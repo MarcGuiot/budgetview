@@ -49,7 +49,6 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
     });
   }
 
-
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 

@@ -91,6 +91,9 @@ public class UpgradeTrigger implements ChangeSetListener {
       });
       repository.update(UserPreferences.KEY, UserPreferences.MULTIPLE_PLANNED, true); // declenche les triggers
     }
+    if (currentJarVersion < 57) {
+      updateTargetSavings(repository);
+    }
 
     deleteDeprecatedGlobs(repository);
 
@@ -101,6 +104,45 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
 
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
+  }
+
+  private void updateTargetSavings(GlobRepository repository) {
+    repository.findOrCreate(Account.EXTERNAL_KEY,
+                            value(Account.IS_IMPORTED_ACCOUNT, Boolean.FALSE)
+                      );
+    GlobList savingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
+    for (Glob series : savingsSeries) {
+      Boolean sens = null;
+      GlobList budget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID)).getGlobs();
+      for (Glob glob : budget) {
+        if (glob.get(SeriesBudget.AMOUNT) > 0){
+          sens = true;
+          break;
+        }
+        if (glob.get(SeriesBudget.AMOUNT) < 0){
+          sens = false;
+          break;
+        }
+      }
+      if (series.get(Series.FROM_ACCOUNT) == null){
+        repository.update(series.getKey(), Series.FROM_ACCOUNT, Account.EXTERNAL_ACCOUNT_ID);
+      }
+      if (series.get(Series.TO_ACCOUNT) == null){
+        repository.update(series.getKey(), Series.FROM_ACCOUNT, Account.EXTERNAL_ACCOUNT_ID);
+      }
+      if (sens == null){
+        if (series.isTrue(Series.IS_MIRROR)){
+          repository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.TO_ACCOUNT));
+        }else {
+          repository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.FROM_ACCOUNT));
+        }
+      }else if (sens){
+        repository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.TO_ACCOUNT));
+      }
+      else {
+        repository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.FROM_ACCOUNT));
+      }
+    }
   }
 
   private void deleteDeprecatedGlobs(GlobRepository repository) {
@@ -117,7 +159,7 @@ public class UpgradeTrigger implements ChangeSetListener {
 
   private void updateAccount(GlobRepository repository, Glob series, final LinkField accountField) {
     Glob account = repository.findLinkTarget(series, accountField);
-    if (account != null && account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+    if (account != null && AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
       repository.update(series.getKey(), accountField, Account.MAIN_SUMMARY_ACCOUNT_ID);
       GlobList planned =
         repository.getAll(Transaction.TYPE,

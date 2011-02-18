@@ -23,16 +23,17 @@ public class SameAccountChecker {
   }
 
   private void update(GlobRepository repository, Integer accountType) {
-    if (accountType.equals(AccountType.MAIN.getId())) {
+    if (AccountType.MAIN.getId().equals(accountType)) {
       summaryAccountId = Account.MAIN_SUMMARY_KEY;
     }
-    else {
+    else if (AccountType.SAVINGS.getId().equals(accountType)) {
       summaryAccountId = Account.SAVINGS_SUMMARY_KEY;
     }
     GlobList accounts = repository.getAll(Account.TYPE);
-    for (Glob tmp : accounts) {
-      if (tmp.get(Account.ACCOUNT_TYPE).equals(accountType)) {
-        this.accounts.add(tmp.get(Account.ID));
+    for (Glob account : accounts) {
+      if (accountType.equals(account.get(Account.ACCOUNT_TYPE)) &&
+          account.get(Account.ID) != Account.EXTERNAL_ACCOUNT_ID) {
+        this.accounts.add(account.get(Account.ID));
       }
     }
   }

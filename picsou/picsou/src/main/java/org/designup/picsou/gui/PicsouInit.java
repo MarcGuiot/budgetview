@@ -8,7 +8,6 @@ import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.config.RegistrationTrigger;
-import org.designup.picsou.gui.license.RegisterLicenseTrigger;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.series.view.SeriesWrapperUpdateTrigger;
 import org.designup.picsou.gui.time.TimeService;
@@ -20,6 +19,7 @@ import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.designup.picsou.triggers.*;
+import org.designup.picsou.triggers.savings.SavingsUpdateSeriesMirrorTrigger;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
@@ -92,12 +92,12 @@ public class PicsouInit {
   }
 
   public static void initTriggerRepository(ServerAccess serverAccess, Directory directory, final GlobRepository repository) {
-    repository.addTrigger(new SeriesShapeTrigger());
+    repository.addTrigger(new SavingsAccountUpdateSeriesTrigger());
+    repository.addTrigger(new SavingsUpdateSeriesMirrorTrigger());
     repository.addTrigger(new CurrentMonthTrigger());
     repository.addTrigger(new SavingsDateActiveBudgetTrigger());
     repository.addTrigger(new UpdateActiveBudgetTrigger());
     repository.addTrigger(new ConfigUpgradeTrigger(directory));
-    repository.addTrigger(new SavingsAccountUpdateSeriesTrigger());
     repository.addTrigger(new SeriesRenameTrigger());
     repository.addTrigger(new AccountDeleteTrigger());
     repository.addTrigger(new SeriesDeletionTrigger());
@@ -111,10 +111,11 @@ public class PicsouInit {
     repository.addTrigger(new MonthsToSeriesBudgetTrigger(directory));
     repository.addTrigger(new IrregularSeriesBudgetCreationTrigger());
     repository.addTrigger(new NotImportedTransactionAccountTrigger());
+    repository.addTrigger(new ImportedToNotImportedAccountTransactionTrigger());
     repository.addTrigger(new ObservedSeriesStatTrigger());
     repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
+    repository.addTrigger(new SeriesShapeTrigger());
     repository.addTrigger(new TransactionPlannedTrigger());
-    repository.addTrigger(new ImportedToNotImportedAccountTransactionTrigger());
     repository.addTrigger(new UpdateAccountOnTransactionDelete());
     repository.addTrigger(new PositionTrigger());
     repository.addTrigger(new PlannedSeriesStatTrigger());
@@ -186,7 +187,6 @@ public class PicsouInit {
             repository.reset(userData, typesToReplace);
             DataCheckingService dataChecker = new DataCheckingService(repository, directory);
             dataChecker.check(e);
-            firstReset = false;
 
             userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {
               public void update(IntegerField field, Integer lastAllocatedId) {
@@ -203,8 +203,13 @@ public class PicsouInit {
         throw new InvalidData(Lang.get("login.data.load.fail"), e);
       }
       finally {
-        repository.completeChangeSet();
-        repository.removeTrigger(upgradeTrigger);
+        try {
+          repository.completeChangeSet();
+        }
+        finally {
+          firstReset = false;
+          repository.removeTrigger(upgradeTrigger);
+        }
       }
     }
   }
@@ -253,6 +258,8 @@ public class PicsouInit {
       repository.findOrCreate(Account.MAIN_SUMMARY_KEY,
                               value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()),
                               value(Account.IS_IMPORTED_ACCOUNT, true));
+      repository.findOrCreate(Account.EXTERNAL_KEY,
+                              value(Account.IS_IMPORTED_ACCOUNT, false));
       repository.findOrCreate(Account.SAVINGS_SUMMARY_KEY,
                               value(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()));
       repository.findOrCreate(Account.ALL_SUMMARY_KEY,

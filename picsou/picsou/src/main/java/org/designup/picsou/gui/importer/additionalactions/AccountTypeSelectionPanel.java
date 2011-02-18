@@ -51,7 +51,8 @@ public class AccountTypeSelectionPanel implements AdditionalImportPanel {
 
     GlobList accounts = repository.getAll(Account.TYPE,
                                           and(isNull(Account.ACCOUNT_TYPE),
-                                              isTrue(Account.IS_VALIDATED)
+                                              isTrue(Account.IS_VALIDATED),
+                                              not(fieldEquals(Account.ID, Account.EXTERNAL_ACCOUNT_ID))
                                               // pour ne pas avoir en meme temps
                                               // AccountTypeSelection et ChooseOrCreateAccout
                                           ));
@@ -60,7 +61,7 @@ public class AccountTypeSelectionPanel implements AdditionalImportPanel {
 
   public JPanel getPanel() {
     this.repeat.set(repository
-      .getAll(Account.TYPE, isNull(Account.ACCOUNT_TYPE))
+      .getAll(Account.TYPE, and(isNull(Account.ACCOUNT_TYPE), not(fieldEquals(Account.ID, Account.EXTERNAL_ACCOUNT_ID))))
       .sort(accountStringifier.getComparator(repository)));
     return panel;
   }

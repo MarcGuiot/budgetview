@@ -49,13 +49,16 @@ import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.utils.ShowHideButton;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
+import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Pair;
 import org.globsframework.utils.Strings;
@@ -73,10 +76,6 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
-
-import static org.globsframework.gui.views.utils.LabelCustomizers.*;
-import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class CategorizationView extends View implements TableView, Filterable, ColorChangeListener {
 
@@ -527,14 +526,15 @@ public class CategorizationView extends View implements TableView, Filterable, C
                                            forcedValues);
       Glob series = repository.find(key);
       if (key != null && series != null) {
-        repository.startChangeSet();
         try {
-          if (categorize(series)) {
-            return;
-          }
-          Glob mirrorSeries = repository.findLinkTarget(series, Series.MIRROR_SERIES);
-          if (mirrorSeries != null) {
-            categorize(mirrorSeries);
+          repository.startChangeSet();
+          for (Glob transaction : currentTransactions) {
+            if (!categorize(series, transaction)) {
+              Glob mirrorSeries = repository.findLinkTarget(series, Series.MIRROR_SERIES);
+              if (mirrorSeries != null) {
+                categorize(mirrorSeries, transaction);
+              }
+            }
           }
         }
         finally {
@@ -543,20 +543,21 @@ public class CategorizationView extends View implements TableView, Filterable, C
       }
     }
 
-    private boolean categorize(Glob series) {
+    private boolean categorize(Glob series, final Glob transaction) {
       boolean noneMatch = false;
       for (Pair<Matchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
+        filter.getFirst().filterDates(Collections.singleton(transaction.get(Transaction.BUDGET_MONTH)),
+                                      Collections.singletonList(transaction));
+        filter.getSecond().setFilter(filter.getFirst());
         noneMatch |= filter.getFirst().matches(series, repository);
       }
       if (!noneMatch) {
         return false;
       }
       Integer subSeriesId = seriesEditor.getLastSelectedSubSeriesId();
-      for (Glob transaction : currentTransactions) {
-        repository.update(transaction.getKey(),
-                          value(Transaction.SERIES, series.get(Series.ID)),
-                          value(Transaction.SUB_SERIES, subSeriesId));
-      }
+      repository.update(transaction.getKey(),
+                        value(Transaction.SERIES, series.get(Series.ID)),
+                        value(Transaction.SUB_SERIES, subSeriesId));
       return true;
     }
   }

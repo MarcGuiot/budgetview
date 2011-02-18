@@ -9,6 +9,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.sqlstreams.constraints.Constraints;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -22,6 +23,7 @@ public class AccountFilteringCombo {
     this.repository = repository;
     accountFilteringCombo =
       GlobComboView.init(Account.TYPE, repository, directory)
+        .setFilter(GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, Account.EXTERNAL_ACCOUNT_ID)))
         .setShowEmptyOption(false);
     accountFilteringCombo.setRenderer(new AccountRenderer(), new AccountComparator());
     accountFilteringCombo.setSelectionHandler(handler);

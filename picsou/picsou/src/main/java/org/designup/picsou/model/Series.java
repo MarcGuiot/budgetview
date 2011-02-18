@@ -85,8 +85,8 @@ public class Series {
   @Required
   public static BooleanField IS_MIRROR;
 
-//  @Target(Account.class)
-//  public static LinkField TARGET_ACCOUNT;
+  @Target(Account.class)
+  public static LinkField TARGET_ACCOUNT;
 
   @DefaultBoolean(true)
   @Required
@@ -216,10 +216,23 @@ public class Series {
     return BudgetArea.get(series.get(Series.BUDGET_AREA));
   }
 
+  public static boolean isFrom(Glob series, Glob fromAccount) {
+    return fromAccount.get(Account.ID).equals(series.get(TARGET_ACCOUNT));
+  }
+
+  public static boolean isTo(Glob series, Glob toAccount) {
+    return toAccount.get(Account.ID).equals(series.get(TARGET_ACCOUNT));
+  }
+
+  public static boolean isSavingToExternal(FieldValues series) {
+    return series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId()) &&
+           series.get(Series.TARGET_ACCOUNT).equals(Account.EXTERNAL_ACCOUNT_ID);
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 10;
+      return 11;
     }
 
     public byte[] serializeData(FieldValues fieldValues) {
@@ -248,9 +261,9 @@ public class Series {
       output.writeBoolean(fieldValues.get(Series.DECEMBER));
       output.writeInteger(fieldValues.get(Series.TO_ACCOUNT));
       output.writeInteger(fieldValues.get(Series.FROM_ACCOUNT));
-      output.writeBoolean(fieldValues.get(Series.IS_MIRROR));
       output.writeInteger(fieldValues.get(Series.MIRROR_SERIES));
       output.writeBoolean(fieldValues.get(Series.SHOULD_REPORT));
+      output.writeInteger(fieldValues.get(Series.TARGET_ACCOUNT));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -284,6 +297,9 @@ public class Series {
       }
       else if (version == 10) {
         deserializeDataV10(fieldSetter, data);
+      }
+      else if (version == 11) {
+        deserializeDataV11(fieldSetter, data);
       }
     }
 
@@ -626,6 +642,36 @@ public class Series {
       fieldSetter.set(Series.IS_MIRROR, input.readBoolean());
       fieldSetter.set(Series.MIRROR_SERIES, input.readInteger());
       fieldSetter.set(Series.SHOULD_REPORT, input.readBoolean());
+    }
+
+    private void deserializeDataV11(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Series.NAME, input.readUtf8String());
+      fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
+      fieldSetter.set(Series.DESCRIPTION, input.readUtf8String());
+      fieldSetter.set(Series.PROFILE_TYPE, input.readInteger());
+      fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
+      fieldSetter.set(Series.LAST_MONTH, input.readInteger());
+      fieldSetter.set(Series.DAY, input.readInteger());
+      fieldSetter.set(Series.INITIAL_AMOUNT, input.readDouble());
+      fieldSetter.set(Series.IS_AUTOMATIC, input.readBoolean());
+      fieldSetter.set(Series.JANUARY, input.readBoolean());
+      fieldSetter.set(Series.FEBRUARY, input.readBoolean());
+      fieldSetter.set(Series.MARCH, input.readBoolean());
+      fieldSetter.set(Series.APRIL, input.readBoolean());
+      fieldSetter.set(Series.MAY, input.readBoolean());
+      fieldSetter.set(Series.JUNE, input.readBoolean());
+      fieldSetter.set(Series.JULY, input.readBoolean());
+      fieldSetter.set(Series.AUGUST, input.readBoolean());
+      fieldSetter.set(Series.SEPTEMBER, input.readBoolean());
+      fieldSetter.set(Series.OCTOBER, input.readBoolean());
+      fieldSetter.set(Series.NOVEMBER, input.readBoolean());
+      fieldSetter.set(Series.DECEMBER, input.readBoolean());
+      fieldSetter.set(Series.TO_ACCOUNT, input.readInteger());
+      fieldSetter.set(Series.FROM_ACCOUNT, input.readInteger());
+      fieldSetter.set(Series.MIRROR_SERIES, input.readInteger());
+      fieldSetter.set(Series.SHOULD_REPORT, input.readBoolean());
+      fieldSetter.set(Series.TARGET_ACCOUNT, input.readInteger());
     }
   }
 }

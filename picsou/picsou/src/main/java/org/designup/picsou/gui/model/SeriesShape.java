@@ -96,7 +96,10 @@ public class SeriesShape {
   }
 
   public static int getBegin(int periodCount, int period) {
-    if (periodCount <= 5) {
+    if (periodCount <= 4) {
+      return getBegin4(period);
+    }
+    if (periodCount == 5) {
       return getBegin5(period);
     }
     if (periodCount == 6) {
@@ -109,7 +112,10 @@ public class SeriesShape {
   }
 
   public static int getEnd(int periodCount, int period) {
-    if (periodCount <= 5) {
+    if (periodCount <= 4) {
+      return getEnd4(period);
+    }
+    if (periodCount == 5) {
       return getEnd5(period);
     }
     if (periodCount == 6) {

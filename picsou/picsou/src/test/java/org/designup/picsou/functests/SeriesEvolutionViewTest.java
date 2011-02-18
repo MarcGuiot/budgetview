@@ -642,7 +642,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesEvolution.expandAll();
     seriesEvolution.checkRowLabels(
       "Main accounts", "Balance", "Savings accounts", "To categorize", "Income", "Recurring", "Variable", "Extras",
-      "Savings", "To account Livret", "Other"
+      "Savings", "To account Livret", "To account Livret", "Other"
     );
   }
 }

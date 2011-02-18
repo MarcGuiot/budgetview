@@ -38,7 +38,8 @@ public class BudgetStatTrigger implements ChangeSetListener {
       if (budgetStatComputer.currentMonth == null) {
         return;
       }
-      repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, budgetStatComputer);
+      repository.safeApply(Transaction.TYPE,
+                           GlobMatchers.not(GlobMatchers.fieldEquals(Transaction.ACCOUNT, Account.EXTERNAL_ACCOUNT_ID)), budgetStatComputer);
       budgetStatComputer.complete();
     }
     finally {
@@ -69,7 +70,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
       }
 
       Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-      if (account == null || !account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+      if (account == null || !AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
         return;
       }
 
@@ -220,23 +221,23 @@ public class BudgetStatTrigger implements ChangeSetListener {
         if (budgetArea.equals(BudgetArea.SAVINGS)) {
           Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
           Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-          if (!(fromAccount != null && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())
-                || (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())))) {
+          if (!(fromAccount != null && AccountType.MAIN.getId().equals(fromAccount.get(Account.ACCOUNT_TYPE))
+                || (toAccount != null && AccountType.MAIN.getId().equals(toAccount.get(Account.ACCOUNT_TYPE))))) {
             continue;
           }
           if (series.get(Series.MIRROR_SERIES) != null) {
             if (fromAccount != null
-                && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())
-                && !series.isTrue(Series.IS_MIRROR)) {
+                && AccountType.MAIN.getId().equals(fromAccount.get(Account.ACCOUNT_TYPE))
+                && !(Series.isFrom(series, fromAccount))) {
               continue;
             }
             if (toAccount != null
-                && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())
-                && series.isTrue(Series.IS_MIRROR)) {
+                && AccountType.MAIN.getId().equals(toAccount.get(Account.ACCOUNT_TYPE))
+                && !Series.isTo(series, toAccount)) {
               continue;
             }
           }
-          if (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+          if (toAccount != null && AccountType.MAIN.getId().equals(toAccount.get(Account.ACCOUNT_TYPE))) {
             savingsInAmounts.addValues(stat, lastTransactionMonthId);
           }
           else {
@@ -305,6 +306,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
 
       return values.get();
     }
+
   }
 
   private class BudgetAreaAmounts {

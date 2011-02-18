@@ -74,9 +74,9 @@ public class SeriesAmountEditionDialog {
   }
 
   public void show(Glob series, Set<Integer> months) {
-    if (series != null && series.isTrue(Series.IS_MIRROR)) {
-      series = parentRepository.findLinkTarget(series, Series.MIRROR_SERIES);
-    }
+//    if (series != null && series.isTrue(Series.IS_MIRROR)) {
+//      series = parentRepository.findLinkTarget(series, Series.MIRROR_SERIES);
+//    }
 
     seriesNameLabel.setText(seriesNameStringifier.toString(series, localRepository));
 
@@ -122,14 +122,14 @@ public class SeriesAmountEditionDialog {
 
     public void actionPerformed(ActionEvent e) {
 
-      ChangeSet changeSet = localRepository.getCurrentChanges();
-      localRepository.startChangeSet();
-      try {
-        changeSet.safeVisit(SeriesBudget.TYPE, new UpdateMirrorSeriesBudgetChangeSetVisitor(localRepository));
-      }
-      finally {
-        localRepository.completeChangeSet();
-      }
+//      ChangeSet changeSet = localRepository.getCurrentChanges();
+//      localRepository.startChangeSet();
+//      try {
+//        changeSet.safeVisit(SeriesBudget.TYPE, new UpdateMirrorSeriesBudgetChangeSetVisitor(localRepository));
+//      }
+//      finally {
+//        localRepository.completeChangeSet();
+//      }
 
       localRepository.commitChanges(false);
       dialog.setVisible(false);

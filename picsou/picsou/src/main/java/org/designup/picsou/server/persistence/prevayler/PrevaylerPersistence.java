@@ -55,7 +55,10 @@ public class PrevaylerPersistence implements Persistence {
 //    if (rootDataManager == null){
 //      Utils.dumpStack();
 //    }
-    rootDataManager.register(mail, signature, activationCode);
+    if (rootDataManager != null){ // le thread LicenseCheckerThread fini par passé mais dans le test d'apres alors que
+      // le closed a été appelé.
+      rootDataManager.register(mail, signature, activationCode);
+    }
   }
 
   public UserInfo createUser(String name, boolean autoLog, boolean isRegisteredUser, byte[] cryptedPassword,

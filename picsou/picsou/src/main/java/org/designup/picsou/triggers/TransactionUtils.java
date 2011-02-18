@@ -8,8 +8,8 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 
 public class TransactionUtils {
-  public static Integer createMirrorTransaction(Key source, FieldValues transaction,
-                                                final Integer accountId, GlobRepository repository) {
+  public static Integer createMirrorTransaction(Key source, FieldValues transaction, final Integer accountId,
+                                                final Integer seriesId, GlobRepository repository) {
     Double amount = -transaction.get(Transaction.AMOUNT);
     Glob savingsTransaction =
       repository.create(Transaction.TYPE,
@@ -29,7 +29,7 @@ public class TransactionUtils {
                         value(Transaction.CATEGORY, transaction.get(Transaction.CATEGORY)),
                         value(Transaction.SUB_SERIES, transaction.get(Transaction.SUB_SERIES)),
                         value(Transaction.LABEL, transaction.get(Transaction.LABEL)),
-                        value(Transaction.SERIES, transaction.get(Transaction.SERIES)),
+                        value(Transaction.SERIES, seriesId),
                         value(Transaction.MIRROR, true),
                         value(Transaction.PLANNED, transaction.get(Transaction.PLANNED)));
     repository.update(source, Transaction.NOT_IMPORTED_TRANSACTION,
@@ -41,15 +41,12 @@ public class TransactionUtils {
                                                             Integer accountId, Integer currentMonthId,
                                                             Integer currentDay,
                                                             GlobRepository repository) {
-    Double multiplier =
-      Account.getMultiplierForInOrOutputOfTheAccount(repository.findLinkTarget(series, Series.FROM_ACCOUNT),
-                                                     repository.findLinkTarget(series, Series.TO_ACCOUNT),
-                                                     repository.get(Key.create(Account.TYPE, accountId)));
+    double multiplier = series.get(Series.FROM_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT)) ? -1 : 1;
     Double amount = multiplier * Math.abs(seriesBudget.get(SeriesBudget.AMOUNT, 0));
     boolean isPlanned = (seriesBudget.get(SeriesBudget.MONTH) >= currentMonthId) &&
                         ((seriesBudget.get(SeriesBudget.MONTH) > currentMonthId)
                          || (seriesBudget.get(SeriesBudget.DAY) > currentDay));
-    if (Math.abs(amount) > 0.0001) {
+    if (Math.abs(amount) > 0.0001 && !isPlanned) {
       return repository.create(Transaction.TYPE,
                                value(Transaction.AMOUNT, amount),
                                value(Transaction.ACCOUNT, accountId),

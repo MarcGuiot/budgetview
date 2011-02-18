@@ -20,7 +20,6 @@ import org.designup.picsou.gui.license.LicenseCheckerThread;
 import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.startup.SlaValidationDialog;
 import org.designup.picsou.gui.undo.UndoRedoService;
-import org.designup.picsou.gui.utils.DataCheckerAction;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -81,17 +80,17 @@ public class MainWindow implements WindowManager {
     ServerAccess.LocalInfo info = initServerAccess(serverAddress, prevaylerPath, dataInMemory);
     if (info != null) {
       registered = configService.update(info.getRepoId(), info.getCount(), info.getMail(),
-                                        info.getSignature(), info.getActivationCode());
+                                        info.getSignature(), info.getActivationCode(), serverAccess);
       long downloadVersion = info.getDownloadVersion();
       if (downloadVersion != -1) {
-         if (downloadVersion < PicsouApplication.JAR_VERSION && downloadVersion >= 52L) {
-           badJarVersion = true;
-           registered = false;
-         }
+        if (downloadVersion < PicsouApplication.JAR_VERSION && downloadVersion > 57L) {
+          badJarVersion = true;
+          registered = false;
+        }
       }
     }
     else {
-      configService.update(null, 0, null, null, null);
+      configService.update(null, 0, null, null, null, serverAccess);
     }
 
     MRJAdapter.addAboutListener(new AboutAction(directory));
@@ -228,6 +227,7 @@ public class MainWindow implements WindowManager {
   }
 
   private void initDemoServerAccess() {
+    serverAccess.disconnect();
     InputStream stream = this.getClass().getResourceAsStream("/demo/demo.snapshot");
     if (serverDirectory != null) {
       serverDirectory.close();
@@ -264,10 +264,14 @@ public class MainWindow implements WindowManager {
     }
 
     public void displayBadPasswordMessage(String key, String complement) {
+      serverAccess.disconnect();
+      initServerAccess(serverAddress, prevaylerPath, dataInMemory);
       loginPanel.displayBadPasswordMessage(key, complement);
     }
 
     public void displayErrorText(String message) {
+      serverAccess.disconnect();
+      initServerAccess(serverAddress, prevaylerPath, dataInMemory);
       loginPanel.displayErrorText(message);
     }
   }
@@ -338,9 +342,8 @@ public class MainWindow implements WindowManager {
               preLoadData.load();
             }
             catch (Exception e) {
-              e.printStackTrace();
-              DataCheckerAction action = new DataCheckerAction(picsouInit.getRepository(), picsouInit.getDirectory());
-              action.actionPerformed(null);
+              feedbackLoadingData.displayErrorText(e.getMessage());
+              return;
             }
             mainPanel.show();
             frame.setFocusTraversalPolicy(null);

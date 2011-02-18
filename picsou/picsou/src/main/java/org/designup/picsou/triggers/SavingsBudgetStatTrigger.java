@@ -110,7 +110,7 @@ public class SavingsBudgetStatTrigger implements ChangeSetListener {
 
     public void run(Glob transaction, GlobRepository repository) throws Exception {
       Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-      if (account == null || !account.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
+      if (account == null || !AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
         return;
       }
       Integer accountId = account.get(Account.ID);

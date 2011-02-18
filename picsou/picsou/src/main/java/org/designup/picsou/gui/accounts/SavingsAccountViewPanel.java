@@ -19,6 +19,7 @@ public class SavingsAccountViewPanel extends AccountViewPanel {
   private static GlobMatcher createMatcher() {
     return and(fieldEquals(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()),
                not(fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID)),
+               not(fieldEquals(Account.ID, Account.EXTERNAL_ACCOUNT_ID)),
                not(fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)));
   }
 

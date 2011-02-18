@@ -232,7 +232,7 @@ public class SeriesAmountEditionPanel {
   private void updatePositiveOrNegativeRadio() {
     Glob series = repository.get(currentSeries);
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-    double multiplier = Account.computeAmountMultiplier(series, repository);
+    double multiplier = Account.getMultiplierForInOrOutputOfTheAccount(series);
     boolean isUsuallyPositive = budgetArea.isIncome() ||
                                 (budgetArea == BudgetArea.SAVINGS && multiplier > 0);
     amountEditor.update(isUsuallyPositive, budgetArea == BudgetArea.SAVINGS);

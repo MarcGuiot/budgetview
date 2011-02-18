@@ -204,6 +204,7 @@ public class CategorizationChecker extends ViewChecker {
       selectSavings().createSeries()
         .setName(savingsName)
         .setFromAccount(fromAccount)
+        .setToAccount("External account")
         .validate();
       return this;
     }

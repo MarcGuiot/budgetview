@@ -11,6 +11,7 @@ import org.designup.picsou.gui.components.charts.histo.utils.Scrollable;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
+import static org.designup.picsou.gui.utils.Matchers.transactionsForMainAccounts;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.SelectionService;
@@ -21,6 +22,8 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -28,9 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
-
-import static org.designup.picsou.gui.utils.Matchers.transactionsForMainAccounts;
-import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class HistoChartBuilder implements Scrollable {
   private HistoChart histoChart;
@@ -188,18 +188,25 @@ public class HistoChartBuilder implements Scrollable {
         maxDay = Math.max(maxDay, transactions.getSortedSet(Transaction.POSITION_DAY).last());
       }
 
-      Double[] values = new Double[maxDay];
+      Double[] lastValues = new Double[maxDay];
+      Double[] minValue = new Double[maxDay];
       for (Glob transaction : transactions) {
         int day = transaction.get(Transaction.POSITION_DAY);
-        values[day - 1] = transaction.get(Transaction.SUMMARY_POSITION);
-      }
-
-      for (int i = 0; i < values.length; i++) {
-        if (values[i] == null) {
-          values[i] = lastValue;
+        lastValues[day - 1] = transaction.get(Transaction.SUMMARY_POSITION);
+        if (minValue[day - 1] == null) {
+          minValue[day - 1] = transaction.get(Transaction.SUMMARY_POSITION);
         }
         else {
-          lastValue = values[i];
+          minValue[day - 1] = Math.min(transaction.get(Transaction.SUMMARY_POSITION, Double.MAX_VALUE), minValue[day - 1]);
+        }
+      }
+
+      for (int i = 0; i < minValue.length; i++) {
+        if (minValue[i] == null) {
+          minValue[i] = lastValue;
+        }
+        else {
+          lastValue = lastValues[i];
         }
       }
 
@@ -207,13 +214,13 @@ public class HistoChartBuilder implements Scrollable {
         Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
         if (stat != null) {
           lastValue = stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
-          for (int i = 0; i < values.length; i++) {
-            values[i] = lastValue;
+          for (int i = 0; i < minValue.length; i++) {
+            minValue[i] = lastValue;
           }
         }
       }
 
-      builder.add(monthId, values, monthId == selectedMonthId);
+      builder.add(monthId, minValue, monthId == selectedMonthId);
     }
 
     builder.apply(accountDailyColors, "daily");
@@ -252,7 +259,7 @@ public class HistoChartBuilder implements Scrollable {
 
     DoubleField plannedField = BudgetStat.getPlanned(budgetArea);
     DoubleField actualField = BudgetStat.getObserved(budgetArea);
-    builder.setInverted(!budgetArea.isIncome());
+    builder.setInverted(!budgetArea.isIncome() && budgetArea != BudgetArea.SAVINGS);
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, monthId));
@@ -297,7 +304,7 @@ public class HistoChartBuilder implements Scrollable {
 
     Glob series = repository.get(Key.create(Series.TYPE, seriesId));
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-    builder.setInverted(!budgetArea.isIncome());
+    builder.setInverted(!budgetArea.isIncome() && budgetArea != BudgetArea.SAVINGS);
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       Glob stat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
@@ -394,7 +401,7 @@ public class HistoChartBuilder implements Scrollable {
     HistoDiffDatasetBuilder dataset = createDiffDataset("series");
 
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-    dataset.setInverted(!budgetArea.isIncome());
+    dataset.setInverted(!budgetArea.isIncome() && budgetArea != BudgetArea.SAVINGS);
 
     List<Integer> monthsToShow = getMonthIdsToShow(selectedMonthId);
 
@@ -404,7 +411,7 @@ public class HistoChartBuilder implements Scrollable {
         .filterSelf(GlobMatchers.isTrue(SeriesBudget.ACTIVE), repository)
         .sort(SeriesBudget.MONTH);
 
-    double multiplier = Account.computeAmountMultiplier(series, repository);
+    double multiplier = Account.getMultiplierForInOrOutputOfTheAccount(series);
 
     for (Glob seriesBudget : list) {
       Integer monthId = seriesBudget.get(SeriesBudget.MONTH);

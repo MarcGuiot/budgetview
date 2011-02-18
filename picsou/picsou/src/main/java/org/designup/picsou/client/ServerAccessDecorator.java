@@ -87,6 +87,7 @@ public class ServerAccessDecorator implements ServerAccess {
   public void disconnect() {
     if (serverAccess != null) {
       serverAccess.disconnect();
+      serverAccess = null;
     }
   }
 }

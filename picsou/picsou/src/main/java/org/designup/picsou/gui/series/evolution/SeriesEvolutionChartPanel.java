@@ -20,6 +20,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
@@ -29,8 +30,6 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
-
-import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
@@ -256,7 +255,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     for (Glob stat : repository.getAll(SeriesStat.TYPE, fieldEquals(SeriesStat.MONTH, selectedMonthId))) {
       Integer seriesId = stat.getKey().get(SeriesStat.SERIES);
       Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-      if (budgetArea.getId().equals(series.get(Series.BUDGET_AREA))) {
+      if (budgetArea.getId().equals(series.get(Series.BUDGET_AREA)) && !Series.isSavingToExternal(series)) {
         Double amount = stat.get(SeriesStat.SUMMARY_AMOUNT);
         dataset.add(series.get(Series.NAME),
                     Math.abs(amount != null ? amount : 0.0),
@@ -285,7 +284,9 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
     for (Glob seriesStat : repository.getAll(SeriesStat.TYPE,
                                              and(fieldEquals(SeriesStat.MONTH, selectedMonthId),
                                                  not(fieldEquals(SeriesStat.SERIES, Series.UNCATEGORIZED_SERIES_ID))))) {
-      categorized += Math.abs(Utils.zeroIfNull(seriesStat.get(SeriesStat.AMOUNT)));
+      if (!Series.isSavingToExternal(repository.findLinkTarget(seriesStat, SeriesStat.SERIES))){
+        categorized += Math.abs(seriesStat.get(SeriesStat.AMOUNT, 0.));
+      }
     }
     dataset.add(Lang.get("seriesEvolution.chart.balance.uncategorized.categorized"),
                 categorized, null, false);
@@ -327,70 +328,29 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       }
 
       Glob series = repository.findLinkTarget(seriesStat, SeriesStat.SERIES);
-      if ((series == null) || series.isTrue(Series.IS_MIRROR)) {
+      if (series == null || !series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
         continue;
       }
 
+      if (Series.isSavingToExternal(series)) {
+        continue;
+      }
       Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
       Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
 
-      boolean isFromSavingsAccount = Account.isUserCreatedSavingsAccount(fromAccount);
-      boolean isToSavingsAccount = Account.isUserCreatedSavingsAccount(toAccount);
+      boolean isFromSavingsAccount = AccountType.SAVINGS.getId().equals(fromAccount.get(Account.ACCOUNT_TYPE));
+      boolean isToSavingsAccount = AccountType.SAVINGS.getId().equals(toAccount.get(Account.ACCOUNT_TYPE));
 
-      String in = "";
-      String out = "";
-      String branch = "";
-
-      boolean isFromImported = GlobUtils.safeIsTrue(fromAccount, Account.IS_IMPORTED_ACCOUNT);
-      boolean isToImported = GlobUtils.safeIsTrue(toAccount, Account.IS_IMPORTED_ACCOUNT);
-
-      if (isFromImported && isToImported) {
-
-        if (isFromSavingsAccount && !isToSavingsAccount) {
-          if (amount >= 0) {
-            savingsOut += amount;
-            seriesOutDataset.add(series.get(Series.NAME), amount, createSelectionAction(series.get(Series.ID)));
-          }
-          else {
-            double absAmount = -amount;
-            savingsOut += absAmount;
-            seriesOutDataset.add(series.get(Series.NAME), absAmount, createSelectionAction(series.get(Series.ID)));
-          }
-        }
-        else if (!isFromSavingsAccount && isToSavingsAccount) {
-          if (amount >= 0) {
-            savingsIn += amount;
-            seriesInDataset.add(series.get(Series.NAME), amount, createSelectionAction(series.get(Series.ID)));
-          }
-          else {
-            double absAmount = -amount;
-            savingsOut += absAmount;
-            seriesOutDataset.add(series.get(Series.NAME), absAmount, createSelectionAction(series.get(Series.ID)));
-          }
+      if (isFromSavingsAccount) {
+        if (series.get(Series.FROM_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
+          savingsOut += -amount;
+          seriesOutDataset.add(series.get(Series.NAME), -amount, createSelectionAction(series.get(Series.ID)));
         }
       }
-      else if (isFromImported && !isToImported) {
-        if (isFromSavingsAccount && !isToSavingsAccount) {
-          double absAmount = Math.abs(amount);
-          savingsOut += absAmount;
-          seriesOutDataset.add(series.get(Series.NAME), absAmount, createSelectionAction(series.get(Series.ID)));
-        }
-        else if (!isFromSavingsAccount && isToSavingsAccount) {
-          double absAmount = Math.abs(amount);
-          savingsIn += absAmount;
-          seriesInDataset.add(series.get(Series.NAME), absAmount, createSelectionAction(series.get(Series.ID)));
-        }
-      }
-      else if (!isFromImported && isToImported) {
-        if (isFromSavingsAccount && !isToSavingsAccount) {
-          double absAmount = Math.abs(amount);
-          savingsOut += absAmount;
-          seriesOutDataset.add(series.get(Series.NAME), absAmount, createSelectionAction(series.get(Series.ID)));
-        }
-        else if (!isFromSavingsAccount && isToSavingsAccount) {
-          double absAmount = Math.abs(amount);
-          savingsIn += absAmount;
-          seriesInDataset.add(series.get(Series.NAME), absAmount, createSelectionAction(series.get(Series.ID)));
+      if (isToSavingsAccount) {
+        if (series.get(Series.TO_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
+          savingsIn += amount;
+          seriesInDataset.add(series.get(Series.NAME), amount, createSelectionAction(series.get(Series.ID)));
         }
       }
     }

@@ -82,7 +82,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
         setWarning(account.get(Account.ACCOUNT_TYPE), account.get(Account.CARD_TYPE));
         if (changeSet.containsUpdates(Account.ACCOUNT_TYPE)) {
           Integer accountType = account.get(Account.ACCOUNT_TYPE);
-          if (!accountType.equals(AccountType.SAVINGS.getId())) {
+          if (!AccountType.SAVINGS.getId().equals(accountType)) {
             return;
           }
           GlobList transactions = parentRepository.getAll(Transaction.TYPE, new GlobMatcher() {

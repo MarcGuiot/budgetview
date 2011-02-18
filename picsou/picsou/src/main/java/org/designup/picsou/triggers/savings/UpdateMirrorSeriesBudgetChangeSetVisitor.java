@@ -3,6 +3,7 @@ package org.designup.picsou.triggers.savings;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.BudgetArea;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.LocalGlobRepository;
@@ -26,12 +27,16 @@ public class UpdateMirrorSeriesBudgetChangeSetVisitor implements ChangeSetVisito
   private void updateMirror(Key key, FieldValues values) {
     Glob budget = localRepository.get(key);
     final Glob series = localRepository.find(Key.create(Series.TYPE, budget.get(SeriesBudget.SERIES)));
+    if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())){
+      return;
+    }
     Glob fromAccount = localRepository.findLinkTarget(series, Series.FROM_ACCOUNT);
     Glob toAccount = localRepository.findLinkTarget(series, Series.TO_ACCOUNT);
-    if (Account.areBothImported(fromAccount, toAccount)) {
-      if (series.isTrue(Series.IS_MIRROR)) {
-        return;
-      }
+//    if (Account.areBothImported(fromAccount, toAccount))
+    {
+//      if (series.isTrue(Series.IS_MIRROR)) {
+//        return;
+//      }
       Integer mirrorSeries = series.get(Series.MIRROR_SERIES);
       final Glob mirrorBudget =
         localRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirrorSeries)
@@ -42,16 +47,11 @@ public class UpdateMirrorSeriesBudgetChangeSetVisitor implements ChangeSetVisito
       }
       values.safeApply(new FieldValues.Functor() {
         public void process(Field field, Object value) throws Exception {
-          if (field.equals(SeriesBudget.OBSERVED_AMOUNT)) {
-            return;
-          }
-          if (field.equals(SeriesBudget.SERIES)) {
+          if (field.equals(SeriesBudget.OBSERVED_AMOUNT) || field.equals(SeriesBudget.SERIES)) {
             return;
           }
           if (field.equals(SeriesBudget.AMOUNT)) {
-            if (!series.get(Series.IS_AUTOMATIC)) {
-              localRepository.update(mirrorBudget.getKey(), SeriesBudget.AMOUNT, value == null ? null : -((Double)value));
-            }
+            localRepository.update(mirrorBudget.getKey(), SeriesBudget.AMOUNT, value == null ? null : -((Double)value));
           }
           else {
             localRepository.update(mirrorBudget.getKey(), field, value);

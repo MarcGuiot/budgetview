@@ -28,10 +28,12 @@ public class Account {
   public static final int MAIN_SUMMARY_ACCOUNT_ID = -1;
   public static final int SAVINGS_SUMMARY_ACCOUNT_ID = -2;
   public static final int ALL_SUMMARY_ACCOUNT_ID = -3;
+  public static final int EXTERNAL_ACCOUNT_ID = -4;
   public static final Set<Integer> SUMMARY_ACCOUNT_IDS = new HashSet<Integer>();
   public static org.globsframework.model.Key MAIN_SUMMARY_KEY;
   public static org.globsframework.model.Key SAVINGS_SUMMARY_KEY;
   public static org.globsframework.model.Key ALL_SUMMARY_KEY;
+  public static org.globsframework.model.Key EXTERNAL_KEY;
 
   public static GlobType TYPE;
 
@@ -92,9 +94,11 @@ public class Account {
     MAIN_SUMMARY_KEY = org.globsframework.model.Key.create(TYPE, MAIN_SUMMARY_ACCOUNT_ID);
     SAVINGS_SUMMARY_KEY = org.globsframework.model.Key.create(TYPE, SAVINGS_SUMMARY_ACCOUNT_ID);
     ALL_SUMMARY_KEY = org.globsframework.model.Key.create(TYPE, ALL_SUMMARY_ACCOUNT_ID);
+    EXTERNAL_KEY = org.globsframework.model.Key.create(TYPE, EXTERNAL_ACCOUNT_ID);
     SUMMARY_ACCOUNT_IDS.add(MAIN_SUMMARY_ACCOUNT_ID);
     SUMMARY_ACCOUNT_IDS.add(SAVINGS_SUMMARY_ACCOUNT_ID);
     SUMMARY_ACCOUNT_IDS.add(ALL_SUMMARY_ACCOUNT_ID);
+    SUMMARY_ACCOUNT_IDS.add(EXTERNAL_ACCOUNT_ID);
   }
 
   public static void createSummary(GlobRepository repository) {
@@ -109,8 +113,11 @@ public class Account {
                       value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
     repository.create(TYPE,
                       value(ID, ALL_SUMMARY_ACCOUNT_ID),
-//                      value(ACCOUNT_TYPE, AccountType.MAIN.getId()),
-value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
+                      value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
+
+    repository.create(TYPE, value(ID, EXTERNAL_ACCOUNT_ID),
+                      value(IS_IMPORTED_ACCOUNT, Boolean.FALSE)
+                      );
   }
 
   public static Glob getBank(Glob account, GlobRepository repository) {
@@ -133,7 +140,7 @@ value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
     return bank;
   }
 
-  public static boolean shouldCreateMirror(Glob fromAccount, Glob toAccount) {
+  public static boolean shouldCreateMirrorTransaction(Glob fromAccount, Glob toAccount) {
     return onlyOneIsImported(fromAccount, toAccount);
   }
 
@@ -159,90 +166,21 @@ value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
   public static boolean isUserCreatedSavingsAccount(Glob account) {
     return (account != null) &&
            AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE)) &&
-           !SAVINGS_SUMMARY_KEY.equals(account.getKey());
+           !SAVINGS_SUMMARY_KEY.equals(account.getKey())&&
+           !EXTERNAL_KEY.equals(account.getKey());
   }
 
-  public static double getMultiplierForInOrOutputOfTheAccount(Glob fromAccount, Glob toAccount, Glob forAccount) {
-
-    if (fromAccount == null && toAccount == null) {
-      throw new RuntimeException("Should not be called if both accounts are null");
+  public static double getMultiplierForInOrOutputOfTheAccount(Glob series) {
+    if (series.get(Series.TARGET_ACCOUNT) != null){
+      return series.get(Series.TARGET_ACCOUNT).equals(series.get(Series.FROM_ACCOUNT)) ? -1 : 1;
     }
-    if (fromAccount != null && toAccount == null) {
-      return -1;
-    }
-    if (fromAccount == null) {
-      return 1;
-    }
-    if (forAccount.getKey().equals(toAccount.getKey())) {
-      return 1;
-    }
-    if (forAccount.getKey().equals(fromAccount.getKey())) {
-      return -1;
-    }
-    throw new RuntimeException("Called with bad account");
+    return 1;
   }
 
-  public static double getMultiplierWithMainAsPointOfView(Glob fromAccount, Glob toAccount,
-                                                          GlobRepository repository) {
-    double multiplier;
-    Integer forAccountIdPointOfView = toAccount == null ?
-                                      (fromAccount == null ? null : fromAccount.get(ID))
-                                      : toAccount.get(ID);
-    if (forAccountIdPointOfView == null) {
-      multiplier = 0;
-    }
-    else {
-      if (fromAccount != null && fromAccount.get(ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
-        forAccountIdPointOfView = fromAccount.get(ID);
-      }
-      // si les deux comptes sont des main comptes on prends le toAccount
-      if (toAccount != null && toAccount.get(ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
-        forAccountIdPointOfView = toAccount.get(ID);
-      }
-      multiplier = getMultiplierForInOrOutputOfTheAccount(fromAccount, toAccount,
-                                                          repository.get(org.globsframework.model.Key.create(TYPE, forAccountIdPointOfView)));
-    }
-    return multiplier;
-  }
 
   public static boolean onlyOneIsImported(Glob account1, Glob account2) {
     return account1 != null && account2 != null &&
            account1.isTrue(Account.IS_IMPORTED_ACCOUNT) != account2.isTrue(Account.IS_IMPORTED_ACCOUNT);
-  }
-
-  public static double computeAmountMultiplier(Glob series, GlobRepository repository) {
-    return computeAmountMultiplier(repository.findLinkTarget(series, Series.FROM_ACCOUNT),
-                                   repository.findLinkTarget(series, Series.TO_ACCOUNT),
-                                   repository);
-  }
-
-  public static double computeAmountMultiplier(Glob fromAccount, Glob toAccount, GlobRepository repository) {
-    if (areBothImported(fromAccount, toAccount)) {
-      return 1;
-    }
-    double multiplier = getMultiplierWithMainAsPointOfView(fromAccount, toAccount, repository);
-    if (multiplier == 0) {
-      if (fromAccount == null && toAccount == null) {
-        multiplier = 1;
-      }
-      else {
-        if (onlyOneIsImported(fromAccount, toAccount)) {
-          if (fromAccount.isTrue(IS_IMPORTED_ACCOUNT)) {
-            multiplier = -1;
-          }
-          else {
-            multiplier = 1;
-          }
-        }
-        else if (fromAccount == null) {
-          multiplier = 1;
-        }
-        else {
-          multiplier = -1;
-        }
-      }
-    }
-    return multiplier;
   }
 
   static public String getName(String number, boolean isCard) {

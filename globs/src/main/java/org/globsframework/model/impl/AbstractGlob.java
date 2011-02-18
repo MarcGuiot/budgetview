@@ -157,19 +157,22 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
       switch (keyFields.length) {
         case 1: {
           Field field = keyFields[0];
-          return new SingleFieldKey(field, values[field.getIndex()]);
+          key = new SingleFieldKey(field, values[field.getIndex()]);
+          return key;
         }
         case 2: {
           Field field1 = keyFields[0];
           Field field2 = keyFields[1];
-          return new TwoFieldKey(field1, values[field1.getIndex()], field2, values[field2.getIndex()]);
+          key = new TwoFieldKey(field1, values[field1.getIndex()], field2, values[field2.getIndex()]);
+          return key;
         }
         case 3: {
           Field field1 = keyFields[0];
           Field field2 = keyFields[1];
           Field field3 = keyFields[2];
-          return new ThreeFieldKey(field1, values[field1.getIndex()], field2, values[field2.getIndex()],
+          key = new ThreeFieldKey(field1, values[field1.getIndex()], field2, values[field2.getIndex()],
                                    field3, values[field3.getIndex()]);
+          return key;
         }
       }
       KeyBuilder keyBuilder = KeyBuilder.init(type);

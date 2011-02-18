@@ -6,6 +6,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.designup.picsou.bank.BankPluginService;
 import org.designup.picsou.client.http.HttpsClientTransport;
+import org.designup.picsou.client.ServerAccessDecorator;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.utils.KeyService;
@@ -80,6 +81,7 @@ public class ConfigService {
   private Directory directory = null;
   private GlobRepository repository = null;
   public static final String MAIL_CONTACT = "contact";
+  private ServerAccess serverAccess;
 
   public ConfigService(String applicationVersion, Long jarVersion, Long localConfigVersion, File currentConfigFile) {
     this.currentConfigFile = currentConfigFile;
@@ -169,7 +171,7 @@ public class ConfigService {
       if (jarVersionHeader != null) {
         long newJarVersion = Long.parseLong(jarVersionHeader.getValue());
         if (localJarVersion < newJarVersion) {
-          jarReceive = new JarReceive(directory, repository);
+          jarReceive = new JarReceive(directory, repository, serverAccess);
           dowloadJarThread =
             new DownloadThread(FTP_URL, PicsouApplication.getJarPath(),
                                generatePicsouJarName(newJarVersion), newJarVersion, jarReceive);
@@ -351,7 +353,9 @@ public class ConfigService {
   }
 
   synchronized public boolean update(final byte[] repoId, final long launchCount, byte[] mailInBytes,
-                                     byte[] signatureInByte, final String activationCode) {
+                                     byte[] signatureInByte, final String activationCode,
+                                     ServerAccess serverAccess) {
+    this.serverAccess = serverAccess;
     boolean isValideUser;
     final String mail = mailInBytes == null ? null : new String(mailInBytes);
     if (signatureInByte != null && activationCode != null) {
@@ -558,8 +562,16 @@ public class ConfigService {
   }
 
   private static class JarReceive extends AbstractJarReceived {
-    public JarReceive(Directory directory, GlobRepository repository) {
+    private ServerAccess serverAccess;
+
+    public JarReceive(Directory directory, GlobRepository repository, ServerAccess serverAccess) {
+      this.serverAccess = serverAccess;
       set(directory, repository);
+    }
+
+    synchronized public void complete(File jarFile, long version) {
+      serverAccess.downloadedVersion(version);
+      super.complete(jarFile, version);
     }
 
     protected void loadJar(File jarFile, long version) {

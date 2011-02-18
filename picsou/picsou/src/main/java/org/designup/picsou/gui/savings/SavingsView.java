@@ -5,7 +5,6 @@ import org.designup.picsou.gui.accounts.CreateAccountAction;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.position.SavingsAccountPositionLabels;
 import org.designup.picsou.gui.budget.SeriesEditionButtons;
-import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.evolution.histobuilders.AccountHistoChartUpdater;
 import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilder;

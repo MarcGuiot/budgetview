@@ -39,7 +39,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkAmount("100")
       .setFromAccount("Main accounts")
       .setToAccount("Epargne LCL")
-      .checkAmount(100.00)
+      .checkAmount("100")
       .validate();
   }
 
@@ -243,11 +243,12 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings
       .createSeries()
       .setName("Epargne")
-      .checkFromAccount("External account")
-      .checkToAccount("External account")
+      .checkFromAccount("")
+      .checkToAccount("")
       .checkSavingsMessageVisibility(true)
       .checkOkEnabled(false)
       .setFromAccount("Main accounts")
+      .setToAccount("External account")
       .checkOkEnabled(true)
       .validate();
   }
@@ -264,6 +265,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     savingsView.createSeries()
       .setName("Savings Plan")
       .setFromAccount("Epargne LCL")
+      .setToAccount("External account")
       .setDescription("Savings for the kids")
       .validate();
     savingsView.checkSeriesTooltip("Epargne LCL", "Savings Plan", "Savings for the kids");

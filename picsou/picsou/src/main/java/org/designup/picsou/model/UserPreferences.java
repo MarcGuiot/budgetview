@@ -56,7 +56,7 @@ public class UserPreferences {
 
   public static DateField LAST_VALID_DAY;
 
-  @DefaultInteger(4)
+  @DefaultInteger(6)
   public static IntegerField PERIOD_COUNT_FOR_PLANNED;
 
   @DefaultInteger(1)
