@@ -480,7 +480,6 @@ public class HistoChartBuilder implements Scrollable {
         rangeEnd = Month.next(offsetCenter, config.monthsLater);
       }
       rangeStart = Math.max(firstMonth, Month.previous(offsetCenter, config.monthsBack));
-
     }
 
     List<Integer> result = new ArrayList<Integer>();

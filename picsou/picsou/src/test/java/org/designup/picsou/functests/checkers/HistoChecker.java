@@ -1,7 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import junit.framework.AssertionFailedError;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffDataset;
@@ -18,7 +17,7 @@ import java.awt.*;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class HistoChecker extends GuiChecker {
+public class HistoChecker extends AbstractHistoChecker<HistoChecker> {
 
   public Window window;
   private String panelName;
@@ -121,72 +120,6 @@ public class HistoChecker extends GuiChecker {
     return this;
   }
 
-  public void click(double xPercent) {
-    HistoChart chart = getChart();
-    chart.paint(Empty.NULL_GRAPHICS_2D);
-    Dimension size = chart.getSize();
-    int x = (int)((size.width - 50) * xPercent);
-    doClick(chart, x);
-  }
-
-  public void clickColumn(int columnIndex) {
-    HistoChart chart = getChart();
-    chart.paint(Empty.NULL_GRAPHICS_2D);
-    int x = chart.getX(columnIndex);
-    doClick(chart, x);
-  }
-
-  public void clickColumnId(int month) {
-    HistoChart chart = getChart();
-    HistoDataset dataset = chart.getCurrentDataset();
-    int columnIndex = dataset.getIndex(month);
-    if (columnIndex < 0) {
-      Assert.fail("Month " + month + " not found - dataset contents:\n" + dataset);
-    }
-
-    clickColumn(columnIndex);
-  }
-
-  public void clickAllColumns() {
-    HistoChart chart = getChart();
-    chart.paint(Empty.NULL_GRAPHICS_2D);
-    int y = chart.getSize().height / 2;
-
-    int x0 = chart.getX(0);
-    Mouse.enter(chart, x0, y);
-    Mouse.move(chart, x0, y);
-    Mouse.pressed(chart, x0, y);
-
-    chart.paint(Empty.NULL_GRAPHICS_2D);
-    int x1 = chart.getX(chart.getCurrentDataset().size() - 1);
-    Mouse.drag(chart, x1, y);
-    Mouse.released(chart, x1, y);
-    Mouse.exit(chart, x1, y);
-  }
-
-  private void doClick(HistoChart chart, int x) {
-    int y = chart.getSize().height / 2;
-
-    Mouse.enter(chart, x, y);
-    Mouse.move(chart, x, y);
-    Mouse.pressed(chart, x, y);
-    Mouse.released(chart, x, y);
-    Mouse.exit(chart, x, y);
-  }
-
-  public void checkSelectedIds(Integer... ids) {
-    HistoChart chart = getChart();
-    HistoDataset dataset = chart.getCurrentDataset();
-
-    Set<Integer> selection = new TreeSet<Integer>();
-    for (int index = 0; index < dataset.size(); index++) {
-      if (dataset.isSelected(index)) {
-        selection.add(dataset.getId(index));
-      }
-    }
-
-    org.globsframework.utils.TestUtils.assertSetEquals(selection, ids);
-  }
 
   private String getErrorMessage(int index, HistoDataset dataset) {
     return "Error at index: " + index + " - dataset contents:\n" + dataset;
@@ -202,26 +135,17 @@ public class HistoChecker extends GuiChecker {
     return this;
   }
 
-  private <T extends HistoDataset> T getDataset(Class<T> datasetClass) {
-    HistoChart chart = getChart();
-    HistoDataset dataset = chart.getCurrentDataset();
-    if (!datasetClass.isAssignableFrom(dataset.getClass())) {
-      throw new AssertionFailedError("Unexpected dataset type: " + datasetClass.getSimpleName());
-    }
-    return (T)dataset;
+  public HistoChecker scroll(int offset) {
+    Mouse.wheel(getPanel(), offset);
+    return this;
   }
 
-  private HistoChart getChart() {
+  protected HistoChart getChart() {
     Panel panel = getPanel();
     return (HistoChart)panel.getAwtComponent();
   }
 
-  private Panel getPanel() {
+  protected Panel getPanel() {
     return window.getPanel(panelName).getPanel(chartName);
-  }
-
-  public HistoChecker scroll(int offset) {
-    Mouse.wheel(getPanel(), offset);
-    return this;
   }
 }

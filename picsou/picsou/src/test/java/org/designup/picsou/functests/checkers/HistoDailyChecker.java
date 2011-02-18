@@ -1,7 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import junit.framework.AssertionFailedError;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyDataset;
@@ -9,7 +8,7 @@ import org.globsframework.utils.Utils;
 import org.uispec4j.Mouse;
 import org.uispec4j.Panel;
 
-public class HistoDailyChecker extends GuiChecker {
+public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
 
   private Panel chartPanel;
 
@@ -25,18 +24,8 @@ public class HistoDailyChecker extends GuiChecker {
     return this;
   }
 
-  public HistoDailyChecker checkRange(int firstMonth, int lastMonth) {
-    HistoDailyDataset dataset = getDataset();
-    int actualFirst = dataset.getId(0);
-    int actualLast = dataset.getId(dataset.size() - 1);
-    if ((actualFirst != firstMonth) || (actualLast != lastMonth)) {
-      Assert.fail("expected: [" + firstMonth + "," + lastMonth + "] but was: [" + actualFirst + "," + actualLast + "]");
-    }
-    return this;
-  }
-
   public HistoDailyChecker checkSelected(int monthId) {
-    HistoDailyDataset dataset = getDataset();
+    HistoDataset dataset = getDataset();
     for (int i = 0; i < dataset.size(); i++) {
       if ((dataset.getId(i) == monthId)) {
         if (!dataset.isSelected(i)) {
@@ -49,25 +38,19 @@ public class HistoDailyChecker extends GuiChecker {
     return this;
   }
 
+  protected HistoDailyDataset getDataset() {
+    return getDataset(HistoDailyDataset.class);
+  }
+
   public void doubleClick() {
     Mouse.doubleClick(new Panel(getChart()));
   }
 
-  public HistoDailyChecker scroll(int offset) {
-    Mouse.wheel(chartPanel, offset);
-    return this;
-  }
-
-  private HistoDailyDataset getDataset() {
-    HistoChart chart = getChart();
-    HistoDataset dataset = chart.getCurrentDataset();
-    if (!HistoDailyDataset.class.isAssignableFrom(dataset.getClass())) {
-      throw new AssertionFailedError("Unexpected dataset type: " + dataset.getClass().getSimpleName());
-    }
-    return (HistoDailyDataset)dataset;
-  }
-
-  private HistoChart getChart() {
+  protected HistoChart getChart() {
     return (HistoChart)chartPanel.getAwtComponent();
+  }
+
+  protected Panel getPanel() {
+    return chartPanel;
   }
 }

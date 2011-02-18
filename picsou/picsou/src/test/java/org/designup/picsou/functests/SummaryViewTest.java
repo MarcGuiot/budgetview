@@ -56,6 +56,12 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
 
     summary.getMainChart().scroll(+1);
     checkRange(201101, 201201);
+
+//    summary.getMainChart().scroll(+20);
+//    checkRange(201107,201207);
+//
+//    summary.getMainChart().clickColumnId(201105);
+//    checkRange(201105,201205);
   }
 
   public void testDoubleClick() throws Exception {
