@@ -87,6 +87,7 @@ public class SeriesAmountEditionDialogChecker extends SeriesAmountEditionChecker
   }
 
   public SeriesAmountEditionDialogChecker scroll(int shift) {
+    System.out.println("SeriesAmountEditionDialogChecker.scroll: ");
     getChart().scroll(shift);
     return this;
   }

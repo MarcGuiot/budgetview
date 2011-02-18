@@ -413,6 +413,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testBeginEndInThePastWithTransactions() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+
     OfxBuilder
       .init(this)
       .addTransaction("2008/04/30", -100, "Free")

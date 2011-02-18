@@ -61,7 +61,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     summary.getSavingsChart()
-      .checkColumnCount(10)
+      .checkColumnCount(13)
       .checkLineColumn(0, "J", "2009", 200.00, true)
       .checkLineColumn(1, "A", "2009", 400.00)
       .checkLineColumn(2, "S", "2009", 600.00)
@@ -73,7 +73,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     summary.getSavingsChart()
-      .checkColumnCount(10)
+      .checkColumnCount(13)
       .checkLineColumn(0, "J", "2009", 300.00, true)
       .checkLineColumn(1, "A", "2009", 500.00)
       .checkLineColumn(2, "S", "2009", 700.00)

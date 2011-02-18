@@ -421,6 +421,8 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(24).validate();
 
     OfxBuilder.init(this)
+      .addTransaction("2010/06/03", -29.00, "Free")
+      .addTransaction("2010/07/03", -29.00, "Free")
       .addTransaction("2010/08/03", -29.00, "Free")
       .load();
 
@@ -428,14 +430,15 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("FREE", "Internet");
    
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkChartColumn(0, "Aug", "2010", 29.00, 29.00, true)
-      .checkChartRange(201008,201108)
-      .scroll(2)
-      .checkChartColumn(0, "Aug", "2010", 29.00, 29.00, true)
-      .checkChartRange(201008,201110)
+      .checkChartColumn(2, "Aug", "2010", 29.00, 29.00, true)
+      .checkChartRange(201006,201108)
+      .scroll(1)
+      .checkChartColumn(1, "Aug", "2010", 29.00, 29.00, true)
+      .checkChartRange(201007,201109)
       .scroll(20)
-      .checkChartRange(201008,201112)
+      .checkChartRange(201008,201110)
+      .scroll(-2)
+      .checkChartRange(201006,201108)
       .validate();
-
   }
 }
