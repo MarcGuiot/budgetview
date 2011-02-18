@@ -324,7 +324,7 @@ public class DataCheckingService {
 
   private void checkSavingsTransaction(Glob transaction, DataCheckReport buffer) {
     Glob target = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-    if (target.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
+    if (AccountType.SAVINGS.getId().equals(target.get(Account.ACCOUNT_TYPE))) {
       Glob savingsSeries = repository.findLinkTarget(transaction, Transaction.SERIES);
       if (transaction.get(Transaction.AMOUNT) >= 0) {
         Integer toAccount = savingsSeries.get(Series.TO_ACCOUNT);

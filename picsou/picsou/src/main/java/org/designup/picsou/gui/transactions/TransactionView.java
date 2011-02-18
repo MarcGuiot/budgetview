@@ -136,7 +136,8 @@ public class TransactionView extends View implements Filterable {
   }
 
   private void updateFilter() {
-    GlobMatcher newFilter = and(showPlannedTransactionsMatcher, filter);
+    GlobMatcher newFilter = and(showPlannedTransactionsMatcher, filter, 
+                                GlobMatchers.not(GlobMatchers.fieldEquals(Transaction.ACCOUNT, Account.EXTERNAL_ACCOUNT_ID)));
     view.setFilter(newFilter);
     headerPainter.setFiltered(filterManager.hasClearableFilters());
   }

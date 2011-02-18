@@ -286,6 +286,11 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     if (mainWindow != null) {
       mainWindow.getAwtComponent().setVisible(false);
       mainWindow.dispose();
+      try {
+        Thread.sleep(100);
+      }
+      catch (InterruptedException e) {
+      }
       mainWindow = null;
     }
   }

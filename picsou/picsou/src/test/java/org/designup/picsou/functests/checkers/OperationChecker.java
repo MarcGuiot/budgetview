@@ -487,4 +487,9 @@ public class OperationChecker {
     MenuItem fileMenu = window.getMenuBar().getMenu("Edit");
     fileMenu.getSubMenu("[Hide signposts]").click();
   }
+
+  public void dumpData() {
+    MenuItem fileMenu = window.getMenuBar().getMenu("Edit");
+    fileMenu.getSubMenu("[Dump data]").click();
+  }
 }

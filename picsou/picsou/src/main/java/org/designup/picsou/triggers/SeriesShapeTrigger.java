@@ -19,14 +19,12 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     Integer monthId1;
     Integer monthId2;
     Integer monthId3;
-    private Boolean positif;
 
-    SeriesToReCompute(Integer seriesId, int monthId1, int monthId2, int monthId3, Boolean isPositif) {
+    SeriesToReCompute(Integer seriesId, int monthId1, int monthId2, int monthId3) {
       this.seriesId = seriesId;
       this.monthId1 = monthId1;
       this.monthId2 = monthId2;
       this.monthId3 = monthId3;
-      positif = isPositif;
     }
   }
 
@@ -40,7 +38,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     if (lastTransactionMonthId == 0) {
       return;
     }
-    if (changeSet.containsChanges(UserPreferences.KEY, UserPreferences.MONTH_FOR_PLANNED, UserPreferences.PERIOD_COUNT_FOR_PLANNED)) {
+    if (changeSet.containsChanges(UserPreferences.KEY, UserPreferences.MONTH_FOR_PLANNED, UserPreferences.PERIOD_COUNT_FOR_PLANNED, UserPreferences.MULTIPLE_PLANNED)) {
       recomputeAll(repository, userPreference);
       return;
     }
@@ -64,9 +62,6 @@ public class SeriesShapeTrigger implements ChangeSetListener {
         if (values.contains(Transaction.BUDGET_MONTH)) {
           Integer budgetMonthId = values.get(Transaction.BUDGET_MONTH);
           Integer previousMonthId = values.getPrevious(Transaction.BUDGET_MONTH);
-          if (budgetMonthId >= lastTransactionMonthId && previousMonthId >= lastTransactionMonthId) {
-            return;
-          }
           Glob glob = repository.get(key);
           addSeries(budgetMonthId, glob.get(Transaction.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
           addSeries(previousMonthId, values.contains(Transaction.SERIES) ?
@@ -77,16 +72,28 @@ public class SeriesShapeTrigger implements ChangeSetListener {
         else if (values.contains(Transaction.SERIES)) {
           Glob glob = repository.get(key);
           Integer budgetMonthId = glob.get(Transaction.BUDGET_MONTH);
-          if (budgetMonthId >= lastTransactionMonthId) {
+          if (budgetMonthId > lastTransactionMonthId) {
             return;
           }
-          addSeries(budgetMonthId, glob.get(Transaction.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
+          if (budgetMonthId.equals(lastTransactionMonthId)) {
+            Integer seriesId = values.get(Transaction.SERIES);
+            Glob budget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
+              .findByIndex(SeriesBudget.MONTH, budgetMonthId)
+              .getGlobs().getFirst();
+            if (budget != null && isSmallDiff(budget)
+                 && budget.get(SeriesBudget.ACTIVE)) {
+              addSeries(budgetMonthId, glob.get(Transaction.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
+            }
+          }
+          else {
+            addSeries(budgetMonthId, glob.get(Transaction.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
+          }
         }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
         Integer budgetMonthId = previousValues.get(Transaction.BUDGET_MONTH);
-        if (budgetMonthId >= lastTransactionMonthId) {
+        if (budgetMonthId > lastTransactionMonthId) {
           return;
         }
         addSeries(budgetMonthId, previousValues.get(Transaction.SERIES), seriesToReCompute,
@@ -98,7 +105,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     for (SeriesToReCompute series : seriesToReCompute.values()) {
       final Glob seriesShape = repository.findOrCreate(Key.create(SeriesShape.TYPE, series.seriesId));
       TransactionGlobFunctor transactionGlobFunctor =
-        new TransactionGlobFunctor(periodInMonth, monthCount, series);
+        new TransactionGlobFunctor(repository, periodInMonth, monthCount, series);
       repository
         .findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.seriesId)
         .saveApply(transactionGlobFunctor, repository);
@@ -131,13 +138,13 @@ public class SeriesShapeTrigger implements ChangeSetListener {
   // 1 1 1 => 
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-//    if (changedTypes.contains(Series.TYPE)) {
-//      Glob userPreference = repository.find(UserPreferences.KEY);
-//      if (userPreference == null) {
-//        return;
-//      }
-//      recomputeAll(repository, userPreference);
-//    }
+    if (changedTypes.contains(Series.TYPE)) {
+      Glob userPreference = repository.find(UserPreferences.KEY);
+      if (userPreference == null) {
+        return;
+      }
+      recomputeAll(repository, userPreference);
+    }
     // force compute all
   }
 
@@ -151,7 +158,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
       final Glob seriesShape = repository.findOrCreate(Key.create(SeriesShape.TYPE, series.get(Series.ID)));
       SeriesToReCompute seriesToReCompute = findValidMonth(repository, series.get(Series.ID), lastTransactionMonthId, userPreference.get(UserPreferences.MONTH_FOR_PLANNED));
       TransactionGlobFunctor transactionGlobFunctor =
-        new TransactionGlobFunctor(periodInMonth, monthCount, seriesToReCompute);
+        new TransactionGlobFunctor(repository, periodInMonth, monthCount, seriesToReCompute);
       repository
         .findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
         .saveApply(transactionGlobFunctor, repository);
@@ -172,13 +179,13 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
       .saveApply(globFunctor, repository);
     if (monthCount == 1) {
-      return new SeriesToReCompute(seriesId, globFunctor.lastId1, globFunctor.lastId1, globFunctor.lastId1, globFunctor.isPositif);
+      return new SeriesToReCompute(seriesId, globFunctor.lastId1, globFunctor.lastId1, globFunctor.lastId1);
     }
     if (monthCount == 2) {
-      return new SeriesToReCompute(seriesId, globFunctor.lastId1, globFunctor.lastId2, globFunctor.lastId2, globFunctor.isPositif);
+      return new SeriesToReCompute(seriesId, globFunctor.lastId1, globFunctor.lastId2, globFunctor.lastId2);
     }
     if (monthCount == 3) {
-      return new SeriesToReCompute(seriesId, globFunctor.lastId1, globFunctor.lastId1, globFunctor.lastId3, globFunctor.isPositif);
+      return new SeriesToReCompute(seriesId, globFunctor.lastId1, globFunctor.lastId1, globFunctor.lastId3);
     }
     throw new RuntimeException("only 3 month max");
   }
@@ -192,12 +199,21 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     private double total2;
     private double total3;
     private int periodCount;
-    private SeriesToReCompute series;
+    private SeriesToReCompute seriesToReCompute;
+    private boolean positif;
 
-    public TransactionGlobFunctor(int periodCount, int monthCount, SeriesToReCompute series) {
+    public TransactionGlobFunctor(GlobRepository repository, int periodCount, int monthCount, SeriesToReCompute seriesToReCompute) {
+      Glob series = repository.find(Key.create(Series.TYPE, seriesToReCompute.seriesId));
+      BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
+      if (budgetArea == BudgetArea.SAVINGS){
+        positif = series.get(Series.TO_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT));
+      }
+      else {
+        positif = budgetArea.isIncome();
+      }
       this.periodCount = periodCount;
       this.monthCount = monthCount;
-      this.series = series;
+      this.seriesToReCompute = seriesToReCompute;
       amountForMonth1 = new double[32];
       amountForMonth2 = new double[32];
       amountForMonth3 = new double[32];
@@ -205,23 +221,23 @@ public class SeriesShapeTrigger implements ChangeSetListener {
 
 
     public void run(Glob glob, GlobRepository repository) throws Exception {
-      if (glob.isTrue(Transaction.MIRROR)){
+      if (glob.isTrue(Transaction.PLANNED)){
         return;
       }
       int budgetMonthId = glob.get(Transaction.BUDGET_MONTH);
       double amount = glob.get(Transaction.AMOUNT, 0);
-      if (series.positif != null && (amount > 0 ? !series.positif : series.positif)){
+      if ((amount > 0 != positif)){
         return;
       }
-      if (budgetMonthId == series.monthId1) {
+      if (budgetMonthId == seriesToReCompute.monthId1) {
         amountForMonth1[glob.get(Transaction.BUDGET_DAY)] += amount;
         total1 += amount;
       }
-      else if (budgetMonthId == series.monthId2) {
+      else if (budgetMonthId == seriesToReCompute.monthId2) {
         amountForMonth2[glob.get(Transaction.BUDGET_DAY)] += amount;
         total2 += amount;
       }
-      else if (budgetMonthId == series.monthId1) {
+      else if (budgetMonthId == seriesToReCompute.monthId1) {
         amountForMonth3[glob.get(Transaction.BUDGET_DAY)] += amount;
         total3 += amount;
       }
@@ -265,7 +281,6 @@ public class SeriesShapeTrigger implements ChangeSetListener {
 
   private static class SelectActiveGlobFunctor implements GlobFunctor {
     private Integer lastTransactionMonthId;
-    private Boolean isPositif;
     private int lastId1 = -1;
     private int lastId2 = -1;
     private int lastId3 = -1;
@@ -276,12 +291,12 @@ public class SeriesShapeTrigger implements ChangeSetListener {
 
     public void run(Glob glob, GlobRepository repository) throws Exception {
       Integer monthId = glob.get(SeriesBudget.MONTH);
-      if (monthId < lastTransactionMonthId && glob.isTrue(SeriesBudget.ACTIVE)) {
+      if ((monthId < lastTransactionMonthId ||
+           (monthId.equals(lastTransactionMonthId) && isSmallDiff(glob))) && glob.isTrue(SeriesBudget.ACTIVE)) {
         if (monthId > lastId1) {
           lastId3 = lastId2;
           lastId2 = lastId1;
           lastId1 = monthId;
-          isPositif = glob.get(SeriesBudget.AMOUNT) != null ? Boolean.valueOf(glob.get(SeriesBudget.AMOUNT) >= 0) : isPositif;
           return;
         }
         if (monthId > lastId2) {
@@ -295,4 +310,13 @@ public class SeriesShapeTrigger implements ChangeSetListener {
       }
     }
   }
+
+    static private boolean isSmallDiff(Glob budget) {
+//      return Amounts.isNearZero(Amounts.zeroIfNull(budget.get(SeriesBudget.AMOUNT)) -
+//                                Amounts.zeroIfNull(budget.get(SeriesBudget.OBSERVED_AMOUNT)));
+      if (Amounts.isNearZero(Amounts.zeroIfNull(budget.get(SeriesBudget.AMOUNT)))){
+        return false;
+      }
+      return Math.abs((Amounts.zeroIfNull(budget.get(SeriesBudget.OBSERVED_AMOUNT)) / (budget.get(SeriesBudget.AMOUNT)))) > 0.90;
+    }
 }

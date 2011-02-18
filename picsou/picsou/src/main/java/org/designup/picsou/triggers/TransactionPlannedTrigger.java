@@ -8,8 +8,6 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Pair;
@@ -30,13 +28,13 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     repository.startChangeSet();
     final Set<Pair<Integer, Integer>> listOfSeriesAndMonth = new HashSet<Pair<Integer, Integer>>();
     if (changeSet.containsChanges(UserPreferences.KEY, UserPreferences.MULTIPLE_PLANNED,
-                                  UserPreferences.MONTH_FOR_PLANNED, UserPreferences.PERIOD_COUNT_FOR_PLANNED)){
+                                  UserPreferences.MONTH_FOR_PLANNED, UserPreferences.PERIOD_COUNT_FOR_PLANNED)) {
       Glob currenMonth = repository.get(CurrentMonth.KEY);
       SortedSet<Integer> seriesId = repository.getAll(Series.TYPE).getSortedSet(Series.ID);
       GlobList months = repository.getAll(Month.TYPE);
       for (Integer id : seriesId) {
         for (Glob glob : months) {
-          if (glob.get(Month.ID) >= currenMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)){
+          if (glob.get(Month.ID) >= currenMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
             listOfSeriesAndMonth.add(new Pair<Integer, Integer>(id, glob.get(Month.ID)));
           }
         }
@@ -149,7 +147,6 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       final Integer monthId = seriesAndMonth.getSecond();
       final Integer seriesId = seriesAndMonth.getFirst();
 
-      Double observedAmount = computeObservedAmount(repository, seriesId, monthId);
       GlobList transactions = getPlannedTransactions(repository, seriesId, monthId);
       Glob seriesBudget =
         repository
@@ -161,7 +158,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         continue;
       }
 
-      repository.update(seriesBudget.getKey(), SeriesBudget.OBSERVED_AMOUNT, observedAmount);
+     Double observedAmount = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT);
       if (Amounts.isNullOrZero(seriesBudget.get(SeriesBudget.AMOUNT)) || !seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
         repository.delete(transactions);
       }
@@ -210,8 +207,6 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       Log.write("Missing series " + seriesBudget.get(SeriesBudget.SERIES));
     }
     else {
-//      GlobList createPlanned =
-//        createPlannedTransaction(series, repository, monthId, seriesBudget.get(SeriesBudget.AMOUNT));
       TheoricalPlanned[] theoricalPlanneds =
         getTheoricalPlanned(series, repository, monthId, seriesBudget.get(SeriesBudget.AMOUNT));
       Double observedAmount = Utils.zeroIfNull(seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT));
@@ -223,18 +218,18 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
           break;
         }
         else {
-          observedAmount -= theoricalPlanned.amountForPeriod; 
+          observedAmount -= theoricalPlanned.amountForPeriod;
           theoricalPlanned.amountForPeriod = 0;
         }
       }
 
       for (TheoricalPlanned theoricalPlanned : theoricalPlanneds) {
         Glob existing = null;
-        if (transactions.size() != 0){
+        if (transactions.size() != 0) {
           existing = transactions.remove(0);
         }
-        if (theoricalPlanned.amountForPeriod != 0){
-          if (existing != null){
+        if (theoricalPlanned.amountForPeriod != 0) {
+          if (existing != null) {
             repository.update(existing.getKey(), FieldValue.value(Transaction.AMOUNT, theoricalPlanned.amountForPeriod),
                               FieldValue.value(Transaction.DAY, theoricalPlanned.day),
                               FieldValue.value(Transaction.POSITION_DAY, theoricalPlanned.day),
@@ -247,7 +242,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
           }
         }
         else {
-          if (existing != null){
+          if (existing != null) {
             repository.delete(existing.getKey());
           }
         }
@@ -327,21 +322,16 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
                   " but one of the account is missing.");
         return;
       }
-      if (series.isTrue(Series.IS_MIRROR)) {
-        account = fromAccount.get(Account.ID);
-      }
-      else {
-        account = toAccount.get(Account.ID);
-      }
+      account = series.get(Series.TARGET_ACCOUNT);
     }
     else if (fromAccount == null && toAccount == null) {
       account = Account.MAIN_SUMMARY_ACCOUNT_ID;
     }
     else {
-      if (fromAccount != null && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+      if (fromAccount != null && AccountType.MAIN.getId().equals(fromAccount.get(Account.ACCOUNT_TYPE))) {
         account = fromAccount.get(Account.ID);
       }
-      else if (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+      else if (toAccount != null && AccountType.MAIN.getId().equals(toAccount.get(Account.ACCOUNT_TYPE))) {
         account = toAccount.get(Account.ID);
       }
       else {
@@ -367,6 +357,12 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     Integer period = repository.get(UserPreferences.KEY).get(UserPreferences.PERIOD_COUNT_FOR_PLANNED);
     Key key = Key.create(SeriesShape.TYPE, seriesId);
     Glob seriesShape = repository.find(key);
+    if (seriesShape == null) {
+      Integer miroirId = series.get(Series.MIRROR_SERIES);
+      if (miroirId != null) {
+        seriesShape = repository.find(Key.create(SeriesShape.TYPE, miroirId));
+      }
+    }
     if (seriesShape == null
         || seriesShape.get(SeriesShape.TOTAL, 0) == 0
         || Math.abs(amount / seriesShape.get(SeriesShape.TOTAL)) > 3) {
@@ -379,9 +375,9 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       IntegerField field = SeriesShape.getField(i);
       Integer percent = seriesShape.get(field);
       percent = percent == null ? 0 : percent;
-      int day = SeriesShape.getDay(period, i, monthId, amount > 0);
+      int day = SeriesShape.getDay(period, i, monthId, series.get(Series.BUDGET_AREA).equals(BudgetArea.INCOME.getId()));
       if (minDay != 0 && day < minDay) {
-        int nextDay = SeriesShape.getDay(period, i + 1, monthId, amount > 0);
+        int nextDay = SeriesShape.getDay(period, i + 1, monthId, series.get(Series.BUDGET_AREA).equals(BudgetArea.INCOME.getId()));
         if (nextDay < minDay && i != period) {
           percentToPropagate += percent;
         }
@@ -430,7 +426,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     }
     else {
       int amount = (int)((totalAmount * percent) / 100);
-      if (Math.abs(amount + alreadyAssignedAmount - totalAmount) < 10){
+      if (Math.abs(amount + alreadyAssignedAmount - totalAmount) < 10) {
         return totalAmount - alreadyAssignedAmount;
       }
       return amount;
@@ -465,41 +461,45 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       day = month.get(CurrentMonth.LAST_TRANSACTION_DAY);
     }
 
-    int account;
-    Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
-    Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-    if (series.get(Series.MIRROR_SERIES) != null) {
-      if (fromAccount == null || toAccount == null) {
-        Log.write("Series " + series.get(Series.NAME) + " is a saving series with both accounts imported" +
-                  " but one of the account is missing.");
-        return;
-      }
-      if (series.isTrue(Series.IS_MIRROR)) {
-        account = fromAccount.get(Account.ID);
-      }
-      else {
-        account = toAccount.get(Account.ID);
-      }
-    }
-    else if (fromAccount == null && toAccount == null) {
+    Integer account;
+//    Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
+//    Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
+//    if (series.get(Series.MIRROR_SERIES) != null) {
+//      if (fromAccount == null || toAccount == null) {
+//        Log.write("Series " + series.get(Series.NAME) + " is a saving series with both accounts imported" +
+//                  " but one of the account is missing.");
+//        return;
+//      }
+    account = series.get(Series.TARGET_ACCOUNT);
+    if (account == null) {
       account = Account.MAIN_SUMMARY_ACCOUNT_ID;
     }
-    else {
-      if (fromAccount != null && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
-        account = fromAccount.get(Account.ID);
-      }
-      else if (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
-        account = toAccount.get(Account.ID);
-      }
-      else {
-        if (fromAccount == null) {
-          account = toAccount.get(Account.ID);
-        }
-        else { //if (toAccount == null)
-          account = fromAccount.get(Account.ID);
-        }
-      }
-    }
+//      if (series.isTrue(Series.IS_MIRROR)) {
+//        account = fromAccount.get(Account.ID);
+//      }
+//      else {
+//        account = toAccount.get(Account.ID);
+//      }
+//    }
+//    else if (fromAccount == null && toAccount == null) {
+//      account = Account.MAIN_SUMMARY_ACCOUNT_ID;
+//    }
+//    else {
+//      if (fromAccount != null && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+//        account = fromAccount.get(Account.ID);
+//      }
+//      else if (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+//        account = toAccount.get(Account.ID);
+//      }
+//      else {
+//        if (fromAccount == null) {
+//          account = toAccount.get(Account.ID);
+//        }
+//        else { //if (toAccount == null)
+//          account = fromAccount.get(Account.ID);
+//        }
+//      }
+//    }
     Integer seriesId = series.get(Series.ID);
     repository.create(Transaction.TYPE,
                       value(Transaction.ACCOUNT, account),

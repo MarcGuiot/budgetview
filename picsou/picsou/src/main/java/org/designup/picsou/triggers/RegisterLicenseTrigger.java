@@ -1,10 +1,9 @@
-package org.designup.picsou.gui.license;
+package org.designup.picsou.triggers;
 
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.utils.KeyService;
 import org.designup.picsou.model.User;
-import org.designup.picsou.model.UserVersionInformation;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 
@@ -67,21 +66,6 @@ public class RegisterLicenseTrigger implements ChangeSetListener {
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
           if (values.contains(User.IS_REGISTERED_USER) && !values.isTrue(User.IS_REGISTERED_USER)) {
             serverAccess.localRegister(null, null, null, -1);
-          }
-        }
-
-        public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        }
-      });
-    }
-    if (changeSet.containsChanges(UserVersionInformation.KEY)){
-      changeSet.safeVisit(UserVersionInformation.KEY, new ChangeSetVisitor() {
-        public void visitCreation(Key key, FieldValues values) throws Exception {
-        }
-
-        public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-          if (values.contains(UserVersionInformation.CURRENT_JAR_VERSION)){
-            serverAccess.downloadedVersion(values.get(UserVersionInformation.CURRENT_JAR_VERSION));
           }
         }
 

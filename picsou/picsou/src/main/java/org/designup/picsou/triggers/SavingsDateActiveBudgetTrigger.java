@@ -26,7 +26,7 @@ public class SavingsDateActiveBudgetTrigger extends DefaultChangeSetListener {
 
   private void updateAllSeries(Key key, GlobRepository repository) {
     Glob account = repository.find(key);
-    if (!account.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())){
+    if (!AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE))){
       return;
     }
     GlobList list = repository.getAll(Series.TYPE,

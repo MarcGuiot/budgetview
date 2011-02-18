@@ -366,6 +366,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     SerializedByteArrayOutput request = new SerializedByteArrayOutput();
     request.getOutput().writeBytes(privateId);
     clientTransport.disconnect(sessionId, request.toByteArray());
+    notConnected = true;
   }
 
 }

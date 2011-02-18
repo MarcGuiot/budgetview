@@ -16,7 +16,7 @@ public class UpdateActiveBudgetTrigger extends DefaultChangeSetListener {
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
           if (values.contains(Transaction.SERIES)){
             Integer seriesId = values.get(Transaction.SERIES);
-            if (!seriesId.equals(Series.UNCATEGORIZED_SERIES_ID)){
+            if (!seriesId.equals(Series.UNCATEGORIZED_SERIES_ID)) {
             Glob transaction = repository.get(key);
               Glob budget = repository
                 .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)

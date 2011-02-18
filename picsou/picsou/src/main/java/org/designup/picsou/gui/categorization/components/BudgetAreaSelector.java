@@ -180,7 +180,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
 
     GlobList accounts = getSelectedTransactionAccounts();
     for (Glob account : accounts) {
-      if (account.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
+      if (AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
         enableValidBudgetAreas(false);
         if (areas.size() == 1) {
           select(BudgetArea.SAVINGS, true);

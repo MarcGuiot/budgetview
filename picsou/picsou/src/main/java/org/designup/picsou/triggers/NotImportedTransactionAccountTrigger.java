@@ -27,7 +27,7 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(Series.FROM_ACCOUNT) || values.contains(Series.TO_ACCOUNT)) {
+        if (values.contains(Series.FROM_ACCOUNT) || values.contains(Series.TO_ACCOUNT) || values.contains(Series.TARGET_ACCOUNT)) {
           Glob series = repository.get(key);
           // il faut detruire toutes les transactions : si soit TO soit FROM change il faut aussi detuire l'autre
           if (values.contains(Series.FROM_ACCOUNT)) {
@@ -235,45 +235,20 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
                                  repository.findLinkTarget(series, Series.TO_ACCOUNT))) {
       return;
     }
-    Integer fromAccountId = series.get(Series.FROM_ACCOUNT);
-    Integer toAccountId = series.get(Series.TO_ACCOUNT);
+    Integer targetAccountId = series.get(Series.TARGET_ACCOUNT);
 
     Glob currentMonth = repository.get(CurrentMonth.KEY);
     GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
       .findByIndex(Transaction.POSITION_MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs();
 
-    Glob transaction = null;
-    if (fromAccountId != null) {
       GlobList transactionForAccount =
-        transactions.filter(fieldEquals(Transaction.ACCOUNT, fromAccountId), repository);
+        transactions.filter(fieldEquals(Transaction.ACCOUNT, targetAccountId), repository);
       repository.delete(transactionForAccount);
-      transaction = TransactionUtils.createTransactionForNotImportedAccount(
-        seriesBudget, series, fromAccountId, currentMonth.get(CurrentMonth.CURRENT_MONTH),
+      TransactionUtils.createTransactionForNotImportedAccount(
+        seriesBudget, series, targetAccountId, currentMonth.get(CurrentMonth.CURRENT_MONTH),
         currentMonth.get(CurrentMonth.CURRENT_DAY),
         repository);
-      if (transaction != null && transaction.get(Transaction.AMOUNT) > 0) {
-        throw new RuntimeException("Bug");
-      }
     }
-    if (toAccountId != null) {
-      GlobList transactionForAccount =
-        transactions.filter(fieldEquals(Transaction.ACCOUNT, toAccountId), repository);
-      repository.delete(transactionForAccount);
-      if (fromAccountId != null) {
-        // si le budget n'est pas actif ou si le montant est a 0 on n'a pas de transaction
-        if (transaction != null) {
-          TransactionUtils.createMirrorTransaction(transaction.getKey(), transaction,
-                                                   toAccountId, repository);
-        }
-      }
-      else {
-        TransactionUtils.createTransactionForNotImportedAccount(
-          seriesBudget, series, toAccountId, currentMonth.get(CurrentMonth.CURRENT_MONTH),
-          currentMonth.get(CurrentMonth.CURRENT_DAY),
-          repository);
-      }
-    }
-  }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }

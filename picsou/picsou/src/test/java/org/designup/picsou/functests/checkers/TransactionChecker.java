@@ -1,9 +1,9 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.converters.BankDateCellConverter;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.functests.checkers.converters.SeriesCellConverter;
-import org.designup.picsou.functests.checkers.converters.BankDateCellConverter;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.transactions.TransactionView;
@@ -299,6 +299,51 @@ public class TransactionChecker extends ViewChecker {
                                 accountName});
 
       return this;
+    }
+
+    public void dumpCode() {
+      Table table = getTable();
+      StringBuilder builder = new StringBuilder();
+      for (int row = 0; row < table.getRowCount(); row++) {
+        String date = table.getContentAt(row, TransactionView.DATE_COLUMN_INDEX).toString();
+        String series = table.getContentAt(row, TransactionView.SERIES_COLUMN_INDEX, new TableCellValueConverter() {
+          public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
+            return SeriesCellConverter.extractSeries(renderedComponent);
+          }
+        }).toString();
+        String label = table.getContentAt(row, TransactionView.LABEL_COLUMN_INDEX).toString();
+        String amount = table.getContentAt(row, TransactionView.AMOUNT_COLUMN_INDEX).toString();
+        String position = table.getContentAt(row, TransactionView.ACCOUNT_BALANCE_INDEX).toString();
+        String totalPosition = table.getContentAt(row, TransactionView.BALANCE_INDEX).toString();
+        String accountName = table.getContentAt(row, TransactionView.ACCOUNT_NAME_INDEX).toString();
+
+        builder.append(".add(\"")
+          .append(date).append("\", \"");
+        builder
+          .append(label).append("\", ")
+          .append(amount);
+
+        boolean hasSeries = !TO_CATEGORIZE.equals(series) && Strings.isNotEmpty(series);
+        if (!hasSeries) {
+          series = "To categorize";
+        }
+        builder
+          .append(", \"")
+          .append(series)
+          .append("\"");
+        if (Strings.isNotEmpty(position)) {
+          builder.append(", ")
+            .append(position);
+        }
+        builder
+          .append(", ")
+          .append(totalPosition)
+          .append(", \"")
+          .append(accountName)
+          .append("\")\n");
+      }
+      builder.append(".check();\n");
+      Assert.fail("Use this code:\n" + builder.toString());
     }
   }
 

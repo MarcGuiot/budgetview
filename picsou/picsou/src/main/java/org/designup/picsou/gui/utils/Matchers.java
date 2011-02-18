@@ -89,50 +89,55 @@ public class Matchers {
         }
         Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
         Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
-        if (Account.areBothImported(toAccount, fromAccount)) {
-          if (accountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
-            if (fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
-              return series.isTrue(Series.IS_MIRROR);
-            }
-            if (toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
-              return !series.isTrue(Series.IS_MIRROR);
-            }
-            return false;
-          }
-          if (accountId == Account.SAVINGS_SUMMARY_ACCOUNT_ID) {
-            if (fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
-              return series.isTrue(Series.IS_MIRROR);
-            }
-            if (toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
-              return !series.isTrue(Series.IS_MIRROR);
-            }
-            return false;
-          }
-          if (accountId.equals(fromAccount.get(Account.ID))) {
-            return series.isTrue(Series.IS_MIRROR);
-          }
-          if (accountId.equals(toAccount.get(Account.ID))) {
-            return !series.isTrue(Series.IS_MIRROR);
-          }
-        }
-        if (accountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
-          if (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
-            return true;
-          }
-          if (fromAccount != null && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
-            return true;
-          }
-        }
-        if (accountId == Account.SAVINGS_SUMMARY_ACCOUNT_ID) {
-          if (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
-            return true;
-          }
-          if (fromAccount != null && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
-            return true;
-          }
-        }
-
-        return (accountId.equals(series.get(Series.FROM_ACCOUNT)) || accountId.equals(series.get(Series.TO_ACCOUNT)));
+        Glob targetAccount = repository.findLinkTarget(series, Series.TARGET_ACCOUNT);
+        return series.get(Series.TARGET_ACCOUNT).equals(accountId);
+//        if (Account.areBothImported(toAccount, fromAccount)) {
+//          if (accountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
+//            return targetAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId());
+//            if (fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+//              return series.isTrue(Series.IS_MIRROR);
+//            }
+//            if (toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+//              return !series.isTrue(Series.IS_MIRROR);
+//            }
+//            return false;
+//          }
+//          if (accountId == Account.SAVINGS_SUMMARY_ACCOUNT_ID) {
+//            return targetAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId());
+//            if (fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
+//              return series.isTrue(Series.IS_MIRROR);
+//            }
+//            if (toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
+//              return !series.isTrue(Series.IS_MIRROR);
+//            }
+//            return false;
+//          }
+//          return accountId.equals(targetAccount.get(Account.ID));
+//          if (accountId.equals(fromAccount.get(Account.ID))) {
+//            return series.isTrue(Series.IS_MIRROR);
+//          }
+//          if (accountId.equals(toAccount.get(Account.ID))) {
+//            return !series.isTrue(Series.IS_MIRROR);
+//          }
+//        }
+//        if (accountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
+//          if (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+//            return true;
+//          }
+//          if (fromAccount != null && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+//            return true;
+//          }
+//        }
+//        if (accountId == Account.SAVINGS_SUMMARY_ACCOUNT_ID) {
+//          if (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
+//            return true;
+//          }
+//          if (fromAccount != null && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
+//            return true;
+//          }
+//        }
+//
+//        return (accountId.equals(series.get(Series.FROM_ACCOUNT)) || accountId.equals(series.get(Series.TO_ACCOUNT)));
       }
     };
   }
@@ -171,72 +176,16 @@ public class Matchers {
         if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
           return true;
         }
-        Integer toAccountId = series.get(Series.TO_ACCOUNT);
-        Integer fromAccountId = series.get(Series.FROM_ACCOUNT);
-        Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
-        Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-        if (Account.onlyOneIsImported(toAccount, fromAccount)) {
-          for (Glob transaction : transactions) {
-            if (transaction.get(Transaction.AMOUNT) > 0) {
-              if (!toAccount.isTrue(Account.IS_IMPORTED_ACCOUNT)) {
-                return false;
-              }
-              if (!isSameAccount(repository, toAccount, transaction)) {
-                return false;
-              }
-            }
-            else {
-              if (!fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT)) {
-                return false;
-              }
-              if (!isSameAccount(repository, fromAccount, transaction)) {
-                return false;
-              }
-            }
+        Glob targetAccount = repository.findLinkTarget(series, Series.TARGET_ACCOUNT);
+        for (Glob transaction : transactions) {
+          if (!isSameAccount(repository, targetAccount, transaction)) {
+            return false;
           }
-        }
-        else if (toAccountId != null && fromAccountId != null) {
-          for (Glob transaction : transactions) {
-            if (transaction.get(Transaction.AMOUNT) > 0) {
-              if (series.isTrue(Series.IS_MIRROR)) {
-                return false;
-              }
-              if (!isSameAccount(repository, toAccount, transaction)) {
-                return false;
-              }
-            }
-            else {
-              if (!series.isTrue(Series.IS_MIRROR)) {
-                return false;
-              }
-              if (!isSameAccount(repository, fromAccount, transaction)) {
-                return false;
-              }
-            }
+          if (transaction.get(Transaction.AMOUNT) > 0 && !series.get(Series.TO_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))){
+            return false;
           }
-        }
-        else if (toAccountId != null || fromAccountId != null) {
-          for (Glob transaction : transactions) {
-            if (transaction.get(Transaction.AMOUNT) < 0) {
-              if (fromAccountId != null) {
-                if (!isSameAccount(repository, fromAccount, transaction)) {
-                  return false;
-                }
-              }
-              else {
-                return false;
-              }
-            }
-            else {
-              if (toAccountId != null) {
-                if (!isSameAccount(repository, toAccount, transaction)) {
-                  return false;
-                }
-              }
-              else {
-                return false;
-              }
-            }
+          else if (transaction.get(Transaction.AMOUNT) < 0 && !series.get(Series.FROM_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))){
+            return false;
           }
         }
         return true;
@@ -245,15 +194,14 @@ public class Matchers {
     }
 
     private boolean isSameAccount(GlobRepository repository, Glob account, Glob transaction) {
-      if (account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+      if (AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
         Glob operationAccount = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-        return operationAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId());
+        return AccountType.MAIN.getId().equals(operationAccount.get(Account.ACCOUNT_TYPE));
       }
-      else {
+      else if (AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
         return account.get(Account.ID).equals(transaction.get(Transaction.ACCOUNT));
       }
-
-
+      return false;
     }
 
     public String toString() {
@@ -263,10 +211,10 @@ public class Matchers {
     private boolean checkInMain(GlobRepository repository) {
       for (Glob transaction : transactions) {
         Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-        if (!account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
+        if (!AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
           return false;
         }
-        if (!account.get(Account.CARD_TYPE).equals(AccountCardType.NOT_A_CARD.getId())) {
+        if (!AccountCardType.NOT_A_CARD.getId().equals(account.get(Account.CARD_TYPE))) {
           return false;
         }
       }

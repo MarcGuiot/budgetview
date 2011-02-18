@@ -2,19 +2,17 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(400, 250)" opaque="true">
+  <panel styleClass="dialog" preferredSize="(400, 200)" opaque="true">
     <column styleClass="innerDialog">
 
       <label text="$preferences.title" name="title" styleClass="title"/>
       <grid>
         <label gridPos="(0,0)" text="$preferences.future.month" styleClass="formLabel"/>
         <comboBox gridPos="(1,0)" ref="futureMonth"/>
-        <label gridPos="(0,1)" text="$preferences.future.multiplePlanned" styleClass="formLabel"/>
-        <checkBox gridPos="(1,1)" ref="multiplePlanned"/>
-        <label gridPos="(0,2)" text="$preferences.future.monthBack" styleClass="formLabel"/>
-        <comboBox gridPos="(1,2)" ref="monthBack"/>
-        <label gridPos="(0,3)" text="$preferences.future.period" styleClass="formLabel"/>
-        <comboBox gridPos="(1,3)" ref="period"/>
+        <label gridPos="(0,1)" text="$preferences.future.monthBack" styleClass="formLabel" marginTop="5"/>
+        <comboBox gridPos="(1,1)" ref="monthBack" marginTop="5"/>
+        <label gridPos="(0,2)" text="$preferences.future.period" styleClass="formLabel" marginTop="5"/>
+        <comboBox gridPos="(1,2)" ref="period" marginTop="5"/>
       </grid>
 
       <filler fill="vertical"/>

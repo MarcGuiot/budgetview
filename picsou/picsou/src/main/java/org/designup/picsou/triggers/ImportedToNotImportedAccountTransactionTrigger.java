@@ -1,6 +1,7 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
@@ -15,20 +16,25 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
 
         Integer oppositeTransaction = values.get(Transaction.NOT_IMPORTED_TRANSACTION);
         Integer seriesId = values.get(Transaction.SERIES);
-        if (seriesId != null && oppositeTransaction == null && !values.isTrue(Transaction.MIRROR)) {
+        if (seriesId != null && oppositeTransaction == null
+            && !values.isTrue(Transaction.MIRROR)
+            && !values.isTrue(Transaction.PLANNED)) {
           Glob series = repository.find(Key.create(Series.TYPE, seriesId));
-          Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
-          Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-          if (Account.shouldCreateMirror(fromAccount, toAccount)) {
-            Integer accountID = getAccount(fromAccount, toAccount);
-            TransactionUtils.createMirrorTransaction(key, values, accountID, repository);
+          if (series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
+            Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
+            Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
+            if (Account.shouldCreateMirrorTransaction(fromAccount, toAccount)) {
+              Integer targetAccount = repository.findLinkTarget(series, Series.MIRROR_SERIES).get(Series.TARGET_ACCOUNT);
+              TransactionUtils.createMirrorTransaction(key, values, targetAccount,
+                                                       series.get(Series.MIRROR_SERIES), repository);
+            }
           }
         }
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         Glob transaction = repository.find(key);
-        if (transaction == null || transaction.isTrue(Transaction.MIRROR)) {
+        if (transaction == null || transaction.isTrue(Transaction.MIRROR) || transaction.isTrue(Transaction.PLANNED)) {
           return;
         }
         Integer mirrorTransactionId = transaction.get(Transaction.NOT_IMPORTED_TRANSACTION);
@@ -37,7 +43,7 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
             Key mirrorKey = Key.create(Transaction.TYPE, mirrorTransactionId);
             //destruction de series
             Glob glob = repository.find(mirrorKey);
-            if (glob != null){
+            if (glob != null) {
               repository.delete(mirrorKey);
             }
           }
@@ -46,9 +52,10 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
             Glob series = repository.find(Key.create(Series.TYPE, newSeriesId));
             Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
             Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-            if (Account.shouldCreateMirror(fromAccount, toAccount)) {
-              Integer accountID = getAccount(fromAccount, toAccount);
-              TransactionUtils.createMirrorTransaction(key, transaction, accountID, repository);
+            if (Account.shouldCreateMirrorTransaction(fromAccount, toAccount)) {
+              Integer targetAccount = repository.findLinkTarget(series, Series.MIRROR_SERIES).get(Series.TARGET_ACCOUNT);
+              TransactionUtils.createMirrorTransaction(key, transaction, targetAccount,
+                                                       series.get(Series.MIRROR_SERIES), repository);
             }
           }
         }
@@ -98,13 +105,6 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
         }
       }
     });
-  }
-
-  private Integer getAccount(Glob fromAccount, Glob toAccount) {
-    if (fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT)){
-      return toAccount.get(Account.ID);
-    }
-    return fromAccount.get(Account.ID);
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {

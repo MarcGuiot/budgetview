@@ -169,18 +169,25 @@ public class HistoChartBuilder {
         maxDay = Math.max(maxDay, transactions.getSortedSet(Transaction.POSITION_DAY).last());
       }
 
-      Double[] values = new Double[maxDay];
+      Double[] lastValues = new Double[maxDay];
+      Double[] minValue = new Double[maxDay];
       for (Glob transaction : transactions) {
         int day = transaction.get(Transaction.POSITION_DAY);
-        values[day - 1] = transaction.get(Transaction.SUMMARY_POSITION);
-      }
-
-      for (int i = 0; i < values.length; i++) {
-        if (values[i] == null) {
-          values[i] = lastValue;
+        lastValues[day - 1] = transaction.get(Transaction.SUMMARY_POSITION);
+        if (minValue[day - 1] == null) {
+          minValue[day - 1] = transaction.get(Transaction.SUMMARY_POSITION);
         }
         else {
-          lastValue = values[i];
+          minValue[day - 1] = Math.min(transaction.get(Transaction.SUMMARY_POSITION, Double.MAX_VALUE), minValue[day - 1]);
+        }
+      }
+
+      for (int i = 0; i < minValue.length; i++) {
+        if (minValue[i] == null) {
+          minValue[i] = lastValue;
+        }
+        else {
+          lastValue = lastValues[i];
         }
       }
 
@@ -188,13 +195,13 @@ public class HistoChartBuilder {
         Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
         if (stat != null) {
           lastValue = stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
-          for (int i = 0; i < values.length; i++) {
-            values[i] = lastValue;
+          for (int i = 0; i < minValue.length; i++) {
+            minValue[i] = lastValue;
           }
         }
       }
 
-      builder.add(monthId, values, monthId == selectedMonthId);
+      builder.add(monthId, minValue, monthId == selectedMonthId);
     }
 
     builder.apply(accountDailyColors, "daily");
@@ -233,7 +240,7 @@ public class HistoChartBuilder {
 
     DoubleField plannedField = BudgetStat.getPlanned(budgetArea);
     DoubleField actualField = BudgetStat.getObserved(budgetArea);
-    builder.setInverted(!budgetArea.isIncome());
+    builder.setInverted(!budgetArea.isIncome() && budgetArea != BudgetArea.SAVINGS);
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, monthId));
@@ -278,7 +285,7 @@ public class HistoChartBuilder {
 
     Glob series = repository.get(Key.create(Series.TYPE, seriesId));
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-    builder.setInverted(!budgetArea.isIncome());
+    builder.setInverted(!budgetArea.isIncome() && budgetArea != BudgetArea.SAVINGS);
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       Glob stat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
@@ -375,7 +382,7 @@ public class HistoChartBuilder {
     HistoDiffDatasetBuilder dataset = createDiffDataset("series");
 
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-    dataset.setInverted(!budgetArea.isIncome());
+    dataset.setInverted(!budgetArea.isIncome() && budgetArea != BudgetArea.SAVINGS);
 
     List<Integer> monthsToShow = getMonthIdsToShow(selectedMonthId);
 
@@ -385,7 +392,7 @@ public class HistoChartBuilder {
         .filterSelf(GlobMatchers.isTrue(SeriesBudget.ACTIVE), repository)
         .sort(SeriesBudget.MONTH);
 
-    double multiplier = Account.computeAmountMultiplier(series, repository);
+    double multiplier = Account.getMultiplierForInOrOutputOfTheAccount(series);
 
     for (Glob seriesBudget : list) {
       Integer monthId = seriesBudget.get(SeriesBudget.MONTH);

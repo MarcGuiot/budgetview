@@ -97,16 +97,18 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
 
   private void updateSeriesBudget(Integer currentMonthId, Glob series, Integer seriesId, Integer statMonthId,
                                   Double observedAmount, GlobRepository repository) {
-    if (!series.isTrue(Series.IS_AUTOMATIC) || statMonthId > currentMonthId) {
-      return;
-    }
-
     ReadOnlyGlobRepository.MultiFieldIndexed budgetIndex =
       repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId);
     Glob currentBudget = budgetIndex.findByIndex(SeriesBudget.MONTH, statMonthId).getGlobs().getFirst();
     if (currentBudget == null || !currentBudget.isTrue(SeriesBudget.ACTIVE)) {
       return;
     }
+    repository.update(currentBudget.getKey(), SeriesBudget.OBSERVED_AMOUNT, observedAmount);
+    
+    if (!series.isTrue(Series.IS_AUTOMATIC) || statMonthId > currentMonthId) {
+      return;
+    }
+
 
     if (statMonthId.equals(currentMonthId)) {
       GlobList seriesBudgets = budgetIndex.getGlobs().sort(SeriesBudget.MONTH);

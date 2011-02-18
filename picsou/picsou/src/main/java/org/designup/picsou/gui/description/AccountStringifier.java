@@ -22,6 +22,9 @@ public class AccountStringifier implements GlobStringifier {
     if (account.get(Account.ID).equals(Account.ALL_SUMMARY_ACCOUNT_ID)) {
       return Lang.get("account.summary.all");
     }
+    if (account.get(Account.ID).equals(Account.EXTERNAL_ACCOUNT_ID)) {
+      return (Lang.get("seriesEdition.account.external"));
+    }
 
     return account.get(Account.NAME);
   }

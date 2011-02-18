@@ -491,7 +491,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("08/07/2008", TransactionType.PLANNED, "Planned: Internet", "", -60.00, "Internet")
+      .add("24/07/2008", TransactionType.PLANNED, "Planned: Internet", "", -60.00, "Internet")
       .add("30/06/2008", TransactionType.PRELEVEMENT, "Free", "", -60.00, "Internet")
       .check();
 
@@ -501,7 +501,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.getRecurring().checkContainsSeries("Leisures");
 
     transactions.initContent()
-      .add("08/07/2008", TransactionType.PLANNED, "Planned: Leisures", "", -60.00, "Leisures")
+      .add("24/07/2008", TransactionType.PLANNED, "Planned: Leisures", "", -60.00, "Leisures")
       .add("30/06/2008", TransactionType.PRELEVEMENT, "Free", "", -60.00, "Leisures")
       .check();
   }
@@ -895,7 +895,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectSavings().editSeries("epargne")
       .setIrregular()
       .checkChart(new Object[][]{
-        {"2008", "June", -100.00, -100.00, true},
+        {"2008", "June", 100.00, 100.00, true},
         {"2008", "July", 0.00, 0.00, true},
         {"2008", "August", 0.00, 0.00},
       })

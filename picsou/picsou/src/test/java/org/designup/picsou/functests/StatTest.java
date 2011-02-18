@@ -75,7 +75,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("15/08/2008", TransactionType.PLANNED, "Planned: Secu", "", 10.00, "Secu")
+      .add("13/08/2008", TransactionType.PLANNED, "Planned: Secu", "", 10.00, "Secu")
       .add("13/08/2008", TransactionType.VIREMENT, "Pharma", "", 10.00, "Secu")
       .check();
   }
@@ -136,7 +136,8 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/15", -90.00, "Auchan")
       .load();
     categorization.setNewIncome("Salaire", "Salaire");
-    categorization.setNewVariable("Auchan", "courses");
+    categorization.setNewVariable("Auchan", "courses")
+      .editSeries("courses").alignPlannedAndActual().setPropagationEnabled().validate();
 
     budgetView.getSummary().checkEndPosition(0);
 

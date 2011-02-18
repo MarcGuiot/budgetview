@@ -279,20 +279,22 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.checkBalanceChartLabel("Savings accounts balance");
     seriesEvolution.balanceChart.getLeftDataset()
       .checkSize(1)
-      .checkValue("Added to savings", 150 + 50 + 200);
+      .checkValue("Added to savings", 620); //150 + 50 + 200);
     seriesEvolution.balanceChart.getRightDataset()
       .checkSize(1)
-      .checkValue("Substracted from savings", 300 + 70 + 40);
+      .checkValue("Substracted from savings", 630); //300 + 70 + 40);
 
     seriesEvolution.checkSeriesChartLabel("Main savings series");
     seriesEvolution.seriesChart.getLeftDataset()
-      .checkSize(3)
+      .checkSize(4)
       .checkValue("MainToImported", 150)
       .checkValue("MainToNonImported", 50)
-      .checkValue("ImportedFromExternal", 200);
+      .checkValue("ImportedFromExternal", 200)
+      .checkValue("ImportedFromNonImported", 220);
     seriesEvolution.seriesChart.getRightDataset()
-      .checkSize(3)
+      .checkSize(4)
       .checkValue("ImportedToExternal", 300)
+      .checkValue("ImportedFromNonImported", 220)
       .checkValue("ImportedToMain", 70)
       .checkValue("MainFromNonImported", 40);
   }

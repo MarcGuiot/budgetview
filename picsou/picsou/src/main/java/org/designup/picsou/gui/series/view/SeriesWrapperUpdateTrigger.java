@@ -16,8 +16,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
     changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Integer seriesId = key.get(Series.ID);
-        if (seriesId.equals(Series.UNCATEGORIZED_SERIES_ID) ||
-            values.isTrue(Series.IS_MIRROR)) {
+        if (seriesId.equals(Series.UNCATEGORIZED_SERIES_ID) || Series.isSavingToExternal(values)) {
           return;
         }
         Glob budgetAreaWrapper =
@@ -103,7 +102,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
 
       for (Glob series : repository.getAll(Series.TYPE)) {
         Integer budgetAreaId = series.get(Series.BUDGET_AREA);
-        if (BudgetArea.UNCATEGORIZED.getId().equals(budgetAreaId)) {
+        if (BudgetArea.UNCATEGORIZED.getId().equals(budgetAreaId) || Series.isSavingToExternal(series)) {
           continue;
         }
         Integer budgetAreaWrapperId = budgetAreaIds.get(budgetAreaId);

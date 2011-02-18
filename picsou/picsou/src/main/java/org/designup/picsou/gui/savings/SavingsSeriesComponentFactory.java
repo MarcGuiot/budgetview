@@ -86,9 +86,7 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
       }
       gauge = BudgetAreaGaugeFactory.createSavingsGauge(mainAccount);
     }
-    final double multiplier = Account.getMultiplierForInOrOutputOfTheAccount(repository.findLinkTarget(series, Series.FROM_ACCOUNT),
-                                                                             repository.findLinkTarget(series, Series.TO_ACCOUNT),
-                                                                             account);
+    final double multiplier = Account.getMultiplierForInOrOutputOfTheAccount(series);
 
     final GlobGaugeView gaugeView =
       new GlobGaugeView(PeriodSeriesStat.TYPE, gauge, BudgetArea.SAVINGS, PeriodSeriesStat.AMOUNT,
@@ -123,9 +121,8 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
   }
 
   private GlobListStringifier getStringifier(Glob series, final DoubleField field) {
-    final double multiplier = Account.getMultiplierForInOrOutputOfTheAccount(repository.findLinkTarget(series, Series.FROM_ACCOUNT),
-                                                                             repository.findLinkTarget(series, Series.TO_ACCOUNT),
-                                                                             account);
+    final double multiplier =
+      Account.getMultiplierForInOrOutputOfTheAccount(series);
     return new GlobListStringifier() {
       public String toString(GlobList list, GlobRepository repository) {
         Glob first = list.getFirst();

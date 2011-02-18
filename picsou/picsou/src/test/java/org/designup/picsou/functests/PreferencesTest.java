@@ -29,27 +29,27 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("15/08/2010", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire")
-      .add("08/08/2010", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF")
       .add("08/08/2010", TransactionType.PLANNED, "Planned: Courant", "", -95.00, "Courant")
+      .add("07/08/2010", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire")
+      .add("01/08/2010", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF")
       .check();
 
     operations.openPreferences().setFutureMonthsCount(12).validate();
     timeline.checkSpanEquals("2008/08", "2009/08");
     timeline.selectLast();
     transactions.initContent()
-      .add("15/08/2009", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire")
-      .add("08/08/2009", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF")
       .add("08/08/2009", TransactionType.PLANNED, "Planned: Courant", "", -95.00, "Courant")
+      .add("07/08/2009", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire")
+      .add("01/08/2009", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF")
       .check();
 
     operations.openPreferences().setFutureMonthsCount(36).validate();
 
     timeline.selectLast();
     transactions.initContent()
-      .add("15/08/2011", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire")
       .add("08/08/2011", TransactionType.PLANNED, "Planned: Courant", "", -95.00, "Courant")
-      .add("08/08/2011", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF")
+      .add("07/08/2011", TransactionType.PLANNED, "Planned: Salaire", "", 1200.00, "Salaire")
+      .add("01/08/2011", TransactionType.PLANNED, "Planned: EDF", "", -55.00, "EDF")
       .check();
 
     operations.openPreferences().setFutureMonthsCount(12).validate();

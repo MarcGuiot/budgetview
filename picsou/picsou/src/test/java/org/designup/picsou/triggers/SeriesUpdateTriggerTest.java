@@ -35,13 +35,13 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
         .getValues(Transaction.ID);
     listener.assertLastChangesEqual(
       Transaction.TYPE,
-      "  <create account='-1' amount='-29.9' bankDay='8' bankMonth='200809' mirror='false'" +
-      "          day='8' id='" + ids[1] + "' label='free telecom' month='200809'" +
-      "          budgetDay='8' budgetMonth='200809' positionDay='8' positionMonth='200809' " +
+      "  <create account='-1' amount='-29.9' bankDay='16' bankMonth='200809' mirror='false'" +
+      "          day='16' id='" + ids[1] + "' label='free telecom' month='200809'" +
+      "          budgetDay='16' budgetMonth='200809' positionDay='16' positionMonth='200809' " +
       "          planned='true' series='100' transactionType='5' type='transaction' createdBySeries='false'/>" +
-      "  <create account='-1' amount='-29.9' bankDay='8' bankMonth='200808' mirror='false'" +
-      "          day='8' id='" + ids[0] + "' label='free telecom' month='200808'" +
-      "          budgetDay='8' budgetMonth='200808' positionDay='8' positionMonth='200808' " +
+      "  <create account='-1' amount='-29.9' bankDay='16' bankMonth='200808' mirror='false'" +
+      "          day='16' id='" + ids[0] + "' label='free telecom' month='200808'" +
+      "          budgetDay='16' budgetMonth='200808' positionDay='16' positionMonth='200808' " +
       "          planned='true' series='100' transactionType='5' type='transaction' createdBySeries='false'/>" +
       "");
   }

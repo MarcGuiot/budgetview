@@ -75,8 +75,8 @@ public class PositionTrigger implements ChangeSetListener {
       updatedAccount.remove(repository.get(Key.create(Account.TYPE, accountId)));
     }
     for (Glob account : updatedAccount) {
-      if (account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
-        if (account.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId())) {
+      if (AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
+        if (AccountCardType.DEFERRED.getId().equals(account.get(Account.CARD_TYPE))) {
           computeDefferedPosition(repository, comparator, transactions, account);
         }
         else {
@@ -93,9 +93,9 @@ public class PositionTrigger implements ChangeSetListener {
       GlobList accounts = repository.getAll(Account.TYPE);
       GlobList tmp = new GlobList();
       for (Glob account : accounts) {
-        if (account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())
-            && Account.MAIN_SUMMARY_ACCOUNT_ID != account.get(Account.ID)
-            && Account.ALL_SUMMARY_ACCOUNT_ID != account.get(Account.ID)) {
+        if (AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE))
+            && (Account.MAIN_SUMMARY_ACCOUNT_ID != account.get(Account.ID))
+            && (Account.ALL_SUMMARY_ACCOUNT_ID != account.get(Account.ID))) {
           tmp.add(account);
         }
       }
@@ -107,7 +107,7 @@ public class PositionTrigger implements ChangeSetListener {
       GlobList accounts = repository.getAll(Account.TYPE);
       GlobList tmp = new GlobList();
       for (Glob account : accounts) {
-        if (account.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())
+        if (AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE))
             && Account.SAVINGS_SUMMARY_ACCOUNT_ID != account.get(Account.ID)
             && Account.ALL_SUMMARY_ACCOUNT_ID != account.get(Account.ID)) {
           tmp.add(account);
