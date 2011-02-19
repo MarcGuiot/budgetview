@@ -47,21 +47,35 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
     checkRange(201010, 201110);
 
     timeline.selectMonth("2011/12");
-
-    summary.getMainChart();
     checkRange(201012, 201112);
 
     summary.getMainChart().scroll(-1);
-    checkRange(201012, 201112);
+    checkRange(201011, 201111);
 
     summary.getMainChart().scroll(+1);
-    checkRange(201101, 201201);
+    checkRange(201012, 201112);
+
+    summary.getMainChart().scroll(+20);
+    checkRange(201107, 201207);
+
+    summary.getMainChart().scroll(-1);
+    checkRange(201106, 201206);
+
+    summary.getMainChart().scroll(-20);
+    checkRange(201009, 201109);
+
+    summary.getMainChart().scroll(+1);
+    checkRange(201010, 201110);
+
+    summary.getMainChart().clickColumnId(201109);
+    checkRange(201010,201110);
+    timeline.checkSelection("2011/09");
   }
 
   public void testDoubleClick() throws Exception {
     operations.openPreferences().setFutureMonthsCount(6).validate();
     OfxBuilder.init(this)
-      .addBankAccount(-1, 10674, "00000123", 2800.0, "2011/01/10")
+      .addBankAccount(-1, 10674, "00000123", 2800.00, "2011/01/10")
       .addTransaction("2010/12/28", 3000.00, "WorldCo")
       .addTransaction("2010/09/28", 3000.00, "WorldCo")
       .load();

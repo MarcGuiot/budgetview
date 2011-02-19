@@ -144,7 +144,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     views.selectEvolution();
     seriesEvolution.select("Main accounts");
     seriesEvolution.histoChart
-      .checkColumnCount(7)
+      .checkColumnCount(13)
       .checkLineColumn(0, "J", "2009", 1000.00, true)
       .checkLineColumn(1, "A", "2009", 800.00)
       .checkLineColumn(2, "S", "2009", 600.00)
@@ -155,7 +155,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
     seriesEvolution.select("Savings accounts");
     seriesEvolution.histoChart
-      .checkColumnCount(7)
+      .checkColumnCount(13)
       .checkLineColumn(0, "J", "2009", 200.00, true)
       .checkLineColumn(1, "A", "2009", 400.00)
       .checkLineColumn(2, "S", "2009", 600.00)
@@ -170,7 +170,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
     views.selectEvolution();
     seriesEvolution.histoChart
-      .checkColumnCount(7)
+      .checkColumnCount(13)
       .checkLineColumn(0, "J", "2009", 300.00, true)
       .checkLineColumn(1, "A", "2009", 500.00)
       .checkLineColumn(2, "S", "2009", 700.00)
@@ -179,7 +179,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
     seriesEvolution.select("Main accounts");
     seriesEvolution.histoChart
-      .checkColumnCount(7)
+      .checkColumnCount(13)
       .checkLineColumn(0, "J", "2009", 1000.00, true)
       .checkLineColumn(1, "A", "2009", 800.00)
       .checkLineColumn(2, "S", "2009", 600.00)
@@ -193,7 +193,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
     views.selectEvolution();
     seriesEvolution.histoChart
-      .checkColumnCount(7)
+      .checkColumnCount(13)
       .checkLineColumn(0, "J", "2009", 500.00, true)
       .checkLineColumn(1, "A", "2009", 300.00)
       .checkLineColumn(2, "S", "2009", 100.00)
@@ -219,11 +219,11 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2009/07");
     seriesEvolution.select("Income");
     seriesEvolution.histoChart
-      .checkColumnCount(8)
+      .checkColumnCount(14)
       .checkDiffColumn(0, "June", "2009", 320.00, 320.00)
       .checkDiffColumn(1, "Jul", "2009", 320.00, 320.00, true);
 
-    seriesEvolution.histoChart.click(0.95);
+    seriesEvolution.histoChart.clickColumn(6);
 
     timeline.checkSelection("2009/12");
     seriesEvolution.checkSelected("Income");

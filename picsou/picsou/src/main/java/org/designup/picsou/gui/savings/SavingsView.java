@@ -5,10 +5,11 @@ import org.designup.picsou.gui.accounts.CreateAccountAction;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.position.SavingsAccountPositionLabels;
 import org.designup.picsou.gui.budget.SeriesEditionButtons;
+import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.evolution.histobuilders.AccountHistoChartUpdater;
 import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilder;
-import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilderConfig;
+import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartRange;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
@@ -118,7 +119,10 @@ public class SavingsView extends View implements GlobSelectionListener {
       cellBuilder.add("savingsSeries", seriesView.getPanel());
       cellBuilder.addDisposeListener(seriesView);
 
-      HistoChartBuilder histoChartBuilder = new HistoChartBuilder(new HistoChartBuilderConfig(false, false, false, false, 6, 12, false), repository, directory, selectionService);
+      HistoChartBuilder histoChartBuilder =
+        new HistoChartBuilder(new HistoChartConfig(false, false, false, false),
+                              new HistoChartRange(6, 12, false, repository),
+                              repository, directory, selectionService);
       AccountHistoChartUpdater updater = new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
         protected void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
           if (account.exists()) {
