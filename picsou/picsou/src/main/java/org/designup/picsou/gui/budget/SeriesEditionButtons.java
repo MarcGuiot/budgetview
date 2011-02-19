@@ -80,7 +80,7 @@ public class SeriesEditionButtons {
     if (repository.contains(Project.TYPE, GlobMatchers.linkedTo(series.getKey(), Project.SERIES))) {
 
     }
-    seriesEditor.show(series, selectedMonthIds);
+    seriesEditor.showSeries(series, selectedMonthIds);
   }
 
   private class TooltipUpdater implements ChangeSetListener {

@@ -52,7 +52,7 @@ public class SeriesEvolutionLabelEditor extends SeriesEvolutionEditor {
     }
 
     public void actionPerformed(ActionEvent e) {
-      seriesEditor.show(currentSeries, Collections.singleton(referenceMonthId));
+      seriesEditor.showSeries(currentSeries, Collections.singleton(referenceMonthId));
     }
   }
 }

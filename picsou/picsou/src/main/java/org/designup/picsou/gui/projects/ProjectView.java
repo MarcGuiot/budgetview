@@ -3,10 +3,12 @@ package org.designup.picsou.gui.projects;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.description.MonthRangeFormatter;
+import org.designup.picsou.gui.projects.actions.CreateProjectAction;
+import org.designup.picsou.gui.projects.utils.ProjectAmountStringifier;
+import org.designup.picsou.gui.projects.utils.ProjectFilter;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.model.ProjectItem;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -25,8 +27,6 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.util.SortedSet;
 
 public class ProjectView extends View {
@@ -45,7 +45,7 @@ public class ProjectView extends View {
 
     projectRepeat = builder.addRepeat("projectRepeat", Project.TYPE, GlobMatchers.ALL, new ProjectComponentFactory());
 
-    builder.add("createProject", new CreateProjectAction());
+    builder.add("createProject", new CreateProjectAction(directory));
 
     parentBuilder.add("projectView", builder);
 
@@ -110,13 +110,4 @@ public class ProjectView extends View {
     }
   }
 
-  private class CreateProjectAction extends AbstractAction {
-    private CreateProjectAction() {
-      super(Lang.get("projectView.create"));
-    }
-
-    public void actionPerformed(ActionEvent actionEvent) {
-      editionDialog.showNewProject();
-    }
-  }
 }

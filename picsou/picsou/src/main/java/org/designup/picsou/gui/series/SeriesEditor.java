@@ -29,7 +29,7 @@ public class SeriesEditor {
     return createdKey;
   }
 
-  public void show(Glob series, Set<Integer> selectedMonthIds) {
+  public void showSeries(Glob series, Set<Integer> selectedMonthIds) {
     Glob project = Project.findProject(series, repository);
     if (project != null) {
       projectEditionDialog.show(project.getKey());
@@ -50,6 +50,10 @@ public class SeriesEditor {
       seriesAmountEditionDialog.show(series, selectedMonthIds);
     }
     lastSelectedSubSeriesId = null;
+  }
+
+  public void showNewProject() {
+    projectEditionDialog.showNewProject();
   }
 
   public Integer getLastSelectedSubSeriesId() {

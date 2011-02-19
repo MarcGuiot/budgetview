@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.projects;
+package org.designup.picsou.gui.projects.utils;
 
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;

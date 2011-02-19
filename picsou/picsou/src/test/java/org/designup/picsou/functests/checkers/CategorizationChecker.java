@@ -5,6 +5,7 @@ import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.model.Glob;
 import org.uispec4j.Button;
@@ -295,8 +296,17 @@ public class CategorizationChecker extends ViewChecker {
     return SeriesEditionDialogChecker.open(getEditSeriesButton());
   }
 
-  Button getEditSeriesButton() {
+  private Button getEditSeriesButton() {
     return getPanel().getButton("editSeries");
+  }
+
+  public Button getCreateProjectButton() {
+    return getPanel().getButton(Lang.get("projectView.create"));
+  }
+
+  public ProjectEditionChecker editProject(String seriesLabel) {
+    Button button = getPanel().getPanel("seriesCard").getButton("editSeries:" + seriesLabel);
+    return ProjectEditionChecker.open(button);
   }
 
   public CategorizationChecker checkTable(Object[][] content) {

@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.projects;
+package org.designup.picsou.gui.projects.utils;
 
 import org.designup.picsou.model.Project;
 import org.globsframework.model.Glob;

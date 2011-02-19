@@ -16,6 +16,8 @@ import org.designup.picsou.gui.description.SeriesDescriptionStringifier;
 import org.designup.picsou.gui.description.SeriesNameComparator;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.projects.ProjectView;
+import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.signpost.guides.CategorizationAreaSignpost;
@@ -385,6 +387,9 @@ public class CategorizationView extends View implements TableView, Filterable, C
       CreateAccountAction action = new CreateAccountAction(AccountType.SAVINGS, repository, directory);
       action.setAccountTypeEditable(false);
       return action;
+    }
+    if (BudgetArea.EXTRAS.equals(budgetArea)) {
+      return new CreateProjectAction(directory);
     }
     return new DisabledAction();
   }

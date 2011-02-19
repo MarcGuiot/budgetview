@@ -7,7 +7,11 @@ public class ExtrasBudgetAreaCategorizationChecker extends BudgetAreaCategorizat
     super(categorizationChecker, BudgetArea.EXTRAS);
   }
 
+  public ProjectEditionChecker createProject() {
+    return ProjectEditionChecker.open(categorizationChecker.getCreateProjectButton());
+  }
+
   public ProjectEditionChecker editProjectSeries(String seriesName) {
-    return ProjectEditionChecker.open(categorizationChecker.getEditSeriesButton());
+    return categorizationChecker.editProject(seriesName);
   }
 }

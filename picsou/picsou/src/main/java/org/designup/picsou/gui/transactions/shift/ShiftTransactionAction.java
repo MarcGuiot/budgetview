@@ -10,7 +10,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.*;
+
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -151,7 +151,7 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
                              directory,
                              Month.getFullLabel(targetMonth)) {
         protected void postValidate() {
-          getSeriesEditor().show(series, Collections.singleton(transaction.get(Transaction.BUDGET_MONTH)));
+          getSeriesEditor().showSeries(series, Collections.singleton(transaction.get(Transaction.BUDGET_MONTH)));
         }
       };
     dialog.show();

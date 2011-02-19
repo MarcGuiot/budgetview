@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.categorization.components;
 
-import com.jidesoft.swing.DefaultOverlayable;
 import org.designup.picsou.gui.description.SeriesDescriptionStringifier;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.model.*;
@@ -193,7 +192,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
 
     public void actionPerformed(ActionEvent e) {
       Glob series = repository.get(seriesKey);
-      seriesEditor.show(series, selectionService.getSelection(Month.TYPE).getValueSet(Month.ID));
+      seriesEditor.showSeries(series, selectionService.getSelection(Month.TYPE).getValueSet(Month.ID));
     }
   }
 

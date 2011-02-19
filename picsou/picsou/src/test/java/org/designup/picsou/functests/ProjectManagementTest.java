@@ -122,8 +122,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .openDeleteAndNavigate();
     views.checkCategorizationSelected();
     categorization.checkTable(new Object[][]{
-      {"01/01/2011","My project",	"HOTEL",	-500.0},
-      {"01/01/2011","My project",	"RESA",	-200.0},
+      {"01/01/2011", "My project", "HOTEL", -500.0},
+      {"01/01/2011", "My project", "RESA", -200.0},
     });
     categorization.checkSelectedTableRows(0, 1);
     categorization.unselectAllTransactions();
@@ -134,8 +134,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
                               "Some operations have been assigned to this project");
     views.checkCategorizationSelected();
     categorization.checkTable(new Object[][]{
-      {"01/01/2011","",	"HOTEL",	-500.0},
-      {"01/01/2011","",	"RESA",	-200.0},
+      {"01/01/2011", "", "HOTEL", -500.0},
+      {"01/01/2011", "", "RESA", -200.0},
     });
     categorization.checkSelectedTableRows(0, 1);
 
@@ -254,5 +254,26 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths(201103, 201105);
     projects.checkProjectList("Project 2");
+  }
+
+  public void testCanCreateProjectsFromTheCategorizationView() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/01/10")
+      .addTransaction("2010/11/01", 1000.00, "Income")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2011/01/05", 100.00, "Resa")
+      .load();
+
+    categorization.selectTransaction("Resa");
+    categorization.selectExtras()
+      .createProject()
+      .setName("My project")
+      .setItem(0, "Trip", 201101, -150.00)
+      .validate();
+
+    projects.checkProjectList("My project");
+    projects.edit("My project")
+    .checkItems("Trip | January 2011 | -150.00")
+    .validate();
   }
 }
