@@ -33,10 +33,12 @@ public class SeriesBudgetSliderAdapter implements GlobSliderAdapter, ColorChange
     labelFont = Gui.getDefaultFont().deriveFont(Font.PLAIN, 9);
     scales.add(new Scale(200, 25, 5, 25));
     scales.add(new Scale(500, 50, 10, 100));
-    scales.add(new Scale(1000, 50, 10, 250));
+    scales.add(new Scale(1000, 100, 25, 250));
     scales.add(new Scale(2000, 250, 50, 500));
-    scales.add(new Scale(5000, 500, 50, 1000));
-    scales.add(new Scale(10000, 1000, 100, 2000));
+    scales.add(new Scale(5000, 500, 100, 1000));
+    scales.add(new Scale(7500, 750, 100, 1000));
+    scales.add(new Scale(10000, 1000, 250, 1000));
+    scales.add(new Scale(20000, 2500, 500, 5000));
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
