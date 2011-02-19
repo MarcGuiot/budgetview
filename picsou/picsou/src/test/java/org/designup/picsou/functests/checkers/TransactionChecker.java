@@ -4,22 +4,16 @@ import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.converters.BankDateCellConverter;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.functests.checkers.converters.SeriesCellConverter;
-import org.designup.picsou.gui.components.PicsouFrame;
-import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.transactions.TransactionView;
-import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Strings;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.KeyUtils;
@@ -27,6 +21,8 @@ import org.uispec4j.utils.KeyUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class TransactionChecker extends ViewChecker {
   public static final String TO_CATEGORIZE = "To categorize";
@@ -55,7 +51,6 @@ public class TransactionChecker extends ViewChecker {
       table = mainWindow.getTable("transactionsTable");
       table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
       table.setCellValueConverter(TransactionView.BANK_DATE_COLUMN_INDEX, new BankDateCellConverter());
-      table.setCellValueConverter(TransactionView.SUBSERIES_COLUMN_INDEX, new SubSeriesCellValueConverter(mainWindow));
       table.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter(true));
     }
     return table;
@@ -106,11 +101,6 @@ public class TransactionChecker extends ViewChecker {
     assertThat(seriesButton.textEquals(seriesName));
   }
 
-  public void checkSeries(int row, String seriesName, String subSeries) {
-    checkSeries(row, seriesName);
-    assertThat(getTable().cellEquals(row, TransactionView.SUBSERIES_COLUMN_INDEX, subSeries));
-  }
-
   private int getIndexOf(String transactionLabel) {
     assertThat(getTable().containsRow(TransactionView.LABEL_COLUMN_INDEX, transactionLabel));
     return getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, transactionLabel);
@@ -158,7 +148,6 @@ public class TransactionChecker extends ViewChecker {
       views.selectData();
       amountTable = mainWindow.getTable(Transaction.TYPE.getName());
       amountTable.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
-      amountTable.setCellValueConverter(TransactionView.SUBSERIES_COLUMN_INDEX, new SubSeriesCellValueConverter(mainWindow));
       amountTable.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter(false));
     }
     return amountTable;
@@ -360,11 +349,22 @@ public class TransactionChecker extends ViewChecker {
 
     public ContentChecker add(String date, TransactionType type, String label,
                               String note, double amount, String series) {
-      return add(date, type, label, note, amount, series, "");
+      return add(date, date, type, label, note, amount, series);
+    }
+
+    public ContentChecker add(String date, String bankDate, TransactionType type, String label,
+                              String note, double amount) {
+      return add(date, bankDate, type, label, note, amount, TO_CATEGORIZE);
+    }
+
+    public ContentChecker add(String date, TransactionType type, String label,
+                              String note, double amount) {
+      add(date, date, type, label, note, amount, TO_CATEGORIZE);
+      return this;
     }
 
     public ContentChecker add(String userDate, String bankDate, TransactionType type, String label,
-                              String note, double amount, String series, String subSeries) {
+                              String note, double amount, String series) {
       if (type == TransactionType.PLANNED) {
         if (amount > 0) {
           type = TransactionType.VIREMENT;
@@ -379,25 +379,9 @@ public class TransactionChecker extends ViewChecker {
       else {
         label = "Planned" + label.substring("Planned".length());
       }
-      add(new Object[]{userDate, bankDate, "(" + type.getName() + ")" + series, subSeries, label,
+      add(new Object[]{userDate, bankDate, "(" + type.getName() + ")" + series, label,
                        TransactionChecker.this.toString(amount),
                        note});
-      return this;
-    }
-
-    public ContentChecker add(String date, String bankDate, TransactionType type, String label,
-                              String note, double amount) {
-      return add(date, bankDate, type, label, note, amount, TO_CATEGORIZE, "");
-    }
-
-    public ContentChecker add(String date, TransactionType type, String label,
-                              String note, double amount, String series, String subSeries) {
-      return add(date, date, type, label, note, amount, series, subSeries);
-    }
-
-    public ContentChecker add(String date, TransactionType type, String label,
-                              String note, double amount) {
-      add(date, type, label, note, amount, TO_CATEGORIZE);
       return this;
     }
 
@@ -409,7 +393,6 @@ public class TransactionChecker extends ViewChecker {
       Table table = getTable();
       for (int row = 0; row < table.getRowCount(); row++) {
         String type = table.getContentAt(row, 0, transactionTypeDumper).toString();
-        String subSeries = table.getContentAt(row, TransactionView.SUBSERIES_COLUMN_INDEX).toString();
         String date = table.getContentAt(row, TransactionView.DATE_COLUMN_INDEX).toString();
         String bankDate = table.getContentAt(row, TransactionView.BANK_DATE_COLUMN_INDEX).toString();
         String series = table.getContentAt(row, TransactionView.SERIES_COLUMN_INDEX, new TableCellValueConverter() {
@@ -433,17 +416,11 @@ public class TransactionChecker extends ViewChecker {
           .append(amount);
 
         boolean hasSeries = !TO_CATEGORIZE.equals(series) && Strings.isNotEmpty(series);
-        boolean hasCategory = Strings.isNotEmpty(subSeries);
-        if (hasSeries || hasCategory) {
-          if (hasSeries) {
-            builder
-              .append(", \"")
-              .append(series)
-              .append("\"");
-          }
-          if (hasCategory) {
-            builder.append(", ").append(subSeries);
-          }
+        if (hasSeries) {
+          builder
+            .append(", \"")
+            .append(series)
+            .append("\"");
         }
         builder.append(")\n");
       }
@@ -472,39 +449,13 @@ public class TransactionChecker extends ViewChecker {
     public void check() {
       Object[][] expectedContent = content.toArray(new Object[content.size()][]);
       UISpecAssert.assertTrue(getTable()
-        .contentEquals(new String[]{Lang.get("transactionView.date.user"),
-                                    Lang.get("transactionView.date.bank"),
-                                    Lang.get("series"),
-                                    Lang.get("subSeries"),
-                                    Lang.get("label"),
-                                    Lang.get("amount"),
-                                    Lang.get("note")},
-                       expectedContent));
-    }
-  }
-
-  private static class SubSeriesCellValueConverter implements TableCellValueConverter {
-    private GlobRepository repository;
-
-    private SubSeriesCellValueConverter(Window window) {
-      Container container = window.getAwtComponent();
-      if (container instanceof PicsouFrame) {
-        PicsouFrame frame = (PicsouFrame)container;
-        this.repository = frame.getRepository();
-      }
-      else if (container instanceof PicsouDialog) {
-        PicsouFrame frame = (PicsouFrame)container.getParent();
-        this.repository = frame.getRepository();
-      }
-    }
-
-    public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
-      Glob transaction = (Glob)modelObject;
-      Glob subSeries = repository.findLinkTarget(transaction, Transaction.SUB_SERIES);
-      if (subSeries == null) {
-        return "";
-      }
-      return subSeries.get(SubSeries.NAME);
+                                .contentEquals(new String[]{Lang.get("transactionView.date.user"),
+                                                            Lang.get("transactionView.date.bank"),
+                                                            Lang.get("series"),
+                                                            Lang.get("label"),
+                                                            Lang.get("amount"),
+                                                            Lang.get("note")},
+                                               expectedContent));
     }
   }
 }

@@ -102,9 +102,9 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
       {"30/06/2008", "Health / Pharmacy", "PHARMAPLUS", -129.90},
     });
 
-    transactions.checkSeries(0, "Health", "Pharmacy");
+    transactions.checkSeries(0, "Health");
     transactions.initContent()
-      .add("30/06/2008", TransactionType.PRELEVEMENT, "PHARMAPLUS", "", -129.90, "Health", "Pharmacy")
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "PHARMAPLUS", "", -129.90, "Health")
       .check();
   }
 
@@ -140,7 +140,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkSeriesIsSelectedWithSubSeries("Groceries", "Misc");
 
     transactions.initContent()
-      .add("30/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -129.90, "Groceries", "Misc")
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -129.90, "Groceries")
       .check();
   }
 
@@ -175,7 +175,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("24/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison", "")
+      .add("24/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison")
       .check();
 
     budgetView.variable.editSeries("Maison")
@@ -185,7 +185,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .add("24/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison", "")
+      .add("24/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison")
       .check();
 
     SeriesEditionDialogChecker editionDialogChecker = budgetView.variable.editSeries("Maison");
@@ -198,7 +198,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("24/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison", "")
+      .add("24/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison")
       .check();
   }
 

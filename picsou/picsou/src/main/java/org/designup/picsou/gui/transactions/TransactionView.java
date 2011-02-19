@@ -13,7 +13,6 @@ import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;
 import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.description.TransactionBudgetAreaStringifier;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.transactions.columns.*;
@@ -54,19 +53,17 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 public class TransactionView extends View implements Filterable {
   public static final int DATE_COLUMN_INDEX = 0;
   public static final int BANK_DATE_COLUMN_INDEX = 1;
-  public static final int BUDGET_AREA_COLUMN_INDEX = 2;
-  public static final int SERIES_COLUMN_INDEX = 3;
-  public static final int SUBSERIES_COLUMN_INDEX = 4;
-  public static final int LABEL_COLUMN_INDEX = 5;
-  public static final int AMOUNT_COLUMN_INDEX = 6;
-  public static final int NOTE_COLUMN_INDEX = 7;
-  public static final int ACCOUNT_BALANCE_INDEX = 8;
-  public static final int BALANCE_INDEX = 9;
-  public static final int ACCOUNT_NAME_INDEX = 10;
+  public static final int SERIES_COLUMN_INDEX = 2;
+  public static final int LABEL_COLUMN_INDEX = 3;
+  public static final int AMOUNT_COLUMN_INDEX = 4;
+  public static final int NOTE_COLUMN_INDEX = 5;
+  public static final int ACCOUNT_BALANCE_INDEX = 6;
+  public static final int BALANCE_INDEX = 7;
+  public static final int ACCOUNT_NAME_INDEX = 8;
 
   public static final String ACCOUNT_FILTER = "accounts";
   public static final String SERIES_FILTER = "series";
-  private static final int[] COLUMN_SIZES = {10, 10, 10, 15, 10, 30, 9, 15, 10, 10, 30};
+  private static final int[] COLUMN_SIZES = {10, 10, 15, 40, 9, 15, 10, 10, 30};
   private static final GlobMatcher HIDE_PLANNED_MATCHER = not(isTrue(Transaction.PLANNED));
 
   private GlobTableView view;
@@ -252,7 +249,6 @@ public class TransactionView extends View implements Filterable {
 
     FontLocator fontLocator = directory.get(FontLocator.class);
     Font dateFont = fontLocator.get("transactionView.date");
-    Font subSeriesFont = fontLocator.get("transactionView.category");
 
     view
       .addColumn(Lang.get("transactionView.date.user"),
@@ -261,11 +257,7 @@ public class TransactionView extends View implements Filterable {
                  new TransactionDateStringifier(TransactionComparator.DESCENDING_BANK_SPLIT_AFTER,
                                                 Transaction.BANK_MONTH,
                                                 Transaction.BANK_DAY), LabelCustomizers.font(dateFont))
-      .addColumn(Lang.get("transactionView.budgetArea"), new TransactionBudgetAreaStringifier())
       .addColumn(new TransactionSeriesColumn(view, rendererColors, descriptionService, repository, directory))
-      .addColumn(Lang.get("subSeries"),
-                 descriptionService.getStringifier(Transaction.SUB_SERIES),
-                 LabelCustomizers.font(subSeriesFont))
       .addColumn(Lang.get("label"),
                  descriptionService.getStringifier(Transaction.LABEL),
                  LabelCustomizers.chain(LabelCustomizers.BOLD,
