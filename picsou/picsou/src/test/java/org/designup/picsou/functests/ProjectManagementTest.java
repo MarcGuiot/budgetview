@@ -78,6 +78,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .deleteItem(1)
       .validate();
 
+    timeline.selectMonth("2011/01");
     projects.checkProject("My project", "Jan 2011", 200.00);
 
     timeline.selectMonth("2011/02");
@@ -205,8 +206,53 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
                   "Hotel | February 2011 | -500.00")
       .cancel();
   }
-//
-//  public void testSeriesIsUpdatedWhenProjectIsUpdated() throws Exception {
-//    fail("tbd");
-//  }
+
+  public void testOnlyPresentAndFutureProjetsAreShown() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/01/10")
+      .addTransaction("2010/11/01", 1000.00, "Income")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2011/01/05", 100.00, "Resa")
+      .load();
+
+    projects.create()
+      .setName("Project 1")
+      .setItem(0, "Reservation", 201101, -100.00)
+      .addItem(1, "Hotel", 201102, -500.00)
+      .validate();
+
+    projects.create()
+      .setName("Project 2")
+      .setItem(0, "Voyage", 201105, -200.00)
+      .addItem(1, "Location", 201105, -1000.00)
+      .validate();
+
+    projects.checkProjectList("Project 1", "Project 2");
+
+    timeline.selectMonth(201103);
+    projects.checkProjectList("Project 2");
+
+    timeline.selectMonth(201102);
+    projects.checkProjectList("Project 1", "Project 2");
+
+    timeline.selectMonth(201106);
+    projects.checkNoProjectShown();
+
+    timeline.selectMonth(201102);
+    projects.checkProjectList("Project 1", "Project 2");
+
+    projects.edit("Project 1")
+      .setItemDate(1, 201101)
+      .validate();
+    projects.checkProjectList("Project 2");
+
+    timeline.selectMonths(201101, 201105);
+    projects.checkProjectList("Project 1", "Project 2");
+
+    timeline.selectMonths(201103, 201105);
+    projects.checkProjectList("Project 2");
+  }
 }

@@ -13,7 +13,6 @@ import org.uispec4j.assertion.UISpecAssert;
 
 import javax.swing.*;
 import java.util.*;
-import java.lang.reflect.InvocationTargetException;
 
 public class TimeViewChecker extends GuiChecker {
   protected TimeViewPanel timeViewPanel;
@@ -76,12 +75,32 @@ public class TimeViewChecker extends GuiChecker {
     timeViewPanel.selectMonthByIndex(index);
   }
 
-  public void selectMonth(String yyyymm) throws InvocationTargetException, InterruptedException {
+  public void selectMonth(final int monthId) throws Exception {
+    SwingUtilities.invokeAndWait(new Runnable() {
+      public void run() {
+        timeViewPanel.selectMonths(Collections.singleton(monthId));
+      }
+    });
+  }
+
+  public void selectMonth(String yyyymm) throws Exception {
     selectMonths(yyyymm);
     checkSelection(yyyymm);
   }
 
-  public void selectMonths(String... yyyymm) throws InvocationTargetException, InterruptedException {
+  public void selectMonths(final int... monthIds) throws Exception {
+    final Set<Integer> monthSet = new HashSet<Integer>();
+    for (int monthId : monthIds) {
+      monthSet.add(monthId);
+    }
+    SwingUtilities.invokeAndWait(new Runnable() {
+      public void run() {
+        timeViewPanel.selectMonths(monthSet);
+      }
+    });
+  }
+
+  public void selectMonths(String... yyyymm) throws Exception {
     final Set<Integer> monthIds = new HashSet<Integer>();
     for (String date : yyyymm) {
       monthIds.add(parseMonthId(date));
@@ -93,7 +112,7 @@ public class TimeViewChecker extends GuiChecker {
     });
   }
 
-  public void selectLast() throws InvocationTargetException, InterruptedException {
+  public void selectLast() throws Exception {
     SwingUtilities.invokeAndWait(new Runnable() {
       public void run() {
         timeViewPanel.selectLastMonth();
@@ -101,7 +120,7 @@ public class TimeViewChecker extends GuiChecker {
     });
   }
 
-  public void selectNone() throws InvocationTargetException, InterruptedException {
+  public void selectNone() throws Exception {
     SwingUtilities.invokeAndWait(new Runnable() {
       public void run() {
         timeViewPanel.selectMonths(Collections.<Integer>emptySet());
@@ -109,7 +128,7 @@ public class TimeViewChecker extends GuiChecker {
     });
   }
 
-  public void selectAll() throws InvocationTargetException, InterruptedException {
+  public void selectAll() throws Exception {
     SwingUtilities.invokeAndWait(new Runnable() {
       public void run() {
         timeViewPanel.selectAll();

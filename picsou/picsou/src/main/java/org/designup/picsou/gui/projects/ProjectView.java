@@ -3,12 +3,16 @@ package org.designup.picsou.gui.projects;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.description.MonthRangeFormatter;
+import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.model.ProjectItem;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.Glob;
@@ -18,6 +22,7 @@ import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -27,6 +32,7 @@ import java.util.SortedSet;
 public class ProjectView extends View {
 
   private ProjectEditionDialog editionDialog;
+  private GlobRepeat projectRepeat;
 
   public ProjectView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -37,11 +43,27 @@ public class ProjectView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectView.splits",
                                                       repository, directory);
 
-    builder.addRepeat("projectRepeat", Project.TYPE, GlobMatchers.ALL, new ProjectComponentFactory());
+    projectRepeat = builder.addRepeat("projectRepeat", Project.TYPE, GlobMatchers.ALL, new ProjectComponentFactory());
 
     builder.add("createProject", new CreateProjectAction());
 
     parentBuilder.add("projectView", builder);
+
+    repository.addChangeListener(new TypeChangeSetListener(ProjectItem.TYPE) {
+      protected void update(GlobRepository repository) {
+        updateFilter();
+      }
+    });
+    selectionService.addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+        updateFilter();
+      }
+    }, Month.TYPE);
+  }
+
+  private void updateFilter() {
+    SortedSet<Integer> months = selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID);
+    projectRepeat.setFilter(new ProjectFilter(months));
   }
 
   private class ProjectComponentFactory implements RepeatComponentFactory<Glob> {
