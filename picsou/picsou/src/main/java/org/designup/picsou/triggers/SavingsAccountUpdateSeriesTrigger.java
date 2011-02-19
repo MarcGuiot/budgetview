@@ -31,8 +31,8 @@ public class SavingsAccountUpdateSeriesTrigger implements ChangeSetListener {
           createSerie(repository, repository.get(key));
         }
         else if (values.contains(Account.IS_IMPORTED_ACCOUNT)) {
-          createMirrorSeriesOnChange(key, repository);
           deleteCreatedBySeries(key, repository);
+          createMirrorSeriesOnChange(key, repository);
         }
       }
 
