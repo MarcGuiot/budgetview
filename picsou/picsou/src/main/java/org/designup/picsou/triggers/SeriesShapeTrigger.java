@@ -81,7 +81,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
               .findByIndex(SeriesBudget.MONTH, budgetMonthId)
               .getGlobs().getFirst();
             if (budget != null && isSmallDiff(budget)
-                 && budget.get(SeriesBudget.ACTIVE)) {
+                && budget.get(SeriesBudget.ACTIVE)) {
               addSeries(budgetMonthId, glob.get(Transaction.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
             }
           }
@@ -101,6 +101,33 @@ public class SeriesShapeTrigger implements ChangeSetListener {
       }
     });
 
+    changeSet.safeVisit(SeriesBudget.TYPE, new ChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+      }
+
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+        if (values.contains(SeriesBudget.AMOUNT) || values.contains(SeriesBudget.OBSERVED_AMOUNT)) {
+          Glob budget = repository.get(key);
+          Integer budgetMonthId = budget.get(SeriesBudget.MONTH);
+          if (budgetMonthId > lastTransactionMonthId) {
+            return;
+          }
+          if (budgetMonthId.equals(lastTransactionMonthId)) {
+            if (budget != null && isSmallDiff(budget)
+                && budget.get(SeriesBudget.ACTIVE)) {
+              addSeries(budgetMonthId, budget.get(SeriesBudget.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
+            }
+          }
+          else {
+            addSeries(budgetMonthId, budget.get(SeriesBudget.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
+          }
+        }
+      }
+
+      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+      }
+    });
+    
     Integer periodInMonth = userPreference.get(UserPreferences.PERIOD_COUNT_FOR_PLANNED);
     for (SeriesToReCompute series : seriesToReCompute.values()) {
       final Glob seriesShape = repository.findOrCreate(Key.create(SeriesShape.TYPE, series.seriesId));
@@ -205,7 +232,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     public TransactionGlobFunctor(GlobRepository repository, int periodCount, int monthCount, SeriesToReCompute seriesToReCompute) {
       Glob series = repository.find(Key.create(Series.TYPE, seriesToReCompute.seriesId));
       BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-      if (budgetArea == BudgetArea.SAVINGS){
+      if (budgetArea == BudgetArea.SAVINGS) {
         positif = series.get(Series.TO_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT));
       }
       else {
@@ -221,12 +248,12 @@ public class SeriesShapeTrigger implements ChangeSetListener {
 
 
     public void run(Glob glob, GlobRepository repository) throws Exception {
-      if (glob.isTrue(Transaction.PLANNED)){
+      if (glob.isTrue(Transaction.PLANNED)) {
         return;
       }
       int budgetMonthId = glob.get(Transaction.BUDGET_MONTH);
       double amount = glob.get(Transaction.AMOUNT, 0);
-      if ((amount > 0 != positif)){
+      if ((amount > 0 != positif)) {
         return;
       }
       if (budgetMonthId == seriesToReCompute.monthId1) {
@@ -243,15 +270,15 @@ public class SeriesShapeTrigger implements ChangeSetListener {
       }
     }
 
-    double getTotal(){
+    double getTotal() {
       double total = 0;
-      if (monthCount >= 1){
+      if (monthCount >= 1) {
         total = total1;
       }
-      if (monthCount >= 2){
+      if (monthCount >= 2) {
         total += total2;
       }
-      if (monthCount >= 3){
+      if (monthCount >= 3) {
         total += total3;
       }
       return total / monthCount;
@@ -311,12 +338,12 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     }
   }
 
-    static private boolean isSmallDiff(Glob budget) {
+  static private boolean isSmallDiff(Glob budget) {
 //      return Amounts.isNearZero(Amounts.zeroIfNull(budget.get(SeriesBudget.AMOUNT)) -
 //                                Amounts.zeroIfNull(budget.get(SeriesBudget.OBSERVED_AMOUNT)));
-      if (Amounts.isNearZero(Amounts.zeroIfNull(budget.get(SeriesBudget.AMOUNT)))){
-        return false;
-      }
-      return Math.abs((Amounts.zeroIfNull(budget.get(SeriesBudget.OBSERVED_AMOUNT)) / (budget.get(SeriesBudget.AMOUNT)))) > 0.90;
+    if (Amounts.isNearZero(Amounts.zeroIfNull(budget.get(SeriesBudget.AMOUNT)))) {
+      return false;
     }
+    return Math.abs((Amounts.zeroIfNull(budget.get(SeriesBudget.OBSERVED_AMOUNT)) / (budget.get(SeriesBudget.AMOUNT)))) > 0.90;
+  }
 }

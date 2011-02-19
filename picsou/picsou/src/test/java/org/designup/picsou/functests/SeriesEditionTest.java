@@ -888,7 +888,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("08/07/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
+      .add("24/07/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
       .add("29/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne")
       .check();
 
