@@ -144,6 +144,7 @@ public class HistoChart extends JPanel {
       else {
         g2.setColor(colors.getChartBgColor());
         g2.fillRect(left, metrics.columnTop(), metrics.columnWidth(), columnHeight);
+        g2.setColor(getBackground());
         g2.fillRect(left, metrics.labelTop(), metrics.columnWidth(), metrics.labelZoneHeightWithMargin());
       }
 
