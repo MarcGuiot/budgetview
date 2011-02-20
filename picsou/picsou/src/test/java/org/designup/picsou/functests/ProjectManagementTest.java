@@ -7,6 +7,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     setCurrentMonth("2010/12");
+    setInitialGuidesShown(true);
     super.setUp();
   }
 
@@ -18,6 +19,10 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
+    projects.checkHintMessageHidden();
+
+    operations.hideSignposts();
+    projects.checkHintMessageDisplayed();
 
     projects.create()
       .checkTitle("Create a project")
@@ -28,6 +33,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .setItemAmount(0, -200.00)
       .checkTotalAmount(200.00)
       .validate();
+
+    projects.checkHintMessageHidden();
 
     projects.checkProjectList("My project");
     projects.checkProject("My project", "Jan 2011", 200.00);
@@ -100,6 +107,9 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
+    operations.hideSignposts();
+
+    projects.checkHintMessageDisplayed();
 
     projects.create()
       .checkTitle("Create a project")
@@ -114,6 +124,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2011/01/01", -500.00, "Hotel")
       .addTransaction("2011/01/01", -10.00, "Something else")
       .load();
+
+    projects.checkHintMessageHidden();
 
     categorization.setExtra("Resa", "My project");
     categorization.setExtra("Hotel", "My project");
@@ -141,6 +153,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     projects.checkNoProjectShown();
     budgetView.getSummary().checkEndPosition(800.00);
+
+    projects.checkHintMessageDisplayed();
   }
 
   public void testCannotHaveEmptyProjectOrProjectItemNames() {
@@ -181,17 +195,17 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     projects.create()
-      .setName("Project 1")
+      .setName("Past Project")
       .setItem(0, "Reservation", 201101, -100.00)
       .addItem(1, "Hotel", 201102, -500.00)
       .validate();
 
-    budgetView.extras.editProjectSeries("Project 1")
+    budgetView.extras.editProjectSeries("Past Project")
       .checkItems("Reservation | January 2011 | -100.00\n" +
                   "Hotel | February 2011 | -500.00")
       .cancel();
 
-    budgetView.extras.editPlannedAmountForProject("Project 1")
+    budgetView.extras.editPlannedAmountForProject("Past Project")
       .checkItems("Reservation | January 2011 | -100.00\n" +
                   "Hotel | February 2011 | -500.00")
       .cancel();
@@ -200,8 +214,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     categorization.showAllTransactions();
     categorization.selectTransaction("Resa");
 
-    categorization.selectExtras().selectSeries("Project 1");
-    categorization.selectExtras().editProjectSeries("Project 1")
+    categorization.selectExtras().selectSeries("Past Project");
+    categorization.selectExtras().editProjectSeries("Past Project")
       .checkItems("Reservation | January 2011 | -100.00\n" +
                   "Hotel | February 2011 | -500.00")
       .cancel();
@@ -213,47 +227,52 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2010/01/10")
+      .addTransaction("2010/10/01", 1000.00, "Income")
       .addTransaction("2010/11/01", 1000.00, "Income")
       .addTransaction("2010/12/01", 1000.00, "Income")
       .addTransaction("2011/01/05", 100.00, "Resa")
       .load();
 
     projects.create()
-      .setName("Project 1")
+      .setName("Past Project")
+      .setItem(0, "Reservation", 201010, -100.00)
+      .addItem(1, "Hotel", 201011, -500.00)
+      .validate();
+
+    projects.create()
+      .setName("Current Project")
       .setItem(0, "Reservation", 201101, -100.00)
       .addItem(1, "Hotel", 201102, -500.00)
       .validate();
 
     projects.create()
-      .setName("Project 2")
-      .setItem(0, "Voyage", 201105, -200.00)
-      .addItem(1, "Location", 201105, -1000.00)
+      .setName("Next Project")
+      .setItem(0, "Reservation", 201105, -100.00)
+      .addItem(1, "Hotel", 201105, -500.00)
       .validate();
 
-    projects.checkProjectList("Project 1", "Project 2");
+    projects.checkProjectList("Current Project", "Next Project");
 
     timeline.selectMonth(201103);
-    projects.checkProjectList("Project 2");
+    projects.checkProjectList("Current Project", "Next Project");
 
     timeline.selectMonth(201102);
-    projects.checkProjectList("Project 1", "Project 2");
+    projects.checkProjectList("Current Project", "Next Project");
 
     timeline.selectMonth(201106);
-    projects.checkNoProjectShown();
+    projects.checkProjectList("Current Project", "Next Project");
 
-    timeline.selectMonth(201102);
-    projects.checkProjectList("Project 1", "Project 2");
+    timeline.selectMonth(201011);
+    projects.checkProjectList("Current Project", "Next Project", "Past Project");
 
-    projects.edit("Project 1")
-      .setItemDate(1, 201101)
+    projects.edit("Past Project")
+      .setItemDate(1, 201010)
+      .setItemDate(1, 201010)
       .validate();
-    projects.checkProjectList("Project 2");
+    projects.checkProjectList("Current Project", "Next Project");
 
     timeline.selectMonths(201101, 201105);
-    projects.checkProjectList("Project 1", "Project 2");
-
-    timeline.selectMonths(201103, 201105);
-    projects.checkProjectList("Project 2");
+    projects.checkProjectList("Current Project", "Next Project");
   }
 
   public void testCanCreateProjectsFromTheCategorizationView() throws Exception {

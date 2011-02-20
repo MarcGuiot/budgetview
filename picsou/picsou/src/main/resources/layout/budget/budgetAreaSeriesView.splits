@@ -4,7 +4,6 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
     <style selector="#budgetAreaSeriesView .amount" font="-,plain,11" anchor="right"/>
-    <style selector="htmlEditorPane.hints" foreground="block.inner.hints"/>
     <style selector="label.totalAmount" font="-,bold,16" weightY="10" anchor="center" marginBottom="2"/>
     <style selector="label.totalAmountTitle" weightX="0" anchor="center"/>
 

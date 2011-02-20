@@ -12,15 +12,17 @@ import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 public class ProjectFilter implements GlobMatcher {
 
   private Integer firstMonth;
+  private Integer currentMonth;
 
-  public ProjectFilter(SortedSet<Integer> months) {
-    if (!months.isEmpty()) {
-      firstMonth = months.first();
+  public ProjectFilter(SortedSet<Integer> selectedMonths, Integer currentMonth) {
+    this.currentMonth = currentMonth;
+    if (!selectedMonths.isEmpty()) {
+      firstMonth = selectedMonths.first();
     }
   }
 
   public boolean matches(Glob project, GlobRepository repository) {
-    if ((project == null) || (firstMonth == null)) {
+    if ((project == null) || (firstMonth == null) || (currentMonth == null)) {
       return false;
     }
 
@@ -29,6 +31,6 @@ public class ProjectFilter implements GlobMatcher {
         .getSortedSet(ProjectItem.MONTH)
         .last();
 
-    return lastItemMonth >= firstMonth;
+    return (lastItemMonth >= currentMonth) || (lastItemMonth >= firstMonth);
   }
 }
