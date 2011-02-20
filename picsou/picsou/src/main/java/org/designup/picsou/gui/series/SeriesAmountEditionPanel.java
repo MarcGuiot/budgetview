@@ -193,10 +193,6 @@ public class SeriesAmountEditionPanel {
                               isTrue(SeriesBudget.ACTIVE),
                               isNotNull(SeriesBudget.AMOUNT)));
 
-    if (noValueDefined) {
-      selectMonths(repository.getAll(Month.TYPE).getValueSet(Month.ID));
-    }
-
     setAutoSelectFutureMonths(noValueDefined);
     propagationCheckBox.setSelected(noValueDefined);
   }
@@ -213,7 +209,6 @@ public class SeriesAmountEditionPanel {
   }
 
   public void selectMonths(Set<Integer> months) {
-
     if (months == null || months.isEmpty()) {
       return;
     }

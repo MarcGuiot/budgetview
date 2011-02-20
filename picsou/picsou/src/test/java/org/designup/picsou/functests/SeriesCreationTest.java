@@ -14,18 +14,23 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
   public void testNewIncomeSeries() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransaction("2008/06/30", 1129.90, "WorldCo/june")
+      .addTransaction("2008/05/30", 1129.90, "WorldCo")
+      .addTransaction("2008/06/30", 1129.90, "WorldCo")
       .load();
 
     views.selectCategorization();
-    categorization.selectTableRows(0);
-    categorization.checkLabel("WORLDCO/JUNE");
+    categorization.selectTableRows(0, 1);
+    categorization.checkLabel("WORLDCO [2 operations]");
 
     categorization.selectIncome().createSeries()
       .setName("Prime")
+      .checkChart(new Object[][]{
+        {"2008", "May", 0.00, 0.00},
+        {"2008", "June", 0.00, 0.00, true}
+      })
       .validate();
 
-    categorization.selectTransaction("WORLDCO/JUNE");
+    categorization.selectTransaction("WORLDCO");
     categorization.selectIncome()
       .checkContainsSeries("Prime")
       .selectSeries("Prime");
@@ -33,7 +38,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions.checkSeries(0, "Prime");
     transactions.initContent()
-      .add("30/06/2008", TransactionType.VIREMENT, "WORLDCO/JUNE", "", 1129.90, "Prime")
+      .add("30/06/2008", TransactionType.VIREMENT, "WORLDCO", "", 1129.90, "Prime")
       .check();
   }
 
