@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.components.charts.stack;
 
 import org.designup.picsou.utils.Lang;
+import org.globsframework.utils.Strings;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class StackChartMetrics {
       String label;
       int percentage;
       if (height >= minTextHeight) {
-        label = dataset.getLabel(i);
+        label = Strings.cut(dataset.getLabel(i), StackChart.MAX_LABEL_LENGTH);
         percentage = (int)Math.round(value * 100 / dataset.getTotal());
         remainingPercentage -= percentage;
       }
@@ -75,7 +76,7 @@ public class StackChartMetrics {
           selectionIndex = -1;
         }
         else {
-          label = dataset.getLabel(i);
+          label = Strings.cut(dataset.getLabel(i), StackChart.MAX_LABEL_LENGTH);
           int topY = (int)(drawingHeight * (1 - dataset.getTotal() / maxValue));
           height += currentY - topY;
           currentY = topY;

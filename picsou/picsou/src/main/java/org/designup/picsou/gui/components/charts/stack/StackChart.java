@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.components.charts.stack;
 
 import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 
 import javax.swing.*;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 public class StackChart extends JPanel {
 
+  public static final int MAX_LABEL_LENGTH = 20;
   private StackChartDataset leftDataset;
   private StackChartDataset rightDataset;
   private StackChartColors colors;
@@ -121,7 +123,7 @@ public class StackChart extends JPanel {
                               leftDataset.getTotal());
       paintBlocks(g2, metrics,
                   leftDataset,
-                  metrics.centerLayout(leftDataset.getLongestLabel()),
+                  metrics.centerLayout(Strings.cut(leftDataset.getLongestLabel(), MAX_LABEL_LENGTH)),
                   colors, colors.getLeftBarColor());
     }
 
