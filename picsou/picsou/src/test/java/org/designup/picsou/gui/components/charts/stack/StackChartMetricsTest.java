@@ -75,6 +75,16 @@ public class StackChartMetricsTest extends ChartTestCase {
     checkBlockSelectionIndexes(blocks, 0, -1);
   }
 
+  public void testVeryLongText() throws Exception {
+
+    dataset.add("item1", 300.00, action);
+    dataset.add("item2 with a very long label", 500.00, action);
+    dataset.add("item3", 200.00, action);
+
+    StackChartBlock[] blocks = metrics.computeBlocks(dataset);
+    checkBlockLabels(blocks, "item2 with a very...", "item1", "item3");
+  }
+
   private void checkBlockLabels(StackChartBlock[] blocks, String... expected) {
     List<String> actual = new ArrayList<String>();
     for (StackChartBlock block : blocks) {

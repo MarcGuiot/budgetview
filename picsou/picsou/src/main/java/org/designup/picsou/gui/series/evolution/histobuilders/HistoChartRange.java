@@ -114,7 +114,8 @@ public class HistoChartRange {
       }
     }
 
-    scrollOffset = actualScroll;  }
+    scrollOffset = actualScroll;
+  }
 
   private void centerOnCurrentMonth(Integer selectedMonthId) {
     center(CurrentMonth.getCurrentMonth(repository));

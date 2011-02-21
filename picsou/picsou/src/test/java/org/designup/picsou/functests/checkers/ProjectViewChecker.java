@@ -4,6 +4,7 @@ import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,6 +55,14 @@ public class ProjectViewChecker extends ViewChecker {
     assertThat(projectPanel.getTextBox("projectPeriod").textEquals(period));
     assertThat(projectPanel.getTextBox("projectAmount").textEquals(toString(amount)));
     return this;
+  }
+
+  public void checkHintMessageDisplayed() {
+    checkComponentVisible(getPanel(), JEditorPane.class, "projectHint", true);
+  }
+
+  public void checkHintMessageHidden() {
+    checkComponentVisible(getPanel(), JEditorPane.class, "projectHint", false);
   }
 
   private Panel getPanel(String projectName) {

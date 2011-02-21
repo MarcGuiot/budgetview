@@ -1583,7 +1583,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testChangePlannedFomBudgetView() throws Exception {
+  public void testChangePlannedFromBudgetView() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     OfxBuilder.init(this)
       .addTransaction("2008/08/06", -100.00, "Virement vers Epargne")

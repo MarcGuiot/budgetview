@@ -180,7 +180,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setSingleMonth()
       .setSingleMonthDate(200810)
       .checkChart(new Object[][]{
-        {"2008", "October", 0.00, 0.00, true}})
+        {"2008", "October", 0.00, 0.00}})
       .validate();
   }
 

@@ -6,14 +6,14 @@ import org.designup.picsou.gui.description.MonthRangeFormatter;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.projects.utils.ProjectAmountStringifier;
 import org.designup.picsou.gui.projects.utils.ProjectFilter;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Project;
-import org.designup.picsou.model.ProjectItem;
+import org.designup.picsou.model.*;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
@@ -27,12 +27,14 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
 import java.util.SortedSet;
 
 public class ProjectView extends View {
 
   private ProjectEditionDialog editionDialog;
   private GlobRepeat projectRepeat;
+  private JEditorPane message;
 
   public ProjectView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -47,8 +49,25 @@ public class ProjectView extends View {
 
     builder.add("createProject", new CreateProjectAction(directory));
 
+    message = GuiUtils.createReadOnlyHtmlComponent(Lang.get("projectView.hint"));
+    builder.add("projectHint", message);
+
     parentBuilder.add("projectView", builder);
 
+    registerMessageUpdater();
+    registerFilterUpdater();
+  }
+
+  private void registerMessageUpdater() {
+    repository.addChangeListener(new TypeChangeSetListener(Project.TYPE, SignpostStatus.TYPE) {
+      protected void update(GlobRepository repository) {
+        updateMessage();
+      }
+    });
+    updateMessage();
+  }
+
+  private void registerFilterUpdater() {
     repository.addChangeListener(new TypeChangeSetListener(ProjectItem.TYPE) {
       protected void update(GlobRepository repository) {
         updateFilter();
@@ -59,11 +78,19 @@ public class ProjectView extends View {
         updateFilter();
       }
     }, Month.TYPE);
+    updateFilter();
+  }
+
+  private void updateMessage() {
+    boolean shouldShow = !repository.contains(Project.TYPE) && SignpostStatus.isInitialGuidanceCompleted(repository);
+    message.setVisible(shouldShow);
+    GuiUtils.revalidate(message);
   }
 
   private void updateFilter() {
-    SortedSet<Integer> months = selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID);
-    projectRepeat.setFilter(new ProjectFilter(months));
+    SortedSet<Integer> selectedMonths = selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID);
+    Integer currentMonth = CurrentMonth.findCurrentMonth(repository);
+    projectRepeat.setFilter(new ProjectFilter(selectedMonths, currentMonth));
   }
 
   private class ProjectComponentFactory implements RepeatComponentFactory<Glob> {

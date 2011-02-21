@@ -25,6 +25,9 @@
            foreground="help.messages.text" opaque="false"/>
     <style selector="scrollPane htmlEditorPane" border="empty(10)"/>
 
+    <style selector="htmlEditorPane.hints"
+           foreground="block.inner.hints"/>
+
     <style selector="htmlEditorPane.note" font="-,plain,11"
            foreground="help.messages.text" opaque="false"/>
 
@@ -162,6 +165,7 @@
     <style selector=".innerBlock label.largeAmount" foreground="block.inner.amount" font="-,bold,13" anchor="top"/>
     <style selector=".innerBlock .hyperlink" foreground="block.inner.hyperlink" font="-,plain,10"/>
 
+    <style selector=".innerBlock"  foreground="block.inner.item"/>
     <style selector="label.alignActualAmount" foreground="block.inner.item" font="-,plain,12" marginLeft="5"/>
 
     <style selector="button.amountLink" ui="hyperlinkButtonWithoutUnderline"

@@ -9,7 +9,7 @@
     <panel styleClass="block" preferredSize="(300,400)">
       <column styleClass="innerBlock">
         <column styleClass="blockScrollBorder">
-          <scrollPane marginTop="0" marginBottom="0" weightY="100">
+          <scrollPane marginTop="0" marginBottom="0" weightY="100" forceVerticalScroll="true">
             <column>
               <repeat ref="projectRepeat" marginTop="5" marginBottom="15">
                 <column name="projectRow" margin="5" marginBottom="5">
@@ -21,6 +21,7 @@
                   </row>
                 </column>
               </repeat>
+              <htmlEditorPane ref="projectHint" styleClass="hints"/>
               <filler fill="vertical"/>
             </column>
           </scrollPane>
