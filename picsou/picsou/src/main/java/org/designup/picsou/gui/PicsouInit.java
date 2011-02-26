@@ -209,6 +209,13 @@ public class PicsouInit {
         finally {
           firstReset = false;
           repository.removeTrigger(upgradeTrigger);
+          repository.startChangeSet();
+          try {
+            upgradeTrigger.postTraitement(repository);
+          }
+          finally {
+            repository.completeChangeSet();
+          }
         }
       }
     }

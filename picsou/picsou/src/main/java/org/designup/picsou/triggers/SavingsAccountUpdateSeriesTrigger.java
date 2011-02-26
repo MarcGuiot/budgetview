@@ -150,7 +150,6 @@ public class SavingsAccountUpdateSeriesTrigger implements ChangeSetListener {
                               FieldValue.value(Series.IS_AUTOMATIC, false));
     }
     {
-
       localRespository.create(Series.TYPE,
                               FieldValue.value(Series.INITIAL_AMOUNT, 0.),
                               FieldValue.value(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()),

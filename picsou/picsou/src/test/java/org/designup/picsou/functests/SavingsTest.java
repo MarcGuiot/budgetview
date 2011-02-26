@@ -205,7 +205,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setToAccount("Epargne LCL")
       .validate();
 
-    categorization.selectSavings().selectSeries("Epargne");
+    categorization.selectTransactions("VIREMENT").selectSavings().selectSeries("Epargne");
 
     timeline.selectMonth("2008/06");
     budgetView.savings.alignAndPropagate("Epargne");

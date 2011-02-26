@@ -27,6 +27,12 @@ public class PreferencesChecker extends GuiChecker {
     return this;
   }
 
+  public PreferencesChecker setMonthBack(int count){
+    window.getComboBox("monthBack").select(Integer.toString(count));
+    UISpecAssert.assertThat(window.getComboBox("monthBack").selectionEquals(Integer.toString(count)));
+    return this;
+  }
+
   public void validate() {
     window.getButton("ok").click();
     UISpecAssert.assertFalse(window.isVisible());

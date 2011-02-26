@@ -21,6 +21,11 @@ public class SavingsUpdateSeriesMirrorTrigger extends DefaultChangeSetListener {
           return;
         }
         Integer mirrorSeriesId = series.get(Series.MIRROR_SERIES);
+        Glob budget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirrorSeriesId)
+          .findByIndex(SeriesBudget.MONTH, values.get(SeriesBudget.MONTH)).getGlobs().getFirst();
+        if (budget != null){
+          return;
+        }
         int sign = series.get(Series.FROM_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT)) ? -1 : 1;
         if (mirrorSeriesId != null) {
           FieldValue[] fieldValues = values.toArray();

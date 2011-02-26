@@ -10,6 +10,7 @@ import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerA
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
+import static org.designup.picsou.gui.utils.Matchers.transactionsForMainAccounts;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.SelectionService;
@@ -20,14 +21,13 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.util.List;
 import java.util.Set;
-
-import static org.designup.picsou.gui.utils.Matchers.transactionsForMainAccounts;
-import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class HistoChartBuilder {
   private HistoChart histoChart;
@@ -172,13 +172,18 @@ public class HistoChartBuilder {
       Double[] lastValues = new Double[maxDay];
       Double[] minValue = new Double[maxDay];
       for (Glob transaction : transactions) {
-        int day = transaction.get(Transaction.POSITION_DAY);
-        lastValues[day - 1] = transaction.get(Transaction.SUMMARY_POSITION);
-        if (minValue[day - 1] == null) {
-          minValue[day - 1] = transaction.get(Transaction.SUMMARY_POSITION);
+        int day = transaction.get(Transaction.POSITION_DAY) - 1;
+        lastValues[day] = transaction.get(Transaction.SUMMARY_POSITION);
+        if (transaction.isTrue(Transaction.PLANNED)) {
+          minValue[day] = transaction.get(Transaction.SUMMARY_POSITION);
         }
         else {
-          minValue[day - 1] = Math.min(transaction.get(Transaction.SUMMARY_POSITION, Double.MAX_VALUE), minValue[day - 1]);
+          if (minValue[day] == null) {
+            minValue[day] = transaction.get(Transaction.SUMMARY_POSITION);
+          }
+          else {
+            minValue[day] = Math.min(transaction.get(Transaction.SUMMARY_POSITION, Double.MAX_VALUE), minValue[day]);
+          }
         }
       }
 
