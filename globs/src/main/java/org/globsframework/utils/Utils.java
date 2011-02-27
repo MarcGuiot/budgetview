@@ -37,6 +37,10 @@ public class Utils {
     return o1.compareTo(o2);
   }
 
+  public static <T> int reverseCompare(Comparable<T> o1, T o2) {
+    return compare(o1, o2) * -1;
+  }
+
   public static int compareIgnoreCase(String o1, String o2) {
     if ((o1 == null) && (o2 == null)) {
       return 0;
