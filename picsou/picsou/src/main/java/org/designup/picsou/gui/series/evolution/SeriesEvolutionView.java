@@ -16,7 +16,6 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.utils.ToggleVisibilityAction;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
@@ -56,13 +55,11 @@ public class SeriesEvolutionView extends View {
   private SeriesEvolutionColors seriesEvolutionColors;
   private Gui.RolloverMouseMotionListener rolloverMouseMotionListener;
   private SeriesEvolutionLabelColumn seriesEvolutionLabelColumn;
-  private SeriesEditor seriesEditor;
 
   public SeriesEvolutionView(GlobRepository repository, Directory directory) {
     super(repository, createLocalDirectory(directory));
     this.parentDirectory = directory;
     this.parentSelectionService = directory.get(SelectionService.class);
-    this.seriesEditor = directory.get(SeriesEditor.class);
   }
 
   private static Directory createLocalDirectory(Directory parentDirectory) {
@@ -119,13 +116,12 @@ public class SeriesEvolutionView extends View {
     tableView
       .addColumn("", expandColumn, expandColumn, GlobStringifiers.empty(stringifier.getComparator(repository)));
 
-    seriesEvolutionLabelColumn = new SeriesEvolutionLabelColumn(tableView, repository, directory, seriesEvolutionColors, seriesEditor);
+    seriesEvolutionLabelColumn = new SeriesEvolutionLabelColumn(tableView, repository, directory, seriesEvolutionColors);
     tableView.addColumn(seriesEvolutionLabelColumn);
 
     for (int offset = -1; offset < -1 + monthColumnsCount; offset++) {
       SeriesEvolutionMonthColumn monthColumn =
-        new SeriesEvolutionMonthColumn(offset, tableView, repository, directory,
-                                       seriesEvolutionColors, seriesEditor);
+        new SeriesEvolutionMonthColumn(offset, tableView, repository, directory, seriesEvolutionColors);
       monthColumns.add(monthColumn);
       tableView.addColumn(monthColumn);
     }
@@ -215,8 +211,7 @@ public class SeriesEvolutionView extends View {
     else if (free > lastColumnSize / 3.) {
       monthColumnsCount++;
       SeriesEvolutionMonthColumn monthColumn =
-        new SeriesEvolutionMonthColumn(monthColumnsCount - 2, tableView, repository, directory,
-                                       seriesEvolutionColors, seriesEditor);
+        new SeriesEvolutionMonthColumn(monthColumnsCount - 2, tableView, repository, directory, seriesEvolutionColors);
       monthColumns.add(monthColumn);
       tableView.addColumn(monthColumn);
       rolloverMouseMotionListener.addColumn(monthColumnsCount + 1);

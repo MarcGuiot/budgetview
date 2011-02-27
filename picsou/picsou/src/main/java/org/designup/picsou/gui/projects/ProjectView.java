@@ -38,7 +38,13 @@ public class ProjectView extends View {
 
   public ProjectView(GlobRepository repository, Directory directory) {
     super(repository, directory);
-    this.editionDialog = new ProjectEditionDialog(repository, directory);
+  }
+
+  private ProjectEditionDialog getOrCreate() {
+    if (editionDialog == null){
+      this.editionDialog = new ProjectEditionDialog(repository, directory);
+    }
+    return editionDialog;
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -100,7 +106,7 @@ public class ProjectView extends View {
       cellBuilder.add("projectName",
                       GlobButtonView.init(Project.TYPE, repository, directory, new GlobListFunctor() {
                         public void run(GlobList list, GlobRepository repository) {
-                          editionDialog.show(projectKey);
+                          getOrCreate().show(projectKey);
                         }
                       })
                         .forceSelection(projectKey)

@@ -53,7 +53,6 @@ public class BudgetAreaSeriesView extends View {
   private List<Key> currentSeries = Collections.emptyList();
 
   private BudgetAreaSeriesFooter footerGenerator;
-  private SeriesEditor seriesEditor;
 
   private Repeat<Glob> seriesRepeat;
   private GlobMatcher seriesFilter;
@@ -67,13 +66,11 @@ public class BudgetAreaSeriesView extends View {
                               final BudgetArea budgetArea,
                               final GlobRepository repository,
                               Directory directory,
-                              BudgetAreaSeriesFooter footerGenerator,
-                              final SeriesEditor seriesEditor) {
+                              BudgetAreaSeriesFooter footerGenerator) {
     super(repository, directory);
     this.name = name;
     this.budgetArea = budgetArea;
     this.footerGenerator = footerGenerator;
-    this.seriesEditor = seriesEditor;
 
     this.orderManager = new SeriesOrderManager(budgetArea, repository, directory) {
       protected void setComparator(Comparator<Glob> newComparator) {
@@ -83,7 +80,7 @@ public class BudgetAreaSeriesView extends View {
     };
     this.comparator = orderManager.getComparator();
 
-    this.seriesButtons = new SeriesEditionButtons(budgetArea, repository, directory, seriesEditor);
+    this.seriesButtons = new SeriesEditionButtons(budgetArea, repository, directory);
 
     this.selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -223,7 +220,7 @@ public class BudgetAreaSeriesView extends View {
       JButton amountButton = addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
           SignpostStatus.setCompleted(SignpostStatus.SERIES_AMOUNT_SHOWN, repository);
-          seriesEditor.showAmount(series, selectedMonthIds);
+          SeriesEditor.get(directory).showAmount(series, selectedMonthIds);
         }
       });
 

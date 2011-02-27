@@ -35,7 +35,6 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
   protected GlobStringifier subSeriesStringifier;
   protected GlobStringifier budgetAreaStringifier;
 
-  protected SeriesEditor seriesEditor;
   protected GlobRepository repository;
   protected Directory directory;
   protected Window parent;
@@ -48,13 +47,11 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
 
   public SeriesChooserComponentFactory(BudgetArea budgetArea,
                                        JRadioButton invisibleSelector,
-                                       SeriesEditor seriesEditor,
                                        GlobRepository repository,
                                        Directory directory) {
     this.invisibleSelector = invisibleSelector;
     this.buttonGroup.add(invisibleSelector);
 
-    this.seriesEditor = seriesEditor;
     this.repository = repository;
     this.directory = directory;
     this.parent = directory.get(JFrame.class);
@@ -192,7 +189,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
 
     public void actionPerformed(ActionEvent e) {
       Glob series = repository.get(seriesKey);
-      seriesEditor.showSeries(series, selectionService.getSelection(Month.TYPE).getValueSet(Month.ID));
+      SeriesEditor.get(directory).showSeries(series, selectionService.getSelection(Month.TYPE).getValueSet(Month.ID));
     }
   }
 

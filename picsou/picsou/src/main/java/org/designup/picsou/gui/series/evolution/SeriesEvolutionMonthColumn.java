@@ -24,11 +24,10 @@ public class SeriesEvolutionMonthColumn implements GlobTableColumn {
 
   public SeriesEvolutionMonthColumn(int offset, GlobTableView view,
                                     GlobRepository repository, Directory directory,
-                                    SeriesEvolutionColors colors,
-                                    SeriesEditor seriesEditor) {
+                                    SeriesEvolutionColors colors) {
     this.offset = offset;
     this.repository = repository;
-    this.editor = new SeriesEvolutionMonthEditor(offset, view, repository, directory, colors, seriesEditor);
+    this.editor = new SeriesEvolutionMonthEditor(offset, view, repository, directory, colors);
   }
 
   public void setReferenceMonthId(Integer monthId) {
