@@ -18,6 +18,7 @@ import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.utils.InvertedComparator;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -35,27 +36,10 @@ public abstract class SeriesOrderManager implements ChangeSetListener {
 
   public SeriesOrderManager(BudgetArea budgetArea, GlobRepository repository, Directory directory) {
     this.budgetArea = budgetArea;
-    this.field = getField(budgetArea);
+    this.field = getUserPreferencesField(budgetArea);
     this.repository = repository;
     this.descriptionService = directory.get(DescriptionService.class);
     this.repository.addChangeListener(this);
-  }
-
-  private IntegerField getField(BudgetArea budgetArea) {
-    switch (budgetArea) {
-      case INCOME:
-        return UserPreferences.SERIES_ORDER_INCOME;
-      case RECURRING:
-        return UserPreferences.SERIES_ORDER_RECURRING;
-      case VARIABLE:
-        return UserPreferences.SERIES_ORDER_VARIABLE;
-      case EXTRAS:
-        return UserPreferences.SERIES_ORDER_EXTRA;
-      case SAVINGS:
-        return UserPreferences.SERIES_ORDER_SAVINGS;
-      default:
-        throw new InvalidParameter("Unexpected budgetArea " + budgetArea);
-    }
   }
 
   public SeriesOrder getUserCurrentOrder() {
@@ -100,7 +84,7 @@ public abstract class SeriesOrderManager implements ChangeSetListener {
         return globComparator;
       }
     }
-    return Collections.reverseOrder(new GlobFieldComparator(PeriodSeriesStat.ABS_SUM_AMOUNT));
+    return new DefaultComparator();
   }
 
   public void add(Order order) {
@@ -263,6 +247,43 @@ public abstract class SeriesOrderManager implements ChangeSetListener {
 
     public Comparator<Glob> getOrder() {
       return new GlobFieldComparator(field);
+    }
+  }
+
+  private class DefaultComparator implements Comparator<Glob> {
+    public int compare(Glob glob1, Glob glob2) {
+      if ((glob1 == null) && (glob2 == null)) {
+        return 0;
+      }
+      if (glob1 == null) {
+        return -1;
+      }
+      if (glob2 == null) {
+        return 1;
+      }
+      int activeResult = Utils.reverseCompare(glob1.get(PeriodSeriesStat.ACTIVE), glob2.get(PeriodSeriesStat.ACTIVE));
+      if (activeResult != 0) {
+        return activeResult;
+      }
+
+      return Utils.reverseCompare(glob1.get(PeriodSeriesStat.ABS_SUM_AMOUNT), glob2.get(PeriodSeriesStat.ABS_SUM_AMOUNT));
+    }
+  }
+
+  private IntegerField getUserPreferencesField(BudgetArea budgetArea) {
+    switch (budgetArea) {
+      case INCOME:
+        return UserPreferences.SERIES_ORDER_INCOME;
+      case RECURRING:
+        return UserPreferences.SERIES_ORDER_RECURRING;
+      case VARIABLE:
+        return UserPreferences.SERIES_ORDER_VARIABLE;
+      case EXTRAS:
+        return UserPreferences.SERIES_ORDER_EXTRA;
+      case SAVINGS:
+        return UserPreferences.SERIES_ORDER_SAVINGS;
+      default:
+        throw new InvalidParameter("Unexpected budgetArea " + budgetArea);
     }
   }
 }

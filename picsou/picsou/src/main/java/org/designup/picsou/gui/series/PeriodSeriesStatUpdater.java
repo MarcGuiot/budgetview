@@ -4,20 +4,22 @@ import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Series;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.fieldContained;
 
 public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSetListener {
 
@@ -63,10 +65,10 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     repository.startChangeSet();
     PeriodSeriesStatFunctor seriesStatFunctor = new PeriodSeriesStatFunctor(repository);
     try {
-      repository.deleteAll(PeriodSeriesStat.TYPE);
-      Set<Integer> monthIds = selectedMonths.getValueSet(Month.ID);
+      resetStats();
 
-      repository.safeApply(SeriesStat.TYPE, GlobMatchers.fieldContained(SeriesStat.MONTH, monthIds),
+      repository.safeApply(SeriesStat.TYPE,
+                           fieldContained(SeriesStat.MONTH, selectedMonths.getValueSet(Month.ID)),
                            seriesStatFunctor);
     }
     finally {
@@ -76,7 +78,16 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     SelectionService localSelectionService = directory.get(SelectionService.class);
     GlobList seriesStats = seriesStatFunctor.getStats();
     localSelectionService.select(GlobSelectionBuilder.init()
-      .add(seriesStats, PeriodSeriesStat.TYPE).get());
+                                   .add(seriesStats, PeriodSeriesStat.TYPE)
+                                   .get());
+  }
+
+  private void resetStats() {
+    repository.deleteAll(PeriodSeriesStat.TYPE);
+    for (Glob series : repository.getAll(Series.TYPE)) {
+        repository.create(Key.create(PeriodSeriesStat.TYPE, series.get(Series.ID)),
+                          value(PeriodSeriesStat.ACTIVE, false));
+    }
   }
 
   private static class PeriodSeriesStatFunctor implements GlobFunctor {
@@ -116,6 +127,9 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
         futureRemaining += seriesStat.get(SeriesStat.REMAINING_AMOUNT);
         futureOverrun += seriesStat.get(SeriesStat.OVERRUN_AMOUNT);
       }
+
+      boolean isActive = seriesStat.isTrue(SeriesStat.ACTIVE) || periodStat.isTrue(PeriodSeriesStat.ACTIVE);
+
       repository.update(periodStat.getKey(),
                         value(PeriodSeriesStat.AMOUNT, amount),
                         value(PeriodSeriesStat.PLANNED_AMOUNT, plannedAmount),
@@ -125,7 +139,9 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
                         value(PeriodSeriesStat.FUTURE_OVERRUN, futureOverrun),
                         value(PeriodSeriesStat.ABS_SUM_AMOUNT,
                               Math.abs(plannedAmount == null ? 0 : plannedAmount) > Math.abs(amount) ?
-                              Math.abs(plannedAmount == null ? 0 : plannedAmount) : Math.abs(amount)));
+                              Math.abs(plannedAmount == null ? 0 : plannedAmount) : Math.abs(amount)),
+                        value(PeriodSeriesStat.ACTIVE, isActive));
+
       stats.add(periodStat);
     }
 

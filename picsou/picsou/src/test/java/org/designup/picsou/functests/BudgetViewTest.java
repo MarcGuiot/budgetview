@@ -11,22 +11,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     super.setUp();
   }
 
-  public void testUnset() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/07/12", -95.00, "Auchan")
-      .load();
-
-    views.selectCategorization();
-    categorization.setNewVariable("Auchan", "Groceries");
-
-    views.selectBudget();
-    budgetView.variable.checkPlannedUset("Groceries");
-
-    timeline.selectAll();
-
-    budgetView.variable.checkPlannedUset("Groceries");
-  }
-
   public void test() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")
@@ -154,6 +138,22 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.getSavings().checkSeriesIsSelected("Epargne");
+  }
+
+  public void testUnset() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewVariable("Auchan", "Groceries");
+
+    views.selectBudget();
+    budgetView.variable.checkPlannedUset("Groceries");
+
+    timeline.selectAll();
+
+    budgetView.variable.checkPlannedUset("Groceries");
   }
 
   public void testImportWithUserDateAndBankDateAtNextMonth() throws Exception {
@@ -547,7 +547,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .showPlannedTransactions()
-      .initContent()  
+      .initContent()
       .add("12/07/2008", TransactionType.PLANNED, "Planned: Loto", "", 15.00, "Loto")
       .add("12/07/2008", TransactionType.VIREMENT, "Loto", "", 15.00)
       .add("05/07/2008", TransactionType.VIREMENT, "Loto", "", 19.00)
@@ -747,15 +747,61 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     categorization
       .selectTransactions("Auchan")
       .selectVariable()
-      .selectNewSeries("Course", -250);
+      .selectNewSeries("Courses", -250);
     timeline.selectMonth("2008/08");
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("10/08/2008", TransactionType.PLANNED, "Planned: Course", "", -240.0, "Course")
-      .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -10.00, "Course")
+      .add("10/08/2008", TransactionType.PLANNED, "Planned: Courses", "", -240.0, "Courses")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -10.00, "Courses")
       .check();
-
   }
 
+  public void testShowHideInactiveSeries() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/10", -50.00, "Auchan")
+      .addTransaction("2008/07/01", -150.00, "Auchan")
+      .addTransaction("2008/07/20", -50.00, "Auchan")
+      .addTransaction("2008/07/05", -50.00, "FNAC")
+      .addTransaction("2008/07/20", -50.00, "FNAC")
+      .load();
+
+    categorization.setNewVariable("Auchan", "Groceries", -200.00);
+    categorization.setNewVariable("FNAC", "Leisures", -100.00);
+
+    budgetView.variable.checkSeriesList("Groceries", "Leisures")
+      .checkSeries("Groceries", -50.00, -200.00)
+      .checkSeries("Leisure", 0.00, -100.00);
+
+    budgetView.variable.editSeries("Leisures").setEndDate(200807).validate();
+
+    budgetView.variable.checkSeriesList("Groceries");
+
+    budgetView.variable
+      .checkAvailableActions("Add", "Disable month filtering")
+      .showInactiveEnveloppes();
+
+    budgetView.variable.checkOrder("Groceries", "Leisures")
+      .checkSeries("Groceries", -50.00, -200.00)
+      .checkSeriesDisabled("Leisures");
+
+    timeline.selectMonth(200809);
+    
+    budgetView.variable.editSeries("Leisures")
+      .clearEndDate()
+      .setPropagationEnabled()
+      .selectMonth(200809)
+      .setAmount(100.00)
+      .validate();
+    budgetView.variable.editSeries("Groceries")
+      .setEndDate(200808)
+      .validate();
+
+    budgetView.variable.checkOrder("Leisures", "Groceries")
+      .checkSeries("Leisure", 0.00, -100.00)
+      .checkSeriesDisabled("Groceries");
+  }
 }

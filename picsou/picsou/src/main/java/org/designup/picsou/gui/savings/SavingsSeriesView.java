@@ -4,6 +4,7 @@ import org.designup.picsou.gui.budget.SeriesEditionButtons;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.utils.MonthMatcher;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
@@ -35,7 +36,7 @@ public class SavingsSeriesView implements Disposable {
   private SeriesEditor seriesEditor;
   private SeriesEditionButtons seriesButtons;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
-  private Matchers.SeriesFirstEndDateFilter seriesDateFilter;
+  private MonthMatcher seriesDateFilter;
   private GlobMatcher seriesFilter = new SavingsSeriesFilter();
   private Repeat<Glob> seriesRepeat;
   private List<Key> currentSeries = Collections.emptyList();
@@ -59,7 +60,7 @@ public class SavingsSeriesView implements Disposable {
     this.selectionListener = new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
-        seriesDateFilter.filterDates(selectedMonthIds);
+        seriesDateFilter.filterMonths(selectedMonthIds);
         updateRepeat(repository);
       }
     };

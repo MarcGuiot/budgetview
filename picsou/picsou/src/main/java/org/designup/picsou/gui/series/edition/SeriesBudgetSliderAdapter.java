@@ -50,7 +50,7 @@ public class SeriesBudgetSliderAdapter implements GlobSliderAdapter, ColorChange
     slider.setMinimum(0);
     slider.setMaximum(1);
     slider.setPaintTicks(true);
-    slider.setPaintLabels(true);
+    slider.setPaintLabels(false);
     slider.setSnapToTicks(true);
   }
 
@@ -73,6 +73,7 @@ public class SeriesBudgetSliderAdapter implements GlobSliderAdapter, ColorChange
 
     if (scale.max != slider.getMaximum()) {
 
+      slider.setPaintLabels(true);
       slider.setExtent(0);
       slider.setMinimum(0);
       slider.setMaximum(scale.max);
@@ -93,6 +94,7 @@ public class SeriesBudgetSliderAdapter implements GlobSliderAdapter, ColorChange
         });
       }
       slider.setLabelTable(table);
+      slider.setPaintLabels(true);
     }
 
     slider.setValue(value);

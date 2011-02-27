@@ -1,9 +1,11 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.functests.checkers.components.JPopupButtonChecker;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
@@ -160,6 +162,22 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
+    public BudgetAreaChecker checkSeriesDisabled(String seriesName) {
+      Panel budgetPanel = getPanel();
+      Button nameButton = budgetPanel.getButton(seriesName);
+
+      JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
+      int nameIndex = getIndex(panel, nameButton.getAwtComponent());
+      Button observedAmount = getButton(panel, nameIndex, OBSERVED_LABEL_OFFSET);
+      assertThat(observedAmount.textEquals("-"));
+      assertFalse(observedAmount.isEnabled());
+
+      Button plannedAmount = getButton(panel, nameIndex, PLANNED_LABEL_OFFSET);
+      assertThat(plannedAmount.textEquals("-"));
+      assertFalse(plannedAmount.isEnabled());
+      return this;
+    }
+
     public BudgetAreaChecker checkSeriesGaugeRemaining(String seriesName, double remaining, boolean onError) {
       GaugeChecker gauge = getGauge(seriesName);
       gauge.checkRemaining(remaining);
@@ -180,11 +198,15 @@ public class BudgetViewChecker extends ViewChecker {
     private void checkAmount(String label, int offset,
                              String seriesName, double expectedAmount,
                              JPanel panel, int nameIndex) {
-      Button button = new Button((JButton)panel.getComponent(nameIndex + offset));
+      Button button = getButton(panel, nameIndex, offset);
       String expectedAmountText = convert(expectedAmount);
       UISpecAssert.assertTrue(seriesName + " " + label + ":\nExpected :" + expectedAmountText +
                               "\nActual   :" + button.getLabel(),
                               button.textEquals(expectedAmountText));
+    }
+
+    private Button getButton(JPanel panel, int nameIndex, int offset) {
+      return new Button((JButton)panel.getComponent(nameIndex + offset));
     }
 
     private String convert(double amount) {
@@ -207,6 +229,16 @@ public class BudgetViewChecker extends ViewChecker {
 
     public BudgetAreaChecker checkNoSeriesShown() {
       checkSeriesList();
+      return this;
+    }
+
+    public BudgetAreaChecker checkOrder(String... seriesNames) {
+      UIComponent[] seriesButtons = getPanel().getUIComponents(Button.class, "seriesName");
+      java.util.List<String> actualNames = new ArrayList<String>();
+      for (UIComponent button : seriesButtons) {
+        actualNames.add(button.getLabel());
+      }
+      TestUtils.assertEquals(Arrays.asList(seriesNames), actualNames);
       return this;
     }
 
@@ -261,30 +293,40 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public SeriesEditionDialogChecker createSeries() {
-      return openSeriesEditionDialog("createSeries");
+      return SeriesEditionDialogChecker.open(getActionPopup().triggerClick(Lang.get("series.add")));
+    }
+
+    public BudgetAreaChecker checkAvailableActions(String... actions) {
+      getActionPopup().checkChoices(actions);
+      return this;
+    }
+
+    public BudgetAreaChecker showInactiveEnveloppes() {
+      getActionPopup().click(Lang.get("budgetView.actions.disableMonthFiltering"));
+      return this;
+    }
+
+    public BudgetAreaChecker hideInactiveEnveloppes() {
+      getActionPopup().click(Lang.get("budgetView.actions.enableMonthFiltering"));
+      return this;
     }
 
     private SeriesEditionDialogChecker openSeriesEditionDialog(String seriesName) {
       return SeriesEditionDialogChecker.open(getPanel().getButton(seriesName));
     }
 
+    private JPopupButtonChecker getActionPopup() {
+      return new JPopupButtonChecker(getPanel().getButton("seriesActions"));
+    }
+
     public void gotoData(String seriesName) {
       Button nameButton = getPanel().getButton(seriesName);
       JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
       int nameIndex = getIndex(panel, nameButton.getAwtComponent());
-      Button button = new Button((JButton)panel.getComponent(nameIndex + OBSERVED_LABEL_OFFSET));
+      Button button = getButton(panel, nameIndex, OBSERVED_LABEL_OFFSET);
       button.click();
     }
 
-    public BudgetAreaChecker checkOrder(String... seriesNames) {
-      UIComponent[] seriesButtons = getPanel().getUIComponents(Button.class, "seriesName");
-      java.util.List<String> actualNames = new ArrayList<String>();
-      for (UIComponent button : seriesButtons) {
-        actualNames.add(button.getLabel());
-      }
-      TestUtils.assertEquals(Arrays.asList(seriesNames), actualNames);
-      return this;
-    }
 
     public BudgetAreaChecker checkSeriesTooltip(String seriesName, String tooltipText) {
       assertThat(getPanel().getButton(seriesName).tooltipContains(tooltipText));

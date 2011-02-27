@@ -64,7 +64,7 @@ public class Matchers {
     );
   }
 
-  public static SeriesFirstEndDateFilter userSeriesActiveInPeriod() {
+  public static MonthMatcher userSeriesActiveInPeriod() {
     return new SeriesFirstEndDateFilter(false) {
       protected boolean isEligible(Glob series, GlobRepository repository) {
         return !Utils.equal(series.get(Series.ID), Series.UNCATEGORIZED_SERIES_ID);
@@ -72,7 +72,7 @@ public class Matchers {
     };
   }
 
-  public static SeriesFirstEndDateFilter seriesActiveInPeriod(final Integer budgetAreaId, boolean isExclusive) {
+  public static MonthMatcher seriesActiveInPeriod(final Integer budgetAreaId, boolean isExclusive) {
     return new SeriesFirstEndDateFilter(isExclusive) {
       protected boolean isEligible(Glob series, GlobRepository repository) {
         return budgetAreaId.equals(series.get(Series.BUDGET_AREA));
@@ -80,75 +80,23 @@ public class Matchers {
     };
   }
 
-  public static SeriesFirstEndDateFilter seriesDateSavingsAndAccountFilter(final Integer accountId) {
+  public static MonthMatcher seriesDateSavingsAndAccountFilter(final Integer accountId) {
     return new SeriesFirstEndDateFilter(false) {
 
       protected boolean isEligible(Glob series, GlobRepository repository) {
         if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
           return false;
         }
-        Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-        Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
-        Glob targetAccount = repository.findLinkTarget(series, Series.TARGET_ACCOUNT);
         return series.get(Series.TARGET_ACCOUNT).equals(accountId);
-//        if (Account.areBothImported(toAccount, fromAccount)) {
-//          if (accountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
-//            return targetAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId());
-//            if (fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
-//              return series.isTrue(Series.IS_MIRROR);
-//            }
-//            if (toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
-//              return !series.isTrue(Series.IS_MIRROR);
-//            }
-//            return false;
-//          }
-//          if (accountId == Account.SAVINGS_SUMMARY_ACCOUNT_ID) {
-//            return targetAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId());
-//            if (fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
-//              return series.isTrue(Series.IS_MIRROR);
-//            }
-//            if (toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
-//              return !series.isTrue(Series.IS_MIRROR);
-//            }
-//            return false;
-//          }
-//          return accountId.equals(targetAccount.get(Account.ID));
-//          if (accountId.equals(fromAccount.get(Account.ID))) {
-//            return series.isTrue(Series.IS_MIRROR);
-//          }
-//          if (accountId.equals(toAccount.get(Account.ID))) {
-//            return !series.isTrue(Series.IS_MIRROR);
-//          }
-//        }
-//        if (accountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
-//          if (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
-//            return true;
-//          }
-//          if (fromAccount != null && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId())) {
-//            return true;
-//          }
-//        }
-//        if (accountId == Account.SAVINGS_SUMMARY_ACCOUNT_ID) {
-//          if (toAccount != null && toAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
-//            return true;
-//          }
-//          if (fromAccount != null && fromAccount.get(Account.ACCOUNT_TYPE).equals(AccountType.SAVINGS.getId())) {
-//            return true;
-//          }
-//        }
-//
-//        return (accountId.equals(series.get(Series.FROM_ACCOUNT)) || accountId.equals(series.get(Series.TO_ACCOUNT)));
       }
     };
   }
 
   public static GlobMatcher deferredCardSeries() {
-    // TODO: à completer
     return GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId());
   }
 
   public static CategorizationFilter deferredCardCategorizationFilter() {
-    // TODO: à completer
     return seriesCategorizationFilter(BudgetArea.OTHER.getId());
   }
 
@@ -158,7 +106,7 @@ public class Matchers {
 
   public static class CategorizationFilter implements GlobMatcher {
     private List<Glob> transactions = Collections.emptyList();
-    private SeriesFirstEndDateFilter filter;
+    private MonthMatcher filter;
 
     public CategorizationFilter(final Integer budgetAreaId) {
       filter = seriesActiveInPeriod(budgetAreaId, true);
@@ -222,48 +170,53 @@ public class Matchers {
     }
 
     public void filterDates(Set<Integer> monthIds, List<Glob> transactions) {
-      filter.filterDates(monthIds);
+      filter.filterMonths(monthIds);
       this.transactions = transactions;
     }
   }
 
-  static public abstract class SeriesFirstEndDateFilter implements GlobMatcher {
+  public static abstract class SeriesFirstEndDateFilter implements MonthMatcher {
     private boolean exclusive;
     private Set<Integer> monthIds = Collections.emptySet();
 
     private SeriesFirstEndDateFilter(boolean isExclusive) {
-      exclusive = isExclusive;
+      this.exclusive = isExclusive;
     }
 
-    public void filterDates(Set<Integer> monthIds) {
+    public void filterMonths(Set<Integer> monthIds) {
       this.monthIds = monthIds;
     }
 
     public boolean matches(Glob series, GlobRepository repository) {
-      if (isEligible(series, repository)) {
-        Integer firstMonth = series.get(Series.FIRST_MONTH);
-        Integer lastMonth = series.get(Series.LAST_MONTH);
-        if (firstMonth == null) {
-          firstMonth = 0;
-        }
-        if (lastMonth == null) {
-          lastMonth = Integer.MAX_VALUE;
-        }
-        for (Integer id : monthIds) {
-          if ((id < firstMonth || id > lastMonth) == exclusive) {
-            return !exclusive;
-          }
-          if (!exclusive) {
-            Glob seriesBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
-              .findByIndex(SeriesBudget.MONTH, id).getGlobs().getFirst();
-            if (seriesBudget != null && seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
-              return true;
-            }
-          }
-        }
-        return exclusive;
+      if (!isEligible(series, repository)) {
+        return false;
       }
-      return false;
+
+      Integer firstMonth = series.get(Series.FIRST_MONTH);
+      Integer lastMonth = series.get(Series.LAST_MONTH);
+      if (firstMonth == null) {
+        firstMonth = 0;
+      }
+      if (lastMonth == null) {
+        lastMonth = Integer.MAX_VALUE;
+      }
+      for (Integer id : monthIds) {
+        if ((id < firstMonth || id > lastMonth) == exclusive) {
+          return !exclusive;
+        }
+        if (!exclusive) {
+          Glob seriesBudget =
+            repository
+              .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
+              .findByIndex(SeriesBudget.MONTH, id)
+              .getGlobs()
+              .getFirst();
+          if (seriesBudget != null && seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
+            return true;
+          }
+        }
+      }
+      return exclusive;
     }
 
     public String toString() {

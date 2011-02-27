@@ -41,21 +41,21 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     seriesEvolution.checkHistoChartLabel("Operations to categorize");
     seriesEvolution.histoChart.checkTooltip(1, "Amount to categorize for July 2009: 20.00");
     seriesEvolution.histoChart.checkTooltip(-1, "");
-    seriesEvolution.histoChart.checkTooltip(10, "");
+    seriesEvolution.histoChart.checkTooltip(10, "Amount to categorize for April 2010: 0.00");
 
     timeline.selectMonth("2009/06");
     seriesEvolution.select("Balance");
     seriesEvolution.histoChart
-      .checkColumnCount(8)
+      .checkColumnCount(14)
       .checkDiffColumn(0, "June", "2009", 650.00, 450.00, true);
     seriesEvolution.checkHistoChartLabel("Global balance evolution --- income --- expenses");
     seriesEvolution.histoChart.checkTooltip(1, "July 2009: Income: 670.00 - Expenses: 450.00");
     seriesEvolution.histoChart.checkTooltip(-1, "");
-    seriesEvolution.histoChart.checkTooltip(10, "");
+    seriesEvolution.histoChart.checkTooltip(10, "April 2010: Income: 670.00 - Expenses: 450.00");
 
     timeline.selectMonth("2009/07");
     seriesEvolution.histoChart
-      .checkColumnCount(8)
+      .checkColumnCount(14)
       .checkDiffColumn(0, "June", "2009", 650.00, 450.00)
       .checkDiffColumn(1, "Jul", "2009", 670.00, 450.00, true)
       .checkDiffColumn(2, "Aug", "2009", 670.00, 450.00)

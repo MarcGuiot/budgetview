@@ -42,6 +42,10 @@ public class SeriesEditionButtons {
     builder.add(createButtonName, new CreateSeriesAction());
   }
 
+  public CreateSeriesAction createSeriesAction() {
+    return new CreateSeriesAction();
+  }
+
   public GlobButtonView createSeriesButton(Glob series) {
     GlobButtonView buttonView =
       GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())

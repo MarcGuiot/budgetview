@@ -7,6 +7,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
@@ -33,6 +34,8 @@ public class SeriesStat {
   public static DoubleField OVERRUN_AMOUNT;
 
   public static DoubleField SUMMARY_AMOUNT;
+
+  public static BooleanField ACTIVE;
 
   static {
     GlobTypeLoader.init(SeriesStat.class);

@@ -261,6 +261,7 @@ public class SeriesAmountEditionPanel {
           selectionOK = true;
         }
       }
+
       if (!selectionOK) {
         Integer firstMonth = monthIds.iterator().next();
         int previous = firstMonth;

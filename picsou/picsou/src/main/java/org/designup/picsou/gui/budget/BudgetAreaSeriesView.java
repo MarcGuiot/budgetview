@@ -4,6 +4,7 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.budget.components.SeriesOrderManager;
 import org.designup.picsou.gui.budget.footers.BudgetAreaSeriesFooter;
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.components.charts.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.charts.Gauge;
@@ -16,6 +17,7 @@ import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.signpost.guides.SeriesAmountSignpost;
 import org.designup.picsou.gui.signpost.guides.SeriesPeriodicitySignpost;
 import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.utils.MonthMatcher;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -42,6 +44,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.*;
 import java.util.List;
 
@@ -49,7 +52,8 @@ public class BudgetAreaSeriesView extends View {
   private String name;
   private BudgetArea budgetArea;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
-  private Matchers.SeriesFirstEndDateFilter seriesDateFilter;
+  private MonthMatcher seriesDateFilter;
+  private boolean monthFilteringEnabled = true;
   private List<Key> currentSeries = Collections.emptyList();
 
   private BudgetAreaSeriesFooter footerGenerator;
@@ -62,6 +66,7 @@ public class BudgetAreaSeriesView extends View {
 
   private SeriesOrderManager orderManager;
   private Comparator<Glob> comparator;
+  private JMenuItem monthFilteringButton;
 
   public BudgetAreaSeriesView(String name,
                               final BudgetArea budgetArea,
@@ -88,7 +93,7 @@ public class BudgetAreaSeriesView extends View {
     this.selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
-        seriesDateFilter.filterDates(selectedMonthIds);
+        seriesDateFilter.filterMonths(selectedMonthIds);
         updateRepeat();
       }
     }, Month.TYPE);
@@ -156,7 +161,11 @@ public class BudgetAreaSeriesView extends View {
     seriesRepeat =
       builder.addRepeat("seriesRepeat", new GlobList(), new SeriesRepeatComponentFactory(builder));
 
-    seriesButtons.registerButtons(builder);
+    JPopupMenu menu = new JPopupMenu();
+    menu.add(seriesButtons.createSeriesAction());
+    menu.addSeparator();
+    menu.add(createMonthFilteringButton());
+    builder.add("seriesActions", new JPopupButton(Lang.get("budgetView.actions"), menu));
 
     parentBuilder.add(name, builder);
     if (budgetArea == BudgetArea.SAVINGS) {
@@ -173,6 +182,11 @@ public class BudgetAreaSeriesView extends View {
         if (series == null) {
           return false;
         }
+
+        if (!monthFilteringEnabled) {
+          return budgetArea.getId().equals(series.get(Series.BUDGET_AREA));
+        }
+
         ReadOnlyGlobRepository.MultiFieldIndexed seriesBudgetIndex =
           repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID));
         int notActive = 0;
@@ -183,12 +197,32 @@ public class BudgetAreaSeriesView extends View {
             notActive++;
           }
         }
-        return !(selectedMonthIds.size() == notActive) && seriesDateFilter.matches(series, repository);
+        boolean activeMonthsInPeriod = !(selectedMonthIds.size() == notActive);
+        return activeMonthsInPeriod && seriesDateFilter.matches(series, repository);
       }
     };
 
     footerGenerator.init(footerArea);
     builder.add("footerArea", footerArea);
+  }
+
+  private JMenuItem createMonthFilteringButton() {
+    monthFilteringButton = new JMenuItem();
+    monthFilteringButton.setAction(new AbstractAction() {
+      public void actionPerformed(ActionEvent actionEvent) {
+        monthFilteringEnabled = !monthFilteringEnabled;
+        updateMonthFilteringButton();
+        updateRepeat();
+      }
+    });
+    updateMonthFilteringButton();
+    return monthFilteringButton;
+  }
+
+  private void updateMonthFilteringButton() {
+    String key =
+      monthFilteringEnabled ? "budgetView.actions.disableMonthFiltering" : "budgetView.actions.enableMonthFiltering";
+    monthFilteringButton.setText(Lang.get(key));
   }
 
   private class SeriesRepeatComponentFactory implements RepeatComponentFactory<Glob> {
@@ -211,21 +245,27 @@ public class BudgetAreaSeriesView extends View {
       final Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
 
       GlobButtonView seriesNameButton = seriesButtons.createSeriesButton(series);
-      cellBuilder.add("seriesName", seriesNameButton.getComponent());
+      SplitsNode<JButton> seriesName = cellBuilder.add("seriesName", seriesNameButton.getComponent());
       cellBuilder.addDisposeListener(seriesNameButton);
 
-      addAmountButton("observedSeriesAmount", PeriodSeriesStat.AMOUNT, series, cellBuilder, new GlobListFunctor() {
+      JButton observedAmountButton = addAmountButton("observedSeriesAmount", PeriodSeriesStat.AMOUNT, series, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
           directory.get(NavigationService.class).gotoDataForSeries(series);
         }
       });
 
-      JButton amountButton = addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
+      JButton plannedAmountButton = addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
           SignpostStatus.setCompleted(SignpostStatus.SERIES_AMOUNT_SHOWN, repository);
           seriesEditor.showAmount(series, selectedMonthIds);
         }
       });
+
+      SeriesButtonsUpdater updater = new SeriesButtonsUpdater(periodSeriesStat.getKey(),
+                                                              seriesName,
+                                                              observedAmountButton,
+                                                              plannedAmountButton);
+      cellBuilder.addDisposeListener(updater);
 
       final GlobGaugeView gaugeView =
         new GlobGaugeView(PeriodSeriesStat.TYPE, budgetArea, PeriodSeriesStat.AMOUNT,
@@ -235,6 +275,7 @@ public class BudgetAreaSeriesView extends View {
                           GlobMatchers.fieldEquals(PeriodSeriesStat.SERIES, series.get(Series.ID)),
                           repository, directory);
       visibles.add(gaugeView);
+
       cellBuilder.add("gauge", gaugeView.getComponent());
       cellBuilder.addDisposeListener(gaugeView);
       cellBuilder.addDisposeListener(new Disposable() {
@@ -252,7 +293,57 @@ public class BudgetAreaSeriesView extends View {
       if (SignpostStatus.isAmountSeries(repository, series.getKey())) {
         Signpost amountSignpost = new SeriesAmountSignpost(repository, directory);
         cellBuilder.addDisposeListener(amountSignpost);
-        amountSignpost.attach(amountButton);
+        amountSignpost.attach(plannedAmountButton);
+      }
+    }
+
+    private class SeriesButtonsUpdater implements ChangeSetListener, Disposable {
+
+      private Key key;
+      private SplitsNode<JButton> seriesName;
+      private JButton observedAmountButton;
+      private JButton plannedAmountButton;
+
+      public SeriesButtonsUpdater(Key key,
+                                  SplitsNode<JButton> seriesName,
+                                  JButton observedAmountButton,
+                                  JButton plannedAmountButton) {
+        this.key = key;
+        this.seriesName = seriesName;
+        this.observedAmountButton = observedAmountButton;
+        this.plannedAmountButton = plannedAmountButton;
+        update();
+        repository.addChangeListener(this);
+      }
+
+      public void dispose() {
+        repository.removeChangeListener(this);
+      }
+
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(key)) {
+          update();
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      }
+
+      private void update() {
+        Glob stat = repository.find(key);
+        if (stat == null) {
+          return;
+        }
+
+        boolean active = stat.isTrue(PeriodSeriesStat.ACTIVE);
+        seriesName.applyStyle(active ? "seriesEnabled" : "seriesDisabled");
+        observedAmountButton.setEnabled(active);
+        plannedAmountButton.setEnabled(active);
+
+        if (!active) {
+          observedAmountButton.setText("-");
+          plannedAmountButton.setText("-");          
+        }
       }
     }
 
@@ -271,8 +362,9 @@ public class BudgetAreaSeriesView extends View {
     }
 
     private GlobListStringifier getStringifier(final DoubleField field) {
-      ForcedPlusGlobListStringifier plusGlobListStringifier = new ForcedPlusGlobListStringifier(budgetArea,
-                                                                                                GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome()));
+      ForcedPlusGlobListStringifier plusGlobListStringifier =
+        new ForcedPlusGlobListStringifier(budgetArea,
+                                          GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome()));
       return new UnsetGlobListStringifier(field, plusGlobListStringifier);
     }
 
@@ -285,13 +377,18 @@ public class BudgetAreaSeriesView extends View {
         this.stringifier = stringifier;
       }
 
-      public String toString(GlobList list, GlobRepository repository) {
-        for (Glob glob : list) {
-          if (glob.get(field) == null){
+      public String toString(GlobList periodStatList, GlobRepository repository) {
+        for (Glob periodStat : periodStatList) {
+          if (!periodStat.isTrue(PeriodSeriesStat.ACTIVE)) {
+            return "-";
+          }
+        }
+        for (Glob periodStat : periodStatList) {
+          if (periodStat.get(field) == null) {
             return Lang.get("gauge.plannetUnset");
           }
         }
-        return stringifier.toString(list, repository);
+        return stringifier.toString(periodStatList, repository);
       }
     }
   }

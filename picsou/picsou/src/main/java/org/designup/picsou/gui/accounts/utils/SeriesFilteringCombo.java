@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.accounts.utils;
 
 import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.utils.MonthMatcher;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
@@ -28,11 +29,11 @@ public class SeriesFilteringCombo {
         .setEmptyOptionLabel(Lang.get("transactionView.series.filter.all"));
     combo.setSelectionHandler(handler);
 
-    final Matchers.SeriesFirstEndDateFilter matcher = Matchers.userSeriesActiveInPeriod();
+    final MonthMatcher matcher = Matchers.userSeriesActiveInPeriod();
     combo.setFilter(matcher);
     directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-        matcher.filterDates(selection.getAll(Month.TYPE).getValueSet(Month.ID));
+        matcher.filterMonths(selection.getAll(Month.TYPE).getValueSet(Month.ID));
         combo.setFilter(matcher);
       }
     }, Month.TYPE, Series.TYPE);

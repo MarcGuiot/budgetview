@@ -101,18 +101,8 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  public SeriesEditionDialogChecker selectAllVisibleMonths() {
-    getChart().clickAllColumns();
-    return this;
-  }
-
   public SeriesEditionDialogChecker selectMonth(Integer monthId) {
     getChart().clickColumnId(monthId);
-    return this;
-  }
-
-  public SeriesEditionDialogChecker selectNoMonth() {
-    fail("A SUPPRIMER - impossible avec histoChart");
     return this;
   }
 
@@ -205,22 +195,6 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     for (int month : months) {
       assertThat(getMonthLabel(month) + " is not checked - " + getPeriodMonthStatuses(),
                  getPeriodMonthCheckBox(getMonthLabel(month)).isSelected());
-    }
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkMonthIsChecked(String... monthsLabel) {
-    for (String monthLabel : monthsLabel) {
-      assertThat(monthLabel + " is not checked - " + getPeriodMonthStatuses(),
-                 getPeriodMonthCheckBox(monthLabel).isSelected());
-    }
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkMonthIsNotChecked(String... monthsLabel) {
-    for (String monthLabel : monthsLabel) {
-      assertFalse(monthLabel + " is checked - " + getPeriodMonthStatuses(),
-                  getPeriodMonthCheckBox(monthLabel).isSelected());
     }
     return this;
   }
@@ -391,29 +365,6 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
 
   }
 
-  public SeriesEditionDialogChecker checkCalendarsAreDisabled() {
-    assertFalse(dialog.getButton("seriesStartDateChooser").isEnabled());
-    assertFalse(dialog.getButton("seriesEndDateChooser").isEnabled());
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkRadioAreDisabled() {
-    for (UIComponent radio : dialog.getUIComponents(RadioButton.class)) {
-      assertFalse(radio.isEnabled());
-    }
-    return this;
-  }
-
-  public SeriesEditionDialogChecker checkEditorAreDisabled() {
-    for (UIComponent textbox : dialog.getUIComponents(TextBox.class)) {
-      if (textbox.getAwtComponent() instanceof JTextField){
-        assertFalse(textbox.getDescription(), textbox.isEnabled());
-      }
-    }
-
-    return this;
-  }
-
   public SeriesEditionDialogChecker checkNameIsSelected() {
     JTextField textEditor = (JTextField)dialog.getInputTextBox("nameField").getAwtComponent();
     Assert.assertEquals(textEditor.getText(), textEditor.getSelectedText());
@@ -492,26 +443,6 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   public SeriesEditionDialogChecker checkSingleMonthSelected() {
     assertThat(getProfileCombo().selectionEquals(ProfileType.SINGLE_MONTH.getLabel()));
     return this;
-  }
-
-  /** @deprecated A SUPPRIMER */
-  public SeriesEditionDialogChecker checkSeriesListIsHidden() {
-    checkSeriesListVisible(false);
-    return this;
-  }
-
-  /** @deprecated A SUPPRIMER */
-  public SeriesEditionDialogChecker checkSeriesListIsVisible() {
-    checkSeriesListVisible(true);
-    return this;
-  }
-
-  /** @deprecated A SUPPRIMER */
-  private void checkSeriesListVisible(boolean visible) {
-    UISpecAssert.fail("A SUPPRIMER");
-    checkComponentVisible(dialog, JPanel.class, "seriesListButtonPanel", visible);
-    checkComponentVisible(dialog, JPanel.class, "seriesPanel", visible);
-    checkComponentVisible(dialog, JButton.class, "deleteSingleSeries", !visible);
   }
 
   public SeriesEditionDialogChecker checkAmountLabel(final String text) {

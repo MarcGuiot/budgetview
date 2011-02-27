@@ -16,6 +16,22 @@
     <style id="up" selector="x" icon="button_up_blue.png"/>
     <style id="down" selector="x" icon="button_down_blue.png"/>
     <style id="none" selector="x" icon=""/>
+
+    <style selector="#seriesName" ui="hyperlinkButtonWithoutUnderline"
+           fill="none" anchor="right" horizontalAlignment="right"/>
+    <style id="seriesEnabled" selector="x" foreground="block.item.link"/>
+    <style id="seriesDisabled" selector="x" foreground="block.item.link.inactive"/>
+
+    <ui name="amountLinkUI" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        underline="false" useNormalColorWhenDisabled="false" autoHideEnabled="false"
+        disabledColor="block.item.link.inactive"/>
+    <style selector="button.plannedAmountLink" ui="amountLinkUI"
+           fill="none" anchor="right" horizontalAlignment="right"
+           foreground="block.amount.planned.link" font="-,bold,11"/>
+    <style selector="button.actualAmountLink" ui="amountLinkUI"
+           fill="none" anchor="right" horizontalAlignment="right"
+           foreground="block.amount.actual.link" font="-,plain,11"/>
+
   </styles>
 
   <column name="budgetAreaSeriesView" styleClass="main">
@@ -41,7 +57,7 @@
               <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid"
                       margin="10" marginTop="5" marginBottom="5">
                 <header>
-                  <button ref="titleSeries" styleClass="itemLink" text="$budgetview.columnTitle.series" 
+                  <button ref="titleSeries" styleClass="itemLink" text="$budgetview.columnTitle.series"
                           anchor="center"/>
                   <button ref="titleAmountReal" styleClass="itemLink" text="$budgetview.columnTitle.real"
                           anchor="right"/>
@@ -49,7 +65,7 @@
                   <button ref="titleAmountPlanned" styleClass="itemLink" text="$budgetview.columnTitle.planned"
                           anchor="right"/>
                 </header>
-                <button ref="seriesName" styleClass="itemLink" marginRight="5" marginBottom="2"/>
+                <button ref="seriesName" marginRight="5" marginBottom="2"/>
                 <button ref="observedSeriesAmount" styleClass="actualAmountLink"
                         tooltipText="$budgetview.tooltip.detail.observed"/>
                 <component ref="gauge" styleClass="detailGauge"/>
@@ -63,7 +79,8 @@
 
           <row styleClass="footer">
             <filler fill="horizontal"/>
-            <button action="createSeries" tooltipText="$series.create.tooltip"/>
+            <button ref="seriesActions" tooltipText="$budgetView.actions.tooltip"
+                    icon="arrow_down.png" rolloverIcon="arrow_down_roll.png"/>
           </row>
         </column>
       </column>
