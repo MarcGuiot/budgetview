@@ -38,4 +38,15 @@ public class DefaultDirectoryTest extends TestCase {
     assertSame(b, wrapper.get(Boolean.class));
     assertNull(directory.find(Boolean.class));
   }
+
+
+  public void testFactory() throws Exception {
+    Directory directory = new DefaultDirectory();
+    directory.addFactory(String.class, new Directory.Factory<String>() {
+      public String create() {
+        return "my instance";
+      }
+    });
+    assertEquals("my instance", directory.find(String.class));
+  }
 }

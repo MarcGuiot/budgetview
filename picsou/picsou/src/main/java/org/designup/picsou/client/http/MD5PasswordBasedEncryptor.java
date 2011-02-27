@@ -4,6 +4,7 @@ import org.globsframework.utils.exceptions.GlobsException;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.MapOfMaps;
+import org.globsframework.utils.Log;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.metamodel.GlobModel;
@@ -14,6 +15,7 @@ import org.designup.picsou.client.SerializableGlobSerializer;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.designup.picsou.server.serialization.SerializationManager;
+import org.uispec4j.utils.Chrono;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -55,7 +57,13 @@ public class MD5PasswordBasedEncryptor implements PasswordBasedEncryptor{
 
   public synchronized static void init() throws NoSuchAlgorithmException {
     if (factory == null){
+      long start = System.currentTimeMillis();
       factory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
+      long stop = System.currentTimeMillis();
+      long duration = stop - start;
+      if (duration > 1000){
+        Log.write("Take too long to compute MD5 : " + duration + "ms");
+      }
     }
   }
 

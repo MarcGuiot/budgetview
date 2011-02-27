@@ -4,10 +4,12 @@ import org.globsframework.utils.exceptions.ItemAlreadyExists;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.LinkedHashMap;
+import java.util.HashMap;
 
 public class DefaultDirectory implements Directory {
-  protected LinkedHashMap<Class, Object> services = new LinkedHashMap<Class, Object>();
+  private LinkedHashMap<Class, Object> services = new LinkedHashMap<Class, Object>();
   private Directory inner;
+  private HashMap<Class, Factory> servicesFactory = new HashMap<Class, Factory>();
 
   public DefaultDirectory() {
   }
@@ -18,6 +20,10 @@ public class DefaultDirectory implements Directory {
 
   public <T> T find(Class<T> serviceClass) {
     T result = (T)services.get(serviceClass);
+    if (result == null && servicesFactory.containsKey(serviceClass)){
+      result = ((T)servicesFactory.get(serviceClass).create());
+      services.put(serviceClass, result);
+    }
     if ((result == null) && (inner != null)) {
       return inner.find(serviceClass);
     }
@@ -40,8 +46,15 @@ public class DefaultDirectory implements Directory {
     add((Class<Object>)service.getClass(), service);
   }
 
+  public <T, D extends T> void addFactory(Class<T> serviceClass, Factory<D> factory) throws ItemAlreadyExists {
+    if (services.containsKey(serviceClass) || servicesFactory.containsKey(serviceClass)) {
+      throw new ItemAlreadyExists("Service already registered for class: " + serviceClass.getName());
+    }
+    servicesFactory.put(serviceClass, factory);
+  }
+
   public <T, D extends T> void add(Class<T> serviceClass, D service) throws ItemAlreadyExists {
-    if (services.containsKey(serviceClass)) {
+    if (services.containsKey(serviceClass) || servicesFactory.containsKey(serviceClass)) {
       throw new ItemAlreadyExists("Service already registered for class: " + serviceClass.getName());
     }
     services.put(serviceClass, service);

@@ -108,7 +108,11 @@ public class MainPanel {
     };
     directory.add(LogoutService.class, logoutService);
 
-    directory.add(SeriesEditor.class, new SeriesEditor(repository, directory));
+    directory.addFactory(SeriesEditor.class, new Directory.Factory<SeriesEditor>() {
+      public SeriesEditor create() {
+        return new SeriesEditor(repository, directory);
+      }
+    });
 
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
 
