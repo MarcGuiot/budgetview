@@ -1,18 +1,22 @@
 package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.components.AmountEditor;
+import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.description.SeriesPeriodicityAndScopeStringifier;
 import org.designup.picsou.gui.series.edition.AlignSeriesBudgetAmountsAction;
 import org.designup.picsou.gui.series.edition.SeriesBudgetSliderAdapter;
 import org.designup.picsou.gui.series.evolution.SeriesAmountChartPanel;
 import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;
 import org.designup.picsou.model.*;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
+import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.model.*;
@@ -50,6 +54,9 @@ public class SeriesAmountEditionPanel {
   private boolean autoSelectFutureMonths;
   private SeriesEditorAccess seriesEditorAccess;
   private SeriesAmountLabelStringifier selectionStringifier = new SeriesAmountLabelStringifier();
+  private CardHandler cards;
+  private JEditorPane disabledMessage;
+  private boolean showingActiveMonths = false;
 
   public interface SeriesEditorAccess {
     void openSeriesEditor(Key series, Set<Integer> selectedMonthIds);
@@ -113,6 +120,17 @@ public class SeriesAmountEditionPanel {
         }
       }
     });
+
+    repository.addChangeListener(new DefaultChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsCreationsOrDeletions(SeriesBudget.TYPE) || changeSet.containsUpdates(SeriesBudget.ACTIVE)) {
+          if (!showingActiveMonths) {
+            selectMonths(selectedMonthIds);
+          }
+          updateCard(false);
+        }
+      }
+    });
   }
 
   public JPanel getPanel() {
@@ -123,6 +141,8 @@ public class SeriesAmountEditionPanel {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesAmountEditionPanel.class,
                                                       "/layout/series/seriesAmountEditionPanel.splits",
                                                       repository, directory);
+
+    cards = builder.addCardHandler("cards");
 
     builder.addLabel("dateLabel", SeriesBudget.TYPE, selectionStringifier);
 
@@ -160,6 +180,9 @@ public class SeriesAmountEditionPanel {
     }
     builder.add("editSeries", editSeriesButton);
 
+    disabledMessage = GuiUtils.createReadOnlyHtmlComponent();
+    builder.add("disabledMessage", disabledMessage);
+
     builder.addLoader(new SplitsLoader() {
       public void load(Component component, SplitsNode node) {
         editSeriesButton.setVisible(seriesEditorAccess != null);
@@ -189,12 +212,14 @@ public class SeriesAmountEditionPanel {
 
     boolean noValueDefined =
       !repository.contains(SeriesBudget.TYPE,
-                          and(linkedTo(currentSeries, SeriesBudget.SERIES),
-                              isTrue(SeriesBudget.ACTIVE),
-                              isNotNull(SeriesBudget.AMOUNT)));
+                           and(linkedTo(currentSeries, SeriesBudget.SERIES),
+                               isTrue(SeriesBudget.ACTIVE),
+                               isNotNull(SeriesBudget.AMOUNT)));
 
     setAutoSelectFutureMonths(noValueDefined);
     propagationCheckBox.setSelected(noValueDefined);
+
+    updateCard(true);
   }
 
   public void clear() {
@@ -216,6 +241,8 @@ public class SeriesAmountEditionPanel {
     currentMonth = Utils.min(months);
 
     updateBudgetFromMonth();
+
+    updateCard(true);
   }
 
   private void updateBudgetFromMonth() {
@@ -232,6 +259,40 @@ public class SeriesAmountEditionPanel {
     doSelectMonths(series, selectedMonthIds);
 
     amountEditor.selectAll();
+  }
+
+  private void updateCard(boolean canDisable) {
+    showingActiveMonths = isShowingActiveMonths();
+    if (showingActiveMonths || !canDisable) {
+      cards.show("standard");
+    }
+    else {
+      cards.show("disabled");
+    }
+  }
+
+  private boolean isShowingActiveMonths() {
+    if (currentSeries == null) {
+      disabledMessage.setText(Lang.get("seriesAmountEdition.disabled.noSeries"));
+      return false;
+    }
+
+    if ((selectedMonthIds == null) || (selectedMonthIds.isEmpty())) {
+      disabledMessage.setText(Lang.get("seriesAmountEdition.disabled.noSelectedMonths"));
+      return false;
+    }
+
+    for (Integer monthId : selectedMonthIds) {
+      for (Glob seriesBudget : SeriesBudget.getAll(currentSeries.get(Series.ID), monthId, repository)) {
+        if (seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
+          return true;
+        }
+      }
+    }
+
+    disabledMessage.setText(Lang.get("seriesAmountEdition.disabled.noActiveMonths",
+                                     MonthListStringifier.toString(selectedMonthIds).toLowerCase()));
+    return false;
   }
 
   private void updatePositiveOrNegativeRadio() {

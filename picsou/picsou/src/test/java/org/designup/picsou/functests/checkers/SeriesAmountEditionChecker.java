@@ -56,6 +56,18 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
     return setAmount(Double.toString(value));
   }
 
+  public T checkAmountEditionEnabled() {
+    checkComponentVisible(dialog, JEditorPane.class, "disabledMessage", false);
+    checkComponentVisible(dialog, JTextField.class, "amountEditor", true);
+    return (T)this;
+  }
+
+  public T checkAmountEditionDisabled(String message) {
+    checkComponentVisible(dialog, JTextField.class, "amountEditor", false);
+    assertThat(dialog.getTextBox("disabledMessage").textEquals(message));
+    return (T)this;
+  }
+
   public T setAmount(String value) {
     getAmountTextBox().setText(value, false);
     return (T)this;

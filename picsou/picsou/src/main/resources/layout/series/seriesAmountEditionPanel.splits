@@ -8,35 +8,50 @@
 
   <column>
 
-    <label ref="dateLabel" margin="10" marginTop="15" marginBottom="0"/>
+    <cards ref="cards">
 
-    <component ref="chart" preferredSize="(300,100)" margin="10" weightY="10"
-               background="dialogBlock.bg"/>
-    
-    <row border="empty(10,10,5,10)" weightY="0">
-      <filler fill="horizontal"/>
-      <component ref="amountEditor"/>
-      <row styleClass="iconButtonGroup" marginTop="0" marginLeft="5">
-        <button action="alignValue" styleClass="align_value"/>
-        <label ref="actualAmountLabel" styleClass="alignActualAmount"/>
-      </row>
-      <filler fill="horizontal"/>
-    </row>
+      <card name="standard">
+        <column>
+          <label ref="dateLabel" margin="10" marginTop="15" marginBottom="0"/>
 
-    <component ref="slider" opaque="false" border="empty(0,10,10,10)" preferredSize="(200,60)" weightY="2"/>
+          <component ref="chart" preferredSize="(300,100)" margin="10" weightY="10"
+                     background="dialogBlock.bg"/>
 
-    <row marginBottom="10">
-      <filler fill="horizontal"/>
-      <checkBox ref="propagate" text="$seriesAmountEdition.propagate" weightX="0"/>
-      <filler fill="horizontal"/>
-    </row>
+          <row border="empty(10,10,5,10)" weightY="0">
+            <filler fill="horizontal"/>
+            <component ref="amountEditor"/>
+            <row styleClass="iconButtonGroup" marginTop="0" marginLeft="5">
+              <button action="alignValue" styleClass="align_value"/>
+              <label ref="actualAmountLabel" styleClass="alignActualAmount"/>
+            </row>
+            <filler fill="horizontal"/>
+          </row>
 
-    <row border="empty(0,10,10,10)" autoHideSource="editSeries">
-      <filler fill="horizontal"/>
-      <label text="$seriesAmountEdition.periodicity" styleClass="small" weightX="0"/>
-      <button ref="editSeries" styleClass="hyperlink" font="-,plain,11" marginLeft="5"
-              tooltipText="$seriesAmountEdition.editSeries.tooltip" weightX="0"/>
-    </row>
+          <component ref="slider" opaque="false" border="empty(0,10,10,10)" preferredSize="(200,60)" weightY="2"/>
+
+          <row marginBottom="10">
+            <filler fill="horizontal"/>
+            <checkBox ref="propagate" text="$seriesAmountEdition.propagate" weightX="0"/>
+            <filler fill="horizontal"/>
+          </row>
+
+          <row border="empty(0,10,10,10)" autoHideSource="editSeries">
+            <filler fill="horizontal"/>
+            <label text="$seriesAmountEdition.periodicity" styleClass="small" weightX="0"/>
+            <button ref="editSeries" styleClass="hyperlink" font="-,plain,11" marginLeft="5"
+                    tooltipText="$seriesAmountEdition.editSeries.tooltip" weightX="0"/>
+          </row>
+        </column>
+      </card>
+
+      <card name="disabled">
+        <column>
+          <filler fill="vertical"/>
+          <htmlEditorPane ref="disabledMessage" margin="20"/>
+          <filler fill="vertical"/>
+        </column>
+      </card>
+    </cards>
 
   </column>
 

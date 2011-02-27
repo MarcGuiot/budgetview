@@ -633,17 +633,21 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .setEndDate(200805)
       .selectAllMonths()
       .setAmount("100")
+      .setEndDate(200805)
       .validate();
     budgetView.variable.createSeries().setName("courantAuchan")
       .setStartDate(200806)
       .setEndDate(200806)
       .selectAllMonths()
       .setAmount("100")
+      .setStartDate(200806)
+      .setEndDate(200806)
       .validate();
     budgetView.variable.createSeries().setName("courantMonoprix")
       .setStartDate(200806)
       .selectAllMonths()
       .setAmount("100")
+      .setStartDate(200806)
       .validate();
 
     categorization.selectTransactions("ED");

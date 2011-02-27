@@ -788,16 +788,21 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .checkSeries("Groceries", -50.00, -200.00)
       .checkSeriesDisabled("Leisures");
 
-    timeline.selectMonth(200809);
-    
     budgetView.variable.editSeries("Leisures")
+      .checkAmountEditionDisabled("Envelope not active for period: august 2008")
       .clearEndDate()
+      .checkAmountEditionEnabled()
       .setPropagationEnabled()
-      .selectMonth(200809)
+      .selectMonth(200808)
       .setAmount(100.00)
       .validate();
+
+    timeline.selectMonth(200809);
+
     budgetView.variable.editSeries("Groceries")
+      .checkAmountEditionEnabled()
       .setEndDate(200808)
+      .checkAmountEditionEnabled()
       .validate();
 
     budgetView.variable.checkOrder("Leisures", "Groceries")
