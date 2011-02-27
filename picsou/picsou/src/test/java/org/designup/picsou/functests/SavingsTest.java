@@ -947,7 +947,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     operations.restore(fileName);
   }
 
-  public void __testSavingsGauge() throws Exception {
+  public void testSavingsGauge() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")  //compte d'épargne
       .addTransaction("2008/08/12", -100.00, "P3 CE")
