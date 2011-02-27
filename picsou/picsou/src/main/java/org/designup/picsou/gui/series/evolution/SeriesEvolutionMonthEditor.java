@@ -30,11 +30,10 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
 
   protected SeriesEvolutionMonthEditor(int offset, GlobTableView view,
                                        GlobRepository repository, Directory directory,
-                                       SeriesEvolutionColors colors,
-                                       SeriesEditor seriesEditor) {
+                                       SeriesEvolutionColors colors) {
     super(offset, view, directory.get(DescriptionService.class), repository, directory, colors);
 
-    complete(new OpenSeriesAmountEditionDialogAction(seriesEditor));
+    complete(new OpenSeriesAmountEditionDialogAction(directory));
   }
 
   protected String getText(Glob seriesWrapper) {
@@ -73,9 +72,9 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
 
   private String getSeriesButtonText(Integer itemId) {
     Glob seriesStat = repository.find(KeyBuilder.init(SeriesStat.TYPE)
-                                        .set(SeriesStat.MONTH, referenceMonthId)
-                                        .set(SeriesStat.SERIES, itemId)
-                                        .get());
+      .set(SeriesStat.MONTH, referenceMonthId)
+      .set(SeriesStat.SERIES, itemId)
+      .get());
     if (seriesStat == null) {
       return "";
     }
@@ -135,14 +134,14 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
   }
 
   private class OpenSeriesAmountEditionDialogAction extends AbstractAction {
-    private SeriesEditor seriesEditor;
+    private Directory directory;
 
-    public OpenSeriesAmountEditionDialogAction(SeriesEditor seriesEditor) {
-      this.seriesEditor = seriesEditor;
+    public OpenSeriesAmountEditionDialogAction(Directory directory) {
+      this.directory = directory;
     }
 
     public void actionPerformed(ActionEvent e) {
-      seriesEditor.showAmount(currentSeries, Collections.singleton(referenceMonthId));
+      SeriesEditor.get(directory).showAmount(currentSeries, Collections.singleton(referenceMonthId));
     }
   }
 }

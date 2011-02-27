@@ -33,7 +33,6 @@ public class SavingsSeriesView implements Disposable {
   private Glob account;
   private GlobRepository repository;
   private Directory directory;
-  private SeriesEditor seriesEditor;
   private SeriesEditionButtons seriesButtons;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
   private MonthMatcher seriesDateFilter;
@@ -49,12 +48,10 @@ public class SavingsSeriesView implements Disposable {
   public SavingsSeriesView(Glob account,
                            final GlobRepository repository,
                            Directory directory,
-                           final SeriesEditor seriesEditor,
                            SeriesEditionButtons seriesButtons) {
     this.account = account;
     this.repository = repository;
     this.directory = directory;
-    this.seriesEditor = seriesEditor;
     this.seriesButtons = seriesButtons;
     this.selectionService = directory.get(SelectionService.class);
     this.selectionListener = new GlobSelectionListener() {
@@ -87,7 +84,6 @@ public class SavingsSeriesView implements Disposable {
                         new GlobList(),
                         new SavingsSeriesComponentFactory(account,
                                                           repository, directory,
-                                                          seriesEditor,
                                                           seriesButtons));
 
     seriesDateFilter = Matchers.seriesDateSavingsAndAccountFilter(account.get(Account.ID));

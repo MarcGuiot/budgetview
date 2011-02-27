@@ -8,15 +8,15 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class CreateProjectAction extends AbstractAction {
+  private Directory directory;
 
-  private SeriesEditor seriesEditor;
 
   public CreateProjectAction(Directory directory) {
     super(Lang.get("projectView.create"));
-    this.seriesEditor = directory.get(SeriesEditor.class);
+    this.directory = directory;
   }
 
   public void actionPerformed(ActionEvent actionEvent) {
-    seriesEditor.showNewProject();
+    SeriesEditor.get(directory).showNewProject();
   }
 }

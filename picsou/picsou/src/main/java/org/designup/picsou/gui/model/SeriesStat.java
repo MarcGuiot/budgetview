@@ -4,6 +4,7 @@ import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.BudgetArea;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.annotations.DefaultDouble;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
@@ -37,8 +38,11 @@ public class SeriesStat {
 
   public static BooleanField ACTIVE;
 
+  public static NotUniqueIndex MONTH_INDEX;
+
   static {
-    GlobTypeLoader.init(SeriesStat.class);
+    GlobTypeLoader loader = GlobTypeLoader.init(SeriesStat.class);
+    loader.defineNonUniqueIndex(MONTH_INDEX, MONTH);
   }
 
   public static BudgetArea getBudgetArea(org.globsframework.model.Key seriesStatKey, GlobRepository repository) {

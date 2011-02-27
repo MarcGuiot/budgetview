@@ -10,7 +10,6 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
-
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -193,7 +192,7 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
 
     Key monthKey = Key.create(Month.TYPE, newMonth);
     Glob glob = repository.find(monthKey);
-    if (glob == null){
+    if (glob == null) {
       repository.create(monthKey);
     }
 

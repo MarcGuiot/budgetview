@@ -6,7 +6,6 @@ import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.position.SavingsAccountPositionLabels;
 import org.designup.picsou.gui.budget.SeriesEditionButtons;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
-import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.evolution.histobuilders.AccountHistoChartUpdater;
 import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartRange;
@@ -50,8 +49,8 @@ public class SavingsView extends View implements GlobSelectionListener {
 
   private void createSavingsBlock(GlobsPanelBuilder builder) {
 
-    SeriesEditionButtons seriesButtons = new SeriesEditionButtons(BudgetArea.SAVINGS, repository, directory,
-                                                                  directory.get(SeriesEditor.class));
+    SeriesEditionButtons seriesButtons = new SeriesEditionButtons(BudgetArea.SAVINGS, repository, directory
+    );
     seriesButtons.setNames("createSavingsSeries");
     seriesButtons.registerButtons(builder);
 
@@ -114,7 +113,6 @@ public class SavingsView extends View implements GlobSelectionListener {
                       positionLabels.getEstimatedAccountPositionDateLabel());
 
       final SavingsSeriesView seriesView = new SavingsSeriesView(account, repository, directory,
-                                                                 directory.get(SeriesEditor.class),
                                                                  seriesButtons);
       cellBuilder.add("savingsSeries", seriesView.getPanel());
       cellBuilder.addDisposeListener(seriesView);

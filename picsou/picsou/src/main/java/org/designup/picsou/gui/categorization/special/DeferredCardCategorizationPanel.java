@@ -7,7 +7,6 @@ import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
 import org.designup.picsou.gui.description.SeriesNameComparator;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
@@ -40,7 +39,7 @@ public class DeferredCardCategorizationPanel implements SpecialCategorizationPan
   public JPanel loadPanel(final GlobRepository repository,
                           final Directory directory,
                           FilteredRepeats filteredRepeats,
-                          SeriesEditor seriesEditionDialog, SeriesCreationHandler seriesCreationHandler) {
+                          SeriesCreationHandler seriesCreationHandler) {
     this.repository = repository;
 
     registerUpdater();
@@ -73,7 +72,6 @@ public class DeferredCardCategorizationPanel implements SpecialCategorizationPan
                                     filter,
                                     SeriesNameComparator.INSTANCE,
                                     new SeriesChooserComponentFactory(budgetArea, invisibleRadio,
-                                                                      seriesEditionDialog,
                                                                       repository,
                                                                       directory));
     filteredRepeats.add(filter, repeat);

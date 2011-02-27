@@ -23,19 +23,16 @@ public class SeriesEditionButtons {
   private BudgetArea budgetArea;
   private GlobRepository repository;
   private Directory directory;
-  private SeriesEditor seriesEditor;
   private SelectionService selectionService;
   private String createButtonName = "createSeries";
 
   public SeriesEditionButtons(final BudgetArea budgetArea,
                               final GlobRepository repository,
-                              Directory directory,
-                              final SeriesEditor seriesEditor) {
+                              Directory directory) {
     this.budgetArea = budgetArea;
     this.repository = repository;
     this.directory = directory;
     this.selectionService = directory.get(SelectionService.class);
-    this.seriesEditor = seriesEditor;
   }
 
   public void registerButtons(SplitsBuilder builder) {
@@ -67,7 +64,7 @@ public class SeriesEditionButtons {
     }
 
     public void actionPerformed(ActionEvent e) {
-      seriesEditor.showNewSeries(GlobList.EMPTY,
+      SeriesEditor.get(directory).showNewSeries(GlobList.EMPTY,
                                  selectionService.getSelection(Month.TYPE),
                                  budgetArea);
     }
@@ -84,7 +81,7 @@ public class SeriesEditionButtons {
     if (repository.contains(Project.TYPE, GlobMatchers.linkedTo(series.getKey(), Project.SERIES))) {
 
     }
-    seriesEditor.showSeries(series, selectedMonthIds);
+    SeriesEditor.get(directory).showSeries(series, selectedMonthIds);
   }
 
   private class TooltipUpdater implements ChangeSetListener {

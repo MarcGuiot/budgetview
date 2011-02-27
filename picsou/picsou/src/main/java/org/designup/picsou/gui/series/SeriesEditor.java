@@ -59,4 +59,8 @@ public class SeriesEditor {
   public Integer getLastSelectedSubSeriesId() {
     return lastSelectedSubSeriesId;
   }
+
+  public static SeriesEditor get(Directory directory) {
+    return directory.get(SeriesEditor.class);
+  }
 }

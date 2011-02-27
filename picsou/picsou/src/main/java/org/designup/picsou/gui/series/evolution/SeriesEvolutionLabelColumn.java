@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.series.evolution;
 
-import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.globsframework.gui.views.GlobTableColumn;
 import org.globsframework.gui.views.GlobTableView;
@@ -20,10 +19,10 @@ public class SeriesEvolutionLabelColumn implements GlobTableColumn {
 
   public SeriesEvolutionLabelColumn(GlobTableView view,
                                     GlobRepository repository, Directory directory,
-                                    SeriesEvolutionColors colors,
-                                    SeriesEditor seriesEditor) {
+                                    SeriesEvolutionColors colors
+  ) {
     this.repository = repository;
-    this.editor = new SeriesEvolutionLabelEditor(view, repository, directory, colors, seriesEditor);
+    this.editor = new SeriesEvolutionLabelEditor(view, repository, directory, colors);
   }
 
   public String getName() {

@@ -16,7 +16,6 @@ import org.designup.picsou.gui.description.SeriesDescriptionStringifier;
 import org.designup.picsou.gui.description.SeriesNameComparator;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.signpost.Signpost;
@@ -93,7 +92,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private static final int[] COLUMN_SIZES = {10, 12, 28, 10};
   public static final String TRANSACTIONS_FILTER = "transactions";
 
-  private SeriesEditor seriesEditor;
   private Signpost signpost;
   private TransactionRendererColors colors;
   private PicsouTableHeaderPainter headerPainter;
@@ -136,8 +134,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
   }
 
   private GlobsPanelBuilder createPanelBuilder() {
-
-    seriesEditor = directory.get(SeriesEditor.class);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorization/categorizationView.splits",
                                                       this.repository, directory);
@@ -363,7 +359,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     Matchers.CategorizationFilter filter = Matchers.seriesCategorizationFilter(budgetArea.getId());
     SeriesChooserComponentFactory componentFactory = new SeriesChooserComponentFactory(budgetArea, invisibleRadio,
-                                                                                       seriesEditor,
                                                                                        repository,
                                                                                        directory);
     GlobRepeat repeat = builder.addRepeat("seriesRepeat",
@@ -441,7 +436,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
         }
       };
 
-      JPanel panel = categorizationPanel.loadPanel(repository, directory, seriesRepeat, seriesEditor, handler);
+      JPanel panel = categorizationPanel.loadPanel(repository, directory, seriesRepeat, handler);
       panel.setVisible(false);
       cellBuilder.add("specialCasePanel", panel);
 
@@ -525,10 +520,10 @@ public class CategorizationView extends View implements TableView, Filterable, C
     }
 
     public void actionPerformed(ActionEvent e) {
-      Key key = seriesEditor.showNewSeries(currentTransactions,
-                                           selectionService.getSelection(Month.TYPE),
-                                           budgetArea,
-                                           forcedValues);
+      Key key = SeriesEditor.get(directory).showNewSeries(currentTransactions,
+                                                          selectionService.getSelection(Month.TYPE),
+                                                          budgetArea,
+                                                          forcedValues);
       Glob series = repository.find(key);
       if (key != null && series != null) {
         try {
@@ -559,7 +554,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
       if (!noneMatch) {
         return false;
       }
-      Integer subSeriesId = seriesEditor.getLastSelectedSubSeriesId();
+      Integer subSeriesId = SeriesEditor.get(directory).getLastSelectedSubSeriesId();
       repository.update(transaction.getKey(),
                         value(Transaction.SERIES, series.get(Series.ID)),
                         value(Transaction.SUB_SERIES, subSeriesId));

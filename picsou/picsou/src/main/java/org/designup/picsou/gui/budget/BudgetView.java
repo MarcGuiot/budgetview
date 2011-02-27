@@ -2,24 +2,19 @@ package org.designup.picsou.gui.budget;
 
 import com.jidesoft.swing.JideSplitPane;
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.budget.summary.BudgetSummaryView;
 import org.designup.picsou.gui.budget.footers.BudgetAreaSeriesFooter;
 import org.designup.picsou.gui.budget.footers.EmptyBudgetAreaSeriesFooter;
-import org.designup.picsou.gui.series.SeriesAmountEditionDialog;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
-import org.designup.picsou.gui.series.SeriesEditor;
+import org.designup.picsou.gui.budget.summary.BudgetSummaryView;
 import org.designup.picsou.model.BudgetArea;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 public class BudgetView extends View {
-  private SeriesEditor seriesEditor;
 
   public BudgetView(GlobRepository repository, Directory parentDirectory) {
     super(repository, parentDirectory);
 
-    seriesEditor = directory.get(SeriesEditor.class);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -54,7 +49,7 @@ public class BudgetView extends View {
                                  BudgetArea budgetArea,
                                  BudgetAreaSeriesFooter footer,
                                  GlobsPanelBuilder builder) {
-    View view = new BudgetAreaSeriesView(name, budgetArea, repository, directory, footer, seriesEditor);
+    View view = new BudgetAreaSeriesView(name, budgetArea, repository, directory, footer);
     view.registerComponents(builder);
 
   }

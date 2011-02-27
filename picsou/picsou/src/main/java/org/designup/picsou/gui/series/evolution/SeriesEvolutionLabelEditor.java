@@ -22,14 +22,13 @@ public class SeriesEvolutionLabelEditor extends SeriesEvolutionEditor {
   protected SeriesEvolutionLabelEditor(GlobTableView view,
                                        GlobRepository repository,
                                        Directory directory,
-                                       SeriesEvolutionColors colors,
-                                       SeriesEditor seriesEditor) {
+                                       SeriesEvolutionColors colors) {
     super(-1, view, directory.get(DescriptionService.class), repository, directory, colors);
 
     this.stringifier = new SeriesWrapperStringifier(repository, directory);
     this.descriptionStringifier = new SeriesWrapperDescriptionStringifier();
 
-    complete(new OpenSeriesEditionDialogAction(seriesEditor));
+    complete(new OpenSeriesEditionDialogAction(directory));
   }
 
   protected String getText(Glob seriesWrapper) {
@@ -45,14 +44,14 @@ public class SeriesEvolutionLabelEditor extends SeriesEvolutionEditor {
   }
 
   private class OpenSeriesEditionDialogAction extends AbstractAction {
-    private SeriesEditor seriesEditor;
+    private Directory directory;
 
-    public OpenSeriesEditionDialogAction(SeriesEditor seriesEditor) {
-      this.seriesEditor = seriesEditor;
+    public OpenSeriesEditionDialogAction(Directory directory) {
+      this.directory = directory;
     }
 
     public void actionPerformed(ActionEvent e) {
-      seriesEditor.showSeries(currentSeries, Collections.singleton(referenceMonthId));
+      SeriesEditor.get(directory).showSeries(currentSeries, Collections.singleton(referenceMonthId));
     }
   }
 }

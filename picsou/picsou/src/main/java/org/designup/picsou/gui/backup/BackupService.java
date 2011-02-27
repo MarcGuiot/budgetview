@@ -125,6 +125,13 @@ public class BackupService {
       repository.completeChangeSet();
     }
     repository.removeTrigger(upgradeTrigger);
+    repository.startChangeSet();
+    try {
+      upgradeTrigger.postTraitement(repository);
+    }
+    finally {
+      repository.completeChangeSet();
+    }
     return Status.OK;
   }
 

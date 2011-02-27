@@ -127,7 +127,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
       }
     });
-    
+
     Integer periodInMonth = userPreference.get(UserPreferences.PERIOD_COUNT_FOR_PLANNED);
     for (SeriesToReCompute series : seriesToReCompute.values()) {
       final Glob seriesShape = repository.findOrCreate(Key.create(SeriesShape.TYPE, series.seriesId));
@@ -143,6 +143,9 @@ public class SeriesShapeTrigger implements ChangeSetListener {
         repository.delete(seriesShape.getKey());
       }
       else {
+
+        transactionGlobFunctor.updateForSingleOp();
+
         for (int i = 1; i < fields.length - 1; i++) {
           repository.update(seriesShape.getKey(), fields[i], transactionGlobFunctor.getPercent(i));
         }
@@ -192,6 +195,8 @@ public class SeriesShapeTrigger implements ChangeSetListener {
       Field[] fields = SeriesShape.TYPE.getFields();
       repository.startChangeSet();
 
+      transactionGlobFunctor.updateForSingleOp();
+
       for (int i = 1; i < fields.length - 1; i++) {
         repository.update(seriesShape.getKey(), fields[i], transactionGlobFunctor.getPercent(i));
       }
@@ -212,7 +217,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
       return new SeriesToReCompute(seriesId, globFunctor.lastId1, globFunctor.lastId2, globFunctor.lastId2);
     }
     if (monthCount == 3) {
-      return new SeriesToReCompute(seriesId, globFunctor.lastId1, globFunctor.lastId1, globFunctor.lastId3);
+      return new SeriesToReCompute(seriesId, globFunctor.lastId1, globFunctor.lastId2, globFunctor.lastId3);
     }
     throw new RuntimeException("only 3 month max");
   }
@@ -225,6 +230,9 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     private double total1;
     private double total2;
     private double total3;
+    private int opCount1;
+    private int opCount2;
+    private int opCount3;
     private int periodCount;
     private SeriesToReCompute seriesToReCompute;
     private boolean positif;
@@ -259,14 +267,17 @@ public class SeriesShapeTrigger implements ChangeSetListener {
       if (budgetMonthId == seriesToReCompute.monthId1) {
         amountForMonth1[glob.get(Transaction.BUDGET_DAY)] += amount;
         total1 += amount;
+        opCount1++;
       }
       else if (budgetMonthId == seriesToReCompute.monthId2) {
         amountForMonth2[glob.get(Transaction.BUDGET_DAY)] += amount;
         total2 += amount;
+        opCount2++;
       }
-      else if (budgetMonthId == seriesToReCompute.monthId1) {
+      else if (budgetMonthId == seriesToReCompute.monthId3) {
         amountForMonth3[glob.get(Transaction.BUDGET_DAY)] += amount;
         total3 += amount;
+        opCount3++;
       }
     }
 
@@ -281,7 +292,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
       if (monthCount >= 3) {
         total += total3;
       }
-      return total / monthCount;
+      return total / getMonthCount();
     }
 
     int getPercent(int period) {
@@ -298,11 +309,32 @@ public class SeriesShapeTrigger implements ChangeSetListener {
           percent += total3 == 0 ? 0. : amountForMonth3[j] / total3;
         }
       }
-      return (int)(100. * (percent) / monthCount);
+      return (int)(100. * (percent) / getMonthCount());
+    }
+
+    private double getMonthCount() {
+      if (monthCount == 1) {
+        return 1;
+      }
+      if (monthCount == 2) {
+        return (total1 == 0 ? 0 : 1) + (total2 == 0 ? 0 : 1);
+      }
+      if (monthCount == 3) {
+        return (total1 == 0 ? 0 : 1) + (total2 == 0 ? 0 : 1) + (total3 == 0 ? 0 : 1);
+      }
+      throw new RuntimeException("no " + monthCount);
     }
 
     public boolean hasData() {
       return total1 != 0 || total2 != 0 || total3 != 0;
+    }
+
+    public void updateForSingleOp() {
+      if (monthCount != 1) {
+        if (opCount1 <= 1 && opCount2 <= 1 && opCount3 <= 1) {
+          monthCount = opCount1 == 1 ? 1 : (opCount2 == 1 ? 2 : monthCount); 
+        }
+      }
     }
   }
 
