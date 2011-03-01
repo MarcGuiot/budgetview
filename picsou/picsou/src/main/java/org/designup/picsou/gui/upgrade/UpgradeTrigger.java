@@ -404,6 +404,9 @@ public class UpgradeTrigger implements ChangeSetListener {
   public void postTraitement(GlobRepository repository) {
     for (Map.Entry<Integer, Key[]> entry : savingsSeriesToOp.entrySet()) {
       Glob series = repository.find(Key.create(Series.TYPE, entry.getKey()));
+      if (series == null){
+        continue;
+      }
       Glob targetAccount = repository.findLinkTarget(series, Series.TARGET_ACCOUNT);
       boolean positif = series.get(Series.TO_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT));
       for (Key key : entry.getValue()) {
@@ -420,6 +423,7 @@ public class UpgradeTrigger implements ChangeSetListener {
         }
       }
     }
+    savingsSeriesToOp.clear();
   }
 
   private boolean isSame(Glob targetAccount, Glob transaction, GlobRepository repository) {

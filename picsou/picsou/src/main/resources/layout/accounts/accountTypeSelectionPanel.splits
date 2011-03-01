@@ -3,7 +3,7 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <column opaque="false" name="accountTypeSelection">
-    <label text="$import.accountTypeSelectionPanel.title" name="title" styleClass="title"/>
+    <label text="$import.accountTypeSelectionPanel.title" name="titleForAccountType" styleClass="title"/>
 
     <repeat ref="accountTypeRepeat" marginLeft="20" marginRight="20">
       <row marginTop="5">

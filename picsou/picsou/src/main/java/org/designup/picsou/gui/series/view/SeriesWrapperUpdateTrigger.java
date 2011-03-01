@@ -31,9 +31,9 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(Series.BUDGET_AREA)){
+        if (values.contains(Series.BUDGET_AREA)) {
           Glob wrapper = SeriesWrapper.find(repository, SeriesWrapperType.SERIES, key.get(Series.ID));
-          if (wrapper != null){
+          if (wrapper != null) {
             repository.delete(wrapper.getKey());
             Glob budgetAreaWrapper =
               repository.findUnique(SeriesWrapper.TYPE,
@@ -49,10 +49,9 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
         Integer seriesId = key.get(Series.ID);
-        Glob wrapper = SeriesWrapper.find(repository, SeriesWrapperType.SERIES, seriesId);
-        if (wrapper != null) {
-          repository.delete(wrapper.getKey());
-        }
+        // normalement il n'y en a qu'un mais...
+        GlobList wrapper = SeriesWrapper.findAll(repository, SeriesWrapperType.SERIES, seriesId);
+        repository.delete(wrapper);
       }
     });
   }

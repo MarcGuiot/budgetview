@@ -42,10 +42,8 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 
 import static org.designup.picsou.model.Transaction.TYPE;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -104,18 +102,12 @@ public class TransactionView extends View implements Filterable {
     builder.add("customFilterMessage", filterClearingPanel.getPanel());
 
     search = new TextFilterPanel(getFilterSet(), repository, directory) {
-      protected GlobMatcher createMatcher(final String searchFilter) {
+      protected GlobMatcher createMatcher(String searchFilter) {
+        searchFilter = searchFilter.toLowerCase();
         return or(fieldContainsIgnoreCase(Transaction.LABEL, searchFilter),
                   fieldContainsIgnoreCase(Transaction.NOTE, searchFilter),
-                  new GlobMatcher() {
-                    final GlobStringifier amountStringifier =
-                      directory.get(DescriptionService.class).getStringifier(Transaction.AMOUNT);
-
-                    public boolean matches(Glob item, GlobRepository repository) {
-                      String s = amountStringifier.toString(item, repository);
-                      return s != null && s.contains(searchFilter);
-                    }
-                  });
+                  new AmountMatcher(searchFilter),
+                  new SeriesMatcher(searchFilter));
       }
     };
     builder.add("transactionSearch", search.getPanel());
@@ -320,6 +312,42 @@ public class TransactionView extends View implements Filterable {
           label.setForeground(rendererColors.getTransactionTextColor());
         }
       }
+    }
+  }
+
+  private class AmountMatcher implements GlobMatcher {
+    final GlobStringifier amountStringifier;
+    private final String searchFilter;
+
+    public AmountMatcher(String searchFilter) {
+      this.searchFilter = searchFilter;
+      amountStringifier = directory.get(DescriptionService.class).getStringifier(Transaction.AMOUNT);
+    }
+
+    public boolean matches(Glob item, GlobRepository repository) {
+      String s = amountStringifier.toString(item, repository);
+      return s != null && s.contains(searchFilter);
+    }
+  }
+
+  private class SeriesMatcher implements GlobMatcher {
+    private Map<Integer, String> cachedNames;
+    private final GlobStringifier seriesNameStringifier;
+    private final String searchFilter;
+
+    public SeriesMatcher(String searchFilter) {
+      this.searchFilter = searchFilter;
+      cachedNames = new WeakHashMap<Integer, String>();
+      seriesNameStringifier = directory.get(DescriptionService.class).getStringifier(Transaction.SERIES);
+    }
+
+    public boolean matches(Glob item, GlobRepository repository) {
+      String s = cachedNames.get(item.get(Transaction.SERIES));
+      if (s == null){
+        s = seriesNameStringifier.toString(item, repository);
+        cachedNames.put(item.get(Transaction.SERIES), s);
+      }
+      return s!= null && s.toLowerCase().contains(searchFilter);
     }
   }
 }

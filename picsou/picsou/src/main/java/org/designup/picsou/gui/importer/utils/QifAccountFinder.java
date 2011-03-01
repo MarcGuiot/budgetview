@@ -64,8 +64,11 @@ public class QifAccountFinder implements GlobFunctor {
         maxCount = entry.getValue();
         accountId = entry.getKey();
       }
+      else if (entry.getValue() > secondCount){
+        secondCount = entry.getValue();
+      }
     }
-    if (maxCount > secondCount * 1.5) {
+    if (maxCount > secondCount * 1.5) { // il faut qu'il y est suffisement d'operation pour choisir
       return accountId;
     }
     return null;

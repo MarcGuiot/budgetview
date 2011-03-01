@@ -131,6 +131,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2008/06/20", -5, "Vinci")
       .addTransaction("2008/06/15", -50, "Virgin")
+      .addTransaction("2008/06/15", -50, "Other")
       .addTransaction("2008/06/15", -500, "FNAC")
       .load();
 
@@ -149,6 +150,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .add("01/07/2008", TransactionType.PLANNED, "Planned: Transports", "", -5.00, "Transports")
       .add("20/06/2008", TransactionType.PRELEVEMENT, "VINCI", "", -5.00, "Transports")
       .add("15/06/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "Other", "", -50.00)
       .add("15/06/2008", TransactionType.PRELEVEMENT, "VIRGIN", "", -50.00, "Leisures")
       .check();
 
@@ -157,12 +159,14 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .add("08/08/2008", TransactionType.PLANNED, "Planned: Leisures", "", -550.00, "Leisures")
       .add("08/07/2008", TransactionType.PLANNED, "Planned: Leisures", "", -550.00, "Leisures")
       .add("20/06/2008", TransactionType.PRELEVEMENT, "VINCI", "", -5.00, "Transports")
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")
       .add("15/06/2008", TransactionType.PRELEVEMENT, "VIRGIN", "", -50.00, "Leisures")
       .check();
 
     transactions.hidePlannedTransactions();
     transactions.initContent()
       .add("20/06/2008", TransactionType.PRELEVEMENT, "VINCI", "", -5.00, "Transports")
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")
       .add("15/06/2008", TransactionType.PRELEVEMENT, "VIRGIN", "", -50.00, "Leisures")
       .check();
 
@@ -170,6 +174,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("20/06/2008", TransactionType.PRELEVEMENT, "VINCI", "", -5.00, "Transports")
       .add("15/06/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "Other", "", -50.00)
       .add("15/06/2008", TransactionType.PRELEVEMENT, "VIRGIN", "", -50.00, "Leisures")
       .check();
 
@@ -181,6 +186,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .add("01/07/2008", TransactionType.PLANNED, "Planned: Transports", "", -5.00, "Transports")
       .add("20/06/2008", TransactionType.PRELEVEMENT, "VINCI", "", -5.00, "Transports")
       .add("15/06/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "Other", "", -50.00)
       .add("15/06/2008", TransactionType.PRELEVEMENT, "VIRGIN", "", -50.00, "Leisures")
       .check();
   }

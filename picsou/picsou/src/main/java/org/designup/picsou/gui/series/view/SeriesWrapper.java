@@ -12,6 +12,8 @@ import org.globsframework.model.FieldValue;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.utils.GlobMatchers;
 
 public class SeriesWrapper {
   public static GlobType TYPE;
@@ -46,6 +48,12 @@ public class SeriesWrapper {
     return repository.findUnique(SeriesWrapper.TYPE,
                                  FieldValue.value(SeriesWrapper.ITEM_TYPE, type.getId()),
                                  FieldValue.value(SeriesWrapper.ITEM_ID, itemId));
+  }
+
+  public static GlobList findAll(GlobRepository repository, SeriesWrapperType type, Integer itemId) {
+    return repository.getAll(SeriesWrapper.TYPE,
+                             GlobMatchers.and(GlobMatchers.fieldEquals(SeriesWrapper.ITEM_TYPE, type.getId()),
+                                              GlobMatchers.fieldEquals(SeriesWrapper.ITEM_ID, itemId)));
   }
 
   public static boolean isAll(Glob wrapper) {

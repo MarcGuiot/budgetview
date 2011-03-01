@@ -118,7 +118,7 @@ public class GlobMatchers {
     return new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
         String actual = item.get(field);
-        return actual != null && actual.toLowerCase().contains(value.toLowerCase());
+        return actual != null && actual.toLowerCase().contains(value);
       }
 
       public String toString() {

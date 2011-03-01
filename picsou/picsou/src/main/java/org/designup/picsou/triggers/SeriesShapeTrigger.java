@@ -179,28 +179,34 @@ public class SeriesShapeTrigger implements ChangeSetListener {
   }
 
   private void recomputeAll(GlobRepository repository, Glob userPreference) {
-    Glob currentMonth = repository.get(CurrentMonth.KEY);
-    Integer lastTransactionMonthId = currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH);
+    repository.startChangeSet();
+    try {
+      Glob currentMonth = repository.get(CurrentMonth.KEY);
+      Integer lastTransactionMonthId = currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH);
 
-    Integer periodInMonth = userPreference.get(UserPreferences.PERIOD_COUNT_FOR_PLANNED);
-    Integer monthCount = userPreference.get(UserPreferences.MONTH_FOR_PLANNED);
-    for (Glob series : repository.getAll(Series.TYPE)) {
-      final Glob seriesShape = repository.findOrCreate(Key.create(SeriesShape.TYPE, series.get(Series.ID)));
-      SeriesToReCompute seriesToReCompute = findValidMonth(repository, series.get(Series.ID), lastTransactionMonthId, userPreference.get(UserPreferences.MONTH_FOR_PLANNED));
-      TransactionGlobFunctor transactionGlobFunctor =
-        new TransactionGlobFunctor(repository, periodInMonth, monthCount, seriesToReCompute);
-      repository
-        .findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
-        .saveApply(transactionGlobFunctor, repository);
-      Field[] fields = SeriesShape.TYPE.getFields();
-      repository.startChangeSet();
+      Integer periodInMonth = userPreference.get(UserPreferences.PERIOD_COUNT_FOR_PLANNED);
+      Integer monthCount = userPreference.get(UserPreferences.MONTH_FOR_PLANNED);
+      repository.deleteAll(SeriesShape.TYPE);
+      for (Glob series : repository.getAll(Series.TYPE)) {
+        SeriesToReCompute seriesToReCompute = findValidMonth(repository, series.get(Series.ID), lastTransactionMonthId, userPreference.get(UserPreferences.MONTH_FOR_PLANNED));
+        TransactionGlobFunctor transactionGlobFunctor =
+          new TransactionGlobFunctor(repository, periodInMonth, monthCount, seriesToReCompute);
+        repository
+          .findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
+          .saveApply(transactionGlobFunctor, repository);
+        Field[] fields = SeriesShape.TYPE.getFields();
 
-      transactionGlobFunctor.updateForSingleOp();
-
-      for (int i = 1; i < fields.length - 1; i++) {
-        repository.update(seriesShape.getKey(), fields[i], transactionGlobFunctor.getPercent(i));
+        transactionGlobFunctor.updateForSingleOp();
+        if (transactionGlobFunctor.hasData()) {
+          final Glob seriesShape = repository.findOrCreate(Key.create(SeriesShape.TYPE, series.get(Series.ID)));
+          for (int i = 1; i < fields.length - 1; i++) {
+            repository.update(seriesShape.getKey(), fields[i], transactionGlobFunctor.getPercent(i));
+          }
+          repository.update(seriesShape.getKey(), SeriesShape.TOTAL, transactionGlobFunctor.getTotal());
+        }
       }
-      repository.update(seriesShape.getKey(), SeriesShape.TOTAL, transactionGlobFunctor.getTotal());
+    }
+    finally {
       repository.completeChangeSet();
     }
   }
@@ -332,7 +338,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     public void updateForSingleOp() {
       if (monthCount != 1) {
         if (opCount1 <= 1 && opCount2 <= 1 && opCount3 <= 1) {
-          monthCount = opCount1 == 1 ? 1 : (opCount2 == 1 ? 2 : monthCount); 
+          monthCount = opCount1 == 1 ? 1 : (opCount2 == 1 ? 2 : monthCount);
         }
       }
     }

@@ -21,6 +21,7 @@ import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.MapOfMaps;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 
@@ -113,6 +114,16 @@ public class BackupService {
         idGenerator.update(field, lastAllocatedId);
       }
     });
+
+    try {
+      repository.startChangeSet();
+      Collection<GlobType> globTypeCollection = PicsouGuiModel.getUserSpecificType();
+      repository.reset(GlobList.EMPTY, globTypeCollection.toArray(new GlobType[globTypeCollection.size()]));
+    } catch (Exception e){
+      Log.write("Erreur while clearing date (ignored)", e);
+    } finally {
+      repository.completeChangeSet();
+    }
 
     try {
       repository.startChangeSet();
