@@ -19,6 +19,7 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
   static {
     TestUtils.clearTmpDir();
     Locale.setDefault(Lang.ROOT);
+    UISpec4J.setWindowInterceptionTimeLimit(15000);
     UISpec4J.setAssertionTimeLimit(1000);
     DummyRepaintManager.init();
   }

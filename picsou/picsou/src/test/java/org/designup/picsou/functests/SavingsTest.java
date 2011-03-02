@@ -378,8 +378,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initAmountContent()
-      .add("08/10/2008", "Planned: CAF", 300.00, "CAF", 1600.00, 1600.00, "Epargne")
-      .add("08/09/2008", "Planned: CAF", 300.00, "CAF", 1300.00, 1300.00, "Epargne")
+      .add("01/10/2008", "Planned: CAF", 300.00, "CAF", 1600.00, 1600.00, "Epargne")
+      .add("01/09/2008", "Planned: CAF", 300.00, "CAF", 1300.00, 1300.00, "Epargne")
       .add("05/08/2008", "CAF", 300.00, "CAF", 1000.00, 1000.00, "Epargne")
       .add("05/07/2008", "CAF", 300.00, "CAF", 700.00, 700.00, "Epargne")
       .add("10/06/2008", "FNAC", -100.00, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
@@ -457,8 +457,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initAmountContent()
-      .add("08/10/2008", "Planned: CAF", 100.00, "CAF", 1200.00, 1200.00, "Epargne")
-      .add("08/09/2008", "Planned: CAF", 100.00, "CAF", 1100.00, 1100.00, "Epargne")
+      .add("01/10/2008", "Planned: CAF", 100.00, "CAF", 1200.00, 1200.00, "Epargne")
+      .add("01/09/2008", "Planned: CAF", 100.00, "CAF", 1100.00, 1100.00, "Epargne")
       .add("10/08/2008", "CAF", -100.00, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("05/08/2008", "CAF", 100.00, "CAF", 1000.00, 1000.00, "Epargne")
       .check();
@@ -877,10 +877,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initAmountContent()
-      .add("08/10/2008", "Planned: Virement CAF", 300.00, "Virement CAF", 1600.00, 4800.00, "Epargne")
+      .add("01/10/2008", "Planned: Virement CAF", 300.00, "Virement CAF", 1600.00, 4800.00, "Epargne")
       .add("01/10/2008", "Planned: Placement", 100.00, "Placement", 3200.00, 4500.00, "Account n. 111222")
       .add("01/10/2008", "Planned: Placement", -100.00, "Placement", -200.00, "Main accounts")
-      .add("08/09/2008", "Planned: Virement CAF", 300.00, "Virement CAF", 1300.00, 4400.00, "Epargne")
+      .add("01/09/2008", "Planned: Virement CAF", 300.00, "Virement CAF", 1300.00, 4400.00, "Epargne")
       .add("01/09/2008", "Planned: Placement", 100.00, "Placement", 3100.00, 4100.00, "Account n. 111222")
       .add("01/09/2008", "Planned: Placement", -100.00, "Placement", -100.00, "Main accounts")
       .add("06/08/2008", "VIREMENT VERS EPARGNE", -100.00, "Placement", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
@@ -1842,8 +1842,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initAmountContent()
-      .add("08/10/2008", "Planned: CAF", 200.00, "CAF", 500.00, 500.00, "epargne")
-      .add("08/09/2008", "Planned: CAF", 200.00, "CAF", 300.00, 300.00, "epargne")
+      .add("01/10/2008", "Planned: CAF", 200.00, "CAF", 500.00, 500.00, "epargne")
+      .add("01/09/2008", "Planned: CAF", 200.00, "CAF", 300.00, 300.00, "epargne")
       .add("06/08/2008", "OPE", -100.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
       .add("01/08/2008", "CAF", 200.00, "CAF", 100.00, 100.00, "epargne")
       .check();

@@ -129,6 +129,9 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+        for (Glob month : repository.getAll(Month.TYPE)) {
+          listOfSeriesAndMonth.add(new Pair<Integer, Integer>(key.get(SeriesShape.SERIES_ID), month.get(Month.ID)));
+        }
       }
     });
 

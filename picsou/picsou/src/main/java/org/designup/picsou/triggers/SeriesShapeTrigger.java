@@ -69,24 +69,42 @@ public class SeriesShapeTrigger implements ChangeSetListener {
                                      glob.get(Transaction.SERIES),
                     seriesToReCompute, repository, lastTransactionMonthId, monthCount);
         }
-        else if (values.contains(Transaction.SERIES)) {
+        else if (values.contains(Transaction.SERIES) || values.contains(Transaction.AMOUNT)) {
           Glob glob = repository.get(key);
           Integer budgetMonthId = glob.get(Transaction.BUDGET_MONTH);
           if (budgetMonthId > lastTransactionMonthId) {
             return;
           }
           if (budgetMonthId.equals(lastTransactionMonthId)) {
-            Integer seriesId = values.get(Transaction.SERIES);
-            Glob budget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
-              .findByIndex(SeriesBudget.MONTH, budgetMonthId)
-              .getGlobs().getFirst();
-            if (budget != null && isSmallDiff(budget)
-                && budget.get(SeriesBudget.ACTIVE)) {
-              addSeries(budgetMonthId, glob.get(Transaction.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
+            Integer previousId = glob.get(Transaction.SERIES);
+            if (values.contains(Transaction.SERIES)){
+              previousId = values.getPrevious(Transaction.SERIES);
+            }
+            for (Integer seriesId : new Integer[]{glob.get(Transaction.SERIES),
+                                                  previousId}) {
+              Glob budget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
+                .findByIndex(SeriesBudget.MONTH, budgetMonthId)
+                .getGlobs().getFirst();
+              Glob seriesShape = repository.find(Key.create(SeriesShape.TYPE, seriesId));
+              if (budget != null){
+                boolean smallDiff = isSmallDiff(budget);
+                if ((smallDiff ||
+                     (seriesShape != null && seriesShape.get(SeriesShape.LAST_MONTH).equals(lastTransactionMonthId)))
+                    && budget.get(SeriesBudget.ACTIVE)) {
+                  addSeries(budgetMonthId, glob.get(Transaction.SERIES), seriesToReCompute, repository,
+                            lastTransactionMonthId, monthCount);
+                }
+                if (!smallDiff && seriesShape != null && seriesShape.get(SeriesShape.LAST_MONTH).equals(lastTransactionMonthId)){
+                  repository.delete(seriesShape.getKey());
+                }
+              }
             }
           }
           else {
             addSeries(budgetMonthId, glob.get(Transaction.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
+            if (values.contains(Transaction.SERIES)){
+              addSeries(budgetMonthId, values.getPrevious(Transaction.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
+            }
           }
         }
       }
@@ -103,28 +121,19 @@ public class SeriesShapeTrigger implements ChangeSetListener {
 
     changeSet.safeVisit(SeriesBudget.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
+        addFromSeriesBudget(key, repository, lastTransactionMonthId, seriesToReCompute, monthCount);
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         if (values.contains(SeriesBudget.AMOUNT) || values.contains(SeriesBudget.OBSERVED_AMOUNT)) {
-          Glob budget = repository.get(key);
-          Integer budgetMonthId = budget.get(SeriesBudget.MONTH);
-          if (budgetMonthId > lastTransactionMonthId) {
-            return;
-          }
-          if (budgetMonthId.equals(lastTransactionMonthId)) {
-            if (budget != null && isSmallDiff(budget)
-                && budget.get(SeriesBudget.ACTIVE)) {
-              addSeries(budgetMonthId, budget.get(SeriesBudget.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
-            }
-          }
-          else {
-            addSeries(budgetMonthId, budget.get(SeriesBudget.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
-          }
+          addFromSeriesBudget(key, repository, lastTransactionMonthId, seriesToReCompute, monthCount);
         }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+        addSeries(previousValues.get(SeriesBudget.MONTH),
+                  previousValues.get(SeriesBudget.SERIES),
+                  seriesToReCompute, repository, lastTransactionMonthId, monthCount);
       }
     });
 
@@ -150,8 +159,34 @@ public class SeriesShapeTrigger implements ChangeSetListener {
           repository.update(seriesShape.getKey(), fields[i], transactionGlobFunctor.getPercent(i));
         }
         repository.update(seriesShape.getKey(), SeriesShape.TOTAL, transactionGlobFunctor.getTotal());
+        repository.update(seriesShape.getKey(), SeriesShape.LAST_MONTH, series.monthId1);
       }
       repository.completeChangeSet();
+    }
+  }
+
+  private void addFromSeriesBudget(Key key, GlobRepository repository, Integer lastTransactionMonthId,
+                                   Map<Integer, SeriesToReCompute> seriesToReCompute, Integer monthCount) {
+    Glob budget = repository.get(key);
+    Integer budgetMonthId = budget.get(SeriesBudget.MONTH);
+    if (budgetMonthId > lastTransactionMonthId) {
+      return;
+    }
+    if (budgetMonthId.equals(lastTransactionMonthId)) {
+      Glob seriesShape = repository.find(Key.create(SeriesShape.TYPE, budget.get(SeriesBudget.SERIES)));
+      boolean smallDiff = isSmallDiff(budget);
+      if (budget != null && (smallDiff ||
+                             (seriesShape != null && seriesShape.get(SeriesShape.LAST_MONTH).equals(lastTransactionMonthId)))
+          && budget.get(SeriesBudget.ACTIVE)) {
+        addSeries(budgetMonthId, budget.get(SeriesBudget.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
+      }
+      // la series doit etre supprimé, elle sera recreer si besoin par le add
+      if (!smallDiff && seriesShape != null && seriesShape.get(SeriesShape.LAST_MONTH).equals(lastTransactionMonthId)){
+        repository.delete(seriesShape.getKey());
+      }
+    }
+    else {
+      addSeries(budgetMonthId, budget.get(SeriesBudget.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
     }
   }
 
@@ -196,13 +231,14 @@ public class SeriesShapeTrigger implements ChangeSetListener {
           .saveApply(transactionGlobFunctor, repository);
         Field[] fields = SeriesShape.TYPE.getFields();
 
-        transactionGlobFunctor.updateForSingleOp();
         if (transactionGlobFunctor.hasData()) {
+          transactionGlobFunctor.updateForSingleOp();
           final Glob seriesShape = repository.findOrCreate(Key.create(SeriesShape.TYPE, series.get(Series.ID)));
           for (int i = 1; i < fields.length - 1; i++) {
             repository.update(seriesShape.getKey(), fields[i], transactionGlobFunctor.getPercent(i));
           }
           repository.update(seriesShape.getKey(), SeriesShape.TOTAL, transactionGlobFunctor.getTotal());
+          repository.update(seriesShape.getKey(), SeriesShape.LAST_MONTH, seriesToReCompute.monthId1);
         }
       }
     }
@@ -382,6 +418,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     if (Amounts.isNearZero(Amounts.zeroIfNull(budget.get(SeriesBudget.AMOUNT)))) {
       return false;
     }
-    return Math.abs((Amounts.zeroIfNull(budget.get(SeriesBudget.OBSERVED_AMOUNT)) / (budget.get(SeriesBudget.AMOUNT)))) > 0.90;
+    double v = Amounts.zeroIfNull(budget.get(SeriesBudget.OBSERVED_AMOUNT)) / (budget.get(SeriesBudget.AMOUNT));
+    return Math.abs(v) > 0.90;
   }
 }
