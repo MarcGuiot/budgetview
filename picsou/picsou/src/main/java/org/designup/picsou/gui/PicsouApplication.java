@@ -208,7 +208,7 @@ public class PicsouApplication {
         try {
           MD5PasswordBasedEncryptor.init();
         }
-        catch (NoSuchAlgorithmException e) {
+        catch (Exception e) {
         }
       }
     };

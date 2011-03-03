@@ -7,6 +7,7 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import java.security.NoSuchAlgorithmException;
@@ -14,7 +15,7 @@ import java.security.spec.InvalidKeySpecException;
 
 public class MD5PasswordBasedEncryptor implements PasswordBasedEncryptor {
   private SecretKey secretKey;
-  private Cipher cipher;
+  private static Cipher cipher;
   private PBEParameterSpec spec;
   private static SecretKeyFactory factory;
 
@@ -31,7 +32,6 @@ public class MD5PasswordBasedEncryptor implements PasswordBasedEncryptor {
       spec = new PBEParameterSpec(salt, count);
       PBEKeySpec keySpec = new PBEKeySpec(password);
       secretKey = factory.generateSecret(keySpec);
-      cipher = Cipher.getInstance("PBEWithMD5AndDES");
     }
     catch (InvalidKeySpecException e) {
       throw new EncryptFail(e);
@@ -41,10 +41,11 @@ public class MD5PasswordBasedEncryptor implements PasswordBasedEncryptor {
     }
   }
 
-  public synchronized static void init() throws NoSuchAlgorithmException {
+  public synchronized static void init() throws NoSuchAlgorithmException, NoSuchPaddingException {
     if (factory == null) {
       long start = System.currentTimeMillis();
       factory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
+      cipher = Cipher.getInstance("PBEWithMD5AndDES");
       long stop = System.currentTimeMillis();
       long duration = stop - start;
       if (duration > 1000) {
