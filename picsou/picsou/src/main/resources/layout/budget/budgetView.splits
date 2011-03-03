@@ -11,17 +11,17 @@
 
     <horizontalSplit ref="horizontalSplitPane">
 
-      <column weightX="3">
-        <label text="$budgetSummaryView.title" styleClass="blockTitle"/>
-        <column styleClass="block" marginBottom="10" weightY="0.1">
+      <verticalBoxes weightX="3">
+        <label text="$budgetSummaryView.title" styleClass="blockTitle" horizontalAlignment="center"/>
+        <column styleClass="block" marginBottom="10" preferredSize="(200,200)">
           <panel ref="budgetSummaryView"/>
         </column>
 
-        <verticalSplit ref="firstVerticalSplitPane" weightY="10">
+        <verticalSplit ref="firstVerticalSplitPane" weightY="10" alignmentX="0.5">
           <panel ref="incomeBudgetView" weightY="5"/>
           <panel ref="savingsBudgetView" weightY="5"/>
         </verticalSplit>
-      </column>
+      </verticalBoxes>
 
       <verticalSplit ref="secondVerticalSplitPane" weightX="3">
         <panel ref="recurringBudgetView" weightY="7"/>
