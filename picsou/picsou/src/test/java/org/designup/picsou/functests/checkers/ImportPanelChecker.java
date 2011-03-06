@@ -12,17 +12,17 @@ public class ImportPanelChecker extends ViewChecker {
   }
 
   public ImportDialogChecker openImport() {
-    return ImportDialogChecker.open(getPanel().getButton("Import").triggerClick());
+    return ImportDialogChecker.open(getPanel().getButton("importButton").triggerClick());
   }
 
   public ImportPanelChecker checkImportMessage(String message) {
-    assertThat(getPanel().getButton().textEquals(message));
+    assertThat(getPanel().getButton("importLabel").textEquals(message));
     return this;
   }
 
   public ImportPanelChecker checkImportSignpostDisplayed(String message) {
     views.selectData();
-    checkSignpostVisible(mainWindow, getPanel().getButton(), message);
+    checkSignpostVisible(mainWindow, getPanel().getButton("importButton"), message);
     return this;
   }
 

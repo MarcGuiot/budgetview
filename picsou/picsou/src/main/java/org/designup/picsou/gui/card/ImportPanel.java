@@ -23,7 +23,7 @@ public class ImportPanel extends View {
 
     Action action = ImportFileAction.init(Lang.get("import"), repository, directory, null);
     JButton button = new JButton(action);
-    builder.add("import", button);
+    builder.add("importButton", button);
 
     JButton importLabel = new JButton();
     importLabel.setModel(button.getModel());

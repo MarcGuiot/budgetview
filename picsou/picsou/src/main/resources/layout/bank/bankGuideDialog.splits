@@ -1,6 +1,9 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.formLabel" fill="horizontal" horizontalAlignment="left" marginBottom="4"/>
+  </styles>
 
   <column styleClass="dialog" preferredSize="(400,340)" opaque="true">
     <column styleClass="innerDialog">
@@ -8,13 +11,18 @@
       <row>
         <filler fill="horizontal"/>
         <column>
-          <label text="$bank.chooser.editLabel" styleClass="formLabelTop"/>
-          <textField ref="bankEditor" marginBottom="10"/>
-          <label text="$bank.chooser.message" styleClass="formLabelTop"/>
+
+          <label text="$bank.chooser.editLabel" styleClass="formLabel"/>
           <scrollPane>
             <list ref="bankList"/>
           </scrollPane>
+          <row>
+            <label icon="button_magnifier.png" marginRight="5"/>
+            <textField ref="bankEditor"/>
+          </row>
+
           <button action="openHelp" marginTop="10" marginBottom="10"/>
+
         </column>
         <filler fill="horizontal"/>
       </row>

@@ -18,10 +18,10 @@
   </styles>
 
   <row>
-    <button ref="import" fill="none" weightX="0" weightY="0"
+    <button ref="importButton" fill="none" weightX="0" weightY="0"
             icon="button_import.png" rolloverIcon="button_import_rollover.png" pressedIcon="button_import.png"
             ui="roundButton" minimumSize="(0,0)"/>
-    <button ref="importLabel" text="$import.button" icon="arrow_left_lightgrey.png"
+    <button ref="importLabel"  text="$import.button" icon="arrow_left_lightgrey.png"
             styleClass="hyperlinkWithoutUnderline" foreground="import.label" fill="none"/>
   </row>
 

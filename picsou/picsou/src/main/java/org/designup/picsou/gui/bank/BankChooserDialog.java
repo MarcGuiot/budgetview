@@ -50,13 +50,13 @@ public class BankChooserDialog implements GlobSelectionListener {
 
     validateAction = new ValidateAction();
 
-    BankChooserPanel.registerComponents(builder, validateAction);
-
+    BankChooserPanel bankChooser = BankChooserPanel.registerComponents(builder, validateAction);
 
     dialog = PicsouDialog.create(parent, localDirectory);
     dialog.addPanelWithButtons(builder.<JPanel>load(), validateAction, new CancelAction(dialog));
 
     dialog.pack();
+    bankChooser.requestFocus();
     dialog.showCentered();
 
     builder.dispose();

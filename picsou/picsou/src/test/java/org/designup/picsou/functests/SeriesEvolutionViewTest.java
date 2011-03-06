@@ -367,8 +367,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
-    seriesEvolution.editSeries("John's")
-      .deleteCurrentSeriesWithConfirmation();
+    seriesEvolution.editSeries("John's").deleteCurrentSeriesWithConfirmation();
 
     seriesEvolution.initContent()
       .add("Main accounts", "", "1000.00", "1350.00", "1700.00", "2050.00", "2400.00", "2750.00", "3100.00")

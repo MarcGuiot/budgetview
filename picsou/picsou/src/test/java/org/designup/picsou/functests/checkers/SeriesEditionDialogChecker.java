@@ -10,7 +10,6 @@ import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -255,15 +254,41 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     assertFalse(dialog.isVisible());
   }
 
-  public void deleteCurrentSeriesWithConfirmation() {
-    SeriesDeleteDialogChecker.init(dialog.getButton("Delete...").triggerClick())
-      .checkMessage()
+  public SeriesDeletionDialogChecker openDeleteDialog() {
+    return SeriesDeletionDialogChecker.init(dialog.getButton("Delete...").triggerClick());
+  }
+
+  public void deleteCurrentSeriesWithConfirmation(String seriesName) {
+    openDeleteDialog()
+      .checkMessage(seriesName)
+      .uncategorize();
+    assertFalse(dialog.isVisible());
+  }
+
+  public void deleteSavingsSeriesWithConfirmation() {
+    ConfirmationDialogChecker.init(dialog.getButton("Delete...").triggerClick())
+      .checkMessageContains("Some operations have been associated")
       .validate();
     assertFalse(dialog.isVisible());
   }
 
+  public SeriesEditionDialogChecker deleteSavingsSeriesWithConfirmationAndCancel() {
+    ConfirmationDialogChecker.init(dialog.getButton("Delete...").triggerClick())
+      .checkMessageContains("Some operations have been associated")
+      .cancel();
+    assertTrue(dialog.isVisible());
+    return this;
+  }
+
+  public void deleteCurrentSeriesWithConfirmation() {
+    openDeleteDialog()
+      .checkMessage()
+      .uncategorize();
+    assertFalse(dialog.isVisible());
+  }
+
   public SeriesEditionDialogChecker deleteCurrentSeriesWithConfirmationAndCancel() {
-    SeriesDeleteDialogChecker.init(dialog.getButton("Delete...").triggerClick())
+    openDeleteDialog()
       .checkMessage()
       .cancel();
     assertTrue(dialog.isVisible());
@@ -351,6 +376,11 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     for (UIComponent checkBox : dialog.getUIComponents(CheckBox.class)) {
       assertFalse(checkBox.isEnabled());
     }
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkVisible() {
+    assertTrue(dialog.isVisible());
     return this;
   }
 

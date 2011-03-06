@@ -47,13 +47,14 @@ public class BankGuideDialog {
 
     OpenHelpAction openHelpAction = new OpenHelpAction(localDirectory);
 
-    BankChooserPanel.registerComponents(builder, openHelpAction);
+    BankChooserPanel bankChooser = BankChooserPanel.registerComponents(builder, openHelpAction);
     builder.add("openHelp", openHelpAction);
 
     dialog = PicsouDialog.create(parent, localDirectory);
     dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(dialog));
 
     dialog.pack();
+    bankChooser.requestFocus();
     dialog.showCentered();
   }
 

@@ -3,6 +3,7 @@ package org.designup.picsou.gui.series;
 import org.designup.picsou.gui.accounts.CreateAccountAction;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
+import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.MonthYearStringifier;
@@ -28,13 +29,12 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
+import javax.sql.rowset.serial.SerialArray;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -42,6 +42,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
+
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesEditionDialog {
   private BudgetArea budgetArea;
@@ -293,7 +296,7 @@ public class SeriesEditionDialog {
     localRepository.addChangeListener(new OkButtonUpdater());
 
     JPanel panel = builder.load();
-    JButton deleteButton = new JButton(new DeleteSeriesAction("seriesEdition.deleteCurrent", true));
+    JButton deleteButton = new JButton(new DeleteSeriesAction());
     deleteButton.setOpaque(false);
     deleteButton.setName("deleteSingleSeries");
     dialog.addPanelWithButtons(panel, okAction, new CancelAction(), deleteButton);
@@ -569,19 +572,16 @@ public class SeriesEditionDialog {
       Set<Integer> negativeAccount = new HashSet<Integer>();
       for (Glob transaction : selectedTransactions) {
         Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-//        if (account.isTrue(Account.IS_IMPORTED_ACCOUNT) &&
-//            account.get(Account.UPDATE_MODE).equals(AccountUpdateMode.AUTOMATIC.getId())) {
-          Integer accountId = transaction.get(Transaction.ACCOUNT);
-          if (AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
-            accountId = Account.MAIN_SUMMARY_ACCOUNT_ID;
-          }
-          if (transaction.get(Transaction.AMOUNT) >= 0) {
-            positiveAccount.add(accountId);
-          }
-          else {
-            negativeAccount.add(accountId);
-          }
-//        }
+        Integer accountId = transaction.get(Transaction.ACCOUNT);
+        if (AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
+          accountId = Account.MAIN_SUMMARY_ACCOUNT_ID;
+        }
+        if (transaction.get(Transaction.AMOUNT) >= 0) {
+          positiveAccount.add(accountId);
+        }
+        else {
+          negativeAccount.add(accountId);
+        }
       }
       if (positiveAccount.size() == 1) {
         toAccountsCombo
@@ -695,7 +695,6 @@ public class SeriesEditionDialog {
         createdSeries = currentSeries.getKey();
         lastSelectedSubSeriesId = SeriesEditionDialog.this.getCurrentSubSeriesId();
       }
-      checkSavingsAccountChange();
       localRepository.commitChanges(false);
       localRepository.rollback();
       dialog.setVisible(false);
@@ -712,19 +711,6 @@ public class SeriesEditionDialog {
     }
   }
 
-  private void checkSavingsAccountChange() {
-//    ChangeSet changeSet = localRepository.getCurrentChanges();
-
-
-//    localRepository.startChangeSet();
-//    try {
-//      changeSet.safeVisit(SeriesBudget.TYPE, new UpdateMirrorSeriesBudgetChangeSetVisitor(localRepository));
-//    }
-//    finally {
-//      localRepository.completeChangeSet();
-//    }
-  }
-
   private class CancelAction extends AbstractAction {
     public CancelAction() {
       super(Lang.get("cancel"));
@@ -738,54 +724,56 @@ public class SeriesEditionDialog {
 
   private class DeleteSeriesAction extends AbstractAction {
     private GlobList seriesToDelete = GlobList.EMPTY;
-    private boolean closeOnDelete;
 
-    public DeleteSeriesAction(String labelKey, boolean closeOnDelete) {
-      super(Lang.get(labelKey));
-      this.closeOnDelete = closeOnDelete;
-      selectionService.addListener(new GlobSelectionListener() {
-        public void selectionUpdated(GlobSelection selection) {
-          seriesToDelete = new GlobList();
-          GlobList currentSeries = selection.getAll(Series.TYPE);
-          for (Glob series : currentSeries) {
-            Glob mirrorSeries = repository.findLinkTarget(series, Series.MIRROR_SERIES);
-            if (mirrorSeries != null) {
-              seriesToDelete.add(mirrorSeries);
-            }
-            seriesToDelete.add(series);
-          }
-          setEnabled(!seriesToDelete.isEmpty());
-        }
-      }, Series.TYPE);
+    public DeleteSeriesAction() {
+      super(Lang.get("seriesEdition.deleteCurrent"));
     }
 
     public void actionPerformed(ActionEvent e) {
-      if (seriesToDelete.isEmpty()) {
-        return;
+      seriesToDelete = new GlobList();
+      seriesToDelete.add(currentSeries);
+      Glob mirrorSeries = repository.findLinkTarget(currentSeries, Series.MIRROR_SERIES);
+      if (mirrorSeries != null) {
+        seriesToDelete.add(mirrorSeries);
       }
 
       Set<Integer> series = seriesToDelete.getValueSet(Series.ID);
       GlobList transactionsForSeries = localRepository.getAll(Transaction.TYPE, fieldIn(Transaction.SERIES, series));
-      boolean deleted = false;
-      SeriesDeletionDialog seriesDeletionDialog = new SeriesDeletionDialog(localRepository, localDirectory, dialog);
+      final Ref<Boolean> deleted = new Ref<Boolean>(false);
       if (transactionsForSeries.isEmpty()) {
-        GlobList tmp = new GlobList(seriesToDelete);
-        selectionService.clear(Series.TYPE);
-        localRepository.delete(tmp);
-        deleted = true;
+        doDelete(deleted);
       }
-      else if (seriesDeletionDialog.show()) {
-        GlobList tmp = new GlobList(seriesToDelete);
-        selectionService.clear(Series.TYPE);
-        localRepository.delete(tmp);
-        deleted = true;
+      else if (BudgetArea.SAVINGS.getId().equals(currentSeries.get(Series.BUDGET_AREA))) {
+        ConfirmationDialog confirmationDialog = new ConfirmationDialog("seriesDeletion.title",
+                                                                       "seriesDeletion.savings.message",
+                                                                       dialog, directory,
+                                                                       ConfirmationDialog.Mode.STANDARD) {
+          protected void postValidate() {
+            doDelete(deleted);
+          }
+        };
+        confirmationDialog.show();
+      }
+      else {
+        SeriesDeletionDialog seriesDeletionDialog =
+          new SeriesDeletionDialog(currentSeries, transactionsForSeries, localRepository, localDirectory, dialog);
+        if (seriesDeletionDialog.show()) {
+          doDelete(deleted);
+        }
       }
 
-      if (deleted && closeOnDelete) {
+      if (deleted.get()) {
         localRepository.commitChanges(false);
         localRepository.rollback();
         dialog.setVisible(false);
       }
+    }
+
+    private void doDelete(Ref<Boolean> deleted) {
+      GlobList tmp = new GlobList(seriesToDelete);
+      selectionService.clear(Series.TYPE);
+      localRepository.delete(tmp);
+      deleted.set(true);
     }
   }
 
@@ -928,28 +916,4 @@ public class SeriesEditionDialog {
     public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     }
   }
-
-//  private static class UpdateBudgetOnSeriesAccountsChange extends DefaultChangeSetListener {
-//
-//    public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
-//      changeSet.safeVisit(Series.TYPE, new DefaultChangeSetVisitor() {
-//        public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-//          if (values.contains(Series.TO_ACCOUNT) || values.contains(Series.FROM_ACCOUNT)) {
-//            Glob series = repository.get(key);
-//            Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
-//            Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-////            double multiplier = Account.computeAmountMultiplier(fromAccount, toAccount, repository);
-//            double multiplier = series.get(Series.FROM_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT)) ? -1. : 1.;
-//            GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE,
-//                                                       fieldEquals(SeriesBudget.SERIES, key.get(Series.ID)));
-//            for (Glob budget : seriesBudgets) {
-//              repository.update(budget.getKey(), SeriesBudget.AMOUNT,
-//                                budget.get(SeriesBudget.AMOUNT) == null ? null : multiplier * Math.abs(budget.get(SeriesBudget.AMOUNT)));
-//            }
-//          }
-//        }
-////        }
-//      });
-//    }
-//  }
 }
