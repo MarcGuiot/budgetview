@@ -6,6 +6,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
@@ -24,6 +25,8 @@ public class GlobListViewFilter implements ComponentHolder {
   private JList list;
   private Key defaultSelectionKey;
   private GlobRepository repository;
+  private GlobMatcher defaultMatcher = GlobMatchers.ALL;
+  private OnKeyActionListener filter;
 
   public static GlobListViewFilter init(final GlobListView listView) {
     return new GlobListViewFilter(listView);
@@ -34,7 +37,8 @@ public class GlobListViewFilter implements ComponentHolder {
     this.list = listView.getComponent();
     this.repository = listView.getRepository();
 
-    this.textField.getDocument().addDocumentListener(new OnKeyActionListener());
+    this.filter = new OnKeyActionListener();
+    this.textField.getDocument().addDocumentListener(filter);
     this.textField.setName(listView.getComponent().getName() + "Filter");
     installKeyListener();
     textField.addActionListener(new ActionListener() {
@@ -44,7 +48,13 @@ public class GlobListViewFilter implements ComponentHolder {
     });
   }
 
-  public GlobListViewFilter setDefault(Key key) throws InvalidParameter {
+  public GlobListViewFilter setDefaultMatcher(GlobMatcher defaultMatcher) {
+    this.defaultMatcher = defaultMatcher;
+    listView.setFilter(filter);
+    return this;
+  }
+
+  public GlobListViewFilter setDefaultValue(Key key) throws InvalidParameter {
     if (key != null && !listView.getType().equals(key.getGlobType())) {
       throw new InvalidParameter("Key must be of type '" + listView.getType() +
                                  "' instead of '" + key.getGlobType() + "'");
@@ -63,10 +73,14 @@ public class GlobListViewFilter implements ComponentHolder {
   }
 
   public void dispose() {
+    this.repository = null;
+    this.textField = null;
+    this.list = null;
+    this.listView = null;
   }
 
   private class OnKeyActionListener implements GlobMatcher, DocumentListener {
-    private String[] filters;
+    private String[] filters = new String[0];
 
     public void update() {
       String filter = textField.getText();
@@ -100,13 +114,12 @@ public class GlobListViewFilter implements ComponentHolder {
     }
 
     public boolean matches(Glob item, GlobRepository repository) {
-      if ((defaultSelectionKey != null) &&
-          (item != null) &&
-          defaultSelectionKey.equals(item.getKey())) {
+      if ((defaultSelectionKey != null) && (item != null)
+          && defaultSelectionKey.equals(item.getKey())) {
         return true;
       }
 
-      return textMatches(item);
+      return defaultMatcher.matches(item, repository) && textMatches(item);
     }
 
     private boolean textMatches(Glob item) {

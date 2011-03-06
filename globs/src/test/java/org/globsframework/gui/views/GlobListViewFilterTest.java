@@ -6,6 +6,8 @@ import org.globsframework.gui.utils.GuiComponentTestCase;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.uispec4j.Key;
 import org.uispec4j.ListBox;
@@ -19,6 +21,7 @@ public class GlobListViewFilterTest extends GuiComponentTestCase {
   private ListBox list;
   private TextBox filter;
   private GlobListView listView;
+  private GlobListViewFilter viewFilter;
 
   public void testCreationWithEmptyRepository() throws Exception {
     GlobRepository repository = checker.getEmptyRepository();
@@ -64,6 +67,38 @@ public class GlobListViewFilterTest extends GuiComponentTestCase {
     assertThat(list.contentEquals("name1"));
     assertThat(filter.foregroundNear("000000"));
     assertThat(list.selectionEquals("name1"));
+  }
+
+  public void testDefaultFilter() throws Exception {
+    GlobRepository repository =
+      checker.parse("<dummyObject id='1' name='name1'/>" +
+                    "<dummyObject id='2' name='name2'/>" +
+                    "<dummyObject id='12' name='name12'/>" +
+                    "<dummyObject id='20' name='name20'/>");
+    init(repository);
+
+    assertThat(list.contentEquals("name1", "name12", "name2", "name20"));
+    assertThat(list.selectionIsEmpty());
+
+    viewFilter.setDefaultMatcher(GlobMatchers.fieldContainsIgnoreCase(DummyObject.NAME, "2"));
+
+    assertThat(list.contentEquals("name12", "name2", "name20"));
+    assertThat(list.selectionIsEmpty());
+
+    filter.setText("1");
+    assertThat(list.contentEquals("name12"));
+    assertThat(list.selectionEquals("name12"));
+    assertThat(filter.foregroundNear("000000"));
+
+    list.clearSelection();
+
+    filter.clear();
+    assertThat(list.contentEquals("name12", "name2", "name20"));
+
+    viewFilter.setDefaultMatcher(GlobMatchers.fieldContainsIgnoreCase(DummyObject.NAME, "1"));
+
+    assertThat(list.contentEquals("name1", "name12"));
+    assertThat(list.selectionIsEmpty());
   }
 
   public void testUpDownKeyPressed() throws Exception {
@@ -145,7 +180,7 @@ public class GlobListViewFilterTest extends GuiComponentTestCase {
                     "<dummyObject id='3' name='name3'/>");
     GlobListView view = createList(repository);
     try {
-      GlobListViewFilter.init(view).setDefault(org.globsframework.model.Key.create(DummyObject2.TYPE, 2));
+      GlobListViewFilter.init(view).setDefaultValue(org.globsframework.model.Key.create(DummyObject2.TYPE, 2));
       fail();
     }
     catch (InvalidParameter e) {
@@ -155,24 +190,21 @@ public class GlobListViewFilterTest extends GuiComponentTestCase {
 
   private void init(GlobRepository repository) {
     listView = createList(repository);
-    filter = new TextBox(GlobListViewFilter.init(listView).getComponent());
+    viewFilter = GlobListViewFilter.init(listView);
+    filter = new TextBox(viewFilter.getComponent());
   }
 
   private void initWithDefault(int id, GlobRepository repository) {
     GlobListView view = createList(repository);
 
-    filter = new TextBox(GlobListViewFilter.init(view)
-      .setDefault(org.globsframework.model.Key.create(DummyObject.TYPE, id))
-      .getComponent());
+    viewFilter = GlobListViewFilter.init(view)
+      .setDefaultValue(org.globsframework.model.Key.create(DummyObject.TYPE, id));
+    filter = new TextBox(viewFilter.getComponent());
   }
 
   private GlobListView createList(GlobRepository repository) {
     GlobListView view = GlobListView.init(DummyObject.TYPE, repository, directory).setRenderer(NAME);
     list = new ListBox(view.getComponent());
     return view;
-  }
-
-  private DummySelectionListener initListener() {
-    return DummySelectionListener.register(directory, DummyObject.TYPE);
   }
 }
