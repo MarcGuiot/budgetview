@@ -16,17 +16,20 @@ public class SelectionService {
     new CopyOnWriteMultiMap<GlobType, GlobSelectionListener>();
   private Map<GlobType, GlobList> currentSelections = new HashMap<GlobType, GlobList>();
 
-  public void addListener(final GlobSelectionListener listener, GlobType... types) {
-    if (types.length == 0) {
-      throw new InvalidParameter("Registration of " + listener + " must be done for at least one GlobType");
+  public void addListener(final GlobSelectionListener listener, GlobType type, GlobType... types) {
+    for (GlobType globType : Utils.list(type, types)) {
+      listenersByType.put(globType, listener);
     }
-    for (GlobType type : types) {
-      listenersByType.put(type, listener);
+  }
+
+  public void addListener(final GlobSelectionListener listener, GlobType[] types) {
+    for (GlobType globType : types) {
+      listenersByType.put(globType, listener);
     }
   }
 
   public void removeListener(GlobSelectionListener listener) {
-    boolean removed = listenersByType.removeValue(listener);
+    listenersByType.removeValue(listener);
   }
 
   public void select(Glob glob) {
