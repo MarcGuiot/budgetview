@@ -2,10 +2,7 @@ package org.designup.picsou.model;
 
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.DefaultInteger;
-import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.annotations.Required;
-import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -36,8 +33,10 @@ public class SeriesBudget {
   @Required
   public static LinkField MONTH;
 
+  @DoublePrecision(4)
   public static DoubleField AMOUNT;
 
+  @DoublePrecision(4)
   public static DoubleField OBSERVED_AMOUNT;
 
   @DefaultInteger(1)

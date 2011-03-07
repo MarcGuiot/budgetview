@@ -321,7 +321,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
   public void update(Key key, Field field, Object newValue) throws ItemNotFound {
     MutableGlob mutableGlob = getGlobForUpdate(key);
-    if (doUpdate(mutableGlob, key, field, newValue)) {
+    if (doUpdate(mutableGlob, key, field, field.normalize(newValue))) {
       notifyListeners(true);
     }
   }

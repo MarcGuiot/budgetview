@@ -49,8 +49,10 @@ public class Transaction {
   @Required
   public static DoubleField AMOUNT;
 
+  @DoublePrecision(4)
   public static DoubleField SUMMARY_POSITION;
 
+  @DoublePrecision(4)
   public static DoubleField ACCOUNT_POSITION;
 
   @NamingField

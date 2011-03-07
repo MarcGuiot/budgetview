@@ -54,6 +54,7 @@ public class Account {
 
   public static StringField NAME;
 
+  @DoublePrecision(4)
   public static DoubleField POSITION;
 
   @Target(Transaction.class)
@@ -61,6 +62,7 @@ public class Account {
 
   public static DateField POSITION_DATE;
 
+  @DoublePrecision(4)
   public static DoubleField FIRST_POSITION;
 
   public static DateField OPEN_DATE;

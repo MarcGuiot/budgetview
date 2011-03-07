@@ -50,6 +50,7 @@ public class Series {
   @Required
   public static IntegerField DAY;
 
+  @DoublePrecision(4)
   public static DoubleField INITIAL_AMOUNT;
 
   @DefaultBoolean(true)

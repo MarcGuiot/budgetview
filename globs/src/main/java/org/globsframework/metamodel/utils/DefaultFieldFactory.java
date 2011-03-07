@@ -101,6 +101,9 @@ class DefaultFieldFactory {
   public DoubleField addDouble(String name,
                                boolean isKeyField,
                                Map<Class<? extends Annotation>, Annotation> annotations) {
+    if (annotations.containsKey(DoublePrecision.class)){
+      return add(new DefaultDoubleFieldWithRound(name, type, annotations), isKeyField);
+    }
     return add(new DefaultDoubleField(name, type, annotations), isKeyField);
   }
 
@@ -326,7 +329,31 @@ class DefaultFieldFactory {
     }
   }
 
+
+  private static class DefaultDoubleFieldWithRound extends DefaultDoubleField{
+    double normalize = 0;
+
+    public DefaultDoubleFieldWithRound(String name, GlobType globType, Map<Class<? extends Annotation>, Annotation> annotations) {
+      super(name, globType, annotations);
+      DoublePrecision annotation = findAnnotation(DoublePrecision.class);
+      if (annotation != null){
+        normalize = Math.pow(10, annotation.value());
+      }
+    }
+
+    public Object normalize(Object value) {
+      if (value == null){
+        return null;
+      }
+      if (normalize == 0){
+        return value;
+      }
+      return (double)((Math.round(((Double)value).doubleValue() * normalize))) / normalize;
+    }
+  }
+
   private static class DefaultDoubleField extends AbstractField implements DoubleField {
+
     public DefaultDoubleField(String name, GlobType globType,
                               Map<Class<? extends Annotation>, Annotation> annotations) {
       super(name, globType, Double.class, annotations);

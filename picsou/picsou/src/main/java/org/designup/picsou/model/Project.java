@@ -31,7 +31,8 @@ public class Project {
   @Target(Series.class)
   public static LinkField SERIES;
 
-  @DefaultDouble(0.00)
+  @DefaultDouble(0.0)
+  @DoublePrecision(4)
   public static DoubleField TOTAL_AMOUNT;
 
   static {

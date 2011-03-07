@@ -29,6 +29,10 @@ abstract class AbstractField extends AnnotatedPropertyHolder<Field> implements F
     this.required = annotations.containsKey(Required.class);
   }
 
+  public Object normalize(Object value) {
+    return value;
+  }
+
   public String getName() {
     return name;
   }

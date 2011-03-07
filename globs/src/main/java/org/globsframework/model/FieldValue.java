@@ -47,7 +47,7 @@ public class FieldValue {
 
   public FieldValue(Field field, Object value) {
     this.field = field;
-    this.value = value;
+    this.value = field.normalize(value);
   }
 
   public Field getField() {

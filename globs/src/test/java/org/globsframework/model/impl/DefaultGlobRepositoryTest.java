@@ -1116,4 +1116,17 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     listener.reset();
   }
 
+  public void testRound() throws Exception {
+    initRepository();
+    Glob glob = repository.create(DummyObject2.TYPE, FieldValue.value(DummyObject2.ID, 1),
+                                  FieldValue.value(DummyObject2.VALUE, 1.2343999));
+    assertEquals(glob.get(DummyObject2.VALUE), 1.2344);
+    repository.update(glob.getKey(), DummyObject2.VALUE, 0.12312222);
+    assertEquals(glob.get(DummyObject2.VALUE), 0,1231);
+    repository.update(glob.getKey(), DummyObject2.VALUE, -0.12312222);
+    assertEquals(glob.get(DummyObject2.VALUE), -0,1231);
+    repository.update(glob.getKey(), DummyObject2.VALUE, -1.2343999);
+    assertEquals(glob.get(DummyObject2.VALUE), -1.2344);
+  }
+
 }

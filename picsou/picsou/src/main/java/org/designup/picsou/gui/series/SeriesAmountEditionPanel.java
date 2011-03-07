@@ -399,12 +399,19 @@ public class SeriesAmountEditionPanel {
 
   private void propagateValue(Integer startMonth) {
     final Double amount = amountEditor.getValue();
+    repository.startChangeSet();
+    try {
+    repository.update(currentSeries, Series.IS_AUTOMATIC, false);
     repository.safeApply(SeriesBudget.TYPE,
                          and(
                            fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID)),
                            isTrue(SeriesBudget.ACTIVE),
                            fieldGreaterOrEqual(SeriesBudget.MONTH, startMonth)),
                          update(SeriesBudget.AMOUNT, Utils.zeroIfNull(amount)));
+    }
+    finally {
+      repository.completeChangeSet();
+    }
   }
 
   public class OpenSeriesEditorCallback implements GlobListFunctor {

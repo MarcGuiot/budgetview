@@ -38,4 +38,6 @@ public interface Field extends PropertyHolder<Field>, Annotable, Serializable {
   int getIndex();
 
   boolean valueEqual(Object o1, Object o2);
+
+  Object normalize(Object value);
 }
