@@ -2,8 +2,11 @@ package org.designup.picsou.server.session.impl;
 
 import org.designup.picsou.server.session.ConnectedState;
 import org.designup.picsou.server.session.Persistence;
+import org.designup.picsou.server.persistence.prevayler.AccountDataManager;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
+
+import java.util.List;
 
 public class DefaultConnectedState extends AbstractSessionState implements ConnectedState {
   private Integer userId;
@@ -40,6 +43,26 @@ public class DefaultConnectedState extends AbstractSessionState implements Conne
     lastAccess();
     checkPrivateId(input);
     persistence.takeSnapshot(userId);
+  }
+
+  public void getSnapshotInfos(SerializedInput input, SerializedOutput output) {
+    lastAccess();
+    checkPrivateId(input);
+    List<AccountDataManager.SnapshotInfo> snapshotInfoList = persistence.getSnapshotInfos(userId);
+    output.write(snapshotInfoList.size());
+    for (AccountDataManager.SnapshotInfo info : snapshotInfoList) {
+      output.write(info.timestamp);
+      output.write(info.version);
+      output.writeUtf8String(info.fileName);
+      output.writeJavaString(info.password == null ? null : new String(info.password));
+    }
+  }
+
+  public void getSnapshotData(SerializedInput input, SerializedOutput output) {
+    lastAccess();
+    checkPrivateId(input);
+    String file = input.readUtf8String();
+    persistence.getSnapshotData(file, output, userId);
   }
 
   public void restore(SerializedInput input, SerializedOutput output) {

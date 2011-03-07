@@ -5,7 +5,8 @@ import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.accounts.AccountView;
 import org.designup.picsou.gui.actions.*;
 import org.designup.picsou.gui.backup.BackupAction;
-import org.designup.picsou.gui.backup.RestoreAction;
+import org.designup.picsou.gui.backup.RestoreFileAction;
+import org.designup.picsou.gui.backup.RestoreSnapshotMenuAction;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
@@ -68,7 +69,8 @@ public class MainPanel {
   private SendFeedbackAction sendFeedbackAction;
   private ProtectAction protectAction;
   private BackupAction backupAction;
-  private RestoreAction restoreAction;
+  private RestoreFileAction restoreActionFileAction;
+  private RestoreSnapshotMenuAction restoreSnapshotMenuAction;
   private PreferencesAction preferencesAction;
   private ExitAction exitAction;
   private LogoutAction logoutAction;
@@ -128,7 +130,8 @@ public class MainPanel {
     exportFileAction = new ExportFileAction(repository, directory);
     sendFeedbackAction = new SendFeedbackAction(repository, directory);
     backupAction = new BackupAction(repository, directory);
-    restoreAction = new RestoreAction(repository, directory);
+    restoreActionFileAction = new RestoreFileAction(repository, directory);
+    restoreSnapshotMenuAction = new RestoreSnapshotMenuAction(directory, repository);
     preferencesAction = new PreferencesAction(repository, directory);
     registerAction = new RegisterLicenseAction(repository, directory);
     exitAction = new ExitAction(windowManager, directory);
@@ -230,7 +233,8 @@ public class MainPanel {
     menu.add(exportFileAction);
     menu.addSeparator();
     menu.add(backupAction);
-    menu.add(restoreAction);
+    menu.add(restoreActionFileAction);
+    menu.add(restoreSnapshotMenuAction);
 
     // A Restaurer - ne fonctionne plus sur Mac
     // MRJAdapter.setPreferencesEnabled(true);

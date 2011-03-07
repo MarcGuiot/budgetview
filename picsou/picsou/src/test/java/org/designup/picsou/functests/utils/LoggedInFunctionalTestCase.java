@@ -248,6 +248,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   protected void restartApplication(String user, String passwd) throws Exception {
     if (mainWindow != null) {
+      operations.exit();
       mainWindow.getAwtComponent().setVisible(false);
       mainWindow.dispose();
     }

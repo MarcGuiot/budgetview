@@ -287,6 +287,11 @@ public class OperationChecker {
     return fileMenu.getSubMenu("Restore").triggerClick();
   }
 
+  public Trigger getRestoreSnapshotTrigger() {
+    MenuItem fileMenu = window.getMenuBar().getMenu("File");
+    return fileMenu.getSubMenu("previous version").triggerClick();
+  }
+
   public Trigger getImportTrigger() {
     return importMenu.triggerClick();
   }
@@ -491,5 +496,9 @@ public class OperationChecker {
   public void dumpData() {
     MenuItem fileMenu = window.getMenuBar().getMenu("Edit");
     fileMenu.getSubMenu("[Dump data]").click();
+  }
+
+  public RestoreSnapshotChecker restoreSnapshot() {
+    return new RestoreSnapshotChecker(WindowInterceptor.getModalDialog(getRestoreSnapshotTrigger()));
   }
 }

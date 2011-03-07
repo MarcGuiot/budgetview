@@ -12,6 +12,8 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import org.globsframework.model.GlobList;
 
 import java.io.InputStream;
+import java.util.List;
+import java.util.Collections;
 
 public class InMemoryAccountDataManager implements AccountDataManager {
   private MapOfMaps<String, Integer, SerializableGlobType> globs;
@@ -60,6 +62,13 @@ public class InMemoryAccountDataManager implements AccountDataManager {
     globs = new MapOfMaps<String, Integer, SerializableGlobType>();
     SerializableGlobSerializer.deserialize(input, globs);
     return true;
+  }
+
+  public List<SnapshotInfo> getSnapshotInfos(Integer userId) {
+    return Collections.emptyList();
+  }
+
+  public void getSnapshotData(Integer userId, String snapshotInfo, SerializedOutput output) {
   }
 
   public GlobList getLocalUsers() {

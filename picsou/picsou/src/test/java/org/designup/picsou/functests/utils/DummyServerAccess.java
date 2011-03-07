@@ -45,6 +45,14 @@ public class DummyServerAccess implements ServerAccess {
     return false;
   }
 
+  public List<SnapshotInfo> getSnapshotInfos() {
+    return null;
+  }
+
+  public MapOfMaps<String, Integer, SerializableGlobType> getSnapshotData(SnapshotInfo info, IdUpdater idUpdater) {
+    return null;
+  }
+
   public void addTransaction(GlobList transactions) {
   }
 

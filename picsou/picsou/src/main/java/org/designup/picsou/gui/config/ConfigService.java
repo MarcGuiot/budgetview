@@ -456,7 +456,7 @@ public class ConfigService {
   public static void waitEndOfConfigRequest(Directory directory) {
     ConfigService configService = directory.get(ConfigService.class);
     synchronized (configService) {
-      while (!configService.isVerifiedServerValidity()) {
+      while (!configService.isVerifiedServerValidity() && !Thread.currentThread().isInterrupted()) {
         try {
           configService.wait(200);
         }

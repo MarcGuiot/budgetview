@@ -6,7 +6,6 @@ import org.apache.commons.httpclient.HttpClientError;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
-import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 import org.designup.picsou.client.ClientTransport;
@@ -65,6 +64,14 @@ public class HttpsClientTransport implements ClientTransport {
   }
 
   public void localDownload(Long sessionId, byte[] privateId, long version) {
+  }
+
+  public SerializedInput getSnapshotInfos(Long sessionId, byte[] bytes) {
+    return null;
+  }
+
+  public SerializedInput getSnapshotData(Long sessionId, byte[] data) {
+    return null;
   }
 
   public SerializedInput identifyUser(Long sessionId, byte[] data) {

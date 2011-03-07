@@ -1,10 +1,9 @@
 package org.designup.picsou.gui.license;
 
-import org.globsframework.utils.directory.Directory;
-import org.globsframework.model.GlobRepository;
-import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.model.User;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -29,14 +28,16 @@ public class LicenseCheckerThread extends Thread {
     ConfigService.waitEndOfConfigRequest(directory);
     try {
       SwingUtilities.invokeAndWait(new Runnable() {
-        public void run() {
-          repository.startChangeSet();
-          try {
-            ConfigService.check(directory, repository);
-            repository.update(User.KEY, User.CONNECTED, true);
-          }
-          finally {
-            repository.completeChangeSet();
+        synchronized public void run() {
+          if (repository != null && directory != null) {
+            repository.startChangeSet();
+            try {
+              ConfigService.check(directory, repository);
+              repository.update(User.KEY, User.CONNECTED, true);
+            }
+            finally {
+              repository.completeChangeSet();
+            }
           }
         }
       });
@@ -47,5 +48,10 @@ public class LicenseCheckerThread extends Thread {
     catch (InvocationTargetException e) {
       e.printStackTrace();
     }
+  }
+
+  synchronized public void shutdown() {
+    repository = null;
+    directory = null;
   }
 }

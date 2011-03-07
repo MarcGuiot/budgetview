@@ -173,7 +173,7 @@ public class PrevaylerDirectory {
   }
 
   public long deletePreviousSnapshot(int countSnapshotNotToDelete) {
-    File[] files = getOrderedFiles(SNAPSHOT_FILENAME_PATTERN);
+    File[] files = getOrderedSnapshot();
     if (files == null) {
       return -1;
     }
@@ -187,6 +187,10 @@ public class PrevaylerDirectory {
       file.delete();
     }
     return transactionId;
+  }
+
+  public File[] getOrderedSnapshot() {
+    return getOrderedFiles(SNAPSHOT_FILENAME_PATTERN);
   }
 
   private File[] getOrderedFiles(final String pattern) {
@@ -205,5 +209,13 @@ public class PrevaylerDirectory {
       }
     });
     return files;
+  }
+
+  public File getFile(String name) {
+    File file = new File(_directory, name);
+    if (!file.exists()){
+      return null;
+    }
+    return file;
   }
 }

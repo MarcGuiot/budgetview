@@ -337,7 +337,6 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
 
     operations.deleteUser(password);
     new LoginChecker(mainWindow).logNewUser("aaaa", "aaaa");
-    operations.exit();
     setCurrentDate("2009/02/03");
     restartApplication("aaaa", "aaaa");
     changeUser("testSeriesEvolutionAfterRestore", "testSeriesEvolutionAfterRestore");

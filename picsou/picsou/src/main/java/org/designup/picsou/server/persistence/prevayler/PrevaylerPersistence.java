@@ -10,7 +10,6 @@ import org.designup.picsou.server.session.Persistence;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.utils.Log;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.serialization.Encoder;
@@ -18,6 +17,7 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class PrevaylerPersistence implements Persistence {
   private RootDataManager rootDataManager;
@@ -94,6 +94,14 @@ public class PrevaylerPersistence implements Persistence {
 
   public void takeSnapshot(Integer userId) {
     accountDataManager.takeSnapshot(userId);
+  }
+
+  public List<AccountDataManager.SnapshotInfo> getSnapshotInfos(Integer userId){
+    return accountDataManager.getSnapshotInfos(userId);
+  }
+
+  public void getSnapshotData(String fileName, SerializedOutput output, Integer userId){
+    accountDataManager.getSnapshotData(userId, fileName, output);
   }
 
   public boolean restore(SerializedInput input, Integer userId) {

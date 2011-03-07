@@ -20,9 +20,7 @@ import org.prevayler.implementation.PrevaylerDirectory;
 
 import java.io.*;
 import java.nio.channels.FileLock;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Date;
+import java.util.*;
 
 public class DirectAccountDataManager implements AccountDataManager {
 
@@ -37,10 +35,12 @@ public class DirectAccountDataManager implements AccountDataManager {
   private class TransactionInfo {
     public long transactionId;
     public long timestamp;
+    public boolean isSnapshot;
 
-    public TransactionInfo(long transactionId, long timestamp) {
+    public TransactionInfo(long transactionId, long timestamp, boolean isSnapshot) {
       this.transactionId = transactionId;
       this.timestamp = timestamp;
+      this.isSnapshot = isSnapshot;
     }
   }
 
@@ -86,12 +86,12 @@ public class DirectAccountDataManager implements AccountDataManager {
     final PrevaylerDirectory prevaylerDirectory = new PrevaylerDirectory(path);
     File file = prevaylerDirectory.latestSnapshot();
     long snapshotVersion = 1;
-    TransactionInfo transactionInfo = new TransactionInfo(snapshotVersion, System.currentTimeMillis());
+    TransactionInfo transactionInfo = new TransactionInfo(snapshotVersion, System.currentTimeMillis(), false);
     if (file != null) {
       snapshotVersion = PrevaylerDirectory.snapshotVersion(file);
       ReadOnlyAccountDataManager.SnapshotInfo snapshotInfo = readSnapshot(globs, file);
       if (snapshotInfo != null) {
-        transactionInfo = new TransactionInfo(snapshotVersion, snapshotInfo.timestamp);
+        transactionInfo = new TransactionInfo(snapshotVersion, snapshotInfo.timestamp, true);
       }
     }
     TransactionInfo nextTransactionVersion = transactionInfo;
@@ -119,19 +119,21 @@ public class DirectAccountDataManager implements AccountDataManager {
     long version = PrevaylerDirectory.journalVersion(nextTransactionFile);
     File file = nextTransactionFile;
     InputStream inputStream = new YANBuffereInputStream(new FileInputStream(file));
-    TransactionInfo transactionInfo = new TransactionInfo(version, System.currentTimeMillis());
+    TransactionInfo transactionInfo = new TransactionInfo(version, System.currentTimeMillis(), false);
+    boolean isFromSnapshot = true;
     while (true) {
       try {
         SerializedInput serializedInput =
           SerializedInputOutputFactory.init(inputStream);
         TransactionInfo newTransactionInfo = readJournalVersion(serializedInput);
         if (newTransactionInfo == null || newTransactionInfo.transactionId != version) {
-          throw new InvalidState(Lang.get("data.load.error.journal", version, 
+          throw new InvalidState(Lang.get("data.load.error.journal", version,
                                           Dates.toTimestampString(new Date(transactionInfo.timestamp))));
         }
         MultiMap<String, ServerDelta> map = SerializableDeltaGlobSerializer.deserialize(serializedInput);
         if (version >= snapshotVersion) {
           ReadOnlyAccountDataManager.apply(globs, map);
+          isFromSnapshot = false;
         }
         transactionInfo = newTransactionInfo;
         version++;
@@ -162,18 +164,19 @@ public class DirectAccountDataManager implements AccountDataManager {
     }
     catch (Exception e) {
     }
-    return new TransactionInfo(version < snapshotVersion ? snapshotVersion : version, transactionInfo.timestamp);
+    return new TransactionInfo(version < snapshotVersion ? snapshotVersion : version,
+                               transactionInfo.timestamp, isFromSnapshot);
   }
 
   private TransactionInfo readJournalVersion(SerializedInput serializedInput) {
     String s = serializedInput.readJavaString();
     if (s.equals("Tr")) {
-      return new TransactionInfo(serializedInput.readNotNullLong(), -1);
+      return new TransactionInfo(serializedInput.readNotNullLong(), -1, false);
     }
     if (s.equals(LATEST_VERSION)) {
       long version = serializedInput.readNotNullLong();
       long timestamp = serializedInput.readNotNullLong();
-      return new TransactionInfo(version, timestamp);
+      return new TransactionInfo(version, timestamp, false);
     }
     return null;
   }
@@ -245,13 +248,15 @@ public class DirectAccountDataManager implements AccountDataManager {
     PrevaylerDirectory directory = new PrevaylerDirectory(getPath(userId));
     MapOfMaps<String, Integer, SerializableGlobType> globs = new MapOfMaps<String, Integer, SerializableGlobType>();
     TransactionInfo transactionInfo = readData(userId, globs);
-    try {
-      writeSnapshot(transactionInfo.transactionId, globs, directory, transactionInfo.timestamp);
-      long lastDeletedSnasphotId = directory.deletePreviousSnapshot(countFileNotToDelete);
-      directory.deletePreviousJournal(lastDeletedSnasphotId);
-    }
-    catch (Exception e) {
-      Log.write("for " + userId, e);
+    if (!transactionInfo.isSnapshot) {
+      try {
+        writeSnapshot(transactionInfo.transactionId, globs, directory, transactionInfo.timestamp);
+        long lastDeletedSnasphotId = directory.deletePreviousSnapshot(countFileNotToDelete);
+        directory.deletePreviousJournal(lastDeletedSnasphotId);
+      }
+      catch (Exception e) {
+        Log.write("for " + userId, e);
+      }
     }
   }
 
@@ -288,6 +293,38 @@ public class DirectAccountDataManager implements AccountDataManager {
     return true;
   }
 
+  public List<SnapshotInfo> getSnapshotInfos(Integer userId) {
+    PrevaylerDirectory directory = new PrevaylerDirectory(getPath(userId));
+    List<SnapshotInfo> snapshotInfos = new ArrayList<SnapshotInfo>();
+    File[] files = directory.getOrderedSnapshot();
+    for (File file : files) {
+      try {
+        ReadOnlyAccountDataManager.SnapshotInfo snapshotInfo =
+          ReadOnlyAccountDataManager.readSnapshot(null, new FileInputStream(file));
+        snapshotInfos.add(new SnapshotInfo(snapshotInfo.timestamp, snapshotInfo.password,
+                                           snapshotInfo.version, file.getName()));
+      }
+      catch (FileNotFoundException e) {
+      }
+    }
+    return snapshotInfos;
+  }
+
+  public void getSnapshotData(Integer userId, String fileName, final SerializedOutput output) {
+    String path = getPath(userId);
+    File file1 = new File(path);
+    if (!file1.exists()) {
+      file1.mkdirs();
+    }
+    final PrevaylerDirectory prevaylerDirectory = new PrevaylerDirectory(path);
+    File file = prevaylerDirectory.getFile(fileName);
+    if (file != null) {
+      MapOfMaps<String, Integer, SerializableGlobType> globs = new MapOfMaps<String, Integer, SerializableGlobType>();
+      readSnapshot(globs, file);
+      SerializableGlobSerializer.serialize(output, globs);
+    }
+  }
+
   synchronized private void writeSnapshot(long transactionId, MapOfMaps<String, Integer, SerializableGlobType> data,
                                           PrevaylerDirectory directory, long timestamp) throws IOException {
     File tempFile = directory.createTempFile("snapshot" + transactionId + "temp", "generatingSnapshot");
@@ -306,3 +343,4 @@ public class DirectAccountDataManager implements AccountDataManager {
     return inMemory;
   }
 }
+

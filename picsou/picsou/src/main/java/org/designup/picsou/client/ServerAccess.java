@@ -41,6 +41,10 @@ public interface ServerAccess {
 
   boolean rename(String name, char[] passwd, char[] previousPasswd) throws UserAlreadyExists;
 
+  List<SnapshotInfo> getSnapshotInfos();
+
+  MapOfMaps<String, Integer, SerializableGlobType> getSnapshotData(SnapshotInfo info, IdUpdater idUpdater);
+
   class UserInfo{
     public final String name;
     public final boolean autologin;
@@ -48,6 +52,18 @@ public interface ServerAccess {
     public UserInfo(String name, Boolean autologin) {
       this.name = name;
       this.autologin = autologin;
+    }
+  }
+
+  class SnapshotInfo {
+    public final long timestamp;
+    public final String file;
+    public final String password;
+
+    public SnapshotInfo(long timestamp, String file, String password) {
+      this.timestamp = timestamp;
+      this.file = file;
+      this.password = password;
     }
   }
 
@@ -102,6 +118,14 @@ public interface ServerAccess {
 
     public boolean rename(String name, char[] passwd, char[] previousPasswd) throws UserAlreadyExists {
       return false;
+    }
+
+    public List<SnapshotInfo> getSnapshotInfos() {
+      return null;
+    }
+
+    public MapOfMaps<String, Integer, SerializableGlobType> getSnapshotData(SnapshotInfo info, IdUpdater idUpdater) {
+      return null;
     }
 
     public List<UserInfo> getLocalUsers() {

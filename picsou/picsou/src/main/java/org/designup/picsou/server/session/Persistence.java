@@ -1,10 +1,13 @@
 package org.designup.picsou.server.session;
 
 import org.designup.picsou.client.exceptions.IdentificationFailed;
+import org.designup.picsou.server.persistence.prevayler.AccountDataManager;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
+
+import java.util.List;
 
 public interface Persistence {
   UserInfo createUser(String name, boolean autoLog, boolean isRegisteredUser,
@@ -44,6 +47,10 @@ public interface Persistence {
                      Integer previousUserId, SerializedInput input);
 
   void setDownloadedVersion(long version);
+
+  List<AccountDataManager.SnapshotInfo> getSnapshotInfos(Integer userId);
+
+  void getSnapshotData(String fileName, SerializedOutput output, Integer userId);
 
   class UserInfo {
     final public Integer userId;

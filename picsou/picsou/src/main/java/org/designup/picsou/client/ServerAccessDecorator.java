@@ -34,6 +34,14 @@ public class ServerAccessDecorator implements ServerAccess {
     return serverAccess.rename(name, passwd, previousPasswd);
   }
 
+  public List<SnapshotInfo> getSnapshotInfos() {
+    return serverAccess.getSnapshotInfos();
+  }
+
+  public MapOfMaps<String, Integer, SerializableGlobType> getSnapshotData(SnapshotInfo info, IdUpdater idUpdater) {
+    return serverAccess.getSnapshotData(info, null);
+  }
+
   public boolean initConnection(String name, char[] password, boolean privateComputer) throws IdentificationFailed {
     return serverAccess.initConnection(name, password, privateComputer);
   }

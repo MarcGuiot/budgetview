@@ -81,6 +81,16 @@ public class DefaultServerRequestProcessingService implements ServerRequestProce
     state.connected().restore(input, output);
   }
 
+  public void getSnapshotInfos(Long sessionId, SerializedInput input, SerializedOutput output) {
+    SessionState state = sessionService.getSessionState(sessionId);
+    state.connected().getSnapshotInfos(input, output);
+  }
+
+  public void getSnapshotData(Long sessionId, SerializedInput input, SerializedOutput output) {
+    SessionState state = sessionService.getSessionState(sessionId);
+    state.connected().getSnapshotData(input, output);
+  }
+
   public void getLocalUsers(SerializedOutput output) {
     sessionService.getLocalUsers(output);
   }

@@ -98,6 +98,18 @@ public class LocalClientTransport implements ClientTransport {
     return output.getInput();
   }
 
+  public SerializedInput getSnapshotInfos(Long sessionId, byte[] data) {
+    SerializedByteArrayOutput output = new SerializedByteArrayOutput();
+    serverRequestProcessingService.getSnapshotInfos(sessionId, SerializedInputOutputFactory.init(data), output.getOutput());
+    return output.getInput();
+  }
+
+  public SerializedInput getSnapshotData(Long sessionId, byte[] data) {
+    SerializedByteArrayOutput output = new SerializedByteArrayOutput();
+    serverRequestProcessingService.getSnapshotData(sessionId, SerializedInputOutputFactory.init(data), output.getOutput());
+    return output.getInput();
+  }
+
   public void disconnect(Long sessionId, byte[] data) {
     serverRequestProcessingService.disconnect(sessionId,
                                               SerializedInputOutputFactory.init(data));

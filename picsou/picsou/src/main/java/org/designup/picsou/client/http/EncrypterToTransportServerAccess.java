@@ -203,6 +203,34 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     return true;
   }
 
+  public List<SnapshotInfo> getSnapshotInfos() {
+    SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
+    outputStream.getOutput().writeBytes(privateId);
+    SerializedInput input = clientTransport.getSnapshotInfos(sessionId, outputStream.toByteArray());
+    int count = input.readNotNullInt();
+    List<SnapshotInfo> snapshotInfos = new ArrayList<SnapshotInfo>(count);
+    for (int i = 0; i < count; i++){
+      // keep order
+      long timestamp = input.readNotNullLong();
+      long version = input.readNotNullLong();
+      String fileName = input.readUtf8String();
+      String password = input.readJavaString();
+      snapshotInfos.add(new SnapshotInfo(timestamp, fileName, password));
+    }
+    return snapshotInfos;
+  }
+
+  public MapOfMaps<String, Integer, SerializableGlobType> getSnapshotData(SnapshotInfo info, IdUpdater idUpdater) {
+    SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
+    SerializedOutput output = outputStream.getOutput();
+    output.writeBytes(privateId);
+    output.writeUtf8String(info.file);
+    SerializedInput input = clientTransport.getSnapshotData(sessionId, outputStream.toByteArray());
+    MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
+    SerializableGlobSerializer.deserialize(input, data);
+    return data;
+  }
+
   public void localRegister(byte[] mail, byte[] signature, String activationCode, long jarVersion) {
     clientTransport.localRegister(sessionId, privateId, mail, signature, activationCode);
   }
@@ -300,6 +328,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     SerializableGlobSerializer.deserialize(input, data);
     return data;
   }
+
 
   public void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data) {
     checkConnected();

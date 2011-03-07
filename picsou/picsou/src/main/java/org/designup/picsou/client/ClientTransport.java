@@ -37,4 +37,8 @@ public interface ClientTransport {
   SerializedInput rename(Long sessionId, byte[] bytes);
 
   void localDownload(Long sessionId, byte[] privateId, long version);
+
+  SerializedInput getSnapshotInfos(Long sessionId, byte[] bytes);
+
+  SerializedInput getSnapshotData(Long sessionId, byte[] data);
 }

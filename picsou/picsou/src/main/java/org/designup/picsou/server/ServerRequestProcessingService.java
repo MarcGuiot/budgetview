@@ -42,4 +42,8 @@ public interface ServerRequestProcessingService {
   void renameUser(long sessionId, SerializedInput input, SerializedOutput output);
 
   void localDownload(Long sessionId, SerializedInput input);
+
+  void getSnapshotInfos(Long sessionId, SerializedInput input, SerializedOutput output);
+
+  void getSnapshotData(Long sessionId, SerializedInput input, SerializedOutput output);
 }

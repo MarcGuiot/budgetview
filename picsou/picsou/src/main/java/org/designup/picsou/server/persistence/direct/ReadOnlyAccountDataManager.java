@@ -36,7 +36,9 @@ public class ReadOnlyAccountDataManager {
       SerializedInput serializedInput = SerializedInputOutputFactory.init(inputStream);
       String version = serializedInput.readJavaString();
       if ("2".equals(version)) {
-        readVersion2(serializedInput, globs);
+        if (globs != null){
+          readVersion2(serializedInput, globs);
+        }
         return new SnapshotInfo(19, null, -1);
       }
       if ("3".equals(version)) {
@@ -67,7 +69,9 @@ public class ReadOnlyAccountDataManager {
                                      MapOfMaps<String, Integer, SerializableGlobType> data) {
     String password = serializedInput.readJavaString();
     long version = serializedInput.readNotNullLong();
-    SerializableGlobSerializer.deserialize(serializedInput, data);
+    if (data != null){
+      SerializableGlobSerializer.deserialize(serializedInput, data);
+    }
     return new SnapshotInfo(version, password == null ? null : password.toCharArray(), -1);
   }
 
@@ -76,7 +80,9 @@ public class ReadOnlyAccountDataManager {
     String password = serializedInput.readJavaString();
     long version = serializedInput.readNotNullLong();
     long timestamp = serializedInput.readNotNullLong();
-    SerializableGlobSerializer.deserialize(serializedInput, data);
+    if (data != null){
+      SerializableGlobSerializer.deserialize(serializedInput, data);
+    }
     return new SnapshotInfo(version, password == null ? null : password.toCharArray(), timestamp);
   }
 

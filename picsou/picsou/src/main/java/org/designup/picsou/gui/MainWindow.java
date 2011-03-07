@@ -25,6 +25,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
+import org.globsframework.utils.Utils;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -107,15 +108,20 @@ public class MainWindow implements WindowManager {
 
   public void shutdown() {
     try {
-      licenseCheckerThread.join(2000);
-//      if (licenseCheckerThread.isAlive()){
-//        Utils.dumpStack();
-//      }
+      LicenseCheckerThread local = licenseCheckerThread;
+      local.shutdown();
+      local.interrupt();
+      local.join(2000);
+      if (local.isAlive()){
+        Thread.dumpStack();
+      }
     }
     catch (InterruptedException e) {
       e.printStackTrace();
     }
     thread.run();
+    Runtime.getRuntime().removeShutdownHook(thread);
+    thread = null;
   }
 
   public void show() {

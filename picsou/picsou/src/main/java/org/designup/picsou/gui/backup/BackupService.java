@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.List;
 
 public class BackupService {
   private ServerAccess serverAccess;
@@ -73,11 +74,15 @@ public class BackupService {
     if (snapshotInfo.version > PicsouApplication.JAR_VERSION) {
       return Status.BAD_VERSION;
     }
+    return restore(password, serverData, snapshotInfo.password);
+  }
+
+  public Status restore(char[] password, MapOfMaps<String, Integer, SerializableGlobType> serverData, final char[] autoLogPassword) {
     PasswordBasedEncryptor readPasswordBasedEncryptor;
     PasswordBasedEncryptor writeBasedEncryptor = directory.get(PasswordBasedEncryptor.class);
-    if (snapshotInfo.password != null) {
+    if (autoLogPassword != null) {
       readPasswordBasedEncryptor = new MD5PasswordBasedEncryptor(EncrypterToTransportServerAccess.salt,
-                                                                 snapshotInfo.password, EncrypterToTransportServerAccess.count);
+                                                                 autoLogPassword, EncrypterToTransportServerAccess.count);
     }
     else if (password == null) {
       readPasswordBasedEncryptor = writeBasedEncryptor;
@@ -109,18 +114,14 @@ public class BackupService {
     serverAccess.replaceData(serverData);
 
     MutableChangeSet changeSet = new DefaultChangeSet();
-    GlobList userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {
-      public void update(IntegerField field, Integer lastAllocatedId) {
-        idGenerator.update(field, lastAllocatedId);
-      }
-    });
+    GlobList userData = serverAccess.getUserData(changeSet, new BackupIdUpdater());
 
     try {
       repository.startChangeSet();
       Collection<GlobType> globTypeCollection = PicsouGuiModel.getUserSpecificType();
       repository.reset(GlobList.EMPTY, globTypeCollection.toArray(new GlobType[globTypeCollection.size()]));
     } catch (Exception e){
-      Log.write("Erreur while clearing date (ignored)", e);
+      Log.write("Erreur while clearing data (ignored)", e);
     } finally {
       repository.completeChangeSet();
     }
@@ -148,5 +149,19 @@ public class BackupService {
 
   public boolean rename(String newName, char[] passwd, final char[] previousPasswd){
     return serverAccess.rename(newName, passwd, previousPasswd);
+  }
+
+  public List<ServerAccess.SnapshotInfo> getSnapshotInfos(){
+    return serverAccess.getSnapshotInfos();
+  }
+
+  public MapOfMaps<String, Integer, SerializableGlobType> restore(ServerAccess.SnapshotInfo snapshotInfo){
+    return serverAccess.getSnapshotData(snapshotInfo, new BackupIdUpdater());
+  }
+
+  private class BackupIdUpdater implements ServerAccess.IdUpdater {
+    public void update(IntegerField field, Integer lastAllocatedId) {
+      idGenerator.update(field, lastAllocatedId);
+    }
   }
 }
