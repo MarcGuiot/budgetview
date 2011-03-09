@@ -9,6 +9,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.GlobList;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 
@@ -18,10 +19,12 @@ public abstract class AbstractRestoreAction extends AbstractBackupRestoreAction 
   }
 
   protected void appyWithPasswordManagement(RestoreDetail action) {
+    Key[] currentSelection = selectionService.getSelection(Month.TYPE).getKeys();
     try {
       char[] password = null;
       while (true) {
         Gui.setWaitCursor(frame);
+        selectionService.clearAll();
         BackupService.Status completed;
         try {
           completed = action.restore(password);
@@ -44,6 +47,7 @@ public abstract class AbstractRestoreAction extends AbstractBackupRestoreAction 
             new AskPasswordDialog("restore.password.title", "restore.password.label", "restore.password.message", directory);
           password = dialog.show();
           if (password == null || password.length == 0) {
+            restoreMonthSelection(currentSelection);
             return;
           }
         }
@@ -52,7 +56,19 @@ public abstract class AbstractRestoreAction extends AbstractBackupRestoreAction 
     catch (Exception ex) {
       Log.write("Restore failed", ex);
       action.showError();
+      restoreMonthSelection(currentSelection);
     }
+  }
+
+  private void restoreMonthSelection(Key[] currentSelection) {
+    GlobList months = new GlobList();
+    for (Key key : currentSelection) {
+      Glob month = repository.find(key);
+      if (month != null){
+        months.add(month);
+      }
+    }
+    selectionService.select(months, Month.TYPE);
   }
 
   private void resetUndoRedo() {

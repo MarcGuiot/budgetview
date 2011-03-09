@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
@@ -34,9 +33,10 @@ public class LoginTest extends StartUpFunctionalTestCase {
     final StartupChecker startupChecker = new StartupChecker();
     setAdapter(new UISpecAdapter() {
       public Window getMainWindow() {
-        if (firstLogin){
-        return startupChecker.enterMain();
-        }else {
+        if (firstLogin) {
+          return startupChecker.enterMain();
+        }
+        else {
           return WindowInterceptor.run(new Trigger() {
             public void run() throws Exception {
               picsouApplication = new PicsouApplication();
@@ -48,7 +48,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     });
 
     openNewLoginWindow(true);
-    if (firstLogin){
+    if (firstLogin) {
       picsouApplication = startupChecker.getApplication();
     }
   }
@@ -68,7 +68,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     closeWindow();
     window = getMainWindow();
 
-    if (firstLogin){
+    if (firstLogin) {
       new OperationChecker(window).logout();
     }
     login = new LoginChecker(window);

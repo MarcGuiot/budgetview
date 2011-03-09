@@ -9,9 +9,9 @@ import org.globsframework.metamodel.index.Index;
 import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.metamodel.links.FieldMappingFunctor;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.indexing.IndexManager;
 import org.globsframework.model.indexing.IndexSource;
 import org.globsframework.model.indexing.IndexTables;
@@ -69,14 +69,14 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       return null;
     }
     Key targetKey = source.getTargetKey(link);
-    if (targetKey == null){
+    if (targetKey == null) {
       return null;
     }
     return find(targetKey);
   }
 
   public GlobList findLinkedTo(Glob target, Link link) {
-    if (target == null){
+    if (target == null) {
       return GlobList.EMPTY;
     }
     if (link instanceof LinkField) {
@@ -211,7 +211,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       if (matcher.matches(glob, this)) {
         boolean added = set.add(glob);
         Utils.beginRemove();
-        if (!added){
+        if (!added) {
           throw new RuntimeException("comparator not exclisif");
         }
         Utils.endRemove();
@@ -415,7 +415,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     try {
       List<Pair<Key, FieldValues>> toBeRemoved = new ArrayList<Pair<Key, FieldValues>>();
       for (Glob glob : list) {
-        if (glob == null){
+        if (glob == null) {
           continue;
         }
         if (!MutableGlob.class.isInstance(glob)) {
@@ -494,7 +494,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
           throw new InvalidParameter("Object " + key + " already exists\n" +
                                      "-- New object values:\n" + GlobPrinter.toString(values) +
                                      "-- Existing object:\n" + GlobPrinter.toString(find(key))
-                                     );
+          );
         }
       }
 
@@ -639,39 +639,38 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     if (bulkDispatchingModeLevel > 0) {
       return;
     }
-    if (this.changeSetToDispatch.isEmpty()) {
-      return;
-    }
-    MutableChangeSet currentChangeSetToDispatch = this.changeSetToDispatch;
+    if (!this.changeSetToDispatch.isEmpty()) {
+      MutableChangeSet currentChangeSetToDispatch = this.changeSetToDispatch;
 
-    // SVP : Laisser le code en commentaires : c'est parfois mon seul moyen de debug Marc.
+      // SVP : Laisser le code en commentaires : c'est parfois mon seul moyen de debug Marc.
 
-    try {
-      bulkDispatchingModeLevel++;
+      try {
+        bulkDispatchingModeLevel++;
 
-      if (applyTriggers) {
+        if (applyTriggers) {
 //        System.err.println("DefaultGlobRepository.notifyListeners " + changeSetToDispatch);
 //        Thread.dumpStack();
-        for (ChangeSetListener trigger : triggers) {
-          this.changeSetToDispatch = new DefaultChangeSet();
-          trigger.globsChanged(currentChangeSetToDispatch, this);
-          currentChangeSetToDispatch.merge(changeSetToDispatch);
+          for (ChangeSetListener trigger : triggers) {
+            this.changeSetToDispatch = new DefaultChangeSet();
+            trigger.globsChanged(currentChangeSetToDispatch, this);
+            currentChangeSetToDispatch.merge(changeSetToDispatch);
 //          if (!changeSetToDispatch.isEmpty()) {
 //            System.err.println(trigger + " : " + changeSetToDispatch);
 //          }
-        }
+          }
 //        System.err.println("------------------------------------------------------------");
+        }
       }
-    }
-    finally {
-      bulkDispatchingModeLevel--;
-    }
+      finally {
+        bulkDispatchingModeLevel--;
+      }
 
-    this.changeSetToDispatch = new DefaultChangeSet();
-    for (ChangeSetListener listener : changeListeners) {
-      listener.globsChanged(currentChangeSetToDispatch, this);
+      this.changeSetToDispatch = new DefaultChangeSet();
+      for (ChangeSetListener listener : changeListeners) {
+        listener.globsChanged(currentChangeSetToDispatch, this);
+      }
+      pendingDeletions.clear();
     }
-    pendingDeletions.clear();
     for (InvokeAction action : actions) {
       action.run();
     }
@@ -724,7 +723,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
   private class ChangeSetExecutor implements ChangeSetVisitor {
     public void visitCreation(Key key, FieldValues values) {
-       create(key, values.toArray());
+      create(key, values.toArray());
     }
 
     public void visitUpdate(Key key, FieldValuesWithPrevious values) {

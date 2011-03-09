@@ -374,6 +374,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    currentlySelected.clear();
     reloadMonth();
     repaint();
   }

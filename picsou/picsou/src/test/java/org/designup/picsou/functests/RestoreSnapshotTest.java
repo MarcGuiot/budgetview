@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.checkers.RestoreSnapshotChecker;
+import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.model.TransactionType;
 
 public class RestoreSnapshotTest extends LoggedInFunctionalTestCase {
@@ -11,6 +12,7 @@ public class RestoreSnapshotTest extends LoggedInFunctionalTestCase {
     setCurrentDate("2008/08/30");
     setInMemory(false);
     setDeleteLocalPrevayler(true);
+    resetWindow();
     super.setUp();
     setDeleteLocalPrevayler(false);
   }
@@ -20,6 +22,7 @@ public class RestoreSnapshotTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/26", 1000, "Company")
       .addTransaction("2008/08/10", -400.0, "Auchan")
       .load();
+    System.out.println("RestoreSnapshotTest.testRestorePrevious");
     restartApplication();
     OfxBuilder.init(this)
       .addTransaction("2008/08/27", 1000, "Company")

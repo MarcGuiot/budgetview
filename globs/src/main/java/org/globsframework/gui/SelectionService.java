@@ -82,4 +82,10 @@ public class SelectionService {
   public void clear(GlobType type) {
     select(Collections.<Glob>emptyList(), type);
   }
+  
+  public void clearAll(){
+    for (GlobType type : currentSelections.keySet()) {
+      clear(type);
+    }
+  }
 }

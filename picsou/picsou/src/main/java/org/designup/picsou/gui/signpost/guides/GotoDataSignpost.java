@@ -23,7 +23,7 @@ public class GotoDataSignpost extends SimpleSignpost implements GlobSelectionLis
 
   public void selectionUpdated(GlobSelection selection) {
     Glob card = selection.getAll(Card.TYPE).getFirst();
-    if (isShowing() && (Card.get(card) == Card.DATA)) {
+    if (isShowing() && (card != null && Card.get(card) == Card.DATA)) {
       dispose();
     }
   }

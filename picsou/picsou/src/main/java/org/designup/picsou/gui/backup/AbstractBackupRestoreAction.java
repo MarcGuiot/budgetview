@@ -5,6 +5,7 @@ import org.designup.picsou.gui.backup.BackupService;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.gui.SelectionService;
 
 import javax.swing.*;
 
@@ -13,6 +14,7 @@ public abstract class AbstractBackupRestoreAction extends AbstractAction {
   protected Directory directory;
   protected JFrame frame;
   protected BackupService backupService;
+  protected SelectionService selectionService;
 
   public AbstractBackupRestoreAction(String name, GlobRepository repository, Directory directory) {
     super(name);
@@ -20,6 +22,7 @@ public abstract class AbstractBackupRestoreAction extends AbstractAction {
     this.directory = directory;
     this.backupService = directory.get(BackupService.class);
     this.frame = directory.get(JFrame.class);
+    this.selectionService = directory.get(SelectionService.class);
   }
 
   protected JFileChooser getFileChooser() {

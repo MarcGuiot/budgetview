@@ -25,7 +25,6 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
-import org.globsframework.utils.Utils;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -70,10 +69,11 @@ public class MainWindow implements WindowManager {
     this.dataInMemory = dataInMemory;
     this.directory = directory;
 
-    if (thread == null) {
-      thread = new ShutDownThread(serverAccess);
-      Runtime.getRuntime().addShutdownHook(thread);
+    if (thread != null) {
+      Runtime.getRuntime().removeShutdownHook(thread);
     }
+    thread = new ShutDownThread(serverAccess);
+    Runtime.getRuntime().addShutdownHook(thread);
 
     this.frame = new PicsouFrame(Lang.get("application"));
 
@@ -112,7 +112,7 @@ public class MainWindow implements WindowManager {
       local.shutdown();
       local.interrupt();
       local.join(2000);
-      if (local.isAlive()){
+      if (local.isAlive()) {
         Thread.dumpStack();
       }
     }

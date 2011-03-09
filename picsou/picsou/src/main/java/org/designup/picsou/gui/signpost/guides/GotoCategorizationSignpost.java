@@ -48,7 +48,7 @@ public class GotoCategorizationSignpost extends Signpost implements GlobSelectio
 
   public void selectionUpdated(GlobSelection selection) {
     Glob card = selection.getAll(Card.TYPE).getFirst();
-    if (isShowing() && (Card.get(card) == Card.CATEGORIZATION)) {
+    if (isShowing() && (card != null && Card.get(card) == Card.CATEGORIZATION)) {
       dispose();
     }
   }
