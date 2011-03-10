@@ -1,16 +1,14 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.*;
+import junit.framework.Assert;
+import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
-import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.interception.WindowHandler;
-
-import junit.framework.Assert;
+import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Button;
 
 
 public class RestoreSnapshotChecker extends GuiChecker {
@@ -27,16 +25,45 @@ public class RestoreSnapshotChecker extends GuiChecker {
   }
 
   public void restore(int position) {
+    restore(position, true);
+  }
+
+  public RestoreSnapshotChecker restoreWithCanel(int position) {
+    restore(position, false);
+    return this;
+  }
+
+  private void restore(int position, final boolean ok) {
     Component[] swingComponents = dialog.getSwingComponents(JButton.class, "date");
     org.uispec4j.Button button = new org.uispec4j.Button(((JButton)swingComponents[position]));
-    WindowInterceptor.init(button.triggerClick())
+    WindowInterceptor interceptor = WindowInterceptor.init(button.triggerClick())
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          MessageDialogChecker dialogChecker = new MessageDialogChecker(window);
-          dialogChecker.checkMessageContains("successfully reloaded");
-          return dialogChecker.triggerClose();
+          ConfirmationDialogChecker confirmationDialogChecker = new ConfirmationDialogChecker(window);
+          confirmationDialogChecker.checkMessageContains("Do you realy want to restore");
+          if (ok) {
+            return confirmationDialogChecker.getOkTrigger();
+          }
+          else {
+            return confirmationDialogChecker.getCancelTrigger();
+          }
         }
-      }).run();
+      });
+    if (ok) {
+      interceptor
+        .process(new WindowHandler() {
+          public Trigger process(Window window) throws Exception {
+            MessageDialogChecker dialogChecker = new MessageDialogChecker(window);
+            dialogChecker.checkMessageContains("successfully reloaded");
+            return dialogChecker.triggerClose();
+          }
+        }).run();
+      assertFalse(dialog.isVisible());
+    }
+  }
+
+  public void close() {
+    dialog.getButton("close").click();
     assertFalse(dialog.isVisible());
   }
 }

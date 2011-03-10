@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.checkers.RestoreSnapshotChecker;
-import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.model.TransactionType;
 
 public class RestoreSnapshotTest extends LoggedInFunctionalTestCase {
@@ -22,7 +21,6 @@ public class RestoreSnapshotTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/26", 1000, "Company")
       .addTransaction("2008/08/10", -400.0, "Auchan")
       .load();
-    System.out.println("RestoreSnapshotTest.testRestorePrevious");
     restartApplication();
     OfxBuilder.init(this)
       .addTransaction("2008/08/27", 1000, "Company")
@@ -62,6 +60,28 @@ public class RestoreSnapshotTest extends LoggedInFunctionalTestCase {
       .add("26/08/2008", TransactionType.VIREMENT, "COMPANY", "", 1000.00)
       .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -400.00)
       .check();
-    
+
+
+    operations.restoreSnapshot()
+      .checkAvaillable(3)
+      .restoreWithCanel(0)
+      .close();
+
+    transactions.initContent()
+      .add("27/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
+      .add("27/08/2008", TransactionType.VIREMENT, "COMPANY", "", 500.00)
+      .add("26/08/2008", TransactionType.VIREMENT, "COMPANY", "", 1000.00)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -400.00)
+      .check();
+
+    operations.restoreSnapshot()
+      .checkAvaillable(3)
+      .restore(0);
+
+    transactions.initContent()
+      .add("27/08/2008", TransactionType.VIREMENT, "COMPANY", "", 500.00)
+      .add("26/08/2008", TransactionType.VIREMENT, "COMPANY", "", 1000.00)
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -400.00)
+      .check();
   }
 }

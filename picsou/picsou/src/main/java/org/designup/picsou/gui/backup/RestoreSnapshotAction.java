@@ -3,6 +3,8 @@ package org.designup.picsou.gui.backup;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
@@ -16,17 +18,29 @@ import java.util.Date;
 public class RestoreSnapshotAction extends AbstractRestoreAction {
   private ServerAccess.SnapshotInfo snapshotInfo;
   private PicsouDialog dialog;
+  private String date;
 
   public RestoreSnapshotAction(Directory directory, GlobRepository repository, ServerAccess.SnapshotInfo snapshotInfo,
                                PicsouDialog dialog) {
-    super(Lang.get("restore.snapshot.button", Dates.DEFAULT_TIMESTAMP_FORMAT.format(new Date(snapshotInfo.timestamp))),
-          repository, directory);
+    super(Lang.get("restore.snapshot.button", getDate(snapshotInfo)), repository, directory);
+    date = getDate(snapshotInfo);
     this.snapshotInfo = snapshotInfo;
     this.dialog = dialog;
   }
 
+  private static String getDate(ServerAccess.SnapshotInfo snapshotInfo) {
+    return PicsouDescriptionService.LOCAL_TIME_STAMP.format(new Date(snapshotInfo.timestamp));
+  }
+
   public void actionPerformed(ActionEvent e) {
-    appyWithPasswordManagement(new RestoreSnapshot());
+    ConfirmationDialog confirmationDialog =
+      new ConfirmationDialog("restore.snapshot.confirmation.title",
+                             "restore.snapshot.confirmation.message", dialog, directory, date) {
+        protected void postValidate() {
+          appyWithPasswordManagement(new RestoreSnapshot());
+        }
+      };
+    confirmationDialog.show();
   }
 
   class RestoreSnapshot implements AbstractRestoreAction.RestoreDetail {

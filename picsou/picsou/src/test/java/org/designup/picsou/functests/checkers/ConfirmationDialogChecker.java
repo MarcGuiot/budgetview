@@ -48,6 +48,10 @@ public class ConfirmationDialogChecker extends GuiChecker {
     return dialog.getButton(buttonName).triggerClick();
   }
 
+  public Trigger getCancelTrigger(){
+    return dialog.getButton("Cancel").triggerClick();
+  }
+
   public void cancel() {
     dialog.getButton("Cancel").click();
     checkHidden();

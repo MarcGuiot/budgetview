@@ -27,7 +27,7 @@ public class DirectAccountDataManager implements AccountDataManager {
   private Map<Integer, DurableOutputStream> outputStreamMap = new HashMap<Integer, DurableOutputStream>();
   private String prevaylerPath;
   private boolean inMemory;
-  private int countFileNotToDelete = 6;
+  private int countFileNotToDelete = 10;
   private RandomAccessFile streamLock;
   private FileLock lock;
   public static final String LATEST_VERSION = "T1";

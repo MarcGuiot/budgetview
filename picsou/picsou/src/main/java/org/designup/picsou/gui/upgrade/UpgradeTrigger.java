@@ -24,6 +24,7 @@ import org.globsframework.utils.directory.Directory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Date;
 
 public class UpgradeTrigger implements ChangeSetListener {
   private Directory directory;
@@ -102,6 +103,10 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (currentJarVersion < 59) {
       updateTargetSavings(repository);
       createMirorSeries(repository, savingsSeriesToOp);
+    }
+    if (currentJarVersion < 61){
+      repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
+                        Month.addDurationMonth(TimeService.getToday()));
     }
 
     deleteDeprecatedGlobs(repository);
