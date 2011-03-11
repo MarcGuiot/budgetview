@@ -1,17 +1,22 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="repeat "/>
+  </styles>
 
-  <panel styleClass="dialog" preferredSize="(400,250)" opaque="true">
+  <panel styleClass="dialog" preferredSize="(450,350)" opaque="true">
     <column styleClass="innerDialog">
       <label text="$restore.snapshot.title" styleClass="title"/>
-      <repeat ref="versionRepeat" layout="verticalGrid" marginTop="20">
-        <row>
-          <button name="date" action="dateRef" styleClass="hyperlinkWithoutUnderline" marginTop="5"/>
-          <filler fill="horizontal"/>
-        </row>
-      </repeat>
-      <filler fill="vertical"/>
+      <htmlEditorPane text="$restore.snapshot.intro" weightY="0.1"/>
+      <scrollPane forceVerticalScroll="true" marginTop="20" weightY="100">
+        <repeat ref="versionRepeat" layout="verticalGrid" margin="10">
+          <row>
+            <button name="date" action="dateRef" styleClass="hyperlinkWithoutUnderline"
+                    fill="none" anchor="left" marginTop="5"/>
+          </row>
+        </repeat>
+      </scrollPane>
     </column>
   </panel>
 

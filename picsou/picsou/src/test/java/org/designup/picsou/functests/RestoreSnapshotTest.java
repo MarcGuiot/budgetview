@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.functests.checkers.RestoreSnapshotChecker;
 import org.designup.picsou.model.TransactionType;
 
 public class RestoreSnapshotTest extends LoggedInFunctionalTestCase {
@@ -26,8 +25,8 @@ public class RestoreSnapshotTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/27", 1000, "Company")
       .load();
 
-    RestoreSnapshotChecker restoreSnapshotChecker = operations.restoreSnapshot();
-    restoreSnapshotChecker.checkAvaillable(1)
+    operations.restoreSnapshot()
+      .checkAvailableSnapshots(1)
       .restore(0);
 
     transactions.initContent()
@@ -51,8 +50,8 @@ public class RestoreSnapshotTest extends LoggedInFunctionalTestCase {
       .load();
 
     operations.restoreSnapshot()
-      .checkAvaillable(2)
-      .restore(1);
+      .checkAvailableSnapshots(2)
+      .restore(0);
 
     transactions.initContent()
       .add("27/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
@@ -63,8 +62,8 @@ public class RestoreSnapshotTest extends LoggedInFunctionalTestCase {
 
 
     operations.restoreSnapshot()
-      .checkAvaillable(3)
-      .restoreWithCanel(0)
+      .checkAvailableSnapshots(3)
+      .restoreWithCancel(2)
       .close();
 
     transactions.initContent()
@@ -75,8 +74,8 @@ public class RestoreSnapshotTest extends LoggedInFunctionalTestCase {
       .check();
 
     operations.restoreSnapshot()
-      .checkAvaillable(3)
-      .restore(0);
+      .checkAvailableSnapshots(3)
+      .restore(2);
 
     transactions.initContent()
       .add("27/08/2008", TransactionType.VIREMENT, "COMPANY", "", 500.00)

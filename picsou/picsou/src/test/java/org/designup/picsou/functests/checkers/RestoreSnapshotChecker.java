@@ -18,7 +18,7 @@ public class RestoreSnapshotChecker extends GuiChecker {
     this.dialog = dialog;
   }
 
-  public RestoreSnapshotChecker checkAvaillable(int count) {
+  public RestoreSnapshotChecker checkAvailableSnapshots(int count) {
     Component[] swingComponents = dialog.getSwingComponents(JButton.class, "date");
     Assert.assertEquals(count, swingComponents.length);
     return this;
@@ -28,7 +28,7 @@ public class RestoreSnapshotChecker extends GuiChecker {
     restore(position, true);
   }
 
-  public RestoreSnapshotChecker restoreWithCanel(int position) {
+  public RestoreSnapshotChecker restoreWithCancel(int position) {
     restore(position, false);
     return this;
   }

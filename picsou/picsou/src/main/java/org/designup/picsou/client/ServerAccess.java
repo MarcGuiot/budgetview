@@ -55,7 +55,7 @@ public interface ServerAccess {
     }
   }
 
-  class SnapshotInfo {
+  class SnapshotInfo implements Comparable<SnapshotInfo> {
     public final long timestamp;
     public final String file;
     public final String password;
@@ -64,6 +64,13 @@ public interface ServerAccess {
       this.timestamp = timestamp;
       this.file = file;
       this.password = password;
+    }
+
+    public int compareTo(SnapshotInfo other) {
+      if (other.timestamp == timestamp) {
+        return 0;
+      }
+      return other.timestamp < timestamp ? -1 : 1;
     }
   }
 

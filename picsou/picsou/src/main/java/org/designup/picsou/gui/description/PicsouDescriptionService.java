@@ -20,7 +20,7 @@ import java.util.Comparator;
 
 public class PicsouDescriptionService extends DefaultDescriptionService {
 
-  public static final SimpleDateFormat LOCAL_TIME_STAMP = new SimpleDateFormat("EEE, d MMM yyyy HH:mm");
+  public static final SimpleDateFormat LOCAL_TIME_STAMP = new SimpleDateFormat("EEEE d MMM yyyy HH:mm");
 
   public PicsouDescriptionService() {
     super(new org.globsframework.model.format.Formats(Formatting.DATE_FORMAT,
