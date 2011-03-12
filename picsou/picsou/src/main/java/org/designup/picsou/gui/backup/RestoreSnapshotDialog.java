@@ -2,6 +2,7 @@ package org.designup.picsou.gui.backup;
 
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -33,7 +34,7 @@ public class RestoreSnapshotDialog {
       }
     });
 
-    dialog.setPanelAndButton(builder.<JPanel>load(), new AbstractAction("close") {
+    dialog.setPanelAndButton(builder.<JPanel>load(), new AbstractAction(Lang.get("close")) {
       public void actionPerformed(ActionEvent e) {
         dialog.setVisible(false);
       }
