@@ -1,9 +1,6 @@
 package org.globsframework.wicket;
 
-import com.gargoylesoftware.htmlunit.CollectingAlertHandler;
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
-import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import junit.framework.TestCase;
@@ -53,12 +50,12 @@ public abstract class WebTestCase extends TestCase {
   }
 
   protected void assertNoMessages(HtmlElement element) throws Exception {
-    assertNoMessages(element.getPage());
+    assertNoMessages((HtmlPage)element.getPage());
   }
 
   protected void assertNoMessages(HtmlPage page) throws Exception {
     HtmlElement element = page.getHtmlElementById(DummyPage.FEEDBACK_COMPONENT_ID);
-    assertFalse(element.getAllHtmlChildElements().hasNext());
+    assertFalse(element.getChildElements().iterator().hasNext());
   }
 
   protected void assertAlert(String alert) {

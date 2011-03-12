@@ -174,17 +174,12 @@ public class HistoChartBuilder {
       for (Glob transaction : transactions) {
         int day = transaction.get(Transaction.POSITION_DAY) - 1;
         lastValues[day] = transaction.get(Transaction.SUMMARY_POSITION);
-        if (transaction.isTrue(Transaction.PLANNED)) {
-          minValue[day] = transaction.get(Transaction.SUMMARY_POSITION);
-        }
-        else {
           if (minValue[day] == null) {
             minValue[day] = transaction.get(Transaction.SUMMARY_POSITION);
           }
           else {
             minValue[day] = Math.min(transaction.get(Transaction.SUMMARY_POSITION, Double.MAX_VALUE), minValue[day]);
           }
-        }
       }
 
       for (int i = 0; i < minValue.length; i++) {

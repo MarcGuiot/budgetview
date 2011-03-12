@@ -14,7 +14,8 @@ public class TransactionComparatorTest extends PicsouTestCase {
   public void testSplitComparator() throws Exception {
     Glob o0 = repository.create(Key.create(Transaction.TYPE, -1),
                                 FieldValue.value(Transaction.BANK_DAY, 1),
-                                FieldValue.value(Transaction.BANK_MONTH, 3));
+                                FieldValue.value(Transaction.BANK_MONTH, 3),
+                                FieldValue.value(Transaction.AMOUNT, 3.));
     Glob o1 = createAccount1(11);
     Glob o2 = createSplitAccount1(10, 11);
     Glob o3 = createSplitAccount1(15, 11);
@@ -30,7 +31,8 @@ public class TransactionComparatorTest extends PicsouTestCase {
     Glob o13 = repository.create(Key.create(Transaction.TYPE, 23),
                                  FieldValue.value(Transaction.BANK_DAY, 1),
                                  FieldValue.value(Transaction.PLANNED, true),
-                                 FieldValue.value(Transaction.BANK_MONTH, 1));
+                                 FieldValue.value(Transaction.BANK_MONTH, 1),
+                                 FieldValue.value(Transaction.AMOUNT, 1.));
 
     check(TransactionComparator.ASCENDING_BANK,
           o13, o2, o3, o4, o1, o6, o7, o8, o5, o9, o10, o11, o12, o0);
@@ -95,7 +97,8 @@ public class TransactionComparatorTest extends PicsouTestCase {
                              FieldValue.value(Transaction.SPLIT_SOURCE, sourceId),
                              FieldValue.value(Transaction.BANK_DAY, 1),
                              FieldValue.value(Transaction.ACCOUNT, 1),
-                             FieldValue.value(Transaction.BANK_MONTH, 2));
+                             FieldValue.value(Transaction.BANK_MONTH, 2),
+                             FieldValue.value(Transaction.AMOUNT, 2.));
   }
 
 
@@ -103,7 +106,8 @@ public class TransactionComparatorTest extends PicsouTestCase {
     return repository.create(Key.create(Transaction.TYPE, id),
                              FieldValue.value(Transaction.ACCOUNT, 1),
                              FieldValue.value(Transaction.BANK_DAY, 1),
-                             FieldValue.value(Transaction.BANK_MONTH, 2));
+                             FieldValue.value(Transaction.BANK_MONTH, 2),
+                             FieldValue.value(Transaction.AMOUNT, 10.));
   }
 
   private Glob createAtPosition(int id, int monthPosition, int monthBank) {
@@ -112,7 +116,9 @@ public class TransactionComparatorTest extends PicsouTestCase {
                              FieldValue.value(Transaction.POSITION_DAY, 26),
                              FieldValue.value(Transaction.POSITION_MONTH, monthPosition),
                              FieldValue.value(Transaction.BANK_DAY, 13),
-                             FieldValue.value(Transaction.BANK_MONTH, monthBank));
+                             FieldValue.value(Transaction.BANK_MONTH, monthBank),
+                             FieldValue.value(Transaction.AMOUNT, 10.)
+    );
   }
 
   private Glob createSplitAccount2(int id, int sourceId) {
@@ -120,14 +126,16 @@ public class TransactionComparatorTest extends PicsouTestCase {
                              FieldValue.value(Transaction.SPLIT_SOURCE, sourceId),
                              FieldValue.value(Transaction.ACCOUNT, 2),
                              FieldValue.value(Transaction.BANK_DAY, 1),
-                             FieldValue.value(Transaction.BANK_MONTH, 2));
+                             FieldValue.value(Transaction.BANK_MONTH, 2),
+                             FieldValue.value(Transaction.AMOUNT, 2.));
   }
 
   private Glob createAccount2(int id) {
     return repository.create(Key.create(Transaction.TYPE, id),
                              FieldValue.value(Transaction.ACCOUNT, 2),
                              FieldValue.value(Transaction.BANK_DAY, 1),
-                             FieldValue.value(Transaction.BANK_MONTH, 2));
+                             FieldValue.value(Transaction.BANK_MONTH, 2),
+                             FieldValue.value(Transaction.AMOUNT, 2.));
   }
 
   private Glob createPlanned(int id) {
@@ -135,7 +143,8 @@ public class TransactionComparatorTest extends PicsouTestCase {
                              FieldValue.value(Transaction.ACCOUNT, 1),
                              FieldValue.value(Transaction.BANK_DAY, 1),
                              FieldValue.value(Transaction.PLANNED, true),
-                             FieldValue.value(Transaction.BANK_MONTH, 2));
+                             FieldValue.value(Transaction.BANK_MONTH, 2),
+                             FieldValue.value(Transaction.AMOUNT, 2.));
   }
 
   private Glob createPlannedAccount2(int id) {
@@ -143,6 +152,7 @@ public class TransactionComparatorTest extends PicsouTestCase {
                              FieldValue.value(Transaction.ACCOUNT, 2),
                              FieldValue.value(Transaction.BANK_DAY, 1),
                              FieldValue.value(Transaction.PLANNED, true),
-                             FieldValue.value(Transaction.BANK_MONTH, 2));
+                             FieldValue.value(Transaction.BANK_MONTH, 2),
+                             FieldValue.value(Transaction.AMOUNT, 2.));
   }
 }

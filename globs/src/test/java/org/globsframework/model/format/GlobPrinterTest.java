@@ -22,10 +22,10 @@ public class GlobPrinterTest extends TestCase {
     createObj2(0, "b");
     createObj2(2, "c");
     checkOutput("===== dummyObject2 ======" + LINE_SEPARATOR +
-                "| id | label |" + LINE_SEPARATOR +
-                "| 0  | b     |" + LINE_SEPARATOR +
-                "| 1  | a     |" + LINE_SEPARATOR +
-                "| 2  | c     |" + LINE_SEPARATOR +
+                "| id | label | value |" + LINE_SEPARATOR +
+                "| 0  | b     |       |" + LINE_SEPARATOR +
+                "| 1  | a     |       |" + LINE_SEPARATOR +
+                "| 2  | c     |       |" + LINE_SEPARATOR +
                 LINE_SEPARATOR);
   }
 
@@ -41,8 +41,8 @@ public class GlobPrinterTest extends TestCase {
                 "| 1  | n2   |       |         | 2006/02/21 | 2005/12/24 23:59:59 |          |      |       |" + LINE_SEPARATOR +
                 "" + LINE_SEPARATOR +
                 "===== dummyObject2 ======" + LINE_SEPARATOR +
-                "| id | label |" + LINE_SEPARATOR +
-                "| 1  | a     |" + LINE_SEPARATOR +
+                "| id | label | value |" + LINE_SEPARATOR +
+                "| 1  | a     |       |" + LINE_SEPARATOR +
                 LINE_SEPARATOR);
   }
 
@@ -57,8 +57,8 @@ public class GlobPrinterTest extends TestCase {
                 DummyObject.TYPE);
 
     checkOutput("===== dummyObject2 ======" + LINE_SEPARATOR +
-                "| id | label |" + LINE_SEPARATOR +
-                "| 1  | a     |" + LINE_SEPARATOR +
+                "| id | label | value |" + LINE_SEPARATOR +
+                "| 1  | a     |       |" + LINE_SEPARATOR +
                 "" + LINE_SEPARATOR,
                 DummyObject2.TYPE);
   }
@@ -69,7 +69,7 @@ public class GlobPrinterTest extends TestCase {
     String actual =
       GlobPrinter.init(repository)
         .showOnly(DummyObject2.TYPE)
-        .exclude(DummyObject2.ID)
+        .exclude(DummyObject2.ID, DummyObject2.VALUE)
         .toString();
 
     assertEquals("===== dummyObject2 ======" + LINE_SEPARATOR +

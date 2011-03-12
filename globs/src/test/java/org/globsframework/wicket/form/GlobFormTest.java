@@ -29,11 +29,11 @@ public abstract class GlobFormTest extends WebTestCase {
       }
     });
 
-    form.getInputByName("component_id").setValueAttribute("1");
-    form.getInputByName("component_name").setValueAttribute("name 1");
-    form.getInputByName("component_value").setValueAttribute("1.25");
-    form.getInputByName("component_date").setValueAttribute("25/12/2007");
-    HtmlPage newPage = (HtmlPage)form.getInputByName("submit").click();
+    form.<HtmlInput>getInputByName("component_id").setValueAttribute("1");
+    form.<HtmlInput>getInputByName("component_name").setValueAttribute("name 1");
+    form.<HtmlInput>getInputByName("component_value").setValueAttribute("1.25");
+    form.<HtmlInput>getInputByName("component_date").setValueAttribute("25/12/2007");
+    HtmlPage newPage = (HtmlPage)form.<HtmlInput>getInputByName("submit").click();
 
     dumpPage(newPage);
     assertNoMessages(form);
@@ -44,8 +44,8 @@ public abstract class GlobFormTest extends WebTestCase {
     assertEquals(Dates.parse("2007/12/25"), createdObject.get(DummyObject.DATE));
 
     HtmlForm newForm = (HtmlForm)newPage.getHtmlElementById(getComponentId());
-    assertEquals("", newForm.getInputByName("component_name").getValueAttribute());
-    assertEquals("", newForm.getInputByName("component_date").getValueAttribute());
+    assertEquals("", newForm.<HtmlInput>getInputByName("component_name").getValueAttribute());
+    assertEquals("", newForm.<HtmlInput>getInputByName("component_date").getValueAttribute());
   }
 
   public void testEditingAnExistingObject() throws Exception {
@@ -74,13 +74,13 @@ public abstract class GlobFormTest extends WebTestCase {
       }
     });
 
-    assertEquals("name 1", form.getInputByName("component_name").getValueAttribute());
-    assertEquals("1.25", form.getInputByName("component_value").getValueAttribute());
-    assertEquals("25/12/2007", form.getInputByName("component_date").getValueAttribute());
+    assertEquals("name 1", form.<HtmlInput>getInputByName("component_name").getValueAttribute());
+    assertEquals("1.25", form.<HtmlInput>getInputByName("component_value").getValueAttribute());
+    assertEquals("25/12/2007", form.<HtmlInput>getInputByName("component_date").getValueAttribute());
     List selectedOptions = form.getSelectByName("component_link").getSelectedOptions();
     assertEquals(1, selectedOptions.size());
     assertEquals("obj0", ((HtmlOption)selectedOptions.get(0)).asText());
-    form.getInputByName("submit").click();
+    form.<HtmlInput>getInputByName("submit").click();
 
     assertNoMessages(form);
 
@@ -146,7 +146,7 @@ public abstract class GlobFormTest extends WebTestCase {
       }
     });
 
-    form.getInputByName("component_id").setValueAttribute("1");
+    form.<HtmlInput>getInputByName("component_id").setValueAttribute("1");
 
     HtmlSelect select = form.getSelectByName("component_link");
     List<HtmlOption> options = select.getOptions();
@@ -155,7 +155,7 @@ public abstract class GlobFormTest extends WebTestCase {
     assertEquals("obj10", options.get(1).asText());
     assertEquals("obj11", options.get(2).asText());
     select.setSelectedAttribute(options.get(2), true);
-    form.getInputByName("submit").click();
+    form.<HtmlInput>getInputByName("submit").click();
 
     assertNoMessages(form);
 
@@ -173,7 +173,7 @@ public abstract class GlobFormTest extends WebTestCase {
       }
     });
 
-    HtmlPage newPage = (HtmlPage)form.getInputByName("submit").click();
+    HtmlPage newPage = (HtmlPage)form.<HtmlInput>getInputByName("submit").click();
 
     checkMessages(newPage, "field 'name' is required", "field 'value' is required");
 
@@ -189,7 +189,7 @@ public abstract class GlobFormTest extends WebTestCase {
       }
     });
 
-    HtmlPage newPage = (HtmlPage)form.getInputByName("submit").click();
+    HtmlPage newPage = (HtmlPage)form.<HtmlInput>getInputByName("submit").click();
 
     checkMessages(newPage, "field 'link' is required.");
 
@@ -208,10 +208,10 @@ public abstract class GlobFormTest extends WebTestCase {
 
     String comment = "Hello,\nHow are you?";
 
-    form.getInputByName("component_id").setValueAttribute("1");
+    form.<HtmlInput>getInputByName("component_id").setValueAttribute("1");
     HtmlTextArea textArea = form.getTextAreaByName("component_comment");
     textArea.setText(comment);
-    form.getInputByName("submit").click();
+    form.<HtmlInput>getInputByName("submit").click();
 
     assertNoMessages(form);
 
@@ -260,21 +260,21 @@ public abstract class GlobFormTest extends WebTestCase {
       }
     });
 
-    form.getInputByName("component_id").setValueAttribute("1");
-    form.getInputByName("component_name").setValueAttribute("name 1");
-    form.getInputByName("component_date").setValueAttribute("not a date!");
-    HtmlPage newPage = (HtmlPage)form.getInputByName("submit").click();
+    form.<HtmlInput>getInputByName("component_id").setValueAttribute("1");
+    form.<HtmlInput>getInputByName("component_name").setValueAttribute("name 1");
+    form.<HtmlInput>getInputByName("component_date").setValueAttribute("not a date!");
+    HtmlPage newPage = (HtmlPage)form.<HtmlInput>getInputByName("submit").click();
 
     checkMessages(newPage, "'not a date!' is not a valid Date.");
 
     HtmlForm newForm = (HtmlForm)newPage.getHtmlElementById(getComponentId());
-    assertEquals("name 1", newForm.getInputByName("component_name").getValueAttribute());
-    assertEquals("not a date!", newForm.getInputByName("component_date").getValueAttribute());
+    assertEquals("name 1", newForm.<HtmlInput>getInputByName("component_name").getValueAttribute());
+    assertEquals("not a date!", newForm.<HtmlInput>getInputByName("component_date").getValueAttribute());
 
     assertFalse(repository.contains(DummyObject.TYPE));
 
-    newForm.getInputByName("component_date").setValueAttribute("25/12/2007");
-    HtmlPage lastPage = (HtmlPage)newForm.getInputByName("submit").click();
+    newForm.<HtmlInput>getInputByName("component_date").setValueAttribute("25/12/2007");
+    HtmlPage lastPage = (HtmlPage)newForm.<HtmlInput>getInputByName("submit").click();
     assertNoMessages(lastPage);
 
     Glob createdObject = repository.get(Key.create(DummyObject.TYPE, 1));
@@ -291,8 +291,8 @@ public abstract class GlobFormTest extends WebTestCase {
       }
     });
 
-    form.getInputByName("component_" + field.getName()).setValueAttribute(value);
-    HtmlPage newPage = (HtmlPage)form.getInputByName("submit").click();
+    form.<HtmlInput>getInputByName("component_" + field.getName()).setValueAttribute(value);
+    HtmlPage newPage = (HtmlPage)form.<HtmlInput>getInputByName("submit").click();
 
     checkMessages(newPage, errorMessage);
 
@@ -309,9 +309,9 @@ public abstract class GlobFormTest extends WebTestCase {
       }
     });
 
-    form.getInputByName("component_id").setValueAttribute("1");
-    form.getInputByName("component_date").setValueAttribute(input);
-    form.getInputByName("submit").click();
+    form.<HtmlInput>getInputByName("component_id").setValueAttribute("1");
+    form.<HtmlInput>getInputByName("component_date").setValueAttribute(input);
+    form.<HtmlInput>getInputByName("submit").click();
 
     assertNoMessages(form);
 

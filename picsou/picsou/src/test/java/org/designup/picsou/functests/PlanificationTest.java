@@ -163,8 +163,8 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("20/06/2008", TransactionType.PLANNED, "Planned: EDF", "", -50.00, "EDF")
       .add("20/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
+      .add("20/06/2008", TransactionType.PLANNED, "Planned: EDF", "", -50.00, "EDF")
       .add("20/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
       .add("10/06/2008", TransactionType.PRELEVEMENT, "EDF", "", -100.00, "EDF")
       .check();

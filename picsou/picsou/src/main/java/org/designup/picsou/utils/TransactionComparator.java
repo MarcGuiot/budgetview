@@ -114,6 +114,12 @@ public class TransactionComparator implements Comparator<Glob> {
   }
 
   int lastCompare(Glob transaction1, Glob transaction2) {
+    if (transaction1.isTrue(Transaction.PLANNED)) { // les deux sont des planned
+      int amountCompareOnSameDay = comparaisonMultiplier * transaction2.get(Transaction.AMOUNT).compareTo(transaction1.get(Transaction.AMOUNT));
+      if (amountCompareOnSameDay != 0) {
+        return amountCompareOnSameDay;
+      }
+    }    
     return comparaisonMultiplier * transaction1.get(Transaction.ID).compareTo(transaction2.get(Transaction.ID));
   }
 }
