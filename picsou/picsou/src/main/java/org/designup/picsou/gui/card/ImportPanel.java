@@ -3,6 +3,7 @@ package org.designup.picsou.gui.card;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.signpost.guides.ImportSignpost;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
@@ -27,8 +28,8 @@ public class ImportPanel extends View {
 
     JButton importLabel = new JButton();
     importLabel.setModel(button.getModel());
-    builder.add("importLabel", importLabel);
-    
+    builder.add("importLabel", Gui.createSyncButton(button));
+
     final ImportSignpost importSignpost = new ImportSignpost(repository, directory);
     importSignpost.attach(button);
 

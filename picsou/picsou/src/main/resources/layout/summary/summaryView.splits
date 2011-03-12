@@ -9,7 +9,6 @@
 
     <style selector="component.chart" margin="15" marginTop="5" marginLeft="25" opaque="true"
            background="block.inner.bg"/>
-
   </styles>
 
   <column>
@@ -22,7 +21,7 @@
 
     <component ref="mainAccountsHistoChart" styleClass="chart" weightY="15"/>
 
-    <row weightY="0">
+    <row weightY="0" marginTop="15">
       <label text="$summaryView.savingsAccountsBalance.title" styleClass="graphTitle"/>
       <label text="$summaryView.savingsAccountsBalance.subtitle" styleClass="graphSubTitle"/>
       <filler fill="horizontal"/>
@@ -30,7 +29,7 @@
 
     <component ref="savingsBalanceHistoChart" styleClass="chart" weightY="10"/>
 
-    <row weightY="0">
+    <row weightY="0" marginTop="15">
       <label text="$summaryView.savingsAccounts.title" styleClass="graphTitle"/>
       <label text="$summaryView.savingsAccounts.subtitle" styleClass="graphSubTitle"/>
       <filler fill="horizontal"/>

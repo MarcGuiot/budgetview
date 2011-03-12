@@ -140,13 +140,6 @@ public class Gui {
     return listener;
   }
 
-  public static JPanel createHorizontalBoxLayoutPanel() {
-    final JPanel panel = new JPanel();
-    panel.setOpaque(false);
-    panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-    return panel;
-  }
-
   public static void setColumnSizes(JTable targetTable, int[] columnSizes) {
     int columns = Math.min(columnSizes.length, targetTable.getColumnCount() - 1);
     for (int column = 0; column < columns; column++) {
@@ -195,6 +188,13 @@ public class Gui {
     GuiUtils.loadCssResource("/help/help.css", editor, HelpDialog.class);
     editor.setText(Lang.getHelpFile(helpFile));
     return editor;
+  }
+
+  public static JButton createSyncButton(JButton button) {
+    JButton sync = new JButton();
+    sync.setModel(button.getModel());
+    sync.setName(button.getName() + "_sync");
+    return sync;
   }
 
   public static boolean isVisible(JComponent component) {

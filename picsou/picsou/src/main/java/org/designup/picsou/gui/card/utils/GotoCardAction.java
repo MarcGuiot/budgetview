@@ -12,10 +12,14 @@ public class GotoCardAction extends AbstractAction {
   private Card card;
   private Directory directory;
 
-  public GotoCardAction(Card card, Directory directory) {
-    super(card.getLabel());
+  public GotoCardAction(String text, Card card, Directory directory) {
+    super(text);
     this.card = card;
     this.directory = directory;
+  }
+
+  public GotoCardAction(Card card, Directory directory) {
+    this(card.getLabel(), card, directory);
   }
 
   public void actionPerformed(ActionEvent e) {

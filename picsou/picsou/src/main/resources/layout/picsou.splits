@@ -147,6 +147,7 @@
               <column weightX="6">
                 <label text="$summaryView.title" styleClass="blockTitle"/>
                 <column styleClass="block">
+                  <panel ref="navigationView" weightY="0"/>
                   <column styleClass="innerBlock"
                           opaque="true" background="block.inner.bg"
                           border="line(block.inner.border)">

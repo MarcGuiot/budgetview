@@ -1,0 +1,35 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="button.navigation"
+           ui="hyperlinkButtonWithoutUnderline" foreground="summary.navigation.link"
+           horizontalTextPosition="left" fill="none" anchor="right" weightX="0" marginRight="10" marginLeft="5"
+           icon="arrow_right_grey.png" rolloverIcon="arrow_right_blue_full.png"/>
+    <style selector="button.navigationIcon" border="" weightX="0" fill="none" anchor="center"/>
+
+  </styles>
+
+  <row border="empty(15,0,0,0)">
+    <filler fill="horizontal"/>
+
+    <button ref="gotoDataIcon" icon="home/data.png" rolloverIcon="home/data_rollover.png"
+            styleClass="navigationIcon"/>
+    <button ref="gotoData" styleClass="navigation"/>
+
+    <filler fill="horizontal"/>
+
+    <button ref="gotoBudgetIcon" icon="home/budget.png" rolloverIcon="home/budget_rollover.png"
+            styleClass="navigationIcon"/>
+    <button ref="gotoBudget" styleClass="navigation"/>
+
+    <filler fill="horizontal"/>
+
+    <button ref="gotoSavingsIcon" icon="home/savings.png" rolloverIcon="home/savings_rollover.png"
+            styleClass="navigationIcon"/>
+    <button ref="gotoSavings" styleClass="navigation"/>
+
+    <filler fill="horizontal"/>
+  </row>
+
+</splits>
