@@ -37,7 +37,7 @@ public class PreferencesDialog {
     Utils.endRemove();
     futureMonth = new JComboBox(items);
     builder.add("futureMonth", futureMonth);
-    periodComboBox = new JComboBox(new Integer[]{4, 5, 6, 7});
+    periodComboBox = new JComboBox(new Integer[]{4, 5, 6, 7, 10});
     builder.add("period", periodComboBox);
     monthBackComboBox = new JComboBox(new Integer[]{1, 2, 3});
     builder.add("monthBack", monthBackComboBox);
