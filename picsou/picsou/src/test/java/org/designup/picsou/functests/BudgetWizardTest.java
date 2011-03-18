@@ -122,7 +122,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     mainAccounts.checkEstimatedPosition(1410);
-    timeline.checkMonthTooltip("2008/08", -90.00);
+    timeline.checkMonthTooltip("2008/08", 0.0);
 
     timeline.selectMonths("2008/07", "2008/08");
     budgetView.getSummary().checkEndPosition(1410);

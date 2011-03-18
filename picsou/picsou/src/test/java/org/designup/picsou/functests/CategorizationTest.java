@@ -746,9 +746,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("16/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant")
-      .add("16/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant")
-      .add("16/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -10.00, "Courant")
+      .add("19/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant")
+      .add("19/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant")
+      .add("19/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -10.00, "Courant")
       .add("10/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -10.00, "Courant")
       .add("20/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -20.00, "Courant")
       .add("10/05/2008", TransactionType.PRELEVEMENT, "ED", "", -10.00, "Occasional")
@@ -944,8 +944,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("23/08/2008", TransactionType.PLANNED, "Planned: Revenue", "", 20.00, "Revenue")
-      .add("23/07/2008", TransactionType.PLANNED, "Planned: Revenue", "", 20.00, "Revenue")
+      .add("19/08/2008", TransactionType.PLANNED, "Planned: Revenue", "", 20.00, "Revenue")
+      .add("19/07/2008", TransactionType.PLANNED, "Planned: Revenue", "", 20.00, "Revenue")
       .add("20/06/2008", TransactionType.VIREMENT, "revenue 1", "", 20.00, "Revenue")
       .add("10/05/2008", TransactionType.VIREMENT, "revenue 2", "", 10.00)
       .check();
@@ -968,8 +968,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("16/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant")
-      .add("16/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant")
+      .add("19/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant")
+      .add("19/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant")
       .add("20/06/2008", TransactionType.PRELEVEMENT, "ED", "", -20.00, "Courant")
       .add("10/05/2008", TransactionType.PRELEVEMENT, "Auchan", "", -10.00)
       .check();

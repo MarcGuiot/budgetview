@@ -52,14 +52,14 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initAmountContent()
-      .add("16/08/2009", "Planned: Tel", -29.90, "Tel", -159.60, "Main accounts")
-      .add("16/08/2009", "Planned: Courses", -10.00, "Courses", -129.70, "Main accounts")
-      .add("16/07/2009", "Planned: Tel", -29.90, "Tel", -119.70, "Main accounts")
+      .add("19/08/2009", "Planned: Tel", -29.90, "Tel", -159.60, "Main accounts")
+      .add("19/08/2009", "Planned: Courses", -10.00, "Courses", -129.70, "Main accounts")
+      .add("19/07/2009", "Planned: Tel", -29.90, "Tel", -119.70, "Main accounts")
       .add("05/07/2009", "PROV", -10.00, "Courses", -20.00, -89.80, "Manual")
-      .add("16/06/2009", "Planned: Tel", -29.90, "Tel", -79.80, "Main accounts")
-      .add("16/06/2009", "Planned: Courses", -10.00, "Courses", -49.90, "Main accounts")
+      .add("19/06/2009", "Planned: Tel", -29.90, "Tel", -79.80, "Main accounts")
+      .add("19/06/2009", "Planned: Courses", -10.00, "Courses", -49.90, "Main accounts")
       .add("22/05/2009", "PROV", -10.00, "Courses", -10.00, -39.90, "Manual")
-      .add("16/05/2009", "Planned: Tel", -29.90, "Tel", -29.90, "Main accounts")
+      .add("19/05/2009", "Planned: Tel", -29.90, "Tel", -29.90, "Main accounts")
       .add("20/04/2009", "FREE TELECOM", -29.90, "Tel", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
     views.selectHome();

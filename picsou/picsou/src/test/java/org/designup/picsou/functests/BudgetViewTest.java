@@ -65,10 +65,10 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     transactions
       .showPlannedTransactions().initContent()
-      .add("08/08/2008", TransactionType.PLANNED, "Planned: Groceries", "", -145.00, "Groceries")
-      .add("07/08/2008", TransactionType.PLANNED, "Planned: Salary", "", 3540.00, "Salary")
-      .add("01/08/2008", TransactionType.PLANNED, "Planned: Electricity", "", -55.00, "Electricity")
-      .add("01/08/2008", TransactionType.PLANNED, "Planned: Internet", "", -29.00, "Internet")
+      .add("11/08/2008", TransactionType.PLANNED, "Planned: Groceries", "", -145.00, "Groceries")
+      .add("04/08/2008", TransactionType.PLANNED, "Planned: Electricity", "", -55.00, "Electricity")
+      .add("04/08/2008", TransactionType.PLANNED, "Planned: Internet", "", -29.00, "Internet")
+      .add("04/08/2008", TransactionType.PLANNED, "Planned: Salary", "", 3540.00, "Salary")
       .check();
 
     budgetView.recurring.checkTitle("Recurring");
@@ -470,7 +470,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     timeline.selectLast();
     transactions
       .showPlannedTransactions().initContent()
-      .add("15/08/2008", TransactionType.PLANNED, "Planned: salaire", "", 1000, "salaire")
+      .add("11/08/2008", TransactionType.PLANNED, "Planned: salaire", "", 1000, "salaire")
       .check();
 
     views.selectBudget();

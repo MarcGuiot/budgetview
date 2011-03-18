@@ -124,7 +124,10 @@ public class Files {
   }
 
   public static void copyStreamTofile(InputStream inputStream, String file) throws IOException {
-    OutputStream outputStream = new FileOutputStream(file);
+    copyStream(inputStream, new FileOutputStream(file));
+  }
+
+  public static void copyStream(InputStream inputStream, OutputStream outputStream) throws IOException {
     byte[] bytes = new byte[1024];
     int readed;
     while ((readed = inputStream.read(bytes)) != -1) {

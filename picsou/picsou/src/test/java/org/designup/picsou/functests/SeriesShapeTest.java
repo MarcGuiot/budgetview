@@ -27,7 +27,7 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
 
     transactions.showPlannedTransactions()
       .initContent()
-      .add("10/07/2008", TransactionType.PLANNED, "Planned: Courses", "", -50.00, "Courses")
+      .add("11/07/2008", TransactionType.PLANNED, "Planned: Courses", "", -50.00, "Courses")
       .add("10/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("10/07/2008", TransactionType.PRELEVEMENT, "ED1", "", -50.00, "Courses")
       .check();
@@ -36,8 +36,8 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .add("24/07/2008", TransactionType.PLANNED, "Planned: Courses", "", -25., "Courses")
-      .add("10/07/2008", TransactionType.PLANNED, "Planned: Courses", "", -25.00, "Courses")
+      .add("27/07/2008", TransactionType.PLANNED, "Planned: Courses", "", -25., "Courses")
+      .add("11/07/2008", TransactionType.PLANNED, "Planned: Courses", "", -25.00, "Courses")
       .add("10/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("10/07/2008", TransactionType.PRELEVEMENT, "ED1", "", -50.00, "Courses")
       .check();
@@ -46,11 +46,11 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .add("31/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 10.00, "Salaire")
-      .add("24/07/2008", TransactionType.PLANNED, "Planned: Courses", "", -17.00, "Courses")
-      .add("23/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 30.00, "Salaire")
-      .add("15/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 630.00, "Salaire")
-      .add("10/07/2008", TransactionType.PLANNED, "Planned: Courses", "", -33.00, "Courses")
+      .add("27/07/2008", TransactionType.PLANNED, "Planned: Courses", "", -17.00, "Courses")
+      .add("27/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 10.00, "Salaire")
+      .add("19/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 30.00, "Salaire")
+      .add("11/07/2008", TransactionType.PLANNED, "Planned: Courses", "", -33.00, "Courses")
+      .add("11/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 630.00, "Salaire")
       .add("10/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 330.00, "Salaire")
       .add("10/07/2008", TransactionType.PRELEVEMENT, "ED1", "", -50.00, "Courses")
       .check();
@@ -60,8 +60,8 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .add("24/07/2008", TransactionType.PLANNED, "Planned: Courses", "", -17.00, "Courses")
-      .add("10/07/2008", TransactionType.PLANNED, "Planned: Courses", "", -33.00, "Courses")
+      .add("27/07/2008", TransactionType.PLANNED, "Planned: Courses", "", -17.00, "Courses")
+      .add("11/07/2008", TransactionType.PLANNED, "Planned: Courses", "", -33.00, "Courses")
       .add("10/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("10/07/2008", TransactionType.PRELEVEMENT, "ED1", "", -50.00, "Courses")
       .check();
@@ -93,8 +93,8 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     transactions.showPlannedTransactions()
       .initContent()
-      .add("17/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -200.00, "Courses")
-      .add("04/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("18/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -200.00, "Courses")
+      .add("02/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("26/08/2008", TransactionType.PLANNED, "Planned: Courses", "", -80.00, "Courses")
       .add("26/08/2008", TransactionType.PRELEVEMENT, "ED2", "", -40.00)
       .add("24/08/2008", TransactionType.PRELEVEMENT, "ED1", "", -30.00)
@@ -108,8 +108,8 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
 
     transactions.showPlannedTransactions()
       .initContent()
-      .add("17/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -200.00, "Courses")
-      .add("04/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("18/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -200.00, "Courses")
+      .add("02/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("26/08/2008", TransactionType.PLANNED, "Planned: Courses", "", -50.00, "Courses")
       .add("26/08/2008", TransactionType.PRELEVEMENT, "ED2", "", -40.00)
       .add("24/08/2008", TransactionType.PRELEVEMENT, "ED1", "", -30.00, "Courses")
@@ -122,11 +122,12 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
     categorization.setVariable("ED2", "Courses");
     transactions
       .initContent()
-      .add("21/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -76.00, "Courses")
-      .add("13/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -20.00, "Courses")
-      .add("09/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -52.00, "Courses")
-      .add("04/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
-      .add("01/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -52.00, "Courses")
+      .add("26/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -46.00, "Courses")
+      .add("22/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -30.00, "Courses")
+      .add("14/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -20.00, "Courses")
+      .add("10/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -52.00, "Courses")
+      .add("02/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -52.00, "Courses")
+      .add("02/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("26/08/2008", TransactionType.PLANNED, "Planned: Courses", "", -10.00, "Courses")
       .add("26/08/2008", TransactionType.PRELEVEMENT, "ED2", "", -40.00, "Courses")
       .add("24/08/2008", TransactionType.PRELEVEMENT, "ED1", "", -30.00, "Courses")
@@ -142,11 +143,12 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .add("21/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -76.00, "Courses")
-      .add("13/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -20.00, "Courses")
-      .add("09/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -52.00, "Courses")
-      .add("04/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
-      .add("01/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -52.00, "Courses")
+      .add("26/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -46.00, "Courses")
+      .add("22/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -30.00, "Courses")
+      .add("14/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -20.00, "Courses")
+      .add("10/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -52.00, "Courses")
+      .add("02/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -52.00, "Courses")
+      .add("02/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("26/08/2008", TransactionType.PLANNED, "Planned: Courses", "", -10.00, "Courses")
       .add("26/08/2008", TransactionType.PRELEVEMENT, "ED2", "", -40.00, "Courses")
       .add("24/08/2008", TransactionType.PRELEVEMENT, "ED1", "", -30.00, "Courses")
@@ -161,8 +163,8 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initContent()
-      .add("17/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -200.00, "Courses")
-      .add("04/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("18/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -200.00, "Courses")
+      .add("02/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("26/08/2008", TransactionType.PLANNED, "Planned: Courses", "", -80.00, "Courses")
       .add("26/08/2008", TransactionType.PRELEVEMENT, "ED2", "", -40.00)
       .add("24/08/2008", TransactionType.PRELEVEMENT, "ED1", "", -30.00)
@@ -178,10 +180,10 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     transactions
       .initContent()
-      .add("13/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -36.00, "Courses")
-      .add("09/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -82.00, "Courses")
-      .add("04/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
-      .add("01/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -82.00, "Courses")
+      .add("14/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -36.00, "Courses")
+      .add("10/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -82.00, "Courses")
+      .add("02/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -82.00, "Courses")
+      .add("02/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("26/08/2008", TransactionType.PLANNED, "Planned: Courses", "", -10.00, "Courses")
       .add("26/08/2008", TransactionType.PRELEVEMENT, "ED2", "", -40.00)
       .add("24/08/2008", TransactionType.PRELEVEMENT, "ED1", "", -30.00)
