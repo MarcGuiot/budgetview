@@ -77,7 +77,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
           }
           if (budgetMonthId.equals(lastTransactionMonthId)) {
             Integer previousId = glob.get(Transaction.SERIES);
-            if (values.contains(Transaction.SERIES)){
+            if (values.contains(Transaction.SERIES)) {
               previousId = values.getPrevious(Transaction.SERIES);
             }
             for (Integer seriesId : new Integer[]{glob.get(Transaction.SERIES),
@@ -86,7 +86,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
                 .findByIndex(SeriesBudget.MONTH, budgetMonthId)
                 .getGlobs().getFirst();
               Glob seriesShape = repository.find(Key.create(SeriesShape.TYPE, seriesId));
-              if (budget != null){
+              if (budget != null) {
                 boolean smallDiff = isSmallDiff(budget);
                 if ((smallDiff ||
                      (seriesShape != null && seriesShape.get(SeriesShape.LAST_MONTH).equals(lastTransactionMonthId)))
@@ -94,7 +94,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
                   addSeries(budgetMonthId, glob.get(Transaction.SERIES), seriesToReCompute, repository,
                             lastTransactionMonthId, monthCount);
                 }
-                if (!smallDiff && seriesShape != null && seriesShape.get(SeriesShape.LAST_MONTH).equals(lastTransactionMonthId)){
+                if (!smallDiff && seriesShape != null && seriesShape.get(SeriesShape.LAST_MONTH).equals(lastTransactionMonthId)) {
                   repository.delete(seriesShape.getKey());
                 }
               }
@@ -102,7 +102,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
           }
           else {
             addSeries(budgetMonthId, glob.get(Transaction.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
-            if (values.contains(Transaction.SERIES)){
+            if (values.contains(Transaction.SERIES)) {
               addSeries(budgetMonthId, values.getPrevious(Transaction.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
             }
           }
@@ -181,7 +181,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
         addSeries(budgetMonthId, budget.get(SeriesBudget.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
       }
       // la series doit etre supprimé, elle sera recreer si besoin par le add
-      if (!smallDiff && seriesShape != null && seriesShape.get(SeriesShape.LAST_MONTH).equals(lastTransactionMonthId)){
+      if (!smallDiff && seriesShape != null && seriesShape.get(SeriesShape.LAST_MONTH).equals(lastTransactionMonthId)) {
         repository.delete(seriesShape.getKey());
       }
     }
@@ -374,9 +374,34 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     public void updateForSingleOp() {
       if (monthCount != 1) {
         if (opCount1 <= 1 && opCount2 <= 1 && opCount3 <= 1) {
-          monthCount = opCount1 == 1 ? 1 : (opCount2 == 1 ? 2 : monthCount);
+          int day1 = getDay(amountForMonth1);
+          int day2 = getDay(amountForMonth2);
+          int day3 = getDay(amountForMonth3);
+          int day = (day1 + day2 + day3) / (opCount1 + opCount2 + opCount3);
+          if (day1 != 0 ){
+            if (day != day1){
+              amountForMonth1[day] = amountForMonth1[day1];
+              amountForMonth1[day1] = 0;
+            }
+          }
+          else if (day2 != 0){
+            amountForMonth1[day] = amountForMonth2[day2];
+          }
+          else if (day3 != 0){
+            amountForMonth1[day] = amountForMonth2[day3];
+          }
+          monthCount = 1;
         }
       }
+    }
+
+    private int getDay(final double[] days) {
+      for (int j = 0; j < days.length; j++) {
+        if (!Amounts.isNearZero(days[j])) {
+          return j;
+        }
+      }
+      return 0;
     }
   }
 
