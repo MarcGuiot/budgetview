@@ -1,0 +1,35 @@
+Mode opératoire pour la creation du DMG sous Mac.
+
+1. Vérifier qu'il n'y a aucun dmg BudgetView monté.
+
+2. Aller dans {home}/picsou_loader
+
+3. Executer :
+
+  cp ./dev/dmg/budgetview_template.dmg ~/Desktop/
+  open ~/Desktop/budgetview_template.dmg
+
+4. Executer : 
+
+  rm -r /Volumes/BudgetView/BudgetView.app
+  cp -r ./BudgetView/BudgetView.app /Volumes/BudgetView/
+  
+4. Dans le Desktop, double-cliquer sur budgetview_template.dmg et vérifier la disposition de la fenêtre.
+
+5. Dans le Desktop, ouvrir budgetview_template.dmg avec Disk Utilities, et lancer "Convert" avec comme nom de fichier le nom cible (par exemple BudgetView-2.0.dmg)
+  
+6. Fermer le dmg budgetview ouvert.
+
+7. Executer : 
+
+  rm ~/Desktop/budgetview_template.dmg
+
+8. Dans le Desktop, double-cliquer le nouveau dmg pour l'ouvrir
+
+9. Drag&Drop de BudgetView dans /Applications
+
+10. Lancer BudgetView dans /Applications, et vérifier la version dans la fenêtre About.
+
+11. Uploader en FTP sur le site.
+
+12. Mettre à jour les liens sur le site.

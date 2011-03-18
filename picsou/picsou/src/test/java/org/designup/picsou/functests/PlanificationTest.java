@@ -35,7 +35,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/08");
     transactions.initContent()
-      .add("08/08/2008", TransactionType.PLANNED, "Planned: Internet", "", -29.90, "Internet")
+      .add("11/08/2008", TransactionType.PLANNED, "Planned: Internet", "", -29.90, "Internet")
       .check();
 
     budgetView.recurring.checkTotalAmounts(0, -29.90);
@@ -62,8 +62,8 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("24/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
-      .add("24/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
+      .add("27/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
+      .add("27/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
       .add("30/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
       .check();
 
@@ -78,8 +78,8 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     transactions
       .initContent()
-      .add("08/09/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
-      .add("08/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -50.00, "Courant")
+      .add("11/09/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
+      .add("11/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -50.00, "Courant")
       .add("04/08/2008", TransactionType.PRELEVEMENT, "ED", "", -50.00, "Courant")
       .add("30/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
       .check();
@@ -103,8 +103,8 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("08/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
-      .add("08/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
+      .add("11/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
+      .add("11/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
       .add("20/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
       .add("20/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
       .check();
@@ -116,8 +116,8 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     transactions
       .initContent()
-      .add("08/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
-      .add("08/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
+      .add("11/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
+      .add("11/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
       .add("30/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -100.00, "Courant")
       .add("30/06/2008", TransactionType.PRELEVEMENT, "ED", "", -80.00)
       .add("20/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
@@ -128,8 +128,8 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initContent()
-      .add("08/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
-      .add("08/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
+      .add("11/08/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
+      .add("11/07/2008", TransactionType.PLANNED, "Planned: Courant", "", -200.00, "Courant")
       .add("30/06/2008", TransactionType.PLANNED, "Planned: Courant", "", -20.00, "Courant")
       .add("30/06/2008", TransactionType.PRELEVEMENT, "ED", "", -80.00, "Courant")
       .add("20/06/2008", TransactionType.PRELEVEMENT, "Auchan", "", -100.00, "Courant")
@@ -183,7 +183,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("08/09/2008", TransactionType.PLANNED, "Planned: Miami trip", "", -2000.00, "Miami trip")
+      .add("11/09/2008", TransactionType.PLANNED, "Planned: Miami trip", "", -2000.00, "Miami trip")
       .check();
   }
 }

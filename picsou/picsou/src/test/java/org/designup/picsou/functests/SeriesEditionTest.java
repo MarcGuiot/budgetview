@@ -491,7 +491,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("24/07/2008", TransactionType.PLANNED, "Planned: Internet", "", -60.00, "Internet")
+      .add("27/07/2008", TransactionType.PLANNED, "Planned: Internet", "", -60.00, "Internet")
       .add("30/06/2008", TransactionType.PRELEVEMENT, "Free", "", -60.00, "Internet")
       .check();
 
@@ -501,7 +501,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.getRecurring().checkContainsSeries("Leisures");
 
     transactions.initContent()
-      .add("24/07/2008", TransactionType.PLANNED, "Planned: Leisures", "", -60.00, "Leisures")
+      .add("27/07/2008", TransactionType.PLANNED, "Planned: Leisures", "", -60.00, "Leisures")
       .add("30/06/2008", TransactionType.PRELEVEMENT, "Free", "", -60.00, "Leisures")
       .check();
   }
@@ -888,7 +888,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("24/07/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
+      .add("27/07/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
       .add("29/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne")
       .check();
 
@@ -977,7 +977,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("01/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
+      .add("04/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
       .add("04/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -10.00)
       .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne")
       .check();
@@ -985,8 +985,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     timeline.checkSpanEquals("2008/06", "2008/10");
     transactions.initContent()
-      .add("01/10/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
-      .add("01/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
+      .add("04/10/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
+      .add("04/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
       .add("04/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -10.00)
       .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne")
       .check();
@@ -1015,7 +1015,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("01/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
+      .add("04/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
       .add("04/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -10.00)
       .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne")
       .check();
@@ -1023,8 +1023,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     timeline.checkSpanEquals("2008/06", "2008/10");
     transactions.initContent()
-      .add("01/10/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
-      .add("01/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
+      .add("04/10/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
+      .add("04/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
       .add("04/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -10.00)
       .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne")
       .check();
