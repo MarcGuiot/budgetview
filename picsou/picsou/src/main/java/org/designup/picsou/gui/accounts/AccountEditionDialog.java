@@ -10,6 +10,7 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
@@ -176,6 +177,9 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     titleLabel.setText(Lang.get(creation ? "account.panel.title.creation" : "account.panel.title.edition"));
     setAccount(localAccount);
     dialog.pack();
+    if (creation) {
+      GuiUtils.selectAndRequestFocus(nameField.getComponent());
+    }
     dialog.showCentered();
   }
 

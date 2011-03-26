@@ -3,6 +3,7 @@ package org.designup.picsou.gui.components;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobNumericEditor;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.GlobRepository;
@@ -90,6 +91,7 @@ public class AmountEditor {
   public void selectAll() {
     JTextField textField = numericEditor.getComponent();
     if (textField.isVisible()) {
+      GuiUtils.selectAndRequestFocus(textField);
       textField.requestFocusInWindow();
       textField.selectAll();
     }
