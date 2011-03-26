@@ -1,6 +1,5 @@
 package org.globsframework.gui.splits.utils;
 
-import com.sun.org.apache.xml.internal.utils.StringToStringTable;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import sun.security.action.GetPropertyAction;
@@ -106,6 +105,11 @@ public class GuiUtils {
     StringSelection selection = new StringSelection(text);
     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     clipboard.setContents(selection, selection);
+  }
+
+  public static void selectAndRequestFocus(JTextField editor) {
+    editor.requestFocusInWindow();
+    editor.selectAll();
   }
 
   static {
