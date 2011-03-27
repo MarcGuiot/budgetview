@@ -194,7 +194,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2011/01/05", 100.00, "Resa")
       .load();
 
-    projects.create()
+    budgetView.extras.createProject()
       .setName("Past Project")
       .setItem(0, "Reservation", 201101, -100.00)
       .addItem(1, "Hotel", 201102, -500.00)

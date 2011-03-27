@@ -12,7 +12,11 @@ public class ProjectEditionChecker extends GuiChecker {
   private Window dialog;
 
   public static ProjectEditionChecker open(Button button) {
-    return new ProjectEditionChecker(WindowInterceptor.getModalDialog(button.triggerClick()));
+    return open(button.triggerClick());
+  }
+
+  public static ProjectEditionChecker open(Trigger trigger) {
+    return new ProjectEditionChecker(WindowInterceptor.getModalDialog(trigger));
   }
 
   public ProjectEditionChecker(Window dialog) {

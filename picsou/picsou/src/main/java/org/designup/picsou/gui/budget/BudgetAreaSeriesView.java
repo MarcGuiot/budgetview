@@ -12,6 +12,7 @@ import org.designup.picsou.gui.components.charts.GlobGaugeView;
 import org.designup.picsou.gui.components.tips.DetailsTipFactory;
 import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
+import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.signpost.guides.SeriesAmountSignpost;
@@ -160,6 +161,9 @@ public class BudgetAreaSeriesView extends View {
 
     JPopupMenu menu = new JPopupMenu();
     menu.add(seriesButtons.createSeriesAction());
+    if (budgetArea == BudgetArea.EXTRAS) {
+      menu.add(new CreateProjectAction(directory));
+    }
     menu.addSeparator();
     menu.add(createMonthFilteringButton());
     builder.add("seriesActions", new JPopupButton(Lang.get("budgetView.actions"), menu));
