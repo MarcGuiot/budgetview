@@ -380,6 +380,10 @@ public class OperationChecker {
     return window.getMenuBar().getMenu("Help");
   }
 
+  public void checkGotoSupport(String url) {
+    BrowsingChecker.checkDisplay(getHelpMenu().getSubMenu("Go to support site"), url);
+  }
+
   public void backupAndLaunchApplication(String user, String password, Date currentDate) throws Exception {
     File file = File.createTempFile("budgetview", ".snapshot");
     String backupFile = file.getAbsoluteFile().getAbsolutePath();

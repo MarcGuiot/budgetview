@@ -10,6 +10,8 @@ public class HelpTest extends LoggedInFunctionalTestCase {
 
   public void testHelpMenu() throws Exception {
     operations.openHelp().checkTitle("Index").close();
+
+    operations.checkGotoSupport("http://support.mybudgetview.fr");
   }
 
   public void testHelpForCards() throws Exception {
