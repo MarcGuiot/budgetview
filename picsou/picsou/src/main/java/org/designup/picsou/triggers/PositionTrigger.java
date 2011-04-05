@@ -538,18 +538,19 @@ public class PositionTrigger implements ChangeSetListener {
                openDay[lastOpenIndex] <= transaction.get(Transaction.POSITION_DAY)))) {
         int tmpAccountId = openId[lastOpenIndex];
         Glob account = repository.find(Key.create(Account.TYPE, tmpAccountId));
-        positions.put(tmpAccountId, account.get(Account.POSITION));
-        // on cherche si il y a une operation dans le futur pour ce comptes.
-        for (int k = index; k < transactions.length; k++) {
-          if (transactions[k].get(Transaction.ACCOUNT) == tmpAccountId) {
-            positions.put(tmpAccountId, transactions[k].get(Transaction.ACCOUNT_POSITION) - transactions[k].get(Transaction.AMOUNT));
-            break;
+        Double value = account.get(Account.POSITION);
+        if (value != null) {
+          positions.put(tmpAccountId, value);
+          // on cherche si il y a une operation dans le futur pour ce comptes.
+          for (int k = index; k < transactions.length; k++) {
+            if (transactions[k].get(Transaction.ACCOUNT) == tmpAccountId) {
+              positions.put(tmpAccountId, transactions[k].get(Transaction.ACCOUNT_POSITION) - transactions[k].get(Transaction.AMOUNT));
+              break;
+            }
           }
         }
         lastOpenIndex++;
       }
     }
-
-
   }
 }
