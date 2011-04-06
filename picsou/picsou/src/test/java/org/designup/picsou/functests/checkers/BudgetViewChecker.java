@@ -315,7 +315,7 @@ public class BudgetViewChecker extends ViewChecker {
       return SeriesEditionDialogChecker.open(getPanel().getButton(seriesName));
     }
 
-    private JPopupButtonChecker getActionPopup() {
+    protected JPopupButtonChecker getActionPopup() {
       return new JPopupButtonChecker(getPanel().getButton("seriesActions"));
     }
 
@@ -403,6 +403,10 @@ public class BudgetViewChecker extends ViewChecker {
 
     public ProjectEditionChecker editPlannedAmountForProject(String seriesName) {
       return ProjectEditionChecker.open(getAmountButton(seriesName));
+    }
+
+    public ProjectEditionChecker createProject() {
+      return ProjectEditionChecker.open(getActionPopup().triggerClick(Lang.get("projectView.create")));
     }
   }
 }

@@ -40,7 +40,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   protected Directory localDirectory;
   private SelectionService selectionService;
   private AccountTypeSelector[] accountTypeSelectors;
-  private GlobTextEditor nameField;
+  protected GlobTextEditor nameField;
   private JLabel accountBank;
   private AccountBankAction bankSelectionAction;
 

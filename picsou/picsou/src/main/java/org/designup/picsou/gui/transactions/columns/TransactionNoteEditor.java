@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.transactions.columns;
 
 import org.designup.picsou.model.Transaction;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
@@ -39,8 +40,7 @@ public class TransactionNoteEditor extends DefaultCellEditor {
     textField = (JTextField)super.getTableCellEditorComponent(table, valueToDisplay, isSelected, row, column);
     textField.setFont(getSmallerFont(table.getFont()));
 
-    textField.requestFocus();
-    textField.selectAll();
+    GuiUtils.selectAndRequestFocus(textField);
     this.table.addKeyListener(tableKeyBlocker);
 
     return textField;

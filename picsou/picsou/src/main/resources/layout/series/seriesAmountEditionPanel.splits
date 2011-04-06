@@ -45,9 +45,11 @@
       </card>
 
       <card name="disabled">
-        <column>
-          <filler fill="vertical"/>
-          <htmlEditorPane ref="disabledMessage" margin="20"/>
+        <column margin="20">
+          <row>
+            <label icon="button_prev_disabled.png" marginRight="5" weightX="0"/>
+            <htmlEditorPane ref="disabledMessage"/>
+          </row>
           <filler fill="vertical"/>
         </column>
       </card>

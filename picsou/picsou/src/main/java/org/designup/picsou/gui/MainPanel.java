@@ -299,6 +299,7 @@ public class MainPanel {
     menu.add(cardView.getHelpAction());
 
     menu.addSeparator();
+    menu.add(new GotoSupportAction(directory));
     menu.add(sendFeedbackAction);
 
     if (!Gui.useMacOSMenu()) {

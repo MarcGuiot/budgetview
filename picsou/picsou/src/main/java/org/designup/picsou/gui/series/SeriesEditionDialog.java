@@ -635,8 +635,7 @@ public class SeriesEditionDialog {
       public void run() {
         if (selectName != null) {
           if (selectName) {
-            nameEditor.getComponent().requestFocusInWindow();
-            nameEditor.getComponent().selectAll();
+            GuiUtils.selectAndRequestFocus(nameEditor.getComponent());
           }
           else {
             amountEditionPanel.selectAmountEditor();
