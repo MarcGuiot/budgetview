@@ -65,6 +65,8 @@ public class RequestForConfigServlet extends HttpServlet {
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    req.setCharacterEncoding("UTF-8");
+    resp.setCharacterEncoding("UTF-8");
     String ip = req.getRemoteAddr();
     String id = req.getHeader(ConfigService.HEADER_REPO_ID).trim();
     String mail = req.getHeader(ConfigService.HEADER_MAIL);

@@ -48,6 +48,7 @@ public class AskMailTest extends ConnectedTestCase {
 
   private PostMethod sendRequest(String lang) throws IOException {
     PostMethod postMethod = new PostMethod("http://localhost/mailTo");
+    postMethod.getParams().setContentCharset("UTF-8");
     postMethod.setRequestHeader(ConfigService.HEADER_MAIL, "monPremierClient@pirate.du");
     postMethod.setRequestHeader(ConfigService.HEADER_LANG, lang);
     client.executeMethod(postMethod);
@@ -57,6 +58,7 @@ public class AskMailTest extends ConnectedTestCase {
   public void testAddInDbIfBadAdress() throws Exception {
     PostMethod postMethod = new PostMethod("http://localhost/mailTo");
     String badMail = "monPremierClient@pirate";
+    postMethod.getParams().setContentCharset("UTF-8");
     postMethod.setRequestHeader(ConfigService.HEADER_MAIL, badMail);
     postMethod.setRequestHeader(ConfigService.HEADER_LANG, "en");
     client.executeMethod(postMethod);

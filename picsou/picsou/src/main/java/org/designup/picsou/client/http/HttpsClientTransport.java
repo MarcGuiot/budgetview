@@ -113,6 +113,7 @@ public class HttpsClientTransport implements ClientTransport {
     boolean hasError = true;
     try {
       PostMethod postMethod = new PostMethod(serverUrl + url);
+      postMethod.getParams().setContentCharset("UTF-8");
       if (sessionId != null) {
         postMethod.setRequestHeader(SESSION_ID, sessionId.toString());
       }

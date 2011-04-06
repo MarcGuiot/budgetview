@@ -23,6 +23,8 @@ public class SendMailServlet extends HttpServlet {
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    req.setCharacterEncoding("UTF-8");
+    resp.setCharacterEncoding("UTF-8");
     String mailTo = req.getHeader(ConfigService.HEADER_TO_MAIL);
     if (Strings.isNullOrEmpty(mailTo)) {
       logger.info("sendMail : missing mail adresse " + (mailTo == null ? "<no mail>" : mailTo));

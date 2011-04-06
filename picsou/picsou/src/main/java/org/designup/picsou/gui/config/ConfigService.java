@@ -107,6 +107,7 @@ public class ConfigService {
     try {
       String url = URL + REQUEST_FOR_MAIL;
       final PostMethod postMethod = new PostMethod(url);
+      postMethod.getParams().setContentCharset("UTF-8");
       postMethod.setRequestHeader(HEADER_MAIL, mail);
       postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
       httpClient.executeMethod(postMethod);
@@ -142,6 +143,7 @@ public class ConfigService {
     this.repoId = repoId;
     String url = URL + REQUEST_FOR_CONFIG;
     PostMethod postMethod = new PostMethod(url);
+    postMethod.getParams().setContentCharset("UTF-8");
     postMethod.setRequestHeader(HEADER_CONFIG_VERSION, Long.toString(localConfigVersion));
     postMethod.setRequestHeader(HEADER_JAR_VERSION, Long.toString(localJarVersion));
     postMethod.setRequestHeader(HEADER_APPLICATION_VERSION, applicationVersion);
@@ -215,6 +217,7 @@ public class ConfigService {
     try {
       String url = URL + REQUEST_FOR_REGISTER;
       final PostMethod postMethod = new PostMethod(url);
+      postMethod.getParams().setContentCharset("UTF-8");
       postMethod.setRequestHeader(HEADER_MAIL, mail);
       postMethod.setRequestHeader(HEADER_CODE, code);
       postMethod.setRequestHeader(HEADER_REPO_ID, Encoder.byteToString(repoId));
@@ -304,6 +307,7 @@ public class ConfigService {
       public void run() {
         String url = URL + REQUEST_SEND_MAIL;
         PostMethod postMethod = new PostMethod(url);
+        postMethod.getParams().setContentCharset("UTF-8");
         postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
         postMethod.setRequestHeader(HEADER_MAIL, fromMail);
         postMethod.setRequestHeader(HEADER_TO_MAIL, toMail);

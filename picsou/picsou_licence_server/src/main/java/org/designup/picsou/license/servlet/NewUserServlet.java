@@ -54,6 +54,8 @@ public class NewUserServlet extends HttpServlet {
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    req.setCharacterEncoding("UTF-8");
+    resp.setCharacterEncoding("UTF-8");
     logger.info("receive new User  : ");
     String mail = req.getParameter(PAYER_EMAIL);
     logger.info("NewUser : mail : '" + mail);
@@ -62,11 +64,17 @@ public class NewUserServlet extends HttpServlet {
     String paymentStatus = "";
     String receiverEmail = "";
     PostMethod postMethod = new PostMethod(PAYPAL_CONFIRM_URL);
+    postMethod.getParams().setContentCharset("UTF-8");
     postMethod.setParameter("cmd", "_notify-validate");
-    Map<String, String> map = req.getParameterMap();
+    Map<String, String[]> map = (Map<String, String[]>)req.getParameterMap();
     StringBuffer paramaters = new StringBuffer();
-    for (String key : map.keySet()) {
-      postMethod.setParameter(key, req.getParameter(key));
+    for (Map.Entry<String,String[]> entry : map.entrySet()) {
+      String key = entry.getKey();
+      for (String name : entry.getValue()) {
+        postMethod.setParameter(key, name);
+        paramaters.append(key).append("='").append(req.getParameter(key))
+          .append("'; ");
+      }
       if (key.equalsIgnoreCase(TRANSACTION_ID)) {
         transactionId = req.getParameter(key);
       }
@@ -76,8 +84,6 @@ public class NewUserServlet extends HttpServlet {
       else if (key.equalsIgnoreCase(RECEIVER_EMAIL)) {
         receiverEmail = req.getParameter(key);
       }
-      paramaters.append(key).append("='").append(req.getParameter(key))
-        .append("'; ");
     }
     logger.info(paramaters.toString());
     if (!receiverEmail.equalsIgnoreCase("paypal@mybudgetview.fr")) {
