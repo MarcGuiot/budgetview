@@ -1886,4 +1886,21 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+
+  public void testSavingsWithoutAccountPosition() throws Exception {
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/06", -100.00, "Savings")
+      .load();
+
+    savingsAccounts.createSavingsAccount("epargne", null);
+
+    savingsAccounts.edit("epargne").setStartDate("2005/12/01").validate();
+
+    categorization.selectTransaction("Savings")
+      .selectSavings()
+      .selectSeries("epargne");
+
+  }
+
 }

@@ -21,6 +21,8 @@ import java.io.IOException;
 
 public class PaypalTest extends ConnectedTestCase {
   private static String SERVER_URL;
+  private static final String RÄPHAEL = "Räphael";
+  private static final String PARAMETER_WITH_ACCENT = "paramterWithAccent";
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -44,10 +46,12 @@ public class PaypalTest extends ConnectedTestCase {
   private void doBuy(final String transactionId) throws IOException, InterruptedException {
     HttpClient client = new HttpClient();
     PostMethod postMethod = new PostMethod(SERVER_URL + LicenseServer.NEW_USER);
+    postMethod.getParams().setContentCharset("UTF-8");
     postMethod.setParameter(NewUserServlet.PAYER_EMAIL, "toto@bv.fr");
     postMethod.setParameter(NewUserServlet.RECEIVER_EMAIL, "paypal@mybudgetview.fr");
     postMethod.setParameter(NewUserServlet.PAYMENT_STATUS_ID, "completed");
     postMethod.setParameter(NewUserServlet.TRANSACTION_ID, transactionId);
+    postMethod.setParameter(PARAMETER_WITH_ACCENT, RÄPHAEL);
     PayPalConfirm.STATUS = PayPalConfirm.VERIFIED;
     int status = client.executeMethod(postMethod);
     assertEquals(200, status);
@@ -67,10 +71,12 @@ public class PaypalTest extends ConnectedTestCase {
   public void testNoValidated() throws Exception {
     HttpClient client = new HttpClient();
     PostMethod postMethod = new PostMethod(SERVER_URL + LicenseServer.NEW_USER);
+    postMethod.getParams().setContentCharset("UTF-8");
     postMethod.setParameter(NewUserServlet.PAYER_EMAIL, "toto@bv.fr");
     postMethod.setParameter(NewUserServlet.RECEIVER_EMAIL, "paypal@mybudgetview.fr");
     postMethod.setParameter(NewUserServlet.PAYMENT_STATUS_ID, "completed");
     postMethod.setParameter(NewUserServlet.TRANSACTION_ID, "12345");
+    postMethod.setParameter(PARAMETER_WITH_ACCENT, RÄPHAEL);
     PayPalConfirm.STATUS = PayPalConfirm.NOT_VENRIFIED;
     int status = client.executeMethod(postMethod);
     assertEquals(412, status);
@@ -85,10 +91,12 @@ public class PaypalTest extends ConnectedTestCase {
     doBuy("12345");
     HttpClient client = new HttpClient();
     PostMethod postMethod = new PostMethod(SERVER_URL + LicenseServer.NEW_USER);
+    postMethod.getParams().setContentCharset("UTF-8");
     postMethod.setParameter(NewUserServlet.PAYER_EMAIL, "toto@bv.fr");
     postMethod.setParameter(NewUserServlet.RECEIVER_EMAIL, "paypal@mybudgetview.fr");
     postMethod.setParameter(NewUserServlet.PAYMENT_STATUS_ID, "completed");
     postMethod.setParameter(NewUserServlet.TRANSACTION_ID, "12346");
+    postMethod.setParameter(PARAMETER_WITH_ACCENT, RÄPHAEL);
     int status = client.executeMethod(postMethod);
     assertEquals(200, status);
     SqlConnection connection = getSqlConnection();
@@ -109,7 +117,13 @@ public class PaypalTest extends ConnectedTestCase {
     static String STATUS = VERIFIED;
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+      req.setCharacterEncoding("UTF-8");
+      resp.setCharacterEncoding("UTF-8");
       resp.getWriter().append(STATUS);
+      String s = req.getParameter(PARAMETER_WITH_ACCENT);
+      if (!RÄPHAEL.equals(s)) {
+        fail(RÄPHAEL + " expected");
+      }
       resp.setStatus(HttpServletResponse.SC_OK);
     }
   }

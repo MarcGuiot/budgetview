@@ -14,6 +14,8 @@ public abstract class ExceptionToStatusHttpServlet extends HttpServlet {
 
   protected void doPost(HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse)
     throws ServletException, IOException {
+    httpServletRequest.setCharacterEncoding("UTF-8");
+    httpServletResponse.setCharacterEncoding("UTF-8");
     try {
       action(httpServletRequest, httpServletResponse);
     }

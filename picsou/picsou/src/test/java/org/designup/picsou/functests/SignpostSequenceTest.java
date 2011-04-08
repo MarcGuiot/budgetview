@@ -48,7 +48,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/05/28", +500, "income")
       .addTransaction("2010/05/29", -100, "auchan")
       .addTransaction("2010/05/29", -100, "auchan")
-      .addTransaction("2010/05/29", -100, "auchan")
+      .addTransaction("2010/05/29", -100, "Chausse")
       .load();
 
     // === Categorization selection ===
@@ -75,6 +75,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     checkNoSignpostVisible();
     categorization.setVariable("auchan", "Groceries");
+    categorization.setVariable("Chausse", "Clothing");
     categorization.checkCompleteProgressMessageShown();
 
     // === Editing series amounts in SeriesEvolution does not remove budget view signpost ===
@@ -106,17 +107,10 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     checkNoSignpostVisible();
 
     budgetView.variable.editPlannedAmount("Groceries").setAmount(10.00).validate();
-    budgetView.variable.editPlannedAmount("Fuel").setAmount(10.00).validate();
-    budgetView.variable.editPlannedAmount("Health").setAmount(10.00).validate();
-    budgetView.variable.editPlannedAmount("Clothing").setAmount(10.00).validate();
-    budgetView.variable.editPlannedAmount("Leisures").setAmount(10.00).validate();
-    budgetView.variable.editPlannedAmount("Beauty").setAmount(10.00).validate();
-    budgetView.variable.editPlannedAmount("Miscellaneous").setAmount(10.00).validate();
-    budgetView.variable.editPlannedAmount("Cash").setAmount(10.00).validate();
 
     signpostView.checkSignpostViewShown();
 
-    budgetView.variable.editPlannedAmount("Bank fees").setAmount(10.00).validate();
+    budgetView.variable.editPlannedAmount("Clothing").setAmount(10.00).validate();
 
     signpostView.checkSummaryViewShown();
 

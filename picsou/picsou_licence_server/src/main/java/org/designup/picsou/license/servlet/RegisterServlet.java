@@ -39,6 +39,8 @@ public class RegisterServlet extends HttpServlet {
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    req.setCharacterEncoding("UTF-8");
+    resp.setCharacterEncoding("UTF-8");
     String mail = req.getHeader(ConfigService.HEADER_MAIL).trim();
     String activationCode = req.getHeader(ConfigService.HEADER_CODE).trim();
     String repoId = req.getHeader(ConfigService.HEADER_REPO_ID).trim();

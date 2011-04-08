@@ -58,9 +58,20 @@ public class GlobCheckBoxView extends AbstractGlobComponentHolder<GlobCheckBoxVi
 
   private void updateBox() {
     Set set = currentsGlob.getValueSet(field);
-    if (set.size() == 1){
+    checkBox.setEnabled(set.size() != 0);
+    if (set.size() == 1) {
       checkBox.setSelected(Boolean.TRUE.equals(set.iterator().next()));
     }
+  }
+
+  public GlobCheckBoxView forceSelection(Key key) {
+    selectionService.removeListener(this);
+    Glob glob = repository.find(key);
+    if (glob != null) {
+      currentsGlob = new GlobList(glob);
+      updateBox();
+    }
+    return this;
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {

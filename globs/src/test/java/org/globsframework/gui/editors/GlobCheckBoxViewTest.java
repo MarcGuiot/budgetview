@@ -25,4 +25,23 @@ public class GlobCheckBoxViewTest extends GuiComponentTestCase {
     assertTrue(checkBox.isSelected());
     assertTrue(repository.find(key2).get(DummyObject.PRESENT));
   }
+
+  public void testForceSelection() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' present='true'/>" +
+                    "<dummyObject id='2' present='false'/>" +
+                    "<dummyObject id='3'/>");
+
+    GlobCheckBoxView boxView = GlobCheckBoxView.init(DummyObject.PRESENT, repository, directory)
+      .forceSelection(key2);
+
+    CheckBox checkBox = new CheckBox(boxView.getComponent());
+    assertFalse(checkBox.isSelected());
+    selectionService.select(repository.find(key1));
+    assertFalse(checkBox.isSelected());
+    repository.update(key1, DummyObject.PRESENT, false);
+    assertFalse(checkBox.isSelected());
+    repository.update(key2, DummyObject.PRESENT, true);
+    assertTrue(checkBox.isSelected());
+  }
 }

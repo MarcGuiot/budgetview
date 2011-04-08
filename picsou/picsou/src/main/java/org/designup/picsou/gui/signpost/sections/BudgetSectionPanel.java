@@ -18,6 +18,7 @@ public class BudgetSectionPanel extends SignpostSectionPanel {
     return monthId != null && !repository.contains(SeriesBudget.TYPE,
                                                    and(fieldEquals(SeriesBudget.MONTH, monthId),
                                                        not(fieldEquals(SeriesBudget.SERIES, Series.UNCATEGORIZED_SERIES_ID)),
-                                                       isNull(SeriesBudget.AMOUNT)));
+                                                       isNull(SeriesBudget.AMOUNT),
+                                                       not(isNull(SeriesBudget.OBSERVED_AMOUNT))));
   }
 }
