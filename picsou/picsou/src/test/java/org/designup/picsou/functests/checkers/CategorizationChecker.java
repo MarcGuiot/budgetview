@@ -134,7 +134,7 @@ public class CategorizationChecker extends ViewChecker {
     details.checkBudgetDate(yyyyMMdd);
   }
 
-  public CategorizationChecker checkAllButSavingBudgetAreaAreDisable() {
+  public CategorizationChecker checkAllButSavingBudgetAreaAreDisabled() {
     for (BudgetArea area : BudgetArea.values()) {
       if (area == BudgetArea.ALL) {
         continue;
@@ -149,7 +149,7 @@ public class CategorizationChecker extends ViewChecker {
     return this;
   }
 
-  public void checkAllBudgetAreaAreEnable() {
+  public void checkAllBudgetAreasAreEnabled() {
     for (BudgetArea area : BudgetArea.values()) {
       if (area == BudgetArea.ALL) {
         continue;
@@ -163,7 +163,7 @@ public class CategorizationChecker extends ViewChecker {
     return this;
   }
 
-  public CategorizationChecker checkSavingPreSelected() {
+  public CategorizationChecker checkSavingsPreSelected() {
     assertThat(getPanel().getToggleButton(BudgetArea.SAVINGS.getName()).isSelected());
     return this;
   }

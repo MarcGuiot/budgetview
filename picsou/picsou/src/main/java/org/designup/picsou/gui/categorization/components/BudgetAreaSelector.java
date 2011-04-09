@@ -158,6 +158,9 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
         }
       }
     }
+    if (changeSet.containsUpdates(Account.ACCOUNT_TYPE)) {
+      updateSelection();
+    }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {

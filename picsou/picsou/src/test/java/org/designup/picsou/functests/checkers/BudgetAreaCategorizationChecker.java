@@ -253,4 +253,21 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     checkComponentVisible(panel, JButton.class, "showDescription", false);
     return this;
   }
+
+  public BudgetAreaCategorizationChecker checkMessage(String text) {
+    TextBox textBox = panel.getTextBox("categorizationMessage");
+    assertThat(textBox.isVisible());
+    assertThat(textBox.textEquals(text));
+    return this;
+  }
+
+  public AccountEditionChecker clickMessageToEditAccount(String linkText) {
+    TextBox textBox = panel.getTextBox("categorizationMessage");
+    return AccountEditionChecker.open(textBox.triggerClickOnHyperlink(linkText));
+  }
+
+  public BudgetAreaCategorizationChecker checkMessageHidden() {
+    checkComponentVisible(panel, JEditorPane.class, "categorizationMessage", false);
+    return this;
+  }
 }

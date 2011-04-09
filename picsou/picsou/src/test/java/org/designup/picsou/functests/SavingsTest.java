@@ -589,20 +589,20 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
 
     categorization.selectTransaction("Virement");
-    categorization.checkAllButSavingBudgetAreaAreDisable();
+    categorization.checkAllButSavingBudgetAreaAreDisabled();
 
     categorization.selectTransaction("Prelevement");
-    categorization.checkAllBudgetAreaAreEnable();
+    categorization.checkAllBudgetAreasAreEnabled();
 
     categorization.setNewSavings("Virement", "epargne", "Main accounts", "Account n. 111");
     categorization.setNewVariable("Prelevement", "economie du mois");
 
     categorization.selectTransactions("Prelevement", "Virement")
-      .checkAllButSavingBudgetAreaAreDisable()
+      .checkAllButSavingBudgetAreaAreDisabled()
       .checkMultipleSeriesSelection()
       .setUncategorized()
       .selectTransaction("Prelevement")
-      .checkSavingPreSelected();
+      .checkSavingsPreSelected();
   }
 
   public void testSimpleCase() throws Exception {
@@ -1349,12 +1349,12 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
 
     categorization.selectTransaction("Virement vers Epargne")
-      .checkSavingPreSelected()
+      .checkSavingsPreSelected()
       .selectSavings()
       .checkContainsNoSeries();
 
     categorization.selectTransaction("Virement Epargne")
-      .checkSavingPreSelected()
+      .checkSavingsPreSelected()
       .selectSavings()
       .checkContainsNoSeries();
   }

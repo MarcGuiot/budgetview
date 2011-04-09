@@ -189,7 +189,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         }
 
         public boolean isApplied(Glob account) {
-          return AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE)) &&
+          return Account.isMain(account) &&
                  account.get(Account.CARD_TYPE).equals(AccountCardType.NOT_A_CARD.getId());
         }
       },
@@ -201,7 +201,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         }
 
         public boolean isApplied(Glob account) {
-          return AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE)) &&
+          return Account.isMain(account) &&
                  Utils.equal(account.get(Account.CARD_TYPE), AccountCardType.CREDIT.getId());
         }
       },
@@ -212,7 +212,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         }
 
         public boolean isApplied(Glob account) {
-          return AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE)) &&
+          return Account.isMain(account) &&
                  Utils.equal(account.get(Account.CARD_TYPE), AccountCardType.DEFERRED.getId());
         }
       }
@@ -225,7 +225,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         }
 
         public boolean isApplied(Glob account) {
-          return AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE));
+          return Account.isSavings(account);
         }
       },
     };

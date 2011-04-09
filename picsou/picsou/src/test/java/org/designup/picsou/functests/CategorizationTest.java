@@ -334,7 +334,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkTable(new Object[][]{
       {"30/06/2008", "", "Carouf", -29.90},
     });
-    
+
     categorization.showLastImportedFileOnly();
     categorization.checkTable(new Object[][]{
       {"15/05/2008", "", "Auchan", -40.00},
@@ -862,7 +862,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     timeline.selectMonth("2008/06");
     categorization.selectTableRows(categorization.getTable()
-      .getRowIndex(CategorizationChecker.AMOUNT_COLUMN_INDEX, -15.0));
+                                     .getRowIndex(CategorizationChecker.AMOUNT_COLUMN_INDEX, -15.0));
     transactionDetails.split("10", "CD");
     categorization.selectExtras().selectSeries("Leisures");
 
@@ -1009,7 +1009,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Courant", 0, -20);
   }
 
-  public void testCreatedSavingTransactionAreNotVisibleInCategorization() throws Exception {
+  public void testCreatedSavingsTransactionsAreNotVisibleInCategorization() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/10", -100.00, "Virement")
       .load();
@@ -1027,7 +1027,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .checkAccountTypeNotEditable()
       .setPosition(1000.0)
       .validate();
-    
+
     categorization
       .selectSavings()
       .createSeries()
@@ -1419,8 +1419,79 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectSavings()
       .checkDescriptionHidden()
       .showDescription();
-     
+
     categorization.selectVariable()
       .checkDescriptionShown();
+  }
+
+  public void testSavingsCategorizationMessage() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addBankAccount("000001", 0.00, "2008/06/30")
+      .addTransaction("2008/06/30", -100.00, "SAVINGS 1.1")
+      .addTransaction("2008/06/30", -100.00, "SAVINGS 1.2")
+      .load();
+    mainAccounts.edit("Account n. 000001")
+      .setAsSavings()
+      .validate();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount("000002", 0.00, "2008/06/30")
+      .addTransaction("2008/06/30", -200.00, "SAVINGS 2")
+      .load();
+    mainAccounts.edit("Account n. 000002")
+      .setAsSavings()
+      .validate();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount("000003", 0.00, "2008/06/30")
+      .addTransaction("2008/06/30", -200.00, "OTHER")
+      .load();
+
+    categorization.selectTransaction("OTHER");
+    categorization.selectSavings().checkMessageHidden();
+
+    categorization.selectTransaction("SAVINGS 1.1");
+    categorization.checkSavingsPreSelected()
+      .getSavings()
+      .checkMessage("This operation is part of a savings account. Edit this account.");
+
+    categorization.selectTransactions("SAVINGS 1.1", "SAVINGS 1.2");
+    categorization.checkSavingsPreSelected()
+      .getSavings()
+      .checkMessage("These operations are part of a savings account. Edit this account.");
+
+    categorization.selectTransactions("SAVINGS 1.1", "SAVINGS 1.2");
+    categorization.checkSavingsPreSelected()
+      .getSavings()
+      .checkMessage("These operations are part of a savings account. Edit this account.");
+
+    categorization.selectTransactions("SAVINGS 1.1", "SAVINGS 2");
+    categorization.checkSavingsPreSelected()
+      .getSavings()
+      .checkMessage("These operations are part of several savings accounts.");
+
+    categorization.selectTransaction("SAVINGS 1.1");
+
+    categorization.checkSavingsPreSelected()
+      .checkAllButSavingBudgetAreaAreDisabled()
+      .getSavings()
+      .checkMessage("This operation is part of a savings account. Edit this account.")
+      .clickMessageToEditAccount("Edit this account.")
+      .setAsMain()
+      .validate();
+
+    categorization.checkSavingsPreSelected();
+    categorization.checkAllBudgetAreasAreEnabled();
+
+    categorization.selectVariable().selectNewSeries("Misc");
+    categorization.checkTable(new Object[][]{
+      {"30/06/2008", "", "OTHER", -200.0},
+      {"30/06/2008", "Misc", "SAVINGS 1.1", -100.0},
+      {"30/06/2008", "", "SAVINGS 1.2", -100.0},
+      {"30/06/2008", "", "SAVINGS 2", -200.0}
+    });
   }
 }

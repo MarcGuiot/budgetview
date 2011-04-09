@@ -118,8 +118,7 @@ public class Account {
                       value(NUMBER, SUMMARY_ACCOUNT_NUMBER));
 
     repository.create(TYPE, value(ID, EXTERNAL_ACCOUNT_ID),
-                      value(IS_IMPORTED_ACCOUNT, Boolean.FALSE)
-                      );
+                      value(IS_IMPORTED_ACCOUNT, Boolean.FALSE));
   }
 
   public static Glob getBank(Glob account, GlobRepository repository) {
@@ -140,6 +139,14 @@ public class Account {
       bank = repository.findLinkTarget(account, Account.BANK);
     }
     return bank;
+  }
+
+  public static boolean isMain(Glob account) {
+    return account != null && AccountType.MAIN.getId().equals(account.get(ACCOUNT_TYPE));
+  }
+
+  public static boolean isSavings(Glob account) {
+    return account != null && AccountType.SAVINGS.getId().equals(account.get(ACCOUNT_TYPE));
   }
 
   public static boolean shouldCreateMirrorTransaction(Glob fromAccount, Glob toAccount) {
@@ -167,7 +174,7 @@ public class Account {
 
   public static boolean isUserCreatedSavingsAccount(Glob account) {
     return (account != null) &&
-           AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE)) &&
+           Account.isSavings(account) &&
            !SAVINGS_SUMMARY_KEY.equals(account.getKey())&&
            !EXTERNAL_KEY.equals(account.getKey());
   }

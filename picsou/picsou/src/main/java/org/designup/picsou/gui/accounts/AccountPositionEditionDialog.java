@@ -14,14 +14,11 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Date;
 
 public class AccountPositionEditionDialog {
   private PicsouDialog dialog;
   private LocalGlobRepository localRepository;
-  private Date balanceDate;
   private AccountPositionEditionPanel editionPanel;
-  private GlobsPanelBuilder builder;
 
   public AccountPositionEditionDialog(Glob account, boolean accountInitialization,
                                       GlobRepository repository, Directory directory, Window parent) {
@@ -31,8 +28,9 @@ public class AccountPositionEditionDialog {
         .copy(Account.TYPE)
         .get();
 
-    builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountPositionEditionDialog.splits",
-                                                      localRepository, directory);
+    GlobsPanelBuilder builder =
+      new GlobsPanelBuilder(getClass(), "/layout/accounts/accountPositionEditionDialog.splits",
+                            localRepository, directory);
 
     ValidateAction validateAction = new ValidateAction();
 

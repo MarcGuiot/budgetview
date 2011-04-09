@@ -346,8 +346,11 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     builder.add("description", GuiUtils.createReadOnlyHtmlComponent(budgetArea.getHtmlDescription()));
 
-    NoSeriesMessage noSeriesMessage = NoSeriesMessageFactory.create(budgetArea, repository, directory);
+    DynamicMessage noSeriesMessage = NoSeriesMessageFactory.create(budgetArea, repository, directory);
     builder.add("noSeriesMessage", noSeriesMessage.getComponent());
+
+    DynamicMessage categorizationMessage = CategorizationMessageFactory.create(budgetArea, repository, directory);
+    builder.add("categorizationMessage", categorizationMessage.getComponent());
 
     JRadioButton invisibleRadio = new JRadioButton("invisibleButton");
     builder.add("invisibleToggle", invisibleRadio);

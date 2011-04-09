@@ -142,11 +142,11 @@ public class Matchers {
     }
 
     private boolean isSameAccount(GlobRepository repository, Glob account, Glob transaction) {
-      if (AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
+      if (Account.isMain(account)) {
         Glob operationAccount = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
         return AccountType.MAIN.getId().equals(operationAccount.get(Account.ACCOUNT_TYPE));
       }
-      else if (AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
+      else if (Account.isSavings(account)) {
         return account.get(Account.ID).equals(transaction.get(Transaction.ACCOUNT));
       }
       return false;
@@ -159,7 +159,7 @@ public class Matchers {
     private boolean checkInMain(GlobRepository repository) {
       for (Glob transaction : transactions) {
         Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-        if (!AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
+        if (!Account.isMain(account)) {
           return false;
         }
         if (!AccountCardType.NOT_A_CARD.getId().equals(account.get(Account.CARD_TYPE))) {

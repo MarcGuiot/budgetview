@@ -340,8 +340,8 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
       Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
       Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
 
-      boolean isFromSavingsAccount = AccountType.SAVINGS.getId().equals(fromAccount.get(Account.ACCOUNT_TYPE));
-      boolean isToSavingsAccount = AccountType.SAVINGS.getId().equals(toAccount.get(Account.ACCOUNT_TYPE));
+      boolean isFromSavingsAccount = Account.isSavings(fromAccount);
+      boolean isToSavingsAccount = Account.isSavings(toAccount);
 
       if (isFromSavingsAccount) {
         if (series.get(Series.FROM_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {

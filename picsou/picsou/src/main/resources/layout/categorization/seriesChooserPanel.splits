@@ -13,13 +13,15 @@
            editable="false" fill="both" margin="5"/>
 
     <style selector=".descriptionPanel button"
-            icon="button_hide.png" rolloverIcon="button_hide_rollover.png"
-            border="" margin="5" marginLeft="0" weightX="0" fill="none" anchor="center"/>
+           icon="button_hide.png" rolloverIcon="button_hide_rollover.png"
+           border="" margin="5" marginLeft="0" weightX="0" fill="none" anchor="center"/>
 
     <style selector="radioButton.subSeriesSelector" horizontalAlignment="left"/>
 
-    <style selector="footer button" ui="hyperlinkButtonWithoutUnderline" foreground="categorization.footerButton" 
+    <style selector="footer button" ui="hyperlinkButtonWithoutUnderline" foreground="categorization.footerButton"
            marginTop="5"/>
+
+    <style selector="htmlEditorPane.hints"  weightY="0.1" border="empty(0,10,10,10)" font="-,plain,11"/>
 
   </styles>
 
@@ -46,10 +48,12 @@
             </repeat>
           </column>
           <footer>
-            <button action="createSeries" text="$series.create.footer" name="createSeriesFooter" tooltipText="$series.create.tooltip"/>
+            <button action="createSeries" text="$series.create.footer" name="createSeriesFooter"
+                    tooltipText="$series.create.tooltip"/>
           </footer>
         </repeat>
       </scrollPane>
+      <htmlEditorPane ref="categorizationMessage" styleClass="hints"/>
       <row styleClass="footer" ref="groupCreateEditSeries">
         <button action="createSeries" tooltipText="$series.create.tooltip"/>
         <button action="additionalAction"/>

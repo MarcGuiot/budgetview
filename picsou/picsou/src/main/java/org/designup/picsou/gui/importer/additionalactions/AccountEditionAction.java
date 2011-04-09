@@ -15,6 +15,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class AccountEditionAction implements AdditionalImportAction {
   private Window parent;
   private GlobRepository repository;
@@ -51,7 +53,7 @@ public class AccountEditionAction implements AdditionalImportAction {
         }
         if (accounts.size() == 0) {
           AccountEditionDialog dialog = new AccountEditionDialog(parent, repository, directory);
-          dialog.showWithNewAccount(FieldValue.value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()));
+          dialog.showWithNewAccount(value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()));
         }
       }
     };

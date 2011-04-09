@@ -573,7 +573,7 @@ public class SeriesEditionDialog {
       for (Glob transaction : selectedTransactions) {
         Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
         Integer accountId = transaction.get(Transaction.ACCOUNT);
-        if (AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
+        if (Account.isMain(account)) {
           accountId = Account.MAIN_SUMMARY_ACCOUNT_ID;
         }
         if (transaction.get(Transaction.AMOUNT) >= 0) {

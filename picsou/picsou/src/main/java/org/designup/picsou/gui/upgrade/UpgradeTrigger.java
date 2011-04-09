@@ -215,7 +215,7 @@ public class UpgradeTrigger implements ChangeSetListener {
 
   private void updateAccount(GlobRepository repository, Glob series, final LinkField accountField) {
     Glob account = repository.findLinkTarget(series, accountField);
-    if (account != null && AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
+    if (Account.isMain(account)) {
       repository.update(series.getKey(), accountField, Account.MAIN_SUMMARY_ACCOUNT_ID);
       GlobList planned =
         repository.getAll(Transaction.TYPE,
@@ -439,7 +439,7 @@ public class UpgradeTrigger implements ChangeSetListener {
   private boolean isSame(Glob targetAccount, Glob transaction, GlobRepository repository) {
     Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
     return targetAccount.get(Account.ID).equals(transaction.get(Transaction.ACCOUNT)) ||
-           (targetAccount.get(Account.ID) == Account.MAIN_SUMMARY_ACCOUNT_ID && account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId()));
+           (targetAccount.get(Account.ID) == Account.MAIN_SUMMARY_ACCOUNT_ID && Account.isMain(account));
   }
 
 }
