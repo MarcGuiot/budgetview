@@ -2,8 +2,10 @@ package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobFunctor;
@@ -330,6 +332,17 @@ public class GlobList extends ArrayList<Glob> {
       }
       else if (value != null) {
         result += value;
+      }
+    }
+    return result;
+  }
+
+  public GlobList getTargets(Link link, GlobRepository repository) {
+    GlobList result = new GlobList();
+    for (Glob glob : this) {
+      Glob target = repository.findLinkTarget(glob, link);
+      if (target != null) {
+        result.add(target);
       }
     }
     return result;
