@@ -28,7 +28,7 @@ public class SeriesDeletionDialogChecker extends GuiChecker {
   }
 
   public SeriesDeletionDialogChecker checkMessage() {
-    assertThat(dialog.getTextBox("introMessage").textContains("Some operations have been associated with the envelope"));
+    assertThat(dialog.getTextBox("introMessage").textContains("Some transactions have been associated with the envelope"));
     return this;
   }
 

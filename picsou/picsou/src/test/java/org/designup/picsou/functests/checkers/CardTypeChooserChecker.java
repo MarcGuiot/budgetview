@@ -26,7 +26,7 @@ public class CardTypeChooserChecker extends GuiChecker {
 
     Panel panel = getPanel(accountName);
     TextBox box = panel.getTextBox("message");
-    assertThat(box.textContains("Withdraw from main account should be categorized"));
+    assertThat(box.textContains("Withdrawals from main account should be categorized in 'Other'"));
     return this;
   }
 
