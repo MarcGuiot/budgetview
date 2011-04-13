@@ -130,7 +130,6 @@ public class LoginPanel {
 
     mainWindow.login(user, password, createUser, useDemoAccount, autoLog);
     useDemoAccount = false;
-    autoLoginUser = null;
   }
 
   private void autoLogin() {

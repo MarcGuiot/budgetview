@@ -122,8 +122,9 @@ public class LoginChecker extends GuiChecker {
     UISpecAssert.waitUntil(window.containsMenuBar(), 2000);
   }
 
-  public void checkNotLoggedIn() {
+  public LoginChecker checkNotLoggedIn() {
     assertFalse(window.containsMenuBar());
+    return this;
   }
 
   public void checkFirstAutoLogin() {

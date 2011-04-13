@@ -419,6 +419,16 @@ public class LoginTest extends StartUpFunctionalTestCase {
     login.clickAutoLogin();
   }
 
+  public void testLoginWithBadPasswdAndAutoLog() throws Exception {
+    login.logNewUser("Alfred", "Alfred");
+    openNewLoginWindow(false);
+    login.enterUserAndPassword("Alfred", "toto")
+      .clickEnter()
+      .checkNotLoggedIn()
+      .checkErrorMessage("login.invalid.credentials");
+    login.clickAutoLogin();
+  }
+
   private void checkDemoMode() {
     login.checkLoggedIn();
     getTransactionView().checkNotEmpty();
