@@ -5,9 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.Pair;
-import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.*;
 

@@ -16,7 +16,7 @@ Mode opératoire pour la creation du DMG sous Mac.
   
 4. Dans le Desktop, double-cliquer sur budgetview_template.dmg et vérifier la disposition de la fenêtre.
 
-5. Dans le Desktop, ouvrir budgetview_template.dmg avec Disk Utilities, et lancer "Convert" avec comme nom de fichier le nom cible (par exemple BudgetView-2.0.dmg)
+5. Dans le Desktop, ouvrir budgetview_template.dmg avec Disk Utility, et lancer "Convert" avec comme nom de fichier le nom cible (par exemple BudgetView-2.0.dmg)
   
 6. Fermer le dmg budgetview ouvert.
 

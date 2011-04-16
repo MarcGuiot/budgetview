@@ -22,4 +22,10 @@ public class BrowsingChecker {
     UISpecAssert.assertThat(window.getTextBox("url").textEquals(url));
     window.getButton("Close").click();
   }
+
+  public static void checkDisplayedUrlContains(Trigger trigger, String urlPart) {
+    Window window = WindowInterceptor.run(trigger);
+    UISpecAssert.assertThat(window.getTextBox("url").textContains(urlPart));
+    window.getButton("Close").click();
+  }
 }

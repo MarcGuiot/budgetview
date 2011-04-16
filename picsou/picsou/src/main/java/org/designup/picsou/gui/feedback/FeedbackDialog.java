@@ -33,7 +33,7 @@ public class FeedbackDialog {
 
     dialog = PicsouDialog.create(parent, directory);
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/general/feedbackDialog.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/feedback/feedbackDialog.splits",
                                                       repository, directory);
     JEditorPane jEditorPane = new JEditorPane();
     builder.add("mailContent", jEditorPane);

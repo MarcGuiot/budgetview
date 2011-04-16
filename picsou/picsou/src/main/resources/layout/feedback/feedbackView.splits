@@ -1,0 +1,27 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="button" border="" weightX="0" fill="none" anchor="center" marginRight="5" marginLeft="5"/>
+    <style selector="button.withText"
+           ui="hyperlinkButtonWithoutUnderline" foreground="summary.navigation.link"
+           font="-,plain,12"
+           horizontalTextPosition="right" fill="none" anchor="right" weightX="0"/>
+  </styles>
+
+  <row border="empty(0,5,10,5)">
+
+    <button action="help" styleClass="withText" icon="help_grey.png" rolloverIcon="help.png"/>
+
+    <filler fill="horizontal"/>
+
+    <button action="sendFeedback" styleClass="withText" icon="mail_grey.png" rolloverIcon="mail.png"/>
+
+    <filler fill="horizontal"/>
+
+    <button action="facebook" icon="facebook_grey.png" rolloverIcon="facebook.png"/>
+    <button action="twitter" icon="twitter_grey.png" rolloverIcon="twitter.png"/>
+
+  </row>
+
+</splits>

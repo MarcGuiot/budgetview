@@ -11,13 +11,14 @@ import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.card.NavigationView;
-import org.designup.picsou.gui.card.utils.GotoCardAction;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.feedback.FeedbackView;
+import org.designup.picsou.gui.feedback.actions.SendFeedbackAction;
 import org.designup.picsou.gui.help.HelpService;
+import org.designup.picsou.gui.help.actions.GotoSupportAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
-import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.notes.NotesView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
@@ -167,6 +168,7 @@ public class MainPanel {
       new NavigationView(repository, directory),
       new SummaryView(repository, directory),
       new ProjectView(repository, directory),
+      new FeedbackView(repository, directory),
       signpostView,
       licenseInfoView,
       notesView);
