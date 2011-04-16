@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.actions;
+package org.designup.picsou.gui.feedback.actions;
 
 import org.designup.picsou.gui.feedback.FeedbackDialog;
 import org.designup.picsou.utils.Lang;
@@ -12,10 +12,14 @@ public class SendFeedbackAction extends AbstractAction {
   private GlobRepository repository;
   private Directory directory;
 
-  public SendFeedbackAction(GlobRepository repository, Directory directory) {
-    super(Lang.get("feedback"));
+  public SendFeedbackAction(String text, GlobRepository repository, Directory directory) {
+    super(text);
     this.repository = repository;
     this.directory = directory;
+  }
+
+  public SendFeedbackAction(GlobRepository repository, Directory directory) {
+    this(Lang.get("feedback"), repository, directory);
   }
 
   public void actionPerformed(ActionEvent e) {

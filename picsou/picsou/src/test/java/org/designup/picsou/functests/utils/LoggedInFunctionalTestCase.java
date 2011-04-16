@@ -47,6 +47,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public ProjectViewChecker projects;
   public SummaryViewChecker summary;
   public SignpostViewChecker signpostView;
+  public FeedbackViewChecker feedbackView;
 
   protected GlobRepository repository;
 
@@ -167,6 +168,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     projects = new ProjectViewChecker(mainWindow);
     summary = new SummaryViewChecker(mainWindow);
     signpostView = new SignpostViewChecker(mainWindow);
+    feedbackView = new FeedbackViewChecker(mainWindow);
   }
 
   protected void tearDown() throws Exception {

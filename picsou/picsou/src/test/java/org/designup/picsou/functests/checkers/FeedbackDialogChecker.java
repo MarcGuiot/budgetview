@@ -17,6 +17,16 @@ public class FeedbackDialogChecker extends GuiChecker{
     return new FeedbackDialogChecker(WindowInterceptor.getModalDialog(trigger));
   }
 
+  public FeedbackDialogChecker checkConnected() {
+    assertTrue(dialog.getButton("Send").isEnabled());
+    return this;
+  }
+
+  public FeedbackDialogChecker checkNotConnected() {
+    assertFalse(dialog.getButton("Send").isEnabled());
+    return this;
+  }
+
   public void send(String title, String mail, String content) {
     dialog.getTextBox("mailSubject").setText(title);
     dialog.getTextBox("fromMail").setText(mail);
@@ -25,16 +35,8 @@ public class FeedbackDialogChecker extends GuiChecker{
     assertFalse(dialog.isVisible());
   }
 
-  public void checkNotConnected() {
-    assertFalse(dialog.getButton("Send").isEnabled());
-  }
-
   public void cancel() {
     dialog.getButton("cancel").click();
     assertFalse(dialog.isVisible());
-  }
-
-  public void checkConnected() {
-    assertTrue(dialog.getButton("Send").isEnabled());
   }
 }

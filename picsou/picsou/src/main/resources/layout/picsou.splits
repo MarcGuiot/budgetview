@@ -160,6 +160,7 @@
                       </card>
                     </cards>
                   </column>
+                  <panel ref="feedbackView" weightY="0"/>
                 </column>
               </column>
 

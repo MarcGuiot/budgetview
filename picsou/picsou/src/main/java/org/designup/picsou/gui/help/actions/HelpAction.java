@@ -1,5 +1,6 @@
-package org.designup.picsou.gui.help;
+package org.designup.picsou.gui.help.actions;
 
+import org.designup.picsou.gui.help.HelpService;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -11,15 +12,12 @@ public class HelpAction extends AbstractAction {
   private Directory directory;
   private Window owner;
 
-  public HelpAction(String label, String helpRef, Directory directory) {
-    this(label, helpRef, directory, directory.get(JFrame.class));
-  }
-
-  public HelpAction(String label, String helpRef, Directory directory, Window owner) {
+  public HelpAction(String label, String helpRef, String tooltip, Directory directory) {
     super(label);
     this.helpRef = helpRef;
     this.directory = directory;
-    this.owner = owner;
+    this.owner = directory.get(JFrame.class);
+    putValue(Action.SHORT_DESCRIPTION, tooltip);
   }
 
   public void actionPerformed(ActionEvent e) {
