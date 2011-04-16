@@ -464,6 +464,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkDates("Year/Month/Day", "Month/Day/Year", "Day/Month/Year")
       .doImport()
       .checkErrorMessage("import.dateformat.undefined")
+      .selectDate("Day/Month/Year")
+      .checkFileContent(new Object[][]{
+        {"02/01/2001", "Menu K", "-1.10"}
+      })
       .selectDate("Month/Day/Year")
       .checkFileContent(new Object[][]{
         {"01/02/2001", "Menu K", "-1.10"}

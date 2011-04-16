@@ -2,6 +2,7 @@ package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.accounts.utils.AccountTypeSelector;
 import org.designup.picsou.gui.bank.BankChooserDialog;
+import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountCardType;
 import org.designup.picsou.model.AccountType;
@@ -33,7 +34,6 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   protected JPanel panel;
   protected T localRepository;
   protected Glob currentAccount;
-  protected JLabel messageLabel;
   protected JTextField positionEditor;
   protected JComboBox accountTypeCombo;
   protected JTextArea messageWarning;
@@ -43,10 +43,11 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   protected GlobTextEditor nameField;
   private JLabel accountBank;
   private AccountBankAction bankSelectionAction;
+  private JButton bankSelectionButton;
+  private ErrorTip errorTip;
 
-  public AbstractAccountPanel(T repository, Directory parentDirectory, JLabel messageLabel) {
+  public AbstractAccountPanel(T repository, Directory parentDirectory) {
     this.localRepository = repository;
-    this.messageLabel = messageLabel;
 
     localDirectory = new DefaultDirectory(parentDirectory);
     selectionService = new SelectionService();
@@ -60,7 +61,8 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     accountBank = builder.add("bankLabel", new JLabel()).getComponent();
 
     bankSelectionAction = new AccountBankAction(dialog);
-    builder.add("bankSelector", new JButton(bankSelectionAction));
+    bankSelectionButton = new JButton(bankSelectionAction);
+    builder.add("bankSelector", bankSelectionButton);
     selectionService.addListener(bankSelectionAction, Account.TYPE);
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -120,14 +122,14 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     positionEditor.setVisible(visible);
   }
 
-  public void setWarning(int accountType, int cardType){
+  public void setWarning(int accountType, int cardType) {
     boolean visible = false;
-    if (accountType == AccountType.MAIN.getId()){
-      if (cardType == AccountCardType.CREDIT.getId()){
+    if (accountType == AccountType.MAIN.getId()) {
+      if (cardType == AccountCardType.CREDIT.getId()) {
         messageWarning.setText(Lang.get("account.credit.warning"));
         visible = true;
       }
-      else if (cardType == AccountCardType.DEFERRED.getId()){
+      else if (cardType == AccountCardType.DEFERRED.getId()) {
         messageWarning.setText(Lang.get("account.deferred.warning"));
         visible = true;
       }
@@ -136,14 +138,17 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   }
 
   public void setSavingsWarning(boolean visible) {
-    if (visible){
+    if (visible) {
       messageWarning.setText(Lang.get("account.savings.warning"));
     }
     messageWarning.setVisible(visible);
   }
 
-  public void setMessage(String key) {
-    messageLabel.setText(Lang.get(key));
+  public void clearMessage() {
+    if (errorTip != null) {
+      errorTip.dispose();
+      errorTip = null;
+    }
   }
 
   public void setAccount(Glob account) {
@@ -160,20 +165,20 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     if (bank != null) {
       selectionService.select(bank);
     }
-    messageLabel.setText("");
+    clearMessage();
     panel.setVisible(account != null);
   }
 
-
   public boolean check() {
     if (panel.isVisible()) {
+      clearMessage();
       if (Strings.isNullOrEmpty(currentAccount.get(Account.NAME))) {
-        setMessage("account.error.missing.name");
+        errorTip = ErrorTip.showLeft(nameField.getComponent(), Lang.get("account.error.missing.name"), localDirectory);
         nameField.getComponent().requestFocus();
         return false;
       }
       if (currentAccount.get(Account.BANK) == null) {
-        setMessage("account.error.missing.bank");
+        errorTip = ErrorTip.showLeft(bankSelectionButton, Lang.get("account.error.missing.bank"), localDirectory);
         return false;
       }
     }
@@ -239,6 +244,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     }
 
     public void actionPerformed(ActionEvent e) {
+      clearMessage();
       BankChooserDialog bankChooserDialog = new BankChooserDialog(dialog, localRepository, localDirectory);
       Integer bankId = bankChooserDialog.show();
       if (bankId != null) {

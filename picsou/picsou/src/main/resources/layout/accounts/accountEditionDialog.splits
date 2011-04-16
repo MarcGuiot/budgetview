@@ -73,8 +73,6 @@
         </tab>
       </tabs>
 
-      <label ref="message" foreground="#FF0000" fill="none" anchor="center" marginTop="5"/>
-
     </column>
   </panel>
 
