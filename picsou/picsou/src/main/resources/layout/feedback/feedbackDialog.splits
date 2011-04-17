@@ -3,6 +3,8 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
     <style selector="label.formLabelTop" marginTop="10"/>
+    <style selector="checkBox" marginTop="0" anchor="left" fill="none"/>
+    <style selector="textArea" lineWrap="true" wrapStyleWord="true" fill="both"/>
   </styles>
 
   <panel styleClass="dialog" minimumSize="(400,180)" preferredSize="(500,500)" opaque="true">
@@ -17,8 +19,9 @@
 
       <label text="$feedback.content" styleClass="formLabelTop"/>
       <scrollPane forceVerticalScroll="true" weightY="100">
-        <editorPane ref="mailContent"/>
+        <textArea ref="mailContent"/>
       </scrollPane>
+      <checkBox ref="addLogs"/>
 
     </column>
   </panel>

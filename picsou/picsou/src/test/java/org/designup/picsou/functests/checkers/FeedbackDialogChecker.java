@@ -27,6 +27,11 @@ public class FeedbackDialogChecker extends GuiChecker{
     return this;
   }
 
+  public FeedbackDialogChecker setLogsAdded() {
+    dialog.getCheckBox("addLogs").select();
+    return this;
+  }
+
   public void send(String title, String mail, String content) {
     dialog.getTextBox("mailSubject").setText(title);
     dialog.getTextBox("fromMail").setText(mail);

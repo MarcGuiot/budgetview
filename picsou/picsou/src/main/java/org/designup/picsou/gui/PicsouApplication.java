@@ -158,6 +158,12 @@ public class PicsouApplication {
     }
   }
 
+  public static File getLogFile() {
+    File logFilePath = new File(getDataPath() + "/" + "logs");
+    logFilePath.mkdirs();
+    return new File(logFilePath, "log.txt");
+  }
+
   public void run(String... args) throws Exception {
     initEncryption();
     mrjDocumentListener = new AbstractAction() {

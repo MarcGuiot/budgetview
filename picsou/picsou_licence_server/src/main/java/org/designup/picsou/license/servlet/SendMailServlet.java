@@ -14,12 +14,10 @@ import java.io.IOException;
 
 public class SendMailServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("sendMail");
-  private Directory directory;
   private Mailer mailer;
 
   public SendMailServlet(Directory directory) {
     mailer = directory.get(Mailer.class);
-    this.directory = directory;
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -27,11 +25,12 @@ public class SendMailServlet extends HttpServlet {
     resp.setCharacterEncoding("UTF-8");
     String mailTo = req.getHeader(ConfigService.HEADER_TO_MAIL);
     if (Strings.isNullOrEmpty(mailTo)) {
-      logger.info("sendMail : missing mail adresse " + (mailTo == null ? "<no mail>" : mailTo));
+      logger.info("sendMail : missing mail address " + (mailTo == null ? "<no email>" : mailTo));
       resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
       return;
     }
-    String content = req.getHeader(ConfigService.HEADER_MAIL_CONTENT);
+
+    String content = ConfigService.decodeContent(req.getHeader(ConfigService.HEADER_MAIL_CONTENT));
     String mailFrom = req.getHeader(ConfigService.HEADER_MAIL);
     String title = req.getHeader(ConfigService.HEADER_MAIL_TITLE);
     if (Strings.isNullOrEmpty(content)) {
@@ -39,6 +38,7 @@ public class SendMailServlet extends HttpServlet {
       resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
       return;
     }
+
     String lang = req.getHeader(ConfigService.HEADER_LANG);
     mailTo = mailTo.trim();
     content = content.trim();

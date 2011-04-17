@@ -5,9 +5,8 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.designup.picsou.bank.BankPluginService;
-import org.designup.picsou.client.http.HttpsClientTransport;
-import org.designup.picsou.client.ServerAccessDecorator;
 import org.designup.picsou.client.ServerAccess;
+import org.designup.picsou.client.http.HttpsClientTransport;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.utils.KeyService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
@@ -22,11 +21,10 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.Encoder;
 
 import javax.swing.*;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Constructor;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -101,7 +99,6 @@ public class ConfigService {
     return loadConfig(directory, repository);
   }
 
-
   // return a translated message
   synchronized public String askForNewCodeByMail(String mail) {
     try {
@@ -136,7 +133,6 @@ public class ConfigService {
       return Lang.get("license.mail.send.error");
     }
   }
-
 
   synchronized private boolean sendRequestForNewConfig(byte[] repoId, String mail, String signature,
                                                        long launchCount, String activationCode) throws IOException {
@@ -312,11 +308,11 @@ public class ConfigService {
         postMethod.setRequestHeader(HEADER_MAIL, fromMail);
         postMethod.setRequestHeader(HEADER_TO_MAIL, toMail);
         postMethod.setRequestHeader(HEADER_MAIL_TITLE, title);
-        postMethod.setRequestHeader(HEADER_MAIL_CONTENT, content);
+        postMethod.setRequestHeader(HEADER_MAIL_CONTENT, encodeContent(content));
         try {
           httpClient.executeMethod(postMethod);
         }
-        catch (final Exception e){
+        catch (final Exception e) {
           updateConnectionStatus(e);
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -444,7 +440,6 @@ public class ConfigService {
     }
     return configLoaded;
   }
-
 
   public Boolean isVerifiedServerValidity() {
     Utils.beginRemove();
@@ -594,6 +589,24 @@ public class ConfigService {
 
     static UserState noSignature(String mail) {
       return new AnonymousUser(mail);
+    }
+  }
+
+  public static String encodeContent(String content) {
+    try {
+      return URLEncoder.encode(content, "utf-8");
+    }
+    catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static String decodeContent(String content) {
+    try {
+      return URLDecoder.decode(content, "utf-8");
+    }
+    catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
     }
   }
 }
