@@ -84,6 +84,13 @@ public class Files {
     }
   }
 
+  public static void dumpStringToFile(File file, String content) throws IOFailure {
+    if ((file == null) || file.exists()) {
+      return;
+    }
+    dumpStringToFile(file.getAbsolutePath(), content);
+  }
+
   public static String dumpStringToFile(String fileName, String content) throws IOFailure {
     FileWriter writer = null;
     try {
