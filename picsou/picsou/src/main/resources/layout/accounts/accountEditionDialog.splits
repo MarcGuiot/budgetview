@@ -8,7 +8,7 @@
            horizontalAlignment="left" font="-,plain,10"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(400,330)">
+  <panel styleClass="dialog" preferredSize="(450,330)">
     <column styleClass="innerDialog">
 
       <label ref="title" styleClass="title"/>
