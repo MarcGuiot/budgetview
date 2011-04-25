@@ -36,6 +36,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkAccountName("")
       .setAccountName("Main CIC account")
       .checkTypes("Main", "Credit card", "Deferred debit card", "Savings")
+      .checkTypesHelp("Account types")
       .selectBank("CIC")
       .checkUpdateModeIsFileImport()
       .checkUpdateModeIsEditable()

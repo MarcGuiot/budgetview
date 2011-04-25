@@ -3,6 +3,7 @@ package org.designup.picsou.gui.accounts;
 import org.designup.picsou.gui.accounts.utils.AccountTypeSelector;
 import org.designup.picsou.gui.bank.BankChooserDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
+import org.designup.picsou.gui.help.actions.HelpAction;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountCardType;
 import org.designup.picsou.model.AccountType;
@@ -57,6 +58,8 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   protected void createComponents(GlobsPanelBuilder builder, Window dialog) {
 
     accountTypeSelectors = createTypeSelectors(localRepository);
+    builder.add("accountTypeHelp", new HelpAction(Lang.get("account.panel.type.help"), "accountTypes",
+                                                  Lang.get("help"), localDirectory, dialog));
 
     accountBank = builder.add("bankLabel", new JLabel()).getComponent();
 
