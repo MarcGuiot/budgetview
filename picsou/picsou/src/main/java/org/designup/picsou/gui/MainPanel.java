@@ -31,7 +31,7 @@ import org.designup.picsou.gui.signpost.SignpostView;
 import org.designup.picsou.gui.startup.LogoutService;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.summary.SummaryView;
-import org.designup.picsou.gui.summary.version.VersionInfoView;
+import org.designup.picsou.gui.summary.version.NewVersionView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
@@ -158,7 +158,7 @@ public class MainPanel {
       titleView,
       transactionView,
       timeView,
-      new VersionInfoView(repository, directory),
+      new NewVersionView(repository, directory),
       new AccountView(repository, directory),
       categorizationView,
       cardView,

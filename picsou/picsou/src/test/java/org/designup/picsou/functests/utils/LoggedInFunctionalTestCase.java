@@ -40,7 +40,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public SavingsViewChecker savingsView;
   public CategorizationChecker categorization;
   public SeriesEvolutionChecker seriesEvolution;
-  public VersionInfoChecker versionInfo;
+  public NewVersionChecker newVersion;
   public ImportPanelChecker importPanel;
   public NotesChecker notes;
   public BackupChecker backup;
@@ -162,7 +162,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     categorization = new CategorizationChecker(mainWindow);
     seriesEvolution = new SeriesEvolutionChecker(mainWindow);
     license = new LicenseActivationChecker(mainWindow);
-    versionInfo = new VersionInfoChecker(mainWindow);
+    newVersion = new NewVersionChecker(mainWindow);
     importPanel = new ImportPanelChecker(mainWindow);
     notes = new NotesChecker(mainWindow);
     projects = new ProjectViewChecker(mainWindow);
@@ -207,7 +207,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     operations = null;
     backup = null;
     title = null;
-    versionInfo = null;
+    newVersion = null;
     budgetView = null;
     savingsView = null;
     categorization = null;

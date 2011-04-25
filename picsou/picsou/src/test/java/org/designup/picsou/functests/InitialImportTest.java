@@ -10,7 +10,7 @@ public class InitialImportTest extends LoggedInFunctionalTestCase {
   }
 
   public void testInitialImport() throws Exception {
-    versionInfo.checkNoNewVersion();
+    newVersion.checkNoNewVersionShown();
 
     views.checkDataSignpostVisible();
     views.selectData();

@@ -4,10 +4,6 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 
 public class HelpTest extends LoggedInFunctionalTestCase {
 
-  protected void selectInitialView() {
-    views.selectHome();
-  }
-
   public void testHelpMenu() throws Exception {
     operations.openHelp().checkTitle("Index").close();
 
@@ -15,6 +11,7 @@ public class HelpTest extends LoggedInFunctionalTestCase {
   }
 
   public void testHelpForCards() throws Exception {
+    views.selectHome();
     operations.openHelp("Dashboard View").checkTitle("Dashboard View").close();
 
     views.selectCategorization();

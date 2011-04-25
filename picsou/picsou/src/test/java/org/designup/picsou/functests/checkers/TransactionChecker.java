@@ -33,6 +33,10 @@ public class TransactionChecker extends ViewChecker {
   private ComboBox accountFilterCombo;
   private ComboBox seriesFilterCombo;
 
+  public static TransactionChecker init(Window window) {
+    return new TransactionChecker(window);
+  }
+
   public TransactionChecker(Window window) {
     super(window);
   }

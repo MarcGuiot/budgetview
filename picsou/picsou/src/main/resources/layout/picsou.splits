@@ -119,13 +119,6 @@
                       <tabs>
                         <tab title="$messagesBlock.tabs.messages">
                           <column>
-                            <panel autoHideSource="newVersionMessage" styleClass="infoMessage"
-                                   border="empty(10,0,0,10)">
-                              <panel styleClass="infoMessageBorder">
-                                <htmlEditorPane ref="newVersionMessage"/>
-                              </panel>
-                            </panel>
-
                             <panel autoHideSource="licenseMessage" styleClass="infoMessage"
                                    border="empty(10,0,0,10)">
                               <panel styleClass="infoMessageBorder">
@@ -198,6 +191,9 @@
           </horizontalBoxes>
         </card>
       </cards>
+
+      <panel ref="newVersionView" weightY="0"/>
+
     </column>
   </panel>
 </splits>
