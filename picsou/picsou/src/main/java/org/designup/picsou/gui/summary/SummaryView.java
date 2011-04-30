@@ -5,9 +5,11 @@ import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
 import org.designup.picsou.gui.accounts.chart.SavingsAccountsBalanceChartView;
 import org.designup.picsou.gui.accounts.chart.SavingsAccountsChartView;
 import org.designup.picsou.gui.card.utils.GotoCardAction;
+import org.designup.picsou.gui.help.actions.HelpAction;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartRange;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -32,6 +34,8 @@ public class SummaryView extends View {
 
     MainDailyPositionsChartView mainDailyPositions = new MainDailyPositionsChartView(range, repository, directory);
     mainDailyPositions.registerComponents(builder);
+    builder.add("openTuningHelp", new HelpAction(Lang.get("summaryView.openTuningHelp.text"),
+                                                 "tuning", "", directory));
 
     SavingsAccountsChartView savingsAccounts = new SavingsAccountsChartView(range, repository, directory);
     savingsAccounts.registerComponents(builder);

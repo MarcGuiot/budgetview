@@ -89,6 +89,7 @@ body.home p.sub {
   border-bottom: 1px solid #DDD;
   padding: 5px;
   background: #F9F9F9;
+  line-height: 1.1em;
 }
 
 .official-guide .video {
