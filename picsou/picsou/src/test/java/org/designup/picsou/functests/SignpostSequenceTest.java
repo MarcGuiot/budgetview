@@ -26,6 +26,10 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     signpostView.checkSignpostViewShown();
 
+    signpostView.checkInnerHelpLink("integrated help", "Index");
+    signpostView.checkSupportSiteLink("online guides", "http://support.mybudgetview.fr");
+    signpostView.checkFeedbackLink("contact us");
+
     // === Import ===
 
     views.checkDataSignpostVisible();
@@ -57,7 +61,6 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     views.checkCategorizationSignpostVisible("Categorization");
 
     views.selectCategorization();
-//    categorization.checkSelectionSignpostDisplayed("Select the operations to categorize");
     categorization.selectTableRow(0);
 
     // === Back to the categorization ===
