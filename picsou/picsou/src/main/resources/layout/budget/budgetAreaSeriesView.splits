@@ -51,8 +51,8 @@
           <label text="$budgetview.planned" styleClass="totalAmountTitle" gridPos="(4,0)" marginLeft="5"/>
         </grid>
 
-        <column styleClass="blockScrollBorder">
-          <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true">
+        <column styleClass="blockScrollBorder" weightY="10">
+          <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true" weightY="10">
             <verticalBoxes>
               <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid"
                       margin="10" marginTop="5" marginBottom="5">
@@ -73,11 +73,11 @@
                         tooltipText="$budgetview.tooltip.detail.planned"/>
               </repeat>
               <htmlEditorPane ref="footerArea" styleClass="hints"/>
-              <filler fill="vertical"/>
+              <filler fill="vertical" weightY="0.01"/>
             </verticalBoxes>
           </scrollPane>
 
-          <row styleClass="footer">
+          <row styleClass="footer" weightY="0.01">
             <filler fill="horizontal"/>
             <button ref="seriesActions" tooltipText="$budgetView.actions.tooltip"
                     icon="arrow_down.png" rolloverIcon="arrow_down_roll.png"/>
