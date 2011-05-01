@@ -6,9 +6,12 @@
     <style selector="label.columnTitle" fill="horizontal" marginBottom="5"
            border="matte(0,0,1,0,dialog.separator.light)"
            horizontalAlignment="left" font="-,plain,10"/>
+
+    <style selector="button#accountTypeHelp"
+           anchor="right" fill="none" weightX="0" marginLeft="5" font="-,plain,11"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(400,330)">
+  <panel styleClass="dialog" preferredSize="(450,330)">
     <column styleClass="innerDialog">
 
       <label ref="title" styleClass="title"/>
@@ -33,8 +36,10 @@
             </grid>
 
             <label text="$account.panel.type" styleClass="formLabel" anchor="left" marginTop="10"/>
-
+            <row>
             <comboBox ref="type" marginTop="5" marginBottom="10"/>
+              <button action="accountTypeHelp" name="accountTypeHelp" styleClass="hyperlinkWithoutUnderline"/>
+            </row>
 
             <textArea ref="messageWarning" styleClass="errorMessage"/>
 
@@ -72,8 +77,6 @@
           </column>
         </tab>
       </tabs>
-
-      <label ref="message" foreground="#FF0000" fill="none" anchor="center" marginTop="5"/>
 
     </column>
   </panel>

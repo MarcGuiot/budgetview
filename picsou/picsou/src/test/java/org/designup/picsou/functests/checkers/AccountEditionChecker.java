@@ -9,12 +9,12 @@ import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class AccountEditionChecker extends GuiChecker {
   private Window dialog;
@@ -35,41 +35,56 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker selectBank(String bankName) {
-    Window bankChooserWindow = WindowInterceptor.getModalDialog(dialog.getButton("bankSelector").triggerClick());
+    Window bankChooserWindow = WindowInterceptor.getModalDialog(getBankButton().triggerClick());
     BankChooserChecker chooserChecker = new BankChooserChecker(bankChooserWindow);
     chooserChecker.selectBank(bankName);
     chooserChecker.validate();
     return this;
   }
 
+  private org.uispec4j.Button getBankButton() {
+    return dialog.getButton("bankSelector");
+  }
+
   public BankChooserChecker openBankSelection() {
-    Window bankChooserWindow = WindowInterceptor.getModalDialog(dialog.getButton("bankSelector").triggerClick());
+    Window bankChooserWindow = WindowInterceptor.getModalDialog(getBankButton().triggerClick());
     return new BankChooserChecker(bankChooserWindow);
   }
 
-
   public AccountEditionChecker checkNoBankSelected() {
     assertThat(dialog.getTextBox("bankLabel").textEquals(""));
-    assertThat(dialog.getButton("bankSelector").textEquals("Click to select a bank"));
+    assertThat(getBankButton().textEquals("Click to select a bank"));
     return this;
   }
 
   public AccountEditionChecker checkSelectedBank(String name) {
     assertThat(dialog.getTextBox("bankLabel").textEquals(name));
-    assertThat(dialog.getButton("bankSelector").textEquals("Modify"));
+    assertThat(getBankButton().textEquals("Modify"));
     return this;
   }
 
   public AccountEditionChecker checkAccountName(String name) {
-    TextBox accountNameField = dialog.getInputTextBox("name");
+    TextBox accountNameField = getNameEditor();
     assertThat(accountNameField.textEquals(name));
     return this;
   }
 
   public AccountEditionChecker setAccountName(final String name) {
-    TextBox accountNameField = dialog.getInputTextBox("name");
+    TextBox accountNameField = getNameEditor();
     accountNameField.setText(name);
     return this;
+  }
+
+  public AccountEditionChecker checkNameValidationError(String message) {
+    dialog.getButton("OK").click();
+    UISpecAssert.assertTrue(dialog.isVisible());
+
+    checkErrorTipVisible(dialog, getNameEditor(), message);
+    return this;
+  }
+
+  private TextBox getNameEditor() {
+    return dialog.getInputTextBox("name");
   }
 
   public AccountEditionChecker setAccountNumber(final String number) {
@@ -96,6 +111,11 @@ public class AccountEditionChecker extends GuiChecker {
 
   public AccountEditionChecker checkTypes(String... expectedTypeNames) {
     assertThat(getTypeCombo().contentEquals(expectedTypeNames));
+    return this;
+  }
+
+  public AccountEditionChecker checkTypesHelp(String title) {
+    HelpChecker.open(dialog.getButton("accountTypeHelp").triggerClick()).checkTitle(title).close();
     return this;
   }
 
@@ -214,13 +234,16 @@ public class AccountEditionChecker extends GuiChecker {
     return dialog.getComboBox("updateMode");
   }
 
-  public AccountEditionChecker checkValidationError(String message) {
+  public AccountEditionChecker checkBankValidationError(String message) {
     dialog.getButton("OK").click();
     UISpecAssert.assertTrue(dialog.isVisible());
 
-    TextBox errorLabel = dialog.getTextBox("message");
-    assertThat(errorLabel.isVisible());
-    assertThat(errorLabel.textEquals(message));
+    checkErrorTipVisible(dialog, getBankButton(), message);
+    return this;
+  }
+
+  public AccountEditionChecker checkNoErrorDisplayed() {
+    checkNoErrorTip(dialog);
     return this;
   }
 

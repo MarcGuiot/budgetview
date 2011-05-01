@@ -9,6 +9,10 @@
 
     <style selector="component.chart" margin="15" marginTop="5" marginLeft="25" opaque="true"
            background="block.inner.bg"/>
+
+    <style selector="button.help" ui="hyperlinkButtonWithoutUnderline"
+           foreground="summary.graph.subtitle" font="-,plain,11" marginRight="10"
+           anchor="center" icon="help_link_grey.png" rolloverIcon="help_link_blue.png"/>
   </styles>
 
   <column>
@@ -17,6 +21,7 @@
       <label text="$summaryView.mainAccounts.title" styleClass="graphTitle"/>
       <label text="$summaryView.mainAccounts.subtitle" styleClass="graphSubTitle"/>
       <filler fill="horizontal"/>
+      <button action="openTuningHelp" styleClass="help"/>
     </row>
 
     <component ref="mainAccountsHistoChart" styleClass="chart" weightY="15"/>

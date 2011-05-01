@@ -13,12 +13,13 @@
            marginTop="5" marginBottom="30" fill="none" anchor="center"/>
   </styles>
 
-  <panel name="projectView" opaque="true" background="block.inner.bg">
+  <panel opaque="true" background="block.inner.bg">
     <column margin="30">
       <label text="$signpostView.title" styleClass="contentTitle" icon="app_icon_48.png"/>
       <row>
         <column border="matte(0,0,0,1,signpostView.verticalDivider)" weightX="4">
-          <htmlEditorPane text="$signpostView.intro" name="content" styleClass="content" marginRight="5"/>
+          <htmlEditorPane text="$signpostView.intro" name="content" styleClass="content" marginRight="5"
+                          useImageLocator="true" hyperlinkListener="hyperlinkHandler"/>
         </column>
         <column weightX="2" minimumSize="(150,200)" preferredSize="(200,350)">
           <column marginLeft="10">
@@ -33,7 +34,7 @@
           </column>
         </column>
       </row>
-      <filler fill="vertical" weightY="1.0"/>
+      <filler fill="vertical" weightY="0.1"/>
     </column>
   </panel>
 

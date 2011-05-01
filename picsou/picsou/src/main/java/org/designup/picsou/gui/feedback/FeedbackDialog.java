@@ -1,5 +1,7 @@
 package org.designup.picsou.gui.feedback;
 
+import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.config.ConfigService;
@@ -11,18 +13,22 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.Set;
 
 public class FeedbackDialog {
   private PicsouDialog dialog;
+  private JTextArea contentEditor;
   private JTextField userMail;
   private JTextField mailSubject;
-  private ErrorTip errorTips = null;
+  private JCheckBox addLogsCheckbox;
+  private ErrorTip errorTip = null;
   private ChangeSetListener tipsListener;
   private GlobRepository repository;
   private Directory directory;
@@ -35,8 +41,8 @@ public class FeedbackDialog {
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/feedback/feedbackDialog.splits",
                                                       repository, directory);
-    JEditorPane jEditorPane = new JEditorPane();
-    builder.add("mailContent", jEditorPane);
+    this.contentEditor = new JTextArea();
+    builder.add("mailContent", contentEditor);
 
     String userMail = repository.get(User.KEY).get(User.MAIL);
 
@@ -46,13 +52,12 @@ public class FeedbackDialog {
     this.mailSubject = new JTextField();
     builder.add("mailSubject", this.mailSubject);
 
+    this.addLogsCheckbox = new JCheckBox(Lang.get("feedback.addLogs"));
+    builder.add("addLogs", addLogsCheckbox);
+
     dialog.addPanelWithButtons(builder.<JPanel>load(),
-                               new ValidateAction(directory, jEditorPane),
-                               new AbstractAction(Lang.get("cancel")) {
-                                 public void actionPerformed(ActionEvent e) {
-                                   dialog.setVisible(false);
-                                 }
-                               });
+                               new ValidateAction(),
+                               new CancelAction(dialog));
     tipsListener = new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsUpdates(User.CONNECTED)) {
@@ -68,16 +73,38 @@ public class FeedbackDialog {
     showConnection();
   }
 
-  private void showConnection() {
-    Glob user = repository.get(User.KEY);
-    if (!user.isTrue(User.CONNECTED) && errorTips == null) {
-      errorTips = ErrorTip.showLeft(dialog.getOkButton(), Lang.get("feedback.notConnected"), directory);
+  private String getMessageText() {
+
+    StringBuilder builder = new StringBuilder();
+    builder
+      .append(contentEditor.getText())
+      .append("\n\n--------------\n\n")
+      .append("version: ").append(PicsouApplication.APPLICATION_VERSION).append("\n");
+    if (addLogsCheckbox.isSelected()) {
+      File logFile = PicsouApplication.getLogFile();
+      if (logFile.exists()) {
+        builder
+          .append("logs:\n")
+          .append(Files.loadFileToString(logFile.getAbsolutePath()));
+      }
+      else {
+        builder.append("[no log file found]");
+      }
     }
 
-    if (user.isTrue(User.CONNECTED) && errorTips != null) {
-      errorTips.dispose();
+    return builder.toString();
+  }
+
+  private void showConnection() {
+    Glob user = repository.get(User.KEY);
+    if (!user.isTrue(User.CONNECTED) && errorTip == null) {
+      errorTip = ErrorTip.showLeft(dialog.getOkButton(), Lang.get("feedback.notConnected"), directory);
     }
-    
+
+    if (user.isTrue(User.CONNECTED) && errorTip != null) {
+      errorTip.dispose();
+    }
+
     dialog.getOkButton().setEnabled(user.isTrue(User.CONNECTED));
   }
 
@@ -88,19 +115,16 @@ public class FeedbackDialog {
   }
 
   private class ValidateAction extends AbstractAction {
-    private final Directory directory;
-    private final JEditorPane jEditorPane;
 
-    public ValidateAction(Directory directory, JEditorPane jEditorPane) {
+    public ValidateAction() {
       super(Lang.get("feedback.send"));
-      this.directory = directory;
-      this.jEditorPane = jEditorPane;
     }
 
     public void actionPerformed(ActionEvent e) {
       directory.get(ConfigService.class).sendMail(ConfigService.MAIL_CONTACT,
                                                   userMail.getText(),
-                                                  mailSubject.getText(), jEditorPane.getText(),
+                                                  mailSubject.getText(),
+                                                  getMessageText(),
                                                   new ConfigService.Listener() {
                                                     public void sent() {
                                                     }

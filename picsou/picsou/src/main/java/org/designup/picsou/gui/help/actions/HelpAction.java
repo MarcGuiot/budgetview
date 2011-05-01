@@ -13,10 +13,14 @@ public class HelpAction extends AbstractAction {
   private Window owner;
 
   public HelpAction(String label, String helpRef, String tooltip, Directory directory) {
+    this(label, helpRef, tooltip,  directory, directory.get(JFrame.class));
+  }
+
+  public HelpAction(String label, String helpRef, String tooltip, Directory directory, Window owner) {
     super(label);
     this.helpRef = helpRef;
     this.directory = directory;
-    this.owner = directory.get(JFrame.class);
+    this.owner = owner;
     putValue(Action.SHORT_DESCRIPTION, tooltip);
   }
 

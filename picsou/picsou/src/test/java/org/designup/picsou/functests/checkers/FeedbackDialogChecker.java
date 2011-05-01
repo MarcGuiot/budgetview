@@ -6,6 +6,8 @@ import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.interception.WindowInterceptor;
 
+import javax.swing.*;
+
 public class FeedbackDialogChecker extends GuiChecker{
   private Window dialog;
 
@@ -17,6 +19,14 @@ public class FeedbackDialogChecker extends GuiChecker{
     return new FeedbackDialogChecker(WindowInterceptor.getModalDialog(trigger));
   }
 
+  public FeedbackDialogChecker checkComponents() {
+    checkComponentVisible(dialog, JButton.class, "send", true);
+    checkComponentVisible(dialog, JButton.class, "cancel", true);
+    checkComponentVisible(dialog, JTextField.class, "mailSubject", true);
+    checkComponentVisible(dialog, JTextField.class, "fromMail", true);
+    return this;
+  }
+
   public FeedbackDialogChecker checkConnected() {
     assertTrue(dialog.getButton("Send").isEnabled());
     return this;
@@ -24,6 +34,11 @@ public class FeedbackDialogChecker extends GuiChecker{
 
   public FeedbackDialogChecker checkNotConnected() {
     assertFalse(dialog.getButton("Send").isEnabled());
+    return this;
+  }
+
+  public FeedbackDialogChecker setLogsAdded() {
+    dialog.getCheckBox("addLogs").select();
     return this;
   }
 

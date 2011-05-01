@@ -37,6 +37,11 @@ public class SummaryViewChecker extends ViewChecker {
     return savingsChart;
   }
 
+  public SummaryViewChecker checkTuningHelp(String title) {
+    HelpChecker.open(getPanel().getButton("openTuningHelp").triggerClick()).checkTitle(title).close();
+    return this;
+  }
+
   private Panel getPanel() {
     if (panel == null) {
       views.selectHome();

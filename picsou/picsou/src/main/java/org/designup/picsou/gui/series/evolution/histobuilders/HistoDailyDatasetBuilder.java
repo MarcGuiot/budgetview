@@ -5,6 +5,7 @@ import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyColors;
 import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyDataset;
 import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyPainter;
 import org.designup.picsou.model.CurrentMonth;
+import org.designup.picsou.model.Month;
 import org.globsframework.model.GlobRepository;
 
 import javax.swing.*;
@@ -21,6 +22,10 @@ public class HistoDailyDatasetBuilder extends HistoDatasetBuilder {
 
   public void add(int monthId, Double[] values, boolean isSelectedMonth) {
     dataset.add(monthId, values, getLabel(monthId), getSection(monthId), isCurrentMonth(monthId), isSelectedMonth);
+  }
+
+  protected String getLabel(int monthId) {
+    return Month.getFullMonthLabel(monthId);
   }
 
   public void apply(HistoDailyColors colors, String messageKey, String... args) {

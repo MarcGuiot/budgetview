@@ -3,8 +3,8 @@ package org.designup.picsou.license.functests;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.license.ConnectedTestCase;
 import org.designup.picsou.license.model.SoftwareInfo;
 import org.designup.picsou.model.TransactionType;
@@ -52,7 +52,7 @@ public class DownloadTest extends ConnectedTestCase {
     picsouApplication = startupChecker.getApplication();
   }
 
-  public void testJarIsSendToSpecificUser() throws Exception {
+  public void testJarIsSentToSpecificUser() throws Exception {
     DbChecker dbChecker = new DbChecker();
     String email = "alfred@free.fr";
     dbChecker.registerMail(email, "1234");
@@ -70,7 +70,7 @@ public class DownloadTest extends ConnectedTestCase {
     retr.assertOk();
 
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
-    
+
     OperationChecker operations = new OperationChecker(window);
     LicenseActivationChecker.enterLicense(window, email, "1234");
     operations.exit();
@@ -99,15 +99,17 @@ public class DownloadTest extends ConnectedTestCase {
     ConnectedTestCase.Retr retr = setFtpReply(jarName, "jar content", configJarName, content);
     startPicsou();
     retr.assertOk();
-    VersionInfoChecker versionInfo = new VersionInfoChecker(window);
-    versionInfo.checkNewVersion();
 
-    OfxBuilder builder = OfxBuilder.init(this);
-    builder.addBankAccount(4321, -2, "1111", 123.3, "10/09/2008");
-    builder.addTransaction("2008/09/10", -100., "STUPID HEADER blabla");
-    String ofxFile = builder.save();
-    OperationChecker operation = new OperationChecker(window);
-    operation.importOfxFile(ofxFile);
+    NewVersionChecker newVersion = new NewVersionChecker(window);
+    newVersion.checkNewVersionShown();
+
+    String ofxFile = OfxBuilder.init(this)
+      .addBankAccount(4321, -2, "1111", 123.3, "10/09/2008")
+      .addTransaction("2008/09/10", -100., "STUPID HEADER blabla")
+      .save();
+
+    OperationChecker.init(window).importOfxFile(ofxFile);
+
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectData();
     TransactionChecker transaction = new TransactionChecker(window);
@@ -164,24 +166,24 @@ public class DownloadTest extends ConnectedTestCase {
 
     final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
     final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
+
     byte[] content = generateConfigContent();
     ConnectedTestCase.Retr retr = setFtpReply(jarName, "jar content", configJarName, content);
     startServers();
 
     retr.assertOk();
 
-    ViewSelectionChecker views = new ViewSelectionChecker(window);
-    views.selectHome();
-    VersionInfoChecker versionInfo = new VersionInfoChecker(window);
-    versionInfo.checkNewVersion();
+    NewVersionChecker newVersion = new NewVersionChecker(window);
+    newVersion.checkNewVersionShown();
 
-    views.selectData();
-    TransactionChecker transaction = new TransactionChecker(window);
-    transaction.initContent()
+    newVersion.checkLink("http://support.mybudgetview.fr/entries/20052156");
+    newVersion.hide();
+    newVersion.checkNoNewVersionShown();
+
+    TransactionChecker.init(window).initContent()
       .add("10/09/2008", TransactionType.VIREMENT, "GOOD HEADER", "", -100.00) // le plugin specific de banque n'est pas appelé
       .check();
   }
-
 
   private byte[] generateConfigContent() throws Exception {
     File tempFile = File.createTempFile("config", ".jar");

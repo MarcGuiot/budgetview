@@ -1,5 +1,7 @@
 package org.designup.picsou.gui.help;
 
+import org.designup.picsou.gui.feedback.FeedbackDialog;
+import org.designup.picsou.gui.feedback.FeedbackService;
 import org.globsframework.utils.directory.Directory;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.model.Card;
@@ -52,6 +54,9 @@ public class HyperlinkHandler implements HyperlinkListener {
     else if (href.startsWith("url:")) {
       BrowsingService browser = directory.get(BrowsingService.class);
       browser.launchBrowser(href.substring(4));
+    }
+    else if (href.startsWith("contact:")) {
+      directory.get(FeedbackService.class).send();
     }
     else if (actions.containsKey(href)) {
       actions.get(href).run();

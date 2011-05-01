@@ -238,7 +238,7 @@
 
     <style selector="button.icon" text="" opaque="false" borderPainted="false"
            minimumSize="(18,20)" preferredSize="(18,20)" maximumSize="(18,20)"
-           fill='none' weightX='0' cursor="hand"/>
+           fill="none" weightX="0" cursor="hand"/>
 
     <!-- Navigation widgets -->
     <style selector=".navigationWidgetLabel"

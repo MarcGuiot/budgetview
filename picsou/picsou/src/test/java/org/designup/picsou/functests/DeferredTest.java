@@ -145,7 +145,6 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
   public void testFirstQifImport() throws Exception {
     String mainAccount = QifBuilder.init(this)
-      //.addBankAccount("", -1, "1234", 1000, "2009/11/30")
       .addTransaction("2009/11/28", -30, "Prelevement novembre")
       .addTransaction("2009/10/28", -35 - 15 /* -15 : transaction precedente non importée */, "Prelevement octobre")
       .save();

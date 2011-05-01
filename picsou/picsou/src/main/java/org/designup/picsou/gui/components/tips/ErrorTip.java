@@ -11,7 +11,6 @@ import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.utils.AutoDispose;
 import org.globsframework.gui.splits.utils.Disposable;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -26,7 +25,6 @@ public class ErrorTip implements Disposable, ColorChangeListener {
   private Color borderColor;
   private HierarchyListener visibilityUpdater;
   private JComponent component;
-  private String text;
   private Directory directory;
 
   public static ErrorTip showLeft(JComponent component, String text, Directory directory) {
@@ -55,7 +53,6 @@ public class ErrorTip implements Disposable, ColorChangeListener {
 
   private ErrorTip(final JComponent component, final String text, Directory directory, BalloonTipPositioner positioner) {
     this.component = component;
-    this.text = text;
     this.directory = directory;
 
     directory.get(ColorService.class).addListener(this);

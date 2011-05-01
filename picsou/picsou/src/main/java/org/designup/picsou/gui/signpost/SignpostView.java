@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.signpost;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.signpost.sections.BudgetSectionPanel;
 import org.designup.picsou.gui.signpost.sections.CategorizationSectionPanel;
 import org.designup.picsou.gui.signpost.sections.ImportSectionPanel;
@@ -41,6 +42,8 @@ public class SignpostView extends View {
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/signpost/signpostView.splits",
                                                       repository, directory);
+
+    builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
 
     builder.addRepeat("signpostRepeat",
                       sections,

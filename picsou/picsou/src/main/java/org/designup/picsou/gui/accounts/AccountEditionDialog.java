@@ -35,7 +35,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   }
 
   public AccountEditionDialog(Window owner, final GlobRepository parentRepository, Directory directory) {
-    super(createLocalRepository(parentRepository), directory, new JLabel());
+    super(createLocalRepository(parentRepository), directory);
     this.parentRepository = parentRepository;
 
     dialog = PicsouDialog.create(owner, localDirectory);
@@ -44,8 +44,6 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
                                                       localRepository, localDirectory);
 
     titleLabel = builder.add("title", new JLabel("accountEditionDialog")).getComponent();
-
-    builder.add("message", messageLabel);
 
     updateModeCombo = builder.addComboEditor("updateMode", Account.UPDATE_MODE).setShowEmptyOption(false);
 

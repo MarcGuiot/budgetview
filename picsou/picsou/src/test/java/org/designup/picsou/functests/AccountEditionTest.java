@@ -36,6 +36,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkAccountName("")
       .setAccountName("Main CIC account")
       .checkTypes("Main", "Credit card", "Deferred debit card", "Savings")
+      .checkTypesHelp("Account types")
       .selectBank("CIC")
       .checkUpdateModeIsFileImport()
       .checkUpdateModeIsEditable()
@@ -70,8 +71,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setAccountName("Main")
       .checkNoBankSelected()
-      .checkValidationError("You must select a bank for this account")
+      .checkBankValidationError("You must select a bank for this account")
       .selectBank("Autre")
+      .checkNoErrorDisplayed()
       .validate();
 
     mainAccounts.edit("Main")
@@ -91,7 +93,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.edit("Account n. 0000123")
       .checkAccountName("Account n. 0000123")
       .setAccountName("")
-      .checkValidationError("You must enter a name for this account")
+      .checkNameValidationError("You must enter a name for this account")
+      .setAccountName("a")
+      .checkNoErrorDisplayed()
       .cancel();
 
     mainAccounts.checkAccountNames("Account n. 0000123");
