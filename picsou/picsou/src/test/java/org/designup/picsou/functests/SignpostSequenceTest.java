@@ -2,6 +2,7 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.SeriesAmountEditionDialogChecker;
 import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
+import org.designup.picsou.functests.checkers.SignpostDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
@@ -113,8 +114,13 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     signpostView.checkSignpostViewShown();
 
-    budgetView.variable.editPlannedAmount("Clothing").setAmount(10.00).validate();
+    views.selectBudget();
+    SignpostDialogChecker
+      .open(
+        budgetView.variable.editPlannedAmount("Clothing").setAmount(10.00).triggerValidate())
+      .close();
 
+    views.checkHomeSelected();
     signpostView.checkSummaryViewShown();
 
     // === Restart ===

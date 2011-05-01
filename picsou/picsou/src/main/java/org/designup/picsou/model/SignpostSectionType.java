@@ -48,6 +48,10 @@ public enum SignpostSectionType implements GlobConstantContainer {
     return getType(nextId);
   }
 
+  public boolean isLast() {
+    return nextId < 0;
+  }
+
   public ReadOnlyGlob getGlob() {
     return new ReadOnlyGlob(SignpostSectionType.TYPE,
                             value(SignpostSectionType.ID, id));

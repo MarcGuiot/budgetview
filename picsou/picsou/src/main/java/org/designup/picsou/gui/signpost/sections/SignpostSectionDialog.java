@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.signpost.sections;
 
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.CloseAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.SignpostSectionType;
@@ -12,6 +13,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.util.Arrays;
 
 public class SignpostSectionDialog {
@@ -45,7 +47,7 @@ public class SignpostSectionDialog {
 
     builder.add("message", GuiUtils.createReadOnlyHtmlComponent(completedSection.getCompletionMessage()));
 
-    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(dialog));
+    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseSectionAction(dialog, completedSection));
     dialog.pack();
 
     return dialog;
@@ -103,6 +105,22 @@ public class SignpostSectionDialog {
 
     private boolean isCompleted(SignpostSection section) {
       return section == completedSection || section.getType().isCompleted(completedSection.getType());
+    }
+  }
+
+  private class CloseSectionAction extends CloseAction {
+    private boolean isLastSection;
+
+    public CloseSectionAction(JDialog dialog, SignpostSection completedSection) {
+      super(dialog);
+      isLastSection = completedSection.getType().isLast();
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      if (isLastSection) {
+        directory.get(NavigationService.class).gotoHome();
+      }
+      super.actionPerformed(e);
     }
   }
 }
