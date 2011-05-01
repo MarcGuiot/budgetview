@@ -1,4 +1,3 @@
-
 /* ========= ZENDESK ========== */
 
 body {
@@ -19,9 +18,11 @@ div#header_container {
 }
 
 div#top-menu {
-
 }
 
+div#voting_control {
+  display:none;
+}
 
 #top-menu-background, #top form#topquery {
   background: #cAc2b6;
@@ -67,6 +68,15 @@ body.home h2#pinned_topics_title,
 body.home div.fade_truncation_outer,
 body.home p.sub {
   display: none;
+}
+
+/* ========= CHANGE LOG ========== */
+
+div#changelog span.date {
+  margin-left: 10px;
+  font-size: 10pt;
+  font-weight: normal;
+  color: #888;
 }
 
 /* ========= GENERAL ========== */

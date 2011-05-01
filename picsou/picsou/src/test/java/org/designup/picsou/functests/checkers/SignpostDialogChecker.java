@@ -21,4 +21,7 @@ public class SignpostDialogChecker {
     this.dialog = dialog;
   }
 
+  public void close() {
+    dialog.getButton("Close").click();
+  }
 }
