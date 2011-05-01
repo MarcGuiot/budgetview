@@ -56,10 +56,10 @@ public class UserPreferences {
 
   public static DateField LAST_VALID_DAY;
 
-  @DefaultInteger(6)
+  @DefaultInteger(10)
   public static IntegerField PERIOD_COUNT_FOR_PLANNED;
 
-  @DefaultInteger(1)
+  @DefaultInteger(3)
   public static IntegerField MONTH_FOR_PLANNED;
 
   @DefaultBoolean(true)

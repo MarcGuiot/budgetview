@@ -2,6 +2,7 @@ package org.designup.picsou.gui.config;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.globsframework.utils.Log;
+import org.designup.picsou.gui.PicsouApplication;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,6 +36,7 @@ public class DownloadThread extends Thread {
     if (splitedUrl.length == 3) {
       client.setDefaultPort(Integer.parseInt(splitedUrl[2]));
     }
+    client.enterLocalPassiveMode();
     try {
       client.connect(splitedUrl[1].substring("//" .length()));
       if (client.isConnected()) {
@@ -42,7 +44,7 @@ public class DownloadThread extends Thread {
           Log.write("Fail to log to ftp server " + (client.getReplyString()));
         }
         client.setFileType(FTPClient.BINARY_FILE_TYPE);
-        String fileSuffix = "picsouJar";
+        String fileSuffix = PicsouApplication.APPNAME + "Jar";
         tempFile = File.createTempFile(fileSuffix, ".tmp", pathToConfig);
         FileOutputStream fileOutputStream = new FileOutputStream(tempFile);
         if (client.retrieveFile(fileName, fileOutputStream)) {
@@ -53,11 +55,13 @@ public class DownloadThread extends Thread {
             completed.complete(targetFile, version);
           }
           else {
+            Log.write("Fail to rename from " + tempFile.getName() + " to " + targetFile.getName());
             tempFile.delete();
             tempFile = null;
           }
         }
         else {
+          Log.write("Fail to retrieve " + fileName);
           tempFile.delete();
           tempFile = null;
         }
