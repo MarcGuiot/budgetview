@@ -79,6 +79,7 @@ public class BudgetSummaryView
       new MainDailyPositionsChartView(repository, directory, "chart",
                                       new HistoChartConfig(true, false, true, false),
                                       new HistoChartRange(0, 1, true, repository));
+    chartView.setShowFullMonthLabels(true);
     chartView.registerComponents(builder);
 
     parentBuilder.add("budgetSummaryView", builder);

@@ -152,8 +152,8 @@ public class HistoChartBuilder {
     histoChart.clear();
   }
 
-  public void showMainDailyHisto(int selectedMonthId) {
-    HistoDailyDatasetBuilder builder = createDailyDataset("daily");
+  public void showMainDailyHisto(int selectedMonthId, boolean showFullMonthLabels) {
+    HistoDailyDatasetBuilder builder = createDailyDataset("daily", showFullMonthLabels);
 
     Double lastValue = null;
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
@@ -426,8 +426,8 @@ public class HistoChartBuilder {
     return new HistoDiffDatasetBuilder(histoChart, histoChartLabel, repository, tooktipKey);
   }
 
-  private HistoDailyDatasetBuilder createDailyDataset(String tooktipKey) {
-    return new HistoDailyDatasetBuilder(histoChart, histoChartLabel, repository, tooktipKey);
+  private HistoDailyDatasetBuilder createDailyDataset(String tooktipKey, boolean showFullMonthLabels) {
+    return new HistoDailyDatasetBuilder(histoChart, histoChartLabel, repository, tooktipKey, showFullMonthLabels);
   }
 
   private List<Integer> getMonthIdsToShow(Integer selectedMonthId) {

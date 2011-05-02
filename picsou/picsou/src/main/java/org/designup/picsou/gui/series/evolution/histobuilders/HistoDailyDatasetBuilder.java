@@ -12,9 +12,12 @@ import javax.swing.*;
 
 public class HistoDailyDatasetBuilder extends HistoDatasetBuilder {
   private HistoDailyDataset dataset;
+  private boolean showFullMonthLabels;
 
-  public HistoDailyDatasetBuilder(HistoChart histoChart, JLabel label, GlobRepository repository, String tooltipKey) {
+  public HistoDailyDatasetBuilder(HistoChart histoChart, JLabel label, GlobRepository repository, String tooltipKey,
+                                  boolean showFullMonthLabels) {
     super(histoChart, label, repository);
+    this.showFullMonthLabels = showFullMonthLabels;
     this.dataset = new HistoDailyDataset("seriesEvolution.chart.histo." + tooltipKey + ".tooltip",
                                          CurrentMonth.getLastTransactionMonth(repository),
                                          CurrentMonth.getLastTransactionDay(repository));
@@ -25,7 +28,7 @@ public class HistoDailyDatasetBuilder extends HistoDatasetBuilder {
   }
 
   protected String getLabel(int monthId) {
-    return Month.getFullMonthLabel(monthId);
+    return showFullMonthLabels ? Month.getFullMonthLabel(monthId) : Month.getShortMonthLabel(monthId);
   }
 
   public void apply(HistoDailyColors colors, String messageKey, String... args) {

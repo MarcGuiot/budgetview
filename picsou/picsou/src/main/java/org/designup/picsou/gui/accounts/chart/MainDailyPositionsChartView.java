@@ -9,6 +9,8 @@ import org.globsframework.utils.directory.Directory;
 
 public class MainDailyPositionsChartView extends AccountsChartView {
 
+  private boolean showFullMonthLabels = false;
+
   public MainDailyPositionsChartView(HistoChartRange range, GlobRepository repository, Directory directory) {
     super(range, repository, directory, "mainAccountsHistoChart");
   }
@@ -18,8 +20,12 @@ public class MainDailyPositionsChartView extends AccountsChartView {
     super(repository, directory, componentName, config, range);
   }
 
+  public void setShowFullMonthLabels(boolean show) {
+    this.showFullMonthLabels = show;
+  }
+
   protected void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
-    histoChartBuilder.showMainDailyHisto(currentMonthId);
+    histoChartBuilder.showMainDailyHisto(currentMonthId, showFullMonthLabels);
   }
 
   protected void processDoubleClick(NavigationService navigationService) {
