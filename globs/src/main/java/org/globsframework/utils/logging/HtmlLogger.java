@@ -17,6 +17,7 @@ class HtmlLogger {
 
   public HtmlLogger() {
     File file = new File("log.html");
+    System.out.println("Logging in: " + file.getAbsolutePath());
     try {
       this.writer =
         new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8")));

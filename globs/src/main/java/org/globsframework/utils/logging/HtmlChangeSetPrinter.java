@@ -11,25 +11,39 @@ import org.globsframework.model.*;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Strings;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 class HtmlChangeSetPrinter {
   private GlobRepository repository;
   private HtmlLogger logger;
 
   public HtmlChangeSetPrinter(HtmlLogger logger,
-                              GlobRepository repository) {
+                              GlobRepository repository,
+                              GlobType... trackedTypes) {
     this.logger = logger;
     this.repository = repository;
+    final Set<GlobType> types = new HashSet<GlobType>(Arrays.asList(trackedTypes));
     this.repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        run(changeSet);
+        if (typesChanged(types, changeSet)) {
+          run(changeSet);
+        }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      }
+
+      private boolean typesChanged(Set<GlobType> types, ChangeSet changeSet) {
+        if (types.isEmpty()) {
+          return true;
+        }
+
+        for (GlobType type : changeSet.getChangedTypes()) {
+          if (types.contains(type)) {
+            return true;
+          }
+        }
+        return false;
       }
     });
   }
