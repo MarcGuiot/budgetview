@@ -1,6 +1,7 @@
-package org.designup.picsou.gui.series.evolution;
+package org.designup.picsou.gui.series.analysis.evolution;
 
 import org.designup.picsou.gui.components.AbstractRolloverEditor;
+import org.designup.picsou.gui.series.analysis.SeriesChartsColors;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.Series;
@@ -21,7 +22,7 @@ import java.awt.*;
 public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
 
   private int offset;
-  private SeriesEvolutionColors colors;
+  private SeriesChartsColors colors;
 
   protected Glob currentSeries;
 
@@ -40,7 +41,7 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
                                DescriptionService descriptionService,
                                GlobRepository repository,
                                Directory directory,
-                               SeriesEvolutionColors colors) {
+                               SeriesChartsColors colors) {
     super(view, descriptionService, repository, directory);
     this.offset = offset;
     this.colors = colors;

@@ -112,10 +112,10 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.getSummary().checkEndPosition(1410.00);
 
-    seriesEvolution.balanceChart.getLeftDataset()
+    seriesAnalysis.balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 1500.00);
-    seriesEvolution.balanceChart.getRightDataset()
+    seriesAnalysis.balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Recurring", 1529.90)
       .checkValue("Variable", 90.00);
@@ -127,20 +127,20 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     timeline.selectMonths("2008/07", "2008/08");
     budgetView.getSummary().checkEndPosition(1410);
     mainAccounts.checkEstimatedPosition(1410);
-    seriesEvolution.balanceChart.getLeftDataset()
+    seriesAnalysis.balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 1500.00);
-    seriesEvolution.balanceChart.getRightDataset()
+    seriesAnalysis.balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Recurring", 1529.90)
       .checkValue("Variable", 90.00);
 
     timeline.selectMonth("2008/09");
     mainAccounts.checkEstimatedPosition(1420 + 1500 - 1529.90 - 80 - 10 - 10);
-    seriesEvolution.balanceChart.getLeftDataset()
+    seriesAnalysis.balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 1500.00);
-    seriesEvolution.balanceChart.getRightDataset()
+    seriesAnalysis.balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Recurring", 1529.90)
       .checkValue("Variable", 90.00);

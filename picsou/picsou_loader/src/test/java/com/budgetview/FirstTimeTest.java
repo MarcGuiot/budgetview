@@ -5,13 +5,10 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.gui.startup.LoginPanel;
 import org.globsframework.utils.Files;
-import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
-import org.uispec4j.UISpec4J;
 import org.uispec4j.utils.DummyRepaintManager;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -731,11 +728,11 @@ public class FirstTimeTest extends UISpecTestCase {
     TimeViewChecker checker = new TimeViewChecker(window);
     checker.selectMonths("2008/10");
 
-    SeriesEvolutionChecker seriesEvolution = new SeriesEvolutionChecker(window);
-    seriesEvolution.balanceChart.getLeftDataset()
+    SeriesAnalysisChecker seriesAnalysis = new SeriesAnalysisChecker(window);
+    seriesAnalysis.balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 2000.00);
-    seriesEvolution.balanceChart.getRightDataset()
+    seriesAnalysis.balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Recurring", 1413.90)
       .checkValue("Variable", 370.00)

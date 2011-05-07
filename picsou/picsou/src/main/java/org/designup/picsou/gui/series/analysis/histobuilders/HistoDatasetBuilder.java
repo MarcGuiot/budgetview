@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.series.evolution.histobuilders;
+package org.designup.picsou.gui.series.analysis.histobuilders;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.model.CurrentMonth;

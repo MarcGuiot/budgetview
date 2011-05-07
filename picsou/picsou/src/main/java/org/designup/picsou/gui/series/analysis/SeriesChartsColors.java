@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.series.evolution;
+package org.designup.picsou.gui.series.analysis;
 
 import org.designup.picsou.gui.budget.summary.BudgetAreaSummaryComputer;
 import org.designup.picsou.gui.model.BudgetStat;
@@ -25,7 +25,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 
-public class SeriesEvolutionColors implements ColorChangeListener {
+public class SeriesChartsColors implements ColorChangeListener {
 
   private GlobRepository parentRepository;
 
@@ -52,7 +52,7 @@ public class SeriesEvolutionColors implements ColorChangeListener {
   private AmountColors amountColors;
   private BudgetAreaColorUpdater budgetAreaColorUpdater;
 
-  public SeriesEvolutionColors(GlobRepository parentRepository, Directory directory) {
+  public SeriesChartsColors(GlobRepository parentRepository, Directory directory) {
     this.parentRepository = parentRepository;
     ColorService colorService = directory.get(ColorService.class);
     colorService.addListener(this);

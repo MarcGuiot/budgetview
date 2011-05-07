@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.series.evolution.histobuilders;
+package org.designup.picsou.gui.series.analysis.histobuilders;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyColors;
@@ -18,7 +18,7 @@ public class HistoDailyDatasetBuilder extends HistoDatasetBuilder {
                                   boolean showFullMonthLabels) {
     super(histoChart, label, repository);
     this.showFullMonthLabels = showFullMonthLabels;
-    this.dataset = new HistoDailyDataset("seriesEvolution.chart.histo." + tooltipKey + ".tooltip",
+    this.dataset = new HistoDailyDataset("seriesAnalysis.chart.histo." + tooltipKey + ".tooltip",
                                          CurrentMonth.getLastTransactionMonth(repository),
                                          CurrentMonth.getLastTransactionDay(repository));
   }
@@ -33,6 +33,6 @@ public class HistoDailyDatasetBuilder extends HistoDatasetBuilder {
 
   public void apply(HistoDailyColors colors, String messageKey, String... args) {
     histoChart.update(new HistoDailyPainter(dataset, colors));
-    updateLabel(label, "seriesEvolution.chart.histo." + messageKey, args);
+    updateLabel(label, "seriesAnalysis.chart.histo." + messageKey, args);
   }
 }

@@ -18,7 +18,7 @@ public enum Card implements GlobConstantContainer {
   HOME("home", 0),
   CATEGORIZATION("categorization", 1),
   BUDGET("budget", 2),
-  EVOLUTION("evolution", 3),
+  ANALYSIS("analysis", 3),
   DATA("data", 4),
   SAVINGS("savings", 5);
 
@@ -68,7 +68,7 @@ public enum Card implements GlobConstantContainer {
       case 2:
         return BUDGET;
       case 3:
-        return EVOLUTION;
+        return ANALYSIS;
       case 4:
         return DATA;
       case 5:

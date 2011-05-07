@@ -7,7 +7,7 @@ import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
-import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartRange;
+import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartRange;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;

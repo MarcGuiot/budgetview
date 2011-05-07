@@ -1,11 +1,11 @@
-package org.designup.picsou.gui.series.evolution;
+package org.designup.picsou.gui.series.analysis;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
-import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilder;
-import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartRange;
-import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartUpdater;
+import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
+import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartRange;
+import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartUpdater;
 import org.designup.picsou.model.SeriesBudget;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobRepository;

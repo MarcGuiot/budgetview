@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.series.evolution.histobuilders;
+package org.designup.picsou.gui.series.analysis.histobuilders;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoPainter;
@@ -19,7 +19,7 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
 
   HistoDiffDatasetBuilder(HistoChart histoChart, JLabel label, GlobRepository repository, String tooltipKey) {
     super(histoChart, label, repository);
-    this.dataset = new HistoDiffDataset("seriesEvolution.chart.histo." + tooltipKey + ".tooltip");
+    this.dataset = new HistoDiffDataset("seriesAnalysis.chart.histo." + tooltipKey + ".tooltip");
     this.lastMonthWithTransactions = CurrentMonth.getLastTransactionMonth(repository);
   }
 
@@ -56,6 +56,6 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
   }
 
   private void updateHistoLabel(String messageKey, String... args) {
-    updateLabel(label, "seriesEvolution.chart.histo." + messageKey, args);
+    updateLabel(label, "seriesAnalysis.chart.histo." + messageKey, args);
   }
 }

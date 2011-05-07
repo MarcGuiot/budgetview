@@ -68,10 +68,10 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/09");
     budgetView.income.checkSeries("Salary", 0.0, 1000.0);
     mainAccounts.checkEstimatedPosition(1000.0);
-    seriesEvolution.balanceChart.getLeftDataset()
+    seriesAnalysis.balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 1000.00);
-    seriesEvolution.balanceChart.getRightDataset()
+    seriesAnalysis.balanceChart.getRightDataset()
       .checkEmpty();
 
     timeline.selectMonth("2008/08");
@@ -85,10 +85,10 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     budgetView.income.checkTotalAmounts(1000.0, 1000.0);
 
-    seriesEvolution.balanceChart.getLeftDataset()
+    seriesAnalysis.balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 1000.00);
-    seriesEvolution.balanceChart.getRightDataset()
+    seriesAnalysis.balanceChart.getRightDataset()
       .checkEmpty();
     budgetView.income.checkSeries("Salary", 1000.0, 1000.0);
 

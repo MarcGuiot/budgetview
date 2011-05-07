@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.series.evolution.histobuilders;
+package org.designup.picsou.gui.series.analysis.histobuilders;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.line.HistoBarPainter;
@@ -14,7 +14,7 @@ public class HistoLineDatasetBuilder extends HistoDatasetBuilder {
 
   public HistoLineDatasetBuilder(HistoChart histoChart, JLabel label, GlobRepository repository, String tooltipKey) {
     super(histoChart, label, repository);
-    this.dataset = new HistoLineDataset("seriesEvolution.chart.histo." + tooltipKey + ".tooltip");
+    this.dataset = new HistoLineDataset("seriesAnalysis.chart.histo." + tooltipKey + ".tooltip");
   }
 
   public void add(int monthId, double value, boolean isSelectedMonth) {
@@ -25,11 +25,11 @@ public class HistoLineDatasetBuilder extends HistoDatasetBuilder {
 
   public void showLine(HistoLineColors colors, String messageKey, String... args) {
     histoChart.update(new HistoLinePainter(dataset, colors));
-    updateLabel(label, "seriesEvolution.chart.histo." + messageKey, args);
+    updateLabel(label, "seriesAnalysis.chart.histo." + messageKey, args);
   }
 
   public void showBars(HistoLineColors colors, String messageKey, String... args) {
     histoChart.update(new HistoBarPainter(dataset, colors));
-    updateLabel(label, "seriesEvolution.chart.histo." + messageKey, args);
+    updateLabel(label, "seriesAnalysis.chart.histo." + messageKey, args);
   }
 }

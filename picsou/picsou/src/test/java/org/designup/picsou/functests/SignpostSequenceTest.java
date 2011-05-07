@@ -84,8 +84,8 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     // === Editing series amounts in SeriesEvolution does not remove budget view signpost ===
 
-    views.selectEvolution();
-    seriesEvolution.editSeries("Groceries", "May 2010").validate();
+    views.selectAnalysis();
+    seriesAnalysis.editSeries("Groceries", "May 2010").validate();
 
     // === Series amounts ===
 

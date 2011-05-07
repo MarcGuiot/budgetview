@@ -104,7 +104,7 @@ public class StackChecker extends ViewChecker {
 
   private StackChart getChart() {
     if (panel == null) {
-      views.selectEvolution();
+      views.selectAnalysis();
       panel = mainWindow.getPanel(containerName).getPanel(name);
     }
     return (StackChart)panel.getAwtComponent();

@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.series.evolution;
+package org.designup.picsou.gui.series.analysis;
 
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.splits.painters.Painter;
@@ -7,12 +7,12 @@ import org.globsframework.model.Glob;
 
 import java.awt.*;
 
-public class SeriesEvolutionBackgroundPainter implements CellPainter, Paintable {
-  private SeriesEvolutionColors seriesEvolutionColors;
+public class SeriesChartsBackgroundPainter implements CellPainter, Paintable {
+  private SeriesChartsColors seriesChartsColors;
   private Painter painter;
 
-  public SeriesEvolutionBackgroundPainter(SeriesEvolutionColors seriesEvolutionColors) {
-    this.seriesEvolutionColors = seriesEvolutionColors;
+  public SeriesChartsBackgroundPainter(SeriesChartsColors seriesChartsColors) {
+    this.seriesChartsColors = seriesChartsColors;
   }
 
   public void setPainter(Painter painter) {
@@ -23,7 +23,7 @@ public class SeriesEvolutionBackgroundPainter implements CellPainter, Paintable 
                     int row, int column,
                     boolean isSelected, boolean hasFocus,
                     int width, int height) {
-    seriesEvolutionColors.setColors(seriesWrapper, row, -1, -1, isSelected, null, this);
+    seriesChartsColors.setColors(seriesWrapper, row, -1, -1, isSelected, null, this);
     painter.paint(g, width, height);
   }
 }

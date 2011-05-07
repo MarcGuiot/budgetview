@@ -24,8 +24,8 @@ public class ViewSelectionChecker extends GuiChecker {
     select("categorization");
   }
 
-  public void selectEvolution() {
-    select("evolution");
+  public void selectAnalysis() {
+    select("analysis");
   }
 
   public void selectBudget() {

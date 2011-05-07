@@ -1,10 +1,11 @@
-package org.designup.picsou.gui.series.evolution;
+package org.designup.picsou.gui.series.analysis.evolution;
 
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.SeriesEditor;
+import org.designup.picsou.gui.series.analysis.SeriesChartsColors;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.BudgetArea;
@@ -30,7 +31,7 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
 
   protected SeriesEvolutionMonthEditor(int offset, GlobTableView view,
                                        GlobRepository repository, Directory directory,
-                                       SeriesEvolutionColors colors) {
+                                       SeriesChartsColors colors) {
     super(offset, view, directory.get(DescriptionService.class), repository, directory, colors);
 
     complete(new OpenSeriesAmountEditionDialogAction(directory));

@@ -4,25 +4,25 @@
   <styles>
     <style selector="panel.chart" margin="15" marginTop="10" opaque="true"/>
     <style selector="label.chartLabel" fill="horizontal" horizontalAlignment="center" weightY="0" marginTop="10"
-           font="-,plain,12" foreground="seriesEvolution.chart.label" opaque="false"/>
+           font="-,plain,12" foreground="seriesAnalysis.chart.label" opaque="false"/>
   </styles>
 
   <column styleClass="main">
 
-    <label text="$seriesEvolution.title" styleClass="blockTitle" marginTop="5"/>
+    <label text="$seriesAnalysis.title" styleClass="blockTitle" marginTop="5"/>
 
     <panel styleClass="block">
 
       <verticalSplit styleClass="innerBlock">
 
-        <grid weightY="8" opaque="true" background="seriesEvolution.chart.bg" border="line(block.inner.border)">
+        <grid weightY="8" opaque="true" background="seriesAnalysis.chart.bg" border="line(block.inner.border)">
           <label gridPos="(0,0)" ref="balanceChartLabel" weightX="1" styleClass="chartLabel"/>
           <label gridPos="(1,0)" ref="seriesChartLabel" weightX="1" styleClass="chartLabel"/>
           <label gridPos="(2,0)" ref="histoChartLabel" weightX="10" styleClass="chartLabel"/>
           <panel gridPos="(0,1)" ref="balanceChart" weightX="1" styleClass="chart" background="stack.bg"/>
           <panel gridPos="(1,1)" ref="seriesChart" weightX="1" styleClass="chart" background="stack.bg"/>
           <panel gridPos="(2,1)" ref="histoChart" weightX="10" styleClass="chart"
-                 background="seriesEvolution.chart.bg"/>
+                 background="seriesAnalysis.chart.bg"/>
         </grid>
 
         <column styleClass="blockScrollBorder" weightY="3">

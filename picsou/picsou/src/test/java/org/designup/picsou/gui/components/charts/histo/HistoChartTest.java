@@ -38,7 +38,7 @@ public class HistoChartTest extends TestCase {
 
   public void testSelectByDragging() throws Exception {
 
-    HistoLineDataset dataset = new HistoLineDataset("seriesEvolution.chart.histo.series.tooltip");
+    HistoLineDataset dataset = new HistoLineDataset("seriesAnalysis.chart.histo.series.tooltip");
     dataset.add(201005, 5, "5", "", "", false, false, false);
     dataset.add(201006, 6, "6", "", "", false, false, false);
     dataset.add(201007, 7, "7", "", "", false, false, false);
@@ -71,7 +71,7 @@ public class HistoChartTest extends TestCase {
   }
 
   public void testWithDiscontinuousMonths() throws Exception {
-    HistoLineDataset dataset = new HistoLineDataset("seriesEvolution.chart.histo.series.tooltip");
+    HistoLineDataset dataset = new HistoLineDataset("seriesAnalysis.chart.histo.series.tooltip");
     dataset.add(201005, 5, "5", "", "", false, false, false);
     dataset.add(201007, 7, "7", "", "", false, false, false);
     dataset.add(201009, 9, "9", "", "", false, false, false);

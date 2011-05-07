@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.series.evolution;
+package org.designup.picsou.gui.series.analysis;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.actions.SelectNextMonthAction;
@@ -6,7 +6,8 @@ import org.designup.picsou.gui.actions.SelectPreviousMonthAction;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.expansion.*;
 import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.gui.series.SeriesEditor;
+import org.designup.picsou.gui.series.analysis.evolution.SeriesEvolutionLabelColumn;
+import org.designup.picsou.gui.series.analysis.evolution.SeriesEvolutionMonthColumn;
 import org.designup.picsou.gui.series.view.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Month;
@@ -40,7 +41,7 @@ import java.util.SortedSet;
 
 import static org.globsframework.utils.Utils.intRange;
 
-public class SeriesEvolutionView extends View {
+public class SeriesAnalysisView extends View {
 
   public static final int LABEL_COLUMN_INDEX = 1;
   public int monthColumnsCount = 12;
@@ -49,14 +50,14 @@ public class SeriesEvolutionView extends View {
   private SelectionService parentSelectionService;
   private GlobTableView tableView;
   private JTable table;
-  private SeriesEvolutionChartPanel chartPanel;
+  private SeriesChartsPanel chartPanel;
   private List<SeriesEvolutionMonthColumn> monthColumns = new ArrayList<SeriesEvolutionMonthColumn>();
   private Integer referenceMonthId;
-  private SeriesEvolutionColors seriesEvolutionColors;
+  private SeriesChartsColors seriesChartsColors;
   private Gui.RolloverMouseMotionListener rolloverMouseMotionListener;
   private SeriesEvolutionLabelColumn seriesEvolutionLabelColumn;
 
-  public SeriesEvolutionView(GlobRepository repository, Directory directory) {
+  public SeriesAnalysisView(GlobRepository repository, Directory directory) {
     super(repository, createLocalDirectory(directory));
     this.parentDirectory = directory;
     this.parentSelectionService = directory.get(SelectionService.class);
@@ -70,11 +71,11 @@ public class SeriesEvolutionView extends View {
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
-    parentBuilder.add("seriesEvolutionView", createLocalPanel());
+    parentBuilder.add("seriesAnalysisView", createLocalPanel());
   }
 
   private GlobsPanelBuilder createLocalPanel() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/evolution/seriesEvolutionView.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/analysis/seriesAnalysisView.splits",
                                                       repository, directory);
 
     ExpandableTable tableAdapter = new ExpandableTable(new SeriesWrapperMatcher()) {
@@ -104,8 +105,8 @@ public class SeriesEvolutionView extends View {
       }
     });
 
-    seriesEvolutionColors = new SeriesEvolutionColors(repository, directory);
-    CellPainter backgroundPainter = new SeriesEvolutionBackgroundPainter(seriesEvolutionColors);
+    seriesChartsColors = new SeriesChartsColors(repository, directory);
+    CellPainter backgroundPainter = new SeriesChartsBackgroundPainter(seriesChartsColors);
     TableExpansionColumn expandColumn = new TableExpansionColumn(backgroundPainter);
 
     tableView
@@ -116,12 +117,12 @@ public class SeriesEvolutionView extends View {
     tableView
       .addColumn("", expandColumn, expandColumn, GlobStringifiers.empty(stringifier.getComparator(repository)));
 
-    seriesEvolutionLabelColumn = new SeriesEvolutionLabelColumn(tableView, repository, directory, seriesEvolutionColors);
+    seriesEvolutionLabelColumn = new SeriesEvolutionLabelColumn(tableView, repository, directory, seriesChartsColors);
     tableView.addColumn(seriesEvolutionLabelColumn);
 
     for (int offset = -1; offset < -1 + monthColumnsCount; offset++) {
       SeriesEvolutionMonthColumn monthColumn =
-        new SeriesEvolutionMonthColumn(offset, tableView, repository, directory, seriesEvolutionColors);
+        new SeriesEvolutionMonthColumn(offset, tableView, repository, directory, seriesChartsColors);
       monthColumns.add(monthColumn);
       tableView.addColumn(monthColumn);
     }
@@ -187,7 +188,7 @@ public class SeriesEvolutionView extends View {
     builder.add("previousMonth", new SelectPreviousMonthAction(repository, parentDirectory));
     builder.add("nextMonth", new SelectNextMonthAction(repository, parentDirectory));
 
-    this.chartPanel = new SeriesEvolutionChartPanel(repository, directory, parentSelectionService);
+    this.chartPanel = new SeriesChartsPanel(repository, directory, parentSelectionService);
     this.chartPanel.registerCharts(builder);
 
     return builder;
@@ -211,7 +212,7 @@ public class SeriesEvolutionView extends View {
     else if (free > lastColumnSize / 3.) {
       monthColumnsCount++;
       SeriesEvolutionMonthColumn monthColumn =
-        new SeriesEvolutionMonthColumn(monthColumnsCount - 2, tableView, repository, directory, seriesEvolutionColors);
+        new SeriesEvolutionMonthColumn(monthColumnsCount - 2, tableView, repository, directory, seriesChartsColors);
       monthColumns.add(monthColumn);
       tableView.addColumn(monthColumn);
       rolloverMouseMotionListener.addColumn(monthColumnsCount + 1);
@@ -260,7 +261,7 @@ public class SeriesEvolutionView extends View {
 
       for (int offset = -1; offset < -1 + monthColumnsCount; offset++) {
         int monthId = Month.offset(referenceMonthId, offset);
-        Glob seriesStat = SeriesEvolutionView.this.repository.find(Key.create(SeriesStat.SERIES, wrapper.get(SeriesWrapper.ITEM_ID),
+        Glob seriesStat = SeriesAnalysisView.this.repository.find(Key.create(SeriesStat.SERIES, wrapper.get(SeriesWrapper.ITEM_ID),
                                                                               SeriesStat.MONTH, monthId));
         if ((seriesStat != null) &&
             (Amounts.isNotZero(seriesStat.get(SeriesStat.PLANNED_AMOUNT))

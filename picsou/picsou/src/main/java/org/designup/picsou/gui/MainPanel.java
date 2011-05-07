@@ -27,7 +27,7 @@ import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.SeriesEditor;
-import org.designup.picsou.gui.series.evolution.SeriesEvolutionView;
+import org.designup.picsou.gui.series.analysis.SeriesAnalysisView;
 import org.designup.picsou.gui.signpost.SignpostView;
 import org.designup.picsou.gui.startup.LogoutService;
 import org.designup.picsou.gui.startup.OpenRequestManager;
@@ -59,7 +59,6 @@ import org.globsframework.model.Key;
 import org.globsframework.model.utils.ReplicationGlobRepository;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.logging.HtmlTracker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -91,7 +90,7 @@ public class MainPanel {
   private TimeView timeView;
   private CardView cardView;
   private TransactionView transactionView;
-  private SeriesEvolutionView seriesEvolutionView;
+  private SeriesAnalysisView seriesAnalysisView;
   private CategorizationView categorizationView;
   private SignpostView signpostView;
 
@@ -155,7 +154,7 @@ public class MainPanel {
 
     cardView = new CardView(repository, directory, categorizationView.getGotoBudgetSignpost());
     NotesView notesView = new NotesView(repository, directory);
-    seriesEvolutionView = new SeriesEvolutionView(repository, directory);
+    seriesAnalysisView = new SeriesAnalysisView(repository, directory);
     signpostView = new SignpostView(repository, directory);
     createPanel(
       titleView,
@@ -166,7 +165,7 @@ public class MainPanel {
       categorizationView,
       cardView,
       new BudgetView(replicationGlobRepository, directory),
-      seriesEvolutionView,
+      seriesAnalysisView,
       new SavingsView(replicationGlobRepository, directory),
       new NavigationView(repository, directory),
       new SummaryView(repository, directory),
@@ -213,7 +212,7 @@ public class MainPanel {
     signpostView.reset();
 
     windowManager.setPanel(panel);
-    seriesEvolutionView.reset();
+    seriesAnalysisView.reset();
     timeView.selectCurrentMonth();
     selectLastMonthWithATransaction(repository, directory);
     timeView.centerToSelected();

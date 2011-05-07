@@ -342,8 +342,8 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     changeUser("testSeriesEvolutionAfterRestore", "testSeriesEvolutionAfterRestore");
     operations.restoreWithNewPassword(path, "password");
 
-    views.selectEvolution();
-    seriesEvolution.checkRow("Salaire", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00");
+    views.selectAnalysis();
+    seriesAnalysis.checkRow("Salaire", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00");
     operations.checkDataIsOk();
   }
 }

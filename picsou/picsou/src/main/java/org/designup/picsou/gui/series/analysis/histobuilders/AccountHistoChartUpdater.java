@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.series.evolution.histobuilders;
+package org.designup.picsou.gui.series.analysis.histobuilders;
 
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;

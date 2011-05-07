@@ -170,8 +170,8 @@
           <panel ref="budgetView"/>
         </card>
 
-        <card name="evolution">
-          <panel ref="seriesEvolutionView"/>
+        <card name="analysis">
+          <panel ref="seriesAnalysisView"/>
         </card>
 
         <card name="savings">

@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.series.evolution;
+package org.designup.picsou.gui.series.analysis;
 
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
@@ -9,8 +9,8 @@ import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartBuilder;
-import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartRange;
+import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
+import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartRange;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.*;
@@ -22,9 +22,8 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
-import org.globsframework.model.utils.GlobUtils;
+
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -32,7 +31,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
-public class SeriesEvolutionChartPanel implements GlobSelectionListener {
+public class SeriesChartsPanel implements GlobSelectionListener {
 
   private GlobRepository repository;
   private Directory directory;
@@ -53,9 +52,9 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
   private StackChartColors expensesStackColors;
   private SelectionService selectionService;
 
-  public SeriesEvolutionChartPanel(final GlobRepository repository,
-                                   Directory directory,
-                                   final SelectionService parentSelectionService) {
+  public SeriesChartsPanel(final GlobRepository repository,
+                           Directory directory,
+                           final SelectionService parentSelectionService) {
     this.repository = repository;
     this.directory = directory;
     this.selectionService = directory.get(SelectionService.class);
@@ -278,7 +277,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
 
     StackChartDataset dataset = new StackChartDataset();
     if (uncategorized > 0.01) {
-      dataset.add(Lang.get("seriesEvolution.chart.balance.uncategorized.tocategorize"),
+      dataset.add(Lang.get("seriesAnalysis.chart.balance.uncategorized.tocategorize"),
                   uncategorized, null, false);
     }
 
@@ -290,7 +289,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
         categorized += Math.abs(seriesStat.get(SeriesStat.AMOUNT, 0.));
       }
     }
-    dataset.add(Lang.get("seriesEvolution.chart.balance.uncategorized.categorized"),
+    dataset.add(Lang.get("seriesAnalysis.chart.balance.uncategorized.categorized"),
                 categorized, null, false);
 
     balanceChart.update(dataset, expensesStackColors);
@@ -362,13 +361,11 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
   }
 
   private void updateSavingsBalanceStack(double savingsIn, double savingsOut) {
-    Glob budgetStat = SavingsBudgetStat.findSummary(selectedMonthId, repository);
-
     StackChartDataset incomeDataset = new StackChartDataset();
-    incomeDataset.add(Lang.get("seriesEvolution.chart.balance.savingsIn"), savingsIn, null);
+    incomeDataset.add(Lang.get("seriesAnalysis.chart.balance.savingsIn"), savingsIn, null);
 
     StackChartDataset expensesDataset = new StackChartDataset();
-    expensesDataset.add(Lang.get("seriesEvolution.chart.balance.savingsOut"), savingsOut, null);
+    expensesDataset.add(Lang.get("seriesAnalysis.chart.balance.savingsOut"), savingsOut, null);
 
     balanceChart.update(incomeDataset, expensesDataset, balanceStackColors);
     updateBalanceLabel("savingsBalance");
@@ -388,7 +385,7 @@ public class SeriesEvolutionChartPanel implements GlobSelectionListener {
   }
 
   private void updateLabel(JLabel label, String messageKey, String... args) {
-    label.setText(Lang.get("seriesEvolution." + messageKey, args));
+    label.setText(Lang.get("seriesAnalysis." + messageKey, args));
   }
 
   private Action createSelectionAction(final BudgetArea budgetArea) {

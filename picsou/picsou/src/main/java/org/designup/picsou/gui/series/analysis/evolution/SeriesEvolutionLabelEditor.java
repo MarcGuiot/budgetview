@@ -1,7 +1,8 @@
-package org.designup.picsou.gui.series.evolution;
+package org.designup.picsou.gui.series.analysis.evolution;
 
 import org.designup.picsou.gui.description.SeriesWrapperDescriptionStringifier;
 import org.designup.picsou.gui.series.SeriesEditor;
+import org.designup.picsou.gui.series.analysis.SeriesChartsColors;
 import org.designup.picsou.gui.series.view.SeriesWrapperStringifier;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
@@ -22,7 +23,7 @@ public class SeriesEvolutionLabelEditor extends SeriesEvolutionEditor {
   protected SeriesEvolutionLabelEditor(GlobTableView view,
                                        GlobRepository repository,
                                        Directory directory,
-                                       SeriesEvolutionColors colors) {
+                                       SeriesChartsColors colors) {
     super(-1, view, directory.get(DescriptionService.class), repository, directory, colors);
 
     this.stringifier = new SeriesWrapperStringifier(repository, directory);

@@ -4,17 +4,12 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
 import org.designup.picsou.gui.accounts.chart.SavingsAccountsBalanceChartView;
 import org.designup.picsou.gui.accounts.chart.SavingsAccountsChartView;
-import org.designup.picsou.gui.card.utils.GotoCardAction;
 import org.designup.picsou.gui.help.actions.HelpAction;
-import org.designup.picsou.gui.model.Card;
-import org.designup.picsou.gui.series.evolution.histobuilders.HistoChartRange;
-import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartRange;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
-
-import javax.swing.*;
 
 public class SummaryView extends View {
 
