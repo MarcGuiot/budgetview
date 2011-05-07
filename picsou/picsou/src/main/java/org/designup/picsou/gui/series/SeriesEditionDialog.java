@@ -34,7 +34,6 @@ import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
-import javax.sql.rowset.serial.SerialArray;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -145,7 +144,7 @@ public class SeriesEditionDialog {
     localDirectory.add(selectionService);
 
     dialog = PicsouDialog.create(parent, directory);
-    dialog.addOnWindowClosedAction(new SetSignpostStatusAction(SignpostStatus.SERIES_PERIODICITY_CLOSED,
+    dialog.addOnWindowClosedAction(new SetSignpostStatusAction(SignpostStatus.SERIES_PERIODICITY_DONE,
                                                                SignpostStatus.SERIES_PERIODICITY_SHOWN,
                                                                repository));
 

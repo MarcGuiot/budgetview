@@ -3,7 +3,6 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.checkers.CategorizationGaugeChecker;
-import org.globsframework.utils.TestUtils;
 
 public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
@@ -61,7 +60,7 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
 
     categorization.setVariable("SAPN", "Leisures");
     gauge.checkHidden();
-    categorization.checkCompleteProgressMessageShown();
+    categorization.checkGotoBudgetSignpostShown();
   }
 
   public void testIgnoresPlannedTransactions() throws Exception {
@@ -93,6 +92,6 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("WorldCo", "Income");
 
     categorization.getCompletionGauge().checkHidden();
-    categorization.checkCompleteProgressMessageShown();
+    categorization.checkGotoBudgetSignpostShown();
   }
 }

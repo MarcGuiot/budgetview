@@ -10,8 +10,8 @@ import org.globsframework.utils.directory.Directory;
 public class CategorizationAreaSignpost extends SimpleSignpost {
   public CategorizationAreaSignpost(GlobRepository repository, Directory directory) {
     super(Lang.get("signpost.categorizationAreaSelection"),
-          SignpostStatus.CATEGORIZATION_AREA_SHOWN,
-          SignpostStatus.CATEGORIZATION_SELECTION_SHOWN,
+          SignpostStatus.CATEGORIZATION_AREA_SELECTION_DONE,
+          SignpostStatus.CATEGORIZATION_SELECTION_DONE,
           repository, directory);
     setLocation(BalloonTip.Orientation.RIGHT_ABOVE, BalloonTip.AttachLocation.NORTH);
   }

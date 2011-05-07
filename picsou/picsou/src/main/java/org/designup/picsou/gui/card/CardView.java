@@ -8,6 +8,7 @@ import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.signpost.guides.GotoCategorizationSignpost;
 import org.designup.picsou.gui.signpost.guides.GotoDataSignpost;
+import org.designup.picsou.gui.signpost.guides.SkipAndGotoBudgetSignpost;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
@@ -61,6 +62,8 @@ public class CardView extends View implements GlobSelectionListener {
 
       if (card.equals(Card.BUDGET)) {
         categorizationCompletionSignpost.attach(toggle);
+        Signpost signpost = new SkipAndGotoBudgetSignpost(repository, directory);
+        signpost.attach(toggle);
       }
       else if (card.equals(Card.DATA)) {
         Signpost signpost = new GotoDataSignpost(repository, directory);

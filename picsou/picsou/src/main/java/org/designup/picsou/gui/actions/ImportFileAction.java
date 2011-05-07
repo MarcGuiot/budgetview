@@ -94,7 +94,7 @@ public class ImportFileAction extends AbstractAction {
 
     public void run() {
       if (dialog != null) {
-        SignpostStatus.setCompleted(SignpostStatus.IMPORT_SHOWN, repository);
+        SignpostStatus.setCompleted(SignpostStatus.IMPORT_DONE, repository);
         dialog.show();
       }
       else {

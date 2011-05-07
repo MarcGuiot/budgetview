@@ -24,7 +24,7 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
   private JTable table;
 
   public FirstCategorizationDoneSignpost(GlobRepository repository, Directory directory) {
-    super(SignpostStatus.FIRST_CATEGORIZATION_DONE_SHOWN, repository, directory);
+    super(SignpostStatus.FIRST_CATEGORIZATION_DONE, repository, directory);
   }
 
   protected void init() {
@@ -60,7 +60,7 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
   }
 
   protected void update() {
-    if (SignpostStatus.isCompleted(SignpostStatus.CATEGORIZATION_AREA_SHOWN, repository)) {
+    if (SignpostStatus.isCompleted(SignpostStatus.CATEGORIZATION_AREA_SELECTION_DONE, repository)) {
       if (canShow()) {
         show(Lang.get("signpost.firstCategorizationDone"));
       }
@@ -90,7 +90,7 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
 
   public void selectionUpdated(GlobSelection selection) {
     if (!isCompleted() && operationCategorized && !selection.getAll(Transaction.TYPE).isEmpty()) {
-      SignpostStatus.setCompleted(SignpostStatus.FIRST_CATEGORIZATION_DONE_SHOWN, repository);
+      SignpostStatus.setCompleted(SignpostStatus.FIRST_CATEGORIZATION_DONE, repository);
       update();
     }
   }

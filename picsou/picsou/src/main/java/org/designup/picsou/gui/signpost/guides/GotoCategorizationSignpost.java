@@ -2,7 +2,6 @@ package org.designup.picsou.gui.signpost.guides;
 
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.signpost.Signpost;
-import org.designup.picsou.gui.signpost.SimpleSignpost;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -20,7 +19,7 @@ import java.util.Set;
 
 public class GotoCategorizationSignpost extends Signpost implements GlobSelectionListener, ChangeSetListener {
   public GotoCategorizationSignpost(GlobRepository repository, Directory directory) {
-    super(SignpostStatus.GOTO_CATEGORIZATION_SHOWN, repository, directory);
+    super(SignpostStatus.GOTO_CATEGORIZATION_DONE, repository, directory);
   }
 
   protected void init() {

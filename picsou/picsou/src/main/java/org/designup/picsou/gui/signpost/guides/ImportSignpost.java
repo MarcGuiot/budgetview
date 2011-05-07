@@ -15,7 +15,7 @@ import java.util.Set;
 public class ImportSignpost extends Signpost implements ChangeSetListener {
 
   public ImportSignpost(GlobRepository repository, Directory directory) {
-    super(SignpostStatus.IMPORT_SHOWN, repository, directory);
+    super(SignpostStatus.IMPORT_DONE, repository, directory);
   }
 
   protected void init() {
@@ -36,11 +36,11 @@ public class ImportSignpost extends Signpost implements ChangeSetListener {
   }
 
   private void update() {
-    if (!SignpostStatus.isCompleted(SignpostStatus.GOTO_DATA_SHOWN, repository)) {
+    if (!SignpostStatus.isCompleted(SignpostStatus.GOTO_DATA_DONE, repository)) {
       return;
     }
 
-    if (SignpostStatus.isCompleted(SignpostStatus.IMPORT_SHOWN, repository)) {
+    if (SignpostStatus.isCompleted(SignpostStatus.IMPORT_DONE, repository)) {
       dispose();
       return;
     }

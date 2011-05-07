@@ -23,7 +23,7 @@ public class CategorizationSelectionSignpost extends Signpost {
   private TypeChangeSetListener changeSetListener;
 
   public CategorizationSelectionSignpost(GlobRepository repository, Directory directory) {
-    super(SignpostStatus.CATEGORIZATION_SELECTION_SHOWN, repository, directory);
+    super(SignpostStatus.CATEGORIZATION_SELECTION_DONE, repository, directory);
     this.selectionListener = new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         update();
@@ -60,7 +60,7 @@ public class CategorizationSelectionSignpost extends Signpost {
   }
 
   public void update() {
-    if (!SignpostStatus.isCompleted(SignpostStatus.GOTO_CATEGORIZATION_SHOWN, repository)) {
+    if (!SignpostStatus.isCompleted(SignpostStatus.GOTO_CATEGORIZATION_DONE, repository)) {
       return;
     }
 

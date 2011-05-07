@@ -12,13 +12,13 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobSelection;
 
-public class CategorizationCompletionSignpost extends Signpost implements Updatable {
+public class GotoBudgetSignpost extends Signpost implements Updatable {
   private CategorizationLevel categorizationLevel;
 
-  public CategorizationCompletionSignpost(CategorizationLevel categorizationLevel,
-                                          GlobRepository repository,
-                                          Directory directory) {
-    super(SignpostStatus.CATEGORIZATION_COMPLETION_SHOWN, repository, directory);
+  public GotoBudgetSignpost(CategorizationLevel categorizationLevel,
+                            GlobRepository repository,
+                            Directory directory) {
+    super(SignpostStatus.GOTO_BUDGET_DONE, repository, directory);
     this.categorizationLevel = categorizationLevel;
   }
 
@@ -40,11 +40,6 @@ public class CategorizationCompletionSignpost extends Signpost implements Updata
     }, Card.TYPE);
   }
 
-  protected void show(String text) {
-    SignpostStatus.setCompleted(SignpostStatus.CATEGORIZATION_COMPLETION_SHOWING, repository);
-    super.show(text);
-  }
-
   public void update() {
     double total = categorizationLevel.getTotal();
     double percentage = categorizationLevel.getPercentage();
@@ -61,5 +56,10 @@ public class CategorizationCompletionSignpost extends Signpost implements Updata
     else if (isShowing()) {
       dispose();
     }
+  }
+
+  protected void show(String text) {
+    SignpostStatus.setCompleted(SignpostStatus.GOTO_BUDGET_SHOWN, repository);
+    super.show(text);
   }
 }

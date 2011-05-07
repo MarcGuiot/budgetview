@@ -1,0 +1,19 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <ui name="newVersionPanelUI" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="categorization.skipPanel.top" bottomColor="categorization.skipPanel.bottom"
+        borderColor="categorization.skipPanel.border" borderWidth="1" cornerRadius="10"/>
+    <style selector=".highlightedPanel" ui="newVersionPanelUI" marginTop="10" opaque="true"/>
+
+  </styles>
+
+  <panel opaque="false">
+    <panel styleClass="highlightedPanel">
+      <htmlEditorPane name="skipCategorizationMessage" text="$signpost.skipCategorization" margin="10"
+                      foreground="categorization.skipPanel.text" hyperlinkListener="hyperlinkHandler"/>
+    </panel>
+  </panel>
+
+</splits>

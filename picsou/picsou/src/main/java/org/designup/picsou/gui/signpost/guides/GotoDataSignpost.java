@@ -13,7 +13,7 @@ import org.globsframework.utils.directory.Directory;
 
 public class GotoDataSignpost extends SimpleSignpost implements GlobSelectionListener {
   public GotoDataSignpost(GlobRepository repository, Directory directory) {
-    super(Lang.get("signpost.gotoData"), SignpostStatus.GOTO_DATA_SHOWN, SignpostStatus.WELCOME_SHOWN, repository, directory);
+    super(Lang.get("signpost.gotoData"), SignpostStatus.GOTO_DATA_DONE, SignpostStatus.WELCOME_SHOWN, repository, directory);
   }
 
   protected void init() {

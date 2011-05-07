@@ -48,12 +48,17 @@
                      foreground="gauge.categorization.label" marginRight="5"/>
               <comboBox ref="transactionFilterCombo"/>
             </row>
+
             <scrollPane viewportBackground="#FFFFFF" marginBottom="0" weightY="100">
               <table ref="transactionsToCategorize" rowHeight="20"/>
             </scrollPane>
+
             <row border="empty(5)" autoHideSource="customFilterMessage">
               <panel ref="customFilterMessage" fill="none" anchor="center"/>
             </row>
+
+            <panel ref="skipCategorizationPanel"/>
+
             <row>
               <label text="$transactionCreation.title" styleClass="separatorTitle" marginTop="15"
                      autoHideSource="transactionCreation"/>

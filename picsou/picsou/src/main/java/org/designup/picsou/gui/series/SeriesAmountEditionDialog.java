@@ -65,7 +65,7 @@ public class SeriesAmountEditionDialog {
     editionPanel.setOkAction(okAction);
     dialog.addPanelWithButtons(builder.<JPanel>load(), okAction, new CancelAction());
     dialog.setAutoFocusOnOpen(editionPanel.getFocusComponent());
-    dialog.addOnWindowClosedAction(new SetSignpostStatusAction(SignpostStatus.SERIES_AMOUNT_CLOSED,
+    dialog.addOnWindowClosedAction(new SetSignpostStatusAction(SignpostStatus.SERIES_AMOUNT_DONE,
                                                                SignpostStatus.SERIES_AMOUNT_SHOWN,
                                                                parentRepository));
     dialog.pack();

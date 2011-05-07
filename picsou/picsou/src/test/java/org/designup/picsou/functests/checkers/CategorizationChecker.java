@@ -752,6 +752,24 @@ public class CategorizationChecker extends ViewChecker {
     return this;
   }
 
+  public CategorizationChecker checkSkipMessageHidden() {
+    checkComponentVisible(getPanel(), JPanel.class, "skipCategorizationPanel", false);
+    return this;
+  }
+
+  public CategorizationChecker checkSkipMessageDisplayed() {
+    checkComponentVisible(getPanel(), JPanel.class, "skipCategorizationPanel", true);
+    return this;
+  }
+
+  public CategorizationChecker skipAndCloseSignpostDialog() {
+    TextBox message = getPanel().getPanel("skipCategorizationPanel").getTextBox("skipCategorizationMessage");
+    SignpostDialogChecker
+      .open(message.triggerClickOnHyperlink("click"))
+      .close();
+    return this;
+  }
+
   public void checkTableBackground(String... colors) {
     Table table = getTable();
     assertThat(table.rowCountEquals(colors.length));
@@ -808,9 +826,14 @@ public class CategorizationChecker extends ViewChecker {
                          "Categorization is quasi complete. You can now see the Budget page.");
   }
 
-  public void checkCompleteProgressMessageShown() {
+  public void checkGotoBudgetSignpostShown() {
     checkSignpostVisible(mainWindow, getBudgetToggle(),
                          "Categorization is completed. You can now see the Budget page.");
+  }
+
+  public void checkSkipAndGotoBudgetSignpostShown() {
+    checkSignpostVisible(mainWindow, getBudgetToggle(),
+                         "Go to the Budget page to continue.");
   }
 
   private ToggleButton getBudgetToggle() {

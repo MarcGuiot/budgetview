@@ -59,6 +59,7 @@ import org.globsframework.model.Key;
 import org.globsframework.model.utils.ReplicationGlobRepository;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.logging.HtmlTracker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -152,7 +153,7 @@ public class MainPanel {
 
     PeriodSeriesStatUpdater.init(replicationGlobRepository, directory);
 
-    cardView = new CardView(repository, directory, categorizationView.getCompletionSignpost());
+    cardView = new CardView(repository, directory, categorizationView.getGotoBudgetSignpost());
     NotesView notesView = new NotesView(repository, directory);
     seriesEvolutionView = new SeriesEvolutionView(repository, directory);
     signpostView = new SignpostView(repository, directory);

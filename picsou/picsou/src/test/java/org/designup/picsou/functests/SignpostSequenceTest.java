@@ -80,7 +80,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     checkNoSignpostVisible();
     categorization.setVariable("auchan", "Groceries");
     categorization.setVariable("Chausse", "Clothing");
-    categorization.checkCompleteProgressMessageShown();
+    categorization.checkGotoBudgetSignpostShown();
 
     // === Editing series amounts in SeriesEvolution does not remove budget view signpost ===
 
@@ -129,6 +129,87 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     checkNoSignpostVisible();
+    signpostView.checkSummaryViewShown();
+
+    views.selectBudget();
+    checkNoSignpostVisible();
+
+    views.selectCategorization();
+    checkNoSignpostVisible();
+  }
+
+  public void testSkipCategorization() throws Exception {
+    views.selectData();
+    importPanel.checkImportSignpostDisplayed("Click here to import your operations");
+    importPanel.openImport().close();
+    checkNoSignpostVisible();
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2010/05/27", -100, "rent")
+      .addTransaction("2010/05/28", +500, "income")
+      .addTransaction("2010/05/29", -100, "auchan")
+      .addTransaction("2010/05/29", -100, "auchan")
+      .addTransaction("2010/05/29", -100, "shoes")
+      .load();
+
+    // === Categorization selection ===
+
+    views.checkDataSelected();
+    views.checkCategorizationSignpostVisible("Categorization");
+    categorization.selectTableRow(0);
+    categorization.checkAreaSelectionSignpostDisplayed("Select the budget area for this operation");
+    categorization.selectVariable();
+    checkNoSignpostVisible();
+
+    categorization.checkSkipMessageHidden();
+
+    // === Categorization ===
+
+    categorization.setNewRecurring("rent", "Rent"); // SED shown
+    categorization.checkFirstCategorizationSignpostDisplayed("The operation is categorized, continue");
+
+    categorization.selectTransaction("auchan");
+    categorization.checkSkipMessageDisplayed();
+
+    categorization.setVariable("auchan", "Groceries");
+
+    // === Skip ===
+
+    categorization.skipAndCloseSignpostDialog();
+    categorization.checkSkipAndGotoBudgetSignpostShown();
+
+    // === Series amounts ===
+
+    views.selectBudget();
+    budgetView.variable.checkAmountSignpostDisplayed(
+      "Groceries", "Click on the planned amounts to set your own values");
+
+    SeriesAmountEditionDialogChecker amountDialog = budgetView.variable.editPlannedAmount("Groceries");
+    checkNoSignpostVisible();
+    amountDialog.cancel();
+
+    // === Series periodicity ===
+
+    budgetView.recurring.checkNameSignpostDisplayed(
+      "Electricity",
+      "Click on the envelope names to change their periodicity " +
+      "(for instance once every two months)");
+
+    SeriesEditionDialogChecker editionDialog = budgetView.recurring.editSeries("Electricity");
+    checkNoSignpostVisible();
+    editionDialog.cancel();
+
+    checkNoSignpostVisible();
+
+    signpostView.checkSignpostViewShown();
+    views.selectBudget();
+    SignpostDialogChecker
+      .open(
+        budgetView.variable.editPlannedAmount("Groceries").setAmount(10.00).triggerValidate())
+      .close();
+
+    views.checkHomeSelected();
     signpostView.checkSummaryViewShown();
 
     views.selectBudget();

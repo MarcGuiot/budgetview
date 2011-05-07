@@ -31,18 +31,19 @@ public class SignpostStatus {
   public static IntegerField ID;
 
   public static BooleanField WELCOME_SHOWN;
-  public static BooleanField GOTO_DATA_SHOWN;
-  public static BooleanField IMPORT_SHOWN;
-  public static BooleanField GOTO_CATEGORIZATION_SHOWN;
-  public static BooleanField CATEGORIZATION_SELECTION_SHOWN;
-  public static BooleanField CATEGORIZATION_AREA_SHOWN;
-  public static BooleanField FIRST_CATEGORIZATION_DONE_SHOWN;
-  public static BooleanField CATEGORIZATION_COMPLETION_SHOWING;
-  public static BooleanField CATEGORIZATION_COMPLETION_SHOWN;
+  public static BooleanField GOTO_DATA_DONE;
+  public static BooleanField IMPORT_DONE;
+  public static BooleanField GOTO_CATEGORIZATION_DONE;
+  public static BooleanField CATEGORIZATION_SELECTION_DONE;
+  public static BooleanField CATEGORIZATION_AREA_SELECTION_DONE;
+  public static BooleanField FIRST_CATEGORIZATION_DONE;
+  public static BooleanField CATEGORIZATION_SKIPPED;
+  public static BooleanField GOTO_BUDGET_SHOWN;
+  public static BooleanField GOTO_BUDGET_DONE;
   public static BooleanField SERIES_PERIODICITY_SHOWN;
-  public static BooleanField SERIES_PERIODICITY_CLOSED;
+  public static BooleanField SERIES_PERIODICITY_DONE;
   public static BooleanField SERIES_AMOUNT_SHOWN;
-  public static BooleanField SERIES_AMOUNT_CLOSED;
+  public static BooleanField SERIES_AMOUNT_DONE;
 
   @Target(SignpostSectionType.class)
   @DefaultInteger(0)
@@ -144,11 +145,14 @@ public class SignpostStatus {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 4;
+      return 5;
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 4) {
+      if (version == 5) {
+        deserializeDataV5(fieldSetter, data);
+      }
+      else if (version == 4) {
         deserializeDataV4(fieldSetter, data);
       }
       else if (version == 3) {
@@ -165,82 +169,104 @@ public class SignpostStatus {
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
-      outputStream.writeBoolean(values.get(IMPORT_SHOWN));
+      outputStream.writeBoolean(values.get(IMPORT_DONE));
       outputStream.writeBoolean(values.get(WELCOME_SHOWN));
-      outputStream.writeBoolean(values.get(GOTO_DATA_SHOWN));
-      outputStream.writeBoolean(values.get(GOTO_CATEGORIZATION_SHOWN));
-      outputStream.writeBoolean(values.get(CATEGORIZATION_SELECTION_SHOWN));
-      outputStream.writeBoolean(values.get(CATEGORIZATION_AREA_SHOWN));
-      outputStream.writeBoolean(values.get(CATEGORIZATION_COMPLETION_SHOWING));
-      outputStream.writeBoolean(values.get(CATEGORIZATION_COMPLETION_SHOWN));
+      outputStream.writeBoolean(values.get(GOTO_DATA_DONE));
+      outputStream.writeBoolean(values.get(GOTO_CATEGORIZATION_DONE));
+      outputStream.writeBoolean(values.get(CATEGORIZATION_SELECTION_DONE));
+      outputStream.writeBoolean(values.get(CATEGORIZATION_AREA_SELECTION_DONE));
+      outputStream.writeBoolean(values.get(GOTO_BUDGET_SHOWN));
+      outputStream.writeBoolean(values.get(GOTO_BUDGET_DONE));
       outputStream.writeBoolean(values.get(SERIES_PERIODICITY_SHOWN));
-      outputStream.writeBoolean(values.get(SERIES_PERIODICITY_CLOSED));
+      outputStream.writeBoolean(values.get(SERIES_PERIODICITY_DONE));
       outputStream.writeBoolean(values.get(SERIES_AMOUNT_SHOWN));
-      outputStream.writeBoolean(values.get(SERIES_AMOUNT_CLOSED));
+      outputStream.writeBoolean(values.get(SERIES_AMOUNT_DONE));
       outputStream.writeInteger(values.get(AMOUNT_SERIES));
       outputStream.writeInteger(values.get(PERIODICITY_SERIES));
-      outputStream.writeBoolean(values.get(FIRST_CATEGORIZATION_DONE_SHOWN));
+      outputStream.writeBoolean(values.get(FIRST_CATEGORIZATION_DONE));
+      outputStream.writeBoolean(values.get(CATEGORIZATION_SKIPPED));
       outputStream.writeInteger(values.get(CURRENT_SECTION));
       return serializedByteArrayOutput.toByteArray();
     }
 
-    private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
+    private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(IMPORT_SHOWN, input.readBoolean());
+      fieldSetter.set(IMPORT_DONE, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
-      fieldSetter.set(GOTO_DATA_SHOWN, input.readBoolean());
-      fieldSetter.set(GOTO_CATEGORIZATION_SHOWN, input.readBoolean());
-      fieldSetter.set(CATEGORIZATION_SELECTION_SHOWN, input.readBoolean());
-      fieldSetter.set(CATEGORIZATION_AREA_SHOWN, input.readBoolean());
-      fieldSetter.set(CATEGORIZATION_COMPLETION_SHOWING, input.readBoolean());
-      fieldSetter.set(CATEGORIZATION_COMPLETION_SHOWN, input.readBoolean());
+      fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
+      fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
+      fieldSetter.set(GOTO_BUDGET_SHOWN, input.readBoolean());
+      fieldSetter.set(GOTO_BUDGET_DONE, input.readBoolean());
       fieldSetter.set(SERIES_PERIODICITY_SHOWN, input.readBoolean());
-      fieldSetter.set(SERIES_PERIODICITY_CLOSED, input.readBoolean());
+      fieldSetter.set(SERIES_PERIODICITY_DONE, input.readBoolean());
       fieldSetter.set(SERIES_AMOUNT_SHOWN, input.readBoolean());
-      fieldSetter.set(SERIES_AMOUNT_CLOSED, input.readBoolean());
+      fieldSetter.set(SERIES_AMOUNT_DONE, input.readBoolean());
       fieldSetter.set(AMOUNT_SERIES, input.readInteger());
       fieldSetter.set(PERIODICITY_SERIES, input.readInteger());
-      fieldSetter.set(FIRST_CATEGORIZATION_DONE_SHOWN, input.readBoolean());
+      fieldSetter.set(FIRST_CATEGORIZATION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_SKIPPED, input.readBoolean());
+      fieldSetter.set(CURRENT_SECTION, input.readInteger());
+    }
+
+    private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(IMPORT_DONE, input.readBoolean());
+      fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
+      fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
+      fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
+      fieldSetter.set(GOTO_BUDGET_SHOWN, input.readBoolean());
+      fieldSetter.set(GOTO_BUDGET_DONE, input.readBoolean());
+      fieldSetter.set(SERIES_PERIODICITY_SHOWN, input.readBoolean());
+      fieldSetter.set(SERIES_PERIODICITY_DONE, input.readBoolean());
+      fieldSetter.set(SERIES_AMOUNT_SHOWN, input.readBoolean());
+      fieldSetter.set(SERIES_AMOUNT_DONE, input.readBoolean());
+      fieldSetter.set(AMOUNT_SERIES, input.readInteger());
+      fieldSetter.set(PERIODICITY_SERIES, input.readInteger());
+      fieldSetter.set(FIRST_CATEGORIZATION_DONE, input.readBoolean());
       fieldSetter.set(CURRENT_SECTION, input.readInteger());
     }
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(IMPORT_SHOWN, input.readBoolean());
+      fieldSetter.set(IMPORT_DONE, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
-      fieldSetter.set(GOTO_DATA_SHOWN, true);
-      fieldSetter.set(GOTO_CATEGORIZATION_SHOWN, true);
-      fieldSetter.set(CATEGORIZATION_SELECTION_SHOWN, input.readBoolean());
-      fieldSetter.set(CATEGORIZATION_AREA_SHOWN, input.readBoolean());
-      fieldSetter.set(CATEGORIZATION_COMPLETION_SHOWING, true);
-      fieldSetter.set(CATEGORIZATION_COMPLETION_SHOWN, input.readBoolean());
+      fieldSetter.set(GOTO_DATA_DONE, true);
+      fieldSetter.set(GOTO_CATEGORIZATION_DONE, true);
+      fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
+      fieldSetter.set(GOTO_BUDGET_SHOWN, true);
+      fieldSetter.set(GOTO_BUDGET_DONE, input.readBoolean());
       fieldSetter.set(SERIES_PERIODICITY_SHOWN, input.readBoolean());
-      fieldSetter.set(SERIES_PERIODICITY_CLOSED, input.readBoolean());
+      fieldSetter.set(SERIES_PERIODICITY_DONE, input.readBoolean());
       input.readBoolean(); // Skip SERIES_GAUGE_SHOWN
       fieldSetter.set(SERIES_AMOUNT_SHOWN, input.readBoolean());
-      fieldSetter.set(SERIES_AMOUNT_CLOSED, input.readBoolean());
+      fieldSetter.set(SERIES_AMOUNT_DONE, input.readBoolean());
       input.readBoolean(); // Skip END_OF_MONTH_POSITION_SHOWN
       fieldSetter.set(AMOUNT_SERIES, input.readInteger());
       fieldSetter.set(PERIODICITY_SERIES, input.readInteger());
-      fieldSetter.set(FIRST_CATEGORIZATION_DONE_SHOWN, input.readBoolean());
+      fieldSetter.set(FIRST_CATEGORIZATION_DONE, input.readBoolean());
       fieldSetter.set(CURRENT_SECTION, SignpostSectionType.COMPLETED.getId());
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(IMPORT_SHOWN, input.readBoolean());
+      fieldSetter.set(IMPORT_DONE, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
-      fieldSetter.set(GOTO_DATA_SHOWN, true);
-      fieldSetter.set(GOTO_CATEGORIZATION_SHOWN, true);
-      fieldSetter.set(CATEGORIZATION_SELECTION_SHOWN, input.readBoolean());
-      fieldSetter.set(CATEGORIZATION_AREA_SHOWN, input.readBoolean());
-      fieldSetter.set(CATEGORIZATION_COMPLETION_SHOWING, true);
-      fieldSetter.set(CATEGORIZATION_COMPLETION_SHOWN, input.readBoolean());
+      fieldSetter.set(GOTO_DATA_DONE, true);
+      fieldSetter.set(GOTO_CATEGORIZATION_DONE, true);
+      fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
+      fieldSetter.set(GOTO_BUDGET_SHOWN, true);
+      fieldSetter.set(GOTO_BUDGET_DONE, input.readBoolean());
       fieldSetter.set(SERIES_PERIODICITY_SHOWN, input.readBoolean());
-      fieldSetter.set(SERIES_PERIODICITY_CLOSED, input.readBoolean());
+      fieldSetter.set(SERIES_PERIODICITY_DONE, input.readBoolean());
       input.readBoolean(); // Skip SERIES_GAUGE_SHOWN
       fieldSetter.set(SERIES_AMOUNT_SHOWN, input.readBoolean());
-      fieldSetter.set(SERIES_AMOUNT_CLOSED, input.readBoolean());
+      fieldSetter.set(SERIES_AMOUNT_DONE, input.readBoolean());
       input.readBoolean(); // Skip END_OF_MONTH_POSITION_SHOWN
       fieldSetter.set(AMOUNT_SERIES, input.readInteger());
       fieldSetter.set(PERIODICITY_SERIES, input.readInteger());
@@ -249,19 +275,19 @@ public class SignpostStatus {
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(IMPORT_SHOWN, input.readBoolean());
+      fieldSetter.set(IMPORT_DONE, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
-      fieldSetter.set(GOTO_DATA_SHOWN, true);
-      fieldSetter.set(GOTO_CATEGORIZATION_SHOWN, true);
-      fieldSetter.set(CATEGORIZATION_SELECTION_SHOWN, input.readBoolean());
-      fieldSetter.set(CATEGORIZATION_AREA_SHOWN, input.readBoolean());
-      fieldSetter.set(CATEGORIZATION_COMPLETION_SHOWING, true);
-      fieldSetter.set(CATEGORIZATION_COMPLETION_SHOWN, input.readBoolean());
+      fieldSetter.set(GOTO_DATA_DONE, true);
+      fieldSetter.set(GOTO_CATEGORIZATION_DONE, true);
+      fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
+      fieldSetter.set(GOTO_BUDGET_SHOWN, true);
+      fieldSetter.set(GOTO_BUDGET_DONE, input.readBoolean());
       fieldSetter.set(SERIES_PERIODICITY_SHOWN, input.readBoolean());
-      fieldSetter.set(SERIES_PERIODICITY_CLOSED, input.readBoolean());
+      fieldSetter.set(SERIES_PERIODICITY_DONE, input.readBoolean());
       input.readBoolean(); // Skip SERIES_GAUGE_SHOWN
       fieldSetter.set(SERIES_AMOUNT_SHOWN, input.readBoolean());
-      fieldSetter.set(SERIES_AMOUNT_CLOSED, input.readBoolean());
+      fieldSetter.set(SERIES_AMOUNT_DONE, input.readBoolean());
       input.readBoolean(); // Skip END_OF_MONTH_POSITION_SHOWN
       fieldSetter.set(CURRENT_SECTION, SignpostSectionType.COMPLETED.getId());
     }

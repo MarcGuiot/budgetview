@@ -121,7 +121,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
       final JToggleButton toggle = new JToggleButton(new AbstractAction(label) {
         public void actionPerformed(ActionEvent e) {
           if (!BudgetArea.UNCATEGORIZED.equals(budgetArea)) {
-            SignpostStatus.setCompleted(SignpostStatus.CATEGORIZATION_AREA_SHOWN, repository);            
+            SignpostStatus.setCompleted(SignpostStatus.CATEGORIZATION_AREA_SELECTION_DONE, repository);
           }
           select(budgetArea, false);
         }

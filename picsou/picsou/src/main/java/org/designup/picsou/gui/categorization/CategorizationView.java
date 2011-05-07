@@ -20,9 +20,10 @@ import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.signpost.guides.CategorizationAreaSignpost;
-import org.designup.picsou.gui.signpost.guides.CategorizationCompletionSignpost;
+import org.designup.picsou.gui.signpost.guides.GotoBudgetSignpost;
 import org.designup.picsou.gui.signpost.guides.CategorizationSelectionSignpost;
 import org.designup.picsou.gui.signpost.guides.FirstCategorizationDoneSignpost;
+import org.designup.picsou.gui.signpost.sections.SkipCategorizationPanel;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
@@ -116,7 +117,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     categorizationLevel = new CategorizationLevel(repository, directory);
 
-    this.signpost = new CategorizationCompletionSignpost(categorizationLevel, repository, parentDirectory);
+    this.signpost = new GotoBudgetSignpost(categorizationLevel, repository, parentDirectory);
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
@@ -129,7 +130,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
     headerPainter.setFiltered(matcher != GlobMatchers.ALL);
   }
 
-  public Signpost getCompletionSignpost() {
+  public Signpost getGotoBudgetSignpost() {
     return signpost;
   }
 
@@ -213,6 +214,9 @@ public class CategorizationView extends View implements TableView, Filterable, C
         return list.get(0).get(Transaction.LABEL);
       }
     }).setAutoHideIfEmpty(true);
+
+    SkipCategorizationPanel skipPanel = new SkipCategorizationPanel(repository, directory);
+    builder.add("skipCategorizationPanel", skipPanel.getPanel());
 
     TransactionCreationPanel transactionCreation = new TransactionCreationPanel(repository, directory);
     transactionCreation.registerComponents(builder);
