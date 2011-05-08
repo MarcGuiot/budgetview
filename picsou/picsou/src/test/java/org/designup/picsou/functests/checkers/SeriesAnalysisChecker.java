@@ -1,21 +1,22 @@
 package org.designup.picsou.functests.checkers;
 
-import junit.framework.AssertionFailedError;
 import junit.framework.Assert;
+import junit.framework.AssertionFailedError;
 import org.designup.picsou.gui.series.analysis.SeriesAnalysisView;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import org.uispec4j.utils.ColorUtils;
 import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class SeriesAnalysisChecker extends ExpandableTableChecker {
 
@@ -27,12 +28,21 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
 
   private static final String PANEL_NAME = "seriesAnalysisView";
   private int COUNT_COLUMN = 10;
+  private Panel panel;
 
   public SeriesAnalysisChecker(Window mainWindow) {
     super(mainWindow);
     this.histoChart = new HistoChecker(mainWindow, "seriesAnalysisView", "histoChart");
     this.balanceChart = new StackChecker(mainWindow, PANEL_NAME, "balanceChart");
     this.seriesChart = new StackChecker(mainWindow, PANEL_NAME, "seriesChart");
+  }
+
+  public void checkBreadcrumb(String text) {
+    assertThat(getPanel().getTextBox("breadcrumb").textEquals(text));
+  }
+
+  public void clickBreadcrumb(String link) {
+    getPanel().getTextBox("breadcrumb").clickOnHyperlink(link);
   }
 
   public SeriesTableChecker initContent() {
@@ -63,10 +73,18 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
     table.selectRow(index);
   }
 
+  public void clearSelection() {
+    getTable().clearSelection();
+  }
+
   public void checkSelected(String label) {
     Table table = getTable();
     int index = getRow(label, table);
     assertThat(table.rowIsSelected(index));
+  }
+
+  public void checkNoSelection() {
+    assertThat(getTable().selectionIsEmpty());
   }
 
   private int getRow(String label, Table table) {
@@ -105,7 +123,11 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
   }
 
   protected Panel getPanel() {
-    return mainWindow.getPanel(PANEL_NAME);
+    if (panel == null) {
+      views.selectAnalysis();
+      panel = mainWindow.getPanel(PANEL_NAME);
+    }
+    return panel;
   }
 
   public SeriesEditionDialogChecker editSeries(String rowLabel) {
@@ -217,7 +239,7 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
       return SeriesAnalysisChecker.this.getTable();
     }
 
-    public void check(){
+    public void check() {
       Object[][] expectedContent = content.toArray(new Object[content.size()][]);
       org.uispec4j.assertion.UISpecAssert.assertTrue(getTable().blockEquals(0, 0, COUNT_COLUMN, content.size(), expectedContent));
     }

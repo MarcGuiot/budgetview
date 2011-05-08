@@ -440,12 +440,12 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     seriesAnalysis.doubleClickOnRow("Income");
     seriesAnalysis.checkRowLabels("Main accounts", "Balance", "Savings accounts", "To categorize",
-                                   "Income",
-                                   "Recurring", "Internet",
-                                   "Variable", "Groceries",
-                                   "Extras",
-                                   "Savings",
-                                   "Other");
+                                  "Income",
+                                  "Recurring", "Internet",
+                                  "Variable", "Groceries",
+                                  "Extras",
+                                  "Savings",
+                                  "Other");
 
     seriesAnalysis.expandAll();
     seriesAnalysis.checkRowLabels(expanded);
@@ -643,5 +643,64 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       "Main accounts", "Balance", "Savings accounts", "To categorize", "Income", "Recurring", "Variable", "Extras",
       "Savings", "To account Livret", "To account Livret", "Other"
     );
+  }
+
+  public void testBreadcrumbs() throws Exception {
+
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00000123", -125.0, "2008/07/12")
+      .addTransaction("2008/07/12", -100.00, "Auchan")
+      .addTransaction("2008/07/05", -30.00, "Free Telecom")
+      .addTransaction("2008/07/05", -50.00, "EDF")
+      .addTransaction("2008/07/01", 300.00, "WorldCo")
+      .addTransaction("2008/07/11", -40.00, "SomethingElse")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewVariable("Auchan", "Groceries", -100.00);
+    categorization.setNewRecurring("Free Telecom", "Internet");
+    categorization.setNewRecurring("EDF", "Energy");
+    categorization.setNewIncome("WorldCo", "Salary");
+
+    seriesAnalysis.checkBreadcrumb("Overall budget / summary");
+
+    seriesAnalysis.select("Energy");
+    seriesAnalysis.checkBreadcrumb("Overall budget > Recurring > Energy");
+
+    seriesAnalysis.clickBreadcrumb("Recurring");
+    seriesAnalysis.checkSelected("Recurring");
+    seriesAnalysis.checkBreadcrumb("Overall budget > Recurring");
+
+    seriesAnalysis.clickBreadcrumb("Overall budget");
+    seriesAnalysis.checkSelected("Balance");
+
+    seriesAnalysis.select("Salary");
+    seriesAnalysis.checkBreadcrumb("Overall budget > Income > Salary");
+
+    // Unselect
+    seriesAnalysis.clearSelection();
+    seriesAnalysis.checkBreadcrumb("Overall budget / summary");
+
+    // Series renaming
+    seriesAnalysis.select("Internet");
+    seriesAnalysis.checkBreadcrumb("Overall budget > Recurring > Internet");
+    seriesAnalysis.editSeries("Internet")
+      .setName("Net")
+      .validate();
+    seriesAnalysis.checkBreadcrumb("Overall budget > Recurring > Net");
+
+    // Change of budget area
+    seriesAnalysis.editSeries("Net")
+      .changeBudgetArea("Variable")
+      .validate();
+    seriesAnalysis.checkBreadcrumb("Overall budget / summary");
+
+    // Series deletion
+    seriesAnalysis.select("Net");
+    seriesAnalysis.checkBreadcrumb("Overall budget > Variable > Net");
+    seriesAnalysis.editSeries("Net")
+      .deleteCurrentSeriesWithConfirmation();
+    seriesAnalysis.checkNoSelection();
+    seriesAnalysis.checkBreadcrumb("Overall budget / summary");
   }
 }

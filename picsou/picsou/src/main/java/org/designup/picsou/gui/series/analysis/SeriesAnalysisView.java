@@ -6,6 +6,7 @@ import org.designup.picsou.gui.actions.SelectPreviousMonthAction;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.expansion.*;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.series.analysis.components.SeriesAnalysisBreadcrumb;
 import org.designup.picsou.gui.series.analysis.evolution.SeriesEvolutionLabelColumn;
 import org.designup.picsou.gui.series.analysis.evolution.SeriesEvolutionMonthColumn;
 import org.designup.picsou.gui.series.view.*;
@@ -187,6 +188,9 @@ public class SeriesAnalysisView extends View {
     builder.add("collapse", new CollapseTableAction(expansionModel));
     builder.add("previousMonth", new SelectPreviousMonthAction(repository, parentDirectory));
     builder.add("nextMonth", new SelectNextMonthAction(repository, parentDirectory));
+
+    SeriesAnalysisBreadcrumb breadcrumb = new SeriesAnalysisBreadcrumb(repository, directory);
+    builder.add("breadcrumb", breadcrumb.getEditor());
 
     this.chartPanel = new SeriesChartsPanel(repository, directory, parentSelectionService);
     this.chartPanel.registerCharts(builder);
