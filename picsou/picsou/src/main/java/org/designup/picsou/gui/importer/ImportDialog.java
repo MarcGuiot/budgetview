@@ -114,8 +114,10 @@ public class ImportDialog {
     fileSelectionPanel.preselectFiles(files);
   }
 
-  public void updateForNextImport(String absolutePath, boolean isAccountNeeded, List<String> dateFormats) throws IOException {
-    previewPanel.setFileName(absolutePath);
+  public void updateForNextImport(String absolutePath, boolean isAccountNeeded, List<String> dateFormats) {
+    if (absolutePath != null){
+      previewPanel.setFileName(absolutePath);
+    }
     previewPanel.updateForNextImport(isAccountNeeded, dateFormats);
   }
 

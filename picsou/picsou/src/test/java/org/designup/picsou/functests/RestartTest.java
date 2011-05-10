@@ -561,7 +561,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addCardAccount("123", 1000.00, "2008/08/19")
       .addTransaction("2008/08/06", -30.00, "FNAC")
-      .loadDeferredCard("Card n. 123");
+      .loadOneDeferredCard("Card n. 123");
 
     OfxBuilder.init(this)
       .addBankAccount("unknown 222", 222, "222", 1000.00, "2008/08/19")

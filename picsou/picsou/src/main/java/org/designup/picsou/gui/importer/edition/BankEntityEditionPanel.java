@@ -2,9 +2,11 @@ package org.designup.picsou.gui.importer.edition;
 
 import org.designup.picsou.gui.bank.BankChooserDialog;
 import org.designup.picsou.model.Account;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -16,7 +18,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
-public class BankEntityEditionPanel {
+public class BankEntityEditionPanel implements Disposable {
   private Window container;
   private GlobRepository repository;
   private Directory directory;
@@ -76,6 +78,7 @@ public class BankEntityEditionPanel {
     private Window dialog;
 
     public AccountBankAction(GlobList accounts, Window dialog) {
+      super("...");
       this.accounts = accounts;
       this.dialog = dialog;
     }

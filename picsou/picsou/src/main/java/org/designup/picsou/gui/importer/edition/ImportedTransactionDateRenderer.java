@@ -32,14 +32,14 @@ public class ImportedTransactionDateRenderer implements LabelCustomizer {
       label.setText(glob.get(ImportedTransaction.BANK_DATE));
       return;
     }
-    Date date = null;
+    Date date;
     try {
       date = format.parse(glob.get(ImportedTransaction.BANK_DATE));
+      label.setText(Formatting.toString(date));
     }
     catch (ParseException e) {
       label.setText("Failed to parse date");
     }
-    label.setText(Formatting.toString(date));
   }
 
   public void setTable(GlobTableView transactionTable) {

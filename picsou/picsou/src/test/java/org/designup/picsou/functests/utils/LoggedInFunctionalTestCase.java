@@ -113,6 +113,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
       operations.openPreferences()
         .setFutureMonthsCount(0)
         .setPeriodInMonth(4)
+        .setMonthBack(1)
         .validate();
     }
 

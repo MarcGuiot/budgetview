@@ -1,7 +1,7 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.checkers.AccountEditionChecker;
+import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
@@ -382,28 +382,36 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName)
-      .acceptFile()
+      .acceptFile();
+    importDialog.selectOfxAccountBank(SOCIETE_GENERALE)
+      .setMainAccountForAll()
+      .checkFileContent(new Object[][]{
+        {"10/06/2008", "V'lib", "1.00"},
+      })
+      .doImport();
+    importDialog.selectOfxAccountBank(SOCIETE_GENERALE)
+      .setMainAccountForAll()
       .checkFileContent(new Object[][]{
         {"21/06/2008", "V'lib", "1.00"},
-        {"10/06/2008", "Metro", "71.00"},
-        {"10/06/2008", "McDo", "10.00"},
-        {"10/06/2008", "V'lib", "1.00"},
-      });
-
+      })
+      .doImport();
     importDialog
-      .openEntityEditor()
-      .checkAccountsForEntity("666", new String[]{"12345678a", "12345678b"})
-      .checkAccountsForEntity("777", new String[]{"1111222233334444", "87654321"})
-      .selectBankForEntity("777", SOCIETE_GENERALE)
-      .selectBankForEntity("666", SOCIETE_GENERALE)
-      .validate();
-
+      .checkFileContent(new Object[][]{
+        {"10/06/2008", "McDo", "10.00"},
+      })
+      .selectOfxAccountBank(SOCIETE_GENERALE)
+      .setMainAccountForAll()
+      .doImport();
+    importDialog
+      .selectOfxAccountBank(SOCIETE_GENERALE)
+      .checkFileContent(new Object[][]{
+        {"10/06/2008", "Metro", "71.00"},
+      });
     importDialog.openCardTypeChooser()
       .selectDeferredCard("Card n. 1111-2222-3333-4444")
       .validate();
 
     importDialog
-      .setMainAccount("Account n. 12345678a", "Account n. 12345678b", "Account n. 87654321")
       .completeImport();
 
     String secondFileName = OfxBuilder.init(this)
@@ -497,7 +505,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkMessageContains("The content of this file is invalid")
       .checkDetailsContain("InvalidData")
       .close();
-     
+
     importDialog.close();
   }
 
@@ -669,7 +677,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .doImport()
       .completeImport();
-    
+
     transactions.initContent()
       .add("13/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
       .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)

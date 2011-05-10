@@ -30,7 +30,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 import java.util.*;
 
 public class ImportPreviewPanel {
@@ -129,28 +128,28 @@ public class ImportPreviewPanel {
 
     additionalPanelsRepeat =
       builder.addRepeat("additionalPanels", Collections.<AdditionalImportPanel>emptyList(),
-                         new RepeatComponentFactory<AdditionalImportPanel>() {
-                           public void registerComponents(RepeatCellBuilder cellBuilder,
-                                                          final AdditionalImportPanel item) {
-                             cellBuilder.add("additionalPanel", item.getPanel());
-                           }
-                         });
+                        new RepeatComponentFactory<AdditionalImportPanel>() {
+                          public void registerComponents(RepeatCellBuilder cellBuilder,
+                                                         final AdditionalImportPanel item) {
+                            cellBuilder.add("additionalPanel", item.getPanel());
+                          }
+                        });
 
     additionalActionsRepeat =
       builder.addRepeat("additionalActions", Collections.<AdditionalImportAction>emptyList(),
-                         new RepeatComponentFactory<AdditionalImportAction>() {
-                           public void registerComponents(RepeatCellBuilder cellBuilder,
-                                                          final AdditionalImportAction item) {
-                             cellBuilder.add("message", new AutoResizingTextArea(item.getMessage()));
-                             cellBuilder.add("action", new AbstractAction(item.getButtonMessage()) {
-                               public void actionPerformed(ActionEvent e) {
-                                 item.getAction().actionPerformed(e);
-                                 updateAdditionalImportActions();
-                                 updateAdditionalImportPanels(true);
-                               }
-                             });
-                           }
-                         });
+                        new RepeatComponentFactory<AdditionalImportAction>() {
+                          public void registerComponents(RepeatCellBuilder cellBuilder,
+                                                         final AdditionalImportAction item) {
+                            cellBuilder.add("message", new AutoResizingTextArea(item.getMessage()));
+                            cellBuilder.add("action", new AbstractAction(item.getButtonMessage()) {
+                              public void actionPerformed(ActionEvent e) {
+                                item.getAction().actionPerformed(e);
+                                updateAdditionalImportActions();
+                                updateAdditionalImportPanels(true);
+                              }
+                            });
+                          }
+                        });
 
     builder.add("skipFile", new SkipFileAction());
     builder.add("finish", new FinishAction());
@@ -199,11 +198,13 @@ public class ImportPreviewPanel {
     this.message.setText(message);
   }
 
-  public void updateForNextImport(boolean isAccountNeeded, List<String> dateFormats) throws IOException {
+  public void updateForNextImport(boolean isAccountNeeded, List<String> dateFormats) {
     updateAdditionalImportActions();
-    updateAdditionalImportPanels(false);
+    updateAdditionalImportPanels(true);
     initQifAccountChooserFields(isAccountNeeded);
-    dateFormatSelectionPanel.init(dateFormats);
+    if (dateFormats != null) {
+      dateFormatSelectionPanel.init(dateFormats);
+    }
   }
 
   private void updateAdditionalImportActions() {

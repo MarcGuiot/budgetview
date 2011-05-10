@@ -1,17 +1,18 @@
 package org.designup.picsou.gui.importer.additionalactions;
 
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.directory.Directory;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.utils.Lang;
 import org.designup.picsou.gui.importer.AdditionalImportAction;
 import org.designup.picsou.gui.importer.edition.BankEntityEditionDialog;
+import org.designup.picsou.gui.bank.BankChooserDialog;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.utils.Lang;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class BankEntityEditionAction implements AdditionalImportAction {
   private Window parent;
@@ -43,8 +44,17 @@ public class BankEntityEditionAction implements AdditionalImportAction {
   public Action getAction() {
     return new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        BankEntityEditionDialog dialog = new BankEntityEditionDialog(repository, directory);
-        dialog.show(parent, accounts);
+        if (accounts.size() == 1) {
+          BankChooserDialog dialog = new BankChooserDialog(parent, repository, directory);
+          Integer bankId = dialog.show();
+          if (bankId != null){
+            repository.update(accounts.get(0).getKey(), Account.BANK, bankId);
+          }
+        }
+        else {
+          BankEntityEditionDialog dialog = new BankEntityEditionDialog(repository, directory);
+          dialog.show(parent, accounts);
+        }
       }
     };
   }

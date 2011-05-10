@@ -316,9 +316,9 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .checkMessageSelectABank();
     importDialog
-      .openEntityEditor()
-      .selectBank("Autre")
-      .validate();
+//      .openEntityEditor()
+      .selectOfxAccountBank("Autre");
+//      .validate();
     importDialog
       .setMainAccount()
       .checkNoErrorMessage()
@@ -390,7 +390,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .selectFiles(file)
       .acceptFile()
       .selectOfxAccountBank("Autre")
-      .checkAccountTypeSelectionDisplayedFor("Account n. 111", "Account n. 222")
+      .checkAccountTypeSelectionDisplayedFor("Account n. 111")
       .checkAccountTypeWarningDisplayed("Account n. 111")
       .setSavingsAccount("Account n. 111")
       .checkNoAccountTypeMessageDisplayed();
@@ -399,6 +399,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .checkAccountTypeSelectionDisplayedFor("Account n. 222")
       .checkAccountTypeWarningDisplayed("Account n. 222")
       .setMainAccount()
+      .selectOfxAccountBank("Autre")
       .checkNoAccountTypeMessageDisplayed()
       .doImport()
       .completeLastStep();
@@ -419,23 +420,25 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addCardAccount("1234", 10, "2008/08/07")
       .addTransaction("2008/08/10", -50.00, "Virement")
       .save();
+//    System.out.println("OfxImportTest.testImportDeferredCardAccount " + file);
+//    openApplication();
     ImportDialogChecker importDialog = operations.openImportDialog();
     importDialog
       .setFilePath(file)
       .acceptFile();
     importDialog
-      .checkMessageSelectABank()
-      .openEntityEditor()
-      .selectBank("Autre")
-      .validate();
-    importDialog
       .setMainAccount()
+      .selectOfxAccountBank("Autre")
+      .doImport();
+    importDialog
+      .selectOfxAccountBank("Autre")
       .checkSelectACardTypeMessage()
       .openCardTypeChooser()
       .checkNoneAreSelected("Card n. 1234")
       .selectDeferredCard("Card n. 1234")
       .validate();
-    importDialog.doImport()
+    importDialog
+      .doImport()
       .completeLastStep();
 
     views.selectHome();
@@ -525,16 +528,34 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .acceptFile();
     AccountChooserChecker accountChooser = importDialog.openChooseAccount();
     accountChooser
+      .checkTargetContent("Account n. 111", "Create imported account", "First account")
       .associate("Account n. 111", "First account")
-      .checkSelected("Account n. 222", "Create imported account")
-      .checkTargetContent("Account n. 222", "Create imported account");
-    accountChooser
-      .associate("Account n. 111", "Create imported account")
-      .checkTargetContent("Account n. 222", "Create imported account", "First account")
       .validate();
+    importDialog.doImport();
     importDialog
       .setMainAccountForAll()
       .completeImport();
 
+  }
+
+  public void testCreateTwoAccountsEndSkipFirst() throws Exception {
+    String ofxFile = OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")
+      .addTransaction("2008/08/10", -50.00, "Virement 111")
+      .addTransaction("2008/08/06", -30.00, "Virement 111")
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 222, "222", 1000.00, "2008/08/10")
+      .addTransaction("2008/08/10", -50.00, "Virement 222")
+      .addTransaction("2008/08/06", -30.00, "Virement 222")
+      .save();
+
+    ImportDialogChecker importDialog = operations.openImportDialog()
+      .setFilePath(ofxFile)
+      .acceptFile();
+    importDialog
+      .skipFile();
+    importDialog
+      .setMainAccountForAll()
+      .completeImport();
+    mainAccounts.checkAccountNames("Account n. 222");
   }
 }

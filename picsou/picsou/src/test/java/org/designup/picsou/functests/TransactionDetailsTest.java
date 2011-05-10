@@ -78,7 +78,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/18", -10.00, "Burger King")
       .addBankAccount("0002", 0.0, "2008/07/31")
       .addTransaction("2008/06/15", -20.00, "McDo")
-      .load();
+      .load();//load();
 
     categorization.checkNoSelectedTableRows();
     transactionDetails.checkNoAccountDisplayed();

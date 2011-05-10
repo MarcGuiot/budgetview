@@ -108,7 +108,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
                         Month.addDurationMonth(TimeService.getToday()));
     }
-    if (currentJarVersion < 64){
+    if (currentJarVersion < 65){
       repository.update(userPreferences.getKey(),
                         FieldValue.value(UserPreferences.MONTH_FOR_PLANNED, 3),
                         FieldValue.value(UserPreferences.PERIOD_COUNT_FOR_PLANNED, 10));

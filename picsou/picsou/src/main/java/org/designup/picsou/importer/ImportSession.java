@@ -2,9 +2,9 @@ package org.designup.picsou.importer;
 
 import org.apache.commons.collections.iterators.ReverseListIterator;
 import org.designup.picsou.bank.BankPluginService;
+import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.gui.importer.utils.NoOperations;
 import org.designup.picsou.gui.time.TimeService;
-import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.importer.utils.DateFormatAnalyzer;
@@ -12,12 +12,16 @@ import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.StringField;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.*;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.utils.ChangeSetAggregator;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.LocalGlobRepository;
+import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.TruncatedFile;
@@ -41,6 +45,8 @@ public class ImportSession {
   private boolean load = false;
   private int lastLoadOperationsCount = 0;
   private int importedOperationsCount = 0;
+  private List<Integer> accountIds = Collections.emptyList();
+  private ChangeSet changes;
 
   public ImportSession(GlobRepository referenceRepository, Directory directory) {
     this.referenceRepository = referenceRepository;
@@ -57,40 +63,89 @@ public class ImportSession {
   }
 
   public List<String> loadFile(File file) throws IOException, TruncatedFile, NoOperations {
+    load = true;
     localRepository.reset(GlobList.EMPTY, Transaction.TYPE, ImportedTransaction.TYPE, Day.TYPE, CurrentMonth.TYPE,
                           DeferredCardDate.TYPE, AccountCardType.TYPE, AccountType.TYPE);
     GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Day.TYPE, DeferredCardDate.TYPE,
                         AccountCardType.TYPE, CurrentMonth.TYPE, Month.TYPE};
     localRepository.reset(referenceRepository.getAll(types), types);
 
+    LocalGlobRepository importRepository;
+    importRepository = LocalGlobRepositoryBuilder
+      .init(referenceRepository)
+      .copy(types).get();
+
+    importRepository.startChangeSet();
+    try {
+      typedStream = new TypedInputStream(file);
+      fileType = typedStream.getType();
+      importService.run(typedStream, referenceRepository, importRepository);
+    }
+    finally {
+      importRepository.completeChangeSet();
+      changes = importRepository.getCurrentChanges();
+      accountIds = new ArrayList<Integer>();
+      changes.safeVisit(Account.TYPE, new ChangeSetVisitor() {
+        public void visitCreation(Key key, FieldValues values) throws Exception {
+          accountIds.add(key.get(Account.ID));
+        }
+
+        public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+          accountIds.add(key.get(Account.ID));
+        }
+
+        public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+        }
+      });
+    }
+    accountIds =
+      new ArrayList(Arrays.asList(importRepository.getAll(Account.TYPE,
+                                                          GlobMatchers.contained(Account.ID, accountIds))
+        .sort(Account.NAME).getValues(Account.ID)));
+
+
+    readNext(true);
+    return getImportedTransactionFormat(importRepository);
+  }
+
+  private void readNext(boolean loadTransactions) throws NoOperations {
+    if (accountIds.isEmpty() && !loadTransactions) {
+      load = false;
+      throw new NoOperations();
+    }
+
     importChangeSet = new DefaultChangeSet();
     importChangeSetAggregator = new ChangeSetAggregator(localRepository, importChangeSet);
 
     localRepository.startChangeSet();
+    Integer currentAccoutId = null;
     try {
-      typedStream = new TypedInputStream(file);
-      fileType = typedStream.getType();
-      importService.run(typedStream, referenceRepository, localRepository);
+      if (!accountIds.isEmpty()) {
+        currentAccoutId = accountIds.remove(0);
+      }
+      changes.safeVisit(new forwardChanges(currentAccoutId));
     }
     finally {
       localRepository.completeChangeSet();
     }
 
-
     BankPluginService bankPluginService = directory.get(BankPluginService.class);
     bankPluginService.apply(referenceRepository, localRepository, importChangeSet);
 
-    load = true;
     GlobList importedOperations = localRepository.getAll(ImportedTransaction.TYPE);
-    if (importedOperations.isEmpty()) {
+    if (importedOperations.isEmpty() && currentAccoutId == null) {
       throw new NoOperations();
     }
+//      }
+//      readNext();
+//    }
+//    else {
     lastLoadOperationsCount = importedOperations.size();
-    return getImportedTransactionFormat();
+//    }
   }
 
-  private List<String> getImportedTransactionFormat() {
-    Set<String> valueSet = localRepository.getAll(ImportedTransaction.TYPE)
+  private List<String> getImportedTransactionFormat(final GlobRepository repository) {
+    Set<String> valueSet = repository.getAll(ImportedTransaction.TYPE)
       .getValueSet(ImportedTransaction.BANK_DATE);
     DateFormatAnalyzer dateFormatAnalyzer = new DateFormatAnalyzer(TimeService.getToday());
     return dateFormatAnalyzer.parse(valueSet);
@@ -100,7 +155,9 @@ public class ImportSession {
     if (!load) {
       return null;
     }
-    load = false;
+    if (accountIds.isEmpty()) {
+      load = false;
+    }
 
     if (fileType.equals(BankFileType.QIF)) {
       GlobList transactions = localRepository.getAll(ImportedTransaction.TYPE);
@@ -231,6 +288,8 @@ public class ImportSession {
   }
 
   public void discard() {
+    localRepository.deleteAll(ImportedTransaction.TYPE);
+    importChangeSet.safeVisit(new RevertChanges());
     importChangeSetAggregator.dispose();
   }
 
@@ -250,5 +309,55 @@ public class ImportSession {
 
   public boolean isAccountNeeded() {
     return fileType.equals(BankFileType.QIF);
+  }
+
+  public boolean gotoNextContent() {
+    try {
+      readNext(false);
+    }
+    catch (NoOperations operations) {
+      return false;
+    }
+    return true;
+  }
+
+  private class forwardChanges implements ChangeSetVisitor {
+    private final Integer currentAccoutId;
+
+    public forwardChanges(Integer currentAccoutId) {
+      this.currentAccoutId = currentAccoutId;
+    }
+
+    public void visitCreation(Key key, FieldValues values) throws Exception {
+      if (key.getGlobType() == ImportedTransaction.TYPE && Utils.equal(currentAccoutId, values.get(ImportedTransaction.ACCOUNT))) {
+        localRepository.create(key, values.toArray());
+      }
+      if (key.getGlobType() == Account.TYPE && Utils.equal(currentAccoutId, key.get(Account.ID))) {
+        localRepository.create(key, values.toArray());
+      }
+    }
+
+    public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+      if (key.getGlobType() == Account.TYPE && Utils.equal(currentAccoutId, key.get(Account.ID))) {
+        localRepository.update(key, values.toArray());
+      }
+    }
+
+    public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+    }
+  }
+
+  private class RevertChanges implements ChangeSetVisitor {
+    public void visitCreation(Key key, FieldValues values) throws Exception {
+      localRepository.delete(key);
+    }
+
+    public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+      localRepository.update(key, values.getPreviousValues().toArray());
+    }
+
+    public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+      localRepository.create(key, previousValues.toArray());
+    }
   }
 }

@@ -104,7 +104,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
       "            <DTPOSTED>20080605\n" +
       "            <DTUSER>20080605\n" +
       "            <TRNAMT>-256.00\n" +
-      "            <FITID>PICSOU104\n" +
+      "            <FITID>PICSOU114\n" +
       "            <NAME>MONOP'S\n" +
       "          </STMTTRN>\n" +
       "          <STMTTRN>\n" +
@@ -112,7 +112,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
       "            <DTPOSTED>20080615\n" +
       "            <DTUSER>20080613\n" +
       "            <TRNAMT>1.00\n" +
-      "            <FITID>PICSOU105\n" +
+      "            <FITID>PICSOU115\n" +
       "            <NAME>CAROUF\n" +
       "          </STMTTRN>\n" +
       "        </BANKTRANLIST>\n" +

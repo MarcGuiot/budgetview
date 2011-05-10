@@ -210,9 +210,9 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     categorization.setVariable("BIO PLUS", "Courses");
     categorization.selectTransactions("RETRAIT GAB 4463", "RETRAIT GAB 5234", "RETRAIT GAB 0301",
                                       "RETRAIT GAB 5642", "RETRAIT GAB 1867", "RETRAIT GAB 9011")
-      .selectVariable().selectNewSeries("Liquide");
+      .selectVariable().selectNewSeries("Liquide", 0);
 
-    categorization.setNewVariable("GROUPE CINE SPECT.", "Loisirs");
+    categorization.setNewVariable("GROUPE CINE SPECT.", "Loisirs", 20.);
     categorization.setVariable("RESA CONCERTS. N151435", "Loisirs");
     categorization.setVariable("JOURNAUX 2000", "Loisirs");
     categorization.setVariable("UGC", "Loisirs");
@@ -221,7 +221,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     categorization.setVariable("AU PIED AGILE", "Habillement");
     categorization.setVariable("PARIS MODE CENTRE", "Habillement");
 
-    categorization.setNewVariable("ZINGMAN", "Divers");
+    categorization.setNewVariable("ZINGMAN", "Divers", 10.);
 
     categorization.setNewExtra("PLOMBERIE 24/7", "Plombier");
 
@@ -236,6 +236,12 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
 
     categorization.setNewSavings("VIRT MENS. LIVRET A", "Virt. auto livret", "Main accounts", "Livret");
+
+    budgetView.savings.editSeries("Virt. auto livret")
+      .selectFirstMonth()
+      .setPropagationEnabled()
+      .setAmount(200)
+      .validate();
 
     // Gestion du liquide
     timeline.selectMonth(Month.toString(secondMonth));
@@ -255,7 +261,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setLabel("Boulangerie").setAmount(-5).setDay(6).create()
       .setLabel("Primeur").setAmount(-20).setDay(9).create();
 
-    categorization.setNewVariable("Boulangerie", "Tous les jours");
+    categorization.setNewVariable("Boulangerie", "Tous les jours", 30.);
     categorization.setVariable("Primeur", "Tous les jours");
     categorization.setVariable("Boucherie", "Tous les jours");
     categorization.setVariable("Retrait", "Liquide");
@@ -296,7 +302,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     savingsAccounts.createNewAccount()
-      .setAccountName("Compte provisions")
+      .setAccountName("Provisions")
       .selectBank("CIC")
       .setPosition(1000)
       .validate();
@@ -306,7 +312,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     budgetView.savings.createSeries()
       .setName("Prov. vacances")
       .setFromAccount("Main accounts")
-      .setToAccount("Compte provisions")
+      .setToAccount("Provisions")
       .setStartDate(firstMonth)
       .selectAllMonths()
       .setAmount(150)
@@ -314,7 +320,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     budgetView.savings.createSeries()
       .setName("Reglement vacances")
-      .setFromAccount("Compte provisions")
+      .setFromAccount("Provisions")
       .setToAccount("Main accounts")
       .setIrregular()
       .selectAllMonths()

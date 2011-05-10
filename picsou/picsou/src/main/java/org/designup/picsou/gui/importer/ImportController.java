@@ -134,6 +134,11 @@ public class ImportController {
 
   public boolean nextImport() {
 
+    if (importSession.gotoNextContent()){
+      importDialog.updateForNextImport(null, isAccountNeeded(), null);
+      return true;
+    }
+
     synchronized (selectedFiles) {
       if (selectedFiles.isEmpty()) {
         step2 = false;

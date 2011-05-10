@@ -6,15 +6,13 @@ import org.designup.picsou.gui.importer.ImportCompletionPanel;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.io.File;
-
-import static org.uispec4j.assertion.UISpecAssert.*;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class ImportDialogChecker extends GuiChecker {
   private Panel dialog;
@@ -97,6 +95,10 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
+  public boolean isLastStep() {
+    return dialog.getTextBox("title").getText().contains("Import done");
+  }
+
   public ImportDialogChecker checkLastStep() {
     assertThat(dialog.getTextBox("title").textEquals("Import done"));
     return this;
@@ -138,7 +140,7 @@ public class ImportDialogChecker extends GuiChecker {
 
     CompletionChecker handler =
       new CompletionChecker(0, importedTransactionCount,
-                                      autocategorizedTransactionCount, Lang.get("import.end.button"));
+                            autocategorizedTransactionCount, Lang.get("import.end.button"));
     handler.checkAndClose(dialog);
     UISpecAssert.assertFalse(dialog.isVisible());
   }
@@ -293,8 +295,12 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker selectOfxAccountBank(String bank) {
-    openEntityEditor().selectBank(bank)
-      .validate();
+    Window window = WindowInterceptor.getModalDialog(dialog.getButton("Select the bank").triggerClick());
+    BankChooserChecker chooserChecker = new BankChooserChecker(window);
+    chooserChecker.selectBank(bank).validate();
+
+//    openEntityEditor().selectBank(bank)
+//      .validate();
     return this;
   }
 
@@ -385,6 +391,45 @@ public class ImportDialogChecker extends GuiChecker {
     assertThat(selectionPanel.isVisible());
     return selectionPanel;
   }
+
+  public boolean hasCardType() {
+    Button button = dialog.findUIComponent(Button.class, "Select a card type");
+    if (button == null) {
+      return false;
+    }
+    return true;
+  }
+
+  public void importDeferred(String accountName, String fileName, boolean withMainAccount) {
+    setFilePath(fileName)
+      .acceptFile();
+    if (hasCardType()) {
+      selectDeferred(accountName);
+    }
+    else {
+      setMainAccountForAll();
+    }
+    if (withMainAccount) {
+      doImport();
+      if (hasCardType()) {
+        selectDeferred(accountName);
+      }
+      else {
+        setMainAccountForAll();
+      }
+    }
+    completeImport();
+  }
+
+  private void selectDeferred(String accountName) {
+    openCardTypeChooser()
+      .selectDeferredCard(accountName)
+      .validate();
+    if (hasAccountType()) {
+      setMainAccount();
+    }
+  }
+
 
   public static class CompletionChecker {
     private int loadedTransactionCount;

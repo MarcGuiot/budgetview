@@ -67,17 +67,8 @@ public class OperationChecker {
   }
 
   public void importOfxWithDeferred(String fileName, String cardAccountName) {
-    ImportDialogChecker importDialog = openImportDialog()
-      .setFilePath(fileName)
-      .acceptFile();
-    importDialog
-      .openCardTypeChooser()
-      .selectDeferredCard(cardAccountName)
-      .validate();
-    importDialog
-      .setMainAccount()
-      .doImport()
-      .completeLastStep();
+    openImportDialog()
+      .importDeferred(cardAccountName, fileName, true);
   }
 
   public void importQifFileWithDeferred(String fileName, String bank, double position) {
@@ -151,11 +142,13 @@ public class OperationChecker {
       importDialog
         .defineAccount(bank, "Main account", DEFAULT_ACCOUNT_NUMBER);
     }
-    else if (bank != null && dialog.findSwingComponent(JButton.class, "Select the bank") != null) { // OFX
+    else if (bank != null && asSelectBank(dialog)) { // OFX
       importDialog
-        .openEntityEditor()
-        .selectBank(bank)
-        .validate();
+        .selectOfxAccountBank("Autre");
+
+//        .openEntityEditor()
+//        .selectBank(bank)
+//        .validate();
     }
     if (targetAccount != null) {
       dialog.getComboBox("accountCombo").select(targetAccount);
@@ -174,11 +167,24 @@ public class OperationChecker {
       accountPosition.setAmount(amount);
       accountPosition.validate();
     }
-    else {
+    int i = 0;
+    while (!importDialog.isLastStep() && i != 10){
       step2Button.click();
+      if (importDialog.hasAccountType()) {
+        importDialog.setMainAccountForAll();
+      }
+      if(bank != null && asSelectBank(dialog)){
+        importDialog
+          .selectOfxAccountBank(bank);
+      }
+      i++;
     }
     importDialog.checkLastStep();
     importDialog.completeLastStep();
+  }
+
+  private boolean asSelectBank(Window dialog) {
+    return dialog.findSwingComponent(JButton.class, "Select the bank") != null;
   }
 
   public void exportOfxFile(String name) {
