@@ -53,6 +53,8 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/05/28", +500, "income")
       .addTransaction("2010/05/29", -100, "auchan")
       .addTransaction("2010/05/29", -100, "auchan")
+      .addTransaction("2010/04/29", -100, "auchan")
+      .addTransaction("2010/03/29", -100, "auchan")
       .addTransaction("2010/05/29", -100, "Chausse")
       .load();
 
@@ -80,6 +82,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     checkNoSignpostVisible();
     categorization.setVariable("auchan", "Groceries");
     categorization.setVariable("Chausse", "Clothing");
+
     categorization.checkGotoBudgetSignpostShown();
 
     // === Editing series amounts in SeriesEvolution does not remove budget view signpost ===
@@ -93,6 +96,9 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkAmountSignpostDisplayed(
       "Groceries", "Click on the planned amounts to set your own values");
 
+    budgetView.variable.checkPlannedUnsetButNotHighlighted("Health");
+    budgetView.variable.checkPlannedUnsetButNotHighlighted("Fuel");
+    budgetView.variable.checkPlannedUnsetAndHighlighted("Groceries");
     SeriesAmountEditionDialogChecker amountDialog = budgetView.variable.editPlannedAmount("Groceries");
     checkNoSignpostVisible();
     amountDialog.cancel();
@@ -110,10 +116,18 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     checkNoSignpostVisible();
 
-    budgetView.variable.editPlannedAmount("Groceries").setAmount(10.00).validate();
+    budgetView.variable.checkPlannedUnsetAndHighlighted("Groceries");
+    budgetView.variable.editPlannedAmount("Groceries")
+      .checkSelectedMonths(201003, 201004, 201005)
+      .setAmount(10.00)
+      .validate();
+    budgetView.variable.checkPlannedNotHighlighted("Groceries");
 
     signpostView.checkSignpostViewShown();
 
+    budgetView.variable.checkPlannedUnsetButNotHighlighted("Health");
+    budgetView.variable.checkPlannedUnsetButNotHighlighted("Fuel");
+    budgetView.variable.checkPlannedUnsetAndHighlighted("Clothing");
     views.selectBudget();
     SignpostDialogChecker
       .open(
@@ -245,5 +259,85 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.checkAmountSignpostDisplayed(
       "Groceries", "Click on the planned amounts to set your own values");
+  }
+
+  public void testRestartDuringBudgetTuning() throws Exception {
+    signpostView.checkSignpostViewShown();
+
+    // === Import ===
+
+    views.selectData();
+    importPanel.checkImportSignpostDisplayed("Click here to import your operations");
+    importPanel.openImport().close();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2010/05/27", -100, "rent")
+      .addTransaction("2010/05/28", +500, "income")
+      .addTransaction("2010/05/29", -100, "auchan")
+      .addTransaction("2010/05/29", -100, "auchan")
+      .addTransaction("2010/04/29", -100, "auchan")
+      .addTransaction("2010/03/29", -100, "auchan")
+      .addTransaction("2010/05/29", -100, "Chausse")
+      .load();
+
+    // === Categorization ===
+
+    categorization.setNewRecurring("rent", "Rent"); // SED shown
+    categorization.setIncome("income", "Income 1");
+    categorization.setVariable("auchan", "Groceries");
+    categorization.setVariable("Chausse", "Clothing");
+
+    // === Series amounts ===
+
+    views.selectBudget();
+    budgetView.variable.checkAmountSignpostDisplayed(
+      "Groceries", "Click on the planned amounts to set your own values");
+
+    budgetView.variable.checkPlannedUnsetButNotHighlighted("Health");
+    budgetView.variable.checkPlannedUnsetButNotHighlighted("Fuel");
+
+    budgetView.variable.checkPlannedUnsetAndHighlighted("Groceries");
+    budgetView.variable.editPlannedAmount("Groceries")
+      .checkSelectedMonths(201003, 201004, 201005)
+      .setAmount(10.00)
+      .validate();
+    budgetView.variable.checkPlannedNotHighlighted("Groceries");
+    budgetView.variable.checkPlannedUnsetAndHighlighted("Clothing");
+
+    // === Series periodicity ===
+
+    budgetView.recurring.editSeries("Electricity")
+      .setTwoMonths()
+      .validate();
+
+    signpostView.checkSignpostViewShown();
+
+    // === Restart ===
+
+    System.out.println("\n\n\nSignpostSequenceTest.testRestartDuringBudgetTuning: ");
+
+    restartApplication();
+
+    signpostView.checkSignpostViewShown();
+
+    views.selectBudget();
+    budgetView.variable.checkPlannedNotHighlighted("Groceries");
+    budgetView.variable.checkPlannedUnsetAndHighlighted("Clothing");
+    SignpostDialogChecker
+      .open(budgetView.variable.editPlannedAmount("Clothing")
+              .checkSelectedMonths(201003, 201004, 201005)
+              .setAmount(10.00)
+              .triggerValidate())
+      .close();
+
+    views.checkHomeSelected();
+    signpostView.checkSummaryViewShown();
+    checkNoSignpostVisible();
+
+    views.selectBudget();
+    checkNoSignpostVisible();
+
+    views.selectCategorization();
+    checkNoSignpostVisible();
   }
 }

@@ -155,7 +155,7 @@ public class MainPanel {
     cardView = new CardView(repository, directory, categorizationView.getGotoBudgetSignpost());
     NotesView notesView = new NotesView(repository, directory);
     seriesAnalysisView = new SeriesAnalysisView(repository, directory);
-    signpostView = new SignpostView(repository, directory);
+    signpostView = new SignpostView(replicationGlobRepository, directory);
     createPanel(
       titleView,
       transactionView,

@@ -127,7 +127,10 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
   }
 
   public void testBackupAndRestoreWithOtherPassword() throws Exception {
+
     changeUser("user", "password");
+    operations.hideSignposts();
+
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")
       .addTransaction("2008/08/10", -400.0, "Auchan")
@@ -135,6 +138,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     String fileName = operations.backup(this);
 
     changeUser("user1", "other passwd");
+    operations.hideSignposts();
 
     WindowInterceptor.init(operations.getRestoreTrigger())
       .process(FileChooserHandler.init().select(fileName))
@@ -336,10 +340,11 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     String path = operations.backup(this);
 
     operations.deleteUser(password);
-    new LoginChecker(mainWindow).logNewUser("aaaa", "aaaa");
+    LoginChecker.init(mainWindow).logNewUser("aaaa", "aaaa");
     setCurrentDate("2009/02/03");
     restartApplication("aaaa", "aaaa");
     changeUser("testSeriesEvolutionAfterRestore", "testSeriesEvolutionAfterRestore");
+    operations.hideSignposts();
     operations.restoreWithNewPassword(path, "password");
 
     views.selectAnalysis();

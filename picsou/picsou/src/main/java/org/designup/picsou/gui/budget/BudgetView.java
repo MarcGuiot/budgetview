@@ -14,7 +14,6 @@ public class BudgetView extends View {
 
   public BudgetView(GlobRepository repository, Directory parentDirectory) {
     super(repository, parentDirectory);
-
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {

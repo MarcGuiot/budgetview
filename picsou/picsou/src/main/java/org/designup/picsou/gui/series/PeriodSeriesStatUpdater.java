@@ -5,6 +5,8 @@ import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SignpostStatus;
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -20,6 +22,7 @@ import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.fieldContained;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSetListener {
 
@@ -70,6 +73,8 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       repository.safeApply(SeriesStat.TYPE,
                            fieldContained(SeriesStat.MONTH, selectedMonths.getValueSet(Month.ID)),
                            seriesStatFunctor);
+
+      initToUpdateField();
     }
     finally {
       repository.completeChangeSet();
@@ -85,8 +90,8 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
   private void resetStats() {
     repository.deleteAll(PeriodSeriesStat.TYPE);
     for (Glob series : repository.getAll(Series.TYPE)) {
-        repository.create(Key.create(PeriodSeriesStat.TYPE, series.get(Series.ID)),
-                          value(PeriodSeriesStat.ACTIVE, false));
+      repository.create(Key.create(PeriodSeriesStat.TYPE, series.get(Series.ID)),
+                        value(PeriodSeriesStat.ACTIVE, false));
     }
   }
 
@@ -148,6 +153,37 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     public GlobList getStats() {
       return new GlobList(stats);
     }
+  }
+
+  private void initToUpdateField() {
+    boolean signpostCompleted = SignpostStatus.isInitialGuidanceCompleted(repository);
+    for (Glob periodStat : repository.getAll(PeriodSeriesStat.TYPE)) {
+      boolean value = !signpostCompleted && isToUpdate(periodStat.get(PeriodSeriesStat.SERIES));
+      repository.update(periodStat.getKey(),
+                        PeriodSeriesStat.TO_SET,
+                        value);
+    }
+  }
+
+  private boolean isToUpdate(Integer seriesId) {
+    if (Series.UNCATEGORIZED_SERIES_ID.equals(seriesId)) {
+      return false;
+    }
+
+    boolean hasObservedAmount = false;
+    boolean hasPlannedAmountToSet = false;
+    for (Glob stat : repository.findByIndex(SeriesStat.SERIES_INDEX, seriesId)) {
+      if (!hasObservedAmount && Amounts.isNotZero(stat.get(SeriesStat.AMOUNT))) {
+        hasObservedAmount = true;
+      }
+      if (!hasPlannedAmountToSet && Amounts.isUnset(stat.get(SeriesStat.PLANNED_AMOUNT))) {
+        hasPlannedAmountToSet = true;
+      }
+      if (hasObservedAmount && hasPlannedAmountToSet) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }

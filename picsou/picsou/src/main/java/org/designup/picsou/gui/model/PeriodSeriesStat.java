@@ -41,6 +41,9 @@ public class PeriodSeriesStat {
   @DefaultBoolean(false)
   public static BooleanField ACTIVE;
 
+  @DefaultBoolean(false)
+  public static BooleanField TO_SET;
+
   static {
     GlobTypeLoader.init(PeriodSeriesStat.class);
   }

@@ -29,6 +29,10 @@ public class Amounts {
     return !isNullOrZero(value);
   }
 
+  public static boolean isUnset(Double value) {
+    return value == null;
+  }
+
   public static double normalize(double value) {
     return isNearZero(value) ? 0 : value;
   }

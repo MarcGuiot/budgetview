@@ -115,7 +115,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
         BudgetViewChecker budgetView = new BudgetViewChecker(window);
         budgetView.income.checkSeriesPresent("Income 1", "Income 2");
         budgetView.variable.checkSeriesPresent("Groceries", "Health", "Fuel");
-        budgetView.variable.checkPlannedUset("Groceries");
+        budgetView.variable.checkPlannedUnset("Groceries");
 
         operations = new OperationChecker(window);
         String filePath = OfxBuilder
@@ -127,7 +127,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
         TimeViewChecker timeView = new TimeViewChecker(window);
         timeView.selectMonth("2006/01");
-        budgetView.variable.checkPlannedUset("Groceries");
+        budgetView.variable.checkPlannedUnset("Groceries");
         operations.logout();
       }
 
@@ -373,6 +373,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     String fileName = operations.backup(this);
     operations.deleteAutoLoginUser();
     login.logNewUser("Alfred", "Alfred");
+    operations.hideSignposts();
     operations.restore(fileName);
     getTransactionView()
       .initContent()

@@ -39,10 +39,12 @@ public class SeriesStat {
   public static BooleanField ACTIVE;
 
   public static NotUniqueIndex MONTH_INDEX;
+  public static NotUniqueIndex SERIES_INDEX;
 
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(SeriesStat.class);
     loader.defineNonUniqueIndex(MONTH_INDEX, MONTH);
+    loader.defineNonUniqueIndex(SERIES_INDEX, SERIES);
   }
 
   public static BudgetArea getBudgetArea(org.globsframework.model.Key seriesStatKey, GlobRepository repository) {

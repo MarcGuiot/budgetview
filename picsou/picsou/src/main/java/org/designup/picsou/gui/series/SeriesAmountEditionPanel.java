@@ -219,6 +219,10 @@ public class SeriesAmountEditionPanel {
     setAutoSelectFutureMonths(noValueDefined);
     propagationCheckBox.setSelected(noValueDefined);
 
+    if (noValueDefined) {
+      selectMonths(repository.getAll(Month.TYPE).getValueSet(Month.ID));
+    }
+
     updateCard(true);
   }
 

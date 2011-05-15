@@ -249,13 +249,13 @@ public class BudgetAreaSeriesView extends View {
       SplitsNode<JButton> seriesName = cellBuilder.add("seriesName", seriesNameButton.getComponent());
       cellBuilder.addDisposeListener(seriesNameButton);
 
-      JButton observedAmountButton = addAmountButton("observedSeriesAmount", PeriodSeriesStat.AMOUNT, series, cellBuilder, new GlobListFunctor() {
+      SplitsNode<JButton> observedAmountButton = addAmountButton("observedSeriesAmount", PeriodSeriesStat.AMOUNT, series, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
           directory.get(NavigationService.class).gotoDataForSeries(series);
         }
       });
 
-      JButton plannedAmountButton = addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
+      SplitsNode<JButton> plannedAmountButton = addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
           SignpostStatus.setCompleted(SignpostStatus.SERIES_AMOUNT_SHOWN, repository);
           SeriesEditor.get(directory).showAmount(series, selectedMonthIds);
@@ -294,7 +294,7 @@ public class BudgetAreaSeriesView extends View {
       if (SignpostStatus.isAmountSeries(repository, series.getKey())) {
         Signpost amountSignpost = new SeriesAmountSignpost(repository, directory);
         cellBuilder.addDisposeListener(amountSignpost);
-        amountSignpost.attach(plannedAmountButton);
+        amountSignpost.attach(plannedAmountButton.getComponent());
       }
     }
 
@@ -302,13 +302,13 @@ public class BudgetAreaSeriesView extends View {
 
       private Key key;
       private SplitsNode<JButton> seriesName;
-      private JButton observedAmountButton;
-      private JButton plannedAmountButton;
+      private SplitsNode<JButton> observedAmountButton;
+      private SplitsNode<JButton> plannedAmountButton;
 
       public SeriesButtonsUpdater(Key key,
                                   SplitsNode<JButton> seriesName,
-                                  JButton observedAmountButton,
-                                  JButton plannedAmountButton) {
+                                  SplitsNode<JButton> observedAmountButton,
+                                  SplitsNode<JButton> plannedAmountButton) {
         this.key = key;
         this.seriesName = seriesName;
         this.observedAmountButton = observedAmountButton;
@@ -328,6 +328,9 @@ public class BudgetAreaSeriesView extends View {
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        if (changedTypes.contains(PeriodSeriesStat.TYPE)) {
+          update();
+        }
       }
 
       private void update() {
@@ -338,28 +341,31 @@ public class BudgetAreaSeriesView extends View {
 
         boolean active = stat.isTrue(PeriodSeriesStat.ACTIVE);
         seriesName.applyStyle(active ? "seriesEnabled" : "seriesDisabled");
-        observedAmountButton.setEnabled(active);
-        plannedAmountButton.setEnabled(active);
+        observedAmountButton.getComponent().setEnabled(active);
+        plannedAmountButton.getComponent().setEnabled(active);
 
         if (!active) {
-          observedAmountButton.setText("-");
-          plannedAmountButton.setText("-");          
+          observedAmountButton.getComponent().setText("-");
+          plannedAmountButton.getComponent().setText("-");
         }
+
+        boolean toSet = active && stat.isTrue(PeriodSeriesStat.TO_SET);
+        plannedAmountButton.applyStyle(toSet ? "plannedToSet" : "plannedAlreadySet");
       }
     }
 
-    private JButton addAmountButton(String name,
-                                    DoubleField field,
-                                    final Glob series,
-                                    RepeatCellBuilder cellBuilder,
-                                    final GlobListFunctor callback) {
+    private SplitsNode<JButton> addAmountButton(String name,
+                                                DoubleField field,
+                                                final Glob series,
+                                                RepeatCellBuilder cellBuilder,
+                                                final GlobListFunctor callback) {
       final GlobButtonView amountButtonView =
         GlobButtonView.init(PeriodSeriesStat.TYPE, repository, directory, getStringifier(field), callback)
           .setFilter(GlobMatchers.linkedTo(series, PeriodSeriesStat.SERIES));
       JButton button = amountButtonView.getComponent();
-      cellBuilder.add(name, button);
+      SplitsNode<JButton> node = cellBuilder.add(name, button);
       cellBuilder.addDisposeListener(amountButtonView);
-      return button;
+      return node;
     }
 
     private GlobListStringifier getStringifier(final DoubleField field) {

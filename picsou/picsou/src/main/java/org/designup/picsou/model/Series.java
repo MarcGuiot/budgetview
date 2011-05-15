@@ -31,7 +31,6 @@ public class Series {
   @Target(BudgetArea.class)
   @Required
   public static LinkField BUDGET_AREA;
-  public static final GlobMatcher USER_SERIES_MATCHER;
 
   public static StringField DESCRIPTION;
 
@@ -144,6 +143,8 @@ public class Series {
   public static final Integer UNCATEGORIZED_SERIES_ID = 1;
 
   public static org.globsframework.model.Key UNCATEGORIZED_SERIES;
+
+  public static final GlobMatcher USER_SERIES_MATCHER;
 
   static {
     GlobTypeLoader.init(Series.class, "series");

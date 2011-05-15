@@ -619,8 +619,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       }
     });
     UISpecAssert.waitUntil(mainWindow.containsSwingComponent(JPasswordField.class), 10000);
-    LoginChecker loginChecker = new LoginChecker(mainWindow);
-    loginChecker.checkErrorMessage("data.load.error.journal");
+    LoginChecker.init(mainWindow).checkErrorMessage("data.load.error.journal");
     mainWindow.dispose();
     mainWindow = null;
   }

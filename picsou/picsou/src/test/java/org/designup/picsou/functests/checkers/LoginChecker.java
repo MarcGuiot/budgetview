@@ -17,6 +17,10 @@ public class LoginChecker extends GuiChecker {
   private Button loginButton;
   private PasswordField passwordConfirmationField;
 
+  public static LoginChecker init(Window window) {
+    return new LoginChecker(window);
+  }
+
   public LoginChecker(Window window) {
     this.window = window;
     userField = window.getInputTextBox("name");

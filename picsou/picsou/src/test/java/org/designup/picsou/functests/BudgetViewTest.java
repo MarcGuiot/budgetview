@@ -149,11 +149,11 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Auchan", "Groceries");
 
     views.selectBudget();
-    budgetView.variable.checkPlannedUset("Groceries");
+    budgetView.variable.checkPlannedUnset("Groceries");
 
     timeline.selectAll();
 
-    budgetView.variable.checkPlannedUset("Groceries");
+    budgetView.variable.checkPlannedUnset("Groceries");
   }
 
   public void testImportWithUserDateAndBankDateAtNextMonth() throws Exception {

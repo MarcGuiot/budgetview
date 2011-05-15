@@ -137,9 +137,29 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
-    public BudgetAreaChecker checkPlannedUset(String seriesName) {
-      Button button = getAmountButton(seriesName);
-      assertThat(button.textEquals("No value defined"));
+    public BudgetAreaChecker checkPlannedUnset(String seriesName) {
+      Button button = getPlannedAmountButton(seriesName);
+      assertThat(button.textEquals("To define"));
+      return this;
+    }
+
+    public BudgetAreaChecker checkPlannedNotHighlighted(String seriesName) {
+      Button button = getPlannedAmountButton(seriesName);
+      assertThat(button.backgroundNear("white"));
+      return this;
+    }
+
+    public BudgetAreaChecker checkPlannedUnsetAndHighlighted(String seriesName) {
+      Button button = getPlannedAmountButton(seriesName);
+      assertThat(button.textEquals("To define"));
+      assertThat(button.backgroundNear("yellow"));
+      return this;
+    }
+
+    public BudgetAreaChecker checkPlannedUnsetButNotHighlighted(String seriesName) {
+      Button button = getPlannedAmountButton(seriesName);
+      assertThat(button.textEquals("To define"));
+      assertThat(button.backgroundNear("white"));
       return this;
     }
 
@@ -273,12 +293,12 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public SeriesAmountEditionDialogChecker editPlannedAmount(String seriesName) {
-      Button button = getAmountButton(seriesName);
+      Button button = getPlannedAmountButton(seriesName);
 
       return SeriesAmountEditionDialogChecker.open(button.triggerClick());
     }
 
-    protected Button getAmountButton(String seriesName) {
+    protected Button getPlannedAmountButton(String seriesName) {
       Button nameButton = getPanel().getButton(seriesName);
 
       JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
@@ -359,7 +379,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public BudgetAreaChecker checkAmountSignpostDisplayed(String seriesName, String text) {
-      BudgetViewChecker.this.checkSignpostVisible(mainWindow, getAmountButton(seriesName), text);
+      BudgetViewChecker.this.checkSignpostVisible(mainWindow, getPlannedAmountButton(seriesName), text);
       return this;
     }
 
@@ -402,7 +422,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public ProjectEditionChecker editPlannedAmountForProject(String seriesName) {
-      return ProjectEditionChecker.open(getAmountButton(seriesName));
+      return ProjectEditionChecker.open(getPlannedAmountButton(seriesName));
     }
 
     public ProjectEditionChecker createProject() {
