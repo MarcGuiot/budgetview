@@ -2,6 +2,7 @@ package org.globsframework.xml;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.Link;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.ContainmentLink;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeUtils;
