@@ -7,4 +7,6 @@ public interface SplitsNode<T extends Component> {
   T getComponent();
 
   void applyStyle(String styleNames);
+
+  void reapplyStyle();
 }

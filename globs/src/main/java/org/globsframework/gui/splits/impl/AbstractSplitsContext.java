@@ -177,6 +177,9 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     for (AutoHideListener listener : autoHideListeners) {
       listener.init(this);
     }
+    for (SplitsNode<Component> node : componentsByName.values()) {
+      node.reapplyStyle();
+    }
     for (Map.Entry<JLabel, String> association : labelForAssociations.entrySet()) {
       JLabel label = association.getKey();
       String ref = association.getValue();

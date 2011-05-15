@@ -62,19 +62,59 @@ public class SplitsDynamicStylesTest extends SplitsTestCase {
       "  </row>" +
       "</repeat>");
 
-    checkColorApply(splitsNodesMap, labels, "aa", "blue", Color.BLUE);
-    checkColorApply(splitsNodesMap, labels, "bb", "red", Color.RED);
-    checkColorApply(splitsNodesMap, labels, "bb", "blue", Color.BLUE);
+    applyStyleAndCheckColor(splitsNodesMap, labels, "aa", "blue", Color.BLUE);
+    applyStyleAndCheckColor(splitsNodesMap, labels, "bb", "red", Color.RED);
+    applyStyleAndCheckColor(splitsNodesMap, labels, "bb", "blue", Color.BLUE);
   }
 
-  private void checkColorApply(Map<String, SplitsNode<JLabel>> splitHandlerMap, Map<String, JLabel> labels,
-                               final String name, final String styleName, final Color color) {
+  private void applyStyleAndCheckColor(Map<String, SplitsNode<JLabel>> splitHandlerMap, Map<String, JLabel> labels,
+                                       final String name, final String styleName, final Color color) {
     SplitsNode<JLabel> labelSplitsNode = splitHandlerMap.get(name);
     JLabel label = labels.get(name);
     labelSplitsNode.applyStyle(styleName);
     assertSame(label, labelSplitsNode.getComponent());
     assertEquals(color, label.getBackground());
   }
+
+  public void testApplyStyleFromRepeatFactory() throws Exception {
+    final Map<String, SplitsNode<JLabel>> splitsNodesMap = new HashMap<String, SplitsNode<JLabel>>();
+    final Map<String, JLabel> labels = new HashMap<String, JLabel>();
+
+    builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
+                      new RepeatComponentFactory<String>() {
+
+                        public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                          JLabel jLabel = new JLabel(object);
+                          SplitsNode<JLabel> node = cellBuilder.add("label", jLabel);
+                          node.applyStyle("red");
+                          splitsNodesMap.put(object, node);
+                          labels.put(object, jLabel);
+                        }
+                      });
+
+    parse(
+      "<styles>" +
+      "  <style id='red' selector='x' background='#FF0000'/>" +
+      "  <style id='blue' selector='x' background='#0000FF'/>" +
+      "</styles>" +
+      "<repeat ref='myRepeat'>" +
+      "  <row>" +
+      "    <label ref='label' background='#00FF00'/>" +
+      "  </row>" +
+      "</repeat>");
+
+    checkColor(splitsNodesMap, labels, "aa", Color.RED);
+    checkColor(splitsNodesMap, labels, "bb", Color.RED);
+  }
+
+  private void checkColor(Map<String, SplitsNode<JLabel>> splitHandlerMap, Map<String, JLabel> labels,
+                          final String name, final Color color) {
+    SplitsNode<JLabel> labelSplitsNode = splitHandlerMap.get(name);
+    JLabel label = labels.get(name);
+    assertSame(label, labelSplitsNode.getComponent());
+    assertEquals(color, label.getBackground());
+  }
+
 
   private SplitsNode<Component> getButton(String xml) throws Exception {
     builder.add("btn", aButton);

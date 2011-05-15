@@ -97,8 +97,14 @@ public class HyperlinkButtonUI extends BasicButtonUI {
     graphics.setFont(button.getFont());
     graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     if (button.isOpaque()) {
-      graphics.setColor(button.getParent().getBackground());
-      graphics.clearRect(0, 0, button.getWidth(), button.getHeight());
+      Color background = button.getBackground();
+      if (background != null) {
+        graphics.fillRect(0, 0, button.getWidth(), button.getHeight());
+      }
+      else {
+        graphics.setColor(button.getParent().getBackground());
+        graphics.clearRect(0, 0, button.getWidth(), button.getHeight());
+      }
     }
 
     String text = button.getText();
