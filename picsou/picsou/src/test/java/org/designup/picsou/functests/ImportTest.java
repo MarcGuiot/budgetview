@@ -633,10 +633,12 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     importDialog
       .openBankGuide()
       .checkContainsBanks("BNP Paribas", "CIC", "Crédit Agricole", "ING Direct", "Société Générale")
+      .checkWebsiteUrlHidden()
       .checkHelpAvailable(false)
       .setFilter("BNP")
       .checkBankList("Autre", "BNP Paribas", "BNPPF")
       .selectBank("BNP Paribas")
+      .checkWebsiteUrl("http://www.bnpparibas.net")
       .checkHelpAvailable(true)
       .openHelp()
       .checkTitle("BNP Paribas downloads")

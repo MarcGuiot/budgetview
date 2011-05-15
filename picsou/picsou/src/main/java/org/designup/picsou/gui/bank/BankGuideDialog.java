@@ -12,6 +12,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -49,6 +50,8 @@ public class BankGuideDialog {
 
     BankChooserPanel bankChooser = BankChooserPanel.registerComponents(builder, openHelpAction);
     builder.add("openHelp", openHelpAction);
+
+    builder.add("gotoWebsite", new GotoBankWebsiteAction(Lang.get("bank.guide.website"), repository, localDirectory));
 
     dialog = PicsouDialog.create(parent, localDirectory);
     dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(dialog));

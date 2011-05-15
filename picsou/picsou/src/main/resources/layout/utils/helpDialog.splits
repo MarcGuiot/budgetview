@@ -7,7 +7,7 @@
            fill="horizontal" horizontalAlignment="center" weightY="0" marginBottom="5"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(600,500)" opaque="true">
+  <panel styleClass="dialog" preferredSize="(600,600)" opaque="true">
     <column styleClass="innerDialog">
 
       <label ref="title"/>

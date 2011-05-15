@@ -3,6 +3,8 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
     <style selector="label.formLabel" fill="horizontal" horizontalAlignment="left" marginBottom="4"/>
+    <style selector="button.gotoWebsite" ui="hyperlinkButton"
+           foreground="hyperlink" icon="arrow_right_blue_full.png"/>
   </styles>
 
   <column styleClass="dialog" preferredSize="(400,340)" opaque="true">
@@ -20,6 +22,8 @@
             <label icon="button_magnifier.png" marginRight="5"/>
             <textField ref="bankEditor"/>
           </row>
+
+          <button action="gotoWebsite" styleClass="gotoWebsite" marginTop="10" fill="none" anchor="center"/>
 
           <button action="openHelp" marginTop="10" marginBottom="10"/>
 

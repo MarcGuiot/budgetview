@@ -7,6 +7,8 @@ import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowInterceptor;
 
+import javax.swing.*;
+
 public class BankGuideChecker extends GuiChecker {
   private Panel panel;
 
@@ -31,6 +33,16 @@ public class BankGuideChecker extends GuiChecker {
 
   public BankGuideChecker checkContainsBanks(String... banks) {
     assertThat(panel.getListBox("bankList").contains(banks));
+    return this;
+  }
+
+  public BankGuideChecker checkWebsiteUrlHidden() {
+    checkComponentVisible(panel, JButton.class, "gotoWebsite", false);
+    return this;
+  }
+
+  public BankGuideChecker checkWebsiteUrl(String url) {
+    BrowsingChecker.checkDisplay(panel.getButton("gotoWebsite"), url);
     return this;
   }
 

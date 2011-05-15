@@ -10,7 +10,6 @@ import javax.swing.*;
 
 public class BankChooserPanel {
 
-  private GlobListView bankListView;
   private GlobListViewFilter filter;
 
   public static BankChooserPanel registerComponents(GlobsPanelBuilder builder, Action validateAction) {
@@ -18,7 +17,7 @@ public class BankChooserPanel {
   }
 
   private BankChooserPanel(GlobsPanelBuilder builder, Action validateAction) {
-    bankListView = builder.addList("bankList", Bank.TYPE)
+    GlobListView bankListView = builder.addList("bankList", Bank.TYPE)
       .addDoubleClickAction(validateAction);
     filter = GlobListViewFilter.init(bankListView).setDefaultValue(Key.create(Bank.TYPE, Bank.GENERIC_BANK_ID));
     builder.add("bankEditor", filter);
