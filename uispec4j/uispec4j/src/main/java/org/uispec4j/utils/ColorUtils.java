@@ -186,6 +186,9 @@ public final class ColorUtils {
   }
 
   private static String toHexString(Color color) {
+    if (color == null) {
+      return "null";
+    }
     return Integer.toHexString(color.getRGB()).substring(2);
   }
 }

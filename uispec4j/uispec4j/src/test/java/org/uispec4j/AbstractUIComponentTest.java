@@ -63,7 +63,13 @@ public class AbstractUIComponentTest extends UnitTestCase {
 
   public void testBackground() throws Exception {
     DummyAwtUIComponent uiComponent = new DummyAwtUIComponent("name");
+
+    uiComponent.component.setBackground(null);
+    assertTrue(uiComponent.backgroundNotSet());
+    assertFalse(uiComponent.backgroundEquals("2255F8"));
+
     uiComponent.component.setBackground(ColorUtils.getColor("2255F7"));
+    assertFalse(uiComponent.backgroundNotSet());
 
     assertTrue(uiComponent.backgroundEquals("2255F7"));
     assertFalse(uiComponent.backgroundEquals("2255F8"));

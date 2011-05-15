@@ -150,6 +150,19 @@ public abstract class AbstractUIComponent implements UIComponent {
   }
 
   /**
+   * Checks that the component has no background
+   */
+  public Assertion backgroundNotSet() {
+    return new Assertion() {
+      public void check() {
+        Color background = getAwtComponent().getBackground();
+        AssertAdapter.assertNull("Background should be null but is: " + ColorUtils.getColorDescription(background),
+                                 background);
+      }
+    };
+  }
+
+  /**
    * Checks the background color of the component
    * The color can be given in either hexadecimal ("FF45C0") or human-readable ("red") format.
    *
