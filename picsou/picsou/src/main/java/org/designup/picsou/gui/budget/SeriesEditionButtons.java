@@ -47,8 +47,6 @@ public class SeriesEditionButtons {
     GlobButtonView buttonView =
       GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())
         .forceSelection(series.getKey());
-    buttonView.getComponent().addActionListener(
-      new SetSignpostStatusAction(SignpostStatus.SERIES_PERIODICITY_SHOWN, repository));
     repository.addChangeListener(new TooltipUpdater(series.getKey(), buttonView));
     return buttonView;
   }

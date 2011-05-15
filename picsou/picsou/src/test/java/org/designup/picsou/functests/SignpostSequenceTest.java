@@ -1,7 +1,6 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.SeriesAmountEditionDialogChecker;
-import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.checkers.SignpostDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
@@ -103,18 +102,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     checkNoSignpostVisible();
     amountDialog.cancel();
 
-    // === Series periodicity ===
-
-    budgetView.recurring.checkNameSignpostDisplayed(
-      "Electricity",
-      "Click on the envelope names to change their periodicity " +
-      "(for instance once every two months)");
-
-    SeriesEditionDialogChecker editionDialog = budgetView.recurring.editSeries("Electricity");
-    checkNoSignpostVisible();
-    editionDialog.cancel();
-
-    checkNoSignpostVisible();
+    // === Edit series amounts ===
 
     budgetView.variable.checkPlannedUnsetAndHighlighted("Groceries");
     budgetView.variable.editPlannedAmount("Groceries")
@@ -202,19 +190,6 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     SeriesAmountEditionDialogChecker amountDialog = budgetView.variable.editPlannedAmount("Groceries");
     checkNoSignpostVisible();
     amountDialog.cancel();
-
-    // === Series periodicity ===
-
-    budgetView.recurring.checkNameSignpostDisplayed(
-      "Electricity",
-      "Click on the envelope names to change their periodicity " +
-      "(for instance once every two months)");
-
-    SeriesEditionDialogChecker editionDialog = budgetView.recurring.editSeries("Electricity");
-    checkNoSignpostVisible();
-    editionDialog.cancel();
-
-    checkNoSignpostVisible();
 
     signpostView.checkSignpostViewShown();
     views.selectBudget();
@@ -304,17 +279,9 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkPlannedNotHighlighted("Groceries");
     budgetView.variable.checkPlannedUnsetAndHighlighted("Clothing");
 
-    // === Series periodicity ===
-
-    budgetView.recurring.editSeries("Electricity")
-      .setTwoMonths()
-      .validate();
-
     signpostView.checkSignpostViewShown();
 
     // === Restart ===
-
-    System.out.println("\n\n\nSignpostSequenceTest.testRestartDuringBudgetTuning: ");
 
     restartApplication();
 

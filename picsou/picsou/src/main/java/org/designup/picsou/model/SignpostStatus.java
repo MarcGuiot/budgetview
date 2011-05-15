@@ -40,8 +40,6 @@ public class SignpostStatus {
   public static BooleanField CATEGORIZATION_SKIPPED;
   public static BooleanField GOTO_BUDGET_SHOWN;
   public static BooleanField GOTO_BUDGET_DONE;
-  public static BooleanField SERIES_PERIODICITY_SHOWN;
-  public static BooleanField SERIES_PERIODICITY_DONE;
   public static BooleanField SERIES_AMOUNT_SHOWN;
   public static BooleanField SERIES_AMOUNT_DONE;
 
@@ -124,11 +122,6 @@ public class SignpostStatus {
     repository.update(KEY, PERIODICITY_SERIES, seriesKey.get(Series.ID));
   }
 
-  public static boolean isPeriodicitySeries(GlobRepository repository, org.globsframework.model.Key key) {
-    return Utils.equal(key.get(Series.ID),
-                       repository.findOrCreate(KEY).get(PERIODICITY_SERIES));
-  }
-
   public static void setSection(SignpostSectionType section, GlobRepository repository) {
     repository.startChangeSet();
     try {
@@ -145,11 +138,14 @@ public class SignpostStatus {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 5;
+      return 6;
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 5) {
+      if (version == 6) {
+        deserializeDataV6(fieldSetter, data);
+      }
+      else if (version == 5) {
         deserializeDataV5(fieldSetter, data);
       }
       else if (version == 4) {
@@ -177,8 +173,6 @@ public class SignpostStatus {
       outputStream.writeBoolean(values.get(CATEGORIZATION_AREA_SELECTION_DONE));
       outputStream.writeBoolean(values.get(GOTO_BUDGET_SHOWN));
       outputStream.writeBoolean(values.get(GOTO_BUDGET_DONE));
-      outputStream.writeBoolean(values.get(SERIES_PERIODICITY_SHOWN));
-      outputStream.writeBoolean(values.get(SERIES_PERIODICITY_DONE));
       outputStream.writeBoolean(values.get(SERIES_AMOUNT_SHOWN));
       outputStream.writeBoolean(values.get(SERIES_AMOUNT_DONE));
       outputStream.writeInteger(values.get(AMOUNT_SERIES));
@@ -188,6 +182,26 @@ public class SignpostStatus {
       outputStream.writeInteger(values.get(CURRENT_SECTION));
       return serializedByteArrayOutput.toByteArray();
     }
+
+    private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(IMPORT_DONE, input.readBoolean());
+      fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
+      fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
+      fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
+      fieldSetter.set(GOTO_BUDGET_SHOWN, input.readBoolean());
+      fieldSetter.set(GOTO_BUDGET_DONE, input.readBoolean());
+      fieldSetter.set(SERIES_AMOUNT_SHOWN, input.readBoolean());
+      fieldSetter.set(SERIES_AMOUNT_DONE, input.readBoolean());
+      fieldSetter.set(AMOUNT_SERIES, input.readInteger());
+      fieldSetter.set(PERIODICITY_SERIES, input.readInteger());
+      fieldSetter.set(FIRST_CATEGORIZATION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_SKIPPED, input.readBoolean());
+      fieldSetter.set(CURRENT_SECTION, input.readInteger());
+    }
+
 
     private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
@@ -199,8 +213,8 @@ public class SignpostStatus {
       fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
       fieldSetter.set(GOTO_BUDGET_SHOWN, input.readBoolean());
       fieldSetter.set(GOTO_BUDGET_DONE, input.readBoolean());
-      fieldSetter.set(SERIES_PERIODICITY_SHOWN, input.readBoolean());
-      fieldSetter.set(SERIES_PERIODICITY_DONE, input.readBoolean());
+      input.readBoolean(); // SERIES_PERIODICITY_SHOWN
+      input.readBoolean(); // SERIES_PERIODICITY_DONE
       fieldSetter.set(SERIES_AMOUNT_SHOWN, input.readBoolean());
       fieldSetter.set(SERIES_AMOUNT_DONE, input.readBoolean());
       fieldSetter.set(AMOUNT_SERIES, input.readInteger());
@@ -220,8 +234,8 @@ public class SignpostStatus {
       fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
       fieldSetter.set(GOTO_BUDGET_SHOWN, input.readBoolean());
       fieldSetter.set(GOTO_BUDGET_DONE, input.readBoolean());
-      fieldSetter.set(SERIES_PERIODICITY_SHOWN, input.readBoolean());
-      fieldSetter.set(SERIES_PERIODICITY_DONE, input.readBoolean());
+      input.readBoolean(); // SERIES_PERIODICITY_SHOWN
+      input.readBoolean(); // SERIES_PERIODICITY_DONE
       fieldSetter.set(SERIES_AMOUNT_SHOWN, input.readBoolean());
       fieldSetter.set(SERIES_AMOUNT_DONE, input.readBoolean());
       fieldSetter.set(AMOUNT_SERIES, input.readInteger());
@@ -240,8 +254,8 @@ public class SignpostStatus {
       fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
       fieldSetter.set(GOTO_BUDGET_SHOWN, true);
       fieldSetter.set(GOTO_BUDGET_DONE, input.readBoolean());
-      fieldSetter.set(SERIES_PERIODICITY_SHOWN, input.readBoolean());
-      fieldSetter.set(SERIES_PERIODICITY_DONE, input.readBoolean());
+      input.readBoolean(); // SERIES_PERIODICITY_SHOWN
+      input.readBoolean(); // SERIES_PERIODICITY_DONE
       input.readBoolean(); // Skip SERIES_GAUGE_SHOWN
       fieldSetter.set(SERIES_AMOUNT_SHOWN, input.readBoolean());
       fieldSetter.set(SERIES_AMOUNT_DONE, input.readBoolean());
@@ -262,8 +276,8 @@ public class SignpostStatus {
       fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
       fieldSetter.set(GOTO_BUDGET_SHOWN, true);
       fieldSetter.set(GOTO_BUDGET_DONE, input.readBoolean());
-      fieldSetter.set(SERIES_PERIODICITY_SHOWN, input.readBoolean());
-      fieldSetter.set(SERIES_PERIODICITY_DONE, input.readBoolean());
+      input.readBoolean(); // SERIES_PERIODICITY_SHOWN
+      input.readBoolean(); // SERIES_PERIODICITY_DONE
       input.readBoolean(); // Skip SERIES_GAUGE_SHOWN
       fieldSetter.set(SERIES_AMOUNT_SHOWN, input.readBoolean());
       fieldSetter.set(SERIES_AMOUNT_DONE, input.readBoolean());
@@ -283,8 +297,8 @@ public class SignpostStatus {
       fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
       fieldSetter.set(GOTO_BUDGET_SHOWN, true);
       fieldSetter.set(GOTO_BUDGET_DONE, input.readBoolean());
-      fieldSetter.set(SERIES_PERIODICITY_SHOWN, input.readBoolean());
-      fieldSetter.set(SERIES_PERIODICITY_DONE, input.readBoolean());
+      input.readBoolean(); // SERIES_PERIODICITY_SHOWN
+      input.readBoolean(); // SERIES_PERIODICITY_DONE
       input.readBoolean(); // Skip SERIES_GAUGE_SHOWN
       fieldSetter.set(SERIES_AMOUNT_SHOWN, input.readBoolean());
       fieldSetter.set(SERIES_AMOUNT_DONE, input.readBoolean());

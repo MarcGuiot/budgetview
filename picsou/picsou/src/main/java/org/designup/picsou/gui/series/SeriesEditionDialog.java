@@ -144,9 +144,6 @@ public class SeriesEditionDialog {
     localDirectory.add(selectionService);
 
     dialog = PicsouDialog.create(parent, directory);
-    dialog.addOnWindowClosedAction(new SetSignpostStatusAction(SignpostStatus.SERIES_PERIODICITY_DONE,
-                                                               SignpostStatus.SERIES_PERIODICITY_SHOWN,
-                                                               repository));
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
                                                       "/layout/series/seriesEditionDialog.splits",

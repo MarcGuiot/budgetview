@@ -16,7 +16,6 @@ import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.signpost.guides.SeriesAmountSignpost;
-import org.designup.picsou.gui.signpost.guides.SeriesPeriodicitySignpost;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.gui.utils.MonthMatcher;
 import org.designup.picsou.model.*;
@@ -284,12 +283,6 @@ public class BudgetAreaSeriesView extends View {
           visibles.remove(gaugeView);
         }
       });
-
-      if (SignpostStatus.isPeriodicitySeries(repository, series.getKey())) {
-        Signpost signpost = new SeriesPeriodicitySignpost(repository, directory);
-        cellBuilder.addDisposeListener(signpost);
-        signpost.attach(seriesNameButton.getComponent());
-      }
 
       if (SignpostStatus.isAmountSeries(repository, series.getKey())) {
         Signpost amountSignpost = new SeriesAmountSignpost(repository, directory);

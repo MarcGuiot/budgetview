@@ -14,7 +14,7 @@ public class BudgetSectionPanel extends SignpostSectionPanel {
 
   protected boolean isCompleted(GlobRepository repository) {
     return SignpostStatus.isCompleted(SignpostStatus.GOTO_BUDGET_DONE, repository)
-           && SignpostStatus.isCompleted(SignpostStatus.SERIES_PERIODICITY_DONE, repository)
+           && SignpostStatus.isCompleted(SignpostStatus.SERIES_AMOUNT_DONE, repository)
            && repository.contains(PeriodSeriesStat.TYPE)
            && !repository.contains(PeriodSeriesStat.TYPE, fieldEquals(PeriodSeriesStat.TO_SET, true));
   }
