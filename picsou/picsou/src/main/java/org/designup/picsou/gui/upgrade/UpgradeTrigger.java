@@ -113,6 +113,9 @@ public class UpgradeTrigger implements ChangeSetListener {
                         FieldValue.value(UserPreferences.MONTH_FOR_PLANNED, 3),
                         FieldValue.value(UserPreferences.PERIOD_COUNT_FOR_PLANNED, 10));
     }
+    if (currentJarVersion < 68){
+      correctSavingMiror(repository);
+    }
 
     deleteDeprecatedGlobs(repository);
 
@@ -125,47 +128,67 @@ public class UpgradeTrigger implements ChangeSetListener {
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
   }
 
+  private void correctSavingMiror(GlobRepository repository) {
+    GlobList savingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
+    for (Glob series : savingsSeries) {
+      Glob mirorSeries = repository.findLinkTarget(series, Series.MIRROR_SERIES);
+      if (mirorSeries.get(Series.TARGET_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))){
+        updateSavingsSeries(repository, series);
+        //finalement deux series sont identiques
+        if (mirorSeries.get(Series.TARGET_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))){
+          Log.write("Correcting savings series.");
+          repository.update(mirorSeries.getKey(), Series.TARGET_ACCOUNT, mirorSeries.get(Series.FROM_ACCOUNT));
+          repository.update(series.getKey(), Series.TARGET_ACCOUNT, mirorSeries.get(Series.TO_ACCOUNT));
+        }
+      }
+    }
+  }
+
   private void updateTargetSavings(GlobRepository repository) {
     repository.findOrCreate(Account.EXTERNAL_KEY,
                             value(Account.IS_IMPORTED_ACCOUNT, Boolean.FALSE)
     );
     GlobList savingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
     for (Glob series : savingsSeries) {
-      Boolean sens = null;
-      GlobList budget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID)).getGlobs();
-      for (Glob glob : budget) {
-        if (glob.get(SeriesBudget.AMOUNT) == null){
-          continue;
-        }
-        if (glob.get(SeriesBudget.AMOUNT) > 0) {
-          sens = true;
-          break;
-        }
-        if (glob.get(SeriesBudget.AMOUNT) < 0) {
-          sens = false;
-          break;
-        }
+      updateSavingsSeries(repository, series);
+    }
+  }
+
+  private void updateSavingsSeries(GlobRepository repository, Glob series) {
+    Boolean sens = null;
+    GlobList budget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID)).getGlobs();
+    for (Glob glob : budget) {
+      if (glob.get(SeriesBudget.AMOUNT) == null){
+        continue;
       }
-      if (series.get(Series.FROM_ACCOUNT) == null) {
-        repository.update(series.getKey(), Series.FROM_ACCOUNT, Account.EXTERNAL_ACCOUNT_ID);
+      if (glob.get(SeriesBudget.AMOUNT) > 0) {
+        sens = true;
+        break;
       }
-      if (series.get(Series.TO_ACCOUNT) == null) {
-        repository.update(series.getKey(), Series.TO_ACCOUNT, Account.EXTERNAL_ACCOUNT_ID);
+      if (glob.get(SeriesBudget.AMOUNT) < 0) {
+        sens = false;
+        break;
       }
-      if (sens == null) {
-        if (series.isTrue(Series.IS_MIRROR)) {
-          repository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.TO_ACCOUNT));
-        }
-        else {
-          repository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.FROM_ACCOUNT));
-        }
-      }
-      else if (sens) {
+    }
+    if (series.get(Series.FROM_ACCOUNT) == null) {
+      repository.update(series.getKey(), Series.FROM_ACCOUNT, Account.EXTERNAL_ACCOUNT_ID);
+    }
+    if (series.get(Series.TO_ACCOUNT) == null) {
+      repository.update(series.getKey(), Series.TO_ACCOUNT, Account.EXTERNAL_ACCOUNT_ID);
+    }
+    if (sens == null) {
+      if (series.isTrue(Series.IS_MIRROR)) {
         repository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.TO_ACCOUNT));
       }
       else {
         repository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.FROM_ACCOUNT));
       }
+    }
+    else if (sens) {
+      repository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.TO_ACCOUNT));
+    }
+    else {
+      repository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.FROM_ACCOUNT));
     }
   }
 
