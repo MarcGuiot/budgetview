@@ -8,15 +8,12 @@ import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.impl.SortingIcon;
 import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.metamodel.DummyObject;
-import static org.globsframework.metamodel.DummyObject.*;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.metamodel.DummyObjectWithLinks;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import static org.globsframework.model.KeyBuilder.newKey;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.GlobStringifiers;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
@@ -41,6 +38,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.Comparator;
+
+import static org.globsframework.metamodel.DummyObject.*;
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.KeyBuilder.newKey;
 
 public class GlobTableViewTest extends GuiComponentTestCase {
   private GlobTableView view;
@@ -217,13 +218,13 @@ public class GlobTableViewTest extends GuiComponentTestCase {
         GlobTableView
           .init(TYPE, repository, new GlobFieldComparator(NAME), directory)
           .addColumn("colName", new DefaultTableCellRenderer() {
-          public Component getTableCellRendererComponent(JTable table, Object object,
-                                                         boolean b, boolean b1, int i, int i1) {
-            Glob glob = (Glob)object;
-            String value = "[" + glob.get(ID) + "] " + glob.get(NAME);
-            return super.getTableCellRendererComponent(table, value, b, b1, i, i1);
-          }
-        }, GlobStringifiers.get(NAME)));
+                       public Component getTableCellRendererComponent(JTable table, Object object,
+                                                                      boolean b, boolean b1, int i, int i1) {
+                         Glob glob = (Glob)object;
+                         String value = "[" + glob.get(ID) + "] " + glob.get(NAME);
+                         return super.getTableCellRendererComponent(table, value, b, b1, i, i1);
+                       }
+                     }, GlobStringifiers.get(NAME)));
 
     assertTrue(table.getHeader().contentEquals("colName"));
     assertTrue(table.contentEquals(new String[][]{
@@ -279,8 +280,8 @@ public class GlobTableViewTest extends GuiComponentTestCase {
                     "<dummyObjectWithLinks id='2'/>");
     Table table =
       createTable(GlobTableView
-        .init(DummyObjectWithLinks.TYPE, repository, new GlobFieldComparator(DummyObjectWithLinks.ID), directory)
-        .addColumn(DummyObjectWithLinks.COMPOSITE_LINK));
+                    .init(DummyObjectWithLinks.TYPE, repository, new GlobFieldComparator(DummyObjectWithLinks.ID), directory)
+                    .addColumn(DummyObjectWithLinks.COMPOSITE_LINK));
     assertTrue(table.getHeader().contentEquals(DummyObjectWithLinks.COMPOSITE_LINK.getName()));
     assertTrue(table.contentEquals(new Object[][]{
       {"target"},
@@ -919,6 +920,66 @@ public class GlobTableViewTest extends GuiComponentTestCase {
       .run();
   }
 
+  public void testRightClickPreservesSelection() throws Exception {
+    repository =
+      checker.parse(
+        "<dummyObject id='1' name='name1' value='1.1'/>" +
+        "<dummyObject id='2' name='name2' value='1.2'/>" +
+        "<dummyObject id='3' name='name3' value='1.3'/>"
+      );
+
+    final GlobTableView view =
+      GlobTableView.init(TYPE, repository, new GlobFieldComparator(ID), directory)
+        .addColumn(NAME)
+        .setPopupFactory(new PopupMenuFactory() {
+          public JPopupMenu createPopup() {
+            JPopupMenu menu = new JPopupMenu();
+            menu.add(new JMenuItem("item 1"));
+            menu.add(new JMenuItem("item 2"));
+            return menu;
+          }
+        });
+
+    final Table table = new Table(view.getComponent());
+
+    WindowInterceptor
+      .init(new Trigger() {
+        public void run() throws Exception {
+          final JDialog dialog = new JDialog();
+          dialog.add(view.getComponent());
+          dialog.add(new JButton(new AbstractAction("Close") {
+            public void actionPerformed(ActionEvent event) {
+              dialog.setVisible(false);
+            }
+          }));
+          dialog.setVisible(true);
+        }
+      })
+      .process(new WindowHandler() {
+        public Trigger process(org.uispec4j.Window window) throws Exception {
+
+          table.selectRows(0, 1);
+
+          PopupMenuInterceptor
+            .run(window.getTable().triggerRightClick(1, 1))
+            .contentEquals("item 1", "item 2")
+            .check();
+
+          assertThat(table.rowsAreSelected(0, 1));
+
+          PopupMenuInterceptor
+            .run(window.getTable().triggerRightClick(2, 1))
+            .contentEquals("item 1", "item 2")
+            .check();
+
+          assertThat(table.rowIsSelected(2));
+
+          return window.getButton("Close").triggerClick();
+        }
+      })
+      .run();
+  }
+
   public void testEditableColumns() throws Exception {
     repository =
       checker.parse("<dummyObject id='1' name='thisIsAName' value='1.11'/>" +
@@ -1088,7 +1149,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     Table table = createTableWithNameAndValueColumns(repository);
 
     assertTrue(table.getHeader().contentEquals("name", "value"));
-    
+
     view.removeColumn(1);
 
     assertTrue(table.getHeader().contentEquals("name"));
