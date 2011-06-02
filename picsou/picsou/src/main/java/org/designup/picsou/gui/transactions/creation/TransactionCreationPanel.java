@@ -260,7 +260,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     if (accountCombo.getItemCount() == 0) {
       final JFrame frame = directory.get(JFrame.class);
       ConfirmationDialog dialog = new ConfirmationDialog("transactionCreation.noAccounts.title",
-                                                         "transactionCreation.noAccounts.message",
+                                                         Lang.get("transactionCreation.noAccounts.message"),
                                                          frame, directory,
                                                          ConfirmationDialog.Mode.EXPANDED) {
 

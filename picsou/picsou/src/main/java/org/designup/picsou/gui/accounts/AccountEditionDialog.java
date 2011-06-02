@@ -229,7 +229,8 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
                          linkedTo(currentAccount, Series.TO_ACCOUNT));
 
       ConfirmationDialog confirmDialog = new ConfirmationDialog("accountDeletion.confirm.title",
-                                                                getMessageKey(), dialog, localDirectory) {
+                                                                Lang.get(getMessageKey()),
+                                                                dialog, localDirectory) {
         protected void postValidate() {
           try {
             parentRepository.startChangeSet();

@@ -114,7 +114,7 @@ public class ExportDialog {
 
     final File file = getFile(chooser, extension);
     if (file.exists() && !ConfirmationDialog.confirmed("export.confirm.title",
-                                                       "export.confirm.message",
+                                                       Lang.get("export.confirm.message"),
                                                        parent, directory)) {
       return;
     }

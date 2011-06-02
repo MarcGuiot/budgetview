@@ -12,14 +12,19 @@ public class MessageDialog {
   private PicsouDialog dialog;
   private SplitsBuilder builder;
 
-  public static void showWithButtonMessage(String titleKey, String buttonKey, Window owner, Directory directory,
-                                           String contentKey, String... contentArgs) {
-    MessageDialog dialog = new MessageDialog(titleKey, buttonKey, owner, directory, contentKey, contentArgs);
+  public static void show(String titleKey, Window owner, Directory directory, String contentKey, String... args) {
+    MessageDialog dialog = new MessageDialog(titleKey, "close", owner, directory, contentKey, args);
     dialog.show();
   }
 
-  public static void show(String titleKey, Window owner, Directory directory, String contentKey, String... args) {
-    MessageDialog dialog = new MessageDialog(titleKey, "close", owner, directory, contentKey, args);
+  public static void show(String titleKey, Directory directory, String contentKey, String... args) {
+    MessageDialog dialog = new MessageDialog(titleKey, "close", directory.get(JFrame.class), directory, contentKey, args);
+    dialog.show();
+  }
+
+  public static void showWithButtonMessage(String titleKey, String buttonKey, Window owner, Directory directory,
+                                           String contentKey, String... contentArgs) {
+    MessageDialog dialog = new MessageDialog(titleKey, buttonKey, owner, directory, contentKey, contentArgs);
     dialog.show();
   }
 

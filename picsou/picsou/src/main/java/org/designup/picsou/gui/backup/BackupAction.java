@@ -43,7 +43,7 @@ public class BackupAction extends AbstractBackupRestoreAction {
     if (returnVal == JFileChooser.APPROVE_OPTION) {
       final File file = chooser.getSelectedFile();
       if (file.exists() && !ConfirmationDialog.confirmed("backup.confirm.title",
-                                                         "backup.confirm.message",
+                                                         Lang.get("backup.confirm.message"),
                                                          frame, directory)) {
         return;
       }

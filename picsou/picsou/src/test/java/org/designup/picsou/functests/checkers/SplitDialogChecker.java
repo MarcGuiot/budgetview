@@ -2,6 +2,8 @@ package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.transactions.split.SplitTransactionDialog;
+import org.designup.picsou.gui.utils.AmountColors;
+import org.designup.picsou.model.util.Amounts;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Window;
@@ -70,6 +72,13 @@ public class SplitDialogChecker extends GuiChecker {
 
   public SplitDialogChecker add() {
     getAddButton().click();
+    return this;
+  }
+
+  public SplitDialogChecker add(double amount, String note) {
+    enterAmount(Formatting.toString(amount));
+    enterNote(note);
+    add();
     return this;
   }
 

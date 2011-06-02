@@ -33,7 +33,9 @@ public class DeleteUserAction extends AbstractAction implements ChangeSetListene
     final Glob user = repository.get(User.KEY);
 
     if (user.isTrue(User.AUTO_LOGIN)) {
-      ConfirmationDialog dialog = new ConfirmationDialog("delete.autologin.title", "delete.autologin.message", directory.get(JFrame.class), directory) {
+      ConfirmationDialog dialog = new ConfirmationDialog("delete.autologin.title",
+                                                         Lang.get("delete.autologin.message"),
+                                                         directory.get(JFrame.class), directory) {
         protected void postValidate() {
           mainPanel.deleteUser(user.get(User.NAME), user.get(User.NAME).toCharArray());
         }

@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.SplitDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.TransactionType;
 
 public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
@@ -345,7 +346,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
 
     transactionDetails.openSplitDialog()
       .checkTable(new Object[][]{
-        {"",	"MONOPRIX",	-50.00,	"",""}
+        {"", "MONOPRIX", -50.00, "", ""}
       })
       .close();
   }
@@ -386,7 +387,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
         {"", "Auchan", -12.50, "note 1"},
       })
       .validateAndClose();
-    
+
     transactionDetails.openSplitDialog()
       .checkTable(new Object[][]{
         {"Food", "Auchan", -7.50, "note 0"},
@@ -401,7 +402,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       })
       .enterAmount("22")
       .validateAndClose();
-    
+
     categorization.selectTableRow(0);
     transactionDetails.openSplitDialog()
       .checkTable(new Object[][]{
@@ -409,6 +410,118 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
         {"", "Auchan", -12.50, "note 1"},
       })
       .close();
+  }
+
+  public void testDeletingASubTransactionReintegratesItInTheMaster() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/05/01", -200.00, "master1")
+      .addTransaction("2006/05/02", -500.00, "master2")
+      .load();
+
+    transactions.initContent()
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "master2", "", -500.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "", -200.00)
+      .check();
+
+    categorization.selectTransactions("master1");
+    transactionDetails.openSplitDialog()
+      .add(50.00, "sub1a")
+      .add(20.00, "sub1b")
+      .add(10.00, "sub1c")
+      .validateAndClose();
+    transactions.initContent()
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "master2", "", -500.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "", -120.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "sub1c", -10.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "sub1b", -20.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "sub1a", -50.00)
+      .check();
+
+    transactions.deleteTransactionWithNote("sub1a", "Removing one part");
+    transactions.initContent()
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "master2", "", -500.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "", -170.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "sub1c", -10.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "sub1b", -20.00)
+      .check();
+
+    categorization.selectTransaction("master2");
+    transactionDetails.openSplitDialog()
+      .add(50.00, "sub2a")
+      .add(20.00, "sub2b")
+      .validateAndClose();
+
+    transactions.initContent()
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "MASTER2", "", -430.00)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "MASTER2", "sub2b", -20.00)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "MASTER2", "sub2a", -50.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "MASTER1", "", -170.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "MASTER1", "sub1c", -10.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "MASTER1", "sub1b", -20.00)
+      .check();
+
+    transactions.deleteTransactionsWithNotes("Removing several parts",
+                                             "sub1b", "sub1c", "sub2a", "sub2b");
+    transactions.initContent()
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "master2", "", -500.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "", -200.00)
+      .check();
+
+    operations.undo(3);
+    transactions.initContent()
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "master2", "", -500.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "", -120.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "sub1c", -10.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "sub1b", -20.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "sub1a", -50.00)
+      .check();
+  }
+
+  public void testDeletingTheMasterOperationDeletesAllSubOperations() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/05/01", -200.00, "master1")
+      .addTransaction("2006/05/02", -500.00, "master2")
+      .load();
+
+    transactions.initContent()
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "master2", "", -500.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "", -200.00)
+      .check();
+
+    categorization.selectTransactions("master1");
+    transactionDetails.openSplitDialog()
+      .add(50.00, "sub1a")
+      .add(20.00, "sub1b")
+      .add(10.00, "sub1c")
+      .validateAndClose();
+    transactions.initContent()
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "master2", "", -500.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "", -120.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "sub1c", -10.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "sub1b", -20.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "master1", "sub1a", -50.00)
+      .check();
+
+    transactions.delete("master1", "Removing one operation");
+    transactions.initContent()
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "master2", "", -500.00)
+      .check();
+
+    categorization.selectTransaction("MASTER2");
+    transactionDetails.openSplitDialog()
+      .add(50.00, "sub2a")
+      .add(20.00, "sub2b")
+      .validateAndClose();
+    transactions.initContent()
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "MASTER2", "", -430.00)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "MASTER2", "sub2b", -20.00)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "MASTER2", "sub2a", -50.00)
+      .check();
+
+    transactions.deleteAll("Removing a mix of standard and split operations");
+    transactions.checkTableIsEmpty();
   }
 
   private SplitDialogChecker openDialogWith(String date, double amount, String label, String series) {

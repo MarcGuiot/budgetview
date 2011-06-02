@@ -207,5 +207,13 @@ public class ArrayUtils {
       AssertAdapter.fail("List should be empty but is " + toString(list));
     }
   }
+
+  public static List<Integer> asList(int[] array) {
+    List<Integer> result = new ArrayList<Integer>();
+    for (int i : array) {
+      result.add(i);
+    }
+    return result;
+  }
 }
 

@@ -9,108 +9,76 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
-import java.awt.*;
-import java.util.Iterator;
-
 public class DeleteTransactionDialog extends ConfirmationDialog {
   private GlobList transactions;
   private GlobRepository repository;
 
-  public DeleteTransactionDialog(GlobList transactions, Window parent,
-                                 GlobRepository repository, Directory directory) {
-    super("transaction.delete.title", "transaction.delete.content", parent, directory);
+  public DeleteTransactionDialog(GlobList transactions,
+                                 GlobRepository repository,
+                                 Directory directory) {
+    super("transaction.delete.title", Lang.get(getContentKey(transactions)), directory);
     this.transactions = transactions;
     this.repository = repository;
-
-    editorPane.setText(getText(transactions,
-                               hasSplit(transactions),
-                               hasAutoCreated(transactions),
-                               hasPlanned(transactions)));
-    
-    if (transactions.isEmpty()) {
-      cancel.setEnabled(false);
-    }
   }
 
-  private String getText(GlobList transactions,
-                         boolean hasSplit,
-                         boolean hasAutoCreated,
-                         boolean hasPlanned) {
-    String text = "<html>";
-    if (hasSplit) {
-      text = Lang.get("transaction.delete.split");
-    }
-    if (hasAutoCreated) {
-      text += Lang.get("transaction.delete.savings");
-    }
-    if (hasPlanned) {
-      text += Lang.get("transaction.delete.planned");
-    }
-    if (!transactions.isEmpty()) {
+  private static String getContentKey(GlobList transactions) {
+    int totalCount = transactions.size();
+    int splitCount = getSplitCount(transactions);
+    if (splitCount == 0) {
       if (transactions.size() == 1) {
-        text += Lang.get("transaction.delete.default.single");
+        return "transaction.delete.default.single";
       }
       else {
-        text += Lang.get("transaction.delete.default.multi", transactions.size());
+        return "transaction.delete.default.multi";
       }
     }
-    text += "</html>";
-    return text;
+    else if (splitCount < totalCount) {
+      return "transaction.delete.split.mixed";
+    }
+    else {
+      if (transactions.size() == 1) {
+        return "transaction.delete.split.single";
+      }
+      else {
+        return "transaction.delete.split.multi";
+      }
+    }
+
   }
 
-  private boolean hasPlanned(GlobList transactions) {
-    boolean hasPlanned = false;
-    for (Iterator<Glob> iterator = transactions.iterator(); iterator.hasNext(); ) {
-      Glob glob = iterator.next();
-      if (Transaction.isPlanned(glob)) {
-        iterator.remove();
-        hasPlanned = true;
+  private static int getSplitCount(GlobList transactions) {
+    int result = 0;
+    for (Glob transaction : transactions) {
+      if (transaction.get(Transaction.SPLIT_SOURCE) != null) {
+        result++;
       }
     }
-    return hasPlanned;
-  }
-
-  private boolean hasAutoCreated(GlobList transactions) {
-    boolean hasAutoCreated = false;
-    for (Iterator<Glob> iterator = transactions.iterator(); iterator.hasNext(); ) {
-      Glob glob = iterator.next();
-      if (Transaction.isCreatedBySeries(glob) || Transaction.isMirrorTransaction(glob)) {
-        iterator.remove();
-        hasAutoCreated = true;
-      }
-    }
-    return hasAutoCreated;
-  }
-
-  private boolean hasSplit(GlobList transactions) {
-    boolean hasSplit = false;
-    for (Iterator it = transactions.iterator(); it.hasNext(); ) {
-      Glob glob = (Glob)it.next();
-      if (glob.get(Transaction.SPLIT_SOURCE) != null) {
-        it.remove();
-        hasSplit = true;
-      }
-    }
-    return hasSplit;
+    return result;
   }
 
   protected void postValidate() {
     try {
       repository.startChangeSet();
       while (!transactions.isEmpty()) {
-        Glob glob = transactions.remove(0);
-        if (Transaction.isSplit(glob)) {
-          GlobList linkedToList = repository.findLinkedTo(glob, Transaction.SPLIT_SOURCE);
-          repository.delete(linkedToList);
-          for (Glob transaction : linkedToList) {
-            transactions.remove(transaction);
-          }
+        Glob toDelete = transactions.remove(0);
+
+        if (Transaction.isSplitSource(toDelete)) {
+          GlobList parts = repository.findLinkedTo(toDelete, Transaction.SPLIT_SOURCE);
+          repository.delete(parts);
+          transactions.removeAll(parts);
         }
-        Glob account = repository.findLinkTarget(glob, Transaction.ACCOUNT);
-        if (account != null && glob.get(Transaction.ID).equals(account.get(Account.TRANSACTION_ID))) {
+
+        if (Transaction.isSplitPart(toDelete)) {
+          Glob source = repository.findLinkTarget(toDelete, Transaction.SPLIT_SOURCE);
+          repository.update(source.getKey(), Transaction.AMOUNT,
+                            source.get(Transaction.AMOUNT) + toDelete.get(Transaction.AMOUNT));
+        }
+
+        Glob account = repository.findLinkTarget(toDelete, Transaction.ACCOUNT);
+        if (account != null && toDelete.get(Transaction.ID).equals(account.get(Account.TRANSACTION_ID))) {
           repository.update(account.getKey(), Account.TRANSACTION_ID, null);
         }
-        repository.delete(glob.getKey());
+        repository.delete(toDelete.getKey());
       }
     }
     finally {

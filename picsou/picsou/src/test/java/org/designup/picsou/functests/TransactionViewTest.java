@@ -284,18 +284,16 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00)
       .check();
 
-    transactions.delete("peage")
-      .validate();
+    transactions.delete("peage", "Removing one operation");
     transactions.initContent()
       .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00)
       .add("02/05/2006", TransactionType.PRELEVEMENT, "sg", "", -200.00)
       .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00)
       .check();
 
-    transactions.delete("nounou")
-      .validate();
+    transactions.delete("nounou");
 
-    categorization.selectTransactions("sg");
+    categorization.selectTransaction("sg");
     transactionDetails.split("100", "sg2");
     transactions.initContent()
       .add("02/05/2006", TransactionType.PRELEVEMENT, "sg", "", -100.00)
@@ -303,17 +301,21 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00)
       .check();
 
-    transactions.delete("sg").validate();
+    transactions.delete("sg", "Removing one operation");
+    transactions.initContent()
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00)
+      .check();
 
     categorization.selectTransactions("essence");
     transactionDetails.split("30", "essence2");
-
-    transactions.deleteTransactionWithNote("essence2")
-      .checkMessageContains("Use the split function")
-      .validate();
     transactions.initContent()
       .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -40.00)
       .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "essence2", -30.00)
+      .check();
+
+    transactions.deleteTransactionWithNote("essence2", "Removing one part");
+    transactions.initContent()
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00)
       .check();
   }
 
@@ -335,10 +337,9 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00)
       .check();
 
-    transactions.delete(2)
-      .checkMessageContains("Operation created by a series can not be removed").validate();
+    transactions.checkDeletionForbidden(2, "Operations created by a series cannot be removed");
 
-    transactions.delete(3).validate();
+    transactions.delete(3);
     transactions.initContent()
       .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
@@ -346,8 +347,35 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testCannotDeletePlannedTransactions() throws Exception {
+    categorization.setNewVariable("essence", "Voiture", -70.00);
+
+    timeline.selectAll();
+    transactions.showPlannedTransactions();
+    transactions.initContent()
+      .add("04/07/2006", TransactionType.PLANNED, "Planned: Voiture", "", -70.00, "Voiture")
+      .add("04/06/2006", TransactionType.PLANNED, "Planned: Voiture", "", -70.00, "Voiture")
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00)
+      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00, "Voiture")
+      .check();
+
+    transactions.checkDeletionForbidden(new int[]{1, 2}, "Planned operation cannot be deleted");
+
+    transactions.delete(5, "Removing one operation");
+    transactions.initContent()
+      .add("11/07/2006", TransactionType.PLANNED, "Planned: Voiture", "", -70.00, "Voiture")
+      .add("11/06/2006", TransactionType.PLANNED, "Planned: Voiture", "", -70.00, "Voiture")
+      .add("11/05/2006", TransactionType.PLANNED, "Planned: Voiture", "", -70.00, "Voiture")
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00)
+      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00)
+      .check();
+  }
+
   public void testToggleShowPlannedTransactions() throws Exception {
-    categorization.setNewVariable("essence", "Voiture", -70.);
+    categorization.setNewVariable("essence", "Voiture", -70.00);
     categorization.setNewRecurring("nounou", "Nounou");
 
     views.selectData();

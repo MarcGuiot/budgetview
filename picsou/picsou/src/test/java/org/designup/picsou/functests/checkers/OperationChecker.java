@@ -310,6 +310,12 @@ public class OperationChecker {
     return new PreferencesChecker(WindowInterceptor.getModalDialog(preferencesMenu.triggerClick()));
   }
 
+  public void undo(int count) {
+    for (int i = 0; i < count; i++) {
+      undo();
+    }
+  }
+
   public void undo() {
     undoMenu.click();
   }

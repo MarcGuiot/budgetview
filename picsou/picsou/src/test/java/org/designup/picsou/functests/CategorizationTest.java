@@ -1255,7 +1255,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.delete(0, 1)
-      .checkMessageContains("Removing 2 operations")
+      .checkMessageContains("Removing several operations")
       .cancel();
     categorization.delete("1_Auchan")
       .checkMessageContains("Removing one operation")

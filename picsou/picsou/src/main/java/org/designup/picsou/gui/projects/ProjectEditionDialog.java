@@ -209,7 +209,7 @@ public class ProjectEditionDialog {
 
       if (!transactionKeys.isEmpty()) {
         ConfirmationDialog confirm = new ConfirmationDialog("projectEdition.deleteConfirmation.title",
-                                                            "projectEdition.deleteConfirmation.message",
+                                                            Lang.get("projectEdition.deleteConfirmation.message"),
                                                             dialog, directory) {
 
           protected String getOkButtonText() {

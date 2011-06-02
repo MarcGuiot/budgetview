@@ -17,6 +17,7 @@ import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.PopupMenuInterceptor;
 import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.utils.IntSet;
 import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.*;
@@ -76,6 +77,11 @@ public class TransactionChecker extends ViewChecker {
   public TransactionChecker categorize(String... labels) {
     select(labels);
     clickSeries(getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, labels[0]));
+    return this;
+  }
+
+  public TransactionChecker selectAll() {
+    getTable().selectAllRows();
     return this;
   }
 
@@ -216,24 +222,122 @@ public class TransactionChecker extends ViewChecker {
     UISpecAssert.assertFalse(getTable().isEmpty());
   }
 
-  public ConfirmationDialogChecker delete(String label) {
-    return delete(getIndexOf(label.toUpperCase()));
+  public void delete(String label) {
+    openDeletionDialog(getIndexOf(label.toUpperCase()))
+      .checkTitle("Delete operations")
+      .validate();
   }
 
-  public ConfirmationDialogChecker deleteTransactionWithNote(String note) {
+  public void delete(String label, String message) {
+    openDeletionDialog(getIndexOf(label.toUpperCase()))
+      .checkTitle("Delete operations")
+      .checkMessageContains(message)
+      .validate();
+  }
+
+  public void delete(int row, int... additionalRows) {
+    openDeletionDialog(org.globsframework.utils.Utils.join(row, additionalRows))
+      .checkTitle("Delete operations")
+      .validate();
+  }
+
+  public void deleteAll(String message) {
+    table.selectAllRows();
+    openDeletionDialog()
+      .checkTitle("Delete operations")
+      .checkMessageContains(message)
+      .validate();
+  }
+
+  public void delete(int row, String message) {
+    openDeletionDialog(row)
+      .checkTitle("Delete operations")
+      .checkMessageContains(message)
+      .validate();
+  }
+
+  public void deleteTransactionWithNote(String note, String message) {
     int row = getTable().getRowIndex(TransactionView.NOTE_COLUMN_INDEX, note);
     Assert.assertTrue(note + " not found", row >= 0);
-    return delete(row);
+    openDeletionDialog(row)
+      .checkTitle("Delete operations")
+      .checkMessageContains(message)
+      .validate();
   }
 
-  public ConfirmationDialogChecker delete(int row) {
+  public void deleteTransactionsWithNotes(String message, String... notes) {
+    if (notes.length == 0) {
+      Assert.fail("You must provide at least one note");
+    }
+    IntSet rowSet = new IntSet();
+    for (String note : notes) {
+      int[] rows = getTable().getRowIndices(TransactionView.NOTE_COLUMN_INDEX, note);
+      Assert.assertTrue(note + " not found", rows.length > 0);
+      rowSet.addAll(rows);
+    }
+    openDeletionDialog(rowSet.toIntArray())
+      .checkMessageContains(message)
+      .validate();
+  }
+
+  public void checkDeletionForbidden(int[] rows, String message) {
+    openDeletionForbiddenDialog(rows)
+      .checkTitle("Deletion denied")
+      .checkMessageContains(message)
+      .close();
+  }
+
+  public void checkDeletionForbidden(int row, String message) {
+    openDeletionForbiddenDialog(row)
+      .checkTitle("Deletion denied")
+      .checkMessageContains(message)
+      .close();
+  }
+
+  private ConfirmationDialogChecker openDeletionDialog(int row) {
+    return new ConfirmationDialogChecker(getDeleteDialog(row));
+  }
+
+  private ConfirmationDialogChecker openDeletionDialog(int[] rows) {
+    return new ConfirmationDialogChecker(getDeleteDialog(rows));
+  }
+
+  private ConfirmationDialogChecker openDeletionDialog() {
+    return new ConfirmationDialogChecker(getDeleteDialog());
+  }
+
+  private MessageDialogChecker openDeletionForbiddenDialog(int row) {
+    return new MessageDialogChecker(getDeleteDialog(row));
+  }
+
+  private MessageDialogChecker openDeletionForbiddenDialog(int[] rows) {
+    return new MessageDialogChecker(getDeleteDialog(rows));
+  }
+
+  private Window getDeleteDialog(int row) {
     getTable().selectRow(row);
-    Window deleteDialog = WindowInterceptor.getModalDialog(new Trigger() {
+    return WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         KeyUtils.pressKey(getTable(), Key.DELETE);
       }
     });
-    return new ConfirmationDialogChecker(deleteDialog);
+  }
+
+  private Window getDeleteDialog(int[] rows) {
+    getTable().selectRows(rows);
+    return WindowInterceptor.getModalDialog(new Trigger() {
+      public void run() throws Exception {
+        KeyUtils.pressKey(getTable(), Key.DELETE);
+      }
+    });
+  }
+
+  private Window getDeleteDialog() {
+    return WindowInterceptor.getModalDialog(new Trigger() {
+      public void run() throws Exception {
+        KeyUtils.pressKey(getTable(), Key.DELETE);
+      }
+    });
   }
 
   public void editNote(int row, String note) {

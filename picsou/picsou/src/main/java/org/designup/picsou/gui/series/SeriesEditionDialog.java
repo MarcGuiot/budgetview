@@ -740,7 +740,7 @@ public class SeriesEditionDialog {
       }
       else if (BudgetArea.SAVINGS.getId().equals(currentSeries.get(Series.BUDGET_AREA))) {
         ConfirmationDialog confirmationDialog = new ConfirmationDialog("seriesDeletion.title",
-                                                                       "seriesDeletion.savings.message",
+                                                                       Lang.get("seriesDeletion.savings.message"),
                                                                        dialog, directory,
                                                                        ConfirmationDialog.Mode.STANDARD) {
           protected void postValidate() {

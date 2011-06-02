@@ -9,13 +9,14 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Set;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class ShiftTransactionAction extends AbstractAction implements GlobSelectionListener, ChangeSetListener {
   protected static final int DAY_LIMIT_FOR_PREVIOUS = 10;
@@ -107,22 +108,18 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
       targetMonth = Month.previous(month);
       series = repository.findLinkTarget(transaction, Transaction.SERIES);
       validMonthForSeries = Series.isValidMonth(targetMonth, series);
-      if (containsTransactions(targetMonth)) {
-        direction = ShiftDirection.PREVIOUS;
-        setEnabled(true);
-        return;
-      }
+      direction = ShiftDirection.PREVIOUS;
+      setEnabled(true);
+      return;
     }
 
     if (day > DAY_LIMIT_FOR_NEXT) {
       targetMonth = Month.next(month);
       series = repository.findLinkTarget(transaction, Transaction.SERIES);
       validMonthForSeries = Series.isValidMonth(targetMonth, series);
-      if (containsTransactions(targetMonth)) {
-        direction = ShiftDirection.NEXT;
-        setEnabled(true);
-        return;
-      }
+      direction = ShiftDirection.NEXT;
+      setEnabled(true);
+      return;
     }
 
     setEnabled(false);
@@ -145,10 +142,9 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
   private void openSeriesErrorDialog() {
     ConfirmationDialog dialog =
       new ConfirmationDialog("shift.transaction.seriesError.title",
-                             "shift.transaction.seriesError.message",
+                             Lang.get("shift.transaction.seriesError.message", Month.getFullLabel(targetMonth)),
                              directory.get(JFrame.class),
-                             directory,
-                             Month.getFullLabel(targetMonth)) {
+                             directory) {
         protected void postValidate() {
           getSeriesEditor().showSeries(series, Collections.singleton(transaction.get(Transaction.BUDGET_MONTH)));
         }
@@ -163,7 +159,7 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
   private void openShiftDialog() {
     ConfirmationDialog dialog =
       new ConfirmationDialog("shift.transaction.title",
-                             getMessageKey(direction),
+                             Lang.get(getMessageKey(direction)),
                              directory.get(JFrame.class),
                              directory) {
         protected void postValidate() {
@@ -217,13 +213,6 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
                       value(Transaction.BUDGET_DAY, dayBeforeShift),
                       value(Transaction.BUDGET_MONTH, monthBeforeShift),
                       value(Transaction.DAY_BEFORE_SHIFT, null));
-  }
-
-  private boolean containsTransactions(int monthToCheck) {
-    return true;
-//    return repository.contains(Transaction.TYPE,
-//                               and(fieldEquals(Transaction.BUDGET_MONTH, monthToCheck),
-//                                   isFalse(Transaction.PLANNED)));
   }
 
   private String getMessageKey(ShiftDirection direction) {

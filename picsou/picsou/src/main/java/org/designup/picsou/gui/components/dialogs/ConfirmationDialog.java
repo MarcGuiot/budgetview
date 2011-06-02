@@ -17,9 +17,9 @@ public abstract class ConfirmationDialog {
   protected AbstractAction ok;
   private SplitsBuilder builder;
 
-  public static boolean confirmed(String titleKey, String contentKey, JFrame parent, Directory directory) {
+  public static boolean confirmed(String titleKey, String content, JFrame parent, Directory directory) {
     final Ref<Boolean> result = new Ref<Boolean>(false);
-    ConfirmationDialog dialog = new ConfirmationDialog(titleKey, contentKey, parent, directory) {
+    ConfirmationDialog dialog = new ConfirmationDialog(titleKey, content, parent, directory) {
       protected void postValidate() {
         result.set(true);
       }
@@ -39,21 +39,24 @@ public abstract class ConfirmationDialog {
     }
   }
 
-  public ConfirmationDialog(String titleKey, String contentKey, Window owner, Directory directory,
-                            String... args) {
-    this(titleKey, contentKey, owner, directory, Mode.STANDARD, args);
+  public ConfirmationDialog(String titleKey, String content, Directory directory) {
+    this(titleKey, content, directory.get(JFrame.class), directory, Mode.STANDARD);
   }
 
-  public ConfirmationDialog(String titleKey, String contentKey,
+  public ConfirmationDialog(String titleKey, String content, Window owner, Directory directory) {
+    this(titleKey, content, owner, directory, Mode.STANDARD);
+  }
+
+  public ConfirmationDialog(String titleKey, String content,
                             Window owner, Directory directory,
-                            Mode mode, String... args) {
+                            Mode mode) {
     builder = SplitsBuilder.init(directory)
       .setSource(getClass(), mode.sourceFile);
 
     dialog = PicsouDialog.create(owner, directory);
 
     builder.add("title", new JLabel(Lang.get(titleKey)));
-    editorPane = new JEditorPane("text/html", Lang.get(contentKey, args));
+    editorPane = new JEditorPane("text/html", content);
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog) {
       protected void processCustomLink(String href) {
         ConfirmationDialog.this.processCustomLink(href);

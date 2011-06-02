@@ -309,7 +309,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private void installDoubleClickHandler() {
     transactionTable.getComponent().addMouseListener(new MouseAdapter() {
       public void mouseReleased(MouseEvent e) {
-        if (e.getClickCount() == 2) {
+        if (e.getClickCount() == 2 && !e.isPopupTrigger()) {
           autoSelectSimilarTransactions();
         }
       }
