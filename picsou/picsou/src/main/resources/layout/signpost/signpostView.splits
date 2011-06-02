@@ -10,12 +10,14 @@
     <style selector="#sectionTitle" ui="sectionTitleButtonUI" anchor="left" fill="none"/>
 
     <style selector="label.contentTitle" font="-,bold,24" foreground="signpostView.title"
-           marginTop="5" marginBottom="30" fill="none" anchor="center"/>
+           fill="none" anchor="center"/>
   </styles>
 
   <panel opaque="true" background="block.inner.bg">
-    <column margin="30">
+    <column marginLeft="20" marginRight="20">
+      <filler fill="vertical" weightY="0.1"/>
       <label text="$signpostView.title" styleClass="contentTitle" icon="app_icon_48.png"/>
+      <filler fill="vertical" weightY="0.1"/>
       <row>
         <column border="matte(0,0,0,1,signpostView.verticalDivider)" weightX="4">
           <htmlEditorPane text="$signpostView.intro" name="content" styleClass="content" marginRight="5"
@@ -34,7 +36,7 @@
           </column>
         </column>
       </row>
-      <filler fill="vertical" weightY="0.1"/>
+      <filler fill="vertical" weightY="0.2"/>
     </column>
   </panel>
 
