@@ -157,6 +157,13 @@ public class Utils {
     return result;
   }
 
+  public static int[] join(int first, int[] other) {
+    int[] result = new int[other.length + 1];
+    result[0] = first;
+    System.arraycopy(other, 0, result, 1, other.length);
+    return result;
+  }
+
   public static <T> List<T> list(T[] objs) {
     return Arrays.asList(objs);
   }
