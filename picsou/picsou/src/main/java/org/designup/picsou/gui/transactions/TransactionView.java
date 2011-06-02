@@ -15,6 +15,7 @@ import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.model.Card;
+import org.designup.picsou.gui.transactions.actions.TransactionTableActions;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.Matchers;
@@ -125,7 +126,7 @@ public class TransactionView extends View implements Filterable {
   }
 
   private void updateFilter() {
-    GlobMatcher newFilter = and(showPlannedTransactionsMatcher, filter, 
+    GlobMatcher newFilter = and(showPlannedTransactionsMatcher, filter,
                                 GlobMatchers.not(GlobMatchers.fieldEquals(Transaction.ACCOUNT, Account.EXTERNAL_ACCOUNT_ID)));
     view.setFilter(newFilter);
     headerPainter.setFiltered(filterManager.hasClearableFilters());
@@ -166,7 +167,7 @@ public class TransactionView extends View implements Filterable {
     });
     builder.add("seriesFilterCombo", seriesFilteringCombo.getComponent());
   }
-  
+
   public void setAccountFilter(Key accountKey) {
     GlobMatcher matcher = Matchers.transactionsForAccounts(Collections.singleton(accountKey.get(Account.ID)), repository);
     filterManager.set(ACCOUNT_FILTER, matcher);
@@ -204,13 +205,17 @@ public class TransactionView extends View implements Filterable {
     headerPainter = PicsouTableHeaderPainter.install(view, directory);
     this.filterManager = new FilterManager(this);
 
+    TransactionTableActions actions = new TransactionTableActions(repository, directory);
+    view.setPopupFactory(actions);
+
     JTable table = view.getComponent();
     table.setDefaultRenderer(Glob.class,
                              new TransactionTableRenderer(table.getDefaultRenderer(Glob.class),
                                                           rendererColors,
                                                           SERIES_COLUMN_INDEX));
 
-    TransactionKeyListener.install(table, NOTE_COLUMN_INDEX, directory, repository, true);
+    TransactionKeyListener.install(table, NOTE_COLUMN_INDEX).setDeleteEnabled(actions.getDelete());
+
     Gui.installRolloverOnButtons(table, SERIES_COLUMN_INDEX, AMOUNT_COLUMN_INDEX);
     table.setDragEnabled(false);
     table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -343,11 +348,11 @@ public class TransactionView extends View implements Filterable {
 
     public boolean matches(Glob item, GlobRepository repository) {
       String s = cachedNames.get(item.get(Transaction.SERIES));
-      if (s == null){
+      if (s == null) {
         s = seriesNameStringifier.toString(item, repository);
         cachedNames.put(item.get(Transaction.SERIES), s);
       }
-      return s!= null && s.toLowerCase().contains(searchFilter);
+      return s != null && s.toLowerCase().contains(searchFilter);
     }
   }
 }

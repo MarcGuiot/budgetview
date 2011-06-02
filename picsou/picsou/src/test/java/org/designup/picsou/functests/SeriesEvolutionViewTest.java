@@ -662,6 +662,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("EDF", "Energy");
     categorization.setNewIncome("WorldCo", "Salary");
 
+    seriesAnalysis.clearSelection();
     seriesAnalysis.checkBreadcrumb("Overall budget / summary");
 
     seriesAnalysis.select("Energy");

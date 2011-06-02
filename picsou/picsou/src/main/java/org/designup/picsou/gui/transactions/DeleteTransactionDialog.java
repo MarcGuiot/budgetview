@@ -21,53 +21,77 @@ public class DeleteTransactionDialog extends ConfirmationDialog {
     super("transaction.delete.title", "transaction.delete.content", parent, directory);
     this.transactions = transactions;
     this.repository = repository;
-    boolean hasSplit = false;
-    for (Iterator it = transactions.iterator(); it.hasNext();) {
-      Glob glob = (Glob)it.next();
-      if (glob.get(Transaction.SPLIT_SOURCE) != null) {
-        it.remove();
-        hasSplit = true;
+
+    editorPane.setText(getText(transactions,
+                               hasSplit(transactions),
+                               hasAutoCreated(transactions),
+                               hasPlanned(transactions)));
+    
+    if (transactions.isEmpty()) {
+      cancel.setEnabled(false);
+    }
+  }
+
+  private String getText(GlobList transactions,
+                         boolean hasSplit,
+                         boolean hasAutoCreated,
+                         boolean hasPlanned) {
+    String text = "<html>";
+    if (hasSplit) {
+      text = Lang.get("transaction.delete.split");
+    }
+    if (hasAutoCreated) {
+      text += Lang.get("transaction.delete.savings");
+    }
+    if (hasPlanned) {
+      text += Lang.get("transaction.delete.planned");
+    }
+    if (!transactions.isEmpty()) {
+      if (transactions.size() == 1) {
+        text += Lang.get("transaction.delete.default.single");
+      }
+      else {
+        text += Lang.get("transaction.delete.default.multi", transactions.size());
       }
     }
-    boolean hasAutoCreated = false;
-    for (Iterator<Glob> iterator = transactions.iterator(); iterator.hasNext();) {
-      Glob glob = iterator.next();
-      if (Transaction.isCreatedBySeries(glob) || Transaction.isMirrorTransaction(glob)) {
-        iterator.remove();
-        hasAutoCreated = true;
-      }
-    }
+    text += "</html>";
+    return text;
+  }
+
+  private boolean hasPlanned(GlobList transactions) {
     boolean hasPlanned = false;
-    for (Iterator<Glob> iterator = transactions.iterator(); iterator.hasNext();) {
+    for (Iterator<Glob> iterator = transactions.iterator(); iterator.hasNext(); ) {
       Glob glob = iterator.next();
       if (Transaction.isPlanned(glob)) {
         iterator.remove();
         hasPlanned = true;
       }
     }
-    String text = "<html>";
-    if (hasSplit) {
-      text = Lang.get("transaction.delete.split");
-    }
-    if (hasAutoCreated) {
-      text = text + Lang.get("transaction.delete.savings");
-    }
-    if (hasPlanned) {
-      text = text + Lang.get("transaction.delete.planned");
-    }
-    if (!transactions.isEmpty()){
-      if (transactions.size() == 1){
-      text = text + Lang.get("transaction.delete.default");
-      }
-      else {
-        text = text + Lang.get("transaction.delete.defaults", transactions.size());
+    return hasPlanned;
+  }
+
+  private boolean hasAutoCreated(GlobList transactions) {
+    boolean hasAutoCreated = false;
+    for (Iterator<Glob> iterator = transactions.iterator(); iterator.hasNext(); ) {
+      Glob glob = iterator.next();
+      if (Transaction.isCreatedBySeries(glob) || Transaction.isMirrorTransaction(glob)) {
+        iterator.remove();
+        hasAutoCreated = true;
       }
     }
-    text += "</html>";
-    editorPane.setText(text);
-    if (transactions.isEmpty()) {
-      cancel.setEnabled(false);
+    return hasAutoCreated;
+  }
+
+  private boolean hasSplit(GlobList transactions) {
+    boolean hasSplit = false;
+    for (Iterator it = transactions.iterator(); it.hasNext(); ) {
+      Glob glob = (Glob)it.next();
+      if (glob.get(Transaction.SPLIT_SOURCE) != null) {
+        it.remove();
+        hasSplit = true;
+      }
     }
+    return hasSplit;
   }
 
   protected void postValidate() {
@@ -75,9 +99,8 @@ public class DeleteTransactionDialog extends ConfirmationDialog {
       repository.startChangeSet();
       while (!transactions.isEmpty()) {
         Glob glob = transactions.remove(0);
-        GlobList linkedToList = null;
         if (Transaction.isSplit(glob)) {
-          linkedToList = repository.findLinkedTo(glob, Transaction.SPLIT_SOURCE);
+          GlobList linkedToList = repository.findLinkedTo(glob, Transaction.SPLIT_SOURCE);
           repository.delete(linkedToList);
           for (Glob transaction : linkedToList) {
             transactions.remove(transaction);

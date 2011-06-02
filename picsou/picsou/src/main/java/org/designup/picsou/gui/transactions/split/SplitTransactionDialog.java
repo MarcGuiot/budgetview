@@ -185,7 +185,7 @@ public class SplitTransactionDialog {
 
     JTable table = tableView.getComponent();
 
-    TransactionKeyListener.install(table, NOTE_COLUMN_INDEX, localDirectory, localRepository, false);
+    TransactionKeyListener.install(table, NOTE_COLUMN_INDEX);
     Gui.installRolloverOnButtons(table, DELETE_SPLIT_COLUMN_INDEX);
 
     TableUtils.setSize(table, LABEL_COLUMN_INDEX, 30 * 7);

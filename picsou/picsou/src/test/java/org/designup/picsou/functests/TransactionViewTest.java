@@ -121,6 +121,27 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     views.checkCategorizationSelected();
     categorization.checkShowsSelectedMonthsOnly();
     categorization.checkSelectedTableRow("SOMETHING ELSE");
+
+    timeline.selectMonth("2006/01");
+    categorization.showUncategorizedTransactionsOnly();
+    categorization.checkTable(new Object[][]{
+      {"01/05/2006", "", "ESSENCE", -70.0},
+      {"10/01/2006", "", "MENU 14", -1.0},
+      {"06/05/2006", "", "NOUNOU", -100.0},
+      {"03/05/2006", "", "PEAGE", -30.0},
+      {"02/05/2006", "", "SG", -200.0}
+    });
+
+    views.selectData();
+
+    transactions.initContent()
+      .add("11/01/2006", TransactionType.PRELEVEMENT, "SOMETHING ELSE", "", -1.00, "Clothes")
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "MENU 14", "", -1.00)
+      .check();
+    transactions.categorizePopup(0);
+    views.checkCategorizationSelected();
+    categorization.checkShowsSelectedMonthsOnly();
+    categorization.checkSelectedTableRow("SOMETHING ELSE");
   }
 
   public void testNavigatingInCategorizationIsDisabledForMirrorAndCreatedFromSeries() throws Exception {
@@ -255,7 +276,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testDeleteATransactionASplitedTransationAndALastImportedTransaction() throws Exception {
+  public void testDeleteATransactionASplittedTransationAndALastImportedTransaction() throws Exception {
     transactions.initContent()
       .add("06/05/2006", TransactionType.PRELEVEMENT, "nounou", "nourrice", -100.00)
       .add("03/05/2006", TransactionType.PRELEVEMENT, "peage", "", -30.00)
@@ -297,7 +318,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDeleteATransactionWithMirrorSavings() throws Exception {
-    savingsAccounts.createSavingsAccount("Epargne LCL", 1000.);
+    savingsAccounts.createSavingsAccount("Epargne LCL", 1000.00);
     categorization
       .selectTransactions("sg")
       .selectSavings().createSeries()

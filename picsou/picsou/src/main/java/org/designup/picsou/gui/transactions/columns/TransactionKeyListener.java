@@ -1,11 +1,5 @@
 package org.designup.picsou.gui.transactions.columns;
 
-import org.designup.picsou.gui.transactions.DeleteTransactionDialog;
-import org.globsframework.utils.directory.Directory;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
-
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
@@ -14,38 +8,26 @@ import java.awt.event.KeyEvent;
 public class TransactionKeyListener extends KeyAdapter {
   private final JTable table;
   private int noteColumnIndex;
-  private Directory directory;
-  private boolean deleteEnable;
-  private GlobRepository repository;
+  private Action deleteAction;
 
-  public static void install(JTable table, int noteColumnIndex,
-                             Directory directory, final GlobRepository repository, boolean deleteEnable) {
-    table.addKeyListener(new TransactionKeyListener(table, noteColumnIndex, deleteEnable, repository, directory));
+  public static TransactionKeyListener install(JTable table, int noteColumnIndex) {
+    TransactionKeyListener listener = new TransactionKeyListener(table, noteColumnIndex);
+    table.addKeyListener(listener);
+    return listener;
   }
 
-  private TransactionKeyListener(JTable table, int noteColumnIndex, boolean deleteEnable,
-                                 GlobRepository repository, Directory directory) {
+  private TransactionKeyListener(JTable table, int noteColumnIndex) {
     this.table = table;
     this.noteColumnIndex = noteColumnIndex;
-    this.repository = repository;
-    this.directory = directory;
-    this.deleteEnable = deleteEnable;
+  }
+
+  public void setDeleteEnabled(Action action) {
+    this.deleteAction = action;
   }
 
   public void keyPressed(KeyEvent event) {
-    if (event.getKeyCode() == KeyEvent.VK_DELETE && deleteEnable){
-      JFrame parent = directory.get(JFrame.class);
-      int[] selectedRows = table.getSelectedRows();
-      if (selectedRows == null || selectedRows.length == 0){
-        return;
-      }
-      GlobList list = new GlobList();
-      for (int row : selectedRows) {
-        list.add((Glob)table.getModel().getValueAt(row, 0));
-      }
-      DeleteTransactionDialog dialog =
-        new DeleteTransactionDialog(list, parent, repository, directory);
-      dialog.show();
+    if ((deleteAction != null) && (event.getKeyCode() == KeyEvent.VK_DELETE)) {
+      deleteAction.actionPerformed(null);
       return;
     }
     int[] selectedRows = table.getSelectedRows();

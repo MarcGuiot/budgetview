@@ -1,10 +1,9 @@
 package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.categorization.actions.CategorizationTableActions;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.transactions.shift.ShiftTransactionAction;
-import org.designup.picsou.gui.transactions.split.SplitTransactionAction;
 import org.designup.picsou.gui.utils.TableView;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -32,7 +31,6 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.util.HashSet;
@@ -40,11 +38,15 @@ import java.util.Set;
 
 public class TransactionDetailsView extends View {
   private TableView tableView;
+  private CategorizationTableActions actions;
   private CardHandler cards;
 
-  public TransactionDetailsView(GlobRepository repository, Directory directory, TableView tableView) {
+  public TransactionDetailsView(GlobRepository repository, Directory directory,
+                                TableView tableView,
+                                CategorizationTableActions actions) {
     super(repository, directory);
     this.tableView = tableView;
+    this.actions = actions;
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
@@ -90,9 +92,9 @@ public class TransactionDetailsView extends View {
                 new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.AT_LEAST_ONE,
                                              repository, directory));
 
-    builder.add("shift", new ShiftTransactionAction(repository, directory));
+    builder.add("shift", actions.getShift());
 
-    builder.add("split", new SplitTransactionAction(repository, directory));
+    builder.add("split", actions.getSplit());
 
     builder.add("originalLabel",
                 GlobHtmlView.init(Transaction.TYPE, repository, directory,

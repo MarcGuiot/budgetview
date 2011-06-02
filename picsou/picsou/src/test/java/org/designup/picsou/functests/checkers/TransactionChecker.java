@@ -15,6 +15,7 @@ import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatchers;
+import org.uispec4j.interception.PopupMenuInterceptor;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.KeyUtils;
 
@@ -64,9 +65,22 @@ public class TransactionChecker extends ViewChecker {
     return mainWindow.findUIComponent(ComponentMatchers.innerNameIdentity("transactionsTable"));
   }
 
+  public TransactionChecker categorizePopup(int row) {
+    PopupMenuInterceptor
+      .run(getTable().triggerRightClick(row, 0))
+      .getSubMenu("Categorize")
+      .click();
+    return this;
+  }
+
   public TransactionChecker categorize(String... labels) {
-    getTable().selectRowsWithText(TransactionView.LABEL_COLUMN_INDEX, labels);
+    select(labels);
     clickSeries(getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, labels[0]));
+    return this;
+  }
+
+  public TransactionChecker select(String... labels) {
+    getTable().selectRowsWithText(TransactionView.LABEL_COLUMN_INDEX, labels);
     return this;
   }
 

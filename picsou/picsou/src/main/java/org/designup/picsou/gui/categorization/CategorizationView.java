@@ -2,6 +2,7 @@ package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.CreateAccountAction;
+import org.designup.picsou.gui.categorization.actions.CategorizationTableActions;
 import org.designup.picsou.gui.categorization.components.*;
 import org.designup.picsou.gui.categorization.special.*;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
@@ -170,10 +171,13 @@ public class CategorizationView extends View implements TableView, Filterable, C
                    chain(BOLD, autoTooltip()))
         .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), ALIGN_RIGHT);
 
+    CategorizationTableActions actions = new CategorizationTableActions(repository, directory);
+    transactionTable.setPopupFactory(actions);
+
     headerPainter = PicsouTableHeaderPainter.install(transactionTable, directory);
 
     final JTable table = transactionTable.getComponent();
-    TransactionKeyListener.install(table, -1, directory, repository, true);
+    TransactionKeyListener.install(table, -1).setDeleteEnabled(actions.getDelete());
     ApplicationColors.installSelectionColors(table, directory);
     Gui.setColumnSizes(table, COLUMN_SIZES);
     installDoubleClickHandler();
@@ -231,7 +235,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
     addSeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
     addOtherSeriesChooser("otherSeriesChooser", builder);
 
-    TransactionDetailsView transactionDetailsView = new TransactionDetailsView(repository, directory, this);
+    TransactionDetailsView transactionDetailsView =
+      new TransactionDetailsView(repository, directory, this, actions);
     transactionDetailsView.registerComponents(builder);
 
     initSelectionListener();
