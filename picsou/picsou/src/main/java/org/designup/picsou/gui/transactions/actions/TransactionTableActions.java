@@ -13,16 +13,13 @@ public class TransactionTableActions implements PopupMenuFactory {
   private CategorizeTransactionsAction categorize;
   private ShiftTransactionAction shift;
   private DeleteTransactionAction delete;
+  private Action copy;
 
-  public TransactionTableActions(GlobRepository repository, Directory directory) {
-
+  public TransactionTableActions(Action copy, GlobRepository repository, Directory directory) {
+    this.copy = copy;
     this.categorize = new CategorizeTransactionsAction(directory);
     this.shift = new ShiftTransactionAction(repository, directory);
     this.delete = new DeleteTransactionAction(repository, directory);
-  }
-
-  public ShiftTransactionAction getShift() {
-    return shift;
   }
 
   public DeleteTransactionAction getDelete() {
@@ -33,6 +30,9 @@ public class TransactionTableActions implements PopupMenuFactory {
     JPopupMenu popup = new JPopupMenu();
     popup.add(categorize);
     popup.add(shift);
+    popup.addSeparator();
+    popup.add(copy);
+    popup.addSeparator();
     popup.add(delete);
     return popup;
   }

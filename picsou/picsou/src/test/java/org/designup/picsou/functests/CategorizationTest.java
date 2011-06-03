@@ -1,10 +1,12 @@
 package org.designup.picsou.functests;
 
+import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.CategorizationChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.TransactionType;
+import org.uispec4j.Clipboard;
 
 public class CategorizationTest extends LoggedInFunctionalTestCase {
 
@@ -1493,5 +1495,23 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"30/06/2008", "", "SAVINGS 1.2", -100.0},
       {"30/06/2008", "", "SAVINGS 2", -200.0}
     });
+  }
+
+  public void testCopyToClipboard() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -29.90, "Free Telecom")
+      .addTransaction("2008/06/25", -29.90, "Free Telecom")
+      .load();
+
+    categorization.setNewRecurring("Free Telecom", "Internet");
+
+    categorization.copy(0, 1);
+    
+    Assert.assertEquals("Date\tSeries\tLabel\tAmount\n" +
+                        "25/06/2008\tInternet\tFREE TELECOM\t-29.90\n" +
+                        "30/06/2008\tInternet\tFREE TELECOM\t-29.90\n",
+                        Clipboard.getContentAsText());
+
   }
 }

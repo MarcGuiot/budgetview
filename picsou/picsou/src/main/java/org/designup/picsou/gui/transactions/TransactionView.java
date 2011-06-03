@@ -205,7 +205,8 @@ public class TransactionView extends View implements Filterable {
     headerPainter = PicsouTableHeaderPainter.install(view, directory);
     this.filterManager = new FilterManager(this);
 
-    TransactionTableActions actions = new TransactionTableActions(repository, directory);
+    TransactionTableActions actions = new TransactionTableActions(view.getCopyAction(Lang.get("copy")),
+                                                                  repository, directory);
     view.setPopupFactory(actions);
 
     JTable table = view.getComponent();

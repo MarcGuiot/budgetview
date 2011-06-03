@@ -8,11 +8,14 @@ import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.model.Glob;
+import org.globsframework.utils.Utils;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.*;
+
+import org.uispec4j.interception.PopupMenuInterceptor;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.KeyUtils;
 
@@ -194,6 +197,14 @@ public class CategorizationChecker extends ViewChecker {
       .selectDeferred()
       .selectSeries(seriesName);
     return this;
+  }
+
+  public void copy(int row, int... rows) {
+    getTable().selectRows(Utils.join(row, rows));
+    PopupMenuInterceptor
+      .run(getTable().triggerRightClick(row, 0))
+      .getSubMenu("Copy")
+      .click();
   }
 
   public class SavingsCategorizationChecker extends BudgetAreaCategorizationChecker {

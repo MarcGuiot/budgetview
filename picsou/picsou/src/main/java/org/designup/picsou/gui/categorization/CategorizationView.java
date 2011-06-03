@@ -171,7 +171,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
                    chain(BOLD, autoTooltip()))
         .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), ALIGN_RIGHT);
 
-    CategorizationTableActions actions = new CategorizationTableActions(repository, directory);
+    CategorizationTableActions actions = new CategorizationTableActions(transactionTable.getCopyAction(Lang.get("copy")),
+                                                                        repository, directory);
     transactionTable.setPopupFactory(actions);
 
     headerPainter = PicsouTableHeaderPainter.install(transactionTable, directory);

@@ -14,9 +14,10 @@ public class CategorizationTableActions implements PopupMenuFactory {
   private SplitTransactionAction split;
   private ShiftTransactionAction shift;
   private DeleteTransactionAction delete;
+  private Action copy;
 
-  public CategorizationTableActions(GlobRepository repository, Directory directory) {
-
+  public CategorizationTableActions(Action copy, GlobRepository repository, Directory directory) {
+    this.copy = copy;
     this.split = new SplitTransactionAction(repository, directory);
     this.shift = new ShiftTransactionAction(repository, directory);
     this.delete = new DeleteTransactionAction(repository, directory);
@@ -38,6 +39,8 @@ public class CategorizationTableActions implements PopupMenuFactory {
     JPopupMenu popup = new JPopupMenu();
     popup.add(split);
     popup.add(shift);
+    popup.addSeparator();
+    popup.add(copy);
     popup.addSeparator();
     popup.add(delete);
     return popup;

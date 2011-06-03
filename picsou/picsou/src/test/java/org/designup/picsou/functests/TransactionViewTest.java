@@ -1,9 +1,11 @@
 package org.designup.picsou.functests;
 
+import junit.framework.Assert;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.TransactionType;
+import org.uispec4j.Clipboard;
 import org.uispec4j.Table;
 import org.uispec4j.assertion.UISpecAssert;
 
@@ -482,5 +484,24 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.recurring.editSeries("Nounou").clearEndDate().validate();
     transactions.checkSelectableSeries("All", "Nounou");
+  }
+
+  public void testCopyToClipboard() throws Exception {
+
+    transactions.initContent()
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00)
+      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00)
+      .check();
+
+    transactions.copy(0, 2);
+    
+    Assert.assertEquals("Operation date\tBank date\tSeries\tLabel\tAmount\tNote\tAccount position\tTotal position\tAccount\n" +
+                        "06/05/2006\t06/05/2006\t\tNOUNOU\t-100.00\tnourrice\t0.00\t0.00\tAccount n. 00001123\n" +
+                        "02/05/2006\t02/05/2006\t\tSG\t-200.00\t\t130.00\t130.00\tAccount n. 00001123\n",
+                        Clipboard.getContentAsText());
+
+
   }
 }

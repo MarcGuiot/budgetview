@@ -10,6 +10,7 @@ import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Window;
@@ -368,6 +369,14 @@ public class TransactionChecker extends ViewChecker {
       showPlannedTransactionsCheckbox = mainWindow.getCheckBox("showPlannedTransactions");
     }
     return showPlannedTransactionsCheckbox;
+  }
+
+  public void copy(int row, int... rows) {
+    getTable().selectRows(Utils.join(row, rows));
+    PopupMenuInterceptor
+      .run(getTable().triggerRightClick(row, 0))
+      .getSubMenu("Copy")
+      .click();
   }
 
   public class TransactionAmountChecker {
