@@ -14,10 +14,12 @@ import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.util.Amounts;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
@@ -128,6 +130,14 @@ public class SeriesAnalysisView extends View {
       tableView.addColumn(monthColumn);
     }
 
+    tableView.setPopupFactory(new PopupMenuFactory() {
+      public JPopupMenu createPopup() {
+        JPopupMenu popup = new JPopupMenu();
+        popup.add(tableView.getCopyAction(Lang.get("copy")));
+        return popup;
+      }
+    });
+
     PicsouTableHeaderPainter.install(tableView, directory);
 
     table = tableView.getComponent();
@@ -147,7 +157,6 @@ public class SeriesAnalysisView extends View {
     for (int i = 0; i < monthColumns.size(); i++) {
       TableUtils.setSize(table, i + 2, width);
     }
-
     expansionModel.completeInit();
 
     builder.add("seriesEvolutionTable", table);

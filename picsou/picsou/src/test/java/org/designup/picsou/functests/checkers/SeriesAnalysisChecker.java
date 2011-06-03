@@ -8,6 +8,7 @@ import org.globsframework.utils.Utils;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
+import org.uispec4j.interception.PopupMenuInterceptor;
 import org.uispec4j.utils.ColorUtils;
 import org.uispec4j.utils.KeyUtils;
 
@@ -191,9 +192,18 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
   }
 
   public void checkClipboardExport(String expectedClipboardContent) throws Exception {
+
     Table table = getTable();
     table.selectAllRows();
     KeyUtils.pressKey(table, org.uispec4j.Key.plaformSpecificCtrl(org.uispec4j.Key.C));
+    Assert.assertEquals(expectedClipboardContent, Clipboard.getContentAsText());
+
+    Clipboard.putText("something to clean up the clipboard before starting again");
+
+    PopupMenuInterceptor
+      .run(getTable().triggerRightClick(0, 0))
+      .getSubMenu("Copy")
+      .click();
     Assert.assertEquals(expectedClipboardContent, Clipboard.getContentAsText());
   }
 

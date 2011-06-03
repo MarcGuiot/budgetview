@@ -3,6 +3,8 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
+import java.awt.*;
+
 public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
@@ -552,20 +554,22 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .setAmount(200)
       .validate();
 
+    mainWindow.getAwtComponent().setSize(new Dimension(1024, 760));
+
     views.selectAnalysis();
     seriesAnalysis.checkClipboardExport(
-      "\t\tJune 2008\tJul 2008\tAug 2008\tSep 2008\tOct 2008\tNov 2008\tDec 2008\tJan 2009\tFeb 2009\tMar 2009\tApr 2009\tMay 2009\n" +
-      "\tMain accounts\t\t-200.00\t-400.00\t-600.00\t-800.00\t-1000.00\t-1200.00\t-1400.00\t\t\t\t\n" +
-      "\tBalance\t\t3416.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\t\t\t\t\n" +
-      "\tSavings accounts\t\t\t\t\t\t\t\t\t\t\t\t\n" +
-      "\tTo categorize\t\t3864.00\t\t\t\t\t\t\t\t\t\t\n" +
-      "\tIncome\t\t\t\t\t\t\t\t\t\t\t\t\n" +
-      "\tRecurring\t\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t\t\t\t\n" +
-      "\tTaxes\t\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t\t\t\t\n" +
-      "\tVariable\t\t\t\t\t\t\t\t\t\t\t\t\n" +
-      "\tExtras\t\t\t\t\t\t\t\t\t\t\t\t\n" +
-      "\tSavings\t\t\t\t\t\t\t\t\t\t\t\t\n" +
-      "\tOther\t\t\t\t\t\t\t\t\t\t\t\t\n"
+      "\t\tJune 2008\tJul 2008\tAug 2008\tSep 2008\tOct 2008\tNov 2008\tDec 2008\tJan 2009\tFeb 2009\tMar 2009\tApr 2009\n" +
+      "\tMain accounts\t\t-200.00\t-400.00\t-600.00\t-800.00\t-1000.00\t-1200.00\t-1400.00\t\t\t\n" +
+      "\tBalance\t\t3416.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\t-200.00\t\t\t\n" +
+      "\tSavings accounts\t\t\t\t\t\t\t\t\t\t\t\n" +
+      "\tTo categorize\t\t3864.00\t\t\t\t\t\t\t\t\t\n" +
+      "\tIncome\t\t\t\t\t\t\t\t\t\t\t\n" +
+      "\tRecurring\t\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t\t\t\n" +
+      "\tTaxes\t\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t200.00\t\t\t\n" +
+      "\tVariable\t\t\t\t\t\t\t\t\t\t\t\n" +
+      "\tExtras\t\t\t\t\t\t\t\t\t\t\t\n" +
+      "\tSavings\t\t\t\t\t\t\t\t\t\t\t\n" +
+      "\tOther\t\t\t\t\t\t\t\t\t\t\t\n"
     );
   }
 
