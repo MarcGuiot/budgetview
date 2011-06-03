@@ -756,9 +756,21 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     addKeyBinding(GuiUtils.ctrl(KeyEvent.VK_C), "Copy", new CopySelectionToClipboardAction());
   }
 
+  public Action getCopyAction(String label) {
+    return new CopySelectionToClipboardAction(label);
+  }
+
   private class CopySelectionToClipboardAction extends AbstractAction {
+
+    private CopySelectionToClipboardAction() {
+    }
+
+    private CopySelectionToClipboardAction(String label) {
+      super(label);
+    }
+
     public void actionPerformed(ActionEvent e) {
-      StringBuffer buffer = new StringBuffer();
+      StringBuilder buffer = new StringBuilder();
 
       boolean firstColumn = true;
       for (GlobTableColumn column : columns) {

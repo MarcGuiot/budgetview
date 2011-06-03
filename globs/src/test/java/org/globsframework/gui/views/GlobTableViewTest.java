@@ -1100,6 +1100,14 @@ public class GlobTableViewTest extends GuiComponentTestCase {
                  "2\ta2\tb2\n" +
                  "4\ta4\tb4\n",
                  Clipboard.getContentAsText());
+
+    table.selectRows(2);
+    Action action = view.getCopyAction("Copy rows");
+    assertEquals("Copy rows", action.getValue(Action.NAME));
+    action.actionPerformed(null);
+    assertEquals("id\tCustom\tOther\n" +
+                 "3\ta3\tb3\n",
+                 Clipboard.getContentAsText());
   }
 
   public void testAddKeyBinding() throws Exception {
