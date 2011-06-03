@@ -269,7 +269,7 @@ public class ImportPreviewPanel {
 
   private class FinishAction extends AbstractAction {
     public FinishAction() {
-      super(Lang.get("import.step2.ok"));
+      super(Lang.get("import.preview.ok"));
     }
 
     public void actionPerformed(ActionEvent event) {

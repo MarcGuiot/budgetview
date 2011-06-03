@@ -1,57 +1,47 @@
 package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Panel;
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import org.uispec4j.interception.WindowInterceptor;
 
-import javax.swing.*;
-
-public class BankGuideChecker extends GuiChecker {
+public class BankDownloadChecker extends GuiChecker {
   private Panel panel;
 
-  public static BankGuideChecker open(Trigger trigger) {
-    Window dialog = WindowInterceptor.getModalDialog(trigger);
-    return new BankGuideChecker(dialog);
-  }
-
-  private BankGuideChecker(Panel panel) {
+  BankDownloadChecker(Panel panel) {
     this.panel = panel;
   }
 
-  public BankGuideChecker selectBank(String bankName) {
+  public BankDownloadChecker selectBank(String bankName) {
     panel.getListBox("bankList").select(bankName);
     return this;
   }
 
-  public BankGuideChecker checkBankList(String... banks) {
+  public BankDownloadChecker checkBankList(String... banks) {
     assertThat(panel.getListBox("bankList").contentEquals(banks));
     return this;
   }
 
-  public BankGuideChecker checkContainsBanks(String... banks) {
+  public BankDownloadChecker checkContainsBanks(String... banks) {
     assertThat(panel.getListBox("bankList").contains(banks));
     return this;
   }
 
-  public BankGuideChecker checkWebsiteUrlHidden() {
-    checkComponentVisible(panel, JButton.class, "gotoWebsite", false);
+  public BankDownloadChecker checkSelectedBank(String bank) {
+    assertThat(panel.getListBox("bankList").selectionEquals(bank));
     return this;
   }
 
-  public BankGuideChecker checkWebsiteUrl(String url) {
+  public BankDownloadChecker checkWebsiteUrl(String url) {
     BrowsingChecker.checkDisplay(panel.getButton("gotoWebsite"), url);
     return this;
   }
 
-  public BankGuideChecker setFilter(String filter) {
+  public BankDownloadChecker setFilter(String filter) {
     panel.getTextBox("bankEditor").setText(filter, false);
     return this;
   }
 
-  public BankGuideChecker checkHelpAvailable(boolean available) {
+  public BankDownloadChecker checkHelpAvailable(boolean available) {
     UISpecAssert.assertEquals(available, panel.getButton("openHelp").isEnabled());
     return this;
   }

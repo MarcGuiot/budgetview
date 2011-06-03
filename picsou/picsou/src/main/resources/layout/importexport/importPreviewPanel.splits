@@ -11,11 +11,11 @@
     <style selector="label.additionalActionButton" anchor="center" fill="none"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(550,550)">
+  <panel styleClass="dialog" preferredSize="(600,550)">
 
     <column styleClass="innerDialog">
 
-      <label text="$import.step2.title" name="title" styleClass="title"/>
+      <label text="$import.preview.title" name="title" styleClass="title"/>
 
       <label text="$import.file.to.import" styleClass="header"/>
       <label ref="fileName"/>

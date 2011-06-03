@@ -31,8 +31,11 @@ public class Bank {
   @Target(BankFormat.class) @NoObfuscation
   public static LinkField BANK_FORMAT;
 
+  public static org.globsframework.model.Key GENERIC_BANK_KEY;
+
   static {
     GlobTypeLoader.init(Bank.class, "bank");
+    GENERIC_BANK_KEY = org.globsframework.model.Key.create(TYPE, GENERIC_BANK_ID);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

@@ -80,8 +80,8 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public BankGuideChecker openBankGuide() {
-    return BankGuideChecker.open(dialog.getTextBox("bankMessage").triggerClickOnHyperlink("download guide"));
+  public BankDownloadChecker getBankDownload() {
+    return new BankDownloadChecker(dialog.getPanel("bankDownload"));
   }
 
   public ImportDialogChecker checkDates(String... dates) {
@@ -91,7 +91,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker doImport() {
-    dialog.getButton(Lang.get("import.step1.ok")).click();
+    dialog.getButton(Lang.get("import.fileSelection.ok")).click();
     return this;
   }
 
@@ -110,7 +110,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public void completeImport() {
-    validateAndComplete(-1, -1, -1, dialog, "import.step2.ok");
+    validateAndComplete(-1, -1, -1, dialog, "import.preview.ok");
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
@@ -121,12 +121,12 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public void completeImport(final int importedTransactionCount, final int autocategorizedTransactionCount) {
-    validateAndComplete(-1, importedTransactionCount, autocategorizedTransactionCount, dialog, "import.step2.ok");
+    validateAndComplete(-1, importedTransactionCount, autocategorizedTransactionCount, dialog, "import.preview.ok");
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public void completeImportNone(int loadTransaction) {
-    validateAndComplete(loadTransaction, 0, 0, dialog, "import.step2.ok");
+    validateAndComplete(loadTransaction, 0, 0, dialog, "import.preview.ok");
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
@@ -136,7 +136,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public void completeImportAndGotoCategorize(int importedTransactionCount, int autocategorizedTransactionCount) {
-    dialog.getButton(Lang.get("import.step2.ok")).click();
+    dialog.getButton(Lang.get("import.preview.ok")).click();
 
     CompletionChecker handler =
       new CompletionChecker(0, importedTransactionCount,
@@ -157,7 +157,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public AccountPositionEditionChecker doImportWithBalance() {
-    return new AccountPositionEditionChecker(dialog, "import.step1.ok");
+    return new AccountPositionEditionChecker(dialog, "import.fileSelection.ok");
   }
 
   public void close() {

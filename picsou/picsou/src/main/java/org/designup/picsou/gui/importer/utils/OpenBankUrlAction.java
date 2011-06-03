@@ -19,7 +19,7 @@ public class OpenBankUrlAction extends AbstractAction implements GlobSelectionLi
   private BrowsingService browsingService;
 
   public OpenBankUrlAction(Directory directory) {
-    super(Lang.get("import.step1.openBankUrl"));
+    super(Lang.get("import.fileSelection.openBankUrl"));
     this.browsingService = directory.get(BrowsingService.class);
     setEnabled(false);
     directory.get(SelectionService.class).addListener(this, Bank.TYPE);

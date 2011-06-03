@@ -1,6 +1,7 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.AccountEditionChecker;
+import org.designup.picsou.functests.checkers.BankDownloadChecker;
 import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
@@ -62,7 +63,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
   public void testCloseButtonLabelBeforeImport() throws Exception {
     operations.openImportDialog()
-      .checkCloseButton(Lang.get("import.step1.close"))
+      .checkCloseButton(Lang.get("import.fileSelection.close"))
       .close();
   }
 
@@ -630,13 +631,20 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     ImportDialogChecker importDialog = operations.openImportDialog();
 
-    importDialog
-      .openBankGuide()
+    BankDownloadChecker bankDownload = importDialog.getBankDownload();
+
+    bankDownload
       .checkContainsBanks("BNP Paribas", "CIC", "Crédit Agricole", "ING Direct", "Société Générale")
-      .checkWebsiteUrlHidden()
-      .checkHelpAvailable(false)
+      .checkSelectedBank("Autre")
+      .checkWebsiteUrl("http://support.mybudgetview.fr/entries/20173256")
+      .checkHelpAvailable(true)
+      .openHelp()
+      .checkTitle("Importing data")
+      .close();
+
+    bankDownload
       .setFilter("BNP")
-      .checkBankList("Autre", "BNP Paribas", "BNPPF")
+      .checkBankList("BNP Paribas", "BNPPF", "Autre")
       .selectBank("BNP Paribas")
       .checkWebsiteUrl("http://www.bnpparibas.net")
       .checkHelpAvailable(true)
@@ -778,7 +786,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
       .check();
   }
-
 
   public void testImportSameTransactionWitSplited() throws Exception {
     OfxBuilder.init(this)

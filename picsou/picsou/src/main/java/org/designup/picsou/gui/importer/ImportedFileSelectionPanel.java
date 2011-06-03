@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.importer;
 
-import org.designup.picsou.gui.bank.BankGuideDialog;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.importer.components.BankDownloadPanel;
 import org.designup.picsou.gui.importer.edition.BrowseFilesAction;
 import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.utils.Lang;
@@ -34,6 +34,7 @@ public class ImportedFileSelectionPanel {
   private boolean usePreferredPath;
   private JEditorPane importMessage = new JEditorPane();
   private Exception lastException;
+  private BankDownloadPanel bankDownload;
 
   public ImportedFileSelectionPanel(ImportController controller,
                                     boolean usePreferredPath,
@@ -50,7 +51,8 @@ public class ImportedFileSelectionPanel {
 
     initFileField();
 
-    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importFileSelectionPanel.splits", localRepository, directory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importFileSelectionPanel.splits",
+                                    localRepository, directory);
     builder.add("importMessage", importMessage);
     builder.add("filePanel", filePanel);
     builder.add("fileField", fileField);
@@ -63,13 +65,10 @@ public class ImportedFileSelectionPanel {
       }
     });
 
+    bankDownload = new BankDownloadPanel(dialog, localRepository, directory);
+    builder.add("bankDownload", bankDownload.getPanel());
+
     final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(directory, dialog);
-    hyperlinkHandler.registerLinkAction("openBankList", new Runnable() {
-      public void run() {
-        BankGuideDialog chooser = new BankGuideDialog(dialog, localRepository, directory);
-        chooser.show();
-      }
-    });
     hyperlinkHandler.registerLinkAction("openErrorDetails", new Runnable() {
       public void run() {
         showLastException();
@@ -121,12 +120,12 @@ public class ImportedFileSelectionPanel {
   }
 
   public void requestFocus() {
-    fileField.requestFocus();
+    bankDownload.requestFocus();
   }
 
   private class ImportAction extends AbstractAction {
     public ImportAction() {
-      super(Lang.get("import.step1.ok"));
+      super(Lang.get("import.fileSelection.ok"));
     }
 
     public void actionPerformed(ActionEvent event) {
@@ -134,7 +133,7 @@ public class ImportedFileSelectionPanel {
     }
   }
 
-    public void acceptFiles() {
+  public void acceptFiles() {
     if (!initialFileAccepted()) {
       return;
     }

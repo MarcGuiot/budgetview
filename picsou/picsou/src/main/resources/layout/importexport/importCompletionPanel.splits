@@ -7,7 +7,7 @@
     <style selector="htmlEditorPane.multiLineLabel" font="-,plain,12"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(500,450)">
+  <panel styleClass="dialog" preferredSize="(600,550)">
 
     <column styleClass="innerDialog">
 

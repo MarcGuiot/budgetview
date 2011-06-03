@@ -4,30 +4,32 @@
 
   <styles>
     <style selector="scrollPane" marginBottom="10"/>
-    <style selector="textArea.sectionTitle" font="-,bold,14" marginBottom="5"
+    <style selector="textArea.sectionTitle" font="-,bold,14" marginBottom="10"
            opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"/>
     <style selector="htmlEditorPane.multiLineLabel" font="-,plain,11"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(500,450)">
+  <panel styleClass="dialog" preferredSize="(600,550)">
 
     <column styleClass="innerDialog">
 
-      <label text="$import.step1.title" name="title" styleClass="title"/>
+      <label text="$import.fileSelection.title" name="title" styleClass="title"/>
 
-      <column marginTop="20">
-
-        <textArea text="$import.step1.bank.title" styleClass="sectionTitle"/>
-
-        <htmlEditorPane name="bankMessage" text="$import.step1.bank.message" styleClass="multiLineLabel"
-                        hyperlinkListener="hyperlinkHandler"/>
+      <column marginTop="20" weightY="20">
+        <textArea text="$import.fileSelection.bank.title" styleClass="sectionTitle"/>
+        <row weightY="100">
+          <panel ref="bankDownload"/>
+        </row>
+        <htmlEditorPane text="$import.fileSelection.bank.openwith"
+                        styleClass="multiLineLabel" hyperlinkListener="hyperlinkHandler"
+                        weightY="0"/>
       </column>
 
-      <column styleClass="separator" marginTop="20">
+      <column styleClass="separator" marginTop="20" weightY="5">
 
-        <textArea text="$import.step1.file.title" styleClass="sectionTitle" marginTop="20"/>
+        <textArea text="$import.fileSelection.file.title" styleClass="sectionTitle" marginTop="20"/>
 
-        <htmlEditorPane text="$import.step1.file.message" styleClass="multiLineLabel"/>
+        <htmlEditorPane text="$import.fileSelection.file.message" styleClass="multiLineLabel"/>
 
         <row margin="5" defaultAnchor="center">
           <textField ref="fileField" marginRight="10" anchor="center" weightX="100"/>
@@ -39,8 +41,6 @@
                           border="empty(0,0,10,0)"/>
         </panel>
       </column>
-
-      <filler fill="vertical"/>
 
       <row>
         <filler fill="horizontal"/>

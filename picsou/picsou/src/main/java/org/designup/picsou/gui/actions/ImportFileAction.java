@@ -82,7 +82,7 @@ public class ImportFileAction extends AbstractAction {
       this.directory = directory;
       this.repository = repository;
       if (!LicenseService.trialExpired(repository) && !User.isDemoUser(repository.get(User.KEY))) {
-        dialog = new ImportDialog(Lang.get("import.step1.close"), files, defaultAccount,
+        dialog = new ImportDialog(Lang.get("import.fileSelection.close"), files, defaultAccount,
                                   directory.get(JFrame.class),
                                   repository, directory,
                                   usePreferedPath);

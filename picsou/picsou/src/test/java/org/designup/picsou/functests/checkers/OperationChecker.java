@@ -157,7 +157,7 @@ public class OperationChecker {
       importDialog.setMainAccountForAll();
     }
 
-    final Button step2Button = dialog.getButton(Lang.get("import.step2.ok"));
+    final Button step2Button = dialog.getButton(Lang.get("import.preview.ok"));
     for (int i = 0; i < fileNames.length - 2; i++) {
       step2Button.click();
     }
