@@ -3,9 +3,9 @@ package org.designup.picsou.gui.series;
 import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.description.MonthListStringifier;
 import org.designup.picsou.gui.description.SeriesPeriodicityAndScopeStringifier;
+import org.designup.picsou.gui.series.analysis.SeriesAmountChartPanel;
 import org.designup.picsou.gui.series.edition.AlignSeriesBudgetAmountsAction;
 import org.designup.picsou.gui.series.edition.SeriesBudgetSliderAdapter;
-import org.designup.picsou.gui.series.analysis.SeriesAmountChartPanel;
 import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -77,25 +77,25 @@ public class SeriesAmountEditionPanel {
 
     this.selectionService = directory.get(SelectionService.class);
     this.selectionService.addListener(new GlobSelectionListener() {
-      public void selectionUpdated(GlobSelection selection) {
-        if (selection.isRelevantForType(Series.TYPE)) {
-          Glob first = selection.getAll(Series.TYPE).getFirst();
-          if (first == null) {
-            clear();
-          }
-          else {
-            setCurrentSeries(first.getKey());
-          }
-          updateBudgetFromMonth();
-        }
-        if (selection.isRelevantForType(Month.TYPE)) {
-          if (currentSeries != null) {
-            Set<Integer> selectedMonths = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
-            doSelectMonths(SeriesAmountEditionPanel.this.repository.find(currentSeries), selectedMonths);
-          }
-        }
-      }
-    }, Month.TYPE, Series.TYPE);
+                                        public void selectionUpdated(GlobSelection selection) {
+                                          if (selection.isRelevantForType(Series.TYPE)) {
+                                            Glob first = selection.getAll(Series.TYPE).getFirst();
+                                            if (first == null) {
+                                              clear();
+                                            }
+                                            else {
+                                              setCurrentSeries(first.getKey());
+                                            }
+                                            updateBudgetFromMonth();
+                                          }
+                                          if (selection.isRelevantForType(Month.TYPE)) {
+                                            if (currentSeries != null) {
+                                              Set<Integer> selectedMonths = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
+                                              doSelectMonths(SeriesAmountEditionPanel.this.repository.find(currentSeries), selectedMonths);
+                                            }
+                                          }
+                                        }
+                                      }, Month.TYPE, Series.TYPE);
 
     createPanel();
 
@@ -265,6 +265,29 @@ public class SeriesAmountEditionPanel {
     amountEditor.selectAll();
   }
 
+  public void completeBeforeCommit() {
+
+    if (!repository.contains(SeriesBudget.TYPE,
+                             and(isNotNull(SeriesBudget.AMOUNT),
+                                 linkedTo(currentSeries, SeriesBudget.SERIES)))) {
+      return;
+    }
+
+    repository.startChangeSet();
+    try {
+      for (Glob seriesBudget : repository.getAll(SeriesBudget.TYPE,
+                                                 and(isNull(SeriesBudget.AMOUNT),
+                                                     linkedTo(currentSeries, SeriesBudget.SERIES)))) {
+        if (seriesBudget.get(SeriesBudget.AMOUNT) == null) {
+          repository.update(seriesBudget.getKey(), SeriesBudget.AMOUNT, 0.00);
+        }
+      }
+    }
+    finally {
+      repository.completeChangeSet();
+    }
+  }
+
   private void updateCard(boolean canDisable) {
     showingActiveMonths = isShowingActiveMonths();
     if (showingActiveMonths || !canDisable) {
@@ -405,13 +428,13 @@ public class SeriesAmountEditionPanel {
     final Double amount = amountEditor.getValue();
     repository.startChangeSet();
     try {
-    repository.update(currentSeries, Series.IS_AUTOMATIC, false);
-    repository.safeApply(SeriesBudget.TYPE,
-                         and(
-                           fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID)),
-                           isTrue(SeriesBudget.ACTIVE),
-                           fieldGreaterOrEqual(SeriesBudget.MONTH, startMonth)),
-                         update(SeriesBudget.AMOUNT, Utils.zeroIfNull(amount)));
+      repository.update(currentSeries, Series.IS_AUTOMATIC, false);
+      repository.safeApply(SeriesBudget.TYPE,
+                           and(
+                             fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID)),
+                             isTrue(SeriesBudget.ACTIVE),
+                             fieldGreaterOrEqual(SeriesBudget.MONTH, startMonth)),
+                           update(SeriesBudget.AMOUNT, Utils.zeroIfNull(amount)));
     }
     finally {
       repository.completeChangeSet();

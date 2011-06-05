@@ -690,6 +690,7 @@ public class SeriesEditionDialog {
         createdSeries = currentSeries.getKey();
         lastSelectedSubSeriesId = SeriesEditionDialog.this.getCurrentSubSeriesId();
       }
+      amountEditionPanel.completeBeforeCommit();
       localRepository.commitChanges(false);
       localRepository.rollback();
       dialog.setVisible(false);

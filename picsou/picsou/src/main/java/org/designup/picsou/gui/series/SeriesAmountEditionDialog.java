@@ -115,16 +115,7 @@ public class SeriesAmountEditionDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
-
-//      ChangeSet changeSet = localRepository.getCurrentChanges();
-//      localRepository.startChangeSet();
-//      try {
-//        changeSet.safeVisit(SeriesBudget.TYPE, new UpdateMirrorSeriesBudgetChangeSetVisitor(localRepository));
-//      }
-//      finally {
-//        localRepository.completeChangeSet();
-//      }
-
+      editionPanel.completeBeforeCommit();
       localRepository.commitChanges(false);
       dialog.setVisible(false);
     }

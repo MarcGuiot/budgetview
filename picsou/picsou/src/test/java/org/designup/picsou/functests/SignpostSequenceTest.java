@@ -140,6 +140,64 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     checkNoSignpostVisible();
   }
 
+  public void testSeriesHighlightInBudgetPhase() throws Exception {
+    signpostView.checkSignpostViewShown();
+
+    // === Import ===
+
+    views.selectData();
+    importPanel.checkImportSignpostDisplayed("Click here to import your operations");
+    importPanel.openImport().close();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2010/05/27", -100, "rent")
+      .addTransaction("2010/05/28", +500, "income")
+      .addTransaction("2010/05/29", -100, "auchan")
+      .addTransaction("2010/04/29", -100, "auchan")
+      .addTransaction("2010/03/29", -100, "auchan")
+      .addTransaction("2010/05/29", -100, "Chausse")
+      .load();
+
+    // === Categorization ===
+
+    categorization.setNewRecurring("rent", "Rent"); // SED shown
+    categorization.setIncome("income", "Income 1");
+    categorization.setVariable("auchan", "Groceries");
+    categorization.setVariable("Chausse", "Clothing");
+
+    // === Series amounts ===
+
+    views.selectBudget();
+    budgetView.variable.checkAmountSignpostDisplayed(
+      "Groceries", "Click on the planned amounts to set your own values");
+
+    budgetView.variable.checkPlannedUnsetButNotHighlighted("Health");
+    budgetView.variable.checkPlannedUnsetButNotHighlighted("Fuel");
+
+    // Nothing changes if we just open/close SED
+    budgetView.variable.checkPlannedUnsetAndHighlighted("Groceries");
+    budgetView.variable.editPlannedAmount("Groceries").validate();
+    budgetView.variable.checkPlannedUnsetAndHighlighted("Groceries");
+
+    // Go through SAED
+    budgetView.variable.checkPlannedUnsetAndHighlighted("Groceries");
+    budgetView.variable.editPlannedAmount("Groceries")
+      .setPropagationDisabled()
+      .clickMonth(201005)
+      .setAmount(10.00)
+      .validate();
+    budgetView.variable.checkPlannedNotHighlighted("Groceries");
+
+    // Go through SED
+    budgetView.variable.checkPlannedUnsetAndHighlighted("Clothing");
+    budgetView.variable.editSeries("Clothing")
+      .setPropagationDisabled()
+      .selectMonth(201005)
+      .setAmount(10.00)
+      .validate();
+    budgetView.variable.checkPlannedNotHighlighted("Clothing");
+  }
+
   public void testSkipCategorization() throws Exception {
     views.selectData();
     importPanel.checkImportSignpostDisplayed("Click here to import your operations");
