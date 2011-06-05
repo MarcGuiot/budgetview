@@ -32,6 +32,7 @@ public class GlobSliderEditor extends AbstractGlobComponentHolder<GlobSliderEdit
     this.adapter = adapter;
 
     this.slider = new JSlider();
+    slider.setPaintLabels(false);
     slider.setEnabled(false);
     slider.addChangeListener(new ChangeListener() {
       public void stateChanged(ChangeEvent e) {
@@ -84,11 +85,14 @@ public class GlobSliderEditor extends AbstractGlobComponentHolder<GlobSliderEdit
     try {
       if (currentGlobs.size() == 0) {
         slider.setValue(0);
+        // Used to circumvent AquaLabelUI exception when displaying disabled labels
+        slider.setPaintLabels(false);
         slider.setEnabled(false);
         return;
       }
 
       slider.setEnabled(true);
+      slider.setPaintLabels(true);
 
       Set<Double> values = currentGlobs.getSortedSet(field);
       Double newValue = values.size() > 0 ? values.iterator().next() : null;
