@@ -1,7 +1,5 @@
 package org.uispec4j.utils;
 
-import com.sun.xml.internal.xsom.impl.Ref;
-
 import java.util.HashSet;
 import java.util.Set;
 
