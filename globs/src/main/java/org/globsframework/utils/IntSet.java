@@ -1,6 +1,4 @@
-package org.uispec4j.utils;
-
-import com.sun.xml.internal.xsom.impl.Ref;
+package org.globsframework.utils;
 
 import java.util.HashSet;
 import java.util.Set;
