@@ -188,7 +188,7 @@ A.highlighted:hover {
 
 #header-links {
   float: right;
-  width: 470px;
+  width: 530px;
   margin-top: 7px;
 }
 
@@ -1026,12 +1026,93 @@ table.field-value td.value {
   text-align: center;
 }
 
-#home p#close-showroom {
+p#close-showroom {
   margin-top: 15px;
-  line-height: 1.4em;
-  font-size: 14pt;
+  line-height: 1.5em;
+  font-size: 12pt;
 }
 
-#home p#close-showroom A {
+p#close-showroom A {
   font-weight: bold;
+}
+
+/*=== "WHY" PAGE ===*/
+
+#why {
+  padding-top: 15px;
+}
+
+#why p {
+  font-size: 10pt;
+  line-height: 1.2em;
+  margin-bottom: 10px;
+}
+
+#why table p {
+  text-align: justify;
+}
+
+#why .why-block {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#why #project-definition-intro p {
+  font-size: 13pt;
+  text-align: center;
+}
+
+#why table#project-definition-examples {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  border: solid 1px #BBB;
+  margin-bottom: 10px;
+  background-color: #F9F9F9;
+}
+
+#why table#project-definition-examples td {
+  padding: 5px 10px 5px 10px;
+}
+
+#why table#project-definition-examples td.left p {
+  text-align: right;
+  font-size: 11pt;
+  font-style:italic;
+}
+
+#why table#project-definition-examples td.right {
+  padding-left: 20px;
+  background-image: url('/files/images/why/right_arrow.png');
+  background-repeat: no-repeat;
+  background-position: left;
+}
+
+#why table#project-definition-examples td.right p {
+  text-align: center;
+  font-size: 12pt;
+  font-weight: bold;
+}
+
+#why #project-definition-try {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#why #budget {
+  padding-bottom: 15px;
+  border-bottom: 1px solid #DDD;
+}
+
+#why #close p {
+  color: #222;
+  font-size: 18pt;
+}
+
+#why #close #close-trial {
+  margin-top: -10px;
+  color: #AAA;
+  font-size: 9pt;
 }
