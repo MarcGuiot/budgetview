@@ -1,5 +1,6 @@
 package org.designup.picsou.model;
 
+import org.apache.http.impl.cookie.PublicSuffixFilter;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
@@ -305,6 +306,12 @@ public class Month {
       }
       return distance;
     }
+  }
+
+  public static Iterable<Integer> yearRange(int monthId) {
+    int firstMonth = Month.toYear(monthId) * 100 + 1;
+    int lastMonth = firstMonth + 11;
+    return range(firstMonth, lastMonth);
   }
 
   private static class RangeIterator implements Iterator<Integer> {

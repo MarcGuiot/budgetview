@@ -22,17 +22,8 @@ import java.util.Date;
 import java.util.List;
 
 public class OperationChecker {
-  private MenuItem importMenu;
-  private MenuItem exportMenu;
-  private MenuItem preferencesMenu;
-  private MenuItem undoMenu;
-  private MenuItem redoMenu;
-  private MenuItem throwExceptionMenu;
-  private MenuItem throwExceptionInRepositoryMenu;
   public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
   private Window window;
-  private MenuItem checkMenu;
-  private MenuItem fileMenu;
 
   public static OperationChecker init(Window window) {
     return new OperationChecker(window);
@@ -41,21 +32,10 @@ public class OperationChecker {
   public OperationChecker(Window window) {
     UISpecAssert.waitUntil(window.containsSwingComponent(JMenu.class), 10000);
     this.window = window;
-    fileMenu = window.getMenuBar().getMenu("File");
-    importMenu = fileMenu.getSubMenu("Import");
-    exportMenu = fileMenu.getSubMenu("Export");
-    preferencesMenu = fileMenu.getSubMenu("Preferences");
-
-    MenuItem editMenu = window.getMenuBar().getMenu("Edit");
-    undoMenu = editMenu.getSubMenu("Undo");
-    redoMenu = editMenu.getSubMenu("Redo");
-    checkMenu = editMenu.getSubMenu("[Check data (see logs)]");
-    throwExceptionMenu = editMenu.getSubMenu("[Throw exception]");
-    throwExceptionInRepositoryMenu = editMenu.getSubMenu("Throw exception in repository");
   }
 
   public ImportDialogChecker openImportDialog() {
-    return ImportDialogChecker.open(importMenu.triggerClick());
+    return ImportDialogChecker.open(getImportMenu().triggerClick());
   }
 
   public void importOfxFile(String name) {
@@ -125,7 +105,7 @@ public class OperationChecker {
   }
 
   private void importFile(final String[] fileNames, final String bank, final Double amount, final String targetAccount) {
-    Window dialog = WindowInterceptor.getModalDialog(importMenu.triggerClick());
+    Window dialog = WindowInterceptor.getModalDialog(getImportMenu().triggerClick());
     TextBox fileField = dialog.getInputTextBox("fileField");
     String txt = "";
     for (String name : fileNames) {
@@ -143,12 +123,7 @@ public class OperationChecker {
         .defineAccount(bank, "Main account", DEFAULT_ACCOUNT_NUMBER);
     }
     else if (bank != null && asSelectBank(dialog)) { // OFX
-      importDialog
-        .selectOfxAccountBank("Autre");
-
-//        .openEntityEditor()
-//        .selectBank(bank)
-//        .validate();
+      importDialog.selectOfxAccountBank("Autre");
     }
     if (targetAccount != null) {
       dialog.getComboBox("accountCombo").select(targetAccount);
@@ -168,12 +143,12 @@ public class OperationChecker {
       accountPosition.validate();
     }
     int i = 0;
-    while (!importDialog.isLastStep() && i != 10){
+    while (!importDialog.isLastStep() && i != 10) {
       step2Button.click();
       if (importDialog.hasAccountType()) {
         importDialog.setMainAccountForAll();
       }
-      if(bank != null && asSelectBank(dialog)){
+      if (bank != null && asSelectBank(dialog)) {
         importDialog
           .selectOfxAccountBank(bank);
       }
@@ -189,7 +164,7 @@ public class OperationChecker {
 
   public void exportOfxFile(String name) {
     WindowInterceptor
-      .init(exportMenu.triggerClick())
+      .init(getExportMenu().triggerClick())
       .processWithButtonClick("OK")
       .process(FileChooserHandler.init().select(name))
       .run();
@@ -289,25 +264,23 @@ public class OperationChecker {
   }
 
   public Trigger getRestoreTrigger() {
-    MenuItem fileMenu = window.getMenuBar().getMenu("File");
-    return fileMenu.getSubMenu("Restore").triggerClick();
+    return getFileMenu().getSubMenu("Restore").triggerClick();
   }
 
   public Trigger getRestoreSnapshotTrigger() {
-    MenuItem fileMenu = window.getMenuBar().getMenu("File");
-    return fileMenu.getSubMenu("previous version").triggerClick();
+    return getFileMenu().getSubMenu("previous version").triggerClick();
   }
 
   public Trigger getImportTrigger() {
-    return importMenu.triggerClick();
+    return getImportMenu().triggerClick();
   }
 
   public Trigger getExportTrigger() {
-    return exportMenu.triggerClick();
+    return getExportMenu().triggerClick();
   }
 
   public PreferencesChecker openPreferences() {
-    return new PreferencesChecker(WindowInterceptor.getModalDialog(preferencesMenu.triggerClick()));
+    return new PreferencesChecker(WindowInterceptor.getModalDialog(getPreferencesMenu().triggerClick()));
   }
 
   public void undo(int count) {
@@ -317,31 +290,31 @@ public class OperationChecker {
   }
 
   public void undo() {
-    undoMenu.click();
+    getUndoMenu().click();
   }
 
   public boolean isUndoAvailable() {
-    return undoMenu.getAwtComponent().isEnabled();
+    return getUndoMenu().getAwtComponent().isEnabled();
   }
 
   public void checkUndoAvailable() {
-    UISpecAssert.assertTrue(undoMenu.isEnabled());
+    UISpecAssert.assertTrue(getUndoMenu().isEnabled());
   }
 
   public void checkUndoNotAvailable() {
-    UISpecAssert.assertFalse(undoMenu.isEnabled());
+    UISpecAssert.assertFalse(getUndoMenu().isEnabled());
   }
 
   public void redo() {
-    redoMenu.click();
+    getRedoMenu().click();
   }
 
   public void checkRedoAvailable() {
-    UISpecAssert.assertTrue(redoMenu.isEnabled());
+    UISpecAssert.assertTrue(getRedoMenu().isEnabled());
   }
 
   public void checkRedoNotAvailable() {
-    UISpecAssert.assertFalse(redoMenu.isEnabled());
+    UISpecAssert.assertFalse(getRedoMenu().isEnabled());
   }
 
   public void logout() {
@@ -458,63 +431,113 @@ public class OperationChecker {
   }
 
   public MessageAndDetailsDialogChecker throwExceptionInApplication() {
-    return MessageAndDetailsDialogChecker.init(throwExceptionMenu.triggerClick());
+    return MessageAndDetailsDialogChecker.init(getThrowExceptionMenu().triggerClick());
   }
 
   public MessageAndDetailsDialogChecker throwExceptionInRepository() {
-    return MessageAndDetailsDialogChecker.init(throwExceptionInRepositoryMenu.triggerClick());
+    return MessageAndDetailsDialogChecker.init(getThrowExceptionInRepositoryMenu().triggerClick());
   }
 
   public void checkDataIsOk() {
-    MessageDialogChecker.init(checkMenu.triggerClick())
+    MessageDialogChecker.init(getCheckMenu().triggerClick())
       .checkMessageContains("No error was found").close();
   }
 
   public void protect(String userName, String password) {
-    MenuItem protectMenu = fileMenu.getSubMenu("Change identifier");
+    MenuItem protectMenu = getFileMenu().getSubMenu("Change identifier");
     RenameChecker checker =
       new RenameChecker(WindowInterceptor.getModalDialog(protectMenu.triggerClick()));
     checker.set("password", userName, password);
   }
 
   public void protectFromAnonymous(String userName, String password) {
-    MenuItem protectMenu = fileMenu.getSubMenu("protect");
+    MenuItem protectMenu = getFileMenu().getSubMenu("protect");
     RenameChecker checker =
       new RenameChecker(WindowInterceptor.getModalDialog(protectMenu.triggerClick()));
     checker.set(userName, password);
   }
 
   public void checkProtect() {
-    MenuItem fileMenu = window.getMenuBar().getMenu("File");
-    UISpecAssert.assertThat(fileMenu.contain("protect"));
+    UISpecAssert.assertThat(getFileMenu().contain("protect"));
   }
 
   public void checkChangeUserName() {
-    MenuItem fileMenu = window.getMenuBar().getMenu("File");
-    UISpecAssert.assertThat(fileMenu.contain("Change identifiers..."));
+    UISpecAssert.assertThat(getFileMenu().contain("Change identifiers..."));
   }
 
   public void nextMonth() {
-    MenuItem fileMenu = window.getMenuBar().getMenu("Edit");
-    fileMenu.getSubMenu("goto to 10 of next month").click();
+    getEditMenu().getSubMenu("goto to 10 of next month").click();
   }
 
   public void nextSixDays() {
-    MenuItem fileMenu = window.getMenuBar().getMenu("Edit");
-    fileMenu.getSubMenu("Add 6 days").click();
+    getEditMenu().getSubMenu("Add 6 days").click();
   }
 
   public void hideSignposts() {
-    MenuItem fileMenu = window.getMenuBar().getMenu("Edit");
-    fileMenu.getSubMenu("[Hide signposts]").click();
+    getEditMenu().getSubMenu("[Hide signposts]").click();
   }
 
   public void dumpData() {
-    MenuItem fileMenu = window.getMenuBar().getMenu("Edit");
-    fileMenu.getSubMenu("[Dump data]").click();
+    getEditMenu().getSubMenu("[Dump data]").click();
   }
 
   public RestoreSnapshotChecker restoreSnapshot() {
     return new RestoreSnapshotChecker(WindowInterceptor.getModalDialog(getRestoreSnapshotTrigger()));
+  }
+
+  public void selectCurrentMonth() {
+    getViewMenu().getSubMenu("select current month").click();
+  }
+
+  public void selectCurrentYear() {
+    getViewMenu().getSubMenu("select current year").click();
+  }
+
+  public void selectLast12Months() {
+    getViewMenu().getSubMenu("select last 12 months").click();
+  }
+
+  private MenuItem getFileMenu() {
+    return window.getMenuBar().getMenu("File");
+  }
+
+  private MenuItem getEditMenu() {
+    return window.getMenuBar().getMenu("Edit");
+  }
+
+  private MenuItem getViewMenu() {
+    return window.getMenuBar().getMenu("View");
+  }
+
+  private MenuItem getImportMenu() {
+    return getFileMenu().getSubMenu("Import");
+  }
+
+  private MenuItem getExportMenu() {
+    return getFileMenu().getSubMenu("Export");
+  }
+
+  private MenuItem getPreferencesMenu() {
+    return getFileMenu().getSubMenu("Preferences");
+  }
+
+  private MenuItem getUndoMenu() {
+    return getEditMenu().getSubMenu("Undo");
+  }
+
+  private MenuItem getRedoMenu() {
+    return getEditMenu().getSubMenu("Redo");
+  }
+
+  private MenuItem getThrowExceptionMenu() {
+    return getEditMenu().getSubMenu("[Throw exception]");
+  }
+
+  private MenuItem getThrowExceptionInRepositoryMenu() {
+    return getEditMenu().getSubMenu("Throw exception in repository");
+  }
+
+  private MenuItem getCheckMenu() {
+    return getEditMenu().getSubMenu("[Check data (see logs)]");
   }
 }

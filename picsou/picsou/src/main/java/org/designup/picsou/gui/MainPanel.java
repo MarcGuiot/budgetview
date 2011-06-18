@@ -34,6 +34,9 @@ import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.summary.SummaryView;
 import org.designup.picsou.gui.summary.version.NewVersionView;
 import org.designup.picsou.gui.time.TimeView;
+import org.designup.picsou.gui.time.actions.SelectCurrentMonthAction;
+import org.designup.picsou.gui.time.actions.SelectCurrentYearAction;
+import org.designup.picsou.gui.time.actions.SelectLast12MonthsAction;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.undo.RedoAction;
@@ -232,11 +235,12 @@ public class MainPanel {
     menuBar = new JMenuBar();
     menuBar.add(createFileMenu());
     menuBar.add(createEditMenu(frame, directory));
+    menuBar.add(createViewMenu(frame, directory));
     menuBar.add(createHelpMenu(directory));
   }
 
   private JMenu createFileMenu() {
-    JMenu menu = new JMenu(Lang.get("file"));
+    JMenu menu = new JMenu(Lang.get("menuBar.file"));
     menu.add(importFileAction);
     menu.add(exportFileAction);
     menu.addSeparator();
@@ -271,7 +275,7 @@ public class MainPanel {
     final UndoAction undoAction = new UndoAction(directory);
     final RedoAction redoAction = new RedoAction(directory);
 
-    JMenu editMenu = new JMenu(Lang.get("edit"));
+    JMenu editMenu = new JMenu(Lang.get("menuBar.edit"));
     editMenu.add(undoAction);
     editMenu.add(redoAction);
 
@@ -293,8 +297,16 @@ public class MainPanel {
     return editMenu;
   }
 
+  private JMenu createViewMenu(PicsouFrame frame, Directory directory) {
+    JMenu showMenu = new JMenu(Lang.get("menuBar.view"));
+    showMenu.add(new SelectCurrentMonthAction(repository, directory));
+    showMenu.add(new SelectCurrentYearAction(repository, directory));
+    showMenu.add(new SelectLast12MonthsAction(repository, directory));
+    return showMenu;
+  }
+
   private JMenu createHelpMenu(final Directory directory) {
-    JMenu menu = new JMenu(Lang.get("help"));
+    JMenu menu = new JMenu(Lang.get("menuBar.help"));
     menu.add(new AbstractAction(Lang.get("help.index")) {
       public void actionPerformed(ActionEvent e) {
         directory.get(HelpService.class).show("index", parent);
