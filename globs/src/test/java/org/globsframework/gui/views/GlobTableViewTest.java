@@ -10,6 +10,7 @@ import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.metamodel.DummyObjectWithLinks;
+import org.globsframework.metamodel.Field;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -21,6 +22,7 @@ import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Strings;
 import org.uispec4j.Clipboard;
 import org.uispec4j.Table;
 import org.uispec4j.Trigger;
@@ -800,8 +802,8 @@ public class GlobTableViewTest extends GuiComponentTestCase {
       checker.parse("<dummyObject id='1' name='name1' value='1.1'/>" +
                     "<dummyObject id='2' name='name2' value='2.2'/>");
 
-    DummyTableColumn column1 = new DummyTableColumn("Col1");
-    DummyTableColumn column2 = new DummyTableColumn("Col2");
+    DummyTableColumn column1 = new DummyTableColumn("Col1", DummyObject.NAME, repository);
+    DummyTableColumn column2 = new DummyTableColumn("Col2", DummyObject.VALUE, repository);
 
     GlobTableView view =
       GlobTableView.init(TYPE, repository, new GlobFieldComparator(ID), directory)
@@ -816,14 +818,52 @@ public class GlobTableViewTest extends GuiComponentTestCase {
 
     view.refresh(false);
     assertThat(table.getHeader().contentEquals("Col A", "Col B"));
+    assertTrue(table.contentEquals(new String[][]{
+      {"name1", "1.1"},
+      {"name2", "2.2"}
+    }));
+  }
+
+  public void testInsertColumn() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' value='1.1'/>" +
+                    "<dummyObject id='2' name='name2' value='2.2'/>");
+
+    DummyTableColumn column1 = new DummyTableColumn("Col1", DummyObject.NAME, repository);
+    DummyTableColumn column2 = new DummyTableColumn("Col2", DummyObject.VALUE, repository);
+
+    GlobTableView view =
+      GlobTableView.init(TYPE, repository, new GlobFieldComparator(ID), directory)
+        .addColumn(column2);
+
+    Table table = new Table(view.getComponent());
+    assertThat(table.getHeader().contentEquals("Col2"));
+
+    view.insertColumn(0, column1);
+    assertThat(table.getHeader().contentEquals("Col1", "Col2"));
+    assertTrue(table.contentEquals(new String[][]{
+      {"name1", "1.1"},
+      {"name2", "2.2"}
+    }));
   }
 
   private static class DummyTableColumn implements GlobTableColumn {
 
     private String name;
+    private GlobRepository repository;
+    private AbstractGlobStringifier stringifier;
 
-    private DummyTableColumn(String name) {
+    private DummyTableColumn(String name, final Field field, GlobRepository repository) {
       this.name = name;
+      this.repository = repository;
+      this.stringifier = new AbstractGlobStringifier() {
+        public String toString(Glob glob, GlobRepository repository) {
+          if (glob == null) {
+            return "";
+          }
+          return Strings.toString(glob.getValue(field));
+        }
+      };
     }
 
     public String getName() {
@@ -831,7 +871,13 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     }
 
     public TableCellRenderer getRenderer() {
-      return new DefaultTableCellRenderer();
+      return new DefaultTableCellRenderer() {
+        public Component getTableCellRendererComponent(JTable jTable, Object o, boolean b, boolean b1, int i, int i1) {
+          Glob glob = (Glob)o;
+          this.setText(stringifier.toString(glob, repository));
+          return this;
+        }
+      };
     }
 
     public TableCellEditor getEditor() {
@@ -839,11 +885,11 @@ public class GlobTableViewTest extends GuiComponentTestCase {
     }
 
     public GlobStringifier getStringifier() {
-      return null;
+      return stringifier;
     }
 
     public Comparator<Glob> getComparator() {
-      return null;
+      return stringifier.getComparator(repository);
     }
 
     public boolean isEditable(int row, Glob glob) {

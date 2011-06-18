@@ -12,7 +12,6 @@ import org.globsframework.gui.views.impl.SortableTableModel;
 import org.globsframework.gui.views.impl.SortingIcon;
 import org.globsframework.gui.views.utils.GlobViewUtils;
 import org.globsframework.gui.views.utils.LabelCustomizers;
-import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
@@ -37,6 +36,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
+
+import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 
 public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> implements GlobSelectionListener {
   private List<GlobTableColumn> columns = new ArrayList<GlobTableColumn>();
@@ -186,6 +187,12 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
 
   public GlobTableView addColumn(GlobTableColumn column) {
     columns.add(column);
+    columnAdded(column);
+    return this;
+  }
+
+  public GlobTableView insertColumn(int index, GlobTableColumn column) {
+    columns.add(index, column);
     columnAdded(column);
     return this;
   }

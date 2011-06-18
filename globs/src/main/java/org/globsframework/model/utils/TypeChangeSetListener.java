@@ -4,19 +4,17 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.utils.exceptions.InvalidParameter;
+import org.globsframework.utils.Utils;
 
+import java.util.List;
 import java.util.Set;
 
 public abstract class TypeChangeSetListener implements ChangeSetListener {
 
-  private GlobType[] types;
+  private List<GlobType> types;
 
-  protected TypeChangeSetListener(GlobType... types) {
-    if (types.length == 0) {
-      throw new InvalidParameter("You must supply at least one GlobType");
-    }
-    this.types = types;
+  protected TypeChangeSetListener(GlobType type, GlobType... additionalTypes) {
+    this.types = Utils.list(type, additionalTypes);
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
