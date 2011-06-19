@@ -46,15 +46,16 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   private JTable table;
   private GlobTableModel tableModel;
   private PopupMenuFactory popupMenuFactory;
-  private LabelCustomizer headerLabelCustomizer = LabelCustomizer.NULL;
-  private CellPainter headerBackgroundPainter = CellPainter.NULL;
   private boolean selectionEnabled = true;
   private Font defaultFont = new JTable().getFont();
   private String name;
   private boolean headerHidden;
   private boolean headerActionsDisabled;
+  private LabelCustomizer headerLabelCustomizer = LabelCustomizer.NULL;
+  private CellPainter headerBackgroundPainter = CellPainter.NULL;
   private CellPainter defaultBackgroundPainter = CellPainter.NULL;
   private LabelCustomizer defaultLabelCustomizer = LabelCustomizer.NULL;
+  private LabelTableCellRenderer headerRenderer;
 
   public static GlobTableView init(GlobType type, GlobRepository globRepository,
                                    Comparator<Glob> comparator, Directory directory) {
@@ -227,10 +228,6 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     return this;
   }
 
-  public PopupMenuFactory getPopupMenuFactory() {
-    return popupMenuFactory;
-  }
-
   public GlobTableView setFilter(GlobMatcher matcher) {
     if (table == null) {
       this.initialFilter = matcher;
@@ -360,7 +357,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       if (cellRenderer != null) {
         tableColumn.setCellRenderer(cellRenderer);
       }
-//      tableColumn.setHeaderRenderer(column.getRenderer());
+      tableColumn.setHeaderRenderer(headerRenderer);
       index++;
     }
   }
@@ -463,11 +460,12 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       return;
     }
 
-    ColumnHeaderRenderer headerRenderer = new ColumnHeaderRenderer(table, tableModel);
+    ColumnHeaderRenderer columnHeaderRenderer = new ColumnHeaderRenderer(table, tableModel);
 
     JTableHeader header = table.getTableHeader();
+    this.headerRenderer = new LabelTableCellRenderer(chain(columnHeaderRenderer, headerLabelCustomizer), headerBackgroundPainter);
     header.setDefaultRenderer(
-      new LabelTableCellRenderer(chain(headerRenderer, headerLabelCustomizer), headerBackgroundPainter));
+      this.headerRenderer);
     header.setReorderingAllowed(false);
 
     if (!headerActionsDisabled) {
