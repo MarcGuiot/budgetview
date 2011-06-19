@@ -1,3 +1,7 @@
+Cf : http://www.banque-france.fr/fr/supervi/telechar/popetscred/eccib.pdf
+
+
+
 30001 Banque de France
 30002 Credit lyonnais
 11449 Credit lyonnais

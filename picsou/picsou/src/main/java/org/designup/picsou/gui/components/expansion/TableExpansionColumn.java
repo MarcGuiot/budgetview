@@ -50,7 +50,7 @@ public class TableExpansionColumn
   public Component getTableCellRendererComponent(JTable table, Object value,
                                                  boolean isSelected, boolean hasFocus,
                                                  int row, int column) {
-    if (value == null){
+    if (value == null) {
       return null;
     }
     Glob glob = (Glob)value;
@@ -79,7 +79,7 @@ public class TableExpansionColumn
 
   private void setUI(JButton button, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
     if (backgroundPainter != null) {
-    button.setUI(new PainterUI(backgroundPainter, (Glob)value, row, column, isSelected, hasFocus));
+      button.setUI(new PainterUI(backgroundPainter, (Glob)value, row, column, isSelected, hasFocus));
     }
   }
 

@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
+import org.designup.picsou.functests.checkers.converters.ReconciliationCellConverter;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Transaction;
@@ -421,8 +422,13 @@ public class CategorizationChecker extends ViewChecker {
   public Table getTable() {
     views.selectCategorization();
     Table table = getPanel().getTable("transactionsToCategorize");
-    table.setCellValueConverter(0, new DateCellConverter());
-    table.setCellValueConverter(3, new TableCellValueConverter() {
+    int offset = 0;
+    if (table.getColumnCount() > 4) {
+      offset = 1;
+      table.setCellValueConverter(0, new ReconciliationCellConverter());
+    }
+    table.setCellValueConverter(offset, new DateCellConverter());
+    table.setCellValueConverter(3 + offset, new TableCellValueConverter() {
       public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
         Glob transaction = (Glob)modelObject;
         return transaction.get(Transaction.AMOUNT);
@@ -732,6 +738,11 @@ public class CategorizationChecker extends ViewChecker {
 
   public CategorizationChecker showUncategorizedTransactionsForSelectedMonths() {
     selectTransactionFilterMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
+    return this;
+  }
+
+  public CategorizationChecker showUnreconciledOnly() {
+    selectTransactionFilterMode(CategorizationFilteringMode.UNRECONCILED);
     return this;
   }
 

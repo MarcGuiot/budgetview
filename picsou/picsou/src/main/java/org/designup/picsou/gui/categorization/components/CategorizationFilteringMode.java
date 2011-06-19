@@ -16,7 +16,6 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -26,7 +25,8 @@ public enum CategorizationFilteringMode {
   SELECTED_MONTHS(2),
   LAST_IMPORTED_FILE(3),
   UNCATEGORIZED(4),
-  UNCATEGORIZED_SELECTED_MONTHS(5);
+  UNCATEGORIZED_SELECTED_MONTHS(5),
+  UNRECONCILED(6);
 
   private int id;
 
@@ -40,7 +40,8 @@ public enum CategorizationFilteringMode {
 
   public GlobMatcher getMatcher(GlobRepository repository,
                                 SelectionService selectionService,
-                                Collection<Key> modifiedTransactions) {
+                                Collection<Key> categorizedTransactions,
+                                Set<Key> reconciledTransactions) {
     switch (this) {
 
       case ALL:
@@ -61,7 +62,7 @@ public enum CategorizationFilteringMode {
 
       case UNCATEGORIZED:
         return or(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                  keyIn(modifiedTransactions));
+                  keyIn(categorizedTransactions));
 
       case UNCATEGORIZED_SELECTED_MONTHS: {
         Set<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getValueSet(Month.ID);
@@ -71,7 +72,12 @@ public enum CategorizationFilteringMode {
         return
           or(and(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
                  fieldIn(Transaction.BUDGET_MONTH, selectedMonthIds)),
-             keyIn(modifiedTransactions));
+             keyIn(categorizedTransactions));
+      }
+
+      case UNRECONCILED: {
+        return or(GlobMatchers.isFalse(Transaction.RECONCILED),
+                  keyIn(reconciledTransactions));
       }
     }
     throw new UnexpectedApplicationState(name());

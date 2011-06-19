@@ -15,14 +15,11 @@ import java.util.Comparator;
 
 public class SeriesEvolutionLabelColumn implements GlobTableColumn {
 
-  private GlobRepository repository;
   private SeriesEvolutionLabelEditor editor;
 
   public SeriesEvolutionLabelColumn(GlobTableView view,
                                     GlobRepository repository, Directory directory,
-                                    SeriesChartsColors colors
-  ) {
-    this.repository = repository;
+                                    SeriesChartsColors colors) {
     this.editor = new SeriesEvolutionLabelEditor(view, repository, directory, colors);
   }
 

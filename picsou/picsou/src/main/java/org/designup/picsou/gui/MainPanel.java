@@ -39,6 +39,7 @@ import org.designup.picsou.gui.time.actions.SelectCurrentYearAction;
 import org.designup.picsou.gui.time.actions.SelectLast12MonthsAction;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
+import org.designup.picsou.gui.transactions.reconciliation.ShowReconciliationAction;
 import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
@@ -302,6 +303,8 @@ public class MainPanel {
     showMenu.add(new SelectCurrentMonthAction(repository, directory));
     showMenu.add(new SelectCurrentYearAction(repository, directory));
     showMenu.add(new SelectLast12MonthsAction(repository, directory));
+    showMenu.addSeparator();
+    showMenu.add(new ShowReconciliationAction(repository, directory));
     return showMenu;
   }
 

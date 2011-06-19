@@ -5,6 +5,7 @@ import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.views.CellPainter;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
 
@@ -102,21 +103,34 @@ public class TransactionRendererColors implements ColorChangeListener {
   }
 
   public void setBackground(Component component, Glob transaction, boolean isSelected, int row) {
+    component.setBackground(getBackgroundColor(transaction, isSelected, row));
+  }
+
+  public CellPainter getBackgroundPainter() {
+    return new CellPainter() {
+      public void paint(Graphics g, Glob transaction, int row, int column, boolean isSelected, boolean hasFocus, int width, int height) {
+        g.setColor(getBackgroundColor(transaction, isSelected, row));
+        g.fillRect(0, 0, width, height);
+      }
+    };
+  }
+
+  private Color getBackgroundColor(Glob transaction, boolean isSelected, int row) {
     if (isSelected) {
-      component.setBackground(selectionBgColor);
+      return selectionBgColor;
     }
     else if ((splitGroupSourceId != null)
              && (transaction != null)
              && transaction.get(Transaction.ID).equals(splitGroupSourceId)) {
-      component.setBackground(splitSourceColor);
+      return splitSourceColor;
     }
     else if ((splitGroupSourceId != null)
              && (transaction != null)
              && splitGroupSourceId.equals(transaction.get(Transaction.SPLIT_SOURCE))) {
-      component.setBackground(splitChildColor);
+      return splitChildColor;
     }
     else {
-      component.setBackground((row % 2) == 0 ? getEvenRowsBgColor() : getOddRowsBgColor());
+      return (row % 2) == 0 ? getEvenRowsBgColor() : getOddRowsBgColor();
     }
   }
 

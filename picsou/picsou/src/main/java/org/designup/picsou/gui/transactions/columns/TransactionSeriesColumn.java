@@ -2,14 +2,13 @@ package org.designup.picsou.gui.transactions.columns;
 
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.HyperlinkTableColumn;
-import org.designup.picsou.gui.description.TransactionSeriesStringifier;
 import org.designup.picsou.gui.description.SeriesDescriptionStringifier;
+import org.designup.picsou.gui.description.TransactionSeriesStringifier;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.ColorLocator;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.components.HyperlinkButton;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.views.GlobTableView;
@@ -34,8 +33,6 @@ public class TransactionSeriesColumn extends HyperlinkTableColumn {
 
   private GlobTableView tableView;
 
-  private ColorService colorService;
-
   private Color selectedColor;
   private Color toCategorizeColor;
   private Font normalFont;
@@ -51,13 +48,11 @@ public class TransactionSeriesColumn extends HyperlinkTableColumn {
     this.rendererColors = transactionRendererColors;
     this.repository = repository;
 
-    seriesStringifier = new TransactionSeriesStringifier();
+    this.seriesStringifier = new TransactionSeriesStringifier();
 
     FontLocator fontLocator = directory.get(FontLocator.class);
-    normalFont = fontLocator.get("transactionView.category");
-    toCategorizeFont = fontLocator.get("transactionView.category.error");
-
-    colorService = directory.get(ColorService.class);
+    this.normalFont = fontLocator.get("transactionView.category");
+    this.toCategorizeFont = fontLocator.get("transactionView.category.error");
   }
 
   public String getName() {
@@ -74,10 +69,12 @@ public class TransactionSeriesColumn extends HyperlinkTableColumn {
     toCategorizeColor = colorLocator.get(ApplicationColors.TRANSACTION_ERROR_TEXT);
   }
 
-  protected void updateComponent(HyperlinkButton button, JPanel panel, Glob transaction, boolean render) {
+  protected void updateComponent(JButton jButton, JPanel panel, Glob transaction, boolean render) {
     if (!render) {
       this.transaction = transaction;
     }
+
+    HyperlinkButton button = (HyperlinkButton)jButton;
 
     if (Transaction.isPlanned(transaction)
         || Transaction.isMirrorTransaction(transaction)
@@ -134,10 +131,5 @@ public class TransactionSeriesColumn extends HyperlinkTableColumn {
     if (!selection.contains(transaction)) {
       tableView.select(transaction);
     }
-  }
-
-  protected void finalize() throws Throwable {
-    super.finalize();
-    colorService.removeListener(this);
   }
 }

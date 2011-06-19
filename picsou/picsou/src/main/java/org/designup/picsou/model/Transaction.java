@@ -119,6 +119,9 @@ public class Transaction {
   @Target(Transaction.class)
   public static LinkField NOT_IMPORTED_TRANSACTION;
 
+  @DefaultBoolean(false)
+  public static BooleanField RECONCILED;
+
   public static NotUniqueIndex LABEL_FOR_CATEGORISATION_INDEX;
 
   public static MultiFieldNotUniqueIndex SERIES_INDEX;
@@ -248,7 +251,7 @@ public class Transaction {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 8;
+      return 9;
     }
 
     public byte[] serializeData(FieldValues fieldValues) {
@@ -288,11 +291,15 @@ public class Transaction {
       output.writeUtf8String(fieldValues.get(Transaction.QIF_P));
       output.writeBoolean(fieldValues.get(Transaction.IS_OFX));
       output.writeInteger(fieldValues.get(Transaction.IMPORT));
+      output.writeBoolean(fieldValues.get(Transaction.RECONCILED));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 8) {
+      if (version == 9) {
+        deserializeDataV9(fieldSetter, data);
+      }
+      else if (version == 8) {
         deserializeDataV8(fieldSetter, data);
       }
       else if (version == 7) {
@@ -316,6 +323,45 @@ public class Transaction {
       else if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+    }
+
+    private void deserializeDataV9(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readUtf8String());
+      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readUtf8String());
+      fieldSetter.set(Transaction.NOTE, input.readUtf8String());
+      fieldSetter.set(Transaction.MONTH, input.readInteger());
+      fieldSetter.set(Transaction.DAY, input.readInteger());
+      fieldSetter.set(Transaction.BUDGET_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.BUDGET_DAY, input.readInteger());
+      fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.BANK_DAY, input.readInteger());
+      fieldSetter.set(Transaction.POSITION_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.POSITION_DAY, input.readInteger());
+      fieldSetter.set(Transaction.AMOUNT, input.readDouble());
+      fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
+      fieldSetter.set(Transaction.SPLIT, input.readBoolean());
+      fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
+      fieldSetter.set(Transaction.DAY_BEFORE_SHIFT, input.readInteger());
+      fieldSetter.set(Transaction.SERIES, input.readInteger());
+      fieldSetter.set(Transaction.SUB_SERIES, input.readInteger());
+      fieldSetter.set(Transaction.PLANNED, input.readBoolean());
+      fieldSetter.set(Transaction.MIRROR, input.readBoolean());
+      fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
+      fieldSetter.set(Transaction.NOT_IMPORTED_TRANSACTION, input.readInteger());
+      fieldSetter.set(Transaction.OFX_CHECK_NUM, input.readUtf8String());
+      fieldSetter.set(Transaction.OFX_MEMO, input.readUtf8String());
+      fieldSetter.set(Transaction.OFX_NAME, input.readUtf8String());
+      fieldSetter.set(Transaction.QIF_M, input.readUtf8String());
+      fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
+      fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
+      fieldSetter.set(Transaction.IMPORT, input.readInteger());
+      fieldSetter.set(Transaction.RECONCILED, input.readBoolean());
     }
 
     private void deserializeDataV8(FieldSetter fieldSetter, byte[] data) {
@@ -354,6 +400,7 @@ public class Transaction {
       fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
       fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
+      fieldSetter.set(Transaction.RECONCILED, false);
     }
 
     private void deserializeDataV7(FieldSetter fieldSetter, byte[] data) {
@@ -396,6 +443,7 @@ public class Transaction {
       fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
       fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
+      fieldSetter.set(Transaction.RECONCILED, false);
     }
 
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
@@ -438,6 +486,7 @@ public class Transaction {
       fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
       fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
+      fieldSetter.set(Transaction.RECONCILED, false);
     }
 
     private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
@@ -479,6 +528,7 @@ public class Transaction {
       fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
       fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
+      fieldSetter.set(Transaction.RECONCILED, false);
     }
 
     private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
@@ -513,6 +563,7 @@ public class Transaction {
       fieldSetter.set(Transaction.MIRROR, input.readBoolean());
       fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
       fieldSetter.set(Transaction.NOT_IMPORTED_TRANSACTION, input.readInteger());
+      fieldSetter.set(Transaction.RECONCILED, false);
     }
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
@@ -546,6 +597,7 @@ public class Transaction {
       fieldSetter.set(Transaction.PLANNED, input.readBoolean());
       fieldSetter.set(Transaction.MIRROR, input.readBoolean());
       fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
+      fieldSetter.set(Transaction.RECONCILED, false);
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -590,6 +642,7 @@ public class Transaction {
       fieldSetter.set(Transaction.SERIES, input.readInteger());
       fieldSetter.set(Transaction.PLANNED, input.readBoolean());
       fieldSetter.set(Transaction.CREATED_BY_SERIES, false);
+      fieldSetter.set(Transaction.RECONCILED, false);
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
@@ -634,6 +687,7 @@ public class Transaction {
       fieldSetter.set(Transaction.SERIES, input.readInteger());
       fieldSetter.set(Transaction.PLANNED, input.readBoolean());
       fieldSetter.set(Transaction.CREATED_BY_SERIES, false);
+      fieldSetter.set(Transaction.RECONCILED, false);
     }
   }
 }

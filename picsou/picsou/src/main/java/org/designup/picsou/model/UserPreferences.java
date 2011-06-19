@@ -11,6 +11,8 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -68,15 +70,23 @@ public class UserPreferences {
   @DefaultBoolean(true)
   public static BooleanField SHOW_BUDGET_AREA_DESCRIPTIONS;
 
+  @DefaultBoolean(false)
+  public static BooleanField SHOW_RECONCILIATION;
+
   static {
     GlobTypeLoader.init(UserPreferences.class, "userPreferences");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 
+  public static boolean isReconciliationShown(GlobRepository repository) {
+    Glob prefs = repository.findOrCreate(KEY);
+    return prefs.isTrue(SHOW_RECONCILIATION);
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 9;
+      return 10;
     }
     
     public byte[] serializeData(FieldValues values) {
@@ -97,11 +107,15 @@ public class UserPreferences {
       outputStream.writeInteger(values.get(PERIOD_COUNT_FOR_PLANNED));
       outputStream.writeInteger(values.get(MONTH_FOR_PLANNED));
       outputStream.writeBoolean(values.get(MULTIPLE_PLANNED));
+      outputStream.writeBoolean(values.get(SHOW_RECONCILIATION));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 9) {
+      if (version == 10) {
+        deserializeDataV10(fieldSetter, data);
+      }
+      else if (version == 9) {
         deserializeDataV9(fieldSetter, data);
       }
       else if (version == 8) {
@@ -128,6 +142,26 @@ public class UserPreferences {
       else if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+    }
+
+    private void deserializeDataV10(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(LAST_BACKUP_RESTORE_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
+      fieldSetter.set(REGISTERED_USER, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
+      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_SAVINGS, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_EXTRA, input.readInteger());
+      fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, input.readBoolean());
+      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, input.readInteger());
+      fieldSetter.set(MONTH_FOR_PLANNED, input.readInteger());
+      fieldSetter.set(MULTIPLE_PLANNED, input.readBoolean());
+      fieldSetter.set(SHOW_RECONCILIATION, input.readBoolean());
     }
 
     private void deserializeDataV9(FieldSetter fieldSetter, byte[] data) {

@@ -367,7 +367,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .check();
     operations.checkDataIsOk();
 
-
     setCurrentDate("2009/01/02");
     restartApplication();
     operations.openPreferences().checkFutureMonthsCount(2).validate();
@@ -455,7 +454,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .check();
     operations.checkDataIsOk();
   }
-
 
   public void testChangeDayChangeTransactionFromPlannedToRealAndViceversaForNotImportedAccount() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
@@ -640,5 +638,28 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.selectAllTransactions();
     categorization.checkMultipleSeriesSelection();
+  }
+
+  public void testReconciliation() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/08/20", 1000.00, "WorldCo")
+      .addTransaction("2008/08/20", 100.00, "Auchan")
+      .load();
+
+    reconciliation.show();
+    reconciliation.toggle("WORLDCO");
+    categorization.checkTable(new Object[][]{
+      {"-", "20/08/2008", "", "AUCHAN", 100.0},
+      {"x", "20/08/2008", "", "WORLDCO", 1000.0}}
+    );
+
+    restartApplication();
+    
+    reconciliation.checkShown();
+    categorization.checkTable(new Object[][]{
+      {"-", "20/08/2008", "", "AUCHAN", 100.0},
+      {"x", "20/08/2008", "", "WORLDCO", 1000.0}}
+    );
   }
 }

@@ -73,10 +73,6 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
     return true;
   }
 
-  protected void refreshDisplay(int row, int column) {
-    tableView.getComponent().editCellAt(row, column);
-  }
-
   public void cancelCellEditing() {
     removeSelectionUpdater();
     super.cancelCellEditing();
@@ -151,6 +147,10 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
           refreshDisplay(row, column);
         }
       }
+    }
+
+    protected void refreshDisplay(int row, int column) {
+      tableView.getComponent().editCellAt(row, column);
     }
   }
 }

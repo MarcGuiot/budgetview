@@ -21,14 +21,15 @@ import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.signpost.guides.CategorizationAreaSignpost;
-import org.designup.picsou.gui.signpost.guides.GotoBudgetSignpost;
 import org.designup.picsou.gui.signpost.guides.CategorizationSelectionSignpost;
 import org.designup.picsou.gui.signpost.guides.FirstCategorizationDoneSignpost;
+import org.designup.picsou.gui.signpost.guides.GotoBudgetSignpost;
 import org.designup.picsou.gui.signpost.sections.SkipCategorizationPanel;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
+import org.designup.picsou.gui.transactions.reconciliation.ReconciliationColumnUpdater;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.Matchers;
@@ -52,16 +53,13 @@ import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.utils.ShowHideButton;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
-import static org.globsframework.gui.views.utils.LabelCustomizers.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Pair;
 import org.globsframework.utils.Strings;
@@ -80,6 +78,10 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
+import static org.globsframework.gui.views.utils.LabelCustomizers.*;
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.*;
+
 public class CategorizationView extends View implements TableView, Filterable, ColorChangeListener {
 
   private Directory parentDirectory;
@@ -91,7 +93,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private Color envelopeSeriesLabelForegroundColor;
   private Color envelopeSeriesLabelBackgroundColor;
 
-  private static final int[] COLUMN_SIZES = {10, 12, 28, 10};
+  public static final int[] COLUMN_SIZES = {10, 12, 28, 10};
   public static final String TRANSACTIONS_FILTER = "transactions";
 
   private Signpost signpost;
@@ -100,7 +102,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private FilterManager filterManager;
   private GlobMatcher filter = GlobMatchers.ALL;
   private GlobMatcher currentTableFilter;
-  private Set<Key> modifiedTransactions = new HashSet<Key>();
+  private Set<Key> categorizedTransactions = new HashSet<Key>();
+  private Set<Key> reconciledTransactions = new HashSet<Key>();
   private CategorizationLevel categorizationLevel;
 
   public CategorizationView(final GlobRepository repository, Directory parentDirectory) {
@@ -108,11 +111,11 @@ public class CategorizationView extends View implements TableView, Filterable, C
     this.colorService.addListener(this);
     this.parentDirectory = parentDirectory;
     parentDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
-      public void selectionUpdated(GlobSelection selection) {
-        selectionService.select(selection.getAll(Month.TYPE), Month.TYPE);
-        updateTableFilter();
-      }
-    }, Month.TYPE);
+                                                              public void selectionUpdated(GlobSelection selection) {
+                                                                selectionService.select(selection.getAll(Month.TYPE), Month.TYPE);
+                                                                updateTableFilter();
+                                                              }
+                                                            }, Month.TYPE);
 
     this.colors = new TransactionRendererColors(directory);
 
@@ -150,9 +153,12 @@ public class CategorizationView extends View implements TableView, Filterable, C
     repository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(Transaction.TYPE) &&
-            changeSet.containsUpdates(Transaction.SERIES)) {
-          modifiedTransactions.clear();
-          modifiedTransactions.addAll(changeSet.getUpdated(Transaction.SERIES));
+            (changeSet.containsUpdates(Transaction.SERIES) ||
+             changeSet.containsUpdates(Transaction.RECONCILED))) {
+          categorizedTransactions.clear();
+          categorizedTransactions.addAll(changeSet.getUpdated(Transaction.SERIES));
+          reconciledTransactions.clear();
+          reconciledTransactions.addAll(changeSet.getUpdated(Transaction.RECONCILED));
           updateTableFilter();
         }
       }
@@ -163,6 +169,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
     transactionTable =
       builder.addTable("transactionsToCategorize", Transaction.TYPE, transactionComparator)
         .setDefaultLabelCustomizer(new TransactionLabelCustomizer())
+        .setDefaultBackgroundPainter(colors.getBackgroundPainter())
         .addColumn(Lang.get("date"), new TransactionDateStringifier(TransactionComparator.DESCENDING_SPLIT_AFTER),
                    fontSize(9))
         .addColumn(Lang.get("series"), new CompactSeriesStringifier(directory),
@@ -188,6 +195,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     Signpost firstCategorization = new FirstCategorizationDoneSignpost(repository, directory);
     firstCategorization.attach(table);
+
+    ReconciliationColumnUpdater.install(transactionTable, repository, directory);
 
     this.filterManager = new FilterManager(this);
     this.filterManager.addListener(new FilterListener() {
@@ -278,7 +287,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
     filteringModeCombo.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         CategorizationFilteringMode mode = (CategorizationFilteringMode)filteringModeCombo.getSelectedItem();
-        modifiedTransactions.clear();
+        categorizedTransactions.clear();
+        reconciledTransactions.clear();
         repository.update(UserPreferences.KEY, UserPreferences.CATEGORIZATION_FILTERING_MODE, mode.getId());
         updateTableFilter();
       }
@@ -319,18 +329,19 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
   private void initSelectionListener() {
     selectionService.addListener(new GlobSelectionListener() {
-      public void selectionUpdated(GlobSelection selection) {
-        currentTransactions = selection.getAll(Transaction.TYPE);
-        Set<Integer> months = currentTransactions.getValueSet(Transaction.BUDGET_MONTH);
-        for (Pair<Matchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
-          filter.getFirst().filterDates(months, currentTransactions);
-          filter.getSecond().setFilter(filter.getFirst());
-        }
-        colors.setSplitGroupSourceId(getSplitGroupSourceId());
-        transactionTable.getComponent().repaint();
-        modifiedTransactions.clear();
-      }
-    }, Transaction.TYPE);
+                                   public void selectionUpdated(GlobSelection selection) {
+                                     currentTransactions = selection.getAll(Transaction.TYPE);
+                                     Set<Integer> months = currentTransactions.getValueSet(Transaction.BUDGET_MONTH);
+                                     for (Pair<Matchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
+                                       filter.getFirst().filterDates(months, currentTransactions);
+                                       filter.getSecond().setFilter(filter.getFirst());
+                                     }
+                                     colors.setSplitGroupSourceId(getSplitGroupSourceId());
+                                     transactionTable.getComponent().repaint();
+                                     categorizedTransactions.clear();
+                                     reconciledTransactions.clear();
+                                   }
+                                 }, Transaction.TYPE);
   }
 
   private Integer getSplitGroupSourceId() {
@@ -487,7 +498,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
   }
 
   public void show(GlobList transactions, boolean forceShowUncategorized) {
-    modifiedTransactions.clear();
+    categorizedTransactions.clear();
+    reconciledTransactions.clear();
     updateFilteringMode(transactions, forceShowUncategorized);
 
     if (transactions.size() < 2) {
@@ -625,7 +637,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
   private GlobMatcher getCurrentFilteringModeMatcher() {
     CategorizationFilteringMode mode = (CategorizationFilteringMode)filteringModeCombo.getSelectedItem();
-    return mode.getMatcher(repository, selectionService, modifiedTransactions);
+    return mode.getMatcher(repository, selectionService, categorizedTransactions, reconciledTransactions);
   }
 
   private class TransactionLabelCustomizer implements LabelCustomizer {
@@ -661,7 +673,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
     }
 
     public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
-      if (modifiedTransactions.contains(glob.getKey())) {
+      if (categorizedTransactions.contains(glob.getKey())) {
         label.setForeground(envelopeSeriesLabelForegroundColor);
         label.setFont(font);
         if (isSelected) {
