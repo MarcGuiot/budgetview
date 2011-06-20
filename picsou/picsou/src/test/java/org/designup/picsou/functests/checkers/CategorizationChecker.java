@@ -322,10 +322,12 @@ public class CategorizationChecker extends ViewChecker {
   }
 
   public CategorizationChecker checkTable(Object[][] content) {
+    Table table = getTable();
+    int labelColumnIndex = isReconciliationShown(table) ? 3 : 2;
     for (Object[] objects : content) {
-      objects[2] = ((String)objects[2]).toUpperCase();
+      objects[labelColumnIndex] = ((String)objects[labelColumnIndex]).toUpperCase();
     }
-    assertTrue(getTable().contentEquals(content));
+    assertTrue(table.contentEquals(content));
     return this;
   }
 
@@ -423,7 +425,7 @@ public class CategorizationChecker extends ViewChecker {
     views.selectCategorization();
     Table table = getPanel().getTable("transactionsToCategorize");
     int offset = 0;
-    if (table.getColumnCount() > 4) {
+    if (isReconciliationShown(table)) {
       offset = 1;
       table.setCellValueConverter(0, new ReconciliationCellConverter());
     }
@@ -435,6 +437,10 @@ public class CategorizationChecker extends ViewChecker {
       }
     });
     return table;
+  }
+
+  private boolean isReconciliationShown(Table table) {
+    return table.getColumnCount() > 4;
   }
 
   private TextBox getTransactionLabel() {
@@ -708,22 +714,22 @@ public class CategorizationChecker extends ViewChecker {
   }
 
   public void checkShowsAllTransactions() {
-    checkTransctionFilterMode(CategorizationFilteringMode.ALL);
+    checkTransactionFilterMode(CategorizationFilteringMode.ALL);
   }
 
   public void checkShowsSelectedMonthsOnly() {
-    checkTransctionFilterMode(CategorizationFilteringMode.SELECTED_MONTHS);
+    checkTransactionFilterMode(CategorizationFilteringMode.SELECTED_MONTHS);
   }
 
   public void checkShowsUncategorizedTransactionsOnly() {
-    checkTransctionFilterMode(CategorizationFilteringMode.UNCATEGORIZED);
+    checkTransactionFilterMode(CategorizationFilteringMode.UNCATEGORIZED);
   }
 
   public void checkShowsUncategorizedTransactionsForSelectedMonths() {
-    checkTransctionFilterMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
+    checkTransactionFilterMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
   }
 
-  private void checkTransctionFilterMode(final CategorizationFilteringMode mode) {
+  private void checkTransactionFilterMode(final CategorizationFilteringMode mode) {
     assertThat(getPanel().getComboBox("transactionFilterCombo").selectionEquals(mode.toString()));
   }
 
@@ -744,6 +750,10 @@ public class CategorizationChecker extends ViewChecker {
   public CategorizationChecker showUnreconciledOnly() {
     selectTransactionFilterMode(CategorizationFilteringMode.UNRECONCILED);
     return this;
+  }
+
+  public void checkFilteringModes(String... entries) {
+    assertThat(getPanel().getComboBox("transactionFilterCombo").contentEquals(entries));
   }
 
   private void selectTransactionFilterMode(CategorizationFilteringMode mode) {

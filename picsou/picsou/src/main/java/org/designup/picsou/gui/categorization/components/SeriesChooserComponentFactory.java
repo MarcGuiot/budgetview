@@ -167,8 +167,10 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
         try {
           repository.startChangeSet();
           for (Glob transaction : currentTransactions) {
-            repository.setTarget(transaction.getKey(), Transaction.SERIES, seriesKey);
-            repository.setTarget(transaction.getKey(), Transaction.SUB_SERIES, subSeriesKey);
+            Key key = transaction.getKey();
+            repository.setTarget(key, Transaction.SERIES, seriesKey);
+            repository.setTarget(key, Transaction.SUB_SERIES, subSeriesKey);
+            repository.update(key, Transaction.RECONCILED, true);
           }
         }
         finally {

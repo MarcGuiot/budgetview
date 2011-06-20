@@ -15,8 +15,7 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
 
@@ -85,6 +84,18 @@ public enum CategorizationFilteringMode {
 
   public String toString() {
     return Lang.get("categorization.filtering." + Strings.toNiceLowerCase(name()));
+  }
+
+  public static CategorizationFilteringMode[] getValues(boolean showReconciliation) {
+    if (showReconciliation) {
+      return values();
+    }
+    else {
+      List<CategorizationFilteringMode> modes = new ArrayList<CategorizationFilteringMode>();
+      modes.addAll(Arrays.asList(values()));
+      modes.remove(UNRECONCILED);
+      return modes.toArray(new CategorizationFilteringMode[modes.size()]);
+    }
   }
 
   public static Object get(Integer modeId) {

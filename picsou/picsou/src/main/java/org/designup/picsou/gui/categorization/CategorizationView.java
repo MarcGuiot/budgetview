@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.categorization;
 
+import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.CreateAccountAction;
 import org.designup.picsou.gui.categorization.actions.CategorizationTableActions;
@@ -29,7 +30,7 @@ import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
-import org.designup.picsou.gui.transactions.reconciliation.ReconciliationColumnUpdater;
+import org.designup.picsou.gui.transactions.reconciliation.ReconciliationColumn;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.Matchers;
@@ -60,6 +61,7 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Pair;
 import org.globsframework.utils.Strings;
@@ -94,6 +96,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private Color envelopeSeriesLabelBackgroundColor;
 
   public static final int[] COLUMN_SIZES = {10, 12, 28, 10};
+  public static final int[] COLUMN_SIZES_WITH_RECONCILIATION = {5, 10, 12, 24, 10};
   public static final String TRANSACTIONS_FILTER = "transactions";
 
   private Signpost signpost;
@@ -105,6 +108,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private Set<Key> categorizedTransactions = new HashSet<Key>();
   private Set<Key> reconciledTransactions = new HashSet<Key>();
   private CategorizationLevel categorizationLevel;
+  private ReconciliationColumn column;
+  private boolean isShowing = false;
 
   public CategorizationView(final GlobRepository repository, Directory parentDirectory) {
     super(repository, createLocalDirectory(parentDirectory));
@@ -196,7 +201,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
     Signpost firstCategorization = new FirstCategorizationDoneSignpost(repository, directory);
     firstCategorization.attach(table);
 
-    ReconciliationColumnUpdater.install(transactionTable, repository, directory);
+    installReconciliationUpdater(transactionTable, repository);
 
     this.filterManager = new FilterManager(this);
     this.filterManager.addListener(new FilterListener() {
@@ -283,7 +288,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
   }
 
   private void addFilteringModeCombo(GlobsPanelBuilder builder) {
-    filteringModeCombo = builder.add("transactionFilterCombo", new JComboBox(CategorizationFilteringMode.values())).getComponent();
+    filteringModeCombo = builder.add("transactionFilterCombo",
+                                     new JComboBox(CategorizationFilteringMode.getValues(false))).getComponent();
     filteringModeCombo.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         CategorizationFilteringMode mode = (CategorizationFilteringMode)filteringModeCombo.getSelectedItem();
@@ -316,6 +322,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
       }
     });
   }
+
 
   private void installDoubleClickHandler() {
     transactionTable.getComponent().addMouseListener(new MouseAdapter() {
@@ -582,7 +589,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
       Integer subSeriesId = SeriesEditor.get(directory).getLastSelectedSubSeriesId();
       repository.update(transaction.getKey(),
                         value(Transaction.SERIES, series.get(Series.ID)),
-                        value(Transaction.SUB_SERIES, subSeriesId));
+                        value(Transaction.SUB_SERIES, subSeriesId),
+                        value(Transaction.RECONCILED, true));
       return true;
     }
   }
@@ -683,6 +691,38 @@ public class CategorizationView extends View implements TableView, Filterable, C
       else {
         label.setFont(originalFont);
       }
+    }
+  }
+
+  private void installReconciliationUpdater(final GlobTableView tableView, GlobRepository repository) {
+    this.column = new ReconciliationColumn(tableView, repository, directory);
+    repository.addChangeListener(new TypeChangeSetListener(UserPreferences.TYPE) {
+      protected void update(GlobRepository repository) {
+        toggleReconciliationColumn(tableView);
+      }
+    });
+    toggleReconciliationColumn(tableView);
+  }
+
+  private void toggleReconciliationColumn(GlobTableView tableView) {
+    Glob preferences = repository.find(UserPreferences.KEY);
+    if (preferences == null) {
+      return;
+    }
+    boolean show = preferences.isTrue(UserPreferences.SHOW_RECONCILIATION);
+    if (show && !isShowing) {
+      tableView.insertColumn(0, column);
+      Gui.setColumnSizes(tableView.getComponent(), COLUMN_SIZES_WITH_RECONCILIATION);
+      filteringModeCombo.setModel(new DefaultComboBoxModel(CategorizationFilteringMode.getValues(true)));
+      filteringModeCombo.setSelectedItem(ContainerFeedbackMessageFilter.ALL);
+      isShowing = true;
+    }
+    else if (!show && isShowing) {
+      tableView.removeColumn(0);
+      Gui.setColumnSizes(tableView.getComponent(), CategorizationView.COLUMN_SIZES);
+      filteringModeCombo.setModel(new DefaultComboBoxModel(CategorizationFilteringMode.getValues(false)));
+      filteringModeCombo.setSelectedItem(ContainerFeedbackMessageFilter.ALL);
+      isShowing = false;
     }
   }
 }

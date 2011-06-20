@@ -91,7 +91,7 @@ public class ReconciliationChecker extends ViewChecker {
   public Table getTable() {
     views.selectCategorization();
     if (table == null) {
-      Panel panel = mainWindow.getPanel("categorizationView");
+      Panel panel = getPanel();
       table = panel.getTable("transactionsToCategorize");
       table.setCellValueConverter(0, new ReconciliationCellConverter());
       table.setCellValueConverter(1, new DateCellConverter());
@@ -103,5 +103,9 @@ public class ReconciliationChecker extends ViewChecker {
       });
     }
     return table;
+  }
+
+  private Panel getPanel() {
+    return mainWindow.getPanel("categorizationView");
   }
 }
