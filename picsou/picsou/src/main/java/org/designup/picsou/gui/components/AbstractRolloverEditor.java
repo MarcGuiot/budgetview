@@ -44,7 +44,7 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
     this.imageLocator = directory.get(ImageLocator.class);
   }
 
-  protected abstract Component getComponent(Glob glob, boolean render);
+  protected abstract Component getComponent(Glob glob, boolean edit);
 
   public Object getCellEditorValue() {
     return null;
@@ -56,14 +56,14 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
       return null;
     }
     this.hasFocus = hasFocus;
-    return getComponentToRender(isSelected, value, row, column, true);
+    return getComponentToRender(isSelected, value, row, column, false);
   }
 
   public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
     hasFocus = true;
     selectionUpdater = new SelectionUpdaterListener(table, row, column);
     addSelectionUpdater();
-    return getComponentToRender(isSelected, value, row, column, false);
+    return getComponentToRender(isSelected, value, row, column, true);
   }
 
   public boolean isCellEditable(EventObject anEvent) {
@@ -91,11 +91,11 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
     tableView.getComponent().getSelectionModel().removeListSelectionListener(selectionUpdater);
   }
 
-  private Component getComponentToRender(boolean isSelected, Object value, int row, int column, boolean isRendering) {
+  private Component getComponentToRender(boolean isSelected, Object value, int row, int column, boolean edit) {
     this.isSelected = isSelected;
     this.row = row;
     this.column = column;
-    return getComponent((Glob)value, isRendering);
+    return getComponent((Glob)value, edit);
   }
 
   protected JLabel createLabel(String text, Color selectionForeground, Color foreground) {

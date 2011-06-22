@@ -24,10 +24,22 @@ public abstract class HyperlinkTableColumn extends ButtonTableColumn implements 
 
   private ColorService colorService;
 
+  private Color normalLinkColor;
+  private Color selectedLinkColor;
+
   protected HyperlinkTableColumn(GlobTableView view, DescriptionService descriptionService, GlobRepository repository, Directory directory) {
     super(view, descriptionService, repository, directory);
     colorService = directory.get(ColorService.class);
     colorService.addListener(this);
+  }
+
+  public void colorsChanged(ColorLocator colorLocator) {
+    normalLinkColor = colorLocator.get(ApplicationColors.TABLE_LINK_NORMAL);
+    selectedLinkColor = colorLocator.get(ApplicationColors.TABLE_LINK_SELECTED);
+  }
+
+  protected void updateComponent(JButton button, JPanel panel, Glob glob, boolean edit) {
+    button.setForeground(isSelected ? selectedLinkColor : normalLinkColor);
   }
 
   protected JButton createButton(Action action) {

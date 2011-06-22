@@ -395,7 +395,7 @@ public class SplitTransactionDialog {
       });
     }
 
-    protected Component getComponent(Glob transaction, boolean render) {
+    protected Component getComponent(Glob transaction, boolean edit) {
       JPanel panel = new JPanel();
       panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
       panel.add(Box.createRigidArea(new Dimension(3, 0)));

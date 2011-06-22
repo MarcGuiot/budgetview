@@ -1,7 +1,5 @@
 package org.designup.picsou.gui.components;
 
-import org.designup.picsou.gui.utils.ApplicationColors;
-import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableColumn;
 import org.globsframework.gui.views.GlobTableView;
@@ -27,8 +25,6 @@ public abstract class ButtonTableColumn extends AbstractRolloverEditor implement
   private JButton editorButton;
   private CellPainterPanel editorPanel;
 
-  private Color normalLinkColor;
-  private Color selectedLinkColor;
 
   public ButtonTableColumn(GlobTableView view, DescriptionService descriptionService, GlobRepository repository, Directory directory) {
     super(view, descriptionService, repository, directory);
@@ -54,11 +50,6 @@ public abstract class ButtonTableColumn extends AbstractRolloverEditor implement
     return new JButton(action);
   }
 
-  public void colorsChanged(ColorLocator colorLocator) {
-    normalLinkColor = colorLocator.get(ApplicationColors.TABLE_LINK_NORMAL);
-    selectedLinkColor = colorLocator.get(ApplicationColors.TABLE_LINK_SELECTED);
-  }
-
   public boolean isCellEditable(EventObject anEvent) {
     if (anEvent instanceof MouseEvent) {
       return ((MouseEvent)anEvent).getClickCount() >= 1;
@@ -66,27 +57,26 @@ public abstract class ButtonTableColumn extends AbstractRolloverEditor implement
     return true;
   }
 
-  protected Component getComponent(Glob glob, boolean render) {
+  protected Component getComponent(Glob glob, boolean edit) {
     JButton button;
     CellPainterPanel panel;
-    if (render) {
-      button = this.rendererButton;
-      panel = this.rendererPanel;
-    }
-    else {
+    if (edit) {
       button = this.editorButton;
       panel = this.editorPanel;
     }
+    else {
+      button = this.rendererButton;
+      panel = this.rendererPanel;
+    }
 
-    button.setForeground(isSelected ? selectedLinkColor : normalLinkColor);
-    panel.update(glob, row, column, isSelected || !render, hasFocus);
+    panel.update(glob, row, column, isSelected, hasFocus);
 
-    updateComponent(button, panel, glob, render);
+    updateComponent(button, panel, glob, edit);
 
     return panel;
   }
 
-  protected abstract void updateComponent(JButton button, JPanel panel, Glob glob, boolean render);
+  protected abstract void updateComponent(JButton button, JPanel panel, Glob glob, boolean edit);
 
   protected abstract void processClick();
 

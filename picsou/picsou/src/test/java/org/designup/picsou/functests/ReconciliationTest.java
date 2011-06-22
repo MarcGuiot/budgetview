@@ -53,6 +53,14 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       {"-", "20/06/2010", "", "AUCHAN", 100.0},
       {"x", "20/06/2010", "", "WORLDCO", 1000.0}
     });
+
+    categorization.selectTableRows(0, 1);
+    reconciliation.toggle(0);
+    categorization.checkTable(new Object[][]{
+      {"x", "20/06/2010", "", "AUCHAN", 100.0},
+      {"x", "20/06/2010", "", "WORLDCO", 1000.0}
+    });
+    categorization.checkSelectedTableRow(0);
   }
 
   public void testPopup() throws Exception {
@@ -199,7 +207,93 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testReconciliatingSplitTransactions() throws Exception {
-    fail("TODO");
+    OfxBuilder
+      .init(this)
+      .addTransaction("2010/06/15", -150.00, "Auchan")
+      .addTransaction("2010/06/20", -200.00, "Fnac")
+      .load();
+
+    reconciliation.show();
+
+    categorization.selectTableRow(0);
+    transactionDetails.openSplitDialog()
+      .checkTable(new Object[][]{
+        {"", "Auchan", -150.00, ""},
+      })
+      .enterAmount("50.00")
+      .enterNote("DVD")
+      .validateAndClose();
+
+    categorization.checkTable(new Object[][]{
+      {"-", "15/06/2010", "", "AUCHAN", -100.0},
+      {"!", "15/06/2010", "", "AUCHAN", -50.0},
+      {"-", "20/06/2010", "", "FNAC", -200.0},
+    });
+
+    reconciliation.checkToggleDisabled(1);
+    categorization.checkTable(new Object[][]{
+      {"-", "15/06/2010", "", "AUCHAN", -100.0},
+      {"!", "15/06/2010", "", "AUCHAN", -50.0},
+      {"-", "20/06/2010", "", "FNAC", -200.0},
+    });
+
+    categorization.showUnreconciledOnly();
+    categorization.setNewVariable(1, "Movies");
+    categorization.checkTable(new Object[][]{
+      {"-", "15/06/2010", "", "AUCHAN", -100.0},
+      {"!", "15/06/2010", "Movies", "AUCHAN", -50.0},
+      {"-", "20/06/2010", "", "FNAC", -200.0},
+    });
+
+    categorization.showAllTransactions();
+    categorization.setNewVariable(0, "Food");
+    categorization.checkTable(new Object[][]{
+      {"x", "15/06/2010", "Food", "AUCHAN", -100.0},
+      {"!", "15/06/2010", "Movies", "AUCHAN", -50.0},
+      {"-", "20/06/2010", "", "FNAC", -200.0},
+    });
+
+    categorization.showUnreconciledOnly();
+    categorization.checkTable(new Object[][]{
+      {"-", "20/06/2010", "", "FNAC", -200.0},
+    });
+
+    categorization.showAllTransactions();
+    categorization.checkTable(new Object[][]{
+      {"x", "15/06/2010", "Food", "AUCHAN", -100.0},
+      {"!", "15/06/2010", "Movies", "AUCHAN", -50.0},
+      {"-", "20/06/2010", "", "FNAC", -200.0},
+    });
+
+    categorization.selectTableRow(2);
+    transactionDetails.openSplitDialog()
+      .checkTable(new Object[][]{
+        {"", "FNAC", -200.00, ""},
+      })
+      .enterAmount("20.00")
+      .enterNote("CD")
+      .validateAndClose();
+    categorization.checkTable(new Object[][]{
+      {"x", "15/06/2010", "Food", "AUCHAN", -100.0},
+      {"!", "15/06/2010", "Movies", "AUCHAN", -50.0},
+      {"-", "20/06/2010", "", "FNAC", -180.0},
+      {"!", "20/06/2010", "", "FNAC", -20.0},
+    });
+
+    categorization.showUnreconciledOnly();
+    categorization.checkTable(new Object[][]{
+      {"-", "20/06/2010", "", "FNAC", -180.0},
+      {"!", "20/06/2010", "", "FNAC", -20.0},
+    });
+
+    reconciliation.toggle(0);
+    categorization.checkTable(new Object[][]{
+      {"x", "20/06/2010", "", "FNAC", -180.0},
+      {"!", "20/06/2010", "", "FNAC", -20.0},
+    });
+
+    categorization.setNewVariable(1, "Music");
+    categorization.checkTableIsEmpty();
   }
 
   public void testInitialGuides() throws Exception {

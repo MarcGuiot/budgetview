@@ -6,6 +6,7 @@ import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.splits.utils.TransparentIcon;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
@@ -36,12 +37,13 @@ public class ReconciliationColumn extends ButtonTableColumn {
     return button;
   }
 
-  protected void updateComponent(JButton button, JPanel panel, Glob transaction, boolean render) {
-    if (!render) {
+  protected void updateComponent(JButton button, JPanel panel, Glob transaction, boolean edit) {
+    if (edit) {
       this.transaction = transaction;
+      selectTransactionIfNeeded(transaction);
     }
 
-    if (transaction == null) {
+    if ((transaction == null) || (transaction.get(Transaction.SPLIT_SOURCE) != null)) {
       button.setIcon(DISABLED_ICON);
       button.setEnabled(false);
     }
@@ -59,7 +61,6 @@ public class ReconciliationColumn extends ButtonTableColumn {
     if (transaction == null) {
       return;
     }
-    tableView.select(transaction);
     repository.update(transaction.getKey(), Transaction.RECONCILED, !transaction.isTrue(Transaction.RECONCILED));
   }
 
@@ -80,5 +81,12 @@ public class ReconciliationColumn extends ButtonTableColumn {
 
   public Comparator<Glob> getComparator() {
     return new GlobFieldsComparator(Transaction.RECONCILED, true, Transaction.LABEL, false);
+  }
+
+  private void selectTransactionIfNeeded(Glob transaction) {
+    GlobList selection = tableView.getCurrentSelection();
+    if (selection.size() > 1 || !selection.contains(transaction)) {
+      tableView.select(transaction);
+    }
   }
 }

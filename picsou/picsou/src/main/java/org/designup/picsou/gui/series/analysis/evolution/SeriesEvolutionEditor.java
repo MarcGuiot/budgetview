@@ -67,10 +67,10 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
     this.referenceMonthId = monthId;
   }
 
-  protected Component getComponent(Glob seriesWrapper, boolean render) {
+  protected Component getComponent(Glob seriesWrapper, boolean edit) {
 
     Integer itemId = seriesWrapper.get(SeriesWrapper.ITEM_ID);
-    if (!render) {
+    if (edit) {
       currentSeries = repository.get(Key.create(Series.TYPE, itemId));
     }
 
@@ -85,10 +85,10 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
         return labelPanel;
 
       case SERIES:
-        JButton button = render ? rendererButton : editorButton;
+        JButton button = edit ? editorButton : rendererButton;
         button.setText(text);
         button.setToolTipText(description);
-        PaintablePanel panel = render ? rendererPanel : editorPanel;
+        PaintablePanel panel = edit ? editorPanel : rendererPanel;
         colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, button, panel);
         return panel;
 

@@ -4,6 +4,7 @@ import org.designup.picsou.model.*;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
@@ -129,10 +130,10 @@ public class Matchers {
           if (!isSameAccount(repository, targetAccount, transaction)) {
             return false;
           }
-          if (transaction.get(Transaction.AMOUNT) > 0 && !series.get(Series.TO_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))){
+          if (transaction.get(Transaction.AMOUNT) > 0 && !series.get(Series.TO_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
             return false;
           }
-          else if (transaction.get(Transaction.AMOUNT) < 0 && !series.get(Series.FROM_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))){
+          else if (transaction.get(Transaction.AMOUNT) < 0 && !series.get(Series.FROM_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
             return false;
           }
         }
@@ -280,5 +281,20 @@ public class Matchers {
     public String toString() {
       return "AccountDateMatcher" + months;
     }
+  }
+
+  public static GlobMatcher unreconciled(final Set<Key> reconciledTransactions) {
+    return new GlobMatcher() {
+      public boolean matches(Glob transaction, GlobRepository repository) {
+        if (transaction == null) {
+          return false;
+        }
+        Glob source = repository.findLinkTarget(transaction, Transaction.SPLIT_SOURCE);
+        if (source != null) {
+          return !source.isTrue(Transaction.RECONCILED) || reconciledTransactions.contains(source.getKey());
+        }
+        return !transaction.isTrue(Transaction.RECONCILED) || reconciledTransactions.contains(transaction.getKey());
+      }
+    };
   }
 }

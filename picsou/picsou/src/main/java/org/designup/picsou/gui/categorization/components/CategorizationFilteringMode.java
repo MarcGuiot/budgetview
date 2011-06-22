@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.categorization.components;
 
+import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
@@ -18,6 +19,7 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import java.util.*;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.isFalse;
 
 public enum CategorizationFilteringMode {
   ALL(1),
@@ -75,8 +77,7 @@ public enum CategorizationFilteringMode {
       }
 
       case UNRECONCILED: {
-        return or(GlobMatchers.isFalse(Transaction.RECONCILED),
-                  keyIn(reconciledTransactions));
+        return Matchers.unreconciled(reconciledTransactions);
       }
     }
     throw new UnexpectedApplicationState(name());

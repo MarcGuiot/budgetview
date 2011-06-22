@@ -69,8 +69,10 @@ public class TransactionSeriesColumn extends HyperlinkTableColumn {
     toCategorizeColor = colorLocator.get(ApplicationColors.TRANSACTION_ERROR_TEXT);
   }
 
-  protected void updateComponent(JButton jButton, JPanel panel, Glob transaction, boolean render) {
-    if (!render) {
+  protected void updateComponent(JButton jButton, JPanel panel, Glob transaction, boolean edit) {
+    super.updateComponent(jButton, panel, transaction, edit);
+
+    if (edit) {
       this.transaction = transaction;
     }
 

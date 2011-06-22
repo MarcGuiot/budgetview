@@ -3,8 +3,10 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.functests.checkers.converters.ReconciliationCellConverter;
+import org.designup.picsou.gui.transactions.reconciliation.ReconciliationColumn;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.model.Glob;
+import org.uispec4j.Button;
 import org.uispec4j.MenuItem;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
@@ -48,7 +50,17 @@ public class ReconciliationChecker extends ViewChecker {
   }
 
   public void toggle(String label) {
-    getTable().editCell(getRowIndex(label), 0).getButton().click();
+    toggle(getRowIndex(label));
+  }
+
+  public void toggle(int rowIndex) {
+    getTable().editCell(rowIndex, 0).getButton().click();
+  }
+
+  public void checkToggleDisabled(int rowIndex) {
+    Button button = getTable().editCell(rowIndex, 0).getButton();
+    assertFalse(button.isEnabled());
+    assertThat(button.iconEquals(ReconciliationColumn.DISABLED_ICON));
   }
 
   public void reconcileWithPopup(String label) {
