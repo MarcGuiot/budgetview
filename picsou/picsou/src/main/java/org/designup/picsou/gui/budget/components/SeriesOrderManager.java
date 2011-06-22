@@ -24,7 +24,10 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 public abstract class SeriesOrderManager implements ChangeSetListener {
   private List<Order> orders = new ArrayList<Order>();
@@ -43,11 +46,11 @@ public abstract class SeriesOrderManager implements ChangeSetListener {
   }
 
   public SeriesOrder getUserCurrentOrder() {
-    Glob glob = repository.find(UserPreferences.KEY);
-    if (glob == null) {
+    Glob prefs = repository.find(UserPreferences.KEY);
+    if (prefs == null) {
       return SeriesOrder.DEFAULT;
     }
-    Integer order = glob.get(field);
+    Integer order = prefs.get(field);
     if (order == null) {
       return SeriesOrder.DEFAULT;
     }
@@ -79,9 +82,9 @@ public abstract class SeriesOrderManager implements ChangeSetListener {
 
   public Comparator<Glob> getComparator() {
     for (Order order : orders) {
-      Comparator<Glob> globComparator = order.getComparator();
-      if (globComparator != null) {
-        return globComparator;
+      Comparator<Glob> comparator = order.getComparator();
+      if (comparator != null) {
+        return comparator;
       }
     }
     return new DefaultComparator();
@@ -261,12 +264,20 @@ public abstract class SeriesOrderManager implements ChangeSetListener {
       if (glob2 == null) {
         return 1;
       }
-      int activeResult = Utils.reverseCompare(glob1.get(PeriodSeriesStat.ACTIVE), glob2.get(PeriodSeriesStat.ACTIVE));
+      Boolean glob1Active = glob1.get(PeriodSeriesStat.ACTIVE);
+      Boolean glob2Active = glob2.get(PeriodSeriesStat.ACTIVE);
+      int activeResult = Utils.reverseCompare(glob1Active, glob2Active);
       if (activeResult != 0) {
         return activeResult;
       }
 
-      return Utils.reverseCompare(glob1.get(PeriodSeriesStat.ABS_SUM_AMOUNT), glob2.get(PeriodSeriesStat.ABS_SUM_AMOUNT));
+      if (glob1Active) {
+        return Utils.reverseCompare(glob1.get(PeriodSeriesStat.ABS_SUM_AMOUNT), glob2.get(PeriodSeriesStat.ABS_SUM_AMOUNT));
+      }
+
+      Glob series1 = repository.findLinkTarget(glob1, PeriodSeriesStat.SERIES);
+      Glob series2 = repository.findLinkTarget(glob2, PeriodSeriesStat.SERIES);
+      return Utils.compare(series1.get(Series.NAME), series2.get(Series.NAME));
     }
   }
 

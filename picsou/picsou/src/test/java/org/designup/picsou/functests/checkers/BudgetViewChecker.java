@@ -321,7 +321,7 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
-    public BudgetAreaChecker showInactiveEnveloppes() {
+    public BudgetAreaChecker showInactiveSeries() {
       getActionPopup().click(Lang.get("budgetView.actions.disableMonthFiltering"));
       return this;
     }

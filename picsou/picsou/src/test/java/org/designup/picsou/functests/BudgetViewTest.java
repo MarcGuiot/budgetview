@@ -782,7 +782,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable
       .checkAvailableActions("Add", "Disable month filtering")
-      .showInactiveEnveloppes();
+      .showInactiveSeries();
 
     budgetView.variable.checkOrder("Groceries", "Leisures")
       .checkSeries("Groceries", -50.00, -200.00)
@@ -808,5 +808,26 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkOrder("Leisures", "Groceries")
       .checkSeries("Leisure", 0.00, -100.00)
       .checkSeriesDisabled("Groceries");
+
+    budgetView.variable.createSeries()
+      .setName("Aaa")
+      .setPropagationEnabled()
+      .setAmount(10)
+      .setStartDate(200812)
+      .validate();
+    budgetView.variable.createSeries()
+      .setName("Ccc")
+      .setPropagationEnabled()
+      .setAmount(20)
+      .setStartDate(200812)
+      .validate();
+    budgetView.variable.createSeries()
+      .setName("Bbbb")
+      .setPropagationEnabled()
+      .setAmount(30)
+      .setStartDate(200812)
+      .validate();
+    
+    budgetView.variable.checkOrder("Leisures", "Groceries");
   }
 }
