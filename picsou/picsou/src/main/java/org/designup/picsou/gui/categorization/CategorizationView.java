@@ -21,10 +21,7 @@ import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.signpost.Signpost;
-import org.designup.picsou.gui.signpost.guides.CategorizationAreaSignpost;
-import org.designup.picsou.gui.signpost.guides.CategorizationSelectionSignpost;
-import org.designup.picsou.gui.signpost.guides.FirstCategorizationDoneSignpost;
-import org.designup.picsou.gui.signpost.guides.GotoBudgetSignpost;
+import org.designup.picsou.gui.signpost.guides.*;
 import org.designup.picsou.gui.signpost.sections.SkipCategorizationPanel;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
@@ -195,12 +192,14 @@ public class CategorizationView extends View implements TableView, Filterable, C
     Gui.setColumnSizes(table, COLUMN_SIZES);
     installDoubleClickHandler();
     registerBankFormatExporter(transactionTable);
+
     Signpost signpost = new CategorizationSelectionSignpost(repository, directory);
     signpost.attach(table);
-
     Signpost firstCategorization = new FirstCategorizationDoneSignpost(repository, directory);
     firstCategorization.attach(table);
 
+    Signpost reconciliation = new ReconciliationSignpost(repository, directory);
+    reconciliation.attach(table);
     installReconciliationUpdater(transactionTable, repository);
 
     this.filterManager = new FilterManager(this);

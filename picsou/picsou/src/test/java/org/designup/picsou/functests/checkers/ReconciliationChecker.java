@@ -35,18 +35,33 @@ public class ReconciliationChecker extends ViewChecker {
     getViewMenu().getSubMenu("Hide reconciliation").click();
   }
 
-  public void checkHidden() {
+  public void checkMenuEnabled() {
+    assertThat(getViewMenu().getSubMenu("Show reconciliation").isEnabled());
+  }
+
+  public void checkMenuDisabled() {
+    assertFalse(getViewMenu().getSubMenu("Show reconciliation").isEnabled());
+  }
+
+  public void checkColumnAndMenuHidden() {
     assertThat(getTable().getHeader().contentEquals("Date", "Series", "Label", "Amount"));
     getViewMenu().getSubMenu("Show reconciliation");
   }
 
-  public void checkShown() {
+  public void checkColumnAndMenuShown() {
     assertThat(getTable().getHeader().contentEquals("", "Date", "Series", "Label", "Amount"));
     getViewMenu().getSubMenu("Hide reconciliation");
   }
 
   private org.uispec4j.MenuItem getViewMenu() {
     return mainWindow.getMenuBar().getMenu("View");
+  }
+
+  public void checkSignpostDisplayed(String text) {
+    checkSignpostVisible(getPanel(), getTable(), text);
+  }
+
+  public void checkSignpostHidden() {
   }
 
   public void toggle(String label) {
@@ -63,18 +78,18 @@ public class ReconciliationChecker extends ViewChecker {
     assertThat(button.iconEquals(ReconciliationColumn.DISABLED_ICON));
   }
 
-  public void reconcileWithPopup(String label) {
-    toggleWithPopup(label, "Reconcile");
+  public void reconcileWithPopup(int row) {
+    toggleWithPopup(row, "Reconcile");
   }
 
-  public void unreconcileWithPopup(String label) {
-    toggleWithPopup(label, "Unreconcile");
+  public void unreconcileWithPopup(int row) {
+    toggleWithPopup(row, "Unreconcile");
   }
 
-  private void toggleWithPopup(String label, String menuAction) {
+  private void toggleWithPopup(int row, String menuAction) {
     Table table = getTable();
     PopupMenuInterceptor
-      .run(table.triggerRightClick(getRowIndex(label), LABEL_COLUMN_INDEX))
+      .run(table.triggerRightClick(row, LABEL_COLUMN_INDEX))
       .getSubMenu(menuAction)
       .click();
   }

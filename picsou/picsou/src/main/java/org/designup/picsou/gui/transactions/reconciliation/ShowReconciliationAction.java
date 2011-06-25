@@ -1,6 +1,8 @@
 package org.designup.picsou.gui.transactions.reconciliation;
 
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.model.SignpostStatus;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
@@ -19,15 +21,15 @@ public class ShowReconciliationAction extends AbstractAction {
   public ShowReconciliationAction(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
-    repository.addChangeListener(new TypeChangeSetListener(UserPreferences.TYPE) {
+    repository.addChangeListener(new TypeChangeSetListener(UserPreferences.TYPE, Transaction.TYPE) {
       protected void update(GlobRepository repository) {
-        updateLabel();
+        doUpdate();
       }
     });
-    updateLabel();
+    doUpdate();
   }
 
-  private void updateLabel() {
+  private void doUpdate() {
     Glob preferences = repository.find(UserPreferences.KEY);
     if (preferences == null) {
       setText("");
@@ -38,6 +40,8 @@ public class ShowReconciliationAction extends AbstractAction {
     else {
       setText(Lang.get("reconciliation.show"));
     }
+
+    setEnabled(repository.contains(Transaction.TYPE));
   }
 
   private void setText(String label) {
@@ -50,7 +54,13 @@ public class ShowReconciliationAction extends AbstractAction {
     boolean doShow = !wasShowing;
     repository.update(UserPreferences.KEY, UserPreferences.SHOW_RECONCILIATION, doShow);
     if (doShow) {
-      directory.get(NavigationService.class).gotoCategorization();
+      if (!SignpostStatus.isCompleted(SignpostStatus.FIRST_RECONCILIATION_SHOWN, repository)) {
+        SignpostStatus.setCompleted(SignpostStatus.FIRST_RECONCILIATION_SHOWN, repository);
+        directory.get(NavigationService.class).gotoCategorizationAndShowAll();
+      }
+      else {
+        directory.get(NavigationService.class).gotoCategorization();
+      }
     }
   }
 }

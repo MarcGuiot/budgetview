@@ -42,7 +42,6 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-
     if (!isCompleted() && changeSet.containsChanges(SignpostStatus.TYPE)) {
       if (SignpostSectionType.isCurrentTypeAfter(SignpostSectionType.BUDGET, repository)) {
         dispose();

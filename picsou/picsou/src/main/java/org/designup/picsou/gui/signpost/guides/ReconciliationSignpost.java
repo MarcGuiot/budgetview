@@ -7,14 +7,14 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
-public class CategorizationSelectionSignpost extends AbstractTableSignpost {
+public class ReconciliationSignpost extends AbstractTableSignpost {
 
-  public CategorizationSelectionSignpost(GlobRepository repository, Directory directory) {
-    super(SignpostStatus.CATEGORIZATION_SELECTION_DONE, repository, directory);
+  public ReconciliationSignpost(GlobRepository repository, Directory directory) {
+    super(SignpostStatus.FIRST_RECONCILIATION_DONE, repository, directory);
   }
 
   protected void update(JTable table) {
-    if (!SignpostStatus.isCompleted(SignpostStatus.GOTO_CATEGORIZATION_DONE, repository)) {
+    if (!SignpostStatus.isCompleted(SignpostStatus.FIRST_RECONCILIATION_SHOWN, repository)) {
       return;
     }
 
@@ -25,7 +25,7 @@ public class CategorizationSelectionSignpost extends AbstractTableSignpost {
 
     boolean selection = table.getSelectedRows().length > 0;
     if (!selection && canShow()) {
-      show(Lang.get("signpost.categorizationSelection"));
+      show(Lang.get("reconciliation.signpost"));
     }
     else if (selection && isShowing()) {
       dispose();

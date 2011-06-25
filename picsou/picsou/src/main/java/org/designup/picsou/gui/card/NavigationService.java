@@ -61,6 +61,11 @@ public class NavigationService implements GlobSelectionListener {
     gotoCategorization();
   }
 
+  public void gotoCategorizationAndShowAll() {
+    categorizationView.setFilteringMode(CategorizationFilteringMode.ALL);
+    gotoCategorization();
+  }
+
   public void gotoCategorizationAndSelectLastImported() {
     categorizationView.setFilteringMode(CategorizationFilteringMode.LAST_IMPORTED_FILE);
     gotoCategorization();

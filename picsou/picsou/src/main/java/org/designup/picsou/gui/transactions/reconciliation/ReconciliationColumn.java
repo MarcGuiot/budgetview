@@ -61,6 +61,7 @@ public class ReconciliationColumn extends ButtonTableColumn {
     if (transaction == null) {
       return;
     }
+    tableView.select(transaction);
     repository.update(transaction.getKey(), Transaction.RECONCILED, !transaction.isTrue(Transaction.RECONCILED));
   }
 
@@ -85,7 +86,7 @@ public class ReconciliationColumn extends ButtonTableColumn {
 
   private void selectTransactionIfNeeded(Glob transaction) {
     GlobList selection = tableView.getCurrentSelection();
-    if (selection.size() > 1 || !selection.contains(transaction)) {
+    if (!selection.contains(transaction)) {
       tableView.select(transaction);
     }
   }

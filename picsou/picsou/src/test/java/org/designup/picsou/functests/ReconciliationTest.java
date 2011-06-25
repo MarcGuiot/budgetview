@@ -11,23 +11,31 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testStandardUsage() throws Exception {
+
+    reconciliation.checkMenuDisabled();
+
     OfxBuilder
       .init(this)
       .addTransaction("2010/06/20", 1000.00, "WorldCo")
       .addTransaction("2010/06/20", 100.00, "Auchan")
       .load();
 
-    reconciliation.checkHidden();
+    reconciliation.checkMenuEnabled();
+    reconciliation.checkColumnAndMenuHidden();
+    categorization.showUncategorizedTransactionsOnly();
 
     reconciliation.show();
     views.checkCategorizationSelected();
-    reconciliation.checkShown();
+    categorization.checkShowsAllTransactions();
+    reconciliation.checkSignpostDisplayed("Click here to mark operations as reconciled");
+    reconciliation.checkColumnAndMenuShown();
     categorization.checkTable(new Object[][]{
       {"-", "20/06/2010", "", "AUCHAN", 100.0},
       {"-", "20/06/2010", "", "WORLDCO", 1000.0}
     });
 
     reconciliation.toggle("WORLDCO");
+    reconciliation.checkSignpostHidden();
     categorization.checkTable(new Object[][]{
       {"-", "20/06/2010", "", "AUCHAN", 100.0},
       {"x", "20/06/2010", "", "WORLDCO", 1000.0}
@@ -35,20 +43,20 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkLabel("WORLDCO");
 
     reconciliation.hide();
-    reconciliation.checkHidden();
+    reconciliation.checkColumnAndMenuHidden();
     categorization.checkTable(new Object[][]{
       {"20/06/2010", "", "AUCHAN", 100.0},
       {"20/06/2010", "", "WORLDCO", 1000.0}
     });
 
     reconciliation.show();
-    reconciliation.checkShown();
+    reconciliation.checkColumnAndMenuShown();
     categorization.checkTable(new Object[][]{
       {"-", "20/06/2010", "", "AUCHAN", 100.0},
       {"x", "20/06/2010", "", "WORLDCO", 1000.0}
     });
 
-    reconciliation.checkShown();
+    reconciliation.checkColumnAndMenuShown();
     categorization.checkTable(new Object[][]{
       {"-", "20/06/2010", "", "AUCHAN", 100.0},
       {"x", "20/06/2010", "", "WORLDCO", 1000.0}
@@ -83,14 +91,15 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     reconciliation.checkPopupEntryShown(0);
 
     categorization.selectTableRows(0, 1);
-    reconciliation.reconcileWithPopup("AUCHAN");
+    categorization.checkSelectedTableRows(0, 1);
+    reconciliation.reconcileWithPopup(0);
     categorization.checkTable(new Object[][]{
       {"x", "15/06/2010", "", "AUCHAN", 150.0},
       {"x", "20/06/2010", "", "FNAC", 200.0},
       {"-", "20/06/2010", "", "WORLDCO", 1000.0}
     });
     
-    reconciliation.unreconcileWithPopup("AUCHAN");
+    reconciliation.unreconcileWithPopup(0);
     categorization.checkTable(new Object[][]{
       {"-", "15/06/2010", "", "AUCHAN", 150.0},
       {"-", "20/06/2010", "", "FNAC", 200.0},
@@ -117,7 +126,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     categorization.showUncategorizedTransactionsOnly();
 
     reconciliation.show();
-    reconciliation.checkShown();
+    reconciliation.checkColumnAndMenuShown();
     categorization.checkTable(new Object[][]{
       {"-", "15/06/2010", "", "AUCHAN", 150.0},
       {"-", "20/06/2010", "", "FNAC", 200.0},
@@ -204,6 +213,37 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       {"x", "25/06/2010", "Leisures", "FNAC", 20.0},
       {"-", "20/06/2010", "", "WORLDCO", 1000.0}
     });
+  }
+
+  public void testMultiSelection() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2010/06/20", 1000.00, "WorldCo")
+      .addTransaction("2010/06/15", -150.00, "Auchan")
+      .addTransaction("2010/06/20", -200.00, "Fnac")
+      .addTransaction("2010/06/20", -50.00, "McDo")
+      .load();
+
+    reconciliation.show();
+    categorization.checkTable(new Object[][]{
+      {"-", "15/06/2010", "", "AUCHAN", -150.0},
+      {"-", "20/06/2010", "", "FNAC", -200.0},
+      {"-", "20/06/2010", "", "MCDO", -50.0},
+      {"-", "20/06/2010", "", "WORLDCO", 1000.0},
+    });
+
+    reconciliation.toggle(1);
+    categorization.selectTableRows(1, 2);
+    categorization.checkSelectedTableRows(1, 2);
+    
+    reconciliation.reconcileWithPopup(1);
+    categorization.checkTable(new Object[][]{
+      {"-", "15/06/2010", "", "AUCHAN", -150.0},
+      {"x", "20/06/2010", "", "FNAC", -200.0},
+      {"x", "20/06/2010", "", "MCDO", -50.0},
+      {"-", "20/06/2010", "", "WORLDCO", 1000.0},
+    });
+    categorization.checkSelectedTableRows(1, 2);
   }
 
   public void testReconciliatingSplitTransactions() throws Exception {
@@ -295,9 +335,4 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable(1, "Music");
     categorization.checkTableIsEmpty();
   }
-
-  public void testInitialGuides() throws Exception {
-    fail("TODO");
-  }
-
 }

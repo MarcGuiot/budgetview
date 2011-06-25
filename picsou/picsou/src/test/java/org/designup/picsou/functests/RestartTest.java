@@ -656,7 +656,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     restartApplication();
     
-    reconciliation.checkShown();
+    reconciliation.checkColumnAndMenuShown();
     categorization.checkTable(new Object[][]{
       {"-", "20/08/2008", "", "AUCHAN", 100.0},
       {"x", "20/08/2008", "", "WORLDCO", 1000.0}}

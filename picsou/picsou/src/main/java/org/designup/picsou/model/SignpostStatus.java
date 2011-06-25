@@ -42,6 +42,8 @@ public class SignpostStatus {
   public static BooleanField GOTO_BUDGET_DONE;
   public static BooleanField SERIES_AMOUNT_SHOWN;
   public static BooleanField SERIES_AMOUNT_DONE;
+  public static BooleanField FIRST_RECONCILIATION_SHOWN;
+  public static BooleanField FIRST_RECONCILIATION_DONE;
 
   @Target(SignpostSectionType.class)
   @DefaultInteger(0)
@@ -138,11 +140,14 @@ public class SignpostStatus {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 6;
+      return 7;
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 6) {
+      if (version == 7) {
+        deserializeDataV7(fieldSetter, data);
+      }
+      else if (version == 6) {
         deserializeDataV6(fieldSetter, data);
       }
       else if (version == 5) {
@@ -180,7 +185,30 @@ public class SignpostStatus {
       outputStream.writeBoolean(values.get(FIRST_CATEGORIZATION_DONE));
       outputStream.writeBoolean(values.get(CATEGORIZATION_SKIPPED));
       outputStream.writeInteger(values.get(CURRENT_SECTION));
+      outputStream.writeBoolean(values.get(FIRST_RECONCILIATION_SHOWN));
+      outputStream.writeBoolean(values.get(FIRST_RECONCILIATION_DONE));
       return serializedByteArrayOutput.toByteArray();
+    }
+
+    private void deserializeDataV7(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(IMPORT_DONE, input.readBoolean());
+      fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
+      fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
+      fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
+      fieldSetter.set(GOTO_BUDGET_SHOWN, input.readBoolean());
+      fieldSetter.set(GOTO_BUDGET_DONE, input.readBoolean());
+      fieldSetter.set(SERIES_AMOUNT_SHOWN, input.readBoolean());
+      fieldSetter.set(SERIES_AMOUNT_DONE, input.readBoolean());
+      fieldSetter.set(AMOUNT_SERIES, input.readInteger());
+      fieldSetter.set(PERIODICITY_SERIES, input.readInteger());
+      fieldSetter.set(FIRST_CATEGORIZATION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_SKIPPED, input.readBoolean());
+      fieldSetter.set(CURRENT_SECTION, input.readInteger());
+      fieldSetter.set(FIRST_RECONCILIATION_SHOWN, input.readBoolean());
+      fieldSetter.set(FIRST_RECONCILIATION_DONE, input.readBoolean());
     }
 
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
@@ -201,7 +229,6 @@ public class SignpostStatus {
       fieldSetter.set(CATEGORIZATION_SKIPPED, input.readBoolean());
       fieldSetter.set(CURRENT_SECTION, input.readInteger());
     }
-
 
     private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
