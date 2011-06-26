@@ -23,6 +23,7 @@ import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Range;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -76,31 +77,33 @@ public class SeriesAmountEditionPanel {
     this.seriesEditorAccess = seriesEditorAccess;
 
     this.selectionService = directory.get(SelectionService.class);
-    this.selectionService.addListener(new GlobSelectionListener() {
-                                        public void selectionUpdated(GlobSelection selection) {
-                                          if (selection.isRelevantForType(Series.TYPE)) {
-                                            Glob first = selection.getAll(Series.TYPE).getFirst();
-                                            if (first == null) {
-                                              clear();
-                                            }
-                                            else {
-                                              setCurrentSeries(first.getKey());
-                                            }
-                                            updateBudgetFromMonth();
-                                          }
-                                          if (selection.isRelevantForType(Month.TYPE)) {
-                                            if (currentSeries != null) {
-                                              Set<Integer> selectedMonths = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
-                                              doSelectMonths(SeriesAmountEditionPanel.this.repository.find(currentSeries), selectedMonths);
-                                            }
-                                          }
-                                        }
-                                      }, Month.TYPE, Series.TYPE);
+    this.selectionService.addListener(
+      new GlobSelectionListener() {
+        public void selectionUpdated(GlobSelection selection) {
+          if (selection.isRelevantForType(Series.TYPE)) {
+            Glob first = selection.getAll(Series.TYPE).getFirst();
+            if (first == null) {
+              clear();
+            }
+            else {
+              setCurrentSeries(first.getKey());
+            }
+            updateBudgetFromMonth();
+          }
+          if (selection.isRelevantForType(Month.TYPE)) {
+            if (currentSeries != null) {
+              Set<Integer> selectedMonths = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
+              doSelectMonths(SeriesAmountEditionPanel.this.repository.find(currentSeries), selectedMonths);
+            }
+          }
+        }
+      }, Month.TYPE, Series.TYPE);
 
     createPanel();
 
     repository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+
         if ((currentSeries != null) && changeSet.containsChanges(currentSeries)
             && repository.find(currentSeries) != null) {
           FieldValues previousValue = changeSet.getPreviousValue(currentSeries);
@@ -108,26 +111,25 @@ public class SeriesAmountEditionPanel {
             updatePositiveOrNegativeRadio();
           }
         }
-      }
-    });
-    repository.addChangeListener(new DefaultChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+
         if (changeSet.containsUpdates(SeriesBudget.AMOUNT)) {
           Glob series = repository.get(currentSeries);
           if (series.isTrue(Series.IS_AUTOMATIC)) {
             repository.update(currentSeries, Series.IS_AUTOMATIC, false);
           }
         }
-      }
-    });
 
-    repository.addChangeListener(new DefaultChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsCreationsOrDeletions(SeriesBudget.TYPE) || changeSet.containsUpdates(SeriesBudget.ACTIVE)) {
           if (!showingActiveMonths) {
             selectMonths(selectedMonthIds);
           }
           updateCard(false);
+        }
+
+        if ((currentSeries != null) &&
+            (changeSet.containsUpdates(Series.FIRST_MONTH) ||
+             changeSet.containsUpdates(Series.LAST_MONTH))) {
+          updateSelectionAfterRangeChange();
         }
       }
     });
@@ -444,6 +446,45 @@ public class SeriesAmountEditionPanel {
   public class OpenSeriesEditorCallback implements GlobListFunctor {
     public void run(GlobList list, GlobRepository repository) {
       seriesEditorAccess.openSeriesEditor(currentSeries, selectedMonthIds);
+    }
+  }
+
+  private void updateSelectionAfterRangeChange() {
+
+    SortedSet<Integer> selectedMonths = selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID);
+
+    Glob series = repository.get(currentSeries);
+    Range<Integer> seriesRange = new Range<Integer>(series.get(Series.FIRST_MONTH), series.get(Series.LAST_MONTH));
+    Integer current = CurrentMonth.getCurrentMonth(repository);
+
+    if (selectedMonths.isEmpty()) {
+      if (seriesRange.contains(current)) {
+        select(current);
+      }
+      else {
+        select(seriesRange.getMin());
+      }
+      return;
+    }
+
+    Range<Integer> selectionRange = new Range<Integer>(selectedMonths.first(), selectedMonths.last());
+    if (!seriesRange.overlaps(selectionRange)) {
+      if (seriesRange.contains(current)) {
+        select(current);
+      }
+      else if (seriesRange.after(current)) {
+        select(seriesRange.getMin());
+      }
+      else {
+        select(seriesRange.getMax());
+      }
+    }
+  }
+
+  private void select(int monthId) {
+    Glob month = repository.find(Key.create(Month.TYPE, monthId));
+    if (month != null) {
+      selectionService.select(month);
     }
   }
 }

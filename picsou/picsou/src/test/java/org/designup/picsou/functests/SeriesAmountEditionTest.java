@@ -426,7 +426,6 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/08/03", -29.00, "Free")
       .load();
 
-    views.selectCategorization();
     categorization.setNewRecurring("FREE", "Internet");
    
     budgetView.recurring.editPlannedAmount("Internet")

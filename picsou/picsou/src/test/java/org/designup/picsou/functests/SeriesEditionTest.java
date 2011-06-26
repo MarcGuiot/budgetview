@@ -322,6 +322,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     edition.editEndDate()
       .checkIsEnabled(200701, 200901)
       .cancel();
+
     edition.cancel();
   }
 
@@ -543,10 +544,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkName("AA")
       .checkAmount("13")
       .checkChart(new Object[][]{
-      {"2008", "June", 0.00, 13.00, true},
-      {"2008", "July", 0.00, 13.00, true},
-      {"2008", "August", 0.00, 13.00, true},
-    })
+        {"2008", "June", 0.00, 13.00, true},
+        {"2008", "July", 0.00, 13.00, true},
+        {"2008", "August", 0.00, 13.00, true},
+      })
       .cancel();
   }
 
@@ -605,7 +606,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectAll();
-    
+
     budgetView.variable.editSeries("S1")
       .checkMonthsAreVisible()
       .checkMonthIsChecked(3, 9)
@@ -688,7 +689,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "July", 0.00, 20.00},
         {"2008", "August", 0.00, 10.00},
       });
-
 
     edition.selectMonth(200807)
       .checkNegativeAmountsSelected()
@@ -1095,6 +1095,52 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
+  public void testSelectionIsUpdatedWhenStartOrEndDatesAreChanged() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(4).validate();
+    OfxBuilder.init(this)
+      .addTransaction("2008/03/04", -10.00, "McDo")
+      .addTransaction("2008/06/04", -10.00, "McDo")
+      .load();
+
+    timeline.selectMonth("2008/06");
+    budgetView.extras.createSeries()
+      .setName("Center Parc")
+      .checkSingleMonthDate("June 2008")
+      .setAmount(500.00)
+      .validate();
+
+    budgetView.extras.editSeries("Center Parc")
+      .setSingleMonthDate(200807)
+      .checkAmountEditionEnabled()
+      .checkMonthSelected(200807)
+      .validate();
+
+    timeline.selectMonths(200806, 200807);
+    budgetView.extras.editSeries("Center Parc")
+      .setEveryMonth()
+      .clearStartDate()
+      .checkAmountEditionEnabled()
+      .checkMonthSelected(200807)
+      .setEndDate(200806)
+      .checkMonthSelected(200806)
+      .setEndDate(200805)
+      .checkMonthSelected(200805)
+      .validate();
+
+    timeline.selectMonth(200805);
+    budgetView.extras.editSeries("Center Parc")
+      .checkMonthsSelected(200803, 200804, 200805)
+      .setPropagationDisabled()
+      .checkMonthsSelected(200803)
+      .clearEndDate()
+      .checkAmountEditionEnabled()
+      .setStartDate(200808)
+      .checkMonthSelected(200808)
+      .setStartDate(200805)
+      .checkMonthSelected(200808)
+      .validate();
+  }
+
   public void testOneTimeAYearCanBeChangedWhenATransactionWithDifferentMonthIsSelected() throws Exception {
     OfxBuilder
       .init(this)
@@ -1312,7 +1358,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testNoBudgetAreaForSavingsAndIncom() throws Exception {
+  public void testNoBudgetAreaForSavingsAndIncome() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/01", 1000, "salaire")
       .load();
@@ -1328,7 +1374,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
-  public void testChangeTabAndReopen() throws Exception {
+  public void testChangeTabAndReopenReturnsToMainTab() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/01", -29.00, "Auchan")
       .load();
