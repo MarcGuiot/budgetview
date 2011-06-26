@@ -13,8 +13,8 @@ public class FeedbackViewChecker extends ViewChecker {
     super(mainWindow);
   }
 
-  public FeedbackDialogChecker openFeedback() {
-    return FeedbackDialogChecker.init(getPanel().getButton("sendFeedback").triggerClick());
+  public void checkFeedbackLinksTo(String urlPart) {
+    checkButtonOpensUrl("sendFeedback", urlPart);
   }
 
   public HelpChecker openHelp() {

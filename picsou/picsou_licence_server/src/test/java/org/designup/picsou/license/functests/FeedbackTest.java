@@ -13,7 +13,8 @@ import org.uispec4j.Window;
 import java.io.File;
 import java.net.URLEncoder;
 
-public class FeedbackTest extends ConnectedTestCase {
+/* Fenetre de feedback debranchee pour le moment */
+public abstract class FeedbackTest extends ConnectedTestCase {
   private Window window;
   private PicsouApplication picsouApplication;
   private int previousRetry;

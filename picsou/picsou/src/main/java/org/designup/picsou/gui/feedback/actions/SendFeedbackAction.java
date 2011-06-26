@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.feedback.actions;
 
-import org.designup.picsou.gui.feedback.FeedbackService;
+import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.directory.Directory;
 
@@ -20,6 +20,6 @@ public class SendFeedbackAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent e) {
-    directory.get(FeedbackService.class).send();
+    directory.get(BrowsingService.class).launchBrowser(Lang.get("feedback.url"));
   }
 }

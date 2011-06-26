@@ -6,16 +6,14 @@ public class FeedbackViewTest extends LoggedInFunctionalTestCase {
 
   public void test() throws Exception {
 
-    feedbackView.openFeedback()
-      .checkConnected()
-      .cancel();
+    feedbackView.checkFeedbackLinksTo("http://support.mybudgetview.fr/anonymous_requests/new");
 
     feedbackView.openHelp()
       .checkTitle("Index")
       .close();
 
-    feedbackView.checkTwitterLinksTo("http://twitter.com/home?status=BudgetView");
+    feedbackView.checkTwitterLinksTo("http://twitter.com/#!/budgetview");
 
-    feedbackView.checkFacebookLinksTo("http://www.facebook.com/sharer.php?u=http://www.mybudgetview.fr");
+    feedbackView.checkFacebookLinksTo("http://www.facebook.com/pages/BudgetView/111823858873970");
   }
 }
