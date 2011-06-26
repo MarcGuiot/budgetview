@@ -2,6 +2,9 @@ package org.globsframework.utils;
 
 import java.security.InvalidParameterException;
 
+/**
+ * Range with lower/upper bounds that can both be null.
+ */
 public class Range<T extends Comparable> {
   private T min;
   private T max;
@@ -20,6 +23,50 @@ public class Range<T extends Comparable> {
 
   public T getMax() {
     return max;
+  }
+
+  public boolean contains(T value) {
+    if (value == null) {
+      throw new InvalidParameterException("Value should be non null");
+    }
+    return ((min == null) || (value.compareTo(min) >= 0)) &&
+           ((max == null) || (value.compareTo(max) <= 0));
+
+  }
+
+  public boolean after(T value) {
+    if (value == null) {
+      throw new InvalidParameterException("Value should be non null");
+    }
+    return (min != null) && (value.compareTo(min) < 0);
+  }
+
+  public boolean before(T value) {
+    if (value == null) {
+      throw new InvalidParameterException("Value should be non null");
+    }
+    return (max != null) && (value.compareTo(max) > 0);
+  }
+
+  public boolean overlaps(Range<T> other) {
+    if ((min != null) && (other.max != null) && (other.max.compareTo(min) < 0)) {
+      return false;
+    }
+    if ((max != null) && (other.min != null) && (other.min.compareTo(max) > 0)) {
+      return false;
+    }
+    return true;
+  }
+
+  public boolean contains(Range<T> other) {
+    if ((min != null) && ((other.min == null) || (other.min.compareTo(min) < 0))) {
+      return false;
+    }
+    if ((max != null) && ((other.max == null) || (other.max.compareTo(max) > 0))) {
+      return false;
+    }
+    return true;
+
   }
 
   public String toString() {
