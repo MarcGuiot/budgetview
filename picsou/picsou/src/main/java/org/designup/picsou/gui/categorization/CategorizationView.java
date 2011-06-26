@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.categorization;
 
-import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.CreateAccountAction;
 import org.designup.picsou.gui.categorization.actions.CategorizationTableActions;
@@ -321,7 +320,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
       }
     });
   }
-
 
   private void installDoubleClickHandler() {
     transactionTable.getComponent().addMouseListener(new MouseAdapter() {
@@ -710,18 +708,18 @@ public class CategorizationView extends View implements TableView, Filterable, C
     }
     boolean show = preferences.isTrue(UserPreferences.SHOW_RECONCILIATION);
     if (show && !isShowing) {
+      isShowing = true;
       tableView.insertColumn(0, column);
       Gui.setColumnSizes(tableView.getComponent(), COLUMN_SIZES_WITH_RECONCILIATION);
       filteringModeCombo.setModel(new DefaultComboBoxModel(CategorizationFilteringMode.getValues(true)));
-      filteringModeCombo.setSelectedItem(ContainerFeedbackMessageFilter.ALL);
-      isShowing = true;
+      setFilteringMode(CategorizationFilteringMode.ALL);
     }
     else if (!show && isShowing) {
+      isShowing = false;
       tableView.removeColumn(0);
       Gui.setColumnSizes(tableView.getComponent(), CategorizationView.COLUMN_SIZES);
       filteringModeCombo.setModel(new DefaultComboBoxModel(CategorizationFilteringMode.getValues(false)));
-      filteringModeCombo.setSelectedItem(ContainerFeedbackMessageFilter.ALL);
-      isShowing = false;
+      setFilteringMode(CategorizationFilteringMode.ALL);
     }
   }
 }

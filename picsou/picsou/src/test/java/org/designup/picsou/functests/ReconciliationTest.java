@@ -168,6 +168,19 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
                                        "Last imported file",
                                        "Uncategorized operations",
                                        "Uncategorized operations for the selected months");
+    categorization.checkTable(new Object[][]{
+      {"15/06/2010", "", "AUCHAN", 150.0},
+      {"20/06/2010", "", "FNAC", 200.0},
+      {"20/06/2010", "", "WORLDCO", 1000.0}
+    });
+    
+    categorization.showUncategorizedTransactionsOnly();
+    reconciliation.show();
+    categorization.checkTable(new Object[][]{
+      {"-", "15/06/2010", "", "AUCHAN", 150.0},
+      {"x", "20/06/2010", "", "FNAC", 200.0},
+      {"x", "20/06/2010", "", "WORLDCO", 1000.0}
+    });
   }
 
   public void testManuallyCategorizedTransactionsAreaAutomaticallyReconciled() throws Exception {
