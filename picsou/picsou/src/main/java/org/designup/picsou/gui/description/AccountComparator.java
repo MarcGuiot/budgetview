@@ -35,7 +35,7 @@ public class AccountComparator implements Comparator<Glob> {
     if (diffClosed != 0) {
       return diffClosed;
     }
-    int diff = account1.get(CARD_TYPE).compareTo(account2.get(CARD_TYPE));
+    int diff = Utils.compare(account1.get(CARD_TYPE), account2.get(CARD_TYPE));
     if (diff != 0) {
       return diff;
     }

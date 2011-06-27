@@ -91,7 +91,7 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
       endMonth = Math.min(Month.getMonthId(closedDate), endMonth);
     }
 
-    while (startMonth != endMonth) {
+    while (startMonth <= endMonth) {
       GlobList globs = indexOnDeferredCardDay.findByIndex(DeferredCardDate.MONTH, startMonth).getGlobs();
       if (globs.isEmpty()) {
         repository.create(DeferredCardDate.TYPE,

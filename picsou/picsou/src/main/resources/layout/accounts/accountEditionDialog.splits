@@ -37,7 +37,7 @@
 
             <label text="$account.panel.type" styleClass="formLabel" anchor="left" marginTop="10"/>
             <row>
-            <comboBox ref="type" marginTop="5" marginBottom="10"/>
+              <comboBox ref="type" marginTop="5" marginBottom="10"/>
               <button action="accountTypeHelp" name="accountTypeHelp" styleClass="hyperlinkWithoutUnderline"/>
             </row>
 

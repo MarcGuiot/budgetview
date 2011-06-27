@@ -9,6 +9,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.Strings;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +25,24 @@ public class QifAccountFinder implements GlobFunctor {
   }
 
   public void run(Glob glob, GlobRepository repository) throws Exception {
-    String label = Transaction.anonymise(createLabel(glob, Transaction.QIF_M, Transaction.QIF_P));
+    String label = getLabel(glob);
     accountsByLabel.put(label, glob.get(Transaction.ACCOUNT));
+  }
+
+  private String getLabel(Glob glob) {
+    String label1 = createLabel(glob, Transaction.QIF_M, Transaction.QIF_P);
+    if (Strings.isNullOrEmpty(label1)){
+      label1 = createLabel(glob, Transaction.OFX_NAME, Transaction.OFX_NAME);
+    }
+    return Transaction.anonymise(label1);
+  }
+
+  private String getImportedLabel(Glob glob) {
+    String label1 = createLabel(glob, ImportedTransaction.QIF_M, ImportedTransaction.QIF_P);
+    if (Strings.isNullOrEmpty(label1)){
+      label1 = createLabel(glob, ImportedTransaction.OFX_NAME, ImportedTransaction.OFX_NAME);
+    }
+    return Transaction.anonymise(label1);
   }
 
   private String createLabel(Glob glob, final StringField qif_m, final StringField qif_p) {
@@ -42,7 +59,7 @@ public class QifAccountFinder implements GlobFunctor {
   public Integer findAccount(GlobList importedTransactions) {
     Map<Integer, Integer> foundAccountsCount = new HashMap<Integer, Integer>();
     for (Glob transaction : importedTransactions) {
-      String label = Transaction.anonymise(createLabel(transaction, ImportedTransaction.QIF_M, ImportedTransaction.QIF_P));
+      String label = getImportedLabel(transaction);
       List<Integer> accounts = accountsByLabel.get(label);
       for (Integer accountId : accounts) {
         Integer count = foundAccountsCount.get(accountId);

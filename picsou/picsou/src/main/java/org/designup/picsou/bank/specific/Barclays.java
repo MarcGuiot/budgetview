@@ -3,22 +3,19 @@ package org.designup.picsou.bank.specific;
 import org.designup.picsou.bank.BankPluginService;
 import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountCardType;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.utils.directory.Directory;
 
-public class CaisseEpargne extends AbstractBankPlugin {
+public class Barclays extends AbstractBankPlugin{
 
-  public CaisseEpargne(GlobRepository globRepository, Directory directory) {
+  public Barclays(GlobRepository globRepository, Directory directory) {
     BankPluginService bankPluginService = directory.get(BankPluginService.class);
-    Glob bankEntity = globRepository.get(Key.create(BankEntity.TYPE, 17515));
+    Glob bankEntity = globRepository.get(Key.create(BankEntity.TYPE, 24599));
     bankPluginService.add(bankEntity.get(BankEntity.BANK), this);
   }
 
-  public void apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository,
-                    GlobRepository localRepository, MutableChangeSet changeSet) {
+  public void apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
     GlobList existingAccounts = getSameAccount(newAccount, referenceRepository);
     if (existingAccounts.isEmpty()) {
       localRepository.update(newAccount.getKey(),

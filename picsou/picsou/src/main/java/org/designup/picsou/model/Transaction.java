@@ -10,7 +10,6 @@ import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import static org.globsframework.model.Key.create;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -78,7 +77,9 @@ public class Transaction {
 
   public static StringField LABEL_FOR_CATEGORISATION;
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   @Target(Category.class)
   public static LinkField CATEGORY;
 
@@ -230,12 +231,12 @@ public class Transaction {
 
   static public boolean isTransactionBeforeOrEqual(Glob transaction, int month, int day) {
     return (transaction.get(BANK_MONTH) < month || (transaction.get(BANK_MONTH) == month &&
-    transaction.get(BANK_DAY) <= day));
+                                                    transaction.get(BANK_DAY) <= day));
   }
 
   static public boolean isPositionTransactionBeforeOrEqual(Glob transaction, int month, int day) {
     return (transaction.get(POSITION_MONTH) < month || (transaction.get(POSITION_MONTH) == month &&
-    transaction.get(POSITION_DAY) <= day));
+                                                        transaction.get(POSITION_DAY) <= day));
   }
 
   public static GlobList getUncategorizedTransactions(Integer monthId, GlobRepository repository) {
@@ -366,6 +367,10 @@ public class Transaction {
 
     private void deserializeDataV8(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
+      deserializeV8(fieldSetter, input);
+    }
+
+    private void deserializeV8(FieldSetter fieldSetter, SerializedInput input) {
       fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readUtf8String());
       fieldSetter.set(Transaction.LABEL, input.readUtf8String());
       fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readUtf8String());

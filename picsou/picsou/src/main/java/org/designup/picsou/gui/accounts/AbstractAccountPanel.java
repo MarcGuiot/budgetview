@@ -36,11 +36,10 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   protected T localRepository;
   protected Glob currentAccount;
   protected JTextField positionEditor;
-  protected JComboBox accountTypeCombo;
   protected JTextArea messageWarning;
   protected Directory localDirectory;
-  private SelectionService selectionService;
-  private AccountTypeSelector[] accountTypeSelectors;
+  protected SelectionService selectionService;
+  protected AccountTypeCombo accountTypeCombo;
   protected GlobTextEditor nameField;
   private JLabel accountBank;
   private AccountBankAction bankSelectionAction;
@@ -53,11 +52,11 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     localDirectory = new DefaultDirectory(parentDirectory);
     selectionService = new SelectionService();
     localDirectory.add(selectionService);
+    accountTypeCombo = new AccountTypeCombo(localRepository);
   }
 
   protected void createComponents(GlobsPanelBuilder builder, Window dialog) {
 
-    accountTypeSelectors = createTypeSelectors(localRepository);
     builder.add("accountTypeHelp", new HelpAction(Lang.get("account.panel.type.help"), "accountTypes",
                                                   Lang.get("help"), localDirectory, dialog));
 
@@ -70,7 +69,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if ((currentAccount != null) && changeSet.containsChanges(currentAccount.getKey())) {
-          updateAccountTypeCombo();
+          accountTypeCombo.updateAccountTypeCombo(currentAccount);
           updateBank(currentAccount);
         }
       }
@@ -78,7 +77,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
     nameField = builder.addEditor("name", Account.NAME).setNotifyOnKeyPressed(true);
     builder.addEditor("number", Account.NUMBER).setNotifyOnKeyPressed(true);
-    builder.add("type", createAccountTypeCombo());
+    builder.add("type", accountTypeCombo.createAccountTypeCombo());
 
     messageWarning = new JTextArea();
     builder.add("messageWarning", messageWarning);
@@ -92,33 +91,6 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         panel.setVisible(false);
       }
     });
-  }
-
-  private Component createAccountTypeCombo() {
-    accountTypeCombo = new JComboBox(accountTypeSelectors);
-
-    accountTypeCombo.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        AccountTypeSelector selector = (AccountTypeSelector)accountTypeCombo.getSelectedItem();
-        if (selector != null) {
-          selector.apply();
-        }
-      }
-    });
-    return accountTypeCombo;
-  }
-
-  private void updateAccountTypeCombo() {
-    if (currentAccount == null) {
-      accountTypeCombo.setSelectedIndex(-1);
-    }
-    else {
-      for (AccountTypeSelector selector : accountTypeSelectors) {
-        if (selector.isApplied(currentAccount)) {
-          accountTypeCombo.setSelectedItem(selector);
-        }
-      }
-    }
   }
 
   public void setBalanceEditorVisible(boolean visible) {
@@ -156,7 +128,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
   public void setAccount(Glob account) {
     this.currentAccount = account;
-    updateAccountTypeCombo();
+    accountTypeCombo.updateAccountTypeCombo(currentAccount);
     setWarning(account.get(Account.ACCOUNT_TYPE), account.get(Account.CARD_TYPE));
     if (account != null) {
       selectionService.select(account);
@@ -186,57 +158,6 @@ public class AbstractAccountPanel<T extends GlobRepository> {
       }
     }
     return true;
-  }
-
-  protected AccountTypeSelector[] createTypeSelectors(final GlobRepository repository) {
-    return new AccountTypeSelector[]{
-      new AccountTypeSelector("account.type.main") {
-        public void apply() {
-          repository.update(currentAccount.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
-          repository.update(currentAccount.getKey(), Account.CARD_TYPE, AccountCardType.NOT_A_CARD.getId());
-        }
-
-        public boolean isApplied(Glob account) {
-          return Account.isMain(account) &&
-                 account.get(Account.CARD_TYPE).equals(AccountCardType.NOT_A_CARD.getId());
-        }
-      },
-
-      new AccountTypeSelector("accountCardType.credit") {
-        public void apply() {
-          repository.update(currentAccount.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
-          repository.update(currentAccount.getKey(), Account.CARD_TYPE, AccountCardType.CREDIT.getId());
-        }
-
-        public boolean isApplied(Glob account) {
-          return Account.isMain(account) &&
-                 Utils.equal(account.get(Account.CARD_TYPE), AccountCardType.CREDIT.getId());
-        }
-      },
-      new AccountTypeSelector("accountCardType.deferred") {
-        public void apply() {
-          repository.update(currentAccount.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
-          repository.update(currentAccount.getKey(), Account.CARD_TYPE, AccountCardType.DEFERRED.getId());
-        }
-
-        public boolean isApplied(Glob account) {
-          return Account.isMain(account) &&
-                 Utils.equal(account.get(Account.CARD_TYPE), AccountCardType.DEFERRED.getId());
-        }
-      }
-      ,
-
-      new AccountTypeSelector("account.type.savings") {
-        public void apply() {
-          repository.update(currentAccount.getKey(), Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId());
-          repository.update(currentAccount.getKey(), Account.CARD_TYPE, AccountCardType.NOT_A_CARD.getId());
-        }
-
-        public boolean isApplied(Glob account) {
-          return Account.isSavings(account);
-        }
-      },
-    };
   }
 
   private class AccountBankAction extends AbstractAction implements GlobSelectionListener {

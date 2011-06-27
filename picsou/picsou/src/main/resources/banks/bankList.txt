@@ -12,3 +12,4 @@ ingdirect.xml
 banquepopulaire.xml
 hsbc.xml
 fortis.xml
+barclays.xml

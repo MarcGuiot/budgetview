@@ -51,26 +51,68 @@ public class OperationChecker {
       .importDeferred(cardAccountName, fileName, true);
   }
 
-  public void importQifFileWithDeferred(String fileName, String bank, double position) {
+  public void importWithNewAccount(String fileName, String accountName) {
     ImportDialogChecker importDialog = openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
 
-    importDialog
-      .addNewAccount()
-      .selectBank(bank)
+    AccountEditionChecker accountEditionChecker = importDialog.addNewAccount();
+    accountEditionChecker
+      .setAccountNumber(accountName)
+      .setAccountName(accountName)
+      .validate();
+    importDialog.doImport();
+    importDialog.completeLastStep();
+  }
+
+  public void importQifFileWithDeferred(String fileName, String bank, Double position) {
+    ImportDialogChecker importDialog = openImportDialog()
+      .setFilePath(fileName)
+      .acceptFile();
+
+    AccountEditionChecker accountEditionChecker = importDialog.addNewAccount();
+    if (bank != null) {
+      accountEditionChecker
+        .selectBank(bank);
+    }
+    accountEditionChecker
       .setAccountNumber("1111")
       .setAccountName("card 1111")
       .setAsDeferredCard()
       .validate();
 
-    importDialog.doImportWithBalance()
-      .setAmountAndEnter(position);
+    if (position != null) {
+      importDialog.doImportWithBalance()
+        .setAmountAndEnter(position);
+    }
+    else {
+      importDialog.doImport();
+    }
+    importDialog.completeLastStep();
+  }
+
+  public void importFirstQifFileWithDeferred(String fileName, String accountName) {
+    ImportDialogChecker importDialog = openImportDialog()
+      .setFilePath(fileName)
+      .acceptFile();
+
+    AccountEditionChecker accountEditionChecker = importDialog.openAccount();
+    accountEditionChecker
+      .setAccountNumber("1111")
+      .setAccountName(accountName)
+      .setAsDeferredCard()
+      .validate();
+
+    importDialog.doImport();
     importDialog.completeLastStep();
   }
 
   public void importOfxFile(String name, String bank) {
     importFile(new String[]{name}, bank, null, null);
+  }
+
+  public void importOfxFile(String name, String bank, Double amount) {
+    importFile(new String[]{name}, bank, amount, null);
   }
 
   public void importOfxFile(String name, Double amount) {

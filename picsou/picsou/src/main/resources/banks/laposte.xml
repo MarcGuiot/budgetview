@@ -10,6 +10,9 @@
                         transactionTypeName="credit_card" label="{NAME.1}"
                         groupForDate="{NAME.2}" dateFormat="dd.MM.yy" originalLabel="{NAME.0}"/>
 
+    <transactionMatcher transactionTypeName="credit_card" bankType="POS" forOfx="true"
+                        label="{NAME.0}" originalLabel="{NAME.0}"/>
+
     <transactionMatcher ofxName="REMISE DE CHEQUES DU (\d{2,4}/\d{2}/\d{2,4})"
                         transactionTypeName="deposit" label="REMISE CHEQUES" groupForDate="{NAME.1}"
                         dateFormat="dd/MM/yy" originalLabel="{NAME.0}"/>

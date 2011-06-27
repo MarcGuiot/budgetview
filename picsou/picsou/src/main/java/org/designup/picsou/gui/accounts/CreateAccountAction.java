@@ -4,6 +4,7 @@ import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.AccountUpdateMode;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Glob;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -17,6 +18,7 @@ public class CreateAccountAction extends AbstractAction {
   private final Window owner;
   private boolean accountTypeEditable = true;
   private boolean updateModeEditable = true;
+  private Glob defaultAccountInfo;
 
   public CreateAccountAction(AccountType accountType, GlobRepository repository, Directory directory) {
     this(accountType, repository, directory, directory.get(JFrame.class));
@@ -42,10 +44,15 @@ public class CreateAccountAction extends AbstractAction {
 
   public void actionPerformed(ActionEvent e) {
     AccountEditionDialog dialog = new AccountEditionDialog(owner, repository, directory);
+    dialog.setAccountInfo(defaultAccountInfo);
     dialog.showWithNewAccount(accountType, accountTypeEditable, AccountUpdateMode.AUTOMATIC, updateModeEditable);
   }
 
   private void initTooltip() {
     putValue(Action.SHORT_DESCRIPTION, Lang.get("newAccount." + accountType.name().toLowerCase() + ".tooltip"));
+  }
+
+  public void setAccountInfo(Glob defaultAccountInfo) {
+    this.defaultAccountInfo = defaultAccountInfo;
   }
 }

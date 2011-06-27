@@ -8,6 +8,7 @@ import org.designup.picsou.gui.importer.edition.DateFormatSelectionPanel;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionDateRenderer;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionsTable;
 import org.designup.picsou.gui.importer.utils.QifAccountFinder;
+import org.designup.picsou.gui.model.CurrentAccountInfo;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.AccountUpdateMode;
@@ -63,6 +64,7 @@ public class ImportPreviewPanel {
   private Repeat<AdditionalImportPanel> additionalPanelsRepeat;
   private ImportedTransactionsTable importedTransactionTable;
   private JPanel panel;
+  private CreateAccountAction createAccountAction;
 
   public ImportPreviewPanel(ImportController controller,
                             Glob defaultAccount,
@@ -102,9 +104,8 @@ public class ImportPreviewPanel {
     builder.add("table", importedTransactionTable.getTable());
     builder.add("fileName", fileNameLabel);
 
-    CreateAccountAction createAccountAction =
-      new CreateAccountAction(AccountType.MAIN, sessionRepository, sessionDirectory, dialog)
-        .setUpdateModeEditable(false);
+    createAccountAction = new CreateAccountAction(AccountType.MAIN, sessionRepository, sessionDirectory, dialog)
+      .setUpdateModeEditable(false);
     newAccountButton = builder.add("newAccount", new JButton(createAccountAction)).getComponent();
 
     GlobComboView comboView = GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory)
@@ -168,7 +169,8 @@ public class ImportPreviewPanel {
 
   private void loadAdditionalImportPanels() {
     additionalImportPanels.addAll(Arrays.asList(
-      new AccountTypeSelectionPanel(sessionRepository, sessionDirectory)
+      new AccountTypeSelectionPanel(sessionRepository, sessionDirectory),
+      new AccountOrCardTypeSelectionPanel(sessionRepository, sessionDirectory)
     ));
   }
 
@@ -204,6 +206,14 @@ public class ImportPreviewPanel {
     initQifAccountChooserFields(isAccountNeeded);
     if (dateFormats != null) {
       dateFormatSelectionPanel.init(dateFormats);
+    }
+    Glob accountInfo = sessionRepository.find(Key.create(CurrentAccountInfo.TYPE, 0));
+
+    if (accountInfo != null){
+      createAccountAction.setAccountInfo(accountInfo);
+    }
+    else {
+      createAccountAction.setAccountInfo(null);
     }
   }
 
@@ -251,6 +261,8 @@ public class ImportPreviewPanel {
         if (accountId != null) {
           account = sessionRepository.find(Key.create(Account.TYPE, accountId));
           sessionDirectory.get(SelectionService.class).select(account);
+        }else {
+          sessionDirectory.get(SelectionService.class).clear(Account.TYPE);
         }
       }
 

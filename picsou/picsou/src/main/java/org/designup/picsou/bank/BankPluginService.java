@@ -2,10 +2,9 @@ package org.designup.picsou.bank;
 
 import org.designup.picsou.bank.specific.AbstractBankPlugin;
 import org.designup.picsou.model.Account;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
-import org.globsframework.model.ReadOnlyGlobRepository;
+import org.designup.picsou.model.Transaction;
+import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.delta.MutableChangeSet;
 
 import java.util.HashMap;
@@ -20,17 +19,25 @@ public class BankPluginService {
     }
   };
 
-  public void apply(ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
+  public boolean useCreatedAccount(Glob account) {
+    Integer bankId = account.get(Account.BANK);
+    BankPlugin bankPlugin = specific.get(bankId);
+    if (bankPlugin == null) {
+      bankPlugin = defaultPlugin;
+    }
+    return bankPlugin.useCreatedAccount();
+  }
 
+  public void apply(ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
     Set<Key> createdAcountsKey = changeSet.getCreated(Account.TYPE);
     for (Key key : createdAcountsKey) {
-      Glob newAccount = localRepository.get(key);
-      Integer bankId = newAccount.get(Account.BANK);
+      Glob account = localRepository.get(key);
+      Integer bankId = account.get(Account.BANK);
       BankPlugin bankPlugin = specific.get(bankId);
       if (bankPlugin == null) {
         bankPlugin = defaultPlugin;
       }
-      bankPlugin.apply(newAccount, referenceRepository, localRepository, changeSet);
+      bankPlugin.apply(account, referenceRepository, localRepository, changeSet);
     }
   }
 
@@ -39,5 +46,21 @@ public class BankPluginService {
     if (actualPlugin == null || actualPlugin.getVersion() < bankPlugin.getVersion()) {
       specific.put(bankId, bankPlugin);
     }
+  }
+
+  public void postApply(GlobList transactions, GlobRepository referenceRepository, GlobRepository localRepository, ChangeSet importChangeSet) {
+    Set<Integer> accountIds = transactions.getValueSet(Transaction.ACCOUNT);
+    for (Integer accountId : accountIds) {
+      Glob account = localRepository.find(Key.create(Account.TYPE, accountId));
+      Integer bankId = account.get(Account.BANK);
+      BankPlugin bankPlugin = specific.get(bankId);
+      if (bankPlugin == null) {
+        bankPlugin = defaultPlugin;
+      }
+      bankPlugin.postApply(transactions.filter(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId), localRepository),
+                           account,
+                           referenceRepository, localRepository, importChangeSet);
+    }
+
   }
 }

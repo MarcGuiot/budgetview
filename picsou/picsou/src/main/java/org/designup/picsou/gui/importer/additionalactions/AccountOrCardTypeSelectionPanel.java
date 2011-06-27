@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.importer.additionalactions;
 
+import org.designup.picsou.gui.accounts.AccountTypeCombo;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.importer.AdditionalImportPanel;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -16,15 +16,13 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-
 import java.util.Collections;
 
-import static org.globsframework.model.utils.GlobMatchers.*;
-
-public class AccountTypeSelectionPanel implements AdditionalImportPanel {
+public class AccountOrCardTypeSelectionPanel implements AdditionalImportPanel {
   private GlobRepository repository;
   private Directory directory;
 
@@ -34,7 +32,7 @@ public class AccountTypeSelectionPanel implements AdditionalImportPanel {
   private boolean showErrors;
   private GlobStringifier accountStringifier;
 
-  public AccountTypeSelectionPanel(GlobRepository repository, Directory directory) {
+  public AccountOrCardTypeSelectionPanel(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
     DescriptionService descriptionService = directory.get(DescriptionService.class);
@@ -51,8 +49,8 @@ public class AccountTypeSelectionPanel implements AdditionalImportPanel {
 
     GlobList accounts = repository.getAll(Account.TYPE,
                                           and(isNull(Account.ACCOUNT_TYPE),
+                                              isNull(Account.CARD_TYPE),
                                               isTrue(Account.IS_VALIDATED),
-                                              isNotNull(Account.CARD_TYPE),
                                               not(fieldEquals(Account.ID, Account.EXTERNAL_ACCOUNT_ID))
                                               // pour ne pas avoir en meme temps
                                               // AccountTypeSelection et ChooseOrCreateAccout
@@ -62,7 +60,7 @@ public class AccountTypeSelectionPanel implements AdditionalImportPanel {
 
   public JPanel getPanel() {
     this.repeat.set(repository
-      .getAll(Account.TYPE, and(isNull(Account.ACCOUNT_TYPE), not(fieldEquals(Account.ID, Account.EXTERNAL_ACCOUNT_ID))))
+      .getAll(Account.TYPE, and(isNull(Account.ACCOUNT_TYPE), isNull(Account.CARD_TYPE), not(fieldEquals(Account.ID, Account.EXTERNAL_ACCOUNT_ID))))
       .sort(accountStringifier.getComparator(repository)));
     return panel;
   }
@@ -78,14 +76,17 @@ public class AccountTypeSelectionPanel implements AdditionalImportPanel {
           accountStringifier.toString(account, repository);
 
         cellBuilder.add("accountName", new JLabel(accountName));
-
-        final GlobLinkComboEditor typeEditor =
-          GlobLinkComboEditor.init(Account.ACCOUNT_TYPE, repository, directory)
-            .setShowEmptyOption(false)
-            .forceSelection(account.getKey())
-            .setName("Combo:" + accountName);
-
-        JComboBox combo = typeEditor.getComponent();
+        AccountTypeCombo accountTypeCombo = new AccountTypeCombo(repository);
+        accountTypeCombo.updateAccountTypeCombo(account);
+        final JComboBox combo = accountTypeCombo.createAccountTypeCombo();
+        combo.setName("Combo:" + accountName);
+//        final GlobLinkComboEditor typeEditor =
+//          GlobLinkComboEditor.init(Account.ACCOUNT_TYPE, repository, directory)
+//            .setShowEmptyOption(false)
+//            .forceSelection(account.getKey())
+//            .setName("Combo:" + accountName);
+//
+//        JComboBox combo = typeEditor.getComponent();
         cellBuilder.add("accountType", combo);
 
         if (showErrors && (errorTip == null)) {
@@ -95,7 +96,6 @@ public class AccountTypeSelectionPanel implements AdditionalImportPanel {
 
         cellBuilder.addDisposeListener(new Disposable() {
           public void dispose() {
-            typeEditor.dispose();
             if (errorTip != null) {
               errorTip.dispose();
             }
@@ -104,6 +104,7 @@ public class AccountTypeSelectionPanel implements AdditionalImportPanel {
       }
     });
 
-    panel =  builder.load();
+    panel = builder.load();
   }
 }
+

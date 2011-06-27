@@ -1,0 +1,76 @@
+OFXHEADER:100
+  DATA:OFXSGML
+  VERSION:102
+  SECURITY:NONE
+  ENCODING:USASCII
+  CHARSET:1252
+  COMPRESSION:NONE
+  OLDFILEUID:NONE
+  NEWFILEUID:NONE
+
+<OFX>
+  <SIGNONMSGSRSV1>
+    <SONRS>
+      <STATUS>
+        <CODE>0
+        <SEVERITY>INFO
+      </STATUS>
+      <DTSERVER>20090214102601
+      <LANGUAGE>FRA
+      <DTPROFUP>20090214102601
+      <DTACCTUP>20090214102601
+    </SONRS>
+  </SIGNONMSGSRSV1>
+  <BANKMSGSRSV1>
+    <STMTTRNRS>
+      <TRNUID>00
+      <STATUS>
+        <CODE>0
+        <SEVERITY>INFO
+      </STATUS>
+      <STMTRS>
+        <CURDEF>EUR
+        <BANKACCTFROM>
+          <BANKID>24599
+          <BRANCHID>00010
+          <ACCTID>123123123
+          <ACCTTYPE>CHECKING
+        </BANKACCTFROM>
+        <BANKTRANLIST>
+          <DTSTART>20081101
+          <DTEND>20090214
+          <STMTTRN>
+            <TRNTYPE>DEBIT
+            <DTPOSTED>20090213
+            <TRNAMT>-100.00
+            <FITID>200900200030BD27
+            <CHECKNUM>0295314
+            <MEMO>Achat etc...
+          </STMTTRN>
+
+
+        </BANKTRANLIST>
+
+        <LEDGERBAL>
+
+          <BALAMT>2705.72
+
+          <DTASOF>20090214
+
+        </LEDGERBAL>
+
+        <AVAILBAL>
+
+          <BALAMT>2705.72
+
+          <DTASOF>20090214
+
+        </AVAILBAL>
+
+      </STMTRS>
+
+    </STMTTRNRS>
+
+  </BANKMSGSRSV1>
+
+</OFX>

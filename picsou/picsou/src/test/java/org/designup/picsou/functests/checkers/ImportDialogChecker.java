@@ -251,8 +251,11 @@ public class ImportDialogChecker extends GuiChecker {
   public ImportDialogChecker defineAccount(String bank, String accountName, String number) {
     AccountEditionChecker accountEditionChecker =
       AccountEditionChecker.open(dialog.getButton("Create an account").triggerClick());
+    if (bank != null){
+      accountEditionChecker
+        .selectBank(bank);
+    }
     accountEditionChecker
-      .selectBank(bank)
       .checkAccountName("Main account")
       .setAccountName(accountName)
       .setAccountNumber(number);
@@ -298,9 +301,6 @@ public class ImportDialogChecker extends GuiChecker {
     Window window = WindowInterceptor.getModalDialog(dialog.getButton("Select the bank").triggerClick());
     BankChooserChecker chooserChecker = new BankChooserChecker(window);
     chooserChecker.selectBank(bank).validate();
-
-//    openEntityEditor().selectBank(bank)
-//      .validate();
     return this;
   }
 
@@ -474,5 +474,9 @@ public class ImportDialogChecker extends GuiChecker {
         throw new RuntimeException(e);
       }
     }
+  }
+
+  public Panel getDialog() {
+    return dialog;
   }
 }

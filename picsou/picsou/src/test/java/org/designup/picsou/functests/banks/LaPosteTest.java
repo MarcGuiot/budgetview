@@ -4,7 +4,7 @@ import org.designup.picsou.model.TransactionType;
 
 public class LaPosteTest extends SpecificBankTestCase {
   public void test() throws Exception {
-    operations.importOfxFile(getFile("laposte1.ofx"));
+    operations.importQifFile(getFile("laposte1.ofx"), null);
     timeline.selectMonths("2006/07", "2006/08");
     views.selectData();
     transactions.getTable().getHeader().click(1);
@@ -24,7 +24,7 @@ public class LaPosteTest extends SpecificBankTestCase {
   }
 
   public void test2() throws Exception {
-    operations.importOfxFile(getFile("laposte2.ofx"));
+    operations.importQifFile(getFile("laposte2.ofx"), null);
     timeline.selectMonths("2008/09", "2008/10", "2008/11", "2008/12");
     views.selectData();
     transactions.getTable().getHeader().click(1);
@@ -53,4 +53,71 @@ public class LaPosteTest extends SpecificBankTestCase {
       .check();
   }
 
+  public void testDiffered() throws Exception {
+    operations.importFirstQifFileWithDeferred(getFile("laposteCBDiffere.ofx"), "9999999X000");
+    timeline.selectAll();
+
+    views.selectData();
+    transactions.getTable().getHeader().click(1);
+    transactions
+      .initContent()
+      .add("26/01/2011", TransactionType.CREDIT_CARD, "BIO ANTONY", "", -98.44)
+      .add("25/01/2011", TransactionType.CREDIT_CARD, "ESSO RABELAIS", "", -63.01)
+      .add("23/01/2011", TransactionType.CREDIT_CARD, "SERRAIT DIDIER", "", -40.93)
+      .add("23/01/2011", TransactionType.CREDIT_CARD, "FROMAGERIE ST D", "", -28.53)
+      .add("22/01/2011", TransactionType.CREDIT_CARD, "PICARD SA 118", "", -28.85)
+      .add("21/01/2011", TransactionType.CREDIT_CARD, "MARCHE ST PIERR", "", -18.60)
+      .add("21/01/2011", TransactionType.CREDIT_CARD, "DEPARTEMENT MAR", "", -27.13)
+      .add("21/01/2011", TransactionType.CREDIT_CARD, "MERC.ST PIERRE", "", -24.85)
+      .add("21/01/2011", TransactionType.CREDIT_CARD, "BIO ANTONY", "", -12.99)
+      .add("21/01/2011", TransactionType.CREDIT_CARD, "PHOTOVIT", "", -64.64)
+      .add("20/01/2011", TransactionType.CREDIT_CARD, "BIO ANTONY", "", -58.52)
+      .add("20/01/2011", TransactionType.CREDIT_CARD, "CORA", "", -76.82)
+      .add("19/01/2011", TransactionType.CREDIT_CARD, "PHARMACIE MEDIO", "", -34.50)
+      .add("14/01/2011", TransactionType.CREDIT_CARD, "BIO ANTONY", "", -61.46)
+      .add("14/01/2011", TransactionType.CREDIT_CARD, "MONCHATRE C", "", -29.41)
+      .add("14/01/2011", TransactionType.CREDIT_CARD, "PAYPAL", "", -113.59)
+      .add("13/01/2011", TransactionType.CREDIT_CARD, "TAO THIAIS", "", -20.48)
+      .add("13/01/2011", TransactionType.CREDIT_CARD, "DECATHLON 468", "", -19.15)
+      .add("13/01/2011", TransactionType.CREDIT_CARD, "432-IKEA THIAIS", "", -43.89)
+      .add("13/01/2011", TransactionType.CREDIT_CARD, "ALICE DELICE", "", -19.95)
+      .add("13/01/2011", TransactionType.CREDIT_CARD, "PARKAGE E-LUDIK", "", -145.11)
+      .add("12/01/2011", TransactionType.CREDIT_CARD, "PAYPAL", "", -87.59)
+      .add("07/01/2011", TransactionType.CREDIT_CARD, "BIO ANTONY", "", -109.88)
+      .add("07/01/2011", TransactionType.CREDIT_CARD, "CARONBIO ANTONY", "", -87.04)
+      .add("05/01/2011", TransactionType.CREDIT_CARD, "LE PETRIN RIBEI", "", -25.90)
+      .add("05/01/2011", TransactionType.CREDIT_CARD, "KERIA C7", "", -109.00)
+      .add("29/12/2010", TransactionType.CREDIT_CARD, "BIO ANTONY", "", -85.76)
+      .add("28/12/2010", TransactionType.CREDIT_CARD, "BIO ANTONY", "", -84.01)
+      .add("28/12/2010", TransactionType.CREDIT_CARD, "MONCHATRE C", "", -67.29)
+      .add("28/12/2010", TransactionType.CREDIT_CARD, "PATHE BELLE EPI", "", -41.60)
+      .check();
+
+    operations.importWithNewAccount(getFile("laposteCC.ofx"), "compte courant");
+
+    views.selectData();
+    transactions.getTable().getHeader().click(1);
+    transactions
+      .initContent()
+      .add("02/05/2011", TransactionType.VIREMENT, "LA MUTUELLE", "", 10.90)
+      .add("02/05/2011", TransactionType.PRELEVEMENT, "CH.CCNELA", "", -100.00)
+      .add("03/05/2011", TransactionType.PRELEVEMENT, "ABONNEMENT INTE", "", -72.40)
+      .add("03/05/2011", TransactionType.PRELEVEMENT, "CNP ASSURANCES", "", -150.00)
+      .add("03/05/2011", TransactionType.PRELEVEMENT, "TELEREGLEMENT DE URSSAF DE", "", -132.00)
+      .add("04/05/2011", TransactionType.PRELEVEMENT, "CHEQUE", "", -167.00)
+      .add("04/05/2011", TransactionType.PRELEVEMENT, "VE D'ILE DE FRA", "", -86.16)
+      .add("05/05/2011", TransactionType.CREDIT_CARD, "DEBIT CARTE BANCAIRE DIFFERE", "", -2629.83)
+      .add("05/05/2011", TransactionType.PRELEVEMENT, "MMA IARD SA", "", -41.45)
+      .add("05/05/2011", TransactionType.PRELEVEMENT, "ECHEANCE PRET", "", -1361.32)
+      .add("06/05/2011", TransactionType.VIREMENT, "C.A.F DU VAL DE", "", 125.78)
+      .add("06/05/2011", TransactionType.PRELEVEMENT, "NOVALIS PREVOYA", "", -59.00)
+      .add("06/05/2011", TransactionType.PRELEVEMENT, "C R P A", "", -479.00)
+      .add("09/05/2011", TransactionType.VIREMENT, "FRANCE TELECOM", "", 118.30)
+      .add("10/05/2011", TransactionType.PRELEVEMENT, "CHEQUE", "", -475.00)
+      .add("13/05/2011", TransactionType.PRELEVEMENT, "EDF PR SIMM", "", -198.00)
+      .check();
+
+    categorization.selectTransaction("DEBIT CARTE BANCAIRE DIFFERE")
+      .selectOther().selectDeferred().selectSeries("9999999X000");
+  }
 }

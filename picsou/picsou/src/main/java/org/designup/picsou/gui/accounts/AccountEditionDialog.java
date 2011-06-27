@@ -1,11 +1,12 @@
 package org.designup.picsou.gui.accounts;
 
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.DatePicker;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.model.CurrentAccountInfo;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -15,7 +16,8 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.linkedTo;
+import static org.globsframework.model.utils.GlobMatchers.or;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -29,6 +31,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   private GlobLinkComboEditor updateModeCombo;
   private JLabel titleLabel;
   private GlobsPanelBuilder builder;
+  private Glob accountInfo;
 
   public AccountEditionDialog(final GlobRepository parentRepository, Directory directory) {
     this(directory.get(JFrame.class), parentRepository, directory);
@@ -74,7 +77,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
 
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (currentAccount == null || !changeSet.containsChanges(Account.TYPE)){
+        if (currentAccount == null || !changeSet.containsChanges(Account.TYPE)) {
           return;
         }
         Glob account = repository.get(currentAccount.getKey());
@@ -151,7 +154,10 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     updateModeCombo.setEnabled(updateModeEditable);
     Glob newAccount = localRepository.create(Account.TYPE,
                                              value(Account.ACCOUNT_TYPE, type.getId()),
-                                             value(Account.UPDATE_MODE, updateMode.getId()));
+                                             value(Account.UPDATE_MODE, updateMode.getId()),
+                                             value(Account.BANK, accountInfo != null ? accountInfo.get(CurrentAccountInfo.BANK) : null),
+                                             value(Account.POSITION, accountInfo != null ? accountInfo.get(CurrentAccountInfo.POSITION) : null),
+                                             value(Account.POSITION_DATE, accountInfo != null ? accountInfo.get(CurrentAccountInfo.POSITION_DATE) : null));
     doShow(newAccount, true);
     builder.dispose();
   }
@@ -165,6 +171,10 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
       .get();
 
     Glob account = localRepository.create(Account.TYPE, values.toArray());
+    localRepository.update(account.getKey(),
+                           value(Account.BANK, accountInfo != null ? accountInfo.get(CurrentAccountInfo.BANK) : null),
+                           value(Account.POSITION, accountInfo != null ? accountInfo.get(CurrentAccountInfo.POSITION) : null),
+                           value(Account.POSITION_DATE, accountInfo != null ? accountInfo.get(CurrentAccountInfo.POSITION_DATE) : null));
     setBalanceEditorVisible(false);
     updateModeCombo.setEnabled(!accountHasTransactions(account));
     doShow(localRepository.get(account.getKey()), true);
@@ -183,6 +193,10 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
 
   private boolean accountHasTransactions(Glob account) {
     return parentRepository.contains(Transaction.TYPE, GlobMatchers.linkedTo(account, Transaction.ACCOUNT));
+  }
+
+  public void setAccountInfo(Glob accountInfo) {
+    this.accountInfo = accountInfo;
   }
 
   private class OkAction extends AbstractAction {

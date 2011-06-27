@@ -2,7 +2,6 @@ package org.designup.picsou.bank.specific;
 
 import org.designup.picsou.bank.BankPlugin;
 import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountCardType;
 import org.designup.picsou.model.ImportedTransaction;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.MutableChangeSet;
@@ -16,10 +15,13 @@ public abstract class AbstractBankPlugin implements BankPlugin {
   public AbstractBankPlugin() {
   }
 
-  public void apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
-    GlobList existingAccounts =
-      referenceRepository.getAll(Account.TYPE,
-                                 GlobMatchers.fieldEquals(Account.NUMBER, newAccount.get(Account.NUMBER)));
+  public boolean useCreatedAccount() {
+    return true;
+  }
+
+  public void apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository,
+                    GlobRepository localRepository, MutableChangeSet changeSet) {
+    GlobList existingAccounts = getSameAccount(newAccount, referenceRepository);
     if (existingAccounts.size() == 1) {
       Glob realAccount = existingAccounts.getFirst();
       updateImportedTransaction(localRepository, newAccount, realAccount);
@@ -27,6 +29,15 @@ public abstract class AbstractBankPlugin implements BankPlugin {
     if (existingAccounts.size() == 2) {
       //
     }
+  }
+
+  protected GlobList getSameAccount(Glob newAccount, ReadOnlyGlobRepository referenceRepository) {
+    return referenceRepository.getAll(Account.TYPE,
+                                      GlobMatchers.and(
+                                        GlobMatchers.fieldEquals(Account.NUMBER, newAccount.get(Account.NUMBER))));
+  }
+
+  public void postApply(GlobList transactions, Glob account, GlobRepository repository, GlobRepository localRepository, ChangeSet set) {
   }
 
   static public void updateImportedTransaction(GlobRepository localRepository, Glob newAccount, Glob existingAccount) {

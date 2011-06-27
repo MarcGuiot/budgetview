@@ -5,6 +5,7 @@ import org.designup.picsou.bank.BankPluginService;
 import org.designup.picsou.gui.accounts.utils.Day;
 import org.designup.picsou.gui.importer.utils.NoOperations;
 import org.designup.picsou.gui.time.TimeService;
+import org.designup.picsou.gui.model.CurrentAccountInfo;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.importer.utils.DateFormatAnalyzer;
@@ -39,7 +40,6 @@ public class ImportSession {
   private ImportService importService;
   private MutableChangeSet importChangeSet;
   private GlobRepository localRepository;
-  private BankFileType fileType;
   private ChangeSetAggregator importChangeSetAggregator;
   private TypedInputStream typedStream;
   private boolean load = false;
@@ -47,6 +47,7 @@ public class ImportSession {
   private int importedOperationsCount = 0;
   private List<Integer> accountIds = Collections.emptyList();
   private ChangeSet changes;
+  private boolean isAccountNeeded;
 
   public ImportSession(GlobRepository referenceRepository, Directory directory) {
     this.referenceRepository = referenceRepository;
@@ -67,7 +68,7 @@ public class ImportSession {
     localRepository.reset(GlobList.EMPTY, Transaction.TYPE, ImportedTransaction.TYPE, Day.TYPE, CurrentMonth.TYPE,
                           DeferredCardDate.TYPE, AccountCardType.TYPE, AccountType.TYPE);
     GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, Day.TYPE, DeferredCardDate.TYPE,
-                        AccountCardType.TYPE, CurrentMonth.TYPE, Month.TYPE};
+                        AccountCardType.TYPE, CurrentMonth.TYPE, Month.TYPE, CurrentAccountInfo.TYPE};
     localRepository.reset(referenceRepository.getAll(types), types);
 
     LocalGlobRepository importRepository;
@@ -76,22 +77,22 @@ public class ImportSession {
       .copy(types).get();
 
     importRepository.startChangeSet();
+    final List<Integer> tmpAccountIds = new ArrayList<Integer>();
     try {
       typedStream = new TypedInputStream(file);
-      fileType = typedStream.getType();
+      isAccountNeeded = typedStream.getType().equals(BankFileType.QIF);
       importService.run(typedStream, referenceRepository, importRepository);
     }
     finally {
       importRepository.completeChangeSet();
       changes = importRepository.getCurrentChanges();
-      accountIds = new ArrayList<Integer>();
       changes.safeVisit(Account.TYPE, new ChangeSetVisitor() {
         public void visitCreation(Key key, FieldValues values) throws Exception {
-          accountIds.add(key.get(Account.ID));
+          tmpAccountIds.add(key.get(Account.ID));
         }
 
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-          accountIds.add(key.get(Account.ID));
+          tmpAccountIds.add(key.get(Account.ID));
         }
 
         public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
@@ -100,7 +101,7 @@ public class ImportSession {
     }
     accountIds =
       new ArrayList(Arrays.asList(importRepository.getAll(Account.TYPE,
-                                                          GlobMatchers.contained(Account.ID, accountIds))
+                                                          GlobMatchers.contained(Account.ID, tmpAccountIds))
         .sort(Account.NAME).getValues(Account.ID)));
 
 
@@ -117,6 +118,9 @@ public class ImportSession {
     importChangeSet = new DefaultChangeSet();
     importChangeSetAggregator = new ChangeSetAggregator(localRepository, importChangeSet);
 
+    Glob info = localRepository.findOrCreate(Key.create(CurrentAccountInfo.TYPE, 0));
+    localRepository.update(info.getKey(), CurrentAccountInfo.BANK, null);
+
     localRepository.startChangeSet();
     Integer currentAccoutId = null;
     try {
@@ -129,19 +133,18 @@ public class ImportSession {
       localRepository.completeChangeSet();
     }
 
-    BankPluginService bankPluginService = directory.get(BankPluginService.class);
-    bankPluginService.apply(referenceRepository, localRepository, importChangeSet);
-
     GlobList importedOperations = localRepository.getAll(ImportedTransaction.TYPE);
     if (importedOperations.isEmpty() && currentAccoutId == null) {
       throw new NoOperations();
     }
-//      }
-//      readNext();
-//    }
-//    else {
+
+    BankPluginService bankPluginService = directory.get(BankPluginService.class);
+    if (currentAccoutId != null) {
+      isAccountNeeded |= !bankPluginService.useCreatedAccount(localRepository.find(Key.create(Account.TYPE, currentAccoutId)));
+    }
+    bankPluginService.apply(referenceRepository, localRepository, importChangeSet);
+
     lastLoadOperationsCount = importedOperations.size();
-//    }
   }
 
   private List<String> getImportedTransactionFormat(final GlobRepository repository) {
@@ -152,6 +155,7 @@ public class ImportSession {
   }
 
   public Key importTransactions(Key currentlySelectedAccount, String selectedDateFormat) {
+    localRepository.delete(Key.create(CurrentAccountInfo.TYPE, 0));
     if (!load) {
       return null;
     }
@@ -159,7 +163,7 @@ public class ImportSession {
       load = false;
     }
 
-    if (fileType.equals(BankFileType.QIF)) {
+    if (isAccountNeeded) {
       GlobList transactions = localRepository.getAll(ImportedTransaction.TYPE);
       for (Glob transaction : transactions) {
         localRepository.update(transaction.getKey(), ImportedTransaction.ACCOUNT, currentlySelectedAccount.get(Account.ID));
@@ -167,6 +171,9 @@ public class ImportSession {
     }
 
     GlobList allNewTransactions = convertImportedTransaction(selectedDateFormat);
+
+    BankPluginService bankPluginService = directory.get(BankPluginService.class);
+    bankPluginService.postApply(allNewTransactions, referenceRepository, localRepository, importChangeSet);
 
     Key importKey = createImport(typedStream, allNewTransactions, localRepository);
     localRepository.deleteAll(ImportedTransaction.TYPE);
@@ -308,7 +315,7 @@ public class ImportSession {
   }
 
   public boolean isAccountNeeded() {
-    return fileType.equals(BankFileType.QIF);
+    return isAccountNeeded;
   }
 
   public boolean gotoNextContent() {

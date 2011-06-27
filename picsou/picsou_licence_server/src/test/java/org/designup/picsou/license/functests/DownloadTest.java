@@ -22,6 +22,12 @@ import java.io.FilenameFilter;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
+/*
+ il faut mettre dans la liste de banque de generateConfigContent les banques specific
+
+*/
+
+
 public class DownloadTest extends ConnectedTestCase {
   private Window window;
   private PicsouApplication picsouApplication;
@@ -198,6 +204,8 @@ public class DownloadTest extends ConnectedTestCase {
                            "      <bankEntity id=\"10807\"/> \n" +
                            "      <bankEntity id=\"17515\"/> \n" +
                            "      <bankEntity id=\"4321\"/> \n" +
+                           "      <bankEntity id=\"20041\"/> \n" +
+                           "      <bankEntity id=\"24599\"/> \n" +
                            "    </bank>\n" +
                            "    <transactionMatcher ofxName=\"STUPID HEADER .*\"\n" +
                            "                        transactionTypeName=\"virement\" " +
@@ -215,16 +223,19 @@ public class DownloadTest extends ConnectedTestCase {
     return content;
   }
 
+  //org.objectweb.asm.util.ASMifierClassVisitor
+  ///home/guiot/dev/java/lesueur/ref/picsou/picsou_licence_server/target/test-classes/org/designup/picsou/license/functests/DummyBankPlugin.class
+
   public static class DummyBankPluginDump implements Opcodes {
 
-    public byte[] dump() throws Exception {
+    public static byte[] dump() throws Exception {
 
       ClassWriter cw = new ClassWriter(0);
       FieldVisitor fv;
       MethodVisitor mv;
       AnnotationVisitor av0;
 
-      cw.visit(V1_5, ACC_PUBLIC + ACC_SUPER, "org/designup/picsou/license/functests/DummyBankPlugin", null, "java/lang/Object", new String[]{"org/designup/picsou/bank/BankPlugin"});
+      cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, "org/designup/picsou/license/functests/DummyBankPlugin", null, "java/lang/Object", new String[]{"org/designup/picsou/bank/BankPlugin"});
 
       {
         mv = cw.visitMethod(ACC_PUBLIC, "<init>", "(Lorg/globsframework/model/GlobRepository;Lorg/globsframework/utils/directory/Directory;)V", null, null);
@@ -254,6 +265,14 @@ public class DownloadTest extends ConnectedTestCase {
         mv.visitEnd();
       }
       {
+        mv = cw.visitMethod(ACC_PUBLIC, "useCreatedAccount", "()Z", null, null);
+        mv.visitCode();
+        mv.visitInsn(ICONST_0);
+        mv.visitInsn(IRETURN);
+        mv.visitMaxs(1, 1);
+        mv.visitEnd();
+      }
+      {
         mv = cw.visitMethod(ACC_PUBLIC, "apply", "(Lorg/globsframework/model/Glob;Lorg/globsframework/model/ReadOnlyGlobRepository;Lorg/globsframework/model/GlobRepository;Lorg/globsframework/model/delta/MutableChangeSet;)V", null, null);
         mv.visitCode();
         mv.visitVarInsn(ALOAD, 3);
@@ -270,6 +289,7 @@ public class DownloadTest extends ConnectedTestCase {
         mv.visitVarInsn(ASTORE, 6);
         Label l0 = new Label();
         mv.visitLabel(l0);
+        mv.visitFrame(Opcodes.F_APPEND, 2, new Object[]{"org/globsframework/model/GlobList", "java/util/Iterator"}, 0, null);
         mv.visitVarInsn(ALOAD, 6);
         mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z");
         Label l1 = new Label();
@@ -287,8 +307,16 @@ public class DownloadTest extends ConnectedTestCase {
         mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/GlobRepository", "update", "(Lorg/globsframework/model/Key;Lorg/globsframework/metamodel/Field;Ljava/lang/Object;)V");
         mv.visitJumpInsn(GOTO, l0);
         mv.visitLabel(l1);
+        mv.visitFrame(Opcodes.F_CHOP, 1, null, 0, null);
         mv.visitInsn(RETURN);
         mv.visitMaxs(5, 8);
+        mv.visitEnd();
+      }
+      {
+        mv = cw.visitMethod(ACC_PUBLIC, "postApply", "(Lorg/globsframework/model/GlobList;Lorg/globsframework/model/Glob;Lorg/globsframework/model/GlobRepository;Lorg/globsframework/model/GlobRepository;Lorg/globsframework/model/ChangeSet;)V", null, null);
+        mv.visitCode();
+        mv.visitInsn(RETURN);
+        mv.visitMaxs(0, 6);
         mv.visitEnd();
       }
       {

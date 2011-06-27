@@ -2,13 +2,11 @@ package org.designup.picsou.gui.importer.additionalactions;
 
 import org.designup.picsou.gui.accounts.AccountEditionDialog;
 import org.designup.picsou.gui.importer.AdditionalImportAction;
+import org.designup.picsou.gui.model.CurrentAccountInfo;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
-import org.globsframework.model.FieldValue;
+import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -53,6 +51,11 @@ public class AccountEditionAction implements AdditionalImportAction {
         }
         if (accounts.size() == 0) {
           AccountEditionDialog dialog = new AccountEditionDialog(parent, repository, directory);
+          Glob accountInfo = repository.find(Key.create(CurrentAccountInfo.TYPE, 0));
+
+          if (accountInfo != null){
+            dialog.setAccountInfo(accountInfo);
+          }
           dialog.showWithNewAccount(value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()));
         }
       }
