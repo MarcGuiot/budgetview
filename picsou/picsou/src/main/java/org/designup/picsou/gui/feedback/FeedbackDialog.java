@@ -3,6 +3,7 @@ package org.designup.picsou.gui.feedback;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.model.User;
@@ -14,6 +15,7 @@ import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Files;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -126,10 +128,13 @@ public class FeedbackDialog {
                                                   mailSubject.getText(),
                                                   getMessageText(),
                                                   new ConfigService.Listener() {
-                                                    public void sent() {
+                                                    public void sent(String mail, String title, String content) {
+                                                      Log.write("Mail sent from " + mail + " title : " + title + "\n" + content);
                                                     }
 
-                                                    public void sendFail() {
+                                                    public void sendFail(String mail, String title, String content) {
+                                                      Log.write("Fail to sent mail from " + mail + " title : " + title + "\n" + content);
+//                                                      MessageDialog.show("");
                                                     }
                                                   });
       dialog.setVisible(false);

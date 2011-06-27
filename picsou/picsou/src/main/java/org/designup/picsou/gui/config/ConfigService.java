@@ -292,9 +292,9 @@ public class ConfigService {
   }
 
   public interface Listener {
-    void sent();
+    void sent(String mail, String title, String content);
 
-    void sendFail();
+    void sendFail(String mail, String title, String content);
   }
 
   synchronized public void sendMail(final String toMail, final String fromMail,
@@ -316,23 +316,25 @@ public class ConfigService {
           updateConnectionStatus(e);
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-              listener.sendFail();
+              Log.write("mail not sent", e);
+              listener.sendFail(fromMail, title, content);
             }
           });
           return;
         }
-        int statusCode = postMethod.getStatusCode();
+        final int statusCode = postMethod.getStatusCode();
         if (statusCode == 200) {
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-              listener.sent();
+              listener.sent(fromMail, title, content);
             }
           });
         }
         else {
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-              listener.sendFail();
+              Log.write("Mail not sent with error code " + statusCode);
+              listener.sendFail(fromMail, title, content);
             }
           });
         }

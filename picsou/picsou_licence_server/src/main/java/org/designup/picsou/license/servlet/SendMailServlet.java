@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 public class SendMailServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("sendMail");
@@ -21,31 +22,37 @@ public class SendMailServlet extends HttpServlet {
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setCharacterEncoding("UTF-8");
-    String mailTo = req.getHeader(ConfigService.HEADER_TO_MAIL);
-    if (Strings.isNullOrEmpty(mailTo)) {
-      logger.info("sendMail : missing mail address " + (mailTo == null ? "<no email>" : mailTo));
-      resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-      return;
-    }
+    try {
+      req.setCharacterEncoding("UTF-8");
+      resp.setCharacterEncoding("UTF-8");
+      String mailTo = req.getHeader(ConfigService.HEADER_TO_MAIL);
+      if (Strings.isNullOrEmpty(mailTo)) {
+        logger.info("sendMail : missing mail address " + (mailTo == null ? "<no email>" : mailTo));
+        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        return;
+      }
 
-    String content = ConfigService.decodeContent(req.getHeader(ConfigService.HEADER_MAIL_CONTENT));
-    String mailFrom = req.getHeader(ConfigService.HEADER_MAIL);
-    String title = req.getHeader(ConfigService.HEADER_MAIL_TITLE);
-    if (Strings.isNullOrEmpty(content)) {
-      logger.info("sendMail : empty content" + mailTo + " from : " + mailFrom + " title : " + title);
-      resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-      return;
-    }
+      String content = ConfigService.decodeContent(req.getHeader(ConfigService.HEADER_MAIL_CONTENT));
+      String mailFrom = req.getHeader(ConfigService.HEADER_MAIL);
+      String title = req.getHeader(ConfigService.HEADER_MAIL_TITLE);
+      logger.info("mail from " + mailFrom +  "\ntitle " + title +  "\n mail : " + content + "\n");
+      if (Strings.isNullOrEmpty(content)) {
+        logger.info("sendMail : empty content" + mailTo + " from : " + mailFrom + " title : " + title);
+        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        return;
+      }
 
-    String lang = req.getHeader(ConfigService.HEADER_LANG);
-    mailTo = mailTo.trim();
-    content = content.trim();
-    mailFrom = mailFrom.trim();
-    if (mailTo.equals(ConfigService.MAIL_CONTACT)){
-      mailer.sendToSupport(mailFrom, title, content);
+      String lang = req.getHeader(ConfigService.HEADER_LANG);
+      mailTo = mailTo.trim();
+      content = content.trim();
+      mailFrom = mailFrom.trim();
+      if (mailTo.equals(ConfigService.MAIL_CONTACT)){
+        mailer.sendToSupport(mailFrom, title, content);
+      }
+      resp.setStatus(HttpServletResponse.SC_OK);
     }
-    resp.setStatus(HttpServletResponse.SC_OK);
+    catch (Exception e) {
+      logger.error("sendMail fail : ", e);
+    }
   }
 }

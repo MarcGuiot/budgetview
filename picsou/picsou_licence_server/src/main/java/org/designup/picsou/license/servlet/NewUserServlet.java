@@ -54,89 +54,95 @@ public class NewUserServlet extends HttpServlet {
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    req.setCharacterEncoding("UTF-8");
-    resp.setCharacterEncoding("UTF-8");
-    logger.info("receive new User  : ");
-    String mail = req.getParameter(PAYER_EMAIL);
-    logger.info("NewUser : mail : '" + mail);
+    String mail = "???";
+    try {
+      req.setCharacterEncoding("UTF-8");
+      resp.setCharacterEncoding("UTF-8");
+      logger.info("receive new User  : ");
+      mail = req.getParameter(PAYER_EMAIL);
+      logger.info("NewUser : mail : '" + mail);
 
-    String transactionId = "";
-    String paymentStatus = "";
-    String receiverEmail = "";
-    PostMethod postMethod = new PostMethod(PAYPAL_CONFIRM_URL);
-    postMethod.getParams().setContentCharset("UTF-8");
-    postMethod.setParameter("cmd", "_notify-validate");
-    Map<String, String[]> map = (Map<String, String[]>)req.getParameterMap();
-    StringBuffer paramaters = new StringBuffer();
-    for (Map.Entry<String,String[]> entry : map.entrySet()) {
-      String key = entry.getKey();
-      for (String name : entry.getValue()) {
-        postMethod.setParameter(key, name);
-        paramaters.append(key).append("='").append(req.getParameter(key))
-          .append("'; ");
+      String transactionId = "";
+      String paymentStatus = "";
+      String receiverEmail = "";
+      PostMethod postMethod = new PostMethod(PAYPAL_CONFIRM_URL);
+      postMethod.getParams().setContentCharset("UTF-8");
+      postMethod.setParameter("cmd", "_notify-validate");
+      Map<String, String[]> map = (Map<String, String[]>)req.getParameterMap();
+      StringBuffer paramaters = new StringBuffer();
+      for (Map.Entry<String, String[]> entry : map.entrySet()) {
+        String key = entry.getKey();
+        for (String name : entry.getValue()) {
+          postMethod.setParameter(key, name);
+          paramaters.append(key).append("='").append(req.getParameter(key))
+            .append("'; ");
+        }
+        if (key.equalsIgnoreCase(TRANSACTION_ID)) {
+          transactionId = req.getParameter(key);
+        }
+        else if (key.equalsIgnoreCase(PAYMENT_STATUS_ID)) {
+          paymentStatus = req.getParameter(key);
+        }
+        else if (key.equalsIgnoreCase(RECEIVER_EMAIL)) {
+          receiverEmail = req.getParameter(key);
+        }
       }
-      if (key.equalsIgnoreCase(TRANSACTION_ID)) {
-        transactionId = req.getParameter(key);
-      }
-      else if (key.equalsIgnoreCase(PAYMENT_STATUS_ID)) {
-        paymentStatus = req.getParameter(key);
-      }
-      else if (key.equalsIgnoreCase(RECEIVER_EMAIL)) {
-        receiverEmail = req.getParameter(key);
-      }
-    }
-    logger.info(paramaters.toString());
-    if (!receiverEmail.equalsIgnoreCase("paypal@mybudgetview.fr")) {
-      logger.error("NewUser : Bad mail : " + receiverEmail );
-      return;
-    }
-    if (!paymentStatus.equalsIgnoreCase("Completed")) {
-      logger.info("NewUser : status " + paymentStatus);
-      return;
-    }
-    int result = client.executeMethod(postMethod);
-    if (result == 200) {
-      InputStream responseBodyAsStream = postMethod.getResponseBodyAsStream();
-      byte[] buffer = new byte[500];
-      int readed = responseBodyAsStream.read(buffer);
-      if (readed == -1) {
-        logger.error("NewUser : Paypal empty response");
+      logger.info(paramaters.toString());
+      if (!receiverEmail.equalsIgnoreCase("paypal@mybudgetview.fr")) {
+        logger.error("NewUser : Bad mail : " + receiverEmail);
         return;
       }
-      String content = new String(buffer, 0, readed);
-      if (content.equalsIgnoreCase("VERIFIED")) {
-        logger.info("NewUser : mail : '" + mail + " VERIFIED");
-        SqlConnection db = sqlService.getDb();
-        try {
-          register(resp, mail, transactionId, sqlService.getDb());
+      if (!paymentStatus.equalsIgnoreCase("Completed")) {
+        logger.info("NewUser : status " + paymentStatus);
+        return;
+      }
+      int result = client.executeMethod(postMethod);
+      if (result == 200) {
+        InputStream responseBodyAsStream = postMethod.getResponseBodyAsStream();
+        byte[] buffer = new byte[500];
+        int readed = responseBodyAsStream.read(buffer);
+        if (readed == -1) {
+          logger.error("NewUser : Paypal empty response");
+          return;
         }
-        catch (Exception e) {
-          logger.error("NewUser : RegisterServlet:doPost", e);
-          SqlConnection db2 = sqlService.getDb();
+        String content = new String(buffer, 0, readed);
+        if (content.equalsIgnoreCase("VERIFIED")) {
+          logger.info("NewUser : mail : '" + mail + " VERIFIED");
+          SqlConnection db = sqlService.getDb();
           try {
-            register(resp, mail, transactionId, db2);
+            register(resp, mail, transactionId, sqlService.getDb());
           }
-          catch (Exception e1) {
-            resp.setStatus(HttpServletResponse.SC_OK);
-            if (db2 != null) {
-              db2.commitAndClose();
+          catch (Exception e) {
+            logger.error("NewUser : RegisterServlet:doPost", e);
+            SqlConnection db2 = sqlService.getDb();
+            try {
+              register(resp, mail, transactionId, db2);
+            }
+            catch (Exception e1) {
+              resp.setStatus(HttpServletResponse.SC_OK);
+              if (db2 != null) {
+                db2.commitAndClose();
+              }
+            }
+          }
+          finally {
+            if (db != null) {
+              db.commitAndClose();
             }
           }
         }
-        finally {
-          if (db != null) {
-            db.commitAndClose();
-          }
+        else {
+          logger.error("NewUser : Paypal refuse confirmation " + content);
+          resp.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
         }
       }
       else {
-        logger.error("NewUser : Paypal refuse confirmation " + content);
+        logger.error("NewUser : Paypal refuse connection " + result);
         resp.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
       }
     }
-    else {
-      logger.error("NewUser : Paypal refuse connection " + result);
-      resp.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
+    catch (Exception e) {
+      logger.error("For newUser :  " + mail, e);
     }
   }
 
