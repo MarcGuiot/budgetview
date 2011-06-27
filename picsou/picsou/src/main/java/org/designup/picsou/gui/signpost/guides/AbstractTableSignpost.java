@@ -61,11 +61,19 @@ public abstract class AbstractTableSignpost extends Signpost {
 
   protected BalloonTip createBalloonTip(JComponent component, String text) {
     return new TablecellBalloonTip(table, text,
-                                   0, 2,
+                                   getRow(), getColumn(),
                                    BALLOON_STYLE,
                                    BalloonTip.Orientation.RIGHT_BELOW,
                                    BalloonTip.AttachLocation.CENTER,
                                    20, 20, false);
+  }
+
+  protected int getRow() {
+    return 0;
+  }
+
+  protected int getColumn() {
+    return 2;
   }
 
   protected abstract void update(JTable table);

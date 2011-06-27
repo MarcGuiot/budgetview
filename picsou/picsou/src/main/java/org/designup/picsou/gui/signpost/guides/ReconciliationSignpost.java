@@ -31,4 +31,8 @@ public class ReconciliationSignpost extends AbstractTableSignpost {
       dispose();
     }
   }
+
+  protected int getColumn() {
+    return 0;
+  }
 }
