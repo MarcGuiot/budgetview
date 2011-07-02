@@ -22,7 +22,7 @@ public class User {
 
   public static StringField NAME;
   public static StringField PASSWORD;
-  public static StringField MAIL;
+  public static StringField EMAIL;
   public static StringField ACTIVATION_CODE;
   public static BlobField SIGNATURE;
   public static IntegerField ACTIVATION_STATE;

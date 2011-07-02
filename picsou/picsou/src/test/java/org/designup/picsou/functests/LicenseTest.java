@@ -65,4 +65,11 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     transactionCreation.checkTrialExpiredMessage();
   }
+
+  public void testFeedbackUsesEmailWhenAvailable() throws Exception {
+    feedbackView.checkFeedbackLinksTo("http://support.mybudgetview.fr/anonymous_requests/new");
+
+    LicenseActivationChecker.enterLicense(mainWindow, "admin", "1234");
+    feedbackView.checkFeedbackLinksTo("http://support.mybudgetview.fr/anonymous_requests/new?email=admin");
+  }
 }

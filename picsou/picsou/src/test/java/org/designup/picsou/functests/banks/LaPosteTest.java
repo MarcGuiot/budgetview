@@ -53,7 +53,7 @@ public class LaPosteTest extends SpecificBankTestCase {
       .check();
   }
 
-  public void testDiffered() throws Exception {
+  public void testDeferred() throws Exception {
     operations.importFirstQifFileWithDeferred(getFile("laposteCBDiffere.ofx"), "9999999X000");
     timeline.selectAll();
 

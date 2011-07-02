@@ -20,7 +20,7 @@ public class FeedbackView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/feedback/feedbackView.splits",
                                                       repository, directory);
 
-    builder.add("sendFeedback", new SendFeedbackAction(Lang.get("feedback.send.text"), directory));
+    builder.add("sendFeedback", new SendFeedbackAction(Lang.get("feedback.send.text"), repository, directory));
     builder.add("help", new HelpAction(Lang.get("feedback.help.text"), "index", Lang.get("feedback.help.tooltip"), directory));
     builder.add("twitter", new TwitterAction(directory));
     builder.add("facebook", new FacebookAction(directory));

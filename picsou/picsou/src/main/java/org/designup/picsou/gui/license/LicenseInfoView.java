@@ -122,7 +122,7 @@ public class LicenseInfoView extends View {
     else if (days == 0) {
       return Lang.get("license.info.last.day");
     }
-    else if (user.get(User.MAIL) == null || state == null) {
+    else if (user.get(User.EMAIL) == null || state == null) {
       return Lang.get("license.expiration.message");
     }
     return "";
@@ -134,7 +134,7 @@ public class LicenseInfoView extends View {
     }
 
     if (state == User.ACTIVATION_FAILED_MAIL_SENT) {
-      return Lang.get("license.activation.failed.mailSent", user.get(User.MAIL));
+      return Lang.get("license.activation.failed.mailSent", user.get(User.EMAIL));
     }
     else if (state == User.ACTIVATION_FAILED_CAN_NOT_CONNECT || state == User.ACTIVATION_FAILED_HTTP_REQUEST) {
       return Lang.get("license.remote.connect");

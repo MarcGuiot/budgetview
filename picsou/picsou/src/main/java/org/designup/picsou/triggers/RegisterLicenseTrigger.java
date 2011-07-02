@@ -29,15 +29,15 @@ public class RegisterLicenseTrigger implements ChangeSetListener {
           if (values.contains(User.SIGNATURE)) {
             signature = values.get(User.SIGNATURE);
           }
-          if (values.contains(User.MAIL)) {
-            mail = values.get(User.MAIL);
+          if (values.contains(User.EMAIL)) {
+            mail = values.get(User.EMAIL);
           }
           if (values.contains(User.ACTIVATION_CODE)) {
             activationCode = values.get(User.ACTIVATION_CODE);
           }
           if (mail != null || signature != null || activationCode != null) {
             Glob user = repository.get(User.KEY);
-            mail = user.get(User.MAIL);
+            mail = user.get(User.EMAIL);
             signature = user.get(User.SIGNATURE);
             activationCode = user.get(User.ACTIVATION_CODE);
             if (mail != null && signature != null && activationCode != null) {

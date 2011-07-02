@@ -25,11 +25,11 @@ public class LicenseActivationChecker {
     return new LicenseActivationChecker(WindowInterceptor.getModalDialog(trigger));
   }
 
-  static public void enterLicense(Window window, final String mail, final String code) {
+  static public void enterLicense(Window window, final String email, final String code) {
     Integer.parseInt(code);
     enterLicense(window, new WindowHandler() {
       public Trigger process(Window window) throws Exception {
-        window.getInputTextBox("ref-mail").setText(mail);
+        window.getInputTextBox("ref-mail").setText(email);
         TextBox codeField = window.getInputTextBox("ref-code");
         codeField.clear();
         codeField.appendText(code);
@@ -38,10 +38,10 @@ public class LicenseActivationChecker {
     });
   }
 
-  static public void enterBadLicense(Window window, final String mail, final String code, final String message) {
+  static public void enterBadLicense(Window window, final String email, final String code, final String message) {
     enterLicense(window, new WindowHandler() {
       public Trigger process(Window window) throws Exception {
-        window.getInputTextBox("ref-mail").setText(mail);
+        window.getInputTextBox("ref-mail").setText(email);
         window.getInputTextBox("ref-code").setText(code);
         TextBox box = window.getTextBox("connectionMessage");
         assertTrue(box.isVisible());

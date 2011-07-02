@@ -138,7 +138,7 @@ public class MainPanel {
 
     importFileAction = ImportFileAction.initForMenu(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
-    sendFeedbackAction = new SendFeedbackAction(directory);
+    sendFeedbackAction = new SendFeedbackAction(repository, directory);
     backupAction = new BackupAction(repository, directory);
     restoreActionFileAction = new RestoreFileAction(repository, directory);
     restoreSnapshotMenuAction = new RestoreSnapshotMenuAction(directory, repository);

@@ -24,9 +24,9 @@ public class RegistrationTrigger implements ChangeSetListener {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(User.ACTIVATION_CODE) || values.contains(User.MAIL)) {
+        if (values.contains(User.ACTIVATION_CODE) || values.contains(User.EMAIL)) {
           Glob user = repository.get(User.KEY);
-          final String mail = user.get(User.MAIL);
+          final String mail = user.get(User.EMAIL);
           final String code = user.get(User.ACTIVATION_CODE);
           if (Strings.isNotEmpty(mail) && Strings.isNotEmpty(code)) {
             Thread thread = new RegistrationThread(mail, code, repository);

@@ -38,7 +38,7 @@ public class LicenseExpirationDialog {
     sendAction = new AbstractAction(Lang.get("license.mail.request.send")) {
       public void actionPerformed(ActionEvent e) {
         final Glob user = repository.get(User.KEY);
-        final String mail = user.get(User.MAIL);
+        final String mail = user.get(User.EMAIL);
         if (mail != null) {
           Thread thread = new Thread() {
             public void run() {
@@ -58,18 +58,18 @@ public class LicenseExpirationDialog {
     };
     builder.add("sendMail", sendAction);
     builder.add("mailAdress",
-                GlobTextEditor.init(User.MAIL, localGlobRepository, directory)
+                GlobTextEditor.init(User.EMAIL, localGlobRepository, directory)
                   .forceSelection(User.KEY));
     localGlobRepository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(User.KEY)) {
           response.setVisible(false);
-          sendAction.setEnabled(Strings.isNotEmpty(repository.get(User.KEY).get(User.MAIL)));
+          sendAction.setEnabled(Strings.isNotEmpty(repository.get(User.KEY).get(User.EMAIL)));
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        sendAction.setEnabled(Strings.isNotEmpty(repository.get(User.KEY).get(User.MAIL)));
+        sendAction.setEnabled(Strings.isNotEmpty(repository.get(User.KEY).get(User.EMAIL)));
       }
     });
     dialog = PicsouDialog.createWithButton(parent, builder.<JPanel>load(), new ValidateAction(), directory);

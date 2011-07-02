@@ -62,7 +62,7 @@ public class LicenseActivationDialog {
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog){
       protected void processCustomLink(String href) {
         if ("newCode".equals(href)) {
-          final String mail = localRepository.get(User.KEY).get(User.MAIL);
+          final String mail = localRepository.get(User.KEY).get(User.EMAIL);
           if (Strings.isNotEmpty(mail)) {
             Thread thread = new Thread() {
               public void run() {
@@ -81,7 +81,7 @@ public class LicenseActivationDialog {
         }
       }
     });
-    mailEditor = builder.addEditor("ref-mail", User.MAIL).setNotifyOnKeyPressed(true);
+    mailEditor = builder.addEditor("ref-mail", User.EMAIL).setNotifyOnKeyPressed(true);
     builder.addEditor("ref-code", User.ACTIVATION_CODE)
       .setValidationAction(validateAction)
       .setNotifyOnKeyPressed(true);
@@ -107,7 +107,7 @@ public class LicenseActivationDialog {
   }
 
   private void updateSendNewCodeMessage(Glob user) {
-    String mail = user.get(User.MAIL);
+    String mail = user.get(User.EMAIL);
     if (Strings.isNullOrEmpty(mail)) {
       messageSendCode.setText(Lang.get("license.askForCode.noMail"));
     }
@@ -139,10 +139,10 @@ public class LicenseActivationDialog {
               localRepository.dispose();
             }
             else if (activationState == User.ACTIVATION_FAILED_MAIL_SENT) {
-              updateDialogState("license.activation.failed.mailSent", localRepository.get(User.KEY).get(User.MAIL));
+              updateDialogState("license.activation.failed.mailSent", localRepository.get(User.KEY).get(User.EMAIL));
             }
             else if (activationState == User.ACTIVATION_FAILED_MAIL_SENT) {
-              updateDialogState("license.code.invalid", localRepository.get(User.KEY).get(User.MAIL));
+              updateDialogState("license.code.invalid", localRepository.get(User.KEY).get(User.EMAIL));
             }
             else if (activationState == User.ACTIVATION_FAILED_MAIL_UNKNOWN) {
               updateDialogState("license.mail.unknown");
@@ -219,7 +219,7 @@ public class LicenseActivationDialog {
       {
         Utils.beginRemove();
         Glob user = localRepository.get(User.KEY);
-        if ("admin".equals(user.get(User.MAIL))) {
+        if ("admin".equals(user.get(User.EMAIL))) {
           localRepository.update(User.KEY, User.IS_REGISTERED_USER, true);
           localRepository.commitChanges(false);
           localDirectory.get(UndoRedoService.class).cleanUndo();
@@ -240,9 +240,9 @@ public class LicenseActivationDialog {
 
     private boolean checkContainsValidChange() {
       return (localRepository.getCurrentChanges().containsUpdates(User.ACTIVATION_CODE)
-              || localRepository.getCurrentChanges().containsUpdates(User.MAIL))
+              || localRepository.getCurrentChanges().containsUpdates(User.EMAIL))
              && (Strings.isNotEmpty(localRepository.get(User.KEY).get(User.ACTIVATION_CODE)))
-             && (Strings.isNotEmpty(localRepository.get(User.KEY).get(User.MAIL)));
+             && (Strings.isNotEmpty(localRepository.get(User.KEY).get(User.EMAIL)));
     }
   }
 

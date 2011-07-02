@@ -3,7 +3,6 @@ package org.designup.picsou.gui.feedback;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.model.User;
@@ -46,7 +45,7 @@ public class FeedbackDialog {
     this.contentEditor = new JTextArea();
     builder.add("mailContent", contentEditor);
 
-    String userMail = repository.get(User.KEY).get(User.MAIL);
+    String userMail = repository.get(User.KEY).get(User.EMAIL);
 
     this.userMail = new JTextField(userMail);
     builder.add("fromMail", this.userMail);
