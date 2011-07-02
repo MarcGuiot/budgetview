@@ -55,6 +55,15 @@ table#table_header td {
   vertical-align: middle;
 }
 
+div.entry-container p.entry_user {
+  display: none;
+}
+
+div.entry img {
+  background: #FFF;
+  margin-bottom: 5px;
+}
+
 /* ========== HOME ============ */
 
 body.home .user_formatted h1 {
