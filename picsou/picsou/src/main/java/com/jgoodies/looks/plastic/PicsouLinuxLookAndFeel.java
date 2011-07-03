@@ -1,5 +1,6 @@
 package com.jgoodies.looks.plastic;
 
+import org.designup.picsou.gui.components.RoundButtonUI;
 import org.designup.picsou.gui.plaf.ApplicationLAF;
 import org.designup.picsou.gui.plaf.*;
 import org.jdesktop.swingx.JXDatePicker;
@@ -16,6 +17,7 @@ public class PicsouLinuxLookAndFeel extends PlasticXPLookAndFeel {
     super.initClassDefaults(defaults);
     try {
       ApplicationLAF.initUI(defaults, PicsouButtonUI.class, "ButtonUI");
+      ApplicationLAF.initUI(defaults, RoundButtonUI.class, "RoundButtonUI");
       ApplicationLAF.initUI(defaults, PicsouWindowsLabelUI.class, "LabelUI");
       ApplicationLAF.initUI(defaults, PicsouOptionPaneUI.class, "OptionPaneUI");
       ApplicationLAF.initUI(defaults, PicsouWindowsFileChooserUI.class, "FileChooserUI");

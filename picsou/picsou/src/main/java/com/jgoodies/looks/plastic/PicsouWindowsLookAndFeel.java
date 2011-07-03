@@ -1,6 +1,7 @@
 package com.jgoodies.looks.plastic;
 
 import com.jgoodies.looks.LookUtils;
+import org.designup.picsou.gui.components.RoundButtonUI;
 import org.designup.picsou.gui.plaf.ApplicationLAF;
 import org.designup.picsou.gui.plaf.PicsouButtonUI;
 import org.designup.picsou.gui.plaf.PicsouWindowsLabelUI;
@@ -21,6 +22,7 @@ public class PicsouWindowsLookAndFeel extends Plastic3DLookAndFeel {
       ApplicationLAF.initUI(defaults, PicsouButtonUI.class, "ButtonUI");
       ApplicationLAF.initUI(defaults, PicsouWindowsLabelUI.class, "LabelUI");
       ApplicationLAF.initUI(defaults, PicsouButtonUI.class, "ToggleButtonUI");
+      ApplicationLAF.initUI(defaults, RoundButtonUI.class, "RoundButtonUI");
       ApplicationLAF.initUI(defaults, com.jgoodies.looks.plastic.PlasticComboBoxUI.class, "ComboBoxUI");
       ApplicationLAF.initUI(defaults, com.jgoodies.looks.plastic.PlasticScrollBarUI.class, "ScrollBarUI");
       ApplicationLAF.initUI(defaults, com.jgoodies.looks.plastic.PlasticSpinnerUI.class, "SpinnerUI");
