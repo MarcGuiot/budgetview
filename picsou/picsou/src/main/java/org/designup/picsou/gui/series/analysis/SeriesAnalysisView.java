@@ -179,7 +179,7 @@ public class SeriesAnalysisView extends View {
           }
           seriesEvolutionLabelColumn.setReferenceMonthId(referenceMonthId);
           tableView.reset();
-          chartPanel.monthSelected(referenceMonthId);
+          chartPanel.monthSelected(referenceMonthId, monthIds);
         }
       }
     }, Month.TYPE);

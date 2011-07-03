@@ -129,11 +129,11 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEstimatedPosition(1410);
     seriesAnalysis.balanceChart.getLeftDataset()
       .checkSize(1)
-      .checkValue("Income", 1500.00);
+      .checkValue("Income", 3000.00);
     seriesAnalysis.balanceChart.getRightDataset()
       .checkSize(2)
-      .checkValue("Recurring", 1529.90)
-      .checkValue("Variable", 90.00);
+      .checkValue("Recurring", 3059.80)
+      .checkValue("Variable", 180.00);
 
     timeline.selectMonth("2008/09");
     mainAccounts.checkEstimatedPosition(1420 + 1500 - 1529.90 - 80 - 10 - 10);
