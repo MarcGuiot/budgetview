@@ -129,12 +129,6 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .setEndDate(200805)
       .validate();
 
-    budgetView.extras.editSeries("Misc")
-      .setEveryMonth()
-      .clearStartDate()
-      .clearEndDate()
-      .validate();
-
     savingsAccounts.createSavingsAccount("Livret", 1000.00);
     budgetView.savings.createSeries()
       .setName("Epargne")

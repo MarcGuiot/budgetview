@@ -16,6 +16,8 @@ import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldStrictlyGreaterThan;
+
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
@@ -24,7 +26,6 @@ import org.globsframework.utils.directory.Directory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.Date;
 
 public class UpgradeTrigger implements ChangeSetListener {
   private Directory directory;
@@ -156,16 +157,16 @@ public class UpgradeTrigger implements ChangeSetListener {
 
   private void updateSavingsSeries(GlobRepository repository, Glob series) {
     Boolean sens = null;
-    GlobList budget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID)).getGlobs();
-    for (Glob glob : budget) {
-      if (glob.get(SeriesBudget.AMOUNT) == null){
+    GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID)).getGlobs();
+    for (Glob budget : budgets) {
+      if (budget.get(SeriesBudget.AMOUNT) == null){
         continue;
       }
-      if (glob.get(SeriesBudget.AMOUNT) > 0) {
+      if (budget.get(SeriesBudget.AMOUNT) > 0) {
         sens = true;
         break;
       }
-      if (glob.get(SeriesBudget.AMOUNT) < 0) {
+      if (budget.get(SeriesBudget.AMOUNT) < 0) {
         sens = false;
         break;
       }
@@ -296,9 +297,8 @@ public class UpgradeTrigger implements ChangeSetListener {
       final Integer lastMonthId = uncategorizedTransactions.getSortedSet(Transaction.MONTH).last();
       repository
         .getAll(SeriesBudget.TYPE,
-                and(
-                  fieldEquals(SeriesBudget.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                  GlobMatchers.fieldStrictlyGreaterThan(SeriesBudget.MONTH, lastMonthId)))
+                and(fieldEquals(SeriesBudget.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                    fieldStrictlyGreaterThan(SeriesBudget.MONTH, lastMonthId)))
         .safeApply(new GlobFunctor() {
           public void run(Glob seriesBudget, GlobRepository repository) throws Exception {
             repository.update(seriesBudget.getKey(), value(SeriesBudget.AMOUNT, 0.0));

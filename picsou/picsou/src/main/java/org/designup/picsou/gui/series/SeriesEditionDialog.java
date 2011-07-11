@@ -9,7 +9,6 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.MonthYearStringifier;
 import org.designup.picsou.gui.series.edition.MonthCheckBoxUpdater;
 import org.designup.picsou.gui.series.subseries.SubSeriesEditionPanel;
-import org.designup.picsou.gui.signpost.actions.SetSignpostStatusAction;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AutomaticSeriesBudgetTrigger;
@@ -29,6 +28,7 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -104,10 +104,10 @@ public class SeriesEditionDialog {
     localRepository.addTrigger(new SingleMonthProfileTypeUpdater());
     localRepository.addTrigger(new ResetAllBudgetIfInAutomaticAndNoneAccountAreImported());
     addSeriesCreationTriggers(localRepository, new ProfileTypeSeriesTrigger.UserMonth() {
-      public Set<Integer> getMonthWithTransaction() {
-        return selectedTransactions.getSortedSet(Transaction.BUDGET_MONTH);
-      }
-    }, repository);
+                                public Set<Integer> getMonthWithTransaction() {
+                                  return selectedTransactions.getSortedSet(Transaction.BUDGET_MONTH);
+                                }
+                              }, repository);
 //    localRepository.addTrigger(new UpdateUpdateMirror());
 //    localRepository.addTrigger(new UpdateBudgetOnSeriesAccountsChange());
     localRepository.addChangeListener(new ProfileTypeChangeListener());
@@ -243,26 +243,26 @@ public class SeriesEditionDialog {
     builder.add("seriesAmountEditionPanel", seriesBudgetPanel);
 
     selectionService.addListener(new GlobSelectionListener() {
-      public void selectionUpdated(GlobSelection selection) {
-        setCurrentSeries(selectionService.getSelection(Series.TYPE).getFirst());
-        if (currentSeries != null) {
-          boolean isSavingsSeries = currentSeries.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId());
-          fromAccountsCombo.setVisible(isSavingsSeries);
-          toAccountsCombo.setVisible(isSavingsSeries);
-          dayChooser.setSelectedItem(currentSeries.get(Series.DAY));
-          Glob fromAccount = repository.findLinkTarget(currentSeries, Series.FROM_ACCOUNT);
-          Glob toAccount = repository.findLinkTarget(currentSeries, Series.TO_ACCOUNT);
-          boolean noneImported = Account.areNoneImported(fromAccount, toAccount);
-          dayChooser.setVisible(noneImported);
-          savingsMessage.setVisible(!isValidSeries(currentSeries));
-          okAction.setEnabled(isValidSeries(currentSeries));
-        }
-        updateDateSelectors();
-        updateMonthChooser();
-        updateMonthSelectionCard();
-        updateBudgetAreaCombo();
-      }
-    }, Series.TYPE);
+                                   public void selectionUpdated(GlobSelection selection) {
+                                     setCurrentSeries(selectionService.getSelection(Series.TYPE).getFirst());
+                                     if (currentSeries != null) {
+                                       boolean isSavingsSeries = currentSeries.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId());
+                                       fromAccountsCombo.setVisible(isSavingsSeries);
+                                       toAccountsCombo.setVisible(isSavingsSeries);
+                                       dayChooser.setSelectedItem(currentSeries.get(Series.DAY));
+                                       Glob fromAccount = repository.findLinkTarget(currentSeries, Series.FROM_ACCOUNT);
+                                       Glob toAccount = repository.findLinkTarget(currentSeries, Series.TO_ACCOUNT);
+                                       boolean noneImported = Account.areNoneImported(fromAccount, toAccount);
+                                       dayChooser.setVisible(noneImported);
+                                       savingsMessage.setVisible(!isValidSeries(currentSeries));
+                                       okAction.setEnabled(isValidSeries(currentSeries));
+                                     }
+                                     updateDateSelectors();
+                                     updateMonthChooser();
+                                     updateMonthSelectionCard();
+                                     updateBudgetAreaCombo();
+                                   }
+                                 }, Series.TYPE);
 
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -473,6 +473,9 @@ public class SeriesEditionDialog {
     finally {
       localRepository.completeChangeSet();
     }
+    if (budgetArea == BudgetArea.EXTRAS) {
+      initExtraBudgetAmounts(createdSeries, transactions);
+    }
     this.createdSeries = null;
     doShow(selectedMonths.getValueSet(Month.ID), createdSeries, true, true);
     return this.createdSeries;
@@ -484,6 +487,33 @@ public class SeriesEditionDialog {
     selectedTransactions.removeAll(and(isTrue(Transaction.PLANNED),
                                        isTrue(Transaction.CREATED_BY_SERIES)),
                                    repository);
+  }
+
+  private void initExtraBudgetAmounts(Glob createdSeries, GlobList transactions) {
+    Map<Integer, Double> amounts = new HashMap<Integer, Double>();
+    for (Glob transaction : transactions) {
+      int monthId = transaction.get(Transaction.MONTH);
+      double amount = transaction.get(Transaction.AMOUNT);
+      Double previousAmount = amounts.get(monthId);
+      if (previousAmount == null) {
+        previousAmount = 0.00;
+      }
+      amounts.put(monthId, previousAmount + amount);
+    }
+
+    Integer seriesId = createdSeries.get(Series.ID);
+    localRepository.startChangeSet();
+    try {
+      for (Map.Entry<Integer, Double> entry : amounts.entrySet()) {
+        Glob budget = SeriesBudget.findOrCreate(seriesId, entry.getKey(), localRepository);
+        localRepository.update(budget.getKey(),
+                               value(SeriesBudget.ACTIVE, true),
+                               value(SeriesBudget.OBSERVED_AMOUNT, entry.getValue()));
+      }
+    }
+    finally {
+      localRepository.completeChangeSet();
+    }
   }
 
   private Glob createSeries(String label, Integer day, Integer fromAccountId, Integer toAccountId, FieldValue... forcedValues) {
@@ -514,31 +544,7 @@ public class SeriesEditionDialog {
     }
     if (budgetArea == BudgetArea.EXTRAS) {
       values.set(Series.IS_AUTOMATIC, false);
-      SelectionService selectionService = directory.get(SelectionService.class);
-      if (!selectedTransactions.isEmpty()) {
-        SortedSet<Integer> months = selectedTransactions.getSortedSet(Transaction.BUDGET_MONTH);
-        values.set(Series.FIRST_MONTH, months.first());
-        values.set(Series.LAST_MONTH, months.last());
-        if (selectedTransactions.size() == 1) {
-          values.set(Series.PROFILE_TYPE, ProfileType.SINGLE_MONTH.getId());
-          values.set(Series.INITIAL_AMOUNT, selectedTransactions.getFirst().get(Transaction.AMOUNT));
-        }
-      }
-      else {
-        GlobList monthIds = selectionService.getSelection(Month.TYPE).sort(Month.ID);
-        if (!monthIds.isEmpty()) {
-          values.set(Series.FIRST_MONTH, monthIds.getFirst().get(Month.ID));
-          values.set(Series.LAST_MONTH, monthIds.getLast().get(Month.ID));
-        }
-        else {
-          int monthId = localDirectory.get(TimeService.class).getCurrentMonthId();
-          values.set(Series.FIRST_MONTH, monthId);
-          values.set(Series.LAST_MONTH, monthId);
-        }
-        if (monthIds.size() == 1) {
-          values.set(Series.PROFILE_TYPE, ProfileType.SINGLE_MONTH.getId());
-        }
-      }
+      values.set(Series.PROFILE_TYPE, ProfileType.IRREGULAR.getId());
     }
 
     values.set(forcedValues);

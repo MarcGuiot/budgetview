@@ -82,12 +82,6 @@ public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
     return transactions;
   }
 
-  private boolean isSame(Glob targetAccount, Glob transaction) {
-    Glob account = localRepository.findLinkTarget(transaction, Transaction.ACCOUNT);
-    return targetAccount.get(Account.ID).equals(transaction.get(Transaction.ACCOUNT)) ||
-           (targetAccount.get(Account.ID) == Account.MAIN_SUMMARY_ACCOUNT_ID && account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId()));
-  }
-
   public static Integer createMirrorSeries(Key key, GlobRepository localRepository) {
     Glob series = localRepository.find(key);
     if (series == null || series.get(Series.MIRROR_SERIES) != null ||
@@ -95,9 +89,6 @@ public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
       return null;
     }
 
-    Glob fromAccount = localRepository.findLinkTarget(series, Series.FROM_ACCOUNT);
-    Glob toAccount = localRepository.findLinkTarget(series, Series.TO_ACCOUNT);
-//    if (Account.areBothImported(fromAccount, toAccount)) {
     FieldValue seriesFieldValues[] = series.toArray();
     GlobIdGenerator generator = localRepository.getIdGenerator();
     int newSeriesId = generator.getNextId(Series.ID, 1);
@@ -115,31 +106,14 @@ public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
                            globFunctor.from ? series.get(Series.FROM_ACCOUNT) : series.get(Series.TO_ACCOUNT));
     localRepository.update(mirrorSeries.getKey(), Series.TARGET_ACCOUNT,
                            globFunctor.from ? series.get(Series.TO_ACCOUNT) : series.get(Series.FROM_ACCOUNT));
-//      createSerieBudget(key, mirrorSeries.getKey(), localRepository);
     return newSeriesId;
-//    }
-//    return null;
-  }
-
-  private static void createSerieBudget(Key existingSeries, Key newSeries, GlobRepository repository) {
-    GlobList seriesBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES,
-                                                   existingSeries.get(Series.ID)).getGlobs();
-    for (Glob glob : seriesBudget) {
-      repository.create(SeriesBudget.TYPE,
-                        FieldValue.value(SeriesBudget.AMOUNT,
-                                         glob.get(SeriesBudget.AMOUNT) == null ? null : -glob.get(SeriesBudget.AMOUNT)),
-                        FieldValue.value(SeriesBudget.ACTIVE, glob.get(SeriesBudget.ACTIVE)),
-                        FieldValue.value(SeriesBudget.MONTH, glob.get(SeriesBudget.MONTH)),
-                        FieldValue.value(SeriesBudget.SERIES, newSeries.get(Series.ID)),
-                        FieldValue.value(SeriesBudget.DAY, glob.get(SeriesBudget.DAY)));
-    }
   }
 
   private static class FindMirrorGlobFunctor implements GlobFunctor {
     private boolean from = false;
 
-    public void run(Glob glob, GlobRepository repository) throws Exception {
-      if (glob.get(SeriesBudget.AMOUNT, 0) < 0) {
+    public void run(Glob budget, GlobRepository repository) throws Exception {
+      if (budget.get(SeriesBudget.AMOUNT, 0) < 0) {
         from = true;
       }
     }

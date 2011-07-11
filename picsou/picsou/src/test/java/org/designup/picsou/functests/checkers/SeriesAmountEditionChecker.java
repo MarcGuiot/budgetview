@@ -124,8 +124,13 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
     return (T)this;
   }
 
+  public T checkPropagationEnabled() {
+    assertTrue(dialog.getCheckBox("propagate").isSelected());
+    return (T)this;
+  }
+
   public T checkPropagationDisabled() {
-    assertFalse(dialog.getCheckBox().isSelected());
+    assertFalse(dialog.getCheckBox("propagate").isSelected());
     return (T)this;
   }
 

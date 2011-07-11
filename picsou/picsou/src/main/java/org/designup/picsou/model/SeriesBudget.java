@@ -3,21 +3,21 @@ package org.designup.picsou.model;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
+import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.FieldSetter;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.utils.Utils;
+import org.globsframework.model.*;
+import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class SeriesBudget {
   public static GlobType TYPE;
@@ -58,6 +58,19 @@ public class SeriesBudget {
       .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
       .findByIndex(SeriesBudget.MONTH, monthId)
       .getGlobs();
+  }
+
+  public static Glob findOrCreate(Integer seriesId, Integer monthId, GlobRepository repository) {
+    GlobList list = getAll(seriesId, monthId, repository);
+    if (list.size() > 1) {
+      throw new InvalidState("Only one budget should exist for " + seriesId + " / " + monthId);
+    }
+    if (list.size() == 1) {
+      return list.getFirst();
+    }
+    return repository.create(SeriesBudget.TYPE,
+                             value(SeriesBudget.SERIES, seriesId),
+                             value(SeriesBudget.MONTH, monthId));
   }
 
   public static class Serializer implements PicsouGlobSerializer {

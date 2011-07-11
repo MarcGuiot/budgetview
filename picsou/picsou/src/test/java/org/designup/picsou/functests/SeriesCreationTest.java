@@ -90,25 +90,29 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.extras.createSeries()
       .setName("Machine a laver")
-      .checkSingleMonthDate("June 2008")
-      .checkChart(new Object[][]{{"2008", "June", 0.00, 0.00, true}})
+      .checkSelectedProfile("Irregular")
+      .checkMonthsSelected(200806)
+      .checkChart(new Object[][]{
+        {"2008", "June", 0.00, 0.00, true}
+      })
       .cancel();
 
     OfxBuilder
       .init(this)
-      .addTransaction("2008/08/30", -10, "mac")
+      .addTransaction("2008/08/15", -200, "Darty")
       .load();
 
     timeline.selectMonths("2008/06", "2008/07");
-    views.selectBudget();
-    budgetView.extras.createSeries()
+    categorization.selectTransaction("Darty");
+
+    categorization.selectExtras().createSeries()
       .setName("Machine a laver")
-      .setEveryMonth()
-      .checkStartDate("June 2008")
-      .checkEndDate("Jul 2008")
+      .checkSelectedProfile("Irregular")
+      .checkMonthsSelected(200806, 200807)
       .checkChart(new Object[][]{
         {"2008", "July", 0.00, 0.00, true},
-        {"2008", "June", 0.00, 0.00, true}
+        {"2008", "June", 0.00, 0.00, true},
+        {"2008", "Aug", 200.00, 200.00}
       })
       .cancel();
   }

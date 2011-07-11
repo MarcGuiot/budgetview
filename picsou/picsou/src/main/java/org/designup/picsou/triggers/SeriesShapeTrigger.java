@@ -438,8 +438,6 @@ public class SeriesShapeTrigger implements ChangeSetListener {
   }
 
   static private boolean isSmallDiff(Glob budget) {
-//      return Amounts.isNearZero(Amounts.zeroIfNull(budget.get(SeriesBudget.AMOUNT)) -
-//                                Amounts.zeroIfNull(budget.get(SeriesBudget.OBSERVED_AMOUNT)));
     if (Amounts.isNearZero(Amounts.zeroIfNull(budget.get(SeriesBudget.AMOUNT)))) {
       return false;
     }

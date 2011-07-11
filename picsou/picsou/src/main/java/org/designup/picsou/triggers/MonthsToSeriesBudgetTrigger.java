@@ -5,7 +5,6 @@ import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.Pair;
 import org.globsframework.utils.directory.Directory;
 
@@ -80,7 +79,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
 
   public static void addMonthForSeries(GlobRepository repository, Integer monthId, Glob series) {
     if (ProfileType.IRREGULAR.getId().equals(series.get(Series.PROFILE_TYPE))) {
-      repository.create(SeriesBudget.TYPE,                        
+      repository.create(SeriesBudget.TYPE,
                         value(SeriesBudget.ACTIVE, true),
                         value(SeriesBudget.SERIES, series.get(Series.ID)),
                         value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId)),
@@ -97,11 +96,11 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
     GlobList globs = index.getGlobs();
     Glob[] existingSeriesBudget = globs.sort(SeriesBudget.MONTH).toArray();
 
-    Pair<Integer,Integer> startEndMonth = Account.getValidMonth(series, repository);
+    Pair<Integer, Integer> startEndMonth = Account.getValidMonth(series, repository);
 
     Glob budget = repository.create(SeriesBudget.TYPE,
                                     value(SeriesBudget.ACTIVE, series.get(Series.getMonthField(monthId)) &&
-                                    monthId >= startEndMonth.getFirst() && monthId <= startEndMonth.getSecond()),
+                                                               monthId >= startEndMonth.getFirst() && monthId <= startEndMonth.getSecond()),
                                     value(SeriesBudget.SERIES, series.get(Series.ID)),
                                     value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId)),
                                     value(SeriesBudget.MONTH, monthId));
@@ -120,8 +119,6 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
           lastmonthId = seriesBudget.get(SeriesBudget.MONTH);
         }
         if (seriesBudget.get(SeriesBudget.MONTH) == nextMonth) {
-//              ???
-//              repository.update(glob.getKey(), SeriesBudget.AMOUNT, 0.);
           break;
         }
       }
@@ -162,10 +159,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
       if (seriesAmount == null) {
         seriesAmount = series.get(Series.INITIAL_AMOUNT);
       }
-//      if (seriesAmount != null)
-      {
-        repository.update(budget.getKey(), SeriesBudget.AMOUNT, seriesAmount);
-      }
+      repository.update(budget.getKey(), SeriesBudget.AMOUNT, seriesAmount);
     }
   }
 

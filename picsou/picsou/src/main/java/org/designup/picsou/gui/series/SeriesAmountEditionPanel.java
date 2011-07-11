@@ -112,7 +112,7 @@ public class SeriesAmountEditionPanel {
           }
         }
 
-        if (changeSet.containsUpdates(SeriesBudget.AMOUNT)) {
+        if (changeSet.containsUpdates(SeriesBudget.AMOUNT) && (currentSeries != null)) {
           Glob series = repository.get(currentSeries);
           if (series.isTrue(Series.IS_AUTOMATIC)) {
             repository.update(currentSeries, Series.IS_AUTOMATIC, false);
@@ -218,10 +218,14 @@ public class SeriesAmountEditionPanel {
                                isTrue(SeriesBudget.ACTIVE),
                                isNotNull(SeriesBudget.AMOUNT)));
 
-    setAutoSelectFutureMonths(noValueDefined);
-    propagationCheckBox.setSelected(noValueDefined);
+    boolean canAutoPropagate = (seriesKey != null) && !BudgetArea.EXTRAS.getId().equals(repository.get(seriesKey).get(Series.BUDGET_AREA));
 
-    if (noValueDefined) {
+    boolean autoPropagate = noValueDefined && canAutoPropagate;
+
+    setAutoSelectFutureMonths(autoPropagate);
+    propagationCheckBox.setSelected(autoPropagate);
+
+    if (autoPropagate) {
       selectMonths(repository.getAll(Month.TYPE).getValueSet(Month.ID));
     }
 
@@ -344,12 +348,7 @@ public class SeriesAmountEditionPanel {
       Integer seriesId = series.get(Series.ID);
       boolean selectionOK = false;
       for (Integer monthId : getMonths(monthIds)) {
-        GlobList list = getBudget(seriesId, monthId);
-        if (!list.isEmpty()) {
-          selection.add(list, SeriesBudget.TYPE);
-          selection.add(repository.get(Key.create(Month.TYPE, monthId)));
-          selectionOK = true;
-        }
+        selectionOK |= addBudgetToSelection(selection, seriesId, monthId);
       }
 
       if (!selectionOK) {
@@ -363,21 +362,11 @@ public class SeriesAmountEditionPanel {
         while (!selectionOK && (previous > realFirst || next < realLast)) {
           if (previous > realFirst) {
             previous = Month.previous(previous);
-            GlobList budget = getBudget(seriesId, previous);
-            if (!budget.isEmpty()) {
-              selectionOK = true;
-              selection.add(budget, SeriesBudget.TYPE);
-              selection.add(repository.get(Key.create(Month.TYPE, previous)));
-            }
+            selectionOK |= addBudgetToSelection(selection, seriesId, previous);
           }
           if (next < realLast) {
             next = Month.next(next);
-            GlobList budget = getBudget(seriesId, previous);
-            if (!budget.isEmpty()) {
-              selectionOK = true;
-              selection.add(budget, SeriesBudget.TYPE);
-              selection.add(repository.get(Key.create(Month.TYPE, next)));
-            }
+            selectionOK |= addBudgetToSelection(selection, seriesId, next);
           }
         }
       }
@@ -386,6 +375,16 @@ public class SeriesAmountEditionPanel {
     finally {
       selectionInProgress = false;
     }
+  }
+
+  private boolean addBudgetToSelection(GlobSelectionBuilder selection, Integer seriesId, Integer monthId) {
+    GlobList budget = getBudget(seriesId, monthId);
+    if (budget.isEmpty()) {
+      return false;
+    }
+    selection.add(budget, SeriesBudget.TYPE);
+    selection.add(repository.get(Key.create(Month.TYPE, monthId)));
+    return true;
   }
 
   private GlobList getBudget(Integer seriesId, Integer monthId) {

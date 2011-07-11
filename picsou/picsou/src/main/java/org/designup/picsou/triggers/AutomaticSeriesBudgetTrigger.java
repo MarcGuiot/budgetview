@@ -6,10 +6,11 @@ import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.utils.Utils;
 
 import java.util.Set;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
@@ -19,10 +20,8 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(Series.IS_AUTOMATIC)) {
-          if (values.isTrue(Series.IS_AUTOMATIC)) {
-            updateSeriesBudget(key, repository);
-          }
+        if (values.contains(Series.IS_AUTOMATIC) && values.isTrue(Series.IS_AUTOMATIC)) {
+          updateSeriesBudget(key, repository);
         }
       }
 
@@ -51,7 +50,7 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
         if (seriesBudget.get(SeriesBudget.MONTH) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
           previousAmount = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT);
           if (previousAmount == null) {
-            previousAmount = 0.00;  
+            previousAmount = 0.00;
           }
         }
         if (seriesBudget.get(SeriesBudget.MONTH).equals(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))) {
@@ -60,7 +59,7 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
               previousAmount = currentAmount;
             }
           }
-          else if (currentAmount < 0){
+          else if (currentAmount < 0) {
             if (currentAmount < previousAmount) {
               previousAmount = currentAmount;
             }

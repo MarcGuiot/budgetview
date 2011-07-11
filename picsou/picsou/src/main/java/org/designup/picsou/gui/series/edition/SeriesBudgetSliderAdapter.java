@@ -9,13 +9,14 @@ import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.GlobMatchers;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Set;
+
+import static org.globsframework.model.utils.GlobMatchers.isTrue;
 
 public class SeriesBudgetSliderAdapter implements GlobSliderAdapter, ColorChangeListener {
 
@@ -102,8 +103,9 @@ public class SeriesBudgetSliderAdapter implements GlobSliderAdapter, ColorChange
 
   private Scale getScale(int absValue) {
     double maxValue = absValue;
-    Set<Double> allValues = repository.getAll(SeriesBudget.TYPE,
-                                              GlobMatchers.isTrue(SeriesBudget.ACTIVE)).getValueSet(SeriesBudget.AMOUNT);
+    Set<Double> allValues =
+      repository.getAll(SeriesBudget.TYPE, isTrue(SeriesBudget.ACTIVE))
+        .getValueSet(SeriesBudget.AMOUNT);
     for (Double value : allValues) {
       if (value != null) {
         maxValue = Math.max(maxValue, Math.abs(value));

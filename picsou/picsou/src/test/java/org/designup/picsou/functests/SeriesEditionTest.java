@@ -97,9 +97,31 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
   public void testAllMonthsAreSelectedInBudgetTableIfCurrentMonthIsNotFound() throws Exception {
 
-    operations.openPreferences().setFutureMonthsCount(4).validate();
+    operations.openPreferences().setFutureMonthsCount(6).validate();
 
     timeline.selectMonths("2008/10", "2008/11");
+
+    budgetView.variable.createSeries()
+      .setName("Groceries")
+      .checkMonthsSelected(200808, 200809, 200810, 200811, 200812, 200901, 200902)
+      .checkPropagationEnabled()
+      .setAmount(200)
+      .validate();
+
+    timeline.selectMonth("2008/10");
+    budgetView.variable.checkSeries("Groceries", 0, -200.00);
+
+    timeline.selectMonth("2008/11");
+    budgetView.variable.checkSeries("Groceries", 0, -200.00);
+  }
+
+  public void testCurrentlySelectedMonthsAreSelectedInBudgetTableIfCurrentMonthIsNotFoundForExtraSeries() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
+    timeline.selectMonths("2008/10", "2008/11");
+
+    System.out.println("SeriesEditionTest.testCurrentlySelectedMonthsAreSelectedInBudgetTableIfCurrentMonthIsNotFound: ");
     budgetView.extras.createSeries()
       .setName("Plumber")
       .checkMonthsSelected(200810, 200811)
@@ -1053,15 +1075,20 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
   public void testExtraWithOnlyOneMonth() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2007/05/04", -100.00, "Virement")
-      .addTransaction("2007/06/04", -100.00, "CENTER PARC")
+      .addTransaction("2008/05/04", -100.00, "Virement")
+      .addTransaction("2008/06/04", -100.00, "CENTER PARC")
       .addTransaction("2008/07/04", -10.00, "McDo")
       .load();
     categorization.selectTransactions("CENTER PARC");
     categorization.selectExtras().createSeries()
       .setName("Center Parc")
-      .checkSingleMonthSelected()
-      .checkSingleMonthDate("June 2007")
+      .checkSelectedProfile("Irregular")
+      .checkNoStartDate()
+      .checkNoEndDate()
+      .checkMonthSelected(200807)
+      .checkAmount(0.00)
+      .selectMonth(200806)
+      .checkAmount(100.00)
       .validate();
   }
 
@@ -1076,9 +1103,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransactions("CENTER PARC");
     categorization.selectExtras().createSeries()
       .setName("Center Parc")
-      .checkEveryMonthSelected()
-      .checkStartDate("June 2007")
-      .checkEndDate("Mar 2008")
+      .checkSelectedProfile("Irregular")
+      .checkNoStartDate()
+      .checkNoEndDate()
+      .checkMonthsSelected(200807)
       .validate();
   }
 
@@ -1090,8 +1118,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/06");
     budgetView.extras.createSeries()
       .setName("Center Parc")
-      .checkSingleMonthSelected()
-      .checkSingleMonthDate("June 2008")
+      .checkSelectedProfile("Irregular")
+      .checkMonthSelected(200806)
       .validate();
   }
 
@@ -1105,11 +1133,11 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/06");
     budgetView.extras.createSeries()
       .setName("Center Parc")
-      .checkSingleMonthDate("June 2008")
       .setAmount(500.00)
       .validate();
 
     budgetView.extras.editSeries("Center Parc")
+      .setSingleMonth()
       .setSingleMonthDate(200807)
       .checkAmountEditionEnabled()
       .checkMonthSelected(200807)
@@ -1129,15 +1157,14 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth(200805);
     budgetView.extras.editSeries("Center Parc")
-      .checkMonthsSelected(200803, 200804, 200805)
-      .setPropagationDisabled()
-      .checkMonthsSelected(200803)
+      .checkMonthSelected(200805)
+      .checkPropagationDisabled()
       .clearEndDate()
       .checkAmountEditionEnabled()
       .setStartDate(200808)
       .checkMonthSelected(200808)
       .setStartDate(200805)
-      .checkMonthSelected(200808)
+      .checkMonthSelected(200805)
       .validate();
   }
 

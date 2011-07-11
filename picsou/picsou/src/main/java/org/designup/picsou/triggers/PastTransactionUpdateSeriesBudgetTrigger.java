@@ -104,11 +104,10 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
       return;
     }
     repository.update(currentBudget.getKey(), SeriesBudget.OBSERVED_AMOUNT, observedAmount);
-    
+
     if (!series.isTrue(Series.IS_AUTOMATIC) || statMonthId > currentMonthId) {
       return;
     }
-
 
     if (statMonthId.equals(currentMonthId)) {
       GlobList seriesBudgets = budgetIndex.getGlobs().sort(SeriesBudget.MONTH);
@@ -169,19 +168,19 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
 
     double firstMonthAmout = 0;
     int firstMonthWithObserved = 0;
-    for (Iterator it = serieBudgets.iterator(); it.hasNext();) {
+    for (Iterator it = serieBudgets.iterator(); it.hasNext(); ) {
       Glob budget = (Glob)it.next();
       if (!budget.isTrue(SeriesBudget.ACTIVE)) {
         continue;
       }
 
-        Glob currentSeriesStat =
-          repository.findOrCreate(Key.create(SeriesStat.SERIES, seriesId,
-                                             SeriesStat.MONTH, budget.get(SeriesBudget.MONTH)));
-        if (firstMonthWithObserved == 0 && Amounts.isNotZero(currentSeriesStat.get(SeriesStat.AMOUNT))) {
-          firstMonthWithObserved = budget.get(SeriesBudget.MONTH);
-          firstMonthAmout = currentSeriesStat.get(SeriesStat.AMOUNT);
-        }
+      Glob currentSeriesStat =
+        repository.findOrCreate(Key.create(SeriesStat.SERIES, seriesId,
+                                           SeriesStat.MONTH, budget.get(SeriesBudget.MONTH)));
+      if (firstMonthWithObserved == 0 && Amounts.isNotZero(currentSeriesStat.get(SeriesStat.AMOUNT))) {
+        firstMonthWithObserved = budget.get(SeriesBudget.MONTH);
+        firstMonthAmout = currentSeriesStat.get(SeriesStat.AMOUNT);
+      }
 
       if (firstMonthWithObserved == statMonthId && statMonthId.equals(budget.get(SeriesBudget.MONTH))) {
         repository.update(budget.getKey(), SeriesBudget.AMOUNT, Utils.zeroIfNull(firstMonthAmout));
@@ -212,9 +211,9 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
         }
         if (budget.get(SeriesBudget.MONTH) >= currentMonthId) {
           while (it.hasNext()) {
-            Glob futurBudget = (Glob)it.next();
-            if (futurBudget.isTrue(SeriesBudget.ACTIVE)) {
-              repository.update(futurBudget.getKey(), SeriesBudget.AMOUNT, Utils.zeroIfNull(futureAmount));
+            Glob futureBudget = (Glob)it.next();
+            if (futureBudget.isTrue(SeriesBudget.ACTIVE)) {
+              repository.update(futureBudget.getKey(), SeriesBudget.AMOUNT, Utils.zeroIfNull(futureAmount));
             }
           }
         }

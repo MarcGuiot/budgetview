@@ -5,10 +5,10 @@ import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 
-import java.util.Calendar;
 import java.util.Set;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class IrregularSeriesBudgetCreationTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
@@ -37,7 +37,7 @@ public class IrregularSeriesBudgetCreationTrigger implements ChangeSetListener {
   private void createSeriesBudget(FieldValues values, GlobRepository repository, Integer monthId, ReadOnlyGlobRepository.MultiFieldIndexed index) {
     if (index.findByIndex(SeriesBudget.MONTH, monthId).getGlobs().isEmpty()) {
       repository.create(SeriesBudget.TYPE,
-                        value(SeriesBudget.AMOUNT, 0.),
+                        value(SeriesBudget.AMOUNT, 0.00),
                         value(SeriesBudget.MONTH, monthId),
                         value(SeriesBudget.DAY, Month.getDay(null, monthId)),
                         value(SeriesBudget.ACTIVE, true),

@@ -4,10 +4,11 @@ import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.utils.Pair;
 
 import java.util.*;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class SeriesBudgetTrigger implements ChangeSetListener {
   private GlobRepository parentRepository;
@@ -108,8 +109,11 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
           repository.update(seriesBudget.getKey(),
                             value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
                             value(SeriesBudget.ACTIVE, active));
-          if ((series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId()) &&
-               seriesBudget.get(SeriesBudget.MONTH) > currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))) {
+          if (BudgetArea.EXTRAS.getId().equals(series.get(Series.BUDGET_AREA))) {
+            repository.update(seriesBudget.getKey(), SeriesBudget.AMOUNT, seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT));
+          }
+          else if ((series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId()) &&
+                    seriesBudget.get(SeriesBudget.MONTH) > currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))) {
             repository.update(seriesBudget.getKey(), SeriesBudget.AMOUNT, 0.0);
           }
         }
