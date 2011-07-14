@@ -65,6 +65,24 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
+  public void testCreatingAnAccountThroughTheMainMenu() throws Exception {
+    views.selectHome();
+    operations.createAccount().cancel();
+    views.checkDataSelected();
+
+    views.selectHome();
+    operations.createAccount()
+      .checkAccountTypeEditable()
+      .checkUpdateModeIsEditable()
+      .setAccountName("Livret")
+      .setAsSavings()
+      .selectBank("CIC")
+      .validate();
+    views.checkDataSelected();
+
+    savingsAccounts.checkAccountNames("Livret");
+  }
+
   public void testABankMustBeSelectedWhenCreatingAnAccount() throws Exception {
     views.selectHome();
 
@@ -595,10 +613,10 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/06");
     views.selectData();
     transactions.initContent()
-    .add("28/06/2008", TransactionType.PRELEVEMENT, "PRELEVEMENT", "", -550.00, "Card n. 1111")
-    .add("27/06/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", -50.00)
-    .add("01/06/2008", TransactionType.VIREMENT, "SALAIRE/OCT", "", 1000.00)
-    .check();
+      .add("28/06/2008", TransactionType.PRELEVEMENT, "PRELEVEMENT", "", -550.00, "Card n. 1111")
+      .add("27/06/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", -50.00)
+      .add("01/06/2008", TransactionType.VIREMENT, "SALAIRE/OCT", "", 1000.00)
+      .check();
   }
 
   public void testUpdateOperationsOnBankChange() throws Exception {
@@ -611,7 +629,6 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("01/06/2008", TransactionType.VIREMENT, "F COM INTERVENTION POUR VIREMENT EXTERNE", "", 1000.00)
       .check();
-
 
     views.selectHome();
     mainAccounts.edit("Account n. 1111")

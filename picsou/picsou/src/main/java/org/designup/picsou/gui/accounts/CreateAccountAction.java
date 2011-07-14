@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.accounts;
 
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.AccountUpdateMode;
 import org.designup.picsou.utils.Lang;
@@ -18,6 +19,7 @@ public class CreateAccountAction extends AbstractAction {
   private final Window owner;
   private boolean accountTypeEditable = true;
   private boolean updateModeEditable = true;
+  private boolean gotoAccountView = false;
   private Glob defaultAccountInfo;
 
   public CreateAccountAction(AccountType accountType, GlobRepository repository, Directory directory) {
@@ -25,7 +27,11 @@ public class CreateAccountAction extends AbstractAction {
   }
 
   public CreateAccountAction(AccountType accountType, GlobRepository repository, Directory directory, Window owner) {
-    super(Lang.get("account.create"));
+    this("account.create", accountType, repository,  directory, owner);
+  }
+
+  public CreateAccountAction(String labelKey, AccountType accountType, GlobRepository repository, Directory directory, Window owner) {
+    super(Lang.get(labelKey));
     this.accountType = accountType;
     this.repository = repository;
     this.directory = directory;
@@ -42,7 +48,15 @@ public class CreateAccountAction extends AbstractAction {
     return this;
   }
 
+  public void setGotoAccountViewEnabled(boolean enabled) {
+    this.gotoAccountView = enabled;
+  }
+
   public void actionPerformed(ActionEvent e) {
+    if (gotoAccountView) {
+      directory.get(NavigationService.class).gotoData();
+    }
+
     AccountEditionDialog dialog = new AccountEditionDialog(owner, repository, directory);
     dialog.setAccountInfo(defaultAccountInfo);
     dialog.showWithNewAccount(accountType, accountTypeEditable, AccountUpdateMode.AUTOMATIC, updateModeEditable);

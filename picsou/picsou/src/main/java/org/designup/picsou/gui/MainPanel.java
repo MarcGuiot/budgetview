@@ -3,6 +3,7 @@ package org.designup.picsou.gui;
 import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.accounts.AccountView;
+import org.designup.picsou.gui.accounts.CreateAccountAction;
 import org.designup.picsou.gui.actions.*;
 import org.designup.picsou.gui.backup.BackupAction;
 import org.designup.picsou.gui.backup.RestoreFileAction;
@@ -47,6 +48,7 @@ import org.designup.picsou.gui.utils.DataCheckerAction;
 import org.designup.picsou.gui.utils.DumpDataAction;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.dev.*;
+import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
@@ -279,6 +281,12 @@ public class MainPanel {
     JMenu editMenu = new JMenu(Lang.get("menuBar.edit"));
     editMenu.add(undoAction);
     editMenu.add(redoAction);
+
+    editMenu.addSeparator();
+    CreateAccountAction createAccount =
+      new CreateAccountAction("account.create.menu", AccountType.MAIN, repository,  directory, frame);
+    createAccount.setGotoAccountViewEnabled(true);
+    editMenu.add(createAccount);
 
     Utils.beginRemove();
     editMenu.addSeparator();

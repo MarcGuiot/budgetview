@@ -539,6 +539,10 @@ public class OperationChecker {
     getViewMenu().getSubMenu("select last 12 months").click();
   }
 
+  public AccountEditionChecker createAccount() {
+    return AccountEditionChecker.open(getEditMenu().getSubMenu("Add a bank account").triggerClick());
+  }
+
   private MenuItem getFileMenu() {
     return window.getMenuBar().getMenu("File");
   }

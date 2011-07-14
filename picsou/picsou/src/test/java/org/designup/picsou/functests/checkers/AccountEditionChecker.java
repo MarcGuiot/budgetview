@@ -183,6 +183,11 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
+  public AccountEditionChecker checkAccountTypeEditable() {
+    assertTrue(getTypeCombo().isEnabled());
+    return this;
+  }
+
   public AccountEditionChecker checkAccountTypeNotEditable() {
     assertFalse(getTypeCombo().isEnabled());
     return this;
@@ -258,8 +263,14 @@ public class AccountEditionChecker extends GuiChecker {
   public void validate() {
     dialog.getButton("OK").click();
     if (dialog.isVisible().isTrue()) {
-      final String message = dialog.getTextBox("message").getText();
-      Assert.fail("Validation failed. Error message: " + message);
+      if (dialog.getTextBox("message").isVisible().isTrue()) {
+        final String message = dialog.getTextBox("message").getText();
+        Assert.fail("Validation failed. Error message: " + message);
+      }
+      else {
+        checkNoErrorTip(dialog);
+      }
+      Assert.fail("Creation failed");
     }
   }
 

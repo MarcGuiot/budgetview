@@ -9,6 +9,10 @@
 
     <style selector="button#accountTypeHelp"
            anchor="right" fill="none" weightX="0" marginLeft="5" font="-,plain,11"/>
+
+    <style selector="button#bankSelector"
+           anchor="southeast" font="-,plain,11" icon="arrow_down_roll.png"
+           iconTextGap="5" horizontalAlignment="left" horizontalTextPosition="left"/>
   </styles>
 
   <panel styleClass="dialog" preferredSize="(450,330)">
@@ -26,8 +30,8 @@
 
               <label text="$account.bank" gridPos="(0,1)" styleClass="formLabel"/>
               <row gridPos="(1,1)" marginBottom="10">
-                <label ref="bankLabel" marginRight="5" font="-,bold,12"/>
-                <button ref="bankSelector" styleClass="itemLink" anchor="southeast" font="-,plain,11"/>
+                <label ref="bankLabel" font="-,bold,12" border="empty(0,0,0,5)"/>
+                <button ref="bankSelector" styleClass="itemLink"/>
                 <filler fill="horizontal"/>
               </row>
 
