@@ -165,4 +165,13 @@ public class Strings {
     result.append("</html>");
     return result.toString();
   }
+
+  public static String[] toUpperCase(String[] labels) {
+    String[] result = new String[labels.length];
+    for (int i = 0; i < labels.length; i++) {
+      String label = labels[i];
+      result[i] = label != null ? label.toUpperCase() : null;
+    }
+    return result;
+  }
 }
