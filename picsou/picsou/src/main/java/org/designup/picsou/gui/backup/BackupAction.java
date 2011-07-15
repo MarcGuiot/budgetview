@@ -4,6 +4,7 @@ import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageFileDialog;
+import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.User;
@@ -30,8 +31,7 @@ public class BackupAction extends AbstractBackupRestoreAction {
 
   public void actionPerformed(ActionEvent event) {
 
-    Glob glob = repository.get(User.KEY);
-    if (!glob.isTrue(User.IS_REGISTERED_USER)) {
+    if (LicenseService.trialInProgress(repository)) {
       MessageDialog.show("backup.trial.title", frame, directory, "backup.trial.content");
     }
 

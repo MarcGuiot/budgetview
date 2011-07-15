@@ -3,12 +3,13 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <styles>
+    <style selector="htmlEditorPane.multiLineLabel" font="-,plain,11"/>
     <style selector="button.gotoWebsite"
            marginTop="10" fill="none" anchor="center"/>
     <style selector="button.openHelp" ui="hyperlinkButton"
-           foreground="hyperlink" font="-,plain,11"
-           marginTop="10" marginBottom="10" fill="none" anchor="center"/>
-    <style selector="htmlEditorPane.multiLineLabel" font="-,plain,11"/>
+           foreground="hyperlink" font="-,plain,12"
+           icon="arrow_right_blue_full.png" iconTextGap="5"
+           marginTop="5" marginBottom="5" fill="none" anchor="center"/>
   </styles>
 
   <column>
@@ -17,9 +18,9 @@
 
     <row>
 
-      <filler fill="horizontal" weightX="1"/>
+      <filler fill="horizontal" weightX="0.5"/>
 
-      <column weightX="3">
+      <column weightX="2" preferredSize="(200,200)">
         <scrollPane>
           <list ref="bankList"/>
         </scrollPane>
@@ -29,14 +30,26 @@
         </row>
       </column>
 
-      <column preferredSize="(210,200)" weightX="0.1" marginLeft="10" marginTop="10">
-        <htmlEditorPane text="$bankDownload.message" styleClass="multiLineLabel"/>
-        <button action="gotoWebsite" styleClass="gotoWebsite"/>
-        <button action="openHelp" styleClass="openHelp"/>
-        <filler fill="vertical"/>
-      </column>
+      <cards ref="cards" weightX="2.2" marginLeft="10">
 
-      <filler fill="horizontal" weightX="1"/>
+        <card name="gotoSite">
+          <column>
+            <htmlEditorPane text="$bankDownload.message" styleClass="multiLineLabel"/>
+            <button action="gotoWebsite" styleClass="gotoWebsite"/>
+            <filler fill="vertical"/>
+            <htmlEditorPane text="$bankDownload.helpIntro" styleClass="multiLineLabel"/>
+            <button action="openHelp" styleClass="openHelp"/>
+            <filler fill="vertical"/>
+            <htmlEditorPane text="$bankDownload.openwith" styleClass="multiLineLabel"/>
+          </column>
+        </card>
+
+        <card name="noSelection">
+          <column>
+            <htmlEditorPane text="$bankDownload.noSelection" styleClass="multiLineLabel"/>
+          </column>
+        </card>
+      </cards>
 
     </row>
 

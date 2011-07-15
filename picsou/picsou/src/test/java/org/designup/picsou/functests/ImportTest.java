@@ -635,7 +635,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     bankDownload
       .checkContainsBanks("BNP Paribas", "CIC", "Crédit Agricole", "ING Direct", "Société Générale")
-      .checkSelectedBank("Autre")
+      .checkNoBankSelected()
+      .checkBankAccessHidden()
+      .selectBank("Autre")
       .checkWebsiteUrl("http://support.mybudgetview.fr/entries/20173256")
       .checkHelpAvailable(true)
       .openHelp()

@@ -20,9 +20,6 @@
         <row weightY="100">
           <panel ref="bankDownload"/>
         </row>
-        <htmlEditorPane text="$import.fileSelection.bank.openwith"
-                        styleClass="multiLineLabel" hyperlinkListener="hyperlinkHandler"
-                        weightY="0"/>
       </column>
 
       <column styleClass="separator" marginTop="20" weightY="5">

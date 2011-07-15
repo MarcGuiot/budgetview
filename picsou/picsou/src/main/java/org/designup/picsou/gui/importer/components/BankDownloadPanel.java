@@ -9,6 +9,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -27,6 +28,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
   private GotoBankWebsiteAction gotoWebsiteAction;
   private OpenHelpAction openHelpAction;
   private BankChooserPanel bankChooser;
+  private CardHandler cards;
 
   public BankDownloadPanel(Window parent, GlobRepository repository, Directory directory) {
     this.parent = parent;
@@ -48,6 +50,8 @@ public class BankDownloadPanel implements GlobSelectionListener {
                             "/layout/importexport/components/bankDownloadPanel.splits",
                             repository, directory);
 
+    cards = builder.addCardHandler("cards");
+
     gotoWebsiteAction = new GotoBankWebsiteAction();
     builder.add("gotoWebsite", gotoWebsiteAction);
 
@@ -60,7 +64,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
     SelectionService selectionService = directory.get(SelectionService.class);
     selectionService.addListener(this, Bank.TYPE);
-    selectionService.select(repository.get(Bank.GENERIC_BANK_KEY));
+    selectionService.clear(Bank.TYPE);
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -72,6 +76,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
   private void update(Glob bank) {
     gotoWebsiteAction.setBank(bank);
     openHelpAction.setBank(bank);
+    cards.show(bank == null ? "noSelection" : "gotoSite");
   }
 
   public void requestFocus() {
@@ -88,7 +93,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
     public void setBank(Glob bank) {
       setEnabled(bank != null);
-      lastUrl = (bank != null) ? bank.get(Bank.DOWNLOAD_URL)  : null;
+      lastUrl = (bank != null) ? bank.get(Bank.DOWNLOAD_URL) : null;
     }
 
     public void actionPerformed(ActionEvent actionEvent) {

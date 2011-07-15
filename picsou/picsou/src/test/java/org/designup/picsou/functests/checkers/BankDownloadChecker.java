@@ -2,6 +2,9 @@ package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Panel;
 import org.uispec4j.assertion.UISpecAssert;
+
+import javax.swing.*;
+
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class BankDownloadChecker extends GuiChecker {
@@ -26,6 +29,11 @@ public class BankDownloadChecker extends GuiChecker {
     return this;
   }
 
+  public BankDownloadChecker checkNoBankSelected() {
+    assertThat(panel.getListBox("bankList").selectionIsEmpty());
+    return this;
+  }
+
   public BankDownloadChecker checkSelectedBank(String bank) {
     assertThat(panel.getListBox("bankList").selectionEquals(bank));
     return this;
@@ -38,6 +46,12 @@ public class BankDownloadChecker extends GuiChecker {
 
   public BankDownloadChecker setFilter(String filter) {
     panel.getTextBox("bankEditor").setText(filter, false);
+    return this;
+  }
+
+  public BankDownloadChecker checkBankAccessHidden() {
+    checkComponentVisible(panel, JButton.class, "gotoWebsite", false);
+    checkComponentVisible(panel, JButton.class, "openHelp", false);
     return this;
   }
 

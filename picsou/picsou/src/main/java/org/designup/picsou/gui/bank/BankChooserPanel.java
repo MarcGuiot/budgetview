@@ -19,7 +19,8 @@ public class BankChooserPanel {
   private BankChooserPanel(GlobsPanelBuilder builder, Action validateAction) {
     GlobListView bankListView = builder.addList("bankList", Bank.TYPE)
       .addDoubleClickAction(validateAction);
-    filter = GlobListViewFilter.init(bankListView).setDefaultValue(Key.create(Bank.TYPE, Bank.GENERIC_BANK_ID));
+    filter = GlobListViewFilter.init(bankListView)
+      .setDefaultValue(Key.create(Bank.TYPE, Bank.GENERIC_BANK_ID));
     builder.add("bankEditor", filter);
   }
 
