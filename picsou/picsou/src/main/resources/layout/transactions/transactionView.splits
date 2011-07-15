@@ -7,13 +7,15 @@
     <label text="$transactionView.operations.title" styleClass="blockTitle"/>
     <panel styleClass="block">
       <column styleClass="innerBlock" margin="10" marginLeft="15" marginRight="15">
+
         <row marginBottom="5" weightY="0">
-          <panel ref="importPanel" marginLeft="10"/>
+          <panel ref="importPanel" marginLeft="10" weightX="0.01"/>
           <filler fill="horizontal"/>
           <panel ref="customFilterMessage" fill="none" anchor="center"/>
           <filler fill="horizontal"/>
           <checkBox ref="showPlannedTransactions" text="$transactionView.showPlannedTransactions" weightX="0"/>
         </row>
+
         <scrollPane borderPos="center" viewportBackground="transactions.bg"
                     border="line(transaction.border)" opaque="false"
                     marginTop="5" marginLeft="5">
@@ -30,14 +32,15 @@
 
           <filler fill="horizontal" gridPos="(2,0,1,2)"/>
 
-          <row gridPos="(3,0)">
+          <component gridPos="(3,0)" ref="transactionSearch"/>
+
+          <row gridPos="(3,1)">
             <filler fill="horizontal"/>
             <label text="$amount" styleClass="formLabelTop" autoHideSource="sum"
                    border="empty(0,0,0,5)" tooltipText="$amount.tooltip"/>
             <label ref="sum" font="-,bold,12"/>
           </row>
 
-          <component gridPos="(3,1)" ref="transactionSearch"/>
         </grid>
 
         <row marginBottom="5">

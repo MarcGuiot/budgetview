@@ -208,6 +208,14 @@ public class CategorizationChecker extends ViewChecker {
       .click();
   }
 
+  public void search(String searchString) {
+    getPanel().getTextBox("searchField").setText(searchString);
+  }
+
+  public void checkSearchCleared() {
+    assertThat(getPanel().getTextBox("searchField").textIsEmpty());
+  }
+
   public class SavingsCategorizationChecker extends BudgetAreaCategorizationChecker {
     private SavingsCategorizationChecker(CategorizationChecker categorizationChecker, BudgetArea budgetArea) {
       super(categorizationChecker, budgetArea);

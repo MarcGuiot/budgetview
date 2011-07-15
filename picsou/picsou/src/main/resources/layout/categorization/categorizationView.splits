@@ -53,8 +53,10 @@
               <table ref="transactionsToCategorize" rowHeight="20"/>
             </scrollPane>
 
-            <row border="empty(5)" autoHideSource="customFilterMessage">
+            <row border="empty(5)">
               <panel ref="customFilterMessage" fill="none" anchor="center"/>
+              <filler fill="horizontal"/>
+              <panel ref="transactionSearch" fill="none" weightX="0.01"/>
             </row>
 
             <panel ref="skipCategorizationPanel"/>

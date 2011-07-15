@@ -21,7 +21,6 @@ public class User {
   public static IntegerField ID;
 
   public static StringField NAME;
-  public static StringField PASSWORD;
   public static StringField EMAIL;
   public static StringField ACTIVATION_CODE;
   public static BlobField SIGNATURE;

@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.license;
 
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.startup.LogoutService;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
@@ -23,7 +23,6 @@ import java.util.Set;
 
 public class LicenseInfoView extends View {
   private JEditorPane licenseMessage;
-  private JButton askForKey;
 
   public LicenseInfoView(final GlobRepository repository, final Directory directory) {
     super(repository, directory);
@@ -133,40 +132,50 @@ public class LicenseInfoView extends View {
       return "";
     }
 
-    if (state == User.ACTIVATION_FAILED_MAIL_SENT) {
-      return Lang.get("license.activation.failed.mailSent", user.get(User.EMAIL));
-    }
-    else if (state == User.ACTIVATION_FAILED_CAN_NOT_CONNECT || state == User.ACTIVATION_FAILED_HTTP_REQUEST) {
-      return Lang.get("license.remote.connect");
-    }
-    else if (state == User.ACTIVATION_FAILED_MAIL_UNKNOWN) {
-      return Lang.get("license.mail.unknown");
-    }
-    else if (state == User.ACTIVATION_FAILED_BAD_SIGNATURE) {
-      return Lang.get("license.activation.failed");
-    }
-    else if (state == User.ACTIVATION_FAILED_MAIL_NOT_SENT) {
-      return Lang.get("license.code.invalid");
-    }
-    else if (state == User.STARTUP_CHECK_KILL_USER) {
-      if (days < 0) {
-        return Lang.get("license.registered.user.killed");
+    switch (state) {
+      case User.ACTIVATION_FAILED_MAIL_SENT:
+        return Lang.get("license.activation.failed.mailSent", user.get(User.EMAIL));
+
+      case User.ACTIVATION_FAILED_CAN_NOT_CONNECT:
+      case User.ACTIVATION_FAILED_HTTP_REQUEST:
+        return Lang.get("license.remote.connect");
+
+      case User.ACTIVATION_FAILED_MAIL_UNKNOWN: {
+        return Lang.get("license.mail.unknown");
       }
-      else {
-        return Lang.get("license.registered.user.killed.trial");
+
+      case User.ACTIVATION_FAILED_BAD_SIGNATURE: {
+        return Lang.get("license.activation.failed");
       }
-    }
-    else if (state == User.STARTUP_CHECK_MAIL_SENT) {
-      if (days < 0) {
-        return Lang.get("license.registered.user.killed.mail.sent");
+
+      case User.ACTIVATION_FAILED_MAIL_NOT_SENT: {
+        return Lang.get("license.code.invalid");
       }
-      else {
-        return Lang.get("license.registered.user.killed.trial.mail.sent");
+
+      case User.STARTUP_CHECK_KILL_USER: {
+        if (days < 0) {
+          return Lang.get("license.registered.user.killed");
+        }
+        else {
+          return Lang.get("license.registered.user.killed.trial");
+        }
       }
+
+      case User.STARTUP_CHECK_MAIL_SENT: {
+        if (days < 0) {
+          return Lang.get("license.registered.user.killed.mail.sent");
+        }
+        else {
+          return Lang.get("license.registered.user.killed.trial.mail.sent");
+        }
+      }
+
+      case User.STARTUP_CHECK_JAR_VERSION: {
+        return Lang.get("license.registered.user.killed.jar.updated.manually");
+      }
+
+      default:
+        return "";
     }
-    else if (state == User.STARTUP_CHECK_JAR_VERSION) {
-      return Lang.get("license.registered.user.killed.jar.updated.manually");
-    }
-    return "";
   }
 }

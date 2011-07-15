@@ -1514,4 +1514,48 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
                         Clipboard.getContentAsText());
 
   }
+
+  public void testSearch() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -30, "Free Telecom")
+      .addTransaction("2008/06/25", -60, "France Telecom")
+      .addTransaction("2008/06/15", -40, "Auchan")
+      .addTransaction("2008/06/15", -40, "FNAC")
+      .load();
+
+    categorization.search("tele");
+    categorization.checkTable(new Object[][]{
+      {"25/06/2008", "", "France Telecom", -60.00},
+      {"30/06/2008", "", "Free Telecom", -30.00},
+    });
+
+    categorization.clearCustomFilter();
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "", "Auchan", -40.00},
+      {"15/06/2008", "", "FNAC", -40.00},
+      {"25/06/2008", "", "France Telecom", -60.00},
+      {"30/06/2008", "", "Free Telecom", -30.00},
+    });
+
+    categorization.setNewVariable("Auchan", "Groceries");
+    categorization.search("gro");
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "Groceries", "Auchan", -40.00},
+    });
+
+    categorization.search("40");
+    categorization.checkTable(new Object[][]{
+      {"15/06/2008", "Groceries", "Auchan", -40.00},
+      {"15/06/2008", "", "FNAC", -40.00},
+    });
+    
+    // Navigation replaces search filter
+    transactions.categorize("France Telecom", "Free Telecom");
+    categorization.checkTable(new Object[][]{
+      {"25/06/2008", "", "France Telecom", -60.00},
+      {"30/06/2008", "", "Free Telecom", -30.00},
+    });
+    categorization.checkSearchCleared();
+  }
 }

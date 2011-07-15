@@ -77,7 +77,7 @@ public class TransactionChecker extends ViewChecker {
 
   public TransactionChecker categorize(String... labels) {
     select(labels);
-    clickSeries(getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, labels[0]));
+    clickSeries(getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, labels[0].toUpperCase()));
     return this;
   }
 
@@ -87,7 +87,7 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public TransactionChecker select(String... labels) {
-    getTable().selectRowsWithText(TransactionView.LABEL_COLUMN_INDEX, labels);
+    getTable().selectRowsWithText(TransactionView.LABEL_COLUMN_INDEX, Strings.toUpperCase(labels));
     return this;
   }
 

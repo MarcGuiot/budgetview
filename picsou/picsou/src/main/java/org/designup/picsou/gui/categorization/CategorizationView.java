@@ -27,6 +27,7 @@ import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
 import org.designup.picsou.gui.transactions.reconciliation.ReconciliationColumn;
+import org.designup.picsou.gui.transactions.search.TransactionFilterPanel;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.Matchers;
@@ -216,6 +217,9 @@ public class CategorizationView extends View implements TableView, Filterable, C
         filterManager.remove(TRANSACTIONS_FILTER);
       }
     });
+
+    TransactionFilterPanel search = new TransactionFilterPanel(filterManager, repository, directory);
+    builder.add("transactionSearch", search.getPanel());
 
     FilterClearingPanel filterClearingPanel = new FilterClearingPanel(filterManager, repository, directory);
     builder.add("customFilterMessage", filterClearingPanel.getPanel());
@@ -510,6 +514,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
       filterManager.reset();
     }
     else {
+      filterManager.clear();
       filterManager.replaceAllWith(TRANSACTIONS_FILTER,
                                    fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
     }

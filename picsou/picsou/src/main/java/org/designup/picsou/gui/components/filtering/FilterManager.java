@@ -98,7 +98,6 @@ public class FilterManager {
   }
 
   private void notifyChanges(List<String> changedFilters) {
-
     List<GlobMatcher> filterList = new ArrayList<GlobMatcher>();
     filterList.addAll(filters.values());
     GlobMatcher filter = GlobMatchers.and(filterList);

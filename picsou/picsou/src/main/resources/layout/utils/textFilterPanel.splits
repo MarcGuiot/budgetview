@@ -1,7 +1,7 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <row>
+  <row preferredSize="(180,20)">
     <label icon="button_magnifier.png" border="empty(0,0,0,5)"/>
     <textField ref="searchField" columns="15"/>
   </row>
