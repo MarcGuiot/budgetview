@@ -73,6 +73,16 @@ public class UserPreferences {
   @DefaultBoolean(false)
   public static BooleanField SHOW_RECONCILIATION;
 
+  public static IntegerField TRANSACTION_POS1;
+  public static IntegerField TRANSACTION_POS2;
+  public static IntegerField TRANSACTION_POS3;
+  public static IntegerField TRANSACTION_POS4;
+  public static IntegerField TRANSACTION_POS5;
+  public static IntegerField TRANSACTION_POS6;
+  public static IntegerField TRANSACTION_POS7;
+  public static IntegerField TRANSACTION_POS8;
+  public static IntegerField TRANSACTION_POS9;
+
   static {
     GlobTypeLoader.init(UserPreferences.class, "userPreferences");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
@@ -86,7 +96,7 @@ public class UserPreferences {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 10;
+      return 11;
     }
     
     public byte[] serializeData(FieldValues values) {
@@ -108,11 +118,23 @@ public class UserPreferences {
       outputStream.writeInteger(values.get(MONTH_FOR_PLANNED));
       outputStream.writeBoolean(values.get(MULTIPLE_PLANNED));
       outputStream.writeBoolean(values.get(SHOW_RECONCILIATION));
+      outputStream.writeInteger(values.get(TRANSACTION_POS1));
+      outputStream.writeInteger(values.get(TRANSACTION_POS2));
+      outputStream.writeInteger(values.get(TRANSACTION_POS3));
+      outputStream.writeInteger(values.get(TRANSACTION_POS4));
+      outputStream.writeInteger(values.get(TRANSACTION_POS5));
+      outputStream.writeInteger(values.get(TRANSACTION_POS6));
+      outputStream.writeInteger(values.get(TRANSACTION_POS7));
+      outputStream.writeInteger(values.get(TRANSACTION_POS8));
+      outputStream.writeInteger(values.get(TRANSACTION_POS9));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 10) {
+      if (version == 11) {
+        deserializeDataV11(fieldSetter, data);
+      }
+      else if (version == 10) {
         deserializeDataV10(fieldSetter, data);
       }
       else if (version == 9) {
@@ -142,6 +164,34 @@ public class UserPreferences {
       else if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+    }
+    private void deserializeDataV11(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(LAST_BACKUP_RESTORE_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
+      fieldSetter.set(REGISTERED_USER, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
+      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_SAVINGS, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_EXTRA, input.readInteger());
+      fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, input.readBoolean());
+      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, input.readInteger());
+      fieldSetter.set(MONTH_FOR_PLANNED, input.readInteger());
+      fieldSetter.set(MULTIPLE_PLANNED, input.readBoolean());
+      fieldSetter.set(SHOW_RECONCILIATION, input.readBoolean());
+      fieldSetter.set(TRANSACTION_POS1, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS2, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS3, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS4, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS5, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS6, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS7, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS8, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS9, input.readInteger());
     }
 
     private void deserializeDataV10(FieldSetter fieldSetter, byte[] data) {
