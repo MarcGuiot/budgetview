@@ -23,8 +23,7 @@ public class BrowseFilesAction extends AbstractAction {
   public BrowseFilesAction(JTextField fileField,
                            LocalGlobRepository localRepository,
                            boolean usePreferredPath,
-                           PicsouDialog dialog
-  ) {
+                           PicsouDialog dialog) {
     super(Lang.get("browse"));
     this.usePreferedPath = usePreferredPath;
     this.localRepository = localRepository;

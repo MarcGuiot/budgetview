@@ -17,10 +17,7 @@ import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
-import org.globsframework.model.utils.ChangeSetAggregator;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.LocalGlobRepository;
-import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.model.utils.*;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
@@ -77,10 +74,9 @@ public class ImportSession {
       .copy(types).get();
 
     importRepository.startChangeSet();
-    final List<Integer> tmpAccountIds = new ArrayList<Integer>();
+    final Set<Integer> tmpAccountIds = new HashSet<Integer>();
     try {
       typedStream = new TypedInputStream(file);
-      isAccountNeeded = typedStream.getType().equals(BankFileType.QIF);
       importService.run(typedStream, referenceRepository, importRepository);
     }
     finally {
@@ -98,13 +94,18 @@ public class ImportSession {
         public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
         }
       });
+      changes.safeVisit(ImportedTransaction.TYPE, new DefaultChangeSetVisitor() {
+        public void visitCreation(Key key, FieldValues values) throws Exception {
+          tmpAccountIds.add(values.get(ImportedTransaction.ACCOUNT));
+        }
+      });
     }
     accountIds =
       new ArrayList(Arrays.asList(importRepository.getAll(Account.TYPE,
                                                           GlobMatchers.contained(Account.ID, tmpAccountIds))
         .sort(Account.NAME).getValues(Account.ID)));
 
-
+    isAccountNeeded = accountIds.isEmpty();
     readNext(true);
     return getImportedTransactionFormat(importRepository);
   }

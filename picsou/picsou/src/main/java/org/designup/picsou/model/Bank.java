@@ -7,6 +7,7 @@ import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.fields.LinkField;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -33,6 +34,10 @@ public class Bank {
 
   public static org.globsframework.model.Key GENERIC_BANK_KEY;
 
+  @DefaultBoolean(false)
+  @NoObfuscation
+  public static BooleanField SYNCHRO_ENABLE;
+
   static {
     GlobTypeLoader.init(Bank.class, "bank");
     GENERIC_BANK_KEY = org.globsframework.model.Key.create(TYPE, GENERIC_BANK_ID);
@@ -45,6 +50,7 @@ public class Bank {
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeUtf8String(values.get(NAME));
       outputStream.writeUtf8String(values.get(DOWNLOAD_URL));
+      outputStream.write(values.get(SYNCHRO_ENABLE));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -54,6 +60,9 @@ public class Bank {
       }
       else if (version == 2) {
         deserializeDataV2(fieldSetter, data);
+      }
+      else if (version == 3) {
+        deserializeDataV3(fieldSetter, data);
       }
     }
 
@@ -69,8 +78,15 @@ public class Bank {
       fieldSetter.set(DOWNLOAD_URL, input.readUtf8String());
     }
 
+    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(DOWNLOAD_URL, input.readUtf8String());
+      fieldSetter.set(SYNCHRO_ENABLE, input.readBoolean());
+    }
+
     public int getWriteVersion() {
-      return 2;
+      return 3;
     }
   }
 

@@ -23,6 +23,12 @@
             ui="roundButton" minimumSize="(0,0)"/>
     <button ref="importLabel"  text="$import.button" icon="arrow_left_lightgrey.png"
             styleClass="hyperlinkWithoutUnderline" foreground="import.label" fill="none"/>
+
+    <button ref="synchroButton" fill="none" weightX="0" weightY="0" marginLeft="10"
+            icon="button_synchro.png" rolloverIcon="button_synchro_rollover.png" pressedIcon="button_synchro.png"
+            ui="roundButton" minimumSize="(0,0)" autoHideIfDisabled="true"/>
+    <button ref="synchroLabel"  text="$synchro.button" icon="arrow_left_lightgrey.png"
+            styleClass="hyperlinkWithoutUnderline" foreground="import.label" fill="none" autoHideIfDisabled="true"/>
   </row>
 
 </splits>

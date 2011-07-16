@@ -54,7 +54,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
     openHelpAction = new OpenHelpAction();
     builder.add("openHelp", openHelpAction);
 
-    bankChooser = BankChooserPanel.registerComponents(builder, gotoWebsiteAction);
+    bankChooser = BankChooserPanel.registerComponents(builder, gotoWebsiteAction, null);
 
     panel = builder.load();
 

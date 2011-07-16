@@ -9,13 +9,24 @@
     <style selector="htmlEditorPane.multiLineLabel" font="-,plain,11"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(600,550)">
+  <panel styleClass="dialog" preferredSize="(600,650)">
 
     <column styleClass="innerDialog">
 
       <label text="$import.fileSelection.title" name="title" styleClass="title"/>
 
-      <column marginTop="20" weightY="20">
+      <panel ref="synchroPanel" styleClass="innerDialog">
+        <column marginTop="20" weightY="20">
+
+          <textArea text="$import.fileSelection.synchro.title" styleClass="sectionTitle"/>
+
+          <htmlEditorPane name="synchroMessage" text="$import.fileSelection.synchro.message" styleClass="multiLineLabel"
+                          hyperlinkListener="hyperlinkHandler"/>
+        </column>
+      </panel>
+
+      <column styleClass="separator" marginTop="20">
+
         <textArea text="$import.fileSelection.bank.title" styleClass="sectionTitle"/>
         <row weightY="100">
           <panel ref="bankDownload"/>

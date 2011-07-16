@@ -3,6 +3,7 @@ package org.designup.picsou.gui;
 import net.roydesign.event.ApplicationEvent;
 import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.bank.BankPluginService;
+import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.client.http.MD5PasswordBasedEncryptor;
 import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.designup.picsou.client.http.RedirectPasswordBasedEncryptor;
@@ -358,6 +359,7 @@ public class PicsouApplication {
     directory.add(PasswordBasedEncryptor.class, new RedirectPasswordBasedEncryptor());
     directory.add(createConfigService());
     directory.add(new BankPluginService());
+    directory.add(new BankSynchroService());
     return directory;
   }
 

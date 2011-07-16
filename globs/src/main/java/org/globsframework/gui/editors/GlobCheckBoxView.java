@@ -1,8 +1,8 @@
 package org.globsframework.gui.editors;
 
-import org.globsframework.gui.utils.AbstractGlobComponentHolder;
-import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.utils.AbstractGlobComponentHolder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.model.*;
@@ -57,10 +57,12 @@ public class GlobCheckBoxView extends AbstractGlobComponentHolder<GlobCheckBoxVi
   }
 
   private void updateBox() {
-    Set set = currentsGlob.getValueSet(field);
-    checkBox.setEnabled(set.size() != 0);
-    if (set.size() == 1) {
-      checkBox.setSelected(Boolean.TRUE.equals(set.iterator().next()));
+    if (currentsGlob != null) {
+      Set set = currentsGlob.getValueSet(field);
+      checkBox.setEnabled(set.size() != 0);
+      if (set.size() == 1) {
+        checkBox.setSelected(Boolean.TRUE.equals(set.iterator().next()));
+      }
     }
   }
 
@@ -79,7 +81,7 @@ public class GlobCheckBoxView extends AbstractGlobComponentHolder<GlobCheckBoxVi
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(type)){
+    if (changedTypes.contains(type)) {
       currentsGlob = GlobList.EMPTY;
     }
   }
