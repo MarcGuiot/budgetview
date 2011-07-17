@@ -65,7 +65,7 @@
 
       <horizontalBoxes weightY="0.1" name="mainWindowHeader">
         <row>
-          <column>
+          <column weightX="0.001">
             <row anchor="left" fill="horizontal" marginBottom="5">
               <button name="backView" action="backView" styleClass="backforward" tooltipText="$back"/>
               <button name="forwardView" action="forwardView" styleClass="backforward" tooltipText="$forward"/>

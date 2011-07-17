@@ -40,7 +40,7 @@
           <column name="seriesBlock">
             <row>
               <radioButton ref="seriesToggle" styleClass="selector"/>
-              <button ref="editSeries" styleClass="editIcon" tooltipText="$series.edit.tooltip"/>
+              <button ref="editSeries" styleClass="editIcon" tooltipText="$series.edit.tooltip" marginLeft="5"/>
               <filler fill="horizontal"/>
             </row>
             <repeat ref="subSeriesRepeat" marginLeft="15" border="matte(0,1,0,0,categorization.subseries.line)">

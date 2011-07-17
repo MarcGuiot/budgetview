@@ -7,13 +7,13 @@ import org.globsframework.utils.TestUtils;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatcher;
-import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.util.*;
 
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.finder.ComponentMatchers.*;
 
 public abstract class AccountViewChecker<T extends AccountViewChecker> extends ViewChecker {
   protected Window mainWindow;
@@ -30,8 +30,36 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
     org.globsframework.utils.TestUtils.assertSetEquals(getDisplayedAccounts(), expectedNames);
   }
 
+  public void select(String accountName, String... others) {
+    getAccountPanel(accountName).getToggleButton("selectAccount").select();
+    for (String other : others) {
+      getAccountPanel(other).getToggleButton("selectAccount").select();
+    }
+  }
+
+  public void checkNoAccountsSelected() {
+    TestUtils.assertEmpty(getSelectedAccounts());
+  }
+
+  public void checkSelectedAccounts(String... accountNames) {
+    List<String> actual = getSelectedAccounts();
+    TestUtils.assertSetEquals(actual, accountNames);
+  }
+
+  private List<String> getSelectedAccounts() {
+    Panel accountsPanel = getAccountsPanel();
+    UIComponent[] toggles = accountsPanel.getUIComponents(ToggleButton.class);
+    List<String> actual = new ArrayList<String>();
+    for (UIComponent toggle : toggles) {
+      if (((ToggleButton)toggle).isSelected().isTrue()) {
+        actual.add(toggle.getContainer("accountPanel").getButton("showAccount").getLabel());
+      }
+    }
+    return actual;
+  }
+
   private Set<String> getDisplayedAccounts() {
-    UIComponent[] uiComponents = getAccountsPanel().getUIComponents(Button.class, "accountName");
+    UIComponent[] uiComponents = getAccountsPanel().getUIComponents(Button.class, "showAccount");
     Set<String> existingNames = new HashSet<String>();
     for (UIComponent uiComponent : uiComponents) {
       Button button = (Button)uiComponent;
@@ -41,7 +69,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
   }
 
   public T checkAccountOrder(String... accounts) {
-    UIComponent[] uiComponents = getAccountsPanel().getUIComponents(Button.class, "accountName");
+    UIComponent[] uiComponents = getAccountsPanel().getUIComponents(Button.class, "showAccount");
     List<String> existingNames = new ArrayList<String>();
     for (UIComponent uiComponent : uiComponents) {
       Button button = (Button)uiComponent;
@@ -80,10 +108,6 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
     UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals("01/02/2006"));
   }
 
-  public void gotoOperations(String accountName) {
-    getAccountPanel(accountName).getButton("gotoOperations").click();
-  }
-
   public T checkSummary(double amount, String updateDate) {
     Date date = Dates.parse(updateDate);
     assertThat(getAccountsPanel().getTextBox("referencePosition").textEquals(toString(amount)));
@@ -111,20 +135,22 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
   }
 
   public AccountEditionChecker edit(String accountName) {
-    return AccountEditionChecker.open(getAccountPanel(accountName).getButton(accountName).triggerClick());
+    return AccountEditionChecker.open(getAccountPanel(accountName).getButton("editAccount").triggerClick());
   }
 
   private Panel getAccountPanel(final String accountName) {
     views.selectData();
     Button account = null;
     try {
-      final ComponentMatcher componentMatcher = ComponentMatchers.displayedNameIdentity(accountName);
+      final ComponentMatcher componentMatcher =
+        and(innerNameIdentity("showAccount"),
+            displayedNameIdentity(accountName));
       account = getAccountsPanel().getButton(componentMatcher);
     }
     catch (Throwable e) {
       Assert.fail("Account '" + accountName + "' not found - available accounts: " + getDisplayedAccounts());
     }
-    return account.getContainer("accountParent");
+    return account.getContainer("accountPanel");
   }
 
   public AccountEditionChecker createNewAccount() {

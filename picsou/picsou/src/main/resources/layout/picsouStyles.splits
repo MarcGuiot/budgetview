@@ -71,7 +71,7 @@
     <style selector="button.iconOnly" weightX="0"
            text="" opaque="false" borderPainted="false"/>
 
-    <style selector="button.editIcon" marginLeft="5" weightX="0" cursor="hand"
+    <style selector="button.editIcon" weightX="0" cursor="hand"
            icon="magnifier_small.png" rolloverIcon="magnifier_rollover.png" pressedIcon="magnifier_rollover.png"
            preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
 
@@ -177,6 +177,20 @@
     <style selector="button.itemLinkUnderlined" ui="hyperlinkButton"
            fill="none" anchor="right" horizontalAlignment="right"
            foreground="block.item.link"/>
+
+    <!-- Inner block selection -->
+    <style id="selectedPanel" selector="x" opaque="true"
+           background="block.inner.highlight.selected.bg"
+           border="line(block.inner.highlight.selected.border)"/>
+    <style id="selectedRolloverPanel" selector="x" opaque="true"
+           background="block.inner.highlight.selected.bg.rollover"
+           border="line(block.inner.highlight.selected.border.rollover)"/>
+    <style id="unselectedPanel" selector="x" opaque="true"
+           background="block.inner.bg"
+           border=""/>
+    <style id="unselectedRolloverPanel" selector="x" opaque="true"
+           background="block.inner.highlight.unselected.bg.rollover"
+           border="line(block.inner.highlight.unselected.border.rollover)"/>
 
     <!-- Block footer -->
     <style selector=".footer" background="block.footer.bg" border="matte(1,0,0,0,block.footer.top)"

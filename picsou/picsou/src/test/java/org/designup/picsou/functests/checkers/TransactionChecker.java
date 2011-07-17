@@ -182,22 +182,6 @@ public class TransactionChecker extends ViewChecker {
     assertTrue(table.rowIsSelected(row));
   }
 
-  public void selectAccount(String accountName) {
-    getAccountFilter().select(accountName);
-  }
-
-  private ComboBox getAccountFilter() {
-    if (accountFilterCombo == null) {
-      views.selectData();
-      accountFilterCombo = mainWindow.getComboBox("accountFilterCombo");
-    }
-    return accountFilterCombo;
-  }
-
-  public void checkSelectedAccount(String selection) {
-    assertThat(getAccountFilter().selectionEquals(selection));
-  }
-
   public void selectSeries(String seriesName) {
     getSeriesFilter().select(seriesName);
   }
