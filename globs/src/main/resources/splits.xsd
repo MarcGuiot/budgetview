@@ -587,6 +587,7 @@
     <xs:complexType>
       <xs:attributeGroup ref="buttonAttributes"/>
       <xs:attribute name="selected" type="xs:boolean"/>
+      <xs:attribute name="selectedIcon" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 

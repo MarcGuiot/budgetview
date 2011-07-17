@@ -300,4 +300,11 @@ public class Utils {
       }
     }
   }
+
+  public static <T> List<T> joinedList(T first, T... others) {
+    ArrayList<T> list = new ArrayList<T>();
+    list.add(first);
+    Collections.addAll(list, others);
+    return list;
+  }
 }

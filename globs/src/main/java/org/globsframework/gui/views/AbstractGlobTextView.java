@@ -4,6 +4,7 @@ import org.globsframework.gui.ComponentHolder;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;

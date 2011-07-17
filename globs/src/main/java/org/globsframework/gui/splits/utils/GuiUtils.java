@@ -184,6 +184,23 @@ public class GuiUtils {
     });
   }
 
+  public static JFrame getEnclosingWindow(Component component) {
+    return (JFrame)getEnclosingComponent(component, new ComponentMatcher() {
+      public boolean matches(Component component) {
+        return Window.class.isInstance(component);
+      }
+    });
+  }
+
+  public static boolean isChild(Container container, Component child) {
+    for (Component parent = child; parent != null; parent = parent.getParent()) {
+      if (parent.equals(container)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public static Component getEnclosingComponent(Component component, ComponentMatcher matcher) {
     for (Component parent = component; parent != null; parent = parent.getParent()) {
       if (matcher.matches(parent)) {
