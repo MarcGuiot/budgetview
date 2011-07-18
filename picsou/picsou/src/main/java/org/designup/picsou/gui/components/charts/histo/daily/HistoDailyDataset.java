@@ -18,8 +18,8 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
     this.currentDay = currentDay;
   }
 
-  public void add(int monthId, Double[] values, String label, String section, boolean current, boolean selected) {
-    add(new HistoDailyElement(monthId, values, label, section, createTooltip(monthId, values), findMinDay(values), current, monthId > currentMonth, selected));
+  public void add(int monthId, Double[] values, String label, String section, boolean current, boolean selected, boolean[] daySelections) {
+    add(new HistoDailyElement(monthId, values, label, section, createTooltip(monthId, values), findMinDay(values), current, monthId > currentMonth, selected, daySelections));
     updateMax(values);
   }
 
@@ -83,6 +83,10 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
       return false;
     }
     return day - 1 > currentDay;
+  }
+  
+  public boolean isDaySelected(int index, int day) {
+    return getElement(index).daySelections[day];
   }
 
   public boolean minInFuture(int index) {

@@ -8,7 +8,7 @@ import org.designup.picsou.gui.budget.SeriesEditionButtons;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.series.analysis.histobuilders.AccountHistoChartUpdater;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
-import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartRange;
+import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
@@ -119,7 +119,7 @@ public class SavingsView extends View implements GlobSelectionListener {
 
       HistoChartBuilder histoChartBuilder =
         new HistoChartBuilder(new HistoChartConfig(false, false, false, false),
-                              new HistoChartRange(6, 12, false, repository),
+                              new ScrollableHistoChartRange(6, 12, false, repository),
                               repository, directory, selectionService);
       AccountHistoChartUpdater updater = new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
         protected void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {

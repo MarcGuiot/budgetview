@@ -15,20 +15,24 @@ public class HistoDailyColors  {
   private String currentDayKey;
   private String positiveInnerLabelKey;
   private String negativeInnerLabelKey;
+  private String selectedDayKey;
 
   private Color currentDayColor;
   private Color positiveInnerLabelColor;
   private Color negativeInnerLabelColor;
+  private Color selectedDayColor;
   
   public HistoDailyColors(HistoLineColors line,
                           String currentDayKey,
                           String positiveInnerLabelKey,
                           String negativeInnerLabelKey,
+                          String selectedDayKey,
                           Directory directory) {
     this.line = line;
     this.currentDayKey = currentDayKey;
     this.positiveInnerLabelKey = positiveInnerLabelKey;
     this.negativeInnerLabelKey = negativeInnerLabelKey;
+    this.selectedDayKey = selectedDayKey;
 
     directory.get(ColorService.class).addListener(new ColorUpdater());
   }
@@ -38,6 +42,7 @@ public class HistoDailyColors  {
       currentDayColor = colorLocator.get(currentDayKey);
       positiveInnerLabelColor = colorLocator.get(positiveInnerLabelKey);
       negativeInnerLabelColor = colorLocator.get(negativeInnerLabelKey);
+      selectedDayColor = colorLocator.get(selectedDayKey);
     }
   }
 
@@ -47,5 +52,9 @@ public class HistoDailyColors  {
 
   public Color getInnerLabelColor(double value) {
     return value >= 0 ? positiveInnerLabelColor : negativeInnerLabelColor;
+  }
+
+  public Color getSelectedDayColor() {
+    return selectedDayColor;
   }
 }

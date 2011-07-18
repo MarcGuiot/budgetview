@@ -28,8 +28,13 @@ public class AccountFilter {
   public static final String ACCOUNT_FILTER = "accounts";
   private SelectionService selectionService;
 
-  public AccountFilter(final FilterManager filterManager, final GlobRepository repository,
-                       Directory directory) {
+  public static AccountFilter init(final FilterManager filterManager, final GlobRepository repository,
+                                   Directory directory) {
+    return new AccountFilter(filterManager, repository, directory);
+  }
+
+  private AccountFilter(final FilterManager filterManager, final GlobRepository repository,
+                        Directory directory) {
     this.repository = repository;
 
     selectionService = directory.get(SelectionService.class);

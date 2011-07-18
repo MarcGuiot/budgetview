@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.accounts.chart.AccountDailyPositionsChartView;
 import org.designup.picsou.gui.accounts.utils.AccountFilter;
 import org.designup.picsou.gui.accounts.utils.SeriesFilteringCombo;
 import org.designup.picsou.gui.card.ImportPanel;
@@ -15,6 +16,8 @@ import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.model.Card;
+import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
+import org.designup.picsou.gui.series.analysis.histobuilders.range.SelectionHistoChartRange;
 import org.designup.picsou.gui.transactions.actions.TransactionTableActions;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.transactions.search.TransactionFilterPanel;
@@ -68,7 +71,6 @@ public class TransactionView extends View implements Filterable {
   private static final GlobMatcher HIDE_PLANNED_MATCHER = not(isTrue(Transaction.PLANNED));
 
   private GlobTableView view;
-  private AccountFilter accountFilter;
   private SeriesFilteringCombo seriesFilteringCombo;
   private TransactionRendererColors rendererColors;
   private TransactionSelection transactionSelection;
@@ -91,7 +93,7 @@ public class TransactionView extends View implements Filterable {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/transactions/transactionView.splits",
                                                       repository, directory);
 
-    accountFilter = new AccountFilter(filterManager, repository, directory);
+    AccountFilter.init(filterManager, repository, directory);
     addSeriesCombo(builder);
     addShowPlannedTransactionsCheckbox(builder);
     builder.add(view.getComponent());
@@ -110,6 +112,12 @@ public class TransactionView extends View implements Filterable {
     builder.addLabel("sum", Transaction.TYPE,
                      GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, false, Transaction.AMOUNT))
       .setAutoHideIfEmpty(true);
+
+    AccountDailyPositionsChartView accountChart =
+      new AccountDailyPositionsChartView("accountChart",
+                                         new SelectionHistoChartRange(repository, directory),
+                                         repository, directory);
+    accountChart.registerComponents(builder);
 
     parentBuilder.add("transactionView", builder);
   }
