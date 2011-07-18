@@ -26,6 +26,7 @@ import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -54,6 +55,7 @@ import java.util.Set;
 
 import static org.designup.picsou.model.Transaction.TYPE;
 import static org.globsframework.model.utils.GlobMatchers.*;
+import org.globsframework.metamodel.fields.IntegerField;
 
 public class TransactionView extends View implements Filterable {
   public static final int DATE_COLUMN_INDEX = 0;
@@ -260,6 +262,14 @@ public class TransactionView extends View implements Filterable {
       .addColumn(Lang.get("transactionView.account.name"),
                  descriptionService.getStringifier(Transaction.ACCOUNT));
 
+    view.registerSaving(UserPreferences.KEY, new GlobTableView.FieldAccess() {
+      public IntegerField getPosField(int modelIndex) {
+        if (UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex > UserPreferences.TRANSACTION_POS9.getIndex()){
+          throw new RuntimeException("missing column in UserPreference");
+        }
+        return (IntegerField)UserPreferences.TYPE.getField(UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex);
+      }
+    }, repository);
     return view;
   }
 

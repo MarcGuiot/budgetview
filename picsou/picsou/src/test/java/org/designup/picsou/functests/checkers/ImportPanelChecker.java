@@ -2,6 +2,8 @@ package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
+import org.uispec4j.Trigger;
+import org.uispec4j.interception.WindowInterceptor;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class ImportPanelChecker extends ViewChecker {
@@ -13,6 +15,11 @@ public class ImportPanelChecker extends ViewChecker {
 
   public ImportDialogChecker openImport() {
     return ImportDialogChecker.open(getPanel().getButton("importButton").triggerClick());
+  }
+
+  public OtherBankSynchoChecker openSynchro() {
+    Window window = WindowInterceptor.getModalDialog(getPanel().getButton("synchroButton").triggerClick());
+    return new OtherBankSynchoChecker(null, window);
   }
 
   public ImportPanelChecker checkImportMessage(String message) {

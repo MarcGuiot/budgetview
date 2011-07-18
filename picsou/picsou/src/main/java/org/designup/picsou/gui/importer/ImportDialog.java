@@ -13,7 +13,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -25,12 +25,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 
 public class ImportDialog {
 
@@ -99,7 +96,7 @@ public class ImportDialog {
   private void loadLocalRepository(GlobRepository repository) {
     GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, Day.TYPE,
                             Account.TYPE, AccountUpdateMode.TYPE,
-                            Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE};
+                            Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE};
 
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)
@@ -115,7 +112,7 @@ public class ImportDialog {
   }
 
   public void updateForNextImport(String absolutePath, boolean isAccountNeeded, List<String> dateFormats) {
-    if (absolutePath != null){
+    if (absolutePath != null) {
       previewPanel.setFileName(absolutePath);
     }
     previewPanel.updateForNextImport(isAccountNeeded, dateFormats);

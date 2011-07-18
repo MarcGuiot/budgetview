@@ -33,7 +33,7 @@ public class TransactionTableRenderer implements TableCellRenderer {
     if (component == null){
       return null;
     }
-    if (column == seriesColumnIndex) {
+    if (table.getColumnModel().getColumn(column).getModelIndex() == seriesColumnIndex) {
       return component;
     }
     if (component instanceof JLabel) {

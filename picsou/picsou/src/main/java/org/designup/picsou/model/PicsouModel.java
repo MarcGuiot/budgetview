@@ -36,7 +36,8 @@ public class PicsouModel {
                           SignpostStatus.TYPE,
                           SeriesOrder.TYPE,
                           Project.TYPE,
-                          ProjectItem.TYPE
+                          ProjectItem.TYPE,
+                          RealAccount.TYPE
                           )
       .get();
 

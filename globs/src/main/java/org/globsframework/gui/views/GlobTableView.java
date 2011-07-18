@@ -16,9 +16,8 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.LinkField;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.model.*;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.CompositeComparator;
@@ -26,8 +25,7 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -56,6 +54,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   private CellPainter defaultBackgroundPainter = CellPainter.NULL;
   private LabelCustomizer defaultLabelCustomizer = LabelCustomizer.NULL;
   private LabelTableCellRenderer headerRenderer;
+  private SavingInfo reorderInfo;
 
   public static GlobTableView init(GlobType type, GlobRepository globRepository,
                                    Comparator<Glob> comparator, Directory directory) {
@@ -317,6 +316,9 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       if (initialFilter != null) {
         setFilter(initialFilter);
       }
+      if (reorderInfo != null){
+        reorderInfo.init();
+      }
     }
     return table;
   }
@@ -415,6 +417,9 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     if (structChanged) {
       resetColumns();
     }
+    if (reorderInfo != null){
+      reorderInfo.init();
+    }
   }
 
   public void reset() {
@@ -466,10 +471,93 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     this.headerRenderer = new LabelTableCellRenderer(chain(columnHeaderRenderer, headerLabelCustomizer), headerBackgroundPainter);
     header.setDefaultRenderer(
       this.headerRenderer);
-    header.setReorderingAllowed(false);
+    header.setReorderingAllowed(reorderInfo != null);
 
     if (!headerActionsDisabled) {
       header.addMouseListener(new GlobTableColumnHeaderMouseListener(table, tableModel));
+    }
+  }
+
+  static class SavingInfo implements TableColumnModelListener, ChangeSetListener {
+    FieldAccess access;
+    private GlobRepository repository;
+    private GlobTableView tableView;
+    Key key;
+
+    public SavingInfo(GlobTableView tableView, Key key, FieldAccess access, GlobRepository repository) {
+      this.tableView = tableView;
+      this.key = key;
+      this.access = access;
+      this.repository = repository;
+      this.repository.addChangeListener(this);
+    }
+
+    public void init(){
+      TableColumnModel tableColumnModel = tableView.getComponent().getColumnModel();
+      tableColumnModel.removeColumnModelListener(this);
+      int i = 0;
+      Glob glob = repository.find(key);
+      if (glob == null){
+        return;
+      }
+      while (i != tableColumnModel.getColumnCount()){
+        int modelIndex = tableColumnModel.getColumn(i).getModelIndex();
+        Integer wantedPos = glob.get(access.getPosField(modelIndex));
+        if (wantedPos == null){
+          break;
+        }
+        if (wantedPos != i){
+          tableView.getComponent().moveColumn(i, wantedPos);
+          i = 0;
+        }
+        else {
+          i++;
+        }
+      }
+      tableColumnModel.addColumnModelListener(this);
+    }
+
+    public void columnAdded(TableColumnModelEvent e) {
+    }
+
+    public void columnRemoved(TableColumnModelEvent e) {
+    }
+
+    public void columnMoved(TableColumnModelEvent e) {
+      TableColumnModel tableColumnModel = tableView.getComponent().getColumnModel();
+      repository.startChangeSet();
+      for (int i = 0; i < tableColumnModel.getColumnCount(); i++){
+        repository.update(key, access.getPosField(tableColumnModel.getColumn(i).getModelIndex()), i);
+      }
+      repository.completeChangeSet();
+    }
+
+    public void columnMarginChanged(ChangeEvent e) {
+    }
+
+    public void columnSelectionChanged(ListSelectionEvent e) {
+    }
+
+    public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+    }
+
+    public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      if (changedTypes.contains(key.getGlobType())){
+        if (tableView.table != null){
+          init();
+        }
+      }
+    }
+  }
+
+  public interface FieldAccess {
+    IntegerField getPosField(int modelIndex);
+  }
+
+  public void registerSaving(Key key, FieldAccess fieldAccess, GlobRepository repository){
+    reorderInfo = new SavingInfo(this, key, fieldAccess, repository);
+    if (table != null){
+      reorderInfo.init();
     }
   }
 
@@ -552,7 +640,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       label.setHorizontalAlignment(JLabel.CENTER);
       label.setHorizontalTextPosition(JLabel.LEFT);
 
-      boolean isSorted = model.isColumnSorted(column);
+      boolean isSorted = model.isColumnSorted(table.getColumnModel().getColumn(column).getModelIndex());
       boolean ascending = model.isSortAscending();
       Icon sortedIcon = ascending ? UP : DOWN;
       label.setIcon(isSorted ? sortedIcon : NONE);

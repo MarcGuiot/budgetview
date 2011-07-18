@@ -401,7 +401,6 @@ public class PositionTrigger implements ChangeSetListener {
       }
     }
 
-
     Double realPosition = null;
     Date positionDate = null;
     int month = TimeService.getCurrentMonth();

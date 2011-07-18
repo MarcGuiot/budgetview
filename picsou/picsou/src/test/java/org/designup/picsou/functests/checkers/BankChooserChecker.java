@@ -1,6 +1,9 @@
 package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Panel;
+import org.uispec4j.Trigger;
+import org.uispec4j.Window;
+import org.uispec4j.interception.WindowInterceptor;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
@@ -28,5 +31,10 @@ public class BankChooserChecker extends GuiChecker {
 
   public void checkListContent(String... banks) {
     assertThat(panel.getListBox("bankList").contentEquals(banks));
+  }
+
+  public static BankChooserChecker init(Trigger trigger) {
+    Window window = WindowInterceptor.getModalDialog(trigger);
+    return new BankChooserChecker(window);
   }
 }

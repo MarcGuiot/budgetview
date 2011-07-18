@@ -169,7 +169,7 @@ class TextBoxHandlerForHtmlTextComponent extends AbstractTextBoxHandlerForTextCo
         }
       }
       if ((exactResults.isEmpty()) && (approximativeResults.isEmpty())) {
-        AssertAdapter.fail("Hyperlink '" + link + "' not found");
+        AssertAdapter.fail("Hyperlink '" + link + "' not found in " + text);
       }
       if ((exactResults.size() > 1) || (approximativeResults.size() > 1)) {
         AssertAdapter.fail("Ambiguous command - found several hyperlinks matching '" + link + "'");

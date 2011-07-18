@@ -28,8 +28,9 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.*;
+import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -41,9 +42,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
-
-import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesEditionDialog {
   private BudgetArea budgetArea;
@@ -104,10 +102,10 @@ public class SeriesEditionDialog {
     localRepository.addTrigger(new SingleMonthProfileTypeUpdater());
     localRepository.addTrigger(new ResetAllBudgetIfInAutomaticAndNoneAccountAreImported());
     addSeriesCreationTriggers(localRepository, new ProfileTypeSeriesTrigger.UserMonth() {
-                                public Set<Integer> getMonthWithTransaction() {
-                                  return selectedTransactions.getSortedSet(Transaction.BUDGET_MONTH);
-                                }
-                              }, repository);
+      public Set<Integer> getMonthWithTransaction() {
+        return selectedTransactions.getSortedSet(Transaction.BUDGET_MONTH);
+      }
+    }, repository);
 //    localRepository.addTrigger(new UpdateUpdateMirror());
 //    localRepository.addTrigger(new UpdateBudgetOnSeriesAccountsChange());
     localRepository.addChangeListener(new ProfileTypeChangeListener());
@@ -243,26 +241,26 @@ public class SeriesEditionDialog {
     builder.add("seriesAmountEditionPanel", seriesBudgetPanel);
 
     selectionService.addListener(new GlobSelectionListener() {
-                                   public void selectionUpdated(GlobSelection selection) {
-                                     setCurrentSeries(selectionService.getSelection(Series.TYPE).getFirst());
-                                     if (currentSeries != null) {
-                                       boolean isSavingsSeries = currentSeries.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId());
-                                       fromAccountsCombo.setVisible(isSavingsSeries);
-                                       toAccountsCombo.setVisible(isSavingsSeries);
-                                       dayChooser.setSelectedItem(currentSeries.get(Series.DAY));
-                                       Glob fromAccount = repository.findLinkTarget(currentSeries, Series.FROM_ACCOUNT);
-                                       Glob toAccount = repository.findLinkTarget(currentSeries, Series.TO_ACCOUNT);
-                                       boolean noneImported = Account.areNoneImported(fromAccount, toAccount);
-                                       dayChooser.setVisible(noneImported);
-                                       savingsMessage.setVisible(!isValidSeries(currentSeries));
-                                       okAction.setEnabled(isValidSeries(currentSeries));
-                                     }
-                                     updateDateSelectors();
-                                     updateMonthChooser();
-                                     updateMonthSelectionCard();
-                                     updateBudgetAreaCombo();
-                                   }
-                                 }, Series.TYPE);
+      public void selectionUpdated(GlobSelection selection) {
+        setCurrentSeries(selectionService.getSelection(Series.TYPE).getFirst());
+        if (currentSeries != null) {
+          boolean isSavingsSeries = currentSeries.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId());
+          fromAccountsCombo.setVisible(isSavingsSeries);
+          toAccountsCombo.setVisible(isSavingsSeries);
+          dayChooser.setSelectedItem(currentSeries.get(Series.DAY));
+          Glob fromAccount = repository.findLinkTarget(currentSeries, Series.FROM_ACCOUNT);
+          Glob toAccount = repository.findLinkTarget(currentSeries, Series.TO_ACCOUNT);
+          boolean noneImported = Account.areNoneImported(fromAccount, toAccount);
+          dayChooser.setVisible(noneImported);
+          savingsMessage.setVisible(!isValidSeries(currentSeries));
+          okAction.setEnabled(isValidSeries(currentSeries));
+        }
+        updateDateSelectors();
+        updateMonthChooser();
+        updateMonthSelectionCard();
+        updateBudgetAreaCombo();
+      }
+    }, Series.TYPE);
 
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
