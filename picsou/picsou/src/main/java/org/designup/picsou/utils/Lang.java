@@ -6,11 +6,9 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import org.globsframework.utils.Files;
 
+import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.io.InputStream;
 
 public class Lang {
@@ -104,18 +102,6 @@ public class Lang {
     }
     try {
       return bundle.getString(key);
-    }
-    catch (MissingResourceException e) {
-      return null;
-    }
-  }
-
-  public static Enumeration<String> getKeys() {
-    if (bundle == null) {
-      bundle = ResourceBundle.getBundle("i18n/lang", LOCALE);
-    }
-    try {
-      return bundle.getKeys();
     }
     catch (MissingResourceException e) {
       return null;
