@@ -3,6 +3,7 @@ package org.designup.picsou.bank;
 import org.designup.picsou.bank.specific.AbstractBankPlugin;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.gui.bank.BankChooserDialog;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.delta.MutableChangeSet;
@@ -33,12 +34,27 @@ public class BankPluginService {
     for (Key key : createdAcountsKey) {
       Glob account = localRepository.get(key);
       Integer bankId = account.get(Account.BANK);
+      if (bankId == null){
+        Glob sameAccount = findFirstSameAccount(referenceRepository, account);
+        if (sameAccount == null){
+          sameAccount = findFirstSameAccount(localRepository, account);
+        }
+        if (sameAccount != null){
+          bankId = sameAccount.get(Account.BANK);
+        }
+      }
       BankPlugin bankPlugin = specific.get(bankId);
       if (bankPlugin == null) {
         bankPlugin = defaultPlugin;
       }
       bankPlugin.apply(account, referenceRepository, localRepository, changeSet);
     }
+  }
+
+  private Glob findFirstSameAccount(ReadOnlyGlobRepository referenceRepository, Glob account) {
+    return referenceRepository.getAll(Account.TYPE, GlobMatchers.and(
+      GlobMatchers.fieldEquals(Account.NUMBER, account.get(Account.NUMBER)),
+      GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, account.get(Account.ID))))).getFirst();
   }
 
   public void add(Integer bankId, BankPlugin bankPlugin) {
@@ -61,6 +77,5 @@ public class BankPluginService {
                            account,
                            referenceRepository, localRepository, importChangeSet);
     }
-
   }
 }

@@ -33,8 +33,7 @@ public abstract class AbstractBankPlugin implements BankPlugin {
 
   protected GlobList getSameAccount(Glob newAccount, ReadOnlyGlobRepository referenceRepository) {
     return referenceRepository.getAll(Account.TYPE,
-                                      GlobMatchers.and(
-                                        GlobMatchers.fieldEquals(Account.NUMBER, newAccount.get(Account.NUMBER))));
+                                        GlobMatchers.fieldEquals(Account.NUMBER, newAccount.get(Account.NUMBER)));
   }
 
   public void postApply(GlobList transactions, Glob account, GlobRepository repository, GlobRepository localRepository, ChangeSet set) {

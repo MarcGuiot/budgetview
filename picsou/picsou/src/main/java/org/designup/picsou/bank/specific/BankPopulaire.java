@@ -1,13 +1,11 @@
 package org.designup.picsou.bank.specific;
 
 import org.designup.picsou.bank.BankPluginService;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountCardType;
-import org.designup.picsou.model.BankEntity;
-import org.designup.picsou.model.ImportedTransaction;
+import org.designup.picsou.model.*;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
 
 public class BankPopulaire extends AbstractBankPlugin {
@@ -33,11 +31,20 @@ public class BankPopulaire extends AbstractBankPlugin {
                                      GlobMatchers.fieldEquals(Account.NUMBER, account.get(Account.NUMBER)),
                                      GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId())));
       if (existingAccounts.isEmpty()) {
+        GlobList all = localRepository.getAll(ImportedTransaction.TYPE,
+                                              GlobMatchers.fieldEquals(ImportedTransaction.ACCOUNT, account.get(Account.ID)));
+        for (Glob glob : all) {
+          localRepository.update(glob.getKey(),
+                                 FieldValue.value(ImportedTransaction.OFX_NAME, glob.get(ImportedTransaction.OFX_MEMO)),
+                                 FieldValue.value(ImportedTransaction.OFX_MEMO, null));
+        }
+        Double position = all.getSum(ImportedTransaction.AMOUNT);
         localRepository.update(account.getKey(),
-                               FieldValue.value(Account.POSITION_DATE, null),
-                               FieldValue.value(Account.POSITION, null),
+//                               FieldValue.value(Account.POSITION_DATE, null),
+                               FieldValue.value(Account.POSITION, position),
                                FieldValue.value(Account.TRANSACTION_ID, null),
                                FieldValue.value(Account.NAME, Account.getName(account.get(Account.NUMBER), Boolean.TRUE)),
+                               FieldValue.value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()),
                                FieldValue.value(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()));
       }
       else if (existingAccounts.size() == 1) {
@@ -46,13 +53,24 @@ public class BankPopulaire extends AbstractBankPlugin {
       }
     }
     else {
+      GlobMatcher globMatcher;
+      if (account.get(Account.CARD_TYPE).equals(AccountCardType.UNDEFINED.getId())){
+        globMatcher = GlobMatchers.or(GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()),
+                                      GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.CREDIT.getId()));
+      }
+      else {
+        globMatcher = GlobMatchers.fieldEquals(Account.CARD_TYPE, account.get(Account.CARD_TYPE));
+      }
       GlobList existingAccounts =
         referenceRepository.getAll(Account.TYPE,
                                    GlobMatchers.and(
                                      GlobMatchers.fieldEquals(Account.NUMBER, account.get(Account.NUMBER)),
-                                     GlobMatchers.not(GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()))));
+                                     globMatcher));
       if (existingAccounts.size() == 1) {
         updateImportedTransaction(localRepository, account, existingAccounts.getFirst());
+      }
+      else{
+        throw new RuntimeException("Bug : multiple account.");
       }
     }
   }
