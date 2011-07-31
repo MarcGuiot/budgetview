@@ -7,7 +7,7 @@ public interface BankPlugin {
 
   boolean useCreatedAccount();
 
-  void apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository,
+  boolean apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository,
              GlobRepository localRepository, MutableChangeSet changeSet);
 
   void postApply(GlobList list, Glob account, GlobRepository repository, GlobRepository localRepository, ChangeSet set);

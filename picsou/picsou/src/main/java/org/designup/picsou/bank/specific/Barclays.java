@@ -15,18 +15,21 @@ public class Barclays extends AbstractBankPlugin{
     bankPluginService.add(bankEntity.get(BankEntity.BANK), this);
   }
 
-  public void apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
+  public boolean apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
     GlobList existingAccounts = getSameAccount(newAccount, referenceRepository);
     if (existingAccounts.isEmpty()) {
       localRepository.update(newAccount.getKey(),
                              FieldValue.value(Account.POSITION_DATE, null),
                              FieldValue.value(Account.POSITION, null),
                              FieldValue.value(Account.TRANSACTION_ID, null));
+      return true;
     }
     else if (existingAccounts.size() == 1) {
       localRepository.update(newAccount.getKey(), FieldValue.value(Account.POSITION_DATE, null));
       updateImportedTransaction(localRepository, newAccount, existingAccounts.getFirst());
+      return true;
     }
+    return false;
   }
 
   public int getVersion() {

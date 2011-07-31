@@ -20,7 +20,7 @@ public class LaPoste extends AbstractBankPlugin {
     return false;
   }
 
-  public void apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository,
+  public boolean apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository,
                     GlobRepository localRepository, MutableChangeSet changeSet) {
     GlobList transactions = localRepository.getAll(ImportedTransaction.TYPE,
                                                    GlobMatchers.fieldEquals(ImportedTransaction.ACCOUNT, newAccount.get(Account.ID)));
@@ -34,6 +34,7 @@ public class LaPoste extends AbstractBankPlugin {
                            FieldValue.value(CurrentAccountInfo.POSITION, newAccount.get(Account.POSITION)));
 //    if (transactions.isEmpty()) {
     localRepository.delete(newAccount.getKey());
+    return false;
 //    super.apply(newAccount, referenceRepository, localRepository, changeSet);
 //      return;
 //    }

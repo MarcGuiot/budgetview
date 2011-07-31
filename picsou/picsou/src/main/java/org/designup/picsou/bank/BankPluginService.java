@@ -29,7 +29,7 @@ public class BankPluginService {
     return bankPlugin.useCreatedAccount();
   }
 
-  public void apply(ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
+  public boolean apply(ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
     Set<Key> createdAcountsKey = changeSet.getCreated(Account.TYPE);
     for (Key key : createdAcountsKey) {
       Glob account = localRepository.get(key);
@@ -47,8 +47,9 @@ public class BankPluginService {
       if (bankPlugin == null) {
         bankPlugin = defaultPlugin;
       }
-      bankPlugin.apply(account, referenceRepository, localRepository, changeSet);
+      return bankPlugin.apply(account, referenceRepository, localRepository, changeSet);
     }
+    return false;
   }
 
   private Glob findFirstSameAccount(ReadOnlyGlobRepository referenceRepository, Glob account) {

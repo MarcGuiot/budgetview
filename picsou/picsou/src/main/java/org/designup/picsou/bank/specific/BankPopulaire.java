@@ -16,12 +16,12 @@ public class BankPopulaire extends AbstractBankPlugin {
     bankPluginService.add(bankEntity.get(BankEntity.BANK), this);
   }
 
-  public void apply(Glob account, ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
+  public boolean apply(Glob account, ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
     GlobList transactions = localRepository.getAll(ImportedTransaction.TYPE,
                                                    GlobMatchers.fieldEquals(ImportedTransaction.ACCOUNT, account.get(Account.ID)));
     if (transactions.isEmpty()) {
       localRepository.delete(account.getKey());
-      return;
+      return true;
     }
     String name = transactions.getFirst().get(ImportedTransaction.OFX_NAME);
     if (name != null && name.toUpperCase().startsWith("FACTURETTE CB")) {
@@ -46,10 +46,15 @@ public class BankPopulaire extends AbstractBankPlugin {
                                FieldValue.value(Account.NAME, Account.getName(account.get(Account.NUMBER), Boolean.TRUE)),
                                FieldValue.value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()),
                                FieldValue.value(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()));
+        return true;
       }
       else if (existingAccounts.size() == 1) {
         localRepository.update(account.getKey(), FieldValue.value(Account.POSITION_DATE, null));
         updateImportedTransaction(localRepository, account, existingAccounts.getFirst());
+        return true;
+      }
+      else if (existingAccounts.size() == 0){
+        return true;
       }
     }
     else {
@@ -68,11 +73,13 @@ public class BankPopulaire extends AbstractBankPlugin {
                                      globMatcher));
       if (existingAccounts.size() == 1) {
         updateImportedTransaction(localRepository, account, existingAccounts.getFirst());
+        return true;
       }
-      else{
-        throw new RuntimeException("Bug : multiple account.");
+      else if (existingAccounts.size() == 0){
+        return true;
       }
     }
+    return false;
   }
 
   public int getVersion() {
