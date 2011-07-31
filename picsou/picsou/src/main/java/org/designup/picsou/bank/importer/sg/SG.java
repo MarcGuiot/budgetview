@@ -1,12 +1,9 @@
 package org.designup.picsou.bank.importer.sg;
 
-import com.gargoylesoftware.htmlunit.*;
-import com.gargoylesoftware.htmlunit.attachment.AttachmentHandler;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.javascript.host.Event;
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.bank.importer.BankPage;
-import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.utils.ApplicationColors;
@@ -32,10 +29,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,11 +47,7 @@ public class SG extends BankPage {
   private ClavierPanel clavierPanel;
   private JButton valider;
   private JButton validerCode;
-  private WebClient client;
-  private HtmlPage page;
   private JTextField code;
-  private SG.ErrorAlertHandler errorAlertHandler;
-  private boolean hasError = false;
   private JTextField passwordTextField;
 
   public static void main(String[] args) throws IOException {
@@ -113,7 +104,7 @@ public class SG extends BankPage {
     Thread thread = new Thread() {
       public void run() {
         try {
-          loadPage();
+          loadPage(INDEX);
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
               validerCode.setEnabled(true);
@@ -152,17 +143,6 @@ public class SG extends BankPage {
     validerCode.setEnabled(false);
     corriger.setEnabled(false);
     valider.setEnabled(false);
-  }
-
-  private void loadPage() throws IOException {
-    client = new WebClient();
-    client.setCssEnabled(false);
-    client.setJavaScriptEnabled(true);
-    client.setCache(new Cache());
-    client.setAjaxController(new NicelyResynchronizingAjaxController());
-    page = (HtmlPage)client.getPage(INDEX);
-    errorAlertHandler = new ErrorAlertHandler();
-    client.setAlertHandler(errorAlertHandler);
   }
 
   protected Double extractAmount(String position) {
@@ -241,7 +221,6 @@ public class SG extends BankPage {
           client.waitForBackgroundJavaScript(10000);
 
           if (page.getTitleText().contains("Erreur")) {
-
             return;
           }
           HtmlElement content = null;
@@ -306,7 +285,7 @@ public class SG extends BankPage {
   }
 
   public List<File> loadFile() {
-    HtmlSelect compte = getElement("compte");
+    HtmlSelect compte = getElementById("compte");
     List<HtmlOption> accountList = compte.getOptions();
     List<File> downloadedFiles = new ArrayList<File>();
     for (HtmlOption option : accountList) {
@@ -327,7 +306,7 @@ public class SG extends BankPage {
 
   private Glob find(HtmlOption option, GlobList accounts) {
     for (Glob account : accounts) {
-      String s = account.get(RealAccount.NAME);
+      String s = account.get(RealAccount.NUMBER);
       if (option.getTextContent().contains(s)) {
         return account;
       }
@@ -345,14 +324,6 @@ public class SG extends BankPage {
     ((HtmlInput)fromDate).setValueAttribute(dateFormat.format(calendar.getTime()));
   }
 
-  private <T extends HtmlElement> T getElement(final String id) {
-    T select = (T)page.getElementById(id);
-    if (select == null) {
-      throw new RuntimeException("Can not find tag '" + id + "' in :\n" + page.asXml());
-    }
-    return select;
-  }
-
   private <T> T getFirst(List<T> htmlElements, final String attribute) {
     if (htmlElements.size() == 0) {
       throw new RuntimeException("no " + attribute + " in :\n" + page.asXml());
@@ -361,19 +332,8 @@ public class SG extends BankPage {
   }
 
 
-  private class DownloadAttachmentHandler implements AttachmentHandler {
-    private Page page;
-
-    public void handleAttachment(Page page) {
-      synchronized (this) {
-        this.page = page;
-        notifyAll();
-      }
-    }
-  }
-
   private File downloadFor(Glob realAccount) {
-    HtmlElement div = getElement("logicielFull");
+    HtmlElement div = getElementById("logicielFull");
     String style = div.getAttribute("style");
     if (Strings.isNotEmpty(style)) {
       return null;
@@ -395,7 +355,7 @@ public class SG extends BankPage {
       Log.write("MONEY not found.");
       return null;
     }
-    HtmlElement periodes = getElement("Periode");
+    HtmlElement periodes = getElementById("Periode");
     List<HtmlElement> from90LastDays = periodes.getElementsByAttribute(HtmlInput.TAG_NAME, "value", "XXJOURS");
     if (!from90LastDays.isEmpty()) {
       ((HtmlInput)from90LastDays.get(0)).setChecked(true);
@@ -426,48 +386,7 @@ public class SG extends BankPage {
 
     HtmlAnchor anchor = findLink(page.getAnchors(), "telecharger");
 
-    DownloadAttachmentHandler downloadAttachmentHandler = new DownloadAttachmentHandler();
-    client.setAttachmentHandler(downloadAttachmentHandler);
-    try {
-      anchor.click();
-    }
-    catch (IOException e) {
-      Log.write("In anchor click", e);
-      return null;
-    }
-    synchronized (downloadAttachmentHandler) {
-      if (downloadAttachmentHandler.page == null) {
-        try {
-          downloadAttachmentHandler.wait(3000);
-        }
-        catch (InterruptedException e1) {
-        }
-      }
-    }
-    if (downloadAttachmentHandler.page != null) {
-      InputStream contentAsStream = downloadAttachmentHandler.page.getWebResponse().getContentAsStream();
-      return createQifLocalFile(realAccount, contentAsStream);
-    }
-    else {
-      Log.write("No download");
-    }
-    return null;
-  }
-
-  private HtmlAnchor findLink(List<HtmlAnchor> anchors, String ref) {
-    for (HtmlAnchor anchor : anchors) {
-      if (anchor.getHrefAttribute().contains(ref)) {
-        return anchor;
-      }
-    }
-    throw new RuntimeException("Can not find ref '" + ref + "' in :\n" + page.asXml());
-  }
-
-  private class ErrorAlertHandler implements AlertHandler {
-    public void handleAlert(Page page, String s) {
-      hasError = true;
-      MessageDialog.show("bank.error", dialog, directory, "bank.error.msg", s);
-    }
+    return downloadFile(realAccount, anchor);
   }
 
   public static BufferedImage getFirstImage(HtmlImage img) {

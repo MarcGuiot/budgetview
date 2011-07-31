@@ -27,11 +27,11 @@ public class RealAccount {
   @Target(Bank.class)
   public static LinkField BANK; // to protect if same name
 
-  public static StringField NAME;
+  public static StringField NUMBER;
 
   public static StringField POSITION;
 
-  public static StringField TYPE_NAME;
+  public static StringField NAME;
 
   @Target(value = AccountType.class)
   public static LinkField ACCOUNT_TYPE;
@@ -61,9 +61,9 @@ public class RealAccount {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput output = serializedByteArrayOutput.getOutput();
       output.writeInteger(fieldValues.get(BANK));
-      output.writeUtf8String(fieldValues.get(NAME));
+      output.writeUtf8String(fieldValues.get(NUMBER));
       output.writeUtf8String(fieldValues.get(POSITION));
-      output.writeUtf8String(fieldValues.get(TYPE_NAME));
+      output.writeUtf8String(fieldValues.get(NAME));
       output.writeInteger(fieldValues.get(ACCOUNT_TYPE));
       output.writeBoolean(fieldValues.get(IMPORTED));
       output.writeBoolean(fieldValues.get(SAVINGS));
@@ -80,9 +80,9 @@ public class RealAccount {
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(BANK, input.readInteger());
-      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(NUMBER, input.readUtf8String());
       fieldSetter.set(POSITION, input.readUtf8String());
-      fieldSetter.set(TYPE_NAME, input.readUtf8String());
+      fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
       fieldSetter.set(IMPORTED, input.readBoolean());
       fieldSetter.set(SAVINGS, input.readBoolean());

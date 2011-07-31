@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
   <bankFormat id='7'>
-
     <bank name="Crédit Mutuel" downloadUrl="https://www.creditmutuel.fr" id='7'>
       <bankEntity id="16306"/>
       <bankEntity id="10278"/>
-      <bankEntity id="15589"/>
       <bankEntity id="18829"/>
       <bankEntity id="15459"/>
       <bankEntity id="15489"/>
@@ -17,6 +15,12 @@
       <bankEntity id="15969"/>
       <bankEntity id="15999"/>
       <bankEntity id="16159"/>
+    </bank>
+  </bankFormat>
+
+  <bankFormat id='15'>
+    <bank name="Crédit Mutuel Arkéa" downloadUrl="https://www.cmso.com/domiweb/accueil.jsp" id='15'  synchroEnable="true">
+      <bankEntity id="15589"/>
     </bank>
 
     <transactionMatcher qifP="CARTE[\s]+(\d{2}/\d{2})[\s]+(.*)"
