@@ -2,7 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
-import org.designup.picsou.gui.series.analysis.SeriesAnalysisView;
+import org.designup.picsou.gui.series.analysis.SeriesEvolutionTableView;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.uispec4j.*;
@@ -89,13 +89,13 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
   }
 
   private int getRow(String label, Table table) {
-    return table.getRowIndex(SeriesAnalysisView.LABEL_COLUMN_INDEX, label);
+    return table.getRowIndex(SeriesEvolutionTableView.LABEL_COLUMN_INDEX, label);
   }
 
   private java.util.List<String> getLineLabels() {
     java.util.List<String> labels = new ArrayList<String>();
     for (int row = 0; row < table.getRowCount(); row++) {
-      labels.add(table.getContentAt(row, SeriesAnalysisView.LABEL_COLUMN_INDEX).toString());
+      labels.add(table.getContentAt(row, SeriesEvolutionTableView.LABEL_COLUMN_INDEX).toString());
     }
     return labels;
   }
@@ -135,16 +135,16 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
     Table table = getTable();
     int row = getRow(rowLabel.toUpperCase(), table);
     if (row == -1) {
-      row = table.getRowIndex(SeriesAnalysisView.LABEL_COLUMN_INDEX, rowLabel);
+      row = table.getRowIndex(SeriesEvolutionTableView.LABEL_COLUMN_INDEX, rowLabel);
     }
-    return SeriesEditionDialogChecker.open(table.editCell(row, SeriesAnalysisView.LABEL_COLUMN_INDEX).getButton().triggerClick());
+    return SeriesEditionDialogChecker.open(table.editCell(row, SeriesEvolutionTableView.LABEL_COLUMN_INDEX).getButton().triggerClick());
   }
 
   public SeriesAmountEditionDialogChecker editSeries(String rowLabel, String columnLabel) {
     Table table = getTable();
     int row = getRow(rowLabel.toUpperCase(), table);
     if (row == -1) {
-      row = table.getRowIndex(SeriesAnalysisView.LABEL_COLUMN_INDEX, rowLabel);
+      row = table.getRowIndex(SeriesEvolutionTableView.LABEL_COLUMN_INDEX, rowLabel);
     }
     int column = table.getHeader().findColumnIndex(columnLabel);
     table.selectRow(row);
@@ -162,7 +162,7 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
   }
 
   public void checkSeriesNotShown(String seriesName) {
-    assertFalse(getTable().containsRow(SeriesAnalysisView.LABEL_COLUMN_INDEX, seriesName));
+    assertFalse(getTable().containsRow(SeriesEvolutionTableView.LABEL_COLUMN_INDEX, seriesName));
   }
 
   public SeriesAnalysisChecker checkForeground(String rowLabel, String columnLabel, String expectedColor) {
@@ -236,6 +236,26 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
 
   public void checkPreviousMonthSelectionDisabled() {
     assertFalse(getPanel().getButton("previousMonth").isEnabled());
+  }
+
+  public SeriesAnalysisChecker checkTableHidden() {
+    checkComponentVisible(getPanel(), JPanel.class, "tablePanel", false);
+    return this;
+  }
+
+  public SeriesAnalysisChecker checkTableShown() {
+    checkComponentVisible(getPanel(), JPanel.class, "tablePanel", true);
+    return this;
+  }
+
+  public SeriesAnalysisChecker toggleTable() {
+    getPanel().getButton("toggleTable").click();
+    return this;
+  }
+
+  public SeriesAnalysisChecker checkToggleLabel(String expectedLabel) {
+    assertThat(getPanel().getButton("toggleTable").textEquals(expectedLabel));
+    return this;
   }
 
   public class SeriesTableChecker extends TableChecker {

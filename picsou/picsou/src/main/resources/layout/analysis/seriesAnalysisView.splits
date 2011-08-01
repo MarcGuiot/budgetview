@@ -5,6 +5,9 @@
     <style selector="panel.chart" margin="15" marginTop="10" opaque="true"/>
     <style selector="label.chartLabel" fill="horizontal" horizontalAlignment="center" weightY="0" marginTop="10"
            font="-,plain,12" foreground="seriesAnalysis.chart.label" opaque="false"/>
+    <style selector="button.toggleButton" ui="hyperlinkButtonWithoutUnderline"
+           icon="arrow_down.png" rolloverIcon="arrow_down_roll.png"
+           foreground="block.bottom.link" iconTextGap="2" marginTop="8"/>
   </styles>
 
   <column styleClass="main">
@@ -15,7 +18,7 @@
 
       <verticalSplit styleClass="innerBlock">
 
-        <column>
+        <column weightY="5">
 
           <row weightY="0.01" marginTop="5" marginBottom="10">
             <filler fill="horizontal"/>
@@ -33,9 +36,15 @@
                    background="seriesAnalysis.chart.bg"/>
           </grid>
 
+          <row>
+            <filler fill="horizontal"/>
+            <button action="toggleTable" styleClass="toggleButton"/>
+            <filler fill="horizontal"/>
+          </row>
+
         </column>
 
-        <column styleClass="blockScrollBorder" weightY="3">
+        <column ref="tablePanel" styleClass="blockScrollBorder" weightY="3">
 
           <scrollPane ref="tableScrollPane" verticalUnitIncrement="10" border="matte(1,1,0,1,block.scroll.border)"
                       horizontalScrollbarPolicy="never">

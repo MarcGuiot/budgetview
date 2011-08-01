@@ -23,13 +23,11 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/11", -40.00, "SomethingElse")
       .load();
 
-    views.selectCategorization();
     categorization.setNewVariable("Auchan", "Groceries", -100.);
     categorization.setNewRecurring("Free Telecom", "Internet");
     categorization.setNewRecurring("EDF", "Energy");
     categorization.setNewIncome("WorldCo", "Salary");
 
-    views.selectBudget();
     budgetView.recurring.editSeries("Energy").setTwoMonths().validate();
 
     timeline.selectMonth("2008/11");
@@ -55,6 +53,13 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.checkColumnNames(
       "", "June 2008", "Jul 2008", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009"
     );
+
+    seriesAnalysis
+      .checkTableHidden()
+      .checkToggleLabel("Show details")
+      .toggleTable()
+      .checkToggleLabel("Hide details")
+      .checkTableShown();
 
     seriesAnalysis.initContent()
       .add("Main accounts", "", "-125.00", "45.00", "165.00", "335.00", "555.00", "425.00", "545.00")
@@ -110,14 +115,13 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/15", 350.00, "Big Inc.")
       .load();
 
-    views.selectCategorization();
     categorization.setNewVariable("Auchan", "Groceries", -480.);
     categorization.setNewIncome("WorldCo", "John's");
     categorization.setNewIncome("Big Inc.", "Mary's");
 
     timeline.selectMonth("2008/06");
 
-    views.selectAnalysis();
+    seriesAnalysis.toggleTable();
     seriesAnalysis.initContent()
       .add("Main accounts", "480.00", "670.00", "870.00", "1070.00", "1270.00", "1470.00", "1670.00", "1870.00")
       .add("Balance", "200.00", "190.00", "200.00", "200.00", "200.00", "200.00", "200.00", "200.00")
@@ -148,14 +152,13 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/04/15", 360.00, "Big Inc.")
       .load();
 
-    views.selectCategorization();
     categorization.setNewVariable("Auchan", "Groceries", -480.);
     categorization.setNewIncome("WorldCo", "John's");
     categorization.setNewIncome("Big Inc.", "Mary's");
 
     timeline.selectMonth("2008/04");
 
-    views.selectAnalysis();
+    seriesAnalysis.toggleTable();
     seriesAnalysis.initContent()
       .add("Main accounts", "810.00", "1000.00", "1190.00", "1380.00", "1570.00", "1760.00", "1950.00", "2140.00")
       .add("Balance", "200.00", "190.00", "190.00", "190.00", "190.00", "190.00", "190.00", "190.00")
@@ -175,7 +178,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
   public void testNoData() throws Exception {
     timeline.checkSelection("2008/07");
-    views.selectAnalysis();
+    seriesAnalysis.toggleTable();
     seriesAnalysis.checkColumnNames(
       "", "June 2008", "Jul 2008", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009"
     );
@@ -189,14 +192,13 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/12", -100.00, "Auchan")
       .load();
 
-    views.selectBudget();
     timeline.selectMonth("2008/12");
     budgetView.extras.createSeries()
       .setName("Christmas")
       .setAmount(200.00)
       .validate();
 
-    views.selectAnalysis();
+    seriesAnalysis.toggleTable();
 
     timeline.selectMonth("2008/07");
     seriesAnalysis.checkColumnNames(
@@ -230,13 +232,12 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/15", 350.00, "Big Inc.")
       .load();
 
-    views.selectCategorization();
     categorization.setNewIncome("WorldCo", "John's");
     categorization.setNewIncome("Big Inc.", "Mary's");
 
     timeline.selectMonth("2008/07");
 
-    views.selectAnalysis();
+    seriesAnalysis.toggleTable();
     seriesAnalysis.initContent()
       .add("Main accounts", "", "1000.00", "1670.00", "2340.00", "3010.00", "3680.00", "4350.00", "5020.00")
       .add("Balance", "", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00")
@@ -347,13 +348,12 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/15", 350.00, "Big Inc.")
       .load();
 
-    views.selectCategorization();
     categorization.setNewIncome("WorldCo", "John's");
     categorization.setNewIncome("Big Inc.", "Mary's");
 
     timeline.selectMonth("2008/07");
 
-    views.selectAnalysis();
+    seriesAnalysis.toggleTable();
     seriesAnalysis.initContent()
       .add("Main accounts", "", "1000.00", "1670.00", "2340.00", "3010.00", "3680.00", "4350.00", "5020.00")
       .add("Balance", "", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00", "670.00")
@@ -394,11 +394,10 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/12", -100.00, "Auchan")
       .load();
 
-    views.selectCategorization();
     categorization.setNewVariable("Auchan", "Groceries", -100.);
 
-    views.selectAnalysis();
     timeline.selectMonths("2008/08");
+    seriesAnalysis.toggleTable();
     seriesAnalysis.checkColumnNames(
       "", "Jul 2008", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009", "Feb 2009"
     );
@@ -416,13 +415,13 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/01", 3540.00, "WorldCo")
       .load();
 
-    views.selectCategorization();
     categorization.setNewVariable("Auchan", "Groceries");
     categorization.setNewRecurring("Free Telecom", "Internet");
     categorization.setNewIncome("WorldCo", "Salary");
     categorization.setNewIncome("GlobalCorp", "Salary 2");
 
-    views.selectAnalysis();
+    seriesAnalysis.toggleTable();
+
     String[] expanded = {"Main accounts", "Balance", "Savings accounts", "To categorize",
                          "Income", "Salary", "Salary 2",
                          "Recurring", "Internet",
@@ -458,11 +457,10 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/12", -100.00, "Auchan")
       .load();
 
-    views.selectCategorization();
     categorization.setNewVariable("Auchan", "Groceries", -100.);
 
-    views.selectAnalysis();
     timeline.selectMonth("2008/07");
+    seriesAnalysis.toggleTable();
     seriesAnalysis.checkColumnNames(
       "", "June 2008", "Jul 2008", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009"
     );
@@ -488,32 +486,27 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testOnlySeriesWithDataForTheDisplayedPeriodAreShown() throws Exception {
-    views.selectBudget();
     budgetView.recurring.createSeries()
       .setName("Taxes")
       .validate();
 
-    views.selectAnalysis();
+    seriesAnalysis.toggleTable();
     seriesAnalysis.checkSeriesNotShown("Taxes");
 
-    views.selectBudget();
     budgetView.recurring.editSeries("Taxes")
       .selectAllMonths()
       .setAmount(200)
       .validate();
 
-    views.selectAnalysis();
     seriesAnalysis.checkRow(
       "Taxes", "", "200.00", "200.00", "200.00", "200.00", "200.00", "200.00", "200.00"
     );
 
-    views.selectBudget();
     budgetView.recurring.editSeries("Taxes")
       .setEndDate(200808)
       .validate();
 
     timeline.selectMonth("2008/10");
-    views.selectAnalysis();
     seriesAnalysis.checkSeriesNotShown("Taxes");
 
     timeline.selectMonth("2008/08");
@@ -526,16 +519,16 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -100.00, "Impots")
       .load();
-    views.selectBudget();
+
     budgetView.recurring.createSeries()
       .setName("Taxes")
       .selectAllMonths()
       .setAmount(0)
       .validate();
-    views.selectCategorization();
+
     categorization.setRecurring("Impots", "Taxes");
 
-    views.selectAnalysis();
+    seriesAnalysis.toggleTable();
     seriesAnalysis.checkRow("Taxes", "", "100.00", "", "", "", "", "", "");
   }
 
@@ -547,7 +540,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/01", 3540.00, "WorldCo")
       .load();
 
-    views.selectBudget();
     budgetView.recurring.createSeries()
       .setName("Taxes")
       .selectAllMonths()
@@ -556,7 +548,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     mainWindow.getAwtComponent().setSize(new Dimension(1024, 760));
 
-    views.selectAnalysis();
+    seriesAnalysis.toggleTable();
     seriesAnalysis.checkClipboardExport(
       "\t\tJune 2008\tJul 2008\tAug 2008\tSep 2008\tOct 2008\tNov 2008\tDec 2008\tJan 2009\tFeb 2009\tMar 2009\tApr 2009\n" +
       "\tMain accounts\t\t-200.00\t-400.00\t-600.00\t-800.00\t-1000.00\t-1200.00\t-1400.00\t\t\t\n" +
@@ -578,8 +570,8 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/12", -95.00, "Auchan")
       .load();
 
-    views.selectAnalysis();
     timeline.checkSelection("2008/07");
+    seriesAnalysis.toggleTable();
     seriesAnalysis.checkColumnNames(
       "", "June 2008", "Jul 2008", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009"
     );
@@ -624,7 +616,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/12", -95.00, "Virement")
       .load();
 
-    views.selectHome();
     savingsAccounts.createNewAccount()
       .setAccountName("Livret")
       .selectBank("ING Direct")
@@ -637,11 +628,10 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/12", +95.00, "Virt livret")
       .load();
 
-    views.selectCategorization();
     categorization.setSavings("Virement", "To account Livret");
     categorization.setSavings("Virt livret", "To account Livret");
 
-    views.selectAnalysis();
+    seriesAnalysis.toggleTable();
     seriesAnalysis.expandAll();
     seriesAnalysis.checkRowLabels(
       "Main accounts", "Balance", "Savings accounts", "To categorize", "Income", "Recurring", "Variable", "Extras",
@@ -660,7 +650,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/11", -40.00, "SomethingElse")
       .load();
 
-    views.selectCategorization();
     categorization.setNewVariable("Auchan", "Groceries", -100.00);
     categorization.setNewRecurring("Free Telecom", "Internet");
     categorization.setNewRecurring("EDF", "Energy");
@@ -669,6 +658,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.clearSelection();
     seriesAnalysis.checkBreadcrumb("Overall budget / summary");
 
+    seriesAnalysis.toggleTable();
     seriesAnalysis.select("Energy");
     seriesAnalysis.checkBreadcrumb("Overall budget > Recurring > Energy");
 
