@@ -1,10 +1,9 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
-
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
     <style selector="#budgetAreaSeriesView .amount" font="-,plain,11" anchor="right"/>
-    <style selector="label.totalAmount" font="-,bold,16" weightY="10" anchor="center" marginBottom="2"/>
+    <style selector="label.totalAmount" font="-,bold,12" weightY="10" anchor="center" marginBottom="2"/>
     <style selector="label.totalAmountTitle" weightX="0" anchor="center"/>
 
     <style selector="repeat header label" font="-,plain,11"
@@ -26,14 +25,18 @@
         underline="false" useNormalColorWhenDisabled="false" autoHideEnabled="false"
         disabledColor="block.item.link.inactive"/>
     <style selector="button#observedSeriesAmount" ui="amountLinkUI"
-           fill="none" anchor="right" horizontalAlignment="right"
+           fill="none" anchor="right" horizontalAlignment="right"  weightX="0.1" marginLeft="0"
            foreground="block.amount.actual.link" font="-,plain,11"/>
     <style selector="button#plannedSeriesAmount" ui="amountLinkUI"
-           fill="none" anchor="right" horizontalAlignment="right"
+           fill="none" anchor="left" horizontalAlignment="left" weightX="0.1" marginRight="0"
            foreground="block.amount.planned.link" font="-,bold,11" opaque="true"/>
     <style id="plannedToSet" selector="x" background="block.amount.planned.link.toset" opaque="true"/>
     <style id="plannedAlreadySet" selector="x" background="block.inner.bg" opaque="true"/>
 
+    <style selector="#gauge" weightX="100"/>
+
+    <style selector="#total label" marginBottom="0"/>
+    
   </styles>
 
   <column name="budgetAreaSeriesView" styleClass="main">
@@ -42,32 +45,20 @@
 
     <panel styleClass="block" preferredSize="(300,400)">
       <column border="empty(10)">
-        <grid weightY="0" marginLeft="5" marginRight="5">
-          <label text="$budgetview.observed" styleClass="totalAmountTitle" gridPos="(0,0)" marginRight="5"/>
-          <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(1,0)"
-                 tooltipText="$budgetview.tooltip.total.observed"/>
-          <component ref="totalGauge" styleClass="totalGauge" gridPos="(2,0,1,1)"
-                     fill="horizontal" anchor="center" marginBottom="0"/>
-          <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(3,0)" foreground=""
-                 tooltipText="$budgetview.tooltip.total.planned"/>
-          <label text="$budgetview.planned" styleClass="totalAmountTitle" gridPos="(4,0)" marginLeft="5"/>
-        </grid>
 
         <column styleClass="blockScrollBorder" weightY="10">
           <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true" weightY="10">
             <verticalBoxes>
               <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid"
-                      margin="10" marginTop="5" marginBottom="5">
+                      margin="5">
                 <header>
-                  <button ref="titleSeries" styleClass="itemLink" text="$budgetview.columnTitle.series"
-                          anchor="center"/>
                   <button ref="titleAmountReal" styleClass="itemLink" text="$budgetview.columnTitle.real"
                           anchor="right"/>
-                  <label text="$budgetview.columnTitle.gauge" anchor="center"/>
+                  <button ref="titleSeries" styleClass="itemLink" text="$budgetview.columnTitle.series"
+                          anchor="center"/>
                   <button ref="titleAmountPlanned" styleClass="itemLink" text="$budgetview.columnTitle.planned"
-                          anchor="right"/>
+                          anchor="left"/>
                 </header>
-                <button ref="seriesName" marginRight="5" marginBottom="2"/>
                 <button ref="observedSeriesAmount"
                         tooltipText="$budgetview.tooltip.detail.observed"/>
                 <component ref="gauge" styleClass="detailGauge"/>
@@ -85,6 +76,15 @@
                     icon="arrow_down.png" rolloverIcon="arrow_down_roll.png"/>
           </row>
         </column>
+
+        <grid name="total" weightY="0" marginLeft="15" marginRight="15">
+          <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(1,0)"
+                 tooltipText="$budgetview.tooltip.total.observed"/>
+          <component ref="totalGauge" styleClass="totalGauge" gridPos="(2,0,1,1)"
+                     fill="horizontal" anchor="center" marginBottom="0"/>
+          <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(3,0)" foreground=""
+                 tooltipText="$budgetview.tooltip.total.planned"/>
+        </grid>
       </column>
     </panel>
 

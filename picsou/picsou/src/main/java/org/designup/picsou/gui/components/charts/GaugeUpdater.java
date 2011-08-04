@@ -9,6 +9,7 @@ public class GaugeUpdater {
   public static void updateGauge(double futureRemaining, double futureOverrun,
                                  double pastRemaining,
                                  double pastOverrun, double gaugeTarget, double gaugeActual,
+                                 boolean active,
                                  final Gauge gauge, BudgetArea budgetArea, boolean isRemainingUnset) {
     String tooltips = computeTooltips(futureRemaining, futureOverrun,
                                       pastRemaining, pastOverrun,
@@ -17,6 +18,7 @@ public class GaugeUpdater {
     gauge.setValues(gaugeActual, gaugeTarget, futureOverrun + pastOverrun,
                     futureRemaining + pastRemaining,
                     "<html>" + tooltips + "</html>", isRemainingUnset);
+    gauge.setActive(active);
   }
 
   public static String computeTooltips(double futureRemaining, double futureOverrun,

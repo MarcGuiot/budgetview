@@ -902,19 +902,19 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("epargne", "Main accounts");
+      .selectAndCreateSavingsSeries("Epargne", "Main accounts");
 
-    budgetView.savings.align("epargne");
+    budgetView.savings.align("Epargne");
 
     timeline.selectMonths("2008/06", "2008/07");
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("27/07/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
-      .add("29/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne")
+      .add("27/07/2008", TransactionType.PLANNED, "Planned: Epargne", "", -100.00, "Epargne")
+      .add("29/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne")
       .check();
 
-    categorization.selectSavings().editSeries("epargne")
+    categorization.selectSavings().editSeries("Epargne")
       .setIrregular()
       .checkChart(new Object[][]{
         {"2008", "June", 100.00, 100.00, true},
@@ -925,7 +925,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/06", "2008/07");
     transactions.initContent()
-      .add("29/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne")
+      .add("29/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne")
       .check();
   }
 
@@ -936,19 +936,19 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("epargne", "Main accounts");
+      .selectAndCreateSavingsSeries("Epargne", "Main accounts");
 
     categorization.selectSavings()
-      .editSeries("epargne")
+      .editSeries("Epargne")
       .setIrregular()
       .setTwoMonths()
       .validate();
 
-    categorization.selectSavings().editSeries("epargne")
+    categorization.selectSavings().editSeries("Epargne")
       .setIrregular()
       .validate();
 
-    categorization.selectSavings().editSeries("epargne")
+    categorization.selectSavings().editSeries("Epargne")
       .setIrregular()
       .setTwoMonths()
       .validate();
@@ -961,22 +961,22 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("epargne", "Main accounts");
-    categorization.selectSavings().editSeries("epargne")
+      .selectAndCreateSavingsSeries("Epargne", "Main accounts");
+    categorization.selectSavings().editSeries("Epargne")
       .setIrregular()
       .setEndDate(200807)
       .validate();
 
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
-    categorization.selectSavings().editSeries("epargne")
+    categorization.selectSavings().editSeries("Epargne")
       .setEndDate(200810)
       .validate();
     timeline.checkSpanEquals("2008/06", "2008/10");
 
     timeline.selectAll();
     transactions.initContent()
-      .add("29/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne")
+      .add("29/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne")
       .check();
   }
 
@@ -987,9 +987,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
     categorization.selectTransactions("Virement");
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("epargne", "Main accounts");
+      .selectAndCreateSavingsSeries("Epargne", "Main accounts");
 
-    categorization.selectSavings().editSeries("epargne")
+    categorization.selectSavings().editSeries("Epargne")
       .setTwoMonths()
       .validate();
     timeline.selectMonth("2008/06");
@@ -999,18 +999,18 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("04/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
+      .add("04/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", -100.00, "Epargne")
       .add("04/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -10.00)
-      .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne")
+      .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne")
       .check();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     timeline.selectAll();
     timeline.checkSpanEquals("2008/06", "2008/10");
     transactions.initContent()
-      .add("04/10/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
-      .add("04/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
+      .add("04/10/2008", TransactionType.PLANNED, "Planned: Epargne", "", -100.00, "Epargne")
+      .add("04/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", -100.00, "Epargne")
       .add("04/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -10.00)
-      .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne")
+      .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne")
       .check();
   }
 
@@ -1021,10 +1021,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
     categorization.selectTransactions("Virement");
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("epargne", "Main accounts");
+      .selectAndCreateSavingsSeries("Epargne", "Main accounts");
 
     operations.openPreferences().setFutureMonthsCount(1).validate();
-    categorization.selectSavings().editSeries("epargne")
+    categorization.selectSavings().editSeries("Epargne")
       .selectMonth(200809)
       .setAmount("0")
       .setTwoMonths()
@@ -1037,18 +1037,18 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("04/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
+      .add("04/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", -100.00, "Epargne")
       .add("04/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -10.00)
-      .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne")
+      .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne")
       .check();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     timeline.selectAll();
     timeline.checkSpanEquals("2008/06", "2008/10");
     transactions.initContent()
-      .add("04/10/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
-      .add("04/08/2008", TransactionType.PLANNED, "Planned: epargne", "", -100.00, "epargne")
+      .add("04/10/2008", TransactionType.PLANNED, "Planned: Epargne", "", -100.00, "Epargne")
+      .add("04/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", -100.00, "Epargne")
       .add("04/07/2008", TransactionType.PRELEVEMENT, "McDo", "", -10.00)
-      .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "epargne")
+      .add("04/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne")
       .check();
   }
 

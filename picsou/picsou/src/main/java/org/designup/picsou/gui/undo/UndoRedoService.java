@@ -130,6 +130,10 @@ public class UndoRedoService {
         repository.completeChangeSetWithoutTriggers();
       }
     }
+
+    public String toString() {
+      return changeSet.toString();
+    }
   }
 
 }

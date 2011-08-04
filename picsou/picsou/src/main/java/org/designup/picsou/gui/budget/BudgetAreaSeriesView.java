@@ -9,8 +9,9 @@ import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.components.charts.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.charts.GlobGaugeView;
-import org.designup.picsou.gui.components.tips.DetailsTipFactory;
+import org.designup.picsou.gui.components.tips.ShowDetailsTipAction;
 import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
+import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.series.SeriesEditor;
@@ -88,12 +89,12 @@ public class BudgetAreaSeriesView extends View {
     this.seriesButtons = new SeriesEditionButtons(budgetArea, repository, directory);
 
     this.selectionService.addListener(new GlobSelectionListener() {
-      public void selectionUpdated(GlobSelection selection) {
-        selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
-        seriesDateFilter.filterMonths(selectedMonthIds);
-        updateRepeat();
-      }
-    }, Month.TYPE);
+                                        public void selectionUpdated(GlobSelection selection) {
+                                          selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
+                                          seriesDateFilter.filterMonths(selectedMonthIds);
+                                          updateRepeat();
+                                        }
+                                      }, Month.TYPE);
 
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -143,7 +144,7 @@ public class BudgetAreaSeriesView extends View {
     JLabel plannedLabel = builder.add("totalPlannedAmount", new JLabel()).getComponent();
 
     Gauge gauge = BudgetAreaGaugeFactory.createGauge(budgetArea);
-    gauge.enableDetailsTips(new DetailsTipFactory(repository, directory));
+    gauge.setActionListener(new ShowDetailsTipAction(gauge, directory));
     builder.add("totalGauge", gauge);
 
     BudgetAreaHeaderUpdater headerUpdater =
@@ -268,12 +269,24 @@ public class BudgetAreaSeriesView extends View {
       cellBuilder.addDisposeListener(updater);
 
       final GlobGaugeView gaugeView =
-        new GlobGaugeView(PeriodSeriesStat.TYPE, budgetArea, PeriodSeriesStat.AMOUNT,
-                          PeriodSeriesStat.PLANNED_AMOUNT,
+        new GlobGaugeView(PeriodSeriesStat.TYPE, budgetArea,
+                          PeriodSeriesStat.AMOUNT, PeriodSeriesStat.PLANNED_AMOUNT,
                           PeriodSeriesStat.PAST_REMAINING, PeriodSeriesStat.FUTURE_REMAINING,
                           PeriodSeriesStat.PAST_OVERRUN, PeriodSeriesStat.FUTURE_OVERRUN,
+                          PeriodSeriesStat.ACTIVE,
                           GlobMatchers.fieldEquals(PeriodSeriesStat.SERIES, series.get(Series.ID)),
                           repository, directory);
+      Gauge gauge = gaugeView.getComponent();
+      gauge.setActionListener(new AbstractAction() {
+        public void actionPerformed(ActionEvent actionEvent) {
+          directory.get(SeriesEditor.class).showSeries(series, selectedMonthIds);
+        }
+      });
+      gaugeView
+        .setMaxValueUpdater(Key.create(PeriodBudgetAreaStat.TYPE, budgetArea.getId()),
+                            PeriodBudgetAreaStat.ABS_SUM_AMOUNT)
+        .setTextSource(series.getKey())
+        .setDescriptionSource(series.getKey(), Series.DESCRIPTION);
       visibles.add(gaugeView);
 
       cellBuilder.add("gauge", gaugeView.getComponent());

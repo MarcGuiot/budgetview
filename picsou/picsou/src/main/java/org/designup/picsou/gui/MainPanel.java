@@ -21,11 +21,13 @@ import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.help.actions.GotoSupportAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
+import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.notes.NotesView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.gui.savings.SavingsView;
+import org.designup.picsou.gui.series.PeriodBudgetAreaTrigger;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.analysis.SeriesAnalysisView;
@@ -154,9 +156,10 @@ public class MainPanel {
     LicenseInfoView licenseInfoView = new LicenseInfoView(repository, directory);
 
     ReplicationGlobRepository replicationGlobRepository =
-      new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE);
+      new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodBudgetAreaStat.TYPE);
 
     PeriodSeriesStatUpdater.init(replicationGlobRepository, directory);
+    PeriodBudgetAreaTrigger.init(replicationGlobRepository);
 
     cardView = new CardView(repository, directory, categorizationView.getGotoBudgetSignpost());
     NotesView notesView = new NotesView(repository, directory);

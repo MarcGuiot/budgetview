@@ -3,10 +3,18 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.model.util.Amounts;
+import org.globsframework.utils.Strings;
+import org.uispec4j.AbstractUIComponent;
 import org.uispec4j.Mouse;
 import org.uispec4j.Panel;
+import org.uispec4j.Trigger;
+import org.uispec4j.assertion.Assertion;
 
-public class GaugeChecker extends GuiChecker {
+public class GaugeChecker extends AbstractUIComponent {
+
+  public static final String TYPE_NAME = "gauge";
+  public static final Class[] SWING_CLASSES = {Gauge.class};
+
   private Gauge gauge;
 
   public GaugeChecker(Panel panel, String componentName) {
@@ -52,14 +60,18 @@ public class GaugeChecker extends GuiChecker {
     return this;
   }
 
-  public GaugeChecker checkDescription(String text) {
-    Assert.assertEquals(text, gauge.getDescription());
-    Assert.assertEquals(text, gauge.getToolTipText());
+  public GaugeChecker checkTooltip(String text) {
+    Assert.assertEquals(text, cleanup(gauge.getTooltip()));
+    Assert.assertEquals(text, cleanup(gauge.getToolTipText()));
     return this;
   }
 
+  private Object cleanup(String text) {
+    return text.replace("<html>", "").replace("</html>", "");
+  }
+
   public GaugeChecker checkDescriptionContains(String text) {
-    Assert.assertTrue(gauge.getDescription(), gauge.getDescription().contains(text));
+    Assert.assertTrue(gauge.getTooltip(), gauge.getTooltip().contains(text));
     return this;
   }
 
@@ -93,7 +105,53 @@ public class GaugeChecker extends GuiChecker {
     return this;
   }
 
+  public String getLabel() {
+    return gauge.getText();
+  }
+
   public void click() {
     Mouse.click(new Panel(gauge));
+  }
+
+  public Trigger triggerClick() {
+    return new Trigger() {
+      public void run() throws Exception {
+        click();
+      }
+    };
+  }
+
+  public Panel getContainer() {
+    return new Panel(gauge.getParent());
+  }
+
+  public Gauge getAwtComponent() {
+    return gauge;
+  }
+
+  public String getDescriptionTypeName() {
+    return TYPE_NAME;
+  }
+
+  public Assertion tooltipContains(final String tooltipText) {
+    return new Assertion() {
+      public void check() {
+        String actualTooltip = gauge.getToolTipText();
+        if (Strings.isNullOrEmpty(actualTooltip)) {
+          Assert.fail("Actual tooltip is empty");
+        }
+        if (!actualTooltip.contains(tooltipText)) {
+          Assert.fail("Actual tooltip '" + actualTooltip + "' does not contain: " + tooltipText);
+        }
+      }
+    };
+  }
+
+  public Assertion widthRatioEquals(final double widthRatio) {
+    return new Assertion() {
+      public void check() {
+        Assert.assertEquals(widthRatio, gauge.getWidthRatio());
+      }
+    };
   }
 }

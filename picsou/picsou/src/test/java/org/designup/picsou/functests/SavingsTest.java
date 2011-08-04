@@ -1731,11 +1731,11 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectBudget();
-    budgetView.savings.editPlannedAmount("To account n. 111222")
+    budgetView.savings.editPlannedAmount("To Account n. 111222")
       .setAmount(150)
       .validate();
     timeline.selectMonth("2008/06");
-    budgetView.savings.checkSeries("To account n. 111222", 100., 150.);
+    budgetView.savings.checkSeries("To Account n. 111222", 100., 150.);
   }
 
   public void testImportOnMirrorAccount() throws Exception {

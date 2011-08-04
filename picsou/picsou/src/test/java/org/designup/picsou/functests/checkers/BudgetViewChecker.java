@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.JPopupButtonChecker;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.components.charts.Gauge;
@@ -9,14 +10,16 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
-import org.uispec4j.*;
+import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.finder.ComponentMatcher;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
@@ -57,9 +60,9 @@ public class BudgetViewChecker extends ViewChecker {
     private Panel panel;
     private BudgetArea budgetArea;
 
-    private static final int OBSERVED_LABEL_OFFSET = 1;
-    private static final int GAUGE_OFFSET = 2;
-    private static final int PLANNED_LABEL_OFFSET = 3;
+    // The reference component in each row is the gauge
+    private static final int OBSERVED_LABEL_OFFSET = -1;
+    private static final int PLANNED_LABEL_OFFSET = +1;
 
     public BudgetAreaChecker(String panelName, BudgetArea budgetArea) {
       this.panelName = panelName;
@@ -171,11 +174,10 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public BudgetAreaChecker checkSeries(String seriesName, double observedAmount, double plannedAmount) {
-      Panel budgetPanel = getPanel();
-      Button nameButton = budgetPanel.getButton(seriesName);
+      GaugeChecker gauge = getGauge(seriesName);
 
-      JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
-      int nameIndex = getIndex(panel, nameButton.getAwtComponent());
+      JPanel panel = (JPanel)gauge.getContainer().getAwtContainer();
+      int nameIndex = getIndex(panel, gauge.getAwtComponent());
 
       checkAmount("observed", OBSERVED_LABEL_OFFSET, seriesName, observedAmount, panel, nameIndex);
       checkAmount("planned", PLANNED_LABEL_OFFSET, seriesName, plannedAmount, panel, nameIndex);
@@ -183,11 +185,10 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public BudgetAreaChecker checkSeriesDisabled(String seriesName) {
-      Panel budgetPanel = getPanel();
-      Button nameButton = budgetPanel.getButton(seriesName);
+      GaugeChecker gauge = getGauge(seriesName);
 
-      JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
-      int nameIndex = getIndex(panel, nameButton.getAwtComponent());
+      JPanel panel = (JPanel)gauge.getContainer().getAwtContainer();
+      int nameIndex = getIndex(panel, gauge.getAwtComponent());
       Button observedAmount = getButton(panel, nameIndex, OBSERVED_LABEL_OFFSET);
       assertThat(observedAmount.textEquals("-"));
       assertFalse(observedAmount.isEnabled());
@@ -205,14 +206,20 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
-    private GaugeChecker getGauge(String seriesName) {
-      Panel budgetPanel = getPanel();
-      Button nameButton = budgetPanel.getButton(seriesName);
-
-      JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
-      int nameIndex = getIndex(panel, nameButton.getAwtComponent());
-
-      return new GaugeChecker((Gauge)panel.getComponent(nameIndex + GAUGE_OFFSET));
+    protected GaugeChecker getGauge(final String seriesName) {
+      Gauge gauge = (Gauge)getPanel().findSwingComponent(new ComponentMatcher() {
+        public boolean matches(Component component) {
+          if (!Gauge.class.equals(component.getClass())) {
+            return false;
+          }
+          Gauge gauge = (Gauge)component;
+          return seriesName.equals(gauge.getText());
+        }
+      });
+      if (gauge == null) {
+        Assert.fail("No gauge found with text: " + seriesName + " - actual content: " + getActualNamesList());
+      }
+      return new GaugeChecker(gauge);
     }
 
     private void checkAmount(String label, int offset,
@@ -253,37 +260,45 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public BudgetAreaChecker checkOrder(String... seriesNames) {
-      UIComponent[] seriesButtons = getPanel().getUIComponents(Button.class, "seriesName");
-      java.util.List<String> actualNames = new ArrayList<String>();
-      for (UIComponent button : seriesButtons) {
-        actualNames.add(button.getLabel());
-      }
-      TestUtils.assertEquals(Arrays.asList(seriesNames), actualNames);
+      TestUtils.assertEquals(Arrays.asList(seriesNames), getActualNamesList());
       return this;
     }
 
     public BudgetAreaChecker checkSeriesList(String... expectedNames) {
-      UIComponent[] components = getPanel().getPanel("seriesRepeat").getUIComponents(Button.class, "seriesName");
-      java.util.List<String> actualNames = new ArrayList<String>();
-      for (UIComponent component : components) {
-        actualNames.add(component.getLabel());
-      }
-      TestUtils.assertSetEquals(actualNames, expectedNames);
+      TestUtils.assertSetEquals(getActualNamesList(), expectedNames);
       return this;
     }
 
+    private List<String> getActualNamesList() {
+      Panel repeatPanel = getPanel().getPanel("seriesRepeat");
+      Component[] components = repeatPanel.getAwtContainer().getComponents();
+      List<String> actualNames = new ArrayList<String>();
+      for (Component component : components) {
+        if (!Gauge.class.isInstance(component)) {
+          continue;
+        }
+        String label = ((Gauge)component).getText();
+        actualNames.add(label);
+      }
+      return actualNames;
+    }
+
     public BudgetAreaChecker checkSeriesPresent(String... expectedNames) {
-      Panel budgetPanel = getPanel();
-      for (String name : expectedNames) {
-        UISpecAssert.assertTrue(budgetPanel.containsUIComponent(Button.class, name));
+      List<String> actualNames = getActualNamesList();
+      for (String expectedName : expectedNames) {
+        if (!actualNames.contains(expectedName)) {
+          Assert.fail("Series '" + expectedName + "' not found. Actual series: " + actualNames);
+        }
       }
       return this;
     }
 
     public BudgetAreaChecker checkSeriesNotPresent(String... seriesNames) {
-      Panel budgetPanel = getPanel();
-      for (String name : seriesNames) {
-        assertFalse(budgetPanel.containsUIComponent(Button.class, name));
+      List<String> actualNames = getActualNamesList();
+      for (String expectedName : seriesNames) {
+        if (actualNames.contains(expectedName)) {
+          Assert.fail("Series '" + expectedName + "' unexpectedly found. Actual series: " + actualNames);
+        }
       }
       return this;
     }
@@ -299,10 +314,10 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     protected Button getPlannedAmountButton(String seriesName) {
-      Button nameButton = getPanel().getButton(seriesName);
+      GaugeChecker gauge = getGauge(seriesName);
 
-      JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
-      int nameIndex = getIndex(panel, nameButton.getAwtComponent());
+      JPanel panel = (JPanel)gauge.getContainer().getAwtContainer();
+      int nameIndex = getIndex(panel, gauge.getAwtComponent());
 
       return new Button((JButton)panel.getComponent(nameIndex + PLANNED_LABEL_OFFSET));
     }
@@ -332,7 +347,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     private SeriesEditionDialogChecker openSeriesEditionDialog(String seriesName) {
-      return SeriesEditionDialogChecker.open(getPanel().getButton(seriesName));
+      return SeriesEditionDialogChecker.open(getGauge(seriesName).triggerClick());
     }
 
     protected JPopupButtonChecker getActionPopup() {
@@ -340,24 +355,20 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public void gotoData(String seriesName) {
-      Button nameButton = getPanel().getButton(seriesName);
-      JPanel panel = (JPanel)nameButton.getContainer().getAwtContainer();
-      int nameIndex = getIndex(panel, nameButton.getAwtComponent());
+      GaugeChecker gauge = getGauge(seriesName);
+      JPanel panel = (JPanel)gauge.getContainer().getAwtContainer();
+      int nameIndex = getIndex(panel, gauge.getAwtComponent());
       Button button = getButton(panel, nameIndex, OBSERVED_LABEL_OFFSET);
       button.click();
     }
 
-
     public BudgetAreaChecker checkSeriesTooltip(String seriesName, String tooltipText) {
-      assertThat(getPanel().getButton(seriesName).tooltipContains(tooltipText));
+      assertThat(getGauge(seriesName).tooltipContains(tooltipText));
       return this;
     }
 
-    public void clickGaugeAndCloseTip(String seriesName) {
-      GaugeChecker gauge = getGauge(seriesName);
-      gauge.click();
-      BalloonTipTesting.closeTip(mainWindow, gauge.getPanel());
-
+    public void checkGaugeWidthRatio(String seriesName, double widthRatio) {
+      assertThat(getGauge(seriesName).widthRatioEquals(widthRatio));
     }
 
     public BudgetAreaChecker checkGaugeTooltip(String seriesName, String... tooltipTextFragments) {
@@ -368,8 +379,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public BudgetAreaChecker checkNameSignpostDisplayed(String seriesName, String text) {
-      Button nameButton = getPanel().getButton(seriesName);
-      BudgetViewChecker.this.checkSignpostVisible(mainWindow, nameButton, text);
+      BudgetViewChecker.this.checkSignpostVisible(mainWindow, getGauge(seriesName), text);
       return this;
     }
 
@@ -418,7 +428,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public ProjectEditionChecker editProjectSeries(String seriesName) {
-      return ProjectEditionChecker.open(getPanel().getButton(seriesName));
+      return ProjectEditionChecker.open(getGauge(seriesName).triggerClick());
     }
 
     public ProjectEditionChecker editPlannedAmountForProject(String seriesName) {

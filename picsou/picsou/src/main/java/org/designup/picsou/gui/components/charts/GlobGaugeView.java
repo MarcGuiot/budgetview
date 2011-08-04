@@ -1,15 +1,21 @@
 package org.designup.picsou.gui.components.charts;
 
-import org.designup.picsou.gui.components.tips.DetailsTipFactory;
 import org.designup.picsou.model.BudgetArea;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.DoubleField;
+import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.*;
+import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.format.GlobStringifiers;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.KeyChangeListener;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.ArrayList;
@@ -23,6 +29,7 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
   private Gauge gauge;
   private DoubleField actualField;
   private DoubleField targetField;
+  private BooleanField activeField;
   private GlobMatcher matcher;
   private List<Key> currentSelection = new ArrayList<Key>();
   private BudgetArea budgetArea;
@@ -31,24 +38,29 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
   private DoubleField pastRemainingField;
   private DoubleField futureRemainingField;
 
+  private TextUpdater textUpdater;
+  private MaxValueUpdater maxValueUpdater;
+  private TextUpdater descriptionUpdater;
+
   public GlobGaugeView(GlobType type, BudgetArea budgetArea,
                        DoubleField actualField, DoubleField targetField,
                        DoubleField pastRemainingField, DoubleField futureRemainingField,
                        DoubleField pastOverrunField, DoubleField futureOverrunField,
+                       BooleanField activeField,
                        GlobMatcher matcher, GlobRepository repository, Directory directory) {
     this(type,
          BudgetAreaGaugeFactory.createGauge(budgetArea),
          budgetArea,
          actualField, targetField,
          pastRemainingField, futureRemainingField, pastOverrunField, futureOverrunField,
-         matcher,
-         repository, directory);
+         activeField, matcher, repository, directory);
   }
 
   public GlobGaugeView(GlobType type, final Gauge gauge, BudgetArea budgetArea,
                        DoubleField actualField, DoubleField targetField,
                        DoubleField pastRemainingField, DoubleField futureRemainingField,
                        DoubleField pastOverrunField, DoubleField futureOverrunField,
+                       BooleanField activeField,
                        GlobMatcher matcher, GlobRepository repository, Directory directory) {
     super(type, repository, directory);
     this.gauge = gauge;
@@ -59,14 +71,45 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
     this.futureOverrunField = futureOverrunField;
     this.pastRemainingField = pastRemainingField;
     this.futureRemainingField = futureRemainingField;
+    this.activeField = activeField;
     this.matcher = matcher;
     repository.addChangeListener(this);
     selectionService.addListener(this, type);
     currentSelection = selectionService.getSelection(type).filterSelf(matcher, repository).toKeyList();
-
-    gauge.enableDetailsTips(new DetailsTipFactory(repository, directory));
-
     update();
+  }
+
+  public GlobGaugeView setTextSource(Key key) {
+    GlobStringifier stringifier = directory.get(DescriptionService.class).getStringifier(key.getGlobType());
+    if (textUpdater != null) {
+      textUpdater.dispose();
+    }
+    this.textUpdater = new TextUpdater(key, stringifier) {
+      protected void setValue(Gauge gauge, String text) {
+        gauge.setText(text);
+      }
+    };
+    return this;
+  }
+
+  public GlobGaugeView setDescriptionSource(Key key, StringField field) {
+    if (descriptionUpdater != null) {
+      descriptionUpdater.dispose();
+    }
+    descriptionUpdater = new TextUpdater(key, field) {
+      protected void setValue(Gauge gauge, String text) {
+        gauge.setDescription(text);
+      }
+    };
+    return this;
+  }
+
+  public GlobGaugeView setMaxValueUpdater(Key maxValueKey, DoubleField maxValueField) {
+    if (maxValueUpdater != null) {
+      maxValueUpdater.dispose();
+    }
+    maxValueUpdater = new MaxValueUpdater(maxValueKey, maxValueField);
+    return this;
   }
 
   public Gauge getComponent() {
@@ -101,6 +144,9 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
   public void dispose() {
     repository.removeChangeListener(this);
     selectionService.removeListener(this);
+    if (textUpdater != null) {
+      textUpdater.dispose();
+    }
   }
 
   private void update() {
@@ -111,7 +157,8 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
     double pastRemaining = 0;
     double futureRemaining = 0;
     boolean isUnset = false;
-    for (Iterator<Key> iter = currentSelection.iterator(); iter.hasNext();) {
+    boolean active = false;
+    for (Iterator<Key> iter = currentSelection.iterator(); iter.hasNext(); ) {
       Key key = iter.next();
       Glob glob = repository.find(key);
       if ((glob == null) || !matcher.matches(glob, repository)) {
@@ -119,7 +166,7 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
         continue;
       }
       actual += getValue(glob, actualField);
-      if (glob.get(actualField) == null){
+      if (glob.get(actualField) == null) {
         isUnset = true;
       }
       target += getValue(glob, targetField);
@@ -127,9 +174,10 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
       futureOverrun += getValue(glob, futureOverrunField);
       pastRemaining += getValue(glob, pastRemainingField);
       futureRemaining += getValue(glob, futureRemainingField);
+      active |= glob.isTrue(activeField);
     }
     GaugeUpdater.updateGauge(futureRemaining, futureOverrun, pastRemaining, pastOverrun,
-                             target, actual, gauge, budgetArea, isUnset);
+                             target, actual, active, gauge, budgetArea, isUnset);
   }
 
   protected double getValue(Glob glob, DoubleField field) {
@@ -139,4 +187,69 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
     }
     return globActual;
   }
+
+  private abstract class TextUpdater implements ChangeSetListener, Disposable {
+    private Key key;
+    private GlobStringifier stringifier;
+
+    private TextUpdater(Key key, StringField field) {
+      this(key, GlobStringifiers.get(field));
+    }
+
+    private TextUpdater(Key key, GlobStringifier stringifier) {
+      this.key = key;
+      this.stringifier = stringifier;
+      repository.addChangeListener(this);
+      update();
+    }
+
+    public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+      if (changeSet.containsChanges(key)) {
+        update();
+      }
+    }
+
+    public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      if (changedTypes.contains(key.getGlobType())) {
+        update();
+      }
+    }
+
+    protected void update() {
+      Glob glob = repository.find(key);
+      setValue(gauge, glob == null ? null : stringifier.toString(glob, repository));
+    }
+
+    protected abstract void setValue(Gauge gauge, String text);
+
+    public void dispose() {
+      repository.removeChangeListener(this);
+    }
+  }
+
+  private class MaxValueUpdater extends KeyChangeListener implements Disposable {
+    private DoubleField field;
+
+    private MaxValueUpdater(Key maxValueKey, DoubleField maxValueField) {
+      super(maxValueKey);
+      field = maxValueField;
+      repository.addChangeListener(this);
+      update();
+    }
+
+    protected void update() {
+      Glob glob = repository.find(key);
+      if (glob == null) {
+        gauge.setMaxValue(null);
+      }
+      else {
+        gauge.setMaxValue(glob.get(field));
+      }
+    }
+
+    public void dispose() {
+      repository.removeChangeListener(this);
+    }
+  }
+
 }

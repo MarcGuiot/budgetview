@@ -1,24 +1,28 @@
 package org.designup.picsou.gui.components;
 
+import org.designup.picsou.gui.components.charts.Gauge;
+import org.designup.picsou.gui.components.charts.GlobGaugeView;
+import org.designup.picsou.model.BudgetArea;
 import org.globsframework.gui.GuiTestCase;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.gui.components.charts.GlobGaugeView;
-import org.designup.picsou.gui.components.charts.Gauge;
 
 import java.util.Arrays;
+
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class GlobGaugeViewTest extends GuiTestCase {
   private GlobRepository repository;
@@ -37,15 +41,16 @@ public class GlobGaugeViewTest extends GuiTestCase {
     obj4 = create(4, null, null);
 
     GlobGaugeView view = new GlobGaugeView(MyObject.TYPE, BudgetArea.VARIABLE,
-                                           MyObject.ACTUAL, MyObject.TARGET, MyObject.PAST_REMAINING, MyObject.FUTURE_REMAINING, 
+                                           MyObject.ACTUAL, MyObject.TARGET, MyObject.PAST_REMAINING, MyObject.FUTURE_REMAINING,
                                            MyObject.PAST_OVERRUN, MyObject.FUTURE_OVERRUN,
+                                           MyObject.ACTIVE,
                                            GlobMatchers.not(fieldEquals(MyObject.ID, 3)),
                                            repository, directory);
     gauge = view.getComponent();
   }
 
   public void testSelection() throws Exception {
-    checkGauge(0d, 0d);
+    checkGauge(0d, 0d, false);
 
     selectionService.select(obj1);
     checkGauge(15.0d, 20.0d);
@@ -56,8 +61,8 @@ public class GlobGaugeViewTest extends GuiTestCase {
     selectionService.select(Arrays.asList(obj1, obj2, obj3), MyObject.TYPE);
     checkGauge(20.0d, 30.0d);
 
-    selectionService.select(obj3);
-    checkGauge(0d, 0d);
+    selectionService.select(obj3); // Excluded by matcher
+    checkGauge(0d, 0d, false);
   }
 
   public void testNullsAreIgnored() throws Exception {
@@ -84,6 +89,15 @@ public class GlobGaugeViewTest extends GuiTestCase {
     checkGauge(45.0d, 70.0d);
   }
 
+  public void testActive() throws Exception {
+    selectionService.select(obj1);
+    checkGauge(15.0d, 20.0d);
+
+    repository.update(obj1.getKey(),
+                      value(MyObject.ACTIVE, false));
+    checkGauge(15.0d, 20.0d, false);
+  }
+
   public void testReset() throws Exception {
     Glob obj6 =
       GlobBuilder.init(MyObject.TYPE)
@@ -96,15 +110,20 @@ public class GlobGaugeViewTest extends GuiTestCase {
     checkGauge(15.0d, 20.0d);
 
     repository.reset(new GlobList(obj6), MyObject.TYPE);
-    checkGauge(0.0d, 0.0d);
+    checkGauge(0.0d, 0.0d, false);
 
     selectionService.select(obj6);
-    checkGauge(4.0d, 7.0d);
+    checkGauge(4.0d, 7.0d, true);
   }
 
   private void checkGauge(double actual, double target) {
+    checkGauge(actual, target, true);
+  }
+
+  private void checkGauge(double actual, double target, boolean active) {
     assertEquals(actual, gauge.getActualValue());
     assertEquals(target, gauge.getTargetValue());
+    assertEquals(active, gauge.isActive());
   }
 
   public static class MyObject {
@@ -121,6 +140,9 @@ public class GlobGaugeViewTest extends GuiTestCase {
 
     public static DoubleField PAST_REMAINING;
     public static DoubleField FUTURE_REMAINING;
+
+    @DefaultBoolean(true)
+    public static BooleanField ACTIVE;
 
     static {
       GlobTypeLoader.init(MyObject.class);

@@ -5,6 +5,7 @@ import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.BudgetAreaGaugeFactory;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.charts.GlobGaugeView;
+import org.designup.picsou.gui.components.tips.ShowDetailsTipAction;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.series.SeriesEditor;
@@ -89,12 +90,14 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
       new GlobGaugeView(PeriodSeriesStat.TYPE, gauge, BudgetArea.SAVINGS, PeriodSeriesStat.AMOUNT,
                         PeriodSeriesStat.PLANNED_AMOUNT, PeriodSeriesStat.PAST_REMAINING, PeriodSeriesStat.FUTURE_REMAINING,
                         PeriodSeriesStat.PAST_OVERRUN, PeriodSeriesStat.FUTURE_OVERRUN,
+                        PeriodSeriesStat.ACTIVE,
                         GlobMatchers.fieldEquals(PeriodSeriesStat.SERIES, series.get(Series.ID)),
                         repository, directory) {
         protected double getValue(Glob glob, DoubleField field) {
           return multiplier * Math.abs(super.getValue(glob, field));
         }
       };
+    gauge.setActionListener(new ShowDetailsTipAction(gauge, directory));
     gaugeView.setName(name + ".gauge");
     cellBuilder.add("gauge", gaugeView.getComponent());
 

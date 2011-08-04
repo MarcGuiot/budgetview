@@ -51,6 +51,7 @@ public class BudgetAreaHeaderUpdater extends BudgetAreaSummaryComputer {
                              totalAmounts.getPastOverrun(),
                              totalAmounts.getGaugeTarget(),
                              totalAmounts.getGaugeActual(),
+                             true,
                              gauge, budgetArea, false);
 
   }

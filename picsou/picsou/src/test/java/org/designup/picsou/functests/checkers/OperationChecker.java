@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.utils.Lang;

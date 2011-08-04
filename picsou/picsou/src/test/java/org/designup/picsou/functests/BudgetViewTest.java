@@ -522,13 +522,11 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/05", -29.00, "Free Telecom")
       .load();
 
-    views.selectCategorization();
-    categorization.setNewVariable("Free Telecom", "tel");
+    categorization.setNewVariable("Free Telecom", "Tel");
     categorization.setNewVariable("Auchan", "Auchan");
     categorization.setNewVariable("Monoprix", "Monop");
 
-    views.selectBudget();
-    budgetView.variable.checkOrder("Auchan", "Monop", "tel");
+    budgetView.variable.checkOrder("Auchan", "Monop", "Tel");
   }
 
   public void testPositiveEnvelopeBudgetDoesNotCreateNegativePlannedTransaction() throws Exception {
@@ -774,7 +772,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.checkSeriesList("Groceries", "Leisures")
       .checkSeries("Groceries", -50.00, -200.00)
-      .checkSeries("Leisure", 0.00, -100.00);
+      .checkSeries("Leisures", 0.00, -100.00);
 
     budgetView.variable.editSeries("Leisures").setEndDate(200807).validate();
 
@@ -806,7 +804,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.variable.checkOrder("Leisures", "Groceries")
-      .checkSeries("Leisure", 0.00, -100.00)
+      .checkSeries("Leisures", 0.00, -100.00)
       .checkSeriesDisabled("Groceries");
 
     budgetView.variable.createSeries()
@@ -829,5 +827,26 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .validate();
     
     budgetView.variable.checkOrder("Leisures", "Groceries");
+  }
+
+  public void testGaugeWidthsAreAdjustedDependingOnTheirRespectiveSizes() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/10", -50.00, "Auchan")
+      .addTransaction("2008/07/01", -150.00, "Auchan")
+      .addTransaction("2008/07/05", -50.00, "FNAC")
+      .addTransaction("2008/07/20", -50.00, "FNAC")
+      .addTransaction("2008/07/05", -25.00, "Zara")
+      .addTransaction("2008/07/20", -25.00, "Zara")
+      .load();
+
+    categorization.setNewVariable("Auchan", "Groceries", -200.00);
+    categorization.setNewVariable("FNAC", "Leisures", -50.00);
+    categorization.setNewVariable("Zara", "Clothes", -50.00);
+    
+    budgetView.variable.checkGaugeWidthRatio("Groceries", 1.0);
+    budgetView.variable.checkGaugeWidthRatio("Leisures", 0.5);
+    budgetView.variable.checkGaugeWidthRatio("Clothes", 0.25);
   }
 }

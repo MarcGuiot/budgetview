@@ -66,6 +66,8 @@ public class GaugeDemo {
 
           for (double[] pair : pairs) {
             Gauge gauge = new Gauge(overrunIsAnError);
+            gauge.setText("Pair");
+            gauge.setForeground(Color.WHITE);
             gauge.setPreferredSize(new Dimension(100, 28));
             gauge.setMaximumSize(new Dimension(100, 28));
             gauge.setValues(pair[0], pair[1]);
@@ -74,6 +76,8 @@ public class GaugeDemo {
           }
           for (double[] triple : triples) {
             Gauge gauge = new Gauge(overrunIsAnError);
+            gauge.setText("Triple");
+            gauge.setForeground(Color.WHITE);
             gauge.setPreferredSize(new Dimension(100, 28));
             gauge.setMaximumSize(new Dimension(100, 28));
             gauge.setValues(triple[0], triple[1], triple[2], 0, "", false);

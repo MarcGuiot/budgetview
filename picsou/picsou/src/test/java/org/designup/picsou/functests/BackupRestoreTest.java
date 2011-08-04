@@ -51,23 +51,19 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/10", -400.0, "Auchan")
       .load();
 
-    views.selectCategorization();
     categorization.setNewIncome("Company", "Salaire");
     categorization.setNewVariable("Auchan", "Course");
 
-    views.selectData();
     transactions
       .initContent()
       .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salaire")
       .add("10/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -400.00, "Course")
       .check();
 
-    views.selectHome();
     notes.setText("Some notes...");
 
     String backupFile = operations.backup(this);
 
-    views.selectCategorization();
     categorization.getTable().selectRows(0, 1);
     categorization.setUncategorized();
 
@@ -78,10 +74,8 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     operations.checkUndoNotAvailable();
     operations.checkRedoNotAvailable();
 
-    views.selectHome();
     notes.checkText("Some notes...");
 
-    views.selectData();
     transactions
       .initContent()
       .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salaire")
