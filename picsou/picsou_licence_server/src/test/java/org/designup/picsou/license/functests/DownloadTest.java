@@ -273,7 +273,7 @@ public class DownloadTest extends ConnectedTestCase {
         mv.visitEnd();
       }
       {
-        mv = cw.visitMethod(ACC_PUBLIC, "apply", "(Lorg/globsframework/model/Glob;Lorg/globsframework/model/ReadOnlyGlobRepository;Lorg/globsframework/model/GlobRepository;Lorg/globsframework/model/delta/MutableChangeSet;)V", null, null);
+        mv = cw.visitMethod(ACC_PUBLIC, "apply", "(Lorg/globsframework/model/Glob;Lorg/globsframework/model/ReadOnlyGlobRepository;Lorg/globsframework/model/GlobRepository;Lorg/globsframework/model/delta/MutableChangeSet;)Z", null, null);
         mv.visitCode();
         mv.visitVarInsn(ALOAD, 3);
         mv.visitInsn(ICONST_1);
@@ -307,6 +307,8 @@ public class DownloadTest extends ConnectedTestCase {
         mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/GlobRepository", "update", "(Lorg/globsframework/model/Key;Lorg/globsframework/metamodel/Field;Ljava/lang/Object;)V");
         mv.visitJumpInsn(GOTO, l0);
         mv.visitLabel(l1);
+        mv.visitInsn(ICONST_0);
+        mv.visitInsn(IRETURN);
         mv.visitFrame(Opcodes.F_CHOP, 1, null, 0, null);
         mv.visitInsn(RETURN);
         mv.visitMaxs(5, 8);

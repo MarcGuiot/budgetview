@@ -20,11 +20,12 @@ public class DummyBankPlugin implements BankPlugin {
     return false;
   }
 
-  public void apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
+  public boolean apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
     GlobList list = localRepository.getAll(ImportedTransaction.TYPE);
     for (Glob glob : list) {
       localRepository.update(glob.getKey(), ImportedTransaction.AMOUNT, -234.);
     }
+    return true;
   }
 
   public void postApply(GlobList list, Glob account, GlobRepository repository, GlobRepository localRepository, ChangeSet set) {

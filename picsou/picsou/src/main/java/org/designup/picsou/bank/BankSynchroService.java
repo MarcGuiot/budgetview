@@ -5,6 +5,7 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.Utils;
 import org.designup.picsou.bank.importer.sg.SG;
 import org.designup.picsou.bank.importer.OtherBank;
+import org.designup.picsou.bank.importer.creditmutuel.CreditMutuelArkea;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ public class BankSynchroService {
 
   public BankSynchroService() {
     register(SG.SG_ID, new SG.Init());
+    register(CreditMutuelArkea.ID, new CreditMutuelArkea.Init());
     Utils.beginRemove();
     register(OtherBank.ID, new OtherBank.Init());
     Utils.endRemove();

@@ -42,8 +42,8 @@ public class OtherBank extends BankPage {
     final SelectionService selectionService = directory.get(SelectionService.class);
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/connection/otherPanel.splits", repository, directory);
 
-    builder.addEditor("type", RealAccount.NAME);
-    builder.addEditor("name", RealAccount.TYPE_NAME);
+    builder.addEditor("type", RealAccount.NUMBER);
+    builder.addEditor("name", RealAccount.NAME);
     builder.addEditor("position", RealAccount.POSITION);
     builder.addCheckBox("isSavings", RealAccount.SAVINGS);
     builder.addEditor("file", RealAccount.FILE_NAME);
@@ -58,8 +58,8 @@ public class OtherBank extends BankPage {
     });
     GlobTableView table = builder.addTable("table", RealAccount.TYPE, new GlobFieldComparator(RealAccount.ID))
       .setFilter(GlobMatchers.fieldEquals(RealAccount.BANK, ID))
+      .addColumn(RealAccount.NUMBER)
       .addColumn(RealAccount.NAME)
-      .addColumn(RealAccount.TYPE_NAME)
       .addColumn(RealAccount.POSITION)
       .addColumn(RealAccount.FILE_NAME);
 

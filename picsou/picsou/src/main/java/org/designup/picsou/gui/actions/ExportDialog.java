@@ -101,7 +101,7 @@ public class ExportDialog {
       }
 
       public String getDescription() {
-        return Lang.get("exportDialog." + type + ".filter");
+        return Lang.get("exportDialog." + type + ".type");
       }
     });
 

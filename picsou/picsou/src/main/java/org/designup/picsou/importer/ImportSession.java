@@ -143,7 +143,7 @@ public class ImportSession {
     if (currentAccoutId != null) {
       isAccountNeeded |= !bankPluginService.useCreatedAccount(localRepository.find(Key.create(Account.TYPE, currentAccoutId)));
     }
-    bankPluginService.apply(referenceRepository, localRepository, importChangeSet);
+    isAccountNeeded |= !bankPluginService.apply(referenceRepository, localRepository, importChangeSet);
 
     lastLoadOperationsCount = importedOperations.size();
   }

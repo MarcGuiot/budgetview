@@ -19,22 +19,23 @@ public abstract class AbstractBankPlugin implements BankPlugin {
     return true;
   }
 
-  public void apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository,
+  public boolean apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository,
                     GlobRepository localRepository, MutableChangeSet changeSet) {
     GlobList existingAccounts = getSameAccount(newAccount, referenceRepository);
     if (existingAccounts.size() == 1) {
       Glob realAccount = existingAccounts.getFirst();
       updateImportedTransaction(localRepository, newAccount, realAccount);
+      return true;
     }
-    if (existingAccounts.size() == 2) {
-      //
+    if (existingAccounts.size() == 0){
+      return true;
     }
+    return false;
   }
 
   protected GlobList getSameAccount(Glob newAccount, ReadOnlyGlobRepository referenceRepository) {
     return referenceRepository.getAll(Account.TYPE,
-                                      GlobMatchers.and(
-                                        GlobMatchers.fieldEquals(Account.NUMBER, newAccount.get(Account.NUMBER))));
+                                        GlobMatchers.fieldEquals(Account.NUMBER, newAccount.get(Account.NUMBER)));
   }
 
   public void postApply(GlobList transactions, Glob account, GlobRepository repository, GlobRepository localRepository, ChangeSet set) {

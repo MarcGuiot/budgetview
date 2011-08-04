@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
-  <bankFormat id='9'>
+  <bankFormat id='14'>
 
     <bank name="Barclays" downloadUrl="http://www.barclays.fr/" id="14">
       <bankEntity id="24599"/>

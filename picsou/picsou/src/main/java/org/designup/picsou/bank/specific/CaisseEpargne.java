@@ -3,9 +3,7 @@ package org.designup.picsou.bank.specific;
 import org.designup.picsou.bank.BankPluginService;
 import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountCardType;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.utils.directory.Directory;
 
@@ -17,7 +15,7 @@ public class CaisseEpargne extends AbstractBankPlugin {
     bankPluginService.add(bankEntity.get(BankEntity.BANK), this);
   }
 
-  public void apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository,
+  public boolean apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository,
                     GlobRepository localRepository, MutableChangeSet changeSet) {
     GlobList existingAccounts = getSameAccount(newAccount, referenceRepository);
     if (existingAccounts.isEmpty()) {
@@ -25,11 +23,14 @@ public class CaisseEpargne extends AbstractBankPlugin {
                              FieldValue.value(Account.POSITION_DATE, null),
                              FieldValue.value(Account.POSITION, null),
                              FieldValue.value(Account.TRANSACTION_ID, null));
+      return true;
     }
     else if (existingAccounts.size() == 1) {
       localRepository.update(newAccount.getKey(), FieldValue.value(Account.POSITION_DATE, null));
       updateImportedTransaction(localRepository, newAccount, existingAccounts.getFirst());
+      return true;
     }
+    return false;
   }
 
   public int getVersion() {

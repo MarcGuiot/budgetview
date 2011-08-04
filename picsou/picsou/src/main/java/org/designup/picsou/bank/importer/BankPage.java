@@ -1,10 +1,12 @@
 package org.designup.picsou.bank.importer;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.RealAccount;
+import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.editors.GlobCheckBoxView;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
@@ -31,6 +33,12 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
+import com.gargoylesoftware.htmlunit.*;
+import com.gargoylesoftware.htmlunit.attachment.AttachmentHandler;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+
 public abstract class BankPage {
   protected Directory directory;
   private Integer bankId;
@@ -40,6 +48,10 @@ public abstract class BankPage {
   protected Repeat<Glob> repeat;
   protected GlobList accountsInPage = new GlobList();
   private CancelAction cancelAction;
+  protected WebClient client;
+  protected HtmlPage page;
+  protected ErrorAlertHandler errorAlertHandler;
+  protected boolean hasError = false;
 
   public BankPage(Directory directory, GlobRepository repository, Integer bankId) {
     this.directory = directory;
@@ -73,10 +85,10 @@ public abstract class BankPage {
     repeat = builder.addRepeat("listCompte", Collections.<Glob>emptyList(),
                                new RepeatComponentFactory<Glob>() {
                                  public void registerComponents(RepeatCellBuilder cellBuilder, Glob realAccount) {
-                                   String name = realAccount.get(RealAccount.NAME);
+                                   String name = realAccount.get(RealAccount.NUMBER);
                                    cellBuilder.add("accountName", new JLabel(name));
                                    cellBuilder.add("solde", new JLabel(realAccount.get(RealAccount.POSITION)));
-                                   cellBuilder.add("typeName", new JLabel(realAccount.get(RealAccount.TYPE_NAME)));
+                                   cellBuilder.add("typeName", new JLabel(realAccount.get(RealAccount.NAME)));
                                    GlobCheckBoxView importedCheckBox =
                                      GlobCheckBoxView.init(RealAccount.IMPORTED, repository, directory)
                                        .setName("import:" + name)
@@ -108,22 +120,22 @@ public abstract class BankPage {
     builder.add("doImport", new DoImportAction());
   }
 
-  protected void createOrUpdateRealAccount(String type, String name, String position, final Integer bankId) {
-    if (Strings.isNotEmpty(type) && Strings.isNotEmpty(name)) {
+  protected void createOrUpdateRealAccount(String name, String number, String position, final Integer bankId) {
+    if (Strings.isNotEmpty(name) || Strings.isNotEmpty(number)) {
       Glob account = repository.getAll(RealAccount.TYPE,
-                                       GlobMatchers.and(GlobMatchers.fieldEquals(RealAccount.TYPE_NAME, type),
-                                                        GlobMatchers.fieldEquals(RealAccount.NAME, name),
+                                       GlobMatchers.and(GlobMatchers.fieldEquals(RealAccount.NAME, name.trim()),
+                                                        GlobMatchers.fieldEquals(RealAccount.NUMBER, number.trim()),
                                                         GlobMatchers.fieldEquals(RealAccount.BANK, bankId)))
         .getFirst();
       if (account == null) {
         account = repository.create(RealAccount.TYPE,
-                                    FieldValue.value(RealAccount.TYPE_NAME, type),
-                                    FieldValue.value(RealAccount.NAME, name),
+                                    FieldValue.value(RealAccount.NAME, name.trim()),
+                                    FieldValue.value(RealAccount.NUMBER, number.trim()),
                                     FieldValue.value(RealAccount.BANK, bankId),
-                                    FieldValue.value(RealAccount.POSITION, position));
+                                    FieldValue.value(RealAccount.POSITION, position.trim()));
       }
       else {
-        repository.update(account.getKey(), RealAccount.POSITION, position);
+        repository.update(account.getKey(), RealAccount.POSITION, position.trim());
       }
       accountsInPage.add(account);
     }
@@ -146,6 +158,66 @@ public abstract class BankPage {
   }
 
   public abstract List<File> loadFile();
+
+  protected void loadPage(final String index) throws IOException {
+    client = new WebClient();
+    client.setCssEnabled(false);
+    client.setJavaScriptEnabled(true);
+    client.setCache(new Cache());
+    client.setAjaxController(new NicelyResynchronizingAjaxController());
+    page = (HtmlPage)client.getPage(index);
+    errorAlertHandler = new ErrorAlertHandler();
+    client.setAlertHandler(errorAlertHandler);
+  }
+
+  protected <T extends HtmlElement> T getElementById(final String id) {
+    T select = (T)page.getElementById(id);
+    if (select == null) {
+      throw new RuntimeException("Can not find tag '" + id + "' in :\n" + page.asXml());
+    }
+    return select;
+  }
+
+  protected HtmlAnchor findLink(List<HtmlAnchor> anchors, String ref) {
+    for (HtmlAnchor anchor : anchors) {
+      if (anchor.getHrefAttribute().contains(ref)) {
+        return anchor;
+      }
+    }
+    throw new RuntimeException("Can not find ref '" + ref + "' in :\n" + page.asXml());
+  }
+
+  protected File downloadFile(Glob realAccount, HtmlElement anchor) {
+    DownloadAttachmentHandler downloadAttachmentHandler = new DownloadAttachmentHandler();
+    client.setAttachmentHandler(downloadAttachmentHandler);
+    try {
+      Page page1 = anchor.click();
+      TextPage page = (TextPage)page1;
+      System.out.println("BankPage.downloadFile" + page.getContent());
+    }
+    catch (IOException e) {
+      Log.write("In anchor click", e);
+      return null;
+    }
+    synchronized (downloadAttachmentHandler) {
+      if (downloadAttachmentHandler.page == null) {
+        try {
+          downloadAttachmentHandler.wait(3000);
+        }
+        catch (InterruptedException e1) {
+        }
+      }
+    }
+    if (downloadAttachmentHandler.page != null) {
+      InputStream contentAsStream = downloadAttachmentHandler.page.getWebResponse().getContentAsStream();
+      return createQifLocalFile(realAccount, contentAsStream);
+    }
+    else {
+      Log.write("No download");
+    }
+    return null;
+  }
+
 
   protected class DoImportAction extends AbstractAction {
     protected DoImportAction() {
@@ -211,8 +283,8 @@ public abstract class BankPage {
                                  FieldValue.value(Account.ACCOUNT_TYPE,
                                                   values.get(RealAccount.SAVINGS)
                                                   ? AccountType.SAVINGS.getId() : AccountType.MAIN.getId()),
-                                 FieldValue.value(Account.NUMBER, values.get(RealAccount.NAME)),
-                                 FieldValue.value(Account.NAME, values.get(RealAccount.TYPE_NAME)),
+                                 FieldValue.value(Account.NUMBER, values.get(RealAccount.NUMBER)),
+                                 FieldValue.value(Account.NAME, values.get(RealAccount.NAME)),
                                  FieldValue.value(Account.POSITION, read(values)),
                                  FieldValue.value(Account.DIRECT_SYNCHRO, Boolean.TRUE),
                                  FieldValue.value(Account.IS_VALIDATED, true));
@@ -220,7 +292,9 @@ public abstract class BankPage {
     }
   }
 
-  protected abstract Double extractAmount(String position);
+  protected Double extractAmount(String position){
+    return Amounts.extractAmount(position);
+  }
 
   protected class CancelAction extends AbstractAction {
     protected CancelAction() {
@@ -237,4 +311,21 @@ public abstract class BankPage {
     dialog.showCentered();
   }
 
+  private class ErrorAlertHandler implements AlertHandler {
+    public void handleAlert(Page page, String s) {
+      hasError = true;
+      MessageDialog.show("bank.error", dialog, directory, "bank.error.msg", s);
+    }
+  }
+
+  private class DownloadAttachmentHandler implements AttachmentHandler {
+    private Page page;
+
+    public void handleAttachment(Page page) {
+      synchronized (this) {
+        this.page = page;
+        notifyAll();
+      }
+    }
+  }
 }

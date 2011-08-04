@@ -25,14 +25,19 @@ public class BankEntity {
 
   public static GlobType TYPE;
 
-  @Key @NoObfuscation
+  @Key
+  @NoObfuscation
   public static IntegerField ID;
 
-  @NamingField @NoObfuscation
+  @NamingField
+  @NoObfuscation
   public static StringField LABEL;
 
-  @Target(Bank.class) @NoObfuscation
+  @Target(Bank.class)
+  @NoObfuscation
   public static LinkField BANK;
+
+  public static StringField URL;
 
   public static Glob getBank(Glob bankEntity, GlobRepository repository) {
     Glob bank = repository.findLinkTarget(bankEntity, BANK);
@@ -74,16 +79,27 @@ public class BankEntity {
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeInteger(values.get(BANK));
       outputStream.writeUtf8String(values.get(LABEL));
+      outputStream.writeUtf8String(values.get(URL));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 2) {
+      if (version == 3) {
+        deserializeDataV3(fieldSetter, data);
+      }
+      else if (version == 2) {
         deserializeDataV2(fieldSetter, data);
       }
       else if (version == 1) {
         deserializeDataV1(fieldSetter, data, id);
       }
+    }
+
+    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(BANK, input.readInteger());
+      fieldSetter.set(LABEL, input.readUtf8String());
+      fieldSetter.set(URL, input.readUtf8String());
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
