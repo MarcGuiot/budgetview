@@ -10,7 +10,7 @@ import java.util.Set;
 
 public abstract class KeyChangeListener implements ChangeSetListener {
 
-  private Key key;
+  protected final Key key;
 
   protected KeyChangeListener(Key key) {
     this.key = key;
