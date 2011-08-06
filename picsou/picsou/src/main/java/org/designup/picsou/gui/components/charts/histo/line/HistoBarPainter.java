@@ -22,7 +22,7 @@ public class HistoBarPainter implements HistoPainter {
     return dataset;
   }
 
-  public void paint(Graphics2D g2, HistoChartMetrics metrics, Integer currentRollover) {
+  public void paint(Graphics2D g2, HistoChartMetrics metrics, Integer rolloverColumnIndex) {
 
     if (dataset.size() == 0) {
       return;
@@ -33,7 +33,7 @@ public class HistoBarPainter implements HistoPainter {
       int width = metrics.columnWidth() - 2 * PADDING;
 
       Double value = dataset.getValue(i);
-      boolean isRollover = (currentRollover != null) && (currentRollover == i);
+      boolean isRollover = (rolloverColumnIndex != null) && (rolloverColumnIndex == i);
 
       colors.setFillStyle(g2, value >= 0,
                           dataset.isCurrent(i), dataset.isFuture(i),

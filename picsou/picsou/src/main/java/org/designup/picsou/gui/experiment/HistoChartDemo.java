@@ -2,6 +2,7 @@ package org.designup.picsou.gui.experiment;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
+import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffBarLinePainter;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffColors;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffDataset;
@@ -13,7 +14,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Set;
 
 public class HistoChartDemo {
   public static void main(String... args) {
@@ -48,7 +48,7 @@ public class HistoChartDemo {
     HistoChart chart = new HistoChart(new HistoChartConfig(true, true, false, true), directory);
 
     chart.addListener(new HistoChartListenerAdapter() {
-      public void columnsClicked(Set<Integer> monthIds) {
+      public void columnsClicked(HistoSelection monthIds) {
         System.out.println("HistoChartDemo.columnClicked: " + monthIds);
       }
     });

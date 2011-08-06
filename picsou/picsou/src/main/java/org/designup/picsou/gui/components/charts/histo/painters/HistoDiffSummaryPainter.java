@@ -26,7 +26,7 @@ public class HistoDiffSummaryPainter implements HistoPainter {
     return dataset;
   }
 
-  public void paint(Graphics2D g2, HistoChartMetrics metrics, Integer currentRollover) {
+  public void paint(Graphics2D g2, HistoChartMetrics metrics, Integer rolloverColumnIndex) {
 
     if (dataset.size() == 0) {
       return;
@@ -37,7 +37,7 @@ public class HistoDiffSummaryPainter implements HistoPainter {
       int width = metrics.columnWidth() - 2 * PADDING;
 
       Double actual = dataset.getActualValue(i);
-      boolean isRollover = (currentRollover != null) && (currentRollover == i);
+      boolean isRollover = (rolloverColumnIndex != null) && (rolloverColumnIndex == i);
       boolean isCurrent = dataset.isCurrent(i);
 
       g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, getFillAlpha(isCurrent, isRollover)));

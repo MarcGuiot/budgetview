@@ -20,7 +20,7 @@ public class HistoLinePainter implements HistoPainter {
     return dataset;
   }
 
-  public void paint(Graphics2D g2, HistoChartMetrics metrics, Integer currentRollover) {
+  public void paint(Graphics2D g2, HistoChartMetrics metrics, Integer rolloverColumnIndex) {
 
     if (dataset.size() == 0) {
       return;
@@ -38,7 +38,7 @@ public class HistoLinePainter implements HistoPainter {
 
       int width = right - left;
 
-      boolean isRollover = (currentRollover != null) && (currentRollover == i);
+      boolean isRollover = (rolloverColumnIndex != null) && (rolloverColumnIndex == i);
 
       boolean future = dataset.isFuture(i);
       boolean positive = value >= 0;

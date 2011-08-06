@@ -1,8 +1,10 @@
 package org.designup.picsou.gui.series.analysis.histobuilders;
 
+import org.apache.wicket.extensions.markup.html.form.palette.component.Selection;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
+import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyColors;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffColors;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
@@ -58,9 +60,9 @@ public class HistoChartBuilder {
     this.repository = repository;
     this.histoChart = new HistoChart(config, directory);
     this.histoChart.addListener(new HistoChartListenerAdapter() {
-      public void columnsClicked(Set<Integer> monthIds) {
+      public void columnsClicked(HistoSelection selection) {
         GlobList months = new GlobList();
-        for (Integer monthId : monthIds) {
+        for (Integer monthId : selection.getColumnIds()) {
           months.add(repository.get(Key.create(Month.TYPE, monthId)));
         }
         parentSelectionService.select(months, Month.TYPE);

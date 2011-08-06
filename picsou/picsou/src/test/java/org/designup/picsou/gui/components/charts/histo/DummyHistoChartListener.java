@@ -3,7 +3,6 @@ package org.designup.picsou.gui.components.charts.histo;
 import org.globsframework.xml.XmlTestLogger;
 
 import java.io.IOException;
-import java.util.Set;
 
 public class DummyHistoChartListener implements HistoChartListener {
 
@@ -12,9 +11,9 @@ public class DummyHistoChartListener implements HistoChartListener {
   public DummyHistoChartListener() throws IOException {
   }
 
-  public void columnsClicked(Set<Integer> ids) {
+  public void columnsClicked(HistoSelection selection) {
     try {
-      logger.log("select").addAttribute("ids", ids.toString()).end();
+      logger.log("select").addAttribute("ids", selection.getColumnIds().toString()).end();
     }
     catch (IOException e) {
       throw new RuntimeException(e);

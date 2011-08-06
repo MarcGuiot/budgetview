@@ -25,7 +25,7 @@ public class HistoDailyPainter implements HistoPainter {
     return dataset;
   }
 
-  public void paint(Graphics2D g2, HistoChartMetrics chartMetrics, Integer currentRollover) {
+  public void paint(Graphics2D g2, HistoChartMetrics chartMetrics, Integer rolloverColumnIndex) {
 
     HistoDailyMetrics metrics = new HistoDailyMetrics(chartMetrics);
     
@@ -71,7 +71,7 @@ public class HistoDailyPainter implements HistoPainter {
         boolean current = dataset.isCurrent(i);
         boolean future = dataset.isFuture(i, day);
         boolean selected = dataset.isSelected(i);
-        boolean rollover = (currentRollover != null) && (currentRollover == i);
+        boolean rollover = (rolloverColumnIndex != null) && (rolloverColumnIndex == i);
         int blockWidth = width / values.length;
 
         if (dataset.isDaySelected(i, day)) {
