@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.components.tips;
 
-import org.designup.picsou.gui.components.charts.Gauge;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -8,16 +7,16 @@ import java.awt.event.ActionEvent;
 
 public class ShowDetailsTipAction extends AbstractAction {
 
-  private Gauge gauge;
+  private JComponent component;
   private Directory directory;
 
-  public ShowDetailsTipAction(Gauge gauge, Directory directory) {
-    this.gauge = gauge;
+  public ShowDetailsTipAction(JComponent component, Directory directory) {
+    this.component = component;
     this.directory = directory;
   }
 
   public void actionPerformed(ActionEvent actionEvent) {
-    DetailsTip tip = new DetailsTip((JComponent)actionEvent.getSource(), gauge.getTooltip(), directory);
+    DetailsTip tip = new DetailsTip((JComponent)actionEvent.getSource(), component.getToolTipText(), directory);
     tip.show();
   }
 }

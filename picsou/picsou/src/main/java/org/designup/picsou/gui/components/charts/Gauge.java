@@ -1,35 +1,30 @@
 package org.designup.picsou.gui.components.charts;
 
+import org.designup.picsou.gui.components.ActionablePanel;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 
-public class Gauge extends JPanel {
+public class Gauge extends ActionablePanel {
 
-  private boolean invertAll;
+  private static final int ARC_WIDTH = 5;
+  private static final int ARC_HEIGHT = 10;
 
   private double actualValue;
   private double targetValue;
-  private double overrunPart = 0;
 
+  private boolean invertAll;
+  private double overrunPart = 0;
   private double fillPercent = 0;
   private double overrunPercent = 0;
   private double emptyPercent = 1.0;
   private double beginPercent = 0.;
   private boolean overrunError = false;
   private boolean active = true;
-
-  private boolean rolloverInProgress;
 
   private Color borderColor = Color.DARK_GRAY;
   private Color rolloverBorderColor = Color.DARK_GRAY;
@@ -53,17 +48,14 @@ public class Gauge extends JPanel {
   private int barHeight = DEFAULT_BAR_HEIGHT;
   private double remainder;
 
-  private String tooltip;
+  private String detailsTooltip;
   private String description;
 
-  private boolean targetValueUnset = false;
-  private String text;
+  private String label;
   private FontMetrics fontMetrics;
   private int fontHeight;
   private int descent;
   private Double maxValue;
-
-  private java.util.List<ActionListener> actionListeners = new ArrayList<ActionListener>();
 
   public Gauge() {
     this(false);
@@ -75,33 +67,9 @@ public class Gauge extends JPanel {
     setMinimumSize(new Dimension(20, 28));
     setPreferredSize(new Dimension(200, 28));
 
-    setTooltipKey("gauge.unset");
+    setDetailsTooltipKey("gauge.unset");
 
     initFontMetrics(getFont());
-  }
-
-  public void setActionListener(final ActionListener listener) {
-
-    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-    addMouseListener(new MouseAdapter() {
-      public void mouseEntered(MouseEvent e) {
-        rolloverInProgress = true;
-        repaint();
-      }
-
-      public void mouseExited(MouseEvent e) {
-        rolloverInProgress = false;
-        repaint();
-      }
-
-      public void mousePressed(MouseEvent e) {
-        if (!e.isConsumed()) {
-          listener.actionPerformed(new ActionEvent(Gauge.this, 0, "action"));
-          e.consume();
-        }
-      }
-    });
   }
 
   public boolean shouldInvertAll() {
@@ -120,13 +88,13 @@ public class Gauge extends JPanel {
     descent = fontMetrics.getDescent();
   }
 
-  public void setText(String text) {
-    this.text = text;
+  public void setLabel(String label) {
+    this.label = label;
     repaint();
   }
 
-  public String getText() {
-    return text;
+  public String getLabel() {
+    return label;
   }
 
   public void setValues(double actualValue, double targetValue) {
@@ -146,18 +114,18 @@ public class Gauge extends JPanel {
     overrunError = false;
 
     if (Amounts.isNearZero(this.targetValue) && Amounts.isNearZero(this.actualValue)) {
-      setTooltipKey("gauge.unset");
+      setDetailsTooltipKey("gauge.unset");
     }
     else if (Amounts.isNearZero(this.targetValue - this.actualValue)) { // passer par remaining et overrun
       fillPercent = 1;
       emptyPercent = 0;
-      setTooltipKey("gauge.complete");
+      setDetailsTooltipKey("gauge.complete");
     }
     else if (this.targetValue > 0) {
       if (this.actualValue > this.targetValue) { // if (overrun == 0 && remaining != 0)
         fillPercent = absTarget / absActual;  //==> differencié passe et future
         overrunPercent = 1 - fillPercent;
-        setTooltipKey("gauge.overrun.ok", Math.abs(remainder));
+        setDetailsTooltipKey("gauge.overrun.ok", Math.abs(remainder));
         emptyPercent = 0;
       }
       else {
@@ -168,7 +136,7 @@ public class Gauge extends JPanel {
           fillPercent = absActual / absTarget;
         }
         emptyPercent = 1 - fillPercent - beginPercent;
-        setTooltipKey("gauge.expected", Math.abs(remainder));
+        setDetailsTooltipKey("gauge.expected", Math.abs(remainder));
       }
     }
     else if (this.targetValue < 0) {
@@ -177,7 +145,7 @@ public class Gauge extends JPanel {
         overrunPercent = 1 - fillPercent;
         overrunError = true;
         emptyPercent = 0;
-        setTooltipKey("gauge.overrun.error", Math.abs(remainder));
+        setDetailsTooltipKey("gauge.overrun.error", Math.abs(remainder));
       }
       else {
         if (!sameSign && !Amounts.isNearZero(this.actualValue)) {
@@ -187,7 +155,7 @@ public class Gauge extends JPanel {
           fillPercent = absActual / absTarget;
         }
         emptyPercent = 1 - fillPercent;
-        setTooltipKey("gauge.partial", Math.abs(remainder));
+        setDetailsTooltipKey("gauge.partial", Math.abs(remainder));
       }
     }
     else {
@@ -196,20 +164,19 @@ public class Gauge extends JPanel {
         overrunPercent = 1;
         emptyPercent = 0;
         if (this.actualValue > 0) {
-          setTooltipKey("gauge.overrun.ok", Math.abs(remainder));
+          setDetailsTooltipKey("gauge.overrun.ok", Math.abs(remainder));
         }
         else {
           overrunError = true;
-          setTooltipKey("gauge.overrun.error", Math.abs(remainder));
+          setDetailsTooltipKey("gauge.overrun.error", Math.abs(remainder));
         }
       }
     }
     repaint();
   }
 
-  public void setValues(double actualValue, double targetValue, double partialOverrun, double remaining, String text,
-                        boolean targetValueUnset) {
-    this.targetValueUnset = targetValueUnset;
+  public void setValues(double actualValue, double targetValue, double partialOverrun, double remaining,
+                        String detailsTooltipText, boolean targetValueUnset) {
     fillPercent = 0;
     overrunPercent = 0;
     emptyPercent = 1;
@@ -222,17 +189,18 @@ public class Gauge extends JPanel {
     this.remainder = remaining;
     boolean sameSign = Amounts.sameSign(this.actualValue, this.targetValue);
 
+    this.detailsTooltip = detailsTooltipText;
     if (targetValueUnset) {
-      text = Lang.get("gauge.plannetUnset");
+      detailsTooltip = Lang.get("gauge.plannetUnset");
     }
     else if (Amounts.isNearZero(this.targetValue) && Amounts.isNearZero(this.actualValue)) {
-      text = Lang.get("gauge.unset");
+      detailsTooltip = Lang.get("gauge.unset");
     }
     else if (Amounts.isNearZero(this.targetValue - this.actualValue) && Amounts.isNearZero(partialOverrun)
              && Amounts.isNearZero(remaining)) { // passer par remaining et overrun
       fillPercent = 1;
       emptyPercent = 0;
-      text = Lang.get("gauge.complete");
+      detailsTooltip = Lang.get("gauge.complete");
     }
     else if (Math.abs(actualValue) > Math.abs(targetValue) && sameSign) {
       double total = Math.abs(remaining) + Math.abs(actualValue);
@@ -268,18 +236,17 @@ public class Gauge extends JPanel {
       }
     }
 
-    this.tooltip = text;
     updateTooltip();
     repaint();
   }
 
-  private void setTooltipKey(String key, Double... values) {
+  private void setDetailsTooltipKey(String key, Double... values) {
     String[] formattedValues = new String[values.length];
     for (int i = 0; i < values.length; i++) {
       formattedValues[i] = Formatting.DECIMAL_FORMAT.format(values[i]);
 
     }
-    this.tooltip = Strings.isNotEmpty(key) ? Lang.get(key, formattedValues) : "";
+    this.detailsTooltip = Strings.isNotEmpty(key) ? Lang.get(key, formattedValues) : "";
     updateTooltip();
   }
 
@@ -293,7 +260,7 @@ public class Gauge extends JPanel {
     if (Strings.isNotEmpty(description)) {
       builder.append(description).append("<br/>");
     }
-    builder.append(tooltip);
+    builder.append(detailsTooltip);
     builder.append("</html>");
     setToolTipText(builder.toString());
   }
@@ -304,13 +271,13 @@ public class Gauge extends JPanel {
 
     if (isOpaque()) {
       g2.setColor(getBackground());
-      g2.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
+      g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, ARC_WIDTH, ARC_HEIGHT);
     }
 
     int width = (int)(getWidthRatio() * (getWidth() - 1));
     int height = getHeight() - 1;
 
-    barHeight = Strings.isNotEmpty(text) ? getHeight() - 1 : DEFAULT_BAR_HEIGHT;
+    barHeight = Strings.isNotEmpty(label) ? getHeight() - 1 : DEFAULT_BAR_HEIGHT;
 
     int barTop = (height - barHeight) / 2;
     int barBottom = height - barTop;
@@ -324,8 +291,8 @@ public class Gauge extends JPanel {
 
     int overrunStart = beginWidth + fillWidth;
 
-    if (fillPercent > 0) {
-      fillBar(g2, filledColorTop, filledColorBottom, 0, fillWidth, barTop, barBottom);
+    if (emptyPercent > 0) {
+      fillBar(g2, emptyColorTop, emptyColorBottom, 0, overrunEnd + emptyWidth, barTop, barBottom);
     }
 
     if (beginPercent > 0) {
@@ -334,15 +301,15 @@ public class Gauge extends JPanel {
 
     if (overrunPercent > 0) {
       if (overrunError) {
-        fillBar(g2, overrunErrorColorTop, overrunErrorColorBottom, overrunStart, overrunWidth, barTop, barBottom);
+        fillBar(g2, overrunErrorColorTop, overrunErrorColorBottom, 0, overrunStart + overrunWidth, barTop, barBottom);
       }
       else {
-        fillBar(g2, overrunColorTop, overrunColorBottom, overrunStart, overrunWidth, barTop, barBottom);
+        fillBar(g2, overrunColorTop, overrunColorBottom, 0, overrunStart + overrunWidth, barTop, barBottom);
       }
     }
 
-    if (emptyPercent > 0) {
-      fillBar(g2, emptyColorTop, emptyColorBottom, overrunEnd, emptyWidth, barTop, barBottom);
+    if (fillPercent > 0) {
+      fillBar(g2, filledColorTop, filledColorBottom, 0, fillWidth, barTop, barBottom);
     }
 
     drawBorder(g2, width, barTop, barHeight);
@@ -359,7 +326,7 @@ public class Gauge extends JPanel {
   }
 
   private void drawBorder(Graphics2D g2, int width, int barTop, int barHeight) {
-    if (rolloverInProgress) {
+    if (isRolloverInProgress()) {
       g2.setColor(rolloverBorderColor);
       g2.drawRect(0, barTop, getWidth() - 1, barHeight);
     }
@@ -371,11 +338,11 @@ public class Gauge extends JPanel {
 
   private void fillBar(Graphics2D g2, Color topColor, Color bottomColor, int barX, int barWidth, int barTop, int barBottom) {
     g2.setPaint(new GradientPaint(0, barTop, topColor, 0, barBottom, bottomColor));
-    g2.fillRect(barX, barTop, barWidth, barHeight);
+    g2.fillRoundRect(barX, barTop, barWidth, barHeight, ARC_WIDTH, ARC_HEIGHT);
   }
 
   private void drawText(Graphics2D g2) {
-    if (Strings.isNullOrEmpty(text)) {
+    if (Strings.isNullOrEmpty(label)) {
       return;
     }
 
@@ -384,14 +351,14 @@ public class Gauge extends JPanel {
     int y = (getHeight() + fontHeight) / 2 - descent - VERTICAL_TEXT_MARGIN + 1;
 
     g2.setColor(labelShadowColor);
-    g2.drawString(text, x + 1, y + 1);
+    g2.drawString(label, x + 1, y + 1);
 
     g2.setColor(getLabelColor());
-    g2.drawString(text, x, y);
+    g2.drawString(label, x, y);
   }
 
   private Color getLabelColor() {
-    if (rolloverInProgress) {
+    if (isRolloverInProgress()) {
       return rolloverLabelColor;
     }
     else if (!active) {
@@ -439,7 +406,7 @@ public class Gauge extends JPanel {
   }
 
   public String getTooltip() {
-    return tooltip;
+    return detailsTooltip;
   }
 
   public void setBorderColor(Color borderColor) {

@@ -18,8 +18,7 @@ public class DaySelection {
 
   public void add(int monthId, int day) {
     boolean[] values = selection.get(monthId);
-    if (values == null) {
-      values = new boolean[32];
+    if (values == null) {      values = new boolean[32];
     }
     values[day] = true;
     selection.put(monthId, values);

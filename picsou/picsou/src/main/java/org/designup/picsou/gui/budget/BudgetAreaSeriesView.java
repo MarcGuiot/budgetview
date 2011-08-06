@@ -6,9 +6,7 @@ import org.designup.picsou.gui.budget.footers.BudgetAreaSeriesFooter;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.TextDisplay;
-import org.designup.picsou.gui.components.charts.BudgetAreaGaugeFactory;
-import org.designup.picsou.gui.components.charts.Gauge;
-import org.designup.picsou.gui.components.charts.GlobGaugeView;
+import org.designup.picsou.gui.components.charts.*;
 import org.designup.picsou.gui.components.tips.ShowDetailsTipAction;
 import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
@@ -285,7 +283,7 @@ public class BudgetAreaSeriesView extends View {
       gaugeView
         .setMaxValueUpdater(Key.create(PeriodBudgetAreaStat.TYPE, budgetArea.getId()),
                             PeriodBudgetAreaStat.ABS_SUM_AMOUNT)
-        .setTextSource(series.getKey())
+        .setLabelSource(series.getKey())
         .setDescriptionSource(series.getKey(), Series.DESCRIPTION);
       visibles.add(gaugeView);
 
@@ -296,6 +294,16 @@ public class BudgetAreaSeriesView extends View {
           visibles.remove(gaugeView);
         }
       });
+
+      GlobDeltaGaugeView deltaGaugeView =
+        new GlobDeltaGaugeView(Key.create(PeriodSeriesStat.TYPE, series.get(Series.ID)), budgetArea,
+                               PeriodSeriesStat.PREVIOUS_SUMMARY_AMOUNT, PeriodSeriesStat.NEW_SUMMARY_AMOUNT,
+                               PeriodSeriesStat.PREVIOUS_SUMMARY_MONTH, PeriodSeriesStat.NEW_SUMMARY_MONTH,
+                               repository, directory);
+      DeltaGauge deltaGauge = deltaGaugeView.getComponent();
+      cellBuilder.add("deltaGauge", deltaGauge);
+      deltaGauge.setActionListener(new ShowDetailsTipAction(deltaGauge, directory));
+      cellBuilder.addDisposeListener(deltaGaugeView);
 
       if (SignpostStatus.isAmountSeries(repository, series.getKey())) {
         Signpost amountSignpost = new SeriesAmountSignpost(repository, directory);

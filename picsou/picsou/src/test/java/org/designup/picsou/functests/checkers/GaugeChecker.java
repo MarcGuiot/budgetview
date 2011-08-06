@@ -106,7 +106,7 @@ public class GaugeChecker extends AbstractUIComponent {
   }
 
   public String getLabel() {
-    return gauge.getText();
+    return gauge.getLabel();
   }
 
   public void click() {

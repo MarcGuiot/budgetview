@@ -8,6 +8,7 @@ import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.DoubleField;
+import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
@@ -37,6 +38,15 @@ public class PeriodSeriesStat {
 
   @DefaultDouble(0.0)
   public static DoubleField ABS_SUM_AMOUNT;
+
+  @DefaultDouble(0.0)
+  public static DoubleField PREVIOUS_SUMMARY_AMOUNT;
+
+  @DefaultDouble(0.0)
+  public static DoubleField NEW_SUMMARY_AMOUNT;
+
+  public static IntegerField PREVIOUS_SUMMARY_MONTH;
+  public static IntegerField NEW_SUMMARY_MONTH;
 
   @DefaultBoolean(false)
   public static BooleanField ACTIVE;

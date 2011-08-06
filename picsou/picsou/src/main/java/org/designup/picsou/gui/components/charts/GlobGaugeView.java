@@ -23,8 +23,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> implements ChangeSetListener,
-                                                                                         GlobSelectionListener {
+public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView>
+  implements ChangeSetListener,
+             GlobSelectionListener {
 
   private Gauge gauge;
   private DoubleField actualField;
@@ -79,14 +80,14 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
     update();
   }
 
-  public GlobGaugeView setTextSource(Key key) {
+  public GlobGaugeView setLabelSource(Key key) {
     GlobStringifier stringifier = directory.get(DescriptionService.class).getStringifier(key.getGlobType());
     if (textUpdater != null) {
       textUpdater.dispose();
     }
     this.textUpdater = new TextUpdater(key, stringifier) {
       protected void setValue(Gauge gauge, String text) {
-        gauge.setText(text);
+        gauge.setLabel(text);
       }
     };
     return this;
@@ -146,6 +147,12 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> im
     selectionService.removeListener(this);
     if (textUpdater != null) {
       textUpdater.dispose();
+    }
+    if (descriptionUpdater != null) {
+      descriptionUpdater.dispose();
+    }
+    if (maxValueUpdater != null) {
+      maxValueUpdater.dispose();
     }
   }
 

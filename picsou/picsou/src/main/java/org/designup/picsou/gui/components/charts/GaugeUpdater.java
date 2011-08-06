@@ -17,7 +17,7 @@ public class GaugeUpdater {
                                       budgetArea);
     gauge.setValues(gaugeActual, gaugeTarget, futureOverrun + pastOverrun,
                     futureRemaining + pastRemaining,
-                    "<html>" + tooltips + "</html>", isRemainingUnset);
+                    tooltips, isRemainingUnset);
     gauge.setActive(active);
   }
 

@@ -2,7 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.JPopupButtonChecker;
-import org.designup.picsou.functests.utils.BalloonTipTesting;
+import org.designup.picsou.gui.components.charts.DeltaGauge;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;
@@ -62,7 +62,8 @@ public class BudgetViewChecker extends ViewChecker {
 
     // The reference component in each row is the gauge
     private static final int OBSERVED_LABEL_OFFSET = -1;
-    private static final int PLANNED_LABEL_OFFSET = +1;
+    private static final int DELTA_GAUGE_OFFSET = +1;
+    private static final int PLANNED_LABEL_OFFSET = +2;
 
     public BudgetAreaChecker(String panelName, BudgetArea budgetArea) {
       this.panelName = panelName;
@@ -213,7 +214,7 @@ public class BudgetViewChecker extends ViewChecker {
             return false;
           }
           Gauge gauge = (Gauge)component;
-          return seriesName.equals(gauge.getText());
+          return seriesName.equals(gauge.getLabel());
         }
       });
       if (gauge == null) {
@@ -277,7 +278,7 @@ public class BudgetViewChecker extends ViewChecker {
         if (!Gauge.class.isInstance(component)) {
           continue;
         }
-        String label = ((Gauge)component).getText();
+        String label = ((Gauge)component).getLabel();
         actualNames.add(label);
       }
       return actualNames;
@@ -320,6 +321,15 @@ public class BudgetViewChecker extends ViewChecker {
       int nameIndex = getIndex(panel, gauge.getAwtComponent());
 
       return new Button((JButton)panel.getComponent(nameIndex + PLANNED_LABEL_OFFSET));
+    }
+
+    protected DeltaGaugeChecker getDeltaGauge(String seriesName) {
+      GaugeChecker gauge = getGauge(seriesName);
+
+      JPanel panel = (JPanel)gauge.getContainer().getAwtContainer();
+      int nameIndex = getIndex(panel, gauge.getAwtComponent());
+
+      return new DeltaGaugeChecker((DeltaGauge)panel.getComponent(nameIndex + DELTA_GAUGE_OFFSET));
     }
 
     public BudgetAreaChecker createSeries(String name) {
@@ -418,6 +428,11 @@ public class BudgetViewChecker extends ViewChecker {
 
     public BudgetAreaChecker alignAndPropagate(String seriesName) {
       editSeries(seriesName).alignPlannedAndActual().setPropagationEnabled().validate();
+      return this;
+    }
+
+    public BudgetAreaChecker checkDeltaGauge(String seriesName, Double previousValue, Double newValue, double ratio, String tooltip) {
+      getDeltaGauge(seriesName).check(previousValue, newValue, ratio, tooltip);
       return this;
     }
   }

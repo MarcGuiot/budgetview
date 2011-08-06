@@ -19,10 +19,10 @@ import org.globsframework.utils.directory.Directory;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.fieldContained;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSetListener {
 
@@ -69,12 +69,11 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     PeriodSeriesStatFunctor seriesStatFunctor = new PeriodSeriesStatFunctor(repository);
     try {
       resetStats();
-
       repository.safeApply(SeriesStat.TYPE,
                            fieldContained(SeriesStat.MONTH, selectedMonths.getValueSet(Month.ID)),
                            seriesStatFunctor);
-
       initToUpdateField();
+      initEvolutionFields();
     }
     finally {
       repository.completeChangeSet();
@@ -85,6 +84,37 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     localSelectionService.select(GlobSelectionBuilder.init()
                                    .add(seriesStats, PeriodSeriesStat.TYPE)
                                    .get());
+  }
+
+  private void initEvolutionFields() {
+    SortedSet<Integer> monthIds = selectedMonths.getSortedSet(Month.ID);
+    if (monthIds.isEmpty()) {
+      return;
+    }
+
+    if (monthIds.size() > 1) {
+      initEvolutionFields(monthIds.first(), monthIds.last());
+    }
+    else {
+      int lastMonth = monthIds.first();
+      initEvolutionFields(Month.previous(lastMonth), lastMonth);
+    }
+  }
+
+  private void initEvolutionFields(int newMonth, int lastMonth) {
+    for (Glob stat : repository.findByIndex(SeriesStat.MONTH_INDEX, lastMonth)) {
+      Integer seriesId = stat.get(SeriesStat.SERIES);
+      Double newValue = stat.get(SeriesStat.SUMMARY_AMOUNT);
+
+      Glob previousStat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, newMonth));
+      Double previousValue = previousStat == null ? null : previousStat.get(SeriesStat.SUMMARY_AMOUNT);
+
+      repository.update(Key.create(PeriodSeriesStat.TYPE, seriesId),
+                        value(PeriodSeriesStat.PREVIOUS_SUMMARY_AMOUNT, previousValue),
+                        value(PeriodSeriesStat.PREVIOUS_SUMMARY_MONTH, newMonth),
+                        value(PeriodSeriesStat.NEW_SUMMARY_AMOUNT, newValue),
+                        value(PeriodSeriesStat.NEW_SUMMARY_MONTH, newMonth));
+    }
   }
 
   private void resetStats() {

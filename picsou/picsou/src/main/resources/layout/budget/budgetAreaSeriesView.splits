@@ -36,7 +36,15 @@
     <style selector="#gauge" weightX="100"/>
 
     <style selector="#total label" marginBottom="0"/>
-    
+
+    <style selector="#deltaGauge"
+           positiveColor="deltaGauge.positive"
+           neutralColor="deltaGauge.neutral"
+           negativeColor="deltaGauge.negative"
+           background="block.inner.bg" opaque="true"
+           preferredSize="(12,12)"
+           fill="none" anchor="center" marginRight="4"/>
+
   </styles>
 
   <column name="budgetAreaSeriesView" styleClass="main">
@@ -56,12 +64,14 @@
                           anchor="right"/>
                   <button ref="titleSeries" styleClass="itemLink" text="$budgetview.columnTitle.series"
                           anchor="center"/>
+                  <label/>
                   <button ref="titleAmountPlanned" styleClass="itemLink" text="$budgetview.columnTitle.planned"
                           anchor="left"/>
                 </header>
                 <button ref="observedSeriesAmount"
                         tooltipText="$budgetview.tooltip.detail.observed"/>
                 <component ref="gauge" styleClass="detailGauge"/>
+                <component ref="deltaGauge"/>
                 <button ref="plannedSeriesAmount"
                         tooltipText="$budgetview.tooltip.detail.planned"/>
               </repeat>
