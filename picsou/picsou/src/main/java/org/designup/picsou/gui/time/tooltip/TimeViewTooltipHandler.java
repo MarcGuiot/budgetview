@@ -41,7 +41,7 @@ public class TimeViewTooltipHandler implements TimeViewMouseHandler {
     panel.setToolTipText(
       Lang.get("timeView.tooltip.month.standard",
                month,
-               Formatting.toMinimumValueString(minPosition),
+               Formatting.toStandardValueString(minPosition),
                Colors.toString(colors.getAmountTextColor(minPosition, Color.BLACK))));
   }
 

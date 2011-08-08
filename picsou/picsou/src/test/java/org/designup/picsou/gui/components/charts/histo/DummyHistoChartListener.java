@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.components.charts.histo;
 
+import org.globsframework.model.Key;
 import org.globsframework.xml.XmlTestLogger;
 
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.io.IOException;
 public class DummyHistoChartListener implements HistoChartListener {
 
   private XmlTestLogger logger = new XmlTestLogger();
+  private boolean rolloverTracked = false;
 
   public DummyHistoChartListener() throws IOException {
   }
@@ -20,10 +22,25 @@ public class DummyHistoChartListener implements HistoChartListener {
     }
   }
 
-  public void doubleClick() {
+  public void doubleClick(Integer columnIndex, Key objectKey) {
   }
 
   public void scroll(int count) {
+  }
+
+  public void setRolloverTracked(boolean tracked) {
+    this.rolloverTracked = tracked;
+  }
+
+  public void rolloverUpdated(HistoRollover rollover) {
+    try {
+      if (rolloverTracked) {
+        logger.log("rolloverUpdated").end();
+      }
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public void check(String expectedLog) throws IOException {

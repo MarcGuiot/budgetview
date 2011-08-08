@@ -1,5 +1,7 @@
 package org.designup.picsou.gui.components.charts.histo;
 
+import org.globsframework.model.Key;
+
 public interface HistoDataset {
 
   public int size();
@@ -20,7 +22,7 @@ public interface HistoDataset {
 
   boolean containsSections();
 
-  String getTooltip(int index);
+  String getTooltip(int index, Key objectKey);
 
   boolean isSelected(int index);
 
@@ -62,7 +64,7 @@ public interface HistoDataset {
       return "";
     }
 
-    public String getTooltip(int index) {
+    public String getTooltip(int index, Key objectKey) {
       return "";
     }
 

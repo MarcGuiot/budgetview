@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.components.charts.histo;
 
 import org.designup.picsou.gui.components.charts.histo.utils.DefaultHistoSelection;
+import org.globsframework.model.Key;
 import org.globsframework.utils.Utils;
 
 import java.util.ArrayList;
@@ -9,41 +10,73 @@ import java.util.TreeSet;
 
 public class HistoSelectionManager {
 
+  private java.util.List<HistoChartListener> listeners;
+
+  private HistoDataset dataset;
+
   private Integer columnSelectionMinIndex;
   private Integer columnSelectionMaxIndex;
 
-  private Integer rolloverColumnIndex;
+  private InnerHistoRollover rollover = new InnerHistoRollover();
 
-  private java.util.List<HistoChartListener> listeners;
+  public HistoSelectionManager() {
+  }
 
-  public void startClick(HistoDataset dataset) {
-    resetSelection();
+  public void addListener(HistoChartListener listener) {
+    if (listeners == null) {
+      listeners = new ArrayList<HistoChartListener>();
+    }
+    this.listeners.add(listener);
+  }
 
-    if (rolloverColumnIndex < dataset.size()) {
-      addRolloverColumnToSelection(dataset);
+  public void resetRollover(HistoDataset dataset) {
+    this.dataset = dataset;
+    this.rollover.columnIndex = null;
+    this.rollover.objectKey = null;
+    for (HistoChartListener listener : listeners) {
+      listener.rolloverUpdated(getRollover());
+    }
+  }
+
+  public void updateRollover(Integer columnIndex, Key objectKey, boolean dragging) {
+    boolean rolloverChanged = false;
+    boolean expandSelection = false;
+
+    if (!Utils.equal(columnIndex, rollover.columnIndex)) {
+      this.rollover.columnIndex = columnIndex;
+      rolloverChanged = true;
+      expandSelection = dragging;
+    }
+
+    if (!Utils.equal(objectKey, rollover.objectKey)) {
+      this.rollover.objectKey = objectKey;
+      rolloverChanged = true;
+    }
+
+    if (rolloverChanged) {
+      for (HistoChartListener listener : listeners) {
+        listener.rolloverUpdated(getRollover());
+      }
+    }
+    if (expandSelection) {
+      addRolloverColumnToSelection();
+    }
+  }
+
+  public void startClick() {
+    columnSelectionMinIndex = null;
+    columnSelectionMaxIndex = null;
+
+    if (rollover.columnIndex < dataset.size()) {
+      addRolloverColumnToSelection();
     }
     else {
-      notifyColumnSelection(dataset);
+      notifyColumnSelection();
     }
   }
 
-  public void addRolloverColumnToSelection(HistoDataset dataset) {
-    boolean selectionChanged = false;
-    if ((columnSelectionMinIndex == null) || (rolloverColumnIndex < columnSelectionMinIndex)) {
-      columnSelectionMinIndex = rolloverColumnIndex;
-      selectionChanged = true;
-    }
-    if ((columnSelectionMaxIndex == null) || (rolloverColumnIndex > columnSelectionMaxIndex)) {
-      columnSelectionMaxIndex = rolloverColumnIndex;
-      selectionChanged = true;
-    }
-    if (selectionChanged) {
-      notifyColumnSelection(dataset);
-    }
-  }
-
-  private void notifyColumnSelection(HistoDataset dataset) {
-    if (!hasSelection()) {
+  private void notifyColumnSelection() {
+    if ((columnSelectionMinIndex == null) || (columnSelectionMaxIndex == null)) {
       return;
     }
 
@@ -62,29 +95,28 @@ public class HistoSelectionManager {
     }
   }
 
-  public void resetSelection() {
-    columnSelectionMinIndex = null;
-    columnSelectionMaxIndex = null;
-  }
-
-  public boolean hasSelection() {
-    return (columnSelectionMinIndex != null) && (columnSelectionMaxIndex != null);
-  }
-
-  public void addListener(HistoChartListener listener) {
-    if (listeners == null) {
-      listeners = new ArrayList<HistoChartListener>();
-    }
-    this.listeners.add(listener);
-  }
-
   public boolean canSelect() {
-    return (rolloverColumnIndex != null) && (listeners != null);
+    return (rollover.columnIndex != null) && (listeners != null);
   }
 
   public void notifyDoubleClick() {
     for (HistoChartListener listener : listeners) {
-      listener.doubleClick();
+      listener.doubleClick(rollover.columnIndex, rollover.objectKey);
+    }
+  }
+
+  public void addRolloverColumnToSelection() {
+    boolean selectionChanged = false;
+    if ((columnSelectionMinIndex == null) || (rollover.columnIndex < columnSelectionMinIndex)) {
+      columnSelectionMinIndex = rollover.columnIndex;
+      selectionChanged = true;
+    }
+    if ((columnSelectionMaxIndex == null) || (rollover.columnIndex > columnSelectionMaxIndex)) {
+      columnSelectionMaxIndex = rollover.columnIndex;
+      selectionChanged = true;
+    }
+    if (selectionChanged) {
+      notifyColumnSelection();
     }
   }
 
@@ -94,23 +126,32 @@ public class HistoSelectionManager {
     }
   }
 
-  public Integer getRolloverColumnIndex() {
-    return rolloverColumnIndex;
+  public HistoRollover getRollover() {
+    return rollover;
   }
 
-  public boolean isCurrentRolloverColumn(Integer columnIndex) {
-    return (Utils.equal(columnIndex, rolloverColumnIndex));
-  }
+  private class InnerHistoRollover implements HistoRollover {
+    private Integer columnIndex;
+    private Key objectKey;
 
-  public void setRolloverColumn(Integer columnIndex) {
-    this.rolloverColumnIndex = columnIndex;
-  }
+    public boolean isOnColumn(int columnIndex) {
+      return Utils.equal(this.columnIndex, columnIndex);
+    }
 
-  public boolean isRolloverColumn(int columnIndex) {
-    return (rolloverColumnIndex != null) && (rolloverColumnIndex == columnIndex);
-  }
+    public boolean isOnObject(Key key) {
+      return Utils.equal(this.objectKey, key);
+    }
 
-  public void resetRollover() {
-    this.rolloverColumnIndex = null;
+    public Integer getColumnIndex() {
+      return columnIndex;
+    }
+
+    public Key getObjectKey() {
+      return objectKey;
+    }
+
+    public boolean isActive() {
+      return (columnIndex != null) || (objectKey != null);
+    }
   }
 }

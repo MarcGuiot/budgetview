@@ -3,6 +3,7 @@ package org.designup.picsou.gui.components.charts.histo.line;
 import org.designup.picsou.gui.components.charts.histo.utils.AbstractHistoDataset;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.model.Key;
 
 public class HistoLineDataset extends AbstractHistoDataset<HistoLineElement> {
 
@@ -24,7 +25,7 @@ public class HistoLineDataset extends AbstractHistoDataset<HistoLineElement> {
     return result;
   }
 
-  public String getTooltip(int index) {
+  public String getTooltip(int index, Key objectKey) {
     if ((index < 0) || (index >= size())) {
       return "";
     }

@@ -1,5 +1,7 @@
 package org.designup.picsou.gui.components.charts.histo;
 
+import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
+import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -16,18 +18,28 @@ public class HistoChart extends JPanel {
   private boolean snapToScale;
   private HistoChartConfig config;
 
-  private HistoSelectionManager selectionManager = new HistoSelectionManager();
+  private HistoSelectionManager selectionManager;
 
   public static final BasicStroke SCALE_STROKE = new BasicStroke(1);
   public static final BasicStroke SCALE_ORIGIN_STROKE = new BasicStroke(1);
 
   public HistoChart(HistoChartConfig config, Directory directory) {
     this.config = config;
+    this.selectionManager = new HistoSelectionManager();
     this.colors = new HistoChartColors(directory);
     setFont(getFont().deriveFont(9f));
     this.selectedLabelFont = getFont().deriveFont(Font.BOLD);
     this.sectionLabelFont = getFont().deriveFont(11f).deriveFont(Font.BOLD);
     registerMouseActions();
+    selectionManager.addListener(new HistoChartListenerAdapter() {
+      public void rolloverUpdated(HistoRollover rollover) {
+        setCursor(rollover.isActive() ?
+                  Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        if (rollover.getColumnIndex() != null) {
+          setToolTipText(painter.getDataset().getTooltip(rollover.getColumnIndex(), rollover.getObjectKey()));
+        }
+      }
+    });
   }
 
   public void addListener(HistoChartListener listener) {
@@ -40,7 +52,7 @@ public class HistoChart extends JPanel {
 
   public void update(HistoPainter painter) {
     this.painter = painter;
-    selectionManager.resetRollover();
+    selectionManager.resetRollover(painter.getDataset());
     this.metrics = null;
     repaint();
   }
@@ -102,7 +114,7 @@ public class HistoChart extends JPanel {
     paintBorder(g2);
 
     g2.setFont(getFont());
-    painter.paint(g2, metrics, selectionManager.getRolloverColumnIndex());
+    painter.paint(g2, metrics, selectionManager.getRollover());
 
     paintSections(g2, dataset);
   }
@@ -206,33 +218,20 @@ public class HistoChart extends JPanel {
     }
   }
 
-  public void mouseMoved(int x, boolean dragging) {
+  public void mouseMoved(int x, int y, boolean dragging) {
     if (metrics == null) {
       return;
     }
 
     Integer columnIndex = metrics.getColumnAt(x);
-
-    if (selectionManager.isCurrentRolloverColumn(columnIndex)) {
-      return;
-    }
-
-    if (config.clickable) {
-      selectionManager.setRolloverColumn(columnIndex);
-      setCursor((columnIndex != null) ?
-                Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-      setToolTipText(painter.getDataset().getTooltip(columnIndex));
-    }
-
-    if (dragging) {
-      selectionManager.addRolloverColumnToSelection(painter.getDataset());
-    }
+    Key objectKey = painter.getObjectKeyAt(x, y);
+    selectionManager.updateRollover(columnIndex, objectKey, dragging);
 
     repaint();
   }
 
   private boolean clickable() {
-    return config.clickable && selectionManager.canSelect() && (painter != null)
+    return config.columnClickEnabled && selectionManager.canSelect() && (painter != null)
            && painter.getDataset().size() > 0;
   }
 
@@ -241,8 +240,11 @@ public class HistoChart extends JPanel {
 
       public void mousePressed(MouseEvent e) {
         if (clickable() && isEnabled() && e.getClickCount() == 1) {
-          selectionManager.startClick(painter.getDataset());
+          selectionManager.startClick();
         }
+      }
+
+      public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 2) {
           selectionManager.notifyDoubleClick();
         }
@@ -250,28 +252,26 @@ public class HistoChart extends JPanel {
 
       public void mouseEntered(MouseEvent e) {
         if (isEnabled()) {
-          selectionManager.resetRollover();
+          selectionManager.resetRollover(painter.getDataset());
         }
       }
 
       public void mouseExited(MouseEvent e) {
-        if (isEnabled()) {
-          selectionManager.resetRollover();
-          repaint();
-        }
+        selectionManager.resetRollover(painter.getDataset());
+        repaint();
       }
     });
 
     addMouseMotionListener(new MouseMotionListener() {
       public void mouseDragged(MouseEvent e) {
         if (isEnabled()) {
-          HistoChart.this.mouseMoved(e.getX(), true);
+          HistoChart.this.mouseMoved(e.getX(), e.getY(), true);
         }
       }
 
       public void mouseMoved(MouseEvent e) {
         if (isEnabled()) {
-          HistoChart.this.mouseMoved(e.getX(), false);
+          HistoChart.this.mouseMoved(e.getX(), e.getY(), false);
         }
       }
     });
@@ -293,7 +293,7 @@ public class HistoChart extends JPanel {
   }
 
   private Color getLabelColor(int columnIndex) {
-    if (selectionManager.isRolloverColumn(columnIndex)) {
+    if (config.columnClickEnabled && selectionManager.getRollover().isOnColumn(columnIndex)) {
       return colors.getRolloverLabelColor();
     }
     else {

@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.accounts;
 
-import org.designup.picsou.gui.accounts.utils.Day;
+import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.DatePicker;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
@@ -133,7 +133,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
 
   private static LocalGlobRepository createLocalRepository(GlobRepository parentRepository) {
     return LocalGlobRepositoryBuilder.init(parentRepository)
-      .copy(Bank.TYPE, BankEntity.TYPE, AccountUpdateMode.TYPE, Day.TYPE, CurrentMonth.TYPE,
+      .copy(Bank.TYPE, BankEntity.TYPE, AccountUpdateMode.TYPE, MonthDay.TYPE, CurrentMonth.TYPE,
             AccountCardType.TYPE, AccountType.TYPE, Month.TYPE, DeferredCardDate.TYPE)
       .get();
   }

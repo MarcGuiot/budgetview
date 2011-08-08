@@ -3,6 +3,7 @@ package org.designup.picsou.gui.components.charts.histo.diff;
 import org.designup.picsou.gui.components.charts.histo.utils.AbstractHistoDataset;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.model.Key;
 
 public class HistoDiffDataset extends AbstractHistoDataset<HistoDiffElement> {
 
@@ -16,7 +17,7 @@ public class HistoDiffDataset extends AbstractHistoDataset<HistoDiffElement> {
     updateMax(actual);
   }
 
-  public String getTooltip(int index) {
+  public String getTooltip(int index, Key objectKey) {
     if ((index < 0) || (index >= size())) {
       return "";
     }

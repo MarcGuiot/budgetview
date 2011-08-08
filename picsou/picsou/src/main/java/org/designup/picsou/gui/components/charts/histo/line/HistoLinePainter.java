@@ -3,6 +3,8 @@ package org.designup.picsou.gui.components.charts.histo.line;
 import org.designup.picsou.gui.components.charts.histo.HistoPainter;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.HistoChartMetrics;
+import org.designup.picsou.gui.components.charts.histo.HistoRollover;
+import org.globsframework.model.Key;
 
 import java.awt.*;
 
@@ -20,7 +22,11 @@ public class HistoLinePainter implements HistoPainter {
     return dataset;
   }
 
-  public void paint(Graphics2D g2, HistoChartMetrics metrics, Integer rolloverColumnIndex) {
+  public Key getObjectKeyAt(int x, int y) {
+    return null;
+  }
+
+  public void paint(Graphics2D g2, HistoChartMetrics metrics, HistoRollover rollover) {
 
     if (dataset.size() == 0) {
       return;
@@ -38,7 +44,7 @@ public class HistoLinePainter implements HistoPainter {
 
       int width = right - left;
 
-      boolean isRollover = (rolloverColumnIndex != null) && (rolloverColumnIndex == i);
+      boolean isRollover = rollover.isOnColumn(i);
 
       boolean future = dataset.isFuture(i);
       boolean positive = value >= 0;

@@ -129,6 +129,7 @@ public class HistoChartBuilder {
       "histo.account.daily.current",
       "histo.account.inner.label.positive",
       "histo.account.inner.label.negative",
+      "histo.account.inner.rollover.day",
       "histo.account.inner.selected.day",
       directory
     );

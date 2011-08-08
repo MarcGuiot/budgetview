@@ -41,7 +41,7 @@ public class Formatting {
     }
   }
 
-  public static String toMinimumValueString(Double value) {
+  public static String toStandardValueString(Double value) {
     if (value == null) {
       return "";
     }

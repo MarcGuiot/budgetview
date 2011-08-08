@@ -3,6 +3,7 @@ package org.designup.picsou.gui.components.charts.histo.painters;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.model.Key;
 import org.globsframework.utils.Strings;
 
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class HistoDiffDataset implements HistoDataset {
     return elements.get(index).label;
   }
 
-  public String getTooltip(int index) {
+  public String getTooltip(int index, Key objectKey) {
     if ((index < 0) || (index >= elements.size())) {
       return "";
     }

@@ -7,6 +7,7 @@ import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.components.charts.*;
+import org.designup.picsou.gui.components.highlighting.HighlightUpdater;
 import org.designup.picsou.gui.components.tips.ShowDetailsTipAction;
 import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
@@ -274,7 +275,7 @@ public class BudgetAreaSeriesView extends View {
                           PeriodSeriesStat.ACTIVE,
                           GlobMatchers.fieldEquals(PeriodSeriesStat.SERIES, series.get(Series.ID)),
                           repository, directory);
-      Gauge gauge = gaugeView.getComponent();
+      final Gauge gauge = gaugeView.getComponent();
       gauge.setActionListener(new AbstractAction() {
         public void actionPerformed(ActionEvent actionEvent) {
           directory.get(SeriesEditor.class).showSeries(series, selectedMonthIds);
@@ -286,6 +287,14 @@ public class BudgetAreaSeriesView extends View {
         .setLabelSource(series.getKey())
         .setDescriptionSource(series.getKey(), Series.DESCRIPTION);
       visibles.add(gaugeView);
+
+      HighlightUpdater highlightUpdater = new HighlightUpdater(series.getKey(), directory) {
+        protected void setHighlighted(boolean highlighted) {
+          gauge.setHighlighted(highlighted);
+        }
+      };
+      cellBuilder.addDisposeListener(highlightUpdater);
+
 
       cellBuilder.add("gauge", gaugeView.getComponent());
       cellBuilder.addDisposeListener(gaugeView);

@@ -2,7 +2,7 @@ package org.designup.picsou.gui;
 
 import org.designup.picsou.bank.SpecificBankLoader;
 import org.designup.picsou.client.ServerAccess;
-import org.designup.picsou.gui.accounts.utils.Day;
+import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.gui.backup.BackupService;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
@@ -104,6 +104,7 @@ public class PicsouInit {
     repository.addTrigger(new RegistrationTrigger(directory));
     repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
     repository.addTrigger(new MonthTrigger(directory));
+    repository.addTrigger(new DayTrigger());
     repository.addTrigger(new DeferredAccountTrigger());
     repository.addTrigger(new DeferredCardDayTrigger());
     repository.addTrigger(new DeferredOperationTrigger());
@@ -232,7 +233,7 @@ public class PicsouInit {
     repository.startChangeSet();
     try {
       for (int i = 1; i < 32; i++) {
-        repository.findOrCreate(Key.create(Day.TYPE, i));
+        repository.findOrCreate(Key.create(MonthDay.TYPE, i));
       }
     }
     finally {

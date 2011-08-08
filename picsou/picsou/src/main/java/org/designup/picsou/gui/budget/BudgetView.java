@@ -5,15 +5,23 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.budget.footers.BudgetAreaSeriesFooter;
 import org.designup.picsou.gui.budget.footers.EmptyBudgetAreaSeriesFooter;
 import org.designup.picsou.gui.budget.summary.BudgetSummaryView;
+import org.designup.picsou.gui.components.highlighting.HighlightingService;
 import org.designup.picsou.model.BudgetArea;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 public class BudgetView extends View {
 
   public BudgetView(GlobRepository repository, Directory parentDirectory) {
-    super(repository, parentDirectory);
+    super(repository, createDirectory(parentDirectory));
+  }
+
+  private static Directory createDirectory(Directory parentDirectory) {
+    DefaultDirectory directory = new DefaultDirectory(parentDirectory);
+    directory.add(new HighlightingService());
+    return directory;
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {

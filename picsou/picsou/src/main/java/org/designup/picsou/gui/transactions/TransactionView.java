@@ -16,7 +16,6 @@ import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.model.Card;
-import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.SelectionHistoChartRange;
 import org.designup.picsou.gui.transactions.actions.TransactionTableActions;
 import org.designup.picsou.gui.transactions.columns.*;
@@ -35,6 +34,7 @@ import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
+import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -55,7 +55,6 @@ import java.util.Set;
 
 import static org.designup.picsou.model.Transaction.TYPE;
 import static org.globsframework.model.utils.GlobMatchers.*;
-import org.globsframework.metamodel.fields.IntegerField;
 
 public class TransactionView extends View implements Filterable {
   public static final int DATE_COLUMN_INDEX = 0;
@@ -152,6 +151,12 @@ public class TransactionView extends View implements Filterable {
       }
     });
     builder.add("seriesFilterCombo", seriesFilteringCombo.getComponent());
+  }
+
+  public void setPlannedTransactionsShown() {
+    if (!showPlannedTransactionsCheckbox.isSelected()) {
+      showPlannedTransactionsCheckbox.doClick();
+    }
   }
 
   public void setAccountFilter(Key accountKey) {
@@ -263,13 +268,13 @@ public class TransactionView extends View implements Filterable {
                  descriptionService.getStringifier(Transaction.ACCOUNT));
 
     view.registerSaving(UserPreferences.KEY, new GlobTableView.FieldAccess() {
-      public IntegerField getPosField(int modelIndex) {
-        if (UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex > UserPreferences.TRANSACTION_POS9.getIndex()){
-          throw new RuntimeException("missing column in UserPreference");
-        }
-        return (IntegerField)UserPreferences.TYPE.getField(UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex);
-      }
-    }, repository);
+                          public IntegerField getPosField(int modelIndex) {
+                            if (UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex > UserPreferences.TRANSACTION_POS9.getIndex()) {
+                              throw new RuntimeException("missing column in UserPreference");
+                            }
+                            return (IntegerField)UserPreferences.TYPE.getField(UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex);
+                          }
+                        }, repository);
     return view;
   }
 

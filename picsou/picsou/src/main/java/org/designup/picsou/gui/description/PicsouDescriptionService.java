@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.description;
 
-import org.designup.picsou.gui.accounts.utils.Day;
+import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.gui.projects.utils.ProjectStringifier;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -68,10 +68,10 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
     if (globType.equals(Bank.TYPE)) {
       return new BankStringifier();
     }
-    if (globType.equals(Day.TYPE)) {
+    if (globType.equals(MonthDay.TYPE)) {
       return new DayGlobStringifier();
     }
-    if (globType.equals(Day.TYPE)) {
+    if (globType.equals(MonthDay.TYPE)) {
       return new DayGlobStringifier();
     }
     if (globType.equals(AccountType.TYPE)){
@@ -133,11 +133,11 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
       if (glob == null){
         return null;
       }
-      return Integer.toString(glob.get(Day.ID));
+      return Integer.toString(glob.get(MonthDay.ID));
     }
 
     public Comparator<Glob> getComparator(GlobRepository repository) {
-      return new GlobFieldComparator(Day.ID);
+      return new GlobFieldComparator(MonthDay.ID);
     }
   }
 }

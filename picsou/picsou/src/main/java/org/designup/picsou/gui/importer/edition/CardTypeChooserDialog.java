@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.importer.edition;
 
 import com.jidesoft.swing.AutoResizingTextArea;
-import org.designup.picsou.gui.accounts.utils.Day;
+import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -37,7 +37,7 @@ public class CardTypeChooserDialog {
 
   public void show(Window parent, final GlobList accounts) {
     final LocalGlobRepository localRepository = LocalGlobRepositoryBuilder.init(repository)
-      .copy(Account.TYPE, AccountCardType.TYPE, Bank.TYPE, BankEntity.TYPE, Day.TYPE)
+      .copy(Account.TYPE, AccountCardType.TYPE, Bank.TYPE, BankEntity.TYPE, MonthDay.TYPE)
       .get();
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/cardTypeChooserDialog.splits",

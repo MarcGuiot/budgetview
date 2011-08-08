@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.utils;
 
-import org.designup.picsou.client.exceptions.InvalidActionForState;
 import org.globsframework.utils.exceptions.OperationDenied;
 
 import java.util.HashMap;
@@ -18,7 +17,8 @@ public class DaySelection {
 
   public void add(int monthId, int day) {
     boolean[] values = selection.get(monthId);
-    if (values == null) {      values = new boolean[32];
+    if (values == null) {
+      values = new boolean[32];
     }
     values[day] = true;
     selection.put(monthId, values);
@@ -28,9 +28,7 @@ public class DaySelection {
     boolean[] values = selection.get(monthId);
     boolean[] result = new boolean[maxDays];
     if (values != null) {
-      for (int i = 0; i < maxDays; i++) {
-        result[i] = values[i];
-      }
+      System.arraycopy(values, 0, result, 0, maxDays);
     }
     return result;
   }

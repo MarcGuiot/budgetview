@@ -85,6 +85,11 @@ public class NavigationService implements GlobSelectionListener {
     gotoCard(Card.DATA);
   }
 
+  public void gotoDataWithPlannedTransactions() {
+    transactionView.setPlannedTransactionsShown();
+    gotoData();
+  }
+
   public void gotoDataForAccount(Key accountKey) {
     selectionService.select(repository.get(accountKey));
     transactionView.setAccountFilter(accountKey);

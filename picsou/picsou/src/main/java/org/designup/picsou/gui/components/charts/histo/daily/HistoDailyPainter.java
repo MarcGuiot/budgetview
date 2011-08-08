@@ -3,7 +3,10 @@ package org.designup.picsou.gui.components.charts.histo.daily;
 import org.designup.picsou.gui.components.charts.histo.HistoChartMetrics;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.HistoPainter;
+import org.designup.picsou.gui.components.charts.histo.HistoRollover;
+import org.designup.picsou.gui.components.charts.histo.utils.HorizontalBlocksClickMap;
 import org.designup.picsou.gui.description.Formatting;
+import org.globsframework.model.Key;
 
 import java.awt.*;
 
@@ -11,6 +14,7 @@ public class HistoDailyPainter implements HistoPainter {
 
   private HistoDailyDataset dataset;
   private HistoDailyColors colors;
+  private HorizontalBlocksClickMap clickMap = new HorizontalBlocksClickMap();
 
   public static final BasicStroke DEFAULT_LINE_STROKE = new BasicStroke(1);
   public static final BasicStroke FUTURE_LINE_STROKE =
@@ -25,10 +29,14 @@ public class HistoDailyPainter implements HistoPainter {
     return dataset;
   }
 
-  public void paint(Graphics2D g2, HistoChartMetrics chartMetrics, Integer rolloverColumnIndex) {
+  public Key getObjectKeyAt(int x, int y) {
+    return clickMap.getKey(x, y);
+  }
+
+  public void paint(Graphics2D g2, HistoChartMetrics chartMetrics, HistoRollover rollover) {
 
     HistoDailyMetrics metrics = new HistoDailyMetrics(chartMetrics);
-    
+
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     if (dataset.size() == 0) {
       return;
@@ -38,6 +46,9 @@ public class HistoDailyPainter implements HistoPainter {
 
     Double previousValue = null;
     Integer previousY = null;
+    int maxX = -1;
+
+    clickMap.reset(metrics.columnTop(), metrics.columnTop() + metrics.columnHeight());
 
     for (int i = 0; i < dataset.size(); i++) {
 
@@ -71,10 +82,17 @@ public class HistoDailyPainter implements HistoPainter {
         boolean current = dataset.isCurrent(i);
         boolean future = dataset.isFuture(i, day);
         boolean selected = dataset.isSelected(i);
-        boolean rollover = (rolloverColumnIndex != null) && (rolloverColumnIndex == i);
+        boolean isRollover = rollover.isOnColumn(i);
         int blockWidth = width / values.length;
 
-        if (dataset.isDaySelected(i, day)) {
+        Key dayKey = dataset.getKey(i, day);
+        clickMap.add(dayKey, previousX);
+        g2.setComposite(AlphaComposite.Src);
+        if (rollover.isOnObject(dayKey)) {
+          g2.setColor(colors.getRolloverDayColor());
+          g2.fillRect(previousX, metrics.columnTop() + 1, blockWidth, metrics.columnHeight() - 1);
+        }
+        else if (dataset.isDaySelected(i, day)) {
           g2.setColor(colors.getSelectedDayColor());
           g2.fillRect(previousX, metrics.columnTop() + 1, blockWidth, metrics.columnHeight() - 1);
         }
@@ -85,21 +103,24 @@ public class HistoDailyPainter implements HistoPainter {
         }
 
         if (Math.signum(previousValue) == Math.signum(value)) {
-          drawBlock(g2, previousX, previousY, x, y, y0, value >= 0, current, future, selected, rollover);
+          drawBlock(g2, previousX, previousY, x, y, y0, value >= 0, current, future, selected, isRollover);
         }
         else {
           int x0 = previousX + (int)(blockWidth * Math.abs(previousValue) / (Math.abs(previousValue) + Math.abs(value)));
-          drawBlock(g2, previousX, previousY, x0, y0, y0, previousValue >= 0, current, future, selected, rollover);
-          drawBlock(g2, x0, y0, x, y, y0, value >= 0, current, future, selected, rollover);
+          drawBlock(g2, previousX, previousY, x0, y0, y0, previousValue >= 0, current, future, selected, isRollover);
+          drawBlock(g2, x0, y0, x, y, y0, value >= 0, current, future, selected, isRollover);
         }
 
         previousX = x;
+        maxX = x + blockWidth;
         previousY = y;
         previousValue = value;
       }
 
       drawMinLabel(g2, dataset, i, metrics);
     }
+
+    clickMap.complete(maxX);
   }
 
   private void drawBlock(Graphics2D g2, int previousX, Integer previousY, int x, int y, int y0,
@@ -140,6 +161,6 @@ public class HistoDailyPainter implements HistoPainter {
   }
 
   private String getMinText(int index, Double minValue) {
-    return Formatting.toMinimumValueString(minValue);
+    return Formatting.toStandardValueString(minValue);
   }
 }

@@ -10,12 +10,7 @@ import org.globsframework.utils.TablePrinter;
 import org.uispec4j.Mouse;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
-import org.uispec4j.interception.toolkit.Empty;
 import org.uispec4j.utils.Utils;
-
-import java.awt.*;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class HistoChecker extends AbstractHistoChecker<HistoChecker> {
 
@@ -116,7 +111,7 @@ public class HistoChecker extends AbstractHistoChecker<HistoChecker> {
 
   public HistoChecker checkTooltip(int index, String expectedText) {
     HistoDataset dataset = getDataset(HistoDataset.class);
-    Assert.assertEquals(expectedText, Utils.cleanupHtml(dataset.getTooltip(index)));
+    Assert.assertEquals(expectedText, Utils.cleanupHtml(dataset.getTooltip(index, null)));
     return this;
   }
 

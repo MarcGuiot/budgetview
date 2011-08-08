@@ -1,6 +1,6 @@
 package org.designup.picsou.model;
 
-import org.designup.picsou.gui.accounts.utils.Day;
+import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
@@ -27,7 +27,7 @@ public class DeferredCardDate {
   @Target(Month.class)
   public static LinkField MONTH;
 
-  @Target(Day.class)
+  @Target(MonthDay.class)
   public static LinkField DAY;
 
   public static MultiFieldUniqueIndex ACCOUNT_AND_DATE;

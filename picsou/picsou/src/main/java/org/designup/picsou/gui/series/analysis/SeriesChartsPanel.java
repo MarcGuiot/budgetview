@@ -64,7 +64,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
 
     this.currentWrapperKey = getMainSummaryWrapper();
 
-    histoChartBuilder = new HistoChartBuilder(new HistoChartConfig(true, true, false, true),
+    histoChartBuilder = new HistoChartBuilder(new HistoChartConfig(true, true, false, true, false),
                                               new ScrollableHistoChartRange(12, 6, false, repository),
                                               repository, directory, parentSelectionService);
     histoChartBuilder.addListener(new HistoChartListenerAdapter() {

@@ -107,6 +107,9 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
 
   private class MouseTracker extends java.awt.event.MouseAdapter implements MouseMotionListener {
     public void mouseClicked(MouseEvent mouseEvent) {
+      if (mouseEvent.isConsumed()) {
+        return;
+      }
       selectionService.select(repository.get(selectionKey));
     }
 

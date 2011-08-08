@@ -1,9 +1,7 @@
 package org.designup.picsou.model;
 
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Account;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
-import org.designup.picsou.gui.accounts.utils.Day;
+import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -12,7 +10,6 @@ import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
-import org.globsframework.utils.serialization.SerializedOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 
@@ -29,7 +26,7 @@ public class DeferredCardPeriod {
   @Target(Month.class)
   public static LinkField FROM_MONTH;
 
-  @Target(Day.class)
+  @Target(MonthDay.class)
   @DefaultInteger(31)
   public static LinkField DAY;
 

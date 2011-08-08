@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.importer;
 
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
-import org.designup.picsou.gui.accounts.utils.Day;
+import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.*;
@@ -94,7 +94,7 @@ public class ImportDialog {
   }
 
   private void loadLocalRepository(GlobRepository repository) {
-    GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, Day.TYPE,
+    GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, MonthDay.TYPE,
                             Account.TYPE, AccountUpdateMode.TYPE,
                             Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE};
 

@@ -24,8 +24,9 @@ public class DetailsTip implements Disposable {
   private JComponent component;
   private String text;
   private AWTEventListener mouseListener;
+  private Right_Above_Positioner positioner = new Right_Above_Positioner(10, 20);
 
-  DetailsTip(final JComponent component, String text, Directory directory) {
+  public DetailsTip(final JComponent component, String text, Directory directory) {
     this.component = component;
     this.text = text;
 
@@ -48,7 +49,7 @@ public class DetailsTip implements Disposable {
                                 BalloonTip.AttachLocation.NORTHEAST,
                                 0, 20,
                                 false);
-    balloonTip.setPositioner(new Right_Above_Positioner(10, 20));
+    balloonTip.setPositioner(positioner);
     balloonTip.setVisible(true);
 
     visibilityUpdater = new HierarchyListener() {

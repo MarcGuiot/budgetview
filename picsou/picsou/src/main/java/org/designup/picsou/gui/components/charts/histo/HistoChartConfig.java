@@ -4,12 +4,12 @@ public class HistoChartConfig {
   public final boolean drawLabels;
   public final boolean drawSections;
   public final boolean drawInnerLabels;
-  public final boolean clickable;
+  public final boolean columnClickEnabled;
 
-  public HistoChartConfig(boolean drawLabels, boolean drawSections, boolean drawInnerLabels, boolean clickable) {
+  public HistoChartConfig(boolean drawLabels, boolean drawSections, boolean drawInnerLabels, boolean columnClickEnabled, boolean objectClickEnabled) {
     this.drawLabels = drawLabels;
     this.drawSections = drawSections;
     this.drawInnerLabels = drawInnerLabels;
-    this.clickable = clickable;
+    this.columnClickEnabled = columnClickEnabled;
   }
 }

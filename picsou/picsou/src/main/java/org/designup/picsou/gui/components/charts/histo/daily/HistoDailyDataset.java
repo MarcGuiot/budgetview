@@ -2,10 +2,9 @@ package org.designup.picsou.gui.components.charts.histo.daily;
 
 import org.designup.picsou.gui.components.charts.histo.utils.AbstractHistoDataset;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.utils.AmountColors;
-import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Day;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.utils.Utils;
+import org.globsframework.model.Key;
 
 public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
 
@@ -19,15 +18,8 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
   }
 
   public void add(int monthId, Double[] values, String label, String section, boolean current, boolean selected, boolean[] daySelections) {
-    add(new HistoDailyElement(monthId, values, label, section, createTooltip(monthId, values), findMinDay(values), current, monthId > currentMonth, selected, daySelections));
+    add(new HistoDailyElement(monthId, values, label, section, "", findMinDay(values), current, monthId > currentMonth, selected, daySelections));
     updateMax(values);
-  }
-
-  private String createTooltip(int monthId, Double[] values) {
-    Double minValue = Utils.min(values);
-    return Lang.get(getTooltipKey(),
-                    Month.getFullLabel(monthId),
-                    Formatting.toMinimumValueString(minValue));
   }
 
   private int findMinDay(Double[] values) {
@@ -84,20 +76,19 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
     }
     return day - 1 > currentDay;
   }
-  
+
   public boolean isDaySelected(int index, int day) {
     return getElement(index).daySelections[day];
   }
 
-  public boolean minInFuture(int index) {
-    return (isFuture(index, getMinDay(index)));
-  }
-
-  public String getTooltip(int index) {
-    if ((index < 0) || (index >= size())) {
+  public String getTooltip(int index, Key objectKey) {
+    if ((index < 0) || (index >= size()) || (objectKey == null)) {
       return "";
     }
-    return Lang.get(getTooltipKey(), getElement(index).tooltip);
+
+    return Lang.get(getTooltipKey(),
+                    Day.getFullLabel(objectKey),
+                    Formatting.toStandardValueString(getValue(index, objectKey.get(Day.DAY))));
   }
 
   public String toString() {
@@ -106,5 +97,9 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
 
   public String toString(int index) {
     return getElement(index).toString();
+  }
+
+  public Key getKey(int index, int day) {
+    return Key.create(Day.MONTH, getElement(index).id, Day.DAY, day);
   }
 }

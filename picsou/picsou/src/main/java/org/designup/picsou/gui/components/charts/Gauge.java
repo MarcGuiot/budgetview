@@ -38,9 +38,12 @@ public class Gauge extends ActionablePanel {
   private Color overrunErrorColorBottom = Color.RED.darker();
   private Color rolloverLabelColor = Color.BLUE;
   private Color inactiveLabelColor = Color.GRAY.brighter();
+  private Color highlightedLabelColor = Color.YELLOW.darker();
   private Color labelShadowColor = Color.gray.darker();
+  private Color highlightedBackgroundColor = Color.YELLOW.brighter();
 
   private static final int DEFAULT_BAR_HEIGHT = 10;
+  private static final int HORIZONTAL_MARGIN = 2;
 
   private static final int HORIZONTAL_TEXT_MARGIN = 4;
   private static final int VERTICAL_TEXT_MARGIN = 1;
@@ -56,6 +59,7 @@ public class Gauge extends ActionablePanel {
   private int fontHeight;
   private int descent;
   private Double maxValue;
+  private boolean highlighted;
 
   public Gauge() {
     this(false);
@@ -270,12 +274,14 @@ public class Gauge extends ActionablePanel {
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
     if (isOpaque()) {
-      g2.setColor(getBackground());
-      g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, ARC_WIDTH, ARC_HEIGHT);
+      g2.setColor(highlighted ? highlightedBackgroundColor : getBackground());
+      g2.fillRect(0, 0, getWidth(), getHeight());
     }
 
-    int width = (int)(getWidthRatio() * (getWidth() - 1));
+    int totalWidth = getWidth() - 1 - 2 * HORIZONTAL_MARGIN;
+    int width = (int)(getWidthRatio() * totalWidth);
     int height = getHeight() - 1;
+    int minX = HORIZONTAL_MARGIN;
 
     barHeight = Strings.isNotEmpty(label) ? getHeight() - 1 : DEFAULT_BAR_HEIGHT;
 
@@ -292,27 +298,27 @@ public class Gauge extends ActionablePanel {
     int overrunStart = beginWidth + fillWidth;
 
     if (emptyPercent > 0) {
-      fillBar(g2, emptyColorTop, emptyColorBottom, 0, overrunEnd + emptyWidth, barTop, barBottom);
+      fillBar(g2, emptyColorTop, emptyColorBottom, minX, overrunEnd + emptyWidth, barTop, barBottom);
     }
 
     if (beginPercent > 0) {
-      fillBar(g2, overrunErrorColorTop, overrunErrorColorBottom, 0, beginWidth, barTop, barBottom);
+      fillBar(g2, overrunErrorColorTop, overrunErrorColorBottom, minX, beginWidth, barTop, barBottom);
     }
 
     if (overrunPercent > 0) {
       if (overrunError) {
-        fillBar(g2, overrunErrorColorTop, overrunErrorColorBottom, 0, overrunStart + overrunWidth, barTop, barBottom);
+        fillBar(g2, overrunErrorColorTop, overrunErrorColorBottom, minX, overrunStart + overrunWidth, barTop, barBottom);
       }
       else {
-        fillBar(g2, overrunColorTop, overrunColorBottom, 0, overrunStart + overrunWidth, barTop, barBottom);
+        fillBar(g2, overrunColorTop, overrunColorBottom, minX, overrunStart + overrunWidth, barTop, barBottom);
       }
     }
 
     if (fillPercent > 0) {
-      fillBar(g2, filledColorTop, filledColorBottom, 0, fillWidth, barTop, barBottom);
+      fillBar(g2, filledColorTop, filledColorBottom, minX, fillWidth, barTop, barBottom);
     }
 
-    drawBorder(g2, width, barTop, barHeight);
+    drawBorder(g2, totalWidth, barTop, barHeight);
 
     drawText(g2);
   }
@@ -330,7 +336,7 @@ public class Gauge extends ActionablePanel {
       g2.setColor(rolloverBorderColor);
       g2.drawRect(0, barTop, getWidth() - 1, barHeight);
     }
-    else {
+    else if (!highlighted) {
       g2.setColor(borderColor);
       g2.drawRect(0, barTop, width, barHeight);
     }
@@ -360,6 +366,9 @@ public class Gauge extends ActionablePanel {
   private Color getLabelColor() {
     if (isRolloverInProgress()) {
       return rolloverLabelColor;
+    }
+    else if (highlighted) {
+      return highlightedLabelColor;
     }
     else if (!active) {
       return inactiveLabelColor;
@@ -457,8 +466,16 @@ public class Gauge extends ActionablePanel {
     this.rolloverLabelColor = rolloverLabelColor;
   }
 
+  public void setHighlightedLabelColor(Color highlightedLabelColor) {
+    this.highlightedLabelColor = highlightedLabelColor;
+  }
+
   public void setInactiveLabelColor(Color inactiveLabelColor) {
     this.inactiveLabelColor = inactiveLabelColor;
+  }
+
+  public void setHighlightedBackgroundColor(Color highlightedBackgroundColor) {
+    this.highlightedBackgroundColor = highlightedBackgroundColor;
   }
 
   public double getBeginPercent() {
@@ -475,5 +492,10 @@ public class Gauge extends ActionablePanel {
 
   public boolean isActive() {
     return active;
+  }
+
+  public void setHighlighted(boolean highlighted) {
+    this.highlighted = highlighted;
+    repaint();
   }
 }

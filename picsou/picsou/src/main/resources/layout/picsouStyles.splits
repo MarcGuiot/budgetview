@@ -271,8 +271,8 @@
            overrunErrorColorTop="gauge.total.warning.top" overrunErrorColorBottom="gauge.total.warning.bottom"/>
 
     <style selector=".detailGauge"
-           opaque="false" font="-,plain,12"
-           foreground="gauge.detail.fg" background="block.inner.bg"
+           opaque="true" font="-,plain,12"
+           foreground="gauge.detail.fg" background="block.inner.bg" highlightedBackgroundColor="gauge.detail.bg.highlighted"
            fill="horizontal" anchor="center" preferredSize="(40,22)" weightX="10"
            marginLeft="6" marginRight="6"
            borderColor="gauge.detail.border" rolloverBorderColor="gauge.detail.border.rollover"
@@ -281,7 +281,8 @@
            overrunColorTop="gauge.detail.overrun.top" overrunColorBottom="gauge.detail.overrun.bottom"
            overrunErrorColorTop="gauge.detail.warning.top" overrunErrorColorBottom="gauge.detail.warning.bottom"
            rolloverLabelColor="gauge.detail.label.rollover" labelShadowColor="gauge.detail.label.shadow"
-           inactiveLabelColor="gauge.detail.label.inactive"/>
+           inactiveLabelColor="gauge.detail.label.inactive" highlightedLabelColor="gauge.detail.label.highlighted"
+            />
 
     <!-- Selection toggles -->
     <style selector="toggleButton.budgetAreaSelector" opaque="false"

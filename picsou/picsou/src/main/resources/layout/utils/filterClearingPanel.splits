@@ -10,7 +10,9 @@
     <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         lineColor="filter.message.link.underline"/>
     <style selector="button.highlightedLink" ui="hyperlinkButton"
-           foreground="filter.message.text" margin="2" fill="none" anchor="center"/>
+           foreground="filter.message.text"
+           margin="2" marginLeft="5" marginRight="5"
+           fill="none" anchor="center"/>
 
   </styles>
 

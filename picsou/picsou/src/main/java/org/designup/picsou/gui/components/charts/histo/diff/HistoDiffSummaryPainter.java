@@ -3,6 +3,8 @@ package org.designup.picsou.gui.components.charts.histo.diff;
 import org.designup.picsou.gui.components.charts.histo.HistoChartMetrics;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.HistoPainter;
+import org.designup.picsou.gui.components.charts.histo.HistoRollover;
+import org.globsframework.model.Key;
 
 import java.awt.*;
 
@@ -26,7 +28,11 @@ public class HistoDiffSummaryPainter implements HistoPainter {
     return dataset;
   }
 
-  public void paint(Graphics2D g2, HistoChartMetrics metrics, Integer rolloverColumnIndex) {
+  public Key getObjectKeyAt(int x, int y) {
+    return null;
+  }
+
+  public void paint(Graphics2D g2, HistoChartMetrics metrics, HistoRollover rollover) {
 
     if (dataset.size() == 0) {
       return;
@@ -37,7 +43,7 @@ public class HistoDiffSummaryPainter implements HistoPainter {
       int width = metrics.columnWidth() - 2 * PADDING;
 
       Double actual = dataset.getActualValue(i);
-      boolean isRollover = (rolloverColumnIndex != null) && (rolloverColumnIndex == i);
+      boolean isRollover = rollover.isOnColumn(i);
       boolean isCurrent = dataset.isCurrent(i);
 
       g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, getFillAlpha(isCurrent, isRollover)));

@@ -158,7 +158,7 @@ public class TimeViewChecker extends GuiChecker {
     timeViewPanel.getMouseOverHandler().enterMonth(parseMonthId(monthId));
     String tooltip = timeViewPanel.getToolTipText();
     Assert.assertTrue("Expected position: " + position + " - " + tooltip,
-                      tooltip.contains("Min position: " + Formatting.toMinimumValueString(position)));
+                      tooltip.contains("Min position: " + Formatting.toStandardValueString(position)));
     return this;
   }
 

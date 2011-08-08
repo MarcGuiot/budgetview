@@ -121,7 +121,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/10", "2008/11");
 
-    System.out.println("SeriesEditionTest.testCurrentlySelectedMonthsAreSelectedInBudgetTableIfCurrentMonthIsNotFound: ");
     budgetView.extras.createSeries()
       .setName("Plumber")
       .checkMonthsSelected(200810, 200811)

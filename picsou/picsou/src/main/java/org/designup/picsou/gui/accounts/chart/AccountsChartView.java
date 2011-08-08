@@ -11,6 +11,7 @@ import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartRangeList
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
 public abstract class AccountsChartView extends View implements HistoChartRangeListener {
@@ -20,7 +21,7 @@ public abstract class AccountsChartView extends View implements HistoChartRangeL
 
   public AccountsChartView(HistoChartRange range, GlobRepository repository, Directory directory, String componentName) {
     this(repository, directory, componentName,
-         new HistoChartConfig(true, true, false, true),
+         new HistoChartConfig(true, true, false, true, false),
          range);
   }
 
@@ -47,7 +48,7 @@ public abstract class AccountsChartView extends View implements HistoChartRangeL
     };
     final NavigationService navigationService = directory.get(NavigationService.class);
     histoChartBuilder.addListener(new HistoChartListenerAdapter() {
-      public void doubleClick() {
+      public void doubleClick(Integer columnIndex, Key objectKey) {
         processDoubleClick(navigationService);
       }
 
