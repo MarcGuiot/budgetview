@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.components.charts.histo.daily;
 
 import org.designup.picsou.gui.components.charts.histo.utils.HistoDatasetElement;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.util.Arrays;
 
@@ -8,11 +9,18 @@ public class HistoDailyElement extends HistoDatasetElement {
 
   public final Double[] values;
   public final int minDay;
+  public final boolean[] daySelections;
 
-  public HistoDailyElement(int id, Double[] values, String label, String section, String tooltip, int minDay, boolean current, boolean future, boolean selected) {
+  public HistoDailyElement(int id, Double[] values, String label, String section, String tooltip, int minDay, boolean current, boolean future, boolean selected, boolean[] daySelections) {
     super(id, label, tooltip, section, current, future, selected);
+
+    if (values.length != daySelections.length) {
+      throw new InvalidParameter("All arrays should have the same length");
+    }
+
     this.values = values;
     this.minDay = minDay;
+    this.daySelections = daySelections;
   }
 
   public Double getLastValue() {

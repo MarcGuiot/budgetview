@@ -2,7 +2,7 @@ package org.designup.picsou.gui.accounts.chart;
 
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
-import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartRange;
+import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 

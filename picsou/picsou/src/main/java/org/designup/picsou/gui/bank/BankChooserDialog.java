@@ -13,6 +13,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -24,15 +25,21 @@ public class BankChooserDialog implements GlobSelectionListener {
   private Window parent;
   private GlobRepository repository;
   private Directory directory;
+  private GlobMatcher matcher;
   private PicsouDialog dialog;
   private Glob selectedBank;
   private BankChooserDialog.ValidateAction validateAction;
   private SelectionService selectionService;
 
   public BankChooserDialog(Window parent, GlobRepository repository, Directory directory) {
+    this(parent, repository, directory, null);
+  }
+
+  public BankChooserDialog(Window parent, GlobRepository repository, Directory directory, GlobMatcher matcher) {
     this.parent = parent;
     this.repository = repository;
     this.directory = directory;
+    this.matcher = matcher;
   }
 
   public Integer show() {
@@ -50,7 +57,7 @@ public class BankChooserDialog implements GlobSelectionListener {
 
     validateAction = new ValidateAction();
 
-    BankChooserPanel bankChooser = BankChooserPanel.registerComponents(builder, validateAction);
+    BankChooserPanel bankChooser = BankChooserPanel.registerComponents(builder, validateAction, matcher);
 
     dialog = PicsouDialog.create(parent, localDirectory);
     dialog.addPanelWithButtons(builder.<JPanel>load(), validateAction, new CancelAction(dialog));

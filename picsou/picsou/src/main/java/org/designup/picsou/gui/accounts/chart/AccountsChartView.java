@@ -6,7 +6,7 @@ import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.series.analysis.histobuilders.AccountHistoChartUpdater;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
-import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartRange;
+import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartRangeListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -54,6 +54,10 @@ public abstract class AccountsChartView extends View implements HistoChartRangeL
       public void scroll(int count) {
       }
     });
+  }
+
+  protected void update() {
+    updater.update(false);
   }
 
   public void rangeUpdated() {

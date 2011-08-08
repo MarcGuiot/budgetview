@@ -327,7 +327,6 @@ public class PositionTrigger implements ChangeSetListener {
       pivot = transactions.length - 1;
       Double position = account.get(Account.POSITION);
       if (position == null) {
-        Log.write("Missing balance for account " + account.get(Account.NAME));
         return true;
       }
       Date positionDate = account.get(Account.POSITION_DATE);
@@ -401,7 +400,6 @@ public class PositionTrigger implements ChangeSetListener {
         positions.put(account.get(Account.ID), value);
       }
     }
-
 
     Double realPosition = null;
     Date positionDate = null;

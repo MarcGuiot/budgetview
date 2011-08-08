@@ -40,6 +40,7 @@ public class Amounts {
   static public double extractAmount(String amount) {
     double coef = 100.0;
     amount = amount.trim();
+    amount = amount.replaceAll("[^0-9-+,.]", "");
     int len = amount.length();
     int commaSep = amount.lastIndexOf(",");
     if (commaSep == len - 2) {
@@ -61,7 +62,7 @@ public class Amounts {
       }
     }
 
-    String tmp = amount.replaceAll(",", "").replaceAll("\\.", "").replaceAll(" ", "");
+    String tmp = amount.replaceAll("[^0-9-]", "");
     if (Strings.isNullOrEmpty(tmp)) {
       return 0.0;
     }

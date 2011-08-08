@@ -72,6 +72,12 @@ public class HistoDailyPainter implements HistoPainter {
         boolean future = dataset.isFuture(i, day);
         boolean selected = dataset.isSelected(i);
         boolean rollover = (currentRollover != null) && (currentRollover == i);
+        int blockWidth = width / values.length;
+
+        if (dataset.isDaySelected(i, day)) {
+          g2.setColor(colors.getSelectedDayColor());
+          g2.fillRect(previousX, metrics.columnTop() + 1, blockWidth, metrics.columnHeight() - 1);
+        }
 
         if (dataset.isCurrent(i, day)) {
           g2.setColor(colors.getCurrentDayColor());
@@ -82,7 +88,6 @@ public class HistoDailyPainter implements HistoPainter {
           drawBlock(g2, previousX, previousY, x, y, y0, value >= 0, current, future, selected, rollover);
         }
         else {
-          int blockWidth = width / values.length;
           int x0 = previousX + (int)(blockWidth * Math.abs(previousValue) / (Math.abs(previousValue) + Math.abs(value)));
           drawBlock(g2, previousX, previousY, x0, y0, y0, previousValue >= 0, current, future, selected, rollover);
           drawBlock(g2, x0, y0, x, y, y0, value >= 0, current, future, selected, rollover);

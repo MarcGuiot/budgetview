@@ -19,6 +19,9 @@ public class AmountsTest extends TestCase {
     checkExtract(2223, "2,223");
     checkExtract(2223, "2.223");
     checkExtract(2223, "2 223");
+    checkExtract(-2223, "-2 223");
+    checkExtract(2223, "2" + '\u00A0' + "223,00 ");
+    checkExtract(2223, "2" + '\u00A0' + "223,00" + '\u00A0');
   }
 
   private void checkExtract(double expected, String input) {

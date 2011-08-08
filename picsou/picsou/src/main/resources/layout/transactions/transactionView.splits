@@ -12,41 +12,43 @@
           <panel ref="importPanel" marginLeft="10" weightX="0.01"/>
           <filler fill="horizontal"/>
           <panel ref="customFilterMessage" fill="none" anchor="center"/>
-          <filler fill="horizontal"/>
-          <checkBox ref="showPlannedTransactions" text="$transactionView.showPlannedTransactions" weightX="0"/>
         </row>
 
-        <scrollPane borderPos="center" viewportBackground="transactions.bg"
-                    border="line(transaction.border)" opaque="false"
-                    marginTop="5" marginLeft="5">
-          <table ref="transactionsTable" background="transactions.bg" rowHeight="20"
-                 autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
-        </scrollPane>
+        <verticalSplit>
+          <column>
+            <scrollPane borderPos="center" viewportBackground="transactions.bg"
+                        border="line(transaction.border)" opaque="false"
+                        marginTop="5" marginLeft="5">
+              <table ref="transactionsTable" background="transactions.bg" rowHeight="20"
+                     autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
+            </scrollPane>
 
-        <grid>
-          <label gridPos="(0,0)" text="$transactionView.filter.label" styleClass="formLabel" marginRight="5"/>
-          <comboBox gridPos="(1,0)" ref="accountFilterCombo"/>
+            <grid>
 
-          <label gridPos="(0,1)" text="$transactionView.series.filter.label" styleClass="formLabel" marginRight="5"/>
-          <comboBox gridPos="(1,1)" ref="seriesFilterCombo"/>
+              <label gridPos="(0,0)" text="$transactionView.series.filter.label" styleClass="formLabel"
+                     marginRight="5"/>
+              <comboBox gridPos="(1,0)" ref="seriesFilterCombo"/>
 
-          <filler fill="horizontal" gridPos="(2,0,1,2)"/>
+              <checkBox gridPos="(0,1,2,1)" ref="showPlannedTransactions"
+                        text="$transactionView.showPlannedTransactions"
+                        weightX="0"/>
 
-          <component gridPos="(3,0)" ref="transactionSearch"/>
+              <filler fill="horizontal" gridPos="(2,0,1,2)"/>
 
-          <row gridPos="(3,1)">
-            <filler fill="horizontal"/>
-            <label text="$amount" styleClass="formLabelTop" autoHideSource="sum"
-                   border="empty(0,0,0,5)" tooltipText="$amount.tooltip"/>
-            <label ref="sum" font="-,bold,12"/>
-          </row>
+              <component gridPos="(3,0)" ref="transactionSearch"/>
 
-        </grid>
+              <row gridPos="(3,1)">
+                <filler fill="horizontal"/>
+                <label text="$amount" styleClass="formLabelTop" autoHideSource="sum"
+                       border="empty(0,0,0,5)" tooltipText="$amount.tooltip"/>
+                <label ref="sum" font="-,bold,12"/>
+              </row>
 
-        <row marginBottom="5">
-        </row>
-        <row marginBottom="5">
-        </row>
+            </grid>
+          </column>
+          <panel ref="accountChart" preferredSize="(400,150)"/>
+        </verticalSplit>
+        
       </column>
     </panel>
   </column>

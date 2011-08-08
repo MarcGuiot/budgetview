@@ -5,6 +5,7 @@ import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.signpost.guides.ImportSignpost;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
+import org.designup.picsou.bank.importer.SynchronizeAction;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -29,6 +30,16 @@ public class ImportPanel extends View {
     JButton importLabel = new JButton();
     importLabel.setModel(button.getModel());
     builder.add("importLabel", Gui.createSyncButton(button));
+
+    Action sync = new SynchronizeAction(repository, directory);
+    JButton syncButton = new JButton(sync);
+    builder.add("synchroButton", syncButton);
+
+    JButton syncLabel = new JButton();
+    syncLabel.setModel(syncButton.getModel());
+    builder.add("synchroLabel", Gui.createSyncButton(syncButton));
+
+
 
     final ImportSignpost importSignpost = new ImportSignpost(repository, directory);
     importSignpost.attach(button);

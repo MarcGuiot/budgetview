@@ -424,68 +424,6 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testSeriesFitering() throws Exception {
-
-    transactions.checkSelectableSeries("All");
-
-    categorization.setNewVariable("essence", "Voiture", -70.00);
-    categorization.setNewRecurring("nounou", "Nounou");
-    transactions.checkSelectableSeries("All", "Nounou", "Voiture");
-
-    transactions.checkSelectedSeries("All");
-    transactions.checkClearFilterButtonHidden();
-
-    timeline.selectAll();
-    transactions.selectSeries("Nounou");
-    transactions.checkClearFilterButtonShown();
-
-    transactions.initContent()
-      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00, "Nounou")
-      .check();
-
-    transactions.selectSeries("Voiture");
-    transactions.checkClearFilterButtonShown();
-    transactions.initContent()
-      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00, "Voiture")
-      .check();
-
-    transactions.clearFilters();
-    transactions.checkClearFilterButtonHidden();
-    transactions.checkSelectedSeries("All");
-    transactions.initContent()
-      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00, "Nounou")
-      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
-      .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00)
-      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00, "Voiture")
-      .check();
-
-    timeline.selectAll();
-    transactions.selectSeries("Nounou");
-    budgetView.recurring.editSeries("Nounou").setEndDate(200605).validate();
-    transactions.checkSelectableSeries("All", "Nounou", "Voiture");
-
-    timeline.selectMonth("2006/06");
-    transactions.checkSelectedSeries("All");
-    transactions.checkSelectableSeries("All", "Voiture");
-    transactions.initContent()
-      .check();
-
-    timeline.selectMonth("2006/05");
-    transactions.initContent()
-      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00, "Nounou")
-      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
-      .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00)
-      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00, "Voiture")
-      .check();
-
-    timeline.selectAll();
-    budgetView.variable.editSeries("Voiture").deleteCurrentSeriesWithConfirmation();
-    transactions.checkSelectableSeries("All", "Nounou");
-
-    budgetView.recurring.editSeries("Nounou").clearEndDate().validate();
-    transactions.checkSelectableSeries("All", "Nounou");
-  }
-
   public void testCopyToClipboard() throws Exception {
 
     transactions.initContent()

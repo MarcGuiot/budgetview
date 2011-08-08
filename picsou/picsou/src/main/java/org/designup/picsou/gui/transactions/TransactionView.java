@@ -1,7 +1,8 @@
 package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.accounts.utils.AccountFilteringCombo;
+import org.designup.picsou.gui.accounts.chart.AccountDailyPositionsChartView;
+import org.designup.picsou.gui.accounts.utils.AccountFilter;
 import org.designup.picsou.gui.accounts.utils.SeriesFilteringCombo;
 import org.designup.picsou.gui.card.ImportPanel;
 import org.designup.picsou.gui.card.utils.GotoCardAction;
@@ -15,6 +16,8 @@ import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.gui.model.Card;
+import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
+import org.designup.picsou.gui.series.analysis.histobuilders.range.SelectionHistoChartRange;
 import org.designup.picsou.gui.transactions.actions.TransactionTableActions;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.transactions.search.TransactionFilterPanel;
@@ -23,6 +26,7 @@ import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -44,11 +48,14 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static org.designup.picsou.model.Transaction.TYPE;
 import static org.globsframework.model.utils.GlobMatchers.*;
+import org.globsframework.metamodel.fields.IntegerField;
 
 public class TransactionView extends View implements Filterable {
   public static final int DATE_COLUMN_INDEX = 0;
@@ -61,13 +68,11 @@ public class TransactionView extends View implements Filterable {
   public static final int BALANCE_INDEX = 7;
   public static final int ACCOUNT_NAME_INDEX = 8;
 
-  public static final String ACCOUNT_FILTER = "accounts";
   public static final String SERIES_FILTER = "series";
   private static final int[] COLUMN_SIZES = {10, 10, 15, 40, 9, 15, 10, 10, 30};
   private static final GlobMatcher HIDE_PLANNED_MATCHER = not(isTrue(Transaction.PLANNED));
 
   private GlobTableView view;
-  private AccountFilteringCombo accountFilteringCombo;
   private SeriesFilteringCombo seriesFilteringCombo;
   private TransactionRendererColors rendererColors;
   private TransactionSelection transactionSelection;
@@ -90,7 +95,7 @@ public class TransactionView extends View implements Filterable {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/transactions/transactionView.splits",
                                                       repository, directory);
 
-    addAccountCombo(builder);
+    AccountFilter.init(filterManager, repository, directory);
     addSeriesCombo(builder);
     addShowPlannedTransactionsCheckbox(builder);
     builder.add(view.getComponent());
@@ -110,6 +115,12 @@ public class TransactionView extends View implements Filterable {
                      GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, false, Transaction.AMOUNT))
       .setAutoHideIfEmpty(true);
 
+    AccountDailyPositionsChartView accountChart =
+      new AccountDailyPositionsChartView("accountChart",
+                                         new SelectionHistoChartRange(repository, directory),
+                                         repository, directory);
+    accountChart.registerComponents(builder);
+
     parentBuilder.add("transactionView", builder);
   }
 
@@ -123,24 +134,6 @@ public class TransactionView extends View implements Filterable {
                                 GlobMatchers.not(GlobMatchers.fieldEquals(Transaction.ACCOUNT, Account.EXTERNAL_ACCOUNT_ID)));
     view.setFilter(newFilter);
     headerPainter.setFiltered(filterManager.hasClearableFilters());
-  }
-
-  private void addAccountCombo(GlobsPanelBuilder builder) {
-    accountFilteringCombo = new AccountFilteringCombo(repository, directory, new GlobComboView.GlobSelectionHandler() {
-      public void processSelection(Glob glob) {
-        filterManager.set(ACCOUNT_FILTER, accountFilteringCombo.getCurrentAccountFilter());
-      }
-    });
-    filterManager.addClearer(new FilterClearer() {
-      public List<String> getAssociatedFilters() {
-        return Arrays.asList(ACCOUNT_FILTER);
-      }
-
-      public void clear() {
-        accountFilteringCombo.reset();
-      }
-    });
-    builder.add("accountFilterCombo", accountFilteringCombo.getComponent());
   }
 
   private void addSeriesCombo(GlobsPanelBuilder builder) {
@@ -162,8 +155,7 @@ public class TransactionView extends View implements Filterable {
   }
 
   public void setAccountFilter(Key accountKey) {
-    GlobMatcher matcher = Matchers.transactionsForAccounts(Collections.singleton(accountKey.get(Account.ID)), repository);
-    filterManager.set(ACCOUNT_FILTER, matcher);
+    selectionService.select(repository.get(accountKey));
   }
 
   public void setSeriesFilter(Glob series) {
@@ -270,13 +262,21 @@ public class TransactionView extends View implements Filterable {
       .addColumn(Lang.get("transactionView.account.name"),
                  descriptionService.getStringifier(Transaction.ACCOUNT));
 
+    view.registerSaving(UserPreferences.KEY, new GlobTableView.FieldAccess() {
+      public IntegerField getPosField(int modelIndex) {
+        if (UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex > UserPreferences.TRANSACTION_POS9.getIndex()){
+          throw new RuntimeException("missing column in UserPreference");
+        }
+        return (IntegerField)UserPreferences.TYPE.getField(UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex);
+      }
+    }, repository);
     return view;
   }
 
   public void reset() {
     view.resetSort();
     transactionSelection.init();
-    accountFilteringCombo.reset();
+    selectionService.select(repository.get(Account.ALL_SUMMARY_KEY));
     showPlannedTransactionsCheckbox.setSelected(false);
     search.reset();
     updateShowTransactionsMatcher();

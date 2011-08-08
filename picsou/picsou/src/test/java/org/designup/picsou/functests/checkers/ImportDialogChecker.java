@@ -109,7 +109,22 @@ public class ImportDialogChecker extends GuiChecker {
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
+  public OtherBankSynchoChecker openSynchro(String bankName) {
+    final BankChooserChecker chooserChecker =
+      BankChooserChecker.init(dialog.getTextBox("synchroMessage")
+        .triggerClickOnHyperlink("synchronize"));
+    chooserChecker.selectBank(bankName);
+    Window window = WindowInterceptor.getModalDialog(new Trigger() {
+      public void run() throws Exception {
+        chooserChecker.validate();
+      }
+    });
+    return new OtherBankSynchoChecker(this, window);
+  }
+
   public void completeImport() {
+    TextBox box = dialog.getTextBox("importMessage");
+    assertTrue(box.textIsEmpty());
     validateAndComplete(-1, -1, -1, dialog, "import.preview.ok");
     UISpecAssert.assertFalse(dialog.isVisible());
   }

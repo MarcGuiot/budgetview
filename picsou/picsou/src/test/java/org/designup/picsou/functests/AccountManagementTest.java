@@ -143,14 +143,13 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Foo", "Foos");
     categorization.setNewVariable("Bar", "Bars");
 
-    mainAccounts.gotoOperations("Account n. 000111");
+    mainAccounts.select("Account n. 000111");
     views.checkDataSelected();
-
     transactions.initContent()
       .add("01/01/2006", TransactionType.PRELEVEMENT, "FOO", "", -10.00, "Foos")
       .check();
 
-    mainAccounts.gotoOperations("Account n. 000222");
+    mainAccounts.select("Account n. 000222");
     views.checkDataSelected();
     transactions.initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "BAR", "", -20.00, "Bars")

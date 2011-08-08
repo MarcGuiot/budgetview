@@ -288,11 +288,11 @@ public class Gui {
       if (this.editorColumns.contains(modelColumnIndex)) {
         int row = e.getY() / table.getRowHeight();
         if (table.isEditing() &&
-            (table.getEditingColumn() == modelColumnIndex) &&
+            (table.getEditingColumn() == graphicalColumnIndex) &&
             (table.getEditingRow() == row)) {
           return;
         }
-        table.editCellAt(row, modelColumnIndex);
+        table.editCellAt(row, graphicalColumnIndex);
       }
     }
   }

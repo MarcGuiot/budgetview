@@ -3,20 +3,24 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
 
+    <style selector="button#showAccount"
+           anchor="left" weightX="100"
+           font="-,plain,14"/>
+
+    <style selector="toggleButton#selectAccount"
+           weightX="0" cursor="hand"
+           icon="arrow_right_blue.png"
+           selectedIcon="arrow_right_blue_rollover.png"
+           rolloverIcon="arrow_right_blue_rollover.png"
+           preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
+
     <style selector="button.website" ui="hyperlinkButtonWithoutUnderline"
-           font="-,plain,11" fill="none" anchor="left" marginLeft="10"
+           font="-,plain,11" fill="none" anchor="left"
            foreground="block.item.link.light"
            icon="open_website.png"
            rolloverIcon="open_website_rollover.png"
-           iconTextGap="0"
-           horizontalTextPosition="left" verticalAlignment="bottom"/>
-
-    <style selector="button.operations" ui="hyperlinkButtonWithoutUnderline"
-           font="-,plain,11" fill="none" anchor="left" marginLeft="10"
-           foreground="block.item.link.light"
-           icon="arrow_right_blue.png"
-           rolloverIcon="arrow_right_blue_rollover.png"
-           iconTextGap="1"
+           iconTextGap="2"
+           horizontalAlignment="left"
            horizontalTextPosition="left" verticalAlignment="bottom"/>
 
     <style selector=".right label.totalAmountTitle"
@@ -24,6 +28,8 @@
 
     <style selector=".left label.totalAmountTitle"
            fill="horizontal" horizontalAlignment="left" marginLeft="10"/>
+
+    <style selector="#accountPanel" opaque="true"/>
 
   </styles>
 
@@ -48,20 +54,21 @@
 
       <column styleClass="blockScrollBorder">
         <scrollPane marginTop="0" marginBottom="0" weightY="100">
-          <column>
+          <column ref="unselect">
             <repeat ref="accountRepeat" marginTop="5" marginBottom="15">
-              <column name="accountParent" margin="5" marginBottom="5">
-                <grid>
-                  <button ref="accountName" gridPos="(0,0)" anchor="west" styleClass="itemLink"  font="-,plain,14"/>
-                  <row gridPos="(0,1)">
-                    <button action="gotoWebsite" styleClass="website"/>
-                    <button action="gotoOperations" styleClass="operations"/>
-                    <filler fill="horizontal"/>
-                  </row>
-                  <button ref="accountPosition" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
-                  <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
+              <panel ref="accountPanel" margin="3">
+                <grid margin="2">
+                  <button ref="editAccount" gridPos="(0,0,1,2)" styleClass="editIcon" marginRight="5"/>
+
+                  <button ref="showAccount" gridPos="(1,0)" styleClass="itemLink"/>
+                  <button ref="accountPosition" gridPos="(2,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
+
+                  <button action="gotoWebsite" styleClass="website" gridPos="(1,1)" fill="none" anchor="west"/>
+                  <label ref="accountUpdateDate" gridPos="(2,1)" anchor="east" styleClass="subitem"/>
+
+                  <toggleButton ref="selectAccount" gridPos="(3,0,1,2)" marginLeft="5"/>
                 </grid>
-              </column>
+              </panel>
             </repeat>
             <filler fill="vertical"/>
           </column>

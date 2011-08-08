@@ -1238,7 +1238,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
     categorization.setSavings("Financement", "Savings Series");
 
-    transactions.selectAccount("Savings");
+    savingsAccounts.select("Savings");
     transactions
       .initAmountContent()
       .add("02/08/2008", "FINANCEMENT", -100.00, "Savings Series", 1000.00, 1000.00, "Savings")

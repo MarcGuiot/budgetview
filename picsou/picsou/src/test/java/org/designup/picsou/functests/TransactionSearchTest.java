@@ -122,7 +122,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .add("15/07/2008", TransactionType.PRELEVEMENT, "VIRGIN", "", -50.00, "Leisures")
       .check();
     transactions.checkSearchTextIsEmpty();
-    transactions.checkSelectedAccount("All accounts");
+    mainAccounts.checkNoAccountsSelected();
     transactions.checkClearFilterButtonHidden();
   }
 

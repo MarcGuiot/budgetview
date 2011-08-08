@@ -10,7 +10,9 @@ import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerA
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
-import static org.designup.picsou.gui.utils.Matchers.transactionsForMainAccounts;
+import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
+import org.designup.picsou.gui.utils.DaySelection;
+import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.SelectionService;
@@ -20,14 +22,16 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.and;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.util.List;
 import java.util.Set;
+
+import static org.designup.picsou.gui.utils.Matchers.transactionsForMainAccounts;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class HistoChartBuilder {
   private HistoChart histoChart;
@@ -123,6 +127,7 @@ public class HistoChartBuilder {
       "histo.account.daily.current",
       "histo.account.inner.label.positive",
       "histo.account.inner.label.negative",
+      "histo.account.inner.selected.day",
       directory
     );
 
@@ -153,15 +158,29 @@ public class HistoChartBuilder {
   }
 
   public void showMainDailyHisto(int selectedMonthId, boolean showFullMonthLabels) {
+    showMainDailyHisto(selectedMonthId, showFullMonthLabels, transactionsForMainAccounts(repository), DaySelection.EMPTY);
+  }
+
+  public void showMainDailyHisto(int selectedMonthId, boolean showFullMonthLabels, Set<Integer> accountIds, DaySelection daySelection) {
+    GlobMatcher matcher;
+    if (accountIds == null) {
+      matcher = Matchers.transactionsForMainAccounts(repository);
+    }
+    else {
+      matcher = Matchers.transactionsForAccounts(accountIds, repository);
+    }
+    showMainDailyHisto(selectedMonthId, showFullMonthLabels, matcher, daySelection);
+  }
+
+  private void showMainDailyHisto(int selectedMonthId, boolean showFullMonthLabels, GlobMatcher accountMatcher, DaySelection daySelection) {
     HistoDailyDatasetBuilder builder = createDailyDataset("daily", showFullMonthLabels);
 
     Double lastValue = null;
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
-
       GlobList transactions =
         repository.getAll(Transaction.TYPE,
                           and(fieldEquals(Transaction.POSITION_MONTH, monthId),
-                              transactionsForMainAccounts(repository)))
+                              accountMatcher))
           .sort(TransactionComparator.ASCENDING_ACCOUNT);
 
       int maxDay = Month.getLastDayNumber(monthId);
@@ -170,21 +189,21 @@ public class HistoChartBuilder {
       }
 
       Double[] lastValues = new Double[maxDay];
-      Double[] minValue = new Double[maxDay];
+      Double[] minValues = new Double[maxDay];
       for (Glob transaction : transactions) {
         int day = transaction.get(Transaction.POSITION_DAY) - 1;
         lastValues[day] = transaction.get(Transaction.SUMMARY_POSITION);
-          if (minValue[day] == null) {
-            minValue[day] = transaction.get(Transaction.SUMMARY_POSITION);
-          }
-          else {
-            minValue[day] = Math.min(transaction.get(Transaction.SUMMARY_POSITION, Double.MAX_VALUE), minValue[day]);
-          }
+        if (minValues[day] == null) {
+          minValues[day] = transaction.get(Transaction.SUMMARY_POSITION);
+        }
+        else {
+          minValues[day] = Math.min(transaction.get(Transaction.SUMMARY_POSITION, Double.MAX_VALUE), minValues[day]);
+        }
       }
 
-      for (int i = 0; i < minValue.length; i++) {
-        if (minValue[i] == null) {
-          minValue[i] = lastValue;
+      for (int i = 0; i < minValues.length; i++) {
+        if (minValues[i] == null) {
+          minValues[i] = lastValue;
         }
         else {
           lastValue = lastValues[i];
@@ -195,13 +214,13 @@ public class HistoChartBuilder {
         Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
         if (stat != null) {
           lastValue = stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
-          for (int i = 0; i < minValue.length; i++) {
-            minValue[i] = lastValue;
+          for (int i = 0; i < minValues.length; i++) {
+            minValues[i] = lastValue;
           }
         }
       }
 
-      builder.add(monthId, minValue, monthId == selectedMonthId);
+      builder.add(monthId, minValues, monthId == selectedMonthId, daySelection.getValues(monthId, maxDay));
     }
 
     builder.apply(accountDailyColors, "daily");

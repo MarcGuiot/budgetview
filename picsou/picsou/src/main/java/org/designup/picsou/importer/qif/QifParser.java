@@ -8,7 +8,6 @@ import org.globsframework.model.FieldValuesBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobIdGenerator;
 import org.globsframework.utils.Strings;
 
@@ -26,6 +25,7 @@ public class QifParser {
   private BufferedReader reader;
   private GlobRepository globRepository;
   private GlobIdGenerator globIdGenerator;
+  private Integer accountId = null;
 
   private QifParser(Reader reader, GlobRepository globRepository) {
     this.globRepository = globRepository;
@@ -57,7 +57,10 @@ public class QifParser {
           case -1:
             return updated ? createTransaction(values) : null;
           case '!':
-            reader.readLine();
+            String line = reader.readLine();
+            if (line.startsWith(" accountId=")) {
+              accountId = Integer.parseInt(line.substring(" accountId=".length()));
+            }
             break;
           case 'D':
             updated = true;
@@ -86,6 +89,7 @@ public class QifParser {
             }
             values.set(ImportedTransaction.BANK_TRANSACTION_TYPE, nValue != null ? nValue.trim() : null);
             values.set(ImportedTransaction.IS_OFX, false);
+            values.set(ImportedTransaction.ACCOUNT, accountId);
             reader.readLine();
             return createTransaction(values);
           case '\n':

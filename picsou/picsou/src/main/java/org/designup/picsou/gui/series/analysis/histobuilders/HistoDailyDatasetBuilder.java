@@ -23,8 +23,8 @@ public class HistoDailyDatasetBuilder extends HistoDatasetBuilder {
                                          CurrentMonth.getLastTransactionDay(repository));
   }
 
-  public void add(int monthId, Double[] values, boolean isSelectedMonth) {
-    dataset.add(monthId, values, getLabel(monthId), getSection(monthId), isCurrentMonth(monthId), isSelectedMonth);
+  public void add(int monthId, Double[] values, boolean isSelectedMonth, boolean[] daySelections) {
+    dataset.add(monthId, values, getLabel(monthId), getSection(monthId), isCurrentMonth(monthId), isSelectedMonth, daySelections);
   }
 
   protected String getLabel(int monthId) {

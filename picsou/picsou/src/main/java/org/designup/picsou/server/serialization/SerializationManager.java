@@ -39,5 +39,6 @@ public class SerializationManager {
     SignpostStatus.TYPE.updateProperty(SERIALIZATION_PROPERTY, new SignpostStatus.Serializer());
     Project.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Project.Serializer());
     ProjectItem.TYPE.updateProperty(SERIALIZATION_PROPERTY, new ProjectItem.Serializer());
+    RealAccount.TYPE.updateProperty(SERIALIZATION_PROPERTY, new RealAccount.Serializer());
   }
 }

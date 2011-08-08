@@ -7,7 +7,7 @@ import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
-import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartRange;
+import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
@@ -78,7 +78,7 @@ public class BudgetSummaryView
     MainDailyPositionsChartView chartView =
       new MainDailyPositionsChartView(repository, directory, "chart",
                                       new HistoChartConfig(true, false, true, false),
-                                      new HistoChartRange(0, 1, true, repository));
+                                      new ScrollableHistoChartRange(0, 1, true, repository));
     chartView.setShowFullMonthLabels(true);
     chartView.registerComponents(builder);
 
