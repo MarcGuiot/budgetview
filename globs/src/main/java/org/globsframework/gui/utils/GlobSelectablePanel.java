@@ -19,6 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -104,7 +105,7 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
     }
   }
 
-  private class MouseTracker extends java.awt.event.MouseAdapter {
+  private class MouseTracker extends java.awt.event.MouseAdapter implements MouseMotionListener {
     public void mouseClicked(MouseEvent mouseEvent) {
       selectionService.select(repository.get(selectionKey));
     }
@@ -139,12 +140,13 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
     }
 
     public void mouseMoved(MouseEvent mouseEvent) {
-      super.mouseMoved(mouseEvent);
+//      super.mouseMoved(mouseEvent);
     }
 
     public void mouseDragged(MouseEvent mouseEvent) {
       addToSelection();
     }
+
 
     private void addToSelection() {
       GlobList selection = selectionService.getSelection(type);
@@ -158,7 +160,7 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
     }
   }
 
-  private class WindowMouseTracker extends MouseAdapter {
+  private class WindowMouseTracker extends MouseAdapter implements MouseMotionListener{
 
     private Window window;
     private Container parent;
@@ -178,10 +180,15 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
       }
     }
 
+    public void mouseDragged(MouseEvent e) {
+    }
+
     public void mouseMoved(MouseEvent mouseEvent) {
       if (rollover) {
         JPanel panel = node.getComponent();
-        Point point = mouseEvent.getLocationOnScreen();
+        Point point = mouseEvent.getPoint();
+        SwingUtilities.convertPointToScreen(point, panel.getParent());
+//        Point point = mouseEvent.getLocationOnScreen();
         if (!panel.contains(point)) {
           rollover = false;
           update();
