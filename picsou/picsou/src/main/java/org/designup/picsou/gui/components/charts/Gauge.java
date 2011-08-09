@@ -338,7 +338,7 @@ public class Gauge extends ActionablePanel {
     }
     else if (!highlighted) {
       g2.setColor(borderColor);
-      g2.drawRect(0, barTop, width, barHeight);
+      g2.drawRect(0, barTop, getWidth() - 1, barHeight);
     }
   }
 
