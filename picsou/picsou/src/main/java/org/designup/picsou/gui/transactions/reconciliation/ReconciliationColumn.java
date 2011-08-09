@@ -3,7 +3,7 @@ package org.designup.picsou.gui.transactions.reconciliation;
 import org.designup.picsou.gui.components.ButtonTableColumn;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Transaction;
-import org.globsframework.gui.splits.utils.TransparentIcon;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -22,7 +22,8 @@ public class ReconciliationColumn extends ButtonTableColumn {
 
   public static Icon RECONCILED_ICON = Gui.IMAGE_LOCATOR.get("reconciled_yes.png");
   public static Icon UNRECONCILED_ICON = Gui.IMAGE_LOCATOR.get("reconciled_no.png");
-  public static Icon DISABLED_ICON = new TransparentIcon(RECONCILED_ICON.getIconHeight(), RECONCILED_ICON.getIconWidth());
+  public static Icon RECONCILED_ICON_DISABLED = Gui.IMAGE_LOCATOR.get("reconciled_yes_disabled.png");
+  public static Icon UNRECONCILED_ICON_DISABLED = Gui.IMAGE_LOCATOR.get("reconciled_no_disabled.png");
 
   private Glob transaction;
 
@@ -44,17 +45,32 @@ public class ReconciliationColumn extends ButtonTableColumn {
     }
 
     if ((transaction == null) || (transaction.get(Transaction.SPLIT_SOURCE) != null)) {
-      button.setIcon(DISABLED_ICON);
+      Glob source = repository.findLinkTarget(transaction, Transaction.SPLIT_SOURCE);
+      if (source.isTrue(Transaction.RECONCILED)) {
+        button.setDisabledIcon(RECONCILED_ICON_DISABLED);
+        setTooltip(button, panel, Lang.get("reconciliation.tooltip.yes.disabled"));
+      }
+      else {
+        button.setDisabledIcon(UNRECONCILED_ICON_DISABLED);
+        setTooltip(button, panel, Lang.get("reconciliation.tooltip.no.disabled"));
+      }
       button.setEnabled(false);
     }
     else if (transaction.isTrue(Transaction.RECONCILED)) {
       button.setIcon(RECONCILED_ICON);
       button.setEnabled(true);
+      setTooltip(button, panel, Lang.get("reconciliation.tooltip.yes"));
     }
     else {
       button.setIcon(UNRECONCILED_ICON);
       button.setEnabled(true);
+      setTooltip(button, panel, Lang.get("reconciliation.tooltip.no"));
     }
+  }
+
+  private void setTooltip(JButton button, JPanel panel, String tooltip) {
+    button.setToolTipText(tooltip);
+    panel.setToolTipText(tooltip);
   }
 
   protected void processClick() {

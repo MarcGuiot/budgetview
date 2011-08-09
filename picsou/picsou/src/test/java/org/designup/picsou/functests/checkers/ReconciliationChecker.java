@@ -11,11 +11,15 @@ import org.uispec4j.MenuItem;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.Assertion;
+import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.PopupMenuInterceptor;
 
+import javax.swing.*;
 import java.awt.*;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
+import static org.uispec4j.assertion.UISpecAssert.or;
 
 public class ReconciliationChecker extends ViewChecker {
 
@@ -73,9 +77,22 @@ public class ReconciliationChecker extends ViewChecker {
   }
 
   public void checkToggleDisabled(int rowIndex) {
+    final JButton button = getTable().editCell(rowIndex, 0).getButton().getAwtComponent();
+    Assert.assertFalse(button.isEnabled());
+    assertThat(new Assertion() {
+      public void check() {
+        Icon icon = button.getDisabledIcon();
+        if ((icon != ReconciliationColumn.RECONCILED_ICON_DISABLED) &&
+            (icon != ReconciliationColumn.UNRECONCILED_ICON_DISABLED)) {
+          Assert.fail("Unexpected disabled icon shown");
+        }
+      }
+    });
+  }
+
+  public void checkToggleTooltip(int rowIndex, String expectedTooltip) {
     Button button = getTable().editCell(rowIndex, 0).getButton();
-    assertFalse(button.isEnabled());
-    assertThat(button.iconEquals(ReconciliationColumn.DISABLED_ICON));
+    assertThat(button.tooltipEquals(expectedTooltip));
   }
 
   public void reconcileWithPopup(int row) {

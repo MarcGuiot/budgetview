@@ -279,22 +279,24 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     categorization.checkTable(new Object[][]{
       {"-", "15/06/2010", "", "AUCHAN", -100.0},
-      {"!", "15/06/2010", "", "AUCHAN", -50.0},
+      {"/-/", "15/06/2010", "", "AUCHAN", -50.0},
       {"-", "20/06/2010", "", "FNAC", -200.0},
     });
 
     reconciliation.checkToggleDisabled(1);
     categorization.checkTable(new Object[][]{
       {"-", "15/06/2010", "", "AUCHAN", -100.0},
-      {"!", "15/06/2010", "", "AUCHAN", -50.0},
+      {"/-/", "15/06/2010", "", "AUCHAN", -50.0},
       {"-", "20/06/2010", "", "FNAC", -200.0},
     });
+    reconciliation.checkToggleTooltip(0, "Click to set this operation as reconciled");
+    reconciliation.checkToggleTooltip(1, "You must reconcile the source operation");
 
     categorization.showUnreconciledOnly();
     categorization.setNewVariable(1, "Movies");
     categorization.checkTable(new Object[][]{
       {"-", "15/06/2010", "", "AUCHAN", -100.0},
-      {"!", "15/06/2010", "Movies", "AUCHAN", -50.0},
+      {"/-/", "15/06/2010", "Movies", "AUCHAN", -50.0},
       {"-", "20/06/2010", "", "FNAC", -200.0},
     });
 
@@ -302,9 +304,11 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable(0, "Food");
     categorization.checkTable(new Object[][]{
       {"x", "15/06/2010", "Food", "AUCHAN", -100.0},
-      {"!", "15/06/2010", "Movies", "AUCHAN", -50.0},
+      {"/x/", "15/06/2010", "Movies", "AUCHAN", -50.0},
       {"-", "20/06/2010", "", "FNAC", -200.0},
     });
+    reconciliation.checkToggleTooltip(0, "Click to set this operation as unreconciled");
+    reconciliation.checkToggleTooltip(1, "You must unreconcile the source operation");
 
     categorization.showUnreconciledOnly();
     categorization.checkTable(new Object[][]{
@@ -314,9 +318,11 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     categorization.showAllTransactions();
     categorization.checkTable(new Object[][]{
       {"x", "15/06/2010", "Food", "AUCHAN", -100.0},
-      {"!", "15/06/2010", "Movies", "AUCHAN", -50.0},
+      {"/x/", "15/06/2010", "Movies", "AUCHAN", -50.0},
       {"-", "20/06/2010", "", "FNAC", -200.0},
     });
+    reconciliation.checkToggleTooltip(0, "Click to set this operation as unreconciled");
+    reconciliation.checkToggleTooltip(1, "You must unreconcile the source operation");
 
     categorization.selectTableRow(2);
     transactionDetails.openSplitDialog()
@@ -328,21 +334,21 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .validateAndClose();
     categorization.checkTable(new Object[][]{
       {"x", "15/06/2010", "Food", "AUCHAN", -100.0},
-      {"!", "15/06/2010", "Movies", "AUCHAN", -50.0},
+      {"/x/", "15/06/2010", "Movies", "AUCHAN", -50.0},
       {"-", "20/06/2010", "", "FNAC", -180.0},
-      {"!", "20/06/2010", "", "FNAC", -20.0},
+      {"/-/", "20/06/2010", "", "FNAC", -20.0},
     });
 
     categorization.showUnreconciledOnly();
     categorization.checkTable(new Object[][]{
       {"-", "20/06/2010", "", "FNAC", -180.0},
-      {"!", "20/06/2010", "", "FNAC", -20.0},
+      {"/-/", "20/06/2010", "", "FNAC", -20.0},
     });
 
     reconciliation.toggle(0);
     categorization.checkTable(new Object[][]{
       {"x", "20/06/2010", "", "FNAC", -180.0},
-      {"!", "20/06/2010", "", "FNAC", -20.0},
+      {"/x/", "20/06/2010", "", "FNAC", -20.0},
     });
 
     categorization.setNewVariable(1, "Music");
