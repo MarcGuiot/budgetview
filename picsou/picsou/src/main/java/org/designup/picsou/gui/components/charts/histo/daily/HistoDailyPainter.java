@@ -66,13 +66,13 @@ public class HistoDailyPainter implements HistoPainter {
       colors.line.setVerticalDividerStyle(g2);
       g2.drawLine(right, metrics.columnTop(), right, metrics.columnTop() + metrics.columnHeight());
 
-      for (int day = 0; day < values.length; day++) {
-        Double value = values[day];
+      for (int dayIndex = 0; dayIndex < values.length; dayIndex++) {
+        Double value = values[dayIndex];
         if (value == null) {
           continue;
         }
 
-        int x = left + (width * (day + 1)) / values.length;
+        int x = left + (width * (dayIndex + 1)) / values.length;
         int y = metrics.y(value);
         if (previousY == null) {
           previousY = y;
@@ -80,24 +80,24 @@ public class HistoDailyPainter implements HistoPainter {
         }
 
         boolean current = dataset.isCurrent(i);
-        boolean future = dataset.isFuture(i, day);
+        boolean future = dataset.isFuture(i, dayIndex);
         boolean selected = dataset.isSelected(i);
         boolean isRollover = rollover.isOnColumn(i);
         int blockWidth = width / values.length;
 
-        Key dayKey = dataset.getKey(i, day);
+        Key dayKey = dataset.getKey(i, dayIndex);
         clickMap.add(dayKey, previousX);
         g2.setComposite(AlphaComposite.Src);
         if (rollover.isOnObject(dayKey)) {
           g2.setColor(colors.getRolloverDayColor());
           g2.fillRect(previousX, metrics.columnTop() + 1, blockWidth, metrics.columnHeight() - 1);
         }
-        else if (dataset.isDaySelected(i, day)) {
+        else if (dataset.isDaySelected(i, dayIndex)) {
           g2.setColor(colors.getSelectedDayColor());
           g2.fillRect(previousX, metrics.columnTop() + 1, blockWidth, metrics.columnHeight() - 1);
         }
 
-        if (dataset.isCurrent(i, day)) {
+        if (dataset.isCurrent(i, dayIndex)) {
           g2.setColor(colors.getCurrentDayColor());
           g2.drawLine(x, metrics.currentDayLineTop(), x, metrics.currentDayLineBottom());
         }

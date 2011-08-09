@@ -49,8 +49,8 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
     return getElement(index).values;
   }
 
-  public Double getValue(int index, int day) {
-    return getElement(index).values[day];
+  public Double getValue(int index, int dayIndex) {
+    return getElement(index).values[dayIndex];
   }
 
   public int getMinDay(int index) {
@@ -88,7 +88,7 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
 
     return Lang.get(getTooltipKey(),
                     Day.getFullLabel(objectKey),
-                    Formatting.toStandardValueString(getValue(index, objectKey.get(Day.DAY))));
+                    Formatting.toStandardValueString(getValue(index, objectKey.get(Day.DAY) - 1)));
   }
 
   public String toString() {
@@ -99,7 +99,7 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
     return getElement(index).toString();
   }
 
-  public Key getKey(int index, int day) {
-    return Key.create(Day.MONTH, getElement(index).id, Day.DAY, day);
+  public Key getKey(int index, int dayIndex) {
+    return Key.create(Day.MONTH, getElement(index).id, Day.DAY, dayIndex + 1);
   }
 }
