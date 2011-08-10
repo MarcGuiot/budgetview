@@ -44,10 +44,9 @@ public class HistoChartMetricsTest extends ChartTestCase {
     HistoChartMetrics metrics =
       new HistoChartMetrics(180, 140, getFontMetrics(), 10, 1000, 3000, true, false, false, false);
 
-    int margin = 10;
-    assertEquals(margin + 78, metrics.y(0));
-    assertEquals(margin + 0, metrics.y(3000));
-    assertEquals(margin + 105, metrics.y(-1000));
+    assertEquals(91, metrics.y(0));
+    assertEquals(5, metrics.y(3000));
+    assertEquals(120, metrics.y(-1000));
 
     assertEquals(138, metrics.labelY());
     assertEquals(73, metrics.labelX("A", 2));
@@ -60,7 +59,7 @@ public class HistoChartMetricsTest extends ChartTestCase {
       new HistoChartMetrics(180, 145, getFontMetrics(), 10, 0, 100, true, false, false, false);
 
     assertEquals(130, metrics.y(0));
-    assertEquals(10, metrics.y(100));
+    assertEquals(5, metrics.y(100));
   }
 
   public void testScaleValues() throws Exception {

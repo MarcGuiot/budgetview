@@ -9,7 +9,7 @@ import java.util.Collections;
 
 public class HistoChartMetrics {
 
-  private static final int VERTICAL_CHART_PADDING = 10;
+  private static final int VERTICAL_CHART_PADDING = 5;
   private static final int MIN_SCALE_ZONE_WIDTH = 40;
   private static final int MIN_SCALE_ZONE_HEIGHT = 30;
   private static final int RIGHT_SCALE_MARGIN = 10;
