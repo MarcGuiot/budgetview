@@ -357,6 +357,10 @@ public class Gauge extends ActionablePanel {
     int y = (getHeight() + fontHeight) / 2 - descent - VERTICAL_TEXT_MARGIN + 1;
 
     g2.setColor(labelShadowColor);
+    g2.drawString(label, x, y - 1);
+    g2.drawString(label, x, y + 1);
+    g2.drawString(label, x + 1, y - 1);
+    g2.drawString(label, x + 1, y);
     g2.drawString(label, x + 1, y + 1);
 
     g2.setColor(getLabelColor());
