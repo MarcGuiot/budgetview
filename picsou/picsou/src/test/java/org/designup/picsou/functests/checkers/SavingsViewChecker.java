@@ -1,14 +1,10 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.uispec4j.Button;
-import org.uispec4j.Panel;
 import org.uispec4j.*;
-import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 
 import javax.swing.*;
-import java.awt.*;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 import static org.uispec4j.finder.ComponentMatchers.and;
@@ -94,23 +90,23 @@ public class SavingsViewChecker extends ViewChecker {
   }
 
   public void checkAccountWithNoPosition(String accountName) {
-    Panel accountPanel = new Panel(getAccountComponent(accountName, 1));
+    Panel accountPanel = getAccountTitleBlock(accountName);
     assertThat(accountPanel.getTextBox("estimatedAccountPosition." + accountName).textEquals("-"));
     assertTrue(accountPanel.getTextBox("estimatedAccountPositionDate." + accountName).isVisible());
   }
 
   public void checkAccount(String accountName, Double position, String updateDate) {
-    Panel accountPanel = new Panel(getAccountComponent(accountName, 1));
+    Panel accountPanel = getAccountTitleBlock(accountName);
     assertTrue(accountPanel.getTextBox("estimatedAccountPosition." + accountName).textEquals(toString(position)));
     assertTrue(accountPanel.getTextBox("estimatedAccountPositionDate." + accountName).textEquals("on " + updateDate));
   }
 
   public void checkEstimatedPosition(String accountName, double position) {
-    Panel accountPanel = new Panel(getAccountComponent(accountName, 1));
+    Panel accountPanel = getAccountTitleBlock(accountName);
     assertTrue(accountPanel.getTextBox("estimatedAccountPosition." + accountName).textEquals(toString(position)));
   }
 
-  private Container getAccountComponent(String accountName, int offset) {
+  private Panel getAccountTitleBlock(String accountName) {
     UIComponent[] labels =
       getPanel().getUIComponents(and(fromClass(JLabel.class),
                                      innerNameIdentity("accountName"),
@@ -121,12 +117,15 @@ public class SavingsViewChecker extends ViewChecker {
     if (labels.length > 1) {
       UISpecAssert.fail("Several labels found for account name: " + accountName);
     }
-    return (Container)getSibling(labels[0], offset, accountName);
+    return labels[0].getContainer("accountNameBlock");
   }
 
   private Panel getPanel() {
     if (savingsView == null) {
-      views.selectSavings();
+      views.selectBudget();
+      if (mainWindow.containsUIComponent(Panel.class, "savingsBudgetView").isTrue()) {
+        mainWindow.getPanel("savingsBudgetView").getButton("specificAction").click();
+      }
       savingsView = mainWindow.getPanel("savingsView");
     }
 
@@ -163,5 +162,11 @@ public class SavingsViewChecker extends ViewChecker {
   public SavingsViewChecker alignAndPropagate(String accountName, String seriesName) {
     editSeries(accountName, seriesName).alignPlannedAndActual().setPropagationEnabled().validate();
     return this;
+  }
+
+  public static void toggleToMainIfNeeded(Window mainWindow) {
+    if (mainWindow.containsUIComponent(Button.class, "toggleToMain").isTrue()) {
+      mainWindow.getButton("toggleToMain").click();
+    }
   }
 }

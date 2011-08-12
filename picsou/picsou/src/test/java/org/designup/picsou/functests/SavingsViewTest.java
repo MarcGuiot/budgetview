@@ -107,18 +107,13 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .setPosition(0)
       .setStartDate("2009/07/02")
       .validate();
-
-    views.selectCategorization();
     categorization.setNewSavings("Virt", "Epargne", "Main accounts", "ING");
-    views.selectSavings();
+
     timeline.selectMonth("2009/06");
     savingsView.checkTotalEstimatedPosition("-", "30/06/2009");
 
-    views.selectHome();
     timeline.selectMonth("2009/10");
     savingsAccounts.edit("ING").setEndDate("2009/09/02").validate();
-
-    views.selectSavings();
     savingsView.checkTotalEstimatedPosition("-", "31/10/2009");
   }
 
@@ -144,7 +139,6 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.alignAndPropagate("Epargne");
 
-    views.selectSavings();
     timeline.selectMonth("2009/05");
     savingsView.checkTotalEstimatedPosition("-", "31/05/2009");
 
@@ -155,37 +149,40 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .setEndDate("2009/11/02")
       .validate();
 
-    views.selectSavings();
     savingsView.checkTotalEstimatedPosition("0.00", "31/07/2009");
 
     operations.openPreferences()
       .setFutureMonthsCount(6)
       .validate();
+
     timeline.selectMonth("2009/11");
     savingsView.checkTotalEstimatedPosition("800.00", "30/11/2009");
+
     timeline.selectMonth("2009/12");
     savingsView.checkTotalEstimatedPosition("-", "31/12/2009");
-    views.selectHome();
+
     timeline.selectMonth("2009/10");
     savingsAccounts.edit("ING")
       .setEndDate("2009/10/02")
       .validate();
-    views.selectSavings();
+
     timeline.selectMonth("2009/10");
     savingsView.checkTotalEstimatedPosition("600.00", "31/10/2009");
+
     timeline.selectMonth("2009/12");
     savingsView.checkTotalEstimatedPosition("-", "31/12/2009");
 
-    views.selectHome();
     timeline.selectMonth("2009/10");
     savingsAccounts.edit("ING")
       .setStartDate("2009/07/02")
       .validate();
-    views.selectSavings();
+
     timeline.selectMonth("2009/08");
     savingsView.checkTotalEstimatedPosition("200.00", "31/08/2009");
+
     timeline.selectMonth("2009/10");
     savingsView.checkTotalEstimatedPosition("600.00", "31/10/2009");
+
     timeline.selectMonth("2009/12");
     savingsView.checkTotalEstimatedPosition("-", "31/12/2009");
   }
@@ -212,7 +209,6 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.alignAndPropagate("Epargne");
 
-    views.selectSavings();
     savingsView.createSeries()
       .setName("External")
       .setFromAccount("External account")
@@ -236,15 +232,11 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/08/25", -10.00, "ed")
       .load();
 
-//    openApplication();
-
-    views.selectSavings();
     timeline.selectMonth("2009/06");
     savingsView.checkTotalEstimatedPosition("200.00", "30/06/2009");
     timeline.selectMonth("2009/07");
     savingsView.checkTotalEstimatedPosition("210.00", "31/07/2009");
     timeline.selectMonth("2009/08");
     savingsView.checkTotalEstimatedPosition("220.00", "31/08/2009");
-
   }
 }

@@ -5,6 +5,7 @@ import org.designup.picsou.gui.accounts.CreateAccountAction;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.position.SavingsAccountPositionLabels;
 import org.designup.picsou.gui.budget.SeriesEditionButtons;
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.series.analysis.histobuilders.AccountHistoChartUpdater;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
@@ -14,9 +15,12 @@ import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.ComponentHolder;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.utils.GlobRepeat;
@@ -28,6 +32,10 @@ import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
+
+import javax.swing.*;
+import javax.swing.event.HyperlinkListener;
+import java.awt.event.ActionEvent;
 
 public class SavingsView extends View implements GlobSelectionListener {
   private Matchers.AccountDateMatcher accountDateMatcher;
@@ -49,10 +57,11 @@ public class SavingsView extends View implements GlobSelectionListener {
 
   private void createSavingsBlock(GlobsPanelBuilder builder) {
 
-    SeriesEditionButtons seriesButtons = new SeriesEditionButtons(BudgetArea.SAVINGS, repository, directory
-    );
+    SeriesEditionButtons seriesButtons = new SeriesEditionButtons(BudgetArea.SAVINGS, repository, directory);
     seriesButtons.setNames("createSavingsSeries");
     seriesButtons.registerButtons(builder);
+
+    builder.add("toggleToMain", new ToggleToMainAction());
 
     builder.add("createSavingsAccount", new CreateAccountAction(AccountType.SAVINGS, repository, directory));
 
@@ -132,5 +141,15 @@ public class SavingsView extends View implements GlobSelectionListener {
       cellBuilder.add("savingsAccountChart", histoChartBuilder.getChart());
     }
 
+  }
+
+  private class ToggleToMainAction extends AbstractAction {
+    private ToggleToMainAction() {
+      super(Lang.get("savingsView.toggleToMain"));
+    }
+
+    public void actionPerformed(ActionEvent actionEvent) {
+      directory.get(NavigationService.class).gotoBudgetForMainAccounts();
+    }
   }
 }

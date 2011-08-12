@@ -8,6 +8,7 @@ import org.designup.picsou.gui.actions.*;
 import org.designup.picsou.gui.backup.BackupAction;
 import org.designup.picsou.gui.backup.RestoreFileAction;
 import org.designup.picsou.gui.backup.RestoreSnapshotMenuAction;
+import org.designup.picsou.gui.budget.BudgetToggle;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
@@ -138,7 +139,10 @@ public class MainPanel {
     categorizationView = new CategorizationView(repository, directory);
     timeView = new TimeView(repository, directory);
 
-    directory.add(new NavigationService(transactionView, categorizationView, repository, directory));
+    BudgetToggle budgetToggle = new BudgetToggle();
+    budgetToggle.registerComponents(builder);
+
+    directory.add(new NavigationService(transactionView, categorizationView, budgetToggle, repository, directory));
 
     importFileAction = ImportFileAction.initForMenu(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);

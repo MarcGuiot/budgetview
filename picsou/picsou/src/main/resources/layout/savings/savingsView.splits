@@ -3,89 +3,99 @@
 
   <styles>
     <style selector="label.accountName" font="-,bold,18" foreground="savingsView.accountName"
-           marginLeft="5"/>
-    <style selector="label.accountPosition" font="-,bold,15" foreground="savingsView.accountPosition"/>
-    <style selector="label.accountPositionDate" font="-,plain,9" foreground="savingsView.accountDate"/>
+           marginLeft="5" marginBottom="5" fill="none" anchor="south"/>
+    <style selector="label.accountPosition" font="-,bold,13" foreground="savingsView.accountPosition"
+           marginRight="4" fill="none" anchor="northeast"/>
+    <style selector="label.accountPositionDate" font="-,plain,9" foreground="savingsView.accountDate"
+           fill="none" anchor="northwest" marginTop="4"/>
+
     <style selector="#header label" anchor="center"/>
+
+    <style selector="button.toggleToMain" ui="hyperlinkButtonWithoutUnderline"
+           fill="none" anchor="left" weightX="0.01"
+           icon="arrow_left_grey.png" rolloverIcon="arrow_left_blue.png"/>
   </styles>
 
   <panel styleClass="main">
-    <horizontalSplit>
 
-      <column weightX="4">
-        <label text="$savingsView.accounts.savings" styleClass="blockTitle" marginTop="5"/>
+    <column weightX="4">
+      <label text="$savingsView.accounts.savings" styleClass="blockTitle" marginTop="5"/>
 
-        <panel styleClass="block">
-          <column styleClass="innerBlock">
+      <panel styleClass="block">
+        <column styleClass="innerBlock">
 
-            <row>
+          <row weightY="0.1" marginBottom="10">
+            <button action="toggleToMain" styleClass="toggleToMain"/>
+            <filler fill="horizontal"/>
+          </row>
+
+          <column styleClass="blockScrollBorder" weightY="100">
+            <scrollPane marginTop="0" marginBottom="0" forceVerticalScroll="true" verticalUnitIncrement="10">
+              <column marginTop="5">
+                <repeat ref="savingsAccounts" layout="verticalGrid" margin="10" marginTop="0" marginBottom="15">
+                  <header>
+                    <label text="$savingsView.header.account"/>
+                    <label text="$savingsView.header.series"/>
+                    <label text="$savingsView.header.evolution"/>
+                  </header>
+                  <column name="accountNameBlock" minimumSize="(120,40)" weightX="0.5" opaque="false"
+                          border="matte(0,0,0,1,savingsView.verticalDivider)" marginLeft="5" marginRight="5">
+                    <label ref="accountName" styleClass="accountName"/>
+                    <row>
+                      <label ref="estimatedAccountPosition"
+                             styleClass="accountPosition"/>
+                      <label ref="estimatedAccountPositionDate"
+                             styleClass="accountPositionDate"
+                             autoHideSource="estimatedAccountPosition"/>
+                    </row>
+                  </column>
+                  <column weightX="1.0">
+                    <filler fill="vertical"/>
+                    <panel ref="savingsSeries" margin="5" marginBottom="20"/>
+                    <filler fill="vertical"/>
+                  </column>
+                  <component ref="savingsAccountChart" marginTop="15" marginBottom="15"
+                             marginLeft="20" preferredSize="(150,70)" weightX="1.0"/>
+                </repeat>
+                <filler fill="vertical"/>
+              </column>
+            </scrollPane>
+            <row styleClass="footer">
               <filler fill="horizontal"/>
-              <grid ref="header" marginBottom="5">
-                <label text="$accountView.reference.title" gridPos="(0,0)"
-                       styleClass="totalAmountTitle" autoHideSource="totalReferenceSavingsPositionAmount"/>
-                <label ref="totalReferenceSavingsPositionAmount" gridPos="(1,0)"
-                       styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"
-                       marginLeft="10" marginRight="10"/>
-                <label ref="totalReferenceSavingsPositionDate" gridPos="(2,0)"
-                       styleClass="totalAmountTitle" autoHideSource="totalReferenceSavingsPositionAmount"/>
-              </grid>
-              <filler fill="horizontal"/>
-              <grid ref="header" marginBottom="5">
-                <label text="$accountView.estimated.title" gridPos="(0,0)"
-                       styleClass="totalAmountTitle" autoHideSource="totalEstimatedSavingsPositionAmount"/>
-                <label ref="totalEstimatedSavingsPositionAmount" gridPos="(1,0)"
-                       styleClass="totalAmount" tooltipText="$accountView.estimated.tooltip"
-                       marginLeft="10" marginRight="10"/>
-                <label ref="totalEstimatedSavingsPositionDate" gridPos="(2,0)"
-                       styleClass="totalAmountTitle" autoHideSource="totalEstimatedSavingsPositionAmount"/>
-              </grid>
-              <filler fill="horizontal"/>
+              <button action="createSavingsAccount" styleClass="create" tooltipText="$series.create.tooltip"/>
+              <button action="createSavingsSeries" styleClass="create" tooltipText="$series.create.tooltip"/>
             </row>
-
-            <column styleClass="blockScrollBorder">
-              <scrollPane marginTop="0" marginBottom="0" forceVerticalScroll="true" verticalUnitIncrement="10">
-                <column marginTop="5">
-                  <repeat ref="savingsAccounts" layout="verticalGrid" margin="10" marginTop="0" marginBottom="15">
-                    <header>
-                      <label text="$savingsView.header.account"/>
-                      <label text="$savingsView.header.position"/>
-                      <label text="$savingsView.header.series"/>
-                      <label text="$savingsView.header.evolution"/>
-                    </header>
-                    <label ref="accountName" anchor="center" styleClass="accountName"
-                           minimumSize="(120,40)" weightX="0.5"/>
-                    <panel marginLeft="5" marginRight="5" opaque="false" weightX="0.5">
-                      <column border="matte(0,1,0,1,savingsView.verticalDivider)" marginLeft="5" marginRight="5">
-                        <label ref="estimatedAccountPosition" anchor="south"
-                               styleClass="accountPosition"/>
-                        <label ref="estimatedAccountPositionDate" anchor="north"
-                               styleClass="accountPositionDate"
-                               autoHideSource="estimatedAccountPosition"/>
-                      </column>
-                    </panel>
-                    <column weightX="0.5">
-                      <filler fill="vertical"/>
-                      <panel ref="savingsSeries" margin="5" marginBottom="20"/>
-                      <filler fill="vertical"/>
-                    </column>
-                    <component ref="savingsAccountChart" marginTop="15" marginBottom="15"
-                               marginLeft="20" preferredSize="(150,70)" weightX="1.0"/>
-                  </repeat>
-                  <filler fill="vertical"/>
-                </column>
-              </scrollPane>
-              <row styleClass="footer">
-                <filler fill="horizontal"/>
-                <button action="createSavingsAccount" styleClass="create" tooltipText="$series.create.tooltip"/>
-                <button action="createSavingsSeries" styleClass="create" tooltipText="$series.create.tooltip"/>
-              </row>
-            </column>
           </column>
-        </panel>
 
-      </column>
+          <row weightY="0.1">
+            <filler fill="horizontal"/>
+            <grid ref="header" marginBottom="5">
+              <label text="$accountView.reference.title" gridPos="(0,0)"
+                     styleClass="totalAmountTitle" autoHideSource="totalReferenceSavingsPositionAmount"/>
+              <label ref="totalReferenceSavingsPositionAmount" gridPos="(1,0)"
+                     styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"
+                     marginLeft="10" marginRight="10"/>
+              <label ref="totalReferenceSavingsPositionDate" gridPos="(2,0)"
+                     styleClass="totalAmountTitle" autoHideSource="totalReferenceSavingsPositionAmount"/>
+            </grid>
+            <filler fill="horizontal"/>
+            <grid ref="header" marginBottom="5">
+              <label text="$accountView.estimated.title" gridPos="(0,0)"
+                     styleClass="totalAmountTitle" autoHideSource="totalEstimatedSavingsPositionAmount"/>
+              <label ref="totalEstimatedSavingsPositionAmount" gridPos="(1,0)"
+                     styleClass="totalAmount" tooltipText="$accountView.estimated.tooltip"
+                     marginLeft="10" marginRight="10"/>
+              <label ref="totalEstimatedSavingsPositionDate" gridPos="(2,0)"
+                     styleClass="totalAmountTitle" autoHideSource="totalEstimatedSavingsPositionAmount"/>
+            </grid>
+            <filler fill="horizontal"/>
+          </row>
 
-    </horizontalSplit>
+        </column>
+      </panel>
+
+
+    </column>
 
   </panel>
 

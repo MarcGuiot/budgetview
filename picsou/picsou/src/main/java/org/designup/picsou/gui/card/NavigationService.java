@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.card;
 
+import org.designup.picsou.gui.budget.BudgetToggle;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.gui.model.Card;
@@ -23,6 +24,7 @@ public class NavigationService implements GlobSelectionListener {
   private SelectionService selectionService;
   private TransactionView transactionView;
   private CategorizationView categorizationView;
+  private BudgetToggle budgetToggle;
   private GlobRepository repository;
 
   private Card currentCard = INITIAL_CARD;
@@ -31,10 +33,12 @@ public class NavigationService implements GlobSelectionListener {
 
   public NavigationService(TransactionView transactionView,
                            CategorizationView categorizationView,
+                           BudgetToggle budgetToggle,
                            GlobRepository repository,
                            Directory directory) {
     this.transactionView = transactionView;
     this.categorizationView = categorizationView;
+    this.budgetToggle = budgetToggle;
     this.repository = repository;
     this.selectionService = directory.get(SelectionService.class);
     this.selectionService.addListener(this, Card.TYPE);
@@ -50,6 +54,16 @@ public class NavigationService implements GlobSelectionListener {
 
   public void gotoBudget() {
     gotoCard(Card.BUDGET);
+  }
+
+  public void gotoBudgetForMainAccounts() {
+    gotoCard(Card.BUDGET);
+    budgetToggle.showMain();
+  }
+
+  public void gotoBudgetForSavingsAccounts() {
+    gotoCard(Card.BUDGET);
+    budgetToggle.showSavings();
   }
 
   public void gotoCategorization() {
@@ -100,10 +114,6 @@ public class NavigationService implements GlobSelectionListener {
     selectionService.select(repository.get(Account.ALL_SUMMARY_KEY));
     transactionView.setSeriesFilter(series);
     select(Card.DATA, false);
-  }
-
-  public void gotoSavings() {
-    gotoCard(Card.SAVINGS);
   }
 
   public boolean backEnabled() {

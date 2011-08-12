@@ -5,13 +5,10 @@ import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.PicsouUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
+import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.FieldSetter;
-import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.utils.Pair;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -22,6 +19,8 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class Account {
   public static final String SUMMARY_ACCOUNT_NUMBER = null;
@@ -74,8 +73,6 @@ public class Account {
   public static LinkField CARD_TYPE;
 
   @Target(AccountType.class)
-//  @DefaultInteger(1)
-//  @Required
   public static LinkField ACCOUNT_TYPE;
 
   @Target(AccountUpdateMode.class)
@@ -149,6 +146,20 @@ public class Account {
     return account != null && AccountType.MAIN.getId().equals(account.get(ACCOUNT_TYPE));
   }
 
+  public static boolean isMain(Integer accountId, GlobRepository repository) {
+    if (accountId == null) {
+      return false;
+    }
+    if (accountId.equals(MAIN_SUMMARY_ACCOUNT_ID)) {
+      return true;
+    }
+    else if (accountId < 0) {
+      return false;
+    }
+    Glob account = repository.get(org.globsframework.model.Key.create(Account.TYPE, accountId));
+    return AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE));
+  }
+
   public static boolean isSavings(Glob account) {
     return account != null && AccountType.SAVINGS.getId().equals(account.get(ACCOUNT_TYPE));
   }
@@ -170,26 +181,19 @@ public class Account {
     return !toAccount.isTrue(Account.IS_IMPORTED_ACCOUNT) && !fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT);
   }
 
-  public static boolean areBothImported(Glob fromAccount, Glob toAccount) {
-    return !(fromAccount == null || toAccount == null)
-           && toAccount.isTrue(Account.IS_IMPORTED_ACCOUNT)
-           && fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT);
-  }
-
   public static boolean isUserCreatedSavingsAccount(Glob account) {
     return (account != null) &&
            Account.isSavings(account) &&
-           !SAVINGS_SUMMARY_KEY.equals(account.getKey())&&
+           !SAVINGS_SUMMARY_KEY.equals(account.getKey()) &&
            !EXTERNAL_KEY.equals(account.getKey());
   }
 
   public static double getMultiplierForInOrOutputOfTheAccount(Glob series) {
-    if (series.get(Series.TARGET_ACCOUNT) != null){
+    if (series.get(Series.TARGET_ACCOUNT) != null) {
       return series.get(Series.TARGET_ACCOUNT).equals(series.get(Series.FROM_ACCOUNT)) ? -1 : 1;
     }
     return 1;
   }
-
 
   public static boolean onlyOneIsImported(Glob account1, Glob account2) {
     return account1 != null && account2 != null &&
@@ -356,7 +360,7 @@ public class Account {
       isCard = isCard == null ? false : isCard;
       fieldSetter.set(CARD_TYPE, isCard ?
                                  AccountCardType.DEFERRED.getId()
-                                 : AccountCardType.NOT_A_CARD.getId());
+                                        : AccountCardType.NOT_A_CARD.getId());
     }
 
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {

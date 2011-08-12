@@ -131,16 +131,15 @@ public abstract class SeriesReportTest extends LoggedInFunctionalTestCase {
       .toggleAutoReport()
       .validate();
 
-    views.selectCategorization();
     categorization.setSavings("Virement", "CA");
-    views.selectBudget();
     budgetView.savings.checkSeries("CA", 50, 100);
     operations.nextMonth();
+
     timeline.selectMonth("2008/08");
     budgetView.savings.checkSeries("CA", 50, 50);
+
     timeline.selectMonth("2008/09");
     budgetView.savings.checkSeries("CA", 0, 150);
-    views.selectSavings();
     savingsView.checkSeriesAmounts("Account n. 111", "CA", 0, 150);
   }
 

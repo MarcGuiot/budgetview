@@ -29,7 +29,7 @@ public class BudgetViewChecker extends ViewChecker {
   public final BudgetAreaChecker recurring;
   public final BudgetAreaChecker variable;
   public final ExtrasBudgetAreaChecker extras;
-  public final BudgetAreaChecker savings;
+  public final SavingsBudgetAreaChecker savings;
 
   public BudgetViewChecker(Window mainWindow) {
     super(mainWindow);
@@ -37,7 +37,7 @@ public class BudgetViewChecker extends ViewChecker {
     this.recurring = new BudgetAreaChecker("recurringBudgetView", BudgetArea.RECURRING);
     this.variable = new BudgetAreaChecker("variableBudgetView", BudgetArea.VARIABLE);
     this.extras = new ExtrasBudgetAreaChecker("extrasBudgetView");
-    this.savings = new BudgetAreaChecker("savingsBudgetView", BudgetArea.SAVINGS);
+    this.savings = new SavingsBudgetAreaChecker("savingsBudgetView");
   }
 
   private int getIndex(JPanel panel, Component component) {
@@ -79,6 +79,7 @@ public class BudgetViewChecker extends ViewChecker {
     public Panel getPanel() {
       views.selectBudget();
       if (panel == null) {
+        SavingsViewChecker.toggleToMainIfNeeded(mainWindow);
         panel = mainWindow.getPanel(panelName);
       }
       return panel;
@@ -452,6 +453,18 @@ public class BudgetViewChecker extends ViewChecker {
 
     public ProjectEditionChecker createProject() {
       return ProjectEditionChecker.open(getActionPopup().triggerClick(Lang.get("projectView.create")));
+    }
+  }
+
+  public class SavingsBudgetAreaChecker extends BudgetAreaChecker {
+
+    public SavingsBudgetAreaChecker(String panelName) {
+      super(panelName, BudgetArea.SAVINGS);
+    }
+
+    public void toggleSavingsView() {
+      getPanel().getButton("specificAction").click();
+
     }
   }
 }

@@ -9,10 +9,12 @@ import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.components.charts.*;
 import org.designup.picsou.gui.components.highlighting.HighlightUpdater;
 import org.designup.picsou.gui.components.tips.ShowDetailsTipAction;
+import org.designup.picsou.gui.components.utils.BlankAction;
 import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
+import org.designup.picsou.gui.savings.ToggleToSavingsAction;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.signpost.guides.SeriesAmountSignpost;
@@ -204,6 +206,15 @@ public class BudgetAreaSeriesView extends View {
 
     footerGenerator.init(footerArea);
     builder.add("footerArea", footerArea);
+
+    builder.add("specificAction", getSpecificAction());
+  }
+
+  private Action getSpecificAction() {
+    if (budgetArea.equals(BudgetArea.SAVINGS)) {
+      return new ToggleToSavingsAction(repository, directory);
+    }
+    return new BlankAction();
   }
 
   private JMenuItem createMonthFilteringButton() {

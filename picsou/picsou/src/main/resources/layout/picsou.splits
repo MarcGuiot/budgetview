@@ -167,15 +167,18 @@
         </card>
 
         <card name="budget">
-          <panel ref="budgetView"/>
+          <cards ref="budgetToggle">
+            <card name="main">
+              <panel ref="budgetView"/>
+            </card>
+            <card name="savings">
+              <panel ref="savingsView"/>
+            </card>
+          </cards>
         </card>
 
         <card name="analysis">
           <panel ref="seriesAnalysisView"/>
-        </card>
-
-        <card name="savings">
-          <panel ref="savingsView"/>
         </card>
 
         <card name="data">

@@ -78,6 +78,7 @@ public class BudgetSummaryViewChecker extends ViewChecker {
   private Panel getPanel() {
     if (panel == null) {
       views.selectBudget();
+      SavingsViewChecker.toggleToMainIfNeeded(mainWindow);
       panel = mainWindow.getPanel("budgetSummaryView");
     }
     return panel;

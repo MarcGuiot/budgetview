@@ -17,6 +17,6 @@ public class SavingsAccountsChartView extends AccountsChartView {
   }
 
   protected void processDoubleClick(NavigationService navigationService) {
-    navigationService.gotoSavings();
+    navigationService.gotoBudgetForSavingsAccounts();
   }
 }

@@ -24,12 +24,6 @@
     <button ref="gotoBudget" styleClass="navigation"/>
 
     <filler fill="horizontal"/>
-
-    <button ref="gotoSavingsIcon" icon="home/savings.png" rolloverIcon="home/savings_rollover.png"
-            styleClass="navigationIcon"/>
-    <button ref="gotoSavings" styleClass="navigation"/>
-
-    <filler fill="horizontal"/>
   </row>
 
 </splits>

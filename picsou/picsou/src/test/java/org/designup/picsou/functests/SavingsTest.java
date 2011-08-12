@@ -386,11 +386,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("05/06/2008", "CAF", 300.00, "CAF", 400.00, 400.00, "Epargne")
       .check();
 
-    views.selectBudget();
     timeline.selectMonth("2008/06");
     budgetView.savings.checkTotalAmounts(0, 0);
-
-    views.selectSavings();
 
     timeline.selectMonth("2008/10");
     savingsView.checkSeriesAmounts("Epargne", "CAF", 0, 300);
@@ -401,7 +398,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectMonth(200806)
       .setAmount(0)
       .validate();
-    views.selectSavings();
 
     // back to normal to see if dateChooser is hidden
 
@@ -555,7 +551,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
     categorization.setSavings("CAF", "CAF");
     timeline.selectMonth("2008/08");
-    views.selectSavings();
     savingsView.alignAndPropagate("Account n. 111", "CAF");
 
     savingsAccounts.checkEstimatedPosition("Account n. 111", 1000);
@@ -711,21 +706,17 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkEstimatedPosition("Account n. 111", 1200);
     mainAccounts.checkEstimatedPosition(-200);
 
-    views.selectBudget();
     timeline.selectMonth("2008/08");
     budgetView.savings.checkSeries("CA", 100, 100);
 
-    views.selectSavings();
     savingsView.checkSeriesAmounts("Account n. 111", "CA", 100, 100);
 
-    views.selectBudget();
     budgetView.savings.checkTotalAmounts(100, 100);
     budgetView.savings.editSeries("CA")
       .selectAllMonths()
       .setAmount(200)
       .validate();
 
-    views.selectSavings();
     savingsView.editSeries("Account n. 111", "CA")
       .selectAllMonths()
       .checkAmount(200.00)
@@ -738,7 +729,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       )
       .validate();
 
-    views.selectBudget();
     budgetView.savings.checkTotalAmounts(100, 200);
   }
 
@@ -906,7 +896,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkEstimatedPosition(4000);
     savingsAccounts.checkSummary(4000, "2008/08/06");
 
-    views.selectSavings();
     savingsView.checkSeriesAmounts("Epargne", "Virement CAF", 300, 300);
     savingsView.checkSeriesAmounts("Account n. 111222", "Placement", 100, 100);
 
@@ -915,7 +904,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkEstimatedPosition("Account n. 111222", 3100);
     savingsAccounts.checkEstimatedPosition(4400);
 
-    views.selectSavings();
     savingsView.checkSeriesAmounts("Epargne", "Virement CAF", 0, 300);
     savingsView.checkSeriesAmounts("Account n. 111222", "Placement", 0, 100);
 
@@ -930,7 +918,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/06");
     budgetView.savings.checkSeries("Placement", 100, 100);
     budgetView.savings.checkSeriesNotPresent("Virement CAF");
-    views.selectSavings();
     savingsView.checkSeriesAmounts("Account n. 111222", "Placement", 100, 100);
 
     timeline.selectMonth("2008/09");
@@ -938,7 +925,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkSeries("Placement", 0, 100);
     budgetView.savings.checkSeriesNotPresent("Virement CAF");
 
-    views.selectSavings();
     savingsView.checkSeriesAmounts("Account n. 111222", "Placement", 0, 100);
 
     savingsView.editSeries("Account n. 111222", "Placement").deleteSavingsSeriesWithConfirmation();
@@ -1039,7 +1025,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     checkDeleteSeries();
 
     operations.restore(fileName);
-    views.selectSavings();
     savingsView.editSeries("Account n. 111", "CA").deleteSavingsSeriesWithConfirmation();
     savingsView.editSeries("Account n. 111", "Project").deleteSavingsSeriesWithConfirmation();
 
@@ -1114,7 +1099,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
     timeline.selectMonth("2008/06");
 
-    views.selectSavings();
     savingsView.checkSeriesAmounts("Savings 1", "Test", -300, -300);
     savingsView.checkSeriesAmounts("Savings 2", "Test", 300, 300);
     savingsView.editSeries("Savings 1", "Test").deleteSavingsSeriesWithConfirmation();
@@ -1170,7 +1154,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .checkToContentEquals("External account", "Livret")
       .validate();
 
-    views.selectSavings();
     savingsView.editSeries("Livret", "Epargne")
       .checkFromContentEquals("External account", "Main accounts")
       .checkToContentEquals("Livret")
@@ -1178,7 +1161,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSavingsAccounts() throws Exception {
-    views.selectSavings();
     savingsView.checkNoAccounts();
     savingsView.checkNoEstimatedTotalPosition();
 

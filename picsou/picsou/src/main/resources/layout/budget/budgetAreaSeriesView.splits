@@ -81,6 +81,7 @@
           </scrollPane>
 
           <row styleClass="footer" weightY="0.01">
+            <button action="specificAction"/>
             <filler fill="horizontal"/>
             <button ref="seriesActions" tooltipText="$budgetView.actions.tooltip"
                     icon="arrow_down.png" rolloverIcon="arrow_down_roll.png"/>

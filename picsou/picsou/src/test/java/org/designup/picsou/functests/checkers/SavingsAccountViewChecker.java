@@ -32,7 +32,6 @@ public class SavingsAccountViewChecker extends AccountViewChecker<SavingsAccount
 
   private SavingsViewChecker getSavings() {
     if (savings == null) {
-      views.selectSavings();
       savings = new SavingsViewChecker(mainWindow);
     }
     return savings;

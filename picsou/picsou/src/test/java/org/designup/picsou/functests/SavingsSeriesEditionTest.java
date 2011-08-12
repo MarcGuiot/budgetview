@@ -217,7 +217,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     SeriesEditionDialogChecker firstSeriesChecker =
       budgetView.savings.editSeries("Autre");
     firstSeriesChecker.selectAllMonths().setAmount(50).validate();
-    views.selectSavings();
     savingsView.editSeries("Account n. 111", "CA")
       .checkName("Autre")
       .validate();
@@ -261,7 +260,6 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setPosition(1000)
       .validate();
 
-    views.selectSavings();
     savingsView.createSeries()
       .setName("Savings Plan")
       .setFromAccount("Epargne LCL")

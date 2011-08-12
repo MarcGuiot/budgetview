@@ -25,7 +25,6 @@ public class NavigationView extends View {
 
     addComponents(builder, Card.DATA);
     addComponents(builder, Card.BUDGET);
-    addComponents(builder, Card.SAVINGS);
 
     parentBuilder.add("navigationView", builder);
   }
