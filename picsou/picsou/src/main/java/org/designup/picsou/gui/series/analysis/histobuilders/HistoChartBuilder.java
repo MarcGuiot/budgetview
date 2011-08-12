@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.series.analysis.histobuilders;
 
-import org.apache.wicket.extensions.markup.html.form.palette.component.Selection;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
@@ -161,10 +160,10 @@ public class HistoChartBuilder {
   }
 
   public void showMainDailyHisto(int selectedMonthId, boolean showFullMonthLabels) {
-    showMainDailyHisto(selectedMonthId, showFullMonthLabels, transactionsForMainAccounts(repository), DaySelection.EMPTY);
+    showAccountDailyHisto(selectedMonthId, showFullMonthLabels, transactionsForMainAccounts(repository), DaySelection.EMPTY);
   }
 
-  public void showMainDailyHisto(int selectedMonthId, boolean showFullMonthLabels, Set<Integer> accountIds, DaySelection daySelection) {
+  public void showDailyHisto(int selectedMonthId, boolean showFullMonthLabels, Set<Integer> accountIds, DaySelection daySelection) {
     GlobMatcher matcher;
     if (accountIds == null) {
       matcher = Matchers.transactionsForMainAccounts(repository);
@@ -172,10 +171,10 @@ public class HistoChartBuilder {
     else {
       matcher = Matchers.transactionsForAccounts(accountIds, repository);
     }
-    showMainDailyHisto(selectedMonthId, showFullMonthLabels, matcher, daySelection);
+    showAccountDailyHisto(selectedMonthId, showFullMonthLabels, matcher, daySelection);
   }
 
-  private void showMainDailyHisto(int selectedMonthId, boolean showFullMonthLabels, GlobMatcher accountMatcher, DaySelection daySelection) {
+  private void showAccountDailyHisto(int selectedMonthId, boolean showFullMonthLabels, GlobMatcher accountMatcher, DaySelection daySelection) {
     HistoDailyDatasetBuilder builder = createDailyDataset("daily", showFullMonthLabels);
 
     Double lastValue = null;

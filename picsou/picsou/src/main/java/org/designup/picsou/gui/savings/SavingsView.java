@@ -10,17 +10,16 @@ import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.series.analysis.histobuilders.AccountHistoChartUpdater;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
+import org.designup.picsou.gui.utils.DaySelection;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.ComponentHolder;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.utils.GlobRepeat;
@@ -34,8 +33,8 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkListener;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 
 public class SavingsView extends View implements GlobSelectionListener {
   private Matchers.AccountDateMatcher accountDateMatcher;
@@ -128,12 +127,14 @@ public class SavingsView extends View implements GlobSelectionListener {
 
       HistoChartBuilder histoChartBuilder =
         new HistoChartBuilder(new HistoChartConfig(false, false, false, false, false),
-                              new ScrollableHistoChartRange(6, 12, false, repository),
+                              new ScrollableHistoChartRange(2, 6, false, repository),
                               repository, directory, selectionService);
       AccountHistoChartUpdater updater = new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
         protected void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
           if (account.exists()) {
-            histoChartBuilder.showSavingsAccountHisto(currentMonthId, account.get(Account.ID), true);
+            histoChartBuilder.showDailyHisto(currentMonthId, false,
+                                             Collections.singleton(account.get(Account.ID)),
+                                             DaySelection.EMPTY);
           }
         }
       };
