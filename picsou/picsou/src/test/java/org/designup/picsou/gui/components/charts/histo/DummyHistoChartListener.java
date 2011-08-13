@@ -13,7 +13,7 @@ public class DummyHistoChartListener implements HistoChartListener {
   public DummyHistoChartListener() throws IOException {
   }
 
-  public void columnsClicked(HistoSelection selection) {
+  public void processClick(HistoSelection selection, Key objectKey) {
     try {
       logger.log("select").addAttribute("ids", selection.getColumnIds().toString()).end();
     }
@@ -22,7 +22,7 @@ public class DummyHistoChartListener implements HistoChartListener {
     }
   }
 
-  public void doubleClick(Integer columnIndex, Key objectKey) {
+  public void processDoubleClick(Integer columnIndex, Key objectKey) {
   }
 
   public void scroll(int count) {

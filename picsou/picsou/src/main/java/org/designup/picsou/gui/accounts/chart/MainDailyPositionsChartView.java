@@ -76,7 +76,7 @@ public class MainDailyPositionsChartView extends AccountsChartView {
       highlightingService.select(series, Series.TYPE);
     }
 
-    public void doubleClick(Integer columnIndex, Key objectKey) {
+    public void processDoubleClick(Integer columnIndex, Key objectKey) {
       if (objectKey == null) {
         return;
       }

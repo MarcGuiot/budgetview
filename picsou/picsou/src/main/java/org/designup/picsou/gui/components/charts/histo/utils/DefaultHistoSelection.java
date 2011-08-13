@@ -16,4 +16,8 @@ public class DefaultHistoSelection implements HistoSelection {
   public SortedSet<Integer> getColumnIds() {
     return Collections.unmodifiableSortedSet(columnIds);
   }
+
+  public String toString() {
+    return columnIds.toString();
+  }
 }

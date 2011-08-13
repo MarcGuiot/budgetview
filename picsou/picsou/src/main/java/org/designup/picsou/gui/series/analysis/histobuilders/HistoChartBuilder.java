@@ -59,7 +59,7 @@ public class HistoChartBuilder {
     this.repository = repository;
     this.histoChart = new HistoChart(config, directory);
     this.histoChart.addListener(new HistoChartListenerAdapter() {
-      public void columnsClicked(HistoSelection selection) {
+      public void processClick(HistoSelection selection, Key objectKey) {
         GlobList months = new GlobList();
         for (Integer monthId : selection.getColumnIds()) {
           months.add(repository.get(Key.create(Month.TYPE, monthId)));

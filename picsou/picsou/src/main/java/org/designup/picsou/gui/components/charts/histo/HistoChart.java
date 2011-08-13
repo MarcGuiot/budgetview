@@ -196,6 +196,9 @@ public class HistoChart extends JPanel {
   }
 
   private void paintScale(Graphics2D g2, int panelWidth, HistoDataset dataset) {
+    if (!config.drawScale) {
+      return;
+    }
     double[] scaleValues = metrics.scaleValues();
     double min = dataset.getMaxNegativeValue();
     double max = dataset.getMaxPositiveValue();
@@ -210,11 +213,9 @@ public class HistoChart extends JPanel {
       }
       g2.drawLine(metrics.chartX(), metrics.y(scaleValue), panelWidth, metrics.y(scaleValue));
 
-      if (config.drawLabels) {
-        g2.setColor(colors.getLabelColor());
-        String label = Integer.toString((int)scaleValue);
-        g2.drawString(label, metrics.scaleX(label), metrics.scaleY(scaleValue));
-      }
+      g2.setColor(colors.getLabelColor());
+      String label = Integer.toString((int)scaleValue);
+      g2.drawString(label, metrics.scaleX(label), metrics.scaleY(scaleValue));
     }
   }
 

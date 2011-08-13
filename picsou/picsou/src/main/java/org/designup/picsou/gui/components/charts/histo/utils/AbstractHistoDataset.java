@@ -9,8 +9,8 @@ import java.util.List;
 
 public abstract class AbstractHistoDataset<E extends HistoDatasetElement> implements HistoDataset {
   private List<E> elements = new ArrayList<E>();
-  private double maxPositive = 0;
-  private double maxNegative = 0;
+  protected double maxPositive = 0;
+  protected double maxNegative = 0;
   private boolean containsSections = false;
   private String tooltipKey;
 

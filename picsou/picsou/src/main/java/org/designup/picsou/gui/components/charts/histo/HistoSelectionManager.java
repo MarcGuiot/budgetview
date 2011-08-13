@@ -71,11 +71,11 @@ public class HistoSelectionManager {
       addRolloverColumnToSelection();
     }
     else {
-      notifyColumnSelection();
+      notifyClick();
     }
   }
 
-  private void notifyColumnSelection() {
+  private void notifyClick() {
     if ((columnSelectionMinIndex == null) || (columnSelectionMaxIndex == null)) {
       return;
     }
@@ -91,7 +91,7 @@ public class HistoSelectionManager {
     }
     HistoSelection selection = new DefaultHistoSelection(columnIds);
     for (HistoChartListener listener : listeners) {
-      listener.columnsClicked(selection);
+      listener.processClick(selection, rollover.getObjectKey());
     }
   }
 
@@ -101,7 +101,7 @@ public class HistoSelectionManager {
 
   public void notifyDoubleClick() {
     for (HistoChartListener listener : listeners) {
-      listener.doubleClick(rollover.columnIndex, rollover.objectKey);
+      listener.processDoubleClick(rollover.columnIndex, rollover.objectKey);
     }
   }
 
@@ -116,7 +116,7 @@ public class HistoSelectionManager {
       selectionChanged = true;
     }
     if (selectionChanged) {
-      notifyColumnSelection();
+      notifyClick();
     }
   }
 

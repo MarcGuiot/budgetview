@@ -264,6 +264,10 @@ public class HistoChartMetrics {
     }
   }
 
+  public FontMetrics getFontMetrics() {
+    return fontMetrics;
+  }
+
   public static class Section {
     public final String text;
     public final int textX;

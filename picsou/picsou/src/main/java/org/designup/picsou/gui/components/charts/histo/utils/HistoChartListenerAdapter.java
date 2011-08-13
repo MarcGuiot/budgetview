@@ -6,10 +6,10 @@ import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.globsframework.model.Key;
 
 public class HistoChartListenerAdapter implements HistoChartListener {
-  public void columnsClicked(HistoSelection selection) {
+  public void processClick(HistoSelection selection, Key objectKey) {
   }
 
-  public void doubleClick(Integer columnIndex, Key objectKey) {
+  public void processDoubleClick(Integer columnIndex, Key objectKey) {
   }
 
   public void scroll(int count) {

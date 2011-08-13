@@ -9,6 +9,7 @@ import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffDataset;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.splits.layout.SingleComponentPanels;
+import org.globsframework.model.Key;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -45,10 +46,10 @@ public class HistoChartDemo {
       directory
     );
 
-    HistoChart chart = new HistoChart(new HistoChartConfig(true, true, false, true, false), directory);
+    HistoChart chart = new HistoChart(new HistoChartConfig(true, true, false, true, true, false), directory);
 
     chart.addListener(new HistoChartListenerAdapter() {
-      public void columnsClicked(HistoSelection monthIds) {
+      public void processClick(HistoSelection monthIds, Key objectKey) {
         System.out.println("HistoChartDemo.columnClicked: " + monthIds);
       }
     });

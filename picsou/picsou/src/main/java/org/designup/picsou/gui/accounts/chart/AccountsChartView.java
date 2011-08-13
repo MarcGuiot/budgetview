@@ -21,7 +21,7 @@ public abstract class AccountsChartView extends View implements HistoChartRangeL
 
   public AccountsChartView(HistoChartRange range, GlobRepository repository, Directory directory, String componentName) {
     this(repository, directory, componentName,
-         new HistoChartConfig(true, true, false, true, false),
+         new HistoChartConfig(true, true, false, true, true, false),
          range);
   }
 
@@ -48,8 +48,8 @@ public abstract class AccountsChartView extends View implements HistoChartRangeL
     };
     final NavigationService navigationService = directory.get(NavigationService.class);
     histoChartBuilder.addListener(new HistoChartListenerAdapter() {
-      public void doubleClick(Integer columnIndex, Key objectKey) {
-        processDoubleClick(navigationService);
+      public void processDoubleClick(Integer columnIndex, Key objectKey) {
+        AccountsChartView.this.processDoubleClick(navigationService);
       }
 
       public void scroll(int count) {
