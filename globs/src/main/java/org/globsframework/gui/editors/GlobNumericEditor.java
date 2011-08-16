@@ -42,18 +42,18 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
     return this;
   }
 
-  protected boolean checkValue(String str) {
-    if ("-".equals(str)) {
+  protected boolean checkValue(String text) {
+    if ("-".equals(text)) {
       return !absoluteValueMode;
     }
-    if (absoluteValueMode && str.startsWith("-")) {
+    if (absoluteValueMode && text.startsWith("-")) {
       return false;
     }
-    if ("".equals(str)) {
+    if ("".equals(text)) {
       return true;
     }
     try {
-      convertValue(str);
+      convertValue(text);
       return true;
     }
     catch (Exception e) {
@@ -122,7 +122,7 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
     });
     ((AbstractDocument)textComponent.getDocument()).setDocumentFilter(new DocumentFilter() {
       public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         String text = textComponent.getText();
         buffer
           .append(text, 0, offset)
@@ -141,7 +141,7 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
           super.replace(fb, offset, length, replaceText, attrs);
           return;
         }
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         String text = textComponent.getText();
         buffer
           .append(text, 0, offset);
@@ -169,7 +169,7 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
       }
 
       public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         String text = textComponent.getText();
         buffer
           .append(text, 0, offset)

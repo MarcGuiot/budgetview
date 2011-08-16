@@ -73,16 +73,15 @@ public class Range<T extends Comparable> {
     return "[" + min + ".." + max + "]";
   }
 
-  public boolean equals(Object o) {
-    if (this == o) {
+  public boolean equals(Object other) {
+    if (this == other) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (other == null || getClass() != other.getClass()) {
       return false;
     }
 
-    final Range pair = (Range)o;
-
+    final Range pair = (Range)other;
     if (!min.equals(pair.min)) {
       return false;
     }

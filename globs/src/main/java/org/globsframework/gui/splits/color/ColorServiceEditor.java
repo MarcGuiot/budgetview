@@ -165,7 +165,6 @@ public class ColorServiceEditor implements ColorCreationListener {
     button.setName("printButton");
     button.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent event) {
-        outputStream.println("========== New colors ==========");
         colorService.printCurrentSet(outputStream);
         outputStream.println();
       }

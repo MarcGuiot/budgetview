@@ -16,7 +16,7 @@ public interface ChangeSet {
   boolean containsChanges(Key key);
 
   /**
-   * return true if Glob for key is create, delete or update on Field field
+   * return true if Glob for key is created, deleted or updated on Field field
    */
   boolean containsChanges(Key key, Field... fields);
 
@@ -31,6 +31,8 @@ public interface ChangeSet {
   Set<Key> getCreated(GlobType type);
 
   Set<Key> getUpdated(GlobType type);
+
+  Set<Key> getCreatedOrUpdated(GlobType type);
 
   Set<Key> getUpdated(Field field);
 
