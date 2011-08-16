@@ -47,8 +47,7 @@ public class ColorServiceEditorTest extends UISpecTestCase {
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
     editor.setOutputStream(new PrintStream(stream));
     panel.getButton("Print").click();
-    assertEquals("========== New colors ==========\n" +
-                 "color1=123456\n" +
+    assertEquals("color1=123456\n" +
                  "color2=00ff00\n" +
                  "color3=ff00ff\n" +
                  "\n",
