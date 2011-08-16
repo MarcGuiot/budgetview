@@ -81,7 +81,8 @@ public class HistoChartMetricsTest extends ChartTestCase {
     HistoChartMetrics metrics =
       createMetrics(150, 145, 10, 0, 100, true, false, false, false);
     assertEquals(40, metrics.left(0));
-    assertEquals(0, metrics.getColumnAt(35));
+    assertEquals(-1, metrics.getColumnAt(35));
+    assertEquals(0, metrics.getColumnAt(45));
     assertEquals(1, metrics.getColumnAt(55));
     assertEquals(2, metrics.getColumnAt(72));
     assertEquals(9, metrics.getColumnAt(145));
