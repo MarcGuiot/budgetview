@@ -17,6 +17,7 @@ import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.savings.ToggleToSavingsAction;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.signpost.Signpost;
+import org.designup.picsou.gui.signpost.guides.SavingsViewToggleSignpost;
 import org.designup.picsou.gui.signpost.guides.SeriesAmountSignpost;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.gui.utils.MonthMatcher;
@@ -207,14 +208,17 @@ public class BudgetAreaSeriesView extends View {
     footerGenerator.init(footerArea);
     builder.add("footerArea", footerArea);
 
-    builder.add("specificAction", getSpecificAction());
+    builder.add("specificAction", getSpecificActionButton());
   }
 
-  private Action getSpecificAction() {
+  private JButton getSpecificActionButton() {
     if (budgetArea.equals(BudgetArea.SAVINGS)) {
-      return new ToggleToSavingsAction(repository, directory);
+      JButton button = new JButton(new ToggleToSavingsAction(repository, directory));
+      Signpost signpost = new SavingsViewToggleSignpost(repository, directory);
+      signpost.attach(button);
+      return button;
     }
-    return new BlankAction();
+    return new JButton(new BlankAction());
   }
 
   private JMenuItem createMonthFilteringButton() {
@@ -305,7 +309,6 @@ public class BudgetAreaSeriesView extends View {
         }
       };
       cellBuilder.addDisposeListener(highlightUpdater);
-
 
       cellBuilder.add("gauge", gaugeView.getComponent());
       cellBuilder.addDisposeListener(gaugeView);

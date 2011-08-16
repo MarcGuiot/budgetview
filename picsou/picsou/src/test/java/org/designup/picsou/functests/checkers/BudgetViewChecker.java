@@ -463,8 +463,19 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public void toggleSavingsView() {
-      getPanel().getButton("specificAction").click();
+      getSpecificActionButton().click();
+    }
 
+    public void checkNoToggleSavingsViewSignpostShown() {
+      checkNoSignpostVisible(getPanel());
+    }
+
+    public void checkToggleSavingsViewSignpostShown(String text) {
+      checkSignpostVisible(getPanel(), getSpecificActionButton(), text);
+    }
+
+    private Button getSpecificActionButton() {
+      return getPanel().getButton("specificAction");
     }
   }
 }

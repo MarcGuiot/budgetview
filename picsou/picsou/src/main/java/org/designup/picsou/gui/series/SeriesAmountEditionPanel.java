@@ -351,7 +351,7 @@ public class SeriesAmountEditionPanel {
         selectionOK |= addBudgetToSelection(selection, seriesId, monthId);
       }
 
-      if (!selectionOK) {
+      if (!monthIds.isEmpty() && !selectionOK) {
         Integer firstMonth = monthIds.iterator().next();
         int previous = firstMonth;
         int next = firstMonth;

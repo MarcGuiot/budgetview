@@ -365,4 +365,65 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     checkNoSignpostVisible();
   }
+
+  public void testSavingsViewSignpostIsShownWhenFirstNonMainSavingsSeriesIsCreated() throws Exception {
+
+    // Skip initial guiding sequence
+    views.selectData();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2010/05/29", -10, "auchan")
+      .load();
+    categorization.selectAllTransactions();
+    categorization.selectVariable().selectNewSeries("Misc");
+    budgetView.variable.editPlannedAmount("Misc")
+      .setAmount(10.00)
+      .validate();
+    views.selectBudget();
+    checkNoSignpostVisible();
+
+    savingsAccounts.createNewAccount()
+      .setAccountName("Livret")
+      .selectBank("ING Direct")
+      .validate();
+
+    budgetView.savings.checkNoToggleSavingsViewSignpostShown();
+
+    budgetView.savings.createSeries()
+      .setName("External series")
+      .setFromAccount("Livret")
+      .setToAccount("External")
+      .validate();
+
+    budgetView.savings.checkToggleSavingsViewSignpostShown("Click to see all savings envelopes");
+  }
+
+  public void testSavingsViewSignpostIsShownOnlyWhenTheLastStepOfTheInitialSequenceIsCompleted() throws Exception {
+    views.selectData();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2010/05/29", -10, "auchan")
+      .load();
+
+    categorization.selectAllTransactions();
+    categorization.selectVariable().selectNewSeries("Misc");
+
+    savingsAccounts.createNewAccount()
+      .setAccountName("Livret")
+      .selectBank("ING Direct")
+      .validate();
+    budgetView.savings.createSeries()
+      .setName("External series")
+      .setFromAccount("Livret")
+      .setToAccount("External")
+      .validate();
+    budgetView.savings.checkNoToggleSavingsViewSignpostShown();
+
+    budgetView.variable.editPlannedAmount("Misc")
+      .setAmount(10.00)
+      .validate();
+
+    views.selectBudget();
+    budgetView.savings.checkToggleSavingsViewSignpostShown("Click to see all savings envelopes");
+  }
 }
