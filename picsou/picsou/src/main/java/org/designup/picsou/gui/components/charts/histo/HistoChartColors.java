@@ -8,6 +8,7 @@ import org.globsframework.utils.directory.Directory;
 import java.awt.*;
 
 public class HistoChartColors implements ColorChangeListener {
+  private static final BasicStroke VERTICAL_DIVIDER_STROKE = new BasicStroke(2.0f);
   private Color chartBgColor;
   private Color chartBorderColor;
   private Color scaleLineColor;
@@ -20,6 +21,7 @@ public class HistoChartColors implements ColorChangeListener {
   private Color selectedColumnColor;
   private Color selectedLabelBackgroundColor;
   private Color selectedColumnBorder;
+  private Color columnDividerColor;
 
   public HistoChartColors(Directory directory) {
     directory.get(ColorService.class).addListener(this);
@@ -38,6 +40,7 @@ public class HistoChartColors implements ColorChangeListener {
     this.selectedColumnColor = colorLocator.get("histo.selection.bg");
     this.selectedLabelBackgroundColor = colorLocator.get("histo.selection.label.bg");
     this.selectedColumnBorder = colorLocator.get("histo.selection.border");
+    this.columnDividerColor = colorLocator.get("histo.column.divider");
   }
 
   public Color getChartBgColor() {
@@ -88,4 +91,9 @@ public class HistoChartColors implements ColorChangeListener {
     return selectedColumnBorder;
   }
 
+  public void setColumnDividerStyle(Graphics2D g2) {
+    g2.setStroke(VERTICAL_DIVIDER_STROKE);
+    g2.setComposite(AlphaComposite.Src);
+    g2.setColor(columnDividerColor);
+  }
 }

@@ -5,12 +5,12 @@ import org.designup.picsou.gui.components.charts.histo.utils.HistoDatasetElement
 import org.globsframework.model.Key;
 import org.globsframework.utils.exceptions.InvalidState;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 public class HistoButtonDataset extends AbstractHistoDataset<HistoDatasetElement> {
 
   private SortedSet<HistoButtonElement> buttonElements = new TreeSet<HistoButtonElement>();
+  private Map<Key,HistoButtonElement> keyMap = new HashMap<Key, HistoButtonElement>();
   private HistoButtonBlock[] blocks;
   private int rowCount;
 
@@ -22,7 +22,10 @@ public class HistoButtonDataset extends AbstractHistoDataset<HistoDatasetElement
   }
 
   public String getTooltip(int index, Key objectKey) {
-    return "";
+    if (objectKey != null) {
+      return keyMap.get(objectKey).tooltip;
+    }
+    return null;
   }
 
   public void addColumn(int id, String label, String tooltip, String section, boolean current, boolean future, boolean selected) {
@@ -30,8 +33,10 @@ public class HistoButtonDataset extends AbstractHistoDataset<HistoDatasetElement
     resetBlocks();
   }
 
-  public void addButton(int minId, int maxId, String label, Key key) {
-    buttonElements.add(new HistoButtonElement(minId, maxId, label, key));
+  public void addButton(int minId, int maxId, String label, Key key, String tooltip) {
+    HistoButtonElement element = new HistoButtonElement(minId, maxId, label, key, tooltip);
+    buttonElements.add(element);
+    keyMap.put(key, element);
     resetBlocks();
   }
 
@@ -56,32 +61,40 @@ public class HistoButtonDataset extends AbstractHistoDataset<HistoDatasetElement
 
   private void computeBlocks() {
     boolean[][] occupied = new boolean[size()][buttonElements.size()];
-    blocks = new HistoButtonBlock[buttonElements.size()];
-    int i = 0;
+    List<HistoButtonBlock> blockList = new ArrayList<HistoButtonBlock>();
     for (HistoButtonElement element : buttonElements) {
-      blocks[i++] = createBlock(element, occupied);
+      HistoButtonBlock block = createBlock(element, occupied);
+      if (block != null) {
+        blockList.add(block);
+      }
     }
+    blocks = blockList.toArray(new HistoButtonBlock[blockList.size()]);
   }
 
   private HistoButtonBlock createBlock(HistoButtonElement element, boolean[][] occupied) {
+    HistoDatasetElement firstColumnElement = getElement(0);
+    HistoDatasetElement lastColumnElement = getElement(size() - 1);
+    if ((element.maxId < firstColumnElement.id) || (element.minId > lastColumnElement.id)) {
+      return null;
+    }
+
     int minElementIndex = getIndex(element.minId);
     int minIndex = minElementIndex < 0 ? 0 : minElementIndex;
     boolean truncatedMin = minElementIndex < 0;
 
     int maxElementIndex = getIndex(element.maxId);
-    HistoDatasetElement lastColumnElement = getElement(size() - 1);
     int maxIndex = element.maxId > lastColumnElement.id ? getIndex(lastColumnElement.id) : maxElementIndex;
     boolean truncatedMax = element.maxId > lastColumnElement.id;
 
     for (int row = 0; row < occupied.length; row++) {
-      boolean free = true;
+      boolean freeBlockAvailable = true;
       for (int i = minIndex; i <= maxIndex; i++) {
         if (occupied[i][row]) {
-          free = false;
+          freeBlockAvailable = false;
           break;
         }
       }
-      if (free) {
+      if (freeBlockAvailable) {
         for (int i = minIndex; i <= maxIndex; i++) {
           occupied[i][row] = true;
         }
@@ -92,5 +105,9 @@ public class HistoButtonDataset extends AbstractHistoDataset<HistoDatasetElement
       }
     }
     throw new InvalidState("Cannot find empty space for element: " + element.label);
+  }
+
+  public Set<HistoButtonElement> getElements() {
+    return Collections.unmodifiableSet(buttonElements);
   }
 }

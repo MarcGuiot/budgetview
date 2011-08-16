@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.checkers;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.utils.Lang;
@@ -586,5 +585,9 @@ public class OperationChecker {
 
   private MenuItem getCheckMenu() {
     return getEditMenu().getSubMenu("[Check data (see logs)]");
+  }
+
+  public NotesDialogChecker openNotes() {
+    return NotesDialogChecker.open(getViewMenu().getSubMenu("Show notes..."));
   }
 }

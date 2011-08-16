@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components.dialogs;
 
-import org.designup.picsou.gui.components.CloseAction;
+import org.designup.picsou.gui.components.CloseDialogAction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -41,7 +41,7 @@ public class MessageAndDetailsDialog {
     builder.add("copy", copyButton);
 
     dialog = PicsouDialog.create(owner, true, directory);
-    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(dialog));
+    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseDialogAction(dialog));
     dialog.pack();
   }
 

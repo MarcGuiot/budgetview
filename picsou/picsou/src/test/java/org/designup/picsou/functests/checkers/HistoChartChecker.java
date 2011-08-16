@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
+import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyDataset;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffDataset;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineDataset;
 import org.designup.picsou.gui.description.Formatting;
@@ -12,19 +13,20 @@ import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import org.uispec4j.utils.Utils;
 
-public class HistoChecker extends AbstractHistoChecker<HistoChecker> {
+public class HistoChartChecker extends AbstractHistoChecker<HistoChartChecker> {
 
   public Window window;
   private String panelName;
   private String chartName;
+  private Panel panel;
 
-  public HistoChecker(Window window, String panelName, String chartName) {
+  public HistoChartChecker(Window window, String panelName, String chartName) {
     this.window = window;
     this.panelName = panelName;
     this.chartName = chartName;
   }
 
-  public HistoChecker checkColumnCount(int count) {
+  public HistoChartChecker checkColumnCount(int count) {
     HistoDataset dataset = getDataset(HistoDataset.class);
     if (count != dataset.size()) {
       Assert.fail("Found " + dataset.size() + " columns instead of " + count +
@@ -33,12 +35,12 @@ public class HistoChecker extends AbstractHistoChecker<HistoChecker> {
     return this;
   }
 
-  public HistoChecker checkDiffColumn(int index, String label, String section, double reference, double actual) {
+  public HistoChartChecker checkDiffColumn(int index, String label, String section, double reference, double actual) {
     checkDiffColumn(index, label, section, reference, actual, false);
     return this;
   }
 
-  public HistoChecker checkDiffColumn(int index, String label, String section, double reference, double actual, boolean selected) {
+  public HistoChartChecker checkDiffColumn(int index, String label, String section, double reference, double actual, boolean selected) {
     HistoDiffDataset dataset = getDataset(HistoDiffDataset.class);
     Assert.assertEquals(getErrorMessage(index, dataset), label, dataset.getLabel(index));
     Assert.assertEquals(getErrorMessage(index, dataset), section, dataset.getSection(index));
@@ -48,7 +50,7 @@ public class HistoChecker extends AbstractHistoChecker<HistoChecker> {
     return this;
   }
 
-  public HistoChecker checkLineColumn(int index, String label, String section, double value, boolean selected) {
+  public HistoChartChecker checkLineColumn(int index, String label, String section, double value, boolean selected) {
     HistoLineDataset dataset = getDataset(HistoLineDataset.class);
     Assert.assertEquals(getErrorMessage(index, dataset), label, dataset.getLabel(index).substring(0, 1));
     Assert.assertEquals(getErrorMessage(index, dataset), section, dataset.getSection(index));
@@ -57,8 +59,22 @@ public class HistoChecker extends AbstractHistoChecker<HistoChecker> {
     return this;
   }
 
-  public HistoChecker checkLineColumn(int index, String label, String section, double value) {
+  public HistoChartChecker checkLineColumn(int index, String label, String section, double value) {
     checkLineColumn(index, label, section, value, false);
+    return this;
+  }
+
+  public HistoChartChecker checkDailyColumn(int index, String label, String section, double value) {
+    checkDailyColumn(index, label, section, value, false);
+    return this;
+  }
+
+  public HistoChartChecker checkDailyColumn(int index, String label, String section, double value, boolean selected) {
+    HistoDailyDataset dataset = getDataset(HistoDailyDataset.class);
+    Assert.assertEquals(getErrorMessage(index, dataset), label, dataset.getLabel(index).substring(0, 1));
+    Assert.assertEquals(getErrorMessage(index, dataset), section, dataset.getSection(index));
+    Assert.assertEquals(getErrorMessage(index, dataset), value, dataset.getLastValue(index));
+    Assert.assertEquals(getErrorMessage(index, dataset), selected, dataset.isSelected(index));
     return this;
   }
 
@@ -109,29 +125,30 @@ public class HistoChecker extends AbstractHistoChecker<HistoChecker> {
     return printer;
   }
 
-  public HistoChecker checkTooltip(int index, String expectedText) {
+  public HistoChartChecker checkTooltip(int index, String expectedText) {
     HistoDataset dataset = getDataset(HistoDataset.class);
     Assert.assertEquals(expectedText, Utils.cleanupHtml(dataset.getTooltip(index, null)));
     return this;
   }
 
-
   private String getErrorMessage(int index, HistoDataset dataset) {
     return "Error at index: " + index + " - dataset contents:\n" + dataset;
   }
 
-  public HistoChecker scroll(int offset) {
+  public HistoChartChecker scroll(int offset) {
     Mouse.wheel(getPanel(), offset);
     return this;
   }
 
   protected HistoChart getChart() {
-    Panel panel = getPanel();
-    return (HistoChart)panel.getAwtComponent();
+    return (HistoChart)getPanel().getAwtComponent();
   }
 
   protected Panel getPanel() {
-    return window.getPanel(panelName).getPanel(chartName);
+    if (panel == null) {
+      panel = window.getPanel(panelName).getPanel(chartName);
+    }
+    return panel;
   }
 
   protected String getName() {

@@ -2,7 +2,7 @@ package org.designup.picsou.gui.actions;
 
 import org.designup.picsou.exporter.Exporter;
 import org.designup.picsou.exporter.Exporters;
-import org.designup.picsou.gui.components.CloseAction;
+import org.designup.picsou.gui.components.CloseDialogAction;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.utils.Lang;
@@ -72,7 +72,7 @@ public class ExportDialog {
     });
 
     dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
-    dialog.addPanelWithButtons(builder.<JPanel>load(), new OkAction(), new CloseAction(dialog));
+    dialog.addPanelWithButtons(builder.<JPanel>load(), new OkAction(), new CloseDialogAction(dialog));
     dialog.pack();
   }
 

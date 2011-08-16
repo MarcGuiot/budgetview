@@ -9,6 +9,6 @@ import org.globsframework.utils.directory.Directory;
 
 public abstract class AccountHistoChartUpdater extends HistoChartUpdater {
   public AccountHistoChartUpdater(HistoChartBuilder histoChartBuilder, GlobRepository repository, Directory directory) {
-    super(histoChartBuilder, repository, directory, Month.TYPE, Month.ID, BudgetStat.TYPE, SavingsBudgetStat.TYPE, Transaction.TYPE);
+    super(repository, directory, Month.TYPE, Month.ID, BudgetStat.TYPE, SavingsBudgetStat.TYPE, Transaction.TYPE);
   }
 }

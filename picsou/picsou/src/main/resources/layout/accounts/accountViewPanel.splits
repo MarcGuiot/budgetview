@@ -23,35 +23,19 @@
            horizontalAlignment="left"
            horizontalTextPosition="left" verticalAlignment="bottom"/>
 
-    <style selector=".right label.totalAmountTitle"
-           fill="horizontal" horizontalAlignment="right" marginRight="10"/>
-
-    <style selector=".left label.totalAmountTitle"
+    <style selector=".left label.totalAmount"
            fill="horizontal" horizontalAlignment="left" marginLeft="10"/>
 
     <style selector="#accountPanel" opaque="true"/>
+
+    <style selector=".summaryFooter" marginTop="6"/>
+
+    <style selector=".summaryFooter label" fill="none" anchor="center"/>
 
   </styles>
 
   <panel styleClass="block">
     <column styleClass="innerBlock">
-      <row marginBottom="5">
-
-        <filler fill="horizontal"/>
-
-        <column styleClass="right">
-          <label text="$accountView.reference.title"
-                 styleClass="totalAmountTitle" autoHideSource="referencePosition"/>
-          <label ref="referencePositionDate"
-                 styleClass="totalAmountTitle" autoHideSource="referencePosition"/>
-        </column>
-        <label ref="referencePosition"
-               styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"/>
-
-        <filler fill="horizontal"/>
-
-      </row>
-
       <column styleClass="blockScrollBorder">
         <scrollPane marginTop="0" marginBottom="0" weightY="100">
           <column ref="unselect">
@@ -79,6 +63,20 @@
           <button action="createAccount" styleClass="create" tooltipText="$accountView.create.tooltip"/>
         </row>
       </column>
+
+      <row styleClass="summaryFooter">
+
+        <filler fill="horizontal"/>
+
+        <label text="$accountView.reference.title"
+               styleClass="totalAmountTitle" autoHideSource="referencePosition"/>
+        <label ref="referencePositionDate"
+               styleClass="totalAmountTitle" autoHideSource="referencePosition"
+               marginLeft="5" marginRight="10"/>
+        <label ref="referencePosition"
+               styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"/>
+
+      </row>
     </column>
   </panel>
 </splits>

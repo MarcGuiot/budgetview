@@ -19,10 +19,12 @@ import org.globsframework.utils.Millis;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.util.Set;
 
 public class LicenseInfoView extends View {
   private JEditorPane licenseMessage;
+  private boolean forceHidden;
 
   public LicenseInfoView(final GlobRepository repository, final Directory directory) {
     super(repository, directory);
@@ -66,19 +68,16 @@ public class LicenseInfoView extends View {
   }
 
   private void update(GlobRepository repository) {
+    if (forceHidden) {
+      licenseMessage.setVisible(false);
+      return;
+    }
+
     Glob user = repository.find(User.KEY);
     Glob userPreferences = repository.find(UserPreferences.KEY);
     if (user == null || userPreferences == null) {
       return;
     }
-    update(user, userPreferences);
-  }
-
-  public void registerComponents(GlobsPanelBuilder builder) {
-    builder.add("licenseMessage", licenseMessage);
-  }
-
-  private void update(Glob user, Glob userPreferences) {
     if (User.isDemoUser(user)) {
       licenseMessage.setText(Lang.get("demo.license.info.message"));
       licenseMessage.setVisible(true);
@@ -94,6 +93,17 @@ public class LicenseInfoView extends View {
     licenseMessage.setVisible(true);
     long days = getDaysLeft(userPreferences);
     licenseMessage.setText(getTrialMessage(user, days));
+  }
+
+  public void registerComponents(GlobsPanelBuilder parentBuilder) {
+
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/general/licenseInfoView.splits",
+                                                      repository, directory);
+
+    builder.add("licenseInfoMessage", licenseMessage);
+    builder.add("hide", new HideAction());
+
+    parentBuilder.add("licenseInfo", builder);
   }
 
   private String getTrialMessage(Glob user, long days) {
@@ -178,4 +188,17 @@ public class LicenseInfoView extends View {
         return "";
     }
   }
+
+  private class HideAction extends AbstractAction {
+
+    private HideAction() {
+      super(Lang.get("newVersion.hide.text"));
+    }
+
+    public void actionPerformed(ActionEvent actionEvent) {
+      forceHidden = true;
+      update(repository);
+    }
+  }
+
 }

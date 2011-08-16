@@ -7,12 +7,14 @@ public class HistoButtonElement implements Comparable<HistoButtonElement> {
   public final int maxId;
   public final String label;
   public final Key key;
+  public final String tooltip;
 
-  public HistoButtonElement(int minId, int maxId, String label, Key key) {
+  public HistoButtonElement(int minId, int maxId, String label, Key key, String tooltip) {
     this.minId = minId;
     this.maxId = maxId;
     this.label = label;
     this.key = key;
+    this.tooltip = tooltip;
   }
 
   public int compareTo(HistoButtonElement other) {

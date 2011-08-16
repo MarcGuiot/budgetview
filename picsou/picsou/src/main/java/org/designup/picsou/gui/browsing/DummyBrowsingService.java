@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.browsing;
 
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.designup.picsou.gui.components.CloseAction;
+import org.designup.picsou.gui.components.CloseDialogAction;
 
 import javax.swing.*;
 
@@ -16,7 +16,7 @@ public class DummyBrowsingService extends BrowsingService {
     label.setName("url");
     panel.add(label);
 
-    panel.add(new JButton(new CloseAction(dialog)));
+    panel.add(new JButton(new CloseDialogAction(dialog)));
 
     dialog.add(panel);
     dialog.pack();

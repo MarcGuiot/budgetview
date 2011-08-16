@@ -44,8 +44,9 @@ public class Gauge extends ActionablePanel {
 
   private static final int DEFAULT_BAR_HEIGHT = 10;
   private static final int HORIZONTAL_MARGIN = 2;
+  private static final double FIXED_WIDTH_RATIO = 0.1;
 
-  private static final int HORIZONTAL_TEXT_MARGIN = 4;
+  private static final int HORIZONTAL_TEXT_MARGIN = 5;
   private static final int VERTICAL_TEXT_MARGIN = 1;
 
   private int barHeight = DEFAULT_BAR_HEIGHT;
@@ -279,7 +280,7 @@ public class Gauge extends ActionablePanel {
     }
 
     int totalWidth = getWidth() - 1 - 2 * HORIZONTAL_MARGIN;
-    int width = (int)(getWidthRatio() * totalWidth);
+    int width = getAdjustedWidth(totalWidth);
     int height = getHeight() - 1;
     int minX = HORIZONTAL_MARGIN;
 
@@ -323,6 +324,15 @@ public class Gauge extends ActionablePanel {
     drawText(g2);
   }
 
+  private int getAdjustedWidth(int totalWidth) {
+    Double value = Utils.max(Math.abs(actualValue), Math.abs(targetValue));
+    if (Math.abs(value) < 0.1) {
+      return 0;
+    }
+    int fixedWidth = (int)(FIXED_WIDTH_RATIO * totalWidth);
+    return fixedWidth + (int)((totalWidth - fixedWidth) * getWidthRatio());
+  }
+
   public double getWidthRatio() {
     if ((maxValue == null) || (maxValue == 0.0)) {
       return 1.0;
@@ -330,6 +340,7 @@ public class Gauge extends ActionablePanel {
     Double value = Utils.max(Math.abs(actualValue), Math.abs(targetValue));
     return Math.abs(value / maxValue);
   }
+
 
   private void drawBorder(Graphics2D g2, int width, int barTop, int barHeight) {
     if (isRolloverInProgress()) {

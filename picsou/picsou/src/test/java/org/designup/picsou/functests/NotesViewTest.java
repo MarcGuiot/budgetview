@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import junit.framework.Assert;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 

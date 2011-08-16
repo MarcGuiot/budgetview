@@ -12,7 +12,6 @@ import org.designup.picsou.gui.budget.BudgetToggle;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.card.NavigationView;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.feedback.FeedbackService;
@@ -24,9 +23,8 @@ import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.notes.NotesView;
+import org.designup.picsou.gui.notes.ShowNotesAction;
 import org.designup.picsou.gui.preferences.PreferencesAction;
-import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodBudgetAreaTrigger;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
@@ -166,7 +164,6 @@ public class MainPanel {
     PeriodBudgetAreaTrigger.init(replicationGlobRepository);
 
     cardView = new CardView(repository, directory, categorizationView.getGotoBudgetSignpost());
-    NotesView notesView = new NotesView(repository, directory);
     seriesAnalysisView = new SeriesAnalysisView(repository, directory);
     signpostView = new SignpostView(replicationGlobRepository, directory);
     createPanel(
@@ -180,13 +177,10 @@ public class MainPanel {
       new BudgetView(replicationGlobRepository, directory),
       seriesAnalysisView,
       new SavingsView(replicationGlobRepository, directory),
-      new NavigationView(repository, directory),
       new SummaryView(repository, directory),
-      new ProjectView(repository, directory),
       new FeedbackView(repository, directory),
       signpostView,
-      licenseInfoView,
-      notesView);
+      licenseInfoView);
 
     createMenuBar(parent, directory);
     builder.load();
@@ -291,7 +285,7 @@ public class MainPanel {
 
     editMenu.addSeparator();
     CreateAccountAction createAccount =
-      new CreateAccountAction("account.create.menu", AccountType.MAIN, repository,  directory, frame);
+      new CreateAccountAction("account.create.menu", AccountType.MAIN, repository, directory, frame);
     createAccount.setGotoAccountViewEnabled(true);
     editMenu.add(createAccount);
 
@@ -318,6 +312,8 @@ public class MainPanel {
     showMenu.add(new SelectCurrentMonthAction(repository, directory));
     showMenu.add(new SelectCurrentYearAction(repository, directory));
     showMenu.add(new SelectLast12MonthsAction(repository, directory));
+    showMenu.addSeparator();
+    showMenu.add(new ShowNotesAction(repository, directory));
     showMenu.addSeparator();
     showMenu.add(new ShowReconciliationAction(repository, directory));
     return showMenu;

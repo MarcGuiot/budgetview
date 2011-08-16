@@ -21,7 +21,7 @@
     <style selector="footer button" ui="hyperlinkButtonWithoutUnderline" foreground="categorization.footerButton"
            marginTop="5"/>
 
-    <style selector="htmlEditorPane.hints"  weightY="0.1" border="empty(0,10,10,10)" font="-,plain,11"/>
+    <style selector="htmlEditorPane.hints"  weightY="0.1" border="empty(0,10,10,10)" font="-,plain,12"/>
 
   </styles>
 

@@ -11,8 +11,8 @@
 
     <panel styleClass="block" preferredSize="(300,200)">
       <column styleClass="innerBlock">
-        <panel background="seriesAnalysis.chart.bg" border="line(block.inner.border)">
-          <component ref="histoChart" margin="15" opaque="true" background="seriesAnalysis.chart.bg"/>
+        <panel background="block.inner.bg.secondary" border="line(block.inner.border)">
+          <component ref="histoChart" margin="15" opaque="true" background="block.inner.bg.secondary"/>
         </panel>
       </column>
     </panel>

@@ -1,0 +1,18 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="dialog" preferredSize="(600,600)">
+    <column styleClass="innerDialog">
+
+      <label text="$notesDialog.title"/>
+
+      <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true" border="line(block.inner.border)"
+                  marginBottom="0">
+        <textArea ref="notesEditor" lineWrap="true" wrapStyleWord="true" margin="5" fill="both"/>
+      </scrollPane>
+
+    </column>
+  </panel>
+
+</splits>

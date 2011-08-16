@@ -42,7 +42,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public SeriesAnalysisChecker seriesAnalysis;
   public NewVersionChecker newVersion;
   public ImportPanelChecker importPanel;
-  public NotesChecker notes;
+  public NotesViewChecker notes;
   public BackupChecker backup;
   public ProjectViewChecker projects;
   public SummaryViewChecker summary;
@@ -166,7 +166,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     license = new LicenseActivationChecker(mainWindow);
     newVersion = new NewVersionChecker(mainWindow);
     importPanel = new ImportPanelChecker(mainWindow);
-    notes = new NotesChecker(mainWindow);
+    notes = new NotesViewChecker(operations, mainWindow);
     projects = new ProjectViewChecker(mainWindow);
     summary = new SummaryViewChecker(mainWindow);
     signpostView = new SignpostViewChecker(mainWindow);

@@ -19,6 +19,7 @@ public class HistoChartMetrics {
   private static final int SECTION_BOTTOM_MARGIN = 5;
   private static final int INNER_LABEL_HEIGHT = 18;
   private static final int INNER_LABEL_BOTTOM_MARGIN = 4;
+  private static final int MIN_NEGATIVE_HEIGHT = 5;
 
   private final double[] SCALES = {0.25, 0.5, 1, 2, 2.5, 5};
 
@@ -26,7 +27,7 @@ public class HistoChartMetrics {
   private int panelHeight;
   private FontMetrics fontMetrics;
   private int columnCount;
-  private boolean drawInnerLabels;
+  private HistoChartConfig config;
   private double maxPositiveValue;
   private double maxNegativeValue;
 
@@ -49,36 +50,36 @@ public class HistoChartMetrics {
                            int columnCount,
                            double maxNegativeValue,
                            double maxPositiveValue,
-                           boolean drawLabels,
-                           boolean drawSections,
-                           boolean drawInnerLabels,
+                           HistoChartConfig config,
+                           boolean containsSections,
                            boolean snapToScale) {
     this.panelWidth = panelWidth;
     this.panelHeight = panelHeight;
     this.fontMetrics = fontMetrics;
     this.columnCount = columnCount;
-    this.drawInnerLabels = drawInnerLabels;
+    this.config = config;
     this.maxPositiveValue = adjustLimit(maxPositiveValue, snapToScale);
     this.maxNegativeValue = adjustLimit(maxNegativeValue, snapToScale);
 
-    this.scaleZoneWidth = drawLabels ? scaleZoneWidth() : 0;
-    this.sectionZoneHeight = drawLabels && drawSections ? SECTION_ZONE_HEIGHT : 0;
+    this.scaleZoneWidth = config.drawScale || config.keepScaleZone ? scaleZoneWidth() : 0;
+    this.sectionZoneHeight =
+      config.drawLabels && config.drawSections && containsSections ? SECTION_ZONE_HEIGHT : 0;
     this.chartWidth = panelWidth - scaleZoneWidth;
     this.columnWidth = columnCount != 0 ? chartWidth / columnCount : 0;
 
-    this.labelZoneHeight = drawLabels ? LABEL_ZONE_HEIGHT : 0;
-    this.labelBottomMargin = drawLabels ? LABEL_BOTTOM_MARGIN : 0;
+    this.labelZoneHeight = config.drawLabels ? LABEL_ZONE_HEIGHT : 0;
+    this.labelBottomMargin = config.drawLabels ? LABEL_BOTTOM_MARGIN : 0;
 
     this.chartHeight = panelHeight - labelZoneHeight - sectionZoneHeight;
-    this.usableChartHeight = chartHeight - (drawInnerLabels ? INNER_LABEL_HEIGHT : 0);
+    this.usableChartHeight = chartHeight - (config.drawInnerLabels ? INNER_LABEL_HEIGHT : 0);
     if (maxNegativeValue != 0.0) {
       this.positiveHeight = (int)((usableChartHeight - 2 * VERTICAL_CHART_PADDING) * this.maxPositiveValue
                                   / (this.maxPositiveValue + this.maxNegativeValue));
       this.negativeHeight = usableChartHeight - 2 * VERTICAL_CHART_PADDING - positiveHeight;
     }
     else {
-      this.positiveHeight = usableChartHeight - VERTICAL_CHART_PADDING;
-      this.negativeHeight = 0;
+      this.positiveHeight = usableChartHeight - VERTICAL_CHART_PADDING - MIN_NEGATIVE_HEIGHT;
+      this.negativeHeight = MIN_NEGATIVE_HEIGHT;
     }
 
     innerLabelY = columnTop() + chartHeight - INNER_LABEL_BOTTOM_MARGIN;
@@ -247,7 +248,7 @@ public class HistoChartMetrics {
   }
 
   public boolean isDrawingInnerLabels() {
-    return drawInnerLabels;
+    return config.drawInnerLabels;
   }
 
   public int innerLabelY() {

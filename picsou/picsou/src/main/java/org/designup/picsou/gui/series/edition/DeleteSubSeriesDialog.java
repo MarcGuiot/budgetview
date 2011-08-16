@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.series.edition;
 
-import org.designup.picsou.gui.components.CloseAction;
+import org.designup.picsou.gui.components.CloseDialogAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.model.Transaction;
@@ -48,7 +48,7 @@ public class DeleteSubSeriesDialog {
     JPanel panel = builder.load();
 
     dialog = PicsouDialog.create(owner, true, directory);
-    dialog.addPanelWithButtons(panel, new ValidateAction(), new CloseAction(dialog));
+    dialog.addPanelWithButtons(panel, new ValidateAction(), new CloseDialogAction(dialog));
   }
 
   public void show() {

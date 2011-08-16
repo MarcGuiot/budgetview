@@ -17,7 +17,6 @@ import java.util.Set;
 import java.util.SortedSet;
 
 public abstract class HistoChartUpdater implements GlobSelectionListener, Disposable {
-  private HistoChartBuilder histoChartBuilder;
   private GlobRepository repository;
   private Directory directory;
   private GlobType selectionType;
@@ -27,13 +26,11 @@ public abstract class HistoChartUpdater implements GlobSelectionListener, Dispos
   private int todayId;
   private ChangeSetListener changeSetListener;
 
-  public HistoChartUpdater(HistoChartBuilder histoChartBuilder,
-                           GlobRepository repository,
+  public HistoChartUpdater(GlobRepository repository,
                            Directory directory,
                            final GlobType selectionType,
                            final IntegerField selectionMonthField,
                            final GlobType... types) {
-    this.histoChartBuilder = histoChartBuilder;
     this.repository = repository;
     this.directory = directory;
     this.selectionType = selectionType;
@@ -71,8 +68,8 @@ public abstract class HistoChartUpdater implements GlobSelectionListener, Dispos
   }
 
   public void update(final boolean resetPosition) {
-    if ((histoChartBuilder != null) && (repository.contains(CurrentMonth.TYPE))) {
-      update(histoChartBuilder, currentMonthId == null ? todayId : currentMonthId, resetPosition);
+    if ((repository != null) && repository.contains(CurrentMonth.TYPE)) {
+      update(currentMonthId == null ? todayId : currentMonthId, resetPosition);
     }
   }
 
@@ -87,11 +84,10 @@ public abstract class HistoChartUpdater implements GlobSelectionListener, Dispos
     if (directory != null) {
       directory.get(SelectionService.class).removeListener(this);
     }
-    histoChartBuilder = null;
     repository = null;
     directory = null;
     changeSetListener = null;
   }
 
-  protected abstract void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition);
+  protected abstract void update(Integer currentMonthId, boolean resetPosition);
 }

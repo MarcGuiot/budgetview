@@ -11,11 +11,14 @@ import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Range;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
+
+import java.util.SortedSet;
 
 public class Project {
   public static GlobType TYPE;
@@ -48,6 +51,15 @@ public class Project {
       throw new UnexpectedApplicationState("More than 1 project for series " + series + " : " + projects);
     }
     return projects.getFirst();
+  }
+
+  public static Range<Integer> getMonthRange(Glob project, GlobRepository repository) {
+    GlobList items = repository.findLinkedTo(project, ProjectItem.PROJECT);
+    SortedSet<Integer> months = items.getSortedSet(ProjectItem.MONTH);
+    if (months.isEmpty()) {
+      return null;
+    }
+    return new Range<Integer>(months.first(), months.last());
   }
 
   public static class Serializer implements PicsouGlobSerializer {

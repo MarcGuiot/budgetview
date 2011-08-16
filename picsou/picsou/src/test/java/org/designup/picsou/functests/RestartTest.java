@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.CategorizationGaugeChecker;
 import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
@@ -219,7 +220,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .validate();
 
     projects.checkProjectList("MyProject");
-    projects.checkProject("MyProject", "Sep-Oct 2008", 800.00);
+    projects.checkProject("MyProject", 200809, 200810, 800.00);
 
     timeline.selectMonth("2008/09");
     budgetView.extras.checkSeries("MyProject", 0, -200.00);
@@ -232,7 +233,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     restartApplication();
 
     projects.checkProjectList("MyProject");
-    projects.checkProject("MyProject", "Sep-Oct 2008", 800.00);
+    projects.checkProject("MyProject", 200809, 200810, 800.00);
     projects.edit("MyProject")
       .checkItems("Reservation | September 2008 | -200.00\n" +
                   "Travel | October 2008 | -100.00\n" +

@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.signpost.sections;
 
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.components.CloseAction;
+import org.designup.picsou.gui.components.CloseDialogAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.SignpostSectionType;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -108,7 +108,7 @@ public class SignpostSectionDialog {
     }
   }
 
-  private class CloseSectionAction extends CloseAction {
+  private class CloseSectionAction extends CloseDialogAction {
     private boolean isLastSection;
 
     public CloseSectionAction(JDialog dialog, SignpostSection completedSection) {

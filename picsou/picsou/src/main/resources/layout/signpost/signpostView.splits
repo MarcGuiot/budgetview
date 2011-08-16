@@ -3,7 +3,6 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styleImport file="/layout/signpost/signpostStyles.splits"/>
   <styles>
-
     <ui name="sectionTitleButtonUI"
         class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         underline="false" autoHideEnabled="false" useNormalColorWhenDisabled="true"/>

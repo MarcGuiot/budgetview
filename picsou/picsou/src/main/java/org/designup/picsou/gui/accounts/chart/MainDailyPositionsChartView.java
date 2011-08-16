@@ -13,6 +13,7 @@ import org.designup.picsou.model.Day;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
+import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -27,13 +28,16 @@ public class MainDailyPositionsChartView extends AccountsChartView {
   private boolean showFullMonthLabels = false;
 
   public MainDailyPositionsChartView(HistoChartRange range, GlobRepository repository, Directory directory) {
-    super(range, repository, directory, "mainAccountsHistoChart");
+    super(range, "mainAccountsHistoChart", repository, directory);
   }
 
-  public MainDailyPositionsChartView(final GlobRepository repository, final Directory directory, String componentName,
-                                     HistoChartConfig config, HistoChartRange range) {
-    super(repository, directory, componentName, config, range);
-    final HistoChart chart = histoChartBuilder.getChart();
+  public MainDailyPositionsChartView(HistoChartRange range, HistoChartConfig config, String componentName,
+                                     final GlobRepository repository, final Directory directory) {
+    super(range, config, componentName, repository, directory);
+  }
+
+  public void installHighlighting() {
+    HistoChart chart = histoChartBuilder.getChart();
     chart.addListener(new ChartListener(repository, chart, directory));
   }
 
@@ -71,39 +75,43 @@ public class MainDailyPositionsChartView extends AccountsChartView {
 
       Integer monthId = objectKey.get(Day.MONTH);
       Integer day = objectKey.get(Day.DAY);
-      GlobList transactions = getTransactions(monthId, day);
+      GlobList transactions = getTransactions(monthId, day, repository);
       GlobList series = transactions.getTargets(Transaction.SERIES, repository);
       highlightingService.select(series, Series.TYPE);
     }
 
     public void processDoubleClick(Integer columnIndex, Key objectKey) {
-      if (objectKey == null) {
-        return;
-      }
+      selectTransactions(objectKey, chart, repository, directory, selectionService);
+    }
+  }
 
-      Integer monthId = objectKey.get(Day.MONTH);
-      Integer day = objectKey.get(Day.DAY);
-      GlobList transactions = getTransactions(monthId, day);
-      if (transactions.isEmpty()) {
-        DetailsTip tip = new DetailsTip(chart, "Il n'y aucune opération le " + Day.getFullLabel(objectKey), directory);
-        tip.show();
-        return;
-      }
-
-      Set<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getValueSet(Month.ID);
-      if (!selectedMonthIds.contains(monthId)) {
-        selectionService.select(repository.get(Key.create(Month.TYPE, monthId)));
-      }
-
-      selectionService.select(transactions, Transaction.TYPE);
-
-      directory.get(NavigationService.class).gotoDataWithPlannedTransactions();
+  public static void selectTransactions(Key objectKey, HistoChart chart, GlobRepository repository, Directory directory, SelectionService selectionService) {
+    if (objectKey == null) {
+      return;
     }
 
-    private GlobList getTransactions(Integer monthId, Integer day) {
-      return repository.getAll(Transaction.TYPE,
-                               and(fieldEquals(Transaction.POSITION_MONTH, monthId),
-                                   fieldEquals(Transaction.POSITION_DAY, day)));
+    Integer monthId = objectKey.get(Day.MONTH);
+    Integer day = objectKey.get(Day.DAY);
+    GlobList transactions = getTransactions(monthId, day, repository);
+    if (transactions.isEmpty()) {
+      DetailsTip tip = new DetailsTip(chart, "Il n'y aucune opération le " + Day.getFullLabel(objectKey), directory);
+      tip.show();
+      return;
     }
+
+    Set<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getValueSet(Month.ID);
+    if (!selectedMonthIds.contains(monthId)) {
+      selectionService.select(repository.get(Key.create(Month.TYPE, monthId)));
+    }
+
+    selectionService.select(transactions, Transaction.TYPE);
+
+    directory.get(NavigationService.class).gotoDataWithPlannedTransactions();
+  }
+
+  private static GlobList getTransactions(Integer monthId, Integer day, GlobRepository repository) {
+    return repository.getAll(Transaction.TYPE,
+                             and(fieldEquals(Transaction.POSITION_MONTH, monthId),
+                                 fieldEquals(Transaction.POSITION_DAY, day)));
   }
 }

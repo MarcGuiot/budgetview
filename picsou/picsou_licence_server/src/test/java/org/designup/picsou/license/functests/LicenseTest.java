@@ -290,7 +290,7 @@ public class LicenseTest extends ConnectedTestCase {
   }
 
   private void checkMessage(final String messageTxt) {
-    TextBox message = window.getTextBox("licenseMessage");
+    TextBox message = getMessageBox();
     assertThat(message.isVisible());
     assertTrue(message.textContains(messageTxt));
   }
@@ -396,8 +396,8 @@ public class LicenseTest extends ConnectedTestCase {
     startApplication(false);
     login.logExistingUser("user", "passw@rd", true);
 
-    LicenseMessageChecker licenseMessageChecker = new LicenseMessageChecker(window);
-    LicenseExpirationChecker expirationChecker = licenseMessageChecker.clickNewLicense();
+    LicenseInfoChecker licenseInfo = new LicenseInfoChecker(window);
+    LicenseExpirationChecker expirationChecker = licenseInfo.clickNewLicense();
     expirationChecker
       .checkMail("alfred@free.fr")
       .sendKey()
@@ -425,8 +425,8 @@ public class LicenseTest extends ConnectedTestCase {
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     startApplication(false);
     login.logExistingUser("user", "passw@rd", true);
-    LicenseMessageChecker messageChecker = new LicenseMessageChecker(window);
-    messageChecker.checkMessage("Your free trial period is over.");
+    LicenseInfoChecker licenseInfo = new LicenseInfoChecker(window);
+    licenseInfo.checkMessage("Your free trial period is over.");
   }
 
   public void testActivationFailDuringTrial() throws Exception {
@@ -452,11 +452,12 @@ public class LicenseTest extends ConnectedTestCase {
     Window dialog = WindowInterceptor.getModalDialog(operation.getImportTrigger());
     ImportDialogChecker importDialog = new ImportDialogChecker(dialog, true);
     importDialog.close();
+    TextBox messageBox = window.getTextBox("licenseInfoMessage");
     if (!anonymous) {
-      assertFalse(window.getTextBox("licenseMessage").isVisible());
+      assertFalse(messageBox.isVisible());
     }
     else {
-      assertTrue(window.getTextBox("licenseMessage").isVisible());
+      assertTrue(messageBox.isVisible());
     }
   }
 
@@ -500,9 +501,13 @@ public class LicenseTest extends ConnectedTestCase {
 
 
   private void checkDaysLeftMessage() {
-    TextBox message = window.getTextBox("licenseMessage");
+    TextBox message = getMessageBox();
     assertThat(message.isVisible());
     assertTrue(message.textContains("days left"));
+  }
+
+  private TextBox getMessageBox() {
+    return window.getTextBox("licenseInfoMessage");
   }
 
   private void checkMessageOver() {
@@ -510,20 +515,20 @@ public class LicenseTest extends ConnectedTestCase {
   }
 
   private void checkWithMailKilled() {
-    TextBox message = window.getTextBox("licenseMessage");
+    TextBox message = getMessageBox();
     assertThat(message.isVisible());
     assertTrue(message.textContains("Activation failed. An email was sent at " + MAIL + " with further information."));
   }
 
   private void checkActivationFailed() {
-    TextBox message = window.getTextBox("licenseMessage");
+    TextBox message = getMessageBox();
     assertThat(message.isVisible());
     assertTrue(message.textContains("This activation code is not valid."));
     assertTrue(message.textContains("You can request"));
   }
 
   private void checkKilled() {
-    TextBox message = window.getTextBox("licenseMessage");
+    TextBox message = getMessageBox();
     assertThat(message.isVisible());
     assertTrue(message.textContains("You are not allowed to import data anymore"));
   }

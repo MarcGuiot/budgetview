@@ -123,6 +123,7 @@ public class PicsouInit {
     repository.addTrigger(new SeriesStatSummaryTrigger());
     repository.addTrigger(new BudgetStatTrigger());
     repository.addTrigger(new SavingsBudgetStatTrigger());
+    repository.addTrigger(new ProjectStatTrigger());
   }
 
   public PreLoadData loadUserData(String user, boolean useDemoAccount, boolean autoLogin) {

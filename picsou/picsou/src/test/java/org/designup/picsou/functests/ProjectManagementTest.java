@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import junit.framework.Assert;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
@@ -19,9 +20,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
-    projects.checkHintMessageHidden();
-
     operations.hideSignposts();
+
     projects.checkHintMessageDisplayed();
 
     projects.create()
@@ -37,7 +37,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projects.checkHintMessageHidden();
 
     projects.checkProjectList("My project");
-    projects.checkProject("My project", "Jan 2011", 200.00);
+    projects.checkProject("My project", 201101, 201101, 200.00);
 
     timeline.selectMonth("2011/01");
     budgetView.extras.checkSeries("My project", 0, -200.00);
@@ -54,7 +54,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .validate();
 
     projects.checkProjectList("My project");
-    projects.checkProject("My project", "Jan-Feb 2011", 800.00);
+    projects.checkProject("My project", 201101, 201102, 800.00);
     budgetView.extras.checkSeries("My project", 0, -200.00);
     budgetView.getSummary().checkEndPosition(800.00);
 
@@ -71,9 +71,13 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2011/02");
-    projects.checkProject("My project", "Jan-Feb 2011", 700.00);
+    projects.checkProject("My project", 201101, 201102, 700.00);
     budgetView.extras.checkSeries("My project", 0, -500.00);
     budgetView.getSummary().checkEndPosition(300.00);
+
+    
+    Assert.fail("[Regis] En cours - je ne comprends pas pourquoi ca ne marche plus");
+
 
     projects.edit("My project")
       .checkItems("Reservation | January 2011 | -200.00\n" +
@@ -86,7 +90,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2011/01");
-    projects.checkProject("My project", "Jan 2011", 200.00);
+    projects.checkProject("My project", 201101, 201101, 200.00);
 
     timeline.selectMonth("2011/02");
     budgetView.extras.checkSeriesNotPresent("My project");
@@ -158,6 +162,9 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCannotHaveEmptyProjectOrProjectItemNames() {
+
+    operations.hideSignposts();
+
     projects.create()
       .validateAndCheckOpen()
       .checkProjectNameMessage("You must provide a name for this project")
@@ -171,10 +178,13 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .setItemAmount(0, -200.00)
       .validate();
 
-    projects.checkProject("My project", "Jan 2011", 200.00);
+    projects.checkProject("My project", 201101, 201101, 200.00);
   }
 
   public void testCannotHaveProjectWithNoItems() throws Exception {
+
+    operations.hideSignposts();
+
     projects.create()
       .checkTitle("Create a project")
       .setName("My project")
@@ -221,22 +231,25 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
-  public void testOnlyPresentAndFutureProjetsAreShown() throws Exception {
+  public void testShowsOnlyProjectsInDisplayedTimeSpan() throws Exception {
 
+    operations.hideSignposts();
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2010/01/10")
-      .addTransaction("2010/10/01", 1000.00, "Income")
-      .addTransaction("2010/11/01", 1000.00, "Income")
-      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/01/01", 1000.00, "Income")
+      .addTransaction("2010/02/01", 1000.00, "Income")
+      .addTransaction("2010/03/01", 1000.00, "Income")
       .addTransaction("2011/01/05", 100.00, "Resa")
       .load();
 
+    timeline.selectMonth(201101);
+
     projects.create()
       .setName("Past Project")
-      .setItem(0, "Reservation", 201010, -100.00)
-      .addItem(1, "Hotel", 201011, -500.00)
+      .setItem(0, "Reservation", 201001, -100.00)
+      .addItem(1, "Hotel", 201002, -500.00)
       .validate();
 
     projects.create()
@@ -262,20 +275,23 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth(201106);
     projects.checkProjectList("Current Project", "Next Project");
 
-    timeline.selectMonth(201011);
-    projects.checkProjectList("Current Project", "Next Project", "Past Project");
+    timeline.selectMonth(201002);
+    projects.checkProjectList("Current Project", "Past Project");
 
     projects.edit("Past Project")
       .setItemDate(1, 201010)
       .setItemDate(1, 201010)
       .validate();
-    projects.checkProjectList("Current Project", "Next Project");
+    projects.checkProjectList("Current Project", "Past Project");
 
     timeline.selectMonths(201101, 201105);
-    projects.checkProjectList("Current Project", "Next Project");
+    projects.checkProjectList("Past Project", "Current Project", "Next Project");
   }
 
   public void testCanCreateProjectsFromTheCategorizationView() throws Exception {
+
+    operations.hideSignposts();
+
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2010/01/10")
       .addTransaction("2010/11/01", 1000.00, "Income")

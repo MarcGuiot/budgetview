@@ -6,8 +6,8 @@ import org.uispec4j.Window;
 public class SummaryViewChecker extends ViewChecker {
   private Panel panel;
   private HistoDailyChecker mainChart;
-  private HistoChecker savingsBalanceChart;
-  private HistoChecker savingsChart;
+  private HistoChartChecker savingsBalanceChart;
+  private HistoChartChecker savingsChart;
 
   public SummaryViewChecker(Window mainWindow) {
     super(mainWindow);
@@ -21,18 +21,18 @@ public class SummaryViewChecker extends ViewChecker {
     return mainChart;
   }
 
-  public HistoChecker getSavingsBalanceChart() {
+  public HistoChartChecker getSavingsBalanceChart() {
     if  (savingsBalanceChart == null) {
       views.selectHome();
-      savingsBalanceChart = new HistoChecker(mainWindow, "summaryView", "savingsBalanceHistoChart");
+      savingsBalanceChart = new HistoChartChecker(mainWindow, "summaryView", "savingsBalanceHistoChart");
     }
     return savingsBalanceChart;
   }
 
-  public HistoChecker getSavingsChart() {
+  public HistoChartChecker getSavingsChart() {
     if  (savingsChart == null) {
       views.selectHome();
-      savingsChart = new HistoChecker(mainWindow, "summaryView", "savingsHistoChart");
+      savingsChart = new HistoChartChecker(mainWindow, "summaryView", "savingsHistoChart");
     }
     return savingsChart;
   }

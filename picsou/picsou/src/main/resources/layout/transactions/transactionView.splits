@@ -15,7 +15,7 @@
         </row>
 
         <verticalSplit>
-          <column>
+          <column weightY="10">
             <scrollPane borderPos="center" viewportBackground="transactions.bg"
                         border="line(transaction.border)" opaque="false"
                         marginTop="5" marginLeft="5">
@@ -46,7 +46,7 @@
 
             </grid>
           </column>
-          <panel ref="accountChart" preferredSize="(400,150)"/>
+          <panel ref="accountChart" weightY="3"/>
         </verticalSplit>
         
       </column>

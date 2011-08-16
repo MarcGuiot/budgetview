@@ -49,15 +49,6 @@
            fill="none" margin="3" weightX="0"/>
     <style selector="button#backView" ui="backArrow"/>
     <style selector="button#forwardView" ui="forwardArrow" marginRight="10"/>
-
-    <!-- Front page information messages -->
-    <style selector=".infoMessage" opaque="false"/>
-    <style selector=".infoMessageBorder" opaque="true"
-           border="line(notesView.introMessage.border)" background="guidingPanel.bg"/>
-    <style selector=".infoMessageBorder htmlEditorPane"
-           margin="1" border="empty(10)" opaque="true" background="guidingPanel.bg"
-           font="-,plain,12" fill="both"/>
-
   </styles>
 
   <panel styleClass="main" ui="wave">
@@ -66,7 +57,7 @@
       <horizontalBoxes weightY="0.1" name="mainWindowHeader">
         <row>
           <column weightX="0.001">
-            <row anchor="left" fill="horizontal" marginBottom="5">
+            <row weightY="1" anchor="left" fill="horizontal" marginBottom="2">
               <button name="backView" action="backView" styleClass="backforward" tooltipText="$back"/>
               <button name="forwardView" action="forwardView" styleClass="backforward" tooltipText="$forward"/>
               <label ref="title" opaque="false" font="Arial,bold,14" weightX="0"
@@ -74,11 +65,14 @@
                      shadowColor="#222222"/>
               <filler fill="horizontal"/>
             </row>
-            <repeat ref="viewToggles" layout="row" weightX="0" weightY="0.1" fill="horizontal">
-              <toggleButton ref="toggle" styleClass="masterViewSelector" marginBottom="2"/>
-            </repeat>
+            <row weightY="1" preferredSize="(230,26)">
+              <repeat ref="viewToggles" layout="row">
+                <toggleButton ref="toggle" styleClass="masterViewSelector" marginBottom="2"/>
+              </repeat>
+              <filler fill="horizontal"/>
+            </row>
           </column>
-          <row weightY="0.1" name="time" marginTop="0" marginLeft="40" marginRight="0">
+          <row weightX="100" weightY="0.1" name="time" marginTop="0" marginLeft="40" marginRight="0">
             <column>
               <filler fill="vertical"/>
               <button ref="prevPeriod" gridPos="(0,1)"
@@ -109,42 +103,13 @@
         <card name="home">
           <column>
             <horizontalSplit weightY="2">
-              <verticalSplit>
-
-                <panel ref="projectView" weightY="6"/>
-
-                <column weightY="4">
-                  <panel styleClass="block">
-                    <column styleClass="innerBlock" margin="5" marginTop="8">
-                      <tabs>
-                        <tab title="$messagesBlock.tabs.messages">
-                          <column>
-                            <panel autoHideSource="licenseMessage" styleClass="infoMessage"
-                                   border="empty(10,0,0,10)">
-                              <panel styleClass="infoMessageBorder">
-                                <htmlEditorPane ref="licenseMessage"/>
-                              </panel>
-                            </panel>
-                          </column>
-                        </tab>
-                        <tab title="$messagesBlock.tabs.notes">
-                          <panel ref="notesView" minimumSize="(200,100)" preferredSize="(200,100)"/>
-                        </tab>
-                      </tabs>
-                    </column>
-                  </panel>
-                </column>
-
-              </verticalSplit>
-
               <column weightX="6">
                 <label text="$summaryView.title" styleClass="blockTitle"/>
                 <column styleClass="block">
-                  <panel ref="navigationView" weightY="0"/>
                   <column styleClass="innerBlock"
                           opaque="true" background="block.inner.bg"
-                          border="line(block.inner.border)">
-                    <cards ref="signpostCard">
+                          border="line(block.inner.border)" marginTop="10" weightY="100">
+                    <cards ref="signpostCard" weightY="100">
                       <card name="signposts">
                         <panel ref="signpostView"/>
                       </card>
@@ -152,6 +117,9 @@
                         <panel ref="summaryView"/>
                       </card>
                     </cards>
+                    <column weightY="0.1">
+                      <panel ref="licenseInfo"/>
+                    </column>
                   </column>
                   <panel ref="feedbackView" weightY="0"/>
                 </column>

@@ -31,7 +31,6 @@ import javax.swing.*;
 import java.util.List;
 import java.util.Set;
 
-import static org.designup.picsou.gui.utils.Matchers.transactionsForMainAccounts;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class HistoChartBuilder {
@@ -110,7 +109,6 @@ public class HistoChartBuilder {
       "histo.uncategorized.line",
       "histo.uncategorized.fill.positive",
       "histo.uncategorized.fill.negative",
-      "histo.vertical.divider",
       directory
     );
 
@@ -119,7 +117,6 @@ public class HistoChartBuilder {
       "histo.account.line.negative",
       "histo.account.fill.positive",
       "histo.account.fill.negative",
-      "histo.vertical.divider",
       directory
     );
 
@@ -138,7 +135,6 @@ public class HistoChartBuilder {
       "histo.account.balance.line.negative",
       "histo.account.balance.fill.positive",
       "histo.account.balance.fill.negative",
-      "histo.vertical.divider",
       directory
     );
   }
@@ -160,7 +156,11 @@ public class HistoChartBuilder {
   }
 
   public void showMainDailyHisto(int selectedMonthId, boolean showFullMonthLabels) {
-    showAccountDailyHisto(selectedMonthId, showFullMonthLabels, transactionsForMainAccounts(repository), DaySelection.EMPTY);
+    showAccountDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForMainAccounts(repository), DaySelection.EMPTY);
+  }
+
+  public void showSavingsDailyHisto(int selectedMonthId, boolean showFullMonthLabels) {
+    showAccountDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForSavingsAccounts(repository), DaySelection.EMPTY);
   }
 
   public void showDailyHisto(int selectedMonthId, boolean showFullMonthLabels, Set<Integer> accountIds, DaySelection daySelection) {

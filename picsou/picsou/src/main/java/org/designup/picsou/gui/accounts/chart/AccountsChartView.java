@@ -19,15 +19,13 @@ public abstract class AccountsChartView extends View implements HistoChartRangeL
   protected String componentName;
   private AccountHistoChartUpdater updater;
 
-  public AccountsChartView(HistoChartRange range, GlobRepository repository, Directory directory, String componentName) {
-    this(repository, directory, componentName,
-         new HistoChartConfig(true, true, false, true, true, false),
-         range);
+  public AccountsChartView(HistoChartRange range, String componentName, GlobRepository repository, Directory directory) {
+    this(range, new HistoChartConfig(true, true, false, true, true, true, true, false),
+         componentName, repository, directory);
   }
 
-  public AccountsChartView(GlobRepository repository, Directory directory, String componentName,
-                           HistoChartConfig config,
-                           HistoChartRange range) {
+  public AccountsChartView(HistoChartRange range, HistoChartConfig config,
+                           String componentName, GlobRepository repository, Directory directory) {
     super(repository, directory);
     createChartBuilder(config, range, repository, directory);
     this.componentName = componentName;
@@ -42,7 +40,7 @@ public abstract class AccountsChartView extends View implements HistoChartRangeL
                                               repository, directory,
                                               directory.get(SelectionService.class));
     updater = new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
-      protected void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
+      protected void update(Integer currentMonthId, boolean resetPosition) {
         updateChart(histoChartBuilder, currentMonthId, true);
       }
     };
@@ -50,9 +48,6 @@ public abstract class AccountsChartView extends View implements HistoChartRangeL
     histoChartBuilder.addListener(new HistoChartListenerAdapter() {
       public void processDoubleClick(Integer columnIndex, Key objectKey) {
         AccountsChartView.this.processDoubleClick(navigationService);
-      }
-
-      public void scroll(int count) {
       }
     });
   }

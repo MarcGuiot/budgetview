@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components.dialogs;
 
-import org.designup.picsou.gui.components.CloseAction;
+import org.designup.picsou.gui.components.CloseDialogAction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.utils.directory.Directory;
@@ -38,7 +38,7 @@ public class MessageDialog {
     builder.add("message", new JEditorPane("text/html", Lang.get(contentKey, contentArgs)));
 
     dialog = PicsouDialog.create(owner, directory);
-    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(buttonKey, dialog));
+    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseDialogAction(buttonKey, dialog));
     dialog.pack();
   }
 

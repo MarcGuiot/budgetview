@@ -682,7 +682,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  private HistoChecker getChart() {
-    return new HistoChecker(dialog, "seriesAmountEditionPanel", "chart");
+  private HistoChartChecker getChart() {
+    return new HistoChartChecker(dialog, "seriesAmountEditionPanel", "chart");
   }
 }

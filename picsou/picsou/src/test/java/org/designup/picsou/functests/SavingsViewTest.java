@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import junit.framework.Assert;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
@@ -62,34 +63,33 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     summary.getSavingsChart()
       .checkColumnCount(13)
-      .checkLineColumn(0, "J", "2009", 200.00, true)
-      .checkLineColumn(1, "A", "2009", 400.00)
-      .checkLineColumn(2, "S", "2009", 600.00)
-      .checkLineColumn(3, "O", "2009", 800.00)
-      .checkLineColumn(6, "J", "2010", 1400.00);
-    summary.getSavingsChart().checkTooltip(1, "End of August 2009 position: 400.00");
+      .checkDailyColumn(0, "J", "2009", 200.00, true)
+      .checkDailyColumn(1, "A", "2009", 400.00)
+      .checkDailyColumn(2, "S", "2009", 600.00)
+      .checkDailyColumn(3, "O", "2009", 800.00)
+      .checkDailyColumn(6, "J", "2010", 1400.00);
 
     savingsAccounts.editPosition("ING").setAmount(300.00).validate();
 
     views.selectHome();
     summary.getSavingsChart()
       .checkColumnCount(13)
-      .checkLineColumn(0, "J", "2009", 300.00, true)
-      .checkLineColumn(1, "A", "2009", 500.00)
-      .checkLineColumn(2, "S", "2009", 700.00)
-      .checkLineColumn(3, "O", "2009", 900.00)
-      .checkLineColumn(6, "J", "2010", 1500.00);
+      .checkDailyColumn(0, "J", "2009", 300.00, true)
+      .checkDailyColumn(1, "A", "2009", 500.00)
+      .checkDailyColumn(2, "S", "2009", 700.00)
+      .checkDailyColumn(3, "O", "2009", 900.00)
+      .checkDailyColumn(6, "J", "2010", 1500.00);
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     views.selectHome();
     summary.getSavingsChart()
       .checkColumnCount(7)
-      .checkLineColumn(0, "J", "2009", 300.00, true)
-      .checkLineColumn(1, "A", "2009", 500.00)
-      .checkLineColumn(2, "S", "2009", 700.00)
-      .checkLineColumn(3, "O", "2009", 900.00)
-      .checkLineColumn(6, "J", "2010", 1500.00);
+      .checkDailyColumn(0, "J", "2009", 300.00, true)
+      .checkDailyColumn(1, "A", "2009", 500.00)
+      .checkDailyColumn(2, "S", "2009", 700.00)
+      .checkDailyColumn(3, "O", "2009", 900.00)
+      .checkDailyColumn(6, "J", "2010", 1500.00);
   }
 
   public void testWithBeginOfAccount() throws Exception {

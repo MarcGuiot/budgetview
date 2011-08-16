@@ -13,23 +13,19 @@ public class HistoLineColors  {
   private String negativeLineKey;
   private String positiveFillKey;
   private String negativeFillKey;
-  private String verticalDividerKey;
 
   private Color positiveLineColor;
   private Color negativeLineColor;
   private Color positiveFillColor;
   private Color negativeFillColor;
-  private Color verticalDividerColor;
 
   public HistoLineColors(String positiveLineKey, String negativeLineKey,
                          String positiveFillKey, String negativeFillKey,
-                         String verticalDividerKey,
                          Directory directory) {
     this.positiveLineKey = positiveLineKey;
     this.negativeLineKey = negativeLineKey;
     this.positiveFillKey = positiveFillKey;
     this.negativeFillKey = negativeFillKey;
-    this.verticalDividerKey = verticalDividerKey;
 
     directory.get(ColorService.class).addListener(new ColorUpdater());
   }
@@ -40,13 +36,7 @@ public class HistoLineColors  {
       negativeLineColor = colorLocator.get(negativeLineKey);
       positiveFillColor = colorLocator.get(positiveFillKey);
       negativeFillColor = colorLocator.get(negativeFillKey);
-      verticalDividerColor = colorLocator.get(verticalDividerKey);
     }
-  }
-
-  public void setVerticalDividerStyle(Graphics2D g2) {
-    g2.setComposite(AlphaComposite.Src);
-    g2.setColor(verticalDividerColor);
   }
 
   public void setLineStyle(Graphics2D g2, boolean positive, boolean future) {

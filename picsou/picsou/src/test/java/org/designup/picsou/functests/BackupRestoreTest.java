@@ -1,9 +1,9 @@
 package org.designup.picsou.functests;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.checkers.MessageFileDialogChecker;
 import org.designup.picsou.functests.checkers.PasswordDialogChecker;
-import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.checkers.utils.ConfirmationHandler;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
@@ -96,8 +96,8 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     WindowInterceptor
       .init(operations.getBackupTrigger())
       .process(FileChooserHandler.init()
-        .assertCurrentFileNameEquals("backup-2008-08-30.budgetview")
-        .select(filePath))
+                 .assertCurrentFileNameEquals("backup-2008-08-30.budgetview")
+                 .select(filePath))
       .process(ConfirmationHandler.cancel("Confirmation", "Do you want to overwrite this file?"))
       .run();
 
@@ -187,7 +187,6 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
       .initContent()
       .check();
   }
-
 
   public void testRestoreWithInvalidFileDoesNotCorruptCurrentData() throws Exception {
     OfxBuilder.init(this)
@@ -317,7 +316,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     changeUser("user", "password");
     operations.openPreferences().setFutureMonthsCount(2).validate();
     operations.hideSignposts();
-    
+
     OfxBuilder.init(this)
       .addTransaction("2008/05/01", 1000.00, "Salaire")
       .addTransaction("2008/05/01", -1000.00, "Loyer")

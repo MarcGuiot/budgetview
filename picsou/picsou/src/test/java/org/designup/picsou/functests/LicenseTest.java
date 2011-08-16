@@ -9,6 +9,8 @@ import org.uispec4j.assertion.UISpecAssert;
 
 public class LicenseTest extends LoggedInFunctionalTestCase {
 
+  private TextBox textBox;
+
   protected void setUp() throws Exception {
     resetWindow();
     setNotRegistered();
@@ -23,7 +25,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
   }
 
   public void testMessage() throws Exception {
-    TextBox box = mainWindow.getTextBox("licenseMessage");
+    TextBox box = getLicenseMessage();
     assertThat(box.isVisible());
     assertThat(box.textEquals("46 days left for trying BudgetView."));
 
@@ -35,7 +37,7 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
     TimeService.setCurrentDate(Dates.parse("2008/10/15"));
 
     restartApplication();
-    TextBox box = mainWindow.getTextBox("licenseMessage");
+    TextBox box = getLicenseMessage();
     assertThat(box.isVisible());
     assertThat(box.textEquals("You have one day left for trying BudgetView."));
   }
@@ -44,16 +46,24 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
     TimeService.setCurrentDate(Dates.parse("2008/10/16"));
 
     restartApplication();
-    TextBox box = mainWindow.getTextBox("licenseMessage");
+    TextBox box = getLicenseMessage();
     assertThat(box.isVisible());
     assertThat(box.textEquals("This is your last day for trying BudgetView."));
+  }
+
+  private TextBox getLicenseMessage() {
+    if (textBox == null) {
+      views.selectHome();
+      textBox = mainWindow.getTextBox("licenseInfoMessage");
+    }
+    return textBox;
   }
 
   public void testTrialOver() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2008/10/18"));
 
     restartApplication();
-    TextBox box = mainWindow.getTextBox("licenseMessage");
+    TextBox box = getLicenseMessage();
     assertThat(box.isVisible());
     assertThat(box.textContains("Your free trial period is over."));
   }

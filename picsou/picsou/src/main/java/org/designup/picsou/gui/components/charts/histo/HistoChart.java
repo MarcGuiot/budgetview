@@ -46,6 +46,11 @@ public class HistoChart extends JPanel {
     selectionManager.addListener(listener);
   }
 
+  // For testing
+  public HistoSelectionManager getSelectionManager() {
+    return selectionManager;
+  }
+
   public void setSnapToScale(boolean value) {
     this.snapToScale = value;
   }
@@ -101,9 +106,8 @@ public class HistoChart extends JPanel {
                                       getFontMetrics(getFont()),
                                       dataset.size(),
                                       dataset.getMaxNegativeValue(), dataset.getMaxPositiveValue(),
-                                      config.drawLabels,
-                                      config.drawSections && dataset.containsSections(),
-                                      config.drawInnerLabels,
+                                      config,
+                                      dataset.containsSections(),
                                       snapToScale);
     }
 
@@ -136,6 +140,7 @@ public class HistoChart extends JPanel {
 
       int columnHeight = metrics.columnHeight();
       int left = metrics.left(i);
+      int right = metrics.right(i);
 
       if (dataset.isSelected(i)) {
         g2.setColor(colors.getSelectedColumnColor());
@@ -149,6 +154,11 @@ public class HistoChart extends JPanel {
         g2.fillRect(left, metrics.columnTop(), metrics.columnWidth(), columnHeight);
         g2.setColor(getBackground());
         g2.fillRect(left, metrics.labelTop(), metrics.columnWidth(), metrics.labelZoneHeightWithMargin());
+      }
+
+      if (config.drawColumnDividers) {
+        colors.setColumnDividerStyle(g2);
+        g2.drawLine(right, metrics.columnTop(), right, metrics.columnTop() + columnHeight);
       }
 
       if (config.drawLabels) {

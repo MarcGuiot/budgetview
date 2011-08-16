@@ -12,7 +12,7 @@
     <style selector="#header label" anchor="center"/>
 
     <style selector="button.toggleToMain" ui="hyperlinkButtonWithoutUnderline"
-           fill="none" anchor="left" weightX="0.01"
+           fill="none" anchor="left" weightX="0.01" font="-,plain,12"
            icon="arrow_left_grey.png" rolloverIcon="arrow_left_blue.png"/>
   </styles>
 
@@ -55,7 +55,7 @@
                     <filler fill="vertical"/>
                   </column>
                   <component ref="savingsAccountChart" marginTop="15" marginBottom="15"
-                             marginLeft="20" preferredSize="(150,70)" weightX="1.0"/>
+                             marginLeft="20" preferredSize="(150,70)" weightX="1.0" background="block.inner.bg"/>
                 </repeat>
                 <filler fill="vertical"/>
               </column>

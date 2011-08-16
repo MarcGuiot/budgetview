@@ -1,47 +1,62 @@
-<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd" xmlns="">
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector="label.graphTitle" marginLeft="10" font="-,bold,14"
-           foreground="summary.graph.title" anchor="bottom"/>
-    <style selector="label.graphSubTitle" marginLeft="10" font="-,plain,12"
-           foreground="summary.graph.subtitle" anchor="bottom"/>
 
     <style selector="component.chart" margin="15" marginTop="5" marginLeft="25" opaque="true"
-           background="block.inner.bg"/>
+           background="block.inner.bg.secondary"/>
 
-    <style selector="button.help" ui="hyperlinkButtonWithoutUnderline"
-           foreground="summary.graph.subtitle" font="-,plain,11" marginRight="10"
-           anchor="center" icon="help_link_grey.png" rolloverIcon="help_link_blue.png"/>
+    <style selector=".titleBlock" weightX="0.01" marginLeft="10"/>
+
+    <style selector=".titleBlock label.graphTitle" font="-,bold,15"
+           foreground="summary.graph.title" anchor="left" marginTop="10"/>
+    <style selector=".titleBlock label.graphSubTitle" font="-,plain,11"
+           foreground="summary.graph.subtitle" anchor="left" marginTop="2"/>
+    <style selector=".titleBlock button" ui="hyperlinkButtonWithoutUnderline"
+           foreground="block.item.link" font="-,plain,12" marginTop="15"
+           icon="arrow_right_blue.png" rolloverIcon="arrow_right_blue_rollover.png" fill="none" anchor="left"/>
+
+    <style selector=".separator"
+           border="matte(1,0,0,0,summaryView.separator)" weightY="0.01"
+           marginLeft="15" marginRight="15"/>
+
+    <style selector=".hints" weightY="0.01" preferredSize="(150,90)" font="-,plain,11" border="empty(10,0,0,0)"/>
   </styles>
 
-  <column>
+  <grid opaque="true" background="block.inner.bg.secondary">
 
-    <row weightY="0" marginTop="15">
+    <column gridPos="(0,0)" styleClass="titleBlock" weightY="10">
+      <label text="$summaryView.projects.title" styleClass="graphTitle" marginTop="15"/>
+      <htmlEditorPane ref="projectHint" styleClass="hints"/>
+      <button action="createProject" styleClass="create" tooltipText="$projectView.create.tooltip"/>
+      <filler fill="vertical"/>
+    </column>
+
+    <component gridPos="(1,0)" ref="projectChart" styleClass="chart" weightX="15" weightY="10"/>
+
+    <panel gridPos="(0,1,2,1)" styleClass="separator"/>
+
+    <column gridPos="(0,2)" styleClass="titleBlock" weightY="12">
       <label text="$summaryView.mainAccounts.title" styleClass="graphTitle"/>
       <label text="$summaryView.mainAccounts.subtitle" styleClass="graphSubTitle"/>
-      <filler fill="horizontal"/>
-      <button action="openTuningHelp" styleClass="help"/>
-    </row>
+      <button action="openTuningHelp" styleClass="hyperlink"/>
+      <filler fill="vertical"/>
+    </column>
 
-    <component ref="mainAccountsHistoChart" styleClass="chart" weightY="15"/>
+    <component gridPos="(1,2)" ref="mainAccountsHistoChart" styleClass="chart" weightX="15" weightY="12"/>
 
-    <row weightY="0" marginTop="15">
-      <label text="$summaryView.savingsAccountsBalance.title" styleClass="graphTitle"/>
-      <label text="$summaryView.savingsAccountsBalance.subtitle" styleClass="graphSubTitle"/>
-      <filler fill="horizontal"/>
-    </row>
+    <panel gridPos="(0,3,2,1)" styleClass="separator"/>
 
-    <component ref="savingsBalanceHistoChart" styleClass="chart" weightY="10"/>
-
-    <row weightY="0" marginTop="15">
+    <column gridPos="(0,4)" styleClass="titleBlock" weightY="16">
       <label text="$summaryView.savingsAccounts.title" styleClass="graphTitle"/>
       <label text="$summaryView.savingsAccounts.subtitle" styleClass="graphSubTitle"/>
-      <filler fill="horizontal"/>
-    </row>
+      <filler fill="vertical"/>
+    </column>
 
-    <component ref="savingsHistoChart" styleClass="chart" weightY="10"/>
-
-  </column>
+    <column gridPos="(1,4)" weightX="15" weightY="16">
+      <component ref="savingsHistoChart" styleClass="chart" weightY="3"/>
+      <component ref="savingsBalanceHistoChart" styleClass="chart" weightY="2"/>
+    </column>
+  </grid>
 
 </splits>

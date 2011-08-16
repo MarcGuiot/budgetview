@@ -21,6 +21,10 @@ public class Matchers {
     return transactionsForAccounts(Collections.singleton(Account.MAIN_SUMMARY_ACCOUNT_ID), repository);
   }
 
+  public static GlobMatcher transactionsForSavingsAccounts(GlobRepository repository) {
+    return transactionsForAccounts(Collections.singleton(Account.SAVINGS_SUMMARY_ACCOUNT_ID), repository);
+  }
+
   public static GlobMatcher transactionsForAccounts(Set<Integer> accountIds, GlobRepository repository) {
     accountIds = new HashSet<Integer>(accountIds);
     if (accountIds.contains(Account.ALL_SUMMARY_ACCOUNT_ID)) {

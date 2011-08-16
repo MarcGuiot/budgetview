@@ -125,12 +125,12 @@ public class SavingsView extends View implements GlobSelectionListener {
       cellBuilder.add("savingsSeries", seriesView.getPanel());
       cellBuilder.addDisposeListener(seriesView);
 
-      HistoChartBuilder histoChartBuilder =
-        new HistoChartBuilder(new HistoChartConfig(false, false, false, true, false, false),
+      final HistoChartBuilder histoChartBuilder =
+        new HistoChartBuilder(new HistoChartConfig(false, false, false, true, true, true, false, false),
                               new ScrollableHistoChartRange(2, 6, false, repository),
                               repository, directory, selectionService);
       AccountHistoChartUpdater updater = new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
-        protected void update(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
+        protected void update(Integer currentMonthId, boolean resetPosition) {
           if (account.exists()) {
             histoChartBuilder.showDailyHisto(currentMonthId, false,
                                              Collections.singleton(account.get(Account.ID)),

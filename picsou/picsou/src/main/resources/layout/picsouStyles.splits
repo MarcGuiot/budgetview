@@ -150,7 +150,7 @@
            shadowDirection="northwest" shadowColor="#222222"/>
     <style selector="label.totalAmountTitle" foreground="block.total.title" font="-,plain,10"
            fill="none" anchor="bottom" weightY="0"/>
-    <style selector=".totalAmount" foreground="block.total" font="-,bold,20"
+    <style selector=".totalAmount" foreground="block.total" font="-,bold,14"
            fill="none" anchor="top" weightY="1"/>
 
     <style selector=".innerBlockBackground"

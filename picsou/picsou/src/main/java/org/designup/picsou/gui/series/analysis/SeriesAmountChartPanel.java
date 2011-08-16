@@ -20,8 +20,8 @@ public class SeriesAmountChartPanel {
 
   public SeriesAmountChartPanel(GlobRepository repository, Directory directory) {
 
-    HistoChartBuilder histoChartBuilder =
-      new HistoChartBuilder(new HistoChartConfig(true, true, false, true, true, false),
+    final HistoChartBuilder histoChartBuilder =
+      new HistoChartBuilder(new HistoChartConfig(true, true, false, true, true, true, true, false),
                             new ScrollableHistoChartRange(4, 12, true, repository),
                             repository, directory, directory.get(SelectionService.class));
     histoChartBuilder.addListener(new HistoChartListenerAdapter() {
@@ -30,10 +30,10 @@ public class SeriesAmountChartPanel {
       }
     });
     histoChartBuilder.setSnapToScale(true);
-    updater = new HistoChartUpdater(histoChartBuilder, repository, directory,
+    updater = new HistoChartUpdater(repository, directory,
                                     SeriesBudget.TYPE, SeriesBudget.MONTH,
                                     SeriesBudget.TYPE) {
-      protected void update(HistoChartBuilder histoChartBuilder, Integer monthId, boolean resetPosition) {
+      protected void update(Integer monthId, boolean resetPosition) {
         if (currentSeriesId != null) {
           histoChartBuilder.showSeriesBudget(currentSeriesId,
                                              SeriesAmountChartPanel.this.selectedMonthId,

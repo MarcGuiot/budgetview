@@ -21,7 +21,6 @@
                   </row>
                 </column>
               </repeat>
-              <htmlEditorPane ref="projectHint" styleClass="hints"/>
               <filler fill="vertical"/>
             </column>
           </scrollPane>

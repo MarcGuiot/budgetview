@@ -21,7 +21,7 @@ import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class SeriesAnalysisChecker extends ExpandableTableChecker {
 
-  public HistoChecker histoChart;
+  public HistoChartChecker histoChart;
   public StackChecker balanceChart;
   public StackChecker seriesChart;
 
@@ -33,7 +33,7 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
 
   public SeriesAnalysisChecker(Window mainWindow) {
     super(mainWindow);
-    this.histoChart = new HistoChecker(mainWindow, "seriesAnalysisView", "histoChart");
+    this.histoChart = new HistoChartChecker(mainWindow, "seriesAnalysisView", "histoChart");
     this.balanceChart = new StackChecker(mainWindow, PANEL_NAME, "balanceChart");
     this.seriesChart = new StackChecker(mainWindow, PANEL_NAME, "seriesChart");
   }

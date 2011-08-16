@@ -26,33 +26,33 @@ public class HistoButtonDatasetTest extends TestCase {
   }
 
   public void testOneRow() throws Exception {
-    dataset.addButton(201103, 201106, "1", key1);
-    dataset.addButton(201109, 201110, "2", key2);
+    dataset.addButton(201103, 201106, "1", key1, "");
+    dataset.addButton(201109, 201110, "2", key2, "");
 
     checkBlocks(" ----1111--22---- ");
   }
 
   public void testOneRowWithContiguousBlocks() throws Exception {
-    dataset.addButton(201011, 201106, "1", key1);
-    dataset.addButton(201107, 201110, "2", key2);
-    dataset.addButton(201111, 201202, "3", key2);
+    dataset.addButton(201011, 201106, "1", key1, "");
+    dataset.addButton(201107, 201110, "2", key2, "");
+    dataset.addButton(201111, 201202, "3", key2, "");
 
     checkBlocks(" 1111111122223333 ");
   }
 
   public void testTwoRows() throws Exception {
-    dataset.addButton(201103, 201109, "1", key1);
-    dataset.addButton(201109, 201110, "2", key2);
-    dataset.addButton(201101, 201105, "3", key3);
+    dataset.addButton(201103, 201109, "1", key1, "");
+    dataset.addButton(201109, 201110, "2", key2, "");
+    dataset.addButton(201101, 201105, "3", key3, "");
 
     checkBlocks(" --33333---22---- \n" +
                 " ----1111111----- ");
   }
 
   public void testTruncatedOnBothSides() throws Exception {
-    dataset.addButton(201006, 201206, "1", key1);
-    dataset.addButton(201103, 201109, "2", key2);
-    dataset.addButton(201105, 201107, "3", key3);
+    dataset.addButton(201006, 201206, "1", key1, "");
+    dataset.addButton(201103, 201109, "2", key2, "");
+    dataset.addButton(201105, 201107, "3", key3, "");
 
     checkBlocks("x1111111111111111x\n" +
                 " ----2222222----- \n" +
@@ -60,9 +60,9 @@ public class HistoButtonDatasetTest extends TestCase {
   }
 
   public void testTruncatedOnEnd() throws Exception {
-    dataset.addButton(201106, 201206, "1", key1);
-    dataset.addButton(201103, 201109, "2", key2);
-    dataset.addButton(201105, 201107, "3", key3);
+    dataset.addButton(201106, 201206, "1", key1, "");
+    dataset.addButton(201103, 201109, "2", key2, "");
+    dataset.addButton(201105, 201107, "3", key3, "");
 
     checkBlocks(" ----2222222----- \n" +
                 " ------333------- \n" +
@@ -70,12 +70,20 @@ public class HistoButtonDatasetTest extends TestCase {
   }
 
   public void testOverlappingBorders() throws Exception {
-    dataset.addButton(201011, 201104, "1", key1);
-    dataset.addButton(201104, 201110, "2", key2);
-    dataset.addButton(201110, 201202, "3", key2);
+    dataset.addButton(201011, 201104, "1", key1, "");
+    dataset.addButton(201104, 201110, "2", key2, "");
+    dataset.addButton(201110, 201202, "3", key3, "");
 
     checkBlocks(" 111111-----33333 \n" +
                 " -----2222222---- ");
+  }
+
+  public void testBlocksHiddenBeforeAndAfter() throws Exception {
+    dataset.addButton(201008, 201010, "1", key1, "");
+    dataset.addButton(201203, 201205, "2", key2, "");
+    dataset.addButton(201104, 201110, "3", key3, "");
+
+    checkBlocks(" -----3333333---- ");
   }
 
   private void checkBlocks(String expected) {

@@ -78,9 +78,9 @@
 
           <column styleClass="innerBlock">
 
-            <panel ref="transactionDetails" weightY="0.1" minimumSize="(200,140)"/>
+            <panel ref="transactionDetails" weightY="0.1" minimumSize="(200,120)"/>
 
-            <cards ref="budgetAreaCard">
+            <cards ref="budgetAreaCard" weightY="100">
 
               <card name="noSelection">
                 <panel styleClass="innerBlockBackground">

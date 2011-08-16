@@ -2,7 +2,7 @@ package org.designup.picsou.gui.about;
 
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.browsing.BrowsingService;
-import org.designup.picsou.gui.components.CloseAction;
+import org.designup.picsou.gui.components.CloseDialogAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.utils.Gui;
@@ -13,8 +13,6 @@ import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import java.io.InputStream;
 
 public class AboutDialog {
@@ -52,7 +50,7 @@ public class AboutDialog {
     builder.add("licensesArea", createLicensesArea());
 
     dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
-    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(dialog));
+    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseDialogAction(dialog));
     dialog.pack();
   }
 

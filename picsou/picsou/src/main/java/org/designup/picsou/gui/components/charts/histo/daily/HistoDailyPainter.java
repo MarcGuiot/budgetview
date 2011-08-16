@@ -16,9 +16,9 @@ public class HistoDailyPainter implements HistoPainter {
   private HistoDailyColors colors;
   private HorizontalBlocksClickMap clickMap = new HorizontalBlocksClickMap();
 
-  public static final BasicStroke DEFAULT_LINE_STROKE = new BasicStroke(1);
+  public static final BasicStroke DEFAULT_LINE_STROKE = new BasicStroke(1.2f);
   public static final BasicStroke FUTURE_LINE_STROKE =
-    new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{2, 3}, 0);
+    new BasicStroke(1.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{2, 3}, 0);
 
   public HistoDailyPainter(HistoDailyDataset dataset, HistoDailyColors colors) {
     this.dataset = dataset;
@@ -62,9 +62,6 @@ public class HistoDailyPainter implements HistoPainter {
       int width = right - left;
       int previousX = left;
       int y0 = metrics.y(0);
-
-      colors.line.setVerticalDividerStyle(g2);
-      g2.drawLine(right, metrics.columnTop(), right, metrics.columnTop() + metrics.columnHeight());
 
       for (int dayIndex = 0; dayIndex < values.length; dayIndex++) {
         Double value = values[dayIndex];

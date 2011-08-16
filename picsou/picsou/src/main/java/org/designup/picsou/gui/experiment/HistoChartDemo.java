@@ -46,7 +46,7 @@ public class HistoChartDemo {
       directory
     );
 
-    HistoChart chart = new HistoChart(new HistoChartConfig(true, true, false, true, true, false), directory);
+    HistoChart chart = new HistoChart(new HistoChartConfig(true, true, false, true, true, true, true, false), directory);
 
     chart.addListener(new HistoChartListenerAdapter() {
       public void processClick(HistoSelection monthIds, Key objectKey) {

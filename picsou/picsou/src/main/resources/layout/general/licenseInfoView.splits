@@ -1,0 +1,22 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <styles>
+    <style selector=".licenseInfoPanel" opaque="true" background="licenseInfo.bg"/>
+    <style selector=".licenseInfoBorder" opaque="true"
+           border="matte(1,0,0,0,licenseInfo.border)" background="licenseInfo.bg"/>
+    <style selector=".licenseInfoBorder htmlEditorPane"
+           margin="1" border="empty(5)" opaque="true" background="licenseInfo.bg"
+           font="-,bold,12" fill="both"/>
+  </styles>
+
+  <panel autoHideSource="licenseInfoMessage" styleClass="licenseInfoPanel"
+         border="empty(10,0,0,10)">
+    <row styleClass="licenseInfoBorder">
+      <htmlEditorPane ref="licenseInfoMessage"/>
+      <button action="hide" anchor="center" fill="none" opaque="false" weightX="0.01"/>
+    </row>
+  </panel>
+
+</splits>

@@ -1,5 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.gui.components.charts.histo.button.HistoButtonDataset;
+import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
@@ -14,6 +17,7 @@ import static org.uispec4j.assertion.UISpecAssert.*;
 public class ProjectViewChecker extends ViewChecker {
 
   private Panel panel;
+  private HistoButtonChartChecker chart;
 
   public ProjectViewChecker(Window mainWindow) {
     super(mainWindow);
@@ -24,36 +28,22 @@ public class ProjectViewChecker extends ViewChecker {
   }
 
   public ProjectEditionChecker edit(String projectName) {
-    return ProjectEditionChecker.open(getPanel().getButton(projectName));
+    return ProjectEditionChecker.open(getChart().triggerClick(projectName));
   }
 
   public ProjectViewChecker checkNoProjectShown() {
-    List<String> actualNames = getActualNames();
-    if (!actualNames.isEmpty()) {
-      UISpecAssert.fail("Unexpected projects shown: " + actualNames);
-    }
+    getChart().checkNoElementShown();
     return this;
   }
 
   public ProjectViewChecker checkProjectList(String... projectNames) {
-    List<String> actualNames = getActualNames();
-    org.globsframework.utils.TestUtils.assertEquals(Arrays.asList(projectNames), actualNames);
+    getChart().checkElementNames(projectNames);
     return this;
   }
 
-  private List<String> getActualNames() {
-    UIComponent[] nameButtons = getPanel().getUIComponents(Button.class, "projectName");
-    List<String> actualNames = new ArrayList<String>();
-    for (UIComponent nameButton : nameButtons) {
-      actualNames.add(nameButton.getLabel());
-    }
-    return actualNames;
-  }
-
-  public ProjectViewChecker checkProject(String projectName, String period, double amount) {
-    Panel projectPanel = getPanel(projectName);
-    assertThat(projectPanel.getTextBox("projectPeriod").textEquals(period));
-    assertThat(projectPanel.getTextBox("projectAmount").textEquals(toString(amount)));
+  public ProjectViewChecker checkProject(String projectName, int start, int end, double amount) {
+    getChart().checkElementPeriod(projectName, start, end);
+    getChart().checkElementTooltipContains(projectName, "Planned: " + toString(amount));
     return this;
   }
 
@@ -65,22 +55,24 @@ public class ProjectViewChecker extends ViewChecker {
     checkComponentVisible(getPanel(), JEditorPane.class, "projectHint", false);
   }
 
-  private Panel getPanel(String projectName) {
-    UIComponent[] nameButtons = getPanel().getUIComponents(Button.class, "projectName");
-    for (UIComponent nameButton : nameButtons) {
-      if (nameButton.getLabel().equals(projectName)) {
-        return nameButton.getContainer("projectRow");
-      }
+  private HistoButtonChartChecker getChart() {
+    if (chart == null) {
+      init();
     }
-    fail("Project '" + projectName + "' not found - actual names: " + getActualNames());
-    return null;
+    return chart;
   }
 
   private Panel getPanel() {
     if (panel == null) {
-      views.selectHome();
-      panel = mainWindow.getPanel("projectView");
+      init();
     }
     return panel;
+  }
+
+  private void init() {
+    views.selectHome();
+    panel = mainWindow.getPanel("home");
+    chart = new HistoButtonChartChecker(mainWindow, "home", "projectChart");
+    chart.init();
   }
 }

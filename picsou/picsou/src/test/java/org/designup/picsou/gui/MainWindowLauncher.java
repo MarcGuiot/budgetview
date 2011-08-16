@@ -85,7 +85,7 @@ import net.roydesign.mac.MRJAdapter;
     })
       .show();
 
-    GuiUtils.setSizeWithinScreen(frame, 1100, 800);
+    GuiUtils.setSizeWithinScreen(frame, 1024, 700);
     GuiUtils.showCentered(frame);
 
     return directory;

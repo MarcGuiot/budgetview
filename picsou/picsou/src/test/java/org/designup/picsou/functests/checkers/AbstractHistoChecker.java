@@ -19,7 +19,7 @@ public abstract class AbstractHistoChecker<T extends AbstractHistoChecker> exten
     HistoChart chart = getChart();
     HistoDataset dataset = chart.getCurrentDataset();
     if (!datasetClass.isAssignableFrom(dataset.getClass())) {
-      throw new AssertionFailedError("Unexpected dataset type: " + datasetClass.getSimpleName());
+      throw new AssertionFailedError("Unexpected dataset type: " + dataset.getClass().getSimpleName());
     }
     return (T)dataset;
   }

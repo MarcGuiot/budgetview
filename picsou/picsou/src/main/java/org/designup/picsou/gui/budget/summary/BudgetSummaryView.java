@@ -76,9 +76,10 @@ public class BudgetSummaryView
     uncategorizedButton.addActionListener(new GotoUncategorizedAction());
 
     MainDailyPositionsChartView chartView =
-      new MainDailyPositionsChartView(repository, directory, "chart",
-                                      new HistoChartConfig(true, false, true, true, false, true),
-                                      new ScrollableHistoChartRange(0, 1, true, repository));
+      new MainDailyPositionsChartView(new ScrollableHistoChartRange(0, 1, true, repository),
+                                      new HistoChartConfig(true, false, true, true, true, true, false, true),
+                                      "chart", repository, directory);
+    chartView.installHighlighting();
     chartView.setShowFullMonthLabels(true);
     chartView.registerComponents(builder);
 

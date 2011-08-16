@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.help;
 
-import org.designup.picsou.gui.components.CloseAction;
+import org.designup.picsou.gui.components.CloseDialogAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -132,7 +132,7 @@ public class HelpDialog {
     forwardPageAction.setEnabled(!forwardPages.isEmpty());
   }
 
-  private class CloseHelpAction extends CloseAction {
+  private class CloseHelpAction extends CloseDialogAction {
     public CloseHelpAction(JDialog dialog) {
       super(dialog);
     }

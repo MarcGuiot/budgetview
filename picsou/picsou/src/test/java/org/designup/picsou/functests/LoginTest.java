@@ -293,9 +293,9 @@ public class LoginTest extends StartUpFunctionalTestCase {
   public void testLoginInDemoMode() throws Exception {
     login.clickDemoLink();
     checkDemoMode();
-    LicenseMessageChecker licenseMessage = getLicenseMessageView();
-    licenseMessage.checkMessage("demo account");
-    licenseMessage.clickLink("logout");
+    LicenseInfoChecker licenseInfo = getLicenseMessageView();
+    licenseInfo.checkMessage("demo account");
+    licenseInfo.clickLink("logout");
     login.checkComponentsVisible();
   }
 
@@ -335,8 +335,8 @@ public class LoginTest extends StartUpFunctionalTestCase {
   public void testLicenseInfoInDemoMode() throws Exception {
     login.clickDemoLink();
 
-    LicenseMessageChecker messageChecker = new LicenseMessageChecker(window);
-    messageChecker.checkMessage("demo account");
+    LicenseInfoChecker licenseInfo = new LicenseInfoChecker(window);
+    licenseInfo.checkMessage("demo account");
   }
 
   public void testAutoLogin() throws Exception {
@@ -448,10 +448,10 @@ public class LoginTest extends StartUpFunctionalTestCase {
     return new CategorizationChecker(window);
   }
 
-  private LicenseMessageChecker getLicenseMessageView() {
+  private LicenseInfoChecker getLicenseMessageView() {
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectHome();
-    return new LicenseMessageChecker(window);
+    return new LicenseInfoChecker(window);
   }
 
   private void checkBankOnImport(final String path) {

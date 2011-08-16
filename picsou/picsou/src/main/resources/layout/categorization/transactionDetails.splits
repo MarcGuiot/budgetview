@@ -65,7 +65,7 @@
 
           <filler fill="vertical" weightY="1.0"/>
 
-          <row border="empty(5,0,0,0)">
+          <row border="empty(2,0,0,0)">
             <label text="$categorization.series.title" styleClass="header"/>
             <filler fill="horizontal"/>
             <button name="shift" action="shift" autoHideIfDisabled="true"

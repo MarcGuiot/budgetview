@@ -5,15 +5,15 @@ import org.designup.picsou.utils.Lang;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class CloseAction extends AbstractAction {
+public class CloseDialogAction extends AbstractAction {
   private JDialog dialog;
 
-  public CloseAction(String key, JDialog dialog) {
+  public CloseDialogAction(String key, JDialog dialog) {
     super(Lang.get(key));
     this.dialog = dialog;
   }
 
-  public CloseAction(JDialog dialog) {
+  public CloseDialogAction(JDialog dialog) {
     this("close", dialog);
   }
 
