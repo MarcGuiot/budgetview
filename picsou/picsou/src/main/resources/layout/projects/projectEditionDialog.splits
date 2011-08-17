@@ -11,14 +11,15 @@
            marginLeft="8" marginRight="8"/>
     <style selector="component#amountEditor" marginRight="8"/>
 
-    <style selector="label.totalAmount" font="-,bold,14" foreground="#222" marginRight="5"/>
+    <style selector="label.totalAmount" font="-,bold,14" foreground="#222" marginRight="5"
+           anchor="center" fill="none"/>
 
     <style selector="button.addItem"
            ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"
            fill="none" anchor="west" marginLeft="10"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(550,500)">
+  <panel styleClass="dialog" preferredSize="(550,600)">
     <column styleClass="innerDialog">
 
       <label ref="title" styleClass="title"/>
@@ -28,7 +29,8 @@
         <textField ref="projectName"/>
       </row>
 
-      <htmlEditorPane text="$projectEdition.items.description" marginTop="10" weightY="0.1"/>
+      <htmlEditorPane text="$projectEdition.series.message" marginTop="5" weightY="0.1"/>
+      <htmlEditorPane text="$projectEdition.items.description" marginTop="5" weightY="0.1"/>
 
       <column styleClass="blockScrollBorder" weightY="100.0">
         <scrollPane>
@@ -44,20 +46,23 @@
               <component ref="amountEditor"/>
               <button action="deleteItem" styleClass="icon" icon="button_delete.png"/>
             </repeat>
-            <button action="addItem" styleClass="addItem" tooltipText="$projectEdition.addItem.tooltip"/>
             <filler fill="vertical"/>
           </column>
         </scrollPane>
 
         <row styleClass="footer">
           <filler fill="horizontal"/>
-          <label text="$projectEdition.totalAmount" styleClass="formLabel"/>
-          <label ref="totalAmount" styleClass="totalAmount"/>
+          <button action="addItem" styleClass="addItem" tooltipText="$projectEdition.addItem.tooltip"/>
         </row>
       </column>
 
-      <htmlEditorPane text="$projectEdition.series.message"
-                      marginTop="15" marginBottom="15" weightY="0.1"/>
+      <row marginTop="10" marginBottom="10">
+        <label text="$projectEdition.total.actual" styleClass="formLabel"/>
+        <label ref="totalActual" styleClass="totalAmount"/>
+        <component ref="gauge" styleClass="totalGauge"/>
+        <label ref="totalPlanned" styleClass="totalAmount"/>
+        <label text="$projectEdition.total.planned" styleClass="formLabelRight"/>
+      </row>
 
     </column>
   </panel>

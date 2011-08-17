@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import junit.framework.Assert;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.budget.summary.BudgetSummaryView;
 
 public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
@@ -16,7 +17,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2010/12/01")
-      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2011/01/01", 1000.00, "Income")
+      .addTransaction("2011/01/01", -100.00, "Resa Travel Plus")
       .load();
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
@@ -26,12 +28,12 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     projects.create()
       .checkTitle("Create a project")
-      .checkTotalAmount(0.00)
+      .checkGauge(0.00, 0.00)
       .setName("My project")
       .setItemName(0, "Reservation")
       .setItemDate(0, 201101)
       .setItemAmount(0, -200.00)
-      .checkTotalAmount(200.00)
+      .checkGauge(0.00, -200.00)
       .validate();
 
     projects.checkHintMessageHidden();
@@ -41,52 +43,51 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2011/01");
     budgetView.extras.checkSeries("My project", 0, -200.00);
-    budgetView.getSummary().checkEndPosition(800.00);
+    budgetView.getSummary().checkEndPosition(1700.00);
 
     projects.edit("My project")
       .addItem(1, "Travel", 201102, -100.00)
-      .checkTotalAmount(300.00)
+      .checkGauge(0.00, -300.00)
       .addItem(2, "Hotel", 201102, -500.00)
       .checkItems("Reservation | January 2011 | -200.00\n" +
                   "Travel | February 2011 | -100.00\n" +
                   "Hotel | February 2011 | -500.00")
-      .checkTotalAmount(800.00)
+      .checkGauge(0.00, -800.00)
       .validate();
 
     projects.checkProjectList("My project");
     projects.checkProject("My project", 201101, 201102, 800.00);
     budgetView.extras.checkSeries("My project", 0, -200.00);
-    budgetView.getSummary().checkEndPosition(800.00);
+    budgetView.getSummary().checkEndPosition(1700.00);
 
     timeline.selectMonth("2011/02");
     budgetView.extras.checkSeries("My project", 0, -600.00);
-    budgetView.getSummary().checkEndPosition(200.00);
+    budgetView.getSummary().checkEndPosition(1100.00);
 
     projects.edit("My project")
       .checkItems("Reservation | January 2011 | -200.00\n" +
                   "Travel | February 2011 | -100.00\n" +
                   "Hotel | February 2011 | -500.00")
       .deleteItem(1)
-      .checkTotalAmount(700.00)
+      .checkGauge(0.00, -700.00)
       .validate();
+
+    categorization.setExtra("Resa Travel Plus", "My project");
 
     timeline.selectMonth("2011/02");
     projects.checkProject("My project", 201101, 201102, 700.00);
     budgetView.extras.checkSeries("My project", 0, -500.00);
-    budgetView.getSummary().checkEndPosition(300.00);
-
-    
-    Assert.fail("[Regis] En cours - je ne comprends pas pourquoi ca ne marche plus");
-
+    budgetView.getSummary().checkEndPosition(1300.00);
 
     projects.edit("My project")
       .checkItems("Reservation | January 2011 | -200.00\n" +
                   "Hotel | February 2011 | -500.00")
-      .deleteLastValueChars(1, 4)
-      .checkTotalAmount(250.00)
+      .setItemAmount(1, -50.00)
       .checkItems("Reservation | January 2011 | -200.00\n" +
-                  "Hotel | February 2011 | -50")
+                  "Hotel | February 2011 | -50.00")
       .deleteItem(1)
+      .checkItems("Reservation | January 2011 | -200.00")
+      .checkGauge(-100.00, -200.00)
       .validate();
 
     timeline.selectMonth("2011/01");
@@ -96,15 +97,67 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     budgetView.extras.checkSeriesNotPresent("My project");
 
     timeline.selectMonth("2011/01");
-    budgetView.extras.checkSeries("My project", 0, -200.00);
-    budgetView.getSummary().checkEndPosition(800.00);
+    budgetView.extras.checkSeries("My project", -100.00, -200.00);
+    budgetView.getSummary().checkEndPosition(1800.00);
 
-    projects.edit("My project").delete();
+    projects.edit("My project").deleteWithConfirmation("Existing operations",
+                                                       "Some operations have been assigned to this project");
     projects.checkNoProjectShown();
+    budgetView.getSummary().checkEndPosition(1900.00);
+  }
+
+  public void testTotalAmountIsUpdatedOnEachKeyStroke() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+    operations.hideSignposts();
+
+    projects.checkHintMessageDisplayed();
+
+    Assert.fail("[Regis] En cours - je ne comprends pas pourquoi cette partie ne marche plus");
+
+    projects.create()
+      .setName("My project")
+      .setItemName(0, "Reservation")
+      .setItemDate(0, 201101)
+      .setItemAmount(0, -200.00)
+      .checkGauge(0.00, -200.00)
+      .addItem(1, "Travel", 201102, -500.00)
+      .checkItems("Reservation | January 2011 | -200.00\n" +
+                  "Travel | February 2011 | -500.00")
+      .checkGauge(0.00, -700.00)
+      .deleteLastValueChars(1, 3)
+      .checkGauge(0.00, -250.00)
+      .validate();
+  }
+
+  public void testProjectDeletionWithNoAssignedTransactions() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/12/01")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .load();
+
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+    operations.hideSignposts();
+
+    projects.create()
+      .checkTitle("Create a project")
+      .setName("My project")
+      .setItem(0, "Reservation", 201101, -200.00)
+      .addItem(1, "Hotel", 201101, -300.00)
+      .validate();
+
+    timeline.selectMonth(201101);
+    budgetView.extras.checkSeries("My project", 0.00, -500.00);
+    budgetView.getSummary().checkEndPosition(500.00);
+
+    projects.edit("My project")
+      .delete();
+    
+    projects.checkNoProjectShown();
+    budgetView.extras.checkNoSeriesShown();
     budgetView.getSummary().checkEndPosition(1000.00);
   }
 
-  public void testProjectDeletion() throws Exception {
+  public void testProjectDeletionWithAssignedTransactions() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2010/12/01")
       .addTransaction("2010/12/01", 1000.00, "Income")
@@ -308,7 +361,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     projects.checkProjectList("My project");
     projects.edit("My project")
-    .checkItems("Trip | January 2011 | -150.00")
-    .validate();
+      .checkItems("Trip | January 2011 | -150.00")
+      .validate();
   }
 }

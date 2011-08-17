@@ -1,6 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
@@ -33,8 +35,14 @@ public class ProjectEditionChecker extends GuiChecker {
     return this;
   }
 
-  public ProjectEditionChecker checkTotalAmount(double amount) {
-    assertThat(dialog.getTextBox("totalAmount").textEquals(toString(amount)));
+  public ProjectEditionChecker checkGauge(double actual, double planned) {
+
+    assertThat(dialog.getTextBox("totalActual").textEquals(Formatting.toString(actual, BudgetArea.EXTRAS)));
+    assertThat(dialog.getTextBox("totalPlanned").textEquals(Formatting.toString(planned, BudgetArea.EXTRAS)));
+
+    GaugeChecker gauge = new GaugeChecker(dialog, "gauge");
+    gauge.checkActualValue(actual);
+    gauge.checkTargetValue(planned);
     return this;
   }
 

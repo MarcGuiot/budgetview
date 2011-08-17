@@ -4,12 +4,14 @@ import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.MonthRangeBound;
+import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.MonthFieldListStringifier;
-import org.designup.picsou.gui.projects.utils.ProjectAmountStringifier;
+import org.designup.picsou.gui.model.ProjectStat;
 import org.designup.picsou.gui.projects.utils.ProjectItemComparator;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
@@ -23,15 +25,12 @@ import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.views.GlobButtonView;
-import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.utils.GlobListFunctor;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.LocalGlobRepository;
-import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.utils.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -45,16 +44,23 @@ import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class ProjectEditionDialog {
-  private PicsouDialog dialog;
+
   private LocalGlobRepository localRepository;
   private GlobRepository parentRepository;
   private Directory directory;
+
+  private Key currentProjectKey;
+  private Double actualAmount = 0.0;
+
+  private PicsouDialog dialog;
   private JLabel titleLabel = new JLabel();
   private GlobRepeat repeat;
   private GlobTextEditor projectNameEditor;
-  private Key currentProjectKey;
   private Map<Key, JTextField> itemNameFields = new HashMap<Key, JTextField>();
-  private GlobLabelView totalAmountLabel;
+
+  private JLabel totalActualLabel = new JLabel();
+  private JLabel totalPlannedLabel = new JLabel();
+  private Gauge gauge = new Gauge();
 
   public ProjectEditionDialog(GlobRepository parentRepository, Directory directory) {
     this(parentRepository, directory, directory.get(JFrame.class));
@@ -69,6 +75,32 @@ public class ProjectEditionDialog {
     this.localRepository.addTrigger(new ProjectTrigger());
 
     createDialog(owner);
+    registerTotalUpdater();
+  }
+
+  private void registerTotalUpdater() {
+    localRepository.addChangeListener(new TypeChangeSetListener(ProjectItem.TYPE) {
+      protected void update(GlobRepository repository) {
+        updateTotal();
+      }
+    });
+  }
+
+  private void updateTotal() {
+    if ((currentProjectKey == null) || (!localRepository.contains(currentProjectKey))) {
+      return;
+    }
+    double plannedAmount = 0.0;
+    for (Glob item : localRepository.findLinkedTo(localRepository.get(currentProjectKey), ProjectItem.PROJECT)) {
+      Double amount = item.get(ProjectItem.AMOUNT);
+      if (amount != null) {
+        plannedAmount += amount;
+      }
+    }
+
+    totalActualLabel.setText(Formatting.toString(actualAmount, BudgetArea.EXTRAS));
+    totalPlannedLabel.setText(Formatting.toString(plannedAmount, BudgetArea.EXTRAS));
+    gauge.setValues(actualAmount, plannedAmount);
   }
 
   private void createDialog(Window owner) {
@@ -90,9 +122,9 @@ public class ProjectEditionDialog {
 
     builder.add("addItem", new AddItemAction());
 
-    totalAmountLabel = GlobLabelView.init(Project.TYPE, localRepository, directory,
-                                          new ProjectAmountStringifier());
-    builder.add("totalAmount", totalAmountLabel);
+    builder.add("totalActual", totalActualLabel);
+    builder.add("totalPlanned", totalPlannedLabel);
+    builder.add("gauge", gauge);
 
     dialog.addPanelWithButtons(builder.<JPanel>load(),
                                new OkAction(), new CancelAction(dialog),
@@ -102,6 +134,7 @@ public class ProjectEditionDialog {
 
   public void showNewProject() {
     titleLabel.setText(Lang.get("projectEdition.title.create"));
+    actualAmount = 0.00;
     localRepository.rollback();
     currentProjectKey = localRepository.create(Project.TYPE).getKey();
     createItem();
@@ -110,16 +143,29 @@ public class ProjectEditionDialog {
 
   public void show(Key projectKey) {
     titleLabel.setText(Lang.get("projectEdition.title.edit"));
-    localRepository.rollback();
     currentProjectKey = projectKey;
+    updateActual();
+    localRepository.rollback();
     doShow();
   }
 
   private void doShow() {
     projectNameEditor.forceSelection(currentProjectKey);
-    totalAmountLabel.forceSelection(currentProjectKey);
     repeat.setFilter(linkedTo(currentProjectKey, ProjectItem.PROJECT));
     dialog.showCentered();
+  }
+
+  private void updateActual() {
+    if (currentProjectKey == null) {
+      actualAmount = 0.00;
+      return;
+    }
+    Glob stat = parentRepository.find(Key.create(ProjectStat.TYPE, currentProjectKey.get(Project.ID)));
+    if (stat == null) {
+      actualAmount = 0.00;
+      return;
+    }
+    actualAmount = stat.get(ProjectStat.ACTUAL_AMOUNT);
   }
 
   private boolean check() {

@@ -43,6 +43,10 @@
            font="-,plain,12" foreground="import.form.label"
            anchor="east" marginRight="10" weightX="0"/>
 
+    <style selector="label.formLabelRight"
+           font="-,plain,12" foreground="import.form.label"
+           anchor="west" marginLeft="10" weightX="0"/>
+
     <style selector="label.formLabelTop"
            font="-,plain,12" foreground="import.form.label"
            anchor="west"/>
