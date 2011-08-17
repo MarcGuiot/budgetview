@@ -48,16 +48,10 @@ public abstract class AbstractHistoChecker<T extends AbstractHistoChecker> exten
     Mouse.wheel(getPanel(), offset);
     return (T)this;
   }
-  public void click(double xPercent) {
-    HistoChart chart = getChart();
-    chart.paint(Empty.NULL_GRAPHICS_2D);
-    Dimension size = chart.getSize();
-    int x = (int)((size.width - 50) * xPercent);
-    doClick(chart, x);
-  }
 
   public void clickColumn(int columnIndex) {
     HistoChart chart = getChart();
+    chart.setSize(200,200);
     chart.paint(Empty.NULL_GRAPHICS_2D);
     int x = chart.getX(columnIndex);
     doClick(chart, x);

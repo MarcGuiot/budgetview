@@ -67,7 +67,7 @@ public class HistoSelectionManager {
     columnSelectionMinIndex = null;
     columnSelectionMaxIndex = null;
 
-    if (rollover.columnIndex < dataset.size()) {
+    if ((rollover.columnIndex >=0) && (rollover.columnIndex < dataset.size())) {
       addRolloverColumnToSelection();
     }
     else {

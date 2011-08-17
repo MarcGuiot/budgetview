@@ -1,7 +1,11 @@
 package org.designup.picsou.gui.signpost.guides;
 
+import net.java.balloontip.BalloonTip;
 import org.designup.picsou.gui.signpost.Signpost;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.LinkField;
@@ -17,6 +21,7 @@ public class SavingsViewToggleSignpost extends Signpost implements ChangeSetList
 
   public SavingsViewToggleSignpost(GlobRepository repository, Directory directory) {
     super(SignpostStatus.SAVINGS_VIEW_TOGGLE_SHOWN, repository, directory);
+    setLocation(BalloonTip.Orientation.RIGHT_ABOVE, BalloonTip.AttachLocation.NORTHEAST);
   }
 
   protected void init() {
@@ -53,9 +58,7 @@ public class SavingsViewToggleSignpost extends Signpost implements ChangeSetList
   }
 
   protected void update() {
-    if (canShow() &&
-        SignpostSectionType.isAllCompleted(repository) &&
-        containsExternalSavingsSeries(repository)) {
+    if (canShow() && containsExternalSavingsSeries(repository)) {
       show(Lang.get("signpost.savingsViewToggle"));
     }
   }

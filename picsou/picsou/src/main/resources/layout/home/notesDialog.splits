@@ -2,10 +2,10 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(600,600)">
+  <panel styleClass="dialog" preferredSize="(400,400)">
     <column styleClass="innerDialog">
 
-      <label text="$notesDialog.title"/>
+      <label text="$notesDialog.title" styleClass="title"/>
 
       <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true" border="line(block.inner.border)"
                   marginBottom="0">

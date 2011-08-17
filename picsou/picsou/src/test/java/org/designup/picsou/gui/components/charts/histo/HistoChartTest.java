@@ -76,9 +76,9 @@ public class HistoChartTest extends TestCase {
     dataset.add(201009, 9, "9", "", "", false, false, false);
     init(dataset);
 
-    Mouse.enter(chart, 30, 10);
-    Mouse.move(chart, 30, 50);
-    Mouse.pressed(chart, 30, 50);
+    Mouse.enter(chart, 50, 10);
+    Mouse.move(chart, 50, 50);
+    Mouse.pressed(chart, 50, 50);
     listener.check("<select ids='[201005]'/>");
 
     Mouse.drag(chart, 100, 50);

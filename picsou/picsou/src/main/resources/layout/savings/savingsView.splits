@@ -25,7 +25,9 @@
         <column styleClass="innerBlock">
 
           <row weightY="0.1" marginBottom="10">
-            <button action="toggleToMain" styleClass="toggleToMain"/>
+            <row styleClass="highlightedPanel">
+              <button action="toggleToMain" styleClass="toggleToMain" margin="3"/>
+            </row>
             <filler fill="horizontal"/>
           </row>
 

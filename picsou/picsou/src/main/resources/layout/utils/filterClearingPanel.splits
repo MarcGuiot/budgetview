@@ -2,21 +2,15 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <ui name="filterPanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="filter.message.top" bottomColor="filter.message.bottom"
-        borderColor="filter.message.border"
-        borderWidth="1" cornerRadius="6"/>
-
     <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         lineColor="filter.message.link.underline"/>
     <style selector="button.highlightedLink" ui="hyperlinkButton"
            foreground="filter.message.text"
            margin="2" marginLeft="5" marginRight="5"
            fill="none" anchor="center"/>
-
   </styles>
 
-  <row ref="panel" ui="filterPanel" preferredSize="(220,20)">
+  <row ref="panel" styleClass="highlightedPanel" preferredSize="(220,20)">
     <button action="cancel" styleClass="highlightedLink" />
   </row>
 </splits>

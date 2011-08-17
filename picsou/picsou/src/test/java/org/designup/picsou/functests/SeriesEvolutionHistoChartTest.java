@@ -230,8 +230,10 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.expandAll();
 
     seriesAnalysis.select("John's");
-    seriesAnalysis.histoChart.click(0.1);
-
+    seriesAnalysis.histoChart.clickColumn(0);
     timeline.checkSelection("2009/06");
+
+    seriesAnalysis.histoChart.clickColumn(2);
+    timeline.checkSelection("2009/08");
   }
 }

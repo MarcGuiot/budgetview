@@ -205,6 +205,13 @@
     <style selector=".preFooter" opaque="true" background="block.prefooter.bg"
            border="matte(1,0,0,0,block.prefooter.top)"/>
 
+    <!-- Highlighted panel -->
+    <ui name="highlightedPanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="highlightedPanel.top" bottomColor="highlightedPanel.bottom"
+        borderColor="highlightedPanel.border"
+        borderWidth="1" cornerRadius="6"/>
+    <style selector=".highlightedPanel"  ui="highlightedPanel"/>
+
     <!-- Icon buttons -->
     <style selector=".iconButtonGroup" opaque="false" marginTop="5" weightY="0"/>
 
