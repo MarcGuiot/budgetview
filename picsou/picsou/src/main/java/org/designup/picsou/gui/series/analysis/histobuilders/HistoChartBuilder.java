@@ -155,15 +155,15 @@ public class HistoChartBuilder {
     histoChart.clear();
   }
 
-  public void showMainDailyHisto(int selectedMonthId, boolean showFullMonthLabels) {
-    showAccountDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForMainAccounts(repository), DaySelection.EMPTY);
+  public void showMainDailyHisto(int selectedMonthId, boolean showFullMonthLabels, String daily) {
+    showAccountDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForMainAccounts(repository), DaySelection.EMPTY, daily);
   }
 
   public void showSavingsDailyHisto(int selectedMonthId, boolean showFullMonthLabels) {
-    showAccountDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForSavingsAccounts(repository), DaySelection.EMPTY);
+    showAccountDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForSavingsAccounts(repository), DaySelection.EMPTY, "daily");
   }
 
-  public void showDailyHisto(int selectedMonthId, boolean showFullMonthLabels, Set<Integer> accountIds, DaySelection daySelection) {
+  public void showDailyHisto(int selectedMonthId, boolean showFullMonthLabels, Set<Integer> accountIds, DaySelection daySelection, String daily) {
     GlobMatcher matcher;
     if (accountIds == null) {
       matcher = Matchers.transactionsForMainAccounts(repository);
@@ -171,11 +171,11 @@ public class HistoChartBuilder {
     else {
       matcher = Matchers.transactionsForAccounts(accountIds, repository);
     }
-    showAccountDailyHisto(selectedMonthId, showFullMonthLabels, matcher, daySelection);
+    showAccountDailyHisto(selectedMonthId, showFullMonthLabels, matcher, daySelection, daily);
   }
 
-  private void showAccountDailyHisto(int selectedMonthId, boolean showFullMonthLabels, GlobMatcher accountMatcher, DaySelection daySelection) {
-    HistoDailyDatasetBuilder builder = createDailyDataset("daily", showFullMonthLabels);
+  private void showAccountDailyHisto(int selectedMonthId, boolean showFullMonthLabels, GlobMatcher accountMatcher, DaySelection daySelection, String daily) {
+    HistoDailyDatasetBuilder builder = createDailyDataset(daily, showFullMonthLabels);
 
     Double lastValue = null;
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {

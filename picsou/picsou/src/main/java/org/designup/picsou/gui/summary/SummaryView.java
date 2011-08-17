@@ -37,7 +37,7 @@ public class SummaryView extends View {
 
     MainDailyPositionsChartView mainDailyPositions = new MainDailyPositionsChartView(range, config,
                                                                                      "mainAccountsHistoChart",
-                                                                                     repository, directory);
+                                                                                     repository, directory, "daily");
     mainDailyPositions.registerComponents(builder);
     builder.add("openTuningHelp", new HelpAction(Lang.get("summaryView.openTuningHelp.text"),
                                                  "tuning", "", directory));

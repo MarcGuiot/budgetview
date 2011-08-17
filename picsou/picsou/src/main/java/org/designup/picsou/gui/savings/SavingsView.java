@@ -134,7 +134,7 @@ public class SavingsView extends View implements GlobSelectionListener {
           if (account.exists()) {
             histoChartBuilder.showDailyHisto(currentMonthId, false,
                                              Collections.singleton(account.get(Account.ID)),
-                                             DaySelection.EMPTY);
+                                             DaySelection.EMPTY, "daily");
           }
         }
       };

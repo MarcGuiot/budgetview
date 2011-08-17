@@ -26,14 +26,12 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 public class MainDailyPositionsChartView extends AccountsChartView {
 
   private boolean showFullMonthLabels = false;
-
-  public MainDailyPositionsChartView(HistoChartRange range, GlobRepository repository, Directory directory) {
-    super(range, "mainAccountsHistoChart", repository, directory);
-  }
+  private String tooltipKey;
 
   public MainDailyPositionsChartView(HistoChartRange range, HistoChartConfig config, String componentName,
-                                     final GlobRepository repository, final Directory directory) {
+                                     final GlobRepository repository, final Directory directory, String tooltipKey) {
     super(range, config, componentName, repository, directory);
+    this.tooltipKey = tooltipKey;
   }
 
   public void installHighlighting() {
@@ -46,7 +44,7 @@ public class MainDailyPositionsChartView extends AccountsChartView {
   }
 
   protected void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
-    histoChartBuilder.showMainDailyHisto(currentMonthId, showFullMonthLabels);
+    histoChartBuilder.showMainDailyHisto(currentMonthId, showFullMonthLabels, tooltipKey);
   }
 
   protected void processDoubleClick(NavigationService navigationService) {

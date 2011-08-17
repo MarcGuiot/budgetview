@@ -48,7 +48,7 @@ public class AccountDailyPositionsChartView extends AccountsChartView {
       daySelection.add(transaction.get(Transaction.MONTH), transaction.get(Transaction.DAY));
     }
 
-    histoChartBuilder.showDailyHisto(currentMonthId, true, accountIds, daySelection);
+    histoChartBuilder.showDailyHisto(currentMonthId, true, accountIds, daySelection, "daily");
   }
 
   protected void processDoubleClick(NavigationService navigationService) {
