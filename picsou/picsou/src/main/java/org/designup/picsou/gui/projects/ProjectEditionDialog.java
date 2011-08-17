@@ -2,6 +2,7 @@ package org.designup.picsou.gui.projects;
 
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.AmountEditor;
+import org.designup.picsou.gui.components.BorderlessTextField;
 import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.charts.Gauge;
@@ -35,8 +36,11 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
 
@@ -200,6 +204,7 @@ public class ProjectEditionDialog {
           .forceSelection(itemKey)
           .getComponent();
       nameField.setName("itemLabel");
+      BorderlessTextField.install(nameField);
       cellBuilder.add("itemLabel", nameField);
       itemNameFields.put(itemKey, nameField);
       cellBuilder.addDisposeListener(new Disposable() {
@@ -220,6 +225,7 @@ public class ProjectEditionDialog {
         new AmountEditor(ProjectItem.AMOUNT, localRepository, directory, true, null)
           .forceSelection(itemKey)
           .update(false, false);
+      BorderlessTextField.install(amountEditor.getNumericEditor().getComponent());
       cellBuilder.add("amountEditor", amountEditor.getPanel());
 
       cellBuilder.add("deleteItem", new DeleteItemAction(itemKey));

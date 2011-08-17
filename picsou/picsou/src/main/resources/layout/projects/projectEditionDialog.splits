@@ -7,7 +7,7 @@
            pressedIcon="button_calendar_pressed.png"
            disabledIcon="button_calendar_disabled.png"
            rolloverIcon="button_calendar_rollover.png"
-           horizontalAlignment="right"
+           horizontalAlignment="left" fill="none" anchor="west"
            marginLeft="8" marginRight="8"/>
     <style selector="component#amountEditor" marginRight="8"/>
 

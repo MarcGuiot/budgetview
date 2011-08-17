@@ -7,7 +7,6 @@
            opaque="false"
            fill="horizontal" weightX="100"
            marginLeft="10" marginRight="10"
-           borderColor="gauge.categorization.border"
            emptyColorTop="gauge.categorization.empty.top" emptyColorBottom="gauge.categorization.empty.bottom"
            filledColorTop="gauge.categorization.filled.top" filledColorBottom="gauge.categorization.filled.bottom"/>
   </styles>

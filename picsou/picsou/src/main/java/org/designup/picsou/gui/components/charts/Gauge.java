@@ -26,7 +26,6 @@ public class Gauge extends ActionablePanel {
   private boolean overrunError = false;
   private boolean active = true;
 
-  private Color borderColor = Color.DARK_GRAY;
   private Color rolloverBorderColor = Color.DARK_GRAY;
   private Color filledColorTop = Color.BLUE.brighter();
   private Color filledColorBottom = Color.BLUE.darker();
@@ -104,8 +103,8 @@ public class Gauge extends ActionablePanel {
 
   public void setValues(double actualValue, double targetValue) {
 
-    this.actualValue = actualValue * (invertAll ? -1. : 1.);
-    this.targetValue = targetValue * (invertAll ? -1. : 1.);
+    this.actualValue = actualValue * (invertAll ? -1.0 : 1.0);
+    this.targetValue = targetValue * (invertAll ? -1.0 : 1.0);
 
     boolean sameSign = Amounts.sameSign(this.actualValue, this.targetValue);
     double absActual = Math.abs(this.actualValue);
@@ -128,7 +127,7 @@ public class Gauge extends ActionablePanel {
     }
     else if (this.targetValue > 0) {
       if (this.actualValue > this.targetValue) { // if (overrun == 0 && remaining != 0)
-        fillPercent = absTarget / absActual;  //==> differencié passe et future
+        fillPercent = absTarget / absActual;  //==> differencie passé et futur
         overrunPercent = 1 - fillPercent;
         setDetailsTooltipKey("gauge.overrun.ok", Math.abs(remainder));
         emptyPercent = 0;
@@ -347,10 +346,6 @@ public class Gauge extends ActionablePanel {
       g2.setColor(rolloverBorderColor);
       g2.drawRect(0, barTop, getWidth() - 1, barHeight);
     }
-    else if (!highlighted) {
-      g2.setColor(borderColor);
-      g2.drawRect(0, barTop, getWidth() - 1, barHeight);
-    }
   }
 
   private void fillBar(Graphics2D g2, Color topColor, Color bottomColor, int barX, int barWidth, int barTop, int barBottom) {
@@ -431,10 +426,6 @@ public class Gauge extends ActionablePanel {
 
   public String getTooltip() {
     return detailsTooltip;
-  }
-
-  public void setBorderColor(Color borderColor) {
-    this.borderColor = borderColor;
   }
 
   public void setRolloverBorderColor(Color borderColor) {
