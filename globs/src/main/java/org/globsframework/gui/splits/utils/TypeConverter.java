@@ -43,8 +43,10 @@ public class TypeConverter {
       return Double.valueOf(value);
     }
     if (targetClass == Icon.class) {
-      ImageLocator locator = context.getService(ImageLocator.class);
-      return locator.get(value);
+      return IconParser.parse(value,
+                              context.getService(ColorService.class),
+                              context.getService(ImageLocator.class),
+                              context);
     }
     if (targetClass == Dimension.class) {
       return SplitsUtils.parseDimension(value);
