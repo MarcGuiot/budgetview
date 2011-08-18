@@ -436,6 +436,14 @@ public class BudgetViewChecker extends ViewChecker {
       getDeltaGauge(seriesName).check(previousValue, newValue, ratio, tooltip);
       return this;
     }
+
+    public void checkHighlighted(String seriesName) {
+      getGauge(seriesName).checkHighlighted();
+    }
+
+    public void checkNotHighlighted(String seriesName) {
+      getGauge(seriesName).checkNotHighlighted();
+    }
   }
 
   public class ExtrasBudgetAreaChecker extends BudgetAreaChecker {

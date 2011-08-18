@@ -13,6 +13,7 @@ public class Gauge extends ActionablePanel {
 
   private static final int ARC_WIDTH = 5;
   private static final int ARC_HEIGHT = 10;
+  private static final boolean USE_PROPORTIONAL_WIDTH = true;
 
   private double actualValue;
   private double targetValue;
@@ -42,10 +43,11 @@ public class Gauge extends ActionablePanel {
   private Color highlightedBackgroundColor = Color.YELLOW.brighter();
 
   private static final int DEFAULT_BAR_HEIGHT = 10;
-  private static final int HORIZONTAL_MARGIN = 2;
-  private static final double FIXED_WIDTH_RATIO = 0.1;
+  private static final int HORIZONTAL_MARGIN = 4;
+  private static final int VERTICAL_MARGIN = 1;
+  private static final double FIXED_WIDTH_RATIO = 0.2;
 
-  private static final int HORIZONTAL_TEXT_MARGIN = 5;
+  private static final int HORIZONTAL_TEXT_MARGIN = 7;
   private static final int VERTICAL_TEXT_MARGIN = 1;
 
   private int barHeight = DEFAULT_BAR_HEIGHT;
@@ -274,18 +276,22 @@ public class Gauge extends ActionablePanel {
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
     if (isOpaque()) {
-      g2.setColor(highlighted ? highlightedBackgroundColor : getBackground());
+      g2.setColor(getBackground());
       g2.fillRect(0, 0, getWidth(), getHeight());
+    }
+    if (highlighted) {
+      g2.setColor(highlightedBackgroundColor);
+      g2.fillRoundRect(0, 0, getWidth(), getHeight(), ARC_WIDTH, ARC_HEIGHT);
     }
 
     int totalWidth = getWidth() - 1 - 2 * HORIZONTAL_MARGIN;
     int width = getAdjustedWidth(totalWidth);
-    int height = getHeight() - 1;
+    int height = getHeight() - 1 - 2 * VERTICAL_MARGIN;
     int minX = HORIZONTAL_MARGIN;
 
-    barHeight = Strings.isNotEmpty(label) ? getHeight() - 1 : DEFAULT_BAR_HEIGHT;
+    barHeight = Strings.isNotEmpty(label) ? height - 1 : DEFAULT_BAR_HEIGHT;
 
-    int barTop = (height - barHeight) / 2;
+    int barTop = (height - barHeight) / 2 + VERTICAL_MARGIN;
     int barBottom = height - barTop;
 
     int beginWidth = (int)(width * beginPercent);
@@ -324,6 +330,9 @@ public class Gauge extends ActionablePanel {
   }
 
   private int getAdjustedWidth(int totalWidth) {
+    if (!USE_PROPORTIONAL_WIDTH) {
+      return totalWidth;
+    }
     Double value = Utils.max(Math.abs(actualValue), Math.abs(targetValue));
     if (Math.abs(value) < 0.1) {
       return 0;
@@ -339,7 +348,6 @@ public class Gauge extends ActionablePanel {
     Double value = Utils.max(Math.abs(actualValue), Math.abs(targetValue));
     return Math.abs(value / maxValue);
   }
-
 
   private void drawBorder(Graphics2D g2, int width, int barTop, int barHeight) {
     if (isRolloverInProgress()) {
@@ -503,5 +511,9 @@ public class Gauge extends ActionablePanel {
   public void setHighlighted(boolean highlighted) {
     this.highlighted = highlighted;
     repaint();
+  }
+
+  public boolean isHighlighted() {
+    return highlighted;
   }
 }

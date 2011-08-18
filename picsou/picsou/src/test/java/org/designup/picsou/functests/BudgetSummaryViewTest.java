@@ -101,6 +101,47 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .checkUncategorizedNotShown();
   }
 
+  public void testRolloverHighlightsCorrespondingSeries() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount(-1, 10674, "0001212", 1500.00, "2008/07/10")
+      .addTransaction("2008/06/05", 1000.00, "WorldCo")
+      .addTransaction("2008/06/10", -200.00, "Auchan")
+      .addTransaction("2008/06/10", -500.00, "FNAC")
+      .load();
+
+    categorization.setNewIncome("WorldCo", "Salary");
+    categorization.setNewVariable("Auchan", "Groceries", -200.00);
+    categorization.setNewExtra("FNAC", "TV");
+
+    timeline.selectMonth("2008/06");
+
+    views.selectBudget();
+
+    budgetView.getSummary().rollover(200806, 3);
+    budgetView.income.checkNotHighlighted("Salary");
+    budgetView.variable.checkNotHighlighted("Groceries");
+    budgetView.extras.checkNotHighlighted("TV");
+
+    budgetView.getSummary().rollover(200806, 5);
+    budgetView.income.checkHighlighted("Salary");
+    budgetView.variable.checkNotHighlighted("Groceries");
+    budgetView.extras.checkNotHighlighted("TV");
+
+    budgetView.getSummary().rollover(200806, 10);
+    budgetView.income.checkNotHighlighted("Salary");
+    budgetView.variable.checkHighlighted("Groceries");
+    budgetView.extras.checkHighlighted("TV");
+
+    budgetView.getSummary().rollover(200806, 15);
+    budgetView.income.checkNotHighlighted("Salary");
+    budgetView.variable.checkNotHighlighted("Groceries");
+    budgetView.extras.checkNotHighlighted("TV");
+  }
+
   public void testTooltipsOverun() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/04", -30, "fringue")

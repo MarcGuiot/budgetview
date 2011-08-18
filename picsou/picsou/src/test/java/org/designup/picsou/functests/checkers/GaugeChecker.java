@@ -9,6 +9,7 @@ import org.uispec4j.Mouse;
 import org.uispec4j.Panel;
 import org.uispec4j.Trigger;
 import org.uispec4j.assertion.Assertion;
+import org.uispec4j.assertion.UISpecAssert;
 
 public class GaugeChecker extends AbstractUIComponent {
 
@@ -153,5 +154,21 @@ public class GaugeChecker extends AbstractUIComponent {
         Assert.assertEquals(widthRatio, gauge.getWidthRatio());
       }
     };
+  }
+
+  public void checkHighlighted() {
+    UISpecAssert.assertTrue(new Assertion() {
+      public void check() {
+        Assert.assertTrue(gauge.isHighlighted());
+      }
+    });
+  }
+
+  public void checkNotHighlighted() {
+    UISpecAssert.assertTrue(new Assertion() {
+      public void check() {
+        Assert.assertFalse(gauge.isHighlighted());
+      }
+    });
   }
 }

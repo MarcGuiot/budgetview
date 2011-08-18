@@ -1,5 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.gui.components.charts.histo.HistoSelectionManager;
+import org.designup.picsou.model.Day;
+import org.globsframework.model.Key;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
@@ -35,6 +38,16 @@ public class BudgetSummaryViewChecker extends ViewChecker {
 
   public BudgetSummaryViewChecker checkNoEstimatedPosition() {
     getChart().checkEndOfMonthValue(0.0);
+    return this;
+  }
+
+  public BudgetSummaryViewChecker rollover(int monthId, int day) {
+    HistoDailyChecker chart = getChart();
+    HistoSelectionManager selectionManager = chart.getChart().getSelectionManager();
+    int columnIndex = chart.getDataset().getIndex(monthId);
+    selectionManager.updateRollover(columnIndex,
+                                    Key.create(Day.MONTH, monthId, Day.DAY, day),
+                                    false);
     return this;
   }
 
