@@ -110,7 +110,17 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
       if (mouseEvent.isConsumed()) {
         return;
       }
-      selectionService.select(repository.get(selectionKey));
+      Glob glob = repository.find(selectionKey);
+      if (glob != null) {
+        GlobList currentSelection = selectionService.getSelection(selectionKey.getGlobType());
+        if (currentSelection.contains(glob)) {
+          currentSelection.remove(glob);
+          selectionService.select(currentSelection, selectionKey.getGlobType());
+        }
+        else {
+          selectionService.select(repository.get(selectionKey));
+        }
+      }
     }
 
     public void mouseEntered(MouseEvent mouseEvent) {
@@ -142,28 +152,21 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
       update();
     }
 
-    public void mouseMoved(MouseEvent mouseEvent) {
-//      super.mouseMoved(mouseEvent);
-    }
-
     public void mouseDragged(MouseEvent mouseEvent) {
       addToSelection();
     }
 
-
     private void addToSelection() {
       GlobList selection = selectionService.getSelection(type);
       Glob glob = repository.get(selectionKey);
-      if (!selection.contains(glob)) {
-        GlobList newSelection = new GlobList();
-        newSelection.addAll(selection);
-        newSelection.add(glob);
-        selectionService.select(newSelection, type);
-      }
+      GlobList newSelection = new GlobList();
+      newSelection.addAll(selection);
+      newSelection.add(glob);
+      selectionService.select(newSelection, type);
     }
   }
 
-  private class WindowMouseTracker extends MouseAdapter implements MouseMotionListener{
+  private class WindowMouseTracker extends MouseAdapter implements MouseMotionListener {
 
     private Window window;
     private Container parent;
@@ -183,15 +186,11 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
       }
     }
 
-    public void mouseDragged(MouseEvent e) {
-    }
-
     public void mouseMoved(MouseEvent mouseEvent) {
       if (rollover) {
         JPanel panel = node.getComponent();
         Point point = mouseEvent.getPoint();
         SwingUtilities.convertPointToScreen(point, panel.getParent());
-//        Point point = mouseEvent.getLocationOnScreen();
         if (!panel.contains(point)) {
           rollover = false;
           update();

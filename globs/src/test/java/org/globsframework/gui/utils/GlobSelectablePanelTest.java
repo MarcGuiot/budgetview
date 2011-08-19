@@ -47,8 +47,11 @@ public class GlobSelectablePanelTest extends GuiComponentTestCase {
     selectionService.select(glob1);
     node.checkLastStyle("selected");
 
+    selectionService.clear(DummyObject.TYPE);
+    node.checkLastStyle("unselected");
+
     Mouse.enter(jPanel, 1, 1);
-    node.checkLastStyle("selectedRollover");
+    node.checkLastStyle("unselectedRollover");
 
     Mouse.click(new Panel(jPanel));
     node.checkLastStyle("selectedRollover");
@@ -86,21 +89,77 @@ public class GlobSelectablePanelTest extends GuiComponentTestCase {
     node.checkLastStyle("selected");
   }
 
+  public void testReclickUnselectsElement() throws Exception {
+    DummySplitsNode node = new DummySplitsNode();
+    new GlobSelectablePanel(node,
+                            "selected", "unselected",
+                            "selectedRollover", "unselectedRollover",
+                            repository, directory, key1);
+    JPanel jPanel = node.getComponent();
+
+    DummySelectionListener selectionListener =
+      DummySelectionListener.register(selectionService, DummyObject.TYPE);
+
+    Mouse.enter(jPanel, 1, 1);
+    Mouse.click(new Panel(jPanel));
+    Mouse.exit(jPanel, 1, 1);
+    node.checkLastStyle("selected");
+    selectionListener.assertEquals("<log>" +
+                                   "  <selection types='dummyObject'>" +
+                                   "    <item key='dummyObject[id=1]'/>" +
+                                   "  </selection>" +
+                                   "</log>");
+
+    Mouse.enter(jPanel, 1, 1);
+    Mouse.click(new Panel(jPanel));
+    Mouse.exit(jPanel, 1, 1);
+    node.checkLastStyle("unselected");
+    selectionListener.assertEquals("<log>" +
+                                   "  <selection types='dummyObject'>" +
+                                   "  </selection>" +
+                                   "</log>");
+  }
+
+  public void testReclickUnselectsElementInMultiSelection() throws Exception {
+    DummySplitsNode node = new DummySplitsNode();
+    new GlobSelectablePanel(node,
+                            "selected", "unselected",
+                            "selectedRollover", "unselectedRollover",
+                            repository, directory, key1);
+    JPanel jPanel = node.getComponent();
+
+    selectionService.select(Arrays.asList(glob1, glob2), DummyObject.TYPE);
+
+    node.checkLastStyle("selected");
+
+    DummySelectionListener selectionListener =
+      DummySelectionListener.register(selectionService, DummyObject.TYPE);
+    
+    Mouse.enter(jPanel, 1, 1);
+    Mouse.click(new Panel(jPanel));
+    Mouse.exit(jPanel, 1, 1);
+    node.checkLastStyle("unselected");
+    selectionListener.assertEquals("<log>" +
+                                   "  <selection types='dummyObject'>" +
+                                   "    <item key='dummyObject[id=2]'/>" +
+                                   "  </selection>" +
+                                   "</log>");
+  }
+
+
   public void testDragCanBeUsedForMultiSelection() throws Exception {
     DummySplitsNode node1 = new DummySplitsNode();
-    GlobSelectablePanel panel1 =
-      new GlobSelectablePanel(node1,
-                              "selected", "unselected",
-                              "selectedRollover", "unselectedRollover",
-                              repository, directory, key1);
+    new GlobSelectablePanel(node1,
+                            "selected", "unselected",
+                            "selectedRollover", "unselectedRollover",
+                            repository, directory, key1);
     JPanel jPanel1 = node1.getComponent();
 
     DummySplitsNode node2 = new DummySplitsNode();
-    GlobSelectablePanel pane2 =
-      new GlobSelectablePanel(node2,
-                              "selected", "unselected",
-                              "selectedRollover", "unselectedRollover",
-                              repository, directory, key2);
+    new GlobSelectablePanel(node2,
+                            "selected", "unselected",
+                            "selectedRollover", "unselectedRollover",
+                            repository, directory, key2);
     JPanel jPanel2 = node2.getComponent();
 
     DummySelectionListener selectionListener =
