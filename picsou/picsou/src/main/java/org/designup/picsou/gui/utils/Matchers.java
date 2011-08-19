@@ -17,6 +17,10 @@ public class Matchers {
   private Matchers() {
   }
 
+  public static GlobMatcher transactionsForAllAccounts(GlobRepository repository) {
+    return GlobMatchers.ALL;
+  }
+
   public static GlobMatcher transactionsForMainAccounts(GlobRepository repository) {
     return transactionsForAccounts(Collections.singleton(Account.MAIN_SUMMARY_ACCOUNT_ID), repository);
   }

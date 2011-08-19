@@ -19,11 +19,6 @@ public abstract class AccountsChartView extends View implements HistoChartRangeL
   protected String componentName;
   private AccountHistoChartUpdater updater;
 
-  public AccountsChartView(HistoChartRange range, String componentName, GlobRepository repository, Directory directory) {
-    this(range, new HistoChartConfig(true, true, false, true, true, true, true, false),
-         componentName, repository, directory);
-  }
-
   public AccountsChartView(HistoChartRange range, HistoChartConfig config,
                            String componentName, GlobRepository repository, Directory directory) {
     super(repository, directory);

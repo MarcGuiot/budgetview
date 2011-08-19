@@ -165,8 +165,8 @@ public class HistoChartBuilder {
 
   public void showDailyHisto(int selectedMonthId, boolean showFullMonthLabels, Set<Integer> accountIds, DaySelection daySelection, String daily) {
     GlobMatcher matcher;
-    if (accountIds == null) {
-      matcher = Matchers.transactionsForMainAccounts(repository);
+    if (accountIds == null || accountIds.isEmpty()) {
+      matcher = Matchers.transactionsForAllAccounts(repository);
     }
     else {
       matcher = Matchers.transactionsForAccounts(accountIds, repository);

@@ -9,9 +9,9 @@
       <column styleClass="innerBlock" margin="10" marginLeft="15" marginRight="15">
 
         <row marginBottom="5" weightY="0">
+          <filler fill="horizontal"/>
           <panel ref="importPanel" marginLeft="10" weightX="0.01"/>
           <filler fill="horizontal"/>
-          <panel ref="customFilterMessage" fill="none" anchor="center"/>
         </row>
 
         <verticalSplit>
@@ -23,32 +23,31 @@
                      autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
             </scrollPane>
 
-            <grid>
+            <row>
+              <filler fill="horizontal"/>
 
-              <label gridPos="(0,0)" text="$transactionView.series.filter.label" styleClass="formLabel"
-                     marginRight="5"/>
-              <comboBox gridPos="(1,0)" ref="seriesFilterCombo"/>
+              <panel ref="customFilterMessage" fill="none" anchor="center"/>
 
-              <checkBox gridPos="(0,1,2,1)" ref="showPlannedTransactions"
+              <filler fill="horizontal"/>
+
+              <label text="$amount" styleClass="formLabelTop" autoHideSource="sum"
+                     border="empty(0,0,0,5)" tooltipText="$amount.tooltip"/>
+              <label ref="sum" font="-,bold,12"/>
+            </row>
+
+            <row>
+              <checkBox ref="showPlannedTransactions"
                         text="$transactionView.showPlannedTransactions"
                         weightX="0"/>
 
-              <filler fill="horizontal" gridPos="(2,0,1,2)"/>
+              <filler fill="horizontal"/>
 
-              <component gridPos="(3,0)" ref="transactionSearch"/>
-
-              <row gridPos="(3,1)">
-                <filler fill="horizontal"/>
-                <label text="$amount" styleClass="formLabelTop" autoHideSource="sum"
-                       border="empty(0,0,0,5)" tooltipText="$amount.tooltip"/>
-                <label ref="sum" font="-,bold,12"/>
-              </row>
-
-            </grid>
+              <component ref="transactionSearch"/>
+            </row>
           </column>
           <panel ref="accountChart" weightY="3"/>
         </verticalSplit>
-        
+
       </column>
     </panel>
   </column>

@@ -52,14 +52,14 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
     List<String> actual = new ArrayList<String>();
     for (UIComponent toggle : toggles) {
       if (((ToggleButton)toggle).isSelected().isTrue()) {
-        actual.add(toggle.getContainer("accountPanel").getButton("showAccount").getLabel());
+        actual.add(toggle.getContainer("accountPanel").getButton("editAccount").getLabel());
       }
     }
     return actual;
   }
 
   private Set<String> getDisplayedAccounts() {
-    UIComponent[] uiComponents = getAccountsPanel().getUIComponents(Button.class, "showAccount");
+    UIComponent[] uiComponents = getAccountsPanel().getUIComponents(Button.class, "editAccount");
     Set<String> existingNames = new HashSet<String>();
     for (UIComponent uiComponent : uiComponents) {
       Button button = (Button)uiComponent;
@@ -69,7 +69,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
   }
 
   public T checkAccountOrder(String... accounts) {
-    UIComponent[] uiComponents = getAccountsPanel().getUIComponents(Button.class, "showAccount");
+    UIComponent[] uiComponents = getAccountsPanel().getUIComponents(Button.class, "editAccount");
     List<String> existingNames = new ArrayList<String>();
     for (UIComponent uiComponent : uiComponents) {
       Button button = (Button)uiComponent;
@@ -143,7 +143,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
     Button account = null;
     try {
       final ComponentMatcher componentMatcher =
-        and(innerNameIdentity("showAccount"),
+        and(innerNameIdentity("editAccount"),
             displayedNameIdentity(accountName));
       account = getAccountsPanel().getButton(componentMatcher);
     }

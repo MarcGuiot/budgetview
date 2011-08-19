@@ -3,15 +3,25 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
 
-    <style selector="button#showAccount"
+    <style selector="button#editAccount"
            anchor="left" weightX="100"
-           font="-,plain,14"/>
+           font="-,plain,14" cursor="hand"
+           icon="magnifier_small.png"
+           rolloverIcon="magnifier_rollover.png"
+           pressedIcon="magnifier_rollover.png"
+           horizontalAlignment="left"
+           horizontalTextPosition="left"
+           iconTextGap="4"/>
+
+    <style selector="button#accountPosition"
+           font="-,bold,14" foreground="block.inner.link.big"/>
 
     <style selector="toggleButton#selectAccount"
            weightX="0" cursor="hand"
-           icon="arrow_right_blue.png"
-           selectedIcon="arrow_right_blue_rollover.png"
-           rolloverIcon="arrow_right_blue_rollover.png"
+           icon="rightArrow(18,18,10,12,block.inner.arrow.unselected)"
+           selectedIcon="rightArrow(18,18,10,12,block.inner.arrow.selected)"
+           rolloverIcon="rightArrow(18,18,10,12,block.inner.arrow.rollover)"
+           pressedIcon="rightArrow(18,18,10,12,block.inner.arrow.pressed)"
            preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
 
     <style selector="button.website" ui="hyperlinkButtonWithoutUnderline"
@@ -26,7 +36,7 @@
     <style selector=".left label.totalAmount"
            fill="horizontal" horizontalAlignment="left" marginLeft="10"/>
 
-    <style selector="#accountPanel" opaque="true"/>
+    <style selector="#accountPanel" opaque="true" background="block.inner.bg"/>
 
     <style selector=".summaryFooter" marginTop="6"/>
 
@@ -42,13 +52,11 @@
             <repeat ref="accountRepeat" marginTop="5" marginBottom="15">
               <panel ref="accountPanel" margin="3">
                 <grid margin="2">
-                  <button ref="editAccount" gridPos="(0,0,1,2)" styleClass="editIcon" marginRight="5"/>
+                  <button ref="editAccount" gridPos="(0,0)" styleClass="itemLink"/>
+                  <button ref="accountPosition" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
 
-                  <button ref="showAccount" gridPos="(1,0)" styleClass="itemLink"/>
-                  <button ref="accountPosition" gridPos="(2,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
-
-                  <button action="gotoWebsite" styleClass="website" gridPos="(1,1)" fill="none" anchor="west"/>
-                  <label ref="accountUpdateDate" gridPos="(2,1)" anchor="east" styleClass="subitem"/>
+                  <button action="gotoWebsite" styleClass="website" gridPos="(0,1)" fill="none" anchor="west"/>
+                  <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
 
                   <toggleButton ref="selectAccount" gridPos="(3,0,1,2)" marginLeft="5"/>
                 </grid>
