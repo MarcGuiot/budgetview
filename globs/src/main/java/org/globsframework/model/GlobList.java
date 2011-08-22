@@ -5,7 +5,6 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobFunctor;
@@ -67,7 +66,7 @@ public class GlobList extends ArrayList<Glob> {
   }
 
   public GlobList filterSelf(GlobMatcher matcher, GlobRepository repository) {
-    for (Iterator<Glob> iter = iterator(); iter.hasNext();) {
+    for (Iterator<Glob> iter = iterator(); iter.hasNext(); ) {
       Glob glob = iter.next();
       if (!matcher.matches(glob, repository)) {
         iter.remove();
@@ -88,7 +87,7 @@ public class GlobList extends ArrayList<Glob> {
 
   public GlobList getExistingGlobs(GlobRepository repository) {
     GlobList result = new GlobList();
-    for (Iterator<Glob> iter = iterator(); iter.hasNext();) {
+    for (Iterator<Glob> iter = iterator(); iter.hasNext(); ) {
       Glob glob = iter.next();
       if (repository.contains(glob.getKey())) {
         result.add(glob);
@@ -98,7 +97,7 @@ public class GlobList extends ArrayList<Glob> {
   }
 
   public void keepExistingGlobsOnly(GlobRepository repository) {
-    for (Iterator<Glob> iter = iterator(); iter.hasNext();) {
+    for (Iterator<Glob> iter = iterator(); iter.hasNext(); ) {
       Glob glob = iter.next();
       if (!glob.exists() || !repository.contains(glob.getKey())) {
         iter.remove();
@@ -106,8 +105,17 @@ public class GlobList extends ArrayList<Glob> {
     }
   }
 
+  public void addAll(Collection<Key> keys, GlobRepository repository) {
+    for (Key key : keys) {
+      Glob glob = repository.find(key);
+      if (glob != null) {
+        add(glob);
+      }
+    }
+  }
+
   public void removeAll(GlobMatcher matcher, GlobRepository repository) {
-    for (Iterator<Glob> iter = iterator(); iter.hasNext();) {
+    for (Iterator<Glob> iter = iterator(); iter.hasNext(); ) {
       Glob glob = iter.next();
       if (matcher.matches(glob, repository)) {
         iter.remove();
@@ -117,7 +125,7 @@ public class GlobList extends ArrayList<Glob> {
 
   public boolean removeAll(Set<Key> keys) {
     boolean asRemoved = false;
-    for (Iterator it = this.iterator(); it.hasNext();) {
+    for (Iterator it = this.iterator(); it.hasNext(); ) {
       Glob glob = (Glob)it.next();
       if (keys.contains(glob.getKey())) {
         it.remove();
@@ -156,7 +164,6 @@ public class GlobList extends ArrayList<Glob> {
     }
     return result;
   }
-
 
   public Set<Integer> getValueSet(IntegerField field) {
     Set<Integer> result = new HashSet<Integer>();
