@@ -655,7 +655,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     categorization.selectTransactions("McDo");
-//    openApplication();
     SeriesEditionDialogChecker edition = categorization.selectVariable().createSeries();
 
     edition.setName("Diet Food")
@@ -678,7 +677,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectPositiveAmounts()
       .setAmount("35")
       .checkChart(new Object[][]{
-        {"2008", "June", 0.00, -35.00, true},
+        {"2008", "June", 0.00, 35.00, true},
         {"2008", "July", 0.00, 0.00},
         {"2008", "August", 0.00, 0.00},
       });
@@ -687,8 +686,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkNegativeAmountsSelected()
       .setAmount("20")
       .checkChart(new Object[][]{
-        {"2008", "June", 0.00, -35.00},
-        {"2008", "July", 0.00, 20.00, true},
+        {"2008", "June", 0.00, 35.00},
+        {"2008", "July", 0.00, -20.00, true},
         {"2008", "August", 0.00, 0.00},
       });
 
@@ -696,9 +695,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkNegativeAmountsSelected()
       .setAmount("10")
       .checkChart(new Object[][]{
-        {"2008", "June", 0.00, -35.00},
-        {"2008", "July", 0.00, 20.00},
-        {"2008", "August", 0.00, 10.00, true},
+        {"2008", "June", 0.00, 35.00},
+        {"2008", "July", 0.00, -20.00},
+        {"2008", "August", 0.00, -10.00, true},
       });
 
     edition.selectMonth(200806)
@@ -716,9 +715,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkAmount(20.00)
       .selectPositiveAmounts()
       .checkChart(new Object[][]{
-        {"2008", "June", 0.00, 35.00},
-        {"2008", "July", 0.00, -20.00, true},
-        {"2008", "August", 0.00, 10.00},
+        {"2008", "June", 0.00, -35.00},
+        {"2008", "July", 0.00, 20.00, true},
+        {"2008", "August", 0.00, -10.00},
       });
 
     edition.validate();

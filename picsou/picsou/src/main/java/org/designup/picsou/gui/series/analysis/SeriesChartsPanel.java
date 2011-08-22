@@ -27,6 +27,8 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -39,7 +41,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
 
   private Integer referenceMonthId;
   private SortedSet<Integer> selectedMonthIds;
-  private Key currentWrapperKey;
+  private Set<Key> currentWrapperKeys = new HashSet<Key>();
 
   private HistoChartBuilder histoChartBuilder;
 
@@ -62,7 +64,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     this.selectionService = directory.get(SelectionService.class);
     this.selectionService.addListener(this, SeriesWrapper.TYPE);
 
-    this.currentWrapperKey = getMainSummaryWrapper();
+    setMainSummaryWrapperKey();
 
     histoChartBuilder = new HistoChartBuilder(new HistoChartConfig(true, true, false, true, true, false, true, false),
                                               new ScrollableHistoChartRange(12, 6, false, repository),
@@ -98,7 +100,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
   }
 
   public void reset() {
-    this.currentWrapperKey = getMainSummaryWrapper();
+    setMainSummaryWrapperKey();
   }
 
   private StackChartColors createStackColors(String leftBar, String leftBorder,
@@ -122,7 +124,8 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     builder.add("balanceChart", balanceChart);
     builder.add("seriesChart", seriesChart);
 
-    builder.add("histoChartLabel", histoChartBuilder.getLabel()).getComponent();
+    builder.add("histoChartLabel", histoChartBuilder.getLabel());
+    builder.add("histoChartLegend", histoChartBuilder.getLegend());
     balanceChartLabel = builder.add("balanceChartLabel", new JLabel()).getComponent();
     seriesChartLabel = builder.add("seriesChartLabel", new JLabel()).getComponent();
   }
@@ -135,61 +138,64 @@ public class SeriesChartsPanel implements GlobSelectionListener {
 
   public void selectionUpdated(GlobSelection selection) {
     if (selection.isRelevantForType(SeriesWrapper.TYPE)) {
-      GlobList wrappers = selection.getAll(SeriesWrapper.TYPE);
-      if (wrappers.size() == 1) {
-        currentWrapperKey = wrappers.getFirst().getKey();
-      }
-      else if (wrappers.size() == 0) {
-        currentWrapperKey = getMainSummaryWrapper();
+      GlobList selectedWrappers = selection.getAll(SeriesWrapper.TYPE);
+      if (selectedWrappers.isEmpty()) {
+        setMainSummaryWrapperKey();
       }
       else {
-        currentWrapperKey = null;
+        currentWrapperKeys.clear();
+        currentWrapperKeys.addAll(selectedWrappers.getKeyList());
       }
     }
 
     update(true);
   }
 
-  private Key getMainSummaryWrapper() {
-    return Key.create(SeriesWrapper.TYPE, SeriesWrapper.BALANCE_SUMMARY_ID);
+  private void setMainSummaryWrapperKey() {
+    currentWrapperKeys.clear();
+    currentWrapperKeys.add(Key.create(SeriesWrapper.TYPE, SeriesWrapper.BALANCE_SUMMARY_ID));
   }
 
   private void update(final boolean resetPosition) {
-    Glob currentWrapper = null;
-    if (currentWrapperKey != null) {
-      currentWrapper = repository.find(currentWrapperKey);
-    }
-    if ((referenceMonthId == null) || (currentWrapper == null) || repository.find(CurrentMonth.KEY) == null) {
+    GlobList currentWrappers = new GlobList();
+    currentWrappers.addAll(currentWrapperKeys, repository);
+
+    Set<Integer> types = currentWrappers.getValueSet(SeriesWrapper.ITEM_TYPE);
+    if ((referenceMonthId == null) || (types.size() != 1) || repository.find(CurrentMonth.KEY) == null) {
       histoChartBuilder.clear();
       return;
     }
-    switch (SeriesWrapperType.get(currentWrapper)) {
+    switch (SeriesWrapperType.get(types.iterator().next())) {
       case BUDGET_AREA: {
-        BudgetArea budgetArea = BudgetArea.get(currentWrapper.get(SeriesWrapper.ITEM_ID));
-        if (budgetArea.equals(BudgetArea.UNCATEGORIZED)) {
+        List<BudgetArea> budgetAreas = BudgetArea.getAll(currentWrappers.getValues(SeriesWrapper.ITEM_ID));
+        if (budgetAreas.size() == 1 && budgetAreas.contains(BudgetArea.UNCATEGORIZED)) {
           histoChartBuilder.showUncategorizedHisto(referenceMonthId, resetPosition);
           updateUncategorizedBalanceStack();
           updateUncategorizedSeriesStack();
         }
         else {
-          histoChartBuilder.showBudgetAreaHisto(budgetArea, referenceMonthId, resetPosition);
-          updateMainBalanceStack(budgetArea);
-          updateBudgetAreaSeriesStack(budgetArea, null);
+          histoChartBuilder.showBudgetAreaHisto(budgetAreas, referenceMonthId, resetPosition);
+
+          BudgetArea first = budgetAreas.get(0);
+          updateMainBalanceStack(first);
+          updateBudgetAreaSeriesStack(first, null);
         }
       }
       break;
 
       case SERIES: {
-        Integer seriesId = currentWrapper.get(SeriesWrapper.ITEM_ID);
+        Set<Integer> seriesIds = currentWrappers.getValueSet(SeriesWrapper.ITEM_ID);
+        histoChartBuilder.showSeriesHisto(seriesIds, referenceMonthId, resetPosition);
+
+        Integer seriesId = seriesIds.iterator().next();
         BudgetArea budgetArea = Series.getBudgetArea(seriesId, repository);
-        histoChartBuilder.showSeriesHisto(seriesId, referenceMonthId, resetPosition);
         updateMainBalanceStack(budgetArea);
         updateBudgetAreaSeriesStack(budgetArea, seriesId);
       }
       break;
 
       case SUMMARY: {
-        Integer id = currentWrapper.get(SeriesWrapper.ID);
+        Integer id = currentWrappers.getFirst().get(SeriesWrapper.ID);
         if (id.equals(SeriesWrapper.BALANCE_SUMMARY_ID)) {
           histoChartBuilder.showMainBalanceHisto(referenceMonthId, resetPosition);
           updateMainBalanceStack(null);
@@ -208,7 +214,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       break;
 
       default:
-        throw new InvalidParameter("Unexpected case: " + currentWrapper);
+        throw new InvalidParameter("Unexpected case: " + types);
     }
   }
 

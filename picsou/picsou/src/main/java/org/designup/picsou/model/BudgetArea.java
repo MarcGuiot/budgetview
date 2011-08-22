@@ -15,6 +15,10 @@ import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public enum BudgetArea implements GlobConstantContainer {
   ALL("ALL", -1, false, false, false),
   INCOME("INCOME", 0, true, true, true),
@@ -108,6 +112,14 @@ public enum BudgetArea implements GlobConstantContainer {
         return OTHER;
     }
     throw new ItemNotFound(id + " not associated to any BugdetArea enum value");
+  }
+
+  public static List<BudgetArea> getAll(Integer[] ids) {
+    List<BudgetArea> result = new ArrayList<BudgetArea>();
+    for (Integer id : ids) {
+      result.add(get(id));
+    }
+    return Collections.unmodifiableList(result);
   }
 
   public Integer getId() {

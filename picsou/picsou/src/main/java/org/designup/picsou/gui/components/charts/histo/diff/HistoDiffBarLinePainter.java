@@ -15,7 +15,6 @@ public class HistoDiffBarLinePainter implements HistoPainter {
   private HistoDiffDataset dataset;
   private HistoDiffColors colors;
   private boolean showActualInTheFuture;
-  private BasicStroke actualLineStroke;
 
   private static final int PADDING = 4;
 
@@ -23,7 +22,6 @@ public class HistoDiffBarLinePainter implements HistoPainter {
     this.dataset = dataset;
     this.colors = colors;
     this.showActualInTheFuture = showActualInTheFuture;
-    this.actualLineStroke = DEFAULT_LINE_STROKE;
   }
 
   public HistoDataset getDataset() {
@@ -44,21 +42,21 @@ public class HistoDiffBarLinePainter implements HistoPainter {
       int left = metrics.left(i) + PADDING;
       int width = metrics.columnWidth() - 2 * PADDING;
 
-      Double reference = dataset.getReferenceValue(i);
+      double reference = dataset.getReferenceValue(i);
       boolean isRollover = rollover.isOnColumn(i);
       boolean isSelected = dataset.isSelected(i);
 
       g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, getFillAlpha(isSelected, isRollover)));
-      g2.setColor(colors.getFillColor());
+      g2.setColor(colors.getFillColor(reference, dataset.isInverted()));
       g2.fillRect(left, metrics.barTop(reference),
                   width, metrics.barHeight(reference));
       g2.setComposite(AlphaComposite.Src);
     }
 
-    g2.setColor(colors.getLineColor());
-    g2.setStroke(actualLineStroke);
-
-    int currentY = metrics.y(dataset.getActualValue(0));
+    double actual = dataset.getActualValue(0);
+    g2.setColor(colors.getLineColor(actual, dataset.isInverted()));
+    g2.setStroke(DEFAULT_LINE_STROKE);
+    int currentY = metrics.y(actual);
     if (dataset.size() == 1) {
       g2.drawLine(metrics.left(0), currentY, metrics.right(0), currentY);
       g2.fillOval(metrics.middleX(0), currentY, 2, 2);

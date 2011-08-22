@@ -26,10 +26,12 @@ public class HistoLineDatasetBuilder extends HistoDatasetBuilder {
   public void showLine(HistoLineColors colors, String messageKey, String... args) {
     histoChart.update(new HistoLinePainter(dataset, colors));
     updateLabel(label, "seriesAnalysis.chart.histo." + messageKey, args);
+    updateLegend();
   }
 
   public void showBars(HistoLineColors colors, String messageKey, String... args) {
     histoChart.update(new HistoBarPainter(dataset, colors));
     updateLabel(label, "seriesAnalysis.chart.histo." + messageKey, args);
+    updateLegend();
   }
 }

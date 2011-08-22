@@ -36,6 +36,9 @@ public class HistoDatasetBuilder {
     label.setText(Lang.get(messageKey, args));
   }
 
+  protected void updateLegend() {
+  }
+
   protected boolean isCurrentMonth(int monthId) {
     return CurrentMonth.isCurrentMonth(monthId, repository);
   }

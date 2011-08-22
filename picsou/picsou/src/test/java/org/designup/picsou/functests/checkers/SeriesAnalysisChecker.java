@@ -65,13 +65,14 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
     assertThat(table.rowEquals(index, 0, COUNT_COLUMN, Utils.join(new String[]{"", label}, values)));
   }
 
-  public void select(String label) {
-    Table table = getTable();
-    int index = getRow(label, table);
-    if (index < 0) {
-      Assert.fail("No line found with label '" + label + "' - available names: " + getLineLabels());
+  public SeriesAnalysisChecker select(String... labels) {
+    if (labels.length != 0) {
+      getTable().selectRowsWithText(SeriesEvolutionTableView.LABEL_COLUMN_INDEX, labels);
     }
-    table.selectRow(index);
+    else {
+      getTable().clearSelection();
+    }
+    return this;
   }
 
   public void clearSelection() {
@@ -207,35 +208,42 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
     Assert.assertEquals(expectedClipboardContent, Clipboard.getContentAsText());
   }
 
-  public void checkHistoChartLabel(String text) {
+  public SeriesAnalysisChecker checkHistoChartLabel(String text) {
     TextBox textBox = getPanel().getTextBox("histoChartLabel");
     Assert.assertEquals(text, org.uispec4j.utils.Utils.cleanupHtml(textBox.getText()));
+    return this;
   }
 
-  public void checkBalanceChartLabel(String text) {
+  public SeriesAnalysisChecker checkBalanceChartLabel(String text) {
     TextBox textBox = getPanel().getTextBox("balanceChartLabel");
     Assert.assertEquals(text, org.uispec4j.utils.Utils.cleanupHtml(textBox.getText()));
+    return this;
   }
 
-  public void checkSeriesChartLabel(String text) {
+  public SeriesAnalysisChecker checkSeriesChartLabel(String text) {
     TextBox textBox = getPanel().getTextBox("seriesChartLabel");
     Assert.assertEquals(text, org.uispec4j.utils.Utils.cleanupHtml(textBox.getText()));
+    return this;
   }
 
-  public void selectNextMonth() {
+  public SeriesAnalysisChecker selectNextMonth() {
     getPanel().getButton("nextMonth").click();
+    return this;
   }
 
-  public void checkNextMonthSelectionDisabled() {
+  public SeriesAnalysisChecker checkNextMonthSelectionDisabled() {
     assertFalse(getPanel().getButton("nextMonth").isEnabled());
+    return this;
   }
 
-  public void selectPreviousMonth() {
+  public SeriesAnalysisChecker selectPreviousMonth() {
     getPanel().getButton("previousMonth").click();
+    return this;
   }
 
-  public void checkPreviousMonthSelectionDisabled() {
+  public SeriesAnalysisChecker checkPreviousMonthSelectionDisabled() {
     assertFalse(getPanel().getButton("previousMonth").isEnabled());
+    return this;
   }
 
   public SeriesAnalysisChecker checkTableHidden() {
@@ -255,6 +263,20 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
 
   public SeriesAnalysisChecker checkToggleLabel(String expectedLabel) {
     assertThat(getPanel().getButton("toggleTable").textEquals(expectedLabel));
+    return this;
+  }
+
+  public SeriesAnalysisChecker checkLegendShown(String lineText, String fillText) {
+    Panel legendPanel = getPanel().getPanel("histoChartLegend");
+    assertThat(legendPanel.isVisible());
+    assertThat(legendPanel.getTextBox("lineLabelText").textEquals(lineText));
+    assertThat(legendPanel.getTextBox("fillLabelText").textEquals(fillText));
+    return this;
+  }
+
+  public SeriesAnalysisChecker checkLegendHidden() {
+    Panel legendPanel = getPanel().getPanel("histoChartLegend");
+    assertFalse(legendPanel.isVisible());
     return this;
   }
 

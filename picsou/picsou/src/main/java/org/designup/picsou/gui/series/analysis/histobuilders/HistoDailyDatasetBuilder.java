@@ -34,5 +34,6 @@ public class HistoDailyDatasetBuilder extends HistoDatasetBuilder {
   public void apply(HistoDailyColors colors, String messageKey, String... args) {
     histoChart.update(new HistoDailyPainter(dataset, colors));
     updateLabel(label, "seriesAnalysis.chart.histo." + messageKey, args);
+    updateLegend();
   }
 }

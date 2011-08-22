@@ -46,6 +46,7 @@ import static org.globsframework.utils.Utils.intRange;
 public class SeriesEvolutionTableView extends View {
 
   public static final int LABEL_COLUMN_INDEX = 1;
+
   public int monthColumnsCount = 12;
 
   private GlobTableView tableView;

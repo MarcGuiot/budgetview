@@ -7,6 +7,8 @@ import org.globsframework.model.Key;
 
 public class HistoDiffDataset extends AbstractHistoDataset<HistoDiffElement> {
 
+  private int multiplier = 1;
+
   public HistoDiffDataset(String tooltipKey) {
     super(tooltipKey);
   }
@@ -27,20 +29,34 @@ public class HistoDiffDataset extends AbstractHistoDataset<HistoDiffElement> {
                     Formatting.toString(getActualValue(index)));
   }
 
-  public Double getReferenceValue(int index) {
+  public double getReferenceValue(int index) {
     Double result = getElement(index).referenceValue;
     if (result == null) {
       return 0.0;
     }
-    return result;
+    return result * multiplier;
   }
 
-  public Double getActualValue(int index) {
+  public double getActualValue(int index) {
     Double result = getElement(index).actualValue;
     if (result == null) {
       return 0.0;
     }
-    return result;
+    return result * multiplier;
+  }
+
+  public double getMaxPositiveValue() {
+    if (multiplier > 0) {
+      return super.getMaxPositiveValue();
+    }
+    return super.getMaxNegativeValue();
+  }
+
+  public double getMaxNegativeValue() {
+    if (multiplier > 0) {
+      return super.getMaxNegativeValue();
+    }
+    return super.getMaxPositiveValue();
   }
 
   public boolean isFuture(int index) {
@@ -51,4 +67,11 @@ public class HistoDiffDataset extends AbstractHistoDataset<HistoDiffElement> {
     return getElement(index).current;
   }
 
+  public void setInverted() {
+    this.multiplier = -1;
+  }
+
+  public boolean isInverted() {
+    return multiplier < 0;
+  }
 }
