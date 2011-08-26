@@ -4,8 +4,8 @@ import org.apache.commons.collections.iterators.ReverseListIterator;
 import org.designup.picsou.bank.BankPluginService;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.gui.importer.utils.NoOperations;
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.model.CurrentAccountInfo;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzer;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.importer.utils.DateFormatAnalyzer;
@@ -18,6 +18,7 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.utils.*;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
@@ -42,9 +43,9 @@ public class ImportSession {
   private boolean load = false;
   private int lastLoadOperationsCount = 0;
   private int importedOperationsCount = 0;
-  private List<Integer> accountIds = Collections.emptyList();
+  private GlobList accountIds = new GlobList();
   private ChangeSet changes;
-  private boolean isAccountNeeded;
+  private Glob realAccount;
 
   public ImportSession(GlobRepository referenceRepository, Directory directory) {
     this.referenceRepository = referenceRepository;
@@ -60,12 +61,13 @@ public class ImportSession {
     return localRepository;
   }
 
-  public List<String> loadFile(File file) throws IOException, TruncatedFile, NoOperations {
+  public List<String> loadFile(File file, final Glob realAccount) throws IOException, TruncatedFile, NoOperations {
+    this.realAccount = realAccount;
     load = true;
     localRepository.reset(GlobList.EMPTY, Transaction.TYPE, ImportedTransaction.TYPE, MonthDay.TYPE, CurrentMonth.TYPE,
                           DeferredCardDate.TYPE, AccountCardType.TYPE, AccountType.TYPE);
     GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, MonthDay.TYPE, DeferredCardDate.TYPE,
-                        AccountCardType.TYPE, CurrentMonth.TYPE, Month.TYPE, CurrentAccountInfo.TYPE};
+                        AccountCardType.TYPE, CurrentMonth.TYPE, Month.TYPE, CurrentAccountInfo.TYPE, RealAccount.TYPE};
     localRepository.reset(referenceRepository.getAll(types), types);
 
     LocalGlobRepository importRepository;
@@ -82,13 +84,12 @@ public class ImportSession {
     finally {
       importRepository.completeChangeSet();
       changes = importRepository.getCurrentChanges();
-      changes.safeVisit(Account.TYPE, new ChangeSetVisitor() {
+      changes.safeVisit(RealAccount.TYPE, new ChangeSetVisitor() {
         public void visitCreation(Key key, FieldValues values) throws Exception {
-          tmpAccountIds.add(key.get(Account.ID));
+          tmpAccountIds.add(key.get(RealAccount.ID));
         }
 
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-          tmpAccountIds.add(key.get(Account.ID));
         }
 
         public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
@@ -101,17 +102,31 @@ public class ImportSession {
       });
     }
     accountIds =
-      new ArrayList(Arrays.asList(importRepository.getAll(Account.TYPE,
-                                                          GlobMatchers.contained(Account.ID, tmpAccountIds))
-        .sort(Account.NAME).getValues(Account.ID)));
-
-    isAccountNeeded = accountIds.isEmpty();
-    readNext(true);
+      importRepository.getAll(RealAccount.TYPE, GlobMatchers.contained(RealAccount.ID, tmpAccountIds))
+        .sort(RealAccount.NAME).sort(RealAccount.NUMBER);
+    if (realAccount != null) {
+      if (accountIds.size() > 1 && realAccount != null) {
+        Log.write("mulitple account : ignoring realAccount");
+      }
+      else {
+        if (accountIds.size() == 1) {
+          Glob account = accountIds.remove(0);
+          importRepository.delete(account.getKey());
+        }
+        accountIds.add(realAccount);
+        importRepository.getAll(ImportedTransaction.TYPE)
+          .safeApply(new GlobFunctor() {
+            public void run(Glob glob, GlobRepository repository) throws Exception {
+              repository.update(glob.getKey(), ImportedTransaction.ACCOUNT, realAccount.get(RealAccount.ID));
+            }
+          }, importRepository);
+      }
+    }
     return getImportedTransactionFormat(importRepository);
   }
 
-  private void readNext(boolean loadTransactions) throws NoOperations {
-    if (accountIds.isEmpty() && !loadTransactions) {
+  private Glob readNext() throws NoOperations {
+    if (accountIds.isEmpty()) {
       load = false;
       throw new NoOperations();
     }
@@ -123,29 +138,56 @@ public class ImportSession {
     localRepository.update(info.getKey(), CurrentAccountInfo.BANK, null);
 
     localRepository.startChangeSet();
-    Integer currentAccoutId = null;
+    Glob currentImportedAccount;
     try {
-      if (!accountIds.isEmpty()) {
-        currentAccoutId = accountIds.remove(0);
-      }
-      changes.safeVisit(new forwardChanges(currentAccoutId));
+      currentImportedAccount = accountIds.remove(0);
+      changes.safeVisit(new forwardChanges(currentImportedAccount.get(RealAccount.ID)));
     }
     finally {
       localRepository.completeChangeSet();
     }
 
     GlobList importedOperations = localRepository.getAll(ImportedTransaction.TYPE);
-    if (importedOperations.isEmpty() && currentAccoutId == null) {
-      throw new NoOperations();
-    }
+//    if (importedOperations.isEmpty()) {
+//      throw new NoOperations();
+//    }
 
-    BankPluginService bankPluginService = directory.get(BankPluginService.class);
-    if (currentAccoutId != null) {
-      isAccountNeeded |= !bankPluginService.useCreatedAccount(localRepository.find(Key.create(Account.TYPE, currentAccoutId)));
+    if (realAccount == null) {
+      currentImportedAccount = findOnExistingRealAccount(currentImportedAccount);
+      Integer realAccountId = currentImportedAccount.get(RealAccount.ID);
+      for (Glob operation : importedOperations) {
+        localRepository.update(operation.getKey(), ImportedTransaction.ACCOUNT, realAccountId);
+      }
     }
-    isAccountNeeded |= !bankPluginService.apply(referenceRepository, localRepository, importChangeSet);
 
     lastLoadOperationsCount = importedOperations.size();
+    return currentImportedAccount;
+  }
+
+  private Glob findOnExistingRealAccount(Glob account) {
+    GlobList matchingAccount = new GlobList();
+    GlobList globList = localRepository.getAll(RealAccount.TYPE);
+    for (Glob glob : globList) {
+      if (RealAccount.areStriclyEquivalent(account, glob)) {
+        matchingAccount.add(glob);
+      }
+    }
+    if (matchingAccount.isEmpty()) {
+      for (Glob glob : globList) {
+        if (RealAccount.areEquivalent(account, glob)) {
+          matchingAccount.add(glob);
+        }
+      }
+      if (matchingAccount.isEmpty()){
+        return account;
+      }
+    }
+    if (matchingAccount.size() == 1) {
+      RealAccount.copy(localRepository, account, matchingAccount.getFirst());
+      localRepository.delete(account.getKey());
+      return matchingAccount.getFirst();
+    }
+    return account;
   }
 
   private List<String> getImportedTransactionFormat(final GlobRepository repository) {
@@ -155,7 +197,7 @@ public class ImportSession {
     return dateFormatAnalyzer.parse(valueSet);
   }
 
-  public Key importTransactions(Key currentlySelectedAccount, String selectedDateFormat) {
+  public Key importTransactions(Glob importedAccount, Glob currentlySelectedAccount, String selectedDateFormat) {
     localRepository.delete(Key.create(CurrentAccountInfo.TYPE, 0));
     if (!load) {
       return null;
@@ -164,17 +206,12 @@ public class ImportSession {
       load = false;
     }
 
-    if (isAccountNeeded) {
-      GlobList transactions = localRepository.getAll(ImportedTransaction.TYPE);
-      for (Glob transaction : transactions) {
-        localRepository.update(transaction.getKey(), ImportedTransaction.ACCOUNT, currentlySelectedAccount.get(Account.ID));
-      }
-    }
-
-    GlobList allNewTransactions = convertImportedTransaction(selectedDateFormat);
-
     BankPluginService bankPluginService = directory.get(BankPluginService.class);
-    bankPluginService.postApply(allNewTransactions, referenceRepository, localRepository, importChangeSet);
+    GlobList transactions = localRepository.getAll(ImportedTransaction.TYPE);
+    bankPluginService.apply(currentlySelectedAccount, importedAccount, transactions, referenceRepository,
+                            localRepository, importChangeSet);
+
+    GlobList allNewTransactions = convertImportedTransaction(selectedDateFormat, currentlySelectedAccount.get(Account.ID));
 
     Key importKey = createImport(typedStream, allNewTransactions, localRepository);
     localRepository.deleteAll(ImportedTransaction.TYPE);
@@ -228,7 +265,7 @@ public class ImportSession {
     return importedOperationsCount;
   }
 
-  private GlobList convertImportedTransaction(String selectedDateFormat) {
+  private GlobList convertImportedTransaction(String selectedDateFormat, Integer accountId) {
     DateFormat dateFormat = new SimpleDateFormat(selectedDateFormat);
     GlobList importedTransactions = localRepository.getAll(ImportedTransaction.TYPE).sort(ImportedTransaction.ID);
     if (importedTransactions.isEmpty()) {
@@ -266,7 +303,7 @@ public class ImportSession {
         value(Transaction.DAY, userDate == null ? null : Month.getDay(userDate)),
         value(Transaction.BUDGET_MONTH, userDate == null ? null : Month.getMonthId(userDate)),
         value(Transaction.BUDGET_DAY, userDate == null ? null : Month.getDay(userDate)),
-        value(Transaction.ACCOUNT, importedTransaction.get(ImportedTransaction.ACCOUNT)),
+        value(Transaction.ACCOUNT, accountId),
         value(Transaction.AMOUNT, importedTransaction.get(ImportedTransaction.AMOUNT)),
         value(Transaction.NOTE, importedTransaction.get(ImportedTransaction.NOTE)),
         value(Transaction.BANK_TRANSACTION_TYPE, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.BANK_TRANSACTION_TYPE))),
@@ -315,18 +352,13 @@ public class ImportSession {
     return importKey;
   }
 
-  public boolean isAccountNeeded() {
-    return isAccountNeeded;
-  }
-
-  public boolean gotoNextContent() {
+  public Glob gotoNextContent() {
     try {
-      readNext(false);
+      return readNext();
     }
     catch (NoOperations operations) {
-      return false;
+      return null;
     }
-    return true;
   }
 
   private class forwardChanges implements ChangeSetVisitor {
@@ -340,15 +372,12 @@ public class ImportSession {
       if (key.getGlobType() == ImportedTransaction.TYPE && Utils.equal(currentAccoutId, values.get(ImportedTransaction.ACCOUNT))) {
         localRepository.create(key, values.toArray());
       }
-      if (key.getGlobType() == Account.TYPE && Utils.equal(currentAccoutId, key.get(Account.ID))) {
+      if (key.getGlobType() == RealAccount.TYPE && Utils.equal(currentAccoutId, key.get(RealAccount.ID))) {
         localRepository.create(key, values.toArray());
       }
     }
 
     public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-      if (key.getGlobType() == Account.TYPE && Utils.equal(currentAccoutId, key.get(Account.ID))) {
-        localRepository.update(key, values.toArray());
-      }
     }
 
     public void visitDeletion(Key key, FieldValues previousValues) throws Exception {

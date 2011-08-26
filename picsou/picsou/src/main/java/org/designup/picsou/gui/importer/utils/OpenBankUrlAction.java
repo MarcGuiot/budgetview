@@ -28,7 +28,7 @@ public class OpenBankUrlAction extends AbstractAction implements GlobSelectionLi
   public void selectionUpdated(GlobSelection selection) {
     GlobList banks = selection.getAll(Bank.TYPE);
     if (banks.size() == 1) {
-      lastUrl = banks.getFirst().get(Bank.DOWNLOAD_URL);
+      lastUrl = banks.getFirst().get(Bank.URL);
     }
     else {
       lastUrl = null;

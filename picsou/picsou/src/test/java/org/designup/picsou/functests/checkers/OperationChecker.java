@@ -8,6 +8,7 @@ import org.globsframework.utils.Ref;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.fail;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
@@ -39,11 +40,33 @@ public class OperationChecker {
   }
 
   public void importOfxFile(String name) {
-    importFile(new String[]{name}, null, null, null);
+    ImportDialogChecker importDialogChecker = openImportDialog()
+      .setFilePath(name)
+      .acceptFile();
+
+    int count = 0;
+    while (!importDialogChecker.isLastStep() && count < 10){
+      if (importDialogChecker.isNew()){
+        importDialogChecker
+          .setMainAccount();
+      }
+      count++;
+      if (!importDialogChecker.isLastStep()){
+        importDialogChecker.checkNoErrorMessage();
+      }
+      importDialogChecker.doImport();
+    }
+
+    importDialogChecker.complete();
   }
 
   public void importOfxFile(String name, double initialAmount) {
-    importFile(new String[]{name}, null, initialAmount, null);
+    openImportDialog()
+      .selectFiles(name)
+      .acceptFile()
+      .setPosition(initialAmount)
+      .setMainAccount()
+      .completeImport();
   }
 
   public void importOfxWithDeferred(String fileName, String cardAccountName) {
@@ -56,11 +79,10 @@ public class OperationChecker {
       .setFilePath(fileName)
       .acceptFile();
 
-    AccountEditionChecker accountEditionChecker = importDialog.addNewAccount();
-    accountEditionChecker
+    importDialog.addNewAccount()
       .setAccountNumber(accountName)
-      .setAccountName(accountName)
-      .validate();
+      .setMainAccount()
+      .setAccountName(accountName);
     importDialog.doImport();
     importDialog.completeLastStep();
   }
@@ -70,7 +92,7 @@ public class OperationChecker {
       .setFilePath(fileName)
       .acceptFile();
 
-    AccountEditionChecker accountEditionChecker = importDialog.addNewAccount();
+    ImportDialogChecker accountEditionChecker = importDialog.addNewAccount();
     if (bank != null) {
       accountEditionChecker
         .selectBank(bank);
@@ -78,16 +100,12 @@ public class OperationChecker {
     accountEditionChecker
       .setAccountNumber("1111")
       .setAccountName("card 1111")
-      .setAsDeferredCard()
-      .validate();
+      .setDeferredAccount();
 
     if (position != null) {
-      importDialog.doImportWithBalance()
-        .setAmountAndEnter(position);
+      importDialog.setPosition(position);
     }
-    else {
-      importDialog.doImport();
-    }
+    importDialog.doImport();
     importDialog.completeLastStep();
   }
 
@@ -96,19 +114,25 @@ public class OperationChecker {
       .setFilePath(fileName)
       .acceptFile();
 
-    AccountEditionChecker accountEditionChecker = importDialog.openAccount();
-    accountEditionChecker
+    importDialog.addNewAccount()
       .setAccountNumber("1111")
-      .setAccountName(accountName)
-      .setAsDeferredCard()
-      .validate();
-
-    importDialog.doImport();
+      .setAccountName(accountName);
+    importDialog
+      .setDeferredAccount()
+      .doImport();
     importDialog.completeLastStep();
   }
 
   public void importOfxFile(String name, String bank) {
-    importFile(new String[]{name}, bank, null, null);
+    ImportDialogChecker importDialogChecker = openImportDialog()
+      .selectFiles(name)
+      .acceptFile();
+    while  (!importDialogChecker.isLastStep()){
+      importDialogChecker.selectBank(bank)
+        .setMainAccount()
+        .doImport();
+    }
+    importDialogChecker.complete();
   }
 
   public void importOfxFile(String name, String bank, Double amount) {
@@ -119,34 +143,62 @@ public class OperationChecker {
     importFile(new String[]{name}, null, amount, null);
   }
 
-  public void importOfxOnAccount(String fileName, String newAccount, String existingAccount) {
+  public void importOfxOnAccount(String fileName, String existingAccount) {
     ImportDialogChecker importDialog = openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
-    importDialog.openChooseAccount()
-      .associate(newAccount, existingAccount)
-      .validate();
+    importDialog.selectAccount(existingAccount);
 
     importDialog.completeImport();
   }
 
   public void importQifFile(String file, String bank) {
-    importFile(new String[]{file}, bank, null, null);
+    openImportDialog()
+      .setFilePath(file)
+      .acceptFile()
+      .selectAccount("Main account")
+      .completeImport();
   }
 
   public void importQifFile(String file, String bank, Double amount) {
-    importFile(new String[]{file}, bank, amount, null);
+    openImportDialog()
+      .setFilePath(file)
+      .acceptFile()
+      .createNewAccount(bank, "Main account", "", amount)
+      .setMainAccount()
+      .completeImport();
   }
 
   public void importQifFile(String file, String bank, String targetAccount) {
-    importFile(new String[]{file}, bank, null, targetAccount);
+    openImportDialog().selectFiles(file)
+      .acceptFile()
+      .selectAccount(targetAccount)
+      .completeImport();
   }
 
-  public void importQifFiles(String bank, String... files) {
-    importFile(files, bank, 0., null);
+  public void importQifFiles(String bank, String file) {
+//    String txt = "";
+//    for (String name : files) {
+//      txt += name + ";";
+//    }
+    ImportDialogChecker importDialogChecker = openImportDialog()
+      .setFilePath(file)
+      .acceptFile();
+
+    while (!importDialogChecker.isLastStep()){
+      importDialogChecker
+        .setAccountName("Main account")
+        .setPosition(0)
+        .selectBank(bank)
+        .setMainAccount()
+        .doImport();
+    }
+
+    importDialogChecker.complete();
   }
 
   private void importFile(final String[] fileNames, final String bank, final Double amount, final String targetAccount) {
+    fail();
     Window dialog = WindowInterceptor.getModalDialog(getImportMenu().triggerClick());
     TextBox fileField = dialog.getInputTextBox("fileField");
     String txt = "";
@@ -165,7 +217,7 @@ public class OperationChecker {
         .defineAccount(bank, "Main account", DEFAULT_ACCOUNT_NUMBER);
     }
     else if (bank != null && asSelectBank(dialog)) { // OFX
-      importDialog.selectOfxAccountBank("Autre");
+      importDialog.selectBank("Autre");
     }
     if (targetAccount != null) {
       dialog.getComboBox("accountCombo").select(targetAccount);
@@ -192,7 +244,7 @@ public class OperationChecker {
       }
       if (bank != null && asSelectBank(dialog)) {
         importDialog
-          .selectOfxAccountBank(bank);
+          .selectBank(bank);
       }
       i++;
     }

@@ -62,6 +62,9 @@ public class DetailsTip implements Disposable {
         if (visible) {
           balloonTip.refreshLocation();
         }
+        else {
+          dispose();
+        }
       }
     };
     component.addHierarchyListener(visibilityUpdater);

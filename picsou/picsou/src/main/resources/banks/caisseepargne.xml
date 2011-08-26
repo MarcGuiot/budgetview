@@ -2,7 +2,7 @@
 <globs>
   <bankFormat id='6'>
 
-    <bank name="Caisse d'épargne" downloadUrl="https://www.caisse-epargne.fr" id='6'>
+    <bank name="Caisse d'épargne" url="https://www.caisse-epargne.fr" id='6' invalidPosition="true">
       <bankEntity id="18645"/>
       <bankEntity id="13335"/>
       <bankEntity id="12225"/>

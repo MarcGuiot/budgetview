@@ -30,7 +30,7 @@ public class InitialImportTest extends LoggedInFunctionalTestCase {
     importPanel.openImport()
       .selectFiles(file)
       .acceptFile()
-      .selectOfxAccountBank("Autre")
+      .selectBank("Autre")
       .setMainAccount()
       .doImport()
       .completeLastStep();

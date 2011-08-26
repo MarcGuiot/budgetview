@@ -59,7 +59,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     savingsAccounts.createNewAccount().setAsSavings()
       .setAccountName("Epargne CA")
-      .selectBank("CA")
+      .selectBank("Crédit Agricole")
       .setPosition(1000)
       .validate();
 

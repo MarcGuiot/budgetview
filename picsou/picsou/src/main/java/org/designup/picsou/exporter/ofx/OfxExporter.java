@@ -9,6 +9,7 @@ import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Strings;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -65,7 +66,11 @@ public class OfxExporter implements Exporter {
         if (bankEntity == null){
           bankEntity="-1";
         }
-        writer.writeBankMsgHeader(bankEntity, account.get(Account.BRANCH_ID), account.get(Account.NUMBER));
+        String number = account.get(Account.NUMBER);
+        if (Strings.isNullOrEmpty(number)){
+          number = account.get(Account.NAME);
+        }
+        writer.writeBankMsgHeader(bankEntity, account.get(Account.BRANCH_ID), number);
         Date date = writeTransactions(account);
         Date balanceDate = account.get(Account.POSITION_DATE);
         if (balanceDate == null) {

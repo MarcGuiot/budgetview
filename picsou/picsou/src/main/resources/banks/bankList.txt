@@ -1,3 +1,4 @@
+us/all.xml
 otherBank.xml
 caisseepargne.xml
 cic.xml

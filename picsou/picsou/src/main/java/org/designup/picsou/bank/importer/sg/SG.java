@@ -3,7 +3,7 @@ package org.designup.picsou.bank.importer.sg;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.javascript.host.Event;
 import org.designup.picsou.bank.BankSynchroService;
-import org.designup.picsou.bank.importer.BankPage;
+import org.designup.picsou.bank.importer.WebBankPage;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.utils.ApplicationColors;
@@ -32,12 +32,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class SG extends BankPage {
+public class SG extends WebBankPage {
   private static final String INDEX = "https://particuliers.secure.societegenerale.fr/index.html";
   private static final String URL_TELECHARGEMENT = "https://particuliers.secure.societegenerale.fr/restitution/tel_telechargement.html";
   //  private static final String INDEX = "file:index.html";
@@ -79,9 +78,10 @@ public class SG extends BankPage {
 
   public static class Init implements BankSynchroService.BankSynchro {
 
-    public void show(Directory directory, GlobRepository repository) {
+    public GlobList show(Directory directory, GlobRepository repository) {
       SG sg = SG.init(directory, repository);
-      sg.show();
+      sg.init();
+      return sg.show();
     }
   }
 
@@ -91,7 +91,6 @@ public class SG extends BankPage {
 
   public static SG init(final Directory directory, GlobRepository repository) {
     SG sg = new SG(directory, repository);
-    sg.init();
     return sg;
   }
 
@@ -179,7 +178,6 @@ public class SG extends BankPage {
         HtmlImage validerImg = zoneClavier.getElementById("tc_valider");
         valider.setAction(new ValiderPwdActionListener(validerImg));
         valider.setEnabled(true);
-        dialog.validate();
       }
       catch (IOException e1) {
         e1.printStackTrace();
@@ -273,8 +271,8 @@ public class SG extends BankPage {
               }
               createOrUpdateRealAccount(type, name, position, SG_ID);
             }
-            showAccounts();
             page = client.getPage(URL_TELECHARGEMENT);
+            doImport();
           }
         }
         catch (IOException e1) {
@@ -284,24 +282,22 @@ public class SG extends BankPage {
     }
   }
 
-  public List<File> loadFile() {
+  public void loadFile() {
     HtmlSelect compte = getElementById("compte");
     List<HtmlOption> accountList = compte.getOptions();
-    List<File> downloadedFiles = new ArrayList<File>();
     for (HtmlOption option : accountList) {
-      Glob realAccount = find(option, accountsInPage);
+      Glob realAccount = find(option, this.accounts);
       if (realAccount != null) {
         if (realAccount.get(RealAccount.IMPORTED)) {
           page = (HtmlPage)compte.setSelectedAttribute(option, true);
           File file = downloadFor(realAccount);
           if (file != null) {
-            downloadedFiles.add(file);
+            repository.update(realAccount.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
           }
         }
       }
     }
     client.closeAllWindows();
-    return downloadedFiles;
   }
 
   private Glob find(HtmlOption option, GlobList accounts) {
@@ -383,7 +379,6 @@ public class SG extends BankPage {
         Log.write("SG : can not find periode");
       }
     }
-
     HtmlAnchor anchor = findLink(page.getAnchors(), "telecharger");
 
     return downloadFile(realAccount, anchor);

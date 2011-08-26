@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.accounts;
 
-import org.designup.picsou.gui.accounts.utils.AccountTypeSelector;
 import org.designup.picsou.gui.bank.BankChooserDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.help.actions.HelpAction;
@@ -16,20 +15,16 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class AbstractAccountPanel<T extends GlobRepository> {
   protected JPanel panel;
@@ -52,10 +47,14 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     localDirectory = new DefaultDirectory(parentDirectory);
     selectionService = new SelectionService();
     localDirectory.add(selectionService);
-    accountTypeCombo = new AccountTypeCombo(localRepository);
+    accountTypeCombo = AccountTypeCombo.create(localRepository);
   }
 
-  protected void createComponents(GlobsPanelBuilder builder, Window dialog) {
+  public Directory getLocalDirectory() {
+    return localDirectory;
+  }
+
+  public void createComponents(GlobsPanelBuilder builder, Window dialog) {
 
     builder.add("accountTypeHelp", new HelpAction(Lang.get("account.panel.type.help"), "accountTypes",
                                                   Lang.get("help"), localDirectory, dialog));
@@ -71,6 +70,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         if ((currentAccount != null) && changeSet.containsChanges(currentAccount.getKey())) {
           accountTypeCombo.updateAccountTypeCombo(currentAccount);
           updateBank(currentAccount);
+          check();
         }
       }
     });
@@ -97,9 +97,12 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     positionEditor.setVisible(visible);
   }
 
-  public void setWarning(int accountType, int cardType) {
+  public void setWarning(Integer accountType, int cardType) {
+    if (accountType == null){
+      return;
+    }
     boolean visible = false;
-    if (accountType == AccountType.MAIN.getId()) {
+    if (AccountType.MAIN.getId().equals(accountType)) {
       if (cardType == AccountCardType.CREDIT.getId()) {
         messageWarning.setText(Lang.get("account.credit.warning"));
         visible = true;
@@ -129,7 +132,10 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   public void setAccount(Glob account) {
     this.currentAccount = account;
     accountTypeCombo.updateAccountTypeCombo(currentAccount);
-    setWarning(account.get(Account.ACCOUNT_TYPE), account.get(Account.CARD_TYPE));
+    Integer accountType = account.get(Account.ACCOUNT_TYPE);
+    if (accountType != null) {
+      setWarning(accountType, account.get(Account.CARD_TYPE));
+    }
     if (account != null) {
       selectionService.select(account);
     }
@@ -152,12 +158,24 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         nameField.getComponent().requestFocus();
         return false;
       }
+      if (localRepository.getAll(Account.TYPE, GlobMatchers.fieldEquals(Account.NAME, currentAccount.get(Account.NAME))).size() != 1){
+        errorTip = ErrorTip.showLeft(nameField.getComponent(), Lang.get("account.error.duplicate.name"), localDirectory);
+        return false;
+      }
       if (currentAccount.get(Account.BANK) == null) {
         errorTip = ErrorTip.showLeft(bankSelectionButton, Lang.get("account.error.missing.bank"), localDirectory);
         return false;
       }
+      if (currentAccount.get(Account.ACCOUNT_TYPE) == null) {
+        errorTip = ErrorTip.showLeft(accountTypeCombo.accountTypeCombo, Lang.get("account.error.missing.account.type"), localDirectory);
+        return false;
+      }
     }
     return true;
+  }
+
+  public Glob getAccount() {
+    return currentAccount;
   }
 
   private class AccountBankAction extends AbstractAction implements GlobSelectionListener {

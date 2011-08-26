@@ -37,7 +37,7 @@ public class ImportedTransaction {
 
   public static BooleanField IS_OFX;
 
-  @Target(Account.class)
+  @Target(RealAccount.class)
   public static LinkField ACCOUNT;
 
   public static BooleanField SPLIT;

@@ -16,11 +16,7 @@ public class DummyBankPlugin implements BankPlugin {
     bankPluginService.add(bankEntity.get(BankEntity.BANK), this);
   }
 
-  public boolean useCreatedAccount() {
-    return false;
-  }
-
-  public boolean apply(Glob newAccount, ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
+  public boolean apply(Glob importedAccount, Glob newAccount, GlobList transactions, ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
     GlobList list = localRepository.getAll(ImportedTransaction.TYPE);
     for (Glob glob : list) {
       localRepository.update(glob.getKey(), ImportedTransaction.AMOUNT, -234.);

@@ -2,60 +2,53 @@ package org.designup.picsou.bank;
 
 import org.designup.picsou.bank.specific.AbstractBankPlugin;
 import org.designup.picsou.model.Account;
-import org.designup.picsou.model.Transaction;
-import org.designup.picsou.gui.bank.BankChooserDialog;
+import org.designup.picsou.model.Bank;
+import org.designup.picsou.model.RealAccount;
+import org.designup.picsou.model.util.Amounts;
+import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.regex.Pattern;
 
 public class BankPluginService {
   private Map<Integer, BankPlugin> specific = new HashMap<Integer, BankPlugin>();
   private BankPlugin defaultPlugin = new AbstractBankPlugin() {
+
+    public boolean apply(Glob importedAccount, Glob account, GlobList transactions, ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
+      Glob bank = referenceRepository.findLinkTarget(account, Account.BANK);
+      if (bank.get(Bank.INVALID_POSITION)) {
+//      localRepository.update(account.getKey(), Account.);
+      }
+      else {
+        String amount = importedAccount.get(RealAccount.POSITION);
+        if (Strings.isNotEmpty(amount)) {
+          localRepository.update(account.getKey(),
+                                 FieldValue.value(Account.POSITION, Amounts.extractAmount(amount)),
+                                 FieldValue.value(Account.POSITION_DATE, importedAccount.get(RealAccount.POSITION_DATE)),
+                                 FieldValue.value(Account.TRANSACTION_ID, null));
+        }
+      }
+
+      return super.apply(importedAccount, account, transactions, referenceRepository, localRepository, changeSet);
+    }
+
     public int getVersion() {
       return 0;
     }
   };
 
-  public boolean useCreatedAccount(Glob account) {
-    Integer bankId = account.get(Account.BANK);
+  public boolean apply(Glob account, Glob currentImportedAcount, GlobList transactions, ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
+    int bankId = account.get(Account.BANK);
     BankPlugin bankPlugin = specific.get(bankId);
     if (bankPlugin == null) {
       bankPlugin = defaultPlugin;
     }
-    return bankPlugin.useCreatedAccount();
-  }
-
-  public boolean apply(ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
-    Set<Key> createdAcountsKey = changeSet.getCreated(Account.TYPE);
-    for (Key key : createdAcountsKey) {
-      Glob account = localRepository.get(key);
-      Integer bankId = account.get(Account.BANK);
-      if (bankId == null){
-        Glob sameAccount = findFirstSameAccount(referenceRepository, account);
-        if (sameAccount == null){
-          sameAccount = findFirstSameAccount(localRepository, account);
-        }
-        if (sameAccount != null){
-          bankId = sameAccount.get(Account.BANK);
-        }
-      }
-      BankPlugin bankPlugin = specific.get(bankId);
-      if (bankPlugin == null) {
-        bankPlugin = defaultPlugin;
-      }
-      return bankPlugin.apply(account, referenceRepository, localRepository, changeSet);
-    }
-    return false;
-  }
-
-  private Glob findFirstSameAccount(ReadOnlyGlobRepository referenceRepository, Glob account) {
-    return referenceRepository.getAll(Account.TYPE, GlobMatchers.and(
-      GlobMatchers.fieldEquals(Account.NUMBER, account.get(Account.NUMBER)),
-      GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID, account.get(Account.ID))))).getFirst();
+    return bankPlugin.apply(currentImportedAcount, account, transactions, referenceRepository, localRepository, changeSet);
   }
 
   public void add(Integer bankId, BankPlugin bankPlugin) {
@@ -65,18 +58,60 @@ public class BankPluginService {
     }
   }
 
-  public void postApply(GlobList transactions, GlobRepository referenceRepository, GlobRepository localRepository, ChangeSet importChangeSet) {
-    Set<Integer> accountIds = transactions.getValueSet(Transaction.ACCOUNT);
-    for (Integer accountId : accountIds) {
-      Glob account = localRepository.find(Key.create(Account.TYPE, accountId));
-      Integer bankId = account.get(Account.BANK);
-      BankPlugin bankPlugin = specific.get(bankId);
-      if (bankPlugin == null) {
-        bankPlugin = defaultPlugin;
+  public void postApply(Glob importedAccount, Glob account, GlobList transactions, GlobRepository referenceRepository, GlobRepository localRepository, ChangeSet importChangeSet) {
+    Integer bankId = account.get(RealAccount.BANK);
+    Glob bank = referenceRepository.findLinkTarget(account, Account.BANK);
+    /*
+    boolean isOfx = transactions.getFirst().get(ImportedTransaction.IS_OFX);
+    if (bank.get(Bank.INVERT_AMOUNT) && account.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId())) {
+      for (Glob transaction : transactions) {
+        localRepository.update(transaction.getKey(), ImportedTransaction.AMOUNT,
+                               -transaction.get(ImportedTransaction.AMOUNT));
       }
-      bankPlugin.postApply(transactions.filter(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId), localRepository),
-                           account,
-                           referenceRepository, localRepository, importChangeSet);
+    }
+    replace(transactions, localRepository, bank, Bank.CHANGE_NAME_OR_M_MATCH,
+            isOfx ? ImportedTransaction.OFX_NAME : ImportedTransaction.QIF_M,
+            OfxTransactionFinalizer.NAME_REGEXP, Bank.CHANGE_MEMO_OR_P_REPLACE);
+
+    replace(transactions, localRepository, bank, Bank.CHANGE_MEMO_OR_P_MATCH,
+            isOfx ? ImportedTransaction.OFX_NAME : ImportedTransaction.QIF_P,
+            OfxTransactionFinalizer.MEMO_REGEXP, Bank.CHANGE_NAME_OR_M_REPLACE);
+
+    if (bank.get(Bank.INVERT_LABEL)) {
+      for (Glob transaction : transactions) {
+        StringField memoField = isOfx ? ImportedTransaction.OFX_MEMO : ImportedTransaction.QIF_P;
+        StringField nameField = isOfx ? ImportedTransaction.OFX_NAME : ImportedTransaction.QIF_M;
+        String memoValue = transaction.get(memoField);
+        localRepository.update(transaction.getKey(), memoField, transaction.get(nameField));
+        localRepository.update(transaction.getKey(), nameField, memoValue);
+      }
+    }
+    */
+
+
+    BankPlugin bankPlugin = specific.get(bankId);
+    if (bankPlugin == null) {
+      bankPlugin = defaultPlugin;
+    }
+    bankPlugin.postApply(transactions, account, referenceRepository, localRepository, importChangeSet);
+  }
+
+  private void replace(GlobList transactions, GlobRepository localRepository, Glob bank,
+                       final StringField match, final StringField name,
+                       final Pattern regexp, final StringField replace) {
+    String nameRegex = bank.get(match);
+    if (Strings.isNotEmpty(nameRegex)) {
+      Pattern pattern = Pattern.compile(nameRegex);
+      for (Glob transaction : transactions) {
+        String s = transaction.get(name);
+        if (Strings.isNotEmpty(s)) {
+          String tmp = Utils.replace(pattern, regexp, s, bank.get(replace));
+          if (tmp != null) {
+            s = tmp;
+          }
+        }
+        localRepository.update(transaction.getKey(), name, s);
+      }
     }
   }
 }

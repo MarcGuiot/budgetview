@@ -93,7 +93,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
     public void setBank(Glob bank) {
       setEnabled(bank != null);
-      lastUrl = (bank != null) ? bank.get(Bank.DOWNLOAD_URL) : null;
+      lastUrl = (bank != null) ? bank.get(Bank.URL) : null;
     }
 
     public void actionPerformed(ActionEvent actionEvent) {

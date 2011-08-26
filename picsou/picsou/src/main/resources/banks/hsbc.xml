@@ -2,7 +2,7 @@
 <globs>
   <bankFormat id='11'>
 
-    <bank name="HSBC" downloadUrl="https://www.hsbc.fr/1/2/hsbc-france/particuliers/login" id="11">
+    <bank name="HSBC" url="https://www.hsbc.fr/1/2/hsbc-france/particuliers/login" id="11">
       <bankEntity id="30056"/>
       <bankEntity id="30368"/>
     </bank>

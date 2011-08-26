@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <globs>
   <bankFormat id='4'>
-    <bank name="Société Générale" id="4" downloadUrl="https://particuliers.societegenerale.fr" synchroEnable="true">
+    <bank name="Société Générale" id="4" url="https://particuliers.societegenerale.fr" downloadUrl="https://particuliers.societegenerale.fr">
       <bankEntity id="30003"/>
     </bank>
 

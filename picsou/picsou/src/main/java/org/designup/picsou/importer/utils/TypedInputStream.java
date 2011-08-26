@@ -1,7 +1,5 @@
 package org.designup.picsou.importer.utils;
 
-import org.designup.picsou.importer.utils.RepeatableInputStream;
-import org.designup.picsou.importer.utils.UTF8Detector;
 import org.designup.picsou.importer.BankFileType;
 
 import java.io.*;
@@ -18,7 +16,7 @@ public class TypedInputStream {
     checkCoding();
     fileName = file.getName().toLowerCase();
     type = BankFileType.getTypeFromName(fileName);
-    if (type == null){
+    if (type == null) {
       findType();
     }
   }
@@ -69,7 +67,8 @@ public class TypedInputStream {
         return new InputStreamReader(stream, DEFAULT_ENCODING);
       }
       return new InputStreamReader(stream, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
+    }
+    catch (UnsupportedEncodingException e) {
       return new InputStreamReader(stream);
     }
   }

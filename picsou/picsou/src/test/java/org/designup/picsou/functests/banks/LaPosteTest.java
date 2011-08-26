@@ -4,7 +4,7 @@ import org.designup.picsou.model.TransactionType;
 
 public class LaPosteTest extends SpecificBankTestCase {
   public void test() throws Exception {
-    operations.importQifFile(getFile("laposte1.ofx"), null);
+    operations.importOfxFile(getFile("laposte1.ofx"));
     timeline.selectMonths("2006/07", "2006/08");
     views.selectData();
     transactions.getTable().getHeader().click(1);
@@ -24,7 +24,7 @@ public class LaPosteTest extends SpecificBankTestCase {
   }
 
   public void test2() throws Exception {
-    operations.importQifFile(getFile("laposte2.ofx"), null);
+    operations.importOfxFile(getFile("laposte2.ofx"));
     timeline.selectMonths("2008/09", "2008/10", "2008/11", "2008/12");
     views.selectData();
     transactions.getTable().getHeader().click(1);

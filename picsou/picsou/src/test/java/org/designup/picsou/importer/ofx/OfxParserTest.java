@@ -86,6 +86,40 @@ public class OfxParserTest extends TestCase {
     checkParsing(TEXT);
   }
 
+  public void testWithIntAccount() throws Exception {
+    checkParsing("INTACCOUNT:1\n" +
+                 "OFXHEADER:100\n" +
+                 "DATA:OFX\n" +
+                 "SGMLVERSION:102\n" +
+                 "SECURITY:NONE\n" +
+                 "ENCODING:USASCII\n" +
+                 "CHARSET:1252\n" +
+                 "COMPRESSION:NONE\n" +
+                 "OLDFILEUID:NONE\n" +
+                 "NEWFILEUID:NONE\n" +
+                 "<OFX>\n" +
+                 "  <SIGNONMSGSRSV1>\n" +
+                 "    <SONRS>\n" +
+                 "      <STATUS>\n" +
+                 "        <CODE>2000\n" +
+                 "        <SEVERITY>ERROR\n" +
+                 "      </STATUS>\n" +
+                 "      <DTSERVER>20110808155841\n" +
+                 "      <LANGUAGE>ENG\n" +
+                 "    </SONRS>\n" +
+                 "  </SIGNONMSGSRSV1>\n" +
+                 "  <BANKMSGSRSV1>\n" +
+                 "    <STMTTRNRS>\n" +
+                 "      <TRNUID>20110807140944.000\n" +
+                 "      <STATUS>\n" +
+                 "        <CODE>2000\n" +
+                 "        <SEVERITY>ERROR\n" +
+                 "      </STATUS>\n" +
+                 "    </STMTTRNRS>\n" +
+                 "  </BANKMSGSRSV1>\n" +
+                 "</OFX>\n");
+  }
+
   public void testWithNoHeader() throws Exception {
     checkParsing(TEXT_WITH_NO_HEADER);
   }

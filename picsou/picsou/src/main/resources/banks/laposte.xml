@@ -2,7 +2,8 @@
 <globs>
   <bankFormat id='3'>
 
-    <bank name="La Banque Postale" downloadUrl="https://www.labanquepostale.fr" id='3'>
+    <bank name="La Banque Postale" url="https://www.labanquepostale.fr" id='3'
+          downloadUrl="https://ofx.videoposte.com" fid="0" org="0" ofxDownload="true">
       <bankEntity id="20041"/>
     </bank>
 

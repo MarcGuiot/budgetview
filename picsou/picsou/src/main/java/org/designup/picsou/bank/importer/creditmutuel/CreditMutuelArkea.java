@@ -1,27 +1,28 @@
 package org.designup.picsou.bank.importer.creditmutuel;
 
-import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.TextPage;
+import com.gargoylesoftware.htmlunit.html.*;
 import org.designup.picsou.bank.BankSynchroService;
-import org.designup.picsou.bank.importer.BankPage;
+import org.designup.picsou.bank.importer.WebBankPage;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.utils.ApplicationColors;
-import org.designup.picsou.utils.Lang;
 import org.designup.picsou.model.RealAccount;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.ui.UIService;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.model.impl.DefaultGlobRepository;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.Log;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -30,9 +31,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.ArrayList;
 
-public class CreditMutuelArkea extends BankPage implements PageAccessor {
+public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
   private JTextField code;
   private JButton validerCode;
   private String INDEX = "https://www.cmso.com/creditmutuel/cmso/index.jsp?fede=cmso";
@@ -55,10 +55,10 @@ public class CreditMutuelArkea extends BankPage implements PageAccessor {
 
   public static class Init implements BankSynchroService.BankSynchro {
 
-    public void show(Directory directory, GlobRepository repository) {
+    public GlobList show(Directory directory, GlobRepository repository) {
       CreditMutuelArkea creditMutuelArkea = CreditMutuelArkea.init(directory, repository);
       creditMutuelArkea.init();
-      creditMutuelArkea.show();
+      return creditMutuelArkea.show();
     }
   }
 
@@ -69,7 +69,7 @@ public class CreditMutuelArkea extends BankPage implements PageAccessor {
 
   public JPanel getPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
-    builder.setSource(getClass(), "/layout/connection/creditMutuelSudOuestPanel.splits");
+    builder.setSource(getClass(), "/layout/connection/userAndPasswordPanel.splits");
     code = new JTextField();
     code.setName("code");
     builder.add(code);
@@ -100,18 +100,17 @@ public class CreditMutuelArkea extends BankPage implements PageAccessor {
     return builder.load();
   }
 
-  public List<File> loadFile() {
-    List<File> downloadedFiles = new ArrayList<File>();
+  public void loadFile() {
     PageChecker checker = new PageChecker(this);
     FormChecker formChecker = checker.getForm("choixCompte");
-    for (Glob glob : accountsInPage) {
-      if (glob.get(RealAccount.IMPORTED)){
+    for (Glob glob : this.accounts) {
+      if (glob.get(RealAccount.IMPORTED)) {
         int count = accountsTable.getRowCount();
-        for (int i = 1; i < count; i++){
-          if (accountsTable.getCellAt(i, 1).getTextContent().contains(glob.get(RealAccount.NAME))){
+        for (int i = 1; i < count; i++) {
+          if (accountsTable.getCellAt(i, 1).getTextContent().contains(glob.get(RealAccount.NAME))) {
             try {
               List<HtmlElement> elementList = accountsTable.getCellAt(i, 0).getHtmlElementsByTagName(HtmlInput.TAG_NAME);
-              if (elementList.size() == 1){
+              if (elementList.size() == 1) {
                 elementList.get(0).click();
               }
             }
@@ -122,31 +121,29 @@ public class CreditMutuelArkea extends BankPage implements PageAccessor {
         }
       }
     }
-//    formChecker.getInputWithValue("1").select();
     formChecker.getAnchorWithImg("valider.gif").click();
     FormChecker patametersChecker = checker.getForm("parametresForm");
     patametersChecker.getInputWithValue("2").select();
     checker.getAnchorWithImg("telecharger.gif").click();
-//    List<FrameWindow> allFrames = page.getFrames();
-//    FrameWindow frame = allFrames.get(0);
     DomNodeList<HtmlElement> tables = page.getElementsByTagName(HtmlTable.TAG_NAME);
     HtmlTable table = (HtmlTable)tables.get(0);
     int count = table.getRowCount();
     for (int i = 1; i < count; i++) {
       HtmlTableCell at = table.getCellAt(i, 0);
       List<HtmlElement> htmlElements = at.getHtmlElementsByTagName(HtmlAnchor.TAG_NAME);
-      if (!htmlElements.isEmpty()){
-        for (Glob glob : accountsInPage) {
-          HtmlElement link = htmlElements.get(0);
-          if (link.getTextContent().contains(glob.get(RealAccount.NAME))){
-            File file = downloadFile(glob, link);
-            downloadedFiles.add(file);
-            break;
+      if (!htmlElements.isEmpty()) {
+        for (Glob glob : accounts) {
+          if (glob.get(RealAccount.IMPORTED)) {
+            HtmlElement link = htmlElements.get(0);
+            if (link.getTextContent().contains(glob.get(RealAccount.NAME))) {
+              File file = downloadFile(glob, link);
+              repository.update(glob.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+              break;
+            }
           }
         }
       }
     }
-    return downloadedFiles;
   }
 
   protected File downloadFile(Glob realAccount, HtmlElement anchor) {
@@ -187,7 +184,7 @@ public class CreditMutuelArkea extends BankPage implements PageAccessor {
           HtmlTableCell position = accountsTable.getCellAt(i, 2);
           createOrUpdateRealAccount(name.getTextContent(), "", position.getTextContent(), ID);
         }
-        showAccounts();
+        doImport();
       }
       catch (IOException e1) {
         throw new RuntimeException(page.asXml(), e1);
@@ -227,7 +224,7 @@ public class CreditMutuelArkea extends BankPage implements PageAccessor {
     frame.setSize(100, 100);
     frame.setVisible(true);
     CreditMutuelArkea creditMutuelArkea = new CreditMutuelArkea(defaultDirectory,
-                                                 new DefaultGlobRepository(new DefaultGlobIdGenerator()), -1);
+                                                                new DefaultGlobRepository(new DefaultGlobIdGenerator()), -1);
     creditMutuelArkea.init();
     creditMutuelArkea.show();
   }

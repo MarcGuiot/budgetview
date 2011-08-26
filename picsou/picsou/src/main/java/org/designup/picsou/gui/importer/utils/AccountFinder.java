@@ -15,11 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class QifAccountFinder implements GlobFunctor {
+public class AccountFinder implements GlobFunctor {
   private MultiMap<String, Integer> accountsByLabel = new MultiMap<String, Integer>();
 
-  public static Integer findQifAccount(GlobList importedTransactions, GlobRepository repository) {
-    QifAccountFinder accountFinder = new QifAccountFinder();
+  public static Integer findBestAccount(GlobList importedTransactions, GlobRepository repository) {
+    AccountFinder accountFinder = new AccountFinder();
     repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, accountFinder);
     return accountFinder.findAccount(importedTransactions);
   }

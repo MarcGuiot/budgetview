@@ -2,7 +2,7 @@
 <globs>
   <bankFormat id='9'>
 
-    <bank name="AXA Banque" downloadUrl="https://clients.axabanque.fr/client/" id="9">
+    <bank name="AXA Banque" url="https://clients.axabanque.fr/client/" id="9">
       <bankEntity id="12548"/>
     </bank>
 

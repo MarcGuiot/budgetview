@@ -626,7 +626,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addBankAccount("333", 20, "2008/07/12")
       .addTransaction("2008/07/12", +95.00, "Virt livret")
-      .load();
+      .loadInAccount("Livret");
 
     categorization.setSavings("Virement", "To account Livret");
     categorization.setSavings("Virt livret", "To account Livret");

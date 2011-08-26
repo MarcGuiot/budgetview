@@ -2,6 +2,7 @@ package org.designup.picsou.bank.importer;
 
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.model.RealAccount;
+import org.designup.picsou.gui.actions.ImportFileAction;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
@@ -40,16 +41,11 @@ public class SynchronizeAction extends AbstractAction {
 
   public void actionPerformed(ActionEvent e) {
     GlobList realAccounts = repository.getAll(RealAccount.TYPE);
-    Set<Integer> banks = new HashSet<Integer>();
-    for (Glob realAccount : realAccounts) {
-      if (realAccount.get(RealAccount.IMPORTED)) {
-        Integer bank = realAccount.get(RealAccount.BANK);
-        banks.add(bank);
-      }
-    }
     BankSynchroService bankSynchroService = directory.get(BankSynchroService.class);
-    for (Integer bank : banks) {
-      bankSynchroService.show(bank, directory, repository);
+    GlobList list = bankSynchroService.show(realAccounts, directory, repository);
+    if (!list.isEmpty()){
+      ImportFileAction fileAction = ImportFileAction.sync(repository, directory, list);
+      fileAction.actionPerformed(null);
     }
   }
 }

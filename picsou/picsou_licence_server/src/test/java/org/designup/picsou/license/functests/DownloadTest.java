@@ -230,6 +230,7 @@ public class DownloadTest extends ConnectedTestCase {
 
     public static byte[] dump() throws Exception {
 
+
       ClassWriter cw = new ClassWriter(0);
       FieldVisitor fv;
       MethodVisitor mv;
@@ -265,17 +266,9 @@ public class DownloadTest extends ConnectedTestCase {
         mv.visitEnd();
       }
       {
-        mv = cw.visitMethod(ACC_PUBLIC, "useCreatedAccount", "()Z", null, null);
+        mv = cw.visitMethod(ACC_PUBLIC, "apply", "(Lorg/globsframework/model/Glob;Lorg/globsframework/model/Glob;Lorg/globsframework/model/GlobList;Lorg/globsframework/model/ReadOnlyGlobRepository;Lorg/globsframework/model/GlobRepository;Lorg/globsframework/model/delta/MutableChangeSet;)Z", null, null);
         mv.visitCode();
-        mv.visitInsn(ICONST_0);
-        mv.visitInsn(IRETURN);
-        mv.visitMaxs(1, 1);
-        mv.visitEnd();
-      }
-      {
-        mv = cw.visitMethod(ACC_PUBLIC, "apply", "(Lorg/globsframework/model/Glob;Lorg/globsframework/model/ReadOnlyGlobRepository;Lorg/globsframework/model/GlobRepository;Lorg/globsframework/model/delta/MutableChangeSet;)Z", null, null);
-        mv.visitCode();
-        mv.visitVarInsn(ALOAD, 3);
+        mv.visitVarInsn(ALOAD, 5);
         mv.visitInsn(ICONST_1);
         mv.visitTypeInsn(ANEWARRAY, "org/globsframework/metamodel/GlobType");
         mv.visitInsn(DUP);
@@ -283,23 +276,23 @@ public class DownloadTest extends ConnectedTestCase {
         mv.visitFieldInsn(GETSTATIC, "org/designup/picsou/model/ImportedTransaction", "TYPE", "Lorg/globsframework/metamodel/GlobType;");
         mv.visitInsn(AASTORE);
         mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/GlobRepository", "getAll", "([Lorg/globsframework/metamodel/GlobType;)Lorg/globsframework/model/GlobList;");
-        mv.visitVarInsn(ASTORE, 5);
-        mv.visitVarInsn(ALOAD, 5);
+        mv.visitVarInsn(ASTORE, 7);
+        mv.visitVarInsn(ALOAD, 7);
         mv.visitMethodInsn(INVOKEVIRTUAL, "org/globsframework/model/GlobList", "iterator", "()Ljava/util/Iterator;");
-        mv.visitVarInsn(ASTORE, 6);
+        mv.visitVarInsn(ASTORE, 8);
         Label l0 = new Label();
         mv.visitLabel(l0);
         mv.visitFrame(Opcodes.F_APPEND, 2, new Object[]{"org/globsframework/model/GlobList", "java/util/Iterator"}, 0, null);
-        mv.visitVarInsn(ALOAD, 6);
+        mv.visitVarInsn(ALOAD, 8);
         mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z");
         Label l1 = new Label();
         mv.visitJumpInsn(IFEQ, l1);
-        mv.visitVarInsn(ALOAD, 6);
+        mv.visitVarInsn(ALOAD, 8);
         mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;");
         mv.visitTypeInsn(CHECKCAST, "org/globsframework/model/Glob");
-        mv.visitVarInsn(ASTORE, 7);
-        mv.visitVarInsn(ALOAD, 3);
-        mv.visitVarInsn(ALOAD, 7);
+        mv.visitVarInsn(ASTORE, 9);
+        mv.visitVarInsn(ALOAD, 5);
+        mv.visitVarInsn(ALOAD, 9);
         mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/Glob", "getKey", "()Lorg/globsframework/model/Key;");
         mv.visitFieldInsn(GETSTATIC, "org/designup/picsou/model/ImportedTransaction", "AMOUNT", "Lorg/globsframework/metamodel/fields/DoubleField;");
         mv.visitLdcInsn(new Double("-234.0"));
@@ -307,11 +300,10 @@ public class DownloadTest extends ConnectedTestCase {
         mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/GlobRepository", "update", "(Lorg/globsframework/model/Key;Lorg/globsframework/metamodel/Field;Ljava/lang/Object;)V");
         mv.visitJumpInsn(GOTO, l0);
         mv.visitLabel(l1);
-        mv.visitInsn(ICONST_0);
-        mv.visitInsn(IRETURN);
         mv.visitFrame(Opcodes.F_CHOP, 1, null, 0, null);
-        mv.visitInsn(RETURN);
-        mv.visitMaxs(5, 8);
+        mv.visitInsn(ICONST_1);
+        mv.visitInsn(IRETURN);
+        mv.visitMaxs(5, 10);
         mv.visitEnd();
       }
       {

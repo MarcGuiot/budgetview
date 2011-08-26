@@ -97,7 +97,8 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
           return multiplier * Math.abs(super.getValue(glob, field));
         }
       };
-    gauge.setActionListener(new ShowDetailsTipAction(gauge, directory));
+    ShowDetailsTipAction detailsTipAction = new ShowDetailsTipAction(gauge, directory);
+    gauge.setActionListener(detailsTipAction);
     gaugeView.setName(name + ".gauge");
     cellBuilder.add("gauge", gaugeView.getComponent());
 
