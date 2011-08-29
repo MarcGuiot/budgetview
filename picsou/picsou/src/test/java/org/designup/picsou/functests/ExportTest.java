@@ -162,7 +162,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
     String ofxFileName = TestUtils.getFileName(this, ".ofx");
     operations.exportOfxFile(ofxFileName);
 
-    operations.importOfxFile(ofxFileName);
+    operations.importOfxOnAccount(ofxFileName, "Main account");
 
     transactions.initContent()
       .add("28/03/2007", TransactionType.VIREMENT, "VIREMENT LOGITEL AVRIL", "", 12345.67)

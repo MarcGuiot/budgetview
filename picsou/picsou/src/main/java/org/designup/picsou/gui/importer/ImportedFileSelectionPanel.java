@@ -9,11 +9,14 @@ import org.designup.picsou.gui.importer.components.BankDownloadPanel;
 import org.designup.picsou.gui.importer.edition.BrowseFilesAction;
 import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.Bank;
+import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.LocalGlobRepository;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.Glob;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
@@ -87,10 +90,16 @@ public class ImportedFileSelectionPanel {
       public void run() {
         BankChooserDialog bankChooserDialog =
           new BankChooserDialog(dialog, localRepository, directory,
-                                GlobMatchers.fieldEquals(Bank.SYNCHRO_ENABLE, true));
+                                GlobMatchers.isNotNull(Bank.URL));
         Integer bankId = bankChooserDialog.show();
+        if (bankId == null){
+          return;
+        }
         BankSynchroService bankSynchroService = directory.get(BankSynchroService.class);
-        bankSynchroService.show(bankId, directory, localRepository);
+        GlobList realAccount = bankSynchroService.show(bankId, directory, localRepository);
+        if (!realAccount.isEmpty()){
+          synchronize(realAccount);
+        }
       }
     });
 
@@ -102,6 +111,19 @@ public class ImportedFileSelectionPanel {
     builder.add("hyperlinkHandler", hyperlinkHandler);
 
     panel = builder.load();
+  }
+
+  public void synchronize(GlobList realAccount) {
+    for (Glob glob : realAccount) {
+      String file = glob.get(RealAccount.FILE_NAME);
+      if (Strings.isNullOrEmpty(file)){
+        controller.addRealAccountWithoutImport(glob);
+      }
+      else {
+        controller.addRealAccountWithImport(glob);
+      }
+    }
+    controller.doImport();
   }
 
   private void initFileField() {

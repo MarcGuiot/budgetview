@@ -2,23 +2,54 @@ package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.accounts.utils.AccountTypeSelector;
 import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.AccountCardType;
+import org.designup.picsou.model.AccountType;
+import org.designup.picsou.model.RealAccount;
+import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Utils;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class AccountTypeCombo {
+public abstract class AccountTypeCombo {
   protected JComboBox accountTypeCombo;
   private AccountTypeSelector[] accountTypeSelectors;
   private Glob currentAccount;
+  private LinkField accountType;
+  private LinkField cardType;
 
-  public AccountTypeCombo(GlobRepository repository) {
+  public static AccountTypeCombo create(GlobRepository repository) {
+    return new AccountTypeCombo(repository, Account.ACCOUNT_TYPE, Account.CARD_TYPE) {
+
+      public boolean isMain(Glob account) {
+        return Account.isMain(account);
+      }
+
+      public boolean isSavings(Glob account) {
+        return Account.isSavings(account);
+      }
+    };
+  }
+
+  public static AccountTypeCombo createForRealAccount(GlobRepository repository) {
+    return new AccountTypeCombo(repository, RealAccount.ACCOUNT_TYPE, RealAccount.CARD_TYPE) {
+
+      public boolean isMain(Glob account) {
+        return account != null && AccountType.MAIN.getId().equals(account.get(RealAccount.ACCOUNT_TYPE));
+      }
+
+      public boolean isSavings(Glob account) {
+        return account != null && AccountType.SAVINGS.getId().equals(account.get(RealAccount.ACCOUNT_TYPE));
+      }
+    };
+  }
+
+  public AccountTypeCombo(GlobRepository repository, LinkField accountType, LinkField cardType) {
+    this.accountType = accountType;
+    this.cardType = cardType;
     accountTypeSelectors = createTypeSelectors(repository);
   }
 
@@ -38,67 +69,69 @@ public class AccountTypeCombo {
 
   public void updateAccountTypeCombo(Glob account) {
     currentAccount = account;
-    if (account == null) {
+    for (AccountTypeSelector selector : accountTypeSelectors) {
+      if (selector.isApplied(currentAccount)) {
+        accountTypeCombo.setSelectedItem(selector);
+        return;
+      }
       accountTypeCombo.setSelectedIndex(-1);
     }
-    else {
-      for (AccountTypeSelector selector : accountTypeSelectors) {
-        if (selector.isApplied(account)) {
-          accountTypeCombo.setSelectedItem(selector);
-        }
-      }
-    }
   }
+
   protected AccountTypeSelector[] createTypeSelectors(final GlobRepository repository) {
     return new AccountTypeSelector[]{
       new AccountTypeSelector("account.type.main") {
         public void apply() {
-          repository.update(currentAccount.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
-          repository.update(currentAccount.getKey(), Account.CARD_TYPE, AccountCardType.NOT_A_CARD.getId());
+          repository.update(currentAccount.getKey(), accountType, AccountType.MAIN.getId());
+          repository.update(currentAccount.getKey(), cardType, AccountCardType.NOT_A_CARD.getId());
         }
 
         public boolean isApplied(Glob account) {
-          return Account.isMain(account) &&
-                 account.get(Account.CARD_TYPE).equals(AccountCardType.NOT_A_CARD.getId());
+          return isMain(account) &&
+                 account.get(cardType).equals(AccountCardType.NOT_A_CARD.getId());
         }
       },
 
       new AccountTypeSelector("accountCardType.credit") {
         public void apply() {
-          repository.update(currentAccount.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
-          repository.update(currentAccount.getKey(), Account.CARD_TYPE, AccountCardType.CREDIT.getId());
+          repository.update(currentAccount.getKey(), accountType, AccountType.MAIN.getId());
+          repository.update(currentAccount.getKey(), cardType, AccountCardType.CREDIT.getId());
         }
 
         public boolean isApplied(Glob account) {
-          return Account.isMain(account) &&
-                 Utils.equal(account.get(Account.CARD_TYPE), AccountCardType.CREDIT.getId());
+          return isMain(account) &&
+                 Utils.equal(account.get(cardType), AccountCardType.CREDIT.getId());
         }
       },
       new AccountTypeSelector("accountCardType.deferred") {
         public void apply() {
-          repository.update(currentAccount.getKey(), Account.ACCOUNT_TYPE, AccountType.MAIN.getId());
-          repository.update(currentAccount.getKey(), Account.CARD_TYPE, AccountCardType.DEFERRED.getId());
+          repository.update(currentAccount.getKey(), accountType, AccountType.MAIN.getId());
+          repository.update(currentAccount.getKey(), cardType, AccountCardType.DEFERRED.getId());
         }
 
         public boolean isApplied(Glob account) {
-          return Account.isMain(account) &&
-                 Utils.equal(account.get(Account.CARD_TYPE), AccountCardType.DEFERRED.getId());
+          return isMain(account) &&
+                 Utils.equal(account.get(cardType), AccountCardType.DEFERRED.getId());
         }
       }
       ,
 
       new AccountTypeSelector("account.type.savings") {
         public void apply() {
-          repository.update(currentAccount.getKey(), Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId());
-          repository.update(currentAccount.getKey(), Account.CARD_TYPE, AccountCardType.NOT_A_CARD.getId());
+          repository.update(currentAccount.getKey(), accountType, AccountType.SAVINGS.getId());
+          repository.update(currentAccount.getKey(), cardType, AccountCardType.NOT_A_CARD.getId());
         }
 
         public boolean isApplied(Glob account) {
-          return Account.isSavings(account);
+          return isSavings(account);
         }
       },
     };
   }
+
+  public abstract boolean isMain(Glob account);
+
+  public abstract boolean isSavings(Glob account);
 
   public void setEnabled(boolean editable) {
     accountTypeCombo.setEnabled(editable);

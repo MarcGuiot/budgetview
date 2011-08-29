@@ -3,6 +3,8 @@ package org.designup.picsou.functests.checkers;
 import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.importer.ImportCompletionPanel;
+import org.designup.picsou.gui.importer.ImportController;
+import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
@@ -12,12 +14,15 @@ import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
+import javax.xml.validation.Validator;
 import java.io.File;
+import java.util.Arrays;
 
 public class ImportDialogChecker extends GuiChecker {
   private Panel dialog;
   private TextBox fileField;
   private Button importButton;
+  private AccountEditionChecker accountEditionChecker;
 
   public static ImportDialogChecker open(Trigger trigger) {
     Window window = WindowInterceptor.getModalDialog(trigger);
@@ -35,6 +40,7 @@ public class ImportDialogChecker extends GuiChecker {
       fileField = dialog.getInputTextBox("fileField");
       importButton = dialog.getButton("Import");
     }
+     accountEditionChecker = new AccountEditionChecker(dialog);
   }
 
   private ImportDialogChecker() {
@@ -90,8 +96,13 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public ImportDialogChecker doImport() {
+  public ImportDialogChecker doFirstImport() {
     dialog.getButton(Lang.get("import.fileSelection.ok")).click();
+    return this;
+  }
+
+  public ImportDialogChecker doImport() {
+    dialog.getButton(Lang.get("import.preview.ok")).click();
     return this;
   }
 
@@ -175,8 +186,14 @@ public class ImportDialogChecker extends GuiChecker {
     return new AccountPositionEditionChecker(dialog, "import.fileSelection.ok");
   }
 
+  public void complete(){
+    dialog.getButton("OK").click();
+    assertFalse(dialog.isVisible());
+  }
+
   public void close() {
     dialog.getButton("close").click();
+    assertFalse(dialog.isVisible());
   }
 
   public ImportDialogChecker checkErrorMessage(String message, String... arg) {
@@ -207,7 +224,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker checkSelectedAccount(String accountNumber) {
-    assertThat(dialog.getComboBox("accountCombo").selectionEquals(accountNumber));
+    assertThat(getAccountCombo().selectionEquals(accountNumber));
     return this;
   }
 
@@ -216,6 +233,7 @@ public class ImportDialogChecker extends GuiChecker {
     if (message != null) {
       assertTrue(message.textIsEmpty());
     }
+    accountEditionChecker.checkNoErrorDisplayed();
     return this;
   }
 
@@ -237,26 +255,37 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker checkMessageCreateFirstAccount() {
-    dialog.getTextBox("You must create an account");
+//    accountEditionChecker.checkErrorTipVisible();
+//    accountEditionChecker.
+    // verifier le sign post
+//    dialog.getTextBox("You must create an account");
     return this;
   }
 
   public ImportDialogChecker checkAvailableAccounts(String... accountNames) {
-    assertTrue(dialog.getComboBox("accountCombo").contentEquals(accountNames));
+    String[] tmp = new String[accountNames.length + 1];
+    System.arraycopy(accountNames, 0, tmp, 1, accountNames.length);
+    tmp[0] = "a new account";
+    assertTrue(getAccountCombo().contentEquals(tmp));
     return this;
   }
 
   public ImportDialogChecker selectAccount(final String accountName) {
-    dialog.getComboBox("accountCombo").select(accountName);
+    getAccountCombo().select(accountName);
     return this;
+  }
+
+  private ComboBox getAccountCombo() {
+    return dialog.getComboBox("accountCombo");
   }
 
   public AccountEditionChecker openAccount() {
     return AccountEditionChecker.open(dialog.getButton("Create an account").triggerClick());
   }
 
-  public AccountEditionChecker addNewAccount() {
-    return AccountEditionChecker.open(dialog.getButton("newAccount").triggerClick());
+  public ImportDialogChecker addNewAccount() {
+    getAccountCombo().select("a new account");
+    return this;
   }
 
   public AccountChooserChecker openChooseAccount() {
@@ -264,30 +293,37 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker defineAccount(String bank, String accountName, String number) {
-    AccountEditionChecker accountEditionChecker =
-      AccountEditionChecker.open(dialog.getButton("Create an account").triggerClick());
+    accountEditionChecker.setAccountName(accountName)
+      .setAccountNumber(number)
+      .setAsMain();
     if (bank != null){
-      accountEditionChecker
-        .selectBank(bank);
+      accountEditionChecker.selectBank(bank);
     }
-    accountEditionChecker
-      .checkAccountName("Main account")
-      .setAccountName(accountName)
-      .setAccountNumber(number);
-    accountEditionChecker.validate();
+//    AccountEditionChecker accountEditionChecker =
+//      AccountEditionChecker.open(dialog.getButton("Create an account").triggerClick());
+//    if (bank != null){
+//      accountEditionChecker
+//        .selectBank(bank);
+//    }
+//    accountEditionChecker
+//      .checkAccountName("Main account")
+//      .setAccountName(accountName)
+//      .setAccountNumber(number);
+//    accountEditionChecker.validate();
     return this;
   }
 
   public ImportDialogChecker createNewAccount(String bank, String accountName, String number, double initialBalance) {
-    addNewAccount()
+    addNewAccount();
+    accountEditionChecker
       .selectBank(bank)
-      .checkUpdateModeIsDisabled()
-      .checkUpdateModeIsFileImport()
-      .checkUpdateModes()
+      .setAsMain()
+//      .checkUpdateModeIsDisabled()
+//      .checkUpdateModeIsFileImport()
+//      .checkUpdateModes()
       .setAccountName(accountName)
       .setAccountNumber(number)
-      .setPosition(initialBalance)
-      .validate();
+      .setPosition(initialBalance);
     return this;
   }
 
@@ -312,10 +348,11 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public ImportDialogChecker selectOfxAccountBank(String bank) {
-    Window window = WindowInterceptor.getModalDialog(dialog.getButton("Select the bank").triggerClick());
-    BankChooserChecker chooserChecker = new BankChooserChecker(window);
-    chooserChecker.selectBank(bank).validate();
+  public ImportDialogChecker selectBank(String bank) {
+    accountEditionChecker.selectBank(bank);
+//    Window window = WindowInterceptor.getModalDialog(dialog.getButton("Select the bank").triggerClick());
+//    BankChooserChecker chooserChecker = new BankChooserChecker(window);
+//    chooserChecker.selectBank(bank).validate();
     return this;
   }
 
@@ -343,8 +380,8 @@ public class ImportDialogChecker extends GuiChecker {
 
   public ImportDialogChecker checkAccountTypeWarningDisplayed(String accountName) {
     BalloonTipTesting.checkBalloonTipVisible(dialog,
-                                             getAccountTypeSelectionCombo(accountName),
-                                             "Select the account type"
+                                             accountEditionChecker.getTypeCombo(),
+                                             "You must specify the accountType"
     );
     return this;
   }
@@ -377,28 +414,18 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public ImportDialogChecker setMainAccount(String... accounts) {
-    return setAccountType("main", accounts);
+  public ImportDialogChecker setMainAccount() {
+    accountEditionChecker.setAsMain();
+    return this;
   }
 
-  public ImportDialogChecker setSavingsAccount(String... accounts) {
-    return setAccountType("savings", accounts);
-  }
-
-  private ImportDialogChecker setAccountType(String accountType, String[] accounts) {
-    if (accounts.length == 0) {
-      getAccountTypeSelectionPanel().getComboBox().select(accountType);
-    }
-    else {
-      for (String account : accounts) {
-        getAccountTypeSelectionCombo(account).select(accountType);
-      }
-    }
+  public ImportDialogChecker setSavingsAccount() {
+    accountEditionChecker.setAsSavings();
     return this;
   }
 
   private ComboBox getAccountTypeSelectionCombo(String account) {
-    return getAccountTypeSelectionPanel().getComboBox("Combo:" + account);
+    return accountEditionChecker.getUpdateModeCombo();
   }
 
   private Panel getAccountTypeSelectionPanel() {
@@ -418,19 +445,19 @@ public class ImportDialogChecker extends GuiChecker {
   public void importDeferred(String accountName, String fileName, boolean withMainAccount) {
     setFilePath(fileName)
       .acceptFile();
-    if (hasCardType()) {
-      selectDeferred(accountName);
+    if (accountEditionChecker.getAccountName().equals(accountName)){
+      setDeferredAccount();
     }
     else {
-      setMainAccountForAll();
+      setMainAccount();
     }
-    if (withMainAccount) {
+    if (withMainAccount){
       doImport();
-      if (hasCardType()) {
-        selectDeferred(accountName);
+      if (accountEditionChecker.getAccountName().equals(accountName)){
+        setDeferredAccount();
       }
-      else {
-        setMainAccountForAll();
+      else{
+        setMainAccount();
       }
     }
     completeImport();
@@ -445,6 +472,44 @@ public class ImportDialogChecker extends GuiChecker {
     }
   }
 
+  public ImportDialogChecker setDeferredAccount() {
+    accountEditionChecker.setAsDeferredCard();
+    return this;
+  }
+
+  public ImportDialogChecker checkErrorAccount() {
+    accountEditionChecker.checkNameMissing();
+    return this;
+  }
+
+  public ImportDialogChecker setAccountNumber(String number) {
+    accountEditionChecker.setAccountNumber(number);
+    return this;
+  }
+
+  public ImportDialogChecker setAccountName(String name) {
+    accountEditionChecker.setAccountName(name);
+    return this;
+  }
+
+  public ImportDialogChecker setPosition(double amount) {
+    accountEditionChecker.setPosition(amount);
+    return this;
+  }
+
+  public boolean isNew() {
+    UIComponent component = dialog.findUIComponent(ComponentMatchers.innerNameIdentity("accountCombo"));
+    return ((JComboBox)component.getAwtComponent()).getSelectedItem() == null;
+  }
+
+  public void waitAcceptFiles() {
+    UISpecAssert.waitUntil(dialog.containsLabel("Preview"), 10000);
+  }
+
+  public ImportDialogChecker setAsCreditCard() {
+    accountEditionChecker.setAsCreditCard();
+    return this;
+  }
 
   public static class CompletionChecker {
     private int loadedTransactionCount;

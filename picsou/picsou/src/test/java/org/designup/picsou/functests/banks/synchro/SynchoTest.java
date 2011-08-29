@@ -17,10 +17,9 @@ public class SynchoTest extends LoggedInFunctionalTestCase {
     ImportDialogChecker dialogChecker = operations.openImportDialog();
     OtherBankSynchoChecker checker = dialogChecker.openSynchro("Autre");
     checker.createNew("princi", "princi", "100.", path);
-    checker.next();
-    checker.select("princi");
     ImportDialogChecker importDialogChecker = checker.doImport();
     importDialogChecker
+      .setMainAccount()
       .completeImport();
 
     transactions.initContent()
@@ -40,9 +39,9 @@ public class SynchoTest extends LoggedInFunctionalTestCase {
     OtherBankSynchoChecker bankSyncho = importPanel.openSynchro();
     bankSyncho.select(0)
       .setFile(path);
-    bankSyncho.next();
     ImportDialogChecker importDialogChecker = bankSyncho.doImport();
     importDialogChecker
+      .setMainAccount()
       .completeImport();
 
     transactions.initContent()

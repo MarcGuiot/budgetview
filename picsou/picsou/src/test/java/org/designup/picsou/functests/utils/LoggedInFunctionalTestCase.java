@@ -221,6 +221,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     projects = null;
     summary = null;
     signpostView = null;
+    feedbackView = null;
     reconciliation = null;
     repository = null;
   }

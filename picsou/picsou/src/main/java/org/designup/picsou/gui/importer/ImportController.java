@@ -1,21 +1,17 @@
 package org.designup.picsou.gui.importer;
 
-import org.designup.picsou.gui.importer.utils.NoOperations;
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.startup.AutoCategorizationFunctor;
 import org.designup.picsou.gui.startup.OpenRequestManager;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.importer.ImportSession;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.TransactionImport;
+import org.designup.picsou.model.*;
+import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobFieldMatcher;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.LocalGlobRepository;
-import org.globsframework.model.utils.GlobFieldMatcher;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -42,9 +38,13 @@ public class ImportController {
 
   private final List<File> selectedFiles = new ArrayList<File>();
   private Set<Integer> importKeys = new HashSet<Integer>();
+  private GlobList realAccountWithImport = new GlobList();
+  private GlobList realAccountWithoutImport = new GlobList();
+  private boolean importMode = true;
+
 
   public ImportController(ImportDialog importDialog,
-                          GlobRepository repository, LocalGlobRepository localRepository, 
+                          GlobRepository repository, LocalGlobRepository localRepository,
                           Directory directory) {
     this.importDialog = importDialog;
     this.repository = repository;
@@ -57,75 +57,42 @@ public class ImportController {
 
   private void initOpenRequestManager(Directory directory) {
     openRequestManager = directory.get(OpenRequestManager.class);
-    openRequestManager.pushCallback(new OpenRequestManager.Callback() {
-      public boolean accept() {
-        synchronized (fileField) {
-          if (step1) {
-            return true;
-          }
-        }
-        return false;
-      }
-
-      public void openFiles(final List<File> files) {
-        SwingUtilities.invokeLater(new Runnable() {
-          public void run() {
-            synchronized (fileField) {
-              if (step1) {
-                importDialog.preselectFiles(files);
-                importDialog.acceptFiles();
-              }
-              else {
-                openRequestManager.openFiles(files);
-              }
-            }
-          }
-        });
-      }
-    });
+    openRequestManager.pushCallback(new InImportOpenStep1Callback());
   }
 
   public void doImport() {
     openRequestManager.popCallback();
-    openRequestManager.pushCallback(new OpenRequestManager.Callback() {
-      public boolean accept() {
-        synchronized (selectedFiles) {
-          if (step2) {
-            return true;
-          }
-        }
-        return false;
-      }
-
-      public void openFiles(final List<File> files) {
-        synchronized (selectedFiles) {
-          if (step2) {
-            for (File file : files) {
-              if (!file.isDirectory()) {
-                selectedFiles.add(file);
-              }
-            }
-          }
-          else {
-            SwingUtilities.invokeLater(new Runnable() {
-              public void run() {
-                try {
-                  Thread.sleep(50);
-                }
-                catch (InterruptedException e) {
-                  // Ignore
-                }
-                openRequestManager.openFiles(files);
-              }
-            });
-          }
-        }
-      }
-    });
+    openRequestManager.pushCallback(new InImportOpenStep2Callback());
     step1 = false;
     List<File> file = getInitialFiles();
-    synchronized (selectedFiles) {
-      selectedFiles.addAll(file);
+    if (file != null) {
+      synchronized (selectedFiles) {
+        selectedFiles.addAll(file);
+      }
+    }
+    next(true);
+  }
+
+  public void next() {
+    next(false);
+  }
+
+  private void next(boolean first) {
+    if (importMode) {
+      if (!realAccountWithoutImport.isEmpty()) {
+        importDialog.showNoImport(realAccountWithoutImport.remove(0), first);
+        return;
+      }
+    }
+    for (Glob glob : realAccountWithoutImport) {
+      if (glob.get(RealAccount.IMPORTED)) {
+        Glob target = localRepository.findLinkTarget(glob, RealAccount.ACCOUNT);
+        if (target != null) {
+          localRepository.update(target.getKey(),
+                                 FieldValue.value(Account.POSITION, Amounts.extractAmount(glob.get(RealAccount.POSITION))),
+                                 FieldValue.value(Account.POSITION_DATE, glob.get(RealAccount.POSITION_DATE)));
+        }
+      }
     }
     if (nextImport()) {
       importDialog.showPreview();
@@ -133,14 +100,16 @@ public class ImportController {
   }
 
   public boolean nextImport() {
-
-    if (importSession.gotoNextContent()){
-      importDialog.updateForNextImport(null, isAccountNeeded(), null);
-      return true;
+    {
+      Glob importedAccount = importSession.gotoNextContent();
+      if (importedAccount != null) {
+        importDialog.updateForNextImport(null, null, importedAccount);
+        return true;
+      }
     }
 
     synchronized (selectedFiles) {
-      if (selectedFiles.isEmpty()) {
+      if (selectedFiles.isEmpty() && realAccountWithImport.isEmpty()) {
         step2 = false;
       }
     }
@@ -167,15 +136,24 @@ public class ImportController {
     }
 
     File file;
-    synchronized (selectedFiles) {
-      file = selectedFiles.remove(0);
+    Glob realAccount = null;
+    if (!realAccountWithImport.isEmpty()) {
+      realAccount = realAccountWithImport.remove(0);
+      String fileName = realAccount.get(RealAccount.FILE_NAME);
+      file = new File(fileName);
+    }
+    else {
+      synchronized (selectedFiles) {
+        file = selectedFiles.remove(0);
+      }
     }
     try {
-      List<String> dateFormats = importSession.loadFile(file);
-      importDialog.updateForNextImport(file.getAbsolutePath(), isAccountNeeded(), dateFormats);
-      return true;
-    }
-    catch (NoOperations e) {
+      List<String> dateFormats = importSession.loadFile(file, realAccount);
+      Glob importedAccount = importSession.gotoNextContent();
+      if (importedAccount != null) {
+        importDialog.updateForNextImport(file.getAbsolutePath(), dateFormats, importedAccount);
+        return true;
+      }
       String message = Lang.get("import.file.empty");
       importDialog.showStep1Message(message);
       return false;
@@ -200,7 +178,7 @@ public class ImportController {
       localRepository.safeApply(Transaction.TYPE,
                                 new GlobFieldMatcher(Transaction.IMPORT, key),
                                 hasOperations);
-      if (hasOperations.isEmpty()){
+      if (hasOperations.isEmpty()) {
         localRepository.delete(Key.create(TransactionImport.TYPE, key));
       }
     }
@@ -211,8 +189,8 @@ public class ImportController {
     nextImport();
   }
 
-  public void completeImport(Key currentAccount, String dateFormat) {
-    Key importKey = importSession.importTransactions(currentAccount, dateFormat);
+  public void completeImport(Glob importedAccount, Glob currentAccount, String dateFormat) {
+    Key importKey = importSession.importTransactions(importedAccount, currentAccount, dateFormat);
     if (importKey != null) {
       importKeys.add(importKey.get(TransactionImport.ID));
     }
@@ -284,16 +262,20 @@ public class ImportController {
     return importSession.getTempRepository();
   }
 
-  public boolean isAccountNeeded() {
-    return importSession.isAccountNeeded();
-  }
-
   public void closeDialog() {
     importDialog.closeDialog();
   }
 
   public JTextField getFileField() {
     return fileField;
+  }
+
+  public void addRealAccountWithoutImport(Glob realAccount) {
+    realAccountWithoutImport.add(realAccount);
+  }
+
+  public void addRealAccountWithImport(Glob realAccount) {
+    realAccountWithImport.add(realAccount);
   }
 
   private static class HasOperationFunctor implements GlobFunctor {
@@ -303,8 +285,71 @@ public class ImportController {
       isEmpty = false;
     }
 
-    boolean isEmpty(){
+    boolean isEmpty() {
       return isEmpty;
+    }
+  }
+
+  private class InImportOpenStep2Callback implements OpenRequestManager.Callback {
+    public boolean accept() {
+      synchronized (selectedFiles) {
+        if (step2) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    public void openFiles(final List<File> files) {
+      synchronized (selectedFiles) {
+        if (step2) {
+          for (File file : files) {
+            if (!file.isDirectory()) {
+              selectedFiles.add(file);
+            }
+          }
+        }
+        else {
+          SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+              try {
+                Thread.sleep(50);
+              }
+              catch (InterruptedException e) {
+                // Ignore
+              }
+              openRequestManager.openFiles(files);
+            }
+          });
+        }
+      }
+    }
+  }
+
+  private class InImportOpenStep1Callback implements OpenRequestManager.Callback {
+    public boolean accept() {
+      synchronized (fileField) {
+        if (step1) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    public void openFiles(final List<File> files) {
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          synchronized (fileField) {
+            if (step1) {
+              importDialog.preselectFiles(files);
+              importDialog.acceptFiles();
+            }
+            else {
+              openRequestManager.openFiles(files);
+            }
+          }
+        }
+      });
     }
   }
 }

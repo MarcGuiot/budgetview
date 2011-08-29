@@ -40,7 +40,7 @@ public class GotoAccountWebsiteAction extends AbstractAction implements ChangeSe
 
     Glob bank = repository.findLinkTarget(account, Account.BANK);
     if (bank != null) {
-      url = bank.get(Bank.DOWNLOAD_URL);
+      url = bank.get(Bank.URL);
     }
     setEnabled(Strings.isNotEmpty(url));
     putValue(Action.NAME, bank != null ? getName(account, repository) : "");

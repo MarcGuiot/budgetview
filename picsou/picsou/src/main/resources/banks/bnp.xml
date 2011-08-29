@@ -2,7 +2,7 @@
 <globs>
   <bankFormat id='5'>
 
-    <bank name="BNP Paribas" downloadUrl="http://www.bnpparibas.net" id='5'>
+    <bank name="BNP Paribas" url="http://www.bnpparibas.net" id='5'>
       <bankEntity id="30004"/>
 
     </bank>

@@ -54,6 +54,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
   }
 
   protected void tearDown() throws Exception {
+    super.tearDown();
     window.getAwtComponent().setVisible(false);
     window.dispose();
     window = null;
@@ -464,7 +465,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
           ImportDialogChecker importDialog = new ImportDialogChecker(window, true);
 
           importDialog.setFilePath(path)
-            .doImport();
+            .acceptFile();
 
           window.getButton("Skip file").click();
           return window.getButton("OK").triggerClick();

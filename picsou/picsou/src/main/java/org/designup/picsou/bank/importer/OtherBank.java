@@ -1,8 +1,6 @@
 package org.designup.picsou.bank.importer;
 
 import org.designup.picsou.bank.BankSynchroService;
-import org.designup.picsou.importer.BankFileType;
-import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -16,25 +14,19 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class OtherBank extends BankPage {
-
+public class OtherBank extends WebBankPage {
   public static int ID = -123456;
   private Map<Key, String> files = new HashMap<Key, String>();
 
   public static class Init implements BankSynchroService.BankSynchro {
 
-    public void show(Directory directory, GlobRepository repository) {
+    public GlobList show(Directory directory, GlobRepository repository) {
       OtherBank bank = new OtherBank(directory, repository);
       bank.init();
-      bank.show();
+      return bank.show();
     }
   }
 
@@ -56,7 +48,7 @@ public class OtherBank extends BankPage {
         selectionService.select(glob);
       }
     });
-    GlobTableView table = builder.addTable("table", RealAccount.TYPE, new GlobFieldComparator(RealAccount.ID))
+    final GlobTableView table = builder.addTable("table", RealAccount.TYPE, new GlobFieldComparator(RealAccount.ID))
       .setFilter(GlobMatchers.fieldEquals(RealAccount.BANK, ID))
       .addColumn(RealAccount.NUMBER)
       .addColumn(RealAccount.NAME)
@@ -68,14 +60,12 @@ public class OtherBank extends BankPage {
     update.addActionListener(new ActionListener() {
 
       public void actionPerformed(ActionEvent e) {
-        GlobList globList = repository.getAll(RealAccount.TYPE,
-                                              GlobMatchers.and(GlobMatchers.fieldEquals(RealAccount.BANK, ID),
-                                                               GlobMatchers.not(GlobMatchers.isNullOrEmpty(RealAccount.FILE_NAME))));
+        GlobList globList = table.getGlobs();
         for (Glob glob : globList) {
           files.put(glob.getKey(), glob.get(RealAccount.FILE_NAME));
         }
-        accountsInPage.addAll(globList);
-        showAccounts();
+        accounts.addAll(globList);
+        doImport();
       }
     });
     return builder.load();
@@ -85,24 +75,10 @@ public class OtherBank extends BankPage {
     super(directory, repository, ID);
   }
 
-  public List<File> loadFile() {
-    List<File> downloadedFiles = new ArrayList<File>();
+  public void loadFile() {
     for (Map.Entry<Key, String> entry : files.entrySet()) {
-      try {
-        TypedInputStream inputStream = new TypedInputStream(new File(entry.getValue()));
-        if (inputStream.getType() == BankFileType.QIF) {
-          downloadedFiles.add(createQifLocalFile(repository.get(entry.getKey()),
-                                                 new FileInputStream(entry.getValue())));
-        }
-        else {
-          downloadedFiles.add(new File(entry.getValue()));
-        }
-      }
-      catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      repository.update(entry.getKey(), RealAccount.FILE_NAME, entry.getValue());
     }
-    return downloadedFiles;
   }
 
   protected Double extractAmount(String position) {

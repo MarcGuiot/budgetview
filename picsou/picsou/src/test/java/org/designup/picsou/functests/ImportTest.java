@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import org.designup.picsou.functests.checkers.AccountEditionChecker;
 import org.designup.picsou.functests.checkers.BankDownloadChecker;
 import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
@@ -168,7 +167,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
-  public void testManualInputAccountsNotShownInQifImport() throws Exception {
+  public void testManualInputAccountsAreShownInQifImport() throws Exception {
 
     mainAccounts.createNewAccount()
       .setAccountName("Main")
@@ -190,7 +189,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .setFilePath(firstQif)
       .acceptFile()
-      .checkAvailableAccounts("Main")
+      .checkAvailableAccounts("Cash", "Main")
       .createNewAccount(SOCIETE_GENERALE, "SG", "12345", 100.0)
       .completeImport();
 
@@ -255,7 +254,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .checkAvailableAccounts("Main account")
       .createNewAccount(SOCIETE_GENERALE, "Second account", "00022", 12.30)
-      .checkSelectedAccount("Second account")
       .completeImport();
 
     views.selectHome();
@@ -271,7 +269,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .checkSelectedAccount(null)
       .doImport()
-      .checkErrorMessage("import.no.account")
+      .checkErrorAccount()
       .selectAccount("Second account")
       .checkNoErrorMessage()
       .completeImport();
@@ -337,38 +335,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccountNames("Main account");
   }
 
-  public void testImportWithCreateAccountChecksAccountBankIsFilled() throws Exception {
-    final String path1 = QifBuilder
-      .init(this)
-      .addTransaction("2006/01/10", -1.1, "Menu K")
-      .save();
-
-    ImportDialogChecker importDialog = operations.openImportDialog()
-      .setFilePath(path1)
-      .acceptFile()
-      .checkFileContent(new Object[][]{
-        {"10/01/2006", "Menu K", "-1.10"}
-      });
-    importDialog
-      .openAccount()
-      .checkNoBankSelected()
-      .setAccountNumber("0123546")
-      .cancel();
-    AccountEditionChecker accountEditionChecker = importDialog.doImport()
-      .checkMessageCreateFirstAccount()
-      .openAccount();
-    accountEditionChecker.openBankSelection()
-      .selectBank("CIC")
-      .cancel();
-    accountEditionChecker.checkNoBankSelected();
-    accountEditionChecker.openBankSelection()
-      .selectBank("LCL")
-      .validate();
-    accountEditionChecker.checkSelectedBank("LCL")
-      .validate();
-    importDialog.skipAndComplete();
-  }
-
   public void testOfxWithUnknownBankEntities() throws Exception {
     String fileName = OfxBuilder.init(this)
       .addBankAccount(666, 1024, "12345678a", 12.0, "2008/06/11")
@@ -384,14 +350,26 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
-    importDialog.selectOfxAccountBank(SOCIETE_GENERALE)
-      .setMainAccountForAll()
+
+    importDialog
+      .selectBank(SOCIETE_GENERALE)
+      .checkFileContent(new Object[][]{
+        {"10/06/2008", "Metro", "71.00"},
+      })
+      .setMainAccount()
+      .setDeferredAccount()
+      .doImport();
+    
+    importDialog.selectBank(SOCIETE_GENERALE)
+      .setMainAccount()
       .checkFileContent(new Object[][]{
         {"10/06/2008", "V'lib", "1.00"},
       })
       .doImport();
-    importDialog.selectOfxAccountBank(SOCIETE_GENERALE)
-      .setMainAccountForAll()
+
+
+    importDialog.selectBank(SOCIETE_GENERALE)
+      .setMainAccount()
       .checkFileContent(new Object[][]{
         {"21/06/2008", "V'lib", "1.00"},
       })
@@ -400,17 +378,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkFileContent(new Object[][]{
         {"10/06/2008", "McDo", "10.00"},
       })
-      .selectOfxAccountBank(SOCIETE_GENERALE)
-      .setMainAccountForAll()
-      .doImport();
-    importDialog
-      .selectOfxAccountBank(SOCIETE_GENERALE)
-      .checkFileContent(new Object[][]{
-        {"10/06/2008", "Metro", "71.00"},
-      });
-    importDialog.openCardTypeChooser()
-      .selectDeferredCard("Card n. 1111-2222-3333-4444")
-      .validate();
+      .selectBank(SOCIETE_GENERALE)
+      .setMainAccount();
 
     importDialog
       .completeImport();
@@ -431,9 +400,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("21/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
       .add("14/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
-      .add("10/06/2008", TransactionType.CREDIT_CARD, "Metro", "", 71.00)
       .add("10/06/2008", TransactionType.VIREMENT, "McDo", "", 10.00)
       .add("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
+      .add("10/06/2008", TransactionType.CREDIT_CARD, "Metro", "", 71.00)
       .check();
   }
 
@@ -450,7 +419,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addBankAccount(666, 1024, "012345", 12.0, "2008/06/11")
       .addTransaction("2008/06/10", 1.0, "V'lib")
-      .load();
+      .loadInAccount("Cash");
 
     mainAccounts.edit("Cash")
       .checkUpdateModeIsFileImport()

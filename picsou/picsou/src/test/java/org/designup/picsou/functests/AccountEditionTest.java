@@ -190,7 +190,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .addBankAccount(-1, 10674, "0000123", 100.00, "2008/10/15")
       .addTransaction("2008/10/01", 1000.00, "WorldCo")
       .addTransaction("2008/10/05", -15.00, "MacDo")
-      .load();
+      .loadInAccount("Main");
 
     mainAccounts.edit("Main")
       .checkUpdateModeIsDisabled()

@@ -150,21 +150,32 @@ public class OfxBuilder {
     operations.importOfxFile(fileName);
   }
 
+  public void loadKnownAccount(){
+    save();
+    operations.importOfxFile(fileName);
+  }
+
+  public void loadInAccount(String name) {
+    save();
+    operations.openImportDialog()
+      .setFilePath(fileName)
+      .acceptFile()
+      .selectAccount(name)
+      .completeImport();
+  }
+
   public void load(String newAccount, String existingAccount) {
     save();
-    operations.importOfxOnAccount(fileName, newAccount, existingAccount);
+    operations.importOfxOnAccount(fileName, existingAccount);
   }
 
   public void loadInNewAccount() {
     save();
     ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName)
-      .acceptFile();
-    importDialog.checkNoMessageSelectAnAccountType()
-      .openChooseAccount()
-      .validate();
+      .acceptFile()
+      .setMainAccount();
     importDialog
-      .setMainAccount()
       .completeImport();
   }
 
@@ -172,10 +183,8 @@ public class OfxBuilder {
     save();
     ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName)
-      .acceptFile();
-    if (importDialog.hasAccountType()) {
-      importDialog.setMainAccount();
-    }
+      .acceptFile()
+      .setMainAccount();
     importDialog.completeImport(importedTransactionCount, autocategorizedTransactionCount);
   }
 
@@ -192,9 +201,14 @@ public class OfxBuilder {
     importDefered(accountName, fileName, true);
   }
 
-  public void loadOneDeferredCard(String accountName) {
+  public void loadOneDeferredCard(String bank) {
     save();
-    importDefered(accountName, fileName, false);
+    operations.openImportDialog()
+      .setFilePath(fileName)
+      .acceptFile()
+      .setDeferredAccount()
+      .selectBank(bank)
+      .completeImport();
   }
 
   private void importDefered(String accountName, final String fileName, boolean withMainAccount) {

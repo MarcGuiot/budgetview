@@ -78,9 +78,8 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     importer.addNewAccount()
       .setAccountName("Card account")
       .selectBank("CIC")
-      .setAsDeferredCard()
-      .setPosition(-1000)
-      .validate();
+      .setDeferredAccount()
+      .setPosition(-1000);
     importer.completeImport();
 
     views.selectCategorization();
@@ -118,11 +117,11 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("30/11/2009", "AUCHAN", -60.00, "To categorize", -100.00, 900.00, "Card n. 1111")
       .add("29/11/2009", "AUCHAN", -40.00, "To categorize", -40.00, 960.00, "Card n. 1111")
       .add("28/11/2009", "PRELEVEMENT NOVEMBRE", -30.00, "Card n. 1111", 1000.00, 1000.00, "Account n. 1234")
-      .add("25/11/2009", "AUCHAN", -10.00, "To categorize", -30.00, 1000.00, "Card n. 1111")
-      .add("29/10/2009", "AUCHAN", -20.00, "To categorize", -20.00, 1000.00, "Card n. 1111")
+      .add("25/11/2009", "AUCHAN", -10.00, "To categorize", -30.00, 1030.00, "Card n. 1111")
+      .add("29/10/2009", "AUCHAN", -20.00, "To categorize", -20.00, 1030.00, "Card n. 1111")
       .add("28/10/2009", "PRELEVEMENT OCTOBRE", 0.00, "Card n. 1111", 1030.00, 1030.00, "Account n. 1234")
       .add("26/09/2009", "PRELEVEMENT AOUT", -50.00, "Card n. 1111", 1030.00, 1030.00, "Account n. 1234")
-      .add("14/09/2009", "AUCHAN", -35.00, "To categorize", -50.00, 1030.00, "Card n. 1111")
+      .add("14/09/2009", "AUCHAN", -35.00, "To categorize", -50.00, 1080.00, "Card n. 1111")
       .check();
 
     // check budget
@@ -332,11 +331,11 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("30/11/2009", "AUCHAN", -60.00, "course", -100.00, 900.00, "Card n. 1111")
       .add("29/11/2009", "AUCHAN", -40.00, "course", -40.00, 960.00, "Card n. 1111")
       .add("28/11/2009", "PRELEVEMENT NOVEMBRE", -30.00, "Card n. 1111", 1000.00, 1000.00, "Account n. 1234")
-      .add("25/11/2009", "AUCHAN", -10.00, "course", -30.00, 1000.00, "Card n. 1111")
-      .add("29/10/2009", "AUCHAN", -20.00, "course", -20.00, 1000.00, "Card n. 1111")
+      .add("25/11/2009", "AUCHAN", -10.00, "course", -30.00, 1030.00, "Card n. 1111")
+      .add("29/10/2009", "AUCHAN", -20.00, "course", -20.00, 1030.00, "Card n. 1111")
       .add("28/10/2009", "PRELEVEMENT OCTOBRE", 0.00, "Card n. 1111", 1030.00, 1030.00, "Account n. 1234")
       .add("26/09/2009", "PRELEVEMENT AOUT", -50.00, "Card n. 1111", 1030.00, 1030.00, "Account n. 1234")
-      .add("14/09/2009", "AUCHAN", -35.00, "course", -50.00, 1030.00, "Card n. 1111")
+      .add("14/09/2009", "AUCHAN", -35.00, "course", -50.00, 1080.00, "Card n. 1111")
       .check();
   }
 
@@ -372,8 +371,8 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("30/11/2009", "AUCHAN", -60.00, "course", -100.00, 810.00, "Card n. 1111")
       .add("29/11/2009", "AUCHAN", -40.00, "course", -40.00, 870.00, "Card n. 1111")
       .add("28/11/2009", "PRELEVEMENT NOVEMBRE", -200.00, "Card n. 1111", 1000.00, 1000.00, "Account n. 1234")
-      .add("25/11/2009", "AUCHAN", -80.00, "course", -200.00, 1000.00, "Card n. 1111")
-      .add("29/10/2009", "AUCHAN", -120.00, "course", -120.00, 1000.00, "Card n. 1111")
+      .add("25/11/2009", "AUCHAN", -80.00, "course", -200.00, 1200.00, "Card n. 1111")
+      .add("29/10/2009", "AUCHAN", -120.00, "course", -120.00, 1200.00, "Card n. 1111")
       .add("28/10/2009", "PRELEVEMENT OCTOBRE", -130.00, "Card n. 1111", 1200.00, 1200.00, "Account n. 1234")
       .add("01/09/2009", "AUCHAN", -130.00, "course", -130.00, 1330.00, "Card n. 1111")
       .check();
@@ -482,8 +481,8 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2009/11");
     transactions.initAmountContent()
       .add("28/11/2009", "PRELEVEMENT NOVEMBRE", -200.00, "Card n. 1111", 1000.00, 1000.00, "Account n. 1234")
-      .add("25/11/2009", "AUCHAN", -80.00, "To categorize", -200.00, 1000.00, "Card n. 1111")
-      .add("31/10/2009", "AUCHAN", -120.00, "To categorize", -120.00, 1000.00, "Card n. 1111")
+      .add("25/11/2009", "AUCHAN", -80.00, "To categorize", -200.00, 1200.00, "Card n. 1111")
+      .add("31/10/2009", "AUCHAN", -120.00, "To categorize", -120.00, 1200.00, "Card n. 1111")
       .check();
 
     timeline.selectMonth("2009/12");

@@ -48,12 +48,13 @@ public class OtherBankSynchoChecker extends GuiChecker {
 
   public ImportDialogChecker doImport() {
     if (importDialogChecker != null) {
-      window.getButton("doImport").click();
+      window.getButton("update").click();
       UISpecAssert.assertFalse(window.isVisible());
+      importDialogChecker.waitAcceptFiles();
     }
     else {
       importDialogChecker =
-        ImportDialogChecker.openInStep2(window.getButton("doImport").triggerClick());
+        ImportDialogChecker.openInStep2(window.getButton("update").triggerClick());
       UISpecAssert.assertFalse(window.isVisible());
     }
     return importDialogChecker;

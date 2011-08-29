@@ -31,6 +31,15 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
     AWTAutoShutdown.notifyToolkitThreadBusy();
   }
 
+  protected void tearDown() throws Exception {
+    super.tearDown();
+//    System.gc();
+//    long freeMem = Runtime.getRuntime().freeMemory();
+//    long maxMem = Runtime.getRuntime().maxMemory();
+//    long totalMem = Runtime.getRuntime().totalMemory();
+//    System.out.println("FunctionalTestCase.tearDown " + freeMem  + " " + maxMem + " " + totalMem);
+  }
+
   protected static String createPrevaylerRepository() {
     String name = TestUtils.TMP_DIR + "/test_prevayler";
     File file = new File(name);

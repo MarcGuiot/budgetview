@@ -3,6 +3,7 @@ package org.designup.picsou.importer.qif;
 import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.ImportedTransaction;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.model.FieldValuesBuilder;
 import org.globsframework.model.Glob;
@@ -57,10 +58,7 @@ public class QifParser {
           case -1:
             return updated ? createTransaction(values) : null;
           case '!':
-            String line = reader.readLine();
-            if (line.startsWith(" accountId=")) {
-              accountId = Integer.parseInt(line.substring(" accountId=".length()));
-            }
+            reader.readLine();
             break;
           case 'D':
             updated = true;
@@ -80,7 +78,9 @@ public class QifParser {
             nValue = reader.readLine();
             break;
           case '^':
-            String value = null;
+            if (accountId == null){
+             accountId = globRepository.create(RealAccount.TYPE).get(RealAccount.ID);
+            }
             if (Strings.isNotEmpty(mValue)) {
               values.set(ImportedTransaction.QIF_M, mValue);
             }

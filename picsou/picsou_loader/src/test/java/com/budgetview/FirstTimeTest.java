@@ -94,7 +94,7 @@ public class FirstTimeTest extends UISpecTestCase {
     ImportDialogChecker ofxImportDialog = operations.openImportDialog();
     ofxImportDialog.browseAndSelect(file)
       .acceptFile()
-      .setMainAccount("Account n. 00001123")
+      .setMainAccount()
       .completeImport();
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);

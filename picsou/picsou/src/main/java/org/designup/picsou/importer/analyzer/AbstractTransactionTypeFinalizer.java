@@ -8,13 +8,12 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.utils.Log;
+import org.globsframework.utils.Utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class AbstractTransactionTypeFinalizer implements TransactionTypeFinalizer {
@@ -27,45 +26,12 @@ public abstract class AbstractTransactionTypeFinalizer implements TransactionTyp
       if (labelRegexp == null) {
         labelRegexp = ALL;
       }
-      return replace(newLabel, labelRegexp, placementRegexp, fileContentValue);
+      return Utils.replace(labelRegexp, placementRegexp, fileContentValue, newLabel);
     }
     else if (labelRegexp != null) {
       return null;
     }
     return newLabel;
-  }
-
-  private String replace(String newLabel, Pattern sourcePattern, Pattern placementRegexp, String mValue) {
-    Matcher matcher = sourcePattern.matcher(mValue);
-    if (!matcher.matches()) {
-      return null;
-    }
-    return replace(matcher, placementRegexp, newLabel);
-  }
-
-  protected String replace(Matcher groupMatcher, final Pattern placementRegexp, final String label) {
-    StringBuffer buffer = new StringBuffer();
-    Matcher matcher = placementRegexp.matcher(label);
-    while (matcher.find()) {
-      int group;
-      try {
-        group = Integer.parseInt(matcher.group(1));
-        try {
-          matcher.appendReplacement(buffer, groupMatcher.group(group));
-        }
-        catch (IndexOutOfBoundsException e) {
-          Log.write("Missing group '" + group + "' on " + label + " for patern " +
-                    placementRegexp.toString() + " and " + groupMatcher.pattern().toString());
-          return null;
-        }
-      }
-      catch (IndexOutOfBoundsException e) {
-        Log.write("Pattern error : " + matcher.pattern().toString() + " on " + label);
-        return null;
-      }
-    }
-    matcher.appendTail(buffer);
-    return buffer.toString();
   }
 
   protected void setTransactionType(Glob transaction,

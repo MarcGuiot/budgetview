@@ -18,6 +18,7 @@ import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +31,6 @@ import java.util.List;
 import java.util.Set;
 
 public class ImportDialog {
-
   private GlobRepository parentRepository;
   private Directory parentDirectory;
   private LocalGlobRepository localRepository;
@@ -44,6 +44,7 @@ public class ImportDialog {
   private ImportedFileSelectionPanel fileSelectionPanel;
   private ImportPreviewPanel previewPanel;
   private ImportCompletionPanel completionPanel;
+  private ImportAccountPanel importAccountsPanel;
 
   public ImportDialog(String textForCloseButton, List<File> files, Glob defaultAccount,
                       final Window owner,
@@ -60,12 +61,14 @@ public class ImportDialog {
 
     controller = new ImportController(this, repository, localRepository, directory);
     fileSelectionPanel = new ImportedFileSelectionPanel(controller, usePreferredPath, localRepository, localDirectory);
+    importAccountsPanel = new ImportAccountPanel(controller, localRepository, localDirectory);
     previewPanel = new ImportPreviewPanel(controller, defaultAccount, repository, localRepository, localDirectory);
     completionPanel = new ImportCompletionPanel(controller, localRepository, localDirectory);
 
     dialog = PicsouDialog.create(owner, directory);
     dialog.setOpenRequestIsManaged(true);
 
+    importAccountsPanel.init(dialog, textForCloseButton);
     fileSelectionPanel.init(dialog, textForCloseButton);
     previewPanel.init(dialog, textForCloseButton);
     completionPanel.init(dialog, textForCloseButton);
@@ -107,15 +110,19 @@ public class ImportDialog {
     }
   }
 
+  public void synchronize(GlobList importedAccount){
+    this.fileSelectionPanel.synchronize(importedAccount);
+  }
+
   public void preselectFiles(List<File> files) {
     fileSelectionPanel.preselectFiles(files);
   }
 
-  public void updateForNextImport(String absolutePath, boolean isAccountNeeded, List<String> dateFormats) {
+  public void updateForNextImport(String absolutePath, List<String> dateFormats, final Glob importedAccount) {
     if (absolutePath != null) {
       previewPanel.setFileName(absolutePath);
     }
-    previewPanel.updateForNextImport(isAccountNeeded, dateFormats);
+    previewPanel.updateForNextImport(dateFormats, importedAccount);
   }
 
   public void showPreview() {
@@ -194,7 +201,7 @@ public class ImportDialog {
     }
     for (Integer accountId : accounts) {
       Glob account = localRepository.get(Key.create(Account.TYPE, accountId));
-      if (account.get(Account.POSITION) == null) {
+      if (account.get(Account.POSITION) == null && !AccountCardType.DEFERRED.getId().equals(account.get(Account.CARD_TYPE))) {
         AccountPositionEditionDialog dialog =
           new AccountPositionEditionDialog(account, true, localRepository, localDirectory, this.dialog);
         dialog.show();
@@ -212,5 +219,12 @@ public class ImportDialog {
 
   public void showStep1Message(String message, Exception exception) {
     fileSelectionPanel.showMessage(message, exception);
+  }
+
+  public void showNoImport(Glob glob, boolean first) {
+    if (first){
+      setCurrentPanel(importAccountsPanel.getPanel());
+    }
+    importAccountsPanel.setImportedAccountToImport(glob);
   }
 }

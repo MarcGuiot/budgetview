@@ -9,22 +9,22 @@ import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
+import org.designup.picsou.utils.Lang;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static org.uispec4j.assertion.UISpecAssert.*;
-
 public class AccountEditionChecker extends GuiChecker {
-  private Window dialog;
+  private org.uispec4j.Panel dialog;
   private CardEditionPanelChecker cardEditionPanelChecker;
 
   public static AccountEditionChecker open(Trigger trigger) {
     return new AccountEditionChecker(WindowInterceptor.getModalDialog(trigger));
   }
 
-  private AccountEditionChecker(Window dialog) {
+  public AccountEditionChecker(org.uispec4j.Panel dialog) {
     this.dialog = dialog;
     cardEditionPanelChecker = new CardEditionPanelChecker(dialog);
   }
@@ -193,7 +193,7 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  private ComboBox getTypeCombo() {
+  public ComboBox getTypeCombo() {
     return dialog.getComboBox("type");
   }
 
@@ -389,5 +389,13 @@ public class AccountEditionChecker extends GuiChecker {
   public AccountEditionChecker delete(int month) {
     cardEditionPanelChecker.delete(month);
     return this;
+  }
+
+  public void checkNameMissing() {
+    checkSignpostVisible(dialog, getNameEditor(), "You must enter a name for this account");
+  }
+
+  public String getAccountName() {
+    return dialog.getInputTextBox("name").getText();
   }
 }

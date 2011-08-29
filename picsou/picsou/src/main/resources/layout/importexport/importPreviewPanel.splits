@@ -28,28 +28,14 @@
 
       <panel ref="dateSelectionPanel"/>
 
-      <repeat ref="additionalPanels">
-        <panel ref="additionalPanel"/>
-      </repeat>
-
-      <repeat ref="additionalActions">
-        <column>
-          <textArea ref="message" styleClass="additionalActionMessage"/>
-          <row marginTop="5">
-            <filler fill="horizontal"/>
-            <button action="action" styleClass="additionalActionButton"/>
-            <filler fill="horizontal"/>
-          </row>
-        </column>
-      </repeat>
-
       <column>
-        <label text="$import.select.account" styleClass="header" autoHideSource="accountCombo"/>        
+        <label text="$import.select.account" styleClass="header" autoHideSource="accountCombo"/>
         <row>
           <comboBox ref="accountCombo"/>
-          <button ref="newAccount"/>
         </row>
       </column>
+
+      <panel ref="accountPanel"/>
 
       <panel minimumSize="(200,20)" opaque="false" marginTop="5">
         <htmlEditorPane ref="importMessage" styleClass="errorMessage"/>

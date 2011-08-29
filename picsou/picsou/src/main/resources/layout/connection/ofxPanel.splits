@@ -1,0 +1,31 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="innerDialog">
+    <column>
+      <row>
+        <label text="Entez votre code"/>
+        <textField ref="code"/>
+      </row>
+      <row>
+        <label text="Entez votre mot de passe"/>
+        <textField ref="password"/>
+      </row>
+      <row>
+        <label text="url"/>
+        <textField ref="url"/>
+      </row>
+      <row>
+        <label text="org"/>
+        <textField ref="org"/>
+      </row>
+      <row>
+        <label text="fid"/>
+        <textField ref="fid"/>
+      </row>
+      <filler fill="vertical"/>
+      <button ref="validerCode"/>
+    </column>
+  </panel>
+</splits>

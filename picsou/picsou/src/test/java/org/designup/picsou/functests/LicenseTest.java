@@ -20,6 +20,11 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
     setDeleteLocalPrevayler(false);
   }
 
+  protected void tearDown() throws Exception {
+    super.tearDown();
+    textBox = null;
+  }
+
   protected void selectInitialView() {
     views.selectHome();
   }

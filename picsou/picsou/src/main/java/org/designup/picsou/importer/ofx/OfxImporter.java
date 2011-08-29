@@ -32,7 +32,7 @@ public class OfxImporter implements AccountFileImporter {
                                    GlobRepository targetRepository) throws TruncatedFile {
     OfxParser parser = new OfxParser();
     try {
-      Functor functor = new Functor(targetRepository);
+      Functor functor = new Functor(targetRepository, initialRepository);
       parser.parse(reader, functor);
       if (!functor.fileCompleted) {
         throw new TruncatedFile();
@@ -46,6 +46,7 @@ public class OfxImporter implements AccountFileImporter {
 
   private static class Functor implements OfxFunctor {
     private GlobRepository repository;
+    private ReadOnlyGlobRepository initialRepository;
     private GlobList createdTransactions = new GlobList();
     private GlobList transactionsForAccount = new GlobList();
     private Map<String, Key> fIdToTransaction = new HashMap<String, Key>();
@@ -55,7 +56,7 @@ public class OfxImporter implements AccountFileImporter {
     private boolean isCreditCard = false;
     private boolean isInLedgerBal = false;
     private String bankEntityLabel;
-    private Double position;
+    private String position;
     private Date updateDate;
     private String fitid;
     private boolean ofxTagFound = false;
@@ -65,9 +66,12 @@ public class OfxImporter implements AccountFileImporter {
     private String memo;
     private String transactionType;
     private String checkNum;
+    private boolean forceAccount = false;
+    private Integer lastTransactionId;
 
-    public Functor(GlobRepository targetRepository) {
+    public Functor(GlobRepository targetRepository, ReadOnlyGlobRepository initialRepository) {
       this.repository = targetRepository;
+      this.initialRepository = initialRepository;
       generator = new ImportedTransactionIdGenerator(targetRepository.getIdGenerator());
     }
 
@@ -101,10 +105,12 @@ public class OfxImporter implements AccountFileImporter {
         isCreditCard = false;
       }
       else if (tag.equalsIgnoreCase("STMTTRN")) {
+        int accountId = currentAccount.get(RealAccount.ID);
+        lastTransactionId = generator.getNextId(ImportedTransaction.ID, 1);
         Glob transaction =
           repository.create(ImportedTransaction.TYPE,
-                            value(ImportedTransaction.ACCOUNT, currentAccount.get(Account.ID)),
-                            value(ImportedTransaction.ID, generator.getNextId(ImportedTransaction.ID, 1)),
+                            value(ImportedTransaction.ACCOUNT, accountId),
+                            value(ImportedTransaction.ID, lastTransactionId),
                             value(ImportedTransaction.IS_OFX, true)
           );
         createdTransactions.add(transaction);
@@ -198,7 +204,7 @@ public class OfxImporter implements AccountFileImporter {
         return;
       }
       if (tag.equalsIgnoreCase("BALAMT")) {
-        position = Amounts.extractAmount(content);
+        position = content; //Amounts.extractAmount(content);
         return;
       }
       if (tag.equalsIgnoreCase("DTASOF")) {
@@ -275,6 +281,9 @@ public class OfxImporter implements AccountFileImporter {
     }
 
     private void updateAccount(String accountNumber) {
+      if (forceAccount) {
+        return;
+      }
       Integer bankId = null;
       Integer bankEntityId = BankEntity.find(bankEntityLabel, repository);
       if (bankEntityId != null) {
@@ -288,19 +297,16 @@ public class OfxImporter implements AccountFileImporter {
           }
         }
       }
-      currentAccount = repository.create(Account.TYPE,
-                                         value(Account.IS_VALIDATED, false),
-                                         value(Account.IS_IMPORTED_ACCOUNT, true),
-                                         value(Account.NUMBER, accountNumber),
-                                         value(Account.ID, generator.getNextId(Account.ID, 1)),
-                                         value(Account.NAME, Account.getName(accountNumber, isCreditCard)),
-                                         value(Account.BANK, bankId),
-                                         value(Account.BANK_ENTITY_LABEL, bankEntityLabel),
-                                         value(Account.BANK_ENTITY, bankEntityId),
-                                         value(Account.ACCOUNT_TYPE, isCreditCard ? AccountType.MAIN.getId() : null),
-                                         value(Account.CARD_TYPE, isCreditCard ? AccountCardType.UNDEFINED.getId()
-                                                                  : AccountCardType.NOT_A_CARD.getId()),
-                                         value(Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId()));
+      currentAccount = repository.create(RealAccount.TYPE,
+                                         value(RealAccount.NUMBER, accountNumber),
+                                         value(RealAccount.ID, generator.getNextId(RealAccount.ID, 1)),
+                                         value(RealAccount.NAME, Account.getName(accountNumber, isCreditCard)),
+                                         value(RealAccount.BANK, bankId),
+                                         value(RealAccount.BANK_ENTITY_LABEL, bankEntityLabel),
+                                         value(RealAccount.BANK_ENTITY, bankEntityId),
+                                         value(RealAccount.ACCOUNT_TYPE, isCreditCard ? AccountType.MAIN.getId() : null),
+                                         value(RealAccount.CARD_TYPE, isCreditCard ? AccountCardType.UNDEFINED.getId()
+                                                                      : AccountCardType.NOT_A_CARD.getId()));
     }
 
     private void updateAccountBalance() {
@@ -309,11 +315,10 @@ public class OfxImporter implements AccountFileImporter {
       }
       if (updateDate != null) {
         repository.update(currentAccount.getKey(),
-                          value(Account.POSITION_DATE, updateDate),
-                          value(Account.POSITION, position),
-                          value(Account.TRANSACTION_ID, null));
+                          value(RealAccount.POSITION_DATE, updateDate),
+                          value(RealAccount.POSITION, position),
+                          value(RealAccount.TRANSACTION_ID, lastTransactionId));
       }
-
       updateDate = null;
       position = null;
     }

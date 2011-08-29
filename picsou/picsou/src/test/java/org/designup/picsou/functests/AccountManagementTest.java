@@ -1,9 +1,9 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.AccountEditionChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
-import org.designup.picsou.functests.checkers.AccountEditionChecker;
 import org.designup.picsou.model.TransactionType;
 
 public class AccountManagementTest extends LoggedInFunctionalTestCase {
