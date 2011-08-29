@@ -1,10 +1,12 @@
-package org.designup.picsou.gui.experiment;
+package org.designup.picsou.gui.components.charts.stack;
 
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
 import org.designup.picsou.gui.components.charts.stack.StackChartColors;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.splits.layout.SingleComponentPanels;
+import org.globsframework.metamodel.DummyObject;
+import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.directory.DefaultDirectory;
 
@@ -13,7 +15,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class StackChartDemo {
-  private static final double[] VALUES = {2, 0, 8, 5, -10, 10, 4};
+
+  private static int currentId = 1;
 
   public static void main(String[] args) {
 
@@ -54,10 +57,6 @@ public class StackChartDemo {
   }
 
   private static void add(StackChartDataset dataset, final String label, double value, boolean selected) {
-    dataset.add(label, value, new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        System.out.println("StackChartDemo.actionPerformed: " + label);
-      }
-    }, selected);
+    dataset.add(label, value, Key.create(DummyObject.TYPE, currentId), selected);
   }
 }

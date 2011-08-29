@@ -206,6 +206,13 @@ public class Gui {
     return true;
   }
 
+  public static boolean isAddModifier(int modifiers) {
+    return ((modifiers & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) ||
+           ((modifiers & InputEvent.SHIFT_MASK) == InputEvent.SHIFT_MASK) ||
+           ((modifiers & InputEvent.ALT_MASK) == InputEvent.ALT_MASK) ||
+           ((modifiers & InputEvent.META_MASK) == InputEvent.META_MASK);
+  }
+
   public static class RolloverColorListener extends MouseAdapter {
     private final JComponent component;
     private final Color rolloverColor;

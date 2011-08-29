@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.components.charts.stack;
 
+import org.globsframework.model.Key;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,17 +13,16 @@ public class StackChartDataset {
   private double total = 0.0;
   private String longestLabel = "";
   private boolean containsSelection;
-  private boolean hasActions;
 
   public void add(String label, Double value) {
     add(label, value, null, false);
   }
 
-  public void add(String label, Double value, Action action) {
-    add(label, value, action, false);
+  public void add(String label, Double value, Key key) {
+    add(label, value, key, false);
   }
 
-  public void add(String label, Double value, Action action, boolean selected) {
+  public void add(String label, Double value, Key key, boolean selected) {
     if ((value == null) || Math.abs(value) < 0.01) {
       return;
     }
@@ -31,7 +30,7 @@ public class StackChartDataset {
       throw new InvalidParameter("Invalid negative value " + value + " for " + label);
     }
 
-    Element element = new Element(label, value, action, selected);
+    Element element = new Element(label, value, key, selected);
     int index = Collections.binarySearch(elements, element);
     elements.add(index < 0 ? -index - 1 : index, element);
     total += value;
@@ -40,7 +39,6 @@ public class StackChartDataset {
     }
 
     containsSelection |= selected;
-    hasActions |= action != null;
   }
 
   public String getLabel(int index) {
@@ -71,14 +69,6 @@ public class StackChartDataset {
     return longestLabel;
   }
 
-  public boolean containsSelection() {
-    return containsSelection;
-  }
-
-  public boolean hasActions() {
-    return hasActions;
-  }
-
   public String toString() {
     StringBuilder builder = new StringBuilder();
     for (Element element : elements) {
@@ -106,26 +96,26 @@ public class StackChartDataset {
     return -1;
   }
 
-  public Action getAction(int index) {
-    return elements.get(index).action;
+  public Key getKey(int index) {
+    return elements.get(index).key;
   }
 
   private static class Element implements Comparable<Element> {
     String label;
     double value;
-    private Action action;
+    private Key key;
     boolean selected;
 
-    public Element(String label, double value, Action action, boolean selected) {
+    public Element(String label, double value, Key key, boolean selected) {
       this.label = label;
       this.value = value;
-      this.action = action;
+      this.key = key;
       this.selected = selected;
     }
 
     public int compareTo(Element other) {
       int cmp = Double.compare(other.value, value);
-      if (cmp == 0){
+      if (cmp == 0) {
         return other.label.compareTo(label);
       }
       return cmp;

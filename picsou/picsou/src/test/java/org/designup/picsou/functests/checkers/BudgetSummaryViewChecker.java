@@ -45,7 +45,7 @@ public class BudgetSummaryViewChecker extends ViewChecker {
     HistoDailyChecker chart = getChart();
     HistoSelectionManager selectionManager = chart.getChart().getSelectionManager();
     int columnIndex = chart.getDataset().getIndex(monthId);
-    selectionManager.updateRollover(columnIndex,
+    selectionManager.updateRollover(columnIndex >= 0 ? columnIndex : null,
                                     Key.create(Day.MONTH, monthId, Day.DAY, day),
                                     false);
     return this;

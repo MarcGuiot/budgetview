@@ -4,12 +4,11 @@ import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
-import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyDataset;
 import org.uispec4j.Mouse;
 import org.uispec4j.Panel;
 import org.uispec4j.interception.toolkit.Empty;
 
-import java.awt.*;
+import javax.swing.*;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -68,31 +67,10 @@ public abstract class AbstractHistoChecker<T extends AbstractHistoChecker> exten
     clickColumn(columnIndex);
   }
 
-  public void clickAllColumns() {
-    HistoChart chart = getChart();
-    chart.paint(Empty.NULL_GRAPHICS_2D);
-    int y = chart.getSize().height / 2;
-
-    int x0 = chart.getX(0);
-    Mouse.enter(chart, x0, y);
-    Mouse.move(chart, x0, y);
-    Mouse.pressed(chart, x0, y);
-
-    chart.paint(Empty.NULL_GRAPHICS_2D);
-    int x1 = chart.getX(chart.getCurrentDataset().size() - 1);
-    Mouse.drag(chart, x1, y);
-    Mouse.released(chart, x1, y);
-    Mouse.exit(chart, x1, y);
-  }
-
   private void doClick(HistoChart chart, int x) {
     int y = chart.getSize().height / 2;
 
-    Mouse.enter(chart, x, y);
-    Mouse.move(chart, x, y);
-    Mouse.pressed(chart, x, y);
-    Mouse.released(chart, x, y);
-    Mouse.exit(chart, x, y);
+    click(chart, x, y);
   }
 
   public void checkSelectedIds(Integer... ids) {

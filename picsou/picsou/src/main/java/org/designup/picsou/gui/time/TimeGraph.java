@@ -165,8 +165,8 @@ public class TimeGraph {
     }
   }
 
-  public void selectMonth(int[] indexes, Collection<Selectable> selectable) {
-    for (int index : indexes) {
+  public void selectMonth(int[] indices, Collection<Selectable> selectable) {
+    for (int index : indices) {
       for (YearGraph year : yearGraphs) {
         year.select(months.get(index), selectable);
       }

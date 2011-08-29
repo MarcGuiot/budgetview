@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
+import org.uispec4j.Key;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import org.uispec4j.interception.toolkit.Empty;
@@ -35,12 +36,29 @@ public class StackChecker extends ViewChecker {
     return new DatasetChecker(chart.getLeftDataset());
   }
 
-  public void click(final double xPercent, final double yPercent) {
-    final StackChart chart = getChart();
+  public void select(String... items) {
+    StackChart chart = getChart();
+    chart.setSize(200, 200);
+    boolean add = false;
+    for (String item : items) {
+      doClick(chart, item, add ? Key.Modifier.CONTROL : Key.Modifier.NONE);
+      add = true;
+    }
+  }
+
+  public void addToSelection(String item) {
+    StackChart chart = getChart();
+    chart.setSize(200, 200);
+    doClick(chart, item, Key.Modifier.CONTROL);
+  }
+
+  private void doClick(StackChart chart, String item, Key.Modifier modifier) {
     chart.paint(Empty.NULL_GRAPHICS_2D);
-    Dimension size = chart.getSize();
-    chart.mouseMoved((int)(size.width * xPercent), (int)(size.height * yPercent));
-    chart.click();
+    Rectangle area = chart.getArea(item);
+    if (area == null) {
+      Assert.fail("Item " + item + " not found - actual labels: " + chart.getAreas());
+    }
+    click(chart, area, modifier);
   }
 
   public class DatasetChecker {
@@ -86,7 +104,7 @@ public class StackChecker extends ViewChecker {
         double value = dataset.getValue(i);
         builder.append("  .checkValue(\"").append(dataset.getLabel(i)).append("\", ")
           .append(StackChecker.this.toString(value))
-        .append(")");
+          .append(")");
         if (i < dataset.size() - 1) {
           builder.append("\n");
         }

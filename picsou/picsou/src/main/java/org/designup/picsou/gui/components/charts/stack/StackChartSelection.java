@@ -1,7 +1,5 @@
 package org.designup.picsou.gui.components.charts.stack;
 
-import javax.swing.*;
-
 public class StackChartSelection {
   public final StackChartDataset dataset;
   public final int datasetIndex;
@@ -9,6 +7,10 @@ public class StackChartSelection {
   public StackChartSelection(StackChartDataset dataset, int datasetIndex) {
     this.dataset = dataset;
     this.datasetIndex = datasetIndex;
+  }
+
+  public String getLabel() {
+    return dataset.getLabel(datasetIndex);
   }
 
   public boolean equals(Object o) {
@@ -27,10 +29,6 @@ public class StackChartSelection {
     int result = dataset.hashCode();
     result = 31 * result + datasetIndex;
     return result;
-  }
-
-  public Action getAction() {
-    return dataset.getAction(datasetIndex);
   }
 
   public String toString() {

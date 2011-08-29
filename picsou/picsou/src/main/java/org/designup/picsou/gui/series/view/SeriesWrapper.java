@@ -14,6 +14,9 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.exceptions.InvalidParameter;
+
+import java.util.Collection;
 
 public class SeriesWrapper {
   public static GlobType TYPE;
@@ -114,5 +117,21 @@ public class SeriesWrapper {
     return repository.findUnique(SeriesWrapper.TYPE,
                                  value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
                                  value(SeriesWrapper.ITEM_ID, seriesId));
+  }
+
+  public static GlobList findAll(GlobList globs, GlobRepository repository) {
+    GlobList result = new GlobList();
+    for (Glob glob : globs) {
+      if (glob.getType().equals(Series.TYPE)) {
+        result.add(getWrapperForSeries(glob.get(Series.ID), repository));
+      }
+      else if (glob.getType().equals(BudgetArea.TYPE)) {
+        result.add(getWrapperForBudgetArea(BudgetArea.get(glob.get(BudgetArea.ID)), repository));
+      }
+      else {
+        throw new InvalidParameter("Unexpected type: " + glob.getType());
+      }
+    }
+    return result;
   }
 }

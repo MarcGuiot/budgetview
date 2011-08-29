@@ -4,9 +4,8 @@ import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.model.Month;
 import org.globsframework.utils.Dates;
-import org.uispec4j.Key;
+import org.uispec4j.*;
 import org.uispec4j.Panel;
-import org.uispec4j.UIComponent;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.utils.KeyUtils;
@@ -89,4 +88,23 @@ public abstract class GuiChecker {
     return null;
   }
 
+  protected void click(JComponent component, int x, int y) {
+    click(component, x, y, Key.Modifier.NONE);
+  }
+
+  protected void click(JComponent component, int x, int y, Key.Modifier modifier) {
+    Mouse.enter(component, x, y);
+    Mouse.move(component, x, y);
+    Mouse.pressed(component, false, modifier, x, y);
+    Mouse.released(component, false, modifier, x, y);
+    Mouse.exit(component, x, y);
+  }
+
+  protected void click(JComponent component, Rectangle rectangle) {
+    click(component, rectangle, Key.Modifier.NONE);
+  }
+
+  protected void click(JComponent component, Rectangle rectangle, Key.Modifier modifier) {
+    click(component, rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2, modifier);
+  }
 }

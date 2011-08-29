@@ -1,8 +1,10 @@
 package org.designup.picsou.gui.components.charts.stack;
 
+import org.globsframework.model.Key;
+
 public class StackChartBlock {
-  public final StackChartDataset dataset;
-  public final int datasetIndex;
+
+  public Key key;
 
   public final int blockY;
   public final int blockHeight;
@@ -13,14 +15,12 @@ public class StackChartBlock {
 
   public final boolean selected;
 
-  public StackChartBlock(StackChartDataset dataset,
-                         int datasetIndex,
+  public StackChartBlock(Key key,
                          int blockY, int blockHeight,
                          String label, String barText,
                          int labelTextY, int barTextY,
                          boolean selected) {
-    this.dataset = dataset;
-    this.datasetIndex = datasetIndex;
+    this.key = key;
 
     this.blockY = blockY;
     this.blockHeight = blockHeight;

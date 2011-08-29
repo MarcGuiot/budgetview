@@ -33,11 +33,10 @@ public class HistoChart extends JPanel {
     registerMouseActions();
     selectionManager.addListener(new HistoChartListenerAdapter() {
       public void rolloverUpdated(HistoRollover rollover) {
-        setCursor(rollover.isActive() ?
-                  Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         if (rollover.getColumnIndex() != null) {
           setToolTipText(painter.getDataset().getTooltip(rollover.getColumnIndex(), rollover.getObjectKey()));
         }
+        setCursor(Cursor.getPredefinedCursor(rollover.isActive() ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
       }
     });
   }

@@ -182,27 +182,6 @@ public class TransactionChecker extends ViewChecker {
     assertTrue(table.rowIsSelected(row));
   }
 
-  public void selectSeries(String seriesName) {
-    getSeriesFilter().select(seriesName);
-  }
-
-  public void checkSelectedSeries(String seriesName) {
-    assertThat(getSeriesFilter().selectionEquals(seriesName));
-  }
-
-  private ComboBox getSeriesFilter() {
-    if (seriesFilterCombo == null) {
-      views.selectData();
-      seriesFilterCombo = mainWindow.getComboBox("seriesFilterCombo");
-    }
-    return seriesFilterCombo;
-  }
-
-  public TransactionChecker checkSelectableSeries(String... series) {
-    assertThat(getSeriesFilter().contentEquals(series));
-    return this;
-  }
-
   public void checkNotEmpty() {
     UISpecAssert.assertFalse(getTable().isEmpty());
   }

@@ -6,7 +6,9 @@ import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerA
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartColors;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
+import org.designup.picsou.gui.components.charts.stack.utils.StackChartAdapter;
 import org.designup.picsou.gui.model.BudgetStat;
+import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
@@ -21,16 +23,12 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
 
@@ -41,7 +39,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
 
   private Integer referenceMonthId;
   private SortedSet<Integer> selectedMonthIds;
-  private Set<Key> currentWrapperKeys = new HashSet<Key>();
+  private Set<Key> selectedWrapperKeys = new HashSet<Key>();
 
   private HistoChartBuilder histoChartBuilder;
 
@@ -87,7 +85,9 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(BudgetStat.TYPE)
+            || changeSet.containsChanges(Series.TYPE)
             || changeSet.containsChanges(SavingsBudgetStat.TYPE)
+            || changeSet.containsChanges(PeriodSeriesStat.TYPE)
             || changeSet.containsChanges(SeriesStat.TYPE)) {
           update(true);
         }
@@ -97,6 +97,10 @@ public class SeriesChartsPanel implements GlobSelectionListener {
         update(true);
       }
     });
+
+    StackSelectionListener listener = new StackSelectionListener();
+    balanceChart.addListener(listener);
+    seriesChart.addListener(listener);
   }
 
   public void reset() {
@@ -143,8 +147,8 @@ public class SeriesChartsPanel implements GlobSelectionListener {
         setMainSummaryWrapperKey();
       }
       else {
-        currentWrapperKeys.clear();
-        currentWrapperKeys.addAll(selectedWrappers.getKeyList());
+        selectedWrapperKeys.clear();
+        selectedWrapperKeys.addAll(selectedWrappers.getKeyList());
       }
     }
 
@@ -152,73 +156,81 @@ public class SeriesChartsPanel implements GlobSelectionListener {
   }
 
   private void setMainSummaryWrapperKey() {
-    currentWrapperKeys.clear();
-    currentWrapperKeys.add(Key.create(SeriesWrapper.TYPE, SeriesWrapper.BALANCE_SUMMARY_ID));
+    selectedWrapperKeys.clear();
+    selectedWrapperKeys.add(Key.create(SeriesWrapper.TYPE, SeriesWrapper.BALANCE_SUMMARY_ID));
   }
 
   private void update(final boolean resetPosition) {
-    GlobList currentWrappers = new GlobList();
-    currentWrappers.addAll(currentWrapperKeys, repository);
-
-    Set<Integer> types = currentWrappers.getValueSet(SeriesWrapper.ITEM_TYPE);
-    if ((referenceMonthId == null) || (types.size() != 1) || repository.find(CurrentMonth.KEY) == null) {
+    GlobList selectedWrappers = getSelectedWrappers();
+    Set<Integer> types = selectedWrappers.getValueSet(SeriesWrapper.ITEM_TYPE);
+    if ((referenceMonthId == null) || repository.find(CurrentMonth.KEY) == null) {
       histoChartBuilder.clear();
       return;
     }
-    switch (SeriesWrapperType.get(types.iterator().next())) {
-      case BUDGET_AREA: {
-        List<BudgetArea> budgetAreas = BudgetArea.getAll(currentWrappers.getValues(SeriesWrapper.ITEM_ID));
-        if (budgetAreas.size() == 1 && budgetAreas.contains(BudgetArea.UNCATEGORIZED)) {
-          histoChartBuilder.showUncategorizedHisto(referenceMonthId, resetPosition);
-          updateUncategorizedBalanceStack();
-          updateUncategorizedSeriesStack();
-        }
-        else {
-          histoChartBuilder.showBudgetAreaHisto(budgetAreas, referenceMonthId, resetPosition);
 
-          BudgetArea first = budgetAreas.get(0);
-          updateMainBalanceStack(first);
-          updateBudgetAreaSeriesStack(first, null);
-        }
-      }
-      break;
-
-      case SERIES: {
-        Set<Integer> seriesIds = currentWrappers.getValueSet(SeriesWrapper.ITEM_ID);
-        histoChartBuilder.showSeriesHisto(seriesIds, referenceMonthId, resetPosition);
-
-        Integer seriesId = seriesIds.iterator().next();
-        BudgetArea budgetArea = Series.getBudgetArea(seriesId, repository);
-        updateMainBalanceStack(budgetArea);
-        updateBudgetAreaSeriesStack(budgetArea, seriesId);
-      }
-      break;
-
-      case SUMMARY: {
-        Integer id = currentWrappers.getFirst().get(SeriesWrapper.ID);
-        if (id.equals(SeriesWrapper.BALANCE_SUMMARY_ID)) {
-          histoChartBuilder.showMainBalanceHisto(referenceMonthId, resetPosition);
-          updateMainBalanceStack(null);
-          updateMainAccountExpensesSeriesStack();
-        }
-        else if (id.equals(SeriesWrapper.MAIN_POSITION_SUMMARY_ID)) {
-          histoChartBuilder.showMainAccountsHisto(referenceMonthId, resetPosition);
-          updateMainBalanceStack(null);
-          updateMainAccountExpensesSeriesStack();
-        }
-        else if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
-          histoChartBuilder.showSavingsAccountsHisto(referenceMonthId, resetPosition);
-          updateSavingsStacks();
-        }
-      }
-      break;
-
-      default:
-        throw new InvalidParameter("Unexpected case: " + types);
+    Set<BudgetArea> budgetAreas = getBudgetAreas(selectedWrappers);
+    if (budgetAreas.size() == 1 && budgetAreas.contains(BudgetArea.UNCATEGORIZED)) {
+      histoChartBuilder.showUncategorizedHisto(referenceMonthId, resetPosition);
+      updateUncategorizedBalanceStack();
+      updateUncategorizedSeriesStack();
+      return;
     }
+
+    if (types.contains(SeriesWrapperType.SUMMARY.getId())) {
+      Integer id = selectedWrappers
+        .filter(fieldEquals(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUMMARY.getId()), repository)
+        .getFirst().get(SeriesWrapper.ID);
+      if (id.equals(SeriesWrapper.BALANCE_SUMMARY_ID)) {
+        histoChartBuilder.showMainBalanceHisto(referenceMonthId, resetPosition);
+        updateMainBalanceStack(Collections.<BudgetArea>emptySet());
+        updateMainAccountExpensesSeriesStack();
+      }
+      else if (id.equals(SeriesWrapper.MAIN_POSITION_SUMMARY_ID)) {
+        histoChartBuilder.showMainAccountsHisto(referenceMonthId, resetPosition);
+        updateMainBalanceStack(Collections.<BudgetArea>emptySet());
+        updateMainAccountExpensesSeriesStack();
+      }
+      else if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
+        histoChartBuilder.showSavingsAccountsHisto(referenceMonthId, resetPosition);
+        updateSavingsStacks();
+      }
+      return;
+    }
+
+    Set<Integer> seriesIds =
+      selectedWrappers
+        .filter(fieldEquals(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()), repository)
+        .getValueSet(SeriesWrapper.ITEM_ID);
+    for (Integer seriesId : seriesIds) {
+      Glob series = repository.get(Key.create(Series.TYPE, seriesId));
+      budgetAreas.add(BudgetArea.get(series.get(Series.BUDGET_AREA)));
+    }
+    if (seriesIds.isEmpty()) {
+      histoChartBuilder.showBudgetAreaHisto(budgetAreas, referenceMonthId, resetPosition);
+    }
+    else {
+      histoChartBuilder.showSeriesHisto(seriesIds, referenceMonthId, resetPosition);
+    }
+
+    updateMainBalanceStack(budgetAreas);
+    updateBudgetAreaSeriesStack(budgetAreas, seriesIds);
   }
 
-  private void updateMainBalanceStack(BudgetArea selectedBudgetArea) {
+  private Set<BudgetArea> getBudgetAreas(GlobList selectedWrappers) {
+    return new HashSet<BudgetArea>(
+      BudgetArea.getAll(
+        selectedWrappers
+          .filter(fieldEquals(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId()), repository)
+          .getValues(SeriesWrapper.ITEM_ID)));
+  }
+
+  private GlobList getSelectedWrappers() {
+    GlobList selectedWrappers = new GlobList();
+    selectedWrappers.addAll(selectedWrapperKeys, repository);
+    return selectedWrappers;
+  }
+
+  private void updateMainBalanceStack(Set<BudgetArea> selectedBudgetAreas) {
     StackChartDataset incomeDataset = new StackChartDataset();
     StackChartDataset expensesDataset = new StackChartDataset();
     for (BudgetArea budgetArea : BudgetArea.INCOME_AND_EXPENSES_AREAS) {
@@ -232,8 +244,8 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       StackChartDataset dataset = amount > 0 ? incomeDataset : expensesDataset;
       dataset.add(budgetArea.getLabel(),
                   Math.abs(amount),
-                  createSelectionAction(budgetArea),
-                  budgetArea.equals(selectedBudgetArea));
+                  budgetArea.getKey(),
+                  selectedBudgetAreas.contains(budgetArea));
     }
 
     balanceChart.update(incomeDataset, expensesDataset, balanceStackColors);
@@ -251,7 +263,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       if (amount != null && amount < 0) {
         Glob series = repository.get(Key.create(Series.TYPE, seriesId));
         String name = series.get(Series.NAME);
-        dataset.add(name, -amount, createSelectionAction(seriesId));
+        dataset.add(name, -amount, series.getKey());
       }
     }
 
@@ -259,25 +271,42 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     updateSeriesLabel("mainAccount");
   }
 
-  private void updateBudgetAreaSeriesStack(BudgetArea budgetArea, Integer selectedSeriesId) {
-    StackChartDataset dataset = new StackChartDataset();
+  private void updateBudgetAreaSeriesStack(Set<BudgetArea> budgetAreas, Set<Integer> selectedSeriesIds) {
+    StackChartDataset incomeDataset = new StackChartDataset();
+    StackChartDataset expensesDataset = new StackChartDataset();
 
     GlobList stats = repository.getAll(SeriesStat.TYPE, fieldIn(SeriesStat.MONTH, selectedMonthIds));
     for (Integer seriesId : stats.getValueSet(SeriesStat.SERIES)) {
       Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-      if (budgetArea.getId().equals(series.get(Series.BUDGET_AREA))
+      if (budgetAreas.contains(BudgetArea.get(series.get(Series.BUDGET_AREA)))
           && !Series.isSavingToExternal(series)) {
-        Double amount = getTotalAmountForSelectedPeriod(seriesId);
-        dataset.add(series.get(Series.NAME),
-                    Math.abs(amount != null ? amount : 0.0),
-                    createSelectionAction(seriesId),
-                    seriesId.equals(selectedSeriesId));
+        double amount = getTotalAmountForSelectedPeriod(seriesId);
+        StackChartDataset targetDataset = amount >= 0 ? incomeDataset : expensesDataset;
+        targetDataset.add(series.get(Series.NAME),
+                          Math.abs(amount),
+                          series.getKey(),
+                          selectedSeriesIds.contains(seriesId));
       }
     }
 
-    StackChartColors colors = budgetArea.isIncome() ? incomeStackColors : expensesStackColors;
-    seriesChart.update(dataset, colors);
-    updateSeriesLabel("budgetArea", budgetArea.getLabel().toLowerCase());
+    if (!incomeDataset.isEmpty() && !expensesDataset.isEmpty()) {
+      seriesChart.update(incomeDataset, expensesDataset, balanceStackColors);
+    }
+    else if (!incomeDataset.isEmpty()) {
+      seriesChart.update(incomeDataset, incomeStackColors);
+    }
+    else if (!expensesDataset.isEmpty()) {
+      seriesChart.update(expensesDataset, expensesStackColors);
+    }
+    else {
+      seriesChart.clear();
+    }
+    if (budgetAreas.size() == 1) {
+      updateSeriesLabel("budgetArea", budgetAreas.iterator().next().getLabel().toLowerCase());
+    }
+    else {
+      updateSeriesLabel("budgetAreas", Integer.toString(budgetAreas.size()));
+    }
   }
 
   private void updateUncategorizedBalanceStack() {
@@ -320,7 +349,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     for (Glob transaction : uncategorizedTransactions) {
       dataset.add(Strings.cut(transaction.get(Transaction.LABEL), 20),
                   Math.abs(transaction.get(Transaction.AMOUNT)),
-                  new CategorizeTransactionAction(transaction.getKey()),
+                  transaction.getKey(),
                   false);
     }
 
@@ -346,27 +375,29 @@ public class SeriesChartsPanel implements GlobSelectionListener {
         continue;
       }
 
-      Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
-      Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-
-      boolean isFromSavingsAccount = Account.isSavings(fromAccount);
-      boolean isToSavingsAccount = Account.isSavings(toAccount);
-
       Double amount = getTotalAmountForSelectedPeriod(seriesId);
       if (amount == null) {
         continue;
       }
 
+      Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
+      Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
+      boolean isFromSavingsAccount = Account.isSavings(fromAccount);
+      boolean isToSavingsAccount = Account.isSavings(toAccount);
       if (isFromSavingsAccount) {
         if (series.get(Series.FROM_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
           savingsOut += -amount;
-          seriesOutDataset.add(series.get(Series.NAME), -amount, createSelectionAction(series.get(Series.ID)));
+          seriesOutDataset.add(series.get(Series.NAME),
+                               -amount,
+                               series.getKey());
         }
       }
       if (isToSavingsAccount) {
         if (series.get(Series.TO_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
           savingsIn += amount;
-          seriesInDataset.add(series.get(Series.NAME), amount, createSelectionAction(series.get(Series.ID)));
+          seriesInDataset.add(series.get(Series.NAME),
+                              amount,
+                              series.getKey());
         }
       }
     }
@@ -375,15 +406,15 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     updateSavingsSeriesStack(seriesInDataset, seriesOutDataset);
   }
 
-  private Double getTotalAmountForSelectedPeriod(Integer seriesId) {
+  private double getTotalAmountForSelectedPeriod(Integer seriesId) {
     if (selectedMonthIds.size() == 1) {
       Integer monthId = selectedMonthIds.first();
       Glob stat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
       if ((stat != null) && stat.isTrue(SeriesStat.ACTIVE)) {
-        return stat.get(SeriesStat.SUMMARY_AMOUNT);
+        return stat.get(SeriesStat.SUMMARY_AMOUNT, 0.00);
       }
       else {
-        return null;
+        return 0.00;
       }
     }
 
@@ -399,7 +430,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
         }
       }
     }
-    return amount;
+    return amount != null ? amount : 0.00;
   }
 
   private void updateSavingsBalanceStack(double savingsIn, double savingsOut) {
@@ -430,36 +461,28 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     label.setText(Lang.get("seriesAnalysis." + messageKey, args));
   }
 
-  private Action createSelectionAction(final BudgetArea budgetArea) {
-    return new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        Glob wrapper = SeriesWrapper.getWrapperForBudgetArea(budgetArea, repository);
-        selectionService.select(wrapper);
+  private class StackSelectionListener extends StackChartAdapter {
+    public void processClick(Key selectedKey, boolean expandSelection) {
+      if (selectedKey == null) {
+        return;
       }
-    };
-  }
 
-  private Action createSelectionAction(final Integer seriesId) {
-    return new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        Glob wrapper = SeriesWrapper.getWrapperForSeries(seriesId, repository);
-        selectionService.select(wrapper);
+      Glob glob = repository.find(selectedKey);
+      if (Transaction.TYPE.equals(selectedKey.getGlobType())) {
+        selectTransactions(glob);
+        return;
       }
-    };
-  }
 
-  private class CategorizeTransactionAction extends AbstractAction {
-    private Key transactionKey;
-
-    public CategorizeTransactionAction(Key transactionKey) {
-      this.transactionKey = transactionKey;
+      Set<Glob> wrappers = new HashSet<Glob>();
+      if (expandSelection) {
+        wrappers.addAll(selectionService.getSelection(SeriesWrapper.TYPE));
+      }
+      wrappers.addAll(SeriesWrapper.findAll(new GlobList(glob), repository));
+      selectionService.select(wrappers, SeriesWrapper.TYPE);
     }
 
-    public void actionPerformed(ActionEvent e) {
-      Glob transaction = repository.find(transactionKey);
-      if (transaction != null) {
-        directory.get(NavigationService.class).gotoCategorization(new GlobList(transaction), true);
-      }
+    private void selectTransactions(Glob transaction) {
+      directory.get(NavigationService.class).gotoCategorization(new GlobList(transaction), true);
     }
   }
 }

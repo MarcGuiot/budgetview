@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector="panel.chart" margin="15" marginTop="10" opaque="true"/>
+    <style selector="panel.chart" margin="5" marginTop="10" opaque="true"/>
     <style selector="label.chartLabel" fill="horizontal" horizontalAlignment="center" anchor="center" weightY="0" marginTop="10"
            font="-,plain,12" foreground="seriesAnalysis.chart.label" opaque="false" />
     <style selector="button.toggleButton" ui="hyperlinkButtonWithoutUnderline"

@@ -1,17 +1,17 @@
 package org.designup.picsou.gui.components.charts.stack;
 
+import org.designup.picsou.gui.components.charts.stack.utils.StackChartAdapter;
+import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.model.Key;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.Utils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class StackChart extends JPanel {
 
@@ -20,10 +20,10 @@ public class StackChart extends JPanel {
   private StackChartDataset rightDataset;
   private StackChartColors colors;
 
-  private Map<Rectangle, StackChartSelection> clickAreas = new HashMap<Rectangle, StackChartSelection>();
-  private StackChartSelection currentRollover;
+  private StackSelectionManager selectionManager = new StackSelectionManager();
+  private BasicStackClickMap clickAreas = new BasicStackClickMap();
+
   private boolean rebuildClickAreas;
-  private boolean clickEnabled;
 
   private Font labelFont;
   private Font selectedLabelFont;
@@ -42,14 +42,16 @@ public class StackChart extends JPanel {
     registerMouseActions();
   }
 
+  public void addListener(StackChartListener listener) {
+    selectionManager.addListener(listener);
+  }
+
   public void update(StackChartDataset leftDataset,
                      StackChartDataset rightDataset,
                      StackChartColors colors) {
     this.leftDataset = leftDataset;
     this.rightDataset = rightDataset;
     this.colors = colors;
-    this.clickEnabled = (leftDataset != null && leftDataset.hasActions())
-                        || (rightDataset != null && rightDataset.hasActions());
     clearClickAreas();
     repaint();
   }
@@ -65,7 +67,7 @@ public class StackChart extends JPanel {
 
   private void clearClickAreas() {
     clickAreas.clear();
-    currentRollover = null;
+    selectionManager.clear();
     rebuildClickAreas = true;
   }
 
@@ -168,74 +170,69 @@ public class StackChart extends JPanel {
       g2.setFont(block.selected ? selectedLabelFont : labelFont);
       g2.drawString(block.label, layout.labelTextX(block.label, block.selected), block.labelTextY);
 
-      if (rebuildClickAreas && clickEnabled && (block.datasetIndex >= 0)) {
+      if (rebuildClickAreas) {
         Rectangle rectangle = new Rectangle(layout.blockX(), block.blockY, layout.blockWidth(), block.blockHeight);
-        StackChartSelection selection = new StackChartSelection(block.dataset, block.datasetIndex);
-        clickAreas.put(rectangle, selection);
+        clickAreas.put(rectangle, block.key, block.label);
       }
       blockColor = Colors.brighten(blockColor, 0.25f);
     }
   }
 
   private boolean isRollover(StackChartBlock block) {
-    return (currentRollover != null)
-           && currentRollover.dataset.equals(block.dataset)
-           && (currentRollover.datasetIndex == block.datasetIndex);
+    return selectionManager.isRollover(block.key);
   }
 
-  public void click() {
-    if (currentRollover != null) {
-      currentRollover.getAction().actionPerformed(new ActionEvent(this, 0, "click"));
-    }
+  public void mouseMoved(int x, int y, boolean expandSelection) {
+    Key rollover = getSelection(x, y);
+    selectionManager.updateRollover(rollover, expandSelection);
   }
 
-  public void mouseMoved(int x, int y) {
-    StackChartSelection rollover = getSelection(x, y);
-    if (Utils.equal(rollover, currentRollover)) {
-      return;
-    }
-
-    currentRollover = rollover;
-    setCursor(currentRollover != null ?
-              Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-    repaint();
-  }
-
-  private StackChartSelection getSelection(int x, int y) {
-    for (Map.Entry<Rectangle, StackChartSelection> entry : clickAreas.entrySet()) {
-      if (entry.getKey().contains(x, y)) {
-        return entry.getValue();
-      }
-    }
-    return null;
+  private Key getSelection(int x, int y) {
+    return clickAreas.getKeyAt(x, y);
   }
 
   private void registerMouseActions() {
     addMouseListener(new MouseAdapter() {
-      public void mouseClicked(MouseEvent e) {
-        StackChart.this.click();
+      public void mousePressed(MouseEvent e) {
+        selectionManager.startClick(Gui.isAddModifier(e.getModifiers()));
       }
 
       public void mouseEntered(MouseEvent e) {
-        currentRollover = null;
+        selectionManager.clear();
       }
 
       public void mouseExited(MouseEvent e) {
-        currentRollover = null;
+        selectionManager.clear();
         repaint();
       }
     });
 
     addMouseMotionListener(new MouseMotionListener() {
       public void mouseDragged(MouseEvent e) {
-        StackChart.this.mouseMoved(e.getX(), e.getY());
+        StackChart.this.mouseMoved(e.getX(), e.getY(), true);
       }
 
       public void mouseMoved(MouseEvent e) {
-        StackChart.this.mouseMoved(e.getX(), e.getY());
+        StackChart.this.mouseMoved(e.getX(), e.getY(), false);
+      }
+    });
+
+    selectionManager.addListener(new StackChartAdapter() {
+      public void rolloverUpdated(Key key) {
+        setCursor(key != null ?
+                  Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        repaint();
       }
     });
   }
 
+  // For test purposes
+  public Rectangle getArea(String label) {
+    return clickAreas.getArea(label);
+  }
 
+  // For test purposes
+  public List<String> getAreas() {
+    return clickAreas.getAllLabels();
+  }
 }

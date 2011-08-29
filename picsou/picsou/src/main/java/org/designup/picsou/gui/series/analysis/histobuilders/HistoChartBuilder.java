@@ -18,7 +18,6 @@ import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -253,7 +252,7 @@ public class HistoChartBuilder {
                      "mainBalance");
   }
 
-  public void showBudgetAreaHisto(List<BudgetArea> budgetAreas, int selectedMonthId, boolean resetPosition) {
+  public void showBudgetAreaHisto(Set<BudgetArea> budgetAreas, int selectedMonthId, boolean resetPosition) {
     if (resetPosition) {
       range.reset();
     }
@@ -277,7 +276,7 @@ public class HistoChartBuilder {
     String messageArg;
     if (budgetAreas.size() == 1) {
       messageKey = "budgetArea";
-      messageArg = budgetAreas.get(0).getLabel();
+      messageArg = budgetAreas.iterator().next().getLabel();
     }
     else {
       messageKey = "budgetArea.multi";
@@ -323,7 +322,6 @@ public class HistoChartBuilder {
       }
       builder.add(monthId, totalPlanned, totalActual, monthId == selectedMonthId);
     }
-
 
     String messageKey;
     String messageArg;

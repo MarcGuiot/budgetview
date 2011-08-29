@@ -119,7 +119,7 @@ public enum BudgetArea implements GlobConstantContainer {
     for (Integer id : ids) {
       result.add(get(id));
     }
-    return Collections.unmodifiableList(result);
+    return result;
   }
 
   public Integer getId() {

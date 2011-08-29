@@ -14,8 +14,9 @@ import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
@@ -79,10 +80,15 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
     getTable().clearSelection();
   }
 
-  public void checkSelected(String label) {
+  public void checkSelected(String... labels) {
     Table table = getTable();
-    int index = getRow(label, table);
-    assertThat(table.rowIsSelected(index));
+    SortedSet<Integer> indices = new TreeSet<Integer>();
+    for (String label : labels) {
+      for (int index : table.getRowIndices(SeriesEvolutionTableView.LABEL_COLUMN_INDEX, label)) {
+        indices.add(index);
+      }
+    }
+    assertThat(table.rowsAreSelected(Utils.toArray(indices)));
   }
 
   public void checkNoSelection() {
@@ -91,14 +97,6 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
 
   private int getRow(String label, Table table) {
     return table.getRowIndex(SeriesEvolutionTableView.LABEL_COLUMN_INDEX, label);
-  }
-
-  private java.util.List<String> getLineLabels() {
-    java.util.List<String> labels = new ArrayList<String>();
-    for (int row = 0; row < table.getRowCount(); row++) {
-      labels.add(table.getContentAt(row, SeriesEvolutionTableView.LABEL_COLUMN_INDEX).toString());
-    }
-    return labels;
   }
 
   public void doubleClickOnRow(String label) {
