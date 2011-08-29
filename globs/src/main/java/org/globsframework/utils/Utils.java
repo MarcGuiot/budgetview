@@ -209,7 +209,7 @@ public class Utils {
     return result;
   }
 
-  public static int[] toArray(List<Integer> result) {
+  public static int[] toArray(Collection<Integer> result) {
     int[] array = new int[result.size()];
     int index = 0;
     for (Integer month : result) {

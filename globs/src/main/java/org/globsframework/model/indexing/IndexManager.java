@@ -44,15 +44,15 @@ public class IndexManager {
   public IndexTables getAssociatedTable(GlobType type) {
     IndexTables tables = globTypeToIndex.get(type);
     if (tables == null) {
-      Collection<Index> indexes = type.getIndices();
-      if (!indexes.isEmpty()) {
-        for (Index index : indexes) {
+      Collection<Index> indices = type.getIndices();
+      if (!indices.isEmpty()) {
+        for (Index index : indices) {
           updateGlobTypeToIndexTables(type, getAssociatedTable(index));
         }
       }
-      Collection<MultiFieldIndex> multiFieldIndexes = type.getMultiFieldIndices();
-      if (!multiFieldIndexes.isEmpty()) {
-        for (MultiFieldIndex index : multiFieldIndexes) {
+      Collection<MultiFieldIndex> multiFieldIndices = type.getMultiFieldIndices();
+      if (!multiFieldIndices.isEmpty()) {
+        for (MultiFieldIndex index : multiFieldIndices) {
           getAssociatedTable(index);
         }
       }
