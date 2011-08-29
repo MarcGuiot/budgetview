@@ -270,18 +270,18 @@ public class ListBox extends AbstractSwingUIComponent {
   private int getIndexForString(String searchedValue) {
     StringMatcher[] matchers = FinderUtils.getMatchers(searchedValue);
     for (StringMatcher matcher : matchers) {
-      List<Integer> indexes = new ArrayList<Integer>();
+      List<Integer> indices = new ArrayList<Integer>();
       for (int listIndex = 0, max = jList.getModel().getSize(); listIndex < max; listIndex++) {
         String renderedValue = getRenderedValue(listIndex);
         if (matcher.matches(renderedValue)) {
-          indexes.add(listIndex);
+          indices.add(listIndex);
         }
       }
-      if (indexes.size() == 1) {
-        return indexes.get(0);
+      if (indices.size() == 1) {
+        return indices.get(0);
       }
-      if (indexes.size() > 1) {
-        String[] items = new String[indexes.size()];
+      if (indices.size() > 1) {
+        String[] items = new String[indices.size()];
         for (int j = 0; j < items.length; j++) {
           items[j] = getRenderedValue(j);
         }

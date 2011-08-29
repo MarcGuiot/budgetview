@@ -268,7 +268,7 @@ public class TableSelectionTest extends TableTestCase {
       throw new AssertionFailureNotDetectedError();
     }
     catch (IllegalArgumentException e) {
-      assertEquals("Invalid indexes: 1 > 0", e.getMessage());
+      assertEquals("Invalid indices: 1 > 0", e.getMessage());
     }
   }
 

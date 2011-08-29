@@ -65,18 +65,18 @@ public class ComboBox extends AbstractSwingUIComponent {
     ListModel model = jComboBox.getModel();
     StringMatcher[] stringMatchers = FinderUtils.getMatchers(value);
     for (StringMatcher stringMatcher : stringMatchers) {
-      List<Integer> indexes = new ArrayList<Integer>();
+      List<Integer> indices = new ArrayList<Integer>();
       for (int modelIndex = 0, max = model.getSize(); modelIndex < max; modelIndex++) {
         if (stringMatcher.matches(getRenderedValue(modelIndex))) {
-          indexes.add(modelIndex);
+          indices.add(modelIndex);
         }
       }
-      if (indexes.size() == 1) {
-        jComboBox.setSelectedIndex(indexes.get(0));
+      if (indices.size() == 1) {
+        jComboBox.setSelectedIndex(indices.get(0));
         return;
       }
-      if (indexes.size() > 1) {
-        String[] items = new String[indexes.size()];
+      if (indices.size() > 1) {
+        String[] items = new String[indices.size()];
         for (int j = 0; j < items.length; j++) {
           items[j] = getRenderedValue(j);
         }

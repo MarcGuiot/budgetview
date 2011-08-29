@@ -757,12 +757,12 @@ public class Table extends AbstractSwingUIComponent {
     };
   }
 
-  public Assertion rowsAreSelected(final int... rowIndexes) {
+  public Assertion rowsAreSelected(final int... rowIndices) {
     return new Assertion() {
       public void check() {
         int[] actualSelection = jTable.getSelectedRows();
         Arrays.sort(actualSelection);
-        int[] expectedSelection = rowIndexes.clone();
+        int[] expectedSelection = rowIndices.clone();
         Arrays.sort(expectedSelection);
         ArrayUtils.assertEquals(expectedSelection, actualSelection);
       }
@@ -792,11 +792,11 @@ public class Table extends AbstractSwingUIComponent {
     }
   }
 
-  public void selectRows(int... rowIndexes) {
+  public void selectRows(int... rowIndices) {
     jTable.getSelectionModel().setValueIsAdjusting(true);
     try {
       jTable.clearSelection();
-      for (int row : rowIndexes) {
+      for (int row : rowIndices) {
         jTable.addRowSelectionInterval(row, row);
       }
       if (jTable.getCellSelectionEnabled()) {
@@ -832,7 +832,7 @@ public class Table extends AbstractSwingUIComponent {
 
   public void selectRowSpan(int start, int end) {
     if (start > end) {
-      throw new IllegalArgumentException("Invalid indexes: " + start + " > " + end);
+      throw new IllegalArgumentException("Invalid indices: " + start + " > " + end);
     }
     jTable.setRowSelectionInterval(start, end);
   }
