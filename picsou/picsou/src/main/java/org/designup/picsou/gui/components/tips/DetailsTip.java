@@ -57,7 +57,7 @@ public class DetailsTip implements Disposable {
         if (balloonTip == null) {
           return;
         }
-        boolean visible = Gui.isVisible(component);
+        boolean visible = Gui.isVisibleInWindow(component);
         balloonTip.setVisible(visible);
         if (visible) {
           balloonTip.refreshLocation();

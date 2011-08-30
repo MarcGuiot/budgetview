@@ -3,17 +3,17 @@ package org.designup.picsou.functests.utils;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import net.java.balloontip.BalloonTip;
+import org.designup.picsou.functests.checkers.components.TipChecker;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.Strings;
-import org.uispec4j.*;
 import org.uispec4j.Panel;
+import org.uispec4j.UIComponent;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.utils.Utils;
 
-import javax.swing.*;
 import java.awt.*;
 
 import static org.uispec4j.finder.ComponentMatchers.*;
@@ -116,5 +116,12 @@ public class BalloonTipTesting {
     BalloonTip tip = getBalloonTip(enclosingWindow.getAwtComponent(),
                                    targetUIComponent.getAwtComponent());
     tip.closeBalloon();
+  }
+
+  public static TipChecker getTip(Panel enclosingWindow,
+                                  UIComponent targetUIComponent) {
+    BalloonTip tip = getBalloonTip(enclosingWindow.getAwtComponent(),
+                                   targetUIComponent.getAwtComponent());
+    return new TipChecker(tip);
   }
 }

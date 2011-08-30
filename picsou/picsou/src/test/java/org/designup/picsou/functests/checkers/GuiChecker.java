@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.functests.checkers.components.TipChecker;
 import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.model.Month;
@@ -61,6 +62,10 @@ public abstract class GuiChecker {
 
   protected void checkNoErrorTip(Panel enclosingPanel) {
     BalloonTipTesting.checkNoBalloonTipVisible(enclosingPanel);
+  }
+
+  protected TipChecker getTip(Panel enclosingPanel, UIComponent component) {
+    return BalloonTipTesting.getTip(enclosingPanel, component);
   }
 
   public static void pressEsc(final Window dialog) {

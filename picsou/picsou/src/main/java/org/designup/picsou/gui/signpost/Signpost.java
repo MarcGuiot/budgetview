@@ -79,7 +79,7 @@ public abstract class Signpost implements Disposable {
         if (balloonTip == null) {
           return;
         }
-        boolean componentVisible = Gui.isVisible(component);
+        boolean componentVisible = Gui.isVisibleInWindow(component);
         boolean tipVisible = balloonTip.isVisible();
         if (componentVisible != tipVisible) {
           balloonTip.setVisible(componentVisible);
@@ -112,7 +112,7 @@ public abstract class Signpost implements Disposable {
     }
     else {
       balloonTip = createBalloonTip(component, text);
-      boolean visible = Gui.isVisible(component);
+      boolean visible = Gui.isVisibleInWindow(component);
       balloonTip.setVisible(visible);
     }
   }

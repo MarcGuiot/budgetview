@@ -197,13 +197,15 @@ public class Gui {
     return sync;
   }
 
-  public static boolean isVisible(JComponent component) {
+  public static boolean isVisibleInWindow(JComponent component) {
+    boolean inWindow = false;
     for (Container parent = component; parent != null; parent = parent.getParent()) {
       if (!parent.isVisible()) {
         return false;
       }
+      inWindow |= Window.class.isInstance(parent);
     }
-    return true;
+    return inWindow;
   }
 
   public static boolean isAddModifier(int modifiers) {

@@ -1,9 +1,10 @@
 package org.designup.picsou.functests;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.ProjectEditionChecker;
+import org.designup.picsou.functests.checkers.components.TipChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.budget.summary.BudgetSummaryView;
 
 public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
@@ -151,7 +152,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     projects.edit("My project")
       .delete();
-    
+
     projects.checkNoProjectShown();
     budgetView.extras.checkNoSeriesShown();
     budgetView.getSummary().checkEndPosition(1000.00);
@@ -232,6 +233,24 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .validate();
 
     projects.checkProject("My project", 201101, 201101, 200.00);
+  }
+  
+  public void testDeletingAnItemWithTipDisablesTip() throws Exception {
+    operations.hideSignposts();
+
+    ProjectEditionChecker dialog = projects.create()
+      .validateAndCheckOpen()
+      .setName("My project")
+      .setItem(0, "Item 1", 201101, 100.00)
+      .addItem();
+
+    TipChecker tip = dialog.validateAndCheckOpen().getProjectItemTip(1);
+    tip.checkVisible();
+
+    dialog.deleteItem(1);
+    tip.checkHidden();
+
+    dialog.cancel();
   }
 
   public void testCannotHaveProjectWithNoItems() throws Exception {

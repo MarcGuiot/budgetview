@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.components.TipChecker;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.*;
@@ -152,6 +153,10 @@ public class ProjectEditionChecker extends GuiChecker {
   public ProjectEditionChecker checkProjectItemMessage(int index, String expectedMessage) {
     checkErrorTipVisible(dialog, getItemComponent(index, TextBox.class, "itemLabel"), expectedMessage);
     return this;
+  }
+
+  public TipChecker getProjectItemTip(int index) {
+    return getTip(dialog, getItemComponent(index, TextBox.class, "itemLabel"));
   }
 
   public ProjectEditionChecker checkNoErrorTipDisplayed() {
