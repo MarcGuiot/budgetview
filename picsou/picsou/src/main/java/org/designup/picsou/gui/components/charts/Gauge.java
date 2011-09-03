@@ -13,7 +13,16 @@ public class Gauge extends ActionablePanel {
 
   private static final int ARC_WIDTH = 5;
   private static final int ARC_HEIGHT = 10;
-  private static final boolean USE_PROPORTIONAL_WIDTH = true;
+
+  private static final boolean USE_PROPORTIONAL_WIDTH = false;
+
+  private static final int DEFAULT_BAR_HEIGHT = 14;
+  private static final int HORIZONTAL_MARGIN = 1;
+  private static final int VERTICAL_MARGIN = 1;
+  private static final double FIXED_WIDTH_RATIO = 0.2;
+
+  private static final int HORIZONTAL_TEXT_MARGIN = 7;
+  private static final int VERTICAL_TEXT_MARGIN = 1;
 
   private double actualValue;
   private double targetValue;
@@ -41,14 +50,6 @@ public class Gauge extends ActionablePanel {
   private Color highlightedLabelColor = Color.YELLOW.darker();
   private Color labelShadowColor = Color.gray.darker();
   private Color highlightedBackgroundColor = Color.YELLOW.brighter();
-
-  private static final int DEFAULT_BAR_HEIGHT = 10;
-  private static final int HORIZONTAL_MARGIN = 4;
-  private static final int VERTICAL_MARGIN = 1;
-  private static final double FIXED_WIDTH_RATIO = 0.2;
-
-  private static final int HORIZONTAL_TEXT_MARGIN = 7;
-  private static final int VERTICAL_TEXT_MARGIN = 1;
 
   private int barHeight = DEFAULT_BAR_HEIGHT;
   private double remainder;

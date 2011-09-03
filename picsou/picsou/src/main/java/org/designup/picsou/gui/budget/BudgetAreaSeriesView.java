@@ -259,17 +259,17 @@ public class BudgetAreaSeriesView extends View {
 
       final Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
 
-      GlobButtonView seriesNameButton = seriesButtons.createSeriesButton(series);
-      SplitsNode<JButton> seriesName = cellBuilder.add("seriesName", seriesNameButton.getComponent());
+      final GlobButtonView seriesNameButton = seriesButtons.createSeriesButton(series);
+      final SplitsNode<JButton> seriesName = cellBuilder.add("seriesName", seriesNameButton.getComponent());
       cellBuilder.addDisposeListener(seriesNameButton);
 
-      SplitsNode<JButton> observedAmountButton = addAmountButton("observedSeriesAmount", PeriodSeriesStat.AMOUNT, series, cellBuilder, new GlobListFunctor() {
+      final SplitsNode<JButton> observedAmountButton = addAmountButton("observedSeriesAmount", PeriodSeriesStat.AMOUNT, series, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
           directory.get(NavigationService.class).gotoDataForSeries(series);
         }
       });
 
-      SplitsNode<JButton> plannedAmountButton = addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
+      final SplitsNode<JButton> plannedAmountButton = addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
           SignpostStatus.setCompleted(SignpostStatus.SERIES_AMOUNT_SHOWN, repository);
           SeriesEditor.get(directory).showAmount(series, selectedMonthIds);
@@ -291,21 +291,16 @@ public class BudgetAreaSeriesView extends View {
                           GlobMatchers.fieldEquals(PeriodSeriesStat.SERIES, series.get(Series.ID)),
                           repository, directory);
       final Gauge gauge = gaugeView.getComponent();
-      gauge.setActionListener(new AbstractAction() {
-        public void actionPerformed(ActionEvent actionEvent) {
-          directory.get(SeriesEditor.class).showSeries(series, selectedMonthIds);
-        }
-      });
+      gauge.setActionListener(new ShowDetailsTipAction(gauge, directory));
       gaugeView
         .setMaxValueUpdater(Key.create(PeriodBudgetAreaStat.TYPE, budgetArea.getId()),
                             PeriodBudgetAreaStat.ABS_SUM_AMOUNT)
-        .setLabelSource(series.getKey())
         .setDescriptionSource(series.getKey(), Series.DESCRIPTION);
       visibles.add(gaugeView);
 
       HighlightUpdater highlightUpdater = new HighlightUpdater(series.getKey(), directory) {
         protected void setHighlighted(boolean highlighted) {
-          gauge.setHighlighted(highlighted);
+          seriesName.applyStyle(highlighted ? "highlightedAmount" : "standardAmount");
         }
       };
       cellBuilder.addDisposeListener(highlightUpdater);
