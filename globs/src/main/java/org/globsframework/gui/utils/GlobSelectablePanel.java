@@ -158,6 +158,9 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
       addToSelection();
     }
 
+    public void mouseMoved(MouseEvent e) {
+    }
+
     private void addToSelection() {
       GlobList selection = selectionService.getSelection(type);
       Glob glob = repository.get(selectionKey);
@@ -186,6 +189,9 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
       if (parent != null) {
         this.parent.addMouseMotionListener(this);
       }
+    }
+
+    public void mouseDragged(MouseEvent e) {
     }
 
     public void mouseMoved(MouseEvent mouseEvent) {
