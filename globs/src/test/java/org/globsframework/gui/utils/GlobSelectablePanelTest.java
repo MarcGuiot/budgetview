@@ -188,6 +188,34 @@ public class GlobSelectablePanelTest extends GuiComponentTestCase {
     node2.checkLastStyle("selected");
   }
 
+  public void testDragDoesNoInsertDuplicatedElementsInTheSelection() throws Exception {
+    DummySplitsNode node1 = new DummySplitsNode();
+    new GlobSelectablePanel(node1,
+                            "selected", "unselected",
+                            "selectedRollover", "unselectedRollover",
+                            repository, directory, key1);
+    JPanel jPanel1 = node1.getComponent();
+
+    DummySelectionListener selectionListener =
+      DummySelectionListener.register(selectionService, DummyObject.TYPE);
+
+    Mouse.drag(jPanel1, 1, 1);
+    selectionListener.assertEquals("<log>" +
+                                   "  <selection types='dummyObject'>" +
+                                   "    <item key='dummyObject[id=1]'/>" +
+                                   "  </selection>" +
+                                   "</log>");
+    node1.checkLastStyle("selected");
+
+    Mouse.drag(jPanel1, 1, 2);
+    selectionListener.assertEquals("<log>" +
+                                   "  <selection types='dummyObject'>" +
+                                   "    <item key='dummyObject[id=1]'/>" +
+                                   "  </selection>" +
+                                   "</log>");
+    node1.checkLastStyle("selected");
+ }
+
   public void testTypeCheck() throws Exception {
     DummySplitsNode node = new DummySplitsNode();
 

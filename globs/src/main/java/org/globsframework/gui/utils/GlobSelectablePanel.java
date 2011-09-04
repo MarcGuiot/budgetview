@@ -22,7 +22,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
   private SplitsNode<JPanel> node;
@@ -159,7 +161,7 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
     private void addToSelection() {
       GlobList selection = selectionService.getSelection(type);
       Glob glob = repository.get(selectionKey);
-      GlobList newSelection = new GlobList();
+      Set<Glob> newSelection = new HashSet<Glob>();
       newSelection.addAll(selection);
       newSelection.add(glob);
       selectionService.select(newSelection, type);
