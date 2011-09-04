@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.accounts.chart.AccountDailyPositionsChartView;
+import org.designup.picsou.gui.accounts.chart.TransactionAccountPositionsChartView;
 import org.designup.picsou.gui.accounts.utils.AccountFilter;
 import org.designup.picsou.gui.card.ImportPanel;
 import org.designup.picsou.gui.card.utils.GotoCardAction;
@@ -18,16 +18,15 @@ import org.designup.picsou.gui.series.analysis.histobuilders.range.SelectionHist
 import org.designup.picsou.gui.transactions.actions.TransactionTableActions;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.transactions.search.TransactionFilterPanel;
+import org.designup.picsou.gui.transactions.utils.LegendStringifier;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.Matchers;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.UserPreferences;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.font.FontLocator;
+import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
@@ -107,11 +106,14 @@ public class TransactionView extends View implements Filterable {
                      GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, false, Transaction.AMOUNT))
       .setAutoHideIfEmpty(true);
 
-    AccountDailyPositionsChartView accountChart =
-      new AccountDailyPositionsChartView("accountChart",
-                                         new SelectionHistoChartRange(repository, directory),
-                                         repository, directory);
+    TransactionAccountPositionsChartView accountChart =
+      new TransactionAccountPositionsChartView("accountChart",
+                                               new SelectionHistoChartRange(repository, directory),
+                                               repository, directory);
     accountChart.registerComponents(builder);
+
+    GlobLabelView legend = builder.addLabel("accountChartLegend", Account.TYPE, new LegendStringifier(directory));
+    selectionService.addListener(legend, Month.TYPE);
 
     parentBuilder.add("transactionView", builder);
   }
@@ -256,7 +258,7 @@ public class TransactionView extends View implements Filterable {
   public void reset() {
     view.resetSort();
     transactionSelection.init();
-    selectionService.select(repository.get(Account.ALL_SUMMARY_KEY));
+    selectionService.clear(Account.TYPE);
     showPlannedTransactionsCheckbox.setSelected(false);
     search.reset();
     updateShowTransactionsMatcher();

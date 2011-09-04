@@ -111,7 +111,7 @@ public class NavigationService implements GlobSelectionListener {
   }
 
   public void gotoDataForSeries(Glob series) {
-    selectionService.select(repository.get(Account.ALL_SUMMARY_KEY));
+    selectionService.clear(Account.TYPE);
     transactionView.setSeriesFilter(series);
     select(Card.DATA, false);
   }

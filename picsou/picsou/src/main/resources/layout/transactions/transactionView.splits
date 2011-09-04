@@ -45,7 +45,13 @@
               <component ref="transactionSearch"/>
             </row>
           </column>
-          <panel ref="accountChart" weightY="3"/>
+
+          <column weightY="3" opaque="true"
+                  background="block.inner.bg.secondary" border="line(block.inner.border)">
+            <label ref="accountChartLegend" anchor="center" fill="none" font="-,plain,11"/>
+            <panel ref="accountChart" margin="5" background="block.inner.bg.secondary"/>
+          </column>
+
         </verticalSplit>
 
       </column>

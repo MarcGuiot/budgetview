@@ -64,5 +64,7 @@ public abstract class AccountsChartView extends View implements HistoChartRangeL
 
   protected abstract void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition);
 
-  protected abstract void processDoubleClick(NavigationService navigationService);
+  protected void processDoubleClick(NavigationService navigationService) {
+
+  }
 }

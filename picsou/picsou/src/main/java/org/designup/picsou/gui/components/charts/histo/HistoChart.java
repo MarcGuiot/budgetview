@@ -21,7 +21,7 @@ public class HistoChart extends JPanel {
   private HistoSelectionManager selectionManager;
 
   public static final BasicStroke SCALE_STROKE = new BasicStroke(1);
-  public static final BasicStroke SCALE_ORIGIN_STROKE = new BasicStroke(1);
+  public static final BasicStroke SCALE_ORIGIN_STROKE = new BasicStroke(1.2f);
 
   public HistoChart(HistoChartConfig config, Directory directory) {
     this.config = config;
@@ -209,10 +209,8 @@ public class HistoChart extends JPanel {
       return;
     }
     double[] scaleValues = metrics.scaleValues();
-    double min = dataset.getMaxNegativeValue();
-    double max = dataset.getMaxPositiveValue();
     for (double scaleValue : scaleValues) {
-      if ((scaleValue == 0) && (scaleValue != min) && (scaleValue != max)) {
+      if (scaleValue == 0) {
         g2.setStroke(SCALE_ORIGIN_STROKE);
         g2.setColor(colors.getScaleOriginLineColor());
       }

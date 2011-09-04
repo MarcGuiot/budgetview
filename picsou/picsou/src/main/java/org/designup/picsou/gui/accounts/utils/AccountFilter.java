@@ -50,7 +50,7 @@ public class AccountFilter {
       }
 
       public void clear() {
-        selectionService.select(repository.get(Account.ALL_SUMMARY_KEY));
+        selectionService.clear(Account.TYPE);
       }
     });
   }

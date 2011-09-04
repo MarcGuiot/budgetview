@@ -31,7 +31,7 @@ public class HistoChartColors implements ColorChangeListener {
     this.chartBgColor = colorLocator.get("histo.chart.bg");
     this.chartBorderColor = colorLocator.get("histo.chart.border");
     this.scaleLineColor = colorLocator.get("histo.scale.line");
-    this.scaleOriginLineColor = scaleLineColor.darker();
+    this.scaleOriginLineColor = colorLocator.get("histo.scale.line.origin");
     this.scaleTextColor = colorLocator.get("histo.scale.text");
     this.sectionLineColor = colorLocator.get("histo.section.line");
     this.labelColor = colorLocator.get("histo.label");

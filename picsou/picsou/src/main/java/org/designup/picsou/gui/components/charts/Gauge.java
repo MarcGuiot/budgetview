@@ -36,6 +36,7 @@ public class Gauge extends ActionablePanel {
   private boolean overrunError = false;
   private boolean active = true;
 
+  private Color borderColor = Color.gray;
   private Color rolloverBorderColor = Color.DARK_GRAY;
   private Color filledColorTop = Color.BLUE.brighter();
   private Color filledColorBottom = Color.BLUE.darker();
@@ -325,7 +326,7 @@ public class Gauge extends ActionablePanel {
       fillBar(g2, filledColorTop, filledColorBottom, minX, fillWidth, barTop, barBottom);
     }
 
-    drawBorder(g2, totalWidth, barTop, barHeight);
+    drawBorder(g2, minX, barTop, width);
 
     drawText(g2);
   }
@@ -350,11 +351,9 @@ public class Gauge extends ActionablePanel {
     return Math.abs(value / maxValue);
   }
 
-  private void drawBorder(Graphics2D g2, int width, int barTop, int barHeight) {
-    if (isRolloverInProgress()) {
-      g2.setColor(rolloverBorderColor);
-      g2.drawRect(0, barTop, getWidth() - 1, barHeight);
-    }
+  private void drawBorder(Graphics2D g2, int barX, int barTop, int barWidth) {
+    g2.setColor(isRolloverInProgress() ? rolloverBorderColor : borderColor);
+    g2.drawRoundRect(barX, barTop, barWidth, barHeight, ARC_WIDTH, ARC_HEIGHT);
   }
 
   private void fillBar(Graphics2D g2, Color topColor, Color bottomColor, int barX, int barWidth, int barTop, int barBottom) {
@@ -435,6 +434,10 @@ public class Gauge extends ActionablePanel {
 
   public String getTooltip() {
     return detailsTooltip;
+  }
+
+  public void setBorderColor(Color borderColor) {
+    this.borderColor = borderColor;
   }
 
   public void setRolloverBorderColor(Color borderColor) {
