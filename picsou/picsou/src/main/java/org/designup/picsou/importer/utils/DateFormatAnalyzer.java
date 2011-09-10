@@ -39,33 +39,52 @@ public class DateFormatAnalyzer {
       maxThird = getMax(maxThird, items, 2);
     }
 
+    if (maxFirst > 99){
+      result.clear();
+      result.add("yyyy/MM/dd");
+    }
+    if (maxThird > 99){
+      result.clear();
+      result.add("dd/MM/yyyy");
+      result.add("MM/dd/yyyy");
+    }
+
     Calendar calendar = new GregorianCalendar();
     calendar.setTime(referenceDate);
     int maxYear = calendar.get(Calendar.YEAR) + 1;
-    if (toYear(maxFirst) > maxYear) {
+    if (toYear(maxFirst) > maxYear && maxFirst < 100) {
       result.remove("yy/MM/dd");
+      result.remove("yyyy/MM/dd");
     }
-    if (toYear(maxThird) > maxYear) {
+    if (toYear(maxThird) > maxYear && maxThird < 100) {
+      result.remove("dd/MM/yyyy");
       result.remove("dd/MM/yy");
+      result.remove("MM/dd/yyyy");
       result.remove("MM/dd/yy");
     }
 
     if (maxFirst > 12) {
       result.remove("MM/dd/yy");
+      result.remove("MM/dd/yyyy");
     }
     if (maxSecond > 12) {
       result.remove("dd/MM/yy");
+      result.remove("dd/MM/yyyy");
       result.remove("yy/MM/dd");
+      result.remove("yyyy/MM/dd");
     }
 
     if (maxFirst > 31) {
       result.remove("dd/MM/yy");
+      result.remove("dd/MM/yyyy");
     }
     if (maxSecond > 31) {
       result.remove("MM/dd/yy");
+      result.remove("MM/dd/yyyy");
     }
     if (maxThird > 31) {
       result.remove("yy/MM/dd");
+      result.remove("yyyy/MM/dd");
     }
 
     return result;

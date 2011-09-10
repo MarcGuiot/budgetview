@@ -110,6 +110,6 @@ public class QifParser {
 
   private void readDate(FieldValuesBuilder values) throws IOException {
     String value = reader.readLine().trim();
-    values.set(ImportedTransaction.BANK_DATE, value);
+    values.set(ImportedTransaction.BANK_DATE, value.replaceAll("[^0-9]+", "/"));
   }
 }
