@@ -154,6 +154,14 @@ public class TwoFieldKey extends Key {
     return null;
   }
 
+  public int get(IntegerField field, int valueIfNull) throws ItemNotFound {
+    Integer value = get(field);
+    if (value == null) {
+      return valueIfNull;
+    }
+    return value;
+  }
+
   public Integer get(LinkField field) {
     return get((IntegerField)field);
   }

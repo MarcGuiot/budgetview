@@ -147,6 +147,10 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter, FieldValue
     return fieldValuesBuilder.get().get(field);
   }
 
+  public int get(IntegerField field, int valueIfNull) throws ItemNotFound {
+    return fieldValuesBuilder.get().get(field, valueIfNull);
+  }
+
   public Integer get(LinkField field) throws ItemNotFound {
     return fieldValuesBuilder.get().get(field);
   }

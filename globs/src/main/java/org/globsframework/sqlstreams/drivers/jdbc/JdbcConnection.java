@@ -54,7 +54,7 @@ public abstract class JdbcConnection implements SqlConnection {
 
   private void checkConnectionIsNotClosed() {
     if (connection == null) {
-      throw new UnexpectedApplicationState("closed was connection");
+      throw new UnexpectedApplicationState("connection was closed");
     }
   }
 

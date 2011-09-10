@@ -41,6 +41,11 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
     return (Integer)doGet(field);
   }
 
+  public int get(IntegerField field, int valueIfNull) throws ItemNotFound {
+    Integer value = get(field);
+    return value == null ? valueIfNull : value;
+  }
+
   public Integer get(LinkField field) throws ItemNotFound {
     return (Integer)doGet(field);
   }

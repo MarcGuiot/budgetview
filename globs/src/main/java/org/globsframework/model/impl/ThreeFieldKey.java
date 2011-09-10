@@ -1,5 +1,6 @@
 package org.globsframework.model.impl;
 
+import org.apache.wicket.util.parse.metapattern.IntegerGroup;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
@@ -182,6 +183,11 @@ public class ThreeFieldKey extends Key {
       return (Integer)value3;
     }
     return null;
+  }
+
+  public int get(IntegerField field, int valueIfNull) throws ItemNotFound {
+    Integer value = get(field);
+    return value == null ? valueIfNull : value;
   }
 
   public Integer get(LinkField field) {

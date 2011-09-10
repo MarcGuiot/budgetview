@@ -32,6 +32,14 @@ public abstract class AbstractFieldValues implements FieldValues {
     return (Integer)doGet(field);
   }
 
+  public int get(IntegerField field, int valueIfNull) throws ItemNotFound {
+    Integer value = (Integer)doGet(field);
+    if (value == null) {
+      return valueIfNull;
+    }
+    return value;
+  }
+
   public Integer get(LinkField field) {
     return (Integer)doGet(field);
   }

@@ -119,6 +119,11 @@ public class SingleFieldKey extends Key {
     return (Integer)value;
   }
 
+  public int get(IntegerField field, int valueIfNull) throws ItemNotFound {
+    Integer value = get(field);
+    return value == null ? valueIfNull : value;
+  }
+
   public Integer get(LinkField field) {
     return get((IntegerField)field);
   }

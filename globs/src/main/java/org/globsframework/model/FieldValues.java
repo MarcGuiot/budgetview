@@ -21,6 +21,8 @@ public interface FieldValues extends Serializable {
 
   Integer get(IntegerField field) throws ItemNotFound;
 
+  int get(IntegerField field, int valueIfNull) throws ItemNotFound;
+
   Integer get(LinkField field) throws ItemNotFound;
 
   String get(StringField field) throws ItemNotFound;
@@ -81,6 +83,10 @@ public interface FieldValues extends Serializable {
     }
 
     public Integer get(IntegerField field) throws ItemNotFound {
+      throw new ItemNotFound(field.getName());
+    }
+
+    public int get(IntegerField field, int valueIfNull) throws ItemNotFound {
       throw new ItemNotFound(field.getName());
     }
 
