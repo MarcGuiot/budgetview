@@ -104,19 +104,17 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
     PageChecker checker = new PageChecker(this);
     FormChecker formChecker = checker.getForm("choixCompte");
     for (Glob glob : this.accounts) {
-      if (glob.get(RealAccount.IMPORTED)) {
-        int count = accountsTable.getRowCount();
-        for (int i = 1; i < count; i++) {
-          if (accountsTable.getCellAt(i, 1).getTextContent().contains(glob.get(RealAccount.NAME))) {
-            try {
-              List<HtmlElement> elementList = accountsTable.getCellAt(i, 0).getHtmlElementsByTagName(HtmlInput.TAG_NAME);
-              if (elementList.size() == 1) {
-                elementList.get(0).click();
-              }
+      int count = accountsTable.getRowCount();
+      for (int i = 1; i < count; i++) {
+        if (accountsTable.getCellAt(i, 1).getTextContent().contains(glob.get(RealAccount.NAME))) {
+          try {
+            List<HtmlElement> elementList = accountsTable.getCellAt(i, 0).getHtmlElementsByTagName(HtmlInput.TAG_NAME);
+            if (elementList.size() == 1) {
+              elementList.get(0).click();
             }
-            catch (IOException e) {
-              throw new RuntimeException(e);
-            }
+          }
+          catch (IOException e) {
+            throw new RuntimeException(e);
           }
         }
       }
@@ -133,13 +131,11 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
       List<HtmlElement> htmlElements = at.getHtmlElementsByTagName(HtmlAnchor.TAG_NAME);
       if (!htmlElements.isEmpty()) {
         for (Glob glob : accounts) {
-          if (glob.get(RealAccount.IMPORTED)) {
-            HtmlElement link = htmlElements.get(0);
-            if (link.getTextContent().contains(glob.get(RealAccount.NAME))) {
-              File file = downloadFile(glob, link);
-              repository.update(glob.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
-              break;
-            }
+          HtmlElement link = htmlElements.get(0);
+          if (link.getTextContent().contains(glob.get(RealAccount.NAME))) {
+            File file = downloadFile(glob, link);
+            repository.update(glob.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+            break;
           }
         }
       }
@@ -173,7 +169,6 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
         client.waitForBackgroundJavaScript(10000);
         HtmlElement elementById = getElementById("quotidien");
         getAnchor(elementById).click();
-//        client.waitForBackgroundJavaScript(10000);
         PageChecker pageChecker = new PageChecker(CreditMutuelArkea.this);
         pageChecker.findAnchorContain("telechargement").click();
         HtmlElement comptes = pageChecker.getElementByName("choixCompte");

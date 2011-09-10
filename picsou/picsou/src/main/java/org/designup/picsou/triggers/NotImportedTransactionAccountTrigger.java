@@ -153,7 +153,8 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
 
               GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
                 .findByIndex(Transaction.POSITION_MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs()
-                .filterSelf(fieldIn(Transaction.ACCOUNT, accounts), repository);
+                .filterSelf(and(fieldIn(Transaction.ACCOUNT, accounts),
+                                or(isTrue(Transaction.CREATED_BY_SERIES), isTrue(Transaction.PLANNED))), repository);
 
               Boolean isPlanned = null;
               if (newDay > currentDay && previousDay < currentDay) {
@@ -170,8 +171,9 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
             }
             else {
               GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
-                .findByIndex(Transaction.POSITION_MONTH , seriesBudget.get(SeriesBudget.MONTH)).getGlobs()
-                .filter(fieldIn(Transaction.ACCOUNT, accounts), repository);
+                .findByIndex(Transaction.POSITION_MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs()
+                .filter(and(fieldIn(Transaction.ACCOUNT, accounts),
+                            or(isTrue(Transaction.CREATED_BY_SERIES), isTrue(Transaction.PLANNED))), repository);
               for (Glob transaction : transactions) {
                 repository.update(transaction.getKey(), Transaction.DAY, seriesBudget.get(SeriesBudget.DAY));
               }
@@ -180,7 +182,8 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
           if (values.contains(SeriesBudget.AMOUNT)) {
             GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
               .findByIndex(Transaction.POSITION_MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs()
-              .filterSelf(fieldIn(Transaction.ACCOUNT, accounts), repository);
+              .filterSelf(and(fieldIn(Transaction.ACCOUNT, accounts),
+                              or(isTrue(Transaction.CREATED_BY_SERIES), isTrue(Transaction.PLANNED))), repository);
             for (Glob transaction : transactions) {
               if (transaction.isTrue(Transaction.MIRROR)) {
                 repository.update(transaction.getKey(), Transaction.AMOUNT, -values.get(SeriesBudget.AMOUNT, 0));
@@ -209,7 +212,8 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
         }
         GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
           .findByIndex(Transaction.POSITION_MONTH, previousValues.get(SeriesBudget.MONTH)).getGlobs()
-          .filterSelf(fieldIn(Transaction.ACCOUNT, accounts), repository);
+          .filterSelf(and(fieldIn(Transaction.ACCOUNT, accounts),
+                          or(isTrue(Transaction.CREATED_BY_SERIES), isTrue(Transaction.PLANNED))), repository);
         repository.delete(transactions);
       }
     });
@@ -221,10 +225,12 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
     Integer fromAccount = series.get(Series.FROM_ACCOUNT);
     Integer toAccount = series.get(Series.TO_ACCOUNT);
     if (fromAccount != null) {
-      repository.delete(transactions.filter(fieldEquals(Transaction.ACCOUNT, fromAccount), repository));
+      repository.delete(transactions.filter(and(fieldEquals(Transaction.ACCOUNT, fromAccount),
+                                                or(isTrue(Transaction.CREATED_BY_SERIES), isTrue(Transaction.PLANNED))), repository));
     }
     if (toAccount != null) {
-      repository.delete(transactions.filter(fieldEquals(Transaction.ACCOUNT, toAccount), repository));
+      repository.delete(transactions.filter(and(fieldEquals(Transaction.ACCOUNT, toAccount),
+                                                or(isTrue(Transaction.CREATED_BY_SERIES), isTrue(Transaction.PLANNED))), repository));
     }
   }
 
@@ -241,14 +247,14 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
     GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
       .findByIndex(Transaction.POSITION_MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs();
 
-      GlobList transactionForAccount =
-        transactions.filter(fieldEquals(Transaction.ACCOUNT, targetAccountId), repository);
-      repository.delete(transactionForAccount);
-      TransactionUtils.createTransactionForNotImportedAccount(
-        seriesBudget, series, targetAccountId, currentMonth.get(CurrentMonth.CURRENT_MONTH),
-        currentMonth.get(CurrentMonth.CURRENT_DAY),
-        repository);
-    }
+    GlobList transactionForAccount =
+      transactions.filter(fieldEquals(Transaction.ACCOUNT, targetAccountId), repository);
+    repository.delete(transactionForAccount);
+    TransactionUtils.createTransactionForNotImportedAccount(
+      seriesBudget, series, targetAccountId, currentMonth.get(CurrentMonth.CURRENT_MONTH),
+      currentMonth.get(CurrentMonth.CURRENT_DAY),
+      repository);
+  }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }

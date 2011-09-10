@@ -3,7 +3,7 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
     <style selector="#budgetAreaSeriesView .amount" font="-,plain,11" anchor="right"/>
-    <style selector="label.totalAmount" font="-,bold,12" weightY="10" anchor="center" marginBottom="2"/>
+    <style selector="label.totalAmount" font="-,bold,16" weightY="10" anchor="center" marginBottom="2"/>
     <style selector="label.totalAmountTitle" weightX="0" anchor="center"/>
 
     <style selector="repeat header label" font="-,plain,11"
@@ -73,6 +73,17 @@
                  tooltipText="$budgetview.tooltip.total.planned"/>
         </grid>
 
+        <grid name="total" weightY="0" marginLeft="5" marginRight="5">
+          <label text="$budgetview.observed" styleClass="totalAmountTitle" gridPos="(0,0)" marginRight="5"/>
+          <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(1,0)"
+                 tooltipText="$budgetview.tooltip.total.observed"/>
+          <component ref="totalGauge" styleClass="totalGauge" gridPos="(2,0,1,1)"
+                     fill="horizontal" anchor="center" marginBottom="0"/>
+          <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(3,0)" foreground=""
+                 tooltipText="$budgetview.tooltip.total.planned"/>
+          <label text="$budgetview.planned" styleClass="totalAmountTitle" gridPos="(4,0)" marginLeft="5"/>
+        </grid>
+        
         <column styleClass="blockScrollBorder" weightY="10">
           <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true" weightY="10">
             <verticalBoxes>

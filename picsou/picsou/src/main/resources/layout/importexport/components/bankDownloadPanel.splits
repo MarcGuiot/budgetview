@@ -34,6 +34,10 @@
 
         <card name="gotoSite">
           <column>
+            <panel ref="synchroPanel" opaque="false">
+              <htmlEditorPane name="synchroMessage" text="$bankDownload.synchro.message" styleClass="multiLineLabel"
+                              hyperlinkListener="hyperlinkHandler"/>
+            </panel>
             <htmlEditorPane text="$bankDownload.message" styleClass="multiLineLabel"/>
             <button action="gotoWebsite" styleClass="gotoWebsite"/>
             <filler fill="vertical"/>
@@ -41,6 +45,7 @@
             <button action="openHelp" styleClass="openHelp"/>
             <filler fill="vertical"/>
             <htmlEditorPane text="$bankDownload.openwith" styleClass="multiLineLabel"/>
+            <filler fill="vertical"/>
           </column>
         </card>
 

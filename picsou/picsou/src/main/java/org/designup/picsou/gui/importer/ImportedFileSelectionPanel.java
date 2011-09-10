@@ -1,24 +1,17 @@
 package org.designup.picsou.gui.importer;
 
-import org.designup.picsou.bank.BankSynchroService;
-import org.designup.picsou.gui.bank.BankChooserDialog;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.importer.components.BankDownloadPanel;
 import org.designup.picsou.gui.importer.edition.BrowseFilesAction;
 import org.designup.picsou.importer.utils.TypedInputStream;
-import org.designup.picsou.model.Bank;
-import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.utils.AbstractDocumentListener;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.Glob;
+import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -43,7 +36,6 @@ public class ImportedFileSelectionPanel {
   private JEditorPane importMessage = new JEditorPane();
   private Exception lastException;
   private BankDownloadPanel bankDownload;
-  private JPanel synchPanel;
 
   public ImportedFileSelectionPanel(ImportController controller,
                                     boolean usePreferredPath,
@@ -62,13 +54,6 @@ public class ImportedFileSelectionPanel {
 
     builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importFileSelectionPanel.splits",
                                     localRepository, directory);
-    synchPanel = new JPanel();
-    builder.add("synchroPanel", synchPanel);
-    boolean hide = System.getProperty("synchro", "false").equalsIgnoreCase("false");
-    Utils.beginRemove();
-    hide = false;
-    Utils.endRemove();
-    synchPanel.setVisible(!hide);
     builder.add("importMessage", importMessage);
     builder.add("filePanel", filePanel);
     builder.add("fileField", fileField);
@@ -81,27 +66,10 @@ public class ImportedFileSelectionPanel {
       }
     });
 
-    bankDownload = new BankDownloadPanel(dialog, localRepository, directory);
+    bankDownload = new BankDownloadPanel(dialog, controller, localRepository, directory);
     builder.add("bankDownload", bankDownload.getPanel());
 
     final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(directory, dialog);
-
-    hyperlinkHandler.registerLinkAction("selectBank", new Runnable() {
-      public void run() {
-        BankChooserDialog bankChooserDialog =
-          new BankChooserDialog(dialog, localRepository, directory,
-                                GlobMatchers.isNotNull(Bank.URL));
-        Integer bankId = bankChooserDialog.show();
-        if (bankId == null){
-          return;
-        }
-        BankSynchroService bankSynchroService = directory.get(BankSynchroService.class);
-        GlobList realAccount = bankSynchroService.show(bankId, directory, localRepository);
-        if (!realAccount.isEmpty()){
-          synchronize(realAccount);
-        }
-      }
-    });
 
     hyperlinkHandler.registerLinkAction("openErrorDetails", new Runnable() {
       public void run() {
@@ -111,19 +79,6 @@ public class ImportedFileSelectionPanel {
     builder.add("hyperlinkHandler", hyperlinkHandler);
 
     panel = builder.load();
-  }
-
-  public void synchronize(GlobList realAccount) {
-    for (Glob glob : realAccount) {
-      String file = glob.get(RealAccount.FILE_NAME);
-      if (Strings.isNullOrEmpty(file)){
-        controller.addRealAccountWithoutImport(glob);
-      }
-      else {
-        controller.addRealAccountWithImport(glob);
-      }
-    }
-    controller.doImport();
   }
 
   private void initFileField() {
@@ -168,6 +123,10 @@ public class ImportedFileSelectionPanel {
 
   public void requestFocus() {
     bankDownload.requestFocus();
+  }
+
+  public void synchronize(GlobList account) {
+    bankDownload.synchronize(account);
   }
 
   private class ImportAction extends AbstractAction {

@@ -32,7 +32,7 @@ public class OfxWriter {
     writeHeader(user, password, org, fid);
     String str = "<BANKMSGSRQV1>\n" +
                  "<STMTTRNRQ>\n" +
-                 "<TRNUID>20110807140944.000\n" +
+                 "<TRNUID>20110829000000\n" +
                  "<CLTCOOKIE>1\n" +
                  "<STMTRQ>\n" +
                  "<BANKACCTFROM>\n" +
@@ -59,7 +59,7 @@ public class OfxWriter {
       "<TRNUID>" + UUID.randomUUID().toString() + "\n" +
       "<CLTCOOKIE>1\n" +
       "<ACCTINFORQ>\n" +
-      "<DTACCTUP>20110704000000\n" +
+      "<DTACCTUP>20110830000000\n" +
       "</ACCTINFORQ>\n" +
       "</ACCTINFOTRNRQ>\n" +
       "</SIGNUPMSGSRQV1>\n" +

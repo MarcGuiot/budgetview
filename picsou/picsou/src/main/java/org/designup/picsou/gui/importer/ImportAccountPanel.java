@@ -5,10 +5,12 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.BankEntity;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.Glob;
+import org.globsframework.model.FieldValue;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -24,6 +26,7 @@ public class ImportAccountPanel {
   private AbstractAccountPanel accountPanel;
   private GlobsPanelBuilder builder;
   private Directory localDirectory;
+  private Glob importedAccount;
 
   public ImportAccountPanel(ImportController controller, LocalGlobRepository localGlobRepository, Directory directory) {
     this.controller = controller;
@@ -31,7 +34,7 @@ public class ImportAccountPanel {
     this.localDirectory.add(new SelectionService());
     this.localGlobRepository =
       LocalGlobRepositoryBuilder.init(localGlobRepository)
-        .copy(Bank.TYPE, BankEntity.TYPE)
+        .copy(Bank.TYPE, BankEntity.TYPE, RealAccount.TYPE)
         .get();
   }
 
@@ -50,8 +53,13 @@ public class ImportAccountPanel {
 
     builder.add("import", new AbstractAction(Lang.get("load")) {
       public void actionPerformed(ActionEvent e) {
-        localGlobRepository.commitChanges(false);
-        controller.next();
+        if (accountPanel.check()){
+          localGlobRepository.update(importedAccount.getKey(),
+                                     FieldValue.value(RealAccount.ACCOUNT, accountPanel.getAccount().get(Account.ID)));
+
+          localGlobRepository.commitChanges(false);
+          controller.next();
+        }
       }
     });
     builder.add("ignore", new AbstractAction(Lang.get("ignore")) {
@@ -72,6 +80,8 @@ public class ImportAccountPanel {
   }
 
   public void setImportedAccountToImport(Glob importedAccount) {
+    localGlobRepository.rollback();
+    this.importedAccount = importedAccount;
     Glob account = RealAccount.createAccountFromImported(importedAccount, localGlobRepository, false);
     accountPanel.setAccount(account);
     this.localDirectory.get(SelectionService.class).select(account);

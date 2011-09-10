@@ -18,7 +18,6 @@ import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,6 +32,7 @@ import java.util.Set;
 public class ImportDialog {
   private GlobRepository parentRepository;
   private Directory parentDirectory;
+  private boolean isSynchro;
   private LocalGlobRepository localRepository;
   private Directory localDirectory;
 
@@ -49,17 +49,18 @@ public class ImportDialog {
   public ImportDialog(String textForCloseButton, List<File> files, Glob defaultAccount,
                       final Window owner,
                       final GlobRepository repository, Directory directory,
-                      boolean usePreferredPath) {
+                      boolean usePreferredPath, boolean isSynchro) {
 
     this.parentRepository = repository;
     this.parentDirectory = directory;
+    this.isSynchro = isSynchro;
 
     loadLocalRepository(repository);
 
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(new SelectionService());
 
-    controller = new ImportController(this, repository, localRepository, directory);
+    controller = new ImportController(this, repository, localRepository, directory, isSynchro);
     fileSelectionPanel = new ImportedFileSelectionPanel(controller, usePreferredPath, localRepository, localDirectory);
     importAccountsPanel = new ImportAccountPanel(controller, localRepository, localDirectory);
     previewPanel = new ImportPreviewPanel(controller, defaultAccount, repository, localRepository, localDirectory);

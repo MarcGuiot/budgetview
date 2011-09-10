@@ -223,8 +223,8 @@ public class DownloadTest extends ConnectedTestCase {
     return content;
   }
 
-  //org.objectweb.asm.util.ASMifierClassVisitor
-  ///home/guiot/dev/java/lesueur/ref/picsou/picsou_licence_server/target/test-classes/org/designup/picsou/license/functests/DummyBankPlugin.class
+//  org.objectweb.asm.util.ASMifierClassVisitor
+//  /home/guiot/dev/java/lesueur/ref/picsou/picsou_licence_server/target/test-classes/org/designup/picsou/license/functests/DummyBankPlugin.class
 
   public static class DummyBankPluginDump implements Opcodes {
 
@@ -236,90 +236,88 @@ public class DownloadTest extends ConnectedTestCase {
       MethodVisitor mv;
       AnnotationVisitor av0;
 
-      cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, "org/designup/picsou/license/functests/DummyBankPlugin", null, "java/lang/Object", new String[]{"org/designup/picsou/bank/BankPlugin"});
+      cw.visit(V1_5, ACC_PUBLIC + ACC_SUPER, "org/designup/picsou/license/functests/DummyBankPlugin", null, "java/lang/Object", new String[] { "org/designup/picsou/bank/BankPlugin" });
 
       {
-        mv = cw.visitMethod(ACC_PUBLIC, "<init>", "(Lorg/globsframework/model/GlobRepository;Lorg/globsframework/utils/directory/Directory;)V", null, null);
-        mv.visitCode();
-        mv.visitVarInsn(ALOAD, 0);
-        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V");
-        mv.visitVarInsn(ALOAD, 2);
-        mv.visitLdcInsn(Type.getType("Lorg/designup/picsou/bank/BankPluginService;"));
-        mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/utils/directory/Directory", "get", "(Ljava/lang/Class;)Ljava/lang/Object;");
-        mv.visitTypeInsn(CHECKCAST, "org/designup/picsou/bank/BankPluginService");
-        mv.visitVarInsn(ASTORE, 3);
-        mv.visitVarInsn(ALOAD, 1);
-        mv.visitFieldInsn(GETSTATIC, "org/designup/picsou/model/BankEntity", "TYPE", "Lorg/globsframework/metamodel/GlobType;");
-        mv.visitIntInsn(SIPUSH, 4321);
-        mv.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;");
-        mv.visitMethodInsn(INVOKESTATIC, "org/globsframework/model/Key", "create", "(Lorg/globsframework/metamodel/GlobType;Ljava/lang/Object;)Lorg/globsframework/model/Key;");
-        mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/GlobRepository", "get", "(Lorg/globsframework/model/Key;)Lorg/globsframework/model/Glob;");
-        mv.visitVarInsn(ASTORE, 4);
-        mv.visitVarInsn(ALOAD, 3);
-        mv.visitVarInsn(ALOAD, 4);
-        mv.visitFieldInsn(GETSTATIC, "org/designup/picsou/model/BankEntity", "BANK", "Lorg/globsframework/metamodel/fields/LinkField;");
-        mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/Glob", "get", "(Lorg/globsframework/metamodel/fields/LinkField;)Ljava/lang/Integer;");
-        mv.visitVarInsn(ALOAD, 0);
-        mv.visitMethodInsn(INVOKEVIRTUAL, "org/designup/picsou/bank/BankPluginService", "add", "(Ljava/lang/Integer;Lorg/designup/picsou/bank/BankPlugin;)V");
-        mv.visitInsn(RETURN);
-        mv.visitMaxs(3, 5);
-        mv.visitEnd();
+      mv = cw.visitMethod(ACC_PUBLIC, "<init>", "(Lorg/globsframework/model/GlobRepository;Lorg/globsframework/utils/directory/Directory;)V", null, null);
+      mv.visitCode();
+      mv.visitVarInsn(ALOAD, 0);
+      mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V");
+      mv.visitVarInsn(ALOAD, 2);
+      mv.visitLdcInsn(Type.getType("Lorg/designup/picsou/bank/BankPluginService;"));
+      mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/utils/directory/Directory", "get", "(Ljava/lang/Class;)Ljava/lang/Object;");
+      mv.visitTypeInsn(CHECKCAST, "org/designup/picsou/bank/BankPluginService");
+      mv.visitVarInsn(ASTORE, 3);
+      mv.visitVarInsn(ALOAD, 1);
+      mv.visitFieldInsn(GETSTATIC, "org/designup/picsou/model/BankEntity", "TYPE", "Lorg/globsframework/metamodel/GlobType;");
+      mv.visitIntInsn(SIPUSH, 4321);
+      mv.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;");
+      mv.visitMethodInsn(INVOKESTATIC, "org/globsframework/model/Key", "create", "(Lorg/globsframework/metamodel/GlobType;Ljava/lang/Object;)Lorg/globsframework/model/Key;");
+      mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/GlobRepository", "get", "(Lorg/globsframework/model/Key;)Lorg/globsframework/model/Glob;");
+      mv.visitVarInsn(ASTORE, 4);
+      mv.visitVarInsn(ALOAD, 3);
+      mv.visitVarInsn(ALOAD, 4);
+      mv.visitFieldInsn(GETSTATIC, "org/designup/picsou/model/BankEntity", "BANK", "Lorg/globsframework/metamodel/fields/LinkField;");
+      mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/Glob", "get", "(Lorg/globsframework/metamodel/fields/LinkField;)Ljava/lang/Integer;");
+      mv.visitVarInsn(ALOAD, 0);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "org/designup/picsou/bank/BankPluginService", "add", "(Ljava/lang/Integer;Lorg/designup/picsou/bank/BankPlugin;)V");
+      mv.visitInsn(RETURN);
+      mv.visitMaxs(3, 5);
+      mv.visitEnd();
       }
       {
-        mv = cw.visitMethod(ACC_PUBLIC, "apply", "(Lorg/globsframework/model/Glob;Lorg/globsframework/model/Glob;Lorg/globsframework/model/GlobList;Lorg/globsframework/model/ReadOnlyGlobRepository;Lorg/globsframework/model/GlobRepository;Lorg/globsframework/model/delta/MutableChangeSet;)Z", null, null);
-        mv.visitCode();
-        mv.visitVarInsn(ALOAD, 5);
-        mv.visitInsn(ICONST_1);
-        mv.visitTypeInsn(ANEWARRAY, "org/globsframework/metamodel/GlobType");
-        mv.visitInsn(DUP);
-        mv.visitInsn(ICONST_0);
-        mv.visitFieldInsn(GETSTATIC, "org/designup/picsou/model/ImportedTransaction", "TYPE", "Lorg/globsframework/metamodel/GlobType;");
-        mv.visitInsn(AASTORE);
-        mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/GlobRepository", "getAll", "([Lorg/globsframework/metamodel/GlobType;)Lorg/globsframework/model/GlobList;");
-        mv.visitVarInsn(ASTORE, 7);
-        mv.visitVarInsn(ALOAD, 7);
-        mv.visitMethodInsn(INVOKEVIRTUAL, "org/globsframework/model/GlobList", "iterator", "()Ljava/util/Iterator;");
-        mv.visitVarInsn(ASTORE, 8);
-        Label l0 = new Label();
-        mv.visitLabel(l0);
-        mv.visitFrame(Opcodes.F_APPEND, 2, new Object[]{"org/globsframework/model/GlobList", "java/util/Iterator"}, 0, null);
-        mv.visitVarInsn(ALOAD, 8);
-        mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z");
-        Label l1 = new Label();
-        mv.visitJumpInsn(IFEQ, l1);
-        mv.visitVarInsn(ALOAD, 8);
-        mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;");
-        mv.visitTypeInsn(CHECKCAST, "org/globsframework/model/Glob");
-        mv.visitVarInsn(ASTORE, 9);
-        mv.visitVarInsn(ALOAD, 5);
-        mv.visitVarInsn(ALOAD, 9);
-        mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/Glob", "getKey", "()Lorg/globsframework/model/Key;");
-        mv.visitFieldInsn(GETSTATIC, "org/designup/picsou/model/ImportedTransaction", "AMOUNT", "Lorg/globsframework/metamodel/fields/DoubleField;");
-        mv.visitLdcInsn(new Double("-234.0"));
-        mv.visitMethodInsn(INVOKESTATIC, "java/lang/Double", "valueOf", "(D)Ljava/lang/Double;");
-        mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/GlobRepository", "update", "(Lorg/globsframework/model/Key;Lorg/globsframework/metamodel/Field;Ljava/lang/Object;)V");
-        mv.visitJumpInsn(GOTO, l0);
-        mv.visitLabel(l1);
-        mv.visitFrame(Opcodes.F_CHOP, 1, null, 0, null);
-        mv.visitInsn(ICONST_1);
-        mv.visitInsn(IRETURN);
-        mv.visitMaxs(5, 10);
-        mv.visitEnd();
+      mv = cw.visitMethod(ACC_PUBLIC, "apply", "(Lorg/globsframework/model/Glob;Lorg/globsframework/model/Glob;Lorg/globsframework/model/GlobList;Lorg/globsframework/model/ReadOnlyGlobRepository;Lorg/globsframework/model/GlobRepository;Lorg/globsframework/model/delta/MutableChangeSet;)Z", null, null);
+      mv.visitCode();
+      mv.visitVarInsn(ALOAD, 5);
+      mv.visitInsn(ICONST_1);
+      mv.visitTypeInsn(ANEWARRAY, "org/globsframework/metamodel/GlobType");
+      mv.visitInsn(DUP);
+      mv.visitInsn(ICONST_0);
+      mv.visitFieldInsn(GETSTATIC, "org/designup/picsou/model/ImportedTransaction", "TYPE", "Lorg/globsframework/metamodel/GlobType;");
+      mv.visitInsn(AASTORE);
+      mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/GlobRepository", "getAll", "([Lorg/globsframework/metamodel/GlobType;)Lorg/globsframework/model/GlobList;");
+      mv.visitVarInsn(ASTORE, 7);
+      mv.visitVarInsn(ALOAD, 7);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "org/globsframework/model/GlobList", "iterator", "()Ljava/util/Iterator;");
+      mv.visitVarInsn(ASTORE, 8);
+      Label l0 = new Label();
+      mv.visitLabel(l0);
+      mv.visitVarInsn(ALOAD, 8);
+      mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z");
+      Label l1 = new Label();
+      mv.visitJumpInsn(IFEQ, l1);
+      mv.visitVarInsn(ALOAD, 8);
+      mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;");
+      mv.visitTypeInsn(CHECKCAST, "org/globsframework/model/Glob");
+      mv.visitVarInsn(ASTORE, 9);
+      mv.visitVarInsn(ALOAD, 5);
+      mv.visitVarInsn(ALOAD, 9);
+      mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/Glob", "getKey", "()Lorg/globsframework/model/Key;");
+      mv.visitFieldInsn(GETSTATIC, "org/designup/picsou/model/ImportedTransaction", "AMOUNT", "Lorg/globsframework/metamodel/fields/DoubleField;");
+      mv.visitLdcInsn(new Double("-234.0"));
+      mv.visitMethodInsn(INVOKESTATIC, "java/lang/Double", "valueOf", "(D)Ljava/lang/Double;");
+      mv.visitMethodInsn(INVOKEINTERFACE, "org/globsframework/model/GlobRepository", "update", "(Lorg/globsframework/model/Key;Lorg/globsframework/metamodel/Field;Ljava/lang/Object;)V");
+      mv.visitJumpInsn(GOTO, l0);
+      mv.visitLabel(l1);
+      mv.visitInsn(ICONST_1);
+      mv.visitInsn(IRETURN);
+      mv.visitMaxs(5, 10);
+      mv.visitEnd();
       }
       {
-        mv = cw.visitMethod(ACC_PUBLIC, "postApply", "(Lorg/globsframework/model/GlobList;Lorg/globsframework/model/Glob;Lorg/globsframework/model/GlobRepository;Lorg/globsframework/model/GlobRepository;Lorg/globsframework/model/ChangeSet;)V", null, null);
-        mv.visitCode();
-        mv.visitInsn(RETURN);
-        mv.visitMaxs(0, 6);
-        mv.visitEnd();
+      mv = cw.visitMethod(ACC_PUBLIC, "postApply", "(Lorg/globsframework/model/GlobList;Lorg/globsframework/model/Glob;Lorg/globsframework/model/GlobRepository;Lorg/globsframework/model/GlobRepository;Lorg/globsframework/model/ChangeSet;)V", null, null);
+      mv.visitCode();
+      mv.visitInsn(RETURN);
+      mv.visitMaxs(0, 6);
+      mv.visitEnd();
       }
       {
-        mv = cw.visitMethod(ACC_PUBLIC, "getVersion", "()I", null, null);
-        mv.visitCode();
-        mv.visitInsn(ICONST_1);
-        mv.visitInsn(IRETURN);
-        mv.visitMaxs(1, 1);
-        mv.visitEnd();
+      mv = cw.visitMethod(ACC_PUBLIC, "getVersion", "()I", null, null);
+      mv.visitCode();
+      mv.visitInsn(ICONST_1);
+      mv.visitInsn(IRETURN);
+      mv.visitMaxs(1, 1);
+      mv.visitEnd();
       }
       cw.visitEnd();
 

@@ -1,12 +1,12 @@
 package org.designup.picsou.bank.importer.ofx;
 
 import org.designup.picsou.bank.importer.BankPage;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.importer.ofx.OfxConnection;
 import org.designup.picsou.model.RealAccount;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.GlobList;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -40,10 +40,6 @@ public class OfxDownloadPage extends BankPage {
     code = new JTextField();
     code.setName("code");
     builder.add(code);
-    validerCode = new JButton("valider");
-    validerCode.setName("validerCode");
-    builder.add(validerCode);
-    validerCode.addActionListener(new ValiderActionListener());
     passwordTextField = new JPasswordField();
     passwordTextField.setName("password");
     builder.add(passwordTextField);
@@ -53,36 +49,43 @@ public class OfxDownloadPage extends BankPage {
     builder.add("org", orgTextField);
     fidTextField = new JTextField(fid);
     builder.add("fid", fidTextField);
+
+    validerCode = new JButton("valider");
+    validerCode.setName("validerCode");
+    builder.add(validerCode);
+    validerCode.addActionListener(new ValiderActionListener());
     return builder.load();
   }
 
   public void loadFile() {
     for (Glob glob : this.accounts) {
-      if (glob.get(RealAccount.IMPORTED)) {
-        try {
-          File file = File.createTempFile("download", ".ofx");
-          OfxConnection.loadOperation(glob, OfxConnection.previousDate(120), code.getText(), new String(passwordTextField.getPassword()),
-                                      urlTextField.getText(), orgTextField.getText(), fidTextField.getText(), file);
-          file.deleteOnExit();
-          repository.update(glob.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
-        }
-        catch (IOException e) {
-          throw new RuntimeException(e);
-        }
-
+      try {
+        File file = File.createTempFile("download", ".ofx");
+        OfxConnection.getInstance().loadOperation(glob, OfxConnection.previousDate(120), code.getText(), new String(passwordTextField.getPassword()),
+                                    urlTextField.getText(), orgTextField.getText(), fidTextField.getText(), file);
+        file.deleteOnExit();
+        repository.update(glob.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+      }
+      catch (IOException e) {
+        throw new RuntimeException(e);
       }
     }
   }
 
   private class ValiderActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
-      List<OfxConnection.AccountInfo> list = OfxConnection.getAccounts(code.getText(), new String(passwordTextField.getPassword()),
-                                                                       urlTextField.getText(), orgTextField.getText(), fidTextField.getText(), OfxDownloadPage.this.repository);
+      try {
+        List<OfxConnection.AccountInfo> list = OfxConnection.getInstance().getAccounts(code.getText(), new String(passwordTextField.getPassword()),
+                                                                         urlTextField.getText(), orgTextField.getText(), fidTextField.getText());
 
-      for (OfxConnection.AccountInfo info : list) {
-        createOrUpdateRealAccount(info.accType, info.number, urlTextField.getText(), orgTextField.getText(), fidTextField.getText());
+        for (OfxConnection.AccountInfo info : list) {
+          createOrUpdateRealAccount(info.accType, info.number, urlTextField.getText(), orgTextField.getText(), fidTextField.getText());
+        }
+        doImport();
       }
-      doImport();
+      catch (RuntimeException exception) {
+        MessageDialog.show("synchro.ofx.error.title", directory, "synchro.ofx.error.content", exception.getMessage());
+      }
     }
   }
 }

@@ -40,17 +40,18 @@ public class ImportController {
   private Set<Integer> importKeys = new HashSet<Integer>();
   private GlobList realAccountWithImport = new GlobList();
   private GlobList realAccountWithoutImport = new GlobList();
-  private boolean importMode = true;
+  private boolean isSynchro = true;
 
 
   public ImportController(ImportDialog importDialog,
                           GlobRepository repository, LocalGlobRepository localRepository,
-                          Directory directory) {
+                          Directory directory, boolean isSynchro) {
     this.importDialog = importDialog;
     this.repository = repository;
     this.localRepository = localRepository;
     this.directory = directory;
     this.importSession = new ImportSession(localRepository, directory);
+    this.isSynchro = isSynchro;
 
     initOpenRequestManager(directory);
   }
@@ -78,21 +79,20 @@ public class ImportController {
   }
 
   private void next(boolean first) {
-    if (importMode) {
+    if (!isSynchro) {
       if (!realAccountWithoutImport.isEmpty()) {
         importDialog.showNoImport(realAccountWithoutImport.remove(0), first);
         return;
       }
     }
     for (Glob glob : realAccountWithoutImport) {
-      if (glob.get(RealAccount.IMPORTED)) {
-        Glob target = localRepository.findLinkTarget(glob, RealAccount.ACCOUNT);
-        if (target != null) {
-          localRepository.update(target.getKey(),
-                                 FieldValue.value(Account.POSITION, Amounts.extractAmount(glob.get(RealAccount.POSITION))),
-                                 FieldValue.value(Account.POSITION_DATE, glob.get(RealAccount.POSITION_DATE)));
-        }
+      Glob target = localRepository.findLinkTarget(glob, RealAccount.ACCOUNT);
+      if (target != null) {
+        localRepository.update(target.getKey(),
+                               FieldValue.value(Account.POSITION, Amounts.extractAmount(glob.get(RealAccount.POSITION))),
+                               FieldValue.value(Account.POSITION_DATE, glob.get(RealAccount.POSITION_DATE)));
       }
+      localRepository.commitChanges(false);
     }
     if (nextImport()) {
       importDialog.showPreview();

@@ -106,6 +106,11 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
+  public ImportDialogChecker importThisAccount(){
+    dialog.getButton("Import this acount...").click();
+    return this;
+  }
+
   public boolean isLastStep() {
     return dialog.getTextBox("title").getText().contains("Import done");
   }
@@ -121,16 +126,8 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public OtherBankSynchoChecker openSynchro(String bankName) {
-    final BankChooserChecker chooserChecker =
-      BankChooserChecker.init(dialog.getTextBox("synchroMessage")
-        .triggerClickOnHyperlink("synchronize"));
-    chooserChecker.selectBank(bankName);
-    Window window = WindowInterceptor.getModalDialog(new Trigger() {
-      public void run() throws Exception {
-        chooserChecker.validate();
-      }
-    });
-    return new OtherBankSynchoChecker(this, window);
+    return getBankDownload().selectBank(bankName)
+      .openSynchro(this);
   }
 
   public void completeImport() {
@@ -509,6 +506,16 @@ public class ImportDialogChecker extends GuiChecker {
   public ImportDialogChecker setAsCreditCard() {
     accountEditionChecker.setAsCreditCard();
     return this;
+  }
+
+  public ImportDialogChecker checkAccount(String accountName) {
+    accountEditionChecker.checkAccountName(accountName);
+    return this;
+  }
+
+  public OfxSynchoChecker openOfxSynchro(String bankName) {
+    return getBankDownload().selectBank(bankName)
+      .openOfxSynchro(this);
   }
 
   public static class CompletionChecker {

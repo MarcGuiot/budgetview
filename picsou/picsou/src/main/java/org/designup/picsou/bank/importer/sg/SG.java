@@ -288,12 +288,10 @@ public class SG extends WebBankPage {
     for (HtmlOption option : accountList) {
       Glob realAccount = find(option, this.accounts);
       if (realAccount != null) {
-        if (realAccount.get(RealAccount.IMPORTED)) {
           page = (HtmlPage)compte.setSelectedAttribute(option, true);
           File file = downloadFor(realAccount);
           if (file != null) {
             repository.update(realAccount.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
-          }
         }
       }
     }

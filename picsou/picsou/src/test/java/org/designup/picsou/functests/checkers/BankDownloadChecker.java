@@ -1,11 +1,12 @@
 package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Panel;
+import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
-
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class BankDownloadChecker extends GuiChecker {
   private Panel panel;
@@ -63,4 +64,17 @@ public class BankDownloadChecker extends GuiChecker {
   public HelpChecker openHelp() {
     return HelpChecker.open(panel.getButton("openHelp").triggerClick());
   }
+
+  public OtherBankSynchoChecker openSynchro(ImportDialogChecker checker) {
+    Window window = WindowInterceptor.getModalDialog(panel.getTextBox("synchroMessage")
+      .triggerClickOnHyperlink("synchronize"));
+    return new OtherBankSynchoChecker(checker, window);
+  }
+
+  public OfxSynchoChecker openOfxSynchro(ImportDialogChecker checker) {
+    Window window = WindowInterceptor.getModalDialog(panel.getTextBox("synchroMessage")
+      .triggerClickOnHyperlink("synchronize"));
+    return new OfxSynchoChecker(checker, window);
+  }
+
 }

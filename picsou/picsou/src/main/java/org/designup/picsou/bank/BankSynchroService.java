@@ -15,6 +15,7 @@ import org.globsframework.utils.directory.Directory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Iterator;
 
 public class BankSynchroService {
   private Map<Integer, BankSynchro> banks = new HashMap<Integer, BankSynchro>();
@@ -63,13 +64,21 @@ public class BankSynchroService {
         importedAccount.addAll(synchro.show(directory, repository));
       }
     }
+    for (Iterator<Glob> iterator = importedAccount.iterator(); iterator.hasNext();) {
+      Glob glob = iterator.next();
+      if (glob.get(RealAccount.ACCOUNT) == null){
+        iterator.remove();
+      }
+    }
     return importedAccount;
   }
 
   public GlobList show(Integer bankId, Directory directory, GlobRepository repository) {
     BankSynchro synchro = banks.get(bankId);
     if (synchro != null) {
-      return synchro.show(directory, repository);
+      GlobList importedAccount = synchro.show(directory, repository);
+      filterRemoveAccountWithNoImport(importedAccount);
+      return importedAccount;
     }
     else {
       Glob glob = repository.find(Key.create(Bank.TYPE, bankId));
@@ -79,10 +88,21 @@ public class BankSynchroService {
             new OfxDownloadPage(repository, directory, bankId, glob.get(Bank.DOWNLOAD_URL),
                             glob.get(Bank.ORG), glob.get(Bank.FID));
           download.init();
-          return download.show();
+          GlobList importedAccount = download.show();
+          filterRemoveAccountWithNoImport(importedAccount);
+          return importedAccount;
         }
       }
     }
     return GlobList.EMPTY;
+  }
+
+  private void filterRemoveAccountWithNoImport(GlobList importedAccount) {
+    for (Iterator<Glob> iterator = importedAccount.iterator(); iterator.hasNext();) {
+      Glob glob = iterator.next();
+      if (glob.get(RealAccount.ACCOUNT) != null && glob.get(RealAccount.FILE_NAME) == null){
+        iterator.remove();
+      }
+    }
   }
 }
