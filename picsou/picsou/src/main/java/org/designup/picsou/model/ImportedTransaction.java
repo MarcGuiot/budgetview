@@ -42,7 +42,13 @@ public class ImportedTransaction {
 
   public static BooleanField SPLIT;
 
-  @Target(Transaction.class)
+  @Target(Series.class)
+  public static LinkField SERIES;
+
+  @Target(SubSeries.class)
+  public static LinkField SUB_SERIES;
+
+  @Target(ImportedTransaction.class)
   public static LinkField SPLIT_SOURCE;
 
   static {

@@ -409,6 +409,21 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     notifyListeners(true);
   }
 
+  public void delete(Collection<Key> keys) throws ItemNotFound, OperationDenied {
+    for (Key key : keys) {
+      MutableGlob glob = getGlobForUpdate(key);
+      GlobType type = glob.getType();
+      IndexTables indexTables = indexManager.getAssociatedTable(type);
+      if (indexTables != null) {
+        indexTables.remove(glob);
+      }
+      disable(glob);
+      globs.remove(key.getGlobType(), key);
+      changeSetToDispatch.processDeletion(key, glob);
+    }
+    notifyListeners(true);
+  }
+
   public void delete(GlobList list) throws OperationDenied {
     startChangeSet();
     OperationDenied exception = null;

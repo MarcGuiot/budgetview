@@ -12,6 +12,7 @@ import org.globsframework.utils.exceptions.*;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.Collection;
 
 public class GlobRepositoryDecorator implements GlobRepository {
   protected GlobRepository repository;
@@ -118,6 +119,10 @@ public class GlobRepositoryDecorator implements GlobRepository {
 
   public void delete(Key key) throws ItemNotFound, OperationDenied {
     getRepository().delete(key);
+  }
+
+  public void delete(Collection<Key> keys) throws ItemNotFound, OperationDenied {
+    getRepository().delete(keys);
   }
 
   public void delete(GlobList list) throws OperationDenied {

@@ -1,10 +1,15 @@
 package org.designup.picsou.gui.importer;
 
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
+import org.designup.picsou.gui.accounts.AccountEditionDialog;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
+import org.designup.picsou.gui.importer.components.ImportSeriesDialog;
 import org.designup.picsou.model.*;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.SingleComponentLayout;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -99,8 +104,9 @@ public class ImportDialog {
 
   private void loadLocalRepository(GlobRepository repository) {
     GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, MonthDay.TYPE,
-                            Account.TYPE, AccountUpdateMode.TYPE,
-                            Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE};
+                            Account.TYPE, AccountUpdateMode.TYPE, BudgetArea.TYPE,
+                            Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE,
+                            Series.TYPE, SubSeries.TYPE};
 
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)
@@ -227,5 +233,11 @@ public class ImportDialog {
       setCurrentPanel(importAccountsPanel.getPanel());
     }
     importAccountsPanel.setImportedAccountToImport(glob);
+  }
+
+  public boolean askForSeriesImport(Set<Key> newSeries) {
+    ImportSeriesDialog dialog = new ImportSeriesDialog(ImportDialog.this.dialog,
+                                                       controller.getSessionRepository(), localDirectory);
+    return dialog.show(newSeries);
   }
 }

@@ -8,6 +8,8 @@ import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobRepositoryDecorator;
 import org.globsframework.utils.exceptions.*;
 
+import java.util.Collection;
+
 public class StrictGlobRepository extends GlobRepositoryDecorator {
   private ExceptionHandler exceptionHandler;
 
@@ -70,6 +72,16 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
   public void delete(Key key) throws ItemNotFound, OperationDenied {
     try {
       super.delete(key);
+    }
+    catch (Throwable e) {
+      exceptionHandler.onException(e);
+      throw new RuntimeException(e);
+    }
+  }
+
+  public void delete(Collection<Key> keys) throws ItemNotFound, OperationDenied {
+    try {
+      super.delete(keys);
     }
     catch (Throwable e) {
       exceptionHandler.onException(e);

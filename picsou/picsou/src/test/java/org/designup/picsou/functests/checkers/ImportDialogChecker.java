@@ -3,8 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.importer.ImportCompletionPanel;
-import org.designup.picsou.gui.importer.ImportController;
-import org.designup.picsou.gui.time.TimeViewPanel;
+import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
@@ -14,9 +13,9 @@ import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
-import javax.xml.validation.Validator;
 import java.io.File;
-import java.util.Arrays;
+
+import junit.framework.Assert;
 
 public class ImportDialogChecker extends GuiChecker {
   private Panel dialog;
@@ -40,7 +39,7 @@ public class ImportDialogChecker extends GuiChecker {
       fileField = dialog.getInputTextBox("fileField");
       importButton = dialog.getButton("Import");
     }
-     accountEditionChecker = new AccountEditionChecker(dialog);
+    accountEditionChecker = new AccountEditionChecker(dialog);
   }
 
   private ImportDialogChecker() {
@@ -106,7 +105,7 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public ImportDialogChecker importThisAccount(){
+  public ImportDialogChecker importThisAccount() {
     dialog.getButton("Import this acount...").click();
     return this;
   }
@@ -168,6 +167,11 @@ public class ImportDialogChecker extends GuiChecker {
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
+  public ImportSeriesChecker importSeries() {
+    return new ImportSeriesChecker(WindowInterceptor.getModalDialog(dialog.getButton(Lang.get("import.preview.ok"))
+      .triggerClick()), dialog);
+  }
+
   public static void validateAndComplete(final int loadedTransaction, final int importedTransactionCount, final int autocategorizedTransactionCount,
                                          final Panel dialog, final String key) {
     dialog.getButton(Lang.get(key)).click();
@@ -183,7 +187,7 @@ public class ImportDialogChecker extends GuiChecker {
     return new AccountPositionEditionChecker(dialog, "import.fileSelection.ok");
   }
 
-  public void complete(){
+  public void complete() {
     dialog.getButton("OK").click();
     assertFalse(dialog.isVisible());
   }
@@ -293,7 +297,7 @@ public class ImportDialogChecker extends GuiChecker {
     accountEditionChecker.setAccountName(accountName)
       .setAccountNumber(number)
       .setAsMain();
-    if (bank != null){
+    if (bank != null) {
       accountEditionChecker.selectBank(bank);
     }
 //    AccountEditionChecker accountEditionChecker =
@@ -442,18 +446,18 @@ public class ImportDialogChecker extends GuiChecker {
   public void importDeferred(String accountName, String fileName, boolean withMainAccount) {
     setFilePath(fileName)
       .acceptFile();
-    if (accountEditionChecker.getAccountName().equals(accountName)){
+    if (accountEditionChecker.getAccountName().equals(accountName)) {
       setDeferredAccount();
     }
     else {
       setMainAccount();
     }
-    if (withMainAccount){
+    if (withMainAccount) {
       doImport();
-      if (accountEditionChecker.getAccountName().equals(accountName)){
+      if (accountEditionChecker.getAccountName().equals(accountName)) {
         setDeferredAccount();
       }
-      else{
+      else {
         setMainAccount();
       }
     }
@@ -565,5 +569,60 @@ public class ImportDialogChecker extends GuiChecker {
 
   public Panel getDialog() {
     return dialog;
+  }
+
+  public class ImportSeriesChecker {
+    private Window dialog;
+    private Panel parent;
+
+    public ImportSeriesChecker(Window dialog, Panel parent) {
+      this.dialog = dialog;
+      this.parent = parent;
+    }
+
+    public ImportSeriesChecker checkContains(String... seriesName) {
+      for (String s : seriesName) {
+        dialog.getInputTextBox("series_" + s);
+      }
+      return this;
+    }
+
+    public ImportSeriesChecker setIncome(String... series) {
+      return set(BudgetArea.INCOME, series);
+    }
+
+    public ImportSeriesChecker setRecuring(String ...series) {
+      return set(BudgetArea.RECURRING, series);
+    }
+
+    public ImportSeriesChecker setVariable(String ...series) {
+      return set(BudgetArea.VARIABLE, series);
+    }
+
+    private ImportSeriesChecker set(BudgetArea budgetArea, String... series) {
+      for (String s : series) {
+        dialog.getComboBox("choice_" + s).select(budgetArea.getLabel());
+      }
+      return this;
+    }
+
+    public void validate() {
+      dialog.getButton("import").click();
+      assertFalse(dialog.isVisible());
+      ImportDialogChecker.complete(-1, -1, -1, parent);
+    }
+
+    public ImportSeriesChecker checkNotContain(String ...series) {
+      for (String s : series) {
+        Assert.assertNull(dialog.findSwingComponent(JComboBox.class, "choice_" + s));
+      }
+      return this;
+    }
+
+    public void cancelImportSeries() {
+      dialog.getButton("do not import").click();
+      assertFalse(dialog.isVisible());
+      ImportDialogChecker.complete(-1, -1, -1, parent);
+    }
   }
 }

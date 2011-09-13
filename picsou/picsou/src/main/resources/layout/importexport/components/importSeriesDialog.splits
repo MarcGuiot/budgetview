@@ -1,0 +1,15 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="dialog">
+    <column styleClass="innerDialog">
+      <label text="$import.series.title" name="title" styleClass="title"/>
+
+      <panel ref="seriesRepeatPanel"/>
+
+      <filler fill="vertical"/>
+    </column>
+  </panel>
+
+</splits>

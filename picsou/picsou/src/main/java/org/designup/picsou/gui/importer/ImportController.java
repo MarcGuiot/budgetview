@@ -190,6 +190,10 @@ public class ImportController {
   }
 
   public void completeImport(Glob importedAccount, Glob currentAccount, String dateFormat) {
+    Set<Key> newSeries = importSession.getNewSeries();
+    if (!newSeries.isEmpty()){
+      importSession.importSeries(importDialog.askForSeriesImport(newSeries));
+    }
     Key importKey = importSession.importTransactions(importedAccount, currentAccount, dateFormat);
     if (importKey != null) {
       importKeys.add(importKey.get(TransactionImport.ID));
