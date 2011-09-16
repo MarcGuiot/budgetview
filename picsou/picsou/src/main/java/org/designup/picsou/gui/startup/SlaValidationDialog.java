@@ -23,7 +23,7 @@ public class SlaValidationDialog {
     return dialog.show();
   }
 
-  public SlaValidationDialog(Window owner, Directory directory) {
+  private SlaValidationDialog(Window owner, Directory directory) {
 
     builder = SplitsBuilder.init(directory).setSource(getClass(), "/layout/general/slaValidationDialog.splits");
 

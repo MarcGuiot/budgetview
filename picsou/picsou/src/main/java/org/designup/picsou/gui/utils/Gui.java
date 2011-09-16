@@ -2,9 +2,7 @@ package org.designup.picsou.gui.utils;
 
 import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PicsouWindowsLookAndFeel;
-import org.designup.picsou.gui.help.HelpDialog;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.font.FontService;
@@ -84,7 +82,6 @@ public class Gui {
       throw new RuntimeException(e);
     }
   }
-
 
   public static Font getDefaultFont() {
     if (font == null) {
@@ -180,14 +177,6 @@ public class Gui {
     result = false;
     Utils.endRemove();
     return result;
-  }
-
-  public static JEditorPane createHelpTextComponent(String helpFile) {
-    JEditorPane editor = new JEditorPane();
-    GuiUtils.initReadOnlyHtmlComponent(editor);
-    GuiUtils.loadCssResource("/help/help.css", editor, HelpDialog.class);
-    editor.setText(Lang.getHelpFile(helpFile));
-    return editor;
   }
 
   public static JButton createSyncButton(JButton button) {

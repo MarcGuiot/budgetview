@@ -73,6 +73,12 @@ public class UserPreferences {
   @DefaultBoolean(false)
   public static BooleanField SHOW_RECONCILIATION;
 
+  @DefaultInteger(0)
+  public static IntegerField EXIT_COUNT;
+
+  @DefaultBoolean(false)
+  public static BooleanField EVALUATION_SHOWN;
+
   public static IntegerField TRANSACTION_POS1;
   public static IntegerField TRANSACTION_POS2;
   public static IntegerField TRANSACTION_POS3;
@@ -96,7 +102,7 @@ public class UserPreferences {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 11;
+      return 12;
     }
     
     public byte[] serializeData(FieldValues values) {
@@ -118,6 +124,8 @@ public class UserPreferences {
       outputStream.writeInteger(values.get(MONTH_FOR_PLANNED));
       outputStream.writeBoolean(values.get(MULTIPLE_PLANNED));
       outputStream.writeBoolean(values.get(SHOW_RECONCILIATION));
+      outputStream.writeInteger(values.get(EXIT_COUNT));
+      outputStream.writeBoolean(values.get(EVALUATION_SHOWN));
       outputStream.writeInteger(values.get(TRANSACTION_POS1));
       outputStream.writeInteger(values.get(TRANSACTION_POS2));
       outputStream.writeInteger(values.get(TRANSACTION_POS3));
@@ -131,7 +139,10 @@ public class UserPreferences {
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 11) {
+      if (version == 12) {
+        deserializeDataV12(fieldSetter, data);
+      }
+      else if (version == 11) {
         deserializeDataV11(fieldSetter, data);
       }
       else if (version == 10) {
@@ -165,6 +176,38 @@ public class UserPreferences {
         deserializeDataV1(fieldSetter, data);
       }
     }
+
+    private void deserializeDataV12(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(LAST_BACKUP_RESTORE_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
+      fieldSetter.set(REGISTERED_USER, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
+      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_SAVINGS, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_EXTRA, input.readInteger());
+      fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, input.readBoolean());
+      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, input.readInteger());
+      fieldSetter.set(MONTH_FOR_PLANNED, input.readInteger());
+      fieldSetter.set(MULTIPLE_PLANNED, input.readBoolean());
+      fieldSetter.set(SHOW_RECONCILIATION, input.readBoolean());
+      fieldSetter.set(EXIT_COUNT, input.readInteger());
+      fieldSetter.set(EVALUATION_SHOWN, input.readBoolean());
+      fieldSetter.set(TRANSACTION_POS1, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS2, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS3, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS4, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS5, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS6, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS7, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS8, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS9, input.readInteger());
+    }
+
     private void deserializeDataV11(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readUtf8String());
@@ -183,6 +226,7 @@ public class UserPreferences {
       fieldSetter.set(MONTH_FOR_PLANNED, input.readInteger());
       fieldSetter.set(MULTIPLE_PLANNED, input.readBoolean());
       fieldSetter.set(SHOW_RECONCILIATION, input.readBoolean());
+      fieldSetter.set(EXIT_COUNT, 0);
       fieldSetter.set(TRANSACTION_POS1, input.readInteger());
       fieldSetter.set(TRANSACTION_POS2, input.readInteger());
       fieldSetter.set(TRANSACTION_POS3, input.readInteger());
@@ -212,6 +256,7 @@ public class UserPreferences {
       fieldSetter.set(MONTH_FOR_PLANNED, input.readInteger());
       fieldSetter.set(MULTIPLE_PLANNED, input.readBoolean());
       fieldSetter.set(SHOW_RECONCILIATION, input.readBoolean());
+      fieldSetter.set(EXIT_COUNT, 0);
     }
 
     private void deserializeDataV9(FieldSetter fieldSetter, byte[] data) {
@@ -231,6 +276,7 @@ public class UserPreferences {
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, input.readInteger());
       fieldSetter.set(MONTH_FOR_PLANNED, input.readInteger());
       fieldSetter.set(MULTIPLE_PLANNED, input.readBoolean());
+      fieldSetter.set(EXIT_COUNT, 0);
     }
 
     private void deserializeDataV8(FieldSetter fieldSetter, byte[] data) {
@@ -250,6 +296,7 @@ public class UserPreferences {
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
       fieldSetter.set(MULTIPLE_PLANNED, false);
+      fieldSetter.set(EXIT_COUNT, 0);
     }
 
     private void deserializeDataV7(FieldSetter fieldSetter, byte[] data) {
@@ -273,6 +320,7 @@ public class UserPreferences {
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
       fieldSetter.set(MULTIPLE_PLANNED, false);
+      fieldSetter.set(EXIT_COUNT, 0);
     }
 
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
@@ -291,6 +339,7 @@ public class UserPreferences {
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
       fieldSetter.set(MULTIPLE_PLANNED, false);
+      fieldSetter.set(EXIT_COUNT, 0);
     }
 
     private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
@@ -308,6 +357,7 @@ public class UserPreferences {
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
       fieldSetter.set(MULTIPLE_PLANNED, false);
+      fieldSetter.set(EXIT_COUNT, 0);
     }
 
     private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
@@ -324,6 +374,7 @@ public class UserPreferences {
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
       fieldSetter.set(MULTIPLE_PLANNED, false);
+      fieldSetter.set(EXIT_COUNT, 0);
     }
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
@@ -339,6 +390,7 @@ public class UserPreferences {
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
       fieldSetter.set(MULTIPLE_PLANNED, false);
+      fieldSetter.set(EXIT_COUNT, 0);
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -352,6 +404,7 @@ public class UserPreferences {
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
       fieldSetter.set(MULTIPLE_PLANNED, false);
+      fieldSetter.set(EXIT_COUNT, 0);
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
@@ -364,6 +417,7 @@ public class UserPreferences {
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
       fieldSetter.set(MULTIPLE_PLANNED, false);
+      fieldSetter.set(EXIT_COUNT, 0);
     }
   }
 

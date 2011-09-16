@@ -36,9 +36,9 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
   }
 
   protected void initWindow(boolean isFirst) {
-    final StartupChecker startupChecker = new StartupChecker();
+    final ApplicationChecker application = new ApplicationChecker();
     if (isFirst) {
-      window = startupChecker.enterMain();
+      window = application.start();
     }
     else {
       window = WindowInterceptor.run(new Trigger() {
@@ -50,7 +50,7 @@ public abstract class ServerFuncTestCase extends UISpecTestCase {
     }
     if (isFirst){
       new OperationChecker(window).logout();
-      picsouApplication = startupChecker.getApplication();
+      picsouApplication = application.getApplication();
     }
   }
 

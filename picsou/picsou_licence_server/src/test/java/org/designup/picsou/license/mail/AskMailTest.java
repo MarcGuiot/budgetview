@@ -17,14 +17,12 @@ public class AskMailTest extends ConnectedTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
-    licenseServer.init();
     startServers();
     client = new HttpClient();
   }
 
   protected void tearDown() throws Exception {
     super.tearDown();
-    stop();
     client = null;
   }
 
@@ -41,10 +39,8 @@ public class AskMailTest extends ConnectedTestCase {
     PostMethod postMethod = sendRequest(s);
     Header header = postMethod.getResponseHeader(ConfigService.HEADER_STATUS);
     assertEquals(ConfigService.HEADER_MAIL_SENT, header.getValue());
-    String content = checkReceivedMail("monPremierClient@pirate.du");
-    assertTrue(content, content.contains(expected));
+    mailServer.checkReceivedMail("monPremierClient@pirate.du").checkContains(expected);
   }
-
 
   private PostMethod sendRequest(String lang) throws IOException {
     PostMethod postMethod = new PostMethod("http://localhost/mailTo");
@@ -64,28 +60,28 @@ public class AskMailTest extends ConnectedTestCase {
     client.executeMethod(postMethod);
     Header header = postMethod.getResponseHeader(ConfigService.HEADER_STATUS);
     assertEquals(ConfigService.HEADER_BAD_ADRESS, header.getValue());
-    SqlConnection connection = getSqlConnection();
+    SqlConnection connection = db.getConnection();
     connection.getQueryBuilder(MailError.TYPE, Constraints.equal(MailError.MAIL, badMail))
       .getQuery().executeUnique();
     connection.commitAndClose();
   }
 
   private void checkInBase(String mailTo) {
-    SqlConnection connection = getSqlConnection();
+    SqlConnection connection = db.getConnection();
     connection.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, mailTo))
       .getQuery().executeUnique();
     connection.commitAndClose();
   }
 
   private void addUser(String mail) {
-    SqlConnection db = getSqlConnection();
+    SqlConnection connection = db.getConnection();
     try {
-      db.getCreateBuilder(License.TYPE)
+      connection.getCreateBuilder(License.TYPE)
         .set(License.MAIL, mail)
         .getRequest().run();
     }
     finally {
-      db.commitAndClose();
+      connection.commitAndClose();
     }
   }
 }

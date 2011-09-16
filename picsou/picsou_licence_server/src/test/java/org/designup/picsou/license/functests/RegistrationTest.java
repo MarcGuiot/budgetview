@@ -2,6 +2,7 @@ package org.designup.picsou.license.functests;
 
 import org.designup.picsou.functests.checkers.LicenseActivationChecker;
 import org.designup.picsou.functests.checkers.SlaValidationDialogChecker;
+import org.designup.picsou.functests.checkers.ApplicationChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.config.ConfigService;
@@ -12,8 +13,7 @@ import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 
 public class RegistrationTest extends ConnectedTestCase {
-  private PicsouApplication picsouApplication;
-  private Window window;
+  private ApplicationChecker application;
   private int previousRetry;
 
   protected void setUp() throws Exception {
@@ -23,38 +23,22 @@ public class RegistrationTest extends ConnectedTestCase {
     previousRetry = ConfigService.RETRY_PERIOD;
     ConfigService.RETRY_PERIOD = 500;
     licenseServer.init();
+    application = new ApplicationChecker();
   }
 
   protected void tearDown() throws Exception {
     super.tearDown();
     ConfigService.RETRY_PERIOD = previousRetry;
-    window.dispose();
-    picsouApplication.shutdown();
-    window = null;
-    picsouApplication = null;
+    application.dispose();
+    application = null;
   }
 
   public void testNoServerAccessForRegistration() throws Exception {
-    startPicsou();
+    Window window = application.start();
 
     LicenseActivationChecker license = LicenseActivationChecker.open(window);
     license.checkConnectionNotAvailable();
-    startServers();
+    startServersWithoutLicence();
     license.checkConnectionIsAvailable();
   }
-
-  private void startPicsou() {
-    Window slaWindow = WindowInterceptor.getModalDialog(new Trigger() {
-      public void run() throws Exception {
-        picsouApplication = new PicsouApplication();
-        picsouApplication.run();
-      }
-    });
-    SlaValidationDialogChecker slaValidationDialogChecker = new SlaValidationDialogChecker(slaWindow);
-    slaValidationDialogChecker.acceptTerms();
-    SlaValidationDialogChecker.TriggerSlaOk triggerSlaOk = new SlaValidationDialogChecker.TriggerSlaOk(slaValidationDialogChecker);
-    triggerSlaOk.run();
-    window = triggerSlaOk.getMainWindow();
-  }
-
 }

@@ -2,13 +2,14 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.TestCase;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.feedback.UserEvaluationDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.fail;
+
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
@@ -21,6 +22,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class OperationChecker {
   public static final String DEFAULT_ACCOUNT_NUMBER = "11111";
@@ -396,7 +399,7 @@ public class OperationChecker {
   }
 
   public void checkUndoNotAvailable() {
-    UISpecAssert.assertFalse(getUndoMenu().isEnabled());
+    assertFalse(getUndoMenu().isEnabled());
   }
 
   public void redo() {
@@ -408,7 +411,7 @@ public class OperationChecker {
   }
 
   public void checkRedoNotAvailable() {
-    UISpecAssert.assertFalse(getRedoMenu().isEnabled());
+    assertFalse(getRedoMenu().isEnabled());
   }
 
   public void logout() {
@@ -416,7 +419,16 @@ public class OperationChecker {
   }
 
   public void exit() {
-    window.getMenuBar().getMenu("File").getSubMenu("Exit").click();
+    getFileMenu().getSubMenu("Exit").click();
+    assertFalse(window.isVisible());
+  }
+
+  public void checkExitWithoutDialog() {
+    exit();
+  }
+
+  public UserEvaluationDialogChecker exitWithUserEvaluation() {
+    return UserEvaluationDialogChecker.open(getFileMenu().getSubMenu("Exit").triggerClick());
   }
 
   public void deleteUser(String password) {
@@ -451,12 +463,16 @@ public class OperationChecker {
   }
 
   public FeedbackDialogChecker openFeedback() {
-    MenuItem feedbackMenu = getHelpMenu().getSubMenu("Feedback");
+    MenuItem feedbackMenu = getDevMenu().getSubMenu("[OpenFeedback]");
     return FeedbackDialogChecker.init(feedbackMenu.triggerClick());
   }
 
   private MenuItem getHelpMenu() {
     return window.getMenuBar().getMenu("Help");
+  }
+
+  private MenuItem getDevMenu() {
+    return window.getMenuBar().getMenu("[Dev]");
   }
 
   public void checkGotoSupport(String url) {
@@ -532,11 +548,6 @@ public class OperationChecker {
     return MessageAndDetailsDialogChecker.init(getThrowExceptionInRepositoryMenu().triggerClick());
   }
 
-  public void checkDataIsOk() {
-    MessageDialogChecker.init(getCheckMenu().triggerClick())
-      .checkMessageContains("No error was found").close();
-  }
-
   public void protect(String userName, String password) {
     MenuItem protectMenu = getFileMenu().getSubMenu("Change identifier");
     RenameChecker checker =
@@ -559,20 +570,37 @@ public class OperationChecker {
     UISpecAssert.assertThat(getFileMenu().contain("Change identifiers..."));
   }
 
+  public void checkDataIsOk() {
+    MessageDialogChecker.init(getCheckMenu().triggerClick())
+      .checkMessageContains("No error was found").close();
+  }
+
   public void nextMonth() {
-    getEditMenu().getSubMenu("goto to 10 of next month").click();
+    getDevMenu().getSubMenu("goto to 10 of next month").click();
   }
 
   public void nextSixDays() {
-    getEditMenu().getSubMenu("Add 6 days").click();
+    getDevMenu().getSubMenu("Add 6 days").click();
   }
 
   public void hideSignposts() {
-    getEditMenu().getSubMenu("[Hide signposts]").click();
+    getDevMenu().getSubMenu("[Hide signposts]").click();
   }
 
   public void dumpData() {
-    getEditMenu().getSubMenu("[Dump data]").click();
+    getDevMenu().getSubMenu("[Dump data]").click();
+  }
+
+  private MenuItem getThrowExceptionMenu() {
+    return getDevMenu().getSubMenu("[Throw exception]");
+  }
+
+  private MenuItem getThrowExceptionInRepositoryMenu() {
+    return getDevMenu().getSubMenu("Throw exception in repository");
+  }
+
+  private MenuItem getCheckMenu() {
+    return getDevMenu().getSubMenu("[Check data (see logs)]");
   }
 
   public RestoreSnapshotChecker restoreSnapshot() {
@@ -625,18 +653,6 @@ public class OperationChecker {
 
   private MenuItem getRedoMenu() {
     return getEditMenu().getSubMenu("Redo");
-  }
-
-  private MenuItem getThrowExceptionMenu() {
-    return getEditMenu().getSubMenu("[Throw exception]");
-  }
-
-  private MenuItem getThrowExceptionInRepositoryMenu() {
-    return getEditMenu().getSubMenu("Throw exception in repository");
-  }
-
-  private MenuItem getCheckMenu() {
-    return getEditMenu().getSubMenu("[Check data (see logs)]");
   }
 
   public NotesDialogChecker openNotes() {

@@ -84,7 +84,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
       public Window getMainWindow() {
         if (mainWindow == null) {
           if (firstLogin) {
-            mainWindow = new StartupChecker().enterMain();
+            mainWindow = new ApplicationChecker().start();
           }
           else {
             mainWindow = WindowInterceptor.run(new Trigger() {

@@ -10,7 +10,11 @@ public class CancelAction extends AbstractAction {
   private PicsouDialog dialog;
 
   public CancelAction(PicsouDialog dialog) {
-    super(Lang.get("cancel"));
+    this(Lang.get("cancel"), dialog);
+  }
+
+  public CancelAction(String label, PicsouDialog dialog) {
+    super(label);
     this.dialog = dialog;
   }
 

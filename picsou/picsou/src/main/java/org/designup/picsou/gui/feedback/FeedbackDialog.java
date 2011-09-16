@@ -3,15 +3,11 @@ package org.designup.picsou.gui.feedback;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.components.tips.ErrorTip;
+import org.designup.picsou.gui.components.server.DisconnectionTip;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
@@ -21,7 +17,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.Set;
 
 public class FeedbackDialog {
   private PicsouDialog dialog;
@@ -29,10 +24,9 @@ public class FeedbackDialog {
   private JTextField userMail;
   private JTextField mailSubject;
   private JCheckBox addLogsCheckbox;
-  private ErrorTip errorTip = null;
-  private ChangeSetListener tipsListener;
   private GlobRepository repository;
   private Directory directory;
+  private DisconnectionTip disconnectionTip;
 
   public FeedbackDialog(Window parent, GlobRepository repository, final Directory directory) {
     this.repository = repository;
@@ -59,19 +53,7 @@ public class FeedbackDialog {
     dialog.addPanelWithButtons(builder.<JPanel>load(),
                                new ValidateAction(),
                                new CancelAction(dialog));
-    tipsListener = new ChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsUpdates(User.CONNECTED)) {
-          showConnection();
-        }
-      }
-
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-      }
-    };
-    repository.addChangeListener(tipsListener);
-
-    showConnection();
+    disconnectionTip = new DisconnectionTip(dialog.getOkButton(), repository, directory);
   }
 
   private String getMessageText() {
@@ -96,23 +78,10 @@ public class FeedbackDialog {
     return builder.toString();
   }
 
-  private void showConnection() {
-    Glob user = repository.get(User.KEY);
-    if (!user.isTrue(User.CONNECTED) && errorTip == null) {
-      errorTip = ErrorTip.showLeft(dialog.getOkButton(), Lang.get("feedback.notConnected"), directory);
-    }
-
-    if (user.isTrue(User.CONNECTED) && errorTip != null) {
-      errorTip.dispose();
-    }
-
-    dialog.getOkButton().setEnabled(user.isTrue(User.CONNECTED));
-  }
-
   public void show() {
     dialog.pack();
     dialog.showCentered();
-    repository.removeChangeListener(tipsListener);
+    disconnectionTip.dispose();
   }
 
   private class ValidateAction extends AbstractAction {

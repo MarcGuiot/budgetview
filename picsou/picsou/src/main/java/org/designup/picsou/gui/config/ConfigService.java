@@ -316,7 +316,7 @@ public class ConfigService {
           updateConnectionStatus(e);
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-              Log.write("mail not sent", e);
+              Log.write("Email not sent", e);
               listener.sendFail(fromMail, title, content);
             }
           });
@@ -333,7 +333,7 @@ public class ConfigService {
         else {
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-              Log.write("Mail not sent with error code " + statusCode);
+              Log.write("Email not sent with error code: " + statusCode);
               listener.sendFail(fromMail, title, content);
             }
           });
@@ -510,10 +510,10 @@ public class ConfigService {
         constructor.newInstance(globRepository, directory);
       }
       catch (IOException e) {
-        Log.write("fail to read " + name, e);
+        Log.write("failed to read " + name, e);
       }
       catch (Exception e) {
-        Log.write("fail to load class " + name, e);
+        Log.write("failed to load class " + name, e);
       }
     }
   }
@@ -546,7 +546,7 @@ public class ConfigService {
                                   .replace("/", "."));
               }
               catch (IOException e) {
-                Log.write("fail to get entry for " + className, e);
+                Log.write("Failed to get entry for " + className, e);
               }
             }
           }

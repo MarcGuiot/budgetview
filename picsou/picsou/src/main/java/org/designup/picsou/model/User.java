@@ -25,6 +25,7 @@ public class User {
   public static StringField ACTIVATION_CODE;
   public static BlobField SIGNATURE;
   public static IntegerField ACTIVATION_STATE;
+  
   @DefaultBoolean(false)
   public static BooleanField CONNECTED;
 

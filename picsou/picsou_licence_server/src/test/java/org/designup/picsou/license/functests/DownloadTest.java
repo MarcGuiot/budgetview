@@ -1,19 +1,20 @@
 package org.designup.picsou.license.functests;
 
-import org.designup.picsou.functests.checkers.*;
+import org.designup.picsou.functests.checkers.ApplicationChecker;
+import org.designup.picsou.functests.checkers.LicenseActivationChecker;
+import org.designup.picsou.functests.checkers.NewVersionChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.license.ConnectedTestCase;
+import org.designup.picsou.license.checkers.FtpServerChecker;
 import org.designup.picsou.license.model.SoftwareInfo;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.utils.Dates;
 import org.objectweb.asm.*;
-import org.uispec4j.Trigger;
 import org.uispec4j.Window;
-import org.uispec4j.interception.WindowInterceptor;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,103 +24,78 @@ import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
 /*
- il faut mettre dans la liste de banque de generateConfigContent les banques specific
-
+ * Note: Il faut mettre les banques specifiques dans la liste de banques de generateConfigContent()
 */
-
-
 public class DownloadTest extends ConnectedTestCase {
-  private Window window;
-  private PicsouApplication picsouApplication;
+
+  private ApplicationChecker application;
 
   protected void setUp() throws Exception {
     System.setProperty("budgetview.log.sout", "true");
     super.setUp();
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
     TimeService.setCurrentDate(Dates.parseMonth("2008/07"));
+    application = new ApplicationChecker();
   }
 
   protected void tearDown() throws Exception {
     super.tearDown();
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
-    if (window != null) {
-      window.dispose();
-    }
-    window = null;
-    if (picsouApplication != null) {
-      picsouApplication.shutdown();
-    }
-    picsouApplication = null;
-  }
-
-  private void startPicsou() {
-    StartupChecker startupChecker = new StartupChecker();
-    window = startupChecker.enterMain();
-    picsouApplication = startupChecker.getApplication();
+    application.dispose();
+    application = null;
   }
 
   public void testJarIsSentToSpecificUser() throws Exception {
-    DbChecker dbChecker = new DbChecker();
     String email = "alfred@free.fr";
-    dbChecker.registerMail(email, "1234");
+    db.registerMail(email, "1234");
     updateDb();
     updateDb(email, PicsouApplication.JAR_VERSION + 2L);
 
-    licenseServer.init();
-
     startServers();
+
     final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
     final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
     byte[] content = generateConfigContent();
-    ConnectedTestCase.Retr retr = setFtpReply(jarName, "jar content", configJarName, content);
-    startPicsou();
+    FtpServerChecker.Retr retr = ftpServer.setFtpReply(jarName, "jar content", configJarName, content);
+    application.start();
     retr.assertOk();
 
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
 
-    OperationChecker operations = new OperationChecker(window);
+    Window window = application.getWindow();
     LicenseActivationChecker.enterLicense(window, email, "1234");
-    operations.exit();
+    application.getOperations().exit();
     window.dispose();
 
     final String jarName2 = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 2L);
-    ConnectedTestCase.Retr retr2 = setFtpReply(jarName2, "jar content", null, null);
 
-    picsouApplication = new PicsouApplication();
-    window = WindowInterceptor.run(new Trigger() {
-      public void run() throws Exception {
-        picsouApplication.run();
-      }
-    });
-
+    FtpServerChecker.Retr retr2 = ftpServer.setFtpReply(jarName2, "jar content", null, null);
+    application.startWithoutSLA();
     retr2.assertOk();
   }
 
   public void testJarIsSentAndConfigUpdated() throws Exception {
     updateDb();
-    licenseServer.init();
     startServers();
     final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
     final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
     byte[] content = generateConfigContent();
-    ConnectedTestCase.Retr retr = setFtpReply(jarName, "jar content", configJarName, content);
-    startPicsou();
+    FtpServerChecker.Retr retr = ftpServer.setFtpReply(jarName, "jar content", configJarName, content);
+    application.start();
     retr.assertOk();
 
-    NewVersionChecker newVersion = new NewVersionChecker(window);
-    newVersion.checkNewVersionShown();
+    application.getNewVersion().checkNewVersionShown();
 
     String ofxFile = OfxBuilder.init(this)
       .addBankAccount(4321, -2, "1111", 123.3, "10/09/2008")
       .addTransaction("2008/09/10", -100., "STUPID HEADER blabla")
       .save();
 
-    OperationChecker.init(window).importOfxFile(ofxFile);
+    application.getOperations().importOfxFile(ofxFile);
 
-    ViewSelectionChecker views = new ViewSelectionChecker(window);
-    views.selectData();
-    TransactionChecker transaction = new TransactionChecker(window);
-    transaction.initContent()
+    application.getViews().selectData();
+
+    application.getTransactions().initContent()
       .add("10/09/2008", TransactionType.VIREMENT, "GOOD HEADER", "", -234.00)
       .check();
     String path = PicsouApplication.getDataPath();
@@ -140,7 +116,7 @@ public class DownloadTest extends ConnectedTestCase {
   }
 
   private void updateDb() {
-    SqlConnection connection = getSqlConnection();
+    SqlConnection connection = db.getConnection();
     connection.getCreateBuilder(SoftwareInfo.TYPE)
       .set(SoftwareInfo.LATEST_JAR_VERSION, PicsouApplication.JAR_VERSION + 1L)
       .set(SoftwareInfo.LATEST_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION + 1L)
@@ -149,7 +125,7 @@ public class DownloadTest extends ConnectedTestCase {
   }
 
   private void updateDb(String mail, long version) {
-    SqlConnection connection = getSqlConnection();
+    SqlConnection connection = db.getConnection();
     connection.getCreateBuilder(SoftwareInfo.TYPE)
       .set(SoftwareInfo.MAIL, mail)
       .set(SoftwareInfo.LATEST_JAR_VERSION, version)
@@ -161,32 +137,29 @@ public class DownloadTest extends ConnectedTestCase {
   public void testNewBankInConfig() throws Exception {
     updateDb();
     licenseServer.init();
-    startPicsou();
+    application.start();
 
-    OperationChecker operations = new OperationChecker(window);
     String fileName = OfxBuilder.init(this)
       .addBankAccount("4321", 111, "1111", 0, "10/09/2008")
       .addTransaction("2008/09/10", -100., "STUPID HEADER blabla")
       .save();
-    operations.importOfxFile(fileName, "Autre");
+
+    application.getOperations().importOfxFile(fileName, "Autre");
 
     final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
     final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
 
-    byte[] content = generateConfigContent();
-    ConnectedTestCase.Retr retr = setFtpReply(jarName, "jar content", configJarName, content);
-    startServers();
-
+    FtpServerChecker.Retr retr = ftpServer.setFtpReply(jarName, "jar content", configJarName, generateConfigContent());
+    startServersWithoutLicence();
     retr.assertOk();
 
-    NewVersionChecker newVersion = new NewVersionChecker(window);
+    NewVersionChecker newVersion = application.getNewVersion();
     newVersion.checkNewVersionShown();
-
     newVersion.checkLink("http://support.mybudgetview.fr/entries/20052156");
     newVersion.hide();
     newVersion.checkNoNewVersionShown();
 
-    TransactionChecker.init(window).initContent()
+    application.getTransactions().initContent()
       .add("10/09/2008", TransactionType.VIREMENT, "GOOD HEADER", "", -100.00) // le plugin specific de banque n'est pas appelé
       .check();
   }
@@ -229,7 +202,6 @@ public class DownloadTest extends ConnectedTestCase {
   public static class DummyBankPluginDump implements Opcodes {
 
     public static byte[] dump() throws Exception {
-
 
       ClassWriter cw = new ClassWriter(0);
       FieldVisitor fv;

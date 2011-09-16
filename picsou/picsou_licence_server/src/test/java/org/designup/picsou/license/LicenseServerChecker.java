@@ -5,10 +5,11 @@ import org.mortbay.jetty.servlet.ServletHolder;
 
 import java.io.IOException;
 
-public class LicenseServerChercker {
+public class LicenseServerChecker {
   private LicenseServer server;
+  private boolean started;
 
-  public LicenseServerChercker(String databaseUrl) throws IOException {
+  public LicenseServerChecker(String databaseUrl) throws IOException {
     server = new LicenseServer();
     server.useSsl(false);
     server.usePort(5000);
@@ -16,19 +17,28 @@ public class LicenseServerChercker {
     server.setDatabaseUrl(databaseUrl);
   }
 
-  public void add(ServletHolder holder, String name){
+  public void add(ServletHolder holder, String name) {
     server.addServlet(holder, name);
   }
 
-  public void stop() throws Exception {
-    server.stop();
+  public void init() {
+    server.init();
   }
 
   public void start() throws Exception {
     server.start();
+    started = true;
   }
 
-  public void init(){
-    server.init();
+  public void stop() throws Exception {
+    if (started) {
+      server.stop();
+    }
+    started = false;
+  }
+
+  public void dispose() throws Exception {
+    stop();
+    server = null;
   }
 }

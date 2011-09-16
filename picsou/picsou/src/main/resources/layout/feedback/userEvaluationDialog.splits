@@ -1,0 +1,55 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.formLabelTop" marginTop="10" font="-,bold,14" marginBottom="10"
+           fill="none" anchor="center"/>
+    <style selector="checkBox" marginTop="0" anchor="left" fill="none"/>
+    <style selector="textArea" lineWrap="true" wrapStyleWord="true" fill="both"/>
+    <style selector="toggleButton" background="" borderPainted="false"
+            font="-,bold,18" cursor="hand" foreground="#888888"/>
+  </styles>
+
+  <panel styleClass="dialog" minimumSize="(300,180)" preferredSize="(650,500)" opaque="true">
+    <column styleClass="innerDialog">
+      <label name="title" text="$userEvaluation.title" styleClass="title"/>
+
+      <column styleClass="innerBlockBackground" background="block.inner.bg.secondary">
+
+        <column margin="10">
+          <label text="$userEvaluation.message" styleClass="formLabelTop"/>
+          <row margin="10" weightY="0.1">
+            <filler fill="horizontal"/>
+            <toggleButton ref="yesToggle" text="$userEvaluation.yes"
+                          icon="smiley_ok.png"
+                          rolloverIcon="smiley_ok_rollover.png"
+                          selectedIcon="smiley_ok_selected.png"
+                          rolloverSelectedIcon="smiley_ok_selected.png"
+                          horizontalTextPosition="left"/>
+            <filler fill="horizontal"/>
+            <toggleButton ref="noToggle" text="$userEvaluation.no"
+                          icon="smiley_nok.png"
+                          rolloverIcon="smiley_nok_rollover.png"
+                          selectedIcon="smiley_nok_selected.png"
+                          rolloverSelectedIcon="smiley_nok_selected.png"
+                          horizontalTextPosition="right"/>
+            <filler fill="horizontal"/>
+          </row>
+
+          <label text="$userEvaluation.comment" styleClass="formLabelTop"/>
+          <scrollPane ref="scroll" forceVerticalScroll="true" weightY="100">
+            <textArea ref="comment"/>
+          </scrollPane>
+
+        </column>
+      </column>
+
+      <row marginTop="0" marginBottom="15" weightY="0.01">
+        <label text="$userEvaluation.contact" styleClass="formLabel"/>
+        <textField ref="email" />
+      </row>
+
+    </column>
+  </panel>
+
+</splits>

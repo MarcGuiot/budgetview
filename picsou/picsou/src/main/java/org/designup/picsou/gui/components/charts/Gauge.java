@@ -16,7 +16,7 @@ public class Gauge extends ActionablePanel {
 
   private static final boolean USE_PROPORTIONAL_WIDTH = false;
 
-  private static final int DEFAULT_BAR_HEIGHT = 14;
+  private static final int DEFAULT_BAR_HEIGHT = 12;
   private static final int HORIZONTAL_MARGIN = 1;
   private static final int VERTICAL_MARGIN = 1;
   private static final double FIXED_WIDTH_RATIO = 0.2;

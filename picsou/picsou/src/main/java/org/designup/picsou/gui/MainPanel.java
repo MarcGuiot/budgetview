@@ -16,6 +16,7 @@ import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.feedback.FeedbackService;
 import org.designup.picsou.gui.feedback.FeedbackView;
+import org.designup.picsou.gui.feedback.actions.OpenFeedbackDialogAction;
 import org.designup.picsou.gui.feedback.actions.SendFeedbackAction;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.help.actions.GotoSupportAction;
@@ -150,7 +151,7 @@ public class MainPanel {
     restoreSnapshotMenuAction = new RestoreSnapshotMenuAction(directory, repository);
     preferencesAction = new PreferencesAction(repository, directory);
     registerAction = new RegisterLicenseAction(repository, directory);
-    exitAction = new ExitAction(windowManager, directory);
+    exitAction = new ExitAction(windowManager, repository, directory);
     logoutAction = new LogoutAction(logoutService);
     protectAction = new ProtectAction(repository, directory);
     deleteUserAction = new DeleteUserAction(this, repository, directory);
@@ -237,9 +238,15 @@ public class MainPanel {
 
   public void createMenuBar(final PicsouFrame frame, Directory directory) {
     menuBar = new JMenuBar();
+
     menuBar.add(createFileMenu());
     menuBar.add(createEditMenu(frame, directory));
-    menuBar.add(createViewMenu(frame, directory));
+    menuBar.add(createViewMenu(directory));
+
+    Utils.beginRemove();
+    menuBar.add(createDevMenu(directory));
+    Utils.endRemove();
+
     menuBar.add(createHelpMenu(directory));
   }
 
@@ -289,17 +296,6 @@ public class MainPanel {
     createAccount.setGotoAccountViewEnabled(true);
     editMenu.add(createAccount);
 
-    Utils.beginRemove();
-    editMenu.addSeparator();
-    editMenu.add(new DumpDataAction(repository));
-    editMenu.add(new DataCheckerAction(repository, directory));
-    editMenu.add(new ThrowExceptionAction());
-    editMenu.add(new ThrowInRepoExceptionAction(repository));
-    editMenu.add(new GotoNextMonthAction(repository));
-    editMenu.add(new AddSixDayAction(repository));
-    editMenu.add(new ClearAllSignpostsAction(repository));
-    Utils.endRemove();
-
     JRootPane rootPane = frame.getRootPane();
     GuiUtils.addShortcut(rootPane, "UNDO", undoAction, GuiUtils.ctrl(KeyEvent.VK_Z));
     GuiUtils.addShortcut(rootPane, "REDO", redoAction, GuiUtils.ctrl(KeyEvent.VK_Y));
@@ -307,7 +303,22 @@ public class MainPanel {
     return editMenu;
   }
 
-  private JMenu createViewMenu(PicsouFrame frame, Directory directory) {
+  private JMenu createDevMenu(Directory directory) {
+    JMenu devMenu = new JMenu("[Dev]");
+    devMenu.addSeparator();
+    devMenu.add(new DumpDataAction(repository));
+    devMenu.add(new DataCheckerAction(repository, directory));
+    devMenu.add(new ThrowExceptionAction());
+    devMenu.add(new ThrowInRepoExceptionAction(repository));
+    devMenu.add(new GotoNextMonthAction(repository));
+    devMenu.add(new AddSixDayAction(repository));
+    devMenu.add(new ClearAllSignpostsAction(repository));
+    devMenu.add(new OpenFeedbackDialogAction(repository, directory));
+    devMenu.add(new ShowUserEvaluationDialogAction(repository, directory));
+    return devMenu;
+  }
+
+  private JMenu createViewMenu(Directory directory) {
     JMenu showMenu = new JMenu(Lang.get("menuBar.view"));
     showMenu.add(new SelectCurrentMonthAction(repository, directory));
     showMenu.add(new SelectCurrentYearAction(repository, directory));

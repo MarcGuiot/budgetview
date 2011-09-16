@@ -46,6 +46,7 @@
            positiveColor="deltaGauge.positive"
            neutralColor="deltaGauge.neutral"
            negativeColor="deltaGauge.negative"
+           noPreviousValueColor="deltaGauge.noPreviousValue"
            background="block.inner.bg" opaque="true"
            preferredSize="(12,12)"
            fill="none" anchor="center" marginRight="2" marginLeft="3"/>
