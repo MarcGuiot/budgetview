@@ -427,7 +427,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public void checkNoToggleSavingsViewSignpostShown() {
-      checkNoSignpostVisible(getPanel());
+      checkNoSignpostVisible(mainWindow);
     }
 
     public void checkToggleSavingsViewSignpostShown(String text) {

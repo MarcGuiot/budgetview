@@ -396,5 +396,9 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.savings.checkToggleSavingsViewSignpostShown("Click to see all savings envelopes");
+
+    budgetView.savings.toggleSavingsView();
+    savingsView.returnToBudgetView();
+    budgetView.savings.checkNoToggleSavingsViewSignpostShown();
   }
 }

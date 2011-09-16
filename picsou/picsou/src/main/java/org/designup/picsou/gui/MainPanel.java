@@ -138,7 +138,7 @@ public class MainPanel {
     categorizationView = new CategorizationView(repository, directory);
     timeView = new TimeView(repository, directory);
 
-    BudgetToggle budgetToggle = new BudgetToggle();
+    BudgetToggle budgetToggle = new BudgetToggle(repository);
     budgetToggle.registerComponents(builder);
 
     directory.add(new NavigationService(transactionView, categorizationView, budgetToggle, repository, directory));

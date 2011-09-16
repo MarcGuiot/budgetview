@@ -169,4 +169,8 @@ public class SavingsViewChecker extends ViewChecker {
       mainWindow.getButton("toggleToMain").click();
     }
   }
+
+  public void returnToBudgetView() {
+    toggleToMainIfNeeded(mainWindow);
+  }
 }
