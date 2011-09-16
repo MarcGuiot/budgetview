@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.components.charts;
 
 import org.designup.picsou.gui.components.ActionablePanel;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.util.Amounts;
 
 import java.awt.*;
@@ -17,11 +18,13 @@ public class DeltaGauge extends ActionablePanel {
   private double ratio;
   private Evolution evolution;
   private boolean active;
+  private boolean noPreviousValue = false;
 
   private Color positiveColor = Color.GREEN;
   private Color neutralColor = Color.WHITE.darker();
   private Color negativeColor = Color.RED;
   private Color rolloverColor = Color.BLUE;
+  private Color noPreviousValueColor = Color.GRAY;
 
   public enum Evolution {
     BETTER,
@@ -55,6 +58,7 @@ public class DeltaGauge extends ActionablePanel {
     }
 
     active = true;
+    noPreviousValue = (previousValue == null) && Amounts.isNotZero(newValue);
     if (newValue.equals(previousValue)) {
       ratio = 0;
       evolution = Evolution.FLAT;
@@ -94,6 +98,9 @@ public class DeltaGauge extends ActionablePanel {
   private Color computeColor() {
     if (evolution == Evolution.FLAT) {
       return neutralColor;
+    }
+    if (noPreviousValue) {
+      return noPreviousValueColor;
     }
     Color targetColor = evolution == Evolution.BETTER ? positiveColor : negativeColor;
     float[] source = neutralColor.getRGBColorComponents(null);
@@ -181,5 +188,9 @@ public class DeltaGauge extends ActionablePanel {
 
   public void setNegativeColor(Color negativeColor) {
     this.negativeColor = negativeColor;
+  }
+
+  public void setNoPreviousValueColor(Color noPreviousValueColor) {
+    this.noPreviousValueColor = noPreviousValueColor;
   }
 }
