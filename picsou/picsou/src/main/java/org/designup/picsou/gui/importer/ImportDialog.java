@@ -1,10 +1,15 @@
 package org.designup.picsou.gui.importer;
 
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
+import org.designup.picsou.gui.accounts.AccountEditionDialog;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
+import org.designup.picsou.gui.importer.components.ImportSeriesDialog;
 import org.designup.picsou.model.*;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.SingleComponentLayout;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -18,7 +23,6 @@ import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,6 +37,7 @@ import java.util.Set;
 public class ImportDialog {
   private GlobRepository parentRepository;
   private Directory parentDirectory;
+  private boolean isSynchro;
   private LocalGlobRepository localRepository;
   private Directory localDirectory;
 
@@ -49,17 +54,18 @@ public class ImportDialog {
   public ImportDialog(String textForCloseButton, List<File> files, Glob defaultAccount,
                       final Window owner,
                       final GlobRepository repository, Directory directory,
-                      boolean usePreferredPath) {
+                      boolean usePreferredPath, boolean isSynchro) {
 
     this.parentRepository = repository;
     this.parentDirectory = directory;
+    this.isSynchro = isSynchro;
 
     loadLocalRepository(repository);
 
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(new SelectionService());
 
-    controller = new ImportController(this, repository, localRepository, directory);
+    controller = new ImportController(this, repository, localRepository, directory, isSynchro);
     fileSelectionPanel = new ImportedFileSelectionPanel(controller, usePreferredPath, localRepository, localDirectory);
     importAccountsPanel = new ImportAccountPanel(controller, localRepository, localDirectory);
     previewPanel = new ImportPreviewPanel(controller, defaultAccount, repository, localRepository, localDirectory);
@@ -98,8 +104,9 @@ public class ImportDialog {
 
   private void loadLocalRepository(GlobRepository repository) {
     GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, MonthDay.TYPE,
-                            Account.TYPE, AccountUpdateMode.TYPE,
-                            Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE};
+                            Account.TYPE, AccountUpdateMode.TYPE, BudgetArea.TYPE,
+                            Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE,
+                            Series.TYPE, SubSeries.TYPE};
 
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)
@@ -226,5 +233,11 @@ public class ImportDialog {
       setCurrentPanel(importAccountsPanel.getPanel());
     }
     importAccountsPanel.setImportedAccountToImport(glob);
+  }
+
+  public boolean askForSeriesImport(Set<Key> newSeries) {
+    ImportSeriesDialog dialog = new ImportSeriesDialog(ImportDialog.this.dialog,
+                                                       controller.getSessionRepository(), localDirectory);
+    return dialog.show(newSeries);
   }
 }

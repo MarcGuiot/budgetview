@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.banks;
 
+import junit.framework.Assert;
 import org.designup.picsou.model.TransactionType;
 
 public class BanquePopulaireTest extends SpecificBankTestCase {
@@ -93,6 +94,9 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
   }
 
   public void testNewFormat() throws Exception {
+
+    Assert.fail("Certains de ces fichiers ne sont pas en conf");
+
     operations.importOfxFile(getFile("CyberPlus_CB_1_20110723224814.ofx"));
     operations.importOfxFile(getFile("CyberPlus_CB_1_20110723224838.ofx"), "banque populaire");
     operations.importOfxFile(getFile("CyberPlus_OP_1_20110723225107.ofx"));

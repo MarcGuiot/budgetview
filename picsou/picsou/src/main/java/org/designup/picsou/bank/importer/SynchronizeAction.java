@@ -20,20 +20,17 @@ public class SynchronizeAction extends AbstractAction {
   public SynchronizeAction(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
-    setEnabled(repository.contains(RealAccount.TYPE,
-                                   GlobMatchers.fieldEquals(RealAccount.IMPORTED, Boolean.TRUE)));
+    setEnabled(repository.contains(RealAccount.TYPE));
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(RealAccount.TYPE)){
-          setEnabled(repository.contains(RealAccount.TYPE,
-                                         GlobMatchers.fieldEquals(RealAccount.IMPORTED, Boolean.TRUE)));
+          setEnabled(repository.contains(RealAccount.TYPE));
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
         if (changedTypes.contains(RealAccount.TYPE)){
-          setEnabled(repository.contains(RealAccount.TYPE,
-                                         GlobMatchers.fieldEquals(RealAccount.IMPORTED, Boolean.TRUE)));
+          setEnabled(repository.contains(RealAccount.TYPE));
         }
       }
     });

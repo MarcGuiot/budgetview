@@ -8,6 +8,8 @@ import org.globsframework.model.utils.GlobIdGenerator;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.exceptions.*;
 
+import java.util.Collection;
+
 public interface GlobRepository extends ReadOnlyGlobRepository {
 
   Glob create(GlobType type, FieldValue... values)
@@ -28,6 +30,9 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
     throws ItemNotFound;
 
   void delete(Key key)
+    throws ItemNotFound, OperationDenied;
+
+  void delete(Collection<Key> keys)
     throws ItemNotFound, OperationDenied;
 
   void delete(GlobList list)

@@ -49,7 +49,7 @@ public class OfxConnectionTest extends TestCase {
                  "<TRNUID>321\n" +
                  "<CLTCOOKIE>1\n" +
                  "<ACCTINFORQ>\n" +
-                 "<DTACCTUP>20110704000000\n" +
+                 "<DTACCTUP>20110830000000\n" +
                  "</ACCTINFORQ>\n" +
                  "</ACCTINFOTRNRQ>\n" +
                  "</SIGNUPMSGSRQV1>\n" +

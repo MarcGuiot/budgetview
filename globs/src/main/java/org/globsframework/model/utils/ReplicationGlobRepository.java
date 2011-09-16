@@ -10,6 +10,7 @@ import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.impl.DefaultGlobRepository;
 import org.globsframework.remote.SerializedRemoteAccess;
+import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.*;
 
@@ -241,6 +242,21 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     }
     else {
       originalRepository.delete(key);
+    }
+  }
+
+  public void delete(Collection<Key> keys) throws ItemNotFound, OperationDenied {
+    MultiMap<GlobType, Key> map = new MultiMap<GlobType, Key>();
+    for (Key key : keys) {
+      map.put(key.getGlobType(), key);
+    }
+    for (GlobType type : map.keySet()) {
+      if (managedTypes.contains(type)) {
+        super.delete(map.get(type));
+      }
+      else {
+        originalRepository.delete(map.get(type));
+      }
     }
   }
 

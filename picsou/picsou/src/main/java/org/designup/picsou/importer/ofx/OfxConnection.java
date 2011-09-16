@@ -1,20 +1,16 @@
 package org.designup.picsou.importer.ofx;
 
 import org.designup.picsou.model.RealAccount;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.model.impl.DefaultGlobRepository;
 import org.globsframework.utils.Files;
-import org.saxstack.utils.XmlUtils;
-import org.saxstack.parser.SaxStackParser;
+import org.globsframework.utils.Log;
 import org.saxstack.parser.DefaultXmlNode;
 import org.saxstack.parser.XmlNode;
-import org.saxstack.writer.XmlWriter;
-import org.saxstack.writer.XmlTag;
-import org.xml.sax.XMLReader;
 import org.xml.sax.Attributes;
 
 import java.io.*;
@@ -24,9 +20,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-import java.util.ArrayList;
 
 public class OfxConnection {
+  static OfxConnection connection = new OfxConnection();
 
   static final DateFormat format = new SimpleDateFormat("yyyyMMdd");
 
@@ -34,23 +30,45 @@ public class OfxConnection {
     public String bankId;
     public String number;
     public String accType;
+
+    public AccountInfo() {
+    }
+
+    public AccountInfo(String bankId, String number, String accType) {
+      this.bankId = bankId;
+      this.number = number;
+      this.accType = accType;
+    }
+
+    public String toString() {
+      return bankId + "/" + number + "/" + accType;
+    }
   }
 
-  public static List<AccountInfo> getAccounts(String user, String password, final String url,
-                                     final String org, final String fid, final GlobRepository repository) {
-    try {
+  public static void register(OfxConnection connection){
+    OfxConnection.connection = connection;
+  }
+  // for test
+  public static OfxConnection getInstance(){
+    return connection;
+  }
+
+
+  public List<AccountInfo> getAccounts(String user, String password, final String url,
+                                              final String org, final String fid) {
       String accountInfo = getAccountInfo(user, password, url, org, fid);
       OfxParser parser = new OfxParser();
       AccountInfoOfxFunctor accountInfoOfxFunctor = new AccountInfoOfxFunctor();
+    try {
       parser.parse(new StringReader(accountInfo), accountInfoOfxFunctor);
-      return accountInfoOfxFunctor.getAccounts();
     }
     catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new RuntimeException(e.getMessage());
     }
+    return accountInfoOfxFunctor.getAccounts();
   }
 
-  public static void loadOperation(Glob realAccount, String fromDate, String user, String password,
+  public void loadOperation(Glob realAccount, String fromDate, String user, String password,
                                    final String url, final String org, final String fid,
                                    final File outputFile) throws IOException {
     StringWriter stringWriter = new StringWriter();
@@ -65,49 +83,73 @@ public class OfxConnection {
     Files.copyStream(inputStream, fileOutputStream);
   }
 
-  public static String getAccountInfo(String user, String password, final String url, final String org, final String fid) throws IOException {
-    StringWriter stringWriter = new StringWriter();
-    OfxWriter writer = new OfxWriter(stringWriter);
-    writer.writeQuery(user, password, org, fid);
-    String request = stringWriter.toString();
-    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-    buffer.write(request.getBytes("UTF-8"));
-    InputStream inputStream = sendBuffer(new URL(url), buffer);
-    return Files.loadStreamToString(inputStream, "UTF-8");
+  public String getAccountInfo(String user, String password, final String url, final String org, final String fid) {
+    try {
+      StringWriter stringWriter = new StringWriter();
+      OfxWriter writer = new OfxWriter(stringWriter);
+      writer.writeQuery(user, password, org, fid);
+      String request = stringWriter.toString();
+      ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+      buffer.write(request.getBytes("UTF-8"));
+      InputStream inputStream = sendBuffer(new URL(url), buffer);
+      String tmp = Files.loadStreamToString(inputStream, "UTF-8");
+      if (tmp.contains("<html>")){
+        throw new RuntimeException(Lang.get("synchro.ofx.content.invalid"));
+      }
+      return tmp;
+    }
+    catch (IOException e) {
+      throw new RuntimeException(Lang.get("synchro.ofx.bad.url", url));
+    }
   }
 
-  static public InputStream sendBuffer(URL url, ByteArrayOutputStream outBuffer) throws IOException {
-    HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-    connection.setRequestMethod("POST");
-    connection.setRequestProperty("Content-Type", "application/x-ofx");
-    connection.setRequestProperty("Content-Length", String.valueOf(outBuffer.size()));
-    connection.setRequestProperty("Accept", "*/*, application/x-ofx");
-    connection.setDoOutput(true);
-    connection.connect();
-
-    OutputStream out = connection.getOutputStream();
-    out.write(outBuffer.toByteArray());
-
+  static public InputStream sendBuffer(URL url, ByteArrayOutputStream outBuffer) {
     InputStream in;
-    int responseCode = connection.getResponseCode();
-    if (responseCode >= 200 && responseCode < 300) {
-      in = connection.getInputStream();
+    try {
+      HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+      connection.setRequestMethod("POST");
+      connection.setRequestProperty("Content-Type", "application/x-ofx");
+      connection.setRequestProperty("Content-Length", String.valueOf(outBuffer.size()));
+      connection.setRequestProperty("Accept", "*/*, application/x-ofx");
+      connection.setDoOutput(true);
+      connection.setConnectTimeout(10000);
+      connection.setReadTimeout(10000);
+      connection.connect();
+
+      OutputStream out = connection.getOutputStream();
+      out.write(outBuffer.toByteArray());
+
+      int responseCode = connection.getResponseCode();
+      if (responseCode >= 200 && responseCode < 300) {
+        in = connection.getInputStream();
+      }
+      else if (responseCode >= 400 && responseCode < 500) {
+        throw new RuntimeException(Lang.get("synchro.ofx.response.error"));
+      }
+      else {
+        throw new RuntimeException(Lang.get("synchro.ofx.response.error"));
+      }
     }
-    else if (responseCode >= 400 && responseCode < 500) {
-      throw new RuntimeException("Error with client request: " + connection.getResponseMessage() + " " + responseCode);
-    }
-    else {
-      throw new RuntimeException("Invalid response code from OFX server: " + connection.getResponseMessage() + " " + responseCode);
+    catch (IOException e) {
+      Log.write("ofx time out", e);
+      throw new RuntimeException(Lang.get("synchro.ofx.timeout"));
     }
 
     return in;
   }
 
   public static void main(String[] args) throws IOException {
+    Reader reader = new BufferedReader(new InputStreamReader(System.in));
+    char[] chars = new char[255];
+    int count = reader.read(chars);
+    String password = new String(chars, 0, count - 1);
+    System.out.println("OfxConnection.main '" + password + "'");
     DefaultGlobRepository repository = new DefaultGlobRepository(new DefaultGlobIdGenerator());
-    List<AccountInfo> globList = OfxConnection.getAccounts("0350763423L", "441146", "https://ofx.videoposte.com",
-                                                  "0", "0", repository);
+    List<AccountInfo> globList = OfxConnection.getInstance().getAccounts("0350763423L", password, "https://ofx.videoposte.com",
+                                                  "0", "0");
+    System.out.println("OfxConnection.main " + globList);
     for (AccountInfo accountInfo : globList) {
+      System.out.println("OfxConnection.main " + accountInfo.number + " " + accountInfo.accType);
       String fromDate;
       fromDate = previousDate(120);
       File outputFile = new File("/tmp/operation.ofx");
@@ -115,7 +157,7 @@ public class OfxConnection {
                                      FieldValue.value(RealAccount.ACC_TYPE, accountInfo.accType),
                                      FieldValue.value(RealAccount.BANK_ID, accountInfo.bankId),
                                      FieldValue.value(RealAccount.NUMBER, accountInfo.number));
-      OfxConnection.loadOperation(glob, fromDate, "0350763423L", "441146",
+      OfxConnection.getInstance().loadOperation(glob, fromDate, "0350763423L", password,
                                   "https://ofx.videoposte.com", "0", "0", outputFile);
       OfxImporter importer = new OfxImporter();
       GlobList list = importer.loadTransactions(new FileReader(outputFile), repository, repository);

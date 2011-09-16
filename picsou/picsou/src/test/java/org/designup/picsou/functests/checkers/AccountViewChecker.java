@@ -91,8 +91,10 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
   public void checkAccount(String accountName, double balance, String updateDate) {
     Panel parentPanel = getAccountPanel(accountName);
     assertThat(parentPanel.getButton("accountPosition").textEquals(toString(balance)));
-    Date date = Dates.parse(updateDate);
-    UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals(Formatting.toString(date)));
+    if (updateDate != null) {
+      Date date = Dates.parse(updateDate);
+      UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals(Formatting.toString(date)));
+    }
   }
 
   public void checkAccountWithoutPosition(String accountName, String yyyymmdd) {

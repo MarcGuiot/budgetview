@@ -19,7 +19,7 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
         if (seriesId != null && oppositeTransaction == null
             && !values.isTrue(Transaction.MIRROR)
             && !values.isTrue(Transaction.PLANNED)) {
-          Glob series = repository.find(Key.create(Series.TYPE, seriesId));
+          Glob series = repository.get(Key.create(Series.TYPE, seriesId));
           if (series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
             Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
             Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);

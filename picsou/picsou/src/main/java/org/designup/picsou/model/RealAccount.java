@@ -58,9 +58,6 @@ public class RealAccount {
   @Target(value = AccountType.class)
   public static LinkField ACCOUNT_TYPE;
 
-  @DefaultBoolean(true)
-  public static BooleanField IMPORTED;
-
   @DefaultBoolean(false)
   public static BooleanField SAVINGS;
 
@@ -116,6 +113,7 @@ public class RealAccount {
                              FieldValue.value(Account.NAME, importedAccount.get(NAME)),
                              FieldValue.value(Account.POSITION, position),
                              FieldValue.value(Account.IS_IMPORTED_ACCOUNT, isImported),
+                             FieldValue.value(Account.DIRECT_SYNCHRO, true),
                              FieldValue.value(Account.BANK, importedAccount.get(BANK)));
   }
 
@@ -149,7 +147,6 @@ public class RealAccount {
       output.writeDate(fieldValues.get(POSITION_DATE));
       output.writeUtf8String(fieldValues.get(NAME));
       output.writeInteger(fieldValues.get(ACCOUNT_TYPE));
-      output.writeBoolean(fieldValues.get(IMPORTED));
       output.writeBoolean(fieldValues.get(SAVINGS));
       output.writeInteger(fieldValues.get(ACCOUNT));
       output.writeInteger(fieldValues.get(CARD_TYPE));
@@ -179,7 +176,6 @@ public class RealAccount {
       fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
-      fieldSetter.set(IMPORTED, input.readBoolean());
       fieldSetter.set(SAVINGS, input.readBoolean());
       fieldSetter.set(ACCOUNT, input.readInteger());
       fieldSetter.set(CARD_TYPE, input.readInteger());

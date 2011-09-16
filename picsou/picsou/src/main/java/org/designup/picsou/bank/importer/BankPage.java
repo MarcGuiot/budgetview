@@ -91,6 +91,7 @@ public abstract class BankPage {
                                     FieldValue.value(RealAccount.NUMBER, number.trim()),
                                     FieldValue.value(RealAccount.URL, url),
                                     FieldValue.value(RealAccount.ORG, org),
+                                    FieldValue.value(RealAccount.BANK, bankId),
                                     FieldValue.value(RealAccount.FID, fid));
       }
       accounts.add(account);

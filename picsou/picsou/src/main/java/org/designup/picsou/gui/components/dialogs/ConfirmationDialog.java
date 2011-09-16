@@ -17,7 +17,7 @@ public abstract class ConfirmationDialog {
   protected AbstractAction ok;
   private SplitsBuilder builder;
 
-  public static boolean confirmed(String titleKey, String content, JFrame parent, Directory directory) {
+  public static boolean confirmed(String titleKey, String content, Window parent, Directory directory) {
     final Ref<Boolean> result = new Ref<Boolean>(false);
     ConfirmationDialog dialog = new ConfirmationDialog(titleKey, content, parent, directory) {
       protected void postValidate() {

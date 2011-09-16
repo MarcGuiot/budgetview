@@ -48,11 +48,11 @@ public class Bank {
   @NoObfuscation
   public static BooleanField OFX_DOWNLOAD;
 
-  public static org.globsframework.model.Key GENERIC_BANK_KEY;
-
   @DefaultBoolean(false)
   @NoObfuscation
   public static BooleanField SYNCHRO_ENABLE;
+
+  public static org.globsframework.model.Key GENERIC_BANK_KEY;
 
   static {
     GlobTypeLoader.init(Bank.class, "bank");
@@ -69,6 +69,9 @@ public class Bank {
       outputStream.writeUtf8String(values.get(DOWNLOAD_URL));
       outputStream.writeUtf8String(values.get(FID));
       outputStream.writeUtf8String(values.get(ORG));
+      outputStream.writeBoolean(values.get(INVALID_POSITION));
+      outputStream.writeBoolean(values.get(OFX_DOWNLOAD));
+      outputStream.writeBoolean(values.get(SYNCHRO_ENABLE));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -115,6 +118,9 @@ public class Bank {
       fieldSetter.set(DOWNLOAD_URL, input.readUtf8String());
       fieldSetter.set(FID, input.readUtf8String());
       fieldSetter.set(ORG, input.readUtf8String());
+      fieldSetter.set(INVALID_POSITION, input.readBoolean());
+      fieldSetter.set(OFX_DOWNLOAD, input.readBoolean());
+      fieldSetter.set(SYNCHRO_ENABLE, input.readBoolean());
     }
 
     public int getWriteVersion() {

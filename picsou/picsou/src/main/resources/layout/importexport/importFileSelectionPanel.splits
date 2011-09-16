@@ -15,16 +15,6 @@
 
       <label text="$import.fileSelection.title" name="title" styleClass="title"/>
 
-      <panel ref="synchroPanel" styleClass="innerDialog">
-        <column marginTop="20" weightY="20">
-
-          <textArea text="$import.fileSelection.synchro.title" styleClass="sectionTitle"/>
-
-          <htmlEditorPane name="synchroMessage" text="$import.fileSelection.synchro.message" styleClass="multiLineLabel"
-                          hyperlinkListener="hyperlinkHandler"/>
-        </column>
-      </panel>
-
       <column styleClass="separator" marginTop="20">
 
         <textArea text="$import.fileSelection.bank.title" styleClass="sectionTitle"/>

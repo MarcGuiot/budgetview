@@ -12,7 +12,10 @@
   <panel styleClass="dialog" preferredSize="(600,550)">
 
     <column styleClass="innerDialog">
-      <label text="$import.account.message"/>
+
+      <label text="$import.preview.title" name="title" styleClass="title"/>
+
+      <htmlEditorPane text="$import.account.message"/>
 
       <panel ref="accountPanel"/>
 
