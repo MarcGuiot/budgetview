@@ -9,7 +9,7 @@
     <style selector="button.openHelp" ui="hyperlinkButton"
            foreground="hyperlink" font="-,plain,12"
            icon="arrow_right_blue_full.png" iconTextGap="5"
-           marginTop="5" marginBottom="5" fill="none" anchor="center"/>
+           marginTop="5" marginBottom="10" fill="none" anchor="center"/>
   </styles>
 
   <column>
@@ -42,7 +42,6 @@
             <htmlEditorPane text="$bankDownload.message" styleClass="multiLineLabel"/>
             <htmlEditorPane text="$bankDownload.helpIntro" styleClass="multiLineLabel"/>
             <button action="openHelp" styleClass="openHelp"/>
-            <filler fill="vertical"/>
             <htmlEditorPane text="$bankDownload.openwith" styleClass="multiLineLabel"/>
             <filler fill="vertical"/>
           </column>

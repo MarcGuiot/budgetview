@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
@@ -50,8 +51,10 @@ public class BankDownloadChecker extends GuiChecker {
     return this;
   }
 
-  public BankDownloadChecker checkHelpAvailable(boolean available) {
-    UISpecAssert.assertEquals(available, panel.getButton("openHelp").isEnabled());
+  public BankDownloadChecker checkHelpAvailable(String buttonLabel) {
+    Button button = panel.getButton("openHelp");
+    UISpecAssert.assertThat(button.isEnabled());
+    UISpecAssert.assertThat(button.textEquals(buttonLabel));
     return this;
   }
 

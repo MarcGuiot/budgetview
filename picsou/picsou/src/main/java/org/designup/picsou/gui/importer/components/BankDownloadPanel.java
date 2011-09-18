@@ -105,23 +105,38 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
   public class OpenHelpAction extends AbstractAction {
     private Glob lastBank;
+    private HelpService helpService;
 
     public OpenHelpAction() {
-      super(Lang.get("bankDownload.guide.button"));
+      helpService = directory.get(HelpService.class);
+      setBank(null);
     }
 
     public void setBank(Glob bank) {
       this.lastBank = bank;
+      putValue(Action.NAME, getLabel());
     }
 
     public void actionPerformed(ActionEvent e) {
-      HelpService helpService = directory.get(HelpService.class);
-      if ((lastBank != null) && helpService.hasBankHelp(lastBank)) {
+      if (hasSpecificHelp()) {
         helpService.showBankHelp(lastBank, parent);
       }
       else {
         helpService.show("import", parent);
       }
+    }
+
+    private Object getLabel() {
+      if (hasSpecificHelp()) {
+        return Lang.get("bankDownload.guide.button.specific", lastBank.get(Bank.NAME));
+      }
+      else {
+        return Lang.get("bankDownload.guide.button");
+      }
+    }
+
+    private boolean hasSpecificHelp() {
+      return (lastBank != null) && helpService.hasBankHelp(lastBank);
     }
   }
 

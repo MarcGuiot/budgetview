@@ -607,7 +607,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkNoBankSelected()
       .checkBankAccessHidden()
       .selectBank("Autre")
-      .checkHelpAvailable(true)
+      .checkHelpAvailable("Show help")
       .openHelp()
       .checkTitle("Importing data")
       .close();
@@ -616,9 +616,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilter("BNP")
       .checkBankList("BNP Paribas", "BNPPF", "Autre")
       .selectBank("BNP Paribas")
-      .checkHelpAvailable(true)
+      .checkHelpAvailable("Show help for BNP Paribas")
       .openHelp()
       .checkTitle("BNP Paribas downloads")
+      .checkContains("http://www.bnpparibas.net")
       .close();
 
     importDialog.close();

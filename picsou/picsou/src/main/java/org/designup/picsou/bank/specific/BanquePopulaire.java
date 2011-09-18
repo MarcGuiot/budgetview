@@ -6,9 +6,9 @@ import org.globsframework.model.*;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.utils.directory.Directory;
 
-public class BankPopulaire extends AbstractBankPlugin {
+public class BanquePopulaire extends AbstractBankPlugin {
 
-  public BankPopulaire(GlobRepository globRepository, Directory directory) {
+  public BanquePopulaire(GlobRepository globRepository, Directory directory) {
     BankPluginService bankPluginService = directory.get(BankPluginService.class);
     Glob bankEntity = globRepository.get(Key.create(BankEntity.TYPE, 10807));
     bankPluginService.add(bankEntity.get(BankEntity.BANK), this);
