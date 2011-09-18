@@ -40,6 +40,9 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   private AccountBankAction bankSelectionAction;
   private JButton bankSelectionButton;
   private ErrorTip errorTip;
+  private SplitsNode<JLabel> nameAsterics;
+  private SplitsNode<JLabel> bankAsterics;
+  private SplitsNode<JLabel> accountTypeAsterics;
 
   public AbstractAccountPanel(T repository, Directory parentDirectory) {
     this.localRepository = repository;
@@ -64,20 +67,25 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     bankSelectionAction = new AccountBankAction(dialog);
     bankSelectionButton = new JButton(bankSelectionAction);
     builder.add("bankSelector", bankSelectionButton);
+    bankAsterics = builder.add("bankAsterics", new JLabel("*"));
+
     selectionService.addListener(bankSelectionAction, Account.TYPE);
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if ((currentAccount != null) && changeSet.containsChanges(currentAccount.getKey())) {
           accountTypeCombo.updateAccountTypeCombo(currentAccount);
           updateBank(currentAccount);
-          check();
+          showWarn();
+          clearMessage();
         }
       }
     });
 
     nameField = builder.addEditor("name", Account.NAME).setNotifyOnKeyPressed(true);
+    nameAsterics = builder.add("nameAsterics", new JLabel("*"));
     builder.addEditor("number", Account.NUMBER).setNotifyOnKeyPressed(true);
     builder.add("type", accountTypeCombo.createAccountTypeCombo());
+    accountTypeAsterics = builder.add("accountTypeAsterics", new JLabel("*"));
 
     messageWarning = new JTextArea();
     builder.add("messageWarning", messageWarning);
@@ -148,6 +156,34 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     }
     clearMessage();
     panel.setVisible(account != null);
+    showWarn();
+  }
+
+  public void clearAsterix(){
+    nameAsterics.applyStyle("default");
+    bankAsterics.applyStyle("default");
+    accountTypeAsterics.applyStyle("default");
+  }
+
+  public void showWarn(){
+    if (Strings.isNullOrEmpty(currentAccount.get(Account.NAME))
+        || localRepository.getAll(Account.TYPE, GlobMatchers.fieldEquals(Account.NAME, currentAccount.get(Account.NAME))).size() != 1){
+      nameAsterics.applyStyle("error");
+    }
+    else {
+      nameAsterics.applyStyle("default");
+    }
+    if (currentAccount.get(Account.BANK) == null) {
+      bankAsterics.applyStyle("error");
+    }else {
+      bankAsterics.applyStyle("default");
+    }
+    if (currentAccount.get(Account.ACCOUNT_TYPE) == null) {
+      accountTypeAsterics.applyStyle("error");
+    }
+    else {
+      accountTypeAsterics.applyStyle("default");
+    }
   }
 
   public boolean check() {
@@ -176,6 +212,11 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
   public Glob getAccount() {
     return currentAccount;
+  }
+
+  public void clearAllMessage() {
+    clearMessage();
+    clearAsterix();
   }
 
   private class AccountBankAction extends AbstractAction implements GlobSelectionListener {

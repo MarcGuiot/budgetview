@@ -69,6 +69,36 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
+  public AccountEditionChecker checkAstericsErrorOnName(){
+    assertThat(dialog.getTextBox("nameAsterics").foregroundNear("FF0000"));
+    return this;
+  }
+
+  public AccountEditionChecker checkAstericsClearOnName(){
+    assertThat(dialog.getTextBox("nameAsterics").foregroundNear("FFFFFF"));
+    return this;
+  }
+
+  public AccountEditionChecker checkAstericsErrorOnBank(){
+    assertThat(dialog.getTextBox("bankAsterics").foregroundNear("FF0000"));
+    return this;
+  }
+
+  public AccountEditionChecker checkAstericsClearOnBank(){
+    assertThat(dialog.getTextBox("bankAsterics").foregroundNear("FFFFFF"));
+    return this;
+  }
+
+  public AccountEditionChecker checkAstericsErrorOnType(){
+    assertThat(dialog.getTextBox("accountTypeAsterics").foregroundNear("FF0000"));
+    return this;
+  }
+
+  public AccountEditionChecker checkAstericsClearOnType(){
+    assertThat(dialog.getTextBox("accountTypeAsterics").foregroundNear("FFFFFF"));
+    return this;
+  }
+
   public AccountEditionChecker setAccountName(final String name) {
     TextBox accountNameField = getNameEditor();
     accountNameField.setText(name);

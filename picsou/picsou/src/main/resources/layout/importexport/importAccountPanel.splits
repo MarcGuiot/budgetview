@@ -9,6 +9,8 @@
     <style selector=".additionalActionMessage" foreground="$dialog.text.error" anchor="left"
            opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"/>
     <style selector="label.additionalActionButton" anchor="center" fill="none"/>
+    <style id="default" selector="x" foreground="#FFFFFF"/>
+    <style id="error" selector="x" foreground="#FF0000"/>
   </styles>
 
   <panel styleClass="dialog" preferredSize="(600,550)">

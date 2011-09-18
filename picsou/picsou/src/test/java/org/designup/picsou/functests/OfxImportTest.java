@@ -2,7 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.checkers.CategorizationChecker;
 import org.designup.picsou.functests.checkers.ImportDialogChecker;
-import org.designup.picsou.functests.checkers.AccountChooserChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BankEntity;
@@ -389,16 +388,20 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     ImportDialogChecker importDialog = importPanel.openImport()
       .selectFiles(file)
       .acceptFile()
+      .checkAstericsErrorOnBank()
       .selectBank("Autre")
 //      .checkAccountTypeSelectionDisplayedFor("Account n. 111")
-      .checkAccountTypeWarningDisplayed("Account n. 111")
+      .checkNoAccountTypeMessageDisplayed()
+      .checkAstericsErrorOnType()
+      .doImport()
+      .checkAccountTypeWarningDisplayed("Account n. 222")
       .setSavingsAccount()
-      .checkNoAccountTypeMessageDisplayed();
+      .checkNoErrorMessage()
+      .checkAstericsClearOnType();
+
     importDialog
       .doImport()
-//      .checkAccountTypeSelectionDisplayedFor("Account n. 222")
       .selectBank("Autre")
-      .checkAccountTypeWarningDisplayed("Account n. 222")
       .setMainAccount()
       .checkNoAccountTypeMessageDisplayed()
       .doImport()

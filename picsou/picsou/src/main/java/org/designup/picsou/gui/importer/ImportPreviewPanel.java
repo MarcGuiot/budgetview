@@ -82,7 +82,7 @@ public class ImportPreviewPanel {
         currentlySelectedAccount = selection.getAll(Account.TYPE).isEmpty() ? null :
                                    selection.getAll(Account.TYPE).get(0);
         if (currentlySelectedAccount != null){
-          accountPanel.clearMessage();
+          accountPanel.clearAllMessage();
         }
       }
     }, Account.TYPE);

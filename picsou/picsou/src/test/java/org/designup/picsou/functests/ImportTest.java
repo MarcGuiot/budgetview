@@ -730,8 +730,12 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .setFilePath(newFileName.getPath())
       .acceptFile()
+      .checkAstericsErrorOnName()
+      .checkAstericsErrorOnBank()
       .checkNoErrorMessage()
       .defineAccount("CIC", "main", "1111")
+      .checkAstericsClearOnBank()
+      .checkAstericsClearOnName()
       .completeImport(0.00);
 
     transactions.initContent()
