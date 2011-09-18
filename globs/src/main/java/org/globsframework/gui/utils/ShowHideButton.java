@@ -40,8 +40,12 @@ public class ShowHideButton extends JButton {
     });
   }
 
-  public void setIcons(Icon showIcon, Icon hideIcon) {
+  public void setShowIcon(Icon showIcon) {
     this.showIcon = showIcon;
+    setIcon(this.component.isVisible() ? this.hideIcon : this.showIcon);
+  }
+
+  public void setHideIcon(Icon hideIcon) {
     this.hideIcon = hideIcon;
     setIcon(this.component.isVisible() ? this.hideIcon : this.showIcon);
   }

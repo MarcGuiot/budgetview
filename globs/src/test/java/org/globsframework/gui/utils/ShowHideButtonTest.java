@@ -15,7 +15,8 @@ public class ShowHideButtonTest extends TestCase {
   public void testShowHide() throws Exception {
     JPanel panel = new JPanel();
     ShowHideButton showHideButton = new ShowHideButton(panel, "show", "hide");
-    showHideButton.setIcons(showIcon, hideIcon);
+    showHideButton.setShowIcon(showIcon);
+    showHideButton.setHideIcon(hideIcon);
     Button button = new Button(showHideButton);
 
     assertTrue(panel.isVisible());
