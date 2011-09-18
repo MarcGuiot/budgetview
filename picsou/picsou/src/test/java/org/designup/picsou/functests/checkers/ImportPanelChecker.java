@@ -7,6 +7,8 @@ import org.uispec4j.interception.WindowInterceptor;
 import javax.swing.*;
 
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 
 public class ImportPanelChecker extends ViewChecker {
   private Panel panel;
@@ -53,5 +55,15 @@ public class ImportPanelChecker extends ViewChecker {
       panel = mainWindow.getPanel("importPanel");
     }
     return panel;
+  }
+
+  public ImportPanelChecker checkSynchroNotVisible() {
+    assertFalse(getPanel().getButton("synchroButton").isVisible());
+    return this;
+  }
+
+  public ImportPanelChecker checkSynchroVisible() {
+    assertTrue(getPanel().getButton("synchroButton").isVisible());
+    return this;
   }
 }

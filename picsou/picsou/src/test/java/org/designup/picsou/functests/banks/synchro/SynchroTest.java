@@ -150,4 +150,25 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     importPanel.checkImportMessage("Import other operations");
     importPanel.checkSynchroMessage("Download your accounts from La Banque Postale");
   }
+
+
+  public void testImportFileDoNotEnableSynchroButton() throws Exception {
+    final String fileName = QifBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "TX 1")
+      .addTransaction("2006/01/11", -2.2, "TX 2")
+      .save();
+    operations.importQifFile(fileName, "Autre", 100.);
+    importPanel.checkSynchroNotVisible();
+    ImportDialogChecker dialogChecker = operations.openImportDialog();
+    OtherBankSynchroChecker checker = dialogChecker.openSynchro("Autre");
+    checker.createNew("princi", "princi", "100.", fileName);
+    ImportDialogChecker importDialogChecker = checker.doImport();
+    importDialogChecker
+      .selectAccount("Main account")
+      .setMainAccount()
+      .completeImport();
+    importPanel.checkSynchroVisible();
+  }
+
 }

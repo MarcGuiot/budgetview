@@ -6,11 +6,12 @@ import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.model.FieldValue;
+import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.GlobMatchers;
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.Files;
@@ -20,18 +21,13 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.and;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-
 public abstract class BankPage {
-  
+
   protected Directory directory;
   protected Integer bankId;
   protected LocalGlobRepository repository;
@@ -69,7 +65,8 @@ public abstract class BankPage {
                                     value(RealAccount.NAME, name.trim()),
                                     value(RealAccount.NUMBER, number.trim()),
                                     value(RealAccount.BANK, bankId),
-                                    value(RealAccount.POSITION, position.trim()));
+                                    value(RealAccount.POSITION, position.trim()),
+                                    value(RealAccount.FROM_SYNCHRO, true));
       }
       else {
         repository.update(account.getKey(), RealAccount.POSITION, position.trim());
@@ -95,8 +92,13 @@ public abstract class BankPage {
                                     value(RealAccount.URL, url),
                                     value(RealAccount.ORG, org),
                                     value(RealAccount.BANK, bankId),
-                                    value(RealAccount.FID, fid));
+                                    value(RealAccount.FID, fid),
+                                    value(RealAccount.FROM_SYNCHRO, true));
       }
+      else {
+        repository.update(account.getKey(), RealAccount.FROM_SYNCHRO, Boolean.TRUE);
+      }
+
       accounts.add(account);
     }
   }
@@ -138,7 +140,7 @@ public abstract class BankPage {
     }
 
     public void actionPerformed(ActionEvent e) {
-      accounts.clone();
+      accounts.clear();
       dialog.setVisible(false);
     }
   }
