@@ -5,8 +5,6 @@ import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.LocalGlobRepository;
@@ -16,8 +14,6 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Set;
 
 public class ImportSeriesDialog {
@@ -45,7 +41,7 @@ public class ImportSeriesDialog {
     builder.add("seriesRepeatPanel", panel.getPanel());
     dialog.addPanelWithButtons(builder.<JPanel>load(),
                                new ValidateAction(localRepository),
-                               new CancelAction());
+                               new DoNotImportAction());
     dialog.pack();
     dialog.showCentered();
     panel.dispose();
@@ -68,9 +64,9 @@ public class ImportSeriesDialog {
     }
   }
 
-  private class CancelAction extends AbstractAction {
-    public CancelAction() {
-      super(Lang.get("import.series.cancel"));
+  private class DoNotImportAction extends AbstractAction {
+    public DoNotImportAction() {
+      super(Lang.get("import.series.doNotImport"));
     }
 
     public void actionPerformed(ActionEvent e) {
