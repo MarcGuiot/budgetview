@@ -19,8 +19,8 @@
            ui="showHideLabelUI" weightX="0" fill="none" anchor="left"/>
     <style selector="button.showHideIcon" border="none" opaque="false" borderPainted="false"
            weightX="0" fill="none" anchor="left" marginLeft="5"/>
-    <style selector="button.showHide" ui="hyperlinkButtonWithoutUnderline"
-           marginLeft="5" font="-,plain,10" foreground="categorization.showHide" fill="none" anchor="left"/>
+    <style selector="button#showHide"
+           marginLeft="5" font="-,plain,11" foreground="categorization.showHide"/>
   </styles>
 
   <column>
@@ -32,7 +32,7 @@
         <repeat ref="specialCategorizationPanels" layout="verticalGrid" margin="10">
           <verticalBoxes ref="specialCaseBlock">
             <row>
-              <button ref="showHide"/>
+              <button ref="showHide" styleClass="showHide"/>
               <filler fill="horizontal"/>
             </row>
             <panel ref="specialCasePanel"/>

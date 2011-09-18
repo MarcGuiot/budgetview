@@ -12,13 +12,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 
-class ClavierPanel extends JPanel {
+class SgKeyboardPanel extends JPanel {
   private InOutMouseMotionListener motionListener = new InOutMouseMotionListener();
   private HtmlInput password;
   private BufferedImage image;
   private JTextField passwordTextField;
 
-  public ClavierPanel(JTextField passwordTextField) {
+  public SgKeyboardPanel(JTextField passwordTextField) {
     this.passwordTextField = passwordTextField;
     addMouseListener(motionListener);
     addMouseMotionListener(motionListener);

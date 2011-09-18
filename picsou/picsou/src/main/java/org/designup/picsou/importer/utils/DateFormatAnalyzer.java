@@ -39,16 +39,6 @@ public class DateFormatAnalyzer {
       maxThird = getMax(maxThird, items, 2);
     }
 
-//    if (maxFirst > 99){
-//      result.clear();
-//      result.add("yyyy/MM/dd");
-//    }
-//    if (maxThird > 99){
-//      result.clear();
-//      result.add("dd/MM/yyyy");
-//      result.add("MM/dd/yyyy");
-//    }
-
     Calendar calendar = new GregorianCalendar();
     calendar.setTime(referenceDate);
     int maxYear = calendar.get(Calendar.YEAR) + 1;

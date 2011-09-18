@@ -32,7 +32,7 @@ public class OtherBank extends WebBankPage {
 
   public JPanel getPanel() {
     final SelectionService selectionService = directory.get(SelectionService.class);
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/connection/otherPanel.splits", repository, directory);
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/bank/connection/otherPanel.splits", repository, directory);
 
     builder.addEditor("type", RealAccount.NUMBER);
     builder.addEditor("name", RealAccount.NAME);

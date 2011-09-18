@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(700,550)">
+  <panel styleClass="dialog" preferredSize="(500,450)">
     <column styleClass="innerDialog">
       <label text="$synchro.title" styleClass="title"/>
         <panel ref="bankSpecific"/>

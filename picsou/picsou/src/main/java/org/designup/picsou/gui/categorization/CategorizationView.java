@@ -474,12 +474,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
       String label = Lang.get("categorization.specialCases." + categorizationPanel.getId());
 
-      ImageLocator imageLocator = directory.get(ImageLocator.class);
-      ImageIcon rightArrow = imageLocator.get("arrow_right.png");
-      ImageIcon downArrow = imageLocator.get("arrow_down.png");
-
-      final ShowHideButton showHide = new ShowHideButton(panel, label, label);
-      showHide.setIcons(rightArrow, downArrow);
+      ShowHideButton showHide = new ShowHideButton(panel, label, label);
       categorizationPanel.registerController(new ShowHidePanelController(showHide));
       cellBuilder.add("showHide", showHide);
     }

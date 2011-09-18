@@ -1,0 +1,41 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <styles>
+    <style selector=".showHide" marginTop="15"/>
+  </styles>
+
+  <panel styleClass="innerDialog">
+    <column>
+      <column weightY="0.001">
+        <label text="$synchro.ofx.intro" marginBottom="10"/>
+        <row>
+          <grid marginLeft="30">
+            <label text="$synchro.ofx.id" styleClass="formLabel" gridPos="(0,0)"/>
+            <textField ref="code" gridPos="(1,0)"/>
+            <label text="$synchro.ofx.password" styleClass="formLabel" gridPos="(0,1)"/>
+            <textField ref="password" gridPos="(1,1)"/>
+          </grid>
+          <button action="validate" fill="none" anchor="center"/>
+          <filler fill="horizontal"/>
+        </row>
+
+        <button ref="showDetails" styleClass="showHide"/>
+      </column>
+
+      <row ref="detailsPanel">
+        <grid marginLeft="30">
+          <label text="$synchro.ofx.url" styleClass="formLabel" gridPos="(0,0)"/>
+          <textField ref="url" gridPos="(1,0)"/>
+          <label text="$synchro.ofx.org" styleClass="formLabel" gridPos="(0,1)"/>
+          <textField ref="org" gridPos="(1,1)"/>
+          <label text="$synchro.ofx.fid" styleClass="formLabel" gridPos="(0,2)"/>
+          <textField ref="fid" gridPos="(1,2)"/>
+        </grid>
+        <filler fill="horizontal"/>
+      </row>
+      <filler fill="vertical"/>
+    </column>
+  </panel>
+</splits>

@@ -20,18 +20,23 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+
 public abstract class BankPage {
+  
   protected Directory directory;
   protected Integer bankId;
   protected LocalGlobRepository repository;
   protected PicsouDialog dialog;
   protected GlobList accounts = new GlobList();
-  private CancelAction cancelAction;
 
   public BankPage(Directory directory, GlobRepository repository, Integer bankId) {
     this.directory = directory;
@@ -43,30 +48,28 @@ public abstract class BankPage {
 
   public void init() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
-    builder.setSource(getClass(), "/layout/connection/synchroDialog.splits");
+    builder.setSource(getClass(), "/layout/bank/connection/synchroDialog.splits");
     builder.add("bankSpecific", getPanel());
     dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
     JPanel panel = builder.load();
-    cancelAction = new CancelAction();
-
-    dialog.setPanelAndButton(panel, cancelAction);
+    dialog.setPanelAndButton(panel, new CancelAction());
   }
 
-  abstract public JPanel getPanel();
+  public abstract JPanel getPanel();
 
   protected void createOrUpdateRealAccount(String name, String number, String position, final Integer bankId) {
     if (Strings.isNotEmpty(name) || Strings.isNotEmpty(number)) {
       Glob account = repository.getAll(RealAccount.TYPE,
-                                       GlobMatchers.and(GlobMatchers.fieldEquals(RealAccount.NAME, name.trim()),
-                                                        GlobMatchers.fieldEquals(RealAccount.NUMBER, number.trim()),
-                                                        GlobMatchers.fieldEquals(RealAccount.BANK, bankId)))
+                                       and(fieldEquals(RealAccount.NAME, name.trim()),
+                                           fieldEquals(RealAccount.NUMBER, number.trim()),
+                                           fieldEquals(RealAccount.BANK, bankId)))
         .getFirst();
       if (account == null) {
         account = repository.create(RealAccount.TYPE,
-                                    FieldValue.value(RealAccount.NAME, name.trim()),
-                                    FieldValue.value(RealAccount.NUMBER, number.trim()),
-                                    FieldValue.value(RealAccount.BANK, bankId),
-                                    FieldValue.value(RealAccount.POSITION, position.trim()));
+                                    value(RealAccount.NAME, name.trim()),
+                                    value(RealAccount.NUMBER, number.trim()),
+                                    value(RealAccount.BANK, bankId),
+                                    value(RealAccount.POSITION, position.trim()));
       }
       else {
         repository.update(account.getKey(), RealAccount.POSITION, position.trim());
@@ -79,20 +82,20 @@ public abstract class BankPage {
                                            final String url, String org, String fid) {
     if (Strings.isNotEmpty(number)) {
       Glob account = repository.getAll(RealAccount.TYPE,
-                                       GlobMatchers.and(GlobMatchers.fieldEquals(RealAccount.NUMBER, number),
-                                                        GlobMatchers.fieldEquals(RealAccount.ACC_TYPE, type),
-                                                        GlobMatchers.fieldEquals(RealAccount.URL, url),
-                                                        GlobMatchers.fieldEquals(RealAccount.ORG, org),
-                                                        GlobMatchers.fieldEquals(RealAccount.FID, fid)))
+                                       and(fieldEquals(RealAccount.NUMBER, number),
+                                           fieldEquals(RealAccount.ACC_TYPE, type),
+                                           fieldEquals(RealAccount.URL, url),
+                                           fieldEquals(RealAccount.ORG, org),
+                                           fieldEquals(RealAccount.FID, fid)))
         .getFirst();
       if (account == null) {
         account = repository.create(RealAccount.TYPE,
-                                    FieldValue.value(RealAccount.ACC_TYPE, type.trim()),
-                                    FieldValue.value(RealAccount.NUMBER, number.trim()),
-                                    FieldValue.value(RealAccount.URL, url),
-                                    FieldValue.value(RealAccount.ORG, org),
-                                    FieldValue.value(RealAccount.BANK, bankId),
-                                    FieldValue.value(RealAccount.FID, fid));
+                                    value(RealAccount.ACC_TYPE, type.trim()),
+                                    value(RealAccount.NUMBER, number.trim()),
+                                    value(RealAccount.URL, url),
+                                    value(RealAccount.ORG, org),
+                                    value(RealAccount.BANK, bankId),
+                                    value(RealAccount.FID, fid));
       }
       accounts.add(account);
     }

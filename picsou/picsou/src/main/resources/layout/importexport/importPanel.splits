@@ -15,21 +15,35 @@
         pressedInnerBorderBottomColor="roundButton.pressed.inner.border.bottom"
         pressedOuterBorderTopColor="roundButton.pressed.outer.border.top"
         pressedOuterBorderBottomColor="roundButton.pressed.outer.border.bottom"/>
+    <style selector="button" weightX="0.01" weightY="0.01" fill="none" anchor="center"/>
   </styles>
 
   <row>
-    <button ref="importButton" fill="none" weightX="0" weightY="0"
+
+    <row autoHideSource="synchroButton">
+      <button ref="synchroButton" fill="none" marginLeft="10"
+              icon="button_synchro.png" rolloverIcon="button_synchro_rollover.png" pressedIcon="button_synchro.png"
+              ui="roundButton" minimumSize="(0,0)" autoHideIfDisabled="true"/>
+      <button ref="synchroLabel"
+              icon="leftArrow(12,16,10,10, import.arrow)"
+              rolloverIcon="leftArrow(12,16,10,10, import.arrow.rollover)"
+              styleClass="hyperlinkWithoutUnderline"
+              marginLeft="5" foreground="import.label" autoHideIfDisabled="true"/>
+
+      <filler fill="horizontal"/>
+    </row>
+    
+    <button ref="importButton" fill="none"
             icon="button_import.png" rolloverIcon="button_import_rollover.png" pressedIcon="button_import.png"
             ui="roundButton" minimumSize="(0,0)"/>
-    <button ref="importLabel"  text="$import.button"
-            icon="arrow_left_lightgrey.png" rolloverIcon="arrow_left_blue.png"
-            styleClass="hyperlinkWithoutUnderline" marginLeft="3" foreground="import.label" fill="none"/>
+    <button ref="importLabel"
+            icon="leftArrow(12,16,10,10, import.arrow)"
+            rolloverIcon="leftArrow(12,16,10,10, import.arrow.rollover)"
+            styleClass="hyperlinkWithoutUnderline"
+            marginLeft="5" foreground="import.label"/>
 
-    <button ref="synchroButton" fill="none" weightX="0" weightY="0" marginLeft="10"
-            icon="button_synchro.png" rolloverIcon="button_synchro_rollover.png" pressedIcon="button_synchro.png"
-            ui="roundButton" minimumSize="(0,0)" autoHideIfDisabled="true"/>
-    <button ref="synchroLabel"  text="$synchro.button" icon="arrow_left_lightgrey.png"
-            styleClass="hyperlinkWithoutUnderline" foreground="import.label" fill="none" autoHideIfDisabled="true"/>
+    <filler fill="horizontal" weightX="10"/>
+
   </row>
 
 </splits>

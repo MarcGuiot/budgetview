@@ -5,6 +5,7 @@ import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.gui.actions.ImportFileAction;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.metamodel.GlobType;
 
@@ -21,17 +22,9 @@ public class SynchronizeAction extends AbstractAction {
     this.repository = repository;
     this.directory = directory;
     setEnabled(repository.contains(RealAccount.TYPE));
-    repository.addChangeListener(new ChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(RealAccount.TYPE)){
-          setEnabled(repository.contains(RealAccount.TYPE));
-        }
-      }
-
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        if (changedTypes.contains(RealAccount.TYPE)){
-          setEnabled(repository.contains(RealAccount.TYPE));
-        }
+    repository.addChangeListener(new TypeChangeSetListener(RealAccount.TYPE) {
+      protected void update(GlobRepository repository) {
+        setEnabled(repository.contains(RealAccount.TYPE));
       }
     });
   }

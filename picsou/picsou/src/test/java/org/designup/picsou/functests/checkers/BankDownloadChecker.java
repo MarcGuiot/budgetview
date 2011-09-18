@@ -40,18 +40,12 @@ public class BankDownloadChecker extends GuiChecker {
     return this;
   }
 
-  public BankDownloadChecker checkWebsiteUrl(String url) {
-    BrowsingChecker.checkDisplay(panel.getButton("gotoWebsite"), url);
-    return this;
-  }
-
   public BankDownloadChecker setFilter(String filter) {
     panel.getTextBox("bankEditor").setText(filter, false);
     return this;
   }
 
   public BankDownloadChecker checkBankAccessHidden() {
-    checkComponentVisible(panel, JButton.class, "gotoWebsite", false);
     checkComponentVisible(panel, JButton.class, "openHelp", false);
     return this;
   }
@@ -65,15 +59,13 @@ public class BankDownloadChecker extends GuiChecker {
     return HelpChecker.open(panel.getButton("openHelp").triggerClick());
   }
 
-  public OtherBankSynchoChecker openSynchro(ImportDialogChecker checker) {
-    Window window = WindowInterceptor.getModalDialog(panel.getTextBox("synchroMessage")
-      .triggerClickOnHyperlink("synchronize"));
-    return new OtherBankSynchoChecker(checker, window);
+  public OtherBankSynchroChecker openSynchro(ImportDialogChecker checker) {
+    Window window = WindowInterceptor.getModalDialog(panel.getButton("synchronize").triggerClick());
+    return new OtherBankSynchroChecker(checker, window);
   }
 
   public OfxSynchoChecker openOfxSynchro(ImportDialogChecker checker) {
-    Window window = WindowInterceptor.getModalDialog(panel.getTextBox("synchroMessage")
-      .triggerClickOnHyperlink("synchronize"));
+    Window window = WindowInterceptor.getModalDialog(panel.getButton("synchronize").triggerClick());
     return new OfxSynchoChecker(checker, window);
   }
 

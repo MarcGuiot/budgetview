@@ -8,11 +8,7 @@
     <panel styleClass="block">
       <column styleClass="innerBlock" margin="10" marginLeft="15" marginRight="15">
 
-        <row marginBottom="2" weightY="0">
-          <filler fill="horizontal"/>
-          <panel ref="importPanel" marginLeft="10" weightX="0.01"/>
-          <filler fill="horizontal"/>
-        </row>
+        <panel ref="importPanel" marginLeft="10" marginBottom="2" weightY="0" weightX="0.01"/>
 
         <verticalSplit>
           <column weightY="10">

@@ -15,8 +15,7 @@
 
       <label text="$import.fileSelection.title" name="title" styleClass="title"/>
 
-      <column styleClass="separator" marginTop="20">
-
+      <column marginTop="20">
         <textArea text="$import.fileSelection.bank.title" styleClass="sectionTitle"/>
         <row weightY="100">
           <panel ref="bankDownload"/>

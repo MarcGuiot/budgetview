@@ -590,7 +590,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testImportDialogGivesAccessToBankSites() throws Exception {
+  public void testImportDialogGivesAccessToBankGuides() throws Exception {
 
     OfxBuilder
       .init(this)
@@ -607,7 +607,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkNoBankSelected()
       .checkBankAccessHidden()
       .selectBank("Autre")
-      .checkWebsiteUrl("http://support.mybudgetview.fr/entries/20173256")
       .checkHelpAvailable(true)
       .openHelp()
       .checkTitle("Importing data")
@@ -617,7 +616,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilter("BNP")
       .checkBankList("BNP Paribas", "BNPPF", "Autre")
       .selectBank("BNP Paribas")
-      .checkWebsiteUrl("http://www.bnpparibas.net")
       .checkHelpAvailable(true)
       .openHelp()
       .checkTitle("BNP Paribas downloads")

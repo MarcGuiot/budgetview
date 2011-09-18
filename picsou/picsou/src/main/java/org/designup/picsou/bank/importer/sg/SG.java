@@ -43,11 +43,11 @@ public class SG extends WebBankPage {
   //  private static final String URL_TELECHARGEMENT = "file:tel_telechargement.html";
   public static final Integer SG_ID = 4;
   private JButton corriger;
-  private ClavierPanel clavierPanel;
+  private SgKeyboardPanel keyboardPanel;
   private JButton valider;
   private JButton validerCode;
   private JTextField code;
-  private JTextField passwordTextField;
+  private JTextField passwordField;
 
   public static void main(String[] args) throws IOException {
     DefaultDirectory defaultDirectory = new DefaultDirectory();
@@ -90,13 +90,12 @@ public class SG extends WebBankPage {
   }
 
   public static SG init(final Directory directory, GlobRepository repository) {
-    SG sg = new SG(directory, repository);
-    return sg;
+    return new SG(directory, repository);
   }
 
   public JPanel getPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
-    builder.setSource(getClass(), "/layout/connection/sgPanel.splits");
+    builder.setSource(getClass(), "/layout/bank/connection/sgPanel.splits");
 
     initCardCode(builder);
 
@@ -123,22 +122,28 @@ public class SG extends WebBankPage {
     code = new JTextField();
     code.setName("code");
     builder.add(code);
+
     validerCode = new JButton(Lang.get("bank.sg.code.valider"));
     validerCode.setName("validerCode");
     builder.add(validerCode);
     validerCode.addActionListener(new ValiderActionListener());
-    passwordTextField = new JTextField();
-    passwordTextField.setEditable(false);
-    clavierPanel = new ClavierPanel(passwordTextField);
-    clavierPanel.setName("imageClavier");
-    builder.add(clavierPanel);
+
+    passwordField = new JTextField();
+    passwordField.setEditable(false);
+    builder.add("password", passwordField);
+
+    keyboardPanel = new SgKeyboardPanel(passwordField);
+    keyboardPanel.setName("imageClavier");
+    builder.add(keyboardPanel);
+
     corriger = new JButton(Lang.get("bank.sg.corriger"));
     corriger.setName("corriger");
     builder.add(corriger);
+
     valider = new JButton(Lang.get("bank.sg.valider"));
     valider.setName("valider");
     builder.add(valider);
-    builder.add("password", passwordTextField);
+
     validerCode.setEnabled(false);
     corriger.setEnabled(false);
     valider.setEnabled(false);
@@ -164,12 +169,9 @@ public class SG extends WebBankPage {
         HtmlImage htmlImageClavier = zoneClavier.getElementById("img_clavier");
         htmlImageClavier.fireEvent(Event.TYPE_LOAD);
         final BufferedImage imageClavier = getFirstImage(htmlImageClavier);
-        clavierPanel.setSize(imageClavier.getWidth(), imageClavier.getHeight());
+        keyboardPanel.setSize(imageClavier.getWidth(), imageClavier.getHeight());
         HtmlElement map = zoneClavier.getElementById("tc_tclavier");
-        clavierPanel.setImage(imageClavier, map, password);
-//        Dimension size = clavierPanel.getParent().getSize();
-//        clavierPanel.setLocation((int)((size.getWidth() - imageClavier.getWidth()) * Math.random()),
-//                                 (int)((size.getHeight() - imageClavier.getHeight()) * Math.random()));
+        keyboardPanel.setImage(imageClavier, map, password);
 
         HtmlImage corrigerImg = zoneClavier.getElementById("tc_corriger");
         corriger.setAction(new CorrigerActionListener(corrigerImg, password));
@@ -197,7 +199,7 @@ public class SG extends WebBankPage {
       public void actionPerformed(ActionEvent e) {
         try {
           page = (HtmlPage)img.click();
-          passwordTextField.setText(password.getValueAttribute());
+          passwordField.setText(password.getValueAttribute());
         }
         catch (IOException e1) {
           e1.printStackTrace();

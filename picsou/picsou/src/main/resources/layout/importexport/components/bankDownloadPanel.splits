@@ -4,7 +4,7 @@
 
   <styles>
     <style selector="htmlEditorPane.multiLineLabel" font="-,plain,11"/>
-    <style selector="button.gotoWebsite"
+    <style selector="button.synchronize"
            marginTop="10" fill="none" anchor="center"/>
     <style selector="button.openHelp" ui="hyperlinkButton"
            foreground="hyperlink" font="-,plain,12"
@@ -34,13 +34,12 @@
 
         <card name="gotoSite">
           <column>
-            <panel ref="synchroPanel" opaque="false">
+            <column ref="synchroPanel" opaque="false">
               <htmlEditorPane name="synchroMessage" text="$bankDownload.synchro.message" styleClass="multiLineLabel"
                               hyperlinkListener="hyperlinkHandler"/>
-            </panel>
+              <button action="synchronize" styleClass="synchronize"/>
+            </column>
             <htmlEditorPane text="$bankDownload.message" styleClass="multiLineLabel"/>
-            <button action="gotoWebsite" styleClass="gotoWebsite"/>
-            <filler fill="vertical"/>
             <htmlEditorPane text="$bankDownload.helpIntro" styleClass="multiLineLabel"/>
             <button action="openHelp" styleClass="openHelp"/>
             <filler fill="vertical"/>

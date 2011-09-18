@@ -1,5 +1,7 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
+  <styleImport file="/layout/picsouStyles.splits"/>
+
   <styles>
     <style selector="label#fileName"
            fill="none" anchor="left" font="-,bold,12" marginBottom="5"/>

@@ -124,9 +124,8 @@ public class ImportDialogChecker extends GuiChecker {
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
-  public OtherBankSynchoChecker openSynchro(String bankName) {
-    return getBankDownload().selectBank(bankName)
-      .openSynchro(this);
+  public OtherBankSynchroChecker openSynchro(String bankName) {
+    return getBankDownload().selectBank(bankName).openSynchro(this);
   }
 
   public void completeImport() {

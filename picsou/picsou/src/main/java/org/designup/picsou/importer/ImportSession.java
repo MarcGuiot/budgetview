@@ -188,7 +188,7 @@ public class ImportSession {
     GlobList matchingAccount = new GlobList();
     GlobList globList = localRepository.getAll(RealAccount.TYPE);
     for (Glob glob : globList) {
-      if (RealAccount.areStriclyEquivalent(account, glob)) {
+      if (RealAccount.areStrictlyEquivalent(account, glob)) {
         matchingAccount.add(glob);
       }
     }

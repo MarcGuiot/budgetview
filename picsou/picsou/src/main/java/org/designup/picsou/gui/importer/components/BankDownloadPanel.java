@@ -1,15 +1,13 @@
 package org.designup.picsou.gui.importer.components;
 
+import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.gui.bank.BankChooserPanel;
-import org.designup.picsou.gui.bank.BankChooserDialog;
-import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.importer.ImportController;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.bank.BankSynchroService;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -18,7 +16,6 @@ import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -32,7 +29,6 @@ public class BankDownloadPanel implements GlobSelectionListener {
   private GlobRepository repository;
   private Directory directory;
   private JPanel panel;
-  private GotoBankWebsiteAction gotoWebsiteAction;
   private OpenHelpAction openHelpAction;
   private BankChooserPanel bankChooser;
   private CardHandler cards;
@@ -65,26 +61,22 @@ public class BankDownloadPanel implements GlobSelectionListener {
     synchroPanel = new JPanel();
     builder.add("synchroPanel", synchroPanel);
 
-    gotoWebsiteAction = new GotoBankWebsiteAction();
-    builder.add("gotoWebsite", gotoWebsiteAction);
-
-    openHelpAction = new OpenHelpAction();
-    builder.add("openHelp", openHelpAction);
-
-    bankChooser = BankChooserPanel.registerComponents(builder, gotoWebsiteAction, null);
-
-    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(directory, parent);
-
-    hyperlinkHandler.registerLinkAction("synchronize", new Runnable() {
-      public void run() {
+    builder.add("synchronize", new AbstractAction(Lang.get("synchro.open")) {
+      public void actionPerformed(ActionEvent actionEvent) {
         BankSynchroService bankSynchroService = directory.get(BankSynchroService.class);
         GlobList realAccount = bankSynchroService.show(bankId, directory, repository);
-        if (!realAccount.isEmpty()){
+        if (!realAccount.isEmpty()) {
           synchronize(realAccount);
         }
       }
     });
 
+    openHelpAction = new OpenHelpAction();
+    builder.add("openHelp", openHelpAction);
+
+    bankChooser = BankChooserPanel.registerComponents(builder, openHelpAction, null);
+
+    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(directory, parent);
     builder.add("hyperlinkHandler", hyperlinkHandler);
 
     panel = builder.load();
@@ -102,7 +94,6 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
   private void update(Glob bank) {
     bankId = bank != null ? bank.get(Bank.ID) : null;
-    gotoWebsiteAction.setBank(bank);
     openHelpAction.setBank(bank);
     cards.show(bank == null ? "noSelection" : "gotoSite");
     synchroPanel.setVisible(bank != null && (bank.get(Bank.SYNCHRO_ENABLE, false) || bank.get(Bank.OFX_DOWNLOAD, false)));
@@ -110,26 +101,6 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
   public void requestFocus() {
     bankChooser.requestFocus();
-  }
-
-  public class GotoBankWebsiteAction extends AbstractAction {
-
-    private String lastUrl;
-
-    public GotoBankWebsiteAction() {
-      super(Lang.get("bankDownload.gotoWebsite.label"));
-    }
-
-    public void setBank(Glob bank) {
-      setEnabled(bank != null);
-      lastUrl = (bank != null) ? bank.get(Bank.URL) : null;
-    }
-
-    public void actionPerformed(ActionEvent actionEvent) {
-      BrowsingService browsingService = directory.get(BrowsingService.class);
-      String url = Strings.isNotEmpty(lastUrl) ? lastUrl : Lang.get("bankDownload.gotoWebsite.default.url");
-      browsingService.launchBrowser(url);
-    }
   }
 
   public class OpenHelpAction extends AbstractAction {
@@ -157,7 +128,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
   public void synchronize(GlobList realAccount) {
     for (Glob glob : realAccount) {
       String file = glob.get(RealAccount.FILE_NAME);
-      if (Strings.isNullOrEmpty(file)){
+      if (Strings.isNullOrEmpty(file)) {
         controller.addRealAccountWithoutImport(glob);
       }
       else {

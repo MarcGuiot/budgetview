@@ -17,6 +17,8 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class RealAccount {
 
   public static GlobType TYPE;
@@ -29,7 +31,8 @@ public class RealAccount {
 
   public static StringField BANK_ID;
 
-  public static IntegerField BANK_ENTITY;
+  @Target(BankEntity.class)
+  public static LinkField BANK_ENTITY;
 
   public static StringField BANK_ENTITY_LABEL;
 
@@ -70,7 +73,7 @@ public class RealAccount {
     GlobTypeLoader.init(RealAccount.class, "realAccount");
   }
 
-  static public boolean areStriclyEquivalent(Glob account, Glob glob) {
+  static public boolean areStrictlyEquivalent(Glob account, Glob glob) {
     return (Strings.isNotEmpty(account.get(NAME)) || Strings.isNotEmpty(account.get(NUMBER)))
            &&
            account.get(BANK) != null &&
@@ -104,24 +107,24 @@ public class RealAccount {
     String amount = importedAccount.get(POSITION);
     Double position = amount != null ? Amounts.extractAmount(amount) : null;
     return repository.create(Account.TYPE,
-                             FieldValue.value(Account.BANK_ENTITY, importedAccount.get(BANK_ENTITY)),
-                             FieldValue.value(Account.BANK_ENTITY_LABEL, importedAccount.get(BANK_ENTITY_LABEL)),
-                             FieldValue.value(Account.ACCOUNT_TYPE, importedAccount.get(ACCOUNT_TYPE)),
-                             FieldValue.value(Account.CARD_TYPE, importedAccount.get(CARD_TYPE)),
-                             FieldValue.value(Account.POSITION_DATE, importedAccount.get(POSITION_DATE)),
-                             FieldValue.value(Account.NUMBER, importedAccount.get(NUMBER)),
-                             FieldValue.value(Account.NAME, importedAccount.get(NAME)),
-                             FieldValue.value(Account.POSITION, position),
-                             FieldValue.value(Account.IS_IMPORTED_ACCOUNT, isImported),
-                             FieldValue.value(Account.DIRECT_SYNCHRO, true),
-                             FieldValue.value(Account.BANK, importedAccount.get(BANK)));
+                             value(Account.BANK_ENTITY, importedAccount.get(BANK_ENTITY)),
+                             value(Account.BANK_ENTITY_LABEL, importedAccount.get(BANK_ENTITY_LABEL)),
+                             value(Account.ACCOUNT_TYPE, importedAccount.get(ACCOUNT_TYPE)),
+                             value(Account.CARD_TYPE, importedAccount.get(CARD_TYPE)),
+                             value(Account.POSITION_DATE, importedAccount.get(POSITION_DATE)),
+                             value(Account.NUMBER, importedAccount.get(NUMBER)),
+                             value(Account.NAME, importedAccount.get(NAME)),
+                             value(Account.POSITION, position),
+                             value(Account.IS_IMPORTED_ACCOUNT, isImported),
+                             value(Account.DIRECT_SYNCHRO, true),
+                             value(Account.BANK, importedAccount.get(BANK)));
   }
 
   public static void copy(GlobRepository repository, Glob from, Glob to) {
     if (from.get(RealAccount.POSITION_DATE).after(to.get(RealAccount.POSITION_DATE))) {
       repository.update(to.getKey(),
-                        FieldValue.value(RealAccount.POSITION, from.get(RealAccount.POSITION)),
-                        FieldValue.value(RealAccount.POSITION_DATE, from.get(RealAccount.POSITION_DATE)));
+                        value(RealAccount.POSITION, from.get(RealAccount.POSITION)),
+                        value(RealAccount.POSITION_DATE, from.get(RealAccount.POSITION_DATE)));
     }
   }
 

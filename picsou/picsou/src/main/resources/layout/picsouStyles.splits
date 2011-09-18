@@ -136,6 +136,13 @@
     <style selector="button.hyperlinkWithoutUnderline" ui="hyperlinkButtonWithoutUnderline"
            fill="none" anchor="right" foreground="hyperlink"/>
 
+    <!-- Dialog components -->
+    <ui name="showHideButtonUI" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        underline="false" rolloverColor="hyperlink"/>
+    <style selector="button.showHide"  ui="showHideButtonUI"
+           showIcon="rightArrow(10,14,8,8,dialog.text)" hideIcon="downArrow(10,14,8,8,dialog.text)"
+           fill="none" anchor="left" foreground="dialog.text" font="-,plain,11"/>
+
     <!-- Blocks and inner blocks -->
 
     <ui name="block" class="org.globsframework.gui.splits.components.StyledPanelUI"

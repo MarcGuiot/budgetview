@@ -1,12 +1,13 @@
 package org.designup.picsou.bank.importer;
 
+import com.gargoylesoftware.htmlunit.*;
+import com.gargoylesoftware.htmlunit.attachment.AttachmentHandler;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
-import org.designup.picsou.gui.startup.OpenRequestManager;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.RealAccount;
-import org.designup.picsou.model.AccountType;
-import org.globsframework.model.*;
-import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 
@@ -14,17 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.awt.event.ActionEvent;
 
-import com.gargoylesoftware.htmlunit.*;
-import com.gargoylesoftware.htmlunit.attachment.AttachmentHandler;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
-
-import javax.swing.*;
-
-public abstract class WebBankPage extends BankPage{
+public abstract class WebBankPage extends BankPage {
   protected WebClient client;
   protected HtmlPage page;
   protected ErrorAlertHandler errorAlertHandler;

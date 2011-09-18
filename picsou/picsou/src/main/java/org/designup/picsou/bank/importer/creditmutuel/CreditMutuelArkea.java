@@ -33,13 +33,12 @@ import java.io.InputStream;
 import java.util.List;
 
 public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
-  private JTextField code;
+  private JTextField codeField;
   private JButton validerCode;
   private String INDEX = "https://www.cmso.com/creditmutuel/cmso/index.jsp?fede=cmso";
   private JPasswordField passwordTextField;
   private HtmlTable accountsTable;
   public static final int ID = 15;
-
 
   public CreditMutuelArkea(Directory directory, GlobRepository repository, Integer bankId) {
     super(directory, repository, bankId);
@@ -69,17 +68,21 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
 
   public JPanel getPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
-    builder.setSource(getClass(), "/layout/connection/userAndPasswordPanel.splits");
-    code = new JTextField();
-    code.setName("code");
-    builder.add(code);
+    builder.setSource(getClass(), "/layout/bank/connection/userAndPasswordPanel.splits");
+
+    codeField = new JTextField();
+    codeField.setName("code");
+    builder.add(codeField);
+
     validerCode = new JButton("valider");
     validerCode.setName("validerCode");
     builder.add(validerCode);
     validerCode.addActionListener(new ValiderActionListener());
+
     passwordTextField = new JPasswordField();
     passwordTextField.setName("password");
     builder.add(passwordTextField);
+
     Thread thread = new Thread() {
       public void run() {
         try {
@@ -161,7 +164,7 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
       HtmlForm form = page.getFormByName("formIdentification");
       HtmlInput personne = form.getInputByName("noPersonne");
       HtmlInput password = form.getInputByName("motDePasse");
-      personne.setValueAttribute(code.getText());
+      personne.setValueAttribute(codeField.getText());
       password.setValueAttribute(new String(passwordTextField.getPassword()));
       HtmlElement element = getAnchor(form);
       try {

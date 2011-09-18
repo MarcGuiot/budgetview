@@ -2,8 +2,10 @@ package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
-import org.uispec4j.Trigger;
 import org.uispec4j.interception.WindowInterceptor;
+
+import javax.swing.*;
+
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class ImportPanelChecker extends ViewChecker {
@@ -17,14 +19,26 @@ public class ImportPanelChecker extends ViewChecker {
     return ImportDialogChecker.open(getPanel().getButton("importButton").triggerClick());
   }
 
-  public OtherBankSynchoChecker openSynchro() {
+  public OtherBankSynchroChecker openSynchro() {
     Window window = WindowInterceptor.getModalDialog(getPanel().getButton("synchroButton").triggerClick());
-    return new OtherBankSynchoChecker(null, window);
+    return new OtherBankSynchroChecker(null, window);
   }
 
   public ImportPanelChecker checkImportMessage(String message) {
     assertThat(getPanel().getButton("importLabel").textEquals(message));
     return this;
+  }
+
+  public ImportPanelChecker checkSynchroMessage(String message) {
+    checkComponentVisible(getPanel(), JButton.class, "synchroLabel", true);
+    checkComponentVisible(getPanel(), JButton.class, "synchroButton", true);
+    assertThat(getPanel().getButton("synchroLabel").textEquals(message));
+    return this;
+  }
+
+  public void checkSynchroButtonHidden() {
+    checkComponentVisible(getPanel(), JButton.class, "synchroLabel", false);
+    checkComponentVisible(getPanel(), JButton.class, "synchroButton", false);
   }
 
   public ImportPanelChecker checkImportSignpostDisplayed(String message) {

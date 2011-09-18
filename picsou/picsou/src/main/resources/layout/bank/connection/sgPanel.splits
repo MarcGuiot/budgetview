@@ -5,7 +5,7 @@
   <panel styleClass="innerDialog">
     <column>
       <row>
-        <label text="Entez votre code"/>
+        <label text="Entrez votre code" styleClass="formLabel"/>
         <textField ref="code"/>
         <button ref="validerCode"/>
       </row>

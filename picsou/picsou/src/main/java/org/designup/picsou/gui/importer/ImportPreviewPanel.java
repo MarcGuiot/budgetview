@@ -231,7 +231,7 @@ public class ImportPreviewPanel {
   private void deleteAccountIfDuplicate(Glob importedAccount) {
     GlobList all = sessionRepository.getAll(RealAccount.TYPE);
     for (Glob glob : all) {
-      if (RealAccount.areStriclyEquivalent(importedAccount, glob) &&
+      if (RealAccount.areStrictlyEquivalent(importedAccount, glob) &&
           Utils.equal(importedAccount.get(RealAccount.ACCOUNT), glob.get(RealAccount.ACCOUNT))) {
         sessionRepository.delete(glob.getKey());
         return;

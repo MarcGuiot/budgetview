@@ -2,9 +2,9 @@ package org.designup.picsou.importer.ofx;
 
 import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.FieldValue;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.model.impl.DefaultGlobRepository;
 import org.globsframework.utils.Files;
@@ -26,7 +26,7 @@ public class OfxConnection {
 
   static final DateFormat format = new SimpleDateFormat("yyyyMMdd");
 
-  public static class AccountInfo{
+  public static class AccountInfo {
     public String bankId;
     public String number;
     public String accType;
@@ -45,20 +45,20 @@ public class OfxConnection {
     }
   }
 
-  public static void register(OfxConnection connection){
+  public static void register(OfxConnection connection) {
     OfxConnection.connection = connection;
   }
+
   // for test
-  public static OfxConnection getInstance(){
+  public static OfxConnection getInstance() {
     return connection;
   }
 
-
   public List<AccountInfo> getAccounts(String user, String password, final String url,
-                                              final String org, final String fid) {
-      String accountInfo = getAccountInfo(user, password, url, org, fid);
-      OfxParser parser = new OfxParser();
-      AccountInfoOfxFunctor accountInfoOfxFunctor = new AccountInfoOfxFunctor();
+                                       final String org, final String fid) {
+    String accountInfo = getAccountInfo(user, password, url, org, fid);
+    OfxParser parser = new OfxParser();
+    AccountInfoOfxFunctor accountInfoOfxFunctor = new AccountInfoOfxFunctor();
     try {
       parser.parse(new StringReader(accountInfo), accountInfoOfxFunctor);
     }
@@ -69,8 +69,8 @@ public class OfxConnection {
   }
 
   public void loadOperation(Glob realAccount, String fromDate, String user, String password,
-                                   final String url, final String org, final String fid,
-                                   final File outputFile) throws IOException {
+                            final String url, final String org, final String fid,
+                            final File outputFile) throws IOException {
     StringWriter stringWriter = new StringWriter();
     OfxWriter writer = new OfxWriter(stringWriter);
     writer.writeLoadOp(fromDate, user, password, org, fid, realAccount.get(RealAccount.BANK_ID),
@@ -93,7 +93,7 @@ public class OfxConnection {
       buffer.write(request.getBytes("UTF-8"));
       InputStream inputStream = sendBuffer(new URL(url), buffer);
       String tmp = Files.loadStreamToString(inputStream, "UTF-8");
-      if (tmp.contains("<html>")){
+      if (tmp.contains("<html>")) {
         throw new RuntimeException(Lang.get("synchro.ofx.content.invalid"));
       }
       return tmp;
@@ -146,7 +146,7 @@ public class OfxConnection {
     System.out.println("OfxConnection.main '" + password + "'");
     DefaultGlobRepository repository = new DefaultGlobRepository(new DefaultGlobIdGenerator());
     List<AccountInfo> globList = OfxConnection.getInstance().getAccounts("0350763423L", password, "https://ofx.videoposte.com",
-                                                  "0", "0");
+                                                                         "0", "0");
     System.out.println("OfxConnection.main " + globList);
     for (AccountInfo accountInfo : globList) {
       System.out.println("OfxConnection.main " + accountInfo.number + " " + accountInfo.accType);
@@ -154,17 +154,16 @@ public class OfxConnection {
       fromDate = previousDate(120);
       File outputFile = new File("/tmp/operation.ofx");
       Glob glob = repository.create(RealAccount.TYPE,
-                                     FieldValue.value(RealAccount.ACC_TYPE, accountInfo.accType),
-                                     FieldValue.value(RealAccount.BANK_ID, accountInfo.bankId),
-                                     FieldValue.value(RealAccount.NUMBER, accountInfo.number));
+                                    FieldValue.value(RealAccount.ACC_TYPE, accountInfo.accType),
+                                    FieldValue.value(RealAccount.BANK_ID, accountInfo.bankId),
+                                    FieldValue.value(RealAccount.NUMBER, accountInfo.number));
       OfxConnection.getInstance().loadOperation(glob, fromDate, "0350763423L", password,
-                                  "https://ofx.videoposte.com", "0", "0", outputFile);
+                                                "https://ofx.videoposte.com", "0", "0", outputFile);
       OfxImporter importer = new OfxImporter();
       GlobList list = importer.loadTransactions(new FileReader(outputFile), repository, repository);
       System.out.println("OfxConnection.main " + list.size());
     }
   }
-
 
 //  public static void main(String[] args) throws IOException {
 //    XMLReader xmlReader = XmlUtils.getXmlReader();
@@ -214,37 +213,38 @@ public class OfxConnection {
     String org;
     String name;
     String url;
+
     public XmlNode getSubNode(String childName, Attributes xmlAttrs) {
-      if (childName.equals("financialInstitutionId")){
-        return new DefaultXmlNode(){
+      if (childName.equals("financialInstitutionId")) {
+        return new DefaultXmlNode() {
           public void setValue(String value) {
             fid = value;
           }
         };
       }
-      if (childName.equals("id")){
-        return new DefaultXmlNode(){
+      if (childName.equals("id")) {
+        return new DefaultXmlNode() {
           public void setValue(String value) {
             id = value;
           }
         };
       }
-      if (childName.equals("name")){
-        return new DefaultXmlNode(){
+      if (childName.equals("name")) {
+        return new DefaultXmlNode() {
           public void setValue(String value) {
             name = value;
           }
         };
       }
-      if (childName.equals("OFXURL")){
-        return new DefaultXmlNode(){
+      if (childName.equals("OFXURL")) {
+        return new DefaultXmlNode() {
           public void setValue(String value) {
             url = value;
           }
         };
       }
-      if (childName.equals("organization")){
-        return new DefaultXmlNode(){
+      if (childName.equals("organization")) {
+        return new DefaultXmlNode() {
           public void setValue(String value) {
             org = value;
           }
