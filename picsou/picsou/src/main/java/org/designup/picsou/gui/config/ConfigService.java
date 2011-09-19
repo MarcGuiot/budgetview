@@ -74,7 +74,7 @@ public class ConfigService {
   private JarReceive jarReceive;
   private File currentConfigFile;
   private byte[] repoId;
-  public static int RETRY_PERIOD = 10000;
+  public static int RETRY_PERIOD = 1000;
   public static final String HEADER_BAD_ADRESS = "badAdress";
   private Directory directory = null;
   private GlobRepository repository = null;
@@ -84,6 +84,7 @@ public class ConfigService {
   public ConfigService(String applicationVersion, Long jarVersion, Long localConfigVersion, File currentConfigFile) {
     this.currentConfigFile = currentConfigFile;
     Utils.beginRemove();
+    RETRY_PERIOD = 1000;
     URL = System.getProperty(COM_APP_LICENSE_URL);
     FTP_URL = System.getProperty(COM_APP_LICENSE_FTP_URL);
     Utils.endRemove();
