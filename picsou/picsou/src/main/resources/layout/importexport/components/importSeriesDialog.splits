@@ -6,9 +6,17 @@
     <column styleClass="innerDialog">
       <label text="$import.series.title" name="title" styleClass="title"/>
 
-      <panel ref="seriesRepeatPanel"/>
+      <htmlEditorPane text="$import.series.message" styleClass="multiLineLabel" weightY="0.01"/>
 
-      <filler fill="vertical"/>
+      <scrollPane>
+        <column>
+          <repeat ref="series" layout="verticalGrid">
+            <textField ref="name"/>
+            <comboBox ref="choice"/>
+          </repeat>
+          <filler fill="vertical"/>
+        </column>
+      </scrollPane>
     </column>
   </panel>
 

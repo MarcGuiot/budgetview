@@ -11,7 +11,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .setMainAccount()
       .importSeries()
       .checkContains("Alimentation", "Loisirs-culture-sport", "Auto-moto")
-      .setRecuring("Alimentation")
+      .setRecurring("Alimentation")
       .setVariable("Loisirs-culture-sport", "Auto-moto")
       .validate();
 
@@ -29,7 +29,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .acceptFile()
       .importSeries()
       .checkContains("[Test]")
-      .setRecuring("[Test]")
+      .setRecurring("[Test]")
       .checkNotContain("Alimentation")
       .validate();
 
