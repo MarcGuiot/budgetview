@@ -4,10 +4,8 @@ import junit.framework.Assert;
 import org.designup.picsou.gui.PicsouApplication;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
-import org.uispec4j.assertion.UISpecAssert;
-import org.uispec4j.interception.WindowInterceptor;
-
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import org.uispec4j.interception.WindowInterceptor;
 
 public class ApplicationChecker extends GuiChecker {
   private PicsouApplication application;

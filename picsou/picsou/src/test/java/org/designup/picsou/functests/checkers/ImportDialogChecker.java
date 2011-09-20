@@ -518,6 +518,36 @@ public class ImportDialogChecker extends GuiChecker {
       .openOfxSynchro(this);
   }
 
+  public ImportDialogChecker checkAstericsErrorOnName() {
+    accountEditionChecker.checkAstericsErrorOnName();
+    return this;
+  }
+
+  public ImportDialogChecker checkAstericsClearOnName() {
+    accountEditionChecker.checkAstericsClearOnName();
+    return this;
+  }
+
+  public ImportDialogChecker checkAstericsErrorOnBank() {
+    accountEditionChecker.checkAstericsErrorOnBank();
+    return this;
+  }
+
+  public ImportDialogChecker checkAstericsClearOnBank() {
+    accountEditionChecker.checkAstericsClearOnBank();
+    return this;
+  }
+
+  public ImportDialogChecker checkAstericsClearOnType() {
+    accountEditionChecker.checkAstericsClearOnType();
+    return this;
+  }
+
+  public ImportDialogChecker checkAstericsErrorOnType() {
+    accountEditionChecker.checkAstericsErrorOnType();
+    return this;
+  }
+
   public static class CompletionChecker {
     private int loadedTransactionCount;
     private final int importedTransactionCount;

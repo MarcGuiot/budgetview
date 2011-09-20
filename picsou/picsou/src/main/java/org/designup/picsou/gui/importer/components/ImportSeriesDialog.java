@@ -68,7 +68,7 @@ public class ImportSeriesDialog {
 
     dialog.addPanelWithButtons(builder.<JPanel>load(),
                                new ValidateAction(localRepository),
-                               new CancelAction());
+                               new DoNotImportAction());
     dialog.pack();
     dialog.showCentered();
     builder.dispose();
@@ -90,9 +90,9 @@ public class ImportSeriesDialog {
     }
   }
 
-  private class CancelAction extends AbstractAction {
-    public CancelAction() {
-      super(Lang.get("import.series.cancel"));
+  private class DoNotImportAction extends AbstractAction {
+    public DoNotImportAction() {
+      super(Lang.get("import.series.doNotImport"));
     }
 
     public void actionPerformed(ActionEvent e) {

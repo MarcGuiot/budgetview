@@ -3,6 +3,7 @@ package org.designup.picsou.functests.banks;
 import org.designup.picsou.model.TransactionType;
 
 public class MoneyExportTest extends SpecificBankTestCase {
+  
   public void testDefaultQifFile() throws Exception {
     operations.openImportDialog()
       .setFilePath(getFile("money_export_standard.qif"))

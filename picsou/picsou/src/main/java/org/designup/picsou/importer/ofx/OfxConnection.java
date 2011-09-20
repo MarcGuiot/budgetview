@@ -156,7 +156,8 @@ public class OfxConnection {
       Glob glob = repository.create(RealAccount.TYPE,
                                     FieldValue.value(RealAccount.ACC_TYPE, accountInfo.accType),
                                     FieldValue.value(RealAccount.BANK_ID, accountInfo.bankId),
-                                    FieldValue.value(RealAccount.NUMBER, accountInfo.number));
+                                    FieldValue.value(RealAccount.NUMBER, accountInfo.number),
+                                    FieldValue.value(RealAccount.FROM_SYNCHRO, true));
       OfxConnection.getInstance().loadOperation(glob, fromDate, "0350763423L", password,
                                                 "https://ofx.videoposte.com", "0", "0", outputFile);
       OfxImporter importer = new OfxImporter();

@@ -44,7 +44,8 @@ public class OtherBank extends WebBankPage {
     builder.add("add", addRealAccount);
     addRealAccount.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        Glob glob = repository.create(RealAccount.TYPE, FieldValue.value(RealAccount.BANK, ID));
+        Glob glob = repository.create(RealAccount.TYPE, FieldValue.value(RealAccount.BANK, ID),
+                                      FieldValue.value(RealAccount.FROM_SYNCHRO, true));
         selectionService.select(glob);
       }
     });

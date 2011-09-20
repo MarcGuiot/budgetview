@@ -7,8 +7,7 @@
       <label text="$import.series.title" name="title" styleClass="title"/>
 
       <htmlEditorPane text="$import.series.message" styleClass="multiLineLabel" weightY="0.01"/>
-
-      <scrollPane>
+      <scrollPane forceVerticalScroll="true" weightY="10">
         <column>
           <repeat ref="series" layout="verticalGrid">
             <textField ref="name"/>

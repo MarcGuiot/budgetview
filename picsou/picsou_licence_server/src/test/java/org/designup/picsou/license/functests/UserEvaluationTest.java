@@ -19,6 +19,7 @@ public class UserEvaluationTest extends ConnectedTestCase {
   public void tearDown() throws Exception {
     super.tearDown();
     application.dispose();
+    application = null;
   }
 
   public void testSendYesWithCommentAndEmail() throws Exception {
@@ -67,8 +68,6 @@ public class UserEvaluationTest extends ConnectedTestCase {
   }
 
   public void testNotConnected() throws Exception {
-
-    fail("[Regis] En cours - je ne comprends pas pourquoi on n'a pas les affichages");
 
     Debug.enter("Restart 1");
     application.restart();

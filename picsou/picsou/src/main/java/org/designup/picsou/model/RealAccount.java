@@ -54,6 +54,9 @@ public class RealAccount {
 
   public static StringField NAME;
 
+  @DefaultBoolean(false)
+  public static BooleanField FROM_SYNCHRO;
+
   @Target(value = AccountCardType.class)
   @DefaultInteger(0)
   public static LinkField CARD_TYPE;
@@ -154,6 +157,7 @@ public class RealAccount {
       output.writeInteger(fieldValues.get(ACCOUNT));
       output.writeInteger(fieldValues.get(CARD_TYPE));
       output.writeInteger(fieldValues.get(TRANSACTION_ID));
+      output.writeBoolean(fieldValues.get(FROM_SYNCHRO));
 
       return serializedByteArrayOutput.toByteArray();
     }
@@ -183,6 +187,7 @@ public class RealAccount {
       fieldSetter.set(ACCOUNT, input.readInteger());
       fieldSetter.set(CARD_TYPE, input.readInteger());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(FROM_SYNCHRO, input.readBoolean());
     }
   }
 
