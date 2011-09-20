@@ -115,6 +115,10 @@ public class MainWindow implements WindowManager {
       local.interrupt();
       local.join(2000);
       if (local.isAlive()) {
+        StackTraceElement[] stackTraceElements = local.getStackTrace();
+        for (StackTraceElement element : stackTraceElements) {
+          System.out.println(element.toString());
+        }
         Thread.dumpStack();
       }
     }

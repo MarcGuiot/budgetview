@@ -29,22 +29,19 @@ public class UserEvaluationDialog {
 
   public static void showIfNeeded(GlobRepository repository, Directory directory) {
 
-    // [Regis => Marc] Comment influer là-dessus dans les tests ?
+    Glob userPrefs = repository.get(UserPreferences.KEY);
+    int exitCount = userPrefs.get(UserPreferences.EXIT_COUNT, 0);
+    repository.update(UserPreferences.KEY, UserPreferences.EXIT_COUNT, exitCount + 1);
     if (!repository.get(User.KEY).isTrue(User.CONNECTED)) {
-      System.out.println("UserEvaluationDialog.showIfNeeded: no connection");
-      System.out.flush();
       return;
     }
 
-    Glob userPrefs = repository.get(UserPreferences.KEY);
     if (userPrefs.isTrue(UserPreferences.EVALUATION_SHOWN)) {
       return;
     }
-    int exitCount = userPrefs.get(UserPreferences.EXIT_COUNT, 0);
     if (exitCount >= 1) {
       doShow(repository, directory);
     }
-    repository.update(UserPreferences.KEY, UserPreferences.EXIT_COUNT, exitCount + 1);
   }
 
   public static void doShow(GlobRepository repository, Directory directory) {

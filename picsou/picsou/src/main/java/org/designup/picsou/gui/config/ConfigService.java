@@ -131,6 +131,7 @@ public class ConfigService {
       }
     }
     catch (IOException e) {
+      updateConnectionStatus(e);
       return Lang.get("license.mail.send.error");
     }
   }
@@ -346,13 +347,13 @@ public class ConfigService {
   }
 
   private void updateConnectionStatus(Exception e) {
-//    if (e instanceof IOException){
-//      SwingUtilities.invokeLater(new Runnable() {
-//        public void run() {
-//          repository.update(User.KEY, User.CONNECTED, false);
-//        }
-//      });
-//    }
+    if (e instanceof IOException){
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          repository.update(User.KEY, User.CONNECTED, false);
+        }
+      });
+    }
   }
 
   synchronized public boolean update(final byte[] repoId, final long launchCount, byte[] mailInBytes,
@@ -455,7 +456,7 @@ public class ConfigService {
   }
 
   @Inline
-  public static void waitEndOfConfigRequest(Directory directory) {
+  public static boolean waitEndOfConfigRequest(Directory directory) {
     ConfigService configService = directory.get(ConfigService.class);
     synchronized (configService) {
       while (!configService.isVerifiedServerValidity() && !Thread.currentThread().isInterrupted()) {
@@ -463,10 +464,11 @@ public class ConfigService {
           configService.wait(200);
         }
         catch (InterruptedException e) {
-          return;
+          return false;
         }
       }
     }
+    return true;
   }
 
   public boolean isMailSend() {

@@ -1,15 +1,16 @@
 package org.designup.picsou.license.functests;
 
 import org.designup.picsou.functests.checkers.ApplicationChecker;
+import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.license.ConnectedTestCase;
 import org.globsframework.utils.logging.Debug;
 
 public class UserEvaluationTest extends ConnectedTestCase {
-
   private ApplicationChecker application;
 
   public void setUp() throws Exception {
+    System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
     super.setUp();
     application = new ApplicationChecker();
     application.start();
@@ -19,6 +20,8 @@ public class UserEvaluationTest extends ConnectedTestCase {
   public void tearDown() throws Exception {
     super.tearDown();
     application.dispose();
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+    application = null;
   }
 
   public void testSendYesWithCommentAndEmail() throws Exception {
@@ -68,7 +71,6 @@ public class UserEvaluationTest extends ConnectedTestCase {
 
   public void testNotConnected() throws Exception {
 
-//    fail("[Regis] En cours - je ne comprends pas pourquoi on n'a pas les affichages");
 
     Debug.enter("Restart 1");
     application.restart();
