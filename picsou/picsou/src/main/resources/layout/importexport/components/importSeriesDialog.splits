@@ -2,13 +2,13 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog">
+  <panel styleClass="dialog" preferredSize="(400,600)">
     <column styleClass="innerDialog">
       <label text="$import.series.title" name="title" styleClass="title"/>
 
-      <htmlEditorPane text="$import.series.message" styleClass="multiLineLabel" weightY="0.01"/>
+      <htmlEditorPane text="$import.series.message" styleClass="multiLineLabel" weightY="0.01" marginBottom="10"/>
       <scrollPane forceVerticalScroll="true" weightY="10">
-        <column>
+        <column margin="10">
           <repeat ref="series" layout="verticalGrid">
             <textField ref="name"/>
             <comboBox ref="choice"/>

@@ -14,7 +14,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .checkContains("Alimentation", "Loisirs-culture-sport", "Auto-moto")
       .setRecurring("Alimentation")
       .setVariable("Loisirs-culture-sport", "Auto-moto")
-      .validate();
+      .validateAndFinishImport();
 
     transactions.initAmountContent()
       .add("20/08/2011", "SPLIT COURSES QUELCONQUES", 0.00, "Alimentation", 0.00, 0.00, "Main account")
@@ -32,7 +32,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .checkContains("[Test]")
       .setRecurring("[Test]")
       .checkNotContain("Alimentation")
-      .validate();
+      .validateAndFinishImport();
 
     categorization.selectTransaction("SPLIT COURSES QUELCONQUES");
      transactionDetails.openSplitDialog()

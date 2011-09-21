@@ -44,7 +44,7 @@ public class ImportSeriesChecker {
     return this;
   }
 
-  public void validate() {
+  public void validateAndFinishImport() {
     dialog.getButton("import").click();
     assertFalse(dialog.isVisible());
     ImportDialogChecker.complete(-1, -1, -1, parent);

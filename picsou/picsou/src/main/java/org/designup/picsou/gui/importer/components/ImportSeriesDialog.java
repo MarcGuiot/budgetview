@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.importer.components;
 
+import org.designup.picsou.gui.components.BorderlessTextField;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
@@ -49,11 +50,13 @@ public class ImportSeriesDialog {
                       GlobMatchers.keyIn(series),
                       new GlobFieldComparator(Series.NAME), new RepeatComponentFactory<Glob>() {
       public void registerComponents(RepeatCellBuilder cellBuilder, Glob item) {
-        JTextField name = GlobTextEditor.init(Series.NAME, repository, directory)
+
+        JTextField nameField = GlobTextEditor.init(Series.NAME, repository, directory)
           .forceSelection(item.getKey())
           .setName("series_" + item.get(Series.NAME))
           .getComponent();
-        cellBuilder.add("name", name);
+        BorderlessTextField.install(nameField);
+        cellBuilder.add("name", nameField);
 
         GlobLinkComboEditor comboView = GlobLinkComboEditor.init(Series.BUDGET_AREA, repository, directory)
           .setEmptyOptionLabel(Lang.get("import.series.uncategorized"))
