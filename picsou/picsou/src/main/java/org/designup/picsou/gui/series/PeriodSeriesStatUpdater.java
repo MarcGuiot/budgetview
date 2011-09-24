@@ -202,18 +202,19 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
 
     boolean hasObservedAmount = false;
     boolean hasPlannedAmountToSet = false;
-    for (Glob stat : repository.findByIndex(SeriesStat.SERIES_INDEX, seriesId)) {
-      if (!hasObservedAmount && Amounts.isNotZero(stat.get(SeriesStat.AMOUNT))) {
-        hasObservedAmount = true;
-      }
-      if (!hasPlannedAmountToSet && Amounts.isUnset(stat.get(SeriesStat.PLANNED_AMOUNT))) {
-        hasPlannedAmountToSet = true;
-      }
+    GlobList activeStats =
+      repository.findByIndex(SeriesStat.SERIES_INDEX, seriesId);
+    if (!selectedMonths.isEmpty()) {
+      activeStats.filterSelf(fieldContained(SeriesStat.MONTH, selectedMonths.getValueSet(Month.ID)), repository);
+    }
+
+    for (Glob stat : activeStats) {
+      hasObservedAmount |= Amounts.isNotZero(stat.get(SeriesStat.AMOUNT));
+      hasPlannedAmountToSet |= Amounts.isUnset(stat.get(SeriesStat.PLANNED_AMOUNT));
       if (hasObservedAmount && hasPlannedAmountToSet) {
         return true;
       }
     }
     return false;
   }
-
 }

@@ -46,7 +46,7 @@
         <column marginBottom="10">
           <row>
             <label icon="leftArrow(14,40,8,30,categorization.selection.arrow)" margin="5" marginLeft="0" weightX="0.01"/>
-            <htmlEditorPane text="$transaction.details.noselection" hyperlinkListener="hyperlinkHandler"/>
+            <htmlEditorPane name="noSelectionMessage" text="$transaction.details.noselection" hyperlinkListener="hyperlinkHandler"/>
           </row>
           <filler fill="vertical"/>
         </column>

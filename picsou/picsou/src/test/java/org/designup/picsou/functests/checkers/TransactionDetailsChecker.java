@@ -143,7 +143,7 @@ public class TransactionDetailsChecker extends ViewChecker {
   }
 
   public void checkMessage(String message) {
-    assertThat(getPanel().getTextBox().textContains(message));
+    assertThat(getPanel().getTextBox("noSelectionMessage").textContains(message));
   }
 
   public void shift() {
