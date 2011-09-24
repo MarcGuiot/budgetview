@@ -12,7 +12,7 @@ public class LocalServer {
     LicenseServer server = new LicenseServer();
     server.setMailPort(5000);
     server.useSsl(false);
-    server.usePort(1432);
+    server.usePort(8443);
     server.setDatabaseUrl("jdbc:hsqldb:.");
     server.init();
     server.addServlet(new ServletHolder(new DefaultServlet()), "/");

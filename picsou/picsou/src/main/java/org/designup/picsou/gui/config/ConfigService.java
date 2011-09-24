@@ -62,7 +62,6 @@ public class ConfigService {
 
   private String URL = PicsouApplication.REGISTER_URL;
   private String FTP_URL = PicsouApplication.FTP_URL;
-  private HttpClient httpClient;
   private long localJarVersion = -1;
   private long localConfigVersion = -1;
   private String applicationVersion;
@@ -92,7 +91,6 @@ public class ConfigService {
     this.localConfigVersion = localConfigVersion;
     Protocol easyhttps = new Protocol("https", new HttpsClientTransport.EasySSLProtocolSocketFactory(), 443);
     Protocol.registerProtocol("https", easyhttps);
-    this.httpClient = new HttpClient();
   }
 
   synchronized public boolean loadConfigFileFromLastestJar(Directory directory, GlobRepository repository) {
@@ -101,13 +99,28 @@ public class ConfigService {
 
   // return a translated message
   synchronized public String askForNewCodeByMail(String mail) {
+    PostMethod postMethod = null;
     try {
       String url = URL + REQUEST_FOR_MAIL;
-      final PostMethod postMethod = new PostMethod(url);
-      postMethod.getParams().setContentCharset("UTF-8");
-      postMethod.setRequestHeader(HEADER_MAIL, mail);
-      postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
-      httpClient.executeMethod(postMethod);
+      try {
+        postMethod = new PostMethod(url);
+        postMethod.getParams().setContentCharset("UTF-8");
+        postMethod.setRequestHeader(HEADER_MAIL, mail);
+        postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
+        HttpClient httpClient = new HttpClient();
+        httpClient.executeMethod(postMethod);
+      }
+      catch (IOException e) {
+        if (postMethod != null) {
+          postMethod.releaseConnection();
+        }
+        postMethod = new PostMethod(url);
+        postMethod.getParams().setContentCharset("UTF-8");
+        postMethod.setRequestHeader(HEADER_MAIL, mail);
+        postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
+        HttpClient httpClient = new HttpClient();
+        httpClient.executeMethod(postMethod);
+      }
       int statusCode = postMethod.getStatusCode();
       if (statusCode == 200) {
         Header status = postMethod.getResponseHeader(HEADER_STATUS);
@@ -132,26 +145,31 @@ public class ConfigService {
     catch (IOException e) {
       return Lang.get("license.mail.send.error");
     }
+    finally {
+      if (postMethod != null) {
+        postMethod.releaseConnection();
+      }
+    }
   }
 
   synchronized private boolean sendRequestForNewConfig(byte[] repoId, String mail, String signature,
                                                        long launchCount, String activationCode) throws IOException {
     this.repoId = repoId;
     String url = URL + REQUEST_FOR_CONFIG;
-    PostMethod postMethod = new PostMethod(url);
-    postMethod.getParams().setContentCharset("UTF-8");
-    postMethod.setRequestHeader(HEADER_CONFIG_VERSION, Long.toString(localConfigVersion));
-    postMethod.setRequestHeader(HEADER_JAR_VERSION, Long.toString(localJarVersion));
-    postMethod.setRequestHeader(HEADER_APPLICATION_VERSION, applicationVersion);
-    postMethod.setRequestHeader(HEADER_REPO_ID, Encoder.byteToString(repoId));
-    postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
-    if (signature != null && signature.length() > 1 && mail != null && activationCode != null) {
-      postMethod.setRequestHeader(HEADER_MAIL, mail);
-      postMethod.setRequestHeader(HEADER_SIGNATURE, signature);
-      postMethod.setRequestHeader(HEADER_CODE, activationCode);
-      postMethod.setRequestHeader(HEADER_COUNT, Long.toString(launchCount));
+    PostMethod postMethod = null;
+    try {
+      postMethod = createNewConfigPostMethod(repoId, mail, signature, launchCount, activationCode, url);
+      HttpClient httpClient = new HttpClient();
+      httpClient.executeMethod(postMethod);
     }
-    httpClient.executeMethod(postMethod);
+    catch (IOException e) {
+      if (postMethod != null) {
+        postMethod.releaseConnection();
+      }
+      postMethod = createNewConfigPostMethod(repoId, mail, signature, launchCount, activationCode, url);
+      HttpClient httpClient = new HttpClient();
+      httpClient.executeMethod(postMethod);
+    }
     int statusCode = postMethod.getStatusCode();
     if (statusCode == 200) {
       Header configVersionHeader = postMethod.getResponseHeader(HEADER_NEW_CONFIG_VERSION);
@@ -199,6 +217,23 @@ public class ConfigService {
     return false;
   }
 
+  private PostMethod createNewConfigPostMethod(byte[] repoId, String mail, String signature, long launchCount, String activationCode, String url) {
+    PostMethod postMethod = new PostMethod(url);
+    postMethod.getParams().setContentCharset("UTF-8");
+    postMethod.setRequestHeader(HEADER_CONFIG_VERSION, Long.toString(localConfigVersion));
+    postMethod.setRequestHeader(HEADER_JAR_VERSION, Long.toString(localJarVersion));
+    postMethod.setRequestHeader(HEADER_APPLICATION_VERSION, applicationVersion);
+    postMethod.setRequestHeader(HEADER_REPO_ID, Encoder.byteToString(repoId));
+    postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
+    if (signature != null && signature.length() > 1 && mail != null && activationCode != null) {
+      postMethod.setRequestHeader(HEADER_MAIL, mail);
+      postMethod.setRequestHeader(HEADER_SIGNATURE, signature);
+      postMethod.setRequestHeader(HEADER_CODE, activationCode);
+      postMethod.setRequestHeader(HEADER_COUNT, Long.toString(launchCount));
+    }
+    return postMethod;
+  }
+
   private boolean checkMailSent(PostMethod postMethod) {
     Header header = postMethod.getResponseHeader(HEADER_MAIL_SENT);
     return header != null && header.getValue().equals("true");
@@ -210,22 +245,26 @@ public class ConfigService {
       return;
     }
     Utils.endRemove();
+    PostMethod postMethod = null;
     try {
       String url = URL + REQUEST_FOR_REGISTER;
-      final PostMethod postMethod = new PostMethod(url);
-      postMethod.getParams().setContentCharset("UTF-8");
-      postMethod.setRequestHeader(HEADER_MAIL, mail);
-      postMethod.setRequestHeader(HEADER_CODE, code);
-      postMethod.setRequestHeader(HEADER_REPO_ID, Encoder.byteToString(repoId));
-      postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
-      httpClient.executeMethod(postMethod);
+      try {
+        postMethod = createRegisterPostMethod(mail, code, url);
+        HttpClient httpClient = new HttpClient();
+        httpClient.executeMethod(postMethod);
+      }
+      catch (IOException e) {
+        if (postMethod != null) {
+          postMethod.releaseConnection();
+        }
+        postMethod = createRegisterPostMethod(mail, code, url);
+        HttpClient httpClient = new HttpClient();
+        httpClient = new HttpClient();
+        httpClient.executeMethod(postMethod);
+      }
       int statusCode = postMethod.getStatusCode();
       if (statusCode == 200) {
-        SwingUtilities.invokeLater(new Runnable() {
-          public void run() {
-            computeResponse(repository, postMethod);
-          }
-        });
+        SwingUtilities.invokeLater(new ComputeRegisterResponse(repository, postMethod));
       }
       else {
         updateRepository(repository, User.ACTIVATION_FAILED_HTTP_REQUEST);
@@ -252,6 +291,21 @@ public class ConfigService {
       thread.setDaemon(true);
       thread.start();
     }
+    finally {
+      if (postMethod != null) {
+        postMethod.releaseConnection();
+      }
+    }
+  }
+
+  private PostMethod createRegisterPostMethod(String mail, String code, String url) {
+    final PostMethod postMethod = new PostMethod(url);
+    postMethod.getParams().setContentCharset("UTF-8");
+    postMethod.setRequestHeader(HEADER_MAIL, mail);
+    postMethod.setRequestHeader(HEADER_CODE, code);
+    postMethod.setRequestHeader(HEADER_REPO_ID, Encoder.byteToString(repoId));
+    postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
+    return postMethod;
   }
 
   private void updateRepository(final GlobRepository repository, final int cause) {
@@ -299,47 +353,7 @@ public class ConfigService {
 
   synchronized public void sendMail(final String toMail, final String fromMail,
                                     final String title, final String content, final Listener listener) {
-    Thread thread = new Thread() {
-      public void run() {
-        String url = URL + REQUEST_SEND_MAIL;
-        PostMethod postMethod = new PostMethod(url);
-        postMethod.getParams().setContentCharset("UTF-8");
-        postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
-        postMethod.setRequestHeader(HEADER_MAIL, fromMail);
-        postMethod.setRequestHeader(HEADER_TO_MAIL, toMail);
-        postMethod.setRequestHeader(HEADER_MAIL_TITLE, title);
-        postMethod.setRequestHeader(HEADER_MAIL_CONTENT, encodeContent(content));
-        try {
-          httpClient.executeMethod(postMethod);
-        }
-        catch (final Exception e) {
-          updateConnectionStatus(e);
-          SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-              Log.write("mail not sent", e);
-              listener.sendFail(fromMail, title, content);
-            }
-          });
-          return;
-        }
-        final int statusCode = postMethod.getStatusCode();
-        if (statusCode == 200) {
-          SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-              listener.sent(fromMail, title, content);
-            }
-          });
-        }
-        else {
-          SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-              Log.write("Mail not sent with error code " + statusCode);
-              listener.sendFail(fromMail, title, content);
-            }
-          });
-        }
-      }
-    };
+    Thread thread = new SendMailThread(fromMail, toMail, title, content, listener);
     thread.setDaemon(true);
     thread.start();
   }
@@ -609,6 +623,96 @@ public class ConfigService {
     }
     catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e);
+    }
+  }
+
+  private class SendMailThread extends Thread {
+    private final String fromMail;
+    private final String toMail;
+    private final String title;
+    private final String content;
+    private final Listener listener;
+
+    public SendMailThread(String fromMail, String toMail, String title, String content, Listener listener) {
+      this.fromMail = fromMail;
+      this.toMail = toMail;
+      this.title = title;
+      this.content = content;
+      this.listener = listener;
+    }
+
+    public void run() {
+      String url = URL + REQUEST_SEND_MAIL;
+      PostMethod postMethod = createPost(url);
+      try {
+        try {
+          HttpClient httpClient = new HttpClient();
+          httpClient.executeMethod(postMethod);
+        }
+        catch (IOException e) {
+          Log.write("connection error (retrying): ", e);
+          postMethod.releaseConnection();
+          HttpClient httpClient = new HttpClient();
+          postMethod = createPost(url);
+          httpClient.executeMethod(postMethod);
+        }
+        Log.write("Send mail ok");
+      }
+      catch (final Exception e) {
+        Log.write("in send mail", e);
+        updateConnectionStatus(e);
+        SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            Log.write("mail not sent", e);
+            listener.sendFail(fromMail, title, content);
+          }
+        });
+        return;
+      }
+      finally {
+          postMethod.releaseConnection();
+      }
+      final int statusCode = postMethod.getStatusCode();
+      if (statusCode == 200) {
+        SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            listener.sent(fromMail, title, content);
+          }
+        });
+      }
+      else {
+        SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            Log.write("Mail not sent with error code " + statusCode);
+            listener.sendFail(fromMail, title, content);
+          }
+        });
+      }
+    }
+
+    private PostMethod createPost(String url) {
+      PostMethod postMethod = new PostMethod(url);
+      postMethod.getParams().setContentCharset("UTF-8");
+      postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
+      postMethod.setRequestHeader(HEADER_MAIL, fromMail);
+      postMethod.setRequestHeader(HEADER_TO_MAIL, toMail);
+      postMethod.setRequestHeader(HEADER_MAIL_TITLE, title);
+      postMethod.setRequestHeader(HEADER_MAIL_CONTENT, encodeContent(content));
+      return postMethod;
+    }
+  }
+
+  private class ComputeRegisterResponse implements Runnable {
+    private final GlobRepository repository;
+    private final PostMethod postMethod;
+
+    public ComputeRegisterResponse(GlobRepository repository, PostMethod postMethod) {
+      this.repository = repository;
+      this.postMethod = postMethod;
+    }
+
+    public void run() {
+      computeResponse(repository, postMethod);
     }
   }
 }

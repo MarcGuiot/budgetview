@@ -14,6 +14,7 @@ import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.card.NavigationView;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.feedback.FeedbackService;
 import org.designup.picsou.gui.feedback.FeedbackView;
 import org.designup.picsou.gui.feedback.actions.SendFeedbackAction;
@@ -48,10 +49,7 @@ import org.designup.picsou.gui.utils.DataCheckerAction;
 import org.designup.picsou.gui.utils.DumpDataAction;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.dev.*;
-import org.designup.picsou.model.AccountType;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.SignpostStatus;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -59,19 +57,23 @@ import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import static org.globsframework.model.utils.GlobMatchers.isFalse;
 import org.globsframework.model.utils.ReplicationGlobRepository;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.Dates;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-
-import static org.globsframework.model.utils.GlobMatchers.isFalse;
+import java.util.Map;
+import java.util.Date;
 
 public class MainPanel {
   private PicsouFrame parent;
@@ -99,6 +101,7 @@ public class MainPanel {
   private SeriesAnalysisView seriesAnalysisView;
   private CategorizationView categorizationView;
   private SignpostView signpostView;
+  private Action threadsAction;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -150,6 +153,7 @@ public class MainPanel {
     logoutAction = new LogoutAction(logoutService);
     protectAction = new ProtectAction(repository, directory);
     deleteUserAction = new DeleteUserAction(this, repository, directory);
+    threadsAction = new SendStackTracesAction(repository, directory);
 
     LicenseInfoView licenseInfoView = new LicenseInfoView(repository, directory);
 
@@ -263,6 +267,8 @@ public class MainPanel {
     menu.add(protectAction);
     menu.add(logoutAction);
     menu.add(deleteUserAction);
+    menu.addSeparator();
+    menu.add(threadsAction);
 
     if (Gui.useMacOSMenu()) {
       MRJAdapter.addQuitApplicationListener(exitAction);
@@ -346,4 +352,116 @@ public class MainPanel {
     windowManager.logOutAndDeleteUser(userName, chars);
   }
 
+  private static class SendStackTracesAction extends AbstractAction {
+    private GlobRepository repository;
+    private Directory directory;
+    private Thread thread;
+    private boolean stop;
+    private StringBuilder buffer = new StringBuilder();
+
+    public SendStackTracesAction(GlobRepository repository, Directory directory) {
+      super(Lang.get("dumpThread"));
+      this.repository = repository;
+      this.directory = directory;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      if (thread == null) {
+        stop = false;
+        dump();
+        this.putValue(Action.NAME, Lang.get("sendThread"));
+      }
+      else {
+        this.putValue(Action.NAME, Lang.get("dumpThread"));
+        stop();
+      }
+    }
+
+    private void stop() {
+      try {
+        synchronized (this) {
+          stop = true;
+          notifyAll();
+        }
+        while (thread.isAlive()) {
+          thread.interrupt();
+          thread.join(200);
+        }
+        thread = null;
+
+        Glob glob = repository.find(User.KEY);
+        String mail = "???";
+        if (glob != null) {
+          mail = glob.get(User.EMAIL);
+        }
+        String content = buffer.toString();
+        Log.write(content);
+        directory.get(ConfigService.class).sendMail(ConfigService.MAIL_CONTACT,
+                                                    mail,
+                                                    "Thread dump",
+                                                    content,
+                                                    new ConfigService.Listener() {
+                                                      public void sent(String mail, String title, String content) {
+                                                        Log.write("Mail sent from " + mail + " title : " + title + "\n" + content);
+                                                      }
+
+                                                      public void sendFail(String mail, String title, String content) {
+                                                        Log.write("Fail to sent mail from " + mail + " title : " + title + "\n" + content);
+                                                        //                                                      MessageDialog.show("");
+                                                      }
+                                                    });
+      }
+      catch (InterruptedException e) {
+        Log.write("interupted thread in send ");
+      }
+    }
+
+    private void dump() {
+      thread = new Thread() {
+        public void run() {
+          try {
+            synchronized (this) {
+              wait(1000);
+              while (!stop) {
+                buffer.append("-------------------").append(Dates.toTimestampString(new Date())).append('\n');
+                Runtime runtime = Runtime.getRuntime();
+                buffer
+                  .append("free mem : ").append(runtime.freeMemory())
+                  .append(" max mem : ").append(runtime.maxMemory())
+                  .append(" total mem : ").append(runtime.totalMemory())
+                  .append('\n');
+                Map<Thread, StackTraceElement[]> map = Thread.getAllStackTraces();
+                for (Map.Entry<Thread, StackTraceElement[]> entry : map.entrySet()) {
+                  if (thread != entry.getKey()) {
+                    buffer.append("Thread : \n")
+                      .append(entry.getKey().getName())
+                      .append("\n");
+                    for (StackTraceElement element : entry.getValue()) {
+                      buffer
+                        .append("at ")
+                        .append(element.getClassName())
+                        .append(".")
+                        .append(element.getMethodName())
+                        .append("(")
+                        .append(element.getFileName())
+                        .append(":")
+                        .append(element.getLineNumber())
+                        .append(")")
+                        .append("\n");
+                    }
+                  }
+                }
+                wait(4000);
+              }
+            }
+          }
+          catch (InterruptedException e) {
+          }
+        }
+      };
+      thread.setDaemon(true);
+      thread.start();
+
+    }
+  }
 }
