@@ -95,6 +95,8 @@ public class LicenseServer {
   public void init() {
     if (useSsl) {
       SslSocketConnector connector = new SslSocketConnector();
+      connector.setHeaderBufferSize(1024 * 1024);
+      connector.setRequestBufferSize(1024 * 1024);
       String keyStore = System.getProperty(KEYSTORE);
       if (keyStore == null) {
         keyStore = "resources/.keystore";
@@ -112,6 +114,8 @@ public class LicenseServer {
     }
     else {
       SocketConnector connector = new SocketConnector();
+      connector.setHeaderBufferSize(1024 * 1024);
+      connector.setRequestBufferSize(1024 * 1024);
       connector.setHost("0.0.0.0");
       connector.setPort(port);
       jetty.addConnector(connector);

@@ -426,6 +426,7 @@ public class MainPanel {
                                                     });
       }
       catch (InterruptedException e) {
+        Log.write("interupted thread in send ");
       }
     }
 
