@@ -44,7 +44,10 @@
 
       <card name="noSelection">
         <column marginBottom="10">
-          <htmlEditorPane text="$transaction.details.noselection" hyperlinkListener="hyperlinkHandler"/>
+          <row>
+            <label icon="leftArrow(14,40,8,30,categorization.selection.arrow)" margin="5" marginLeft="0" weightX="0.01"/>
+            <htmlEditorPane name="noSelectionMessage" text="$transaction.details.noselection" hyperlinkListener="hyperlinkHandler"/>
+          </row>
           <filler fill="vertical"/>
         </column>
       </card>
@@ -54,7 +57,7 @@
           <htmlEditorPane ref="userLabel" weightY="0.1"/>
 
           <htmlEditorPane ref="originalLabel"
-                    foreground="transaction.detail.formLabel" font="-,plain,10"/>
+                          foreground="transaction.detail.formLabel" font="-,plain,10"/>
 
           <label ref="details" styleClass="formLabel" horizontalAlignment="left"/>
 

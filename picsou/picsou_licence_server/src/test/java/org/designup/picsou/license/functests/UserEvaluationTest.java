@@ -71,7 +71,6 @@ public class UserEvaluationTest extends ConnectedTestCase {
 
   public void testNotConnected() throws Exception {
 
-
     Debug.enter("Restart 1");
     application.restart();
     Debug.exit();

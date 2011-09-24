@@ -3,6 +3,7 @@ package org.designup.picsou.functests.banks;
 import org.designup.picsou.model.TransactionType;
 
 public class MoneyExportTest extends SpecificBankTestCase {
+  
   public void testDefaultQifFile() throws Exception {
     operations.openImportDialog()
       .setFilePath(getFile("money_export_standard.qif"))
@@ -11,9 +12,9 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .setMainAccount()
       .importSeries()
       .checkContains("Alimentation", "Loisirs-culture-sport", "Auto-moto")
-      .setRecuring("Alimentation")
+      .setRecurring("Alimentation")
       .setVariable("Loisirs-culture-sport", "Auto-moto")
-      .validate();
+      .validateAndFinishImport();
 
     transactions.initAmountContent()
       .add("20/08/2011", "SPLIT COURSES QUELCONQUES", 0.00, "Alimentation", 0.00, 0.00, "Main account")
@@ -29,9 +30,9 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .acceptFile()
       .importSeries()
       .checkContains("[Test]")
-      .setRecuring("[Test]")
+      .setRecurring("[Test]")
       .checkNotContain("Alimentation")
-      .validate();
+      .validateAndFinishImport();
 
     categorization.selectTransaction("SPLIT COURSES QUELCONQUES");
      transactionDetails.openSplitDialog()

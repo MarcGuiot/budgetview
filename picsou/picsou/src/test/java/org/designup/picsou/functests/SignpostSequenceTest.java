@@ -196,6 +196,41 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .setAmount(10.00)
       .validate();
     budgetView.variable.checkPlannedNotHighlighted("Clothing");
+
+    signpostView.checkSummaryViewShown();
+  }
+
+  public void testSeriesUnsetOnlyTakesCurrentSelectionIntoAccount() throws Exception {
+
+    views.selectData();
+    importPanel.checkImportSignpostDisplayed("Click here to import your operations");
+    importPanel.openImport().close();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2010/05/28", +500, "income")
+      .addTransaction("2010/05/29", -100, "auchan")
+      .addTransaction("2010/04/29", -100, "auchan")
+      .addTransaction("2010/04/29", -100, "vroum")
+      .load();
+
+    categorization.setIncome("income", "Income 1");
+    categorization.setVariable("auchan", "Groceries");
+    categorization.setNewVariable("vroum", "Car");
+    categorization.editSeries("Car")
+      .setEndDate(201004)
+      .validate();
+
+    timeline.selectMonth(201005);
+    
+    SignpostDialogChecker
+      .open(
+        budgetView.variable.editPlannedAmount("Groceries")
+          .setAmount(10.00)
+          .triggerValidate())
+      .close();
+    budgetView.variable.checkPlannedNotHighlighted("Groceries");
+
+    signpostView.checkSummaryViewShown();
   }
 
   public void testSkipCategorization() throws Exception {

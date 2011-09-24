@@ -26,6 +26,11 @@ public class LangTest extends TestCase {
     checkEmpty(root, "Missing entries in fr");
   }
 
+  public void testEnglishDictionnaryIsComplete() throws Exception {
+    root.removeAll(english);
+    checkEmpty(root, "Missing entries in en");
+  }
+
   private void checkEmpty(SortedSet<Object> keys, String message) {
     if (!keys.isEmpty()) {
       StringBuilder text = new StringBuilder();

@@ -3,7 +3,6 @@ package org.designup.picsou.functests.checkers;
 import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.importer.ImportCompletionPanel;
-import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
@@ -14,8 +13,6 @@ import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.io.File;
-
-import junit.framework.Assert;
 
 public class ImportDialogChecker extends GuiChecker {
   private Panel dialog;
@@ -593,65 +590,6 @@ public class ImportDialogChecker extends GuiChecker {
       catch (Exception e) {
         throw new RuntimeException(e);
       }
-    }
-  }
-
-  public Panel getDialog() {
-    return dialog;
-  }
-
-  public class ImportSeriesChecker {
-    private Window dialog;
-    private Panel parent;
-
-    public ImportSeriesChecker(Window dialog, Panel parent) {
-      this.dialog = dialog;
-      this.parent = parent;
-    }
-
-    public ImportSeriesChecker checkContains(String... seriesName) {
-      for (String s : seriesName) {
-        dialog.getInputTextBox("series_" + s);
-      }
-      return this;
-    }
-
-    public ImportSeriesChecker setIncome(String... series) {
-      return set(BudgetArea.INCOME, series);
-    }
-
-    public ImportSeriesChecker setRecuring(String ...series) {
-      return set(BudgetArea.RECURRING, series);
-    }
-
-    public ImportSeriesChecker setVariable(String ...series) {
-      return set(BudgetArea.VARIABLE, series);
-    }
-
-    private ImportSeriesChecker set(BudgetArea budgetArea, String... series) {
-      for (String s : series) {
-        dialog.getComboBox("choice_" + s).select(budgetArea.getLabel());
-      }
-      return this;
-    }
-
-    public void validate() {
-      dialog.getButton("import").click();
-      assertFalse(dialog.isVisible());
-      ImportDialogChecker.complete(-1, -1, -1, parent);
-    }
-
-    public ImportSeriesChecker checkNotContain(String ...series) {
-      for (String s : series) {
-        Assert.assertNull(dialog.findSwingComponent(JComboBox.class, "choice_" + s));
-      }
-      return this;
-    }
-
-    public void cancelImportSeries() {
-      dialog.getButton("do not import").click();
-      assertFalse(dialog.isVisible());
-      ImportDialogChecker.complete(-1, -1, -1, parent);
     }
   }
 }
