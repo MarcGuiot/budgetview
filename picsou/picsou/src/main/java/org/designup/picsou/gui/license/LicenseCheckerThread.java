@@ -25,7 +25,9 @@ public class LicenseCheckerThread extends Thread {
   }
 
   public void run() {
-    ConfigService.waitEndOfConfigRequest(directory);
+    if (!ConfigService.waitEndOfConfigRequest(directory)){
+      return ;
+    }
     try {
       SwingUtilities.invokeAndWait(new Runnable() {
         synchronized public void run() {
@@ -42,11 +44,7 @@ public class LicenseCheckerThread extends Thread {
         }
       });
     }
-    catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-    catch (InvocationTargetException e) {
-      e.printStackTrace();
+    catch (Exception e) {
     }
   }
 
