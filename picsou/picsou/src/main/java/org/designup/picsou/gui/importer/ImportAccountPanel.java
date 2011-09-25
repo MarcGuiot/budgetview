@@ -1,16 +1,16 @@
 package org.designup.picsou.gui.importer;
 
-import org.designup.picsou.gui.accounts.AbstractAccountPanel;
+import org.designup.picsou.gui.accounts.AccountEditionPanel;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.model.RealAccount;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.BankEntity;
-import org.designup.picsou.model.Account;
+import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.model.Glob;
 import org.globsframework.model.FieldValue;
+import org.globsframework.model.Glob;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -23,7 +23,7 @@ public class ImportAccountPanel {
   private JPanel panel;
   private ImportController controller;
   private LocalGlobRepository localGlobRepository;
-  private AbstractAccountPanel accountPanel;
+  private AccountEditionPanel accountPanel;
   private GlobsPanelBuilder builder;
   private Directory localDirectory;
   private Glob importedAccount;
@@ -44,16 +44,13 @@ public class ImportAccountPanel {
 
   public void init(PicsouDialog dialog, String closeButton) {
     builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importAccountPanel.splits", localGlobRepository, localDirectory);
-    accountPanel = new AbstractAccountPanel(localGlobRepository, localDirectory);
-    GlobsPanelBuilder accountBuilder =
-      new GlobsPanelBuilder(getClass(), "/layout/importexport/accountPanel.splits", localGlobRepository,
-                            accountPanel.getLocalDirectory());
-    accountPanel.createComponents(accountBuilder, dialog);
-    builder.add("accountPanel", accountBuilder);
+
+    accountPanel = new AccountEditionPanel(dialog, localGlobRepository, localDirectory);
+    builder.add("accountPanel", accountPanel.getPanel());
 
     builder.add("import", new AbstractAction(Lang.get("load")) {
       public void actionPerformed(ActionEvent e) {
-        if (accountPanel.check()){
+        if (accountPanel.check()) {
           localGlobRepository.update(importedAccount.getKey(),
                                      FieldValue.value(RealAccount.ACCOUNT, accountPanel.getAccount().get(Account.ID)));
 

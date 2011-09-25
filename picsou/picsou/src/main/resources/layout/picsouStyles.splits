@@ -39,6 +39,8 @@
            font="-,plain,11" foreground="import.header.label"
            marginTop="5" marginBottom="3" fill="none" anchor="southwest"/>
 
+    <!-- Form elements -->
+
     <style selector="label.formLabel"
            font="-,plain,12" foreground="import.form.label"
            anchor="east" marginRight="10" weightX="0"/>
@@ -61,6 +63,10 @@
            marginRight="5" weightX="0"/>
 
     <style selector="textField" fill="horizontal" weightX="10.0"/>
+
+    <style id="mandatoryFieldFlagHidden" selector="x" foreground="#FFFFFF" icon="empty(10,10)"/>
+    <style id="mandatoryFieldFlagShown" selector="x" foreground="#FF0000" icon="leftArrow(10,10,8,8,field.mandatory)"/>
+    <style selector="label.mandatoryFieldFlag" marginLeft="4"/>
 
     <style selector="row.buttons"
            fill="horizontal" anchor="center"

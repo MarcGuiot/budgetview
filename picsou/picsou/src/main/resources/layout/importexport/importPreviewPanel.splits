@@ -6,12 +6,9 @@
     <style selector="label#fileName"
            fill="none" anchor="left" font="-,bold,12" marginBottom="5"/>
     <style selector="scrollPane" marginBottom="10"/>
-    <style selector=".additionalActionMessage" foreground="$dialog.text.error" anchor="left"
-           opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"/>
-    <style selector="label.additionalActionButton" anchor="center" fill="none"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(600,550)">
+  <panel styleClass="dialog" preferredSize="(600,650)">
 
     <column styleClass="innerDialog">
 
@@ -21,21 +18,20 @@
       <label ref="fileName"/>
 
       <label text="$import.file.content" styleClass="header"/>
-
       <scrollPane maximumSize="(400,300)" weightY="500">
         <table ref="table"/>
       </scrollPane>
 
       <panel ref="dateSelectionPanel"/>
 
-      <column>
-        <label text="$import.select.account" styleClass="header" autoHideSource="accountCombo"/>
-        <row>
-          <comboBox ref="accountCombo"/>
-        </row>
-      </column>
+      <row weightY="0.01">
+        <label text="$import.select.account" styleClass="formLabel" autoHideSource="accountCombo" marginBottom="5"/>
+        <comboBox ref="accountCombo" marginBottom="5"/>
+      </row>
 
-      <panel ref="accountPanel"/>
+      <panel weightY="0.01" background="dialog.block" border="line(dialog.border)">
+        <panel ref="accountEditionPanel" margin="10"/>
+      </panel>
 
       <panel minimumSize="(200,20)" opaque="false" marginTop="5">
         <htmlEditorPane ref="importMessage" styleClass="errorMessage"/>

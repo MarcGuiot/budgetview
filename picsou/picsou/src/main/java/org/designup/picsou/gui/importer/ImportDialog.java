@@ -1,16 +1,13 @@
 package org.designup.picsou.gui.importer;
 
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
-import org.designup.picsou.gui.accounts.AccountEditionDialog;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.components.dialogs.MessageDialog;
-import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.importer.components.ImportSeriesDialog;
 import org.designup.picsou.model.*;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.layout.SingleComponentLayout;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
@@ -18,7 +15,6 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -34,10 +30,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+
 public class ImportDialog {
   private GlobRepository parentRepository;
   private Directory parentDirectory;
-  private boolean isSynchro;
   private LocalGlobRepository localRepository;
   private Directory localDirectory;
 
@@ -52,13 +49,11 @@ public class ImportDialog {
   private ImportAccountPanel importAccountsPanel;
 
   public ImportDialog(String textForCloseButton, List<File> files, Glob defaultAccount,
-                      final Window owner,
-                      final GlobRepository repository, Directory directory,
+                      final Window owner, final GlobRepository repository, Directory directory,
                       boolean usePreferredPath, boolean isSynchro) {
 
     this.parentRepository = repository;
     this.parentDirectory = directory;
-    this.isSynchro = isSynchro;
 
     loadLocalRepository(repository);
 
@@ -117,7 +112,7 @@ public class ImportDialog {
     }
   }
 
-  public void synchronize(GlobList importedAccount){
+  public void synchronize(GlobList importedAccount) {
     this.fileSelectionPanel.synchronize(importedAccount);
   }
 
@@ -229,7 +224,7 @@ public class ImportDialog {
   }
 
   public void showNoImport(Glob glob, boolean first) {
-    if (first){
+    if (first) {
       setCurrentPanel(importAccountsPanel.getPanel());
     }
     importAccountsPanel.setImportedAccountToImport(glob);

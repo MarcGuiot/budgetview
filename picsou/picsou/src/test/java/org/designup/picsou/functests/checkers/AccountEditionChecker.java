@@ -70,32 +70,32 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker checkAstericsErrorOnName(){
-    assertThat(dialog.getTextBox("nameAsterics").foregroundNear("FF0000"));
+    assertThat(dialog.getTextBox("nameFlag").foregroundNear("FF0000"));
     return this;
   }
 
   public AccountEditionChecker checkAstericsClearOnName(){
-    assertThat(dialog.getTextBox("nameAsterics").foregroundNear("FFFFFF"));
+    assertThat(dialog.getTextBox("nameFlag").foregroundNear("FFFFFF"));
     return this;
   }
 
   public AccountEditionChecker checkAstericsErrorOnBank(){
-    assertThat(dialog.getTextBox("bankAsterics").foregroundNear("FF0000"));
+    assertThat(dialog.getTextBox("bankFlag").foregroundNear("FF0000"));
     return this;
   }
 
   public AccountEditionChecker checkAstericsClearOnBank(){
-    assertThat(dialog.getTextBox("bankAsterics").foregroundNear("FFFFFF"));
+    assertThat(dialog.getTextBox("bankFlag").foregroundNear("FFFFFF"));
     return this;
   }
 
   public AccountEditionChecker checkAstericsErrorOnType(){
-    assertThat(dialog.getTextBox("accountTypeAsterics").foregroundNear("FF0000"));
+    assertThat(dialog.getTextBox("accountTypeFlag").foregroundNear("FF0000"));
     return this;
   }
 
   public AccountEditionChecker checkAstericsClearOnType(){
-    assertThat(dialog.getTextBox("accountTypeAsterics").foregroundNear("FFFFFF"));
+    assertThat(dialog.getTextBox("accountTypeFlag").foregroundNear("FFFFFF"));
     return this;
   }
 

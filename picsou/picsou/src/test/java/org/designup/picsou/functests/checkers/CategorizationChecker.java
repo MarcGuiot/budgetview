@@ -88,7 +88,7 @@ public class CategorizationChecker extends ViewChecker {
         assertFalse(area.getName(), panel.containsUIComponent(ToggleButton.class, area.getName()));
       }
     }
-    assertThat(panel.getTextBox("noSelectionMessage").textContains("You must select an operation"));
+    assertThat(panel.getTextBox("noSelectionInfoMessage").textContains("You must select an operation"));
   }
 
   public void checkBudgetAreaIsSelected(BudgetArea budgetArea) {

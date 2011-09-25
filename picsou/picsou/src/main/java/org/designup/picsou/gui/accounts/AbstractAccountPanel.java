@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.bank.BankChooserDialog;
+import org.designup.picsou.gui.components.MandatoryFieldFlag;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.help.actions.HelpAction;
 import org.designup.picsou.model.Account;
@@ -15,9 +16,11 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
-import org.globsframework.model.*;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.DefaultChangeSetListener;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -26,12 +29,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+
 public class AbstractAccountPanel<T extends GlobRepository> {
   protected JPanel panel;
   protected T localRepository;
   protected Glob currentAccount;
   protected JTextField positionEditor;
-  protected JTextArea messageWarning;
+  protected JTextArea warningMessage;
   protected Directory localDirectory;
   protected SelectionService selectionService;
   protected AccountTypeCombo accountTypeCombo;
@@ -40,9 +45,9 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   private AccountBankAction bankSelectionAction;
   private JButton bankSelectionButton;
   private ErrorTip errorTip;
-  private SplitsNode<JLabel> nameAsterics;
-  private SplitsNode<JLabel> bankAsterics;
-  private SplitsNode<JLabel> accountTypeAsterics;
+  private MandatoryFieldFlag nameFlag;
+  private MandatoryFieldFlag bankFlag;
+  private MandatoryFieldFlag accountTypeFlag;
 
   public AbstractAccountPanel(T repository, Directory parentDirectory) {
     this.localRepository = repository;
@@ -53,11 +58,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     accountTypeCombo = AccountTypeCombo.create(localRepository);
   }
 
-  public Directory getLocalDirectory() {
-    return localDirectory;
-  }
-
-  public void createComponents(GlobsPanelBuilder builder, Window dialog) {
+  protected void createComponents(GlobsPanelBuilder builder, Window dialog) {
 
     builder.add("accountTypeHelp", new HelpAction(Lang.get("account.panel.type.help"), "accountTypes",
                                                   Lang.get("help"), localDirectory, dialog));
@@ -67,7 +68,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     bankSelectionAction = new AccountBankAction(dialog);
     bankSelectionButton = new JButton(bankSelectionAction);
     builder.add("bankSelector", bankSelectionButton);
-    bankAsterics = builder.add("bankAsterics", new JLabel("*"));
+    bankFlag = new MandatoryFieldFlag("bankFlag", builder);
 
     selectionService.addListener(bankSelectionAction, Account.TYPE);
     localRepository.addChangeListener(new DefaultChangeSetListener() {
@@ -75,21 +76,21 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         if ((currentAccount != null) && changeSet.containsChanges(currentAccount.getKey())) {
           accountTypeCombo.updateAccountTypeCombo(currentAccount);
           updateBank(currentAccount);
-          showWarn();
+          updateMandatoryFlags();
           clearMessage();
         }
       }
     });
 
     nameField = builder.addEditor("name", Account.NAME).setNotifyOnKeyPressed(true);
-    nameAsterics = builder.add("nameAsterics", new JLabel("*"));
+    nameFlag = new MandatoryFieldFlag("nameFlag", builder);
     builder.addEditor("number", Account.NUMBER).setNotifyOnKeyPressed(true);
     builder.add("type", accountTypeCombo.createAccountTypeCombo());
-    accountTypeAsterics = builder.add("accountTypeAsterics", new JLabel("*"));
+    accountTypeFlag = new MandatoryFieldFlag("accountTypeFlag", builder);
 
-    messageWarning = new JTextArea();
-    builder.add("messageWarning", messageWarning);
-    messageWarning.setVisible(false);
+    warningMessage = new JTextArea();
+    builder.add("messageWarning", warningMessage);
+    warningMessage.setVisible(false);
 
     positionEditor = builder.addEditor("position", Account.POSITION).setNotifyOnKeyPressed(true).getComponent();
 
@@ -106,28 +107,28 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   }
 
   public void setWarning(Integer accountType, int cardType) {
-    if (accountType == null){
+    if (accountType == null) {
       return;
     }
     boolean visible = false;
     if (AccountType.MAIN.getId().equals(accountType)) {
       if (cardType == AccountCardType.CREDIT.getId()) {
-        messageWarning.setText(Lang.get("account.credit.warning"));
+        warningMessage.setText(Lang.get("account.credit.warning"));
         visible = true;
       }
       else if (cardType == AccountCardType.DEFERRED.getId()) {
-        messageWarning.setText(Lang.get("account.deferred.warning"));
+        warningMessage.setText(Lang.get("account.deferred.warning"));
         visible = true;
       }
     }
-    messageWarning.setVisible(visible);
+    warningMessage.setVisible(visible);
   }
 
   public void setSavingsWarning(boolean visible) {
     if (visible) {
-      messageWarning.setText(Lang.get("account.savings.warning"));
+      warningMessage.setText(Lang.get("account.savings.warning"));
     }
-    messageWarning.setVisible(visible);
+    warningMessage.setVisible(visible);
   }
 
   public void clearMessage() {
@@ -156,34 +157,20 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     }
     clearMessage();
     panel.setVisible(account != null);
-    showWarn();
+    updateMandatoryFlags();
   }
 
-  public void clearAsterix(){
-    nameAsterics.applyStyle("default");
-    bankAsterics.applyStyle("default");
-    accountTypeAsterics.applyStyle("default");
+  public void clearMandatoryFlags() {
+    nameFlag.clear();
+    bankFlag.clear();
+    accountTypeFlag.clear();
   }
 
-  public void showWarn(){
-    if (Strings.isNullOrEmpty(currentAccount.get(Account.NAME))
-        || localRepository.getAll(Account.TYPE, GlobMatchers.fieldEquals(Account.NAME, currentAccount.get(Account.NAME))).size() != 1){
-      nameAsterics.applyStyle("error");
-    }
-    else {
-      nameAsterics.applyStyle("default");
-    }
-    if (currentAccount.get(Account.BANK) == null) {
-      bankAsterics.applyStyle("error");
-    }else {
-      bankAsterics.applyStyle("default");
-    }
-    if (currentAccount.get(Account.ACCOUNT_TYPE) == null) {
-      accountTypeAsterics.applyStyle("error");
-    }
-    else {
-      accountTypeAsterics.applyStyle("default");
-    }
+  public void updateMandatoryFlags() {
+    nameFlag.update(Strings.isNullOrEmpty(currentAccount.get(Account.NAME))
+                    || localRepository.getAll(Account.TYPE, fieldEquals(Account.NAME, currentAccount.get(Account.NAME))).size() != 1);
+    bankFlag.update(currentAccount.get(Account.BANK) == null);
+    accountTypeFlag.update(currentAccount.get(Account.ACCOUNT_TYPE) == null);
   }
 
   public boolean check() {
@@ -194,7 +181,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         nameField.getComponent().requestFocus();
         return false;
       }
-      if (localRepository.getAll(Account.TYPE, GlobMatchers.fieldEquals(Account.NAME, currentAccount.get(Account.NAME))).size() != 1){
+      if (localRepository.getAll(Account.TYPE, fieldEquals(Account.NAME, currentAccount.get(Account.NAME))).size() != 1) {
         errorTip = ErrorTip.showLeft(nameField.getComponent(), Lang.get("account.error.duplicate.name"), localDirectory);
         return false;
       }
@@ -214,9 +201,9 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     return currentAccount;
   }
 
-  public void clearAllMessage() {
+  public void clearAllMessages() {
     clearMessage();
-    clearAsterix();
+    clearMandatoryFlags();
   }
 
   private class AccountBankAction extends AbstractAction implements GlobSelectionListener {

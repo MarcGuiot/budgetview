@@ -13,8 +13,6 @@
     <style selector="button#bankSelector"
            anchor="southeast" font="-,plain,11" icon="arrow_down_roll.png"
            iconTextGap="5" horizontalAlignment="left" horizontalTextPosition="left"/>
-    <style id="default" selector="x" foreground="#FFFFFF"/>
-    <style id="error" selector="x" foreground="#FF0000"/>
   </styles>
 
   <panel styleClass="dialog" preferredSize="(450,330)">
@@ -28,11 +26,11 @@
           <column margin="15">
             <grid defaultMarginBottom="5">
               <label text="$account.name" gridPos="(0,0)" styleClass="formLabel"/>
-              <label ref="nameAsterics" gridPos="(1,0)"/>
+              <label ref="nameFlag" gridPos="(1,0)"/>
               <textField ref="name" gridPos="(2,0)" marginBottom="10"/>
 
               <label text="$account.bank" gridPos="(0,1)" styleClass="formLabel"/>
-              <label ref="bankAsterics" gridPos="(1,1)"/>
+              <label ref="bankFlag" gridPos="(1,1)"/>
               <row gridPos="(2,1)" marginBottom="10">
                 <label ref="bankLabel" font="-,bold,12" border="empty(0,0,0,5)"/>
                 <button ref="bankSelector" styleClass="itemLink"/>
@@ -45,7 +43,7 @@
 
             <row>
               <label text="$account.panel.type" styleClass="formLabel" anchor="left" marginTop="10"/>
-              <label ref="accountTypeAsterics"/>
+              <label ref="accountTypeFlag"/>
             </row>
             <row>
               <comboBox ref="type" marginTop="5" marginBottom="10"/>

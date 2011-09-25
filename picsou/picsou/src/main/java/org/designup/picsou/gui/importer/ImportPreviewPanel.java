@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.importer;
 
-import org.designup.picsou.gui.accounts.AbstractAccountPanel;
+import org.designup.picsou.gui.accounts.AccountEditionPanel;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.importer.edition.DateFormatSelectionPanel;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionDateRenderer;
@@ -49,7 +49,7 @@ public class ImportPreviewPanel {
   private GlobsPanelBuilder builder;
   private ImportedTransactionsTable importedTransactionTable;
   private JPanel panel;
-  private AbstractAccountPanel accountPanel;
+  private AccountEditionPanel accountEditionPanel;
   private LocalGlobRepository accountEditionRepository;
   private Glob importedAccount;
 
@@ -82,16 +82,15 @@ public class ImportPreviewPanel {
         currentlySelectedAccount = selection.getAll(Account.TYPE).isEmpty() ? null :
                                    selection.getAll(Account.TYPE).get(0);
         if (currentlySelectedAccount != null){
-          accountPanel.clearAllMessage();
+          accountEditionPanel.clearAllMessages();
         }
       }
     }, Account.TYPE);
 
     sessionRepository = controller.getSessionRepository();
 
-    accountEditionRepository = LocalGlobRepositoryBuilder.init(sessionRepository)
-      .get();
-    accountPanel = new AbstractAccountPanel(accountEditionRepository, sessionDirectory);
+    accountEditionRepository = LocalGlobRepositoryBuilder.init(sessionRepository).get();
+    accountEditionPanel = new AccountEditionPanel(dialog, accountEditionRepository, sessionDirectory);
 
     importedTransactionTable = new ImportedTransactionsTable(sessionRepository, sessionDirectory, dateRenderer);
     builder.add("table", importedTransactionTable.getTable());
@@ -112,18 +111,13 @@ public class ImportPreviewPanel {
     registerAccountCreationListener(sessionRepository, sessionDirectory);
 
     builder.add("importMessage", message);
-
-    GlobsPanelBuilder accountBuilder =
-      new GlobsPanelBuilder(getClass(), "/layout/importexport/accountPanel.splits", accountEditionRepository,
-                            accountPanel.getLocalDirectory());
-    accountPanel.createComponents(accountBuilder, dialog);
-    builder.add("accountPanel", accountBuilder);
+    builder.add("accountEditionPanel", accountEditionPanel.getPanel());
 
     builder.add("skipFile", new SkipFileAction());
     builder.add("finish", new FinishAction());
     builder.add("close", new CancelAction(textForCloseButton));
     this.panel = builder.load();
-    accountPanel.setBalanceEditorVisible(true);
+    accountEditionPanel.setBalanceEditorVisible(true);
   }
 
   private void registerAccountCreationListener(final GlobRepository sessionRepository,
@@ -157,7 +151,7 @@ public class ImportPreviewPanel {
     accountEditionRepository.rollback();
     Glob glob = RealAccount.createAccountFromImported(importedAccount, accountEditionRepository, true);
 
-    accountPanel.setAccount(glob);
+    accountEditionPanel.setAccount(glob);
     localDirectory.get(SelectionService.class).select(glob);
 
     if (dateFormats != null) {
@@ -201,7 +195,7 @@ public class ImportPreviewPanel {
     public void actionPerformed(ActionEvent event) {
       setEnabled(false);
       try {
-        if (currentlySelectedAccount == null && !accountPanel.check()) {
+        if (currentlySelectedAccount == null && !accountEditionPanel.check()) {
           return;
         }
         showStep2Message("");
@@ -209,7 +203,7 @@ public class ImportPreviewPanel {
           return;
         }
         if (currentlySelectedAccount == null) {
-          currentlySelectedAccount = accountPanel.getAccount();
+          currentlySelectedAccount = accountEditionPanel.getAccount();
           accountEditionRepository.commitChanges(false);
         }
         else {
