@@ -6,6 +6,7 @@ import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.components.ArrowIcon;
+import org.globsframework.gui.splits.components.EmptyIcon;
 import org.globsframework.utils.Strings;
 
 import javax.swing.*;
@@ -23,6 +24,11 @@ public class IconParser {
                                                         "[ ]*([A-z\\.#0-9]+)[ ]*" +
                                                         "\\)");
 
+  private static Pattern EMPTY_FORMAT = Pattern.compile("empty\\(" +
+                                                        "[ ]*([0-9]+)[ ]*," +
+                                                        "[ ]*([0-9]+)[ ]*" +
+                                                        "\\)");
+
   public static Icon parse(String text, ColorService colorService, ImageLocator imageLocator, SplitsContext context) {
     if (Strings.isNullOrEmpty(text)) {
       return null;
@@ -31,6 +37,11 @@ public class IconParser {
     ArrowIcon arrow = parseArrow(text, colorService, context);
     if (arrow != null) {
       return arrow;
+    }
+
+    EmptyIcon empty = parseEmpty(text);
+    if (empty != null) {
+      return empty;
     }
 
     return imageLocator.get(text);
@@ -65,6 +76,17 @@ public class IconParser {
       }
 
       return icon;
+    }
+    return null;
+  }
+
+  private static EmptyIcon parseEmpty(String text) {
+    Matcher emptyMatcher = EMPTY_FORMAT.matcher(text.trim());
+    if (emptyMatcher.matches()) {
+      int iconWidth = Integer.parseInt(emptyMatcher.group(1));
+      int iconHeight = Integer.parseInt(emptyMatcher.group(2));
+
+      return new EmptyIcon(iconWidth, iconHeight);
     }
     return null;
   }

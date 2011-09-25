@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.components.ArrowIcon;
+import org.globsframework.gui.splits.components.EmptyIcon;
 import org.globsframework.gui.splits.impl.DefaultSplitsContext;
 import org.globsframework.utils.directory.DefaultDirectory;
 
@@ -38,6 +39,12 @@ public class IconParserTest extends TestCase {
     Icon icon = parse(DummyImageLocator.ICON1_NAME);
     assertEquals(DummyImageLocator.ICON1, icon);
     assertEquals(DummyImageLocator.ICON1_NAME, imageLocator.lastRequestedImageName);
+  }
+
+  public void testEmptyIcon() throws Exception {
+    EmptyIcon icon = (EmptyIcon)parse("empty(12,15)");
+    assertEquals(12, icon.getIconWidth());
+    assertEquals(15, icon.getIconHeight());
   }
 
   private ArrowIcon parseArrow(String text) {
