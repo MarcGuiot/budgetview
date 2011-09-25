@@ -91,7 +91,7 @@ public abstract class SignpostSectionPanel {
   }
 
   private void checkForCompletion(GlobRepository repository) {
-    if (!inProgress || !isCompleted(repository)) {
+    if (!inProgress || !isCompleted(repository) || isAllCompleted(repository)) {
       return;
     }
 
@@ -99,6 +99,10 @@ public abstract class SignpostSectionPanel {
     dialog.show(section);
 
     SignpostStatus.setSection(section.getType().getNextSection(), repository);
+  }
+
+  private boolean isAllCompleted(GlobRepository repository) {
+    return SignpostStatus.isInitialGuidanceCompleted(repository);
   }
 
   protected abstract boolean isCompleted(GlobRepository repository);

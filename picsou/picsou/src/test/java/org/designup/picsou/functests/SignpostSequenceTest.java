@@ -436,4 +436,31 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     savingsView.returnToBudgetView();
     budgetView.savings.checkNoToggleSavingsViewSignpostShown();
   }
+
+  public void testSignpostsNotShownAfterRestore() throws Exception {
+    views.selectData();
+    importPanel.checkImportSignpostDisplayed("Click here to import your operations");
+    importPanel.openImport().close();
+    OfxBuilder
+      .init(this)
+      .addTransaction("2010/05/27", -100, "auchan")
+      .load();
+    categorization.setNewRecurring("auchan", "Groceries");
+    views.selectBudget();
+    budgetView.recurring.editPlannedAmount("Groceries")
+      .setPropagationDisabled()
+      .clickMonth(201005)
+      .setAmount(10.00)
+      .validate();
+    budgetView.variable.checkPlannedNotHighlighted("Groceries");
+    signpostView.checkSummaryViewShown();
+
+    setDeleteLocalPrevayler(true);
+    String backupFilePath = operations.backup(this);
+
+    restartApplication(true);
+
+    operations.restore(backupFilePath);
+    signpostView.checkSummaryViewShown();
+  }
 }

@@ -45,7 +45,6 @@ public class UserEvaluationDialog {
   }
 
   public static void doShow(GlobRepository repository, Directory directory) {
-    System.out.println("UserEvaluationDialog.doShow: ");
     repository.update(UserPreferences.KEY, UserPreferences.EVALUATION_SHOWN, true);
     UserEvaluationDialog dialog = new UserEvaluationDialog(repository, directory);
     dialog.show();
