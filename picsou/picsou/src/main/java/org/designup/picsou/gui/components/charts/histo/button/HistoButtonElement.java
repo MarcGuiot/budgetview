@@ -18,27 +18,22 @@ public class HistoButtonElement implements Comparable<HistoButtonElement> {
   }
 
   public int compareTo(HistoButtonElement other) {
-    return Integer.signum(minId - other.minId);
-  }
-
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+    int minDiff = Integer.signum(minId - other.minId);
+    if (minDiff != 0) {
+      return minDiff;
     }
 
-    HistoButtonElement that = (HistoButtonElement)o;
-
-    if (key != null ? !key.equals(that.key) : that.key != null) {
-      return false;
+    int maxDiff = Integer.signum(maxId - other.maxId);
+    if (maxDiff != 0) {
+      return maxDiff;
     }
 
-    return true;
+    int labelDiff = label.compareTo(other.label);
+    if (labelDiff != 0) {
+      return labelDiff;
+    }
+
+    return key.toString().compareTo(other.key.toString());
   }
 
-  public int hashCode() {
-    return key != null ? key.hashCode() : 0;
-  }
 }

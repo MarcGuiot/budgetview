@@ -10,6 +10,7 @@ public class HistoButtonDatasetTest extends TestCase {
   private final Key key1 = Key.create(DummyObject.TYPE, 1);
   private final Key key2 = Key.create(DummyObject.TYPE, 2);
   private final Key key3 = Key.create(DummyObject.TYPE, 3);
+  private final Key key4 = Key.create(DummyObject.TYPE, 4);
 
   private HistoButtonDataset dataset;
 
@@ -32,10 +33,22 @@ public class HistoButtonDatasetTest extends TestCase {
     checkBlocks(" ----1111--22---- ");
   }
 
+  public void testOneMonthItems() throws Exception {
+    dataset.addButton(201103, 201106, "1", key1, "");
+    dataset.addButton(201103, 201103, "2", key2, "");
+    dataset.addButton(201103, 201103, "3", key3, "");
+    dataset.addButton(201103, 201103, "4", key4, "");
+
+    checkBlocks(" ----2----------- \n" +
+                " ----3----------- \n" +
+                " ----4----------- \n" +
+                " ----1111-------- ");
+  }
+
   public void testOneRowWithContiguousBlocks() throws Exception {
     dataset.addButton(201011, 201106, "1", key1, "");
     dataset.addButton(201107, 201110, "2", key2, "");
-    dataset.addButton(201111, 201202, "3", key2, "");
+    dataset.addButton(201111, 201202, "3", key3, "");
 
     checkBlocks(" 1111111122223333 ");
   }

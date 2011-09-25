@@ -32,6 +32,8 @@ public class HistoButtonPainter implements HistoPainter {
       Rectangle rectangle = metrics.buttonRectangle(block);
       boolean isRolloverOnBlock = rollover.isOnObject(block.key);
 
+      g2.setClip(rectangle.x, rectangle.y, rectangle.width + 1, rectangle.height + 1);
+
       g2.setPaint(new GradientPaint(0, rectangle.y, colors.getBgTopColor(isRolloverOnBlock),
                                     0, rectangle.y + rectangle.height, colors.getBgBottomColor(isRolloverOnBlock)));
       g2.fillRoundRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height, ARC_WIDTH, ARC_HEIGHT);
@@ -40,6 +42,7 @@ public class HistoButtonPainter implements HistoPainter {
       g2.drawRoundRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height, ARC_WIDTH, ARC_HEIGHT);
 
       if (metrics.canDrawLabels()) {
+        g2.setClip(rectangle.x, rectangle.y, rectangle.width - 2, rectangle.height);
         g2.setColor(colors.getLabelShadowColor());
         g2.drawString(block.label, metrics.labelX(block) + 1, metrics.labelY(block) + 1);
         g2.setColor(colors.getLabelColor(isRolloverOnBlock));
