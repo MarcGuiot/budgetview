@@ -7,7 +7,6 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.importer.components.ImportSeriesDialog;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.layout.SingleComponentLayout;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
@@ -15,6 +14,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -29,8 +29,6 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 
 public class ImportDialog {
   private GlobRepository parentRepository;

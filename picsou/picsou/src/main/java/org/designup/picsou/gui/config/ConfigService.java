@@ -261,7 +261,6 @@ public class ConfigService {
         }
         postMethod = createRegisterPostMethod(mail, code, url);
         HttpClient httpClient = new HttpClient();
-        httpClient = new HttpClient();
         httpClient.executeMethod(postMethod);
       }
       int statusCode = postMethod.getStatusCode();
