@@ -80,8 +80,11 @@ public class ImportSession {
   }
 
   public List<String> loadFile(File file, final Glob realAccount) throws IOException, TruncatedFile, NoOperations {
+    Log.write("loadFile");
     this.importSeries = null;
     this.realAccount = realAccount;
+    importChangeSet = new DefaultChangeSet();
+    importChangeSetAggregator = new ChangeSetAggregator(localRepository, importChangeSet);
     load = true;
     localRepository.reset(GlobList.EMPTY, Transaction.TYPE, ImportedTransaction.TYPE, MonthDay.TYPE, CurrentMonth.TYPE,
                           DeferredCardDate.TYPE, AccountCardType.TYPE, AccountType.TYPE, BudgetArea.TYPE);
@@ -97,35 +100,31 @@ public class ImportSession {
 
     importRepository.startChangeSet();
     final Set<Integer> tmpAccountIds = new HashSet<Integer>();
-    try {
-      typedStream = new TypedInputStream(file);
-      importService.run(typedStream, referenceRepository, importRepository);
-    }
-    finally {
-      importRepository.completeChangeSet();
-      changes = importRepository.getCurrentChanges();
-      changes.safeVisit(RealAccount.TYPE, new ChangeSetVisitor() {
-        public void visitCreation(Key key, FieldValues values) throws Exception {
-          tmpAccountIds.add(key.get(RealAccount.ID));
-        }
+    typedStream = new TypedInputStream(file);
+    importService.run(typedStream, referenceRepository, importRepository);
+    importRepository.completeChangeSet();
+    changes = importRepository.getCurrentChanges();
+    changes.safeVisit(RealAccount.TYPE, new ChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+        tmpAccountIds.add(key.get(RealAccount.ID));
+      }
 
-        public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        }
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+      }
 
-        public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        }
-      });
-      changes.safeVisit(ImportedTransaction.TYPE, new DefaultChangeSetVisitor() {
-        public void visitCreation(Key key, FieldValues values) throws Exception {
-          tmpAccountIds.add(values.get(ImportedTransaction.ACCOUNT));
-        }
-      });
-    }
+      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+      }
+    });
+    changes.safeVisit(ImportedTransaction.TYPE, new DefaultChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+        tmpAccountIds.add(values.get(ImportedTransaction.ACCOUNT));
+      }
+    });
     accountIds =
       importRepository.getAll(RealAccount.TYPE, GlobMatchers.contained(RealAccount.ID, tmpAccountIds))
         .sort(RealAccount.NAME).sort(RealAccount.NUMBER);
     if (realAccount != null) {
-      if (accountIds.size() > 1 && realAccount != null) {
+      if (accountIds.size() > 1) {
         Log.write("mulitple account : ignoring realAccount");
       }
       else {
@@ -142,12 +141,16 @@ public class ImportSession {
           }, importRepository);
       }
     }
-    return getImportedTransactionFormat(importRepository);
+    List<String> dateFormat = getImportedTransactionFormat(importRepository);
+    Log.write("loadFile ok");
+    return dateFormat;
   }
 
   private Glob readNext() throws NoOperations {
+    Log.write("readNext");
     if (accountIds.isEmpty()) {
       load = false;
+      Log.write("readNext no op");
       throw new NoOperations();
     }
 
@@ -181,6 +184,7 @@ public class ImportSession {
     }
 
     lastLoadOperationsCount = importedOperations.size();
+    Log.write("readNext ok");
     return currentImportedAccount;
   }
 
@@ -218,9 +222,11 @@ public class ImportSession {
   }
 
   public Key importTransactions(Glob importedAccount, Glob currentlySelectedAccount, String selectedDateFormat) {
+    Log.write("importTransactions");
     localRepository.delete(Key.create(CurrentAccountInfo.TYPE, 0));
     removeUnConfiguredSeries();
     if (!load) {
+      Log.write("importTransactions !load");
       return null;
     }
     if (accountIds.isEmpty()) {
@@ -280,6 +286,7 @@ public class ImportSession {
       referenceRepository.completeChangeSet();
     }
     importedOperationsCount += lastLoadOperationsCount;
+    Log.write("importTransactions ok");
     return importKey;
   }
 

@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.importer;
 
-import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.importer.components.BankDownloadPanel;
@@ -21,7 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class ImportedFileSelectionPanel {
+public class ImportedFileSelectionPanel implements MessageHandler {
 
   private ImportController controller;
   private LocalGlobRepository localRepository;
@@ -73,7 +72,7 @@ public class ImportedFileSelectionPanel {
 
     hyperlinkHandler.registerLinkAction("openErrorDetails", new Runnable() {
       public void run() {
-        showLastException();
+        ImportDialog.showLastException(ImportedFileSelectionPanel.this.lastException, ImportedFileSelectionPanel.this.directory);
       }
     });
     builder.add("hyperlinkHandler", hyperlinkHandler);
@@ -93,11 +92,11 @@ public class ImportedFileSelectionPanel {
     importMessage.setText("");
   }
 
-  public void showMessage(String message) {
-    showMessage(message, null);
+  public void showFileErrorMessage(String message) {
+    showFileErrorMessage(message, null);
   }
 
-  public void showMessage(String message, Exception exception) {
+  public void showFileErrorMessage(String message, Exception exception) {
     lastException = exception;
     this.importMessage.setText(message);
   }
@@ -185,15 +184,6 @@ public class ImportedFileSelectionPanel {
   }
 
   private void displayErrorMessage(String key, String... args) {
-    this.showMessage("<html><font color=red>" + Lang.get(key, args) + "</font></html>");
-  }
-
-  private void showLastException() {
-    MessageAndDetailsDialog dialog = new MessageAndDetailsDialog("import.file.error.title",
-                                                                 "import.file.error.message",
-                                                                 Strings.toString(lastException),
-                                                                 directory.get(JFrame.class),
-                                                                 directory);
-    dialog.show();
+    this.showFileErrorMessage("<html><font color=red>" + Lang.get(key, args) + "</font></html>");
   }
 }

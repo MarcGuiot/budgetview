@@ -6,6 +6,7 @@ import org.designup.picsou.gui.importer.edition.DateFormatSelectionPanel;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionDateRenderer;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionsTable;
 import org.designup.picsou.gui.importer.utils.AccountFinder;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountUpdateMode;
 import org.designup.picsou.model.ImportedTransaction;
@@ -21,13 +22,14 @@ import org.globsframework.model.utils.*;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.Log;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Set;
 
-public class ImportPreviewPanel {
+public class ImportPreviewPanel implements MessageHandler{
   private ImportController controller;
   private GlobRepository repository;
   private LocalGlobRepository localRepository;
@@ -52,6 +54,8 @@ public class ImportPreviewPanel {
   private AccountEditionPanel accountEditionPanel;
   private LocalGlobRepository accountEditionRepository;
   private Glob importedAccount;
+  private ImportPreviewPanel.FinishAction finishAction;
+  private Exception lastException;
 
   public ImportPreviewPanel(ImportController controller,
                             Glob defaultAccount,
@@ -110,11 +114,21 @@ public class ImportPreviewPanel {
 
     registerAccountCreationListener(sessionRepository, sessionDirectory);
 
+    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(sessionDirectory, dialog);
+
+    hyperlinkHandler.registerLinkAction("openErrorDetails", new Runnable() {
+      public void run() {
+        ImportDialog.showLastException(lastException, sessionDirectory);
+      }
+    });
+    builder.add("hyperlinkHandler", hyperlinkHandler);
+
     builder.add("importMessage", message);
     builder.add("accountEditionPanel", accountEditionPanel.getPanel());
 
     builder.add("skipFile", new SkipFileAction());
-    builder.add("finish", new FinishAction());
+    finishAction = new FinishAction();
+    builder.add("finish", finishAction);
     builder.add("close", new CancelAction(textForCloseButton));
     this.panel = builder.load();
     accountEditionPanel.setBalanceEditorVisible(true);
@@ -187,19 +201,33 @@ public class ImportPreviewPanel {
     fileNameLabel.setText(absolutePath);
   }
 
+  public void showFileErrorMessage(String message) {
+    this.setFileName("");
+    this.message.setText(message);
+    finishAction.setEnabled(false);
+  }
+
+  public void showFileErrorMessage(String message, Exception exception) {
+    showFileErrorMessage(message);
+    this.message.setText(message);
+  }
+
   private class FinishAction extends AbstractAction {
     public FinishAction() {
       super(Lang.get("import.preview.ok"));
     }
 
     public void actionPerformed(ActionEvent event) {
+      Log.write("finish");
       setEnabled(false);
       try {
         if (currentlySelectedAccount == null && !accountEditionPanel.check()) {
+          Log.write("finish account check fail");
           return;
         }
         showStep2Message("");
         if (!dateFormatSelectionPanel.check()) {
+          Log.write("finish missing date");
           return;
         }
         if (currentlySelectedAccount == null) {
@@ -215,6 +243,7 @@ public class ImportPreviewPanel {
         deleteAccountIfDuplicate(importedAccount);
         sessionRepository.update(currentlySelectedAccount.getKey(), Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
         controller.completeImport(importedAccount, currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
+        Log.write("finish ok");
       }
       finally {
         setEnabled(true);
@@ -233,12 +262,17 @@ public class ImportPreviewPanel {
     }
   }
 
+  private void clearFileError() {
+    lastException = null;
+  }
+
   private class SkipFileAction extends AbstractAction {
     private SkipFileAction() {
       super(Lang.get("import.skip.file"));
     }
 
     public void actionPerformed(ActionEvent e) {
+      clearFileError();
       setEnabled(false);
       try {
         accountEditionRepository.rollback();
@@ -248,6 +282,7 @@ public class ImportPreviewPanel {
         setEnabled(true);
       }
     }
+
   }
 
   private class CancelAction extends AbstractAction {
@@ -256,6 +291,7 @@ public class ImportPreviewPanel {
     }
 
     public void actionPerformed(ActionEvent e) {
+      clearFileError();
       controller.complete(); // missing?
       controller.closeDialog();
     }

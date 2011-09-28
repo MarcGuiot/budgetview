@@ -4,6 +4,7 @@ import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.importer.components.ImportSeriesDialog;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.SelectionService;
@@ -19,6 +20,7 @@ import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,6 +47,7 @@ public class ImportDialog {
   private ImportPreviewPanel previewPanel;
   private ImportCompletionPanel completionPanel;
   private ImportAccountPanel importAccountsPanel;
+  private MessageHandler messageLabel;
 
   public ImportDialog(String textForCloseButton, List<File> files, Glob defaultAccount,
                       final Window owner, final GlobRepository repository, Directory directory,
@@ -81,6 +84,7 @@ public class ImportDialog {
       Glob bank = Account.getBank(defaultAccount, localRepository);
       localDirectory.get(SelectionService.class).select(bank);
     }
+    messageLabel = fileSelectionPanel;
   }
 
   private void initMainPanel() {
@@ -126,6 +130,7 @@ public class ImportDialog {
   }
 
   public void showPreview() {
+    messageLabel = previewPanel;
     setCurrentPanel(previewPanel.getPanel());
   }
 
@@ -213,12 +218,12 @@ public class ImportDialog {
     fileSelectionPanel.acceptFiles();
   }
 
-  public void showStep1Message(String message) {
-    fileSelectionPanel.showMessage(message);
+  public void showMessage(String message) {
+    messageLabel.showFileErrorMessage(message);
   }
 
-  public void showStep1Message(String message, Exception exception) {
-    fileSelectionPanel.showMessage(message, exception);
+  public void showMessage(String message, Exception exception) {
+    messageLabel.showFileErrorMessage(message, exception);
   }
 
   public void showNoImport(Glob glob, boolean first) {
@@ -232,5 +237,14 @@ public class ImportDialog {
     ImportSeriesDialog dialog = new ImportSeriesDialog(ImportDialog.this.dialog,
                                                        controller.getSessionRepository(), localDirectory);
     return dialog.show(newSeries);
+  }
+
+  public static void showLastException(Exception exception, Directory directory) {
+    MessageAndDetailsDialog dialog = new MessageAndDetailsDialog("import.file.error.title",
+                                                                 "import.file.error.message",
+                                                                 Strings.toString(exception),
+                                                                 directory.get(JFrame.class),
+                                                                 directory);
+    dialog.show();
   }
 }
