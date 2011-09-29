@@ -1,31 +1,37 @@
 !Type:Bank
-D04/08'2011
+D04/08'2008
 T1,000.00
 CX
 PSolde initial
 L[Test]
 ^
-D04/08'2011
+D04/08'2008
 MUn logiciel quelconque
 T-14.17
 N1001
 PFNAC VELIZY CARTE 34609231 PAIEM
 LLoisirs-culture-sport
 ^
-D20/08'2011
+D20/08'2008
 MCredit Porsche
 T-100.00
 N1002
 PCREDIPLUS
-LAuto-moto:Remboursement de prêt auto-moto
+LAuto-moto:Remboursement de pret auto-moto
 ^
-D20/08'2011
+D20/08'2008
+MESSO
+T-100.00
+N1002
+LAuto-moto:Essence
+^
+D20/08'2008
 MCourses quelconques
 T-50.00
 N1003
 PSPLIT
-LAlimentation:Épicerie
-SAlimentation:Épicerie
+LAlimentation:Epicerie
+SAlimentation:Epicerie
 ECourses quelconques
 $-30.00
 SLoisirs-culture-sport:Journaux

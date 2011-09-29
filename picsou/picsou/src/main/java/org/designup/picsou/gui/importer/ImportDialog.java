@@ -7,6 +7,8 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.importer.components.ImportSeriesDialog;
 import org.designup.picsou.model.*;
+import org.designup.picsou.triggers.AutomaticSeriesBudgetTrigger;
+import org.designup.picsou.triggers.SeriesBudgetTrigger;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.SingleComponentLayout;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -103,11 +105,14 @@ public class ImportDialog {
     GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, MonthDay.TYPE,
                             Account.TYPE, AccountUpdateMode.TYPE, BudgetArea.TYPE,
                             Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE,
-                            Series.TYPE, SubSeries.TYPE};
+                            Series.TYPE, SubSeries.TYPE, ImportedSeries.TYPE};
 
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)
         .copy(globTypes).get();
+      this.localRepository.addTrigger(new AutomaticSeriesBudgetTrigger());
+      this.localRepository.addTrigger(new SeriesBudgetTrigger(parentRepository));
+
     }
     else {
       this.localRepository.rollback();

@@ -5,7 +5,6 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobIdGenerator;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 
@@ -143,7 +142,6 @@ public class QifParser {
       values.set(ImportedTransaction.IS_OFX, false);
       values.set(ImportedTransaction.ACCOUNT, accountId);
       values.set(ImportedTransaction.SERIES, seriesId);
-      values.set(ImportedTransaction.SUB_SERIES, subSeriesId);
     }
 
     private class SplitedNextTransactionReader implements NextTransactionReader {
@@ -189,7 +187,6 @@ public class QifParser {
                                       glob.get(ImportedTransaction.AMOUNT) - amount);
                 completeValues(values);
                 seriesId = null;
-                subSeriesId = null;
                 Glob transaction = createTransaction(values);
                 result.add(transaction);
                 return new NextTransactionReader() {
@@ -214,7 +211,6 @@ public class QifParser {
                 };
               case '^':
                 seriesId = null;
-                subSeriesId = null;
                 date = null;
                 reader.readLine();
                 return normal;
@@ -239,43 +235,12 @@ public class QifParser {
   }
 
   private void addEnveloppe(String line) {
-    String[] tmp = line.split(":");
-    String seriesName = tmp[0];
-    Glob series = globRepository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.NAME, seriesName)).getFirst();
+    String seriesName = line.trim();
+    Glob series = globRepository.getAll(ImportedSeries.TYPE, GlobMatchers.fieldEquals(ImportedSeries.NAME, seriesName)).getFirst();
     if (series == null) {
-      series = initialRepository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.NAME, seriesName)).getFirst();
+      series = globRepository.create(ImportedSeries.TYPE, FieldValue.value(ImportedSeries.NAME, seriesName));
     }
-    boolean forceCreation = false;
-    if (series == null) {
-      series = globRepository.create(Series.TYPE, FieldValue.value(Series.NAME, seriesName));
-      forceCreation = true;
-    }
-    Glob subSeries = null;
-    if (tmp.length > 1) {
-      String subSeriesName = tmp[1];
-      if (forceCreation) {
-        subSeries = globRepository.create(SubSeries.TYPE, FieldValue.value(SubSeries.SERIES, series.get(Series.ID)),
-                                          FieldValue.value(SubSeries.NAME, subSeriesName));
-      }
-      else {
-        GlobMatcher seriesFilter = GlobMatchers.fieldEquals(SubSeries.SERIES, series.get(Series.ID));
-        subSeries = initialRepository.getAll(SubSeries.TYPE,
-                                             GlobMatchers.and(GlobMatchers.fieldEquals(SubSeries.NAME, subSeriesName),
-                                                              seriesFilter)).getFirst();
-
-        if (subSeries == null) {
-          subSeries = globRepository.getAll(SubSeries.TYPE,
-                                            GlobMatchers.and(GlobMatchers.fieldEquals(SubSeries.NAME, subSeriesName),
-                                                             seriesFilter)).getFirst();
-        }
-        if (subSeries == null) {
-          subSeries = globRepository.create(SubSeries.TYPE, FieldValue.value(SubSeries.SERIES, series.get(Series.ID)),
-                                            FieldValue.value(SubSeries.NAME, subSeriesName));
-        }
-      }
-    }
-    subSeriesId = subSeries != null ? subSeries.get(SubSeries.ID) : null;
-    seriesId = series.get(Series.ID);
+    seriesId = series.get(ImportedSeries.ID);
   }
 
   private Glob createTransaction(FieldValuesBuilder values) {

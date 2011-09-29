@@ -62,9 +62,7 @@ public class ImportSession {
     if (importSeries != null) {
       return Collections.emptySet();
     }
-    HasSeriesChangeSetVisitor seriesChangeSetVisitor = new HasSeriesChangeSetVisitor();
-    changes.safeVisit(ImportedTransaction.TYPE, seriesChangeSetVisitor);
-    return changes.getCreated(Series.TYPE);
+    return changes.getCreated(ImportedSeries.TYPE);
   }
 
   public void importSeries(boolean importSeries) {
@@ -224,7 +222,6 @@ public class ImportSession {
   public Key importTransactions(Glob importedAccount, Glob currentlySelectedAccount, String selectedDateFormat) {
     Log.write("importTransactions");
     localRepository.delete(Key.create(CurrentAccountInfo.TYPE, 0));
-    removeUnConfiguredSeries();
     if (!load) {
       Log.write("importTransactions !load");
       return null;
@@ -274,6 +271,7 @@ public class ImportSession {
                                              currentlySelectedAccount != null ?
                                              currentlySelectedAccount.get(Account.ID) : null);
         }
+        removeImportedSeries();
       }
       finally {
         localRepository.completeChangeSet();
@@ -290,20 +288,8 @@ public class ImportSession {
     return importKey;
   }
 
-  private void removeUnConfiguredSeries() {
-    if (!shouldImportSeries()) {
-      localRepository.delete(changes.getCreated(Series.TYPE));
-      localRepository.delete(changes.getCreated(SubSeries.TYPE));
-    }
-    else {
-      Set<Key> keySet = changes.getCreated(Series.TYPE);
-      for (Key key : keySet) {
-        if (localRepository.get(key).get(Series.BUDGET_AREA) == null) {
-          localRepository.delete(SubSeries.TYPE, GlobMatchers.fieldEquals(SubSeries.SERIES, key.get(Series.ID)));
-          localRepository.delete(key);
-        }
-      }
-    }
+  private void removeImportedSeries() {
+    localRepository.delete(ImportedSeries.TYPE, GlobMatchers.ALL);
   }
 
   public int getImportedOperationsCount() {
@@ -374,7 +360,9 @@ public class ImportSession {
 
   private Integer getSubSeriesId(Glob importedTransaction) {
     if (shouldImportThisSeries(importedTransaction)) {
-      return importedTransaction.get(ImportedTransaction.SUB_SERIES);
+      Glob series = localRepository.findLinkTarget(importedTransaction, ImportedTransaction.SERIES);
+      Integer subSeries = series.get(ImportedSeries.SUB_SERIES);
+      return subSeries != null ? subSeries : ((Integer)Transaction.SUB_SERIES.getDefaultValue());
     }
     else {
       return ((Integer)Transaction.SUB_SERIES.getDefaultValue());
@@ -383,7 +371,9 @@ public class ImportSession {
 
   private Integer getSeriesId(Glob importedTransaction) {
     if (shouldImportThisSeries(importedTransaction)) {
-      return importedTransaction.get(ImportedTransaction.SERIES);
+      Glob series = localRepository.findLinkTarget(importedTransaction, ImportedTransaction.SERIES);
+      Integer seriesId = series.get(ImportedSeries.SERIES);
+      return seriesId != null ? seriesId : ((Integer)Transaction.SERIES.getDefaultValue());
     }
     else {
       return ((Integer)Transaction.SERIES.getDefaultValue());
@@ -392,8 +382,7 @@ public class ImportSession {
 
   private boolean shouldImportThisSeries(Glob importedTransaction) {
     Glob series = localRepository.findLinkTarget(importedTransaction, ImportedTransaction.SERIES);
-    boolean b = shouldImportSeries() && series != null && series.get(Series.BUDGET_AREA) != null;
-    return b;
+    return shouldImportSeries() && series != null && series.get(ImportedSeries.BUDGET_AREA) != null;
   }
 
   private Boolean shouldImportSeries() {
@@ -453,10 +442,7 @@ public class ImportSession {
       else if (key.getGlobType() == RealAccount.TYPE && Utils.equal(currentAccoutId, key.get(RealAccount.ID))) {
         localRepository.create(key, values.toArray());
       }
-      else if (key.getGlobType() == Series.TYPE) {
-        localRepository.create(key, values.toArray());
-      }
-      else if (key.getGlobType() == SubSeries.TYPE) {
+      else if (key.getGlobType() == ImportedSeries.TYPE) {
         localRepository.create(key, values.toArray());
       }
     }
@@ -489,8 +475,7 @@ public class ImportSession {
     }
 
     public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-      hasSeriesChanges = values.get(ImportedTransaction.SERIES) != null
-                         || values.get(ImportedTransaction.SUB_SERIES) != null;
+      hasSeriesChanges = values.get(ImportedTransaction.SERIES) != null;
     }
 
     public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
