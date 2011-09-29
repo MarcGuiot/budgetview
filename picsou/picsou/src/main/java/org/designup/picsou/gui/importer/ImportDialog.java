@@ -3,8 +3,8 @@ package org.designup.picsou.gui.importer;
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.gui.components.PicsouFrame;
-import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.importer.components.ImportSeriesDialog;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AutomaticSeriesBudgetTrigger;
@@ -20,9 +20,9 @@ import org.globsframework.model.Key;
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -112,7 +112,6 @@ public class ImportDialog {
         .copy(globTypes).get();
       this.localRepository.addTrigger(new AutomaticSeriesBudgetTrigger());
       this.localRepository.addTrigger(new SeriesBudgetTrigger(parentRepository));
-
     }
     else {
       this.localRepository.rollback();

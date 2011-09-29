@@ -4,6 +4,13 @@ import org.designup.picsou.model.TransactionType;
 
 public class MoneyExportTest extends SpecificBankTestCase {
 
+  protected void setUp() throws Exception {
+    createDefaultSeries = true;
+    resetWindow();
+    super.setUp();
+  }
+
+
   public void testDefaultQifFile() throws Exception {
     operations.openPreferences().setFutureMonthsCount(3).validate();
     operations.openImportDialog()
