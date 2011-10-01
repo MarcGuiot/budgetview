@@ -11,7 +11,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
   }
 
 
-  public void testDefaultQifFile() throws Exception {
+  public void __testDefaultQifFile() throws Exception {
     operations.openPreferences().setFutureMonthsCount(3).validate();
     operations.openImportDialog()
       .setFilePath(getFile("money_export_standard.qif"))
@@ -75,7 +75,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .cancel();
   }
 
-  public void testStrictQifFile() throws Exception {
+  public void __testStrictQifFile() throws Exception {
     operations.openImportDialog()
       .setFilePath(getFile("money_export_strict.qif"))
       .acceptFile()

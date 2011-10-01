@@ -31,6 +31,19 @@ R org/jdesktop/swingx/plaf/linux/resources/
 R org/jdesktop/swingx/plaf/macosx/resources/
 R org/jdesktop/swingx/plaf/windows/resources/
 R net/java/balloontip/images/
+P net/sourceforge/htmlunit true
+P com/gargoylesoftware/htmlunit true
+P org/cyberneko/html true
+#P org/apache/xerces true
+P org/apache/xalan true
+#P org/apache/xml true
+P org/apache/xpath true
+#P org/apache/bcel true
+#P org/apache/regexp true
+#P java_cup/runtime true
+
+R com/gargoylesoftware/htmlunit/javascript/configuration/
+
 R layout/
 R banks/
 R logging/

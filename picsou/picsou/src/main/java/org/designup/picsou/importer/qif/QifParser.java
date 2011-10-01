@@ -5,7 +5,6 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobIdGenerator;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 
 import java.io.BufferedReader;
@@ -235,12 +234,12 @@ public class QifParser {
   }
 
   private void addEnveloppe(String line) {
-    String seriesName = line.trim();
-    Glob series = globRepository.getAll(ImportedSeries.TYPE, GlobMatchers.fieldEquals(ImportedSeries.NAME, seriesName)).getFirst();
-    if (series == null) {
-      series = globRepository.create(ImportedSeries.TYPE, FieldValue.value(ImportedSeries.NAME, seriesName));
-    }
-    seriesId = series.get(ImportedSeries.ID);
+//    String seriesName = line.trim();
+//    Glob series = globRepository.getAll(ImportedSeries.TYPE, GlobMatchers.fieldEquals(ImportedSeries.NAME, seriesName)).getFirst();
+//    if (series == null) {
+//      series = globRepository.create(ImportedSeries.TYPE, FieldValue.value(ImportedSeries.NAME, seriesName));
+//    }
+//    seriesId = series.get(ImportedSeries.ID);
   }
 
   private Glob createTransaction(FieldValuesBuilder values) {

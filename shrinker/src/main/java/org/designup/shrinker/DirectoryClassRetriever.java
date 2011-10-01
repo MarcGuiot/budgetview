@@ -39,7 +39,7 @@ public class DirectoryClassRetriever implements DependExtractor.ClassRetreiver {
     dependencies.put(dependClassName, className);
   }
 
-  public void addPathContent(String path, Boolean isRecursive) {
+  public void addPathContent(String path, Boolean isRecursive, Added added) {
   }
 
   void complete() {
