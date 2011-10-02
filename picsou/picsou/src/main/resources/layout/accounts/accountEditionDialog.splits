@@ -26,24 +26,24 @@
           <column margin="15">
             <grid defaultMarginBottom="5">
               <label text="$account.name" gridPos="(0,0)" styleClass="formLabel"/>
-              <label ref="nameFlag" gridPos="(1,0)"/>
-              <textField ref="name" gridPos="(2,0)" marginBottom="10"/>
+              <textField ref="name" gridPos="(1,0)" marginBottom="10"/>
+              <label ref="nameFlag" gridPos="(2,0)" styleClass="mandatoryFieldFlag"/>
 
               <label text="$account.bank" gridPos="(0,1)" styleClass="formLabel"/>
-              <label ref="bankFlag" gridPos="(1,1)"/>
-              <row gridPos="(2,1)" marginBottom="10">
+              <row gridPos="(1,1)" marginBottom="10">
                 <label ref="bankLabel" font="-,bold,12" border="empty(0,0,0,5)"/>
                 <button ref="bankSelector" styleClass="itemLink"/>
                 <filler fill="horizontal"/>
               </row>
+              <label ref="bankFlag" gridPos="(2,1)" styleClass="mandatoryFieldFlag"/>
 
               <label text="$account.position" gridPos="(0,2)" styleClass="formLabel" autoHideSource="position"/>
-              <textField ref="position" gridPos="(2,2)"/>
+              <textField ref="position" gridPos="(1,2)"/>
             </grid>
 
             <row>
               <label text="$account.panel.type" styleClass="formLabel" anchor="left" marginTop="10"/>
-              <label ref="accountTypeFlag"/>
+              <label ref="accountTypeFlag" styleClass="mandatoryFieldFlag"/>
             </row>
             <row>
               <comboBox ref="type" marginTop="5" marginBottom="10"/>

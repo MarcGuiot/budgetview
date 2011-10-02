@@ -16,7 +16,12 @@
 
     <style selector="button.addItem"
            ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"
-           fill="none" anchor="west" marginLeft="10"/>
+           fill="none" anchor="west" marginLeft="10" tooltipText="$projectEdition.addItem.tooltip"/>
+
+    <style selector="button.plus"
+           ui="hyperlinkButtonWithoutUnderline"  foreground="dialog.block.add"
+           text="$projectEdition.add" tooltipText="$projectEdition.addItem.tooltip"
+            font="-,plain,12" fill="none" anchor="west"  marginLeft="10"/>
   </styles>
 
   <panel styleClass="dialog" preferredSize="(550,600)">
@@ -46,13 +51,14 @@
               <component ref="amountEditor"/>
               <button action="deleteItem" styleClass="icon" icon="button_delete.png"/>
             </repeat>
+            <button action="addItem" styleClass="plus"/>
             <filler fill="vertical"/>
           </column>
         </scrollPane>
 
-        <row styleClass="footer">
+        <row styleClass="footer" name="footer">
           <filler fill="horizontal"/>
-          <button action="addItem" styleClass="addItem" tooltipText="$projectEdition.addItem.tooltip"/>
+          <button action="addItem" styleClass="addItem"/>
         </row>
       </column>
 

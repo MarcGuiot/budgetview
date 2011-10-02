@@ -16,6 +16,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   private static final String OFX_PATH = "tmp/demo.ofx";
   private static final String OFX_UPDATE_PATH = "tmp/demo_update.ofx";
   private static final String OFX_SAVINGS_PATH = "tmp/demo_savings.ofx";
+  private static final String SNAPSHOT_PATH = "tmp/demo.budgetview";
 
   private int fourthMonth;
   private int thirdMonth;
@@ -331,13 +332,10 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
 
-    String outputFile = System.getProperty("outfile");
-    if (outputFile != null) {
-      File out = new File(outputFile);
-      out.delete();
-      operations.backup(out.getAbsoluteFile().getAbsolutePath());
-      System.out.println("DemoGenerationTest.test : snapshot generated in " + out.getAbsoluteFile().getAbsolutePath());
-    }
+    String backupPath = new File(OFX_SAVINGS_PATH).getAbsolutePath();
+    new File(OFX_SAVINGS_PATH).delete();
+    operations.backup(backupPath);
+    System.out.println("Backup file saved in: " + backupPath);
   }
 
   public void testCreateNextMonthFile() throws Exception {

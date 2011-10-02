@@ -29,7 +29,7 @@
         <comboBox ref="accountCombo" marginBottom="5"/>
       </row>
 
-      <panel weightY="0.01" background="dialog.block" border="line(dialog.border)">
+      <panel weightY="0.01" background="import.preview.account.bg" border="line(dialog.border)">
         <panel ref="accountEditionPanel" margin="10"/>
       </panel>
 

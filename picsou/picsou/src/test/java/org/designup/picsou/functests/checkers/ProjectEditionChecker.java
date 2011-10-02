@@ -94,7 +94,7 @@ public class ProjectEditionChecker extends GuiChecker {
   }
 
   public ProjectEditionChecker addItem() {
-    dialog.getButton("addItem").click();
+    dialog.getPanel("footer").getButton("addItem").click();
     return this;
   }
 
