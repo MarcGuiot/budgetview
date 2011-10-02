@@ -64,6 +64,14 @@ public class GlobDeltaGaugeViewTest extends GuiTestCase {
                -0.5, "The amount is decreasing - it was +100.00 in july 2011");
     checkGauge(-100.0, -50.0, 201107, 201108,
                -0.5, "The amount is decreasing - it was 100.00 in july 2011");
+
+    // To zero
+    checkGauge(100.0, 0.0, 201107, 201108,
+               -1.0, "The amount was +100.00 in july 2011, and it is set to zero in august 2011");
+    checkGauge(-100.0, 0.0, 201107, 201108,
+               -1.0, "The amount was 100.00 in july 2011, and it is set to zero in august 2011");
+    checkGauge(0.0, 0.0, 201107, 201108,
+               0.0, "The amount is zero in july 2011 and august 2011");
   }
 
   private void checkGauge(Double previousValue, Double newValue,

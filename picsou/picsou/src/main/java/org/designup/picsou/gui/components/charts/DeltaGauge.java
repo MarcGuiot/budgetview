@@ -75,11 +75,19 @@ public class DeltaGauge extends ActionablePanel {
       ratio = +1;
       evolution = Evolution.WORSE;
     }
-    else if ((previousValue < 0) && (newValue >= 0)) {
+    else if ((previousValue < 0) && Amounts.isNullOrZero(newValue)) {
+      ratio = -1;
+      evolution = Evolution.BETTER;
+    }
+    else if ((previousValue > 0) && Amounts.isNullOrZero(newValue)) {
+      ratio = -1;
+      evolution = Evolution.WORSE;
+    }
+    else if ((previousValue < 0) && (newValue > 0)) {
       ratio = +1;
       evolution = Evolution.BETTER;
     }
-    else if ((previousValue > 0) && (newValue <= 0)) {
+    else if ((previousValue > 0) && (newValue < 0)) {
       ratio = -1;
       evolution = Evolution.WORSE;
     }

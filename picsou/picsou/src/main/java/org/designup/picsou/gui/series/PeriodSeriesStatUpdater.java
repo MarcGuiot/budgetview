@@ -101,17 +101,17 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     }
   }
 
-  private void initEvolutionFields(int newMonth, int lastMonth) {
-    for (Glob stat : repository.findByIndex(SeriesStat.MONTH_INDEX, lastMonth)) {
+  private void initEvolutionFields(int previousMonth, int newMonth) {
+    for (Glob stat : repository.findByIndex(SeriesStat.MONTH_INDEX, newMonth)) {
       Integer seriesId = stat.get(SeriesStat.SERIES);
       Double newValue = stat.get(SeriesStat.SUMMARY_AMOUNT);
 
-      Glob previousStat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, newMonth));
+      Glob previousStat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, previousMonth));
       Double previousValue = previousStat == null ? null : previousStat.get(SeriesStat.SUMMARY_AMOUNT);
 
       repository.update(Key.create(PeriodSeriesStat.TYPE, seriesId),
                         value(PeriodSeriesStat.PREVIOUS_SUMMARY_AMOUNT, previousValue),
-                        value(PeriodSeriesStat.PREVIOUS_SUMMARY_MONTH, newMonth),
+                        value(PeriodSeriesStat.PREVIOUS_SUMMARY_MONTH, previousMonth),
                         value(PeriodSeriesStat.NEW_SUMMARY_AMOUNT, newValue),
                         value(PeriodSeriesStat.NEW_SUMMARY_MONTH, newMonth));
     }

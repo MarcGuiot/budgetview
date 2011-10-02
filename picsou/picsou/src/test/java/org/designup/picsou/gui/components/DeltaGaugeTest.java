@@ -33,7 +33,7 @@ public class DeltaGaugeTest extends TestCase {
     checkRatio(+100.0, -1.0, -1.0, WORSE);
     checkRatio(-100.0, +1.0, +1.0, BETTER);
     checkRatio(+1.0, 0.0, -1.0, WORSE);
-    checkRatio(-1.0, 0.0, +1.0, BETTER);
+    checkRatio(-1.0, 0.0, -1.0, BETTER);
   }
 
   public void testPositiveVariation() throws Exception {

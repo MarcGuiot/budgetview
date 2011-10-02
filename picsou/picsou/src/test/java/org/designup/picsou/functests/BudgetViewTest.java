@@ -851,7 +851,13 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDeltaGauge() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+
     OfxBuilder.init(this)
+      .addTransaction("2008/06/10", 1000.00, "WorldCo")
+      .addTransaction("2008/07/10", 1000.00, "WorldCo")
+      .addTransaction("2008/08/10", 1200.00, "WorldCo")
       .addTransaction("2008/06/10", -55.00, "EDF")
       .addTransaction("2008/07/10", -55.00, "EDF")
       .addTransaction("2008/08/10", -55.00, "EDF")
@@ -863,15 +869,19 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/10", -50.00, "Zara")
       .load();
 
+    categorization.setNewIncome("WorldCo", "Salary");
     categorization.setNewRecurring("EDF", "Electricity");
     categorization.setNewVariable("Auchan", "Groceries", -200.00);
     categorization.setNewExtra("FNAC", "Leisures");
     categorization.setNewVariable("Zara", "Clothes", -50.00);
 
     timeline.selectMonth("2008/08");
+    budgetView.income.checkDeltaGauge("Salary", 1000.0, 1200.0, 0.20,
+                                      "The amount is increasing - it was 1000.00 in july 2008");
     budgetView.recurring.checkDeltaGauge("Electricity", -55.0, -55.0, 0.0,
                                          "The amount is the same as in july 2008");
-    budgetView.variable.checkDeltaGauge("Groceries", -50.0, -200.0, 1.0,
+    budgetView.variable.editPlannedAmount("Groceries").setPropagationDisabled().setAmount(250.00).validate();
+    budgetView.variable.checkDeltaGauge("Groceries", -50.0, -250.0, 1.00,
                                         "The amount is increasing - it was 50.00 in july 2008");
     budgetView.extras.checkDeltaGauge("Leisures", null, -50.0, 1.0,
                                       "This envelope was not used in july 2008");
@@ -883,5 +893,13 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
                                          "The amount is the same as in june 2008");
     budgetView.variable.checkDeltaGauge("Clothes", -150.0, -50.0, -0.67,
                                         "The amount is decreasing - it was 150.00 in june 2008");
+
+    timeline.selectMonth("2008/09");
+    budgetView.variable.editSeries("Clothes").setAmount(0.00).validate();
+    budgetView.variable.checkDeltaGauge("Clothes", -50.0, 0.0, -1.00,
+                                        "The amount was 50.00 in august 2008, and it is set to zero in september 2008");
+    budgetView.income.editSeries("Salary").setAmount(0.00).validate();
+    budgetView.income.checkDeltaGauge("Salary", 1200.0, 0.0, -1.00,
+                                      "The amount was 1200.00 in august 2008, and it is set to zero in september 2008");
   }
 }
