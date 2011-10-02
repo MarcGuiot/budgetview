@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<globs>
+  <bankFormat id='20'>
+
+    <bank name="Dexia" url="http://www.dexia.be/fr/particulier/" id="20">
+      <bankEntity id="13148"/>
+    </bank>
+
+  </bankFormat>
+</globs>
