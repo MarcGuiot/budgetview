@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.components.charts.histo;
 
+import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyDataset;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
@@ -7,6 +8,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Date;
 
 public class HistoChart extends JPanel {
 
