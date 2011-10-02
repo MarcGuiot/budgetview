@@ -91,7 +91,7 @@ public class TransactionView extends View implements Filterable {
     addShowPlannedTransactionsCheckbox(builder);
     builder.add(view.getComponent());
 
-    ImportPanel importPanel = new ImportPanel(repository, directory);
+    ImportPanel importPanel = new ImportPanel(ImportPanel.Mode.STANDARD, true, repository, directory);
     importPanel.registerComponents(builder);
 
     builder.add("gotoCategorization", new GotoCardAction(Card.CATEGORIZATION, directory));

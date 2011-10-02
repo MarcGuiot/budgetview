@@ -69,7 +69,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     categorization.showSelectedMonthsOnly();
     categorization.checkNoSelectedTableRows();
-    transactionDetails.checkMessage("No data");
+    transactionDetails.checkNoDataMessage();
   }
 
   public void testDisplayAccount() throws Exception {

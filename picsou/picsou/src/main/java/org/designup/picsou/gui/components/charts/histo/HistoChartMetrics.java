@@ -62,8 +62,7 @@ public class HistoChartMetrics {
     this.maxNegativeValue = adjustLimit(maxNegativeValue, snapToScale);
 
     this.scaleZoneWidth = config.drawScale || config.keepScaleZone ? scaleZoneWidth() : 0;
-    this.sectionZoneHeight =
-      config.drawLabels && config.drawSections && containsSections ? SECTION_ZONE_HEIGHT : 0;
+    this.sectionZoneHeight = config.drawLabels && config.drawSections && containsSections ? SECTION_ZONE_HEIGHT : 0;
     this.chartWidth = panelWidth - scaleZoneWidth;
     this.columnWidth = columnCount != 0 ? chartWidth / columnCount : 0;
 

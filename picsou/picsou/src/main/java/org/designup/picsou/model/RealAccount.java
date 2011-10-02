@@ -76,7 +76,7 @@ public class RealAccount {
     GlobTypeLoader.init(RealAccount.class, "realAccount");
   }
 
-  static public boolean areStrictlyEquivalent(Glob account, Glob glob) {
+  public static boolean areStrictlyEquivalent(Glob account, Glob glob) {
     return (Strings.isNotEmpty(account.get(NAME)) || Strings.isNotEmpty(account.get(NUMBER)))
            &&
            account.get(BANK) != null &&

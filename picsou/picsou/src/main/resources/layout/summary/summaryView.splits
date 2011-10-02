@@ -9,7 +9,7 @@
     <style selector=".titleBlock" weightX="0.01" marginLeft="10"/>
 
     <style selector=".titleBlock label.graphTitle" font="-,bold,15"
-           foreground="summary.graph.title" anchor="left" marginTop="10"/>
+           foreground="summary.graph.title" anchor="left" marginTop="6"/>
     <style selector=".titleBlock label.graphSubTitle" font="-,plain,11"
            foreground="summary.graph.subtitle" anchor="left" marginTop="2"/>
     <style selector=".titleBlock button" ui="hyperlinkButtonWithoutUnderline"
@@ -23,40 +23,50 @@
     <style selector=".hints" weightY="0.01" preferredSize="(150,90)" font="-,plain,11" border="empty(10,0,0,0)"/>
   </styles>
 
-  <grid opaque="true" background="block.inner.bg.secondary">
 
-    <column gridPos="(0,0)" styleClass="titleBlock" weightY="10">
-      <label text="$summaryView.projects.title" styleClass="graphTitle" marginTop="15"/>
-      <htmlEditorPane ref="projectHint" styleClass="hints"/>
-      <button action="createProject" styleClass="create" tooltipText="$projectView.create.tooltip"/>
-      <filler fill="vertical"/>
-    </column>
+  <column opaque="true" background="block.inner.bg.secondary">
 
-    <component gridPos="(1,0)" ref="projectChart" styleClass="chart" weightX="15" weightY="10"/>
+    <row margin="10" marginBottom="2">
+      <filler fill="horizontal" weightX="100"/>
+      <panel ref="importPanel" opaque="false" weightX="1"/>
+    </row>
 
-    <panel gridPos="(0,1,2,1)" styleClass="separator"/>
+    <grid>
 
-    <column gridPos="(0,2)" styleClass="titleBlock" weightY="12">
-      <label text="$summaryView.mainAccounts.title" styleClass="graphTitle"/>
-      <label text="$summaryView.mainAccounts.subtitle" styleClass="graphSubTitle"/>
-      <button action="openTuningHelp" styleClass="hyperlink"/>
-      <filler fill="vertical"/>
-    </column>
+      <column gridPos="(0,0)" styleClass="titleBlock" weightY="10">
+        <label text="$summaryView.projects.title" styleClass="graphTitle" marginTop="15"/>
+        <htmlEditorPane ref="projectHint" styleClass="hints"/>
+        <button action="createProject" styleClass="create" tooltipText="$projectView.create.tooltip"/>
+        <filler fill="vertical"/>
+      </column>
 
-    <component gridPos="(1,2)" ref="mainAccountsHistoChart" styleClass="chart" weightX="15" weightY="12"/>
+      <component gridPos="(1,0)" ref="projectChart" styleClass="chart" weightX="15" weightY="10"/>
 
-    <panel gridPos="(0,3,2,1)" styleClass="separator"/>
+      <panel gridPos="(0,1,2,1)" styleClass="separator"/>
 
-    <column gridPos="(0,4)" styleClass="titleBlock" weightY="16">
-      <label text="$summaryView.savingsAccounts.title" styleClass="graphTitle"/>
-      <label text="$summaryView.savingsAccounts.subtitle" styleClass="graphSubTitle"/>
-      <filler fill="vertical"/>
-    </column>
+      <column gridPos="(0,2)" styleClass="titleBlock" weightY="12">
+        <label text="$summaryView.mainAccounts.title" styleClass="graphTitle"/>
+        <label text="$summaryView.mainAccounts.subtitle" styleClass="graphSubTitle"/>
+        <button action="openTuningHelp" styleClass="hyperlink"/>
+        <filler fill="vertical"/>
+      </column>
 
-    <column gridPos="(1,4)" weightX="15" weightY="16">
-      <component ref="savingsHistoChart" styleClass="chart" weightY="3"/>
-      <component ref="savingsBalanceHistoChart" styleClass="chart" weightY="2"/>
-    </column>
-  </grid>
+      <component gridPos="(1,2)" ref="mainAccountsHistoChart" styleClass="chart" weightX="15" weightY="12"/>
+
+      <panel gridPos="(0,3,2,1)" styleClass="separator"/>
+
+      <column gridPos="(0,4)" styleClass="titleBlock" weightY="16">
+        <label text="$summaryView.savingsAccounts.title" styleClass="graphTitle"/>
+        <label text="$summaryView.savingsAccounts.subtitle" styleClass="graphSubTitle"/>
+        <filler fill="vertical"/>
+      </column>
+
+      <column gridPos="(1,4)" weightX="15" weightY="16">
+        <component ref="savingsHistoChart" styleClass="chart" weightY="3"/>
+        <component ref="savingsBalanceHistoChart" styleClass="chart" weightY="2"/>
+      </column>
+    </grid>
+
+  </column>
 
 </splits>

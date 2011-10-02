@@ -15,12 +15,8 @@
 
     <ui name="showHideLabelUI" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         underline="false" autoHideEnabled="false" useNormalColorWhenDisabled="true"/>
-    <style selector="button#showHide" font="-,bold,13" marginBottom="5"
+    <style selector="button#showHide" font="-,bold,13" marginBottom="5" foreground="categorization.showHide"
            ui="showHideLabelUI" weightX="0" fill="none" anchor="left"/>
-    <style selector="button.showHideIcon" border="none" opaque="false" borderPainted="false"
-           weightX="0" fill="none" anchor="left" marginLeft="5"/>
-    <style selector="button#showHide"
-           marginLeft="5" font="-,plain,11" foreground="categorization.showHide"/>
   </styles>
 
   <column>

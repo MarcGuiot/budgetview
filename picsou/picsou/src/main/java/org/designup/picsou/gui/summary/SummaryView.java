@@ -4,6 +4,7 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
 import org.designup.picsou.gui.accounts.chart.SavingsAccountsBalanceChartView;
 import org.designup.picsou.gui.accounts.chart.SavingsAccountsChartView;
+import org.designup.picsou.gui.card.ImportPanel;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.help.actions.HelpAction;
 import org.designup.picsou.gui.projects.ProjectChartView;
@@ -28,6 +29,9 @@ public class SummaryView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/summary/summaryView.splits",
                                                       repository, directory);
 
+    ImportPanel importPanel = new ImportPanel(ImportPanel.Mode.COMPACT, false, repository, directory);
+    importPanel.registerComponents(builder);
+    
     HistoChartRange range = new ScrollableHistoChartRange(MONTHS_BACK, MONTHS_FORWARD, false, repository);
 
     ProjectChartView projects = new ProjectChartView(range, repository, directory);

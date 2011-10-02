@@ -40,7 +40,7 @@ public class ProjectChartView extends View {
   public ProjectChartView(final HistoChartRange range, final GlobRepository repository, final Directory directory) {
     super(repository, directory);
     this.range = range;
-    this.histoChart = new HistoChart(new HistoChartConfig(true, true, true, false, true, true, true, true), directory);
+    this.histoChart = new HistoChart(new HistoChartConfig(true, false, true, false, true, true, true, true), directory);
     this.updater = new HistoChartUpdater(repository, directory, Month.TYPE, Month.ID, Project.TYPE, ProjectItem.TYPE) {
       protected void update(Integer currentMonthId, boolean resetPosition) {
         updateChart(currentMonthId, resetPosition);

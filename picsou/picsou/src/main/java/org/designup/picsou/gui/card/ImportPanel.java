@@ -18,19 +18,35 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+
 public class ImportPanel extends View {
 
   private JButton importLabel;
   private JButton syncLabel;
+  private Mode mode;
+  private boolean showSignpost;
 
-  public ImportPanel(GlobRepository repository, Directory directory) {
+  public enum Mode {
+    STANDARD("/layout/importexport/importPanel_standard.splits"),
+    COMPACT("/layout/importexport/importPanel_compact.splits");
+
+    final String filePath;
+
+    private Mode(String filePath) {
+      this.filePath = filePath;
+    }
+  }
+
+  public ImportPanel(Mode mode, boolean showSignpost, GlobRepository repository, Directory directory) {
     super(repository, directory);
+    this.mode = mode;
+    this.showSignpost = showSignpost;
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importPanel.splits",
-                                                      repository, directory);
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), mode.filePath, repository, directory);
 
     Action action = ImportFileAction.init(Lang.get("import"), repository, directory, null);
     JButton button = new JButton(action);
@@ -48,8 +64,10 @@ public class ImportPanel extends View {
     syncLabel.setModel(syncButton.getModel());
     builder.add("synchroLabel", syncLabel);
 
-    final ImportSignpost importSignpost = new ImportSignpost(repository, directory);
-    importSignpost.attach(button);
+    if (showSignpost) {
+      final ImportSignpost importSignpost = new ImportSignpost(repository, directory);
+      importSignpost.attach(button);
+    }
 
     parentBuilder.add("importPanel", builder);
 
@@ -62,14 +80,14 @@ public class ImportPanel extends View {
   }
 
   private void updateLabels() {
-    GlobList accounts = repository.getAll(RealAccount.TYPE);
+    GlobList accounts = repository.getAll(RealAccount.TYPE, fieldEquals(RealAccount.FROM_SYNCHRO, Boolean.TRUE));
     if (accounts.isEmpty()) {
       importLabel.setText(Lang.get("importPanel.import.label"));
       syncLabel.setText("");
     }
     else if (accounts.size() == 1) {
       importLabel.setText(Lang.get("importPanel.import.label.other"));
-      syncLabel.setText(getLabel(accounts.getFirst()));
+      syncLabel.setText(getSyncLabel(accounts.getFirst()));
     }
     else {
       importLabel.setText(Lang.get("importPanel.import.label.other"));
@@ -77,7 +95,7 @@ public class ImportPanel extends View {
     }
   }
 
-  private String getLabel(Glob realAccount) {
+  private String getSyncLabel(Glob realAccount) {
     String realAccountLabel = realAccount.get(RealAccount.BANK_ENTITY_LABEL);
     if (Strings.isNotEmpty(realAccountLabel)) {
       return Lang.get("importPanel.synchro.label.single", realAccountLabel);
