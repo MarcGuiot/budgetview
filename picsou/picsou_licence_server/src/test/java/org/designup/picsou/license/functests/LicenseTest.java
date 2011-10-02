@@ -243,7 +243,7 @@ public class LicenseTest extends ConnectedTestCase {
 
     stopServers();
     license.validate();
-    license.checkErrorMessage("Activation failed")
+    license.checkErrorMessage("You must be connected to the Internet")
       .cancel();
 
     checkMessage("46 days left for trying BudgetView");

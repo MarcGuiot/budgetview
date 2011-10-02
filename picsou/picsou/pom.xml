@@ -106,6 +106,7 @@
                     <path refid="maven.runtime.classpath"/>
                   </classpath>
                   <sysproperty key="with.debug" value="true"/>
+                  <sysproperty key="std.out.trace" value="false"/>
                   <arg
                     line="budgetview.jar ${project.build.directory}/../dev/ant/inputClient.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
                 </java>

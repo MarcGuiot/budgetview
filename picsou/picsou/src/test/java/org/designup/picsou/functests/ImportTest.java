@@ -9,6 +9,7 @@ import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
+import org.globsframework.utils.Utils;
 
 import java.io.File;
 
@@ -467,7 +468,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     ImportDialogChecker importDialog = operations.openImportDialog()
       .selectFiles(path)
       .acceptFile()
-      .checkHtmlErrorMessage("import.file.error");
+      .checkHtmlErrorMessage("import.file.error", path);
 
     importDialog
       .clickErrorMessage()
@@ -489,7 +490,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .selectFiles(path)
       .acceptFile()
-      .checkHtmlErrorMessage("import.file.error")
+      .checkHtmlErrorMessage("import.file.error", path)
       .close();
   }
 
@@ -802,5 +803,46 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testBadSecondFile() throws Exception {
+    final String path = QifBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .addTransaction("2006/01/09", -1.1, "Menu K")
+      .save();
+
+    Files.dumpStringToFile("badFile.ofx", "some bad content");
+
+    operations
+      .openImportDialog()
+      .selectFiles(path, "badFile.ofx")
+      .acceptFile()
+      .checkNoErrorMessage()
+      .createNewAccount("CIC", "Main account", "", 0.)
+      .setMainAccount()
+      .doImport()
+      .checkHtmlErrorMessage("import.file.error", path)
+      .skipAndComplete();
+
+    transactions.initContent()
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "MENU K", "", -1.10)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "MENU K", "", -1.10)
+      .add("09/01/2006", TransactionType.PRELEVEMENT, "MENU K", "", -1.10)
+      .check();
+
+    final String path2 = QifBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "Menu K2")
+      .save();
+
+    operations.importOfxOnAccount(path2, "Main account");
+
+    transactions.initContent()
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "MENU K2", "", -1.10)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "MENU K", "", -1.10)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "MENU K", "", -1.10)
+      .add("09/01/2006", TransactionType.PRELEVEMENT, "MENU K", "", -1.10)
+      .check();
+  }
 
 }

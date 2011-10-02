@@ -29,7 +29,11 @@ public class DependExtractor {
 
     void add(String dependClassName, String className);
 
-    void addPathContent(String path, Boolean isRecursive);
+    interface Added{
+      boolean add(String className);
+    }
+
+    void addPathContent(String path, Boolean isRecursive, Added added);
   }
 
   public void add(ClassRetreiver classRetreiver) {
@@ -59,11 +63,19 @@ public class DependExtractor {
   }
 
   public void extract() throws IOException {
-    extractClass();
     while (!pathAndIsRecursive.isEmpty()) {
       Pair<String, Boolean> pathAndPattern = pathAndIsRecursive.removeFirst();
-      classRetriever.addPathContent(pathAndPattern.getFirst(), pathAndPattern.getSecond());
+      classRetriever.addPathContent(pathAndPattern.getFirst(), pathAndPattern.getSecond(), new ClassRetreiver.Added() {
+        public boolean add(String className) {
+          if (classToIgnore.contains(className)) {
+            return false;
+          }
+          classToParse.add(className);
+          return true;
+        }
+      });
     }
+    extractClass();
   }
 
   private void extractClass() throws IOException {

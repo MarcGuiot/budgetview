@@ -2,6 +2,7 @@ package org.designup.picsou.bank.importer.sg;
 
 import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.javascript.host.Event;
+import com.jidesoft.swing.InfiniteProgressPanel;
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.bank.importer.WebBankPage;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
@@ -48,6 +49,8 @@ public class SG extends WebBankPage {
   private JButton validerCode;
   private JTextField code;
   private JTextField passwordField;
+  private InfiniteProgressPanel progressPanel = new InfiniteProgressPanel();
+
 
   public static void main(String[] args) throws IOException {
     DefaultDirectory defaultDirectory = new DefaultDirectory();
@@ -98,18 +101,21 @@ public class SG extends WebBankPage {
     builder.setSource(getClass(), "/layout/bank/connection/sgPanel.splits");
 
     initCardCode(builder);
-
+    progressPanel.setVisible(true);
+    progressPanel.start();
     Thread thread = new Thread() {
       public void run() {
         try {
           loadPage(INDEX);
+          progressPanel.stop();
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
               validerCode.setEnabled(true);
             }
           });
         }
-        catch (IOException e) {
+        catch (Exception e) {
+          progressPanel.stop();
           e.printStackTrace();
         }
       }
@@ -143,6 +149,8 @@ public class SG extends WebBankPage {
     valider = new JButton(Lang.get("bank.sg.valider"));
     valider.setName("valider");
     builder.add(valider);
+
+    builder.add("progressPanel", progressPanel);
 
     validerCode.setEnabled(false);
     corriger.setEnabled(false);

@@ -57,7 +57,7 @@ public class ClassPathClassRetriever implements DependExtractor.ClassRetreiver {
     }
   }
 
-  public void addPathContent(String path, Boolean isRecursive) {
+  public void addPathContent(String path, Boolean isRecursive, Added added) {
     String[] names = (DependExtractor.undotte(path)).split("/");
     DirectoryNode node = entryNode;
     for (String name : names) {
@@ -67,18 +67,26 @@ public class ClassPathClassRetriever implements DependExtractor.ClassRetreiver {
       }
       node = child.asDirectory();
     }
-    updateSubContent(node, path);
+    updateSubContent(node, path, added);
   }
 
-  private void updateSubContent(DirectoryNode node, String path) {
+  private void updateSubContent(DirectoryNode node, String path, Added added) {
     Iterator<Node> children = node.getChildren();
     while (children.hasNext()) {
       Node child = children.next();
       if (child.isDirectory()) {
-        updateSubContent(child.asDirectory(), path + "/" + child.getName());
+        updateSubContent(child.asDirectory(), path + "/" + child.getName(), added);
       }
       else {
-        classToJar.add(path + "/" + child.getName());
+        String name = path + "/" + child.getName();
+        if (name.endsWith(".class")){
+          String className = name.substring(0, name.length() - ".class".length());
+          if (added.add(className)){
+            classToJar.add(name);
+          }
+        }else{
+          classToJar.add(name);
+        }
       }
     }
   }

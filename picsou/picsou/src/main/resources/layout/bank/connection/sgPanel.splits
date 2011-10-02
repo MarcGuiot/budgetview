@@ -7,6 +7,7 @@
       <row>
         <label text="Entrez votre code" styleClass="formLabel"/>
         <textField ref="code"/>
+        <component ref="progressPanel" opaque="false" visible="true"/>
         <button ref="validerCode"/>
       </row>
       <row>

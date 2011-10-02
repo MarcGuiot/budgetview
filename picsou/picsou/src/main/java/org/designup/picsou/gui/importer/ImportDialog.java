@@ -3,11 +3,13 @@ package org.designup.picsou.gui.importer;
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.importer.components.ImportSeriesDialog;
 import org.designup.picsou.model.*;
+import org.designup.picsou.triggers.AutomaticSeriesBudgetTrigger;
+import org.designup.picsou.triggers.SeriesBudgetTrigger;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.layout.SingleComponentLayout;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
@@ -15,8 +17,10 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -29,8 +33,6 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 
 public class ImportDialog {
   private GlobRepository parentRepository;
@@ -47,6 +49,7 @@ public class ImportDialog {
   private ImportPreviewPanel previewPanel;
   private ImportCompletionPanel completionPanel;
   private ImportAccountPanel importAccountsPanel;
+  private MessageHandler messageLabel;
 
   public ImportDialog(String textForCloseButton, List<File> files, Glob defaultAccount,
                       final Window owner, final GlobRepository repository, Directory directory,
@@ -83,6 +86,7 @@ public class ImportDialog {
       Glob bank = Account.getBank(defaultAccount, localRepository);
       localDirectory.get(SelectionService.class).select(bank);
     }
+    messageLabel = fileSelectionPanel;
   }
 
   private void initMainPanel() {
@@ -101,11 +105,13 @@ public class ImportDialog {
     GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, MonthDay.TYPE,
                             Account.TYPE, AccountUpdateMode.TYPE, BudgetArea.TYPE,
                             Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE,
-                            Series.TYPE, SubSeries.TYPE};
+                            Series.TYPE, SubSeries.TYPE, ImportedSeries.TYPE};
 
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)
         .copy(globTypes).get();
+      this.localRepository.addTrigger(new AutomaticSeriesBudgetTrigger());
+      this.localRepository.addTrigger(new SeriesBudgetTrigger(parentRepository));
     }
     else {
       this.localRepository.rollback();
@@ -128,6 +134,7 @@ public class ImportDialog {
   }
 
   public void showPreview() {
+    messageLabel = previewPanel;
     setCurrentPanel(previewPanel.getPanel());
   }
 
@@ -215,12 +222,12 @@ public class ImportDialog {
     fileSelectionPanel.acceptFiles();
   }
 
-  public void showStep1Message(String message) {
-    fileSelectionPanel.showMessage(message);
+  public void showMessage(String message) {
+    messageLabel.showFileErrorMessage(message);
   }
 
-  public void showStep1Message(String message, Exception exception) {
-    fileSelectionPanel.showMessage(message, exception);
+  public void showMessage(String message, Exception exception) {
+    messageLabel.showFileErrorMessage(message, exception);
   }
 
   public void showNoImport(Glob glob, boolean first) {
@@ -234,5 +241,14 @@ public class ImportDialog {
     ImportSeriesDialog dialog = new ImportSeriesDialog(ImportDialog.this.dialog,
                                                        controller.getSessionRepository(), localDirectory);
     return dialog.show(newSeries);
+  }
+
+  public static void showLastException(Exception exception, Directory directory) {
+    MessageAndDetailsDialog dialog = new MessageAndDetailsDialog("import.file.error.title",
+                                                                 "import.file.error.message",
+                                                                 Strings.toString(exception),
+                                                                 directory.get(JFrame.class),
+                                                                 directory);
+    dialog.show();
   }
 }

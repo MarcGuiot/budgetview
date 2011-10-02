@@ -180,6 +180,7 @@ public class LicenseActivationDialog {
       messageSendCode.setVisible(false);
       selectionService.clear(User.TYPE);
       validateAction.setEnabled(false);
+      connectionState.setVisible(false);
     }
     return isConnected;
   }
