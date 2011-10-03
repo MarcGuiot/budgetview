@@ -58,6 +58,11 @@ public class DateFormatSelectionPanel {
 
   public void init(List<String> dateFormats) {
     selectedFormat = null;
+    if (dateFormats == null){
+      panel.setVisible(false);
+      selectedFormat = "";
+      return;
+    }
     if (dateFormats.size() == 0) {
       dateFormats = DateFormatAnalyzer.getAllFormats();
       panel.setVisible(true);

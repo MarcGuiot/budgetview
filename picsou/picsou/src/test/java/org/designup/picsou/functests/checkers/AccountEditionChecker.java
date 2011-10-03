@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.globsframework.utils.Dates;
+import org.globsframework.model.format.Formats;
 import org.jdesktop.swingx.JXDatePicker;
 import org.uispec4j.ComboBox;
 import org.uispec4j.TextBox;
@@ -131,6 +132,13 @@ public class AccountEditionChecker extends GuiChecker {
     TextBox textBox = dialog.getInputTextBox("position");
     assertThat(textBox.isVisible());
     textBox.setText(Double.toString(amount));
+    return this;
+  }
+
+  public AccountEditionChecker checkPosition(double amount) {
+    TextBox textBox = dialog.getInputTextBox("position");
+    assertThat(textBox.isVisible());
+    assertThat(textBox.textEquals(Formats.DEFAULT_DECIMAL_FORMAT.format(amount)));
     return this;
   }
 
@@ -427,5 +435,11 @@ public class AccountEditionChecker extends GuiChecker {
 
   public String getAccountName() {
     return dialog.getInputTextBox("name").getText();
+  }
+
+  public void checkAccountDisable() {
+    assertFalse(getTypeCombo().isEnabled());
+    assertFalse(getBankButton().isEnabled());
+    assertFalse(getNameEditor().isEnabled());
   }
 }

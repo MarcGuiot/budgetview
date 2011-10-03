@@ -17,10 +17,24 @@
       <label text="$import.file.to.import" styleClass="header"/>
       <label ref="fileName"/>
 
-      <label text="$import.file.content" styleClass="header"/>
-      <scrollPane maximumSize="(400,300)" weightY="500">
-        <table ref="table"/>
-      </scrollPane>
+
+      <cards ref="mainCardOperations">
+        <card name="cardOperations">
+          <column>
+            <label text="$import.file.content" styleClass="header"/>
+            <scrollPane maximumSize="(400,300)" weightY="500">
+              <table ref="table"/>
+            </scrollPane>
+          </column>
+        </card>
+        <card name="noOperations">
+          <column>
+            <filler fill="vertical"/>
+            <htmlEditorPane ref="noOperationLabel" styleClass="importantMessage"/>
+            <filler fill="vertical"/>
+          </column>
+        </card>
+      </cards>
 
       <panel ref="dateSelectionPanel"/>
 

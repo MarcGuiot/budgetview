@@ -19,14 +19,18 @@ import java.util.Iterator;
 
 public class BankSynchroService {
   private Map<Integer, BankSynchro> banks = new HashMap<Integer, BankSynchro>();
+  static boolean SHOW_SYNCHRO =
+    System.getProperty("budgetview.synchro", "false").equalsIgnoreCase("false");
 
   public interface BankSynchro {
     GlobList show(Directory directory, GlobRepository repository);
   }
 
   public BankSynchroService() {
-    register(SG.SG_ID, new SG.Init());
-    register(CreditMutuelArkea.ID, new CreditMutuelArkea.Init());
+    if (!SHOW_SYNCHRO){
+      register(SG.SG_ID, new SG.Init());
+      register(CreditMutuelArkea.ID, new CreditMutuelArkea.Init());
+    }
     Utils.beginRemove();
     register(OtherBank.ID, new OtherBank.Init());
     Utils.endRemove();

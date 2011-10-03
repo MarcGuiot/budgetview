@@ -132,6 +132,13 @@ public class ImportDialogChecker extends GuiChecker {
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
+  public void completeImportWithNext() {
+    TextBox box = dialog.getTextBox("importMessage");
+    assertTrue(box.textIsEmpty());
+    validateAndComplete(-1, -1, -1, dialog, "import.preview.noOperation.ok");
+    UISpecAssert.assertFalse(dialog.isVisible());
+  }
+
   public void completeImport(double amount) {
     doImportWithBalance().setAmount(amount).validate();
     ImportDialogChecker.complete(-1, -1, -1, dialog);
@@ -513,6 +520,11 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
+  public ImportDialogChecker checkAccountDisable(){
+    accountEditionChecker.checkAccountDisable();
+    return this;
+  }
+
   public OfxSynchoChecker openOfxSynchro(String bankName) {
     return getBankDownload().selectBank(bankName)
       .openOfxSynchro(this);
@@ -520,6 +532,11 @@ public class ImportDialogChecker extends GuiChecker {
 
   public ImportDialogChecker checkAstericsErrorOnName() {
     accountEditionChecker.checkAstericsErrorOnName();
+    return this;
+  }
+
+  public ImportDialogChecker checkAccountPosition(double position){
+    accountEditionChecker.checkPosition(position);
     return this;
   }
 
@@ -545,6 +562,11 @@ public class ImportDialogChecker extends GuiChecker {
 
   public ImportDialogChecker checkAstericsErrorOnType() {
     accountEditionChecker.checkAstericsErrorOnType();
+    return this;
+  }
+
+  public ImportDialogChecker doNext() {
+    dialog.getButton(Lang.get("import.preview.noOperation.ok")).click();
     return this;
   }
 

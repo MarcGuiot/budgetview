@@ -21,6 +21,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.DefaultChangeSetListener;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -28,8 +29,6 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class AbstractAccountPanel<T extends GlobRepository> {
   protected JPanel panel;
@@ -48,6 +47,8 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   private MandatoryFieldFlag nameFlag;
   private MandatoryFieldFlag bankFlag;
   private MandatoryFieldFlag accountTypeFlag;
+  private boolean enable = true;
+  private GlobTextEditor number;
 
   public AbstractAccountPanel(T repository, Directory parentDirectory) {
     this.localRepository = repository;
@@ -84,7 +85,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
     nameField = builder.addEditor("name", Account.NAME).setNotifyOnKeyPressed(true);
     nameFlag = new MandatoryFieldFlag("nameFlag", builder);
-    builder.addEditor("number", Account.NUMBER).setNotifyOnKeyPressed(true);
+    number = builder.addEditor("number", Account.NUMBER).setNotifyOnKeyPressed(true);
     builder.add("type", accountTypeCombo.createAccountTypeCombo());
     accountTypeFlag = new MandatoryFieldFlag("accountTypeFlag", builder);
 
@@ -167,14 +168,16 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   }
 
   public void updateMandatoryFlags() {
-    nameFlag.update(Strings.isNullOrEmpty(currentAccount.get(Account.NAME))
-                    || localRepository.getAll(Account.TYPE, fieldEquals(Account.NAME, currentAccount.get(Account.NAME))).size() != 1);
-    bankFlag.update(currentAccount.get(Account.BANK) == null);
-    accountTypeFlag.update(currentAccount.get(Account.ACCOUNT_TYPE) == null);
+    if (enable) {
+      nameFlag.update(Strings.isNullOrEmpty(currentAccount.get(Account.NAME))
+                      || localRepository.getAll(Account.TYPE, fieldEquals(Account.NAME, currentAccount.get(Account.NAME))).size() != 1);
+      bankFlag.update(currentAccount.get(Account.BANK) == null);
+      accountTypeFlag.update(currentAccount.get(Account.ACCOUNT_TYPE) == null);
+    }
   }
 
   public boolean check() {
-    if (panel.isVisible()) {
+    if (panel.isVisible() && enable) {
       clearMessage();
       if (Strings.isNullOrEmpty(currentAccount.get(Account.NAME))) {
         errorTip = ErrorTip.showLeft(nameField.getComponent(), Lang.get("account.error.missing.name"), localDirectory);
@@ -252,4 +255,18 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     }
   }
 
+  public void setEnable(boolean enable) {
+    this.enable = enable;
+    this.nameField.getComponent().setEnabled(enable);
+    this.number.getComponent().setEnabled(enable);
+    this.accountTypeCombo.setEnabled(enable);
+    this.bankSelectionButton.setEnabled(enable);
+    this.positionEditor.setEnabled(enable);
+    if (!enable){
+      clearMandatoryFlags();
+    }
+    else {
+      updateMandatoryFlags();
+    }
+  }
 }

@@ -131,6 +131,9 @@
     <style selector="htmlEditorPane.errorMessage"
            foreground="#FF0000" font="-,bold,12" fill="horizontal" anchor="center"/>
 
+    <style selector="htmlEditorPane.importantMessage"
+           foreground="#000000" font="-,bold,12" fill="horizontal" anchor="center"/>
+
     <!-- Hyperlinks -->
 
     <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"/>

@@ -153,7 +153,7 @@ public class ImportController {
       List<String> dateFormats = importSession.loadFile(file, realAccount);
       Glob importedAccount = importSession.gotoNextContent();
       if (importedAccount != null) {
-        importDialog.updateForNextImport(file.getAbsolutePath(), dateFormats, importedAccount);
+        importDialog.updateForNextImport(file.getAbsolutePath(),  dateFormats, importedAccount);
         Log.write("nextImport as next content");
         return true;
       }

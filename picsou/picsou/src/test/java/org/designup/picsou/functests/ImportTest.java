@@ -9,7 +9,6 @@ import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
-import org.globsframework.utils.Utils;
 
 import java.io.File;
 
@@ -360,7 +359,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setMainAccount()
       .setDeferredAccount()
       .doImport();
-    
+
     importDialog.selectBank(SOCIETE_GENERALE)
       .setMainAccount()
       .checkFileContent(new Object[][]{
@@ -845,4 +844,45 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testMultipleEmptyAccount() throws Exception {
+    String s = OfxBuilder.init(this)
+      .addBankAccount("111", 100, "2011/10/01")
+      .addBankAccount("112", 100, "2011/10/01")
+      .addBankAccount("113", 100, "2011/10/01")
+      .save();
+    operations.openImportDialog()
+      .selectFiles(s)
+      .acceptFile()
+      .setMainAccount()
+      .doNext()
+      .setMainAccount()
+      .doNext()
+      .setMainAccount()
+      .completeImportWithNext();
+
+    mainAccounts.checkAccountNames("Account n. 111", "Account n. 112", "Account n. 113");
+
+    String s2 = OfxBuilder.init(this)
+      .addBankAccount("1114", 100, "2011/10/03")
+      .addBankAccount("112", 200, "2011/10/03")
+      .addBankAccount("113", 300, "2011/10/03")
+      .addTransaction("2011/10/03", 100, "Aniversaire")
+      .save();
+    operations.openImportDialog()
+      .selectFiles(s2)
+      .acceptFile()
+      .checkAccount("Account n. 113")
+      .checkAccountDisable()
+      .selectAccount("a new account")
+      .checkAstericsErrorOnName()
+      .checkAccountPosition(300.)
+      .selectAccount("Account n. 113")
+      .doImport()
+      .setMainAccount()
+      .doNext()
+      .completeImportWithNext();
+
+    mainAccounts.checkAccount("Account n. 113", 300., "2011/10/03");
+    mainAccounts.checkAccount("Account n. 112", 200., "2011/10/03");
+  }
 }

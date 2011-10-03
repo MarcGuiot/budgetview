@@ -2,11 +2,11 @@ package org.designup.picsou.gui.importer;
 
 import org.designup.picsou.gui.accounts.AccountEditionPanel;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.importer.edition.DateFormatSelectionPanel;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionDateRenderer;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionsTable;
 import org.designup.picsou.gui.importer.utils.AccountFinder;
-import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountUpdateMode;
 import org.designup.picsou.model.ImportedTransaction;
@@ -16,20 +16,22 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.*;
+import org.globsframework.utils.Log;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.Utils;
-import org.globsframework.utils.Log;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Set;
 
-public class ImportPreviewPanel implements MessageHandler{
+public class ImportPreviewPanel implements MessageHandler {
   private ImportController controller;
   private GlobRepository repository;
   private LocalGlobRepository localRepository;
@@ -56,6 +58,9 @@ public class ImportPreviewPanel implements MessageHandler{
   private Glob importedAccount;
   private ImportPreviewPanel.FinishAction finishAction;
   private Exception lastException;
+  private Glob newAccount;
+  private CardHandler cardHandler;
+  private JEditorPane noOperationLabel;
 
   public ImportPreviewPanel(ImportController controller,
                             Glob defaultAccount,
@@ -70,6 +75,9 @@ public class ImportPreviewPanel implements MessageHandler{
 
   public void init(PicsouDialog dialog, final String textForCloseButton) {
     builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importPreviewPanel.splits", localRepository, localDirectory);
+    cardHandler = builder.addCardHandler("mainCardOperations");
+    noOperationLabel = new JEditorPane();
+    builder.add("noOperationLabel", noOperationLabel);
     dateRenderer = new ImportedTransactionDateRenderer();
     dateFormatSelectionPanel = new DateFormatSelectionPanel(localRepository, localDirectory,
                                                             new DateFormatSelectionPanel.Callback() {
@@ -85,8 +93,14 @@ public class ImportPreviewPanel implements MessageHandler{
         showStep2Message("");
         currentlySelectedAccount = selection.getAll(Account.TYPE).isEmpty() ? null :
                                    selection.getAll(Account.TYPE).get(0);
-        if (currentlySelectedAccount != null){
+        if (currentlySelectedAccount != null) {
           accountEditionPanel.clearAllMessages();
+          accountEditionPanel.setAccount(currentlySelectedAccount);
+          accountEditionPanel.setEnable(false);
+        }
+        else if (newAccount != null) {
+          accountEditionPanel.setAccount(newAccount);
+          accountEditionPanel.setEnable(true);
         }
       }
     }, Account.TYPE);
@@ -163,27 +177,35 @@ public class ImportPreviewPanel implements MessageHandler{
   public void updateForNextImport(List<String> dateFormats, Glob importedAccount) {
     this.importedAccount = importedAccount;
     accountEditionRepository.rollback();
-    Glob glob = RealAccount.createAccountFromImported(importedAccount, accountEditionRepository, true);
+    newAccount = RealAccount.createAccountFromImported(importedAccount, accountEditionRepository, true);
 
-    accountEditionPanel.setAccount(glob);
-    localDirectory.get(SelectionService.class).select(glob);
+    accountEditionPanel.setAccount(newAccount);
+    localDirectory.get(SelectionService.class).select(newAccount);
 
-    if (dateFormats != null) {
-      dateFormatSelectionPanel.init(dateFormats);
+    GlobList importedTransactions = sessionRepository.getAll(ImportedTransaction.TYPE);
+    if (importedTransactions.isEmpty()) {
+      cardHandler.show("noOperations");
+      finishAction.putValue(Action.NAME, Lang.get("import.preview.noOperation.ok"));
+      updateNoOperationMessage();
     }
+    else {
+      cardHandler.show("cardOperations");
+      finishAction.putValue(Action.NAME, Lang.get("import.preview.ok"));
+    }
+
+    dateFormatSelectionPanel.init(importedTransactions.isEmpty() ? null : dateFormats);
     Integer accountId = importedAccount.get(RealAccount.ACCOUNT);
     if (accountId != null) {
       sessionDirectory.get(SelectionService.class)
         .select(sessionRepository.get(Key.create(Account.TYPE, accountId)));
     }
     else {
-      GlobList importedTransactions = sessionRepository.getAll(ImportedTransaction.TYPE);
       accountId = AccountFinder.findBestAccount(importedTransactions, repository);
       //
       Glob associatedImportedAccout = sessionRepository.getAll(RealAccount.TYPE)
         .filter(GlobMatchers.fieldEquals(RealAccount.ACCOUNT, accountId), sessionRepository)
         .getFirst();
-      if (associatedImportedAccout != null && !RealAccount.areNearEquivalent(associatedImportedAccout, importedAccount)){
+      if (associatedImportedAccout != null && !RealAccount.areNearEquivalent(associatedImportedAccout, importedAccount)) {
         accountId = null;
       }
       //
@@ -194,6 +216,27 @@ public class ImportPreviewPanel implements MessageHandler{
       else {
         sessionDirectory.get(SelectionService.class).clear(Account.TYPE);
       }
+    }
+  }
+
+  private void updateNoOperationMessage() {
+    String accName = newAccount.get(Account.NAME);
+    String accNumber = newAccount.get(Account.NUMBER);
+    String name = null;
+    if (Strings.isNotEmpty(accName) && Strings.isNotEmpty(accNumber)) {
+      name = accName + " (" + accNumber + ")";
+    }
+    else if (Strings.isNotEmpty(accName)) {
+      name = accName;
+    }
+    else if (Strings.isNotEmpty(accNumber)) {
+      name = accNumber;
+    }
+    if (Strings.isNullOrEmpty(name)) {
+      noOperationLabel.setText(Lang.get("import.preview.noOperations.noName", name));
+    }
+    else {
+      noOperationLabel.setText(Lang.get("import.preview.noOperations", name));
     }
   }
 
@@ -237,12 +280,13 @@ public class ImportPreviewPanel implements MessageHandler{
         else {
           accountEditionRepository.rollback();
         }
-        
+
         sessionRepository.update(importedAccount.getKey(),
                                  FieldValue.value(RealAccount.ACCOUNT, currentlySelectedAccount.get(Account.ID)));
         deleteAccountIfDuplicate(importedAccount);
         sessionRepository.update(currentlySelectedAccount.getKey(), Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
         controller.completeImport(importedAccount, currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
+        newAccount = null;
         Log.write("finish ok");
       }
       finally {
@@ -272,6 +316,7 @@ public class ImportPreviewPanel implements MessageHandler{
     }
 
     public void actionPerformed(ActionEvent e) {
+      newAccount = null;
       clearFileError();
       setEnabled(false);
       try {
@@ -291,6 +336,7 @@ public class ImportPreviewPanel implements MessageHandler{
     }
 
     public void actionPerformed(ActionEvent e) {
+      newAccount = null;
       clearFileError();
       controller.complete(); // missing?
       controller.closeDialog();

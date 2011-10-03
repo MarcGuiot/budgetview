@@ -44,6 +44,7 @@ public class ImportSession {
   private int lastLoadOperationsCount = 0;
   private int importedOperationsCount = 0;
   private GlobList accountIds = new GlobList();
+  private int accountCount;
   private ChangeSet changes;
   private Glob realAccount;
   private Boolean importSeries;
@@ -77,10 +78,10 @@ public class ImportSession {
     return localRepository;
   }
 
-  public List<String> loadFile(File file, final Glob realAccount) throws IOException, TruncatedFile, NoOperations {
+  public List<String> loadFile(File file, final Glob synchronizedAccount) throws IOException, TruncatedFile, NoOperations {
     Log.write("loadFile");
     this.importSeries = null;
-    this.realAccount = realAccount;
+    this.realAccount = synchronizedAccount;
     importChangeSet = new DefaultChangeSet();
     importChangeSetAggregator = new ChangeSetAggregator(localRepository, importChangeSet);
     load = true;
@@ -121,7 +122,23 @@ public class ImportSession {
     accountIds =
       importRepository.getAll(RealAccount.TYPE, GlobMatchers.contained(RealAccount.ID, tmpAccountIds))
         .sort(RealAccount.NAME).sort(RealAccount.NUMBER);
-    if (realAccount != null) {
+
+    // on met en premier un compte qui a des operations sinon, le dateFormat sera demandé pour un compte
+    // potentiellement vide
+
+    List<Glob> newList = new ArrayList<Glob>();
+    for (Iterator it = accountIds.iterator(); it.hasNext();) {
+      Glob acc = (Glob)it.next();
+      if (!importRepository.contains(ImportedTransaction.TYPE,
+                                     GlobMatchers.fieldEquals(ImportedTransaction.ACCOUNT, acc.get(RealAccount.ID)))) {
+        newList.add(acc);
+        it.remove();
+      }
+    }
+    accountIds.addAll(newList);
+
+    accountCount = accountIds.size();
+    if (synchronizedAccount != null) {
       if (accountIds.size() > 1) {
         Log.write("mulitple account : ignoring realAccount");
       }
@@ -130,11 +147,11 @@ public class ImportSession {
           Glob account = accountIds.remove(0);
           importRepository.delete(account.getKey());
         }
-        accountIds.add(realAccount);
+        accountIds.add(synchronizedAccount);
         importRepository.getAll(ImportedTransaction.TYPE)
           .safeApply(new GlobFunctor() {
             public void run(Glob glob, GlobRepository repository) throws Exception {
-              repository.update(glob.getKey(), ImportedTransaction.ACCOUNT, realAccount.get(RealAccount.ID));
+              repository.update(glob.getKey(), ImportedTransaction.ACCOUNT, synchronizedAccount.get(RealAccount.ID));
             }
           }, importRepository);
       }
@@ -169,9 +186,6 @@ public class ImportSession {
     }
 
     GlobList importedOperations = localRepository.getAll(ImportedTransaction.TYPE);
-//    if (importedOperations.isEmpty()) {
-//      throw new NoOperations();
-//    }
 
     if (realAccount == null) {
       currentImportedAccount = findOnExistingRealAccount(currentImportedAccount);
@@ -182,7 +196,7 @@ public class ImportSession {
     }
 
     lastLoadOperationsCount = importedOperations.size();
-    Log.write("readNext ok");
+    Log.write("readNext ok with " + lastLoadOperationsCount);
     return currentImportedAccount;
   }
 
