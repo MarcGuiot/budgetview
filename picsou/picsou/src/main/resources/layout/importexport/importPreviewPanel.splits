@@ -28,11 +28,12 @@
           </column>
         </card>
         <card name="noOperations">
-          <column>
-            <filler fill="vertical"/>
-            <htmlEditorPane ref="noOperationLabel" styleClass="importantMessage"/>
-            <filler fill="vertical"/>
-          </column>
+          <scrollPane forceVerticalScroll="true">
+            <column>
+              <htmlEditorPane ref="noOperationLabel" styleClass="importantMessage" margin="10"/>
+              <filler fill="vertical"/>
+            </column>
+          </scrollPane>
         </card>
       </cards>
 
