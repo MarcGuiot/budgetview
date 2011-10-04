@@ -107,13 +107,23 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAutoCategorizationWithCardTransactions() throws Exception {
-    OfxBuilder
+    String path = OfxBuilder
       .init(this)
       .addBankAccount(30066, 10674, "000123", 0, "2006/01/11")
       .addCardAccount("000111", 0, "2006/01/11")
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .addTransaction("2006/01/11", -1.1, "Fouquet's")
-      .loadDeferredCard("Card n. 000111");
+      .save();
+    operations
+      .openImportDialog()
+      .setFilePath(path)
+      .acceptFile()
+      .setDeferredAccount()
+      .doImport()
+      .setMainAccount()
+      .completeImportWithNext();
+
+//    .loadDeferredCard("Card n. 000111");
 
     views.selectData();
     transactions.initContent()
