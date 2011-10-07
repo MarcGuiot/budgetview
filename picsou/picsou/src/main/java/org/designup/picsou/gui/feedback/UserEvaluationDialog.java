@@ -17,6 +17,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.*;
 
 public class UserEvaluationDialog {
   private PicsouDialog dialog;
@@ -26,6 +27,7 @@ public class UserEvaluationDialog {
   private JToggleButton noToggle = new JToggleButton();
   private Directory directory;
   private JButton sendButton;
+  private JProgressBar sendingState = new JProgressBar();
 
   public static void showIfNeeded(GlobRepository repository, Directory directory) {
 
@@ -70,6 +72,7 @@ public class UserEvaluationDialog {
     ButtonGroup group = new ButtonGroup();
     group.add(yesToggle);
     group.add(noToggle);
+    builder.add("sendingState", sendingState);
 
     this.commentEditor = new JTextArea();
     builder.add("comment", commentEditor);
@@ -128,26 +131,84 @@ public class UserEvaluationDialog {
   }
 
   private class SendAction extends AbstractAction {
+    private WaitClosedThread schedule;
 
     public SendAction() {
       super(Lang.get("feedback.send"));
     }
 
     public void actionPerformed(ActionEvent e) {
+      sendingState.setVisible(true);
+      sendingState.setIndeterminate(true);
       directory.get(ConfigService.class).sendMail(ConfigService.MAIL_CONTACT,
                                                   emailField.getText(),
                                                   getHeaderText(),
                                                   getMessageText(),
                                                   new ConfigService.Listener() {
                                                     public void sent(String mail, String title, String content) {
+                                                      messageSent();
                                                       Log.write("Mail sent from " + mail + " title : " + title + "\n" + content);
                                                     }
 
                                                     public void sendFail(String mail, String title, String content) {
+                                                      messageSent();
                                                       Log.write("Fail to sent mail from " + mail + " title : " + title + "\n" + content);
                                                     }
                                                   });
+      schedule = new WaitClosedThread(dialog);
+      schedule.setDaemon(true);
+      schedule.start();
+      setEnabled(false);
+      sendingState.setIndeterminate(false);
+      sendingState.setVisible(false);
+    }
+
+    private void messageSent() {
+      schedule.close();
+      try {
+        schedule.join();
+      }
+      catch (InterruptedException e) {
+      }
       dialog.setVisible(false);
+    }
+  }
+
+  private static class WaitClosedThread extends Thread {
+    private boolean closed = false;
+    private Dialog dialog;
+
+    private WaitClosedThread(Dialog dialog) {
+      this.dialog = dialog;
+    }
+
+    public void close(){
+      synchronized (this){
+        dialog = null;
+        closed = true;
+        notifyAll();
+      }
+    }
+    public void run() {
+      try {
+        synchronized (this){
+          if (!closed){
+            wait(5000);
+          }
+        }
+        if (!closed) {
+          SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+              Dialog tmp = dialog;
+              if (tmp != null){
+                tmp.setVisible(false);
+              }
+            }
+          });
+        }
+      }
+      catch (InterruptedException e1) {
+      }
     }
   }
 }

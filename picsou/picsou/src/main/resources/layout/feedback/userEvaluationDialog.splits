@@ -49,6 +49,10 @@
         <textField ref="email" />
       </row>
 
+      <row>
+        <progressBar ref="sendingState" visible="false"/>
+      </row>
+
     </column>
   </panel>
 
