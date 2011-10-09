@@ -150,16 +150,15 @@
         </card>
 
         <card name="data">
-          <horizontalBoxes opaque="false">
-
-            <column minimumSize="(320,200)" preferredSize="(320,700)" marginRight="20">
-              <panel ref="accountView" weightY="1.0"/>
+          <horizontalSplit opaque="false">
+            <column weightX="1" minimumSize="(300,200)" preferredSize="(300,700)">
+              <panel ref="accountView"/>
             </column>
 
-            <column weightX="100">
+            <column weightX="2.5">
               <panel ref="transactionView"/>
             </column>
-          </horizontalBoxes>
+          </horizontalSplit>
         </card>
       </cards>
 
