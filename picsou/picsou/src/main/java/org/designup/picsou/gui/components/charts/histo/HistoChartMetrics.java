@@ -254,7 +254,7 @@ public class HistoChartMetrics {
     return innerLabelY;
   }
 
-  public int textWidth(String text) {
+  public int labelTextWidth(String text) {
     return fontMetrics.stringWidth(text);
   }
 

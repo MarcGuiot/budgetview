@@ -11,14 +11,16 @@ import java.awt.*;
 
 public class HistoButtonPainter implements HistoPainter {
   private HistoButtonDataset dataset;
+  private FontMetrics buttonFontMetrics;
   private HistoButtonColors colors;
   private BasicClickMap clickMap = new BasicClickMap();
 
   private static final int ARC_WIDTH = 5;
   private static final int ARC_HEIGHT = 10;
 
-  public HistoButtonPainter(HistoButtonDataset dataset, HistoButtonColors colors) {
+  public HistoButtonPainter(HistoButtonDataset dataset, FontMetrics buttonFontMetrics, HistoButtonColors colors) {
     this.dataset = dataset;
+    this.buttonFontMetrics = buttonFontMetrics;
     this.colors = colors;
   }
 
@@ -26,7 +28,9 @@ public class HistoButtonPainter implements HistoPainter {
 
     clickMap.reset();
 
-    HistoButtonMetrics metrics = new HistoButtonMetrics(chartMetrics, dataset.getRowCount());
+    HistoButtonMetrics metrics = new HistoButtonMetrics(chartMetrics, buttonFontMetrics, dataset.getRowCount());
+
+    g2.setFont(buttonFontMetrics.getFont());
 
     for (HistoButtonBlock block : dataset.getBlocks()) {
       Rectangle rectangle = metrics.buttonRectangle(block);

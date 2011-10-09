@@ -18,16 +18,15 @@ public class HistoButtonMetrics {
   private int buttonTopOffset;
   private int labelYOffset;
 
-  public HistoButtonMetrics(HistoChartMetrics metrics, int rowCount) {
+  public HistoButtonMetrics(HistoChartMetrics metrics, FontMetrics buttonFontMetrics, int rowCount) {
     this.metrics = metrics;
     this.rowCount = rowCount;
 
-    FontMetrics fontMetrics = metrics.getFontMetrics();
-    int labelHeight = fontMetrics.getAscent() + fontMetrics.getDescent();
+    int labelHeight = buttonFontMetrics.getAscent() + buttonFontMetrics.getDescent();
     int labelHeightWithMargin = labelHeight + 2 * VERTICAL_LABEL_MARGIN;
     int blockHeight = rowCount == 0 ? 0 : metrics.columnHeight() / rowCount;
     this.canDrawLabels = blockHeight > labelHeightWithMargin;
-    this.labelYOffset = blockHeight / 2 - labelHeight / 2 + fontMetrics.getAscent();
+    this.labelYOffset = blockHeight / 2 - labelHeight / 2 + buttonFontMetrics.getAscent();
     this.buttonHeight = canDrawLabels ? labelHeightWithMargin : blockHeight;
     this.buttonTopOffset = blockHeight / 2 - buttonHeight / 2;
   }

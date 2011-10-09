@@ -70,7 +70,9 @@ public class HistoButtonChartDemo {
       }
     });
 
-    chart.update(new HistoButtonPainter(dataset, colors));
+    Font buttonFont = chart.getFont().deriveFont(11.0f);
+    FontMetrics buttonFontMetrics = chart.getFontMetrics(buttonFont);
+    chart.update(new HistoButtonPainter(dataset, buttonFontMetrics, colors));
 
     JFrame frame = new JFrame();
     frame.setContentPane(SingleComponentPanels.create(chart, new Insets(20, 20, 20, 20)));

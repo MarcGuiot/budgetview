@@ -45,7 +45,7 @@ public class HistoDailyMetrics {
   }
 
   public int innerLabelX(int index, int minX, String text) {
-    int textWidth = metrics.textWidth(text);
+    int textWidth = metrics.labelTextWidth(text);
     int midColumnX = metrics.left(index) + metrics.columnWidth() / 2;
 
     if ((minX > midColumnX) && (minX + textWidth / 2 + INNER_LABEL_PADDING > metrics.right(index))) {
@@ -59,7 +59,7 @@ public class HistoDailyMetrics {
   }
 
   public int innerLabelLineX(int index, int minX, String text) {
-    int textWidth = metrics.textWidth(text);
+    int textWidth = metrics.labelTextWidth(text);
     return innerLabelX(index, minX, text) + textWidth / 2;
   }
 

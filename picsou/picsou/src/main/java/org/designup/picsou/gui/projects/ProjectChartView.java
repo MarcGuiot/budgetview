@@ -28,14 +28,17 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class ProjectChartView extends View {
+  private static final float BUTTON_FONT_SIZE = 12.0f;
   private HistoChartUpdater updater;
   private HistoChart histoChart;
   private HistoChartRange range;
   private HistoButtonColors colors;
   private ProjectEditionDialog editionDialog;
   private JEditorPane message;
+  private FontMetrics buttonFontMetrics;
 
   public ProjectChartView(final HistoChartRange range, final GlobRepository repository, final Directory directory) {
     super(repository, directory);
@@ -84,6 +87,9 @@ public class ProjectChartView extends View {
       "histo.button.rollover.border",
       directory
     );
+
+    Font buttonFont = histoChart.getFont().deriveFont(BUTTON_FONT_SIZE);
+    buttonFontMetrics = histoChart.getFontMetrics(buttonFont);
   }
 
   private void updateChart(Integer currentMonthId, boolean resetPosition) {
@@ -103,7 +109,7 @@ public class ProjectChartView extends View {
       dataset.addButton(range.getMin(), range.getMax(), project.get(Project.NAME), project.getKey(), getTooltip(project));
     }
 
-    histoChart.update(new HistoButtonPainter(dataset.get(), colors));
+    histoChart.update(new HistoButtonPainter(dataset.get(), buttonFontMetrics, colors));
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
