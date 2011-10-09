@@ -37,6 +37,7 @@ public class UserEvaluationTest extends ConnectedTestCase {
       .enterEmailAddress("toto@example.com")
       .send();
 
+    Thread.sleep(1000);
     application.checkClosed();
 
     mailServer.checkReceivedMail("support@mybudgetview.fr")
@@ -59,6 +60,7 @@ public class UserEvaluationTest extends ConnectedTestCase {
       .enterComment("Blah")
       .send();
 
+    Thread.sleep(1000);
     application.checkClosed();
 
     mailServer.checkReceivedMail("support@mybudgetview.fr")
@@ -99,6 +101,7 @@ public class UserEvaluationTest extends ConnectedTestCase {
       .enterEmailAddress("toto@example.com")
       .send();
 
+    Thread.sleep(1000);
     application.checkClosed();
 
     mailServer.checkReceivedMail("support@mybudgetview.fr")

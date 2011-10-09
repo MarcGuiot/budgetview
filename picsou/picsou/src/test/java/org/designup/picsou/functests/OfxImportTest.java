@@ -428,13 +428,13 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(file)
       .acceptFile();
     importDialog
-      .setMainAccount()
+      .setDeferredAccount()
       .selectBank("Autre")
       .doImport();
     importDialog
       .selectBank("Autre")
-      .setDeferredAccount()
-      .doImport()
+      .setMainAccount()
+      .doNext()
       .completeLastStep();
 
     views.selectHome();

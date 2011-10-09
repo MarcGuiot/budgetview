@@ -193,7 +193,9 @@ public class ImportPreviewPanel implements MessageHandler {
       finishAction.putValue(Action.NAME, Lang.get("import.preview.ok"));
     }
 
-    dateFormatSelectionPanel.init(importedTransactions.isEmpty() ? null : dateFormats);
+    if (dateFormats != null){
+      dateFormatSelectionPanel.init(importedTransactions.isEmpty() ? null : dateFormats);
+    }
     Integer accountId = importedAccount.get(RealAccount.ACCOUNT);
     if (accountId != null) {
       sessionDirectory.get(SelectionService.class)
