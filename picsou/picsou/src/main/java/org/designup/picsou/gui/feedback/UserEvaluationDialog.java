@@ -159,8 +159,6 @@ public class UserEvaluationDialog {
       schedule.setDaemon(true);
       schedule.start();
       setEnabled(false);
-      sendingState.setIndeterminate(false);
-      sendingState.setVisible(false);
     }
 
     private void messageSent() {
