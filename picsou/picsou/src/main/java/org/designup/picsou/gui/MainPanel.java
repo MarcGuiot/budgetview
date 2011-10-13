@@ -275,9 +275,6 @@ public class MainPanel {
     menu.add(protectAction);
     menu.add(logoutAction);
     menu.add(deleteUserAction);
-    menu.addSeparator();
-    menu.add(threadsAction);
-
     if (Gui.useMacOSMenu()) {
       MRJAdapter.addQuitApplicationListener(exitAction);
     }
@@ -321,6 +318,7 @@ public class MainPanel {
     devMenu.add(new ClearAllSignpostsAction(repository));
     devMenu.add(new OpenFeedbackDialogAction(repository, directory));
     devMenu.add(new ShowUserEvaluationDialogAction(repository, directory));
+    devMenu.add(threadsAction);
     return devMenu;
   }
 
