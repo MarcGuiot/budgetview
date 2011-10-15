@@ -233,6 +233,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
 
   public void localRegister(byte[] mail, byte[] signature, String activationCode, long jarVersion) {
     clientTransport.localRegister(sessionId, privateId, mail, signature, activationCode);
+    clientTransport.localDownload(sessionId, privateId, jarVersion);
   }
 
   public void downloadedVersion(long version) {

@@ -14,6 +14,7 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -104,9 +105,11 @@ public class ImportController {
   public boolean nextImport() {
     Log.write("nextImport");
     {
-      Glob importedAccount = importSession.gotoNextContent();
+      Ref<Integer> accountCount = new Ref<Integer>();
+      Ref<Integer> accountNum = new Ref<Integer>();
+      Glob importedAccount = importSession.gotoNextContent(accountNum, accountCount);
       if (importedAccount != null) {
-        importDialog.updateForNextImport(null, null, importedAccount);
+        importDialog.updateForNextImport(null, null, importedAccount, accountNum.get(), accountCount.get());
         Log.write("nextImport as next");
         return true;
       }
@@ -151,9 +154,11 @@ public class ImportController {
     }
     try {
       List<String> dateFormats = importSession.loadFile(file, realAccount);
-      Glob importedAccount = importSession.gotoNextContent();
+      Ref<Integer> accountCount = new Ref<Integer>();
+      Ref<Integer> accountNum = new Ref<Integer>();
+      Glob importedAccount = importSession.gotoNextContent(accountNum, accountCount);
       if (importedAccount != null) {
-        importDialog.updateForNextImport(file.getAbsolutePath(),  dateFormats, importedAccount);
+        importDialog.updateForNextImport(file.getAbsolutePath(),  dateFormats, importedAccount, accountNum.get(), accountCount.get());
         Log.write("nextImport as next content");
         return true;
       }

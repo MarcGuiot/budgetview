@@ -44,6 +44,7 @@ public class ImportPreviewPanel implements MessageHandler {
   private JComboBox accountComboBox;
 
   private JLabel fileNameLabel = new JLabel();
+  private JEditorPane accountCountInfo = new JEditorPane();
 
   private DateFormatSelectionPanel dateFormatSelectionPanel;
   private ImportedTransactionDateRenderer dateRenderer;
@@ -90,6 +91,7 @@ public class ImportPreviewPanel implements MessageHandler {
     sessionDirectory.add(new SelectionService());
     sessionDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
+        System.out.println("ImportPreviewPanel.selectionUpdated");
         showStep2Message("");
         currentlySelectedAccount = selection.getAll(Account.TYPE).isEmpty() ? null :
                                    selection.getAll(Account.TYPE).get(0);
@@ -97,10 +99,15 @@ public class ImportPreviewPanel implements MessageHandler {
           accountEditionPanel.clearAllMessages();
           accountEditionPanel.setAccount(currentlySelectedAccount);
           accountEditionPanel.setEnable(false);
+          System.out.println("ImportPreviewPanel.selectionUpdated false");
         }
         else if (newAccount != null) {
           accountEditionPanel.setAccount(newAccount);
           accountEditionPanel.setEnable(true);
+          System.out.println("ImportPreviewPanel.selectionUpdated true");
+        }
+        else{
+          System.out.println("ImportPreviewPanel.selectionUpdated none");
         }
       }
     }, Account.TYPE);
@@ -113,6 +120,7 @@ public class ImportPreviewPanel implements MessageHandler {
     importedTransactionTable = new ImportedTransactionsTable(sessionRepository, sessionDirectory, dateRenderer);
     builder.add("table", importedTransactionTable.getTable());
     builder.add("fileName", fileNameLabel);
+    builder.add("accountCountInfo", accountCountInfo);
 
     GlobComboView comboView = GlobComboView.init(Account.TYPE, sessionRepository, sessionDirectory)
       .setShowEmptyOption(true)
@@ -174,7 +182,9 @@ public class ImportPreviewPanel implements MessageHandler {
     this.message.setText(message);
   }
 
-  public void updateForNextImport(List<String> dateFormats, Glob importedAccount) {
+  public void updateForNextImport(List<String> dateFormats, Glob importedAccount,
+                                  Integer accountNum, Integer accountCount) {
+    System.out.println("ImportPreviewPanel.updateForNextImport");
     this.importedAccount = importedAccount;
     accountEditionRepository.rollback();
     newAccount = RealAccount.createAccountFromImported(importedAccount, accountEditionRepository, true);
@@ -182,6 +192,7 @@ public class ImportPreviewPanel implements MessageHandler {
     accountEditionPanel.setAccount(newAccount);
     localDirectory.get(SelectionService.class).select(newAccount);
 
+    updateAccountMessage(accountNum, accountCount);
     GlobList importedTransactions = sessionRepository.getAll(ImportedTransaction.TYPE);
     if (importedTransactions.isEmpty()) {
       cardHandler.show("noOperations");
@@ -219,6 +230,15 @@ public class ImportPreviewPanel implements MessageHandler {
         sessionDirectory.get(SelectionService.class).clear(Account.TYPE);
       }
     }
+//    accountComboBox.repaint();
+  }
+
+  private void updateAccountMessage(Integer accountNum, Integer accountCount) {
+    if (accountCount == 1){
+      accountCountInfo.setText(Lang.get("import.preview.accountMessage.one"));
+    }else {
+      accountCountInfo.setText(Lang.get("import.preview.accountMessage.many", accountNum, accountCount));
+    }
   }
 
   private void updateNoOperationMessage() {
@@ -248,6 +268,7 @@ public class ImportPreviewPanel implements MessageHandler {
 
   public void showFileErrorMessage(String message) {
     this.setFileName("");
+    this.accountCountInfo.setText("");
     this.message.setText(message);
     finishAction.setEnabled(false);
   }
@@ -287,8 +308,8 @@ public class ImportPreviewPanel implements MessageHandler {
                                  FieldValue.value(RealAccount.ACCOUNT, currentlySelectedAccount.get(Account.ID)));
         deleteAccountIfDuplicate(importedAccount);
         sessionRepository.update(currentlySelectedAccount.getKey(), Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
-        controller.completeImport(importedAccount, currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
         newAccount = null;
+        controller.completeImport(importedAccount, currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
         Log.write("finish ok");
       }
       finally {

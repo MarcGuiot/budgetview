@@ -442,4 +442,11 @@ public class AccountEditionChecker extends GuiChecker {
     assertFalse(getBankButton().isEnabled());
     assertFalse(getNameEditor().isEnabled());
   }
+
+  public void checkAccountEnable() {
+    assertThat(getTypeCombo().isEnabled());
+    assertThat(getBankButton().isEnabled());
+    assertThat(getNameEditor().isEnabled());
+  }
+
 }

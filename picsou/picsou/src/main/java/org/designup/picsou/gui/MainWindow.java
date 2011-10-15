@@ -20,13 +20,11 @@ import org.designup.picsou.gui.license.LicenseCheckerThread;
 import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.startup.SlaValidationDialog;
 import org.designup.picsou.gui.undo.UndoRedoService;
-import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
-import org.globsframework.utils.logging.HtmlTracker;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
