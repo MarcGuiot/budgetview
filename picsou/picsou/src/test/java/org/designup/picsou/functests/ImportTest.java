@@ -681,6 +681,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkMessageEmptyFile()
       .setFilePath(notEmpty)
       .acceptFile()
+      .checkAccountMessage(1, 1)
       .setMainAccount()
       .completeImport();
 
@@ -853,11 +854,14 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .selectFiles(s)
       .acceptFile()
+      .checkAccountMessage(1, 3)
       .setMainAccount()
       .doNext()
       .setMainAccount()
+      .checkAccountMessage(2, 3)
       .doNext()
       .setMainAccount()
+      .checkAccountMessage(3, 3)
       .completeImportWithNext();
 
     mainAccounts.checkAccountNames("Account n. 111", "Account n. 112", "Account n. 113");
@@ -884,5 +888,42 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkAccount("Account n. 113", 300., "2011/10/03");
     mainAccounts.checkAccount("Account n. 112", 200., "2011/10/03");
+  }
+
+  public void testEmptyAssociateToOldFollowByNew() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/8", 2.0, "V'lib")
+      .load();
+
+    String s = OfxBuilder.init(this)
+      .addBankAccount("111", 100, "2011/10/01")
+      .addBankAccount("112", 100, "2011/10/01")
+      .addBankAccount("113", 100, "2011/10/01")
+      .save();
+
+
+    ImportDialogChecker checker = operations.openImportDialog();
+    checker
+      .selectFiles(s)
+      .acceptFile()
+      .checkAccountMessage(1, 3)
+      .selectAccount("Account n. 00001123")
+      .doNext();
+    checker
+      .checkAccountEnable()
+      .selectAccount("Account n. 00001123")
+      .checkAccountDisable();
+    checker
+      .selectAccount("a new account")
+      .checkAccountEnable()
+      .setMainAccount()
+      .doNext();
+      checker
+      .setMainAccount()
+      .checkAccountMessage(3, 3)
+      .completeImportWithNext();
+
+
+    mainAccounts.checkAccountNames("Account n. 00001123", "Account n. 112", "Account n. 113");
   }
 }

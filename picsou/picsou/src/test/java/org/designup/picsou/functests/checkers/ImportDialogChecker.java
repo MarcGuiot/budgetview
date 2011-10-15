@@ -375,6 +375,18 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
+  public ImportDialogChecker checkAccountMessage(int accountNum, int accountCount) {
+    if (accountCount == 1) {
+      assertThat(dialog.getTextBox("accountCountInfo")
+        .textContains("There is one account in this file."));
+    }
+    else {
+      assertThat(dialog.getTextBox("accountCountInfo")
+        .textContains("Account " + accountNum + " on " + accountCount));
+    }
+    return this;
+  }
+
   public ImportDialogChecker checkAccountTypeSelectionDisplayedFor(String... accounts) {
     for (String account : accounts) {
       getAccountTypeSelectionCombo(account);
@@ -520,8 +532,13 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public ImportDialogChecker checkAccountDisable(){
+  public ImportDialogChecker checkAccountDisable() {
     accountEditionChecker.checkAccountDisable();
+    return this;
+  }
+
+  public ImportDialogChecker checkAccountEnable() {
+    accountEditionChecker.checkAccountEnable();
     return this;
   }
 
@@ -535,7 +552,7 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public ImportDialogChecker checkAccountPosition(double position){
+  public ImportDialogChecker checkAccountPosition(double position) {
     accountEditionChecker.checkPosition(position);
     return this;
   }

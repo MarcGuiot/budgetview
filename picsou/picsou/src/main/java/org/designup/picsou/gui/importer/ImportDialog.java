@@ -126,11 +126,12 @@ public class ImportDialog {
     fileSelectionPanel.preselectFiles(files);
   }
 
-  public void updateForNextImport(String absolutePath, List<String> dateFormats, final Glob importedAccount) {
+  public void updateForNextImport(String absolutePath, List<String> dateFormats, final Glob importedAccount,
+                                  Integer accountNum, Integer accountCount) {
     if (absolutePath != null) {
       previewPanel.setFileName(absolutePath);
     }
-    previewPanel.updateForNextImport(dateFormats, importedAccount);
+    previewPanel.updateForNextImport(dateFormats, importedAccount, accountNum, accountCount);
   }
 
   public void showPreview() {

@@ -21,6 +21,7 @@ import org.globsframework.model.utils.*;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.TruncatedFile;
@@ -433,11 +434,16 @@ public class ImportSession {
     return importKey;
   }
 
-  public Glob gotoNextContent() {
+  public Glob gotoNextContent(Ref<Integer> accountNum, Ref<Integer> accountCount) {
     try {
-      return readNext();
+      Glob glob = readNext();
+      accountCount.set(this.accountCount);
+      accountNum.set(this.accountCount - this.accountIds.size());
+      return glob;
     }
     catch (NoOperations operations) {
+      accountNum.set(0);
+      accountCount.set(0);
       return null;
     }
   }

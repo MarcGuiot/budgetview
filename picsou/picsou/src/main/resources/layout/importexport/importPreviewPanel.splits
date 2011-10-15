@@ -16,6 +16,7 @@
 
       <label text="$import.file.to.import" styleClass="header"/>
       <label ref="fileName"/>
+      <htmlEditorPane ref="accountCountInfo"/>
 
 
       <cards ref="mainCardOperations">
