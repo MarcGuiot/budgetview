@@ -8,6 +8,7 @@ import org.designup.picsou.model.TransactionType;
 public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
 
   public void testAutoCategorization() throws Exception {
+
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K 1")

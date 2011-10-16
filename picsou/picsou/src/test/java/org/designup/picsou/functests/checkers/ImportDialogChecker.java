@@ -93,11 +93,6 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public ImportDialogChecker doFirstImport() {
-    dialog.getButton(Lang.get("import.fileSelection.ok")).click();
-    return this;
-  }
-
   public ImportDialogChecker doImport() {
     dialog.getButton(Lang.get("import.preview.ok")).click();
     return this;
@@ -284,17 +279,9 @@ public class ImportDialogChecker extends GuiChecker {
     return dialog.getComboBox("accountCombo");
   }
 
-  public AccountEditionChecker openAccount() {
-    return AccountEditionChecker.open(dialog.getButton("Create an account").triggerClick());
-  }
-
   public ImportDialogChecker addNewAccount() {
     getAccountCombo().select("a new account");
     return this;
-  }
-
-  public AccountChooserChecker openChooseAccount() {
-    return AccountChooserChecker.open(this, dialog.getButton("Associate").triggerClick());
   }
 
   public ImportDialogChecker defineAccount(String bank, String accountName, String number) {
@@ -304,17 +291,6 @@ public class ImportDialogChecker extends GuiChecker {
     if (bank != null) {
       accountEditionChecker.selectBank(bank);
     }
-//    AccountEditionChecker accountEditionChecker =
-//      AccountEditionChecker.open(dialog.getButton("Create an account").triggerClick());
-//    if (bank != null){
-//      accountEditionChecker
-//        .selectBank(bank);
-//    }
-//    accountEditionChecker
-//      .checkAccountName("Main account")
-//      .setAccountName(accountName)
-//      .setAccountNumber(number);
-//    accountEditionChecker.validate();
     return this;
   }
 
@@ -323,17 +299,10 @@ public class ImportDialogChecker extends GuiChecker {
     accountEditionChecker
       .selectBank(bank)
       .setAsMain()
-//      .checkUpdateModeIsDisabled()
-//      .checkUpdateModeIsFileImport()
-//      .checkUpdateModes()
       .setAccountName(accountName)
       .setAccountNumber(number)
       .setPosition(initialBalance);
     return this;
-  }
-
-  public void checkClosed() {
-    assertFalse(dialog.isVisible());
   }
 
   public ImportDialogChecker checkDirectory(String directory) {
@@ -343,26 +312,8 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public BankEntityEditionChecker openEntityEditor() {
-    Window window = WindowInterceptor.getModalDialog(dialog.getButton("Select the bank").triggerClick());
-    return new BankEntityEditionChecker(window);
-  }
-
-  public ImportDialogChecker checkMessageSelectABank() {
-    dialog.getTextBox("You must select a bank for this account");
-    return this;
-  }
-
   public ImportDialogChecker selectBank(String bank) {
     accountEditionChecker.selectBank(bank);
-//    Window window = WindowInterceptor.getModalDialog(dialog.getButton("Select the bank").triggerClick());
-//    BankChooserChecker chooserChecker = new BankChooserChecker(window);
-//    chooserChecker.selectBank(bank).validate();
-    return this;
-  }
-
-  public ImportDialogChecker checkSelectACardTypeMessage() {
-    dialog.getTextBox("You must select a card type");
     return this;
   }
 
@@ -386,34 +337,15 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public ImportDialogChecker checkAccountTypeSelectionDisplayedFor(String... accounts) {
-    for (String account : accounts) {
-      getAccountTypeSelectionCombo(account);
-    }
-    return this;
-  }
-
   public ImportDialogChecker checkAccountTypeWarningDisplayed(String accountName) {
     BalloonTipTesting.checkBalloonTipVisible(dialog,
                                              accountEditionChecker.getTypeCombo(),
-                                             "You must specify the accountType"
-    );
+                                             "You must specify the accountType");
     return this;
   }
 
   public ImportDialogChecker checkNoAccountTypeMessageDisplayed() {
     BalloonTipTesting.checkNoBalloonTipVisible(dialog);
-    return this;
-  }
-
-  public ImportDialogChecker checkNoMessageSelectAnAccountType() {
-    try {
-      dialog.getTextBox("You must choose the account type");
-      fail("message is present");
-    }
-    catch (ItemNotFoundException e) {
-      // OK
-    }
     return this;
   }
 
@@ -439,22 +371,10 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  private ComboBox getAccountTypeSelectionCombo(String account) {
-    return accountEditionChecker.getUpdateModeCombo();
-  }
-
   private Panel getAccountTypeSelectionPanel() {
     Panel selectionPanel = dialog.getPanel("accountTypeSelection");
     assertThat(selectionPanel.isVisible());
     return selectionPanel;
-  }
-
-  public boolean hasCardType() {
-    Button button = dialog.findUIComponent(Button.class, "Select a card type");
-    if (button == null) {
-      return false;
-    }
-    return true;
   }
 
   public void importDeferred(String accountName, String fileName, boolean withMainAccount) {
@@ -476,15 +396,6 @@ public class ImportDialogChecker extends GuiChecker {
       }
     }
     completeImport();
-  }
-
-  private void selectDeferred(String accountName) {
-    openCardTypeChooser()
-      .selectDeferredCard(accountName)
-      .validate();
-    if (hasAccountType()) {
-      setMainAccount();
-    }
   }
 
   public ImportDialogChecker setDeferredAccount() {
@@ -531,13 +442,24 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
+  public boolean accountIsEditable() {
+    return accountEditionChecker.accountIsEditable();
+  }
+
   public ImportDialogChecker checkAccountNotEditable() {
-    accountEditionChecker.checkAccountDisable();
+    accountEditionChecker.checkAccountDisabled();
+    return this;
+  }
+
+  public ImportDialogChecker checkAccountDescription(String text) {
+    TextBox description = dialog.getTextBox("readOnlyDescription");
+    assertTrue(description.isVisible());
+    assertTrue(description.textEquals(text));
     return this;
   }
 
   public ImportDialogChecker checkAccountEditable() {
-    accountEditionChecker.checkAccountEnable();
+    accountEditionChecker.checkAccountEditable();
     return this;
   }
 

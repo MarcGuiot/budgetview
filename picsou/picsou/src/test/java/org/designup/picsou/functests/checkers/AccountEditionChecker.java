@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
 import org.globsframework.utils.Dates;
 import org.globsframework.model.format.Formats;
 import org.jdesktop.swingx.JXDatePicker;
@@ -437,16 +438,23 @@ public class AccountEditionChecker extends GuiChecker {
     return dialog.getInputTextBox("name").getText();
   }
 
-  public void checkAccountDisable() {
-    assertFalse(getTypeCombo().isEnabled());
-    assertFalse(getBankButton().isEnabled());
-    assertFalse(getNameEditor().isEnabled());
+  public void checkAccountDisabled() {
+    checkComponentVisible(dialog, JEditorPane.class, "readOnlyDescription", true);
+    checkComponentVisible(dialog, JTextField.class, "name", false);
+    checkComponentVisible(dialog, JTextField.class, "number", false);
+    checkComponentVisible(dialog, JComboBox.class, "type", false);
+    checkComponentVisible(dialog, JButton.class, "bankSelector", false);
   }
 
-  public void checkAccountEnable() {
+  public void checkAccountEditable() {
+    checkComponentVisible(dialog, JEditorPane.class, "readOnlyDescription", false);
     assertThat(getTypeCombo().isEnabled());
     assertThat(getBankButton().isEnabled());
     assertThat(getNameEditor().isEnabled());
   }
 
+  public boolean accountIsEditable() {
+    ComponentIsVisibleAssertion assertion = new ComponentIsVisibleAssertion(dialog, JTextField.class, "name", true);
+    return assertion.isTrue();
+  }
 }

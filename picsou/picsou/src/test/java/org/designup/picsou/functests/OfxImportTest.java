@@ -519,7 +519,6 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .checkAvailableAccounts("First account")
       .selectAccount("First account")
-      .setMainAccount()
       .doImport()
       .selectBank("Autre")
       .setMainAccount()

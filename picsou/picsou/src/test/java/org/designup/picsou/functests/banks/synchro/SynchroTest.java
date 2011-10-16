@@ -57,9 +57,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     synchro.select(0)
       .setFile(path);
 
-    ImportDialogChecker importDialogChecker = synchro.doImport();
-    importDialogChecker
-      .setMainAccount()
+    synchro.doImport()
       .completeImport();
 
     transactions.initContent()
@@ -151,8 +149,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     importPanel.checkSynchroMessage("Download your accounts from La Banque Postale");
   }
 
-
-  public void testImportFileDoNotEnableSynchroButton() throws Exception {
+  public void testImportFileDoesNotEnableSynchroButton() throws Exception {
     final String fileName = QifBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "TX 1")
@@ -166,7 +163,6 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     ImportDialogChecker importDialogChecker = checker.doImport();
     importDialogChecker
       .selectAccount("Main account")
-      .setMainAccount()
       .completeImport();
     importPanel.checkSynchroVisible();
   }

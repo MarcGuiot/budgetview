@@ -47,7 +47,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   private MandatoryFieldFlag nameFlag;
   private MandatoryFieldFlag bankFlag;
   private MandatoryFieldFlag accountTypeFlag;
-  private boolean enable = true;
+  private boolean editable = true;
   private GlobTextEditor number;
 
   public AbstractAccountPanel(T repository, Directory parentDirectory) {
@@ -168,7 +168,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   }
 
   public void updateMandatoryFlags() {
-    if (enable) {
+    if (editable) {
       nameFlag.update(Strings.isNullOrEmpty(currentAccount.get(Account.NAME))
                       || localRepository.getAll(Account.TYPE, fieldEquals(Account.NAME, currentAccount.get(Account.NAME))).size() != 1);
       bankFlag.update(currentAccount.get(Account.BANK) == null);
@@ -177,7 +177,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   }
 
   public boolean check() {
-    if (panel.isVisible() && enable) {
+    if (panel.isVisible() && editable) {
       clearMessage();
       if (Strings.isNullOrEmpty(currentAccount.get(Account.NAME))) {
         errorTip = ErrorTip.showLeft(nameField.getComponent(), Lang.get("account.error.missing.name"), localDirectory);
@@ -255,14 +255,14 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     }
   }
 
-  public void setEditable(boolean enable) {
-    this.enable = enable;
-    this.nameField.getComponent().setEnabled(enable);
-    this.number.getComponent().setEnabled(enable);
-    this.accountTypeCombo.setEnabled(enable);
-    this.bankSelectionButton.setEnabled(enable);
-    this.positionEditor.setEnabled(enable);
-    if (!enable){
+  public void setEditable(boolean editable) {
+    this.editable = editable;
+    this.nameField.getComponent().setEnabled(editable);
+    this.number.getComponent().setEnabled(editable);
+    this.accountTypeCombo.setEnabled(editable);
+    this.bankSelectionButton.setEnabled(editable);
+    this.positionEditor.setEnabled(editable);
+    if (!editable){
       clearMandatoryFlags();
     }
     else {

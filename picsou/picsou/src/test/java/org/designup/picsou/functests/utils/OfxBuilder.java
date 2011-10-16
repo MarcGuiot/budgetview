@@ -150,11 +150,6 @@ public class OfxBuilder {
     operations.importOfxFile(fileName);
   }
 
-  public void loadKnownAccount(){
-    save();
-    operations.importOfxFile(fileName);
-  }
-
   public void loadInAccount(String name) {
     save();
     operations.openImportDialog()
@@ -173,18 +168,21 @@ public class OfxBuilder {
     save();
     ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName)
-      .acceptFile()
-      .setMainAccount();
-    importDialog
-      .completeImport();
+      .acceptFile();
+    if (importDialog.accountIsEditable()) {
+      importDialog.setMainAccount();
+    }
+    importDialog.completeImport();
   }
 
   public void load(int importedTransactionCount, int autocategorizedTransactionCount) {
     save();
     ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName)
-      .acceptFile()
-      .setMainAccount();
+      .acceptFile();
+    if (importDialog.accountIsEditable()) {
+      importDialog.setMainAccount();
+    }
     importDialog.completeImport(importedTransactionCount, autocategorizedTransactionCount);
   }
 

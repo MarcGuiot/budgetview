@@ -1,13 +1,26 @@
 package org.designup.picsou.gui.accounts;
 
+import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.Bank;
+import org.designup.picsou.utils.HtmlBuilder;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Date;
 
 public class AccountEditionPanel extends AbstractAccountPanel {
+
+  private CardHandler cards;
 
   public AccountEditionPanel(Window owner, GlobRepository repository, Directory parentDirectory) {
     super(repository, parentDirectory);
@@ -15,14 +28,62 @@ public class AccountEditionPanel extends AbstractAccountPanel {
   }
 
   private void createPanel(Window owner) {
-    GlobsPanelBuilder accountBuilder =
+    GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/accounts/accountEditionPanel.splits", localRepository,
                             localDirectory);
-    createComponents(accountBuilder, owner);
-    accountBuilder.load();
+    createComponents(builder, owner);
+    cards = builder.addCardHandler("cards");
+    cards.show("editable");
+    builder.addHtmlView("readOnlyDescription", Account.TYPE, new GlobListStringifier() {
+      public String toString(GlobList list, GlobRepository repository) {
+        if (list.size() != 1) {
+          return "";
+        }
+        return getReadOnlyDescription(list.get(0), repository);
+      }
+    });
+    builder.load();
+  }
+
+  private String getReadOnlyDescription(Glob account, GlobRepository repository) {
+
+    HtmlBuilder html = new HtmlBuilder();
+
+    String number = account.get(Account.NUMBER);
+    if (Strings.isNotEmpty(number)) {
+      html.appendParagraph(Lang.get("account.readOnly.number", number));
+    }
+
+    Glob bank = repository.findLinkTarget(account, Account.BANK);
+    if (bank != null) {
+      String bankName = bank.get(Bank.NAME);
+      if (Strings.isNotEmpty(bankName)) {
+        html.appendParagraph(Lang.get("account.readOnly.bank", bankName));
+      }
+    }
+
+    Double position = account.get(Account.POSITION);
+    Date date = account.get(Account.POSITION_DATE);
+    if (position != null) {
+      String positionLabel = Formatting.toString(position);
+      if (date != null) {
+        String dateLabel = Formatting.toString(date);
+        html.appendParagraph(Lang.get("account.readOnly.positionAndDate", positionLabel, dateLabel));
+      }
+      else {
+        html.appendParagraph(Lang.get("account.readOnly.position", positionLabel));
+      }
+    }
+
+    return html.toString();
   }
 
   public JPanel getPanel() {
     return panel;
+  }
+
+  public void setEditable(boolean editable) {
+    cards.show(editable ? "editable" : "readonly");
+    super.setEditable(editable);
   }
 }

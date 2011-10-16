@@ -15,7 +15,7 @@
          border="empty(10,0,0,10)">
     <row styleClass="licenseInfoBorder">
       <htmlEditorPane ref="licenseInfoMessage"/>
-      <button action="hide" anchor="center" fill="none" opaque="false" weightX="0.01"/>
+      <button action="hide" anchor="center" fill="none" opaque="false" marginRight="5" weightX="0.01"/>
     </row>
   </panel>
 
