@@ -148,6 +148,10 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return store(GlobMultiLineTextView.init(type, repository, directory, stringifier).setName(name));
   }
 
+  public GlobHtmlView addHtmlView(String name, GlobType type, GlobListStringifier stringifier) {
+    return store(GlobHtmlView.init(type, repository, directory, stringifier).setName(name));
+  }
+
   public GlobButtonView addButton(String name, GlobType type, GlobListStringifier stringifier, GlobListFunctor callback) {
     return store(GlobButtonView.init(type, repository, directory, stringifier, callback).setName(name));
   }
