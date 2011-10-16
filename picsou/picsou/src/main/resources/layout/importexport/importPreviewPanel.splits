@@ -14,15 +14,14 @@
 
       <label text="$import.preview.title" name="title" styleClass="title"/>
 
-      <label text="$import.file.to.import" styleClass="header"/>
+      <label text="$import.file.to.import" marginBottom="5"/>
       <label ref="fileName"/>
-      <htmlEditorPane ref="accountCountInfo"/>
 
+      <htmlEditorPane ref="accountCountInfo"/>
 
       <cards ref="mainCardOperations">
         <card name="cardOperations">
           <column>
-            <label text="$import.file.content" styleClass="header"/>
             <scrollPane maximumSize="(400,300)" weightY="500">
               <table ref="table"/>
             </scrollPane>
@@ -41,7 +40,7 @@
       <panel ref="dateSelectionPanel"/>
 
       <row weightY="0.01">
-        <label text="$import.select.account" styleClass="formLabel" autoHideSource="accountCombo" marginBottom="5"/>
+        <label ref="accountSelectionLabel" styleClass="formLabel" autoHideSource="accountCombo" marginBottom="5"/>
         <comboBox ref="accountCombo" marginBottom="5"/>
       </row>
 

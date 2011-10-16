@@ -40,11 +40,12 @@ public class ImportPreviewPanel implements MessageHandler {
   private GlobRepository sessionRepository;
   private DefaultDirectory sessionDirectory;
 
-  private Glob currentlySelectedAccount;
-  private JComboBox accountComboBox;
-
   private JLabel fileNameLabel = new JLabel();
   private JEditorPane accountCountInfo = new JEditorPane();
+
+  private Glob currentlySelectedAccount;
+  private JLabel accountSelectionLabel = new JLabel();
+  private JComboBox accountComboBox;
 
   private DateFormatSelectionPanel dateFormatSelectionPanel;
   private ImportedTransactionDateRenderer dateRenderer;
@@ -90,27 +91,21 @@ public class ImportPreviewPanel implements MessageHandler {
     sessionDirectory = new DefaultDirectory(localDirectory);
     sessionDirectory.add(new SelectionService());
     sessionDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
-      public void selectionUpdated(GlobSelection selection) {
-        System.out.println("ImportPreviewPanel.selectionUpdated");
-        showStep2Message("");
-        currentlySelectedAccount = selection.getAll(Account.TYPE).isEmpty() ? null :
-                                   selection.getAll(Account.TYPE).get(0);
-        if (currentlySelectedAccount != null) {
-          accountEditionPanel.clearAllMessages();
-          accountEditionPanel.setAccount(currentlySelectedAccount);
-          accountEditionPanel.setEnable(false);
-          System.out.println("ImportPreviewPanel.selectionUpdated false");
-        }
-        else if (newAccount != null) {
-          accountEditionPanel.setAccount(newAccount);
-          accountEditionPanel.setEnable(true);
-          System.out.println("ImportPreviewPanel.selectionUpdated true");
-        }
-        else{
-          System.out.println("ImportPreviewPanel.selectionUpdated none");
-        }
-      }
-    }, Account.TYPE);
+                                                               public void selectionUpdated(GlobSelection selection) {
+                                                                 showStep2Message("");
+                                                                 currentlySelectedAccount = selection.getAll(Account.TYPE).isEmpty() ? null :
+                                                                                            selection.getAll(Account.TYPE).get(0);
+                                                                 if (currentlySelectedAccount != null) {
+                                                                   accountEditionPanel.clearAllMessages();
+                                                                   accountEditionPanel.setAccount(currentlySelectedAccount);
+                                                                   accountEditionPanel.setEditable(false);
+                                                                 }
+                                                                 else if (newAccount != null) {
+                                                                   accountEditionPanel.setAccount(newAccount);
+                                                                   accountEditionPanel.setEditable(true);
+                                                                 }
+                                                               }
+                                                             }, Account.TYPE);
 
     sessionRepository = controller.getSessionRepository();
 
@@ -133,6 +128,8 @@ public class ImportPreviewPanel implements MessageHandler {
       });
     accountComboBox = comboView.getComponent();
     builder.add("accountCombo", accountComboBox);
+
+    builder.add("accountSelectionLabel", accountSelectionLabel);
 
     registerAccountCreationListener(sessionRepository, sessionDirectory);
 
@@ -183,8 +180,7 @@ public class ImportPreviewPanel implements MessageHandler {
   }
 
   public void updateForNextImport(List<String> dateFormats, Glob importedAccount,
-                                  Integer accountNum, Integer accountCount) {
-    System.out.println("ImportPreviewPanel.updateForNextImport");
+                                  Integer accountNumber, Integer accountCount) {
     this.importedAccount = importedAccount;
     accountEditionRepository.rollback();
     newAccount = RealAccount.createAccountFromImported(importedAccount, accountEditionRepository, true);
@@ -192,8 +188,10 @@ public class ImportPreviewPanel implements MessageHandler {
     accountEditionPanel.setAccount(newAccount);
     localDirectory.get(SelectionService.class).select(newAccount);
 
-    updateAccountMessage(accountNum, accountCount);
     GlobList importedTransactions = sessionRepository.getAll(ImportedTransaction.TYPE);
+
+    updateFileAndAccountMessage(accountNumber, accountCount, !importedTransactions.isEmpty());
+
     if (importedTransactions.isEmpty()) {
       cardHandler.show("noOperations");
       finishAction.putValue(Action.NAME, Lang.get("import.preview.noOperation.ok"));
@@ -204,7 +202,7 @@ public class ImportPreviewPanel implements MessageHandler {
       finishAction.putValue(Action.NAME, Lang.get("import.preview.ok"));
     }
 
-    if (dateFormats != null){
+    if (dateFormats != null) {
       dateFormatSelectionPanel.init(importedTransactions.isEmpty() ? null : dateFormats);
     }
     Integer accountId = importedAccount.get(RealAccount.ACCOUNT);
@@ -214,14 +212,14 @@ public class ImportPreviewPanel implements MessageHandler {
     }
     else {
       accountId = AccountFinder.findBestAccount(importedTransactions, repository);
-      //
+
       Glob associatedImportedAccout = sessionRepository.getAll(RealAccount.TYPE)
         .filter(GlobMatchers.fieldEquals(RealAccount.ACCOUNT, accountId), sessionRepository)
         .getFirst();
       if (associatedImportedAccout != null && !RealAccount.areNearEquivalent(associatedImportedAccout, importedAccount)) {
         accountId = null;
       }
-      //
+
       if (accountId != null) {
         Glob account = sessionRepository.find(Key.create(Account.TYPE, accountId));
         sessionDirectory.get(SelectionService.class).select(account);
@@ -230,14 +228,23 @@ public class ImportPreviewPanel implements MessageHandler {
         sessionDirectory.get(SelectionService.class).clear(Account.TYPE);
       }
     }
-//    accountComboBox.repaint();
   }
 
-  private void updateAccountMessage(Integer accountNum, Integer accountCount) {
-    if (accountCount == 1){
-      accountCountInfo.setText(Lang.get("import.preview.accountMessage.one"));
-    }else {
-      accountCountInfo.setText(Lang.get("import.preview.accountMessage.many", accountNum, accountCount));
+  private void updateFileAndAccountMessage(Integer accountNumber, Integer accountCount, boolean hasTransactions) {
+    String transactionsSuffix = hasTransactions ? ".with.operations" : ".without.operations";
+    if (accountCount == 1) {
+      accountCountInfo.setText(Lang.get("import.preview.accountMessage.one" + transactionsSuffix));
+    }
+    else {
+      accountCountInfo.setText(Lang.get("import.preview.accountMessage.many" + transactionsSuffix,
+                                        accountNumber, accountCount));
+    }
+
+    if (hasTransactions) {
+      accountSelectionLabel.setText(Lang.get("import.select.account"));
+    }
+    else {
+      accountSelectionLabel.setText(Lang.get("import.select.account.empty"));
     }
   }
 

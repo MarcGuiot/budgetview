@@ -42,7 +42,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       })
       .completeImport();
 
-    views.selectData();
     transactions
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
@@ -111,7 +110,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setMainAccount()
       .completeImport();
 
-    views.selectData();
     transactions
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
@@ -128,7 +126,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.importQifFile(path, SOCIETE_GENERALE, 0.00);
 
-    views.selectData();
     transactions
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
@@ -193,7 +190,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .createNewAccount(SOCIETE_GENERALE, "SG", "12345", 100.0)
       .completeImport();
 
-    views.selectHome();
     mainAccounts.checkAccountNames("Main", "Cash", "SG");
     mainAccounts.edit("Main")
       .checkUpdateModeIsFileImport()
@@ -229,7 +225,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     importDialog.completeLastStep();
 
-    views.selectHome();
     mainAccounts.checkAccount("Main", 12.33, "2006/01/10");
   }
 
@@ -256,7 +251,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .createNewAccount(SOCIETE_GENERALE, "Second account", "00022", 12.30)
       .completeImport();
 
-    views.selectHome();
     mainAccounts.checkAccountNames("Main account", "Second account");
 
     String secondSecondQif = QifBuilder
@@ -288,6 +282,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .setFilePath(path1 + ";" + path2)
       .acceptFile()
+      .checkAccountMessage("Operations for single account:")
       .checkFileContent(new Object[][]{
         {"10/01/2006", "First operation", "-1.10"}
       })
@@ -316,6 +311,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .setFilePath(firstQif)
       .acceptFile()
+      .checkAccountMessage("Operations for single account:")
       .defineAccount(SOCIETE_GENERALE, "Main account", "12345")
       .completeImport(0.00);
 
@@ -366,7 +362,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
         {"10/06/2008", "V'lib", "1.00"},
       })
       .doImport();
-
 
     importDialog.selectBank(SOCIETE_GENERALE)
       .setMainAccount()
@@ -681,7 +676,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkMessageEmptyFile()
       .setFilePath(notEmpty)
       .acceptFile()
-      .checkAccountMessage(1, 1)
+      .checkAccountMessage("Operations for single account:")
+      .checkAccountSelectionMessage("Import operations in:")
       .setMainAccount()
       .completeImport();
 
@@ -762,7 +758,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testImportSameTransactionWitSplited() throws Exception {
+  public void testImportSameTransactionWitSplitted() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/8", 2.0, "V'lib")
       .addTransaction("2008/06/9", 1.0, "V'lib")
@@ -772,7 +768,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/10", 4.0, "V lib")
       .load();
 
-//    openApplication();
     views.selectCategorization();
     categorization.selectTableRows(4);
     transactionDetails.split("1", "a pied");
@@ -803,7 +798,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testBadSecondFile() throws Exception {
+  public void testInvalidSecondFile() throws Exception {
     final String path = QifBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K")
@@ -845,38 +840,41 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testMultipleEmptyAccount() throws Exception {
-    String s = OfxBuilder.init(this)
+  public void testMultipleEmptyAccounts() throws Exception {
+    String path1 = OfxBuilder.init(this)
       .addBankAccount("111", 100, "2011/10/01")
       .addBankAccount("112", 100, "2011/10/01")
       .addBankAccount("113", 100, "2011/10/01")
       .save();
     operations.openImportDialog()
-      .selectFiles(s)
+      .selectFiles(path1)
       .acceptFile()
-      .checkAccountMessage(1, 3)
+      .checkAccountMessage("Account 1/3 - No operations")
+      .checkAccountSelectionMessage("Update:")
       .setMainAccount()
       .doNext()
       .setMainAccount()
-      .checkAccountMessage(2, 3)
+      .checkAccountMessage("Account 2/3 - No operations")
+      .checkAccountSelectionMessage("Update:")
       .doNext()
       .setMainAccount()
-      .checkAccountMessage(3, 3)
+      .checkAccountMessage("Account 3/3 - No operations")
+      .checkAccountSelectionMessage("Update:")
       .completeImportWithNext();
 
     mainAccounts.checkAccountNames("Account n. 111", "Account n. 112", "Account n. 113");
 
-    String s2 = OfxBuilder.init(this)
+    String path2 = OfxBuilder.init(this)
       .addBankAccount("1114", 100, "2011/10/03")
       .addBankAccount("112", 200, "2011/10/03")
       .addBankAccount("113", 300, "2011/10/03")
-      .addTransaction("2011/10/03", 100, "Aniversaire")
+      .addTransaction("2011/10/03", 100, "Anniversaire")
       .save();
     operations.openImportDialog()
-      .selectFiles(s2)
+      .selectFiles(path2)
       .acceptFile()
       .checkAccount("Account n. 113")
-      .checkAccountDisable()
+      .checkAccountNotEditable()
       .selectAccount("a new account")
       .checkAstericsErrorOnName()
       .checkAccountPosition(300.)
@@ -890,39 +888,43 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccount("Account n. 112", 200., "2011/10/03");
   }
 
-  public void testEmptyAssociateToOldFollowByNew() throws Exception {
+  public void testEmptyAssociatedToOldFollowedByNew() throws Exception {
+
     OfxBuilder.init(this)
       .addTransaction("2008/06/8", 2.0, "V'lib")
       .load();
 
-    String s = OfxBuilder.init(this)
+    String path = OfxBuilder.init(this)
       .addBankAccount("111", 100, "2011/10/01")
       .addBankAccount("112", 100, "2011/10/01")
       .addBankAccount("113", 100, "2011/10/01")
       .save();
 
-
     ImportDialogChecker checker = operations.openImportDialog();
     checker
-      .selectFiles(s)
+      .selectFiles(path)
       .acceptFile()
-      .checkAccountMessage(1, 3)
+      .checkAccountMessage("Account 1/3 - No operations")
+      .checkAccountSelectionMessage("Update:")
       .selectAccount("Account n. 00001123")
       .doNext();
     checker
-      .checkAccountEnable()
+      .checkAccountEditable()
+      .checkAccountMessage("Account 2/3 - No operations")
+      .checkAccountSelectionMessage("Update:")
       .selectAccount("Account n. 00001123")
-      .checkAccountDisable();
-    checker
+      .checkAccountNotEditable()
       .selectAccount("a new account")
-      .checkAccountEnable()
+      .checkAccountMessage("Account 2/3 - No operations")
+      .checkAccountSelectionMessage("Update:")
+      .checkAccountEditable()
       .setMainAccount()
       .doNext();
-      checker
+    checker
+      .checkAccountMessage("Account 3/3 - No operations")
+      .checkAccountSelectionMessage("Update:")
       .setMainAccount()
-      .checkAccountMessage(3, 3)
       .completeImportWithNext();
-
 
     mainAccounts.checkAccountNames("Account n. 00001123", "Account n. 112", "Account n. 113");
   }

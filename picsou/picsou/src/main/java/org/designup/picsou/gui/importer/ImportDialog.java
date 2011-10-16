@@ -127,11 +127,11 @@ public class ImportDialog {
   }
 
   public void updateForNextImport(String absolutePath, List<String> dateFormats, final Glob importedAccount,
-                                  Integer accountNum, Integer accountCount) {
+                                  Integer accountNumber, Integer accountCount) {
     if (absolutePath != null) {
       previewPanel.setFileName(absolutePath);
     }
-    previewPanel.updateForNextImport(dateFormats, importedAccount, accountNum, accountCount);
+    previewPanel.updateForNextImport(dateFormats, importedAccount, accountNumber, accountCount);
   }
 
   public void showPreview() {

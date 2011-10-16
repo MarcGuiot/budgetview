@@ -255,7 +255,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     }
   }
 
-  public void setEnable(boolean enable) {
+  public void setEditable(boolean enable) {
     this.enable = enable;
     this.nameField.getComponent().setEnabled(enable);
     this.number.getComponent().setEnabled(enable);

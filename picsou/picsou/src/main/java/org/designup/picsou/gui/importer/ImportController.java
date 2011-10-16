@@ -106,10 +106,10 @@ public class ImportController {
     Log.write("nextImport");
     {
       Ref<Integer> accountCount = new Ref<Integer>();
-      Ref<Integer> accountNum = new Ref<Integer>();
-      Glob importedAccount = importSession.gotoNextContent(accountNum, accountCount);
+      Ref<Integer> accountNumber = new Ref<Integer>();
+      Glob importedAccount = importSession.gotoNextContent(accountNumber, accountCount);
       if (importedAccount != null) {
-        importDialog.updateForNextImport(null, null, importedAccount, accountNum.get(), accountCount.get());
+        importDialog.updateForNextImport(null, null, importedAccount, accountNumber.get(), accountCount.get());
         Log.write("nextImport as next");
         return true;
       }
@@ -155,10 +155,10 @@ public class ImportController {
     try {
       List<String> dateFormats = importSession.loadFile(file, realAccount);
       Ref<Integer> accountCount = new Ref<Integer>();
-      Ref<Integer> accountNum = new Ref<Integer>();
-      Glob importedAccount = importSession.gotoNextContent(accountNum, accountCount);
+      Ref<Integer> accountNumber = new Ref<Integer>();
+      Glob importedAccount = importSession.gotoNextContent(accountNumber, accountCount);
       if (importedAccount != null) {
-        importDialog.updateForNextImport(file.getAbsolutePath(),  dateFormats, importedAccount, accountNum.get(), accountCount.get());
+        importDialog.updateForNextImport(file.getAbsolutePath(),  dateFormats, importedAccount, accountNumber.get(), accountCount.get());
         Log.write("nextImport as next content");
         return true;
       }

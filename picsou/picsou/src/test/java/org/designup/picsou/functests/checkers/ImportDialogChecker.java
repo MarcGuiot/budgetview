@@ -6,13 +6,14 @@ import org.designup.picsou.gui.importer.ImportCompletionPanel;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.io.File;
+
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class ImportDialogChecker extends GuiChecker {
   private Panel dialog;
@@ -172,7 +173,7 @@ public class ImportDialogChecker extends GuiChecker {
 
   public ImportSeriesChecker importSeries() {
     return new ImportSeriesChecker(WindowInterceptor.getModalDialog(dialog.getButton(Lang.get("import.preview.ok"))
-      .triggerClick()), dialog);
+                                                                      .triggerClick()), dialog);
   }
 
   public static void validateAndComplete(final int loadedTransaction, final int importedTransactionCount, final int autocategorizedTransactionCount,
@@ -375,15 +376,13 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public ImportDialogChecker checkAccountMessage(int accountNum, int accountCount) {
-    if (accountCount == 1) {
-      assertThat(dialog.getTextBox("accountCountInfo")
-        .textContains("There is one account in this file."));
-    }
-    else {
-      assertThat(dialog.getTextBox("accountCountInfo")
-        .textContains("Account " + accountNum + " on " + accountCount));
-    }
+  public ImportDialogChecker checkAccountMessage(String text) {
+    assertThat(dialog.getTextBox("accountCountInfo").textContains(text));
+    return this;
+  }
+
+  public ImportDialogChecker checkAccountSelectionMessage(String text) {
+    assertThat(dialog.getTextBox("accountSelectionLabel").textEquals(text));
     return this;
   }
 
@@ -532,12 +531,12 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public ImportDialogChecker checkAccountDisable() {
+  public ImportDialogChecker checkAccountNotEditable() {
     accountEditionChecker.checkAccountDisable();
     return this;
   }
 
-  public ImportDialogChecker checkAccountEnable() {
+  public ImportDialogChecker checkAccountEditable() {
     accountEditionChecker.checkAccountEnable();
     return this;
   }
