@@ -23,6 +23,8 @@ import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.help.actions.GotoSupportAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
+import org.designup.picsou.gui.license.LicenseExpirationDialog;
+import org.designup.picsou.gui.license.LicenseExpirationAction;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.notes.ShowNotesAction;
@@ -306,7 +308,7 @@ public class MainPanel {
     return editMenu;
   }
 
-  private JMenu createDevMenu(Directory directory) {
+  private JMenu createDevMenu(final Directory directory) {
     JMenu devMenu = new JMenu("[Dev]");
     devMenu.addSeparator();
     devMenu.add(new DumpDataAction(repository));
@@ -318,6 +320,7 @@ public class MainPanel {
     devMenu.add(new ClearAllSignpostsAction(repository));
     devMenu.add(new OpenFeedbackDialogAction(repository, directory));
     devMenu.add(new ShowUserEvaluationDialogAction(repository, directory));
+    devMenu.add(new LicenseExpirationAction(repository, directory));
     devMenu.add(threadsAction);
     return devMenu;
   }

@@ -7,8 +7,10 @@
       <label text="$license.ask.for.code" name="title" styleClass="title"/>
       <htmlEditorPane name="askMailMessage" text="$license.ask.message.mail"/>
       <row>
+        <label text="$license.ask.mail"/>
         <textField ref="mailAdress"/>
         <button action="sendMail"/>
+        <component ref="sendState" visible="false"/>
         <filler fill="horizontal"/>
       </row>
       <label ref="mailResponse" styleClass="errorMessage"/>

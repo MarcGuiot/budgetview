@@ -59,7 +59,7 @@ public class AskMailTest extends ConnectedTestCase {
     postMethod.setRequestHeader(ConfigService.HEADER_LANG, "en");
     client.executeMethod(postMethod);
     Header header = postMethod.getResponseHeader(ConfigService.HEADER_STATUS);
-    assertEquals(ConfigService.HEADER_BAD_ADRESS, header.getValue());
+    assertEquals(ConfigService.HEADER_MAIL_UNKNOWN, header.getValue());
     SqlConnection connection = db.getConnection();
     connection.getQueryBuilder(MailError.TYPE, Constraints.equal(MailError.MAIL, badMail))
       .getQuery().executeUnique();

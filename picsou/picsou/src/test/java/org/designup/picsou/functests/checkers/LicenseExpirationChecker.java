@@ -14,7 +14,7 @@ public class LicenseExpirationChecker extends GuiChecker {
   }
 
   public void close() {
-    window.getButton("ok").click();
+    window.getButton("Cancel").click();
     UISpecAssert.assertFalse(window.isVisible());
   }
 

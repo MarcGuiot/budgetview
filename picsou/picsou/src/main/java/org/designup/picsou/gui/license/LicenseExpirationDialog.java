@@ -21,12 +21,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
+import com.jidesoft.swing.InfiniteProgressPanel;
+
 public class LicenseExpirationDialog {
   private PicsouDialog dialog;
   private JLabel response = new JLabel();
   private LocalGlobRepository localGlobRepository;
   private AbstractAction sendAction;
   private GlobsPanelBuilder builder;
+  private InfiniteProgressPanel progressPanel = new InfiniteProgressPanel();
+  private Thread sendRequestThread;
 
   public LicenseExpirationDialog(Window parent, final GlobRepository repository, final Directory directory) {
     localGlobRepository = LocalGlobRepositoryBuilder.init(repository)
@@ -37,29 +41,33 @@ public class LicenseExpirationDialog {
     builder.add("mailResponse", response);
     sendAction = new AbstractAction(Lang.get("license.mail.request.send")) {
       public void actionPerformed(ActionEvent e) {
-        final Glob user = repository.get(User.KEY);
+        sendAction.setEnabled(false);
+        progressPanel.setVisible(true);
+        progressPanel.start();
+        final Glob user = localGlobRepository.get(User.KEY);
         final String mail = user.get(User.EMAIL);
-        if (mail != null) {
-          Thread thread = new Thread() {
+        if (Strings.isNotEmpty(mail) && sendRequestThread == null) {
+          sendRequestThread = new Thread() {
             public void run() {
               final String response = directory.get(ConfigService.class).askForNewCodeByMail(mail);
               SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                  LicenseExpirationDialog.this.response.setText(response);
-                  LicenseExpirationDialog.this.response.setVisible(true);
+                  requestDone(response);
                 }
               });
             }
           };
-          thread.setDaemon(true);
-          thread.start();
+          sendRequestThread.setDaemon(true);
+          sendRequestThread.start();
         }
       }
     };
     builder.add("sendMail", sendAction);
-    builder.add("mailAdress",
-                GlobTextEditor.init(User.EMAIL, localGlobRepository, directory)
-                  .forceSelection(User.KEY));
+    builder.add("sendState", progressPanel);
+    GlobTextEditor mailEditor = GlobTextEditor.init(User.EMAIL, localGlobRepository, directory)
+      .setNotifyOnKeyPressed(true)
+      .forceSelection(User.KEY);
+    builder.add("mailAdress", mailEditor);
     localGlobRepository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(User.KEY)) {
@@ -72,23 +80,37 @@ public class LicenseExpirationDialog {
         sendAction.setEnabled(Strings.isNotEmpty(repository.get(User.KEY).get(User.EMAIL)));
       }
     });
+    sendAction.setEnabled(Strings.isNotEmpty(localGlobRepository.get(User.KEY).get(User.EMAIL)));
     dialog = PicsouDialog.createWithButton(parent, builder.<JPanel>load(), new ValidateAction(), directory);
     dialog.pack();
   }
 
+  private void requestDone(String response) {
+    this.response.setText(response);
+    this.response.setVisible(true);
+    end();
+  }
+
+  private void end() {
+    sendRequestThread = null;
+    this.progressPanel.setVisible(false);
+    sendAction.setEnabled(true);
+    progressPanel.stop();
+  }
+
   public void show() {
     dialog.showCentered();
+    end();
     builder.dispose();
   }
 
   private class ValidateAction extends AbstractAction {
     private ValidateAction() {
-      super(Lang.get("ok"));
+      super(Lang.get("cancel"));
     }
 
     public void actionPerformed(ActionEvent e) {
       dialog.setVisible(false);
-      localGlobRepository.commitChanges(true);
     }
   }
 }

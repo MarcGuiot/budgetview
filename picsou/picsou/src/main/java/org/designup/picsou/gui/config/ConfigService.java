@@ -2,6 +2,7 @@ package org.designup.picsou.gui.config;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpConnectionManager;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.designup.picsou.bank.BankPluginService;
@@ -59,6 +60,7 @@ public class ConfigService {
   public static final String REQUEST_FOR_CONFIG = "/requestForConfig";
   public static final String REQUEST_FOR_MAIL = "/mailTo";
   public static final String REQUEST_SEND_MAIL = "/sendMailToUs";
+  public static final String HEADER_BAD_ADRESS = "badAdress";
 
   private String URL = PicsouApplication.REGISTER_URL;
   private String FTP_URL = PicsouApplication.FTP_URL;
@@ -74,7 +76,6 @@ public class ConfigService {
   private File currentConfigFile;
   private byte[] repoId;
   public static int RETRY_PERIOD = 1000;
-  public static final String HEADER_BAD_ADRESS = "badAdress";
   private Directory directory = null;
   private GlobRepository repository = null;
   public static final String MAIL_CONTACT = "contact";
@@ -90,7 +91,7 @@ public class ConfigService {
     this.applicationVersion = applicationVersion;
     localJarVersion = jarVersion;
     this.localConfigVersion = localConfigVersion;
-    Protocol easyhttps = new Protocol("https", new HttpsClientTransport.EasySSLProtocolSocketFactory(), 443);
+    Protocol easyhttps = new Protocol("https", new HttpsClientTransport.EasySSLProtocolSocketFactory(), 8443);
     Protocol.registerProtocol("https", easyhttps);
   }
 
@@ -108,7 +109,7 @@ public class ConfigService {
         postMethod.getParams().setContentCharset("UTF-8");
         postMethod.setRequestHeader(HEADER_MAIL, mail);
         postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
-        HttpClient httpClient = new HttpClient();
+        HttpClient httpClient = getNewHttpClient();
         httpClient.executeMethod(postMethod);
       }
       catch (IOException e) {
@@ -119,7 +120,7 @@ public class ConfigService {
         postMethod.getParams().setContentCharset("UTF-8");
         postMethod.setRequestHeader(HEADER_MAIL, mail);
         postMethod.setRequestHeader(HEADER_LANG, Lang.get("lang"));
-        HttpClient httpClient = new HttpClient();
+        HttpClient httpClient = getNewHttpClient();
         httpClient.executeMethod(postMethod);
       }
       int statusCode = postMethod.getStatusCode();
@@ -154,6 +155,12 @@ public class ConfigService {
     }
   }
 
+  private HttpClient getNewHttpClient() {
+    HttpClient httpClient = new HttpClient();
+    httpClient.getParams().setSoTimeout(5000);
+    return httpClient;
+  }
+
   synchronized private boolean sendRequestForNewConfig(byte[] repoId, String mail, String signature,
                                                        long launchCount, String activationCode) throws IOException {
     this.repoId = repoId;
@@ -161,7 +168,7 @@ public class ConfigService {
     PostMethod postMethod = null;
     try {
       postMethod = createNewConfigPostMethod(repoId, mail, signature, launchCount, activationCode, url);
-      HttpClient httpClient = new HttpClient();
+      HttpClient httpClient = getNewHttpClient();
       httpClient.executeMethod(postMethod);
     }
     catch (IOException e) {
@@ -169,7 +176,7 @@ public class ConfigService {
         postMethod.releaseConnection();
       }
       postMethod = createNewConfigPostMethod(repoId, mail, signature, launchCount, activationCode, url);
-      HttpClient httpClient = new HttpClient();
+      HttpClient httpClient = getNewHttpClient();
       httpClient.executeMethod(postMethod);
     }
     int statusCode = postMethod.getStatusCode();
@@ -252,7 +259,7 @@ public class ConfigService {
       String url = URL + REQUEST_FOR_REGISTER;
       try {
         postMethod = createRegisterPostMethod(mail, code, url);
-        HttpClient httpClient = new HttpClient();
+        HttpClient httpClient = getNewHttpClient();
         httpClient.executeMethod(postMethod);
       }
       catch (IOException e) {
@@ -260,7 +267,7 @@ public class ConfigService {
           postMethod.releaseConnection();
         }
         postMethod = createRegisterPostMethod(mail, code, url);
-        HttpClient httpClient = new HttpClient();
+        HttpClient httpClient = getNewHttpClient();
         httpClient.executeMethod(postMethod);
       }
       int statusCode = postMethod.getStatusCode();
@@ -648,13 +655,13 @@ public class ConfigService {
       PostMethod postMethod = createPost(url);
       try {
         try {
-          HttpClient httpClient = new HttpClient();
+          HttpClient httpClient = getNewHttpClient();
           httpClient.executeMethod(postMethod);
         }
         catch (IOException e) {
           Log.write("connection error (retrying): ", e);
           postMethod.releaseConnection();
-          HttpClient httpClient = new HttpClient();
+          HttpClient httpClient = getNewHttpClient();
           postMethod = createPost(url);
           httpClient.executeMethod(postMethod);
         }

@@ -213,7 +213,6 @@ public class HttpsClientTransport implements ClientTransport {
      */
     public Socket createSocket(String host, int port, InetAddress clientHost, int clientPort)
       throws IOException, UnknownHostException {
-      Log.write("createSocket4 to " + host);
       return getSSLContext().getSocketFactory().createSocket(host, port, clientHost, clientPort);
     }
 
@@ -237,7 +236,6 @@ public class HttpsClientTransport implements ClientTransport {
     public Socket createSocket(String host, int port, InetAddress localAddress, int localPort,
                                HttpConnectionParams params)
       throws IOException, UnknownHostException, ConnectTimeoutException {
-      Log.write("createSocket1 to " + host);
       if (params == null) {
         throw new IllegalArgumentException("Parameters may not be null");
       }
@@ -256,7 +254,6 @@ public class HttpsClientTransport implements ClientTransport {
 
     public Socket createSocket(String host, int port)
       throws IOException {
-      Log.write("createSocket2 to " + host);
       return getSSLContext().getSocketFactory().createSocket(host, port);
     }
 

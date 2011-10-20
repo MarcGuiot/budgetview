@@ -37,7 +37,7 @@ public class AskForCodeServlet extends HttpServlet {
     String mailTo = req.getHeader(ConfigService.HEADER_MAIL);
     if (Strings.isNullOrEmpty(mailTo)) {
       logger.info("Bad ask for code from " + (mailTo == null ? "<no mail>" : mailTo));
-      resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_BAD_ADRESS);
+      resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_UNKNOWN);
       return;
     }
     String lang = req.getHeader(ConfigService.HEADER_LANG);
@@ -124,7 +124,7 @@ public class AskForCodeServlet extends HttpServlet {
   }
 
   private void replyBadAdress(HttpServletResponse resp) {
-    resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_BAD_ADRESS);
+    resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_UNKNOWN);
   }
 
   private void replyFailed(HttpServletResponse resp) {
