@@ -1,0 +1,161 @@
+/*=== PAGE TOP BLOCK ===*/
+
+#main {
+  padding-top: 0;
+}
+
+body.front #main #content {
+  margin-top: 3em;
+}
+
+
+div#text h1 {
+  font-family: helvetica, arial, sans-serif;
+  color: #333;
+  font-size: 38px;
+  letter-spacing: -1px;
+  line-height: 1.1em;
+  margin: 20px 0px 20px;
+  padding: 0px;
+  text-align: center;
+}
+
+div#text h2 {
+  color: #444;
+  font-family: georgia, arial, sans-serif;
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 1.1em;
+  text-align: center;
+  margin: 0px 0px 15px;
+  padding: 0px;
+}
+
+div#text img {
+  margin-top: 10px;
+}
+
+div#text #platforms {
+  margin: 0;
+  color: #777;
+}
+
+div#text #price {
+  margin: -10px 0 0 0;
+  color: #333;
+  font-size: bold;
+}
+
+table#front-table {
+  margin-bottom: 60px;
+}
+
+table#front-table td, td {
+  vertical-align: middle;
+}
+
+#videoBorder {
+  width: 560px;
+  height: 420px;
+  border: solid 1px #AAA;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#text {
+  margin-right: 30px;
+  text-align: center;
+}
+
+/*=== PRESENTATION PAGE ===*/
+
+#content #presentation h2 {
+  font-size: 13pt;
+  margin-bottom: 0;
+}
+
+#intro {
+  margin-top: 15px;
+}
+
+table#intro p.intro {
+  font-size: 12pt;
+  color: #888;
+}
+
+table#intro h3 {
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+table#intro p.description {
+  margin-top: 0;
+  color: #888;
+}
+
+table#budget {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table#budget td {
+  vertical-align: top;
+}
+
+
+table#import {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+div.separator {
+  margin: 20px;
+  border-top: solid 1px #DDD;
+  border-bottom: solid 1px #D0D0D0;
+  padding: 5px;
+}
+
+div.separator p {
+  font-size: 12pt;
+  font-weight: bold;
+  text-align: center;
+}
+
+#steps-intro {
+  margin-top: 0;
+}
+
+#security {
+  width: 70%;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#security td.left {
+  padding: 0;
+  vertical-align: bottom;
+}
+
+#security td.left img {
+  margin: 0;
+}
+
+#security h2 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+p#close-showroom {
+  margin-top: 15px;
+  line-height: 1.4em;
+  font-size: 14pt;
+}
+
+p#close-showroom A {
+  font-weight: bold;
+}

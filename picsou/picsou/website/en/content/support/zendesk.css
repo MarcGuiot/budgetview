@@ -1,0 +1,256 @@
+/* ========= ZENDESK ========== */
+
+body {
+  background: #d9d1c5 url('http://www.mybudgetview.fr/files/images/bg_original.png') repeat-x;
+}
+
+
+div#page {
+  max-width: 960px;
+}
+
+div#header {
+  padding-bottom: 2px;
+}
+
+div#header_container {
+  padding-top: 2px;
+}
+
+div#top-menu {
+}
+
+div#voting_control {
+  display:none;
+}
+
+#top-menu-background, #top form#topquery {
+  background: #cAc2b6;
+}
+
+ul#green.agent-tabs li.main,
+ul#green.agent-tabs li.active:hover,
+ul#green.agent-tabs li.active.over  {
+  border-left: 2px solid #cAc2b6;
+}
+
+div#header div#top-right {
+  font-size: 10pt;
+  font-weight: normal;
+}
+
+div#header table#table_header a {
+  font-size: 18pt;
+}
+
+div#footer {
+  max-width: 960px;
+}
+
+table#table_header {
+  width: 40%;
+}
+
+table#table_header td {
+  vertical-align: middle;
+}
+
+div.entry-container p.entry_user {
+  display: none;
+}
+
+div.entry img {
+  background: #FFF;
+  margin-bottom: 5px;
+}
+
+/* ========== HOME ============ */
+
+body.home .user_formatted h1 {
+  font-size: 22pt;
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+body.home h2#pinned_topics_title,
+body.home div.fade_truncation_outer,
+body.home p.sub {
+  display: none;
+}
+
+/* ========= CHANGE LOG ========== */
+
+div#changelog span.date {
+  margin-left: 10px;
+  font-size: 10pt;
+  font-weight: normal;
+  color: #888;
+}
+
+/* ========= GENERAL ========== */
+
+.centered {
+  text-align: center;
+}
+
+.official-guide h1 {
+  color: #444;
+}
+
+.official-guide h2 {
+  color: #444;
+  text-align: center;
+  font-size: 16pt;
+  margin-top: 25px;
+  margin-bottom: 15px;
+  border-top: 1px solid #DDD;
+  border-bottom: 1px solid #DDD;
+  padding: 5px;
+  background: #F9F9F9;
+  line-height: 1.1em;
+}
+
+.official-guide .video {
+  margin-left: auto; 
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  width: 560px;
+  border: solid 1px #ccc;
+}
+
+.user_formatted p,
+.user_formatted li,
+.user_formatted td, {
+  font-size: 10pt;
+  text-align: justify;
+}
+
+A.highlighted:link {
+  border-bottom: 1px dashed #0000FF;
+}
+
+A.highlighted:visited {
+  border-bottom: 1px dashed #0000dd;
+}
+
+A.highlighted:hover {
+  border-bottom: 1px dashed #dd6600;
+}
+
+
+/* ========== TABLES ========== */
+
+table {
+  width: 100%;
+  border-spacing: 0;
+}
+
+td {
+  vertical-align: top;
+  text-align: left;
+}
+
+td.left {
+  padding-right: 15px;
+}
+
+td.center {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+td.right {
+  padding-left: 15px;
+}
+
+td.vertically-centered {
+  vertical-align: middle;
+}
+
+table.banner h3 {
+  text-align: center;
+}
+
+table.banner td, table.banner p {
+  font-size: 9pt;
+}
+
+table.vertical-bars td.left {
+  padding-right: 25px;
+  border-right: 1px solid #EEE;
+}
+
+table.vertical-bars td.center {
+  padding-left: 25px;
+  padding-right: 25px;
+  border-right: 1px solid #EEE;
+}
+
+table.vertical-bars td.right {
+  padding-left: 25px;
+}
+
+/* ========== FIELD/VALUE TABLE ========== */
+
+table.field-value {
+  padding: 0;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  border: solid 1px #ccc;
+}
+
+table.field-value td {
+  padding: 5px;
+  vertical-align: top;
+  text-align: right;
+  background: #fbfbfb;
+  -webkit-border-horizontal-spacing: 0;
+  -webkit-border-vertical-spacing: 0;
+}
+
+table.field-value td.field {
+  padding-top: 10px;
+  background: #444;
+  color: #FFF;
+  text-align: left;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+table.field-value td.value {
+  padding-left: 10px;
+  text-align: left;
+}
+
+/* ========== CALENDAR TABLE ========== */
+
+table.calendar {
+  padding: 0;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.calendar td {
+  border: solid 1px #ccc;
+  padding-left: 5px;
+  padding-right: 5px;
+  text-align: right;
+  background: #FFF;
+}
+
+table.calendar tr.months td {
+  background: #444;
+  color: #FFF;
+  border: solid 1px #444;
+  text-align: center;
+}
+
+table.calendar td.name {
+  text-align: left;
+}
