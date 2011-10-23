@@ -31,6 +31,7 @@ public class LicenseExpirationDialog {
   private GlobsPanelBuilder builder;
   private InfiniteProgressPanel progressPanel = new InfiniteProgressPanel();
   private Thread sendRequestThread;
+  private GlobTextEditor emailField;
 
   public LicenseExpirationDialog(Window parent, final GlobRepository repository, final Directory directory) {
     localGlobRepository = LocalGlobRepositoryBuilder.init(repository)
@@ -64,10 +65,11 @@ public class LicenseExpirationDialog {
     };
     builder.add("sendMail", sendAction);
     builder.add("sendState", progressPanel);
-    GlobTextEditor mailEditor = GlobTextEditor.init(User.EMAIL, localGlobRepository, directory)
+
+    emailField = GlobTextEditor.init(User.EMAIL, localGlobRepository, directory)
       .setNotifyOnKeyPressed(true)
       .forceSelection(User.KEY);
-    builder.add("mailAdress", mailEditor);
+    builder.add("mailAdress", emailField);
     localGlobRepository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(User.KEY)) {
@@ -81,6 +83,7 @@ public class LicenseExpirationDialog {
       }
     });
     sendAction.setEnabled(Strings.isNotEmpty(localGlobRepository.get(User.KEY).get(User.EMAIL)));
+    emailField.getComponent().addActionListener(sendAction);
     dialog = PicsouDialog.createWithButton(parent, builder.<JPanel>load(), new ValidateAction(), directory);
     dialog.pack();
   }
@@ -99,6 +102,7 @@ public class LicenseExpirationDialog {
   }
 
   public void show() {
+    emailField.getComponent().requestFocus();
     dialog.showCentered();
     end();
     builder.dispose();

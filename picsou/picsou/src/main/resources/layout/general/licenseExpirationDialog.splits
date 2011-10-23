@@ -6,14 +6,16 @@
     <column styleClass="innerDialog">
       <label text="$license.ask.for.code" name="title" styleClass="title"/>
       <htmlEditorPane name="askMailMessage" text="$license.ask.message.mail"/>
-      <row>
+      <row margin="10">
         <label text="$license.ask.mail"/>
-        <textField ref="mailAdress"/>
+        <textField ref="mailAdress" columns="50" marginLeft="10" marginRight="10" weightX="100.0"/>
         <button action="sendMail"/>
-        <component ref="sendState" visible="false"/>
-        <filler fill="horizontal"/>
       </row>
       <label ref="mailResponse" styleClass="errorMessage"/>
+      <row preferredSize="(30,30)" minimumSize="(30,30)">
+        <component ref="sendState" visible="false"/>
+      </row>
+      <filler fill="vertical"/>
     </column>
   </panel>
 
