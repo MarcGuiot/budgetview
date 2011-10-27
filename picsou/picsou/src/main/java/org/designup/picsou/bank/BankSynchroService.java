@@ -19,7 +19,7 @@ import java.util.Iterator;
 
 public class BankSynchroService {
   private Map<Integer, BankSynchro> banks = new HashMap<Integer, BankSynchro>();
-  static boolean SHOW_SYNCHRO =
+  static public boolean SHOW_SYNCHRO =
     System.getProperty("budgetview.synchro", "false").equalsIgnoreCase("false");
 
   public interface BankSynchro {
@@ -27,13 +27,9 @@ public class BankSynchroService {
   }
 
   public BankSynchroService() {
-    if (!SHOW_SYNCHRO){
-      register(SG.SG_ID, new SG.Init());
-      register(CreditMutuelArkea.ID, new CreditMutuelArkea.Init());
-    }
-    Utils.beginRemove();
+    register(SG.SG_ID, new SG.Init());
+    register(CreditMutuelArkea.ID, new CreditMutuelArkea.Init());
     register(OtherBank.ID, new OtherBank.Init());
-    Utils.endRemove();
   }
 
   public void register(Integer bankId, BankSynchro synchro) {

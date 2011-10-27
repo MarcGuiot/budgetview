@@ -96,7 +96,8 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .select("secondary")
       .setAmount("100")
       .createNew("Livret B", "Livret B", "110.", null)
-      .doImport();
+      .doImport()
+      .complete();
 
     savingsAccounts.checkAccountNames("secondary", "Livret A");
     savingsAccounts.checkAccount("secondary", 100, null);

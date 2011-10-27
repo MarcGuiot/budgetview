@@ -9,6 +9,7 @@ import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -69,6 +70,13 @@ public class OtherBank extends WebBankPage {
         doImport();
       }
     });
+    repository.getAll(RealAccount.TYPE, GlobMatchers.fieldEquals(RealAccount.BANK,
+                                                                 OtherBank.ID))
+      .safeApply(new GlobFunctor() {
+      public void run(Glob glob, GlobRepository repository) throws Exception {
+        repository.update(glob.getKey(), RealAccount.FILE_NAME, null);
+      }
+    }, repository);
     return builder.load();
   }
 

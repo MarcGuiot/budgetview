@@ -17,6 +17,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -96,7 +97,13 @@ public class BankDownloadPanel implements GlobSelectionListener {
     bankId = bank != null ? bank.get(Bank.ID) : null;
     openHelpAction.setBank(bank);
     cards.show(bank == null ? "noSelection" : "gotoSite");
-    synchroPanel.setVisible(bank != null && (bank.get(Bank.SYNCHRO_ENABLE, false) || bank.get(Bank.OFX_DOWNLOAD, false)));
+    boolean synchro = bank != null && (bank.get(Bank.SYNCHRO_ENABLE, false) && BankSynchroService.SHOW_SYNCHRO);
+    Utils.beginRemove();
+    if (bank != null && bank.get(Bank.ID).equals(-123456)){
+      synchro = true;
+    }
+    Utils.endRemove();
+    synchroPanel.setVisible(bank != null && (synchro || bank.get(Bank.OFX_DOWNLOAD, false)));
   }
 
   public void requestFocus() {

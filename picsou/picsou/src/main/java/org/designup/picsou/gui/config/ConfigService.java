@@ -148,6 +148,10 @@ public class ConfigService {
       updateConnectionStatus(e);
       return Lang.get("license.mail.send.error");
     }
+    catch (Exception e){
+      updateConnectionStatus(e);
+      return Lang.get("license.mail.send.error");
+    }
     finally {
       if (postMethod != null) {
         postMethod.releaseConnection();
