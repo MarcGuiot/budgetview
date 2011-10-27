@@ -65,4 +65,9 @@ public class SavingsViewToggleSignpost extends Signpost implements ChangeSetList
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
+
+
+  public void dispose() {
+    super.dispose();
+  }
 }

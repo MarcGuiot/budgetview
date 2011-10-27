@@ -1,0 +1,34 @@
+!Type:Bank
+D04/08'2008
+MUn aute logiciel quelconque
+T-30
+N1001
+PFNAC VELIZY CARTE 34609231 PAIEM
+LLoisirs-culture-sport
+^
+D20/07'2008
+MCredit Porsche
+T-100.00
+N1002
+PCREDIPLUS
+LAuto-moto:Remboursement de pret auto-moto
+^
+D20/06'2008
+MESSO
+T-80.00
+N1002
+LAuto-moto:Essence
+^
+D20/06'2008
+MCourses Auchan
+T-50.00
+N1003
+PSPLIT
+LAlimentation:Epicerie
+SAlimentation:Epicerie
+ECourses quelconques
+$-30.00
+SLoisirs-culture-sport:Sport
+EMotomag
+$-20.00
+^

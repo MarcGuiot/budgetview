@@ -69,6 +69,8 @@ public class BudgetAreaSeriesView extends View {
   private SeriesOrderManager orderManager;
   private Comparator<Glob> comparator;
   private JMenuItem monthFilteringButton;
+  private Collection<SeriesRepeatComponentFactory.SeriesButtonsUpdater> updaters =
+    new ArrayList<SeriesRepeatComponentFactory.SeriesButtonsUpdater>();
 
   public BudgetAreaSeriesView(String name,
                               final BudgetArea budgetArea,
@@ -91,12 +93,12 @@ public class BudgetAreaSeriesView extends View {
     this.seriesButtons = new SeriesEditionButtons(budgetArea, repository, directory);
 
     this.selectionService.addListener(new GlobSelectionListener() {
-                                        public void selectionUpdated(GlobSelection selection) {
-                                          selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
-                                          seriesDateFilter.filterMonths(selectedMonthIds);
-                                          updateRepeat();
-                                        }
-                                      }, Month.TYPE);
+      public void selectionUpdated(GlobSelection selection) {
+        selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
+        seriesDateFilter.filterMonths(selectedMonthIds);
+        updateRepeat();
+      }
+    }, Month.TYPE);
 
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -117,6 +119,9 @@ public class BudgetAreaSeriesView extends View {
   }
 
   private void updateRepeat() {
+    for (SeriesRepeatComponentFactory.SeriesButtonsUpdater updater : updaters) {
+      updater.releaseSignPost();
+    }
     List<Key> newSeries = repository.getAll(PeriodSeriesStat.TYPE, seriesFilter)
       .sort(comparator)
       .toKeyList();
@@ -135,6 +140,15 @@ public class BudgetAreaSeriesView extends View {
     });
     currentSeries = newSeries;
     footerGenerator.update(currentSeries);
+
+    if (!SignpostStatus.isCompleted(SignpostStatus.SERIES_AMOUNT_SHOWN, repository)) {
+      if (!newSeries.isEmpty()) {
+        Key key = newSeries.get(0);
+        for (SeriesRepeatComponentFactory.SeriesButtonsUpdater updater : updaters) {
+          updater.updateSignPost(key);
+        }
+      }
+    }
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -276,11 +290,19 @@ public class BudgetAreaSeriesView extends View {
         }
       });
 
-      SeriesButtonsUpdater updater = new SeriesButtonsUpdater(periodSeriesStat.getKey(),
-                                                              seriesName,
-                                                              observedAmountButton,
-                                                              plannedAmountButton);
+      final SeriesButtonsUpdater updater = new SeriesButtonsUpdater(periodSeriesStat.getKey(),
+                                                                    seriesName,
+                                                                    observedAmountButton,
+                                                                    plannedAmountButton);
       cellBuilder.addDisposeListener(updater);
+      if (budgetArea == BudgetArea.VARIABLE && !SignpostStatus.isCompleted(SignpostStatus.SERIES_AMOUNT_SHOWN, repository)) {
+        cellBuilder.addDisposeListener(new Disposable() {
+          public void dispose() {
+            updaters.remove(updater);
+          }
+        });
+        updaters.add(updater);
+      }
 
       final GlobGaugeView gaugeView =
         new GlobGaugeView(PeriodSeriesStat.TYPE, budgetArea,
@@ -322,20 +344,14 @@ public class BudgetAreaSeriesView extends View {
       cellBuilder.add("deltaGauge", deltaGauge);
       deltaGauge.setActionListener(new ShowDetailsTipAction(deltaGauge, directory));
       cellBuilder.addDisposeListener(deltaGaugeView);
-
-      if (SignpostStatus.isAmountSeries(repository, series.getKey())) {
-        Signpost amountSignpost = new SeriesAmountSignpost(repository, directory);
-        cellBuilder.addDisposeListener(amountSignpost);
-        amountSignpost.attach(plannedAmountButton.getComponent());
-      }
     }
 
     private class SeriesButtonsUpdater implements ChangeSetListener, Disposable {
-
       private Key key;
       private SplitsNode<JButton> seriesName;
       private SplitsNode<JButton> observedAmountButton;
       private SplitsNode<JButton> plannedAmountButton;
+      private Signpost signpost;
 
       public SeriesButtonsUpdater(Key key,
                                   SplitsNode<JButton> seriesName,
@@ -351,6 +367,10 @@ public class BudgetAreaSeriesView extends View {
 
       public void dispose() {
         repository.removeChangeListener(this);
+        if (signpost != null) {
+          signpost.hide();
+          signpost = null;
+        }
       }
 
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -383,6 +403,20 @@ public class BudgetAreaSeriesView extends View {
 
         boolean toSet = active && stat.isTrue(PeriodSeriesStat.TO_SET);
         plannedAmountButton.applyStyle(toSet ? "plannedToSet" : "plannedAlreadySet");
+      }
+
+      public void updateSignPost(Key key) {
+        if (key.equals(this.key)) {
+          signpost = new SeriesAmountSignpost(repository, directory);
+          signpost.attach(plannedAmountButton.getComponent());
+        }
+      }
+
+      public void releaseSignPost() {
+        if (signpost != null) {
+          signpost.hide();
+          signpost = null;
+        }
       }
     }
 

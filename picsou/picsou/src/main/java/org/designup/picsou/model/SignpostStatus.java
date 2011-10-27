@@ -99,6 +99,17 @@ public class SignpostStatus {
     }
   }
 
+  public static void setAllBeforeBudgetCompleted(GlobRepository repository) {
+    repository.startChangeSet();
+    setCompleted(CATEGORIZATION_SELECTION_DONE, repository);
+    setCompleted(CATEGORIZATION_AREA_SELECTION_DONE, repository);
+    setCompleted(FIRST_CATEGORIZATION_DONE, repository);
+    setCompleted(GOTO_CATEGORIZATION_DONE, repository);
+    setCompleted(GOTO_DATA_DONE, repository);
+    setCompleted(IMPORT_DONE, repository);
+    repository.completeChangeSet();
+  }
+
   public static boolean isInitialGuidanceCompleted(GlobRepository repository) {
     Glob status = repository.find(KEY);
     return (status != null) && Utils.equal(status.get(CURRENT_SECTION), SignpostSectionType.COMPLETED.getId());

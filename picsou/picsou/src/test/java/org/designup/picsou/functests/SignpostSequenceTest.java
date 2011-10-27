@@ -4,6 +4,7 @@ import org.designup.picsou.functests.checkers.SeriesAmountEditionDialogChecker;
 import org.designup.picsou.functests.checkers.SignpostDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.functests.banks.SpecificBankTestCase;
 
 public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
@@ -318,7 +319,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     // === Amount signpost is shown in the budget view ===
     views.selectBudget();
     budgetView.variable.checkAmountSignpostDisplayed(
-      "Groceries", "Click on the planned amounts to set your own values");
+      "Misc", "Click on the planned amounts to set your own values");
 
     // === Restart ===
     restartApplication();
@@ -326,7 +327,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     // === Amount signpost is shown on restart ===
     views.selectBudget();
     budgetView.variable.checkAmountSignpostDisplayed(
-      "Groceries", "Click on the planned amounts to set your own values");
+      "Misc", "Click on the planned amounts to set your own values");
   }
 
   public void testRestartDuringBudgetTuning() throws Exception {
@@ -409,6 +410,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2010/05/29", -10, "auchan")
       .load();
+
     categorization.selectAllTransactions();
     categorization.selectVariable().selectNewSeries("Misc");
     budgetView.variable.editPlannedAmount("Misc")
@@ -462,5 +464,52 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     operations.restore(backupFilePath);
     signpostView.checkSummaryViewShown();
+  }
+
+  public void testImportMoneyWithOneUncategorised() throws Exception {
+    signpostView.checkSignpostViewShown();
+
+    operations.openImportDialog()
+      .setFilePath(SpecificBankTestCase.getFile("money_export_standard.qif", this))
+      .acceptFile()
+      .createNewAccount("CIC", "Main account", "", 0.)
+      .setMainAccount()
+      .importSeries()
+      .checkContains("Loisirs-culture-sport:Journaux",
+                     "Auto-moto:Remboursement de pret auto-moto", "Alimentation:Epicerie", "Auto-moto:Essence")
+      .setRecurring("Alimentation:Epicerie", "Auto-moto:Remboursement de pret auto-moto")
+      .setVariable("Loisirs-culture-sport:Journaux", "Loisirs-culture-sport", "Auto-moto:Essence")
+      .validateAndFinishImport();
+
+    views.selectCategorization();
+
+    categorization.checkFirstCategorizationSignpostDisplayed("Select the operations to categorize");
+    
+    categorization.selectTableRow(0);
+
+    categorization.checkSkipMessageDisplayed();
+  }
+
+  public void testImportMoneyWithAllCategorised() throws Exception {
+    signpostView.checkSignpostViewShown();
+
+    operations.openImportDialog()
+      .setFilePath(SpecificBankTestCase.getFile("money_export_standard.qif", this))
+      .acceptFile()
+      .createNewAccount("CIC", "Main account", "", 0.)
+      .setMainAccount()
+      .importSeries()
+      .checkContains("Loisirs-culture-sport:Journaux",
+                     "Auto-moto:Remboursement de pret auto-moto", "Alimentation:Epicerie", "Auto-moto:Essence")
+      .setRecurring("Alimentation:Epicerie", "Auto-moto:Remboursement de pret auto-moto")
+      .setVariable("Loisirs-culture-sport:Journaux", "Loisirs-culture-sport", "Auto-moto:Essence", "[Test]")
+      .validateAndFinishImport();
+
+    views.selectCategorization();
+
+    categorization.checkFirstCategorizationSignpostDisplayed("Select the transactions to see it's categorization or categorize it");
+//    categorization.selectTableRow(0);
+    
+    //categorization.checkGotoBudgetSignpostShown();
   }
 }
