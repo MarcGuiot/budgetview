@@ -41,8 +41,7 @@ public class DataCheckingService {
     }
     finally {
       if (report.hasError()) {
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        toolkit.beep();
+        Toolkit.getDefaultToolkit().beep();
         String message = report.toString();
         String message1 = message + "\n\n";
         if (ex != null) {

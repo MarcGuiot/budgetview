@@ -5,7 +5,6 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.gui.backup.BackupService;
 import org.designup.picsou.gui.browsing.BrowsingService;
-import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.config.RegistrationTrigger;
 import org.designup.picsou.gui.model.PicsouGuiModel;
@@ -13,6 +12,7 @@ import org.designup.picsou.gui.series.view.SeriesWrapperUpdateTrigger;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.upgrade.ConfigUpgradeTrigger;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
+import org.designup.picsou.gui.utils.ShowDialogAndExitExceptionHandler;
 import org.designup.picsou.gui.utils.datacheck.DataCheckingService;
 import org.designup.picsou.importer.ImportService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
@@ -29,13 +29,10 @@ import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.impl.DefaultGlobIdGenerator;
 import org.globsframework.model.utils.DefaultChangeSetListener;
-import org.globsframework.utils.Log;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import picsou.AwtExceptionHandler;
 
-import javax.swing.*;
 import java.util.Collection;
 
 import static org.globsframework.model.FieldValue.value;
@@ -47,8 +44,8 @@ public class PicsouInit {
   private Directory directory;
   private DefaultGlobIdGenerator idGenerator;
   private UpgradeTrigger upgradeTrigger;
-  private boolean firstReset = true;
   private ServerChangeSetListener changeSetListenerToDb;
+  private ShowDialogAndExitExceptionHandler exceptionHandler;
 
   public static PicsouInit init(ServerAccess serverAccess, Directory directory, boolean registeredUser, boolean badJarVersion) {
     return new PicsouInit(serverAccess, directory, registeredUser, badJarVersion);
@@ -59,8 +56,9 @@ public class PicsouInit {
     this.directory = directory;
 
     idGenerator = new DefaultGlobIdGenerator();
+    this.exceptionHandler = new ShowDialogAndExitExceptionHandler(directory);
     this.repository =
-      GlobRepositoryBuilder.init(idGenerator, new ShowDialogAndExitExceptionHandler())
+      GlobRepositoryBuilder.init(idGenerator, exceptionHandler)
         .add(directory.get(GlobModel.class).getConstants())
         .get();
 
@@ -169,7 +167,7 @@ public class PicsouInit {
           createPersistentDataForNewUser(repository, directory);
         }
         else {
-          firstReset = true;
+          exceptionHandler.setFirstReset(true);
           try {
             repository.reset(userData, typesToReplace);
           }
@@ -209,7 +207,7 @@ public class PicsouInit {
           repository.completeChangeSet();
         }
         finally {
-          firstReset = false;
+          exceptionHandler.setFirstReset(false);
           repository.removeTrigger(upgradeTrigger);
           repository.startChangeSet();
           try {
@@ -302,21 +300,4 @@ public class PicsouInit {
     return repository;
   }
 
-  private class ShowDialogAndExitExceptionHandler implements ExceptionHandler {
-
-    public void onException(Throwable ex) {
-      Log.write(ex.getMessage(), ex);
-      if (!firstReset || !PicsouApplication.EXIT_ON_DATA_ERROR) {
-        MessageAndDetailsDialog dialog = new MessageAndDetailsDialog("exception.title",
-                                                                     "exception.content",
-                                                                     Strings.toString(ex),
-                                                                     directory.get(JFrame.class),
-                                                                     directory);
-        dialog.show();
-        if (PicsouApplication.EXIT_ON_DATA_ERROR) {
-          System.exit(10);
-        }
-      }
-    }
-  }
 }

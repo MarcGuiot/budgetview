@@ -17,7 +17,7 @@ import java.io.InputStream;
 
 public class AboutDialog {
 
-  private static final String[] SYSTEM_PROPERTIES = {
+  public static final String[] SYSTEM_PROPERTIES = {
     "java.vm.vendor",
     "java.version",
     "java.vm.version",
