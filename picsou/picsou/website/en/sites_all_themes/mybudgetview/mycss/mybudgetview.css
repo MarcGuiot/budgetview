@@ -178,6 +178,12 @@ A.highlighted:hover {
   padding-top: 1px;
 }
 
+#page #header #navigation {
+  float: right;
+  margin-left: 0;
+  margin-right: 0;
+}
+
 #page #header ul#main-menu {
   margin-top: 7px;
   padding: 0;
