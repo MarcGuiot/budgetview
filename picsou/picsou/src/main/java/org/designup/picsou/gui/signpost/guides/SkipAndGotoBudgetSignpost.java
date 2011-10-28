@@ -33,6 +33,7 @@ public class SkipAndGotoBudgetSignpost extends SimpleSignpost implements GlobSel
     }
     if (Card.BUDGET.getId() == cards.get(0).get(Card.ID)) {
       dispose();
+      SignpostStatus.setAllBeforeBudgetCompleted(repository);
     }
   }
 

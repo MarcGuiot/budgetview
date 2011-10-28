@@ -94,7 +94,6 @@ public class ImportController {
                                FieldValue.value(Account.POSITION, Amounts.extractAmount(glob.get(RealAccount.POSITION))),
                                FieldValue.value(Account.POSITION_DATE, glob.get(RealAccount.POSITION_DATE)));
       }
-      localRepository.commitChanges(false);
     }
     if (nextImport()) {
       importDialog.showPreview();
@@ -176,6 +175,7 @@ public class ImportController {
   }
 
   public void commitAndClose(Set<Integer> months) {
+    Log.write("import end");
     openRequestManager.popCallback();
     localRepository.commitChanges(true);
     importDialog.showLastImportedMonthAndClose(months);

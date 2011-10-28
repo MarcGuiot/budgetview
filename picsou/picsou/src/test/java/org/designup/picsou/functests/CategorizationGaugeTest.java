@@ -7,6 +7,7 @@ import org.designup.picsou.functests.checkers.CategorizationGaugeChecker;
 public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     setCurrentMonth("2008/06");
+    setInitialGuidesShown(true);
     resetWindow();
     super.setUp();
   }
@@ -84,6 +85,13 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNothingIsShownIfThereAreNoTransactionsToCategorize() throws Exception {
+//    String s = OfxBuilder
+//      .init(this)
+//      .addTransaction("2008/05/10", 1000.0, "WorldCo")
+//      .save();
+//    System.out.println("CategorizationGaugeTest.testNothingIsShownIfThereAreNoTransactionsToCategorize " +s);
+//    openApplication();
+
     OfxBuilder
       .init(this)
       .addTransaction("2008/05/10", 1000.0, "WorldCo")

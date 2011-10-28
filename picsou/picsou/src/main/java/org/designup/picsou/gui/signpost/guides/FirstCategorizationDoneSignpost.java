@@ -6,6 +6,7 @@ import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.model.SignpostSectionType;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -14,6 +15,7 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -61,12 +63,20 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
   protected void update() {
     if (SignpostStatus.isCompleted(SignpostStatus.CATEGORIZATION_AREA_SELECTION_DONE, repository)) {
       if (canShow()) {
-        show(Lang.get("signpost.firstCategorizationDone"));
+        if (!repository.contains(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID))){
+          SignpostStatus.setCompleted(SignpostStatus.FIRST_CATEGORIZATION_DONE, repository);
+          repository.removeChangeListener(this);
+          selectionService.removeListener(this);
+        }else {
+          show(Lang.get("signpost.firstCategorizationDone"));
+        }
       }
     }
     else {
       if (isShowing()) {
         hide();
+        repository.removeChangeListener(this);
+        selectionService.removeListener(this);
       }
     }
   }

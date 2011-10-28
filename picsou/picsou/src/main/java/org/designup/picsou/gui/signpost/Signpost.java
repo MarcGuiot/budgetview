@@ -30,6 +30,8 @@ public abstract class Signpost implements Disposable {
   private BalloonTip.AttachLocation attachLocation;
 
   protected static final ModernBalloonStyle BALLOON_STYLE = createBalloonStyle();
+  private KeyChangeListener completionListener;
+  private HierarchyListener hierarchyListener;
 
   public static ModernBalloonStyle createBalloonStyle() {
     ModernBalloonStyle style =
@@ -64,7 +66,7 @@ public abstract class Signpost implements Disposable {
     if (isCompleted()) {
       return;
     }
-    KeyChangeListener completionListener = new KeyChangeListener(SignpostStatus.KEY) {
+    completionListener = new KeyChangeListener(SignpostStatus.KEY) {
       protected void update() {
         if (isShowing() && isCompleted()) {
           dispose();
@@ -74,7 +76,7 @@ public abstract class Signpost implements Disposable {
 
     repository.addChangeListener(completionListener);
 
-    component.addHierarchyListener(new HierarchyListener() {
+    hierarchyListener = new HierarchyListener() {
       public void hierarchyChanged(HierarchyEvent e) {
         if (balloonTip == null) {
           return;
@@ -85,13 +87,14 @@ public abstract class Signpost implements Disposable {
           balloonTip.setVisible(componentVisible);
         }
       }
-    });
+    };
+    component.addHierarchyListener(hierarchyListener);
     init();
   }
 
   protected abstract void init();
 
-  protected boolean isCompleted() {
+  public boolean isCompleted() {
     return SignpostStatus.isCompleted(completionField, repository);
   }
 
@@ -131,6 +134,18 @@ public abstract class Signpost implements Disposable {
       balloonTip.closeBalloon();
       balloonTip = null;
     }
+    if (hierarchyListener != null) {
+      component.removeHierarchyListener(hierarchyListener);
+      hierarchyListener = null;
+    }
+    if (completionListener != null) {
+      repository.removeChangeListener(completionListener);
+      completionListener = null;
+    }
+    onHide();
+  }
+
+  protected void onHide() {
   }
 
   public void dispose() {

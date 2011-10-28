@@ -5,6 +5,7 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobIdGenerator;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 
 import java.io.BufferedReader;
@@ -19,11 +20,9 @@ public class QifParser {
   }
 
   private BufferedReader reader;
-  private ReadOnlyGlobRepository initialRepository;
   private GlobRepository globRepository;
   private GlobIdGenerator globIdGenerator;
   private Integer accountId = null;
-  private Integer subSeriesId;
   private Integer seriesId;
   GlobList result = new GlobList();
   private String date;
@@ -33,7 +32,6 @@ public class QifParser {
   String pValue = null;
 
   private QifParser(Reader reader, ReadOnlyGlobRepository initialRepository, GlobRepository globRepository) {
-    this.initialRepository = initialRepository;
     this.globRepository = globRepository;
     this.reader = new BufferedReader(reader);
     globIdGenerator = new ImportedTransactionIdGenerator(globRepository.getIdGenerator());
@@ -99,7 +97,6 @@ public class QifParser {
               completeDefault(values);
               Glob transaction = createTransaction(values);
               seriesId = null;
-              subSeriesId = null;
               result.add(transaction);
               return new SplitedNextTransactionReader(transaction.get(ImportedTransaction.ID), this);
             }
@@ -109,7 +106,6 @@ public class QifParser {
               result.add(transaction);
               reader.readLine();
               seriesId = null;
-              subSeriesId = null;
               date = null;
               mValue = null;
               pValue = null;
@@ -227,19 +223,18 @@ public class QifParser {
 
       private void completeValues(FieldValuesBuilder values) {
         completeDefault(values);
-//        values.set(ImportedTransaction.SPLIT, Boolean.TRUE);
         values.set(ImportedTransaction.SPLIT_SOURCE, parentId);
       }
     }
   }
 
   private void addEnveloppe(String line) {
-//    String seriesName = line.trim();
-//    Glob series = globRepository.getAll(ImportedSeries.TYPE, GlobMatchers.fieldEquals(ImportedSeries.NAME, seriesName)).getFirst();
-//    if (series == null) {
-//      series = globRepository.create(ImportedSeries.TYPE, FieldValue.value(ImportedSeries.NAME, seriesName));
-//    }
-//    seriesId = series.get(ImportedSeries.ID);
+    String seriesName = line.trim();
+    Glob series = globRepository.getAll(ImportedSeries.TYPE, GlobMatchers.fieldEquals(ImportedSeries.NAME, seriesName)).getFirst();
+    if (series == null) {
+      series = globRepository.create(ImportedSeries.TYPE, FieldValue.value(ImportedSeries.NAME, seriesName));
+    }
+    seriesId = series.get(ImportedSeries.ID);
   }
 
   private Glob createTransaction(FieldValuesBuilder values) {

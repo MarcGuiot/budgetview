@@ -20,7 +20,7 @@ import java.util.Set;
 public abstract class SignpostSectionPanel {
 
   private SignpostSection section;
-  private GlobRepository repository;
+  protected GlobRepository repository;
   private Directory directory;
 
   private SplitsNode<JPanel> sectionPanel;

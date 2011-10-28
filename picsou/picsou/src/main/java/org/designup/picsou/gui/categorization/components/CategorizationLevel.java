@@ -1,9 +1,6 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.UserPreferences;
+import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -51,7 +48,8 @@ public class CategorizationLevel implements ChangeSetListener {
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(Transaction.TYPE) || changeSet.containsChanges(UserPreferences.KEY)) {
+    if (changeSet.containsChanges(Transaction.TYPE) || changeSet.containsChanges(UserPreferences.KEY)
+        || changeSet.containsChanges(SignpostStatus.TYPE)) {
       update();
     }
   }
@@ -65,7 +63,8 @@ public class CategorizationLevel implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(Transaction.TYPE) || changedTypes.contains(UserPreferences.TYPE)) {
+    if (changedTypes.contains(Transaction.TYPE) || changedTypes.contains(UserPreferences.TYPE)
+        || changedTypes.contains(SignpostStatus.TYPE)) {
       update();
     }
   }

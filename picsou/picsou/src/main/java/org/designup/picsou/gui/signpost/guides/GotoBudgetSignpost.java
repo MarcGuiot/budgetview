@@ -41,6 +41,9 @@ public class GotoBudgetSignpost extends Signpost implements Updatable {
   }
 
   public void update() {
+    if (!SignpostStatus.isCompleted(SignpostStatus.FIRST_CATEGORIZATION_DONE, repository)){
+      return;
+    }
     double total = categorizationLevel.getTotal();
     double percentage = categorizationLevel.getPercentage();
 

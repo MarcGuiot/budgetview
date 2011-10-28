@@ -5,6 +5,11 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 
 public class InitialImportTest extends LoggedInFunctionalTestCase {
 
+  protected void setUp() throws Exception {
+    resetWindow();
+    super.setUp();
+  }
+
   protected void selectInitialView() {
     views.selectHome();
   }

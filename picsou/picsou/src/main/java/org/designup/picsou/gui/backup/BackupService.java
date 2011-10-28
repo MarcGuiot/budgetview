@@ -8,6 +8,7 @@ import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.model.User;
+import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.persistence.direct.ReadOnlyAccountDataManager;
 import org.globsframework.metamodel.GlobModel;
@@ -140,6 +141,7 @@ public class BackupService {
     repository.startChangeSet();
     try {
       upgradeTrigger.postTraitement(repository);
+      SignpostStatus.setAllCompleted(repository);
     }
     finally {
       repository.completeChangeSet();

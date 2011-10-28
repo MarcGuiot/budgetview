@@ -2,6 +2,8 @@ package org.designup.picsou.functests.banks;
 
 import org.designup.picsou.model.TransactionType;
 
+import java.io.IOException;
+
 public class MoneyExportTest extends SpecificBankTestCase {
 
   protected void setUp() throws Exception {
@@ -11,19 +13,9 @@ public class MoneyExportTest extends SpecificBankTestCase {
   }
 
 
-  public void __testDefaultQifFile() throws Exception {
+  public void testDefaultQifFile() throws Exception {
     operations.openPreferences().setFutureMonthsCount(3).validate();
-    operations.openImportDialog()
-      .setFilePath(getFile("money_export_standard.qif"))
-      .acceptFile()
-      .createNewAccount("CIC", "Main account", "", 0.)
-      .setMainAccount()
-      .importSeries()
-      .checkContains("Loisirs-culture-sport:Journaux",
-                     "Auto-moto:Remboursement de pret auto-moto", "Alimentation:Epicerie", "Auto-moto:Essence")
-      .setRecurring("Alimentation:Epicerie", "Auto-moto:Remboursement de pret auto-moto")
-      .setVariable("Loisirs-culture-sport:Journaux", "Loisirs-culture-sport", "Auto-moto:Essence")
-      .validateAndFinishImport();
+    importStandard();
 
     transactions.initAmountContent()
       .add("20/08/2008", "SPLIT COURSES QUELCONQUES", 0.00, "Alimentation", 0.00, 0.00, "Main account")
@@ -75,7 +67,21 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .cancel();
   }
 
-  public void __testStrictQifFile() throws Exception {
+  private void importStandard() throws IOException {
+    operations.openImportDialog()
+      .setFilePath(getFile("money_export_standard.qif"))
+      .acceptFile()
+      .createNewAccount("CIC", "Main account", "", 0.)
+      .setMainAccount()
+      .importSeries()
+      .checkContains("Loisirs-culture-sport:Journaux",
+                     "Auto-moto:Remboursement de pret auto-moto", "Alimentation:Epicerie", "Auto-moto:Essence")
+      .setRecurring("Alimentation:Epicerie", "Auto-moto:Remboursement de pret auto-moto")
+      .setVariable("Loisirs-culture-sport:Journaux", "Loisirs-culture-sport", "Auto-moto:Essence")
+      .validateAndFinishImport();
+  }
+
+  public void testStrictQifFile() throws Exception {
     operations.openImportDialog()
       .setFilePath(getFile("money_export_strict.qif"))
       .acceptFile()
@@ -90,6 +96,30 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .add("20/08/2008", TransactionType.PRELEVEMENT, "SPLIT COURSES QUELCONQUES", "Courses quelconques", -30.00)
       .add("20/08/2008", TransactionType.PRELEVEMENT, "CREDIPLUS CREDIT PORSCHE", "", -100.00)
       .add("04/08/2008", TransactionType.PRELEVEMENT, "FNAC VELIZY CARTE 34609231 PAIEM UN LOGICIEL QUELCONQUE", "", -14.17)
+      .add("04/08/2008", TransactionType.VIREMENT, "SOLDE INITIAL", "", 1000.00)
+      .check();
+  }
+
+  public void testReImportWithOnMoreSeries() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(3).validate();
+    importStandard();
+
+    operations.openImportDialog()
+      .setFilePath(getFile("money_export_standard_2.qif"))
+      .acceptFile()
+      .importSeries()
+      .checkNotContain("Alimentation")
+      .checkContains("Loisirs-culture-sport:Sport")
+      .setVariable("Loisirs-culture-sport:Sport")
+      .validateAndFinishImport();
+    transactions.initContent()
+      .add("20/08/2008", TransactionType.VIREMENT, "SPLIT COURSES QUELCONQUES", "", 0.00, "Alimentation")
+      .add("20/08/2008", TransactionType.PRELEVEMENT, "SPLIT COURSES QUELCONQUES", "Motomag", -20.00, "Loisirs-culture-sport")
+      .add("20/08/2008", TransactionType.PRELEVEMENT, "SPLIT COURSES QUELCONQUES", "Courses quelconques", -30.00, "Alimentation")
+      .add("20/08/2008", TransactionType.PRELEVEMENT, "ESSO", "", -100.00, "Auto-moto")
+      .add("20/08/2008", TransactionType.PRELEVEMENT, "CREDIPLUS CREDIT PORSCHE", "", -100.00, "Auto-moto")
+      .add("04/08/2008", TransactionType.PRELEVEMENT, "FNAC VELIZY CARTE 34609231 PAIEM UN AUTE LOGICIEL QUELCONQUE", "", -30.00, "Loisirs-culture-sport")
+      .add("04/08/2008", TransactionType.PRELEVEMENT, "FNAC VELIZY CARTE 34609231 PAIEM UN LOGICIEL QUELCONQUE", "", -14.17, "Loisirs-culture-sport")
       .add("04/08/2008", TransactionType.VIREMENT, "SOLDE INITIAL", "", 1000.00)
       .check();
 

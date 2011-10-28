@@ -48,6 +48,10 @@ public class ImportSeriesDialog {
 
 
     updateToKnownSeries(importedSeriesKeys, localRepository);
+    if (importedSeriesKeys.isEmpty()) {
+      localRepository.commitChanges(true);
+      return true;
+    }
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/components/importSeriesDialog.splits",
                                                       localRepository, directory);
@@ -143,11 +147,19 @@ public class ImportSeriesDialog {
       Glob glob = localRepository.get(importedSerie);
       String s = glob.get(ImportedSeries.NAME);
       String[] splited = s.split(":");
+      Integer seriesId = null;
+      Integer subSeriesId = null;
+      Integer budgetArea = null;
+      boolean duplicate = false;
       if (splited.length == 1) {
         GlobList series = localRepository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.NAME, splited[0]));
-        if (series.size() == 1) {
-          localRepository.update(glob.getKey(), ImportedSeries.SERIES, series.getFirst().get(Series.ID));
-          it.remove();
+        for (Glob sery : series) {
+          if (seriesId != null){
+            duplicate = true;
+          }
+          seriesId = sery.get(Series.ID);
+          subSeriesId = null;
+          budgetArea = sery.get(Series.BUDGET_AREA);
         }
       }
       else if (splited.length == 2) {
@@ -156,13 +168,23 @@ public class ImportSeriesDialog {
           GlobList subSeries = localRepository.findLinkedTo(sery, SubSeries.SERIES);
           for (Glob subSery : subSeries) {
             if (subSery.get(SubSeries.NAME).equals(splited[1])) {
-              localRepository.update(glob.getKey(),
-                                     FieldValue.value(ImportedSeries.SERIES, sery.get(Series.ID)),
-                                     FieldValue.value(ImportedSeries.SUB_SERIES, subSery.get(SubSeries.ID)));
-              it.remove();
+              if (seriesId != null){
+                duplicate = true;
+              }
+              seriesId = sery.get(Series.ID);
+              subSeriesId = subSery.get(SubSeries.ID);
+              budgetArea = sery.get(Series.BUDGET_AREA);
             }
           }
         }
+      }
+      if (!duplicate && budgetArea != null) {
+        localRepository.update(glob.getKey(),
+                               FieldValue.value(ImportedSeries.SERIES, seriesId),
+                               FieldValue.value(ImportedSeries.SUB_SERIES, subSeriesId),
+                               FieldValue.value(ImportedSeries.BUDGET_AREA, budgetArea));
+
+        it.remove();
       }
     }
   }
