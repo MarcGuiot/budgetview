@@ -55,16 +55,14 @@
 
       <panel gridPos="(0,3,2,1)" styleClass="separator"/>
 
-      <column gridPos="(0,4)" styleClass="titleBlock" weightY="16">
+      <column gridPos="(0,4)" styleClass="titleBlock" weightY="12">
         <label text="$summaryView.savingsAccounts.title" styleClass="graphTitle"/>
         <label text="$summaryView.savingsAccounts.subtitle" styleClass="graphSubTitle"/>
         <filler fill="vertical"/>
       </column>
 
-      <column gridPos="(1,4)" weightX="15" weightY="16">
-        <component ref="savingsHistoChart" styleClass="chart" weightY="3"/>
-        <component ref="savingsBalanceHistoChart" styleClass="chart" weightY="2"/>
-      </column>
+      <component gridPos="(1,4)" ref="savingsHistoChart" styleClass="chart" weightX="15" weightY="12"/>
+
     </grid>
 
   </column>

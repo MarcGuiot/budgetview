@@ -5,7 +5,7 @@
     <style selector="panel.chart" margin="5" marginTop="10" opaque="true"/>
     <style selector="label.chartLabel" fill="horizontal" horizontalAlignment="center" anchor="center" weightY="0" marginTop="10"
            font="-,plain,12" foreground="seriesAnalysis.chart.label" opaque="false" />
-    <style selector="button.toggleButton" ui="hyperlinkButtonWithoutUnderline"
+    <style selector="button.toggleButton"
            icon="arrow_down.png" rolloverIcon="arrow_down_roll.png"
            foreground="block.bottom.link" iconTextGap="2" marginTop="8"/>
   </styles>

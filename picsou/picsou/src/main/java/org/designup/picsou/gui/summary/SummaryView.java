@@ -2,7 +2,6 @@ package org.designup.picsou.gui.summary;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
-import org.designup.picsou.gui.accounts.chart.SavingsAccountsBalanceChartView;
 import org.designup.picsou.gui.accounts.chart.SavingsAccountsChartView;
 import org.designup.picsou.gui.card.ImportPanel;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
@@ -49,10 +48,6 @@ public class SummaryView extends View {
     SavingsAccountsChartView savingsAccounts =
       new SavingsAccountsChartView(range, config, repository, directory);
     savingsAccounts.registerComponents(builder);
-
-    SavingsAccountsBalanceChartView savingsAccountsBalance =
-      new SavingsAccountsBalanceChartView(range, config, repository, directory);
-    savingsAccountsBalance.registerComponents(builder);
 
     parentBuilder.add("summaryView", builder);
   }

@@ -91,7 +91,6 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
 
   private void checkRange(int start, int end) {
     summary.getMainChart().checkRange(start, end);
-    summary.getSavingsBalanceChart().checkRange(start, end);
     summary.getSavingsChart().checkRange(start, end);
   }
 }
