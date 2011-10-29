@@ -785,7 +785,7 @@ table.field-value td.value {
 #home div#text h1 {
   font-family: helvetica, arial, sans-serif;
   color: #333;
-  font-size: 38px;
+  font-size: 32px;
   letter-spacing: -1px;
   line-height: 1.1em;
   margin: 20px 0px 20px;
@@ -793,11 +793,6 @@ table.field-value td.value {
   text-align: center;
   text-shadow: white 0 2px 0;
 }
-
-#home div#text h1 span#second {
-  font-size: 34px;
-}
-
 
 #home div#text h2 {
   color: #444;
