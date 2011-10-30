@@ -14,7 +14,6 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.util.Set;
@@ -22,7 +21,8 @@ import java.util.Collections;
 
 public class TitleView extends View implements GlobSelectionListener {
 
-  private JLabel label = new JLabel();
+  private JLabel sectionTitle = new JLabel();
+  private JLabel periodTitle = new JLabel();
   private Set<Integer> months = Collections.emptySet();
   private Card card = Card.HOME;
 
@@ -32,7 +32,8 @@ public class TitleView extends View implements GlobSelectionListener {
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
-    builder.add("title", label);
+    builder.add("sectionTitle", sectionTitle);
+    builder.add("periodTitle", periodTitle);
     updateLabel();
   }
 
@@ -51,25 +52,25 @@ public class TitleView extends View implements GlobSelectionListener {
 
   private void updateLabel() {
     if (!repository.contains(Transaction.TYPE)) {
-      label.setText(Lang.get("title.nodata"));
+      updateText(Lang.get("title.nodata"), "");
       return;
     }
     if (card == null) {
-      label.setText(Lang.get("title.nocard"));
+      updateText(Lang.get("title.nocard"), "");
       return;
     }
     if (months.isEmpty()) {
-      label.setText(Lang.get("title.noperiod"));
+      updateText(Lang.get("title.noperiod"), "");
       return;
     }
 
-    String monthDesc = MonthListStringifier.toString(months, MonthRangeFormatter.STANDARD);
-    if (Strings.isNullOrEmpty(monthDesc)) {
-      label.setText(Lang.get("title.card.only", card.getLabel()));
-    }
-    else {
-      label.setText(Lang.get("title.with.month", card.getLabel(), monthDesc.toLowerCase()));
-    }
+    updateText(Lang.get("title.card", card.getLabel()),
+               MonthListStringifier.toString(months, MonthRangeFormatter.STANDARD));
+  }
+
+  private void updateText(String sectionText, String periodText) {
+    sectionTitle.setText(sectionText);
+    periodTitle.setText(periodText);
   }
 
 }

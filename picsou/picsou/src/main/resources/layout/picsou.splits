@@ -60,9 +60,12 @@
             <row weightY="1" anchor="left" fill="horizontal" marginBottom="2">
               <button name="backView" action="backView" styleClass="backforward" tooltipText="$back"/>
               <button name="forwardView" action="forwardView" styleClass="backforward" tooltipText="$forward"/>
-              <label ref="title" opaque="false" font="Arial,bold,16" weightX="0"
+              <label ref="sectionTitle" opaque="false" font="Arial,bold,18" weightX="0"
                      horizontalAlignment="center" foreground="title" shadowDirection="northwest"
-                     shadowColor="#222222"/>
+                     shadowColor="#222222" anchor="south"/>
+              <label ref="periodTitle" opaque="false" font="Arial,bold,11" weightX="0" marginLeft="8"
+                     horizontalAlignment="center" foreground="title" shadowDirection="northwest"
+                     shadowColor="#222222" anchor="south" marginBottom="2"/>
               <filler fill="horizontal"/>
             </row>
             <row weightY="1" preferredSize="(230,26)">
