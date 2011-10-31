@@ -206,7 +206,7 @@ public class ImportPreviewPanel implements MessageHandler {
       dateFormatSelectionPanel.init(importedTransactions.isEmpty() ? null : dateFormats);
     }
     Integer accountId = importedAccount.get(RealAccount.ACCOUNT);
-    if (accountId != null) {
+    if (accountId != null && sessionRepository.contains(Key.create(Account.TYPE, accountId))) {
       sessionDirectory.get(SelectionService.class)
         .select(sessionRepository.get(Key.create(Account.TYPE, accountId)));
     }

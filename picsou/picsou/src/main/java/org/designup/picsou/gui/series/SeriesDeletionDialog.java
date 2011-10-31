@@ -13,6 +13,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobListView;
 import org.globsframework.gui.views.GlobListViewFilter;
+import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -24,6 +25,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.SortedSet;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class SeriesDeletionDialog {
   private PicsouDialog dialog;
@@ -108,7 +111,9 @@ public class SeriesDeletionDialog {
       repository.startChangeSet();
       Integer targetSeriesId = targetSeries.get(Series.ID);
       for (Glob transaction : transactionsForSeries) {
-        repository.update(transaction.getKey(), Transaction.SERIES, targetSeriesId);
+        repository.update(transaction.getKey(),
+                          value(Transaction.SERIES, targetSeriesId),
+                          value(Transaction.SUB_SERIES, null));
       }
       updateStartDate();
       updateEndDate();

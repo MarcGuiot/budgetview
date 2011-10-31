@@ -930,4 +930,18 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkAccountNames("Account n. 00001123", "Account n. 112", "Account n. 113");
   }
+
+
+  public void testAssociatToAccountAndDeleteIt() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/8", 2.0, "V'lib")
+      .load();
+
+    mainAccounts.edit("Account n. 00001123").delete().validate();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/8", 2.0, "V'lib")
+      .load();
+
+  }
 }
