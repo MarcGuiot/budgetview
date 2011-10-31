@@ -41,15 +41,14 @@ import picsou.AwtExceptionHandler;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.logging.LogManager;
 import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "2.13";
-  public static final Long JAR_VERSION = 74L;
+  public static final String APPLICATION_VERSION = "2.14";
+  public static final Long JAR_VERSION = 75L;
   public static final Long BANK_CONFIG_VERSION = 7L;
   private static final String JAR_DIRECTORY = "jars";
   private static final String BANK_CONFIG_DIRECTORY = "configs";

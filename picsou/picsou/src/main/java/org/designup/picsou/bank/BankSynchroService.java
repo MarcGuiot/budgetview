@@ -20,7 +20,7 @@ import java.util.Iterator;
 public class BankSynchroService {
   private Map<Integer, BankSynchro> banks = new HashMap<Integer, BankSynchro>();
   static public boolean SHOW_SYNCHRO =
-    System.getProperty("budgetview.synchro", "false").equalsIgnoreCase("false");
+    System.getProperty("budgetview.synchro", "false").equalsIgnoreCase("true");
 
   public interface BankSynchro {
     GlobList show(Directory directory, GlobRepository repository);
