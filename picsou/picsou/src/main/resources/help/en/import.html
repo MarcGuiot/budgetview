@@ -1,74 +1,82 @@
 <html>
 <body>
 
-<p>BudgetView utilise les relevés bancaires électroniques que vous fournit votre banque.</p>
+<p>BudgetView uses the electronic transaction listings made available from your bank.</p>
 
-<p>Note: Si votre banque ne propose pas ces téléchargements, vous pouvez
-  <a href="help:manualInput">saisir vos opérations manuellement</a>.</p>
+<p>Note: if your bank does not allow downloading these listings, you can
+  still <a href="help:manualInput">create transactions manually</a>.</p>
 
-<p>Pour télécharger ces relevés, suivez la séquence suivante&nbsp;:</p>
+<p>To download your transactions, please follow the steps below:</p>
 
-<h2>1. Connectez-vous au site de votre banque</h2>
+<h2>1. Connect to you bank website</h2>
 
-<p>A partir de la fenêtre d'import, vous pouvez accéder au site de votre banque. Si votre
-  banque ne figure pas dans la liste des banques proposées, il vous suffit d'utiliser votre
-  navigateur internet pour vous rendre par vous-même sur le site de votre banque. BudgetView
-  fonctionnera correctement avec votre banque, pour peu que celle-ci propose bien un téléchargement
-  au format OFX ou QIF.</p>
+<p>
+  Select your bank in the import dialog. If your bank supports direct electronic downloads (without
+  having to manually download files from their website), BudgetView will propose you
+  to enter your connection identifiers and it will then proceed with the direct download. In this case,
+  you will just have to follow the instructions that will appear on the screen.</p>
 
-<p>Une fois sur le site de votre banque, entrez vos identifiants de connexion, puis rendez-vous sur la
-  page de téléchargement des relevés.</p>
+<p>If your bank does not propose a direct download, you have to go to your bank's website
+  and follow the instructions below.</p>
 
-<h2>2. Préparez le téléchargement</h2>
+<p>Note: If your bank does not appear in the banks list,
+  you can in any case go to your bank's website on your own. The import will work properly, provided
+  that your bank proposes to download statements as OFX or QIF files.</p>
 
-<p>Vous devrez indiquer les informations suivantes :</p>
+<p>Once on your bank's website, you can login by entering you online identifier and password,
+  and then navigate to the downloads page.</p>
+
+<h2>2. Prepare the download</h2>
+
+<p>Use the instructions below for the download:</p>
 
 <table>
   <tr>
     <td valign="top"><b>Format</b></td>
-    <td valign="top"><p>BudgetView reconnaît les deux formats de fichiers les plus couramment utilisés&nbsp;:</p>
+    <td valign="top"><p>BudgetView recognizes the two main file formats used today:</p>
       <ul>
-        <li><b>OFX</b>: Il s'agit du format proposé pour des logiciels tels que Microsoft Money.
-          <b>Nous vous recommandons d'utiliser ce format</b>, qui contient les informations de compte et de solde.</li>
-        <li><b>QIF</b>: Il s'agit du format géré par le logiciel Quicken d'Intuit. Il ne doit être utilisé qu'en absence
-          de fichiers OFX, car il ne contient pas d'informations sur le compte des opérations téléchargées, en
-          particulier les soldes de ces comptes.</li>
+        <li><b>OFX</b>: This is the format used by applications such as Microsoft Money.
+          <b>We recommend that you use this format</b>, which contains account and position
+          information.</li>
+        <li><b>QIF</b>: This is the format used for instance by Intuit's Quicken.
+          You should only use it if OFX is not available, because it usually does not contain
+          information about accounts or account positions.</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td valign="top"><b>Période des opérations</b></td>
-    <td valign="top"><p>Vous pouvez télécharger les opérations des deux ou trois derniers mois sans vous soucier
-      des données déjà importées dans l'outil - BudgetView saura éviter d'importer des opérations en doublon.</p>
-      <p>Pour établir un budget réaliste, <b>importez environ un ou deux mois complets</b>
-        de données&nbsp; lors de la première utilisation.</p>
-    </td>
-  </tr>
-  <tr>
-    <td valign="top"><b>Format de dates</b></td>
-    <td valign="top"><p>Dans la plupart des cas BudgetView saura reconnaître les formats de dates par lui-même.
-      Il n'est donc pas utile de se soucier de cette information.
-      En cas de problème spécifique, choisissez le format JJ/MM/AAAA.
-    </td>
-  </tr>
-  <tr>
-    <td valign="top"><b>Comptes</b></td>
+    <td valign="top"><b>Period</b></td>
     <td valign="top">
-      <p>Dans un premier temps, <b>importez les opérations de vos comptes chèques</b> uniquement.
-        Vous pourrez récupérer vos autres comptes par la suite.</p>
+      <p>
+        You can download transactions for the past two or three months, without taking care of
+        specific import dates - BudgetView will take care of excluding duplicate
+        transactions automatically.</p>
+      <p>
+        To start building a realistic budget, <b>one or two months of data should be enough</b> -
+        you will tune your budget later.</p>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"><b>Date formats</b></td>
+    <td valign="top"><p>
+      In most cases BudgetView will recognize automatically the date format used in the file - there
+      should be no need for you to select a specific format for the download.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"><b>Accounts</b></td>
+    <td valign="top">
+      <p>To start creating your budget, we recommend getting your <b>checking accounts</b> first.
+        You can retrieve your other accounts later.</p>
     </td>
   </tr>
 </table>
 
-<h2>3. Lancez le téléchargement</h2>
+<h2>3. Start downloading</h2>
 
-<p>Si votre navigateur vous propose un choix entre "Ouvrir avec BudgetView" et "Enregistrer sous",
-  vous pouvez choisir "<b>Ouvrir avec BudgetView</b>"&nbsp;: le fichier sera alors automatiquement redirigé vers
-  BudgetView, où vous pourrez poursuivre l'import.</p>
-
-<p>Pour plus d'informations, veuillez consulter la page
-  <a href="url:http://support.mybudgetview.fr/entries/316592">Importer vos relevés d'opérations</a>
-  sur notre site de support.</p>
+<p>
+  If during the download your browser proposes an "<b>Open with...</b>" option, we recommend that you use it:
+  the downloaded file will be automatically opened in BudgetView.</p>
 
 </body>
 </html>
