@@ -187,6 +187,36 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
+  public void testTransferFromSubseries() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/20", -30.00, "Forfait Kro")
+      .load();
+
+    categorization.selectTransaction("Forfait Kro");
+    categorization.selectVariable().createSeries()
+      .setName("Drinks")
+      .gotoSubSeriesTab()
+      .addSubSeries("Kro")
+      .validate();
+    categorization.setVariable("Forfait Kro", "Kro");
+
+    budgetView.variable.createSeries("Health");
+
+    categorization.checkTable(new Object[][]{
+      {"20/05/2008", "Drinks / Kro", "FORFAIT KRO", -30.0}
+    });
+
+    categorization.getVariable().editSeries("Drinks")
+      .openDeleteDialog()
+      .selectTransferSeries("Health")
+      .transfer();
+
+    categorization.checkTable(new Object[][]{
+      {"20/05/2008", "Health", "FORFAIT KRO", -30.0}
+    });
+  }
+
   public void testSetEndDate() throws Exception {
     OfxBuilder
       .init(this)

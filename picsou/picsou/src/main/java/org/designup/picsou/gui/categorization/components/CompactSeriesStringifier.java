@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.categorization.components;
 
 import org.designup.picsou.model.Series;
-import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.SubSeries;
+import org.designup.picsou.model.Transaction;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -20,7 +20,7 @@ public class CompactSeriesStringifier extends AbstractGlobStringifier {
   }
 
   public String toString(Glob transaction, GlobRepository repository) {
-    if (transaction == null){
+    if (transaction == null) {
       return "";
     }
     Integer seriesId = transaction.get(Transaction.SERIES);
@@ -28,15 +28,17 @@ public class CompactSeriesStringifier extends AbstractGlobStringifier {
       return "";
     }
 
-    StringBuffer buffer = new StringBuffer();
-    buffer.append(seriesStringifier.toString(transaction, repository));
+    StringBuilder builder = new StringBuilder();
+    builder.append(seriesStringifier.toString(transaction, repository));
     Integer subSeriesId = transaction.get(Transaction.SUB_SERIES);
     if (subSeriesId != null) {
-      buffer.append(" / ");
       Glob subSeries = repository.get(Key.create(SubSeries.TYPE, subSeriesId));
-      buffer.append(subSeries.get(SubSeries.NAME));
+      if (subSeries != null) {
+        builder.append(" / ");
+        builder.append(subSeries.get(SubSeries.NAME));
+      }
     }
 
-    return buffer.toString();
+    return builder.toString();
   }
 }
