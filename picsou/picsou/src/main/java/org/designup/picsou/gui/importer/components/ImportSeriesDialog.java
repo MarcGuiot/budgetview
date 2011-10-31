@@ -26,6 +26,8 @@ import java.awt.event.ActionEvent;
 import java.util.Iterator;
 import java.util.Set;
 
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+
 public class ImportSeriesDialog {
   private Window parent;
   private GlobRepository repository;
@@ -45,7 +47,6 @@ public class ImportSeriesDialog {
     localRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(ImportedSeries.TYPE, Series.TYPE, SubSeries.TYPE, BudgetArea.TYPE)
       .get();
-
 
     updateToKnownSeries(importedSeriesKeys, localRepository);
     if (importedSeriesKeys.isEmpty()) {
@@ -70,9 +71,11 @@ public class ImportSeriesDialog {
 
         GlobLinkComboEditor comboView = GlobLinkComboEditor.init(ImportedSeries.BUDGET_AREA, localRepository, directory)
           .setEmptyOptionLabel(Lang.get("import.series.uncategorized"))
-          .setFilter(GlobMatchers.fieldIn(BudgetArea.ID, BudgetArea.INCOME.getId(),
-                                          BudgetArea.RECURRING.getId(),
-                                          BudgetArea.VARIABLE.getId()))
+          .setFilter(fieldIn(BudgetArea.ID,
+                             BudgetArea.INCOME.getId(),
+                             BudgetArea.RECURRING.getId(),
+                             BudgetArea.VARIABLE.getId()))
+          .setComparator(new GlobFieldComparator(BudgetArea.ID))
           .setName("choice_" + item.get(ImportedSeries.NAME))
           .forceSelection(item.getKey());
         cellBuilder.add("choice", comboView.getComponent());
@@ -142,7 +145,7 @@ public class ImportSeriesDialog {
   }
 
   private void updateToKnownSeries(Set<Key> importedSeries, LocalGlobRepository localRepository) {
-    for (Iterator<Key> it = importedSeries.iterator(); it.hasNext();) {
+    for (Iterator<Key> it = importedSeries.iterator(); it.hasNext(); ) {
       Key importedSerie = it.next();
       Glob glob = localRepository.get(importedSerie);
       String s = glob.get(ImportedSeries.NAME);
@@ -154,7 +157,7 @@ public class ImportSeriesDialog {
       if (splited.length == 1) {
         GlobList series = localRepository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.NAME, splited[0]));
         for (Glob sery : series) {
-          if (seriesId != null){
+          if (seriesId != null) {
             duplicate = true;
           }
           seriesId = sery.get(Series.ID);
@@ -168,7 +171,7 @@ public class ImportSeriesDialog {
           GlobList subSeries = localRepository.findLinkedTo(sery, SubSeries.SERIES);
           for (Glob subSery : subSeries) {
             if (subSery.get(SubSeries.NAME).equals(splited[1])) {
-              if (seriesId != null){
+              if (seriesId != null) {
                 duplicate = true;
               }
               seriesId = sery.get(Series.ID);
