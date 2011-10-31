@@ -59,10 +59,12 @@ public class SubSeriesUpdater implements GlobSelectionListener, ChangeSetListene
     }
 
     Glob subSeries = repository.find(KeyBuilder.newKey(SubSeries.TYPE, subSeriesId));
-    boolean isGoodSeries = series.getKey().equals(seriesKey);
-    boolean isGoodSubSeries = subSeries.getKey().equals(subSeriesKey);
-    if (isGoodSeries && isGoodSubSeries) {
-      toggle.setSelected(true);
+    if (subSeries != null){
+      boolean isGoodSeries = series.getKey().equals(seriesKey);
+      boolean isGoodSubSeries = subSeries.getKey().equals(subSeriesKey);
+      if (isGoodSeries && isGoodSubSeries) {
+        toggle.setSelected(true);
+      }
     }
   }
 

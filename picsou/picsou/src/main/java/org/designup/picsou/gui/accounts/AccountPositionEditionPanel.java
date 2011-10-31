@@ -90,19 +90,7 @@ public class AccountPositionEditionPanel {
   }
 
   private void updateTransactionInfo(Glob account, GlobRepository transactionsRepository) {
-    Integer transactionId = account.get(Account.TRANSACTION_ID);
-    Glob transaction;
-    if (transactionId == null) {
-      transaction = getLatestTransactions(account, transactionsRepository);
-    }
-    else {
-      transaction = transactionsRepository.get(Key.create(Transaction.TYPE, transactionId));
-      if (transaction.get(Transaction.BANK_MONTH) > TimeService.getCurrentMonth() ||
-          (transaction.get(Transaction.BANK_MONTH) == TimeService.getCurrentMonth() &&
-           transaction.get(Transaction.BANK_DAY) > TimeService.getCurrentDay())) {
-        transaction = getLatestTransactions(account, transactionsRepository);
-      }
-    }
+    Glob transaction = getLatestTransactions(account, transactionsRepository);
 
     String date = "";
     String label = "";
