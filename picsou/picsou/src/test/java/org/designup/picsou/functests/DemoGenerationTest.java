@@ -24,7 +24,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   private int firstMonth;
 
   protected void setUp() throws Exception {
-    Locale.setDefault(Lang.EN);
+    Locale.setDefault(Lang.ROOT);
 
     thirdMonth = Month.getMonthId(new Date());
     secondMonth = Month.previous(thirdMonth);
@@ -47,10 +47,9 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     System.setProperty("uispec4j.test.library", "junit");
 
-    Lang.setLocale(Lang.ROOT);
+    Lang.setLocale(Lang.EN);
 
     DemoGenerationTest test = createTest();
-    Lang.setLocale(Lang.EN);
     test.test();
     test.tearDown();
 
@@ -154,6 +153,8 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction(first(7), -57.00, transaction("health1"))
       .addTransaction(second(8), -35.00, transaction("health.doctor"))
       .addTransaction(third(19), 25.80, transaction("health.reimbursements"))
+      .addTransaction(first(19), 900, transaction("house2"))
+      .addTransaction(second(17), 500, transaction("house2"))
 
         // EXTRAS
       .addTransaction(second(28), -680.50, transaction("plumber"))
@@ -234,6 +235,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .validate();
 
     //  ================ SAVINGS   ================
+
     views.selectHome();
     savingsAccounts.createNewAccount()
       .setAccountName(account("savings"))
@@ -281,7 +283,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth(Month.toString(secondMonth));
-    budgetView.recurring.editSeries(transaction("electricity")).setTwoMonths().validate();
+    budgetView.recurring.editSeries(series("electricity")).setTwoMonths().validate();
 
     timeline.selectMonth(Month.toString(secondMonth));
     budgetView.variable.editSeries(series("groceries"))
@@ -301,12 +303,24 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setAmount(150)
       .validate();
 
+
+    //======== "HOUSE RENOVATION" PROJECT ===========
+
+    budgetView.extras.createProject()
+      .setName(project("house"))
+      .setItem(0, "First", firstMonth, -900.00)
+      .addItem(1, "Second", secondMonth, -600.00)
+      .validate();
+
+
+    //======== "TRIP" PROJECT ===========
+
     int holidaysMonth1 = Month.next(thirdMonth, 2);
     int holidaysMonth2 = Month.next(thirdMonth, 3);
     int holidaysMonth3 = Month.next(thirdMonth, 4);
     timeline.selectMonth(Month.toString(holidaysMonth3));
     budgetView.extras.createProject()
-      .setName(series("trip"))
+      .setName(project("trip"))
       .setItem(0, "Accomodation reservation", holidaysMonth1, -600.00)
       .addItem(1, "Flight tickets", holidaysMonth1, -450.00)
       .addItem(2, "Equipment", holidaysMonth2, -400.00)
@@ -453,12 +467,16 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     return Lang.get("demo.transactions." + keySuffix, args);
   }
 
-  private String series(String keySuffix, String... args) {
-    return Lang.get("demo.series." + keySuffix, args);
+  private String series(String keySuffix) {
+    return Lang.get("demo.series." + keySuffix);
   }
 
-  private String account(String keySuffix, String... args) {
-    return Lang.get("demo.account." + keySuffix, args);
+  private String account(String keySuffix) {
+    return Lang.get("demo.account." + keySuffix);
+  }
+
+  private String project(String keySuffix) {
+    return Lang.get("demo.project." + keySuffix);
   }
 
   private String mainAccounts() {

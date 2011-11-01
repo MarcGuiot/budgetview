@@ -268,7 +268,7 @@ public class OperationChecker {
 
   public Trigger getBackupTrigger() {
     MenuItem fileMenu = window.getMenuBar().getMenu("File");
-    return fileMenu.getSubMenu("Backup").triggerClick();
+    return fileMenu.getSubMenu(Lang.get("backup")).triggerClick();
   }
 
   public String backup(TestCase test) {
@@ -360,7 +360,7 @@ public class OperationChecker {
   }
 
   public Trigger getRestoreTrigger() {
-    return getFileMenu().getSubMenu("Restore").triggerClick();
+    return getFileMenu().getSubMenu(Lang.get("restore")).triggerClick();
   }
 
   public Trigger getRestoreSnapshotTrigger() {
