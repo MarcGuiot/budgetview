@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.importer.ImportCompletionPanel;
@@ -99,16 +100,16 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker importThisAccount() {
-    dialog.getButton("Import this acount...").click();
+    dialog.getButton(Lang.get("load")).click();
     return this;
   }
 
   public boolean isLastStep() {
-    return dialog.getTextBox("title").getText().contains("Import done");
+    return dialog.getTextBox("title").getText().contains(Lang.get("import.end.info.title"));
   }
 
   public ImportDialogChecker checkLastStep() {
-    assertThat(dialog.getTextBox("title").textEquals("Import done"));
+    assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.end.info.title")));
     return this;
   }
 
@@ -318,12 +319,12 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public CardTypeChooserChecker openCardTypeChooser() {
-    Window window = WindowInterceptor.getModalDialog(dialog.getButton("Select a card type").triggerClick());
+    Window window = WindowInterceptor.getModalDialog(dialog.getButton(Lang.get("account.error.missing.cardType.button")).triggerClick());
     return new CardTypeChooserChecker(window);
   }
 
   public ImportDialogChecker checkMessageEmptyFile() {
-    dialog.getTextBox("This file contains no operations");
+    dialog.getTextBox(Lang.get("import.file.empty"));
     return this;
   }
 
@@ -340,7 +341,7 @@ public class ImportDialogChecker extends GuiChecker {
   public ImportDialogChecker checkAccountTypeWarningDisplayed(String accountName) {
     BalloonTipTesting.checkBalloonTipVisible(dialog,
                                              accountEditionChecker.getTypeCombo(),
-                                             "You must specify the accountType");
+                                             Lang.get("account.error.missing.account.type"));
     return this;
   }
 

@@ -1,10 +1,10 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.functests.checkers.LoginChecker;
-import org.designup.picsou.model.Month;
 import org.designup.picsou.gui.MainWindow;
+import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
 
 import java.io.File;
@@ -24,7 +24,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   private int firstMonth;
 
   protected void setUp() throws Exception {
-    Locale.setDefault(Locale.FRENCH);
+    Locale.setDefault(Lang.EN);
 
     thirdMonth = Month.getMonthId(new Date());
     secondMonth = Month.previous(thirdMonth);
@@ -40,8 +40,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     loginChecker.logNewUser(MainWindow.DEMO_USER_NAME, MainWindow.DEMO_PASSWORD);
     initCheckers();
 
-    Locale.setDefault(Locale.FRENCH);
-
     operations.openPreferences().setFutureMonthsCount(12).validate();
   }
 
@@ -49,9 +47,10 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     System.setProperty("uispec4j.test.library", "junit");
 
-    Locale.setDefault(Lang.ROOT);
+    Lang.setLocale(Lang.ROOT);
 
     DemoGenerationTest test = createTest();
+    Lang.setLocale(Lang.EN);
     test.test();
     test.tearDown();
 
@@ -76,92 +75,92 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(OFX_PATH)
       .addBankAccount(30066, 10678, "00000123456", 1410.20, third(20))
         // Income
-      .addTransaction(first(28), 1760.50, "WORLDCO")
-      .addTransaction(first(29), 1312.80, "BIGCORP PAIE " + first(29))
-      .addTransaction(second(28), 1760.50, "WORLDCO")
-      .addTransaction(second(28), 1312.80, "BIGCORP PAIE " + second(28))
+      .addTransaction(first(28), 1760.50, transaction("salary1"))
+      .addTransaction(first(29), 1312.80, transaction("salary2", first(29)))
+      .addTransaction(second(28), 1760.50, transaction("salary1"))
+      .addTransaction(second(28), 1312.80, transaction("salary2", second(28)))
         // Fixed
-      .addTransaction(first(9), -1010.00, "PRET IMMO N.3325566")
-      .addTransaction(second(9), -1010.00, "PRET IMMO N.3325566")
-      .addTransaction(third(9), -1010.00, "PRET IMMO N.3325566")
-      .addTransaction(first(20), -189.75, "PRET CONSO N.6784562 F657")
-      .addTransaction(second(20), -189.75, "PRET CONSO N.6784562 F657")
-      .addTransaction(first(9), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR")
-      .addTransaction(second(8), second(9), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR")
-      .addTransaction(third(12), third(14), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR")
-      .addTransaction(first(5), -110.70, "TRESOR PUBLIC I.R. 23225252323")
-      .addTransaction(second(5), -110.70, "TRESOR PUBLIC I.R. 23225252323")
-      .addTransaction(third(5), -110.70, "TRESOR PUBLIC I.R. 23225252323")
-      .addTransaction(first(1), -70.30, "RATP NAVIGO 10/08")
-      .addTransaction(second(2), -70.30, "RATP NAVIGO 10/08")
-      .addTransaction(third(2), -70.30, "RATP NAVIGO 11/08")
-      .addTransaction(first(17), -67.00, "GROUPE SCOLAIRE R.L OCT. 2008")
-      .addTransaction(second(17), -67.00, "GROUPE SCOLAIRE R.L OCT. 2008")
-      .addTransaction(third(17), -67.00, "GROUPE SCOLAIRE R.L NOV. 2008")
-      .addTransaction(first(11), -25.50, "TVSAT")
-      .addTransaction(second(11), -25.50, "TVSAT")
-      .addTransaction(third(12), -25.50, "TVSAT")
-      .addTransaction(first(8), -45.30, "RED TELECOMS MOBILE")
-      .addTransaction(second(8), -45.30, "RED TELECOMS MOBILE")
-      .addTransaction(third(10), -66.10, "RED TELECOMS MOBILE")
-      .addTransaction(first(3), -29.90, "OPTIBOX ABT INTERNET 2523Z233")
-      .addTransaction(second(2), -29.90, "OPTIBOX ABT INTERNET 2523Z233")
-      .addTransaction(third(2), -29.90, "OPTIBOX ABT INTERNET 2523Z233")
-      .addTransaction(second(15), -65.89, "EDF")
+      .addTransaction(first(9), -1010.00, transaction("house"))
+      .addTransaction(second(9), -1010.00, transaction("house"))
+      .addTransaction(third(9), -1010.00, transaction("house"))
+      .addTransaction(first(20), -189.75, transaction("car.loan"))
+      .addTransaction(second(20), -189.75, transaction("car.loan"))
+      .addTransaction(first(9), -83.10, transaction("car.insurance"))
+      .addTransaction(second(8), second(9), -83.10, transaction("car.insurance"))
+      .addTransaction(third(12), third(14), -83.10, transaction("car.insurance"))
+      .addTransaction(first(5), -110.70, transaction("taxes"))
+      .addTransaction(second(5), -110.70, transaction("taxes"))
+      .addTransaction(third(5), -110.70, transaction("taxes"))
+      .addTransaction(first(1), -70.30, transaction("train"))
+      .addTransaction(second(2), -70.30, transaction("train"))
+      .addTransaction(third(2), -70.30, transaction("train"))
+      .addTransaction(first(17), -67.00, transaction("school", "OCT"))
+      .addTransaction(second(17), -67.00, transaction("school", "NOV"))
+      .addTransaction(third(17), -67.00, transaction("school", "DEC"))
+      .addTransaction(first(11), -25.50, transaction("tv"))
+      .addTransaction(second(11), -25.50, transaction("tv"))
+      .addTransaction(third(12), -25.50, transaction("tv"))
+      .addTransaction(first(8), -45.30, transaction("mobile"))
+      .addTransaction(second(8), -45.30, transaction("mobile"))
+      .addTransaction(third(10), -66.10, transaction("mobile"))
+      .addTransaction(first(3), -29.90, transaction("internet"))
+      .addTransaction(second(2), -29.90, transaction("internet"))
+      .addTransaction(third(2), -29.90, transaction("internet"))
+      .addTransaction(second(15), -65.89, transaction("electricity"))
         // Envelopes
-      .addTransaction(first(1), first(2), -100.60, "HYPER M")
-      .addTransaction(first(7), -230.30, "HYPER M")
-      .addTransaction(first(15), -130.00, "HYPER M")
-      .addTransaction(first(23), -200.30, "HYPER M")
-      .addTransaction(first(29), second(2), -100.60, "HYPER M")
-      .addTransaction(second(7), -230.30, "HYPER M")
-      .addTransaction(second(15), -130.00, "HYPER M")
-      .addTransaction(second(23), -200.30, "HYPER M")
-      .addTransaction(third(5), -121.20, "HYPER M")
-      .addTransaction(first(17), -35.50, "BIO PLUS")
-      .addTransaction(first(9), -37.55, "BIO PLUS")
-      .addTransaction(second(19), -35.50, "BIO PLUS")
-      .addTransaction(second(11), -41.15, "BIO PLUS")
-      .addTransaction(first(7), -20.00, "RETRAIT GAB 4463")
-      .addTransaction(first(16), -40.00, "RETRAIT GAB 5234")
-      .addTransaction(first(20), -20.00, "RETRAIT GAB 5642")
-      .addTransaction(second(8), -20.00, "RETRAIT GAB 4463")
-      .addTransaction(second(12), -30.00, "RETRAIT GAB 5234")
-      .addTransaction(second(22), -20.00, "RETRAIT GAB 5642")
-      .addTransaction(second(30), -20.00, "RETRAIT GAB 0301")
-      .addTransaction(third(1), -20.00, "RETRAIT GAB 1867")
-      .addTransaction(third(9), -20.00, "RETRAIT GAB 9011")
-      .addTransaction(third(2), -18.30, "GROUPE CINE SPECT.")
-      .addTransaction(second(10), -35.30, "RESA CONCERTS. N151435")
-      .addTransaction(first(10), -19.30, "UGC")
-      .addTransaction(first(15), -9.70, "JOURNAUX 2000")
-      .addTransaction(second(8), -5.30, "JOURNAUX 2000")
-      .addTransaction(second(16), -3.70, "JOURNAUX 2000")
-      .addTransaction(second(24), -12.50, "JOURNAUX 2000")
-      .addTransaction(second(11), -55.65, "CHAUSS'MODE")
-      .addTransaction(second(26), -69.90, "AU PIED AGILE")
-      .addTransaction(first(27), -126.00, "PARIS MODE CENTRE")
-      .addTransaction(second(27), -50.00, "PARIS MODE CENTRE")
-      .addTransaction(third(7), -75.00, "PARIS MODE CENTRE")
-      .addTransaction(first(19), -13.50, "ZINGMAN")
-      .addTransaction(second(19), -11.50, "ZINGMAN")
-      .addTransaction(third(9), -6.50, "DAILY MAGAZINES")
-      .addTransaction(first(7), -57.00, "CENTRE MEDICAL DES FLORETTES")
-      .addTransaction(first(9), -16.80, "PHARMACIE DES 4 CHEMINS")
-      .addTransaction(second(5), 7.80, "REMB. MUTUELLE SANTEPLUS")
-      .addTransaction(second(15), 35.00, "REMB. MUTUELLE SANTEPLUS")
-      .addTransaction(second(22), 12.50, "REMB. MUTUELLE SANTEPLUS")
-      .addTransaction(second(9), -16.80, "PHARMACIE DES 4 CHEMINS")
-      .addTransaction(first(7), -57.00, "CENTRE MEDICAL DES FLORETTES")
-      .addTransaction(second(8), -35.00, "DR PHU")
-      .addTransaction(third(19), 25.80, "REMB. MUTUELLE SANTEPLUS")
+      .addTransaction(first(1), first(2), -100.60, transaction("groceries1"))
+      .addTransaction(first(7), -230.30, transaction("groceries1"))
+      .addTransaction(first(15), -130.00, transaction("groceries1"))
+      .addTransaction(first(23), -200.30, transaction("groceries1"))
+      .addTransaction(first(29), second(2), -100.60, transaction("groceries1"))
+      .addTransaction(second(7), -230.30, transaction("groceries1"))
+      .addTransaction(second(15), -130.00, transaction("groceries1"))
+      .addTransaction(second(23), -200.30, transaction("groceries1"))
+      .addTransaction(third(5), -121.20, transaction("groceries1"))
+      .addTransaction(first(17), -35.50, transaction("groceries2"))
+      .addTransaction(first(9), -37.55, transaction("groceries2"))
+      .addTransaction(second(19), -35.50, transaction("groceries2"))
+      .addTransaction(second(11), -41.15, transaction("groceries2"))
+      .addTransaction(first(7), -20.00, transaction("cash", "4463"))
+      .addTransaction(first(16), -40.00, transaction("cash", "5234"))
+      .addTransaction(first(20), -20.00, transaction("cash", "5642"))
+      .addTransaction(second(8), -20.00, transaction("cash", "4463"))
+      .addTransaction(second(12), -30.00, transaction("cash", "5234"))
+      .addTransaction(second(22), -20.00, transaction("cash", "5642"))
+      .addTransaction(second(30), -20.00, transaction("cash", "0301"))
+      .addTransaction(third(1), -20.00, transaction("cash", "1867"))
+      .addTransaction(third(9), -20.00, transaction("cash", "9011"))
+      .addTransaction(third(2), -18.30, transaction("movies"))
+      .addTransaction(second(10), -35.30, transaction("concert", "N151435"))
+      .addTransaction(first(10), -19.30, transaction("movies2"))
+      .addTransaction(first(15), -9.70, transaction("newspaper"))
+      .addTransaction(second(8), -5.30, transaction("newspaper"))
+      .addTransaction(second(16), -3.70, transaction("newspaper"))
+      .addTransaction(second(24), -12.50, transaction("newspaper"))
+      .addTransaction(second(11), -55.65, transaction("shoes"))
+      .addTransaction(second(26), -69.90, transaction("shoes2"))
+      .addTransaction(first(27), -126.00, transaction("clothing"))
+      .addTransaction(second(27), -50.00, transaction("clothing"))
+      .addTransaction(third(7), -75.00, transaction("clothing"))
+      .addTransaction(first(19), -13.50, transaction("misc"))
+      .addTransaction(second(19), -11.50, transaction("misc"))
+      .addTransaction(third(9), -6.50, transaction("newspaper2"))
+      .addTransaction(first(7), -57.00, transaction("health1"))
+      .addTransaction(first(9), -16.80, transaction("health2"))
+      .addTransaction(second(5), 7.80, transaction("health.reimbursements"))
+      .addTransaction(second(15), 35.00, transaction("health.reimbursements"))
+      .addTransaction(second(22), 12.50, transaction("health.reimbursements"))
+      .addTransaction(second(9), -16.80, transaction("health2"))
+      .addTransaction(first(7), -57.00, transaction("health1"))
+      .addTransaction(second(8), -35.00, transaction("health.doctor"))
+      .addTransaction(third(19), 25.80, transaction("health.reimbursements"))
 
         // EXTRAS
-      .addTransaction(second(28), -680.50, "PLOMBERIE 24/7")
+      .addTransaction(second(28), -680.50, transaction("plumber"))
         // SAVINGS
-      .addTransaction(first(5), -200.00, "VIRT MENS. LIVRET A")
-      .addTransaction(second(3), -200.00, "VIRT MENS. LIVRET A")
-      .addTransaction(third(20), -200.00, "VIRT MENS. LIVRET A")
+      .addTransaction(first(5), -200.00, transaction("savings"))
+      .addTransaction(second(3), -200.00, transaction("savings"))
+      .addTransaction(third(20), -200.00, transaction("savings"))
       .save();
 
     operations.importOfxFile(OFX_PATH);
@@ -169,19 +168,19 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     OfxBuilder.init(OFX_SAVINGS_PATH)
       .addBankAccount(14559, 22500, "000123321", 1000, third(20))
-      .addTransaction(first(5), 200, "VIRT 1")
-      .addTransaction(second(3), 200, "VIRT 2")
-      .addTransaction(third(20), 200, "VIRT 3")
+      .addTransaction(first(5), 200, transaction("savings1"))
+      .addTransaction(second(3), 200, transaction("savings2"))
+      .addTransaction(third(20), 200, transaction("savings3"))
       .save();
     System.out.println("OFX Savings File saved in: " + new File(OFX_SAVINGS_PATH).getAbsolutePath());
 
     views.selectHome();
     mainAccounts.edit("Account n. 00000123456")
-      .setAccountName("Compte courant")
+      .setAccountName(account("main"))
       .validate();
 
     mainAccounts.createNewAccount()
-      .setAccountName("Liquide")
+      .setAccountName(account("cash"))
       .selectBank("Autre")
       .setUpdateModeToManualInput()
       .setPosition(0.00)
@@ -191,54 +190,65 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
 
-    categorization.setNewIncome("WORLDCO", "Salaire Marie");
-    categorization.setNewIncome("BIGCORP PAIE " + first(29), "Salaire Eric");
-    categorization.setNewIncome("BIGCORP PAIE " + second(28), "Salaire Eric");
+    categorization.setNewIncome(transaction("salary1"), series("salary.mary"));
+    categorization.setNewIncome(transaction("salary2", first(29)), series("salary.eric"));
+    categorization.setIncome(transaction("salary2", second(28)), series("salary.eric"));
 
-    categorization.setNewRecurring("PRET IMMO N.3325566", "Credit immo");
-    categorization.setNewRecurring("PRET CONSO N.6784562 F657", "Credit auto");
-    categorization.setNewRecurring("VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR", "Assurance auto");
-    categorization.setNewRecurring("TRESOR PUBLIC I.R. 23225252323", "Impots revenu");
-    categorization.setNewRecurring("RATP NAVIGO 10/08", "Navigo");
-    categorization.setNewRecurring("GROUPE SCOLAIRE R.L OCT. 2008", "Ecole");
-    categorization.setRecurring("GROUPE SCOLAIRE R.L NOV. 2008", "Ecole");
-    categorization.setNewRecurring("TVSAT", "TV Sat");
-    categorization.setNewRecurring("RED TELECOMS MOBILE", "Tel. mobile");
-    categorization.setNewRecurring("OPTIBOX ABT INTERNET 2523Z233", "Internet");
-    categorization.setNewRecurring("EDF", "EDF");
+    categorization.setNewRecurring(transaction("house"), series("house"));
+    categorization.setNewRecurring(transaction("car.loan"), series("car.loan"));
+    categorization.setNewRecurring(transaction("car.insurance"), series("car.insurance"));
+    categorization.setNewRecurring(transaction("taxes"), series("taxes"));
+    categorization.setNewRecurring(transaction("train"), series("train"));
+    categorization.setNewRecurring(transaction("school", "OCT"), series("school"));
+    categorization.setRecurring(transaction("school", "NOV"), series("school"));
+    categorization.setNewRecurring(transaction("tv"), series("tv"));
+    categorization.setNewRecurring(transaction("mobile"), series("mobile"));
+    categorization.setNewRecurring(transaction("internet"), series("internet"));
+    categorization.setNewRecurring(transaction("electricity"), series("electricity"));
 
-    categorization.setNewVariable("HYPER M", "Courses");
-    categorization.setVariable("BIO PLUS", "Courses");
-    categorization.selectTransactions("RETRAIT GAB 4463", "RETRAIT GAB 5234", "RETRAIT GAB 0301",
-                                      "RETRAIT GAB 5642", "RETRAIT GAB 1867", "RETRAIT GAB 9011")
-      .selectVariable().selectNewSeries("Liquide", 0);
+    categorization.setNewVariable(transaction("groceries1"), series("groceries"));
+    categorization.setVariable(transaction("groceries2"), series("groceries"));
+    categorization.selectTransactions(transaction("cash", "4463"),
+                                      transaction("cash", "5234"),
+                                      transaction("cash", "0301"),
+                                      transaction("cash", "5642"),
+                                      transaction("cash", "1867"),
+                                      transaction("cash", "9011"))
+      .selectVariable().selectNewSeries(series("cash"), 0.00);
 
-    categorization.setNewVariable("GROUPE CINE SPECT.", "Loisirs", 20.);
-    categorization.setVariable("RESA CONCERTS. N151435", "Loisirs");
-    categorization.setVariable("JOURNAUX 2000", "Loisirs");
-    categorization.setVariable("UGC", "Loisirs");
+    categorization.setNewVariable(transaction("movies"), series("leisures"), -150.00);
+    categorization.setVariable(transaction("concert", "N151435"), series("leisures"));
+    categorization.setVariable(transaction("newspaper"), series("leisures"));
+    categorization.setVariable(transaction("movies2"), series("leisures"));
 
-    categorization.setNewVariable("CHAUSS'MODE", "Habillement");
-    categorization.setVariable("AU PIED AGILE", "Habillement");
-    categorization.setVariable("PARIS MODE CENTRE", "Habillement");
+    categorization.setNewVariable(transaction("shoes"), series("clothing"), -100.00);
+    categorization.setVariable(transaction("shoes2"), series("clothing"));
+    categorization.setVariable(transaction("clothing"), series("clothing"));
 
-    categorization.setNewVariable("ZINGMAN", "Divers", 10.);
+    categorization.setNewVariable(transaction("misc"), series("misc"), -10.00);
 
-    categorization.setNewExtra("PLOMBERIE 24/7", "Plombier");
+    categorization.selectTransaction(transaction("plumber")).selectExtras()
+      .createSeries()
+      .setName(series("plumber"))
+      .setSingleMonth()
+      .validate();
 
     //  ================ SAVINGS   ================
     views.selectHome();
     savingsAccounts.createNewAccount()
-      .setAccountName("Livret")
+      .setAccountName(account("savings"))
       .selectBank("ING Direct")
       .setPosition(1000)
       .validate();
 
     views.selectCategorization();
 
-    categorization.setNewSavings("VIRT MENS. LIVRET A", "Virt. auto livret", "Main accounts", "Livret");
+    categorization.setNewSavings(transaction("savings"),
+                                 series("savings"),
+                                 mainAccounts(),
+                                 account("savings"));
 
-    budgetView.savings.editSeries("Virt. auto livret")
+    budgetView.savings.editSeries(series("savings"))
       .selectFirstMonth()
       .setPropagationEnabled()
       .setAmount(200)
@@ -247,63 +257,67 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     // Gestion du liquide
     timeline.selectMonth(Month.toString(secondMonth));
     transactionCreation.show()
-      .setLabel("Retrait").setAmount(20).setDay(8).create()
-      .setLabel("Retrait").setAmount(40).setDay(12).create()
-      .setLabel("Retrait").setAmount(20).setDay(22).create()
-      .setLabel("Retrait").setAmount(20).setDay(27).create()
-      .setLabel("Boulangerie").setAmount(-20.).setDay(28).create()
-      .setLabel("Boucherie").setAmount(-40).setDay(28).create()
-      .setLabel("Primeur").setAmount(-40).setDay(28).create();
+      .setLabel(transaction("manual1")).setAmount(20).setDay(8).create()
+      .setLabel(transaction("manual1")).setAmount(40).setDay(12).create()
+      .setLabel(transaction("manual1")).setAmount(20).setDay(22).create()
+      .setLabel(transaction("manual1")).setAmount(20).setDay(27).create()
+      .setLabel(transaction("manual2")).setAmount(-20.).setDay(28).create()
+      .setLabel(transaction("manual3")).setAmount(-40).setDay(28).create()
+      .setLabel(transaction("manual4")).setAmount(-40).setDay(28).create();
 
     timeline.selectMonth(Month.toString(thirdMonth));
     transactionCreation
-      .setLabel("Retrait").setAmount(20).setDay(1).create()
-      .setLabel("Retrait").setAmount(20).setDay(9).create()
-      .setLabel("Boulangerie").setAmount(-5).setDay(6).create()
-      .setLabel("Primeur").setAmount(-20).setDay(9).create();
+      .setLabel(transaction("manual1")).setAmount(20).setDay(1).create()
+      .setLabel(transaction("manual1")).setAmount(20).setDay(9).create()
+      .setLabel(transaction("manual2")).setAmount(-5).setDay(6).create()
+      .setLabel(transaction("manual4")).setAmount(-20).setDay(9).create();
 
-    categorization.setNewVariable("Boulangerie", "Tous les jours", 30.);
-    categorization.setVariable("Primeur", "Tous les jours");
-    categorization.setVariable("Boucherie", "Tous les jours");
-    categorization.setVariable("Retrait", "Liquide");
+    categorization.setNewVariable(transaction("manual2"), series("manual.daily"), -30.00);
+    categorization.setVariable(transaction("manual4"), series("manual.daily"));
+    categorization.setVariable(transaction("manual3"), series("manual.daily"));
+    categorization.setVariable(transaction("manual1"), series("cash"));
 
     //======== SERIES TUNING ===========
 
     views.selectBudget();
     timeline.selectMonth(Month.toString(secondMonth));
-    budgetView.recurring.editSeries("EDF").setTwoMonths().validate();
+    budgetView.recurring.editSeries(transaction("electricity")).setTwoMonths().validate();
 
     timeline.selectMonth(Month.toString(secondMonth));
-    budgetView.variable.editSeries("Courses")
+    budgetView.variable.editSeries(series("groceries"))
       .selectAllMonths()
-      .setAmount(750.0)
+      .setAmount(800.0)
       .validate();
 
-    budgetView.variable.editSeries("Habillement")
+    budgetView.variable.editSeries(series("clothing"))
       .selectAllMonths()
-      .setAmount(50.0)
+      .setAmount(100.0)
       .validate();
 
     timeline.selectMonth(Month.toString(Month.next(thirdMonth, 2)));
     budgetView.extras.createSeries()
-      .setName("Cadeaux")
-      .selectAllMonths()
+      .setName(series("gifts"))
+      .setPropagationDisabled()
       .setAmount(150)
       .validate();
 
-    int holidaysMonth = Month.next(thirdMonth, 4);
-    timeline.selectMonth(Month.toString(holidaysMonth));
-    budgetView.extras.createSeries()
-      .setName("Vacances")
-      .selectAllMonths()
-      .setAmount(2250)
+    int holidaysMonth1 = Month.next(thirdMonth, 2);
+    int holidaysMonth2 = Month.next(thirdMonth, 3);
+    int holidaysMonth3 = Month.next(thirdMonth, 4);
+    timeline.selectMonth(Month.toString(holidaysMonth3));
+    budgetView.extras.createProject()
+      .setName(series("trip"))
+      .setItem(0, "Accomodation reservation", holidaysMonth1, -600.00)
+      .addItem(1, "Flight tickets", holidaysMonth1, -450.00)
+      .addItem(2, "Equipment", holidaysMonth2, -400.00)
+      .addItem(3, "Accomodation", holidaysMonth3, -1000.00)
       .validate();
 
     //======== PROVISIONS ===========
 
     views.selectHome();
     savingsAccounts.createNewAccount()
-      .setAccountName("Provisions")
+      .setAccountName(account("provisions"))
       .selectBank("CIC")
       .setPosition(1000)
       .validate();
@@ -311,31 +325,52 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     timeline.selectMonth(Month.toString(Month.next(thirdMonth)));
     budgetView.savings.createSeries()
-      .setName("Prov. vacances")
-      .setFromAccount("Main accounts")
-      .setToAccount("Provisions")
+      .setName(series("savings.trip"))
+      .setFromAccount(mainAccounts())
+      .setToAccount(account("provisions"))
       .setStartDate(firstMonth)
+      .setEndDate(firstMonth)
       .selectAllMonths()
-      .setAmount(150)
+      .setAmount(400)
       .validate();
 
     budgetView.savings.createSeries()
-      .setName("Reglement vacances")
-      .setFromAccount("Provisions")
-      .setToAccount("Main accounts")
+      .setName(series("trip.payment"))
+      .setFromAccount(account("provisions"))
+      .setToAccount(mainAccounts())
       .setIrregular()
-      .selectAllMonths()
-      .setStartDate(holidaysMonth)
-      .setEndDate(holidaysMonth)
-      .setAmount(1800)
+      .setPropagationDisabled()
+      .selectMonth(holidaysMonth1)
+      .setAmount(800)
+      .selectMonth(holidaysMonth2)
+      .setAmount(500)
+      .selectMonth(holidaysMonth2)
+      .setAmount(700)
       .validate();
 
     views.selectCategorization();
 
-    String backupPath = new File(OFX_SAVINGS_PATH).getAbsolutePath();
-    new File(OFX_SAVINGS_PATH).delete();
+    //======== CLEANUP ===========
+
+    budgetView.savings.editSeries(fromAccount("provisions")).deleteCurrentSeries();
+    budgetView.savings.editSeries(toAccount("provisions")).deleteCurrentSeries();
+    budgetView.savings.editSeries(fromAccount("savings")).deleteCurrentSeries();
+    budgetView.savings.editSeries(toAccount("savings")).deleteCurrentSeries();
+
+    //======== BACKUP ===========
+
+    String backupPath = new File(SNAPSHOT_PATH).getAbsolutePath();
+    new File(SNAPSHOT_PATH).delete();
     operations.backup(backupPath);
     System.out.println("Backup file saved in: " + backupPath);
+  }
+
+  private String toAccount(String accountName) {
+    return Lang.get("savings.series.auto.create.name.to.savings", account(accountName));
+  }
+
+  private String fromAccount(String accountName) {
+    return Lang.get("savings.series.auto.create.name.from.savings", account(accountName));
   }
 
   public void testCreateNextMonthFile() throws Exception {
@@ -343,56 +378,56 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(OFX_UPDATE_PATH)
       .addBankAccount(30066, 10678, "00000123456", 1688.12, fourth(18))
         // Income
-      .addTransaction(third(28), 1760.50, "WORLDCO")
-      .addTransaction(third(28), 1312.80, "BIGCORP PAIE " + third(28))
+      .addTransaction(third(28), 1760.50, transaction("salary1"))
+      .addTransaction(third(28), 1312.80, transaction("salary2", third(28)))
         // Fixed
-      .addTransaction(fourth(9), -1010.00, "PRET IMMO N.3325566")
-      .addTransaction(third(21), -189.75, "PRET CONSO N.6784562 F657")
-      .addTransaction(fourth(18), -189.75, "PRET CONSO N.6784562 F657")
-      .addTransaction(fourth(13), -83.10, "VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR")
-      .addTransaction(fourth(5), -110.70, "TRESOR PUBLIC I.R. 23225252323")
-      .addTransaction(fourth(2), -70.30, "RATP NAVIGO 07/08")
-      .addTransaction(fourth(12), -25.50, "TVSAT")
-      .addTransaction(fourth(17), -66.10, "RED TELECOMS MOBILE")
-      .addTransaction(fourth(2), -29.90, "OPTIBOX ABT INTERNET 2523Z233")
-      .addTransaction(fourth(15), -65.89, "EDF")
+      .addTransaction(fourth(9), -1010.00, transaction("house"))
+      .addTransaction(third(21), -189.75, transaction("car.loan"))
+      .addTransaction(fourth(18), -189.75, transaction("car.loan"))
+      .addTransaction(fourth(13), -83.10, transaction("car.insurance"))
+      .addTransaction(fourth(5), -110.70, transaction("taxes"))
+      .addTransaction(fourth(2), -70.30, transaction("train"))
+      .addTransaction(fourth(12), -25.50, transaction("tv"))
+      .addTransaction(fourth(17), -66.10, transaction("mobile"))
+      .addTransaction(fourth(2), -29.90, transaction("internet"))
+      .addTransaction(fourth(15), -65.89, transaction("electricity"))
         // Envelopes
-      .addTransaction(third(15), -105.00, "HYPER M")
-      .addTransaction(third(23), -271.30, "HYPER M")
-      .addTransaction(third(29), -81.60, "HYPER M")
-      .addTransaction(third(18), -98.20, "HYPER M")
+      .addTransaction(third(15), -105.00, transaction("groceries1"))
+      .addTransaction(third(23), -271.30, transaction("groceries1"))
+      .addTransaction(third(29), -81.60, transaction("groceries1"))
+      .addTransaction(third(18), -98.20, transaction("groceries1"))
 
-      .addTransaction(third(19), -35.50, "BIO PLUS")
-      .addTransaction(fourth(1), -41.15, "BIO PLUS")
-      .addTransaction(fourth(5), -41.15, "BIO PLUS")
+      .addTransaction(third(19), -35.50, transaction("groceries2"))
+      .addTransaction(fourth(1), -41.15, transaction("groceries2"))
+      .addTransaction(fourth(5), -41.15, transaction("groceries2"))
 
-      .addTransaction(third(1), -20.00, "RETRAIT GAB 1867")
-      .addTransaction(third(9), -20.00, "RETRAIT GAB 9011")
-      .addTransaction(fourth(15), -20.00, "RETRAIT LILLE 29A11")
-      .addTransaction(fourth(10), -35.30, "RESA CONCERTS. N1Y3454")
-      .addTransaction(fourth(17), -19.30, "CINE MAX BERCY")
-      .addTransaction(third(15), -13.70, "JOURNAUX 2000")
-      .addTransaction(third(16), -3.70, "JOURNAUX 2000")
-      .addTransaction(third(24), -12.50, "JOURNAUX 2000")
-      .addTransaction(third(17), -55.65, "CHAUSS'MODE")
-      .addTransaction(fourth(5), -126.00, "MOD MOD")
-      .addTransaction(third(27), -50.00, "PARIS MODE CENTRE")
-      .addTransaction(third(29), -6.50, "DAILY MAGAZINES")
-      .addTransaction(fourth(5), -7.50, "DAILY MAGAZINES")
-      .addTransaction(fourth(12), -8.80, "DAILY MAGAZINES")
-      .addTransaction(fourth(12), -14.20, "677 LEO MAGS")
-      .addTransaction(fourth(12), -160.20, "HI-FI MEDIA STORE 632526")
-      .addTransaction(third(24), -16.80, "PHARMACIE DES 4 CHEMINS")
-      .addTransaction(fourth(9), -16.80, "PHARMACIE DES 4 CHEMINS")
-      .addTransaction(fourth(15), 35.00, "REMB. MUTUELLE SANTEPLUS")
-      .addTransaction(fourth(22), 12.50, "REMB. MUTUELLE SANTEPLUS")
-      .addTransaction(fourth(5), 7.80, "REMB. MUTUELLE SANTEPLUS")
-      .addTransaction(fourth(9), -16.80, "PHARMACIE DES 4 CHEMINS")
-      .addTransaction(fourth(11), -45.00, "PHARMA DES LYS")
-      .addTransaction(fourth(8), -35.00, "DR PHU")
-      .addTransaction(fourth(22), 25.80, "REMB. MUTUELLE SANTEPLUS")
+      .addTransaction(third(1), -20.00, transaction("cash", "1867"))
+      .addTransaction(third(9), -20.00, transaction("cash", "9011"))
+      .addTransaction(fourth(15), -20.00, transaction("cash2"))
+      .addTransaction(fourth(10), -35.30, transaction("concert", "N1Y3454"))
+      .addTransaction(fourth(17), -19.30, transaction("movies3"))
+      .addTransaction(third(15), -13.70, transaction("newspaper"))
+      .addTransaction(third(16), -3.70, transaction("newspaper"))
+      .addTransaction(third(24), -12.50, transaction("newspaper"))
+      .addTransaction(third(17), -55.65, transaction("shoes"))
+      .addTransaction(fourth(5), -126.00, transaction("clothing2"))
+      .addTransaction(third(27), -50.00, transaction("clothing"))
+      .addTransaction(third(29), -6.50, transaction("newspaper2"))
+      .addTransaction(fourth(5), -7.50, transaction("newspaper2"))
+      .addTransaction(fourth(12), -8.80, transaction("newspaper2"))
+      .addTransaction(fourth(12), -14.20, transaction("newspaper3"))
+      .addTransaction(fourth(12), -160.20, transaction("hifi"))
+      .addTransaction(third(24), -16.80, transaction("health2"))
+      .addTransaction(fourth(9), -16.80, transaction("health2"))
+      .addTransaction(fourth(15), 35.00, transaction("health.reimbursements"))
+      .addTransaction(fourth(22), 12.50, transaction("health.reimbursements"))
+      .addTransaction(fourth(5), 7.80, transaction("health.reimbursements"))
+      .addTransaction(fourth(9), -16.80, transaction("health2"))
+      .addTransaction(fourth(11), -45.00, transaction("health3"))
+      .addTransaction(fourth(8), -35.00, transaction("health.doctor"))
+      .addTransaction(fourth(22), 25.80, transaction("health.reimbursements"))
         // SAVINGS
-      .addTransaction(fourth(17), -200.00, "VIRT MENS. LIVRET A")
+      .addTransaction(fourth(17), -200.00, transaction("savings"))
       .save();
 
     System.out.println("OFX File update saved in: " + new File(OFX_UPDATE_PATH).getAbsolutePath());
@@ -412,5 +447,21 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
   private String fourth(int day) {
     return Month.toString(fourthMonth) + "/" + day;
+  }
+
+  private String transaction(String keySuffix, String... args) {
+    return Lang.get("demo.transactions." + keySuffix, args);
+  }
+
+  private String series(String keySuffix, String... args) {
+    return Lang.get("demo.series." + keySuffix, args);
+  }
+
+  private String account(String keySuffix, String... args) {
+    return Lang.get("demo.account." + keySuffix, args);
+  }
+
+  private String mainAccounts() {
+    return Lang.get("account.summary.main");
   }
 }

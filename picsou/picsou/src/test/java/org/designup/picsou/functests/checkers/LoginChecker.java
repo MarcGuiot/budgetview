@@ -137,11 +137,7 @@ public class LoginChecker extends GuiChecker {
   }
 
   public void clickFirstAutoLogin() {
-//    HelpChecker.open(new Trigger() {
-//      public void run() throws Exception {
     doLogin("Create auto login user", true);
-//      }
-//    }).close();
   }
 
   public void clickAutoLogin() {

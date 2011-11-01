@@ -50,8 +50,7 @@ public class OperationChecker {
     int count = 0;
     while (!importDialogChecker.isLastStep() && count < 10){
       if (importDialogChecker.isNew()){
-        importDialogChecker
-          .setMainAccount();
+        importDialogChecker.setMainAccount();
       }
       count++;
       if (!importDialogChecker.isLastStep()){
@@ -415,7 +414,7 @@ public class OperationChecker {
   }
 
   public void logout() {
-    window.getMenuBar().getMenu("File").getSubMenu("Logout").click();
+    window.getMenuBar().getMenu("File").getSubMenu(Lang.get("gotoLogin")).click();
   }
 
   public void exit() {
@@ -446,7 +445,7 @@ public class OperationChecker {
     MenuItem subMenu = window.getMenuBar().getMenu("File").getSubMenu("Delete");
     ConfirmationDialogChecker confirmationDialogChecker =
       new ConfirmationDialogChecker(WindowInterceptor.getModalDialog(subMenu.triggerClick()));
-    confirmationDialogChecker.checkMessageContains("Do you realy want do delete your data?");
+    confirmationDialogChecker.checkMessageContains("Do you really want to delete all data associated to this user?");
     confirmationDialogChecker.validate();
   }
 

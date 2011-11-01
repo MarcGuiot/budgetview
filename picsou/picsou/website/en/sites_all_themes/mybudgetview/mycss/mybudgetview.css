@@ -781,7 +781,6 @@ table.field-value td.value {
   margin-top: 3em;
 }
 
-
 #home div#text h1 {
   font-family: helvetica, arial, sans-serif;
   color: #333;
@@ -849,6 +848,10 @@ table.field-value td.value {
 
 #home #presentation {
   padding-top: 30px;
+}
+
+#home #presentation p {
+  line-height: 1.3em;
 }
 
 #home table.image-and-text {
