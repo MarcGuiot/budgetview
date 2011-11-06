@@ -56,10 +56,12 @@ public class SendImportedFileDialog {
         }
       })
       .setFilter(GlobMatchers.isNotNull(TransactionImport.DATA));
+
     textArea = new JTextArea();
     textArea.setCaretPosition(0);
     textArea.setEditable(true);
     builder.add("details", textArea);
+
     service.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         try {
@@ -83,6 +85,7 @@ public class SendImportedFileDialog {
         }
       }
     }, TransactionImport.TYPE);
+
     copyButton = new JButton(new AbstractAction(Lang.get("exception.copy")) {
       public void actionPerformed(ActionEvent e) {
         GuiUtils.copyTextToClipboard(textArea.getText());
