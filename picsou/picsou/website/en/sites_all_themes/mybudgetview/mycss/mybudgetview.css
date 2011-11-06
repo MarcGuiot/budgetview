@@ -39,6 +39,10 @@ body, caption, th, td, input, textarea, select, option, legend, fieldset {
   padding-top: 15px;
 }
 
+div#skip-link {
+  display: none;
+}
+
 /* ========== GENERAL STYLES ========== */
 
 h1 {
