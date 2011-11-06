@@ -45,6 +45,7 @@ public class TypedInputStream {
   }
 
   public RepeatableInputStream getRepetableStream() {
+    stream.reset();
     return stream;
   }
 

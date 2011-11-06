@@ -1,6 +1,7 @@
 package org.designup.picsou.importer;
 
 import org.apache.commons.collections.iterators.ReverseListIterator;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.designup.picsou.bank.BankPluginService;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.gui.importer.utils.NoOperations;
@@ -18,10 +19,7 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.utils.*;
-import org.globsframework.utils.Log;
-import org.globsframework.utils.MultiMap;
-import org.globsframework.utils.Utils;
-import org.globsframework.utils.Ref;
+import org.globsframework.utils.*;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.TruncatedFile;
@@ -32,6 +30,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.zip.ZipOutputStream;
+import java.util.zip.ZipEntry;
 
 public class ImportSession {
   private GlobRepository referenceRepository;
@@ -90,7 +90,7 @@ public class ImportSession {
                           DeferredCardDate.TYPE, AccountCardType.TYPE, AccountType.TYPE, BudgetArea.TYPE);
     GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, MonthDay.TYPE, DeferredCardDate.TYPE,
                         AccountCardType.TYPE, CurrentMonth.TYPE, Month.TYPE, CurrentAccountInfo.TYPE,
-                        RealAccount.TYPE, Series.TYPE, SubSeries.TYPE};
+                        RealAccount.TYPE, Series.TYPE, SubSeries.TYPE, TransactionImport.TYPE};
     localRepository.reset(referenceRepository.getAll(types), types);
 
     LocalGlobRepository importRepository;
@@ -421,15 +421,38 @@ public class ImportSession {
   }
 
   public Key createImport(TypedInputStream file, GlobList createdTransactions, GlobRepository targetRepository) {
+    file.getRepetableStream();
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    ZipOutputStream stream = new ZipOutputStream(byteArrayOutputStream);
+    byte[] bytes = null;
+    try {
+      stream.putNextEntry(new ZipEntry("tmp"));
+      Files.copyStream(file.getRepetableStream(), stream);
+      bytes = byteArrayOutputStream.toByteArray();
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
     Glob transactionImport =
       targetRepository.create(TransactionImport.TYPE,
                               value(TransactionImport.IMPORT_DATE, TimeService.getToday()),
-                              value(TransactionImport.SOURCE, file.getName()));
+                              value(TransactionImport.SOURCE, file.getName()),
+                              value(TransactionImport.DATA, bytes));
 
     Key importKey = transactionImport.getKey();
 
     for (Glob createdTransaction : createdTransactions) {
       targetRepository.setTarget(createdTransaction.getKey(), Transaction.IMPORT, importKey);
+    }
+    GlobList list = targetRepository.getAll(TransactionImport.TYPE, GlobMatchers.isNotNull(TransactionImport.DATA))
+      .sort(TransactionImport.ID);
+    int count = 5;
+    while (!list.isEmpty() && count != 0){
+      list.remove(list.size() - 1);
+      count--;
+    }
+    for (Glob glob : list) {
+      targetRepository.update(glob.getKey(), TransactionImport.DATA, null);
     }
     return importKey;
   }

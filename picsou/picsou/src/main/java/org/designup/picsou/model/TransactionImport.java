@@ -6,6 +6,7 @@ import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.DateField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.fields.BlobField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
@@ -21,6 +22,7 @@ public class TransactionImport {
   public static IntegerField ID;
   public static StringField SOURCE;
   public static DateField IMPORT_DATE;
+  public static BlobField DATA;
 
   static {
     GlobTypeLoader.init(TransactionImport.class, "transactionImport");
@@ -33,6 +35,7 @@ public class TransactionImport {
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeUtf8String(values.get(TransactionImport.SOURCE));
       outputStream.writeDate(values.get(TransactionImport.IMPORT_DATE));
+      outputStream.writeBytes(values.get(TransactionImport.DATA));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -42,6 +45,9 @@ public class TransactionImport {
       }
       else if (version == 2) {
         deserializeDataV2(fieldSetter, data);
+      }
+      else if (version == 3) {
+        deserializeDataV3(fieldSetter, data);
       }
     }
 
@@ -57,8 +63,15 @@ public class TransactionImport {
       fieldSetter.set(TransactionImport.IMPORT_DATE, input.readDate());
     }
 
+    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(TransactionImport.SOURCE, input.readUtf8String());
+      fieldSetter.set(TransactionImport.IMPORT_DATE, input.readDate());
+      fieldSetter.set(TransactionImport.DATA, input.readBytes());
+    }
+
     public int getWriteVersion() {
-      return 2;
+      return 3;
     }
   }
 
