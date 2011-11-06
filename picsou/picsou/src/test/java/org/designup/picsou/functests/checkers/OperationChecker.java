@@ -657,4 +657,8 @@ public class OperationChecker {
   public NotesDialogChecker openNotes() {
     return NotesDialogChecker.open(getViewMenu().getSubMenu("Show notes..."));
   }
+
+  public SendImportedFileChecker openSendImportedFile() {
+    return SendImportedFileChecker.open(getHelpMenu().getSubMenu("Send imported file"));
+  }
 }

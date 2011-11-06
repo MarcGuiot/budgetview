@@ -14,6 +14,7 @@ import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.components.dialogs.SendImportedFileAction;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.feedback.FeedbackService;
 import org.designup.picsou.gui.feedback.FeedbackView;
@@ -21,10 +22,9 @@ import org.designup.picsou.gui.feedback.actions.OpenFeedbackDialogAction;
 import org.designup.picsou.gui.feedback.actions.SendFeedbackAction;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.help.actions.GotoSupportAction;
+import org.designup.picsou.gui.license.LicenseExpirationAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
-import org.designup.picsou.gui.license.LicenseExpirationDialog;
-import org.designup.picsou.gui.license.LicenseExpirationAction;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.notes.ShowNotesAction;
@@ -67,17 +67,17 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import static org.globsframework.model.utils.GlobMatchers.isFalse;
 import org.globsframework.model.utils.ReplicationGlobRepository;
+import org.globsframework.utils.Dates;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
-import org.globsframework.utils.Dates;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.Map;
 import java.util.Date;
+import java.util.Map;
 
 public class MainPanel {
   private PicsouFrame parent;
@@ -88,6 +88,7 @@ public class MainPanel {
   private BackupAction backupAction;
   private RestoreFileAction restoreActionFileAction;
   private RestoreSnapshotMenuAction restoreSnapshotMenuAction;
+  private SendImportedFileAction sendImportedFileAction;
   private PreferencesAction preferencesAction;
   private ExitAction exitAction;
   private LogoutAction logoutAction;
@@ -154,6 +155,7 @@ public class MainPanel {
     backupAction = new BackupAction(repository, directory);
     restoreActionFileAction = new RestoreFileAction(repository, directory);
     restoreSnapshotMenuAction = new RestoreSnapshotMenuAction(directory, repository);
+    sendImportedFileAction = new SendImportedFileAction(directory, repository);
     preferencesAction = new PreferencesAction(repository, directory);
     registerAction = new RegisterLicenseAction(repository, directory);
     exitAction = new ExitAction(windowManager, repository, directory);
@@ -264,7 +266,6 @@ public class MainPanel {
     menu.add(backupAction);
     menu.add(restoreActionFileAction);
     menu.add(restoreSnapshotMenuAction);
-
     // A Restaurer - ne fonctionne plus sur Mac
     // MRJAdapter.setPreferencesEnabled(true);
     // MRJAdapter.addPreferencesListener(preferencesAction);
@@ -349,7 +350,7 @@ public class MainPanel {
     menu.addSeparator();
     menu.add(new GotoSupportAction(directory));
     menu.add(sendFeedbackAction);
-
+    menu.add(sendImportedFileAction);
     if (!Gui.useMacOSMenu()) {
       menu.addSeparator();
       menu.add(new AboutAction(directory));
