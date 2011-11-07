@@ -12,6 +12,11 @@ import java.io.ByteArrayInputStream;
 public class SendImportedFileTest extends LoggedInFunctionalTestCase {
 
   public void testShow() throws Exception {
+    SendImportedFileChecker importedFileChecker = operations.openSendImportedFile();
+    importedFileChecker.checkChoice();
+    importedFileChecker.close();
+
+
     OfxBuilder.init(this)
       .addTransaction("2009/01/01", -29.00, "Free Telecom")
       .addTransaction("2009/02/02", -29.00, "Free Telecom")
@@ -20,7 +25,7 @@ public class SendImportedFileTest extends LoggedInFunctionalTestCase {
       .load();
 
     Ref <String> fileContent = new Ref<String>();
-    SendImportedFileChecker importedFileChecker = operations.openSendImportedFile();
+    importedFileChecker = operations.openSendImportedFile();
     importedFileChecker.checkChoice("2008/08/31:100:sendimportedfiletest_testshow_0.ofx")
       .select("2008/08/31:100:sendimportedfiletest_testshow_0.ofx")
       .checkContentContain("OFX")

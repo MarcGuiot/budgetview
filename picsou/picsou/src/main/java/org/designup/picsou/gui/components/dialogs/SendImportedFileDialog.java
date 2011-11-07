@@ -93,8 +93,11 @@ public class SendImportedFileDialog {
     dialog = PicsouDialog.create(owner, true, directory);
     dialog.addPanelWithButton(builder.<JPanel>load(), new CloseDialogAction(dialog));
     dialog.pack();
-    service.select(repository.getAll(TransactionImport.TYPE, GlobMatchers.isNotNull(TransactionImport.DATA))
-      .sort(TransactionImport.ID).getLast());
+    Glob last = repository.getAll(TransactionImport.TYPE, GlobMatchers.isNotNull(TransactionImport.DATA))
+      .sort(TransactionImport.ID).getLast();
+    if (last != null){
+      service.select(last);
+    }
   }
 
   public final void show() {
