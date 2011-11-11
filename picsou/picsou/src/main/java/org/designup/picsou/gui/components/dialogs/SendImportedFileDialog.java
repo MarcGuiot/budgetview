@@ -14,7 +14,6 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobStringifier;
-import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.ReverseGlobFieldComparator;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -82,7 +81,10 @@ public class SendImportedFileDialog {
     dialog.addPanelWithButton(builder.<JPanel>load(), new CloseDialogAction(dialog));
     dialog.pack();
 
-    selectionService.select(getLastImport(repository));
+    Glob lastImport = getLastImport(repository);
+    if (lastImport != null) {
+      selectionService.select(lastImport);
+    }
   }
 
   public final void show() {

@@ -8,7 +8,6 @@ import org.globsframework.utils.TestUtils;
 public class SendImportedFileTest extends LoggedInFunctionalTestCase {
 
   public void testShow() throws Exception {
-
     operations.checkSendImportedFileDisabled();
 
     OfxBuilder.init(this)
