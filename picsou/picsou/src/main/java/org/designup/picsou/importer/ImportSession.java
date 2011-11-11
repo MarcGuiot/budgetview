@@ -437,14 +437,14 @@ public class ImportSession {
       targetRepository.create(TransactionImport.TYPE,
                               value(TransactionImport.IMPORT_DATE, TimeService.getToday()),
                               value(TransactionImport.SOURCE, file.getName()),
-                              value(TransactionImport.DATA, bytes));
+                              value(TransactionImport.FILE_CONTENT, bytes));
 
     Key importKey = transactionImport.getKey();
 
     for (Glob createdTransaction : createdTransactions) {
       targetRepository.setTarget(createdTransaction.getKey(), Transaction.IMPORT, importKey);
     }
-    GlobList list = targetRepository.getAll(TransactionImport.TYPE, GlobMatchers.isNotNull(TransactionImport.DATA))
+    GlobList list = targetRepository.getAll(TransactionImport.TYPE, GlobMatchers.isNotNull(TransactionImport.FILE_CONTENT))
       .sort(TransactionImport.ID);
     int count = 5;
     while (!list.isEmpty() && count != 0){
@@ -452,7 +452,7 @@ public class ImportSession {
       count--;
     }
     for (Glob glob : list) {
-      targetRepository.update(glob.getKey(), TransactionImport.DATA, null);
+      targetRepository.update(glob.getKey(), TransactionImport.FILE_CONTENT, null);
     }
     return importKey;
   }

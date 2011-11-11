@@ -3,75 +3,86 @@ package org.designup.picsou.importer;
 import org.designup.picsou.importer.ofx.OfxFunctor;
 import org.designup.picsou.importer.ofx.OfxParser;
 import org.designup.picsou.importer.utils.TypedInputStream;
+import org.globsframework.utils.Log;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class Obfuscator {
-  static Set<String> stringTagToObfuscate = new HashSet<String>();
-  static Set<String> doubleTagToObfuscate = new HashSet<String>();
-  private Random random = new Random();
-  private Map<String, String> knownString = new HashMap<String, String>();
-  private Set<String> generatedString = new HashSet<String>();
+  private static Set<String> stringTagToObfuscate = new HashSet<String>();
+  private static Set<String> doubleTagToObfuscate = new HashSet<String>();
+  private Map<String, String> knownStrings = new HashMap<String, String>();
+  private Set<String> generatedNumbers = new HashSet<String>();
+  private int currentGeneratedNumber = 1000000;
+  private char currentRandomChar = 'a';
+  private char currentRandomDigit = '0';
 
   static {
-    addStringToObfuscate("NAME", "MEMO", "ACCTID");
-    addDoubleToObfuscate("TRNAMT", "BALAMT");
+    addStringsToObfuscate("NAME", "MEMO", "ACCTID", "CHECKNUM");
+    addNumbersToObfuscate("TRNAMT", "BALAMT");
   }
 
   public String apply(TypedInputStream stream) {
     BankFileType type = stream.getType();
-    final StringBuffer buf = new StringBuffer();
-    if (type == BankFileType.OFX) {
-      transformOfx(stream, buf);
+    final StringBuilder builder = new StringBuilder();
+    switch (type) {
+      case OFX:
+        transformOfx(stream, builder);
+        break;
+      case QIF:
+        transformQif(stream, builder);
+        break;
+      default:
+        throw new InvalidParameter("Unexpected file type: " + type);
     }
-    else {
-      transformQif(stream, buf);
-    }
-    return buf.toString();
+    return builder.toString();
   }
 
-  private void transformOfx(TypedInputStream stream, final StringBuffer buf) {
+  private void transformOfx(TypedInputStream stream, final StringBuilder builder) {
     OfxParser parser = new OfxParser();
     try {
       parser.parse(stream.getBestProbableReader(), new OfxFunctor() {
         public void processHeader(String key, String value) {
-          buf.append(key)
+          builder.append(key)
             .append(":")
             .append(value)
             .append("\n");
         }
 
         public void enterTag(String tag) {
-          buf.append("<")
+          builder.append("<")
             .append(tag)
             .append(">")
             .append("\n");
         }
 
         public void leaveTag(String tag) {
-          buf.append("</")
+          builder.append("</")
             .append(tag)
             .append(">")
             .append("\n");
         }
 
         public void processTag(String tag, String content) {
-          buf
+          builder
             .append("<")
             .append(tag)
             .append(">");
           if (doubleTagToObfuscate.contains(tag)) {
-            buf.append(getDouble(content));
+            builder.append(getObfuscatedNumber(content));
           }
           else if (stringTagToObfuscate.contains(tag)) {
-            buf.append(getStringContent(content));
+            builder.append(getStringContent(content));
           }
           else {
-            buf.append(content);
+            builder.append(content);
           }
-          buf.append("\n");
+          builder.append("\n");
         }
 
         public void end() {
@@ -79,150 +90,148 @@ public class Obfuscator {
       });
     }
     catch (IOException e) {
+      Log.write("OFX obfuscation error", e);
     }
   }
 
-  private void transformQif(TypedInputStream stream, StringBuffer buf) {
+  private void transformQif(TypedInputStream stream, StringBuilder builder) {
     try {
       BufferedReader reader = new BufferedReader(stream.getBestProbableReader());
-      String s = reader.readLine();
-      while (s != null) {
-        if (s.startsWith("T")) {
-          buf.append("T")
-            .append(generateNum(s.substring(1).trim()));
+      String line = reader.readLine();
+      while (line != null) {
+        if (line.startsWith("T") || line.startsWith("$")) {
+          builder
+            .append(line.charAt(0))
+            .append(generateNumber());
         }
-        else if (s.startsWith("P") || s.startsWith("N") || s.startsWith("L") || s.startsWith("M")) {
-          buf.append(s.charAt(0));
-          buf.append(generate(s).substring(1).trim());
+        else if (line.startsWith("P") || line.startsWith("N") || line.startsWith("L") || line.startsWith("M")) {
+          builder.append(line.charAt(0));
+          builder.append(generateString(line).substring(1).trim());
         }
         else {
-          buf.append(s);
+          builder.append(line);
         }
-        buf.append("\n");
-        s = reader.readLine();
+        builder.append("\n");
+        line = reader.readLine();
       }
     }
     catch (IOException e) {
+      Log.write("QIF obfuscation error", e);
     }
   }
 
-  private String getDouble(String content) {
-    if (knownString.containsKey(content)) {
-      return knownString.get(content);
+  private String getObfuscatedNumber(String content) {
+    if (knownStrings.containsKey(content)) {
+      return knownStrings.get(content);
     }
-    String str = generateNum(content);
-    while (generatedString.contains(str)) {
-      str = generateNum(content);
+    String number = generateNumber();
+    while (generatedNumbers.contains(number)) {
+      number = generateNumber();
     }
-    knownString.put(content, str);
-    generatedString.add(str);
-    return str;
+    knownStrings.put(content, number);
+    generatedNumbers.add(number);
+    return number;
   }
 
-  private String generateNum(String content) {
-    StringBuffer buffer = new StringBuffer();
-    int countDigit = 0;
-    for (int i = 0; i < content.length(); i++) {
-      if (Character.isDigit(content.charAt(i))) {
-        countDigit++;
-      }
-      else {
-        if (countDigit != 0) {
-          appendRandomNumber(buffer, countDigit);
-          countDigit = 0;
-        }
-        buffer.append(content.charAt(i));
-      }
-    }
-    if (countDigit != 0) {
-      appendRandomNumber(buffer, countDigit);
-    }
-    return buffer.toString();
-  }
-
-  private void appendRandomNumber(StringBuffer buffer, int countDigit) {
-    if (countDigit > 4) {
-      buffer.append(Integer.toString(random.nextInt(1000) + 1));
-    }
-    else {
-      buffer.append(Integer.toString(random.nextInt(((int)Math.pow(10, countDigit)))));
-    }
+  private String generateNumber() {
+    String result = Integer.toString(currentGeneratedNumber);
+    currentGeneratedNumber += 1;
+    return result;
   }
 
   private String getStringContent(String line) {
     String[] strings = line.split(" ");
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     for (String content : strings) {
-      buffer.append(getStr(content));
+      buffer.append(getString(content));
       buffer.append(" ");
     }
     return buffer.toString().trim();
   }
 
-  private String getStr(String str) {
-    String s = knownString.get(str);
-    if (s == null) {
-      char c = 'a';
-      char c1 = '1';
-      int count = 0;
-      while (true) {
-        String s1 = generate(str);
-        if (generatedString.contains(s1)) {
-          if (count == 26) {
-            generatedString.add(s1);
-            knownString.put(str, s1);
-            return s1;
-          }
-          else {
-            c = (char)(c + 1);
-            c1 = (char)(c1 + 1);
-            if (c1 > '9') {
-              c1 = '1';
-            }
-            count++;
-          }
+  private String getString(String content) {
+    String obfuscatedString = knownStrings.get(content);
+    if (obfuscatedString != null) {
+      return obfuscatedString;
+    }
+
+    char c = 'a';
+    char c1 = '1';
+    int count = 0;
+    while (true) {
+      String newGenerated = generateString(content);
+      if (generatedNumbers.contains(newGenerated)) {
+        if (count == 26) {
+          generatedNumbers.add(newGenerated);
+          knownStrings.put(content, newGenerated);
+          return newGenerated;
         }
         else {
-          generatedString.add(s1);
-          knownString.put(str, s1);
-          return s1;
+          c = (char)(c + 1);
+          c1 = (char)(c1 + 1);
+          if (c1 > '9') {
+            c1 = '1';
+          }
+          count++;
         }
       }
+      else {
+        generatedNumbers.add(newGenerated);
+        knownStrings.put(content, newGenerated);
+        return newGenerated;
+      }
     }
-    return s;
   }
 
-  private String generate(String content) {
-    StringBuffer buffer = new StringBuffer();
+  private String generateString(String content) {
+    StringBuilder builder = new StringBuilder();
     for (int i = 0; i < content.length(); i++) {
       char c = content.charAt(i);
       if (Character.isSpaceChar(c)) {
-        buffer.append(' ');
+        builder.append(' ');
       }
       else if (Character.isDigit(c)) {
-        buffer.append((char)('1' + random.nextInt(8)));
+        builder.append(getRandomDigit());
       }
       else if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
-        buffer.append((char)('a' + random.nextInt(25)));
+        builder.append(getRandomChar());
       }
       else {
-        buffer.append(c);
+        builder.append(c);
       }
     }
-    return buffer.toString();
+    return builder.toString();
   }
 
-  static void addStringToObfuscate(String... str) {
-    for (String s : str) {
-      stringTagToObfuscate.add(s.toUpperCase());
-      stringTagToObfuscate.add(s.toLowerCase());
+  private char getRandomChar() {
+    char result = currentRandomChar;
+    currentRandomChar += 1;
+    if (currentRandomChar > 'z') {
+      currentRandomChar = 'a';
+    }
+    return result;
+  }
+
+  private char getRandomDigit() {
+    char result = currentRandomDigit;
+    currentRandomDigit += 1;
+    if (currentRandomDigit > '9') {
+      currentRandomDigit = '0';
+    }
+    return result;
+  }
+
+  static void addStringsToObfuscate(String... strings) {
+    for (String string : strings) {
+      stringTagToObfuscate.add(string.toUpperCase());
+      stringTagToObfuscate.add(string.toLowerCase());
     }
   }
 
-  static void addDoubleToObfuscate(String... str) {
-    for (String s : str) {
-      doubleTagToObfuscate.add(s.toUpperCase());
-      doubleTagToObfuscate.add(s.toLowerCase());
+  static void addNumbersToObfuscate(String... numbers) {
+    for (String number : numbers) {
+      doubleTagToObfuscate.add(number.toUpperCase());
+      doubleTagToObfuscate.add(number.toLowerCase());
     }
   }
 }

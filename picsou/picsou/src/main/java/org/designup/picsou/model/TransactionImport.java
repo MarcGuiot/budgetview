@@ -22,7 +22,7 @@ public class TransactionImport {
   public static IntegerField ID;
   public static StringField SOURCE;
   public static DateField IMPORT_DATE;
-  public static BlobField DATA;
+  public static BlobField FILE_CONTENT;
 
   static {
     GlobTypeLoader.init(TransactionImport.class, "transactionImport");
@@ -32,29 +32,34 @@ public class TransactionImport {
 
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
-      SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
-      outputStream.writeUtf8String(values.get(TransactionImport.SOURCE));
-      outputStream.writeDate(values.get(TransactionImport.IMPORT_DATE));
-      outputStream.writeBytes(values.get(TransactionImport.DATA));
+      SerializedOutput stream = serializedByteArrayOutput.getOutput();
+      stream.writeUtf8String(values.get(TransactionImport.SOURCE));
+      stream.writeDate(values.get(TransactionImport.IMPORT_DATE));
+      stream.writeBytes(values.get(TransactionImport.FILE_CONTENT));
       return serializedByteArrayOutput.toByteArray();
     }
 
+    public int getWriteVersion() {
+      return 3;
+    }
+
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 1) {
-        deserializeDataV1(fieldSetter, data);
+      if (version == 3) {
+        deserializeDataV3(fieldSetter, data);
       }
       else if (version == 2) {
         deserializeDataV2(fieldSetter, data);
       }
-      else if (version == 3) {
-        deserializeDataV3(fieldSetter, data);
+      else if (version == 1) {
+        deserializeDataV1(fieldSetter, data);
       }
     }
 
-    private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
+    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(TransactionImport.SOURCE, input.readJavaString());
+      fieldSetter.set(TransactionImport.SOURCE, input.readUtf8String());
       fieldSetter.set(TransactionImport.IMPORT_DATE, input.readDate());
+      fieldSetter.set(TransactionImport.FILE_CONTENT, input.readBytes());
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -63,16 +68,10 @@ public class TransactionImport {
       fieldSetter.set(TransactionImport.IMPORT_DATE, input.readDate());
     }
 
-    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+    private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(TransactionImport.SOURCE, input.readUtf8String());
+      fieldSetter.set(TransactionImport.SOURCE, input.readJavaString());
       fieldSetter.set(TransactionImport.IMPORT_DATE, input.readDate());
-      fieldSetter.set(TransactionImport.DATA, input.readBytes());
-    }
-
-    public int getWriteVersion() {
-      return 3;
     }
   }
-
 }

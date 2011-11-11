@@ -4,17 +4,22 @@
 
   <panel styleClass="dialog" preferredSize="(600,600)" opaque="true">
     <column styleClass="innerDialog">
-      <label text="sendImportedFile.title" styleClass="title"/>
-      <htmlEditorPane text="sendImportedFile.message" marginBottom="10" weightY="0"/>
+      <label text="$sendImportedFile.title" styleClass="title"/>
+
+      <htmlEditorPane text="$sendImportedFile.intro" marginBottom="5" weightY="0"/>
       <comboBox ref="files"/>
+
+      <htmlEditorPane text="$sendImportedFile.content" marginTop="5" marginBottom="5" weightY="0"/>
       <scrollPane>
         <textArea ref="details"/>
       </scrollPane>
+
       <row marginTop="5" marginBottom="15" autoHideSource="copy">
         <filler fill="horizontal"/>
         <button ref="copy"/>
         <filler fill="horizontal"/>
       </row>
+
     </column>
   </panel>
 

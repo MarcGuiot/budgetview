@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.feedback.UserEvaluationDialog;
@@ -659,6 +660,14 @@ public class OperationChecker {
   }
 
   public SendImportedFileChecker openSendImportedFile() {
-    return SendImportedFileChecker.open(getHelpMenu().getSubMenu("Send imported file"));
+    return SendImportedFileChecker.open(getSendImportedFileMenuItem());
+  }
+
+  private MenuItem getSendImportedFileMenuItem() {
+    return getHelpMenu().getSubMenu(Lang.get("sendImportedFile.action"));
+  }
+
+  public void checkSendImportedFileDisabled() {
+    assertFalse(getSendImportedFileMenuItem().isEnabled());
   }
 }

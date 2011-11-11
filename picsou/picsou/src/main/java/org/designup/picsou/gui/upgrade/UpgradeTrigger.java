@@ -80,7 +80,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
 
     if (currentJarVersion < 24) {
-      repository.safeApply(Transaction.TYPE, isTrue(Transaction.PLANNED), new RemovePlanedPrefixFunctor());
+      repository.safeApply(Transaction.TYPE, isTrue(Transaction.PLANNED), new RemovePlannedPrefixFunctor());
     }
 
     if (currentJarVersion < 34) {
@@ -407,7 +407,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     repository.deleteAll(Category.TYPE);
   }
 
-  private static class RemovePlanedPrefixFunctor implements GlobFunctor {
+  private static class RemovePlannedPrefixFunctor implements GlobFunctor {
 
     public void run(Glob glob, GlobRepository repository) throws Exception {
       String label = glob.get(Transaction.LABEL);
@@ -450,7 +450,8 @@ public class UpgradeTrigger implements ChangeSetListener {
               repository.update(transaction.getKey(), Transaction.SERIES, series.get(Series.ID));
             }
             else {
-              Log.write("Operation : " + GlobPrinter.toString(transaction) + " not valide for seires : " + GlobPrinter.toString(series));
+              Log.write("Invalid operation: " + GlobPrinter.toString(transaction) + "\n" +
+                        "for series: " + GlobPrinter.toString(series));
             }
           }
         }

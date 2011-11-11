@@ -1,11 +1,14 @@
 package org.designup.picsou.functests.checkers;
 
+import org.globsframework.utils.Files;
 import org.globsframework.utils.Ref;
 import org.uispec4j.MenuItem;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowInterceptor;
+
+import java.io.ByteArrayInputStream;
 
 public class SendImportedFileChecker extends GuiChecker {
   private Window dialog;
@@ -18,7 +21,7 @@ public class SendImportedFileChecker extends GuiChecker {
     return new SendImportedFileChecker(WindowInterceptor.getModalDialog(menu.triggerClick()));
   }
 
-  public SendImportedFileChecker checkChoice(String... expected) {
+  public SendImportedFileChecker checkChoices(String... expected) {
     assertThat(dialog.getComboBox().contentEquals(expected));
     return this;
   }
@@ -28,18 +31,17 @@ public class SendImportedFileChecker extends GuiChecker {
     return this;
   }
 
-  public SendImportedFileChecker checkContentContains(String content) {
+  public SendImportedFileChecker checkMessageContains(String content) {
     assertThat(dialog.getInputTextBox("details").textContains(content));
     return this;
   }
 
-  public SendImportedFileChecker getContent(Ref<String> content) {
-    content.set(dialog.getInputTextBox("details").getText());
+  public SendImportedFileChecker saveContentToFile(String fileName) throws Exception {
+    Files.copyStreamTofile(new ByteArrayInputStream(dialog.getInputTextBox("details").getText().getBytes("UTF-8")), fileName);
     return this;
   }
 
   public void close() {
-    dialog.getButton("close").click();
-    assertFalse(dialog.isVisible());
+    dialog.getButton("Close").click();
   }
 }
