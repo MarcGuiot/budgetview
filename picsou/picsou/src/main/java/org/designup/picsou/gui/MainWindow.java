@@ -239,7 +239,9 @@ public class MainWindow implements WindowManager {
 
   private void initDemoServerAccess() {
     serverAccess.disconnect();
-    InputStream stream = this.getClass().getResourceAsStream("/demo/demo.snapshot");
+
+    String name = "/demo/demo-" + Lang.getLang() + ".snapshot";
+    InputStream stream = this.getClass().getResourceAsStream(name);
     if (serverDirectory != null) {
       serverDirectory.close();
     }

@@ -1,5 +1,13 @@
 #!/bin/sh
 
+createTar() {
+  tar cvf budgetview.tar budgetview/budgetview.sh budgetview/license.txt budgetview/budgetview${JAR_VERSION}.jar \
+      budgetview/budgetviewloader-1.0.jar budgetview/budgetview_icon_16.png budgetview/budgetview_icon_32.png \
+      budgetview/budgetview_icon_48.png budgetview/budgetview_icon_128.png budgetview/version.txt
+  
+  gzip budgetview.tar
+}
+
 VERSION=`java -jar ../picsou/obfuscated/budgetview.jar -v -jar | grep "Jar version"`
 JAR_VERSION=`echo $VERSION | sed -e 's/Jar version://g' | sed -e 's/  *//g'`
 
@@ -19,15 +27,17 @@ cp dev/images/budgetview_icon_16.png budgetview/
 cp dev/images/budgetview_icon_32.png budgetview/
 cp dev/images/budgetview_icon_48.png budgetview/
 cp dev/images/budgetview_icon_128.png budgetview/
-cp dev/install/budgetview.sh budgetview/
 cp dev/install/license.txt budgetview/
 cp target/budgetviewloader-1.0.jar budgetview/
 cp ../picsou/obfuscated/budgetview${JAR_VERSION}.jar budgetview/
-tar cvf budgetview.tar budgetview/budgetview.sh budgetview/license.txt budgetview/budgetview${JAR_VERSION}.jar \
-    budgetview/budgetviewloader-1.0.jar budgetview/budgetview_icon_16.png budgetview/budgetview_icon_32.png \
-    budgetview/budgetview_icon_48.png budgetview/budgetview_icon_128.png budgetview/version.txt
 
-gzip budgetview.tar
+cp dev/install/budgetview.en.sh budgetview/budgetview.sh
+createTar
+mv budgetview.tar.gz budgetview-${SOFT_VERSION}-en.tar.gz
 
-mv budgetview.tar.gz budgetview-${SOFT_VERSION}.tar.gz
+cp dev/install/budgetview.fr.sh budgetview/budgetview.sh
+createTar
+mv budgetview.tar.gz budgetview-${SOFT_VERSION}-fr.tar.gz
+
 rm -rf budgetview
+

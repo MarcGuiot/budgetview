@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.ProfileType;
+import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatchers;
@@ -240,17 +241,17 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   public void validate() {
-    dialog.getButton("OK").click();
+    dialog.getButton(Lang.get("ok")).click();
     checkClosed();
   }
 
   public void cancel() {
-    dialog.getButton("Cancel").click();
+    dialog.getButton(Lang.get("cancel")).click();
     checkClosed();
   }
 
   public void deleteCurrentSeries() {
-    dialog.getButton("Delete...").click();
+    dialog.getButton(Lang.get("transaction.delete.action")).click();
     assertFalse(dialog.isVisible());
   }
 

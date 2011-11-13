@@ -48,7 +48,7 @@ DefaultDirectoryLocation
 {}
 
 DefaultLanguage
-{French}
+{English}
 
 DefaultToSystemLanguage
 {Yes}
@@ -93,13 +93,13 @@ Language,de
 {No}
 
 Language,en
-{No}
+{Yes}
 
 Language,es
 {No}
 
 Language,fr
-{Yes}
+{No}
 
 Language,hu
 {No}
@@ -2235,7 +2235,7 @@ Windows,BuildSeparateArchives
 {No}
 
 Windows,Executable
-{<%AppName%>-<%Version%>-Setup<%Ext%>}
+{<%AppName%>-<%Version%>-en-Setup<%Ext%>}
 
 Windows,FileDescription
 {<%AppName%> <%Version%> Setup}

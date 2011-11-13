@@ -146,7 +146,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
     try {
       final ComponentMatcher componentMatcher =
         and(innerNameIdentity("editAccount"),
-            displayedNameIdentity(accountName));
+            displayedNameSubstring(accountName));
       account = getAccountsPanel().getButton(componentMatcher);
     }
     catch (Throwable e) {

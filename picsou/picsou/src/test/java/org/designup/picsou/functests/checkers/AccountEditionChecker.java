@@ -159,17 +159,17 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker setAsMain() {
-    getTypeCombo().select("Main");
+    getTypeCombo().select(Lang.get("account.type.main"));
     return this;
   }
 
   public AccountEditionChecker setAsDeferredCard() {
-    getTypeCombo().select("Deferred debit card");
+    getTypeCombo().select(Lang.get("accountCardType.deferred"));
     return this;
   }
 
   public AccountEditionChecker setAsCreditCard() {
-    getTypeCombo().select("Credit card");
+    getTypeCombo().select(Lang.get("accountCardType.credit"));
     return this;
   }
 
@@ -237,11 +237,11 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker setUpdateModeToManualInput() {
-    return setUpdateMode("Manual input");
+    return setUpdateMode(Lang.get("account.updateMode.manual"));
   }
 
   public AccountEditionChecker setUpdateModeToFileImport() {
-    return setUpdateMode("File import");
+    return setUpdateMode(Lang.get("account.updateMode.automatic"));
   }
 
   private AccountEditionChecker setUpdateMode(String mode) {
@@ -250,17 +250,18 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker checkUpdateModes() {
-    assertThat(getUpdateModeCombo().contentEquals("File import", "Manual input"));
+    assertThat(getUpdateModeCombo().contentEquals(Lang.get("account.updateMode.automatic"),
+                                                  Lang.get("account.updateMode.manual")));
     return this;
   }
 
   public AccountEditionChecker checkUpdateModeIsFileImport() {
-    assertThat(getUpdateModeCombo().selectionEquals("File import"));
+    assertThat(getUpdateModeCombo().selectionEquals(Lang.get("account.updateMode.automatic")));
     return this;
   }
 
   public AccountEditionChecker checkUpdateModeIsManualInput() {
-    assertThat(getUpdateModeCombo().selectionEquals("Manual input"));
+    assertThat(getUpdateModeCombo().selectionEquals(Lang.get("account.updateMode.manual")));
     return this;
   }
 

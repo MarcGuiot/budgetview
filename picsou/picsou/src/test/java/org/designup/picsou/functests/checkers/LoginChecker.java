@@ -27,7 +27,7 @@ public class LoginChecker extends GuiChecker {
     passwordField = window.getPasswordField("password");
     createUserCheckbox = window.getCheckBox();
     passwordConfirmationField = window.getPasswordField("confirmPassword");
-    loginButton = window.getButton("Enter");
+    loginButton = window.getButton(Lang.get("login.enter"));
   }
 
   public LoginChecker enterUserName(String name) {

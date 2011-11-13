@@ -1,5 +1,6 @@
 open "budgetview.jar"
-     -"budgetview.jar!demo/demo.snapshot"
+     -"budgetview.jar!demo/demo-fr.snapshot"
+     -"budgetview.jar!demo/demo-en.snapshot"
      -"budgetview.jar!apple/laf/*.class"
      -"budgetview.jar!net/roydesign/mac/*.class"
      -"budgetview.jar!net/roydesign/event/*.class";

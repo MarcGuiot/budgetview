@@ -6,6 +6,7 @@ import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
+import org.designup.picsou.utils.Lang;
 
 public class LicenseActivationChecker {
   private Window dialog;
@@ -18,7 +19,7 @@ public class LicenseActivationChecker {
 
   public static LicenseActivationChecker open(Window window) {
     UISpecAssert.waitUntil(window.containsMenuBar(), 10000);
-    return open(window.getMenuBar().getMenu("File").getSubMenu("Register").triggerClick());
+    return open(window.getMenuBar().getMenu(Lang.get("file")).getSubMenu("Register").triggerClick());
   }
 
   public static LicenseActivationChecker open(Trigger trigger) {
@@ -53,7 +54,7 @@ public class LicenseActivationChecker {
 
   private static void enterLicense(Window window, WindowHandler windowHandler) {
     UISpecAssert.waitUntil(window.containsMenuBar(), 10000);
-    MenuItem registerMenu = window.getMenuBar().getMenu("File").getSubMenu("Register");
+    MenuItem registerMenu = window.getMenuBar().getMenu(Lang.get("file")).getSubMenu(Lang.get("license.register"));
     WindowInterceptor.init(registerMenu.triggerClick())
       .process(windowHandler)
       .run();
