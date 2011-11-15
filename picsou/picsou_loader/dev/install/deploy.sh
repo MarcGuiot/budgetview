@@ -29,19 +29,34 @@ then
   exit 2
 fi
 
-if [ -a budgetview-${SOFT_VERSION}.tar.gz ];
+if [ -a budgetview-${SOFT_VERSION}-en.tar.gz ];
 then
-   scp budgetview-${SOFT_VERSION}.tar.gz fr_mybudgetview@91.121.123.100:files/app
+   scp budgetview-${SOFT_VERSION}-en.tar.gz en_mybudgetview@91.121.123.100:files/app
 fi
 
-if [ -a dev/install/output/BudgetView-${SOFT_VERSION}-Setup.exe ];
+if [ -a budgetview-${SOFT_VERSION}-fr.tar.gz ];
 then
-   scp dev/install/output/BudgetView-${SOFT_VERSION}-Setup.exe  fr_mybudgetview@91.121.123.100:files/app
+   scp budgetview-${SOFT_VERSION}-fr.tar.gz fr_mybudgetview@91.121.123.100:files/app
 fi
 
-if [ -a BudgetView-${SOFT_VERSION}.dmg ];
+if [ -a dev/install/output/BudgetView-${SOFT_VERSION}-en-Setup.exe ];
 then
-   scp BudgetView-${SOFT_VERSION}.dmg fr_mybudgetview@91.121.123.100:files/app
+   scp dev/install/output/BudgetView-${SOFT_VERSION}-en-Setup.exe  en_mybudgetview@91.121.123.100:files/app
+fi
+
+if [ -a dev/install/output/BudgetView-${SOFT_VERSION}-fr-Setup.exe ];
+then
+   scp dev/install/output/BudgetView-${SOFT_VERSION}-fr-Setup.exe  fr_mybudgetview@91.121.123.100:files/app
+fi
+
+if [ -a BudgetView-${SOFT_VERSION}-en.dmg ];
+then
+   scp BudgetView-${SOFT_VERSION}-en.dmg en_mybudgetview@91.121.123.100:files/app
+fi
+
+if [ -a BudgetView-${SOFT_VERSION}-fr.dmg ];
+then
+   scp BudgetView-${SOFT_VERSION}-fr.dmg fr_mybudgetview@91.121.123.100:files/app
 fi
 
 scp ../picsou/obfuscated/budgetview${JAR_VERSION}.jar ../picsou/ChangeLogOutput-${JAR_VERSION}.txt.bz2 build@91.121.123.100:versions/
