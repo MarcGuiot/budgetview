@@ -14,7 +14,9 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobStringifier;
+import static org.globsframework.model.utils.GlobMatchers.isNotNull;
 import org.globsframework.model.utils.ReverseGlobFieldComparator;
+import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -27,20 +29,19 @@ import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import static org.globsframework.model.utils.GlobMatchers.isNotNull;
-
 public class SendImportedFileDialog {
   private GlobRepository repository;
   private GlobsPanelBuilder builder;
   private PicsouDialog dialog;
   private JButton copyButton;
   private JTextArea textArea;
+  private JCheckBox obfuscate;
 
   public SendImportedFileDialog(Window owner, Directory directory, GlobRepository repository) {
     this.repository = repository;
     directory = new DefaultDirectory(directory);
 
-    SelectionService selectionService = new SelectionService();
+    final SelectionService selectionService = new SelectionService();
     directory.add(SelectionService.class, selectionService);
 
     builder = new GlobsPanelBuilder(getClass(), "/layout/utils/sendImportedFileDialog.splits", repository, directory);
@@ -58,6 +59,14 @@ public class SendImportedFileDialog {
       })
       .setFilter(isNotNull(TransactionImport.FILE_CONTENT));
 
+    obfuscate = new JCheckBox();
+    obfuscate.setSelected(true);
+    obfuscate.addActionListener(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        textArea.setText(getObfuscatedText(selectionService.getSelection(TransactionImport.TYPE).getFirst()));
+      }
+    });
+    builder.add("obfuscate", obfuscate);
     textArea = new JTextArea();
     textArea.setEditable(true);
     builder.add("details", textArea);
@@ -65,7 +74,7 @@ public class SendImportedFileDialog {
     selectionService.addListener(
       new GlobSelectionListener() {
         public void selectionUpdated(GlobSelection selection) {
-          textArea.setText(getObfuscatedText(selection));
+          textArea.setText(getObfuscatedText(selection.getAll(TransactionImport.TYPE).getFirst()));
           textArea.setCaretPosition(0);
         }
       }, TransactionImport.TYPE);
@@ -92,9 +101,8 @@ public class SendImportedFileDialog {
     builder.dispose();
   }
 
-  private String getObfuscatedText(GlobSelection selection) {
+  private String getObfuscatedText(Glob first) {
     try {
-      Glob first = selection.getAll(TransactionImport.TYPE).getFirst();
       if (first != null) {
         byte[] bytes = first.get(TransactionImport.FILE_CONTENT);
         if (bytes != null) {
@@ -103,8 +111,13 @@ public class SendImportedFileDialog {
           ZipEntry zipEntry = stream.getNextEntry();
           if (zipEntry != null) {
             TypedInputStream typedInputStream = new TypedInputStream(stream);
-            Obfuscator obfuscator = new Obfuscator();
-            return obfuscator.apply(typedInputStream);
+            if (obfuscate.isSelected()) {
+              Obfuscator obfuscator = new Obfuscator();
+              return obfuscator.apply(typedInputStream);
+            }
+            else {
+              return Files.loadStreamToString(typedInputStream.getBestProbableReader());
+            }
           }
         }
       }

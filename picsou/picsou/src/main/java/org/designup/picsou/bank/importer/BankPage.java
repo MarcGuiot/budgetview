@@ -14,17 +14,14 @@ import static org.globsframework.model.utils.GlobMatchers.and;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.model.utils.LocalGlobRepository;
 import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
-import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 public abstract class BankPage {
 
@@ -103,13 +100,13 @@ public abstract class BankPage {
     }
   }
 
-  public static File createQifLocalFile(Glob realAccount, InputStream contentAsStream) {
+  public static File createQifLocalFile(Glob realAccount, InputStream contentAsStream, String charset) {
     File file;
     try {
       file = File.createTempFile("download", ".qif");
       FileOutputStream fileOutputStream = new FileOutputStream(file);
       fileOutputStream.write(("! accountId=" + realAccount.get(RealAccount.ID) + "\n").getBytes());
-      Files.copyStream(contentAsStream, fileOutputStream);
+      Files.copyInUtf8(contentAsStream, charset, fileOutputStream);
       file.deleteOnExit();
     }
     catch (IOException e) {

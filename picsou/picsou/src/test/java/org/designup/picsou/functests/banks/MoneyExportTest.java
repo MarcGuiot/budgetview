@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.banks;
 
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.functests.utils.OfxBuilder;
 
 import java.io.IOException;
 
@@ -12,8 +13,11 @@ public class MoneyExportTest extends SpecificBankTestCase {
     super.setUp();
   }
 
-
   public void testDefaultQifFile() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/01", 15.00, "internet")
+      .load();
+    categorization.setRecurring("internet", "Internet");
     operations.openPreferences().setFutureMonthsCount(3).validate();
     importStandard();
 
@@ -25,6 +29,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .add("20/08/2008", "CREDIPLUS CREDIT PORSCHE", -100.00, "Auto-moto", 150.00, 150.00, "Main account")
       .add("04/08/2008", "FNAC VELIZY CARTE 34609231 PAIEM UN LOGICIEL QUELCONQUE", -14.17, "Loisirs-culture-sport", 250.00, 250.00, "Main account")
       .add("04/08/2008", "SOLDE INITIAL", 1000.00, "To categorize", 264.17, 264.17, "Main account")
+      .add("01/08/2008", "INTERNET", 15.0, "Internet", 0.00,	-735.83,	"Account n. 00001123")
       .check();
 
     operations.openImportDialog()
@@ -65,6 +70,8 @@ public class MoneyExportTest extends SpecificBankTestCase {
         {"2008", "Nov", 0.00, 30.00, },
       })
       .cancel();
+    budgetView.recurring.checkSeriesNotPresent("Electricity");
+    budgetView.recurring.checkSeriesPresent("Internet");
   }
 
   private void importStandard() throws IOException {

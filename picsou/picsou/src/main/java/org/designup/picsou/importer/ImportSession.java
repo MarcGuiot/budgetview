@@ -71,10 +71,6 @@ public class ImportSession {
     this.importSeries = importSeries;
   }
 
-  interface AskForSeriesImport {
-    boolean shouldImport();
-  }
-
   public GlobRepository getTempRepository() {
     return localRepository;
   }
@@ -437,6 +433,7 @@ public class ImportSession {
       targetRepository.create(TransactionImport.TYPE,
                               value(TransactionImport.IMPORT_DATE, TimeService.getToday()),
                               value(TransactionImport.SOURCE, file.getName()),
+                              value(TransactionImport.IS_WITH_SERIES, shouldImportSeries()),
                               value(TransactionImport.FILE_CONTENT, bytes));
 
     Key importKey = transactionImport.getKey();

@@ -155,8 +155,6 @@ public class Obfuscator {
       return obfuscatedString;
     }
 
-    char c = 'a';
-    char c1 = '1';
     int count = 0;
     while (true) {
       String newGenerated = generateString(content);
@@ -167,11 +165,6 @@ public class Obfuscator {
           return newGenerated;
         }
         else {
-          c = (char)(c + 1);
-          c1 = (char)(c1 + 1);
-          if (c1 > '9') {
-            c1 = '1';
-          }
           count++;
         }
       }

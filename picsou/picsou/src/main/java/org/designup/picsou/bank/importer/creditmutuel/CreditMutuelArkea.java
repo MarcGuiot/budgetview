@@ -2,6 +2,7 @@ package org.designup.picsou.bank.importer.creditmutuel;
 
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.TextPage;
+import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.*;
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.bank.importer.WebBankPage;
@@ -149,8 +150,9 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
     try {
       Page page1 = anchor.click();
       TextPage page = (TextPage)page1;
-      InputStream contentAsStream = page.getWebResponse().getContentAsStream();
-      return createQifLocalFile(realAccount, contentAsStream);
+      WebResponse response = page.getWebResponse();
+      InputStream contentAsStream = response.getContentAsStream();
+      return createQifLocalFile(realAccount, contentAsStream, response.getContentCharset());
     }
     catch (IOException e) {
       Log.write("In anchor click", e);
