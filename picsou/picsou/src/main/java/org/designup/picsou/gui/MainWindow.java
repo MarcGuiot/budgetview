@@ -25,6 +25,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
+import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -240,7 +241,11 @@ public class MainWindow implements WindowManager {
   private void initDemoServerAccess() {
     serverAccess.disconnect();
 
-    String name = "/demo/demo-" + Lang.getLang() + ".snapshot";
+    String lang = Lang.getLang();
+    if (Strings.isNullOrEmpty(lang)){
+      lang = Lang.EN.getLanguage();
+    }
+    String name = "/demo/demo-" + lang + ".snapshot";
     InputStream stream = this.getClass().getResourceAsStream(name);
     if (serverDirectory != null) {
       serverDirectory.close();
