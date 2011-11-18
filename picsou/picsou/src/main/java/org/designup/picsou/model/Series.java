@@ -136,6 +136,9 @@ public class Series {
   @Required
   public static BooleanField DECEMBER;
 
+  @DefaultBoolean(false)
+  public static BooleanField IS_INITIAL;
+
   /**
    * @deprecated
    */
@@ -234,7 +237,7 @@ public class Series {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 11;
+      return 12;
     }
 
     public byte[] serializeData(FieldValues fieldValues) {
@@ -266,6 +269,7 @@ public class Series {
       output.writeInteger(fieldValues.get(Series.MIRROR_SERIES));
       output.writeBoolean(fieldValues.get(Series.SHOULD_REPORT));
       output.writeInteger(fieldValues.get(Series.TARGET_ACCOUNT));
+      output.writeBoolean(fieldValues.get(Series.IS_INITIAL));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -302,6 +306,9 @@ public class Series {
       }
       else if (version == 11) {
         deserializeDataV11(fieldSetter, data);
+      }
+      else if (version == 12) {
+        deserializeDataV12(fieldSetter, data);
       }
     }
 
@@ -674,6 +681,37 @@ public class Series {
       fieldSetter.set(Series.MIRROR_SERIES, input.readInteger());
       fieldSetter.set(Series.SHOULD_REPORT, input.readBoolean());
       fieldSetter.set(Series.TARGET_ACCOUNT, input.readInteger());
+    }
+
+    private void deserializeDataV12(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Series.NAME, input.readUtf8String());
+      fieldSetter.set(Series.BUDGET_AREA, input.readInteger());
+      fieldSetter.set(Series.DESCRIPTION, input.readUtf8String());
+      fieldSetter.set(Series.PROFILE_TYPE, input.readInteger());
+      fieldSetter.set(Series.FIRST_MONTH, input.readInteger());
+      fieldSetter.set(Series.LAST_MONTH, input.readInteger());
+      fieldSetter.set(Series.DAY, input.readInteger());
+      fieldSetter.set(Series.INITIAL_AMOUNT, input.readDouble());
+      fieldSetter.set(Series.IS_AUTOMATIC, input.readBoolean());
+      fieldSetter.set(Series.JANUARY, input.readBoolean());
+      fieldSetter.set(Series.FEBRUARY, input.readBoolean());
+      fieldSetter.set(Series.MARCH, input.readBoolean());
+      fieldSetter.set(Series.APRIL, input.readBoolean());
+      fieldSetter.set(Series.MAY, input.readBoolean());
+      fieldSetter.set(Series.JUNE, input.readBoolean());
+      fieldSetter.set(Series.JULY, input.readBoolean());
+      fieldSetter.set(Series.AUGUST, input.readBoolean());
+      fieldSetter.set(Series.SEPTEMBER, input.readBoolean());
+      fieldSetter.set(Series.OCTOBER, input.readBoolean());
+      fieldSetter.set(Series.NOVEMBER, input.readBoolean());
+      fieldSetter.set(Series.DECEMBER, input.readBoolean());
+      fieldSetter.set(Series.TO_ACCOUNT, input.readInteger());
+      fieldSetter.set(Series.FROM_ACCOUNT, input.readInteger());
+      fieldSetter.set(Series.MIRROR_SERIES, input.readInteger());
+      fieldSetter.set(Series.SHOULD_REPORT, input.readBoolean());
+      fieldSetter.set(Series.TARGET_ACCOUNT, input.readInteger());
+      fieldSetter.set(Series.IS_INITIAL, input.readBoolean());
     }
   }
 }
