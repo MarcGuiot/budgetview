@@ -1,73 +1,736 @@
-Cf : http://www.banque-france.fr/fr/supervi/telechar/popetscred/eccib.pdf
-
-
-
-30001 Banque de France
-30002 Credit lyonnais
-11449 Credit lyonnais
-30003 Société Générale
-30004 BNP
-12406 CREDIT AGRICOLE
-12706 CREDIT AGRICOLE
-13306 CREDIT AGRICOLE
-10107 BANQUE POP/bred
-10307 BANQUE POP
-20041 LA POSTE
-30056 CCF
-30066 CIC
-30076 CREDIT DU NORD
-30077 SMC
-30368 BANQUE HERVE
-30938 UBP
-30998 WORMS
-40168 BANQUE DE BRETAGNE
-30056 HSBC
-
-------
-
-http://www.technimag.com/catalog/cbanque.php :
-
-10067 SOGENAL
-10107 BANQUE POP/bred
-10207 banque nationnal du midi
-10307 banque pop
-10607 BANQUE POP AV
-10688 CIN
-10548 BANQUE DE SAVOIE
-10807 B POP MACON ET FRANCHE CONTE
-10907 B POP DU SUD OUEST
-11406 CREDIT AGRICOLE
-11425 CAISSE D EPARGNE
-11449 CREDIT LYONNAIS
-11607 BANQUE POP
-12345 CREDIT LYONNAIS
-12406 CREDIT AGRICOLE
-12706 CREDIT AGRICOLE
-13306 CREDIT AGRICOLE
-14505 CAISSE D EPARGNE
-15459 CREDIT MUT STRASBOURG
-15707 BP DU MIDI
-15959 C MUT STRASBOURG
-15999 C MUT STRASBOURG
-16306 C MUT STRASBOURG
-17106 CA Pyrénnée oriental
-17695 CAISSE D EPARGNE
-17907 BP
-18206 CA
-18306 CA
-18707 BP
-19106 CA de manosque
-20041 LA POSTE
-30001 Banque de France
-30002 Credit lyonnais
-30003 Société Générale
-30004 BNP
-30056 CCF
-30066 CIC
-30076 CREDIT DU NORD
-30076 CREDIT DU NORD
-30077 SMC
-30368 BANQUE HERVE
-30938 UBP
-30998 WORMS
-40168 BANQUE DE BRETAGNE
+13279 Affine
+11938 AGCO finance SNC
+45129 Agence française de développement
+13959 Agrifigest-Alma – Société financière et agricole de gestion
+41829 Al Khaliji France
+12240 Allianz banque
+15318 Allied irish banks plc (AIB) – AIB Corporate banking France
+16160 Alsabail – Alsacienne de crédit bail immobilier
+14578 Alsolia
+16820 American Express carte France
+14328 Amundi finance
+19530 Amundi group
+23890 Attijariwafa bank europe
+13558 Auxifip
+11733 Axa bank Europe SA
+16318 Axa bank Europe SCF
+12548 Axa banque
+25080 Axa banque financement
+B
+18839 B.F.T. – Banque de financement et de trésorerie
+15980 Bail Entreprises
+11078 Bail immo Nord
+15970 Bail-Actea
+12088 Banca Carige S.p.A – Cassa di risparmio di Genova e Imperia
+16098 Banca IFIS
+14908 Banca popolare di Sondrio (Suisse)
+14818 Banca regionale Europea S.p.A.
+41189 Banco Bilbao Vizcaya Argentaria (BBVA)
+12589 Banco BPI
+19229 Banco de Sabadell
+41139 Banco do Brasil
+12508 Banco Guipuzcoano S.A.
+44729 Banco Santander SA
+18089 Bank Audi Saradar France
+14508 Bank Julius Baer (Monaco) S.A.M.
+41259 Bank Melli Iran
+41219 Bank of America national association
+18769 Bank of China limited
+14879 Bank of India
+13648 Bank of Scotland plc
+41239 Bank Polska Kasa Opieki Spolka Akcyjna
+44269 Bank Saderat Iran
+17799 Bank Sepah
+17579 Bank Tejarat
+12869 Banque Accord
+10968 Banque AIG
+12579 Banque BCP
+12179 Banque BIA
+17499 Banque calédonienne d’investissement – B.C.I.
+12468 Banque cantonale de Genève (France) S.A.
+17519 Banque centrale de compensation
+41439 Banque Chaabi du Maroc
+24659 Banque Chabrières
+10178 Banque Chaix
+10188 Banque Chalus
+30087 Banque CIC Est
+30027 Banque CIC Nord Ouest
+30047 Banque CIC Ouest
+13298 Banque commerciale du marché nord Europe-BCMNE
+18829 Banque commerciale pour le marché de l’entreprise – BCME
+10268 Banque Courtois – successeurs de l’ancienne maison Courtois et Cie depuis 1760
+40168 Banque de Bretagne
+11668 Banque de gestion Edmond de Rothschild – Monaco
+43799 Banque de gestion privée Indosuez – BGPI
+12169 Banque de la Réunion
+11899 Banque de l’économie du commerce et de la monétique
+17619 Banque de l’Europe méridionale – Bemo
+14889 Banque de Nouvelle Calédonie
+12149 Banque de Polynésie
+11210 Banque de réalisations de gestion et de financement – Régéfi
+11749 Banque de Saint-Pierre et Miquelon
+10548 Banque de Savoie
+12239 Banque de Tahiti « B.D.T. »
+13999 Banque de Vizille
+11408 Banque de Wallis et Futuna
+43030 Banque Degroof & Philippe
+12879 Banque Delubac et Cie
+41839 Banque des Antilles françaises « B.D.A.F. »
+44149 Banque d’escompte
+19089 Banque d’Orsay
+30258 Banque du bâtiment et des travaux publics – BTP banque
+11628 Banque du crédit mutuel Ile-de-France – BCMI
+14628 Banque du groupe Casino
+12939 Banque Dupuy de Parseval
+13149 Banque Edel SNC
+43659 Banque Espirito Santo et de la Vénétie
+18869 Banque fédérale mutualiste -B.F.M.
+11808 Banque fédérative du crédit mutuel
+13179 Banque Fiducial
+41599 Banque française
+18729 Banque française commerciale Antilles-Guyane – B.F.C. Antilles-Guyane
+18719 Banque française commerciale Océan Indien – B.F.C. Océan Indien
+40398 Banque internationale de commerce – BRED
+24349 Banque J. Safra (Monaco) SA
+11438 Banque Jean-Philippe Hottinguer et Cie
+13259 Banque Kolb
+10228 Banque Laydernier
+21990 Banque Leonardo
+13369 Banque Martin – Maurel
+13379 Banque Marze
+17959 Banque Michel Inchauspé – BAMI
+18569 Banque Misr
+18879 Banque monétaire et financière – B.M.F.
+14898 Banque nationale de Paris Intercontinentale
+30788 Banque Neuflize OBC
+19730 Banque Nomura France
+13489 Banque Nuger
+40978 Banque Palatine
+16840 Banque Pasche Monaco SAM
+11468 Banque patrimoine et immobilier (B.P.I.)
+13529 Banque Pelletier
+13807 Banque populaire Atlantique
+10807 Banque populaire Bourgogne Franche-Comté
+13607 Banque populaire Centre Atlantique (2ème du nom)
+15607 Banque populaire Côte d’Azur
+17607 Banque populaire d’Alsace
+16707 Banque populaire de l’Ouest
+16807 Banque populaire des Alpes
+11907 Banque populaire du Massif central
+13507 Banque populaire du Nord
+16607 Banque populaire du Sud
+10907 Banque populaire du Sud-Ouest
+13907 Banque populaire Loire et Lyonnais
+14707 Banque populaire Lorraine Champagne
+17807 Banque populaire Occitane
+14607 Banque populaire provençale et Corse
+10207 Banque populaire Rives de Paris
+18707 Banque populaire Val de France (2ème du nom)
+11989 Banque Pouyanne
+18919 Banque privée 1818
+44319 Banque privée européenne
+13168 Banque PSA finance
+17649 Banque Revillon
+10468 Banque Rhône-Alpes – Groupe Crédit du Nord
+14150 Banque Robeco
+14608 Banque Safra France SA
+13579 Banque Saint-Olive
+17779 Banque SBA
+17469 Banque Socrédo
+13539 Banque Solfea
+10558 Banque Tarneaud
+11449 Banque Thémis
+30568 Banque Transatlantique S.A.
+42649 Banque Travelex S.A.
+15958 Banques Populaires covered bonds
+19300 Barclays bail
+30588 Barclays bank plc
+12448 Barclays bank plc Monaco
+24599 Barclays France
+16050 Bati Lease
+18040 Batifranc
+16020 Batimap
+13018 Batiroc Bretagne – Pays de Loire
+16180 Batiroc Normandie
+10108 Bayerische landesbank
+16218 Bforbank
+16158 BGFI International
+15218 Bibby factor France
+15818 Binckbank NV
+17599 Blom bank France
+12249 BMCE Bank international plc
+14670 BMW Finance
+30004 BNP Paribas
+18020 BNP Paribas Factor
+15408 BNP Paribas Fin’AMS
+13078 BNP Paribas Guadeloupe
+11729 BNP Paribas Guyane
+15668 BNP Paribas home loan covered bonds
+30958 BNP Paribas Lease Group
+13088 BNP Paribas Martinique
+17939 BNP Paribas Nouvelle-Calédonie
+18029 BNP Paribas Personal Finance
+16078 BNP Paribas Public Sector SCF
+41919 BNP Paribas Réunion
+41329 BNP Paribas securities services
+40198 BNP Paribas wealth management
+11498 BNP Paribas wealth management Monaco
+16168 BOA France
+21859 Bourgogne garantie
+40618 Boursorama
+16188 BPCE
+14888 BPCE International et Outremer (BPCE IOM)
+11378 BPN-Banco portugues de negocios, SA
+10107 BRED – Banque populaire
+12779 BRED Cofilease
+14318 BRED Gestion
+11018 BSI Monaco SAM
+18049 BSI-Ifabanque SA
+18590 Bull finance
+23779 Byblos bank Europe
+C
+11380 C.R.H. – Caisse de refinancement de l’habitat
+41539 CA Consumer finance
+18129 CACEIS Bank
+15988 Cafineo
+15429 Caisse agricole Crédit Mutuel
+18609 Caisse centrale du crédit immobilier de France-3CIF
+45539 Caisse centrale du crédit mutuel
+15449 Caisse de Bretagne de crédit mutuel agricole
+17429 Caisse de crédit agricole mutuel de la Nouvelle-Calédonie et dépendances
+18950 Caisse de crédit municipal d’Avignon
+16560 Caisse de crédit municipal de Bordeaux
+16170 Caisse de crédit municipal de Boulogne-sur-Mer
+28570 Caisse de crédit municipal de Dijon
+14078 Caisse de crédit municipal de Lille
+18050 Caisse de crédit municipal de Lyon
+10140 Caisse de crédit municipal de Marseille
+18160 Caisse de crédit municipal de Nancy
+18470 Caisse de crédit municipal de Nantes
+16200 Caisse de crédit municipal de Nice
+17620 Caisse de crédit municipal de Nîmes
+12420 Caisse de crédit municipal de Reims
+18450 Caisse de crédit municipal de Roubaix
+16100 Caisse de crédit municipal de Rouen
+17100 Caisse de crédit municipal de Strasbourg
+17150 Caisse de crédit municipal de Toulon
+11550 Caisse de crédit municipal de Toulouse
+60220 Caisse de développement de la Corse
+25709 Caisse de garantie de l’immobilier
+11190 Caisse de garantie du logement locatif social
+14900 Caisse de mutualisation des financements – Camufi
+13335 Caisse d’épargne et de prévoyance Aquitaine Poitou-Charentes
+14445 Caisse d’épargne et de prévoyance Bretagne-Pays de Loire
+18315 Caisse d’épargne et de prévoyance Côte d’Azur
+16705 Caisse d’épargne et de prévoyance d’Alsace
+18715 Caisse d’épargne et de prévoyance d’Auvergne et du Limousin
+12135 Caisse d’épargne et de prévoyance de Bourgogne Franche-Comté
+15135 Caisse d’épargne et de prévoyance de Lorraine Champagne-Ardenne
+13135 Caisse d’épargne et de prévoyance de Midi-Pyrénées
+18025 Caisse d’épargne et de prévoyance de Picardie
+13825 Caisse d’épargne et de prévoyance de Rhône Alpes
+13485 Caisse d’épargne et de prévoyance du Languedoc Roussillon
+17515 Caisse d’épargne et de prévoyance Ile-de-France
+14265 Caisse d’épargne et de prévoyance Loire Drôme Ardèche
+14505 Caisse d’épargne et de prévoyance Loire-Centre
+16275 Caisse d’épargne et de prévoyance Nord France Europe
+11425 Caisse d’épargne et de prévoyance Normandie
+11315 Caisse d’épargne et de prévoyance Provence-Alpes-Corse
+10278 Caisse fédérale de crédit mutuel
+15749 Caisse fédérale de crédit mutuel de Loire-Atlantique et du Centre-Ouest
+15959 Caisse fédérale de crédit mutuel de Normandie
+15459 Caisse fédérale de crédit mutuel du Centre
+16159 Caisse fédérale du crédit mutuel Antilles-Guyane
+15829 Caisse fédérale du crédit mutuel d’Anjou
+15489 Caisse fédérale du crédit mutuel de Maine-Anjou et Basse-Normandie
+15629 Caisse fédérale du crédit mutuel Nord Europe
+15519 Caisse fédérale du crédit mutuel Océan
+18589 Caisse française de développement industriel – C.F.D.I.
+15899 Caisse interfédérale du crédit mutuel sud Europe Méditerranée
+26819 Caisse mutuelle de garantie des industries mécaniques et transformatrices des métaux « CMGM »
+17206 Caisse régionale de crédit agricole mutuel Alsace Vosges
+14706 Caisse régionale de crédit agricole mutuel Atlantique Vendée
+18706 Caisse régionale de crédit agricole mutuel Brie Picardie
+14806 Caisse régionale de crédit agricole mutuel Centre Loire
+17806 Caisse régionale de crédit agricole mutuel Centre-Est
+11706 Caisse régionale de crédit agricole mutuel Charente-Maritime Deux-Sèvres
+12406 Caisse régionale de crédit agricole mutuel Charente-Périgord (Crédit agricole Charente-Périgord)
+11306 Caisse régionale de crédit agricole mutuel d’Alpes-Provence
+13306 Caisse régionale de crédit agricole mutuel d’Aquitaine
+16806 Caisse régionale de crédit agricole mutuel de Centre France – Crédit agricole Centre France (3ème du nom)
+11006 Caisse régionale de crédit agricole mutuel de Champagne-Bourgogne
+12506 Caisse régionale de crédit agricole mutuel de Franche-Comté
+12006 Caisse régionale de crédit agricole mutuel de la Corse
+14006 Caisse régionale de crédit agricole mutuel de la Guadeloupe
+19806 Caisse régionale de crédit agricole mutuel de la Martinique et de la Guyane
+19906 Caisse régionale de crédit agricole mutuel de la Réunion
+19406 Caisse régionale de crédit agricole mutuel de la Touraine et du Poitou
+17906 Caisse régionale de crédit agricole mutuel de l’Anjou et du Maine
+16106 Caisse régionale de crédit agricole mutuel de Lorraine
+16606 Caisse régionale de crédit agricole mutuel de Normandie
+18206 Caisse régionale de crédit agricole mutuel de Paris et d’Ile-de-France
+12206 Caisse régionale de crédit agricole mutuel des Côtes-d’Armor
+18106 Caisse régionale de crédit agricole mutuel des Savoie – Crédit agricole des Savoie
+13606 Caisse régionale de crédit agricole mutuel d’Ille-et-Vilaine
+19506 Caisse régionale de crédit agricole mutuel du Centre Ouest
+12906 Caisse régionale de crédit agricole mutuel du Finistère
+13506 Caisse régionale de crédit agricole mutuel du Languedoc
+16006 Caisse régionale de crédit agricole mutuel du Morbihan
+10206 Caisse régionale de crédit agricole mutuel du Nord Est
+14506 Caisse régionale de crédit agricole mutuel Loire – Haute-Loire
+16706 Caisse régionale de crédit agricole mutuel Nord de France
+11206 Caisse régionale de crédit agricole mutuel Nord Midi-Pyrénées
+18306 Caisse régionale de crédit agricole mutuel Normandie-Seine
+19106 Caisse régionale de crédit agricole mutuel Provence-Côte d’Azur (Alpes de Haute-Provence-Alpes-maritimes-Var)
+16906 Caisse régionale de crédit agricole mutuel Pyrénées-Gascogne
+13906 Caisse régionale de crédit agricole mutuel Sud Rhône-Alpes
+17106 Caisse régionale de crédit agricole mutuel Sud-Méditerranée (Ariège et Pyrénées-Orientales)
+13106 Caisse régionale de crédit agricole mutuel Toulouse 31
+14406 Caisse régionale de crédit agricole mutuel Val de France
+17219 Caisse régionale de crédit maritime mutuel Atlantique
+17149 Caisse régionale de crédit maritime mutuel de Bretagne-Normandie
+17179 Caisse régionale de crédit maritime mutuel de la Méditerranée
+15348 Caisse régionale de crédit maritime mutuel de la région Nord
+15358 Caisse régionale de crédit maritime mutuel d’outre mer
+17169 Caisse régionale de crédit maritime mutuel du littoral du sud ouest
+13798 Caisse solidaire
+11748 Caixa d’Estalvis de Catalunya, Tarragona i Manresa
+14828 Caixa Geral de Depositos
+12619 Caixa geral de depositos S.A.
+12518 Caja de ahorros y Monte de Piedad de Guipuzcoa y San Sebastian – Kutxa
+14798 Camefi banque
+14648 Capitole Finance – Tofinso
+11307 CASDEN Banque Populaire
+12138 Caterpillar finance France S.A.
+20290 Caution mutuelle du crédit immobilier de France – CM-CIF
+16989 Cavabanque
+13490 Central expansion
+15628 CheBanca! SpA – Micos
+10918 Cholet Dupont
+41199 CIC Iberbanco
+16700 Cicobail
+14658 CIF EUROMORTGAGE
+19930 Cinergie
+11960 CIT (France) S.A.S.
+11689 Citibank international plc – Citigroup
+15778 Citibank, N.A.
+14218 Claas financial services
+13070 CM-CIC Bail
+15848 CM-CIC covered bonds
+17230 CM-CIC Laviolette financement
+11600 CMCIC Lease
+50140 CMP-Banque
+12110 CMV Médiforce
+13838 CNH Capital Europe
+15448 CNH Financial services
+11790 Cofacrédit
+13128 Cofica bail
+14940 Cofidis
+18660 Cofiloisirs – Compagnie pour le financement des loisirs
+13728 Cofiplan S.A.
+18000 Cofitem-Cofimur
+14590 Cogera société anonyme
+15858 Coinstar money transfer SAS
+17629 Commerzbank AG
+18179 Commerzbank holdings France
+17869 Compagnie de banques internationales de Paris
+30051 Compagnie de financement foncier
+19850 Compagnie de gestion et de prêts – C.D.G.P.
+14588 Compagnie financière de Bourbon
+26630 Compagnie financière de Paris
+18930 Compagnie financière du littoral – Cofilit
+17060 Compagnie générale d’affacturage – C.G.A.
+18189 Compagnie générale de crédit aux particuliers – Crédipar
+13360 Compagnie générale de garantie
+19250 Compagnie générale de location d’équipements « C.G.L. »
+17569 Compagnie monégasque de banque
+18610 Compagnie pour la location de véhicules – CLV
+16270 Comptoir financier de garantie – CFG
+15380 Conservateur finance
+17479 Coopérative immobilière des îles Saint-Pierre-et-Miquelon (C.I.S.P.M.)
+18540 Corsabail
+18889 Cortal Consors
+14698 Coutts & co (Monaco)
+21670 CP Or devises
+15278 Créalfi
+17510 Créatis
+31489 Crédit agricole corporate and investment bank
+15898 Crédit Agricole covered bonds
+13210 Crédit agricole leasing & factoring
+30006 Crédit Agricole S.A.
+16600 Crédit calédonien et tahitien Credical
+10638 Crédit commercial du Sud-Ouest
+42559 Crédit coopératif
+11778 Crédit du Maroc
+30076 Crédit du Nord
+19150 Crédit et services financiers – Creserfi
+16640 Crédit financier lillois
+43199 Crédit Foncier de France
+12739 Crédit foncier de Monaco
+15149 Crédit foncier et communal d’Alsace et de Lorraine-Banque
+14448 Crédit foncier et communal d’Alsace et de Lorraine-Société de crédit foncier « CFCAL-SCF »
+12418 Crédit immobilier de France – Ouest
+12348 Crédit immobilier de France Bretagne Atlantique
+12338 Crédit Immobilier de France Centre Est
+12398 Crédit immobilier de France Centre Ouest
+18709 Crédit immobilier de France Ile de France
+12368 Crédit immobilier de France Méditerranée (2ème du nom)
+12308 Crédit immobilier de France Nord
+12328 Crédit immobilier de France Rhône Alpes Auvergne
+12258 Crédit immobilier de France Sud Ouest
+30066 Crédit industriel et commercial – CIC
+15568 Crédit lift
+19230 Crédit logement
+30002 Crédit lyonnais
+10160 Crédit mobilier de Monaco
+19020 Crédit moderne Antilles Guyane
+12050 Crédit moderne Océan Indien
+15208 Crédit municipal de Paris
+16179 Crédit mutuel agricole et rural de Loire-Atlantique et du Centre-Ouest
+15549 Crédit mutuel agricole et rural Océan « C.M.A.R. Océan »
+15589 Crédit mutuel Arkéa
+16088 CREDIT MUTUEL ARKEA COVERED BONDS
+18169 Crédit suisse (France)
+14048 Crédit suisse (Monaco)
+13428 Crédit suisse AG
+14758 Creelia
+14988 Créfidis
+D
+11678 De Lage Landen leasing S.A.S.
+14918 DePfa bank plc
+17789 Deutsche bank AG
+15648 Deutsche leasing France
+17863 Deutsche pfandbriefbank AG
+14178 Dexia bail
+23380 Dexia C.L.F. régions bail
+13148 Dexia CLF Banque
+17290 Dexia crédit local
+14410 Dexia Flobail
+14388 Dexia Municipal Agency
+16038 Dexia private bank Monaco S.A.M.
+16000 Diac
+10900 Diffuco
+15338 Disponis
+14998 Domofinance
+15508 Dresdner bank Monaco
+E
+16048 Ebi SA
+18759 EFG Bank (Monaco)
+16198 EFG banque privée
+42959 Electro banque
+22970 Epargne crédit des militaires (E.C.M.)
+13698 Ester finance titrisation
+12658 Euler Hermès sfac crédit
+16850 Eurofactor
+14148 Eurohypo AG
+15000 Euronext Paris S.A.
+14206 Europay France
+17979 Europe arab bank PLC
+13408 Européenne de cautionnement S.A.
+17973 Exane derivatives
+18209 Exane finance
+62108 EXPANSO – La Société pour le développement régional
+F
+14380 Facet
+10890 Factobail
+11978 Factocic
+15798 FBN bank (UK) Ltd
+13400 FC France
+12478 FCE bank plc-Ford credit Europe Ford credit-Jaguar financial services-Volvo car finance-PRIMUS-Land Rover financial services-Ford financial-Mazda bank
+15900 Fédéral finance banque
+13038 Fidem
+16108 Fideuram bank (Monaco) SAM
+14008 Fimipar
+19169 Finamur
+13540 Financière du Marché Saint-Honoré
+10038 Financière immobilière Crédit agricole CIB
+12298 Financière régionale de crédit immobilier de Bretagne
+16839 Financo
+13538 Finifac
+14020 FL Auto
+28860 Foncaris
+10930 Fonds régional de garantie du Nord-Pas-de-Calais – F.R.G.- Nord-Pas-de-Calais
+45720 Fortis banque – Fortis bank, succursale en France
+15590 Fortis commercial finance S.A.S.
+18053 Fortis investment finance
+21339 Fortis lease
+15558 Fortis mediacom finance
+14518 Fortuneo
+13158 France active garantie FAG S.A.
+17529 Francetel – Société française de financement des télécommunications
+16760 Franfinance
+18689 Fransabank France S.A.
+10820 Fructibail
+16190 Fructicomi
+G
+19339 GCE bail
+15998 GCE COVERED BONDS
+10008 GE Capital équipement finance
+13928 GE Capital financements immobiliers d’entreprise
+11818 GE Commercial distribution finance S.A.
+15168 GE Corporate finance bank S.A.S.
+13580 GE Factofrance
+14288 GE Factor
+42799 GE Money bank
+16208 GE SCF
+19519 Gedex distribution
+19269 Génébanque
+16830 Genecal
+28310 Genecomi
+17660 Généfim
+19249 Généfimmo
+14848 General electric financement pacifique S.A.S.
+17839 GMAC Banque
+14040 Goldman Sachs Paris Inc et Cie
+18370 Groupama banque (2ème du nom)
+18520 Groupe Sofemo
+H
+18289 Habib bank limited
+15578 Hoist kredit AB
+18059 HSBC bank plc
+16058 HSBC COVERED BONDS (FRANCE)
+11720 HSBC Epargne entreprise (France)
+13888 HSBC Factoring (France)
+30056 HSBC France
+14398 HSBC Leasing (France)
+13488 HSBC Private bank (Monaco) S.A.
+18629 HSBC Private bank France
+14408 HSBC Real Estate Leasing (France)
+16008 HSH Nordbank AG
+I
+16030 IBM France financement
+13788 Idifine
+13678 IFN Finance
+17123 IKB deutsche industriebank AG
+30438 ING Belgium SA, succursale en France
+14559 ING Direct N.V.
+11248 ING Lease France S.A.
+15518 ING real estate finance (France)
+12818 Institut pour le financement du cinéma et des industries culturelles – I.F.C.I.C.
+17070 Inter Europe conseil
+11830 Inter-Coop ( 2ème du nom)
+11490 Interfimo
+10128 Intesa Sanpaolo SpA
+13688 Isbank GmbH
+J
+12978 JCB Finance
+15458 Joh. Berenberg, Gossler & Co. KG
+14108 John Deere crédit
+30628 JPMorgan Chase bank, National Association
+15008 Jyske bank A/S
+K
+14188 KBC bail France
+15428 KBC bail immobilier France SAS
+27800 KBC bank
+13338 KBL Monaco private bankers
+19069 KBL Richelieu banque privée
+16028 Key equipment finance nordic AB
+15378 Komatsu financial France
+14989 Korea exchange bank
+L
+20041 La Banque Postale
+16178 La Banque Postale Financement
+42529 La Compagnie financière Edmond de Rothschild banque
+16068 Landesbank Hessen-Thüringen Girozentrale (Helaba)
+19063 Landesbank Saar (SAARLB)
+11230 Laser cofinoga
+30748 Lazard frères banque
+14120 Legal & general bank (France)
+13150 LixxBail
+44449 LixxCrédit
+21120 Lloyds TSB bank plc
+15528 Lloyds TSB bank plc
+10800 Locam – Location automobiles matériels
+12549 Locindus S.A.
+13858 Loisirs finance
+10096 Lyonnaise de banque « L.B. »
+M
+15960 MACSF Financement
+15498 MAN financial services SAS
+14478 Martin Maurel Sella Banque privée – Monaco S.A.M.
+12860 Médiatis
+15148 Mediobanca – banca di credito finanziario S.p.A.
+18789 Mega international commercial bank Co, Ltd
+19139 Ménafinance
+10550 Mercedes-Benz financial services France S.A.
+15920 Merrill Lynch capital markets (France) SAS
+10323 Merrill Lynch international bank limited
+15078 MFF
+18529 Mizuho corporate bank limited Paris branch
+14690 Monabanq.
+18750 Monacrédit
+15658 MoneyGram France
+30478 Monte Paschi banque S.A.
+15638 Monte Paschi Monaco S.A.M.
+15438 Multi accès banque
+N
+17549 Natiocrédibail
+18530 Natiocredimurs, société en nom collectif
+18439 Natioénergie – Société pour le financement des économies d’énergie (Sofergie)
+17989 National bank of Abu Dhabi
+41639 National bank of Kuwait (International) plc
+14139 National bank of Pakistan
+30007 Natixis
+16278 Natixis Asset Management Finance
+12749 Natixis bail
+11470 Natixis coficiné
+19940 Natixis Energéco
+11138 Natixis factor
+14768 Natixis financement
+16780 Natixis funding
+14948 Natixis interépargne
+11128 Natixis lease
+15930 Natixis paiements
+19239 Natixis transport finance
+12198 Newedge group
+18429 Norbail Sofergie
+27180 Norbail-Immobilier
+16870 Nord Financement
+14018 Norrsken finance
+14238 Nouméa crédit
+15830 Novacrédit
+O
+15138 Océanienne de financement (OFINA)
+18730 Océor lease Nouméa
+19190 Oceor lease Réunion
+19110 Océor lease Tahiti
+24280 Oddo corporate finance
+45850 Oddo et cie
+15938 Orange – BNP Paribas services
+13880 OSEO bretagne
+18359 OSEO financement
+18190 OSEO garantie
+19649 OSEO garantie regions
+27589 Oudart S.A.
+P
+12568 Paribas dérivés garantis S.N.C. (PDG)
+25790 Parifergie
+21349 Parilease
+15608 Philippine national bank (Europe) PLC
+15068 Pictet & Cie (Europe) SA
+13758 Prêts et services
+15548 Prioris
+16298 Procapital banking services
+15488 Projeo
+Q
+17919 Qatar national bank
+43789 Quilvest banque privée
+R
+10218 Rabobank Nederland – Rabobank international
+15298 RBC Dexia investor services bank France SA
+11188 RCI Banque
+27910 Réunibail
+15708 Ria France
+18669 Rothschild et compagnie banque
+15908 Royal bank of Canada Europe limited
+S
+11008 S E B – Skandinaviska enskilda banken AB (publ)
+16130 S.I.R.C.A.M.
+24850 Sal.Oppenheim (France)
+13998 Same Deutz-Fahr finance
+15868 Saxo banque (France)
+22840 Scania finance France
+11140 SEDEF (société européenne de développement du financement)
+15728 Sefia
+13368 SG private banking (Monaco)
+14228 SGB Finance
+14958 Siemens financial services SAS
+11298 Sinopia financial services
+15618 SNS property finance (SNSPF)
+60080 Société alsacienne de développement et d’expansion « SADE »
+43629 Société anonyme de crédit à l’industrie française (C.A.L.I.F.)
+15610 Société anonyme de gestion et de financement – Sagefi
+19000 Société auxiliaire d’études et d’investissements mobiliers – Investimo
+10057 Société bordelaise de crédit industriel et commercial – Société bordelaise de C.I.C.
+17279 Société centrale de crédit maritime mutuel
+12128 Société centrale pour le financement de l’immobilier – Socfim
+19479 Société coopérative et mutuelle de la région P.A.C.A. – « S.O.M.U.P.A.C.A. »
+13220 Société coopérative pour la rénovation et l’équipement du commerce – Socorec
+17679 Société de banque et d’expansion – S.B.E. (2ème du nom)
+25609 Société de caution mutuelle des entreprises de travail temporaire « Socamett »
+20380 Société de caution mutuelle des négociants en céréales/oléagineux et protéagineux – Caution Grainol
+20280 Société de caution mutuelle des professions immobilières et foncières « Socaf »
+19189 Société de crédit à la consommation Camif – C2C
+12500 Société de financement de la meunerie
+19560 Société de garantie coopérative et mutuelle des industries métallurgiques,électriques et connexes de la région Rhône-Alpes – Somudimec
+13028 Société de gestion des fonds de garantie d’outre-mer (Sogefom)
+10088 Société de promotion et de participation pour la coopération économique-Proparco
+19870 Société des paiements Pass – S2P
+15228 Société financière Antilles Guyane – SOFIAG
+14749 Société financière de banque – Sofib
+21570 Société financière de la N.E.F.
+14928 Société financière de paiements
+12828 Société financière des entreprises du Gard – Sofigard
+14378 Société financière du porte-monnaie électronique interbancaire
+12670 Société financière et mobilière
+17439 Société financière pour le développement de la Réunion (S.O.F.I.D.E.R.)
+19340 Société financière pour l’expansion de la distribution – Sofinedis
+30003 Société générale
+18319 Société générale calédonienne de banque SGCB
+18079 Société générale de banque aux Antilles
+13769 Société générale pour le développement des opérations de crédit-bail immobilier- Sogebail
+15968 Société Générale SCF
+18900 Société guadeloupéenne de financement – Soguafi
+26679 Société interprofessionnelle artisanale de garantie d’investissements – S.I.A.G.I.
+30077 Société marseillaise de crédit
+18890 Société martiniquaise de financement – Somafi
+20019 Société pour le financement du développement industriel en Poitou-Charentes « Sofindi »
+10050 Société réunionnaise de financement – Sorefi
+12280 Socram banque
+10920 Sodelem
+19460 Sofax banque
+12438 SOFIAP (Société financière pour l’accession à la propriété)
+18809 Soficarte
+18230 Sofiprotéol
+15409 SOFIRIF – Coopérative financière de la région Ile de France
+18650 SOFISCOP
+12008 Sofiscop Sud-Est
+13248 Sofracem
+12668 Sofrafi
+26269 Sogal-Société de garantie des entreprises laitières agricoles et alimentaires – Sogal-Socamuel
+23930 Sogama – crédit associatif
+19259 Sogefimur
+12748 Sogefinancement
+19990 Sogefinerg-Société générale pour le financement des investissements économisant l’énergie
+15178 Sogelease BDP
+14198 Sogelease France
+21619 Sophia-Bail
+15918 Standard chartered bank
+14688 Star Lease
+18329 State bank of India
+11518 State street banque S.A.
+12938 Sud-ouest bail
+15250 Sumitomo Mitsui banking corporation Europe limited
+14568 Svenska handelsbanken AB (publ)
+11238 SwissLife banque privée
+26310 Sygma banque
+T
+41249 The bank of Tokyo – Mitsubishi UFJ Ltd
+15258 The Governor and company of the bank of Ireland (Bank of Ireland)
+18739 The royal bank of Scotland NV
+10423 The royal bank of Scotland plc
+13878 Toyota kreditbank GmbH – Toyota France financement
+22910 Transolver finance S.A.
+43849 Tunisian foreign bank
+U
+12798 UBS
+30758 UBS (France) S.A.
+11999 UBS (Monaco) S.A.
+15928 UBS limited
+13968 UCB-Entreprises
+13528 Unicredit SpA
+18280 Unifergie – Union pour le financement des économies d’énergie
+16750 Unimat
+43899 Union de banques arabes et françaises – U.B.A.F.
+19570 Union financière de France banque
+13390 Union financière pour le développement de l’économie céréalière – Unigrains
+13020 Union industrielle et commerciale de France – Unincofra
+14800 Union notariale financière de crédit – Unofi crédit
+V
+15788 Veolia P.P.P. Finance
+12558 VFS Finance France
+15128 Volkswagen bank GmbH
+40238 VTB Bank (France) S.A.
+W
+41629 WestLB AG
+14738 W-HA S.A.
