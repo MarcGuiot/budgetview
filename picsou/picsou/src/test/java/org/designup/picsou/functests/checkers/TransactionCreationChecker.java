@@ -9,6 +9,7 @@ import org.uispec4j.Window;
 import javax.swing.*;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
+import org.designup.picsou.utils.Lang;
 
 public class TransactionCreationChecker extends ViewChecker {
   private Panel panel;
@@ -129,7 +130,7 @@ public class TransactionCreationChecker extends ViewChecker {
 
   public TransactionCreationChecker checkShowing() {
     checkPanelVisible(true);
-    assertThat(getShowHideButton().textEquals("Hide"));
+    assertThat(getShowHideButton().textEquals(Lang.get("hide")));
     return this;
   }
 
@@ -146,7 +147,7 @@ public class TransactionCreationChecker extends ViewChecker {
   public TransactionCreationChecker checkHidden() {
     views.selectCategorization();
     checkPanelVisible(false);
-    assertThat(getShowHideButton().textEquals("Input operations manually"));
+    assertThat(getShowHideButton().textEquals(Lang.get("transactionCreation.show")));
     return this;
   }
 

@@ -78,7 +78,8 @@ public class DefaultSeriesFactory {
       .set(Series.NAME, getName(budgetArea, nameKey))
       .set(Series.IS_AUTOMATIC, budgetArea.isAutomatic())
       .set(Series.BUDGET_AREA, budgetArea.getId())
-      .set(Series.PROFILE_TYPE, profileType.getId());
+      .set(Series.PROFILE_TYPE, profileType.getId())
+      .set(Series.IS_INITIAL, Boolean.TRUE);
 
     Glob series = repository.create(Series.TYPE, builder.toArray());
 

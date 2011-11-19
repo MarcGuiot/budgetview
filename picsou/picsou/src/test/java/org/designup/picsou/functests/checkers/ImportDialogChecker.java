@@ -188,12 +188,12 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public void complete() {
-    dialog.getButton("OK").click();
+    dialog.getButton(Lang.get("import.end.button")).click();
     assertFalse(dialog.isVisible());
   }
 
   public void close() {
-    dialog.getButton("close").click();
+    dialog.getButton(Lang.get("import.fileSelection.close")).click();
     assertFalse(dialog.isVisible());
   }
 
@@ -219,7 +219,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker checkCloseButton(String text) {
-    Button close = dialog.getButton("close");
+    Button close = dialog.getButton(Lang.get("close"));
     assertThat(close.textEquals(text));
     return this;
   }
@@ -244,14 +244,14 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker browseAndSelect(String path) {
-    WindowInterceptor.init(dialog.getButton("Browse").triggerClick())
+    WindowInterceptor.init(dialog.getButton(Lang.get("browse")).triggerClick())
       .process(FileChooserHandler.init().select(new String[]{path}))
       .run();
     return this;
   }
 
   public ImportDialogChecker skipFile() {
-    dialog.getButton("Skip").click();
+    dialog.getButton(Lang.get("import.skip.file")).click();
     return this;
   }
 
@@ -266,7 +266,7 @@ public class ImportDialogChecker extends GuiChecker {
   public ImportDialogChecker checkAvailableAccounts(String... accountNames) {
     String[] tmp = new String[accountNames.length + 1];
     System.arraycopy(accountNames, 0, tmp, 1, accountNames.length);
-    tmp[0] = "a new account";
+    tmp[0] = Lang.get("import.account.combo.empty");
     assertTrue(getAccountCombo().contentEquals(tmp));
     return this;
   }
@@ -281,7 +281,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker addNewAccount() {
-    getAccountCombo().select("a new account");
+    getAccountCombo().select(Lang.get("import.account.combo.empty"));
     return this;
   }
 
@@ -307,7 +307,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker checkDirectory(String directory) {
-    WindowInterceptor.init(dialog.getButton("Browse").triggerClick())
+    WindowInterceptor.init(dialog.getButton(Lang.get("browse")).triggerClick())
       .process(FileChooserHandler.init().assertCurrentDirEquals(new File(directory)).cancelSelection())
       .run();
     return this;
@@ -430,7 +430,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public void waitAcceptFiles() {
-    UISpecAssert.waitUntil(dialog.containsLabel("Preview"), 10000);
+    UISpecAssert.waitUntil(dialog.containsLabel(Lang.get("import.preview.title")), 10000);
   }
 
   public ImportDialogChecker setAsCreditCard() {
@@ -537,7 +537,7 @@ public class ImportDialogChecker extends GuiChecker {
         assertThat(contentBox.textContains(expectedMessage));
       }
       if (buttonMessage == null) {
-        return dialog.getButton("OK").triggerClick();
+        return dialog.getButton(Lang.get("import.end.button")).triggerClick();
       }
       else {
         return dialog.getButton(buttonMessage).triggerClick();

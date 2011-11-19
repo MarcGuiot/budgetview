@@ -31,6 +31,24 @@ public class SendImportedFileTest extends LoggedInFunctionalTestCase {
                             "<FITID>PICSOU101\n" +
                             "<NAME>lmno\n" +
                             "</STMTTRN>")
+      .toggleObfuscate()
+      .checkMessageContains("<STMTTRN>\n" +
+                            "<TRNTYPE>DEBIT\n" +
+                            "<DTPOSTED>20090202\n" +
+                            "<DTUSER>20090202\n" +
+                            "<TRNAMT>-29.00\n" +
+                            "<FITID>PICSOU101\n" +
+                            "<NAME>FNAC\n" +
+                            "</STMTTRN>")
+      .toggleObfuscate()
+      .checkMessageContains("<STMTTRN>\n" +
+                            "<TRNTYPE>DEBIT\n" +
+                            "<DTPOSTED>20090202\n" +
+                            "<DTUSER>20090202\n" +
+                            "<TRNAMT>1000000\n" +
+                            "<FITID>PICSOU101\n" +
+                            "<NAME>lmno\n" +
+                            "</STMTTRN>")
       .saveContentToFile(fileName)
       .close();
 

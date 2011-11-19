@@ -33,6 +33,10 @@ public class Lang {
     bundle = null;
   }
 
+  public static String getLang(){
+    return LOCALE.getLanguage();
+  }
+
   public static String get(String key, Object... arguments) throws ItemNotFound {
     if (arguments.length == 0) {
       return getMessage(key);

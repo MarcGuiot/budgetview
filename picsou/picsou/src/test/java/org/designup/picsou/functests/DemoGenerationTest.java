@@ -46,8 +46,8 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   public static void main(String[] args) throws Exception {
 
     System.setProperty("uispec4j.test.library", "junit");
-
-    Lang.setLocale(Lang.EN);
+    String lang = System.getProperty("LANG", "fr"); // sert dans le picous/pom.xml
+    Lang.setLocale(lang.equalsIgnoreCase("fr") ? Locale.FRANCE : Locale.ENGLISH);
 
     DemoGenerationTest test = createTest();
     test.test();
@@ -176,7 +176,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     System.out.println("OFX Savings File saved in: " + new File(OFX_SAVINGS_PATH).getAbsolutePath());
 
     views.selectHome();
-    mainAccounts.edit("Account n. 00000123456")
+    mainAccounts.edit("00000123456")
       .setAccountName(account("main"))
       .validate();
 
@@ -303,7 +303,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setAmount(150)
       .validate();
 
-
     //======== "HOUSE RENOVATION" PROJECT ===========
 
     budgetView.extras.createProject()
@@ -311,7 +310,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setItem(0, "First", firstMonth, -900.00)
       .addItem(1, "Second", secondMonth, -600.00)
       .validate();
-
 
     //======== "TRIP" PROJECT ===========
 
@@ -371,7 +369,19 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     budgetView.savings.editSeries(fromAccount("savings")).deleteCurrentSeries();
     budgetView.savings.editSeries(toAccount("savings")).deleteCurrentSeries();
 
+    operations.hideSignposts();
     //======== BACKUP ===========
+
+    // ne pas supprimer ce code il permet de generer les snaphots de demo qui sont integre a la version
+    // cf pom.xml
+
+    String outputFile = System.getProperty("outfile");
+    if (outputFile != null) {
+      File out = new File(outputFile);
+      out.delete();
+      operations.backup(out.getAbsoluteFile().getAbsolutePath());
+      System.out.println("DemoGenerationTest.test : snapshot generated in " + out.getAbsoluteFile().getAbsolutePath());
+    }
 
     String backupPath = new File(SNAPSHOT_PATH).getAbsolutePath();
     new File(SNAPSHOT_PATH).delete();

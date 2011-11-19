@@ -78,8 +78,9 @@ public abstract class WebBankPage extends BankPage {
       }
     }
     if (downloadAttachmentHandler.page != null) {
-      InputStream contentAsStream = downloadAttachmentHandler.page.getWebResponse().getContentAsStream();
-      return BankPage.createQifLocalFile(realAccount, contentAsStream);
+      WebResponse response = downloadAttachmentHandler.page.getWebResponse();
+      InputStream contentAsStream = response.getContentAsStream();
+      return BankPage.createQifLocalFile(realAccount, contentAsStream, response.getContentCharset());
     }
     else {
       Log.write("No download");

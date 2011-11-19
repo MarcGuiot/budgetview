@@ -1,7 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
 import org.globsframework.utils.Files;
-import org.globsframework.utils.Ref;
+import org.globsframework.utils.Strings;
 import org.uispec4j.MenuItem;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
@@ -31,13 +32,22 @@ public class SendImportedFileChecker extends GuiChecker {
     return this;
   }
 
-  public SendImportedFileChecker checkMessageContains(String content) {
-    assertThat(dialog.getInputTextBox("details").textContains(content));
+  public SendImportedFileChecker checkMessageContains(String expected) {
+    String trimmedExpected = Strings.trimLines(expected);
+    String trimmedActual = Strings.trimLines(dialog.getInputTextBox("details").getText());
+    if (!trimmedActual.contains(trimmedExpected)) {
+      Assert.fail("Text not found:\n" + trimmedExpected + "\nActual:\n" + trimmedActual);
+    }
     return this;
   }
 
   public SendImportedFileChecker saveContentToFile(String fileName) throws Exception {
     Files.copyStreamTofile(new ByteArrayInputStream(dialog.getInputTextBox("details").getText().getBytes("UTF-8")), fileName);
+    return this;
+  }
+
+  public SendImportedFileChecker toggleObfuscate() {
+    dialog.getCheckBox().click();
     return this;
   }
 

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<jsmoothproject>
+  <JVMSearchPath>registry</JVMSearchPath>
+  <JVMSearchPath>javahome</JVMSearchPath>
+  <JVMSearchPath>jrepath</JVMSearchPath>
+  <JVMSearchPath>jdkpath</JVMSearchPath>
+  <JVMSearchPath>exepath</JVMSearchPath>
+  <JVMSearchPath>jview</JVMSearchPath>
+  <arguments></arguments>
+  <currentDirectory>${EXECUTABLEPATH}</currentDirectory>
+  <embeddedJar>true</embeddedJar>
+  <executableName>budgetview.exe</executableName>
+  <iconLocation>../images/budgetview_icon_128.png</iconLocation>
+  <initialMemoryHeap>-1</initialMemoryHeap>
+  <jarLocation>../../target/budgetviewloader-1.0.jar</jarLocation>
+  <javaProperties>
+    <name>budgetview.exe.dir</name>
+    <value>${EXECUTABLEPATH}</value>
+  </javaProperties>
+  <javaProperties>
+    <name>sun.awt.exception.handler</name>
+    <value>picsou.AwtExceptionHandler</value>
+  </javaProperties>
+  <mainClassName>com.budgetview.Main</mainClassName>
+  <maximumMemoryHeap>134217728</maximumMemoryHeap>
+  <maximumVersion></maximumVersion>
+  <minimumVersion>1.5</minimumVersion>
+  <skeletonName>Windowed Wrapper</skeletonName>
+  <skeletonProperties>
+    <key>Message</key>
+    <value>Java is missing on your computer. Do you want to install it ? After installation, you need to restart BudgetView...</value>
+  </skeletonProperties>
+  <skeletonProperties>
+    <key>URL</key>
+    <value>http://www.java.com</value>
+  </skeletonProperties>
+  <skeletonProperties>
+    <key>SingleProcess</key>
+    <value>1</value>
+  </skeletonProperties>
+  <skeletonProperties>
+    <key>SingleInstance</key>
+    <value>0</value>
+  </skeletonProperties>
+  <skeletonProperties>
+    <key>JniSmooth</key>
+    <value>0</value>
+  </skeletonProperties>
+  <skeletonProperties>
+    <key>Debug</key>
+    <value>0</value>
+  </skeletonProperties>
+</jsmoothproject>

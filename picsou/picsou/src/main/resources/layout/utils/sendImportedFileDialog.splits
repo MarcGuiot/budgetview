@@ -10,6 +10,7 @@
       <comboBox ref="files"/>
 
       <htmlEditorPane text="$sendImportedFile.content" marginTop="5" marginBottom="5" weightY="0"/>
+      <checkBox text="$sendImportedFile.obfuscate" ref="obfuscate"/>
       <scrollPane>
         <textArea ref="details"/>
       </scrollPane>

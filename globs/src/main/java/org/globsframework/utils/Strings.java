@@ -1,7 +1,7 @@
 package org.globsframework.utils;
 
-import org.globsframework.utils.exceptions.InvalidParameter;
 import org.apache.commons.lang.StringUtils;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -173,5 +173,14 @@ public class Strings {
       result[i] = label != null ? label.toUpperCase() : null;
     }
     return result;
+  }
+
+  public static String trimLines(String input) {
+    return input
+      .replaceAll("^[ ]*", "")
+      .replaceAll("[ ]*\n", "\n")
+      .replaceAll("\n[ ]*", "\n")
+      .replaceAll("[ ]*$", "")
+      ;
   }
 }

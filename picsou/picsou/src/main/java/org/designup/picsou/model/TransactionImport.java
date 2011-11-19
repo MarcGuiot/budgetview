@@ -3,10 +3,8 @@ package org.designup.picsou.model;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.fields.DateField;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.fields.BlobField;
+import org.globsframework.metamodel.annotations.DefaultBoolean;
+import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
@@ -20,8 +18,14 @@ public class TransactionImport {
 
   @Key
   public static IntegerField ID;
+
   public static StringField SOURCE;
+
   public static DateField IMPORT_DATE;
+
+  @DefaultBoolean(false)
+  public static BooleanField IS_WITH_SERIES;
+
   public static BlobField FILE_CONTENT;
 
   static {
@@ -36,15 +40,19 @@ public class TransactionImport {
       stream.writeUtf8String(values.get(TransactionImport.SOURCE));
       stream.writeDate(values.get(TransactionImport.IMPORT_DATE));
       stream.writeBytes(values.get(TransactionImport.FILE_CONTENT));
+      stream.writeBoolean(values.get(TransactionImport.IS_WITH_SERIES));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public int getWriteVersion() {
-      return 3;
+      return 4;
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 3) {
+      if (version == 4) {
+        deserializeDataV4(fieldSetter, data);
+      }
+      else if (version == 3) {
         deserializeDataV3(fieldSetter, data);
       }
       else if (version == 2) {
@@ -53,6 +61,14 @@ public class TransactionImport {
       else if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+    }
+
+    private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(TransactionImport.SOURCE, input.readUtf8String());
+      fieldSetter.set(TransactionImport.IMPORT_DATE, input.readDate());
+      fieldSetter.set(TransactionImport.FILE_CONTENT, input.readBytes());
+      fieldSetter.set(TransactionImport.IS_WITH_SERIES, input.readBoolean());
     }
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {

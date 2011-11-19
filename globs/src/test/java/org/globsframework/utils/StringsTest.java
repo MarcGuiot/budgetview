@@ -81,4 +81,16 @@ public class StringsTest extends TestCase {
       assertEquals("Line length parameter must be greater than 0", e.getMessage());
     }
   }
+
+  public void testTrimLines() throws Exception {
+    assertEquals("One", Strings.trimLines("One"));
+    assertEquals("One\n" +
+                 "\n" +
+                 "Two\n" +
+                 "Three",
+                 Strings.trimLines("  One \n\n" +
+                                   "Two   \n" +
+                                   "  Three  "));
+
+  }
 }

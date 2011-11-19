@@ -81,12 +81,21 @@
               <tasks>
                 <mkdir dir="src/main/resources/demo"/>
                 <java fork="yes" classname="org.designup.picsou.functests.DemoGenerationTest" failonerror="true">
-                  <jvmarg line="-Doutfile=src/main/resources/demo/demo.snapshot"/>
+                  <jvmarg line="-Doutfile=src/main/resources/demo/demo-fr.snapshot"/>
+                  <jvmarg line="-DLANG=fr"/>
                   <classpath>
                     <path refid="maven.test.classpath"/>
                   </classpath>
                 </java>
-                <copy file="src/main/resources/demo/demo.snapshot" tofile="target/classes/demo/demo.snapshot"/>
+                <copy file="src/main/resources/demo/demo-fr.snapshot" tofile="target/classes/demo/demo-fr.snapshot"/>
+                <java fork="yes" classname="org.designup.picsou.functests.DemoGenerationTest" failonerror="true">
+                  <jvmarg line="-Doutfile=src/main/resources/demo/demo-en.snapshot"/>
+                  <jvmarg line="-DLANG=en"/>
+                  <classpath>
+                    <path refid="maven.test.classpath"/>
+                  </classpath>
+                </java>
+                <copy file="src/main/resources/demo/demo-en.snapshot" tofile="target/classes/demo/demo-en.snapshot"/>
                 <java fork="yes"
                       classname="org.designup.shrinker.JarShrinker" failonerror="true">
                   <classpath>

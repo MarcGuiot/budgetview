@@ -1,7 +1,6 @@
 package org.designup.picsou.model;
 
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;

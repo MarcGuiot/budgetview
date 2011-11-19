@@ -256,19 +256,19 @@ public class OperationChecker {
   }
 
   private boolean asSelectBank(Window dialog) {
-    return dialog.findSwingComponent(JButton.class, "Select the bank") != null;
+    return dialog.findSwingComponent(JButton.class, Lang.get("import.account.bankentity")) != null;
   }
 
   public void exportOfxFile(String name) {
     WindowInterceptor
       .init(getExportMenu().triggerClick())
-      .processWithButtonClick("OK")
+      .processWithButtonClick(Lang.get("ok"))
       .process(FileChooserHandler.init().select(name))
       .run();
   }
 
   public Trigger getBackupTrigger() {
-    MenuItem fileMenu = window.getMenuBar().getMenu("File");
+    MenuItem fileMenu = window.getMenuBar().getMenu(Lang.get("file"));
     return fileMenu.getSubMenu(Lang.get("backup")).triggerClick();
   }
 
@@ -302,7 +302,7 @@ public class OperationChecker {
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           MessageFileDialogChecker dialog = new MessageFileDialogChecker(window);
-          dialog.checkMessageContains("Backup done in file");
+//          dialog.checkMessageContains(Lang.get("backup.ok.message"));
           selectedFile.set(dialog.getFilePath());
           return dialog.getOkTrigger();
         }
@@ -415,11 +415,11 @@ public class OperationChecker {
   }
 
   public void logout() {
-    window.getMenuBar().getMenu("File").getSubMenu(Lang.get("gotoLogin")).click();
+    window.getMenuBar().getMenu(Lang.get("file")).getSubMenu(Lang.get("gotoLogin")).click();
   }
 
   public void exit() {
-    getFileMenu().getSubMenu("Exit").click();
+    getFileMenu().getSubMenu(Lang.get("exit")).click();
     assertFalse(window.isVisible());
   }
 
@@ -428,11 +428,11 @@ public class OperationChecker {
   }
 
   public UserEvaluationDialogChecker exitWithUserEvaluation() {
-    return UserEvaluationDialogChecker.open(getFileMenu().getSubMenu("Exit").triggerClick());
+    return UserEvaluationDialogChecker.open(getFileMenu().getSubMenu(Lang.get("exit")).triggerClick());
   }
 
   public void deleteUser(String password) {
-    MenuItem subMenu = window.getMenuBar().getMenu("File").getSubMenu("Delete");
+    MenuItem subMenu = window.getMenuBar().getMenu(Lang.get("file")).getSubMenu(Lang.get("delete"));
     PasswordDialogChecker dialogChecker =
       new PasswordDialogChecker(WindowInterceptor.getModalDialog(subMenu.triggerClick()));
     if (password != null) {
@@ -443,7 +443,8 @@ public class OperationChecker {
   }
 
   public void deleteAutoLoginUser() {
-    MenuItem subMenu = window.getMenuBar().getMenu("File").getSubMenu("Delete");
+    MenuItem subMenu = window.getMenuBar().getMenu(Lang.get("file"))
+      .getSubMenu(Lang.get("delete"));
     ConfirmationDialogChecker confirmationDialogChecker =
       new ConfirmationDialogChecker(WindowInterceptor.getModalDialog(subMenu.triggerClick()));
     confirmationDialogChecker.checkMessageContains("Do you really want to delete all data associated to this user?");
@@ -468,7 +469,7 @@ public class OperationChecker {
   }
 
   private MenuItem getHelpMenu() {
-    return window.getMenuBar().getMenu("Help");
+    return window.getMenuBar().getMenu(Lang.get("help"));
   }
 
   private MenuItem getDevMenu() {
@@ -476,7 +477,7 @@ public class OperationChecker {
   }
 
   public void checkGotoSupport(String url) {
-    BrowsingChecker.checkDisplay(getHelpMenu().getSubMenu("Go to support site"), url);
+    BrowsingChecker.checkDisplay(getHelpMenu().getSubMenu(Lang.get("gotoSupport")), url);
   }
 
   public void backupAndLaunchApplication(String user, String password, Date currentDate) throws Exception {
@@ -620,43 +621,43 @@ public class OperationChecker {
   }
 
   public AccountEditionChecker createAccount() {
-    return AccountEditionChecker.open(getEditMenu().getSubMenu("Add a bank account").triggerClick());
+    return AccountEditionChecker.open(getEditMenu().getSubMenu(Lang.get("account.create.menu")).triggerClick());
   }
 
   private MenuItem getFileMenu() {
-    return window.getMenuBar().getMenu("File");
+    return window.getMenuBar().getMenu(Lang.get("file"));
   }
 
   private MenuItem getEditMenu() {
-    return window.getMenuBar().getMenu("Edit");
+    return window.getMenuBar().getMenu(Lang.get("edit"));
   }
 
   private MenuItem getViewMenu() {
-    return window.getMenuBar().getMenu("View");
+    return window.getMenuBar().getMenu(Lang.get("view"));
   }
 
   private MenuItem getImportMenu() {
-    return getFileMenu().getSubMenu("Import");
+    return getFileMenu().getSubMenu(Lang.get("import"));
   }
 
   private MenuItem getExportMenu() {
-    return getFileMenu().getSubMenu("Export");
+    return getFileMenu().getSubMenu(Lang.get("export"));
   }
 
   private MenuItem getPreferencesMenu() {
-    return getFileMenu().getSubMenu("Preferences");
+    return getFileMenu().getSubMenu(Lang.get("preferences"));
   }
 
   private MenuItem getUndoMenu() {
-    return getEditMenu().getSubMenu("Undo");
+    return getEditMenu().getSubMenu(Lang.get("undo"));
   }
 
   private MenuItem getRedoMenu() {
-    return getEditMenu().getSubMenu("Redo");
+    return getEditMenu().getSubMenu(Lang.get("redo"));
   }
 
   public NotesDialogChecker openNotes() {
-    return NotesDialogChecker.open(getViewMenu().getSubMenu("Show notes..."));
+    return NotesDialogChecker.open(getViewMenu().getSubMenu(Lang.get("notesDialog.action")));
   }
 
   public SendImportedFileChecker openSendImportedFile() {
