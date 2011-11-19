@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<globs>
+  <bankFormat id='99'>
+
+    <bank name="Boursorama" url="http://www.boursorama.com/" id="1000">
+      <bankEntity id="40618"/>
+    </bank>
+
+    <bank name="Credit du Nord" url="http://www.credit-du-nord.fr/" id="1002">
+      <bankEntity id="30076"/>
+    </bank>
+
+    <bank name="Monabanq." url="http://www.monabanq.com" id="1003">
+      <bankEntity id="14690"/>
+    </bank>
+
+    <bank name="Fortuneo" url="http://www.fortuneo.fr" id="1004">
+      <bankEntity id="14518"/>
+    </bank>
+
+    <bank name="BRED - Banque Populaire" url="http://www.bred.fr" id="1005">
+      <bankEntity id="10107"/>
+    </bank>
+
+    <bank name="Cortal Consors" url="http://www.cortalconsors.fr" id="1006">
+      <bankEntity id="18889"/>
+    </bank>
+
+  </bankFormat>
+</globs>
