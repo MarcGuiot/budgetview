@@ -26,5 +26,25 @@
       <bankEntity id="18889"/>
     </bank>
 
+    <bank name="BforBank" url="http://www.bforbank.com" id="1007">
+      <bankEntity id="16218"/>
+    </bank>
+
+    <bank name="Banque Accord" url="http://www.banque-accord.fr" id="1008">
+      <bankEntity id="12869"/>
+    </bank>
+
+    <bank name="Banque Palatine" url="https://www.palatine.fr" id="1009">
+      <bankEntity id="40978"/>
+    </bank>
+
+    <bank name="Groupama Banque" url="http://www.groupamabanque.com/" id="1010">
+      <bankEntity id="18370"/>
+    </bank>
+
+    <bank name="SMC - Société Marseillaise de Crédit" url="http://www.smc.fr" id="1011">
+      <bankEntity id="30077"/>
+    </bank>
+
   </bankFormat>
 </globs>

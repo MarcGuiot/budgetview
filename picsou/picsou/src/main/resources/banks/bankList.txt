@@ -1,4 +1,5 @@
 us/all.xml
+generic_french_banks.xml
 otherBank.xml
 caisseepargne.xml
 cic.xml
