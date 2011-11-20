@@ -228,6 +228,8 @@ public class ImportPreviewPanel implements MessageHandler {
         sessionDirectory.get(SelectionService.class).clear(Account.TYPE);
       }
     }
+    // necessaire sous linux au moins
+    accountComboBox.repaint();
   }
 
   private void updateFileAndAccountMessage(Integer accountNumber, Integer accountCount, boolean hasTransactions) {
