@@ -310,8 +310,8 @@ public class SG extends WebBankPage {
 
   private Glob find(HtmlOption option, GlobList accounts) {
     for (Glob account : accounts) {
-      String s = account.get(RealAccount.NUMBER);
-      if (option.getTextContent().contains(s)) {
+      String number = account.get(RealAccount.NUMBER);
+      if (option.getTextContent().contains(number)) {
         return account;
       }
     }
@@ -376,8 +376,8 @@ public class SG extends WebBankPage {
         List<HtmlElement> toDates = periodes.getElementsByAttribute(HtmlInput.TAG_NAME, "name", "dateau");
         if (!toDates.isEmpty()) {
           HtmlElement toDate = getFirst(toDates, "dateau");
-          String s = ((HtmlInput)toDate).getValueAttribute();
-          if (Strings.isNullOrEmpty(s)) {
+          String value = ((HtmlInput)toDate).getValueAttribute();
+          if (Strings.isNullOrEmpty(value)) {
             setDate(toDate, 0, -1);
           }
         }

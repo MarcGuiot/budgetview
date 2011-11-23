@@ -97,20 +97,20 @@ public class BankPluginService {
   }
 
   private void replace(GlobList transactions, GlobRepository localRepository, Glob bank,
-                       final StringField match, final StringField name,
+                       final StringField match, final StringField nameField,
                        final Pattern regexp, final StringField replace) {
     String nameRegex = bank.get(match);
     if (Strings.isNotEmpty(nameRegex)) {
       Pattern pattern = Pattern.compile(nameRegex);
       for (Glob transaction : transactions) {
-        String s = transaction.get(name);
-        if (Strings.isNotEmpty(s)) {
-          String tmp = Utils.replace(pattern, regexp, s, bank.get(replace));
+        String name = transaction.get(nameField);
+        if (Strings.isNotEmpty(name)) {
+          String tmp = Utils.replace(pattern, regexp, name, bank.get(replace));
           if (tmp != null) {
-            s = tmp;
+            name = tmp;
           }
         }
-        localRepository.update(transaction.getKey(), name, s);
+        localRepository.update(transaction.getKey(), nameField, name);
       }
     }
   }

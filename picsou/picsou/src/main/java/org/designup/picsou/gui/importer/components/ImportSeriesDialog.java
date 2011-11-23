@@ -148,8 +148,8 @@ public class ImportSeriesDialog {
     for (Iterator<Key> it = importedSeries.iterator(); it.hasNext(); ) {
       Key importedSerie = it.next();
       Glob glob = localRepository.get(importedSerie);
-      String s = glob.get(ImportedSeries.NAME);
-      String[] splited = s.split(":");
+      String name = glob.get(ImportedSeries.NAME);
+      String[] splited = name.split(":");
       Integer seriesId = null;
       Integer subSeriesId = null;
       Integer budgetArea = null;

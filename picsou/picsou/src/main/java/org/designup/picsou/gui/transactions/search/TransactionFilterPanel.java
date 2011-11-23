@@ -59,12 +59,12 @@ public class TransactionFilterPanel extends TextFilterPanel {
     }
 
     public boolean matches(Glob item, GlobRepository repository) {
-      String s = cachedNames.get(item.get(Transaction.SERIES));
-      if (s == null) {
-        s = seriesNameStringifier.toString(item, repository);
-        cachedNames.put(item.get(Transaction.SERIES), s);
+      String seriesName = cachedNames.get(item.get(Transaction.SERIES));
+      if (seriesName == null) {
+        seriesName = seriesNameStringifier.toString(item, repository);
+        cachedNames.put(item.get(Transaction.SERIES), seriesName);
       }
-      return s != null && s.toLowerCase().contains(searchFilter);
+      return seriesName != null && seriesName.toLowerCase().contains(searchFilter);
     }
   }
 }

@@ -65,7 +65,6 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
   }
 
   public void testIgnoresPlannedTransactions() throws Exception {
-
     views.selectData();
     OfxBuilder
       .init(this)
@@ -85,13 +84,6 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNothingIsShownIfThereAreNoTransactionsToCategorize() throws Exception {
-//    String s = OfxBuilder
-//      .init(this)
-//      .addTransaction("2008/05/10", 1000.0, "WorldCo")
-//      .save();
-//    System.out.println("CategorizationGaugeTest.testNothingIsShownIfThereAreNoTransactionsToCategorize " +s);
-//    openApplication();
-
     OfxBuilder
       .init(this)
       .addTransaction("2008/05/10", 1000.0, "WorldCo")

@@ -112,15 +112,15 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
       planned = Lang.get("transaction.planned");
     }
 
-    public String toString(Glob glob, GlobRepository repository) {
-      if (glob == null){
+    public String toString(Glob transaction, GlobRepository repository) {
+      if (transaction == null){
         return null;
       }
-      if (glob.isTrue(Transaction.PLANNED)) {
-        String s = stringifier.toString(glob, repository);
-        return planned + (s == null ? "" : s);
+      if (transaction.isTrue(Transaction.PLANNED)) {
+        String label = stringifier.toString(transaction, repository);
+        return planned + (label == null ? "" : label);
       }
-      return stringifier.toString(glob, repository);
+      return stringifier.toString(transaction, repository);
     }
 
     public Comparator<Glob> getComparator(GlobRepository repository) {
