@@ -2,7 +2,7 @@ package org.designup.picsou.client;
 
 import org.designup.picsou.server.model.ServerDelta;
 import org.designup.picsou.server.model.ServerState;
-import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
 

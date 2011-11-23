@@ -9,7 +9,7 @@ import static org.designup.picsou.model.TransactionType.VIREMENT;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 

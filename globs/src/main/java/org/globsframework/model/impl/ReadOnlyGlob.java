@@ -18,7 +18,7 @@ public class ReadOnlyGlob extends AbstractGlob {
     return true;
   }
 
-  void dispose() {
+  public void dispose() {
   }
 
   public Glob duplicate() {

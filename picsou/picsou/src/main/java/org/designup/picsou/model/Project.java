@@ -11,7 +11,7 @@ import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Range;
+import org.globsframework.utils.collections.Range;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -32,10 +32,12 @@ public class Project {
   public static StringField NAME;
 
   @Target(Series.class)
+  @Required
   public static LinkField SERIES;
 
   @DefaultDouble(0.0)
   @DoublePrecision(4)
+  @Required
   public static DoubleField TOTAL_AMOUNT;
 
   static {

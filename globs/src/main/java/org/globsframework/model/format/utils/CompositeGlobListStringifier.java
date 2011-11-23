@@ -5,7 +5,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobListMatcher;
 import org.globsframework.model.utils.GlobListMatchers;
-import org.globsframework.utils.Pair;
+import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.Strings;
 
 import java.util.ArrayList;

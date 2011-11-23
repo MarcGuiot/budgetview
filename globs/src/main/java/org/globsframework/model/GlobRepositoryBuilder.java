@@ -1,11 +1,12 @@
 package org.globsframework.model;
 
-import org.globsframework.model.impl.DefaultCheckedGlobIdGenerator;
-import org.globsframework.model.impl.DefaultGlobRepository;
-import org.globsframework.model.impl.DefaultGlobIdGenerator;
-import org.globsframework.model.impl.StrictGlobRepository;
+import org.globsframework.model.repository.DefaultCheckedGlobIdGenerator;
+import org.globsframework.model.repository.DefaultGlobRepository;
+import org.globsframework.model.repository.*;
+import org.globsframework.model.repository.DefaultGlobIdGenerator;
+import org.globsframework.model.repository.StrictGlobRepository;
 import org.globsframework.model.utils.GlobConstantContainer;
-import org.globsframework.model.utils.GlobIdGenerator;
+import org.globsframework.utils.exceptions.ExceptionHandler;
 
 public class GlobRepositoryBuilder {
   private GlobList globList = new GlobList();

@@ -1,4 +1,4 @@
-package org.globsframework.model.utils;
+package org.globsframework.model.repository;
 
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;

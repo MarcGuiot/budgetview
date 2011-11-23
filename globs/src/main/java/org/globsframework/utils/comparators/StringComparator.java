@@ -1,4 +1,4 @@
-package org.globsframework.utils;
+package org.globsframework.utils.comparators;
 
 import java.util.Comparator;
 

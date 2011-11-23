@@ -6,6 +6,8 @@ import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.model.repository.DefaultGlobRepository;
+import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.*;

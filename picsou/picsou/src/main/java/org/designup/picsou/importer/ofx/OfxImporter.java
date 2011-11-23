@@ -6,8 +6,9 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.utils.GlobIdGenerator;
-import org.globsframework.utils.MultiMap;
+
+import org.globsframework.model.repository.GlobIdGenerator;
+import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.TruncatedFile;

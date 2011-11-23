@@ -9,7 +9,7 @@ import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
-import org.globsframework.utils.Pair;
+import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;

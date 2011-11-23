@@ -1,10 +1,11 @@
-package org.globsframework.model.utils;
+package org.globsframework.model.repository;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.ChangeSetListener;
+import org.globsframework.model.utils.ChangeSetAggregator;
 import org.globsframework.utils.exceptions.InvalidState;
 
 import java.util.HashSet;

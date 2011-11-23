@@ -14,7 +14,7 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.impl.DefaultGlobRepository;
+import org.globsframework.model.repository.DefaultGlobRepository;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 

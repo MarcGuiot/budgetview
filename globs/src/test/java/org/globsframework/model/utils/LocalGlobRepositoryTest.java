@@ -8,6 +8,8 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.GlobChecker;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.repository.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.exceptions.InvalidState;
 
 public class LocalGlobRepositoryTest extends TestCase {

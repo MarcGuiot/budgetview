@@ -1,4 +1,6 @@
-package org.globsframework.utils;
+package org.globsframework.utils.collections;
+
+import org.globsframework.utils.Strings;
 
 import java.util.*;
 

@@ -1,6 +1,6 @@
 package org.designup.shrinker;
 
-import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import org.objectweb.asm.ClassReader;
 

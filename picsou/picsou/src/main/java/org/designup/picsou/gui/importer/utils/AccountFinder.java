@@ -8,7 +8,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.Strings;
 
 import java.util.HashMap;

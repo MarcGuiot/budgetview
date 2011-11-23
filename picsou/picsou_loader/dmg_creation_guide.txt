@@ -6,13 +6,19 @@ Mode opératoire pour la creation du DMG sous Mac.
 
 3. Executer :
 
-  cp ./dev/dmg/budgetview_template.dmg ~/Desktop/
+  cp ./dev/dmg/budgetview_template-fr.dmg ~/Desktop/budgetview_template.dmg
+  open ~/Desktop/budgetview_template.dmg
+
+  cp ./dev/dmg/budgetview_template-en.dmg ~/Desktop/budgetview_template.dmg
   open ~/Desktop/budgetview_template.dmg
 
 4. Executer : 
 
   rm -r /Volumes/BudgetView/BudgetView.app
-  cp -r ./BudgetView/BudgetView.app /Volumes/BudgetView/
+  cp -r ./BudgetView-fr/BudgetView.app /Volumes/BudgetView/
+
+  rm -r /Volumes/BudgetView/BudgetView.app
+  cp -r ./BudgetView-en/BudgetView.app /Volumes/BudgetView/
   
 5. Dans le Desktop, double-cliquer sur budgetview_template.dmg et vérifier la disposition de la fenêtre.
 

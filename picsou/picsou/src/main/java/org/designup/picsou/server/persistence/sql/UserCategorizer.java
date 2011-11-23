@@ -11,8 +11,8 @@ import org.globsframework.streams.accessors.StringAccessor;
 import org.globsframework.streams.accessors.utils.ValueIntegerAccessor;
 import org.globsframework.streams.accessors.utils.ValueLongAccessor;
 import org.globsframework.streams.accessors.utils.ValueStringAccessor;
-import org.globsframework.utils.MultiMap;
-import org.globsframework.utils.Pair;
+import org.globsframework.utils.collections.MultiMap;
+import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.Ref;
 
 public class UserCategorizer {

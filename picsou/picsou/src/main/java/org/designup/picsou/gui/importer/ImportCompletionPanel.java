@@ -5,8 +5,7 @@ import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;

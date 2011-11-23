@@ -184,11 +184,11 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
     return key;
   }
 
-  void dispose() {
+  public void dispose() {
     disposed = true;
   }
 
-  void setValues(Object[] values) {
+  public void setValues(Object[] values) {
     this.values = values;
     this.disposed = false;
   }

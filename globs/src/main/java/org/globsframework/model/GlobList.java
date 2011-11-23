@@ -6,6 +6,7 @@ import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.model.utils.EmptyGlobList;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatcher;

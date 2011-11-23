@@ -3,8 +3,7 @@ package org.globsframework.gui.utils;
 import org.globsframework.gui.DummySelectionListener;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.model.Glob;
-import org.globsframework.model.impl.DefaultGlobRepository;
-import org.globsframework.utils.TestUtils;
+import org.globsframework.model.repository.DefaultGlobRepository;
 
 import javax.swing.*;
 import java.util.Arrays;

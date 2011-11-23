@@ -16,7 +16,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.delta.DefaultChangeSet;
-import org.globsframework.model.impl.DefaultGlobRepository;
+import org.globsframework.model.repository.DefaultGlobRepository;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.utils.Functor;

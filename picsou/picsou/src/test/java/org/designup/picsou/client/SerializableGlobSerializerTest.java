@@ -2,7 +2,7 @@ package org.designup.picsou.client;
 
 import junit.framework.TestCase;
 import org.designup.picsou.server.model.SerializableGlobType;
-import org.globsframework.utils.MapOfMaps;
+import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 
 public class SerializableGlobSerializerTest extends TestCase {

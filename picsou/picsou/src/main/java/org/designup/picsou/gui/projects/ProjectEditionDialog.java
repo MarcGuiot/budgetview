@@ -30,17 +30,15 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.repository.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
 

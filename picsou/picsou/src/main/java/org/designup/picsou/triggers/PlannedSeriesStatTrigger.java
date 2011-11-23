@@ -7,7 +7,7 @@ import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.utils.Pair;
+import org.globsframework.utils.collections.Pair;
 
 import java.util.Set;
 

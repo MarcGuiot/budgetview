@@ -8,7 +8,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
-import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.collections.MultiMap;
 
 class ChangeSetSerializerVisitor implements ChangeSetVisitor {
   private PasswordBasedEncryptor passwordBasedEncryptor;

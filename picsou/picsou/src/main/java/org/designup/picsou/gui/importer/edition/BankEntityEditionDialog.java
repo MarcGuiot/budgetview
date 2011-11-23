@@ -7,8 +7,8 @@ import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.LocalGlobRepository;
-import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+import org.globsframework.model.repository.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.gui.GlobsPanelBuilder;
 

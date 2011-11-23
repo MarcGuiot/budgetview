@@ -1,13 +1,12 @@
 package org.globsframework.model.utils;
 
-import com.sun.corba.se.spi.activation.Repository;
 import junit.framework.TestCase;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import static org.globsframework.model.FieldValue.value;
 
 import org.globsframework.model.*;
-import org.globsframework.model.impl.DefaultGlobRepository;
+import org.globsframework.model.repository.ReplicationGlobRepository;
 
 public class ReplicationGlobRepositoryTest extends TestCase {
   private GlobChecker checker = new GlobChecker();

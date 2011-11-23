@@ -5,12 +5,12 @@ import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.Glob;
-import org.globsframework.model.FieldValue;
 import org.globsframework.model.GlobList;
 import static org.globsframework.model.FieldValue.value;
+
+import org.globsframework.model.repository.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobBuilder;
-import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
-import org.globsframework.model.utils.LocalGlobRepository;
 import org.uispec4j.Key;
 import org.uispec4j.TextBox;
 

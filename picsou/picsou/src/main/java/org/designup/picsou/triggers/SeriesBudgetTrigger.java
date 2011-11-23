@@ -4,7 +4,7 @@ import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
-import org.globsframework.utils.Pair;
+import org.globsframework.utils.collections.Pair;
 
 import java.util.*;
 

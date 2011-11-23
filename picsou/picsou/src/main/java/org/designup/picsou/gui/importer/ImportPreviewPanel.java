@@ -19,6 +19,8 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.model.*;
+import org.globsframework.model.repository.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;

@@ -1,12 +1,11 @@
 package org.designup.picsou.triggers.savings;
 
-import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.model.BudgetArea;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.utils.Log;
 
 public class UpdateMirrorSeriesBudgetChangeSetVisitor implements ChangeSetVisitor {

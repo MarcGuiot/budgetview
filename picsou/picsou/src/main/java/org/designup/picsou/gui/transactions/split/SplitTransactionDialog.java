@@ -30,6 +30,8 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifiers;
+import org.globsframework.model.repository.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;

@@ -10,8 +10,8 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.MapOfMaps;
-import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.collections.MapOfMaps;
+import org.globsframework.utils.collections.MultiMap;
 
 import java.util.*;
 

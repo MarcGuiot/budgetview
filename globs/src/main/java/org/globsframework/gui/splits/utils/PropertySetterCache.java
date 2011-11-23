@@ -1,6 +1,6 @@
 package org.globsframework.gui.splits.utils;
 
-import org.globsframework.utils.Pair;
+import org.globsframework.utils.collections.Pair;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

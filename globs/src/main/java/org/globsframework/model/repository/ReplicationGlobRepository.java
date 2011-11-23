@@ -1,4 +1,4 @@
-package org.globsframework.model.utils;
+package org.globsframework.model.repository;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -8,9 +8,10 @@ import org.globsframework.metamodel.index.Index;
 import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
-import org.globsframework.model.impl.DefaultGlobRepository;
+import org.globsframework.model.utils.GlobFunctor;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.remote.SerializedRemoteAccess;
-import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.*;
 

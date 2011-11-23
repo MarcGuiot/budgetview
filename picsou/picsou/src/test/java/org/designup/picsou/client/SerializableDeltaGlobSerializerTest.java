@@ -3,7 +3,7 @@ package org.designup.picsou.client;
 import junit.framework.TestCase;
 import org.designup.picsou.server.model.ServerDelta;
 import org.designup.picsou.server.model.ServerState;
-import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 
 import java.util.List;

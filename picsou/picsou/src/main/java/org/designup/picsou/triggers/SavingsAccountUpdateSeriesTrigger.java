@@ -6,10 +6,10 @@ import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.repository.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.utils.GlobMatchers.*;
-import org.globsframework.model.utils.LocalGlobRepository;
-import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 
 import java.util.Set;
 

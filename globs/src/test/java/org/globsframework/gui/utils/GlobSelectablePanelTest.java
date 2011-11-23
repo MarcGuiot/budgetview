@@ -6,7 +6,7 @@ import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
-import org.globsframework.model.impl.DefaultGlobRepository;
+import org.globsframework.model.repository.DefaultGlobRepository;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.uispec4j.Mouse;
 import org.uispec4j.Panel;

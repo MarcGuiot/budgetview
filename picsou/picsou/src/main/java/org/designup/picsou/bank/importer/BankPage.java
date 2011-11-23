@@ -12,8 +12,9 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import static org.globsframework.model.utils.GlobMatchers.and;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import org.globsframework.model.utils.LocalGlobRepository;
-import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
+
+import org.globsframework.model.repository.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Files;

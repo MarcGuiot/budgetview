@@ -23,7 +23,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.TypeChangeSetListener;
-import org.globsframework.utils.Range;
+import org.globsframework.utils.collections.Range;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 

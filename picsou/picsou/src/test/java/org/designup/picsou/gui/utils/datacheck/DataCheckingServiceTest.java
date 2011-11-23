@@ -6,8 +6,8 @@ import org.designup.picsou.gui.PicsouInit;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.globsframework.model.Key;
-import org.globsframework.model.impl.DefaultGlobIdGenerator;
-import org.globsframework.model.impl.DefaultGlobRepository;
+import org.globsframework.model.repository.DefaultGlobIdGenerator;
+import org.globsframework.model.repository.DefaultGlobRepository;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.directory.DefaultDirectory;
 

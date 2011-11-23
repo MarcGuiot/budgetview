@@ -9,7 +9,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.utils.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 

@@ -9,7 +9,7 @@ import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
-import org.globsframework.utils.IntSet;
+import org.globsframework.utils.collections.IntSet;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.uispec4j.Button;

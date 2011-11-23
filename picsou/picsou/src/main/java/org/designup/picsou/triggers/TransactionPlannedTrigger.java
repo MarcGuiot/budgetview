@@ -10,7 +10,7 @@ import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Log;
-import org.globsframework.utils.Pair;
+import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.Utils;
 
 import java.util.ArrayList;

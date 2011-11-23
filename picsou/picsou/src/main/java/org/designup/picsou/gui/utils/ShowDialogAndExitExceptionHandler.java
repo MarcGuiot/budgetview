@@ -3,7 +3,7 @@ package org.designup.picsou.gui.utils;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.about.AboutDialog;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
-import org.globsframework.model.ExceptionHandler;
+import org.globsframework.utils.exceptions.ExceptionHandler;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;

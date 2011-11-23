@@ -4,8 +4,8 @@ import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.utils.CopyOnWriteMultiMap;
-import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.collections.CopyOnWriteMultiMap;
+import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 

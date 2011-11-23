@@ -7,7 +7,8 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import static org.globsframework.model.format.GlobListStringifiers.fieldValue;
-import org.globsframework.model.impl.DefaultGlobRepository;
+import org.globsframework.model.repository.DefaultGlobRepository;
+
 import static org.globsframework.model.utils.GlobListMatchers.contains;
 
 public class CompositeGlobListStringifierTest extends TestCase {

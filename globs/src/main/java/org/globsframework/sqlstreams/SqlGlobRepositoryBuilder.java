@@ -3,11 +3,11 @@ package org.globsframework.sqlstreams;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.impl.DefaultGlobRepository;
-import org.globsframework.model.utils.GlobIdGenerator;
+import org.globsframework.model.repository.DefaultGlobRepository;
+import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.utils.Log;
-import org.globsframework.utils.T3uples;
+import org.globsframework.utils.collections.T3uples;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.util.ArrayList;

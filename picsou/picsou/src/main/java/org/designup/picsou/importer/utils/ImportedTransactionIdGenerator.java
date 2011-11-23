@@ -3,7 +3,7 @@ package org.designup.picsou.importer.utils;
 import org.designup.picsou.model.ImportedTransaction;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.model.utils.GlobIdGenerator;
+import org.globsframework.model.repository.GlobIdGenerator;
 
 public class ImportedTransactionIdGenerator implements GlobIdGenerator {
   private final GlobIdGenerator originalGenerator;

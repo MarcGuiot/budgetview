@@ -10,7 +10,7 @@ import org.globsframework.sqlstreams.drivers.jdbc.impl.SqlValueFieldVisitor;
 import org.globsframework.sqlstreams.utils.PrettyWriter;
 import org.globsframework.sqlstreams.utils.StringPrettyWriter;
 import org.globsframework.streams.accessors.Accessor;
-import org.globsframework.utils.Pair;
+import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.sql.Connection;

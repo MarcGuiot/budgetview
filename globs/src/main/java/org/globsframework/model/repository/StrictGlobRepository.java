@@ -1,11 +1,12 @@
-package org.globsframework.model.impl;
+package org.globsframework.model.repository;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.repository.GlobRepositoryDecorator;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobRepositoryDecorator;
+import org.globsframework.utils.exceptions.ExceptionHandler;
 import org.globsframework.utils.exceptions.*;
 
 import java.util.Collection;

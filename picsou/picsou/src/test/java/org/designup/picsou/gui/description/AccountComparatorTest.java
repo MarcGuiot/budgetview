@@ -6,7 +6,7 @@ import static org.designup.picsou.model.Account.*;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.AccountCardType;
 import org.globsframework.model.*;
-import org.globsframework.model.impl.DefaultGlobRepository;
+import org.globsframework.model.repository.DefaultGlobRepository;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.Dates;
 

@@ -11,7 +11,7 @@ import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.persistence.direct.ReadOnlyAccountDataManager;
 import org.globsframework.utils.Files;
-import org.globsframework.utils.MapOfMaps;
+import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;

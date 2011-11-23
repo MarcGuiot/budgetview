@@ -5,7 +5,7 @@ import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Pair;
+import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.*;

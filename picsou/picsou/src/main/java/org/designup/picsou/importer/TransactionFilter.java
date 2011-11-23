@@ -5,7 +5,7 @@ import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.Strings;
 import static org.globsframework.utils.Utils.equal;
 

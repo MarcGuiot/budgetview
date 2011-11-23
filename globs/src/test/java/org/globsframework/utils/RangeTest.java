@@ -1,6 +1,7 @@
 package org.globsframework.utils;
 
 import junit.framework.TestCase;
+import org.globsframework.utils.collections.Range;
 
 public class RangeTest extends TestCase  {
 

@@ -6,8 +6,8 @@ import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
-import org.globsframework.model.impl.DefaultGlobIdGenerator;
-import org.globsframework.model.utils.CachedGlobIdGenerator;
+import org.globsframework.model.repository.DefaultGlobIdGenerator;
+import org.globsframework.model.repository.CachedGlobIdGenerator;
 
 import java.util.ArrayList;
 import java.util.List;

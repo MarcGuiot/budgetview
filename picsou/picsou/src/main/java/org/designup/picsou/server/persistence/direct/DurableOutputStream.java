@@ -1,9 +1,9 @@
 package org.designup.picsou.server.persistence.direct;
 
+import org.globsframework.utils.collections.MultiMap;
 import org.prevayler.implementation.PrevaylerDirectory;
 import org.designup.picsou.server.model.ServerDelta;
 import org.designup.picsou.client.SerializableDeltaGlobSerializer;
-import org.globsframework.utils.MultiMap;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.exceptions.IOFailure;
 import org.globsframework.utils.serialization.SerializedOutput;

@@ -6,8 +6,8 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.impl.DefaultGlob;
 import org.globsframework.streams.GlobStream;
 import org.globsframework.streams.accessors.Accessor;
-import org.globsframework.utils.MultiMap;
-import org.globsframework.utils.Pair;
+import org.globsframework.utils.collections.MultiMap;
+import org.globsframework.utils.collections.Pair;
 
 import java.util.ArrayList;
 import java.util.List;

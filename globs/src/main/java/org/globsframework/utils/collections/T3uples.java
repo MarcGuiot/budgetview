@@ -1,4 +1,4 @@
-package org.globsframework.utils;
+package org.globsframework.utils.collections;
 
 public class T3uples<T, D, E> extends Pair<T, D> {
   private E third;

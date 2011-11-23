@@ -5,7 +5,7 @@ import org.designup.picsou.gui.components.charts.histo.HistoSelectionManager;
 import org.designup.picsou.gui.components.charts.histo.button.HistoButtonBlock;
 import org.designup.picsou.gui.components.charts.histo.button.HistoButtonDataset;
 import org.designup.picsou.gui.components.charts.histo.button.HistoButtonElement;
-import org.globsframework.utils.Range;
+import org.globsframework.utils.collections.Range;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.Utils;
 import org.uispec4j.Trigger;

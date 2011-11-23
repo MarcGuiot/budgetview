@@ -16,8 +16,9 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
+
+import org.globsframework.model.repository.ReplicationGlobRepository;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.ReplicationGlobRepository;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 

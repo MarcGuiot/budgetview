@@ -5,7 +5,7 @@ import org.globsframework.metamodel.properties.Property;
 import org.globsframework.metamodel.properties.PropertyHolder;
 import org.globsframework.metamodel.utils.DefaultPropertyHolder;
 import org.globsframework.metamodel.utils.IdProperty;
-import org.globsframework.utils.MultiMap;
+import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import org.objectweb.asm.ClassReader;

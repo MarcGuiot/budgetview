@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.utils.dev;
 
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
-import org.globsframework.model.utils.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.designup.picsou.model.User;
 
 import javax.swing.*;

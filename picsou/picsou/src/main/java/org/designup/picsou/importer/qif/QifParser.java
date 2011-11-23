@@ -4,7 +4,7 @@ import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobIdGenerator;
+import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 

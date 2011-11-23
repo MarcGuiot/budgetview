@@ -1,4 +1,7 @@
-package org.globsframework.model;
+package org.globsframework.model.utils;
+
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 
 import java.util.Collection;
 

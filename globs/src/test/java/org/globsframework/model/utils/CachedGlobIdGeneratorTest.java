@@ -3,6 +3,8 @@ package org.globsframework.model.utils;
 import junit.framework.TestCase;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.model.repository.CachedGlobIdGenerator;
+import org.globsframework.model.repository.GlobIdGenerator;
 
 import java.util.HashMap;
 import java.util.Map;

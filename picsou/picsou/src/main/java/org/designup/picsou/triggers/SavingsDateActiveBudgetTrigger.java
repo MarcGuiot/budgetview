@@ -3,7 +3,7 @@ package org.designup.picsou.triggers;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.*;
-import org.globsframework.utils.Pair;
+import org.globsframework.utils.collections.Pair;
 import org.designup.picsou.model.*;
 
 public class SavingsDateActiveBudgetTrigger extends DefaultChangeSetListener {

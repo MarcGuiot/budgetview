@@ -1,6 +1,7 @@
 package org.globsframework.utils;
 
 import junit.framework.TestCase;
+import org.globsframework.utils.collections.MapOfMaps;
 
 public class MapOfMapsTest extends TestCase {
 

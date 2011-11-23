@@ -1,7 +1,7 @@
 package org.designup.shrinker;
 
-import org.globsframework.utils.MultiMap;
-import org.globsframework.utils.Pair;
+import org.globsframework.utils.collections.MultiMap;
+import org.globsframework.utils.collections.Pair;
 import org.objectweb.asm.*;
 
 import java.io.IOException;

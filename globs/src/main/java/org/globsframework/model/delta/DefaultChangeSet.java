@@ -3,7 +3,7 @@ package org.globsframework.model.delta;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.utils.MapOfMaps;
+import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.xml.XmlChangeSetWriter;
 

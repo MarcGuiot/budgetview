@@ -5,7 +5,7 @@ import org.designup.picsou.license.model.MailError;
 import org.designup.picsou.license.model.RepoInfo;
 import org.designup.picsou.license.model.SoftwareInfo;
 import org.globsframework.metamodel.Field;
-import org.globsframework.model.EmptyGlobList;
+import org.globsframework.model.utils.EmptyGlobList;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SqlConnection;

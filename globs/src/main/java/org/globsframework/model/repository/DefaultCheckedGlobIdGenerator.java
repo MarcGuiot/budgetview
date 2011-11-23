@@ -1,11 +1,11 @@
-package org.globsframework.model.impl;
+package org.globsframework.model.repository;
 
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.KeyBuilder;
-import org.globsframework.model.utils.GlobIdGenerator;
+import org.globsframework.model.repository.GlobIdGenerator;
 
 import java.util.Collections;
 import java.util.HashMap;

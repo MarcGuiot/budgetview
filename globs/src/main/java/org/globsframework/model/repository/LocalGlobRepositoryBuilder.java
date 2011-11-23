@@ -1,10 +1,9 @@
-package org.globsframework.model.utils;
+package org.globsframework.model.repository;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.impl.DefaultGlobRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;

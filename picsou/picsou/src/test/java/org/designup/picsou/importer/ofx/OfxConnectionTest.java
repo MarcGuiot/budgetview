@@ -6,10 +6,8 @@ import java.io.StringWriter;
 import java.io.StringReader;
 import java.util.List;
 
-import org.globsframework.model.impl.DefaultGlobRepository;
-import org.globsframework.model.impl.DefaultGlobIdGenerator;
-import org.globsframework.model.GlobList;
-import org.designup.picsou.model.RealAccount;
+import org.globsframework.model.repository.DefaultGlobRepository;
+import org.globsframework.model.repository.DefaultGlobIdGenerator;
 
 public class OfxConnectionTest extends TestCase {
 

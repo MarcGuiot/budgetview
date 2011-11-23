@@ -27,7 +27,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
-import org.globsframework.model.impl.DefaultGlobIdGenerator;
+import org.globsframework.model.repository.DefaultGlobIdGenerator;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;

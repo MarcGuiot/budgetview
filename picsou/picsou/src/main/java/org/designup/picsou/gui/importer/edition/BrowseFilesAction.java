@@ -5,7 +5,7 @@ import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.importer.BankFileType;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.globsframework.model.Glob;
-import org.globsframework.model.utils.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.utils.Log;
 
 import javax.swing.*;

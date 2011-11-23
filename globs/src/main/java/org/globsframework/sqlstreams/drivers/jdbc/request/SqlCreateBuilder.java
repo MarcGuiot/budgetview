@@ -12,7 +12,7 @@ import org.globsframework.sqlstreams.drivers.jdbc.JdbcConnection;
 import org.globsframework.sqlstreams.drivers.jdbc.SqlCreateRequest;
 import org.globsframework.streams.accessors.*;
 import org.globsframework.streams.accessors.utils.*;
-import org.globsframework.utils.Pair;
+import org.globsframework.utils.collections.Pair;
 
 import java.sql.Connection;
 import java.util.ArrayList;

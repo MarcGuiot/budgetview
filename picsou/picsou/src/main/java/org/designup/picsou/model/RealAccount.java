@@ -57,11 +57,11 @@ public class RealAccount {
   @DefaultBoolean(false)
   public static BooleanField FROM_SYNCHRO;
 
-  @Target(value = AccountCardType.class)
+  @Target(AccountCardType.class)
   @DefaultInteger(0)
   public static LinkField CARD_TYPE;
 
-  @Target(value = AccountType.class)
+  @Target(AccountType.class)
   public static LinkField ACCOUNT_TYPE;
 
   @DefaultBoolean(false)

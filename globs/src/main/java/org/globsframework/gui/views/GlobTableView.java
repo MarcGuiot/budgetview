@@ -20,7 +20,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.utils.CompositeComparator;
+import org.globsframework.utils.comparators.CompositeComparator;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ItemNotFound;
 

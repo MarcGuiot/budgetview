@@ -7,7 +7,7 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.delta.MutableChangeSet;
-import org.globsframework.utils.MapOfMaps;
+import org.globsframework.utils.collections.MapOfMaps;
 
 import java.util.List;
 

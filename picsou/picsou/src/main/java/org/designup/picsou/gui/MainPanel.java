@@ -66,7 +66,8 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import static org.globsframework.model.utils.GlobMatchers.isFalse;
-import org.globsframework.model.utils.ReplicationGlobRepository;
+
+import org.globsframework.model.repository.ReplicationGlobRepository;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;

@@ -17,7 +17,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobFieldComparator;
-import org.globsframework.utils.InvertedComparator;
+import org.globsframework.utils.comparators.InvertedComparator;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;

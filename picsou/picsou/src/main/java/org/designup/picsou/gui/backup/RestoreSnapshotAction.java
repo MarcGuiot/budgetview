@@ -9,7 +9,7 @@ import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Dates;
-import org.globsframework.utils.MapOfMaps;
+import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.directory.Directory;
 
 import java.awt.event.ActionEvent;

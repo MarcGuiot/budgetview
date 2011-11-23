@@ -13,10 +13,10 @@ import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.model.*;
+import org.globsframework.model.repository.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.LocalGlobRepository;
-import org.globsframework.model.utils.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 

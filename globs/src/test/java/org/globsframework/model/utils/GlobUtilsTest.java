@@ -5,7 +5,7 @@ import org.globsframework.metamodel.DummyObject;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.Key;
-import org.globsframework.model.impl.DefaultGlobRepository;
+import org.globsframework.model.repository.DefaultGlobRepository;
 import org.globsframework.utils.TestUtils;
 
 public class GlobUtilsTest extends TestCase {

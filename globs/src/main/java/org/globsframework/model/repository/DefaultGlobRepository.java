@@ -1,4 +1,4 @@
-package org.globsframework.model.impl;
+package org.globsframework.model.repository;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -12,15 +12,17 @@ import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.impl.AbstractGlob;
+import org.globsframework.model.impl.DefaultGlob;
 import org.globsframework.model.indexing.IndexManager;
 import org.globsframework.model.indexing.IndexSource;
 import org.globsframework.model.indexing.IndexTables;
+import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobIdGenerator;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.MapOfMaps;
-import org.globsframework.utils.Pair;
+import org.globsframework.utils.collections.MapOfMaps;
+import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.*;
 import org.globsframework.xml.XmlGlobWriter;

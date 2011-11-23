@@ -3,8 +3,8 @@ package org.designup.picsou.triggers.savings;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.*;
+import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobIdGenerator;
 import org.globsframework.model.utils.GlobMatchers;
 
 public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {

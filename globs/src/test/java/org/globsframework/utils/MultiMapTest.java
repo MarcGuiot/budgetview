@@ -1,6 +1,7 @@
 package org.globsframework.utils;
 
 import junit.framework.TestCase;
+import org.globsframework.utils.collections.MultiMap;
 
 public class MultiMapTest extends TestCase {
   private MultiMap<String, Integer> map = new MultiMap<String, Integer>();
