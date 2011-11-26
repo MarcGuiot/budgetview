@@ -61,7 +61,6 @@ public class TransactionView extends View implements Filterable {
   public static final int BALANCE_INDEX = 7;
   public static final int ACCOUNT_NAME_INDEX = 8;
 
-  public static final String SERIES_FILTER = "series";
   private static final int[] COLUMN_SIZES = {10, 10, 15, 40, 9, 15, 10, 10, 30};
   private static final GlobMatcher HIDE_PLANNED_MATCHER = not(isTrue(Transaction.PLANNED));
 
@@ -142,7 +141,7 @@ public class TransactionView extends View implements Filterable {
 
   public void setSeriesFilter(Glob series) {
     Set<Integer> seriesSet = Collections.singleton(series.get(Series.ID));
-    filterManager.set(SERIES_FILTER, Matchers.transactionsForSeries(seriesSet));
+    filterManager.set(TransactionSelection.SERIES_FILTER, Matchers.transactionsForSeries(seriesSet));
   }
 
   private void addShowPlannedTransactionsCheckbox(GlobsPanelBuilder builder) {

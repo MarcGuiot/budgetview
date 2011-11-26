@@ -14,6 +14,7 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.uispec4j.Button;
 import org.uispec4j.*;
+import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatchers;
@@ -160,7 +161,11 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public TransactionChecker clearFilters() {
-    this.mainWindow.getPanel("customFilterMessage").getButton().click();
+    Panel panel = this.mainWindow.getPanel("customFilterMessage");
+    assertTrue(panel.isVisible());
+    Button button = panel.getButton();
+    button.click();
+    assertFalse(panel.isVisible());
     return this;
   }
 

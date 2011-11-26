@@ -9,7 +9,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.List;
+import java.util.Collection;
 
 public class FilterClearingPanel implements FilterListener {
   private FilterManager filterManager;
@@ -38,7 +38,7 @@ public class FilterClearingPanel implements FilterListener {
     builder.load();
   }
 
-  public void filterUpdated(List<String> changedFilters) {
+  public void filterUpdated(Collection<String> changedFilters) {
     panel.setVisible(filterManager.hasClearableFilters());
   }
 

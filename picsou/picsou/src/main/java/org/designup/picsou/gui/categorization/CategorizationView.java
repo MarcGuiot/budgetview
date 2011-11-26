@@ -203,7 +203,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     this.filterManager = new FilterManager(this);
     this.filterManager.addListener(new FilterListener() {
-      public void filterUpdated(List<String> changedFilters) {
+      public void filterUpdated(Collection<String> changedFilters) {
         transactionTable.clearSelection();
       }
     });

@@ -11,6 +11,7 @@ public class FilterManager {
   private List<String> clearableNames = new ArrayList<String>();
   private List<FilterClearer> clearers = new ArrayList<FilterClearer>();
   private List<FilterListener> listeners = new ArrayList<FilterListener>();
+  private boolean changeInProgress = false;
 
   public FilterManager(Filterable filterable) {
     this.filterable = filterable;
@@ -36,12 +37,12 @@ public class FilterManager {
       changedFilters.add(name);
       setSilently(name, entry.getValue());
     }
-    notifyChanges(changedFilters);
+    updateAndNotify(changedFilters);
   }
 
   public void set(String name, GlobMatcher matcher) {
     setSilently(name, matcher);
-    notifyChanges(Collections.singletonList(name));
+    updateAndNotify(Collections.singletonList(name));
   }
 
   private void setSilently(String name, GlobMatcher matcher) {
@@ -59,12 +60,12 @@ public class FilterManager {
     changedFilters.add(name);
     filters.clear();
     setSilently(name, matcher);
-    notifyChanges(changedFilters);
+    updateAndNotify(changedFilters);
   }
 
   public void remove(String name) {
     if (removeSilently(name)) {
-      notifyChanges(Collections.singletonList(name));
+      updateAndNotify(Collections.singletonList(name));
     }
   }
 
@@ -81,28 +82,45 @@ public class FilterManager {
   }
 
   public void clear() {
-    for (FilterClearer clearer : clearers) {
-      clearer.clear();
+    List<String> removedFilters = new ArrayList<String>();
+    try {
+      changeInProgress = true;
+      for (FilterClearer clearer : clearers) {
+        List<String> filterNames = clearer.getAssociatedFilters();
+        for (String name : filterNames) {
+          GlobMatcher matcher = filters.remove(name);
+          if (matcher != null) {
+            removedFilters.add(name);
+          }
+        }
+        clearer.clear();
+      }
     }
+    finally {
+      changeInProgress = false;
+    }
+    updateAndNotify(removedFilters);
   }
 
   public void reset() {
     List<String> changedFilters = new ArrayList<String>();
     changedFilters.addAll(filters.keySet());
     filters.clear();
-    notifyChanges(changedFilters);
+    updateAndNotify(changedFilters);
   }
 
-  public boolean isActive(String name) {
-    return filters.containsKey(name);
-  }
-
-  private void notifyChanges(List<String> changedFilters) {
+  private void updateAndNotify(List<String> changedFilters) {
     List<GlobMatcher> filterList = new ArrayList<GlobMatcher>();
     filterList.addAll(filters.values());
     GlobMatcher filter = GlobMatchers.and(filterList);
     filterable.setFilter(filter);
+    doNotify(changedFilters);
+  }
 
+  private void doNotify(Collection<String> changedFilters) {
+    if (changeInProgress) {
+      return;
+    }
     for (FilterListener listener : listeners) {
       listener.filterUpdated(changedFilters);
     }
