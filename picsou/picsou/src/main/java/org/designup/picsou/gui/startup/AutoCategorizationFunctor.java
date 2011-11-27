@@ -21,6 +21,10 @@ public class AutoCategorizationFunctor implements GlobFunctor {
 
   public void run(Glob transaction, final GlobRepository repository) throws Exception {
     transactionCount++;
+    if (!transaction.get(Transaction.SERIES).equals(Series.UNCATEGORIZED_SERIES_ID)){
+      autocategorized++;
+      return;
+    }
     GlobList index = referenceRepository.findByIndex(Transaction.LABEL_FOR_CATEGORISATION_INDEX,
                                                      transaction.get(Transaction.LABEL_FOR_CATEGORISATION))
       .sort(TransactionComparator.ASCENDING);
