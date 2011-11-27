@@ -13,7 +13,6 @@ import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.GlobRepositoryValidator;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
