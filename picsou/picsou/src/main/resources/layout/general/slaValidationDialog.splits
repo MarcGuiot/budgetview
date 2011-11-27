@@ -9,7 +9,7 @@
   <panel styleClass="dialog" preferredSize="(600,500)" opaque="true">
     <column styleClass="innerDialog">
 
-      <label text="$slaValidation.title" name="title" styleClass="title"/>
+      <label text="$slaValidation.title" name="titleLabel" styleClass="title"/>
 
       <label text="$slaValidation.message" styleClass="message"/>
 

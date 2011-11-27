@@ -32,6 +32,8 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .add("01/08/2008", "INTERNET", 15.0, "Internet", 0.00,	-735.83,	"Account n. 00001123")
       .check();
 
+
+    // ici on a un 'bug' => [Test] n'est pas reimporté donc pas update.
     operations.openImportDialog()
       .setFilePath(getFile("money_export_standard.qif"))
       .acceptFile()
@@ -39,7 +41,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .checkContains("[Test]")
       .setRecurring("[Test]")
       .checkNotContain("Alimentation")
-      .validateAndFinishImport();
+      .validateAndFinishImport(7, 0, 0);
 
     categorization.selectTransaction("SPLIT COURSES QUELCONQUES");
     transactionDetails.openSplitDialog()
@@ -85,7 +87,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
                      "Auto-moto:Remboursement de pret auto-moto", "Alimentation:Epicerie", "Auto-moto:Essence")
       .setRecurring("Alimentation:Epicerie", "Auto-moto:Remboursement de pret auto-moto")
       .setVariable("Loisirs-culture-sport:Journaux", "Loisirs-culture-sport", "Auto-moto:Essence")
-      .validateAndFinishImport();
+      .validateAndFinishImport(7, 7, 6);
   }
 
   public void testStrictQifFile() throws Exception {
@@ -129,6 +131,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .add("04/08/2008", TransactionType.PRELEVEMENT, "FNAC VELIZY CARTE 34609231 PAIEM UN LOGICIEL QUELCONQUE", "", -14.17, "Loisirs-culture-sport")
       .add("04/08/2008", TransactionType.VIREMENT, "SOLDE INITIAL", "", 1000.00)
       .check();
-
   }
+
+
 }

@@ -18,7 +18,7 @@ public class SlaValidationDialogChecker extends GuiChecker {
   }
 
   public SlaValidationDialogChecker checkTitle(String title) {
-    assertThat(dialog.getTextBox("title").textEquals(title));
+    assertThat(dialog.getTextBox("titleLabel").textEquals(title));
     return this;
   }
 

@@ -66,15 +66,20 @@ public class ImportCompletionPanel {
     GuiUtils.revalidate(message);
   }
 
-  public static String getEndOfImportMessageKey(int importedTransactionCount, int transactionCount, int autocategorizedTransactions) {
-    if (transactionCount == 0) {
-      return "import.end.info.operations.none.none." + normalize(importedTransactionCount);
+  public static String getEndOfImportMessageKey(int importedTransactionCount, int loadedTransactionCount, int autocategorizedTransactions) {
+    if (loadedTransactionCount == 0) {
+      if (autocategorizedTransactions > 0){
+        return "import.end.info.operations.none.none." + normalize(importedTransactionCount);
+      }
+      else {
+        return "import.end.info.operations.none.none." + normalize(importedTransactionCount);
+      }
     }
     else {
-      if ((transactionCount > 1) && (transactionCount == autocategorizedTransactions)) {
+      if ((loadedTransactionCount > 1) && (loadedTransactionCount == autocategorizedTransactions)) {
         return "import.end.info.operations.many.all";
       }
-      return "import.end.info.operations." + normalize(transactionCount) + "." + normalize(autocategorizedTransactions);
+      return "import.end.info.operations." + normalize(loadedTransactionCount) + "." + normalize(autocategorizedTransactions);
     }
   }
 

@@ -50,6 +50,12 @@ public class ImportSeriesChecker {
     ImportDialogChecker.complete(-1, -1, -1, parent);
   }
 
+  public void validateAndFinishImport(int loadedTransaction, int importedTransactionCount, int autocategorizedTransactionCount) {
+    dialog.getButton("import").click();
+    assertFalse(dialog.isVisible());
+    ImportDialogChecker.complete(loadedTransaction, importedTransactionCount, autocategorizedTransactionCount, parent);
+  }
+
   public ImportSeriesChecker checkNotContain(String ...series) {
     for (String s : series) {
       Assert.assertNull(dialog.findSwingComponent(JComboBox.class, "choice_" + s));

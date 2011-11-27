@@ -55,7 +55,10 @@ public class ServerAccessDecorator implements ServerAccess {
   }
 
   public void applyChanges(ChangeSet changeSet, GlobRepository globRepository) {
-    serverAccess.applyChanges(changeSet, globRepository);
+    // protection for mac where the exit is called even if the user was not logged.
+    if (serverAccess != null) {
+      serverAccess.applyChanges(changeSet, globRepository);
+    }
   }
 
   public void takeSnapshot() {
