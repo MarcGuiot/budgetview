@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.image.VolatileImage;
+import java.awt.image.BufferedImage;
 
 public class WavePanelUI extends BasicPanelUI {
   private Color topColor;
@@ -17,7 +18,7 @@ public class WavePanelUI extends BasicPanelUI {
   protected GeneralPath path;
   private int width;
   private int height;
-  private VolatileImage image = null;
+  private BufferedImage image = null;
 
   public WavePanelUI() {
     path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
@@ -49,10 +50,10 @@ public class WavePanelUI extends BasicPanelUI {
       createImage(g, component, dimension);
     }
     if (image != null) {
-      do {
+//      do {
         g.drawImage(image, 0, 0, null);
-      }
-      while (image != null && image.contentsLost());
+//      }
+//      while (image != null && image.contentsLost());
     }
   }
 
@@ -66,8 +67,15 @@ public class WavePanelUI extends BasicPanelUI {
         g2 = (Graphics2D)g;
       }
       else {
-        image = component.createVolatileImage(width, height);
-        g2 = image.createGraphics();
+//        image = component.createVolatileImage(width, height);
+//        g2 = image.createGraphics();
+        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice device = env.getDefaultScreenDevice();
+        GraphicsConfiguration config = device.getDefaultConfiguration();
+        BufferedImage bufferedImage = config.createCompatibleImage(width, height, Transparency.OPAQUE);
+        g2 = bufferedImage.createGraphics();
+        image = bufferedImage;
+
       }
     }
     catch (Throwable e) {

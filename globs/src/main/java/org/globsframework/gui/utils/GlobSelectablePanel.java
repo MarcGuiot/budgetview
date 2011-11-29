@@ -40,6 +40,8 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
   private boolean selected;
   private boolean rollover;
   private WindowMouseTracker windowTracker;
+  private MouseTracker tracker;
+  private GlobSelectablePanel.FrameDeactivatedListener frameDeactivatedListener;
 
   public GlobSelectablePanel(SplitsNode<JPanel> panelNode,
                              String selectedStyle, String unselectedStyle,
@@ -61,10 +63,11 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
     selectionService.addListener(this, type);
 
     Component panel = node.getComponent();
-    MouseTracker mouseTracker = new MouseTracker();
-    panel.addMouseListener(mouseTracker);
-    panel.addMouseMotionListener(mouseTracker);
-    panel.addPropertyChangeListener("Frame.active", new FrameDeactivatedListener());
+    tracker = new MouseTracker();
+    panel.addMouseListener(tracker);
+    panel.addMouseMotionListener(tracker);
+    frameDeactivatedListener = new FrameDeactivatedListener();
+    panel.addPropertyChangeListener("Frame.active", frameDeactivatedListener);
   }
 
   private void checkKeyTypes(Key[] otherKeys) {
@@ -101,6 +104,12 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
   }
 
   public void dispose() {
+    JPanel panel = node.getComponent();
+    if (panel != null){
+      panel.removeMouseListener(tracker);
+      panel.removeMouseMotionListener(tracker);
+      panel.removePropertyChangeListener(frameDeactivatedListener);
+    }
     selectionService.removeListener(this);
     if (windowTracker != null) {
       windowTracker.dispose();

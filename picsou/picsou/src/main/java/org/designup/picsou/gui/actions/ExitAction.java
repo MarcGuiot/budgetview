@@ -14,6 +14,7 @@ public class ExitAction extends AbstractAction {
   private WindowManager windowManager;
   private GlobRepository repository;
   private Directory directory;
+  private boolean showUserEvaluation = true;
 
   public ExitAction(WindowManager windowManager, GlobRepository repository, Directory directory) {
     super(Lang.get("exit"));
@@ -23,9 +24,16 @@ public class ExitAction extends AbstractAction {
     this.frame = directory.get(JFrame.class);
   }
 
+  public ExitAction(WindowManager windowManager, GlobRepository repository, Directory directory, boolean showUserEvaluation) {
+    this(windowManager, repository, directory);
+    this.showUserEvaluation = showUserEvaluation;
+  }
+
   public void actionPerformed(ActionEvent e) {
 
-    UserEvaluationDialog.showIfNeeded(repository, directory);
+    if (showUserEvaluation){
+      UserEvaluationDialog.showIfNeeded(repository, directory);
+    }
 
     frame.setVisible(false);
     frame.dispose();
