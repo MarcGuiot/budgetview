@@ -426,7 +426,7 @@ array set Properties {
 {Back Button;Next Button}
 
 0BC06F61-0237-40A3-B3CB-99DB85BEAEA5,CommandLineArguments
-{-l <%Language%>}
+{-l en}
 
 0BC06F61-0237-40A3-B3CB-99DB85BEAEA5,Conditions
 {2 conditions}
@@ -750,7 +750,7 @@ array set Properties {
 {can create}
 
 518566B8-E4AF-6C59-4C80-8E4545D21CA6,Command
-{<%InstallDir%>\budgetview.exe -l <%Language%> "%1"}
+{<%InstallDir%>\budgetview.exe -l en "%1"}
 
 518566B8-E4AF-6C59-4C80-8E4545D21CA6,CommandName
 {Open}
@@ -852,7 +852,7 @@ array set Properties {
 {<%ProgramExecutable%>}
 
 6675DC28-02ED-FB0F-408A-825F4402B665,Command
-{<%InstallDir%>\budgetview.exe -l <%Language%> "%1"}
+{<%InstallDir%>\budgetview.exe -l en "%1"}
 
 6675DC28-02ED-FB0F-408A-825F4402B665,CommandName
 {open}
@@ -1044,7 +1044,7 @@ array set Properties {
 {Finish}
 
 7ED948AD-24B3-4EDB-A79B-0F00DACFAC57,CommandLineArguments
-{ -l <%Language%>}
+{ -l en}
 
 7ED948AD-24B3-4EDB-A79B-0F00DACFAC57,Conditions
 {1 condition}
@@ -1098,7 +1098,7 @@ array set Properties {
 {3 conditions}
 
 8C9FCEF1-5721-4F82-B78C-4F773FD8A11C,ProgramCommandLine
-{<%ProgramExecutable%> -l <%Language%>}
+{<%ProgramExecutable%> -l en}
 
 8C9FCEF1-5721-4F82-B78C-4F773FD8A11C,WaitForProgram
 {No}
@@ -1365,7 +1365,7 @@ BDFBF9DE-520E-4FC7-A948-1E338438E270,Conditions
 {1 condition}
 
 C02FF264-188D-4CAA-9DB6-68552CDEE2A2,Command
-{<%InstallDir%>\budgetview.exe  -l <%Language%> "%1"}
+{<%InstallDir%>\budgetview.exe  -l en "%1"}
 
 C02FF264-188D-4CAA-9DB6-68552CDEE2A2,CommandName
 {Open}
@@ -1554,7 +1554,7 @@ E0F4E853-A044-473B-AD88-F372BB9BFB7F,ExitType
 {Finish}
 
 E55E8D57-A5BC-4017-A1D1-89F2C6D6AADB,CommandLineArguments
-{-l <%Language%>}
+{-l en}
 
 E55E8D57-A5BC-4017-A1D1-89F2C6D6AADB,Conditions
 {2 conditions}
