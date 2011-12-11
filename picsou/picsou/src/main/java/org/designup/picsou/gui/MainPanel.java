@@ -312,6 +312,8 @@ public class MainPanel {
     JRootPane rootPane = frame.getRootPane();
     GuiUtils.addShortcut(rootPane, "UNDO", undoAction, GuiUtils.ctrl(KeyEvent.VK_Z));
     GuiUtils.addShortcut(rootPane, "REDO", redoAction, GuiUtils.ctrl(KeyEvent.VK_Y));
+    GuiUtils.addShortcut(rootPane, "Data check", new DataCheckerAction(repository, directory),
+                         GuiUtils.ctrl(KeyEvent.VK_D));
 
     return editMenu;
   }
