@@ -1,5 +1,7 @@
 package org.designup.picsou.gui.utils.datacheck;
 
+import org.globsframework.utils.Log;
+
 public class DataCheckReport {
 
   private StringBuilder builder = new StringBuilder();
@@ -26,6 +28,7 @@ public class DataCheckReport {
   }
 
   public boolean hasError() {
+    Log.write(toString());
     return hasError;
   }
 

@@ -276,6 +276,11 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
+  public ImportDialogChecker selectNewAccount() {
+    getAccountCombo().select("a new account");
+    return this;
+  }
+
   private ComboBox getAccountCombo() {
     return dialog.getComboBox("accountCombo");
   }

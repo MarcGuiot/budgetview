@@ -6,7 +6,7 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
   public void setUp() throws Exception {
-    setCurrentDate("2010/06/20");
+    setCurrentDate("2010/06/25");
     super.setUp();
   }
 

@@ -235,8 +235,8 @@ public class PositionTrigger implements ChangeSetListener {
       Glob lastTransaction = repository.get(Key.create(Transaction.TYPE, lastUpdateTransactionId));
       repository.update(account.getKey(),
                         FieldValue.value(Account.POSITION_DATE,
-                                         Month.toDate(lastTransaction.get(Transaction.BANK_MONTH),
-                                                      lastTransaction.get(Transaction.BANK_DAY))),
+                                         Month.toDate(lastTransaction.get(Transaction.POSITION_MONTH),
+                                                      lastTransaction.get(Transaction.POSITION_DAY))),
                         FieldValue.value(Account.POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION))
       );
     }
@@ -296,8 +296,8 @@ public class PositionTrigger implements ChangeSetListener {
       Glob lastTransaction = repository.get(Key.create(Transaction.TYPE, lastUpdateTransactionId));
       repository.update(account.getKey(),
                         FieldValue.value(Account.POSITION_DATE,
-                                         Month.toDate(lastTransaction.get(Transaction.BANK_MONTH),
-                                                      lastTransaction.get(Transaction.BANK_DAY))),
+                                         Month.toDate(lastTransaction.get(Transaction.POSITION_MONTH),
+                                                      lastTransaction.get(Transaction.POSITION_DAY))),
                         FieldValue.value(Account.POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION))
       );
     }
@@ -341,8 +341,8 @@ public class PositionTrigger implements ChangeSetListener {
         Glob transaction = transactions[pivot];
         Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
         if (checkSameAccount(account, transactionAccount) && !transaction.isTrue(Transaction.PLANNED)
-            && (positionDate == null || (transaction.get(Transaction.BANK_MONTH) < positionMonthId ||
-                                         (transaction.get(Transaction.BANK_MONTH) == positionMonthId &&
+            && (positionDate == null || (transaction.get(Transaction.POSITION_MONTH) < positionMonthId ||
+                                         (transaction.get(Transaction.POSITION_MONTH) == positionMonthId &&
                                           transaction.get(Transaction.BANK_DAY) <= positionDay)))) {
           positionBefore = positionAfter - transaction.get(Transaction.AMOUNT);
           repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, positionAfter);
@@ -411,7 +411,8 @@ public class PositionTrigger implements ChangeSetListener {
       if (!sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
         continue;
       }
-      if (Transaction.isPositionTransactionBeforeOrEqual(transaction, month, currentDay) && !transaction.isTrue(Transaction.PLANNED)) {
+      if (Transaction.isPositionTransactionBeforeOrEqual(transaction, month, currentDay)
+          && !transaction.isTrue(Transaction.PLANNED)) {
 
         accountManagement.updateOpenPosition(transaction, index, transactions, positions);
         accountManagement.updateClosePosition(transaction, positions);
@@ -431,8 +432,8 @@ public class PositionTrigger implements ChangeSetListener {
         }
 
         realPosition = position;
-        positionDate = Month.toDate(transaction.get(Transaction.BANK_MONTH),
-                                    transaction.get(Transaction.BANK_DAY));
+        positionDate = Month.toDate(transaction.get(Transaction.POSITION_MONTH),
+                                    transaction.get(Transaction.POSITION_DAY));
         repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, position);
       }
       else {

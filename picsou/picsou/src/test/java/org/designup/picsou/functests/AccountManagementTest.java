@@ -168,4 +168,51 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     accountEditionChecker.validate();
     mainAccounts.checkAccountWithoutPosition("no position", "2008/08/31");
   }
+
+  public void testMultipleAccountAtDifferentDate() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(4).validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount("13006", 13006, "123", 10, "2008/08/10")
+      .addTransaction("2008/07/28", -550, "first account")
+      .load();
+    categorization.setNewVariable("first account", "first serie", 100.);
+
+    OfxBuilder.init(this)
+      .addBankAccount("13006", 13006, "321", 10, "2008/07/30")
+      .addTransaction("2008/07/29", -550, "second account ")
+      .load();
+
+    mainAccounts.checkAccount("123", 10, "2008/07/28");
+    mainAccounts.checkAccount("321", 10, "2008/07/29");
+    mainAccounts.checkSummary(20, "2008/07/29");
+
+    OfxBuilder.init(this)
+      .addBankAccount("123", -10, "2008/08/14")
+      .addTransaction("2008/08/14", -20, "first account")
+      .load();
+
+    mainAccounts.checkAccount("123", -10, "2008/08/14");
+    mainAccounts.checkAccount("321", 10, "2008/07/29");
+    mainAccounts.checkSummary(0, "2008/08/14");
+    operations.checkDataIsOk();
+  }
+
+
+  public void testMultipleAccountAtWithDateOfAccountEqualToLastOperationDate() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(4).validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount("123", 10, "2008/08/10")
+      .addTransaction("2008/07/28", -550, "first account")
+      .load();
+    categorization.setNewVariable("first account", "first serie", 100.);
+
+    OfxBuilder.init(this)
+      .addBankAccount("321", 10, "2008/07/30")
+      .addTransaction("2008/07/30", -550, "second account ")
+      .load();
+
+    mainAccounts.checkSummary(20, "2008/07/30");
+  }
 }

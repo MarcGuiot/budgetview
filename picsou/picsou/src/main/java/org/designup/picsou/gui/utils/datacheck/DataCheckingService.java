@@ -1,16 +1,18 @@
 package org.designup.picsou.gui.utils.datacheck;
 
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.MonthsToSeriesBudgetTrigger;
+import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.annotations.Required;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobFunctors;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Dates;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -19,10 +21,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public class DataCheckingService {
   private GlobRepository repository;
@@ -242,7 +241,58 @@ public class DataCheckingService {
     repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, toSeriesChecker);
     toSeriesChecker.deletePlanned(repository);
 
+
+    checkAccountTotal(report);
+
     return report.hasError();
+  }
+
+  private void checkAccountTotal(DataCheckReport report) {
+    Glob mainSummaryAccount = repository.getAll(Account.TYPE, GlobMatchers.fieldEquals(Account.ID, Account.MAIN_SUMMARY_ACCOUNT_ID)).getFirst();
+
+    Date mainPosDate = mainSummaryAccount.get(Account.POSITION_DATE);
+    GlobList allMainAcounts = repository.getAll(Account.TYPE, GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()));
+    for (Glob mainAccount : allMainAcounts) {
+      Date date = mainAccount.get(Account.POSITION_DATE);
+      if (date != null && mainPosDate.before(date)) {
+        report.addError("main summary date is " + Dates.toString(mainPosDate) +
+                        " but is composed with date " + Dates.toString(date) + " for " +
+                        mainAccount.get(Account.NAME));
+
+      }
+    }
+
+    TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
+    SortedSet<Glob> trs = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
+    
+    Glob[] transactions = trs.toArray(new Glob[trs.size()]);
+    Glob currentMonth = repository.get(CurrentMonth.KEY);
+    Date lastTransactionDate = Month.toDate(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH),
+                                    currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY));
+    for (Glob transaction : transactions) {
+      Integer accountId = transaction.get(Transaction.ACCOUNT);
+      Date positionDate = Month.toDate(transaction.get(Transaction.POSITION_MONTH), transaction.get(Transaction.POSITION_DAY));
+      if (transaction.isTrue(Transaction.PLANNED)) {
+        if (positionDate.before(lastTransactionDate)){
+          report.addError("Planned before current date " + Dates.toString(positionDate) + " / " + 
+                          Dates.toString(lastTransactionDate));
+        }
+      }
+      else {
+        if (positionDate.after(lastTransactionDate)){
+          report.addError("Current position date before last operation " + Dates.toString(positionDate) + " / " +
+                          Dates.toString(lastTransactionDate));
+        }
+        Date bankDate = Month.toDate(transaction.get(Transaction.BANK_MONTH), transaction.get(Transaction.BANK_DAY));
+        if (bankDate.after(lastTransactionDate)){
+          report.addError("Current bank date before last operation " + Dates.toString(positionDate) + " / " +
+                          Dates.toString(lastTransactionDate));
+        }
+        if (accountId == Account.MAIN_SUMMARY_ACCOUNT_ID){
+          report.addError("Main summary contains transaction");
+        }
+      }
+    }
   }
 
   private void checkSeriesBudget(DataCheckReport buf, Glob series, Integer firstMonthForSeries, Integer lastMonthForSeries) {

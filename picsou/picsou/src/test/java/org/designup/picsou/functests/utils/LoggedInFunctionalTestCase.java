@@ -13,6 +13,7 @@ import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.repository.GlobRepositoryValidator;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
@@ -176,7 +177,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   protected void tearDown() throws Exception {
 //    GlobRepositoryValidator.run(repository);
-//    operations.checkDataIsOk();
+    operations.checkDataIsOk();
     try {
       UISpecDisplay.instance().reset();
       if (mainWindow != null && operations != null) {
