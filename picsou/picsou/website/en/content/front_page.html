@@ -1,8 +1,19 @@
 <?php
-  drupal_add_html_head('<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>');
-  drupal_add_html_head('<script type="text/javascript" src="/files/fancybox/jquery.fancybox-1.3.4.pack.js"></script>');
-  drupal_add_html_head('<script type="text/javascript" src="/files/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>');
-  drupal_add_html_head('<link rel="stylesheet" href="/files/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />');
+
+drupal_add_js('http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js');
+drupal_add_js('/files/fancybox/jquery.fancybox-1.3.4.pack.js', 'external');
+drupal_add_js('/files/fancybox/jquery.mousewheel-3.0.4.pack.js', 'external');
+
+$fancybox_css = array(
+  '#tag' => 'link',
+  '#attributes' => array(
+    'href' => '/files/fancybox/jquery.fancybox-1.3.4.css',
+    'rel' => 'stylesheet',
+    'type' => 'text/css',
+  ),
+);
+drupal_add_html_head($fancybox_css, 'fancybox_styles');
+
 ?>
 
 <div id="home">
@@ -16,7 +27,7 @@
 
             <h2>Plan and monitor your spendings<br/>over the next months...<br/>
               and realize your projects!</h2>
-            <a href="/telechargement">
+            <a href="/download">
               <img src="files/images/front/try_button.png" alt="Try now!"
                    width="248" height="65"/>
             </a>
@@ -27,9 +38,12 @@
         <td>
           <div id="videoBorder">
             <div id="flashcontent" style="background: #000">
-              <object width=560 height=420><param name="movie" value="http://cdn.smugmug.com/ria/ShizVidz-2011030702.swf" />
+              <object width=560 height=420 style="z-index:-1;">
+                <param name="movie" value="http://cdn.smugmug.com/ria/ShizVidz-2011030702.swf"/>
                 <param name="allowFullScreen" value="true" />
                 <param name="allowScriptAccess" value="always" />
+                <!-- To prevent the object from covering the fancybox div -->
+                <param name="wmode" value="transparent" />
                 <param name="flashVars" value="s=ZT0xJmk9MTU5MzYzMjIyNCZrPVhKdGt0UFQmYT0yMDE3Nzg4MV9GN0tMcVImdT1idWRnZXR2aWV3&so=0&se=0&l=0" />
                 <embed src="http://cdn.smugmug.com/ria/ShizVidz-2011030702.swf" flashVars="s=ZT0xJmk9MTU5MzYzMjIyNCZrPVhKdGt0UFQmYT0yMDE3Nzg4MV9GN0tMcVImdT1idWRnZXR2aWV3&so=0&se=0&l=0"
                        width="560" height="420" type="application/x-shockwave-flash"
@@ -65,7 +79,7 @@
               'overlayColor' : '#444'
               });
             </script>
-
+            
           <td class="center">
             <img src="files/images/front/separator_left.png" width="9" height="83"/>
           </td>

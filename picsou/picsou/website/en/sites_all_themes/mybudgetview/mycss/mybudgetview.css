@@ -840,6 +840,10 @@ table.field-value td.value {
   margin-right: auto;
 }
 
+#home #videoBorder #flashcontent object {
+  z-order: 500;
+}
+
 #home #text {
   margin-right: 30px;
   text-align: center;
