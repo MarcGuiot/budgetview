@@ -92,6 +92,7 @@ public class MainPanel {
   private SendImportedFileAction sendImportedFileAction;
   private PreferencesAction preferencesAction;
   private ExitAction exitAction;
+  private static ExitAction exitActionWhitoutUserEvaluation;
   private LogoutAction logoutAction;
   private DeleteUserAction deleteUserAction;
   private GlobsPanelBuilder builder;
@@ -280,6 +281,10 @@ public class MainPanel {
     menu.add(logoutAction);
     menu.add(deleteUserAction);
     if (Gui.useMacOSMenu()) {
+      if (exitActionWhitoutUserEvaluation != null){
+        MRJAdapter.removeQuitApplicationListener(exitActionWhitoutUserEvaluation);
+        exitActionWhitoutUserEvaluation = null;
+      }
       MRJAdapter.addQuitApplicationListener(exitAction);
     }
     else {
@@ -360,11 +365,25 @@ public class MainPanel {
   }
 
   public void logout() {
+    if (Gui.useMacOSMenu()){
+      MRJAdapter.removeQuitApplicationListener(exitAction);
+      if (exitActionWhitoutUserEvaluation == null){
+        exitActionWhitoutUserEvaluation = new ExitAction(windowManager, repository, directory, false);
+        MRJAdapter.addQuitApplicationListener(exitActionWhitoutUserEvaluation);
+      }
+    }
     directory.get(OpenRequestManager.class).popCallback();
     windowManager.logout();
   }
 
   public void deleteUser(String userName, char[] chars) {
+    if (Gui.useMacOSMenu()){
+      MRJAdapter.removeQuitApplicationListener(exitAction);
+      if (exitActionWhitoutUserEvaluation == null){
+        exitActionWhitoutUserEvaluation = new ExitAction(windowManager, repository, directory, false);
+        MRJAdapter.addQuitApplicationListener(exitActionWhitoutUserEvaluation);
+      }
+    }
     directory.get(OpenRequestManager.class).popCallback();
     windowManager.logOutAndDeleteUser(userName, chars);
   }
