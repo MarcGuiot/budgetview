@@ -1,13 +1,14 @@
 package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
+import org.designup.picsou.utils.Lang;
 
 public class HelpTest extends LoggedInFunctionalTestCase {
 
   public void testHelpMenu() throws Exception {
     operations.openHelp().checkTitle("Index").close();
 
-    operations.checkGotoSupport("http://support.mybudgetview.fr");
+    operations.checkGotoSupport(Lang.get("site.support.url"));
   }
 
   public void testHelpForCards() throws Exception {
@@ -22,5 +23,11 @@ public class HelpTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     operations.openHelp("Operations View").checkTitle("Operations View").close();
+  }
+
+  public void testAccessToWebsite() throws Exception {
+    String url = Lang.get("site.url");
+    operations.checkGotoWebsite(url);
+    feedbackView.checkWebsiteLinksTo(url);
   }
 }

@@ -29,6 +29,10 @@ public class FeedbackViewChecker extends ViewChecker {
     checkButtonOpensUrl("facebook", urlPart);
   }
 
+  public void checkWebsiteLinksTo(String urlPart) {
+    checkButtonOpensUrl("visitWebsite", urlPart);
+  }
+
   private void checkButtonOpensUrl(String button, String urlPart) {
     BrowsingChecker.checkDisplayedUrlContains(getPanel().getButton(button).triggerClick(), urlPart);
   }

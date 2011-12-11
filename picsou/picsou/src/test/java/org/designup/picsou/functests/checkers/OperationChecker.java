@@ -671,4 +671,8 @@ public class OperationChecker {
   public void checkSendImportedFileDisabled() {
     assertFalse(getSendImportedFileMenuItem().isEnabled());
   }
+
+  public void checkGotoWebsite(String url) {
+    BrowsingChecker.checkDisplay(getHelpMenu().getSubMenu(Lang.get("gotoWebsite")).triggerClick(), url);
+  }
 }

@@ -15,6 +15,10 @@
 
     <filler fill="horizontal"/>
 
+    <button action="visitWebsite" styleClass="withText" icon="website_grey.png" rolloverIcon="website.png"/>
+
+    <filler fill="horizontal"/>
+
     <button action="sendFeedback" styleClass="withText" icon="mail_grey.png" rolloverIcon="mail.png"/>
 
     <filler fill="horizontal"/>
