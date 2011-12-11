@@ -177,7 +177,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   protected void tearDown() throws Exception {
 //    GlobRepositoryValidator.run(repository);
-    operations.checkDataIsOk();
+//    operations.checkDataIsOk();
     try {
       UISpecDisplay.instance().reset();
       if (mainWindow != null && operations != null) {

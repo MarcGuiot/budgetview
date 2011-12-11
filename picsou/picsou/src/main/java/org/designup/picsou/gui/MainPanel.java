@@ -22,6 +22,7 @@ import org.designup.picsou.gui.feedback.actions.OpenFeedbackDialogAction;
 import org.designup.picsou.gui.feedback.actions.SendFeedbackAction;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.help.actions.GotoSupportAction;
+import org.designup.picsou.gui.help.actions.GotoWebsiteAction;
 import org.designup.picsou.gui.license.LicenseExpirationAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
@@ -354,6 +355,7 @@ public class MainPanel {
     menu.add(cardView.getHelpAction());
 
     menu.addSeparator();
+    menu.add(new GotoWebsiteAction(directory));
     menu.add(new GotoSupportAction(directory));
     menu.add(sendFeedbackAction);
     menu.add(sendImportedFileAction);

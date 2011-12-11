@@ -15,6 +15,6 @@ public class GotoSupportAction extends BrowsingAction {
   }
 
   protected String getUrl() {
-    return "http://support.mybudgetview.fr";
+    return Lang.get("site.support.url");
   }
 }
