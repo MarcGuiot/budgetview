@@ -6,202 +6,205 @@ drupal_add_js('/files/fancybox/jquery.mousewheel-3.0.4.pack.js', 'external');
 
 $fancybox_css = array(
   '#tag' => 'link',
-  '#attributes' => array(
-    'href' => '/files/fancybox/jquery.fancybox-1.3.4.css',
-    'rel' => 'stylesheet',
-    'type' => 'text/css',
-  ),
+'#attributes' => array(
+'href' => '/files/fancybox/jquery.fancybox-1.3.4.css',
+'rel' => 'stylesheet',
+'type' => 'text/css',
+),
 );
 drupal_add_html_head($fancybox_css, 'fancybox_styles');
 
 ?>
 
 <div id="home">
-    <table id="front-table">
+  <table id="front-table">
+    <tr>
+      <td>
+        <div id="text">
+          <h1>Your budget<br/>in the blink of an eye!</h1>
+
+          <h2>Organize your budget<br/>in just a few clicks.</h2>
+
+          <h2>Plan and monitor your spending habits<br/>over the next months...<br/>
+            and realize your projects!</h2>
+          <a href="/download">
+            <img src="files/images/front/try_button.png" alt="Try now!"
+                 width="248" height="65"/>
+          </a>
+          <p id="price">Free 45 day trial</p>
+          <p id="platforms">Windows - Mac - Linux</p>
+        </div>
+      </td>
+      <td>
+        <div id="videoBorder">
+          <div id="flashcontent" style="background: #000">
+            <object width=560 height=420 style="z-index:-1;">
+              <param name="movie" value="http://cdn.smugmug.com/ria/ShizVidz-2011030702.swf"/>
+              <param name="allowFullScreen" value="true"/>
+              <param name="allowScriptAccess" value="always"/>
+              <!-- To prevent the object from covering the fancybox div -->
+              <param name="wmode" value="transparent"/>
+              <param name="flashVars"
+                     value="s=ZT0xJmk9MTU5MzYzMjIyNCZrPVhKdGt0UFQmYT0yMDE3Nzg4MV9GN0tMcVImdT1idWRnZXR2aWV3&so=0&se=0&l=0"/>
+              <embed src="http://cdn.smugmug.com/ria/ShizVidz-2011030702.swf"
+                     flashVars="s=ZT0xJmk9MTU5MzYzMjIyNCZrPVhKdGt0UFQmYT0yMDE3Nzg4MV9GN0tMcVImdT1idWRnZXR2aWV3&so=0&se=0&l=0"
+                     width="560" height="420" type="application/x-shockwave-flash"
+                     allowFullScreen="true" allowScriptAccess="always"></embed>
+            </object>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div id="presentation" class="light-block">
+
+    <table class="image-and-text" style="width: 85%;">
       <tr>
-        <td>
-          <div id="text">
-            <h1>Your budget<br/>in the blink of an eye!</h1>
+        <td class="left">
 
-            <h2>Organize your budget<br/>in just a few clicks.</h2>
-
-            <h2>Plan and monitor your spendings<br/>over the next months...<br/>
-              and realize your projects!</h2>
-            <a href="/download">
-              <img src="files/images/front/try_button.png" alt="Try now!"
-                   width="248" height="65"/>
+          <div id="screenshots-gallery">
+            <a class="gallery" rel="group1" href="files/images/app/view_budget.png">
+              <img src="files/images/front/screenshot_magnifier.png" alt="La vue Budget"
+                   width="312" height="206"/>
             </a>
-            <p id="price">Free 45 day trial</p>
-            <p id="platforms">Windows - Mac - Linux</p>
+
+            <a class="gallery" rel="group1" href="files/images/app/view_home.png"></a>
+            <a class="gallery" rel="group1" href="files/images/app/view_accounts.png"></a>
+            <a class="gallery" rel="group1" href="files/images/app/view_categorization.png"></a>
+            <a class="gallery" rel="group1" href="files/images/app/view_analysis.png"></a>
           </div>
+
+          <script type="text/javascript">
+            $("a.gallery").fancybox({
+            'overlayOpacity' : 0.8,
+            'overlayColor' : '#444'
+            });
+          </script>
+
+        <td class="center">
+          <img src="files/images/front/separator_left.png" width="9" height="83"/>
         </td>
-        <td>
-          <div id="videoBorder">
-            <div id="flashcontent" style="background: #000">
-              <object width=560 height=420 style="z-index:-1;">
-                <param name="movie" value="http://cdn.smugmug.com/ria/ShizVidz-2011030702.swf"/>
-                <param name="allowFullScreen" value="true" />
-                <param name="allowScriptAccess" value="always" />
-                <!-- To prevent the object from covering the fancybox div -->
-                <param name="wmode" value="transparent" />
-                <param name="flashVars" value="s=ZT0xJmk9MTU5MzYzMjIyNCZrPVhKdGt0UFQmYT0yMDE3Nzg4MV9GN0tMcVImdT1idWRnZXR2aWV3&so=0&se=0&l=0" />
-                <embed src="http://cdn.smugmug.com/ria/ShizVidz-2011030702.swf" flashVars="s=ZT0xJmk9MTU5MzYzMjIyNCZrPVhKdGt0UFQmYT0yMDE3Nzg4MV9GN0tMcVImdT1idWRnZXR2aWV3&so=0&se=0&l=0"
-                       width="560" height="420" type="application/x-shockwave-flash"
-                       allowFullScreen="true" allowScriptAccess="always"></embed>
-              </object>
-            </div>
-          </div>
+        <td class="right">
+          <h2>Visualize the essential</h2>
+          <p>With BudgetView, forget about the long lists of operations you'll find
+            everywhere. Instead, visualize your entire budget on a single screen in a simple set of
+            envelopes such as: income, groceries, leisure, etc.</p>
         </td>
       </tr>
     </table>
 
-    <div id="presentation" class="light-block">
 
-      <table class="image-and-text" style="width: 85%;">
+    <table id="budget" class="image-and-text" style="margin-top: -30px;width: 95%;">
+      <tr>
+        <td class="left align-right">
+          <h2>Your projects come first!</h2>
+          <p>At the beginning of each month, arrange your budget to leave some room for savings and any desired
+            financial goals. The ideal solution: set up a fixed transfer to your savings account so that you
+            pay yourself first! BudgetView will then help you fine tune your spending to avoid any overdrafts.</p>
+        </td>
+        <td class="center">
+          <img src="files/images/front/separator_right.png" width="9" height="83"/>
+        </td>
+        <td>
+          <img src="files/images/front/postcards.png" alt="Cartes postales"
+               width="342" height="261" style="margin-left: 20px;"/>
+        </td>
+      </tr>
+    </table>
+
+    <table class="image-and-text" style="margin-top: -30px;width: 90%;">
+      <tr>
+        <td class="left">
+          <img src="files/images/front/budgetArea.png" alt="Postal cards"
+               width="375" height="269"/>
+        </td>
+        <td class="center">
+          <img src="files/images/front/separator_left.png" width="9" height="83"/>
+        </td>
+        <td class="right">
+          <h2>Notice the slightest overrun</h2>
+          <p>During the course of each month,  import financial statements from your bank and compare your spending
+            with your planned budget. In just one glance, you will be
+            aware of any cost overrun. You can then readjust your budget to avoid overdraw and preserve your goals.
+          </p>
+        </td>
+      </tr>
+    </table>
+
+
+    <table id="future" class="image-and-text" style="margin-top: 10px;width: 95%;">
+      <tr>
+        <td class="left align-right">
+          <h2>Anticipate the coming months</h2>
+          <p>Observe the projected activity in your main accounts for the near future, to
+            anticipate any problems.
+            You can now accurately plan your goals since you will be able to see their impact on your budget.
+          </p>
+        </td>
+        <td class="center">
+          <img src="files/images/front/separator_right.png" width="9" height="83"/>
+        </td>
+        <td class="right">
+          <img src="files/images/front/futur.png" alt="Anticipation des soldes de fin de mois"
+               width="383" height="166"/>
+        </td>
+      </tr>
+    </table>
+
+    <table id="import" class="image-and-text" style="margin-top: 20px;width: 100%;">
+      <tr>
+        <td class="left">
+          <img src="files/images/front/import.png" alt="Importez vos relevés"
+               width="356" height="125"/>
+        </td>
+        <td class="center">
+          <img src="files/images/front/separator_left.png" width="9" height="83"/>
+        </td>
+        <td class="right">
+          <h2>No tedious input of transactions</h2>
+          <p>Import your financial statements from your bank's website.
+            <strong>BudgetView categorizes automatically most of your transactions</strong>,
+            leaving only a few operations for manual processing.
+            This way, your budget can be up to date in just a few minutes, at any time!
+          </p>
+        </td>
+      </tr>
+    </table>
+
+    <div id="security" style="margin-top: 30px;width: 60%;">
+      <table>
         <tr>
           <td class="left">
-
-            <div id="screenshots-gallery">
-              <a class="gallery" rel="group1" href="files/images/app/view_budget.png">
-                <img src="files/images/front/screenshot_magnifier.png" alt="La vue Budget"
-                     width="312" height="206"/>
-              </a>
-
-              <a class="gallery" rel="group1" href="files/images/app/view_home.png"></a>
-              <a class="gallery" rel="group1" href="files/images/app/view_accounts.png" ></a>
-              <a class="gallery" rel="group1" href="files/images/app/view_categorization.png"></a>
-              <a class="gallery" rel="group1" href="files/images/app/view_analysis.png" ></a>
-            </div>
-
-            <script type="text/javascript">
-              $("a.gallery").fancybox({
-              'overlayOpacity'	:	0.8,
-              'overlayColor' : '#444'
-              });
-            </script>
-            
-          <td class="center">
-            <img src="files/images/front/separator_left.png" width="9" height="83"/>
+            <img src="files/images/front/secret.png"
+                 alt="Security" width="162" height="119"/>
           </td>
           <td class="right">
-            <h2>Visualize the essential</h2>
-            <p>With BudgetView, forget about the long listings of operations you'll find everywhere.
-              Visualize all you budget on a single screen, as a set of simple envelopes:
-              income, groceries, leisures, etc.</p>
-          </td>
-        </tr>
-      </table>
-
-
-      <table id="budget" class="image-and-text" style="margin-top: -30px;width: 95%;">
-        <tr>
-          <td class="left align-right">
-            <h2>Your projects first!</h2>
-            <p>At the beginning of each month, prepare your budget to leave some room for your savings
-              and your projects. The ideal solution: a fixed transfer to your savings accounts, to
-              pay yourself first! BudgetView will then help you tune your spending to avoid any overdraw.</p>
-          </td>
-          <td class="center">
-            <img src="files/images/front/separator_right.png" width="9" height="83"/>
-          </td>
-          <td>
-            <img src="files/images/front/postcards.png" alt="Cartes postales"
-                 width="342" height="261" style="margin-left: 20px;"/>
-          </td>
-        </tr>
-      </table>
-
-      <table class="image-and-text" style="margin-top: -30px;width: 90%;">
-        <tr>
-          <td class="left">
-            <img src="files/images/front/budgetArea.png" alt="Postal cards"
-                 width="375" height="269"/>
-          </td>
-          <td class="center">
-            <img src="files/images/front/separator_left.png" width="9" height="83"/>
-          </td>
-          <td class="right">
-            <h2>Notice the slightest overrun</h2>
-            <p>During the course of the month, import your financial statements from your bank
-              to check how you are doing compared to what you planned.
-              At a glance, you can see any overrun and adjust your budget to avoid any overdraw and
-              preserve your projects.</p>
-          </td>
-        </tr>
-      </table>
-
-
-      <table id="future" class="image-and-text" style="margin-top: 10px;width: 95%;">
-        <tr>
-          <td class="left align-right">
-            <h2>Anticipate the coming months</h2>
-            <p>Observe the evolution of the position of your main accounts in the near future. You can
-               anticipate any problem, and also prepare your projects to see their impact on your budget.
-            </p>
-          </td>
-          <td class="center">
-            <img src="files/images/front/separator_right.png" width="9" height="83"/>
-          </td>
-          <td class="right">
-            <img src="files/images/front/futur.png" alt="Anticipation des soldes de fin de mois"
-                 width="383" height="166"/>
-          </td>
-        </tr>
-      </table>
-
-      <table id="import" class="image-and-text" style="margin-top: 20px;width: 100%;">
-        <tr>
-          <td class="left">
-            <img src="files/images/front/import.png" alt="Importez vos relevés"
-                 width="356" height="125"/>
-          </td>
-          <td class="center">
-            <img src="files/images/front/separator_left.png" width="9" height="83"/>
-          </td>
-          <td class="right">
-            <h2>No tedious input of transactions</h2>
-            <p>Import your financial statements from your bank's website.
-              <strong>BudgetView categorizes automatically most of your transactions</strong>,
-              leaving usually only a few operations to process manually. You budget is up to date in
-              just a few minutes!
+            <h2>Secure and confidential</h2>
+            <p>
+              Your personal information is not sent over the internet: everything is kept on your own computer.
+              Further protect your sensitive data with a password that only you will know.
             </p>
           </td>
         </tr>
       </table>
+    </div>
 
-      <div id="security" style="margin-top: 30px;width: 60%;">
-        <table>
-          <tr>
-            <td class="left">
-              <img src="files/images/front/secret.png"
-                   alt="Security" width="162" height="119"/>
-            </td>
-            <td class="right">
-              <h2>Secure and confidential</h2>
-              <p>
-                You personal information is not sent over the internet. You keep everything
-                on your own computer, and you can protect your data with a password you'll be the only one to know.
-              </p>
-            </td>
-          </tr>
-        </table>
-      </div>
+    <hr/>
 
-      <hr/>
-
-      <div id="close">
-        <p>What are you waiting for?</p>
-        <a href="/download">
-          <img src="files/images/front/try_button.png" alt="Try now!"
-               width="298" height="74"/>
-        </a>
-        <p id="close-trial">Free 45-day trial</p>
-        <p id="close-showroom">Want to learn more?<br>
-          Discover <a href="/tour" class="highlighted">BudgetView in pictures</a><br/>
-          and our guide: <a href="/managing-a-family-budget-guide" class="highlighted">Managing a family budget</a>
-        </p>
-      </div>
-
+    <div id="close">
+      <p>What are you waiting for?</p>
+      <a href="/download">
+        <img src="files/images/front/try_button.png" alt="Try now!"
+             width="298" height="74"/>
+      </a>
+      <p id="close-trial">Free 45-day trial</p>
+      <p id="close-showroom">Want to learn more?<br>
+        Discover <a href="/tour" class="highlighted">BudgetView in pictures</a><br/>
+        and our guide: <a href="/managing-a-family-budget-guide" class="highlighted">Managing a family budget</a>
+      </p>
     </div>
 
   </div>
+
+</div>
