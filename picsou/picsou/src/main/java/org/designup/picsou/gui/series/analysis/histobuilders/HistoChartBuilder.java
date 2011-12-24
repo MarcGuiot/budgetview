@@ -16,17 +16,21 @@ import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRan
 import org.designup.picsou.gui.utils.DaySelection;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
+import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.TablePrinter;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -43,7 +47,6 @@ public class HistoChartBuilder {
   private HistoLineColors uncategorizedColors;
   private HistoLineColors accountColors;
   private HistoDailyColors accountDailyColors;
-  private HistoLineColors accountBalanceColors;
   private HistoDiffColors seriesColors;
 
   private HistoChartRange range;
@@ -126,14 +129,6 @@ public class HistoChartBuilder {
       "histo.account.inner.selected.day",
       directory
     );
-
-    accountBalanceColors = new HistoLineColors(
-      "histo.account.balance.line.positive",
-      "histo.account.balance.line.negative",
-      "histo.account.balance.fill.positive",
-      "histo.account.balance.fill.negative",
-      directory
-    );
   }
 
   public HistoChart getChart() {
@@ -157,29 +152,87 @@ public class HistoChartBuilder {
   }
 
   public void showMainDailyHisto(int selectedMonthId, boolean showFullMonthLabels, String daily) {
-    showAccountDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForMainAccounts(repository), DaySelection.EMPTY, daily);
+    showDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForMainAccounts(repository), DaySelection.EMPTY, daily);
   }
 
   public void showSavingsDailyHisto(int selectedMonthId, boolean showFullMonthLabels) {
-    showAccountDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForSavingsAccounts(repository), DaySelection.EMPTY, "daily");
+    showDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForSavingsAccounts(repository), DaySelection.EMPTY, "daily");
   }
 
-  public void showDailyHisto(int selectedMonthId, boolean showFullMonthLabels, Set<Integer> accountIds, DaySelection daySelection, String daily) {
-    GlobMatcher matcher;
-    if (accountIds == null || accountIds.isEmpty()) {
-      matcher = Matchers.transactionsForAllAccounts(repository);
+  public void showAccountDailyHisto(int selectedMonthId, boolean showFullMonthLabels, Set<Integer> accountIds, DaySelection daySelection, String daily) {
+
+    HistoDailyDatasetBuilder builder = createDailyDataset(daily, showFullMonthLabels);
+    int column = 0;
+    List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
+
+    for (int monthId : monthIdsToShow) {
+      int maxDay = Month.getLastDayNumber(monthId);
+      Double[] minValuesForAll = new Double[maxDay];
+      Double[][] values = new Double[maxDay][accountIds.size() + 1];
+
+      for (Integer accountId : accountIds) {
+
+        GlobMatcher accountMatcher = Matchers.transactionsForAccount(accountId);
+
+        GlobList transactions =
+          repository.getAll(Transaction.TYPE,
+                            and(fieldEquals(Transaction.POSITION_MONTH, monthId),
+                                accountMatcher))
+            .sort(TransactionComparator.ASCENDING_ACCOUNT);
+
+        if (!transactions.isEmpty()) {
+          maxDay = Math.max(maxDay, transactions.getSortedSet(Transaction.POSITION_DAY).last());
+        }
+
+        Double[] minValuesForAccount = new Double[maxDay];
+        Double lastValue = getLastValue(accountMatcher, monthIdsToShow, Transaction.ACCOUNT_POSITION);
+        if (lastValue == null) {
+          Glob account = repository.get(Key.create(Account.TYPE, accountId));
+          lastValue = account.get(Account.POSITION);
+        }
+        getDailyValues(monthId, transactions, lastValue, maxDay, minValuesForAccount, Transaction.ACCOUNT_POSITION);
+
+        System.out.println("  >> " + accountId + " >> " + Arrays.toString(minValuesForAccount));
+        for (int i = 0; i < maxDay; i++) {
+          values[i][column] = minValuesForAccount[i];
+          if (minValuesForAll[i] == null) {
+            minValuesForAll[i] = minValuesForAccount[i];
+          }
+          else if (minValuesForAccount[i] != null) {
+            minValuesForAll[i] += minValuesForAccount[i];
+          }
+        }
+
+        column++;
+      }
+
+      System.out.println("  >> all >> " + Arrays.toString(minValuesForAll));
+
+      TablePrinter printer = new TablePrinter();
+      for (int i = 0; i < maxDay; i++) {
+        values[i][column] = minValuesForAll[i];
+        printer.addRow(values[i]);
+      }
+      printer.print();
+
+      builder.add(monthId, minValuesForAll, monthId == selectedMonthId, daySelection.getValues(monthId, maxDay));
     }
-    else {
-      matcher = Matchers.transactionsForAccounts(accountIds, repository);
-    }
-    showAccountDailyHisto(selectedMonthId, showFullMonthLabels, matcher, daySelection, daily);
+
+    builder.apply(accountDailyColors, "daily");
+
   }
 
-  private void showAccountDailyHisto(int selectedMonthId, boolean showFullMonthLabels, GlobMatcher accountMatcher, DaySelection daySelection, String daily) {
+  public void showDailyHisto(int selectedMonthId, boolean showFullMonthLabels, GlobMatcher accountMatcher, DaySelection daySelection, String daily) {
     HistoDailyDatasetBuilder builder = createDailyDataset(daily, showFullMonthLabels);
 
-    Double lastValue = null;
-    for (int monthId : getMonthIdsToShow(selectedMonthId)) {
+    List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
+    if (monthIdsToShow.isEmpty()) {
+      return;
+    }
+
+    Double lastValue = getLastValue(accountMatcher, monthIdsToShow, Transaction.SUMMARY_POSITION);
+
+    for (int monthId : monthIdsToShow) {
       GlobList transactions =
         repository.getAll(Transaction.TYPE,
                           and(fieldEquals(Transaction.POSITION_MONTH, monthId),
@@ -191,42 +244,78 @@ public class HistoChartBuilder {
         maxDay = Math.max(maxDay, transactions.getSortedSet(Transaction.POSITION_DAY).last());
       }
 
-      Double[] lastValues = new Double[maxDay];
       Double[] minValues = new Double[maxDay];
-      for (Glob transaction : transactions) {
-        int day = transaction.get(Transaction.POSITION_DAY) - 1;
-        lastValues[day] = transaction.get(Transaction.SUMMARY_POSITION);
-        if (minValues[day] == null) {
-          minValues[day] = transaction.get(Transaction.SUMMARY_POSITION);
-        }
-        else {
-          minValues[day] = Math.min(transaction.get(Transaction.SUMMARY_POSITION, Double.MAX_VALUE), minValues[day]);
-        }
-      }
-
-      for (int i = 0; i < minValues.length; i++) {
-        if (minValues[i] == null) {
-          minValues[i] = lastValue;
-        }
-        else {
-          lastValue = lastValues[i];
-        }
-      }
-
-      if (lastValue == null) {
-        Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
-        if (stat != null) {
-          lastValue = stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
-          for (int i = 0; i < minValues.length; i++) {
-            minValues[i] = lastValue;
-          }
-        }
-      }
+      lastValue = getDailyValues(monthId, transactions, lastValue, maxDay, minValues, Transaction.SUMMARY_POSITION);
 
       builder.add(monthId, minValues, monthId == selectedMonthId, daySelection.getValues(monthId, maxDay));
     }
 
     builder.apply(accountDailyColors, "daily");
+  }
+
+  private Double getDailyValues(int monthId, GlobList transactions, Double previousLastValue, int maxDay,
+                                Double[] minValues, DoubleField positionField) {
+    Double lastValue = previousLastValue;
+    Double[] lastValues = new Double[maxDay];
+    for (Glob transaction : transactions) {
+      int day = transaction.get(Transaction.POSITION_DAY) - 1;
+      lastValues[day] = transaction.get(positionField);
+      if (minValues[day] == null) {
+        minValues[day] = transaction.get(positionField);
+      }
+      else {
+        minValues[day] = Math.min(transaction.get(positionField, Double.MAX_VALUE), minValues[day]);
+      }
+    }
+
+    for (int i = 0; i < minValues.length; i++) {
+      if (minValues[i] == null) {
+        minValues[i] = lastValue;
+      }
+      else {
+        lastValue = lastValues[i];
+      }
+    }
+
+    if (lastValue == null) {
+      Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
+      if (stat != null) {
+        lastValue = stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
+        for (int i = 0; i < minValues.length; i++) {
+          minValues[i] = lastValue;
+        }
+      }
+    }
+
+    for (int i = minValues.length - 2; i >= 0; i--) {
+      if (minValues[i] == null) {
+        minValues[i] = minValues[i + 1];
+      }
+    }
+
+    return lastValue;
+  }
+
+  private Double getLastValue(GlobMatcher accountMatcher, List<Integer> monthIdsToShow, DoubleField positionField) {
+    GlobList previousTransactions =
+      repository.getAll(Transaction.TYPE,
+                        and(fieldStrictlyLessThan(Transaction.POSITION_MONTH, monthIdsToShow.get(0)),
+                            accountMatcher))
+        .sort(TransactionComparator.ASCENDING_ACCOUNT);
+    if (!previousTransactions.isEmpty()) {
+      return previousTransactions.getLast().get(positionField);
+    }
+
+    GlobList nextTransactions =
+      repository.getAll(Transaction.TYPE,
+                        and(fieldGreaterOrEqual(Transaction.POSITION_MONTH, monthIdsToShow.get(0)),
+                            accountMatcher))
+        .sort(TransactionComparator.ASCENDING_ACCOUNT);
+    if (nextTransactions.isEmpty()) {
+      return null;
+    }
+    Glob firstTransaction = nextTransactions.getFirst();
+    return Amounts.diff(firstTransaction.get(positionField), firstTransaction.get(Transaction.AMOUNT));
   }
 
   public void showMainBalanceHisto(int selectedMonthId, boolean resetPosition) {
@@ -370,21 +459,6 @@ public class HistoChartBuilder {
     }
 
     builder.showBars(accountColors, "savingsAccounts");
-  }
-
-  public void showSavingsBalanceHisto(int selectedMonthId, boolean resetPosition) {
-    if (resetPosition) {
-      range.reset();
-    }
-    HistoLineDatasetBuilder builder = createLineDataset("savingsBalance");
-
-    for (int monthId : getMonthIdsToShow(selectedMonthId)) {
-      Glob stat = SavingsBudgetStat.findSummary(monthId, repository);
-      Double value = stat != null ? stat.get(SavingsBudgetStat.BALANCE) : 0.0;
-      builder.add(monthId, value, monthId == selectedMonthId);
-    }
-
-    builder.showBars(accountBalanceColors, "savingsBalance");
   }
 
   public void showSeriesBudget(Integer seriesId, int selectedMonthId, Set<Integer> selectedMonths, boolean resetPosition) {

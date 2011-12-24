@@ -56,6 +56,9 @@ public class HistoDailyBlockPainter {
   }
 
   private void flush() {
+    if (fillPath == null) {
+      return;
+    }
     fillPath.lineTo(lastX, y0);
     fillPath.lineTo(firstX, y0);
     fillPath.lineTo(firstX, firstY);

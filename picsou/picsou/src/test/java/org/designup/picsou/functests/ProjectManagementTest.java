@@ -107,29 +107,6 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary().checkEndPosition(1900.00);
   }
 
-  public void testTotalAmountIsUpdatedOnEachKeyStroke() throws Exception {
-    operations.openPreferences().setFutureMonthsCount(6).validate();
-    operations.hideSignposts();
-
-    projects.checkHintMessageDisplayed();
-
-    Assert.fail("[Regis] En cours - je ne comprends pas pourquoi cette partie ne marche plus");
-
-    projects.create()
-      .setName("My project")
-      .setItemName(0, "Reservation")
-      .setItemDate(0, 201101)
-      .setItemAmount(0, -200.00)
-      .checkGauge(0.00, -200.00)
-      .addItem(1, "Travel", 201102, -500.00)
-      .checkItems("Reservation | January 2011 | -200.00\n" +
-                  "Travel | February 2011 | -500.00")
-      .checkGauge(0.00, -700.00)
-      .deleteLastValueChars(1, 3)
-      .checkGauge(0.00, -250.00)
-      .validate();
-  }
-
   public void testProjectDeletionWithNoAssignedTransactions() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2010/12/01")

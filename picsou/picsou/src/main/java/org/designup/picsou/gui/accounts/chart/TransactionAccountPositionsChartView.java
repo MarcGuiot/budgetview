@@ -6,20 +6,17 @@ import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerA
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.utils.DaySelection;
+import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
 import java.util.Set;
 
 public class TransactionAccountPositionsChartView extends AccountsChartView {
@@ -30,10 +27,10 @@ public class TransactionAccountPositionsChartView extends AccountsChartView {
           new HistoChartConfig(false, false, false, true, true, true, true, true),
           componentName, repository, directory);
     selectionService.addListener(new GlobSelectionListener() {
-                                   public void selectionUpdated(GlobSelection selection) {
-                                     update();
-                                   }
-                                 }, Account.TYPE, Transaction.TYPE);
+      public void selectionUpdated(GlobSelection selection) {
+        update();
+      }
+    }, Account.TYPE, Transaction.TYPE);
     histoChartBuilder.getChart().addListener(new HistoChartListenerAdapter() {
       public void processClick(HistoSelection selection, Key objectKey) {
         MainDailyPositionsChartView.selectTransactions(objectKey, histoChartBuilder.getChart(),
@@ -52,6 +49,13 @@ public class TransactionAccountPositionsChartView extends AccountsChartView {
       daySelection.add(transaction.get(Transaction.MONTH), transaction.get(Transaction.DAY));
     }
 
-    histoChartBuilder.showDailyHisto(currentMonthId, true, accountIds, daySelection, "daily");
+    if (accountIds == null || accountIds.isEmpty()) {
+      histoChartBuilder.showDailyHisto(currentMonthId, true,
+                                       Matchers.transactionsForMainAccounts(repository),
+                                       daySelection, "daily");
+    }
+    else {
+      histoChartBuilder.showAccountDailyHisto(currentMonthId, true, accountIds, daySelection, "daily");
+    }
   }
 }

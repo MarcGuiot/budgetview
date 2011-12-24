@@ -34,8 +34,6 @@ public class TransactionChecker extends ViewChecker {
   private Table table;
   private Table amountTable;
   private CheckBox showPlannedTransactionsCheckbox;
-  private ComboBox accountFilterCombo;
-  private ComboBox seriesFilterCombo;
 
   public static TransactionChecker init(Window window) {
     return new TransactionChecker(window);
@@ -345,6 +343,13 @@ public class TransactionChecker extends ViewChecker {
       .run(getTable().triggerRightClick(row, 0))
       .getSubMenu("Copy")
       .click();
+  }
+
+  public HistoDailyChecker checkGraph(String legend) {
+    views.selectData();
+    Panel panel = mainWindow.getPanel("transactionView");
+    assertThat(panel.getTextBox("accountChartLegend").textEquals(legend));
+    return new HistoDailyChecker(panel, "accountChart");
   }
 
   public class TransactionAmountChecker {

@@ -92,7 +92,23 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
   }
 
   public String toString() {
-    return "daily(" + currentMonth + " / " + currentDay + ")\n" + super.toString();
+    StringBuilder builder = new StringBuilder();
+    builder.append("daily(").append(currentMonth).append(currentDay).append(")\n");
+    for (HistoDailyElement element : this.elements) {
+      builder.append("- ").append(element.id).append('\n');
+      for (int i = 0; i < element.values.length; i++) {
+        builder.append("    ").append(Formatting.TWO_DIGIT_INTEGER_FORMAT.format(i))
+          .append(':').append(element.values[i]);
+        if (element.daySelections[i]) {
+          builder.append('*');
+        }
+        if (i == element.minDay) {
+          builder.append(" min");
+        }
+        builder.append("\n");
+      }
+    }
+    return builder.toString();
   }
 
   public String toString(int index) {

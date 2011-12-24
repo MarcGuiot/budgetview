@@ -29,6 +29,10 @@ public class Matchers {
     return transactionsForAccounts(Collections.singleton(Account.SAVINGS_SUMMARY_ACCOUNT_ID), repository);
   }
 
+  public static GlobMatcher transactionsForAccount(Integer accountId) {
+    return GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId);
+  }
+
   public static GlobMatcher transactionsForAccounts(Set<Integer> accountIds, GlobRepository repository) {
     accountIds = new HashSet<Integer>(accountIds);
     if (accountIds.contains(Account.ALL_SUMMARY_ACCOUNT_ID)) {

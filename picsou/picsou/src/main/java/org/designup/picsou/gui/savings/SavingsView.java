@@ -34,7 +34,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.Collections;
 
 public class SavingsView extends View implements GlobSelectionListener {
   private Matchers.AccountDateMatcher accountDateMatcher;
@@ -133,7 +132,7 @@ public class SavingsView extends View implements GlobSelectionListener {
         protected void update(Integer currentMonthId, boolean resetPosition) {
           if (account.exists()) {
             histoChartBuilder.showDailyHisto(currentMonthId, false,
-                                             Collections.singleton(account.get(Account.ID)),
+                                             Matchers.transactionsForAccount(account.get(Account.ID)),
                                              DaySelection.EMPTY, "daily");
           }
         }

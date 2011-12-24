@@ -50,14 +50,14 @@ public class SeriesAnalysisView extends View {
     seriesChartsColors = new SeriesChartsColors(repository, directory);
 
     parentSelectionService.addListener(new GlobSelectionListener() {
-                                         public void selectionUpdated(GlobSelection selection) {
-                                           SortedSet<Integer> monthIds = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
-                                           if (!monthIds.isEmpty()) {
-                                             referenceMonthId = monthIds.iterator().next();
-                                             chartPanel.monthSelected(referenceMonthId, monthIds);
-                                           }
-                                         }
-                                       }, Month.TYPE);
+      public void selectionUpdated(GlobSelection selection) {
+        SortedSet<Integer> monthIds = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
+        if (!monthIds.isEmpty()) {
+          referenceMonthId = monthIds.iterator().next();
+          chartPanel.monthSelected(referenceMonthId, monthIds);
+        }
+      }
+    }, Month.TYPE);
 
     SeriesAnalysisBreadcrumb breadcrumb = new SeriesAnalysisBreadcrumb(repository, directory);
     builder.add("breadcrumb", breadcrumb.getEditor());

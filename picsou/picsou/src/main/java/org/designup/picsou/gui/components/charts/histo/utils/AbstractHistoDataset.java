@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractHistoDataset<E extends HistoDatasetElement> implements HistoDataset {
-  private List<E> elements = new ArrayList<E>();
+  protected List<E> elements = new ArrayList<E>();
   protected double maxPositive = 0;
   protected double maxNegative = 0;
   private boolean containsSections = false;
