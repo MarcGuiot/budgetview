@@ -155,7 +155,8 @@
     <!-- Blocks and inner blocks -->
 
     <ui name="block" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="block.top" bottomColor="block.bottom" borderColor="block.border" bevelTopColor="block.bevel.top"
+        topColor="block.structure.top" bottomColor="block.structure.bottom"
+        borderColor="block.structure.border" bevelTopColor="block.structure.bevel.top"
         borderWidth="1" cornerRadius="15"/>
     <style selector=".block" ui="block" opaque="false" marginBottom="0"/>
     <style selector=".block .innerBlock" margin="8"/>
@@ -166,8 +167,8 @@
     <style selector=".budgetAreaSelection textArea" border="empty(10)"/>
 
     <style selector="label.blockTitle" anchor="center"
-           foreground="#FFFFFF" marginBottom="5" font="-,bold,13" weightY="0"
-           shadowDirection="northwest" shadowColor="#222222"/>
+           foreground="block.title" marginBottom="5" font="-,bold,13" weightY="0"
+           shadowDirection="northwest" shadowColor="block.title.shadow"/>
     <style selector="label.totalAmountTitle" foreground="block.total.title" font="-,plain,10"
            fill="none" anchor="bottom" weightY="0"/>
     <style selector=".totalAmount" foreground="block.total" font="-,bold,14"

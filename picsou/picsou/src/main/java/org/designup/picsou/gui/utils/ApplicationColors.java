@@ -122,11 +122,11 @@ public enum ApplicationColors {
                                                  "/colors/color.properties",
                                                  "/colors/color_gold.properties",
                                                  "/colors/darkgreycolors.properties",
-                                                 "/colors/blackcolors.properties",
+                                                 "/colors/color_black.properties",
                                                  "/colors/color_purple.properties",
                                                  "/colors/color_green.properties",
                                                  "/colors/color_print.properties",
-                                                 "/colors/grey_yellow1.properties");
+                                                 "/colors/color_grey.properties");
     check(colorService);
     return colorService;
   }

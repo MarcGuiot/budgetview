@@ -834,7 +834,7 @@ table.field-value td.value {
 #home div#text #price {
   margin: -10px 0 0 0;
   color: #333;
-  font-size: bold;
+  font-size: 11pt;
 }
 
 #home table#front-table {
@@ -1115,4 +1115,75 @@ p#close-showroom A {
   margin-top: -10px;
   color: #AAA;
   font-size: 9pt;
+}
+
+/*=== "SUPPORT" PAGE ===*/
+
+.support h1 {
+  font-size: 20pt;
+}
+
+.support div.light-block {
+  padding-top: 20px;
+}
+
+.faq p, .faq li, .faq td {
+  font-size: 11pt;
+  line-height: 1.45em;
+  margin-bottom: 10px;
+}
+
+.guide p, .guide li, .guide td {
+  font-size: 10pt;
+  line-height: 1.35em;
+  margin-bottom: 10px;
+}
+
+.support .video {
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+table#guides-table tr.titles td {
+  font-size: 11pt;
+}
+
+table#faq-menu td li {
+  margin-bottom: 0px;
+}
+
+div#faq-header {
+  text-align: center;
+}
+
+div#faq-header A:link {
+  text-decoration: none;
+  color: #AAAAAA;
+}
+
+div#faq-header A:visited {
+  text-decoration: none;
+  color: #999999;
+}
+
+div#faq-header A:hover {
+  text-decoration: underline;
+  color: #0000FF;
+}
+
+div#block-block-5 {
+  margin-top: 0;
+}
+
+div#support-sidebar {
+  margin-top: 80px;
+}
+
+div#support-footer {
+  text-align: center;
+  margin-top: 10px;
+}
+
+div#support-footer p {
+  font-size: 14pt;
 }

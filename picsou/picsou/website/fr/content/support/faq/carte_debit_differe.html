@@ -1,0 +1,31 @@
+<div class="faq support">
+
+  <h1>Comment traiter les cartes à débit différé ?</h1>
+
+  <div class="light-block">
+
+    <p>Dans le cas des cartes à débit différé :</p>
+
+    <ul>
+      <li> les opérations carte sont prélevées sur un compte dédié </li>
+      <li>une fois par mois, le solde du compte carte est remis à zéro et une opération de prélèvement du montant total
+        des opérations du compte carte apparaît sur le compte principal.
+        Cette opération mensuelle sur le compte courant se présente alors comme un doublon potentiel de l'ensemble des
+        opérations carte qui ont déjà été prélevées sur le compte carte.</li>
+    </ul>
+    
+    <p>Pour éviter que cette opération mensuelle ne fausse vos comptes dans BudgetView, vous devez la catégoriser d'une
+    manière spécifique.</p>
+
+    <p>Pour cela, il faut tout d'abord que vous ayez bien déclaré votre compte carte en tant que "Compte carte à débit
+    différé". Pour vous en assurer, vous pouvez cliquer sur ce compte dans la vue "Comptes".</p>
+
+    <p>Ensuite, dans la vue Catégorisation, quand vous sélectionnez l'opération mensuelle "dépenses carte", vous devez
+    sélectionner le poste "Autres", et vous pourrez voir dans la section "Virement d'un compte carte à débit différé"
+    que BudgetView vous propose de sélectionner votre compte carte.</p>
+
+    <p>Une fois que vous aurez classée l'opération de cette sorte, celle-ci sera prise en compte correctement par
+    BudgetView et vous n'aurez pas de problème de doublon.</p>
+
+  </div>
+</div>
