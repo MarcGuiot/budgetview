@@ -26,11 +26,9 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.TablePrinter;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -192,7 +190,6 @@ public class HistoChartBuilder {
         }
         getDailyValues(monthId, transactions, lastValue, maxDay, minValuesForAccount, Transaction.ACCOUNT_POSITION);
 
-        System.out.println("  >> " + accountId + " >> " + Arrays.toString(minValuesForAccount));
         for (int i = 0; i < maxDay; i++) {
           values[i][column] = minValuesForAccount[i];
           if (minValuesForAll[i] == null) {
@@ -205,15 +202,6 @@ public class HistoChartBuilder {
 
         column++;
       }
-
-      System.out.println("  >> all >> " + Arrays.toString(minValuesForAll));
-
-      TablePrinter printer = new TablePrinter();
-      for (int i = 0; i < maxDay; i++) {
-        values[i][column] = minValuesForAll[i];
-        printer.addRow(values[i]);
-      }
-      printer.print();
 
       builder.add(monthId, minValuesForAll, monthId == selectedMonthId, daySelection.getValues(monthId, maxDay));
     }

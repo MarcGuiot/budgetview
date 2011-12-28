@@ -5,10 +5,12 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.ConnectedTestCase;
+import org.designup.picsou.license.checkers.Email;
 import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.model.MailError;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.utils.Utils;
 
 import java.io.IOException;
 
@@ -27,19 +29,22 @@ public class AskMailTest extends ConnectedTestCase {
   }
 
   public void testSendMailInEn() throws Exception {
-    checkMail("en", "You 'monPremierClient@pirate.du' ask for a new code");
+    checkMail("en", "Here is the new activation code", "monPremierClient@pirate.du");
   }
 
-  public void testSendMailInfr() throws Exception {
-    checkMail("fr", "Suite a votre demande, veuillez trouver");
+  public void testSendMailInFr() throws Exception {
+    checkMail("fr", "Suite a votre demande, veuillez trouver", "monPremierClient@pirate.du");
   }
 
-  private void checkMail(String s, final String expected) throws IOException, InterruptedException {
+  private void checkMail(String lang, final String expected, String... nextExpected) throws IOException, InterruptedException {
     addUser("monPremierClient@pirate.du");
-    PostMethod postMethod = sendRequest(s);
+    PostMethod postMethod = sendRequest(lang);
     Header header = postMethod.getResponseHeader(ConfigService.HEADER_STATUS);
     assertEquals(ConfigService.HEADER_MAIL_SENT, header.getValue());
-    mailServer.checkReceivedMail("monPremierClient@pirate.du").checkContains(expected);
+    Email email = mailServer.checkReceivedMail("monPremierClient@pirate.du");
+    for (String content : Utils.join(expected, nextExpected)) {
+      email.checkContains(content);
+    }
   }
 
   private PostMethod sendRequest(String lang) throws IOException {

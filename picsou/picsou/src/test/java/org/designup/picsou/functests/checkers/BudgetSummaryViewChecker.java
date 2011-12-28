@@ -81,7 +81,7 @@ public class BudgetSummaryViewChecker extends ViewChecker {
     return this;
   }
 
-  private HistoDailyChecker getChart() {
+  public HistoDailyChecker getChart() {
     if (chart == null) {
       chart = new HistoDailyChecker(getPanel(), "chart");
     }

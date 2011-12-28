@@ -27,6 +27,12 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .checkUncategorized(50.00)
       .gotoUncategorized();
 
+    budgetView.getSummary().getChart()
+      .checkRange(200807, 200807)
+      .checkCurrentDay(200807, 5)
+      .checkValue(200807, 1, 1550.00)
+      .checkValue(200807, 5, 1500.00);
+
     categorization.initContent()
       .add("05/07/2008", "", "FNAC", -50)
       .check();
@@ -46,7 +52,6 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/05", -50.00, "FNAC")
       .load();
 
-    views.selectBudget();
     timeline.checkSelection("2008/07");
     timeline.selectAll();
     budgetView.getSummary()
@@ -66,6 +71,17 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .checkReferencePosition("Position on 05/07/2008", 1500.00)
       .checkEndPosition(2300.00)
       .checkUncategorized(50.00);
+
+    budgetView.getSummary().getChart()
+      .checkRange(200807, 200808)
+      .checkCurrentDay(200807, 5)
+      .checkValue(200807, 1, 1550.00)
+      .checkValue(200807, 5, 1500.00)
+      .checkValue(200807, 6, 2500.00)
+      .checkValue(200807, 11, 2300.00)
+      .checkValue(200808, 1, 2300.00)
+      .checkValue(200808, 4, 3300.00)
+      .checkValue(200808, 11, 3100.00);
 
     timeline.selectAll();
 

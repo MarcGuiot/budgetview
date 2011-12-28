@@ -1,5 +1,6 @@
 package org.designup.picsou.license.functests;
 
+import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
@@ -386,13 +387,18 @@ public class LicenseTest extends ConnectedTestCase {
       .close();
 
     String newEmail = mailServer.checkReceivedMail(MAIL).getContent();
-    newCode = newEmail.substring(newEmail.length() - 5, newEmail.length()).trim();
     exit();
     SqlConnection connection = db.getConnection();
     Glob glob = connection.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, MAIL))
       .selectAll()
       .getQuery().executeUnique();
-    assertEquals(newCode, glob.get(License.ACTIVATION_CODE));
+    String activationCode = glob.get(License.ACTIVATION_CODE);
+    if (activationCode.length() < 4) {
+      Assert.fail("Invalid activation code found in DB: " + activationCode);
+    }
+    if (!newEmail.contains(activationCode)) {
+      Assert.fail("New email does not contain activation code '" + activationCode + "' : \n" + newEmail);
+    }
   }
 
   private String checkMailAndExtractCode() throws InterruptedException {

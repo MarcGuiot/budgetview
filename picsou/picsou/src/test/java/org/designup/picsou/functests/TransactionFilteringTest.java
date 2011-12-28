@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import junit.framework.Assert;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
@@ -22,6 +21,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .check();
     transactions.checkGraph("Main accounts - may 2006")
       .checkRange(200605, 200605)
+      .checkCurrentDay(200605, 8)
       .checkValue(200605, 15, 500.00)
       .checkValue(200605, 6, 900.00)
       .checkValue(200605, 1, 1200.00);
@@ -33,6 +33,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .check();
     transactions.checkGraph("Account n. 1 - may 2006")
       .checkRange(200605, 200605)
+      .checkCurrentDay(200605, 8)
       .checkValue(200605, 15, 500.00)
       .checkValue(200605, 6, 900.00)
       .checkValue(200605, 1, 1200.00);
@@ -44,6 +45,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .check();
     transactions.checkGraph("Main accounts - april 2006")
       .checkRange(200604, 200604)
+      .checkIsPastOnly(200604)
       .checkValue(200604, 16, 1200.00)
       .checkValue(200604, 14, 1400.00);
 
@@ -53,6 +55,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .check();
     transactions.checkGraph("Account n. 1 - april 2006")
       .checkRange(200604, 200604)
+      .checkIsPastOnly(200604)
       .checkValue(200604, 16, 1200.00)
       .checkValue(200604, 14, 1400.00);
   }
@@ -83,6 +86,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .check();
     transactions.checkGraph("Main accounts - may 2006")
       .checkRange(200605, 200605)
+      .checkCurrentDay(200605, 11)
       .checkValue(200605, 15, 1500.00)
       .checkValue(200605, 9, 1800.00)
       .checkValue(200605, 6, 2000.00)
@@ -98,6 +102,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .check();
     transactions.checkGraph("Account n. 1 - may 2006")
       .checkRange(200605, 200605)
+      .checkCurrentDay(200605, 11)
       .checkValue(200605, 15, 500.00)
       .checkValue(200605, 10, 600.00)
       .checkValue(200605, 5, 800.00);
@@ -106,6 +111,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkNoAccountsSelected();
     transactions.checkGraph("Main accounts - may 2006")
       .checkRange(200605, 200605)
+      .checkCurrentDay(200605, 11)
       .checkValue(200605, 15, 1500.00)
       .checkValue(200605, 9, 1800.00)
       .checkValue(200605, 6, 2000.00);
@@ -119,6 +125,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .check();
     transactions.checkGraph("Account n. 2 - may 2006")
       .checkRange(200605, 200605)
+      .checkCurrentDay(200605, 11)
       .checkValue(200605, 15, 1000.00)
       .checkValue(200605, 9, 1200.00)
       .checkValue(200605, 3, 1500.00);
@@ -130,6 +137,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .check();
     transactions.checkGraph("Account n. 3 - may 2006")
       .checkRange(200605, 200605)
+      .checkCurrentDay(200605, 11)
       .checkValue(200605, 12, 10000.00)
       .checkValue(200605, 7, 11000.00);
 
@@ -146,6 +154,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .check();
     transactions.checkGraph("Main accounts - may 2006")
       .checkRange(200605, 200605)
+      .checkCurrentDay(200605, 11)
       .checkValue(200605, 15, 1500.00)
       .checkValue(200605, 9, 1800.00)
       .checkValue(200605, 6, 2000.00);
@@ -174,7 +183,9 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .check();
     transactions.checkGraph("Main accounts - may 2006")
       .checkRange(200605, 200605)
+      .checkCurrentDay(200605, 8)
       .checkValue(200605, 15, 11500.00)
+      .checkValue(200605, 8, 11500.00)
       .checkValue(200605, 7, 11700.00)
       .checkValue(200605, 1, 12100.00);
 
