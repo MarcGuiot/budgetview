@@ -47,7 +47,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     transactions
       .initAmountContent()
       .add("28/06/2008", "PRELEVEMENT", -550.00, "Card n. 1111", 1000.00, 1000.00, "Account n. 1234")
-      .add("27/06/2008", "AUCHAN", -50.00, "To categorize", 100.00, 1000.00, "Card n. 1111")
+      .add("27/06/2008", "AUCHAN", -50.00, "To categorize", 100.00, 1550.00, "Card n. 1111")
       .check();
   }
 
@@ -111,8 +111,8 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     categorization.setDeferred("Prelevement novembre", "Card n. 1111");
     categorization.setDeferred("Prelevement octobre", "Card n. 1111");
     categorization.setDeferred("Prelevement aout", "Card n. 1111");
-
     views.selectData();
+
     transactions.initAmountContent()
       .add("30/11/2009", "AUCHAN", -60.00, "To categorize", -100.00, 900.00, "Card n. 1111")
       .add("29/11/2009", "AUCHAN", -40.00, "To categorize", -40.00, 960.00, "Card n. 1111")
@@ -219,7 +219,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/12/02", -70, "Auchan")
       .addTransaction("2009/09/28", -15, "Auchan")
       .save();
-    operations.importQifFile(newDeferredAccount, "Autre", "card 1111");
+    operations.importFile(newDeferredAccount, "card 1111");
 
     timeline.selectAll();
     views.selectData();
@@ -238,7 +238,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     String filePath = QifBuilder.init(this)
       .addTransaction("2009/12/04", -20, "cheque 1")
       .save();
-    operations.importQifFile(filePath, "Société Générale", "Main account");
+    operations.importFile(filePath, "Main account");
 
     views.selectData();
     transactions.initAmountContent()
@@ -494,4 +494,118 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("29/11/2009", "AUCHAN", -40.00, "To categorize", -40.00, 850.00, "Card n. 1111")
       .check();
   }
+
+  public void testMonthChange() throws Exception {
+    setCurrentDate("2011/08/24");
+    setInMemory(false);
+    restartApplication(true);
+    setDeleteLocalPrevayler(false);
+
+    String d1 = QifBuilder.init(this)
+      .addTransaction("2011/08/23", -12., "diffe 1")
+      .addTransaction("2011/08/25", -12., "diffe 2")
+      .addTransaction("2011/08/26", -12., "diffe 3")
+      .addTransaction("2011/08/30", -12., "diffe 4")
+      .save();
+    operations.importQifFileWithDeferred(d1, SOCIETE_GENERALE, -48.);
+    String m1 = QifBuilder.init(this)
+      .addTransaction("2011/08/24", -12., "5")
+      .save();
+    operations.importQifFile(m1, SOCIETE_GENERALE, 100.);
+
+    transactions.initAmountContent()
+      .add("30/08/2011", "DIFFE 4", -12.00, "To categorize", -48.00, 52., "card 1111")
+      .add("26/08/2011", "DIFFE 3", -12.00, "To categorize", -36.00, 64., "card 1111")
+      .add("25/08/2011", "DIFFE 2", -12.00, "To categorize", -24.00, 76., "card 1111")
+      .add("24/08/2011", "5", -12.00, "To categorize", 100.00, 100.00, "Main account")
+      .add("23/08/2011", "DIFFE 1", -12.00, "To categorize", -12.00, 88., "card 1111")
+      .check();
+
+    setCurrentDate("2011/08/31");
+    restartApplication();
+
+    String d2 = QifBuilder.init(this)
+      .addTransaction("2011/08/31", -100., "diffe 6")
+      .save();
+
+    operations.importFile(d2, "card 1111");
+
+    transactions.initAmountContent()
+      .add("31/08/2011", "DIFFE 6", -100.00, "To categorize", -148.00, -48.00, "card 1111")
+      .add("30/08/2011", "DIFFE 4", -12.00, "To categorize", -48.00, 52.00, "card 1111")
+      .add("26/08/2011", "DIFFE 3", -12.00, "To categorize", -36.00, 64.00, "card 1111")
+      .add("25/08/2011", "DIFFE 2", -12.00, "To categorize", -24.00, 76.00, "card 1111")
+      .add("24/08/2011", "5", -12.00, "To categorize", 100.00, 100.00, "Main account")
+      .add("23/08/2011", "DIFFE 1", -12.00, "To categorize", -12.00, 88.00, "card 1111")
+      .check();
+
+
+    String m2 = QifBuilder.init(this)
+      .addTransaction("2011/08/31", -12. * 4 - 100, "virement cdd")
+      .save();
+
+    operations.importFile(m2, "Main account");
+    categorization.selectTransaction("virement cdd")
+      .selectOther().selectDeferred().selectSeries("card 1111");
+
+    transactions.initAmountContent()
+      .add("31/08/2011", "VIREMENT CDD", -148.00, "card 1111", -48.00, -48.00, "Main account")
+      .add("31/08/2011", "DIFFE 6", -100.00, "To categorize", -148.00, 100.00, "card 1111")
+      .add("30/08/2011", "DIFFE 4", -12.00, "To categorize", -48.00, 100.00, "card 1111")
+      .add("26/08/2011", "DIFFE 3", -12.00, "To categorize", -36.00, 100.00, "card 1111")
+      .add("25/08/2011", "DIFFE 2", -12.00, "To categorize", -24.00, 100.00, "card 1111")
+      .add("24/08/2011", "5", -12.00, "To categorize", 100.00, 100.00, "Main account")
+      .add("23/08/2011", "DIFFE 1", -12.00, "To categorize", -12.00, 100.00, "card 1111")
+      .check();
+
+    setCurrentDate("2011/09/01");
+    restartApplication();
+
+    String d3 = QifBuilder.init(this)
+      .addTransaction("2011/09/03", -12., "diffe 7")
+      .save();
+    operations.importFile(d3, "card 1111");
+
+    String m3 = QifBuilder.init(this)
+      .addTransaction("2011/09/02", -53, "8")
+      .save();
+    operations.importFile(m3, "Main account");
+
+    timeline.selectAll();
+    transactions.initAmountContent()
+      .add("03/09/2011", "DIFFE 7", -12.00, "To categorize", -12.00, -113.00, "card 1111")
+      .add("02/09/2011", "8", -53.00, "To categorize", -101.00, -101.00, "Main account")
+      .add("31/08/2011", "VIREMENT CDD", -148.00, "card 1111", -48.00, -48.00, "Main account")
+      .add("31/08/2011", "DIFFE 6", -100.00, "To categorize", -148.00, 100.00, "card 1111")
+      .add("30/08/2011", "DIFFE 4", -12.00, "To categorize", -48.00, 100.00, "card 1111")
+      .add("26/08/2011", "DIFFE 3", -12.00, "To categorize", -36.00, 100.00, "card 1111")
+      .add("25/08/2011", "DIFFE 2", -12.00, "To categorize", -24.00, 100.00, "card 1111")
+      .add("24/08/2011", "5", -12.00, "To categorize", 100.00, 100.00, "Main account")
+      .add("23/08/2011", "DIFFE 1", -12.00, "To categorize", -12.00, 100.00, "card 1111")
+      .check();
+
+    setCurrentDate("2011/09/07");
+    restartApplication();
+
+    String d4 = QifBuilder.init(this)
+      .addTransaction("2011/09/07", -23., "diffe 9")
+      .save();
+
+    operations.importFile(d4, "card 1111");
+    timeline.selectAll();
+    transactions.initAmountContent()
+      .add("07/09/2011", "DIFFE 9", -23.00, "To categorize", -35.00, -136.00, "card 1111")
+      .add("03/09/2011", "DIFFE 7", -12.00, "To categorize", -12.00, -113.00, "card 1111")
+      .add("02/09/2011", "8", -53.00, "To categorize", -101.00, -101.00, "Main account")
+      .add("31/08/2011", "VIREMENT CDD", -148.00, "card 1111", -48.00, -48.00, "Main account")
+      .add("31/08/2011", "DIFFE 6", -100.00, "To categorize", -148.00, 100.00, "card 1111")
+      .add("30/08/2011", "DIFFE 4", -12.00, "To categorize", -48.00, 100.00, "card 1111")
+      .add("26/08/2011", "DIFFE 3", -12.00, "To categorize", -36.00, 100.00, "card 1111")
+      .add("25/08/2011", "DIFFE 2", -12.00, "To categorize", -24.00, 100.00, "card 1111")
+      .add("24/08/2011", "5", -12.00, "To categorize", 100.00, 100.00, "Main account")
+      .add("23/08/2011", "DIFFE 1", -12.00, "To categorize", -12.00, 100.00, "card 1111")
+      .check();
+    mainAccounts.checkSummary(-101., "2011/09/02");
+  }
+  
 }

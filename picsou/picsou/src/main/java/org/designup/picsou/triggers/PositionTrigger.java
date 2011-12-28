@@ -276,18 +276,17 @@ public class PositionTrigger implements ChangeSetListener {
     }
     int month = TimeService.getCurrentMonth();
     int day = TimeService.getCurrentDay();
+    if (firstTransaction == null && pivot >= 0 && pivot < transactions.length) {
+      firstTransaction = transactions[pivot];
+    }
     for (int i = pivot + 1; i < transactions.length; i++) {
       Glob transaction = transactions[i];
       Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
       if (checkSameAccount(account, transactionAccount)) {
         positionAfter = positionAfter + transaction.get(Transaction.AMOUNT);
         repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, positionAfter);
-        if (!transaction.isTrue(Transaction.PLANNED) &&
-            Transaction.isPositionTransactionBeforeOrEqual(transaction, month, day)) {
+        if (!transaction.isTrue(Transaction.PLANNED)) {
           lastUpdateTransactionId = transaction.get(Transaction.ID);
-        }
-        if (firstTransaction == null) {
-          firstTransaction = transaction;
         }
       }
     }
@@ -390,6 +389,8 @@ public class PositionTrigger implements ChangeSetListener {
       return;
     }
 
+//    Date lastRealTransactionDate = null;
+
     Matchers.AccountDateMatcher matcher =
       new Matchers.AccountDateMatcher(new GlobList(firstMonth));
     for (Glob account : accounts) {
@@ -398,21 +399,30 @@ public class PositionTrigger implements ChangeSetListener {
           && !account.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId())) {
         Double value = account.get(Account.FIRST_POSITION);
         positions.put(account.get(Account.ID), value);
+//        if (account.get(Account.POSITION_DATE) != null) {
+//          if (lastRealTransactionDate == null) {
+//            lastRealTransactionDate = account.get(Account.POSITION_DATE);
+//          }
+//          else if (account.get(Account.POSITION_DATE).after(lastRealTransactionDate)) {
+//            lastRealTransactionDate = account.get(Account.POSITION_DATE);
+//          }
+//        }
       }
     }
 
     Double realPosition = null;
     Date positionDate = null;
-    int month = TimeService.getCurrentMonth();
-    int currentDay = TimeService.getCurrentDay();
+    Glob currentMonth = repository.get(CurrentMonth.KEY);
+    int month = currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH);
+    int currentDay = currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY);
     int index = 0;
     for (; index < transactions.length; index++) {
       Glob transaction = transactions[index];
       if (!sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
         continue;
       }
-      if (Transaction.isPositionTransactionBeforeOrEqual(transaction, month, currentDay)
-          && !transaction.isTrue(Transaction.PLANNED)) {
+      if (!transaction.isTrue(Transaction.PLANNED) &&
+          Transaction.isPositionTransactionBeforeOrEqual(transaction, month, currentDay)) {
 
         accountManagement.updateOpenPosition(transaction, index, transactions, positions);
         accountManagement.updateClosePosition(transaction, positions);

@@ -363,12 +363,12 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/06");
     savingsAccounts.checkEstimatedPosition("Epargne", 400);
     savingsAccounts.checkEstimatedPosition(400);
-    savingsAccounts.checkSummary(1000, "2008/08/05");
+    savingsAccounts.checkSummary(400, "2008/06/05");
 
     timeline.selectMonth("2008/08");
     savingsAccounts.checkEstimatedPosition("Epargne", 1000);
     savingsAccounts.checkEstimatedPosition(1000);
-    savingsAccounts.checkSummary(1000, "2008/08/05");
+    savingsAccounts.checkSummary(400, "2008/06/05");
 
     timeline.selectMonth("2008/09");
     savingsAccounts.checkEstimatedPosition("Epargne", 1300);

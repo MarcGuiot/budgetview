@@ -172,7 +172,7 @@ public class OperationChecker {
       .completeImport();
   }
 
-  public void importQifFile(String file, String bank, String targetAccount) {
+  public void importFile(String file, String targetAccount) {
     openImportDialog().selectFiles(file)
       .acceptFile()
       .selectAccount(targetAccount)

@@ -1,6 +1,5 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.metamodel.GlobType;
@@ -14,53 +13,56 @@ import java.util.Set;
 public class CurrentMonthTrigger implements ChangeSetListener {
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (!changeSet.containsChanges(CurrentMonth.KEY) &&
-        !changeSet.containsCreationsOrDeletions(Transaction.TYPE)) {
+    if (!(changeSet.containsChanges(CurrentMonth.KEY) || changeSet.containsCreationsOrDeletions(Transaction.TYPE))) {
       return;
     }
-    Glob currentMonth = repository.get(CurrentMonth.KEY);
-    final int previousLastMonth = currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH);
-    int previousLastDay = currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY);
-    int lastMonth = previousLastMonth;
-    int lastDay = previousLastDay;
-    if (changeSet.containsCreationsOrDeletions(Transaction.TYPE)) {
-      MonthCallback monthCallback = new MonthCallback();
-      repository.safeApply(Transaction.TYPE, ALL, monthCallback);
-      lastMonth = monthCallback.getLastMonthId();
-      if (previousLastMonth != lastMonth) {
-        repository.update(CurrentMonth.KEY, CurrentMonth.LAST_TRANSACTION_MONTH, lastMonth);
-        previousLastDay = -1;
-      }
-      DayCallback dayCallback = new DayCallback(lastMonth, previousLastDay);
-      repository.safeApply(Transaction.TYPE, ALL, dayCallback);
-      lastDay = dayCallback.getLastMonthDay();
-      if (previousLastDay != lastDay) {
-        repository.update(CurrentMonth.KEY, CurrentMonth.LAST_TRANSACTION_DAY, lastDay);
-      }
-    }
 
-    if (changeSet.containsChanges(CurrentMonth.KEY) ||
-        (previousLastMonth != lastMonth) ||
-        (previousLastDay != lastDay)) {
-      repository.delete(Transaction.TYPE,
-                        and(isTrue(Transaction.PLANNED),
-                            fieldStrictlyLessThan(Transaction.MONTH, lastMonth)));
-      repository.safeApply(Transaction.TYPE, ALL,
-                           new UpdateDayCallback(lastMonth, lastDay));
-    }
+    repository.startChangeSet();
+    try {
+      Set<Integer> deferredAccountId = repository.getAll(Account.TYPE,
+                                                         GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()))
+        .getSortedSet(Account.ID);
+      Glob currentMonth = repository.get(CurrentMonth.KEY);
+      final int previousLastMonth = currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH);
+      int previousLastDay = currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY);
+      int lastMonth = previousLastMonth;
+      int lastDay = previousLastDay;
+      if (changeSet.containsCreationsOrDeletions(Transaction.TYPE)) {
+        MonthCallback monthCallback = new MonthCallback(deferredAccountId);
+        repository.safeApply(Transaction.TYPE, ALL, monthCallback);
+        lastMonth = monthCallback.getLastMonthId();
+        if (previousLastMonth != lastMonth) {
+          repository.update(CurrentMonth.KEY, CurrentMonth.LAST_TRANSACTION_MONTH, lastMonth);
+          previousLastDay = -1;
+        }
+        DayCallback dayCallback = new DayCallback(lastMonth, previousLastDay, deferredAccountId);
+        repository.safeApply(Transaction.TYPE, ALL, dayCallback);
+        lastDay = dayCallback.getLastMonthDay();
+        if (previousLastDay != lastDay) {
+          repository.update(CurrentMonth.KEY, CurrentMonth.LAST_TRANSACTION_DAY, lastDay);
+        }
+      }
 
-    if (changeSet.containsChanges(CurrentMonth.KEY)) {
-      FieldValues value = changeSet.getPreviousValue(CurrentMonth.KEY);
-      if (value.contains(CurrentMonth.CURRENT_MONTH)) {
-        Integer previousMonth = value.get(CurrentMonth.CURRENT_MONTH);
-        if (previousMonth != null) {
-          GlobList series = repository.getAll(Series.TYPE, GlobMatchers.isTrue(Series.SHOULD_REPORT));
-          repository.startChangeSet();
-          try {
+      if (changeSet.containsChanges(CurrentMonth.KEY) ||
+          (previousLastMonth != lastMonth) ||
+          (previousLastDay != lastDay)) {
+        repository.delete(Transaction.TYPE,
+                          and(isTrue(Transaction.PLANNED),
+                              fieldStrictlyLessThan(Transaction.MONTH, lastMonth)));
+        repository.safeApply(Transaction.TYPE, ALL,
+                             new UpdateDayCallback(lastMonth, lastDay));
+      }
+
+      if (changeSet.containsChanges(CurrentMonth.KEY)) {
+        FieldValues value = changeSet.getPreviousValue(CurrentMonth.KEY);
+        if (value.contains(CurrentMonth.CURRENT_MONTH)) {
+          Integer previousMonth = value.get(CurrentMonth.CURRENT_MONTH);
+          if (previousMonth != null) {
+            GlobList series = repository.getAll(Series.TYPE, GlobMatchers.isTrue(Series.SHOULD_REPORT));
             for (Glob aSeries : series) {
-              if (aSeries.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())){
+              if (aSeries.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
                 if (Account.shouldCreateMirrorTransaction(repository.findLinkTarget(aSeries, Series.FROM_ACCOUNT),
-                                               repository.findLinkTarget(aSeries, Series.TO_ACCOUNT))){
+                                                          repository.findLinkTarget(aSeries, Series.TO_ACCOUNT))) {
                   continue;
                 }
               }
@@ -89,11 +91,11 @@ public class CurrentMonthTrigger implements ChangeSetListener {
                                 previousBudget.get(SeriesBudget.OBSERVED_AMOUNT, 0.) + diff);
             }
           }
-          finally {
-            repository.completeChangeSet();
-          }
         }
       }
+    }
+    finally {
+      repository.completeChangeSet();
     }
   }
 
@@ -102,19 +104,25 @@ public class CurrentMonthTrigger implements ChangeSetListener {
 
   private static class MonthCallback implements GlobFunctor {
     private int lastMonthId = 0;
+    private Set<Integer> deferredAccountId;
+
+    public MonthCallback(Set<Integer> deferredAccountId) {
+      this.deferredAccountId = deferredAccountId;
+    }
 
     public void run(Glob transaction, GlobRepository repository) {
       Integer monthId = transaction.get(Transaction.BANK_MONTH);
-      if (!transaction.isTrue(Transaction.PLANNED) && monthId > lastMonthId) {
+      if (!transaction.isTrue(Transaction.PLANNED) && monthId > lastMonthId
+          && !deferredAccountId.contains(transaction.get(Transaction.ACCOUNT))) {
         lastMonthId = monthId;
       }
     }
 
     public int getLastMonthId() {
-      int currentMonthId = TimeService.getCurrentMonth();
-      if (lastMonthId > currentMonthId) {
-        return currentMonthId;
-      }
+//      int currentMonthId = TimeService.getCurrentMonth();
+//      if (lastMonthId > currentMonthId) {
+//        return currentMonthId;
+//      }
       return lastMonthId;
     }
   }
@@ -122,24 +130,27 @@ public class CurrentMonthTrigger implements ChangeSetListener {
   private static class DayCallback implements GlobFunctor {
     private int lastMonthId;
     private int lastMonthDay;
+    private Set<Integer> deferredAccountId;
 
-    public DayCallback(int lastMonthId, int lastMonthDay) {
+    public DayCallback(int lastMonthId, int lastMonthDay, Set<Integer> deferredAccountId) {
       this.lastMonthId = lastMonthId;
       this.lastMonthDay = lastMonthDay;
+      this.deferredAccountId = deferredAccountId;
     }
 
     public void run(Glob glob, GlobRepository repository) {
       if (!glob.isTrue(Transaction.PLANNED) && glob.get(Transaction.BANK_MONTH).equals(lastMonthId)
-          && glob.get(Transaction.BANK_DAY) > lastMonthDay) {
+          && glob.get(Transaction.BANK_DAY) > lastMonthDay
+         && !deferredAccountId.contains(glob.get(Transaction.ACCOUNT))) {
         lastMonthDay = glob.get(Transaction.BANK_DAY);
       }
     }
 
     public int getLastMonthDay() {
-      if (lastMonthDay > TimeService.getCurrentDay() &&
-          lastMonthId == TimeService.getCurrentMonth()) {
-        return TimeService.getCurrentDay();
-      }
+//      if (lastMonthDay > TimeService.getCurrentDay() &&
+//          lastMonthId == TimeService.getCurrentMonth()) {
+//        return TimeService.getCurrentDay();
+//      }
       return lastMonthDay;
     }
   }
