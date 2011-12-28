@@ -28,7 +28,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     signpostView.checkSignpostViewShown();
 
     signpostView.checkInnerHelpLink("integrated help", "Index");
-    signpostView.checkSupportSiteLink("online guides", "http://support.mybudgetview.fr");
+    signpostView.checkSupportSiteLink("online guides", "http://www.mybudgetview.fr/support");
     signpostView.checkFeedbackLink("contact us");
 
     // === Import ===
