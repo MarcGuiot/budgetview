@@ -33,6 +33,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2009/05");
     transactionCreation
+      .show()
       .setAmount(-10)
       .setLabel("prov")
       .setDay(22)

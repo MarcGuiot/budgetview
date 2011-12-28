@@ -235,6 +235,10 @@ public class Account {
     return new Pair<Integer, Integer>(startMonth, endMonth);
   }
 
+  public static boolean isManualUpdateAccount(Glob account) {
+    return AccountUpdateMode.get(account.get(UPDATE_MODE)) == AccountUpdateMode.MANUAL;
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {

@@ -81,7 +81,8 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectCategorization();
-    transactionCreation.selectAccount("Savings")
+    transactionCreation.show()
+      .selectAccount("Savings")
       .setAmount(-100)
       .setLabel("Financement")
       .setDay(2)

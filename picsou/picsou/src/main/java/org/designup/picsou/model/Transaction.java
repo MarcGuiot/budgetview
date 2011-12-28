@@ -220,6 +220,14 @@ public class Transaction {
     return transaction.isTrue(CREATED_BY_SERIES);
   }
 
+  public static boolean isManuallyCreated(Glob transaction, GlobRepository repository) {
+    Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
+    if (account == null) {
+      return false;
+    }
+    return Account.isManualUpdateAccount(account);
+  }
+
   public static String getLabel(boolean planned, Glob series) {
     if (planned) {
       return Series.getPlannedTransactionLabel(series.get(Series.ID), series);

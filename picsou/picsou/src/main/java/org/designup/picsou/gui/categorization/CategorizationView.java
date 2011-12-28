@@ -586,7 +586,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
       repository.update(transaction.getKey(),
                         value(Transaction.SERIES, series.get(Series.ID)),
                         value(Transaction.SUB_SERIES, subSeriesId),
-                        value(Transaction.RECONCILED, true));
+                        value(Transaction.RECONCILED, !Transaction.isManuallyCreated(transaction, repository)));
       return true;
     }
   }
