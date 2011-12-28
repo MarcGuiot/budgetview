@@ -233,6 +233,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   public void setInMemory(boolean inMemory) {
     isInMemory = inMemory;
+    System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, Boolean.toString(isInMemory));
   }
 
   public void setDeleteLocalPrevayler(boolean deleteLocalPrevayler) {

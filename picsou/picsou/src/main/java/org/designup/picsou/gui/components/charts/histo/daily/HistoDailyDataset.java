@@ -63,7 +63,7 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
 
   public boolean isCurrent(int index, int day) {
     int month = getElement(index).id;
-    return month == currentMonth && day - 1 == currentDay;
+    return month == currentMonth && day + 1 == currentDay;
   }
 
   public boolean isFuture(int index, int day) {
@@ -74,7 +74,7 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
     else if (month < currentMonth) {
       return false;
     }
-    return day - 1 > currentDay;
+    return day + 1 > currentDay;
   }
 
   public boolean isDaySelected(int index, int day) {

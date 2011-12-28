@@ -47,6 +47,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     categorization
       .setNewRecurring("prov", "Courses");
 
+    fail("MG a RM, on avait dit qu'on faisait quoi pour la creations d'operation dans le future?");
     timeline.selectAll();
     views.selectData();
     transactions

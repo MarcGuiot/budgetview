@@ -51,11 +51,12 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.BANK_MONTH, 200808),
                       value(Transaction.BANK_DAY, 1),
                       value(Transaction.AMOUNT, -40.0),
-                      value(Transaction.LABEL, "free"));
+                      value(Transaction.LABEL, "free"),
+                      value(Transaction.ACCOUNT, 3));
 
     listener.assertLastChangesEqual(
       Transaction.TYPE,
-      "  <create amount='-40.0' bankMonth='200808' bankDay='1' day='1' id='10' mirror='false'" +
+      "  <create account='3' amount='-40.0' bankMonth='200808' bankDay='1' day='1' id='10' mirror='false'" +
       "          budgetDay='1' budgetMonth='200808'  reconciled='false'" +
       "          label='free' month='200808' planned='false' series='100' type='transaction' createdBySeries='false'/>" +
       "  <delete _account='-1' _amount='-29.9' _bankDay='18' _bankMonth='200808' _mirror='false'" +
@@ -143,7 +144,8 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.BUDGET_DAY, 1),
                       value(Transaction.BANK_MONTH, 200808),
                       value(Transaction.BANK_DAY, 1),
-                      value(Transaction.LABEL, "picsou"));
+                      value(Transaction.LABEL, "picsou"),
+                      value(Transaction.ACCOUNT, 3));
     repository.create(Transaction.TYPE,
                       value(Transaction.ID, 1),
                       value(Transaction.SERIES, ENVELOPPE_SERIES_ID),
@@ -152,15 +154,16 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.BUDGET_DAY, 1),
                       value(Transaction.BANK_MONTH, 200808),
                       value(Transaction.BANK_DAY, 1),
-                      value(Transaction.LABEL, "Auchan"));
+                      value(Transaction.LABEL, "Auchan"),
+                      value(Transaction.ACCOUNT, 3));
     repository.completeChangeSet();
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "<update _amount='2000.0' amount='100.0' id='" + incomePlannedTransaction[0] + "' type='transaction'/>" +
-      "<create amount='-300.0' bankMonth='200808' bankDay='1' id='1' label='Auchan'" +
+      "<create account='3' amount='-300.0' bankMonth='200808' bankDay='1' id='1' label='Auchan'" +
       "        budgetDay='1' budgetMonth='200808' reconciled='false'" +
       "        planned='false' series='101' type='transaction' mirror='false'  createdBySeries='false'/>" +
-      "<create amount='1900.0' bankMonth='200808' bankDay='1' id='0' label='picsou'" +
+      "<create account='3' amount='1900.0' bankMonth='200808' bankDay='1' id='0' label='picsou'" +
       "        budgetDay='1' budgetMonth='200808' reconciled='false'" +
       "        planned='false' series='102' type='transaction' mirror='false'  createdBySeries='false'/>" +
       "<update _amount='-1000.0' amount='-700.0' id='" + enveloppePlannedTransaction[0] + "' type='transaction'/>");
@@ -193,6 +196,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     createEnveloppeSeries();
     createMonth(200807, 200808, 200809);
     repository.create(Transaction.TYPE,
+                      value(Transaction.ACCOUNT, 3),
                       value(Transaction.ID, 2),
                       value(Transaction.SERIES, ENVELOPPE_SERIES_ID),
                       value(Transaction.AMOUNT, -900.),
@@ -202,6 +206,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.BANK_DAY, 1),
                       value(Transaction.LABEL, "Auchan"));
     repository.create(Transaction.TYPE,
+                      value(Transaction.ACCOUNT, 3),
                       value(Transaction.ID, 3),
                       value(Transaction.SERIES, ENVELOPPE_SERIES_ID),
                       value(Transaction.AMOUNT, -600.),
@@ -244,6 +249,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     createMonth(200807, 200808, 200809);
     repository.create(Transaction.TYPE,
                       value(Transaction.ID, 103),
+                      value(Transaction.ACCOUNT, 3),
                       value(Transaction.SERIES, INCOME_SERIES_ID),
                       value(Transaction.AMOUNT, 2200.),
                       value(Transaction.BUDGET_MONTH, 200808),
@@ -288,6 +294,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     createMonth(200807, 200808, 200809);
     repository.create(Transaction.TYPE,
                       value(Transaction.ID, 103),
+                      value(Transaction.ACCOUNT, 3),
                       value(Transaction.SERIES, Series.OCCASIONAL_SERIES_ID),
                       value(Transaction.AMOUNT, 2200.),
                       value(Transaction.BUDGET_MONTH, 200808),

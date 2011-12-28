@@ -79,6 +79,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
           updateBank(currentAccount);
           updateMandatoryFlags();
           clearMessage();
+          setWarning(currentAccount.get(Account.ACCOUNT_TYPE), currentAccount.get(Account.CARD_TYPE));
         }
       }
     });
@@ -108,6 +109,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   }
 
   public void setWarning(Integer accountType, int cardType) {
+    warningMessage.setVisible(false);
     if (accountType == null) {
       return;
     }
@@ -143,9 +145,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     this.currentAccount = account;
     accountTypeCombo.updateAccountTypeCombo(currentAccount);
     Integer accountType = account.get(Account.ACCOUNT_TYPE);
-    if (accountType != null) {
-      setWarning(accountType, account.get(Account.CARD_TYPE));
-    }
+    setWarning(accountType, account.get(Account.CARD_TYPE));
     if (account != null) {
       selectionService.select(account);
     }

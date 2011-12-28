@@ -574,7 +574,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/09", -1, "Menu K")
       .save();
 
-    operations.importQifFile(file2, SOCIETE_GENERALE, "other");
+    operations.importFile(file2, "other");
 
     views.selectData();
     timeline.checkSelection("2006/01");
@@ -942,6 +942,29 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/06/8", 2.0, "V'lib")
       .load();
+  }
+
+  public void testImportWithDateInTheFuture() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/8", 2.0, "V'lib")
+      .addTransaction("2008/06/8", 2.0, "V'lib")
+      .load();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/09/02", 2.0, "V'lib")
+      .addTransaction("2008/09/02", 2.0, "V'lib")
+      .load();
+
+    timeline.selectAll();
+//    transactions.initContent()
+//      .add("31/08/2008", TransactionType.VIREMENT, "V'LIB", "", 2.00)
+//      .add("31/08/2008", TransactionType.VIREMENT, "V'LIB", "", 2.00)
+//      .add("08/06/2008", TransactionType.VIREMENT, "V'LIB", "", 2.00)
+//      .add("08/06/2008", TransactionType.VIREMENT, "V'LIB", "", 2.00)
+//      .check();
+
+    
+    mainAccounts.checkSummary(0., "2008/09/02");
 
   }
 }

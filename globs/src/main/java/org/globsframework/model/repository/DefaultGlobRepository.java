@@ -673,8 +673,8 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
             currentChangeSetToDispatch.merge(changeSetToDispatch);
 //          if (!changeSetToDispatch.isEmpty()) {
 //            System.err.println(trigger + " : " + changeSetToDispatch);
-//          }
           }
+//          }
 //        System.err.println("------------------------------------------------------------");
         }
       }

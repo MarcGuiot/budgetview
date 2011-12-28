@@ -179,10 +179,9 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .checkValue(200605, 1, 12100.00);
 
     timeline.selectMonth(200604);
-    Assert.fail("[RM=>MG] Pourquoi 1A et 2A ont-ils la meme position summary ci-dessous ?");
     transactions.initAmountContent()
       .add("20/04/2006", "TRANSACTION 2A", -300.00, "To categorize", 1000.00, 12100.00, "Account n. 2")
-      .add("15/04/2006", "TRANSACTION 1A", -400.00, "To categorize", 1100.00, 12100.00, "Account n. 1")
+      .add("15/04/2006", "TRANSACTION 1A", -400.00, "To categorize", 1100.00, 12400.00, "Account n. 1")
       .check();
     transactions.checkGraph("Main accounts - april 2006")
       .checkRange(200604, 200604)
@@ -228,10 +227,13 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .add("20/04/2006", TransactionType.PRELEVEMENT, "TRANSACTION 2A", "", -300.00)
       .add("15/04/2006", TransactionType.PRELEVEMENT, "TRANSACTION 1A", "", -400.00)
       .check();
-    transactions.checkGraph("Main accounts - may 2006")
-      .checkRange(200605, 200605)
-      .checkValue(200605, 15, 1500.00)
-      .checkValue(200605, 9, 1800.00)
-      .checkValue(200605, 6, 2000.00);
+    transactions.checkGraph("Main accounts - april - may 2006")
+      .checkRange(200604, 200605)
+      .checkValue(200605, 15, 11500.00)
+      .checkValue(200605, 9, 11500.0)
+      .checkValue(200605, 6, 11700.0);
+    fail("[MG=>RM] En ouvrant l'application, en selectionnant plusieurs mois et en cliquant sur un des comptes pour filtrer les operations. " +
+         "(En plus cela montre un probleme de date summary acount dans le cas ou un compte n'a pas d'operations. J'ignorerais bien ce probleme.");
+//    openApplication();
   }
 }

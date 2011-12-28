@@ -406,6 +406,7 @@ public class ImportDialogChecker extends GuiChecker {
 
   public ImportDialogChecker setDeferredAccount() {
     accountEditionChecker.setAsDeferredCard();
+    accountEditionChecker.checkDeferredWarning();
     return this;
   }
 

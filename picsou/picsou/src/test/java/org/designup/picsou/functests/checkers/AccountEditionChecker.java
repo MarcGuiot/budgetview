@@ -174,13 +174,13 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker checkCreditCardWarning() {
-    dialog.getTextBox("messageWarning")
-      .textContains("Operations in main acount should be clasified in Budget Area 'other'");
+    assertTrue(dialog.getTextBox("messageWarning")
+      .textContains("Credit card are not managed"));
     return this;
   }
 
   public AccountEditionChecker checkDeferredWarning() {
-    dialog.getTextBox("messageWarning").textContains("Credit card are not managed");
+    assertTrue(dialog.getTextBox("messageWarning").textContains("Operations in main account should be categorized in Budget Area 'other"));
     return this;
   }
 
