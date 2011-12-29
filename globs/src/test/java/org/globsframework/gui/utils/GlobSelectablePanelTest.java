@@ -134,7 +134,7 @@ public class GlobSelectablePanelTest extends GuiComponentTestCase {
 
     DummySelectionListener selectionListener =
       DummySelectionListener.register(selectionService, DummyObject.TYPE);
-    
+
     Mouse.enter(jPanel, 1, 1);
     Mouse.click(new Panel(jPanel));
     Mouse.exit(jPanel, 1, 1);
@@ -145,7 +145,6 @@ public class GlobSelectablePanelTest extends GuiComponentTestCase {
                                    "  </selection>" +
                                    "</log>");
   }
-
 
   public void testDragCanBeUsedForMultiSelection() throws Exception {
     DummySplitsNode node1 = new DummySplitsNode();
@@ -214,7 +213,63 @@ public class GlobSelectablePanelTest extends GuiComponentTestCase {
                                    "  </selection>" +
                                    "</log>");
     node1.checkLastStyle("selected");
- }
+  }
+
+  public void testShiftClickCanBeUsedForMultiSelection() throws Exception {
+    DummySplitsNode node1 = new DummySplitsNode();
+    new GlobSelectablePanel(node1,
+                            "selected", "unselected",
+                            "selectedRollover", "unselectedRollover",
+                            repository, directory, key1);
+    JPanel jPanel1 = node1.getComponent();
+
+    DummySplitsNode node2 = new DummySplitsNode();
+    new GlobSelectablePanel(node2,
+                            "selected", "unselected",
+                            "selectedRollover", "unselectedRollover",
+                            repository, directory, key2);
+    JPanel jPanel2 = node2.getComponent();
+
+    DummySelectionListener selectionListener =
+      DummySelectionListener.register(selectionService, DummyObject.TYPE);
+
+    node1.checkLastStyle(null);
+    node2.checkLastStyle(null);
+
+    Mouse.enter(jPanel1, 1, 1);
+    Mouse.click(new Panel(jPanel1), org.uispec4j.Key.Modifier.SHIFT);
+    Mouse.exit(jPanel1, 1, 1);
+    selectionListener.assertEquals("<log>" +
+                                   "  <selection types='dummyObject'>" +
+                                   "    <item key='dummyObject[id=1]'/>" +
+                                   "  </selection>" +
+                                   "</log>");
+    node1.checkLastStyle("selected");
+    node2.checkLastStyle("unselected");
+
+    Mouse.enter(jPanel2, 1, 1);
+    Mouse.click(new Panel(jPanel2), org.uispec4j.Key.Modifier.SHIFT);
+    Mouse.exit(jPanel2, 1, 1);
+    selectionListener.assertEquals("<log>" +
+                                   "  <selection types='dummyObject'>" +
+                                   "    <item key='dummyObject[id=1]'/>" +
+                                   "    <item key='dummyObject[id=2]'/>" +
+                                   "  </selection>" +
+                                   "</log>");
+    node1.checkLastStyle("selected");
+    node2.checkLastStyle("selected");
+
+    Mouse.enter(jPanel1, 1, 1);
+    Mouse.click(new Panel(jPanel1), org.uispec4j.Key.Modifier.SHIFT);
+    Mouse.exit(jPanel1, 1, 1);
+    selectionListener.assertEquals("<log>" +
+                                   "  <selection types='dummyObject'>" +
+                                   "    <item key='dummyObject[id=2]'/>" +
+                                   "  </selection>" +
+                                   "</log>");
+    node1.checkLastStyle("unselected");
+    node2.checkLastStyle("selected");
+  }
 
   public void testTypeCheck() throws Exception {
     DummySplitsNode node = new DummySplitsNode();
