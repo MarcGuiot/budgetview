@@ -94,9 +94,9 @@ public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
   public void dump() {
     StringBuilder builder = new StringBuilder();
     HistoDailyDataset dataset = getDataset();
+    Double value = null;
     for (int monthIndex = 0; monthIndex < dataset.size(); monthIndex++) {
       int monthId = dataset.getId(monthIndex);
-      Double value = null;
       Double[] values = dataset.getValues(monthIndex);
       for (int dayIndex = 0; dayIndex < values.length; dayIndex++) {
         if (value == null || (!value.equals(values[dayIndex]))) {

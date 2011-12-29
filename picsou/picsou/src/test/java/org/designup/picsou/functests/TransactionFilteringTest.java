@@ -158,6 +158,25 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .checkValue(200605, 15, 1500.00)
       .checkValue(200605, 9, 1800.00)
       .checkValue(200605, 6, 2000.00);
+
+    timeline.selectAll();
+    mainAccounts.select("Account n. 1");
+    transactions.checkGraph("Account n. 1 - may 2006 - august 2008")
+      .checkValue(200605, 1, 1200.00)
+      .checkValue(200605, 2, 800.00)
+      .checkValue(200605, 8, 600.00)
+      .checkValue(200605, 11, 500.00)
+      .checkValue(200608, 1, 500.00);
+    mainAccounts.select("Account n. 1", "Account n. 2");
+    transactions.checkGraph("2 accounts - may 2006 - august 2008")
+      .checkValue(200605, 1, 2700.00)
+      .checkValue(200605, 2, 2300.00)
+      .checkValue(200605, 5, 2000.00)
+      .checkValue(200605, 8, 1800.00)
+      .checkValue(200605, 10, 1600.00)
+      .checkValue(200605, 11, 1500.00)
+      .checkValue(200605, 31, 1500.00)
+      .checkValue(200608, 1, 1500.00);
   }
 
   public void testAccountFilteringWithMissingPreviousAndNextMonth() throws Exception {
@@ -243,8 +262,26 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .checkValue(200605, 15, 11500.00)
       .checkValue(200605, 9, 11500.0)
       .checkValue(200605, 6, 11700.0);
-    fail("[MG=>RM] En ouvrant l'application, en selectionnant plusieurs mois et en cliquant sur un des comptes pour filtrer les operations. " +
-         "(En plus cela montre un probleme de date summary acount dans le cas ou un compte n'a pas d'operations. J'ignorerais bien ce probleme.");
-//    openApplication();
+
+    timeline.selectAll();
+    mainAccounts.select("Account n. 1");
+    transactions.checkGraph("Account n. 1 - april 2006 - august 2008")
+      .checkValue(200604, 1, 1500.00)
+      .checkValue(200604, 15, 1100.00)
+      .checkValue(200605, 2, 700.00)
+      .checkValue(200605, 8, 500.00);
+    mainAccounts.select("Account n. 1", "Account n. 2");
+    transactions.initAmountContent()
+      .add("08/05/2006", "TRANSACTION 1C", -200.00, "To categorize", 500.00, 11500.00, "Account n. 1")
+      .add("02/05/2006", "TRANSACTION 1B", -400.00, "To categorize", 700.00, 11700.00, "Account n. 1")
+      .add("20/04/2006", "TRANSACTION 2A", -300.00, "To categorize", 1000.00, 12100.00, "Account n. 2")
+      .add("15/04/2006", "TRANSACTION 1A", -400.00, "To categorize", 1100.00, 12400.00, "Account n. 1")
+      .check();
+    transactions.checkGraph("2 accounts - april 2006 - august 2008")
+      .checkValue(200604, 1, 2800.00)
+      .checkValue(200604, 15, 2400.00)
+      .checkValue(200604, 20, 2100.00)
+      .checkValue(200605, 2, 1700.00)
+      .checkValue(200605, 8, 1500.00);
   }
 }

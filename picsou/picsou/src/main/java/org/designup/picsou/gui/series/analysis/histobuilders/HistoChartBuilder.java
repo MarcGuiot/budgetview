@@ -29,7 +29,9 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -160,14 +162,24 @@ public class HistoChartBuilder {
   public void showAccountDailyHisto(int selectedMonthId, boolean showFullMonthLabels, Set<Integer> accountIds, DaySelection daySelection, String daily) {
 
     HistoDailyDatasetBuilder builder = createDailyDataset(daily, showFullMonthLabels);
-    int column = 0;
     List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
 
+    Map<Integer, Double> lastValueForAccounts = new HashMap<Integer, Double>();
+    for (Integer accountId : accountIds) {
+      GlobMatcher accountMatcher = Matchers.transactionsForAccount(accountId);
+      Double lastValue = getLastValue(accountMatcher, monthIdsToShow, Transaction.ACCOUNT_POSITION);
+      if (lastValue == null) {
+        Glob account = repository.get(Key.create(Account.TYPE, accountId));
+        lastValue = account.get(Account.POSITION);
+      }
+      lastValueForAccounts.put(accountId, lastValue);
+    }
+    
     for (int monthId : monthIdsToShow) {
       int maxDay = Month.getLastDayNumber(monthId);
       Double[] minValuesForAll = new Double[maxDay];
       Double[][] values = new Double[maxDay][accountIds.size() + 1];
-
+      int accountIndex = 0;
       for (Integer accountId : accountIds) {
 
         GlobMatcher accountMatcher = Matchers.transactionsForAccount(accountId);
@@ -183,24 +195,22 @@ public class HistoChartBuilder {
         }
 
         Double[] minValuesForAccount = new Double[maxDay];
-        Double lastValue = getLastValue(accountMatcher, monthIdsToShow, Transaction.ACCOUNT_POSITION);
-        if (lastValue == null) {
-          Glob account = repository.get(Key.create(Account.TYPE, accountId));
-          lastValue = account.get(Account.POSITION);
-        }
-        getDailyValues(monthId, transactions, lastValue, maxDay, minValuesForAccount, Transaction.ACCOUNT_POSITION);
+        Double lastValue = lastValueForAccounts.get(accountId);
+        Double newLastValue = getDailyValues(monthId, transactions, lastValue, maxDay, minValuesForAccount, Transaction.ACCOUNT_POSITION);
 
-        for (int i = 0; i < maxDay; i++) {
-          values[i][column] = minValuesForAccount[i];
-          if (minValuesForAll[i] == null) {
-            minValuesForAll[i] = minValuesForAccount[i];
+        for (int dayIndex = 0; dayIndex < maxDay; dayIndex++) {
+          values[dayIndex][accountIndex] = minValuesForAccount[dayIndex];
+          if (minValuesForAll[dayIndex] == null) {
+            minValuesForAll[dayIndex] = minValuesForAccount[dayIndex];
           }
-          else if (minValuesForAccount[i] != null) {
-            minValuesForAll[i] += minValuesForAccount[i];
+          else if (minValuesForAccount[dayIndex] != null) {
+            minValuesForAll[dayIndex] += minValuesForAccount[dayIndex];
           }
         }
 
-        column++;
+        lastValueForAccounts.put(accountId, newLastValue);
+        
+        accountIndex++;
       }
 
       builder.add(monthId, minValuesForAll, monthId == selectedMonthId, daySelection.getValues(monthId, maxDay));
