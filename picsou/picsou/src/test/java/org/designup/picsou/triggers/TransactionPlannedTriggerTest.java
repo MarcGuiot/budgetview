@@ -181,6 +181,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
                       value(Transaction.BANK_MONTH, 200808),
                       value(Transaction.BANK_DAY, 1),
                       value(Transaction.BUDGET_DAY, 1),
+                      value(Transaction.ACCOUNT, 3),
                       value(Transaction.SERIES, Series.OCCASIONAL_SERIES_ID));
     repository.completeChangeSet();
     listener.assertLastChangesEqual(
@@ -189,7 +190,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "<update _amount='-700.0' amount='-800.0' id='" + enveloppePlannedTransaction[0] + "' type='transaction'/>\n" +
       "<create amount='-100.0' bankMonth='200808' bankDay='1' budgetDay='1'  id='2' budgetMonth='200808'\n" +
       "        planned='false' series='0' type='transaction' mirror='false' createdBySeries='false'" +
-      "        reconciled='false'/>");
+      "        reconciled='false' account='3'/>");
   }
 
   public void testOverrunEnveloppe() throws Exception {

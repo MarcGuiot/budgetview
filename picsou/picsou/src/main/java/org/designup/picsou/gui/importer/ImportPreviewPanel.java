@@ -222,7 +222,7 @@ public class ImportPreviewPanel implements MessageHandler {
         accountId = null;
       }
 
-      if (accountId != null) {
+      if (accountId != null && !Account.SUMMARY_ACCOUNT_IDS.contains(accountId)) {
         Glob account = sessionRepository.find(Key.create(Account.TYPE, accountId));
         sessionDirectory.get(SelectionService.class).select(account);
       }
@@ -300,6 +300,10 @@ public class ImportPreviewPanel implements MessageHandler {
       try {
         if (currentlySelectedAccount == null && !accountEditionPanel.check()) {
           Log.write("finish account check fail");
+          return;
+        }
+        if (currentlySelectedAccount != null && Account.SUMMARY_ACCOUNT_IDS.contains(currentlySelectedAccount.get(Account.ID))){
+          Log.write("BUG : Summary account");
           return;
         }
         showStep2Message("");
