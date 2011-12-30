@@ -105,7 +105,7 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
 
   public void dispose() {
     JPanel panel = node.getComponent();
-    if (panel != null){
+    if (panel != null) {
       panel.removeMouseListener(tracker);
       panel.removeMouseMotionListener(tracker);
       panel.removePropertyChangeListener(frameDeactivatedListener);
@@ -129,7 +129,12 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
           selectionService.select(currentSelection, selectionKey.getGlobType());
         }
         else {
-          selectionService.select(repository.get(selectionKey));
+          if (mouseEvent.isShiftDown()) {
+            addToSelection();
+          }
+          else {
+            selectionService.select(repository.get(selectionKey));
+          }
         }
       }
     }

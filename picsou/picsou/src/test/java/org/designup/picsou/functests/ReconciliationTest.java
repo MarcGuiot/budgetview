@@ -183,7 +183,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     });
   }
 
-  public void testManuallyCategorizedTransactionsAreaAutomaticallyReconciled() throws Exception {
+  public void testManuallyCategorizedTransactionsAreAutomaticallyReconciled() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2010/06/20", 1000.00, "WorldCo")
@@ -353,5 +353,44 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     categorization.setNewVariable(1, "Music");
     categorization.checkTableIsEmpty();
+  }
+
+  public void testManuallyCreatedTransactionsAreNotAutomaticallyReconciled() throws Exception {
+
+    mainAccounts.createNewAccount()
+      .setAccountName("Cash")
+      .setAccountNumber("012345")
+      .setUpdateModeToManualInput()
+      .selectBank("CIC")
+      .validate();
+
+
+    transactionCreation.show()
+      .setLabel("FNAC").setAmount(-50.00).setDay(25)
+      .create();
+    reconciliation.show();
+    categorization.checkTable(new Object[][]{
+      {"-", "25/06/2010", "", "FNAC", -50.0}
+    });
+
+    categorization.setNewVariable(0, "Leisures");
+    categorization.checkTable(new Object[][]{
+      {"-", "25/06/2010", "Leisures", "FNAC", -50.0}
+    });
+
+    categorization.setNewVariable(0, "Groceries", 100.00);
+    categorization.checkTable(new Object[][]{
+      {"-", "25/06/2010", "Groceries", "FNAC", -50.0}
+    });
+
+    categorization.setVariable(0, "Leisures");
+    categorization.checkTable(new Object[][]{
+      {"-", "25/06/2010", "Leisures", "FNAC", -50.0}
+    });
+
+    reconciliation.toggle("FNAC");
+    categorization.checkTable(new Object[][]{
+      {"x", "25/06/2010", "Leisures", "FNAC", -50.0}
+    });
   }
 }

@@ -175,7 +175,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectCategorization();
-    categorization.setNewVariable("Auchan", "Groceries", -145.);
+    categorization.setNewVariable("Auchan", "Groceries", -145.00);
     categorization.setVariable("Monoprix", "Groceries");
     categorization.setNewRecurring("Free Telecom", "Internet");
     categorization.setNewIncome("WorldCo", "Salary");
@@ -194,7 +194,15 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkTotalAmounts(3540.0, 3540.00);
     budgetView.income.checkSeries("Salary", 3540.0, 3540.0);
 
-    budgetView.getSummary().checkEndPosition(-3366.00);
+    budgetView.getSummary()
+      .checkEndPosition(-3366.00)
+      .getChart()
+      .checkRange(200807, 200808)
+      .checkCurrentDay(200808, 2)
+      .checkValue(200807, 1, -3366.00)
+      .checkValue(200808, 1, 95.00)
+      .checkValue(200808, 2, 0.00)
+      .checkValue(200808, 27, 3366.00);
   }
 
   public void testEditingASeriesWithTransactions() throws Exception {

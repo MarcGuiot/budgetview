@@ -4,7 +4,6 @@ import junit.framework.Assert;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyDataset;
-import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.utils.Utils;
 import org.uispec4j.Mouse;
@@ -42,17 +41,48 @@ public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
     return this;
   }
 
-  public HistoDailyChecker checkValue(int monthId, int day, double expectedValue) {
+  public HistoDailyChecker checkValue(int monthId, int dayId, double expectedValue) {
     HistoDailyDataset dataset = getDataset();
-    int index = dataset.getIndex(monthId);
-    if (index < 0) {
+    int monthIndex = dataset.getIndex(monthId);
+    if (monthIndex < 0) {
       Assert.fail("Month " + monthId + " not found");
     }
-    Double actual = dataset.getValue(index, day - 1);
+    Double actual = dataset.getValue(monthIndex, dayId - 1);
     if (!Amounts.equal(actual, expectedValue)) {
-      Assert.fail("Error for " + monthId + Formatting.TWO_DIGIT_INTEGER_FORMAT.format(day) +
+      Assert.fail("Error for " + toString(monthId, dayId) +
                   " - was " + actual + " instead of " + expectedValue +
                   "\nDataset content:\n" + dataset);
+    }
+    return this;
+  }
+
+  public HistoDailyChecker checkIsPastOnly(int monthId) {
+    HistoDailyDataset dataset = getDataset();
+    int monthIndex = dataset.getIndex(monthId);
+    if (dataset.isCurrent(monthIndex)) {
+      Assert.fail("Month " + monthId + " is current - dataset:\n" + dataset);
+    }
+    if (dataset.isFuture(monthIndex)) {
+      Assert.fail("Month " + monthId + " is future - dataset:\n" + dataset);
+    }
+    return this;
+  }
+
+  public HistoDailyChecker checkCurrentDay(int monthId, int dayId) {
+    HistoDailyDataset dataset = getDataset();
+    int dayIndex = dayId - 1;
+    int monthIndex = dataset.getIndex(monthId);
+    if (monthIndex < 0) {
+      Assert.fail("No month " + monthId + " found - dataset:\n" + dataset);
+    }
+    if (!dataset.isCurrent(monthIndex, dayIndex)) {
+      Assert.fail(toString(monthId, dayId) + " not current - dataset:\n" + dataset);
+    }
+    if (dataset.isFuture(monthIndex, dayIndex)) {
+      Assert.fail(toString(monthId, dayId) + " is current, should not be future - dataset:\n" + dataset);
+    }
+    if (!dataset.isFuture(monthIndex, dayIndex + 1)) {
+      Assert.fail(toString(monthId, dayId + 1) + " not future - dataset:\n" + dataset);
     }
     return this;
   }
@@ -62,7 +92,24 @@ public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
   }
 
   public void dump() {
-    Assert.fail("Chart content:\n" + getDataset().toString());
+    StringBuilder builder = new StringBuilder();
+    HistoDailyDataset dataset = getDataset();
+    Double value = null;
+    for (int monthIndex = 0; monthIndex < dataset.size(); monthIndex++) {
+      int monthId = dataset.getId(monthIndex);
+      Double[] values = dataset.getValues(monthIndex);
+      for (int dayIndex = 0; dayIndex < values.length; dayIndex++) {
+        if (value == null || (!value.equals(values[dayIndex]))) {
+          value = values[dayIndex];
+          builder
+            .append("  .checkValue(").append(monthId).append(", ").append(dayIndex + 1).append(", ")
+            .append(toString(value))
+            .append(")\n");
+        }
+      }
+    }
+    Assert.fail("Chart content:\n" + builder.toString());
+
   }
 
   public void doubleClick() {

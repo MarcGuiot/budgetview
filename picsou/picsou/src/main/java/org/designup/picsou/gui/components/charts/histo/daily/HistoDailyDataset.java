@@ -8,17 +8,17 @@ import org.globsframework.model.Key;
 
 public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
 
-  private Integer currentMonth;
-  private Integer currentDay;
+  private Integer currentMonthId;
+  private Integer currentDayId;
 
-  public HistoDailyDataset(String tooltipKey, Integer currentMonth, Integer currentDay) {
+  public HistoDailyDataset(String tooltipKey, Integer currentMonthId, Integer currentDayId) {
     super(tooltipKey);
-    this.currentMonth = currentMonth;
-    this.currentDay = currentDay;
+    this.currentMonthId = currentMonthId;
+    this.currentDayId = currentDayId;
   }
 
   public void add(int monthId, Double[] values, String label, String section, boolean current, boolean selected, boolean[] daySelections) {
-    add(new HistoDailyElement(monthId, values, label, section, "", findMinDay(values), current, monthId > currentMonth, selected, daySelections));
+    add(new HistoDailyElement(monthId, values, label, section, "", findMinDay(values), current, monthId > currentMonthId, selected, daySelections));
     updateMax(values);
   }
 
@@ -45,40 +45,42 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
     }
   }
 
-  public Double[] getValues(int index) {
-    return getElement(index).values;
+  public Double[] getValues(int monthIndex) {
+    return getElement(monthIndex).values;
   }
 
-  public Double getValue(int index, int dayIndex) {
-    return getElement(index).values[dayIndex];
+  public Double getValue(int monthIndex, int dayIndex) {
+    return getElement(monthIndex).values[dayIndex];
   }
 
-  public int getMinDay(int index) {
-    return getElement(index).minDay;
+  public int getMinDay(int monthIndex) {
+    return getElement(monthIndex).minDay;
   }
 
-  public Double getLastValue(int index) {
-    return getElement(index).getLastValue();
+  public Double getLastValue(int monthIndex) {
+    return getElement(monthIndex).getLastValue();
   }
 
-  public boolean isCurrent(int index, int day) {
-    int month = getElement(index).id;
-    return month == currentMonth && day + 1 == currentDay;
+  public boolean isCurrent(int monthIndex, int dayIndex) {
+    int monthId = getElement(monthIndex).id;
+    int dayId = dayIndex + 1;
+    return monthId == currentMonthId && dayId == currentDayId;
   }
 
-  public boolean isFuture(int index, int day) {
-    int month = getElement(index).id;
-    if (month > currentMonth) {
+  public boolean isFuture(int monthIndex, int dayIndex) {
+    int month = getElement(monthIndex).id;
+    if (month > currentMonthId) {
       return true;
     }
-    else if (month < currentMonth) {
+    else if (month < currentMonthId) {
       return false;
     }
-    return day + 1 > currentDay;
+    int dayId = dayIndex + 1;
+    return dayId > currentDayId;
   }
 
-  public boolean isDaySelected(int index, int day) {
-    return getElement(index).daySelections[day];
+  public boolean isDaySelected(int monthIndex, int dayIndex) {
+    return getElement(monthIndex).daySelections[dayIndex];
   }
 
   public String getTooltip(int index, Key objectKey) {
@@ -93,16 +95,16 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
 
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("daily(").append(currentMonth).append(currentDay).append(")\n");
+    builder.append("daily(").append(currentMonthId).append(currentDayId).append(")\n");
     for (HistoDailyElement element : this.elements) {
       builder.append("- ").append(element.id).append('\n');
-      for (int i = 0; i < element.values.length; i++) {
-        builder.append("    ").append(Formatting.TWO_DIGIT_INTEGER_FORMAT.format(i))
-          .append(':').append(element.values[i]);
-        if (element.daySelections[i]) {
+      for (int dayIndex = 0; dayIndex < element.values.length; dayIndex++) {
+        builder.append("    [").append(Formatting.TWO_DIGIT_INTEGER_FORMAT.format(dayIndex))
+          .append("] ").append(element.values[dayIndex]);
+        if (element.daySelections[dayIndex]) {
           builder.append('*');
         }
-        if (i == element.minDay) {
+        if (dayIndex == element.minDay) {
           builder.append(" min");
         }
         builder.append("\n");
@@ -111,11 +113,11 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
     return builder.toString();
   }
 
-  public String toString(int index) {
-    return getElement(index).toString();
+  public String toString(int monthIndex) {
+    return getElement(monthIndex).toString();
   }
 
-  public Key getKey(int index, int dayIndex) {
-    return Key.create(Day.MONTH, getElement(index).id, Day.DAY, dayIndex + 1);
+  public Key getKey(int monthIndex, int dayIndex) {
+    return Key.create(Day.MONTH, getElement(monthIndex).id, Day.DAY, dayIndex + 1);
   }
 }

@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.designup.picsou.functests.checkers.components.TipChecker;
 import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Month;
 import org.globsframework.utils.Dates;
 import org.uispec4j.*;
@@ -34,6 +35,10 @@ public abstract class GuiChecker {
   protected String toString(double value, boolean forcePlus) {
     String prefix = (forcePlus && value > 0) ? "+" : "";
     return prefix + format.format(value);
+  }
+  
+  protected String toString(int monthId, int dayId) {
+    return monthId + Formatting.TWO_DIGIT_INTEGER_FORMAT.format(dayId);
   }
 
   protected <T extends JComponent> void checkComponentVisible(final Panel panel,

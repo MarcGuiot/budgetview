@@ -47,11 +47,11 @@ public abstract class AbstractHistoDataset<E extends HistoDatasetElement> implem
     return maxNegative;
   }
 
-  public int getId(int index) {
-    if ((index < 0) || (index >= elements.size())) {
+  public int getId(int monthIndex) {
+    if ((monthIndex < 0) || (monthIndex >= elements.size())) {
       return -1;
     }
-    return elements.get(index).id;
+    return elements.get(monthIndex).id;
   }
 
   public int getIndex(int id) {

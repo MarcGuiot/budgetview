@@ -10,6 +10,7 @@ import javax.swing.*;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.designup.picsou.utils.Lang;
+import org.uispec4j.assertion.UISpecAssert;
 
 public class TransactionCreationChecker extends ViewChecker {
   private Panel panel;
@@ -19,6 +20,7 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public TransactionCreationChecker setAmount(double amount) {
+    checkShowing();
     TextBox textBox = getPanel().getInputTextBox("amountEditor");
     if (amount < 0) {
       getPanel().getToggleButton("negativeAmount").click();
@@ -32,6 +34,7 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public TransactionCreationChecker enterAmountWithoutValidating(double amount) {
+    checkShowing();
     TextBox textBox = getPanel().getInputTextBox("amountEditor");
     textBox.setText(toString(amount), false);
     return this;
@@ -55,6 +58,7 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public TransactionCreationChecker setDay(int day) {
+    checkShowing();
     TextBox textBox = getPanel().getInputTextBox("day");
     textBox.setText(Integer.toString(day), false);
     textBox.focusLost();
@@ -62,6 +66,7 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public TransactionCreationChecker enterDayWithoutValidating(int day) {
+    checkShowing();
     TextBox textBox = getPanel().getInputTextBox("day");
     textBox.setText(Integer.toString(day), false);
     return this;
@@ -78,6 +83,7 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public TransactionCreationChecker setLabel(String label) {
+    checkShowing();
     TextBox textBox = getPanel().getInputTextBox("label");
     textBox.setText(label, false);
     textBox.focusLost();
@@ -91,6 +97,7 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public TransactionCreationChecker create() {
+    checkShowing();
     Panel panel = getPanel();
     panel.getButton("Create").click();
     TextBox errorMessage = panel.getTextBox("errorMessage");

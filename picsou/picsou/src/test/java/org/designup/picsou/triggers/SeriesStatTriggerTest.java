@@ -42,7 +42,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                   "<transaction id='1' series='10' month='200807' day='1' budgetMonth='200807' budgetDay='1' bankMonth='200807' bankDay='1' amount='-10.0' account='3'/>" +
                   "<transaction id='2' series='20' month='200807' day='1' budgetMonth='200807' budgetDay='1' bankMonth='200807' bankDay='1' amount='-10.0' account='3'/>" +
                   "<transaction id='3' series='20' month='200807' day='1' budgetMonth='200807' budgetDay='1' bankMonth='200807' bankDay='1' amount='-10.0' account='3'/>" +
-                  "<transaction id='4' month='200807' bankMonth='200807' bankDay='1' budgetMonth='200807' budgetDay='1' amount='-50.0'/>" +
+                  "<transaction id='4' month='200807' bankMonth='200807' bankDay='1' budgetMonth='200807' budgetDay='1' amount='-50.0' account='3'/>" +
                   "");
 
     listener.assertLastChangesEqual(

@@ -1152,23 +1152,30 @@ table#faq-menu td li {
   margin-bottom: 0px;
 }
 
-div#faq-header {
+div#support-breadcrumb {
   text-align: center;
+  text-shadow: white 0 2px 0;
+  color: #AAAAAA;
 }
 
-div#faq-header A:link {
+div#support-breadcrumb A:link {
   text-decoration: none;
   color: #AAAAAA;
 }
 
-div#faq-header A:visited {
+div#support-breadcrumb A:visited {
   text-decoration: none;
   color: #999999;
 }
 
-div#faq-header A:hover {
+div#support-breadcrumb A:hover {
   text-decoration: underline;
   color: #0000FF;
+}
+
+img.faq-icon {
+  float:left;
+  margin: 0 5px 2px 0;
 }
 
 div#block-block-5 {
@@ -1186,4 +1193,13 @@ div#support-footer {
 
 div#support-footer p {
   font-size: 14pt;
+}
+
+/* ========= CHANGE LOG ========== */
+
+div#changelog span.date {
+  margin-left: 10px;
+  font-size: 10pt;
+  font-weight: normal;
+  color: #888;
 }

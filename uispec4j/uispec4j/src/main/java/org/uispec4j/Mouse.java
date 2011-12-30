@@ -22,6 +22,14 @@ public class Mouse {
   }
 
   /**
+   * Clicks in the center of a UIComponent.
+   */
+  public static void click(UIComponent uiComponent, Key.Modifier keyModifier) {
+    Component awtComponent = uiComponent.getAwtComponent();
+    doClickInRectangle(awtComponent, awtComponent.getBounds(), false, keyModifier);
+  }
+
+  /**
    * Double clicks in the center of a UIComponent.
    */
   public static void doubleClick(UIComponent uiComponent) {

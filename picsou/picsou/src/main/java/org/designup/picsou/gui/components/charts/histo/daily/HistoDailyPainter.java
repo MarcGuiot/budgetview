@@ -47,15 +47,15 @@ public class HistoDailyPainter implements HistoPainter {
     int y0 = metrics.y(0);
     HistoDailyBlockPainter blockPainter = new HistoDailyBlockPainter(g2, colors, y0);
 
-    for (int i = 0; i < dataset.size(); i++) {
+    for (int monthIndex = 0; monthIndex < dataset.size(); monthIndex++) {
 
-      Double[] values = dataset.getValues(i);
+      Double[] values = dataset.getValues(monthIndex);
       if (values.length == 0) {
         continue;
       }
 
-      int left = metrics.left(i);
-      int right = metrics.right(i);
+      int left = metrics.left(monthIndex);
+      int right = metrics.right(monthIndex);
       int width = right - left;
       int previousX = left;
 
@@ -72,25 +72,25 @@ public class HistoDailyPainter implements HistoPainter {
           previousValue = value;
         }
 
-        boolean current = dataset.isCurrent(i);
-        boolean future = dataset.isFuture(i, dayIndex);
-        boolean selected = dataset.isSelected(i);
-        boolean isRollover = rollover.isOnColumn(i);
+        boolean current = dataset.isCurrent(monthIndex);
+        boolean future = dataset.isFuture(monthIndex, dayIndex);
+        boolean selected = dataset.isSelected(monthIndex);
+        boolean isRollover = rollover.isOnColumn(monthIndex);
         int blockWidth = width / values.length;
 
-        Key dayKey = dataset.getKey(i, dayIndex);
+        Key dayKey = dataset.getKey(monthIndex, dayIndex);
         clickMap.add(dayKey, previousX);
         g2.setComposite(AlphaComposite.Src);
         if (rollover.isOnObject(dayKey)) {
           g2.setColor(colors.getRolloverDayColor());
           g2.fillRect(previousX, metrics.columnTop() + 1, blockWidth, metrics.columnHeight() - 1);
         }
-        else if (dataset.isDaySelected(i, dayIndex)) {
+        else if (dataset.isDaySelected(monthIndex, dayIndex)) {
           g2.setColor(colors.getSelectedDayColor());
           g2.fillRect(previousX, metrics.columnTop() + 1, blockWidth, metrics.columnHeight() - 1);
         }
 
-        if (dataset.isCurrent(i, dayIndex)) {
+        if (dataset.isCurrent(monthIndex, dayIndex)) {
           g2.setColor(colors.getCurrentDayColor());
           g2.drawLine(x, metrics.currentDayLineTop(), x, metrics.currentDayLineBottom());
         }
@@ -110,7 +110,7 @@ public class HistoDailyPainter implements HistoPainter {
         previousValue = value;
       }
 
-      drawMinLabel(g2, dataset, i, metrics);
+      drawMinLabel(g2, dataset, monthIndex, metrics);
     }
 
     blockPainter.complete();
@@ -118,22 +118,22 @@ public class HistoDailyPainter implements HistoPainter {
     clickMap.complete(maxX);
   }
 
-  private void drawMinLabel(Graphics2D g2, HistoDailyDataset dataset, int index, HistoDailyMetrics metrics) {
-    int minDay = dataset.getMinDay(index);
-    Double minValue = dataset.getValue(index, minDay);
+  private void drawMinLabel(Graphics2D g2, HistoDailyDataset dataset, int dayIndex, HistoDailyMetrics metrics) {
+    int minDayIndex = dataset.getMinDay(dayIndex);
+    Double minValue = dataset.getValue(dayIndex, minDayIndex);
     if ((minValue == null) || !metrics.isDrawingInnerLabels()) {
       return;
     }
 
-    String text = getMinText(index, minValue);
-    int minX = metrics.minX(minDay, dataset.getValues(index).length, index);
+    String text = getMinText(dayIndex, minValue);
+    int minX = metrics.minX(minDayIndex, dataset.getValues(dayIndex).length, dayIndex);
 
     g2.setStroke(new BasicStroke(1));
     g2.setComposite(AlphaComposite.Src);
     g2.setColor(colors.getInnerLabelColor(minValue));
-    g2.drawString(text, metrics.innerLabelX(index, minX, text), metrics.innerLabelY());
+    g2.drawString(text, metrics.innerLabelX(dayIndex, minX, text), metrics.innerLabelY());
 
-    g2.drawLine(metrics.innerLabelLineX(index, minX, text),
+    g2.drawLine(metrics.innerLabelLineX(dayIndex, minX, text),
                 metrics.innerLabelLineY(),
                 minX,
                 metrics.y(minValue));

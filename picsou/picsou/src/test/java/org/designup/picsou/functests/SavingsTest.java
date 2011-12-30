@@ -1206,7 +1206,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setUpdateModeToManualInput()
       .validate();
 
-    transactionCreation.selectAccount("Savings")
+    transactionCreation.show()
+      .selectAccount("Savings")
       .setAmount(-100)
       .setLabel("Financement")
       .setDay(2)

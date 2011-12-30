@@ -33,7 +33,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
   public void select(String accountName, String... others) {
     getAccountPanel(accountName).getToggleButton("selectAccount").select();
     for (String other : others) {
-      getAccountPanel(other).getToggleButton("selectAccount").select();
+      Mouse.click(getAccountPanel(other), Key.Modifier.SHIFT);
     }
   }
 
