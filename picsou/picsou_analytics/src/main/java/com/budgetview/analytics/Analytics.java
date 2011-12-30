@@ -37,6 +37,7 @@ public class Analytics {
       .safeApply(new UserWeekStatFunctor(), repository);
 
     repository.getAll(WeekStat.TYPE)
+      .safeApply(new WeekFieldsFunctor(), repository)
       .safeApply(new UserWeekRatiosFunctor(), repository);
   }
 }

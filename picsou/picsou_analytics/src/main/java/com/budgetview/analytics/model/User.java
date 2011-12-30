@@ -22,7 +22,6 @@ public class User {
   public static BooleanField PREVIOUS_USER;
   public static DateField PURCHASE_DATE;
   public static IntegerField PING_COUNT;
-  public static BooleanField POTENTIAL_BUYER;
 
   static {
     GlobTypeLoader.init(User.class);
