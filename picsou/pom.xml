@@ -12,6 +12,7 @@
     <module>picsou_loader</module>
     <module>picsou_licence_server</module>
     <module>picsou_server</module>
+    <module>picsou_analytics</module>
     <module>morphograph</module>
   </modules>
 

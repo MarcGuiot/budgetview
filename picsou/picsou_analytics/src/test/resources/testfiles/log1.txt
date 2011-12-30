@@ -1,0 +1,37 @@
+INFO 16 Sep 2011 08:42:16,287 - thread 28 msg : RequestForConfigServlet.init
+INFO 16 Sep 2011 18:49:30,553 - thread 28 msg : known_anonymous ip = 86.72.115.107 id =cnaUHRq6xqb5SjxKmIBcwhOGcWL90NaaC0k4AP8jBNXeoWFvjtrtH64epu/AGY2qW5k= access_count = 5
+INFO 23 Sep 2011 16:51:15,140 - thread 28 msg : known_anonymous ip = 2.6.151.71 id =xz3hUljIb9yj1/HI099SActFVi6YS5WISVua6Mn47+QVPmHroDDhtwrT+nM1Gttb7Io= access_count = 28
+INFO 23 Sep 2011 16:52:42,171 - thread 28 msg : known_anonymous ip = 2.6.151.71 id =xz3hUljIb9yj1/HI099SActFVi6YS5WISVua6Mn47+QVPmHroDDhtwrT+nM1Gttb7Io= access_count = 29
+INFO 23 Sep 2011 17:02:23,449 - thread 28 msg : known_anonymous ip = 2.6.151.71 id =xz3hUljIb9yj1/HI099SActFVi6YS5WISVua6Mn47+QVPmHroDDhtwrT+nM1Gttb7Io= access_count = 30
+INFO 24 Sep 2011 07:58:28,283 - thread 28 msg : compute_license ip = 88.168.69.99 mail = claire@gmail.com count = 56 id = IAUeKzTA8Hs6XUauGSxl/TfQXhJ6YzVNIi1/2bj6Quo8UdDsnldMo3fchkFOF7UbQYc= code = 2475
+ERROR 24 Sep 2011 07:58:28,283 - RequestForConfigServlet:computeLicense
+org.globsframework.utils.exceptions.UnexpectedApplicationState: for request : select LICENSE.GROUP_ID, LICENSE.ACCESS_COUNT, LICENSE.ACTIVATION_CODE, LICENSE.LAST_ACTIVATION_CODE, LICENSE.ID from LICENSE WHERE LICENSE.MAIL =  ?
+  ... exception ...
+INFO 24 Sep 2011 16:24:05,641 - thread 28 msg : ok_for mail = marc.guiot@free.fr count = 145
+INFO 24 Sep 2011 16:41:44,864 - thread 28 msg : known_anonymous ip = 2.6.151.71 id =xz3hUljIb9yj1/HI099SActFVi6YS5WISVua6Mn47+QVPmHroDDhtwrT+nM1Gttb7Io= access_count = 31
+INFO 24 Sep 2011 17:16:14,545 - thread 28 msg : compute_license ip = 83.63.223.141 mail = david@free.fr count = 6 id = q3i8PA+aLGpLHpQ2xDUqQU09ofazH0VNTBWVG3f21dxwdolYBByeHlRWl0kZnc5+dYU= code = 2181
+INFO 25 Sep 2011 10:02:43,057 - thread 16 msg : ok_for mail = marc.guiot@free.fr count = 150
+INFO 25 Sep 2011 10:03:56,065 - receive new User  :
+INFO 25 Sep 2011 10:03:56,072 - NewUser : mail : 'bernard@wanadoo.fr
+INFO 25 Sep 2011 10:03:56,105 - item_number=''; residence_country='FR'; shipping_method='Default'; shipping_discount='0.00'; insurance_amount='0.00'; verify_sign='AiKZhEEPLJjSIccz.2M.tbyW5YFwAogOwwn6hFr2r7eNMOUys8ifgwbo'; payment_status='Completed'; business='paypal@mybudgetview.fr'; protection_eligibility='Ineligible'; transaction_subject='Code d'activation BudgetView'; payer_id='8RUUNCADFXSWW'; first_name='Bernard'; shipping='0.00'; payer_email='bernard@wanadoo.fr'; mc_fee='1.27'; btn_id='20331125'; txn_id='9WF31892AN672923R'; receiver_email='paypal@mybudgetview.fr'; quantity='1'; notify_version='3.4'; txn_type='web_accept'; mc_gross='29.90'; payer_status='unverified'; mc_currency='EUR'; custom=''; payment_date='00:16:57 Sep 25, 2011 PDT'; payment_fee=''; charset='UTF-8'; payment_gross=''; ipn_track_id='rL229rvcmQ2BGs7vDxFjVA'; discount='0.00'; tax='4.90'; handling_amount='0.00'; item_name='Code d'activation BudgetView'; last_name='Aiglehoux'; payment_type='instant'; receiver_id='RQLKPV2F4ZR74';
+INFO 25 Sep 2011 10:03:57,259 - NewUser : mail : 'bernard@wanadoo.fr VERIFIED
+INFO 25 Sep 2011 10:03:57,302 - NewUser : ok  for bernard@wanadoo.fr code is 1594
+INFO 25 Sep 2011 10:03:57,425 - mail sent : bernard@wanadoo.fr  Votre code d'activation BudgetView
+INFO 25 Sep 2011 10:03:57,433 - mail sent : support@mybudgetview.fr  New User
+INFO 25 Sep 2011 10:17:16,171 - thread 16 msg : compute_license ip = 88.164.73.52 mail = marc.guiot@free.fr count = 151 id = 0ErTcdgy0TwqnA6TnAdfTU9H6LIGO0sm//zWsquCwFW7JUnbWOEiNkOjwqEJtFrYIPY= code = 9005
+INFO 25 Sep 2011 10:17:16,173 - thread 16 msg : ok_for mail = marc.guiot@free.fr count = 151
+INFO 25 Sep 2011 10:30:40,574 - thread 16 msg : compute_license ip = 109.10.185.30 mail = celine@free.fr count = 268 id = UfLGJ1Q8dIw7OmxGXPGyjf5rKJzfYpBCA/jIN0MN+zcDk3eBCN29Dx9dWTbP8LoP2H4= code = 3214
+INFO 25 Sep 2011 10:30:40,576 - thread 16 msg : ok_for mail = celine@free.fr count = 268
+INFO 25 Sep 2011 10:33:22,938 - thread 17 msg : known_anonymous ip = 2.6.151.71 id =xz3hUljIb9yj1/HI099SActFVi6YS5WISVua6Mn47+QVPmHroDDhtwrT+nM1Gttb7Io= access_count = 32
+INFO 25 Sep 2011 11:29:11,542 - thread 16 msg : compute_license ip = 2.6.151.71 mail = bernard@wanadoo.fr count = 40 id = xz3hUljIb9yj1/HI099SActFVi6YS5WISVua6Mn47+QVPmHroDDhtwrT+nM1Gttb7Io= code = 1594
+INFO 25 Sep 2011 11:29:11,544 - thread 16 msg : ok_for mail = bernard@wanadoo.fr count = 40
+INFO 25 Sep 2011 11:32:15,209 - thread 18 msg : compute_license ip = 91.179.29.240 mail = denis@hotmail.com count = 6 id = mThDESEPMqD2BdjgEFeijyvusB1VOXch9kfaWqgYJS8illlT4V9q5UybkPAOCCzLR7k= code = 5665
+INFO 25 Sep 2011 11:32:15,211 - thread 18 msg : ok_for mail = denis@hotmail.com count = 6
+INFO 27 Sep 2011 15:04:47,361 - thread 16 msg : compute_license ip = 2.6.151.71 mail = bernard@wanadoo.fr count = 44 id = xz3hUljIb9yj1/HI099SActFVi6YS5WISVua6Mn47+QVPmHroDDhtwrT+nM1Gttb7Io= code = 1594
+INFO 27 Sep 2011 15:04:47,363 - thread 16 msg : ok_for mail = bernard@wanadoo.fr count = 44
+INFO 07 Oct 2011 10:20:06,140 - thread 16 msg : compute_license ip = 83.195.122.123 mail = paul@sfr.fr count = 50 id = CqWz9YDDa1roj/v55V2gRbv+lQ6gwunSB7GJ8trpsREqW6GHMns0GKqvV2wuK9eb6jg= code = 9276
+INFO 07 Oct 2011 10:20:06,142 - thread 16 msg : ok_for mail = paul@sfr.fr count = 50
+INFO 07 Oct 2011 14:38:22,359 - thread 16 msg : compute_license ip = 86.213.120.48 mail = bernard@wanadoo.fr count = 47 id = xz3hUljIb9yj1/HI099SActFVi6YS5WISVua6Mn47+QVPmHroDDhtwrT+nM1Gttb7Io= code = 1594
+INFO 07 Oct 2011 14:38:22,361 - thread 16 msg : ok_for mail = bernard@wanadoo.fr count = 47
+INFO 07 Oct 2011 16:49:07,696 - thread 16 msg : compute_license ip = 82.230.57.112 mail = raphael@mail.com count = 12 id = CtoSZZEFL2f0PcraT6a53WJXfeEOb6+h5Y+RagMtpbJ6xvq3WIDNowPUMvLK8+VmuxQ= code = 8009
+INFO 07 Oct 2011 16:49:07,698 - thread 16 msg : ok_for mail = raphael@mail.com count = 12
