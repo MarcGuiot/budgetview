@@ -25,17 +25,17 @@ public class AutoCategorizationFunctor implements GlobFunctor {
       autocategorized++;
       return;
     }
-    GlobList index = referenceRepository.findByIndex(Transaction.LABEL_FOR_CATEGORISATION_INDEX,
-                                                     transaction.get(Transaction.LABEL_FOR_CATEGORISATION))
-      .sort(TransactionComparator.ASCENDING);
-    if (index.size() == 0) {
-      return;
-    }
     Integer transactionType = transaction.get(Transaction.TRANSACTION_TYPE);
     if (transactionType.equals(TransactionType.CHECK.getId()) ||
         transactionType.equals(TransactionType.WITHDRAWAL.getId()) ||
         transactionType.equals(TransactionType.DEPOSIT.getId()) ||
         !transaction.get(Transaction.SERIES).equals(Series.UNCATEGORIZED_SERIES_ID)) {
+      return;
+    }
+    GlobList index = referenceRepository.findByIndex(Transaction.LABEL_FOR_CATEGORISATION_INDEX,
+                                                     transaction.get(Transaction.LABEL_FOR_CATEGORISATION))
+      .sort(TransactionComparator.ASCENDING);
+    if (index.size() == 0) {
       return;
     }
     {
@@ -154,6 +154,9 @@ public class AutoCategorizationFunctor implements GlobFunctor {
     }
 
     boolean isValid(Glob transaction, Glob findTransaction, Glob currentSeries) {
+      if (transaction.get(Transaction.PLANNED)){
+        return false;
+      }
       if (!transaction.get(Transaction.ACCOUNT).equals(findTransaction.get(Transaction.ACCOUNT))) {
         return false;
       }

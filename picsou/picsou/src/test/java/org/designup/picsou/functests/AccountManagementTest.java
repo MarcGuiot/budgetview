@@ -215,4 +215,26 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkSummary(20, "2008/07/30");
   }
+
+  public void testFindAccountWthOneOperation() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount("123", 10, "2008/08/10")
+      .addTransaction("2008/07/28", -550, "first account")
+      .load();
+
+    OfxBuilder.init(this)
+      .addBankAccount("321", 10, "2008/07/30")
+      .addTransaction("2008/07/30", -550, "second account")
+      .load();
+
+    String path = OfxBuilder.init(this)
+      .addBankAccount("321", 10, "2008/07/30")
+      .addTransaction("2008/08/01", -50, "second account")
+      .save();
+    operations.openImportDialog()
+      .selectFiles(path)
+      .acceptFile()
+      .checkSelectedAccount("Account n. 321")
+      .doImport();
+  }
 }

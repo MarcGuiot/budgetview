@@ -2,6 +2,7 @@ package org.designup.picsou.gui.importer.utils;
 
 import org.designup.picsou.model.ImportedTransaction;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.Account;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -20,13 +21,16 @@ public class AccountFinder implements GlobFunctor {
 
   public static Integer findBestAccount(GlobList importedTransactions, GlobRepository repository) {
     AccountFinder accountFinder = new AccountFinder();
-    repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, accountFinder);
+    repository.safeApply(Transaction.TYPE,
+                         GlobMatchers.isFalse(Transaction.PLANNED), accountFinder);
     return accountFinder.findAccount(importedTransactions);
   }
 
   public void run(Glob glob, GlobRepository repository) throws Exception {
     String label = getLabel(glob);
-    accountsByLabel.put(label, glob.get(Transaction.ACCOUNT));
+    if (!Strings.isNullOrEmpty(label)){
+      accountsByLabel.put(label, glob.get(Transaction.ACCOUNT));
+    }
   }
 
   private String getLabel(Glob glob) {
@@ -47,10 +51,10 @@ public class AccountFinder implements GlobFunctor {
 
   private String createLabel(Glob glob, final StringField qif_m, final StringField qif_p) {
     String label = "";
-    if (glob.get(qif_m) != null) {
+    if (Strings.isNotEmpty(glob.get(qif_m))) {
       label += glob.get(qif_m).toUpperCase();
     }
-    if (glob.get(qif_p) != null) {
+    if (Strings.isNotEmpty(glob.get(qif_p))) {
       label += ":" + glob.get(qif_p).toUpperCase();
     }
     return label;
@@ -62,8 +66,10 @@ public class AccountFinder implements GlobFunctor {
       String label = getImportedLabel(transaction);
       List<Integer> accounts = accountsByLabel.get(label);
       for (Integer accountId : accounts) {
-        Integer count = foundAccountsCount.get(accountId);
-        foundAccountsCount.put(accountId, count != null ? count + 1 : 1);
+        if (!Account.SUMMARY_ACCOUNT_IDS.contains(accountId)){
+          Integer count = foundAccountsCount.get(accountId);
+          foundAccountsCount.put(accountId, count != null ? count + 1 : 1);
+        }
       }
     }
     if (foundAccountsCount.isEmpty()) {

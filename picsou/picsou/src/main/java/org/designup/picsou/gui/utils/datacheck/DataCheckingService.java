@@ -279,6 +279,9 @@ public class DataCheckingService {
         }
       }
       else {
+        if (Account.SUMMARY_ACCOUNT_IDS.contains(transaction.get(Transaction.ACCOUNT))){
+          report.addError("Operation in summary account " + transaction.get(Transaction.LABEL));
+        }
         if (positionDate.after(lastTransactionDate)){
           report.addError("Current position date before last operation " + Dates.toString(positionDate) + " / " +
                           Dates.toString(lastTransactionDate));
