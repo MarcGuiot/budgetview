@@ -15,13 +15,15 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.TablePrinter;
-import static org.globsframework.utils.Utils.sort;
 
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.*;
+
+import static org.globsframework.utils.Utils.beginRemove;
+import static org.globsframework.utils.Utils.sort;
 
 public class GlobPrinter {
 
@@ -49,6 +51,25 @@ public class GlobPrinter {
 
   public static GlobPrinter init(GlobList list) {
     return new GlobPrinter(list);
+  }
+
+  public static void print(Glob glob) {
+    print(glob, new OutputStreamWriter(System.out));
+  }
+  
+  public static void print(Glob glob, Writer writer) {
+    PrintWriter printer = new PrintWriter(writer);
+    printer.println("===== " + glob + " ======");
+
+    List<Object[]> rows = new ArrayList<Object[]>();
+    for (Field field : glob.getType().getFields()) {
+      rows.add(new Object[]{field.getName(), glob.getValue(field)});
+    }
+
+    TablePrinter.print(new String[]{"Field", "Value"}, rows, printer);
+
+    printer.println();
+    printer.flush();
   }
 
   private GlobRepository repository;

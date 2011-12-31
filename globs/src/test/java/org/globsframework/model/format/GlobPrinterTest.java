@@ -4,10 +4,14 @@ import junit.framework.TestCase;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.metamodel.GlobType;
-import static org.globsframework.model.FieldValue.value;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.utils.Dates;
+
+import java.io.StringWriter;
+
+import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.utils.Strings.LINE_SEPARATOR;
 
 public class GlobPrinterTest extends TestCase {
@@ -92,6 +96,32 @@ public class GlobPrinterTest extends TestCase {
                           "| 1  | obj1 |       |         |      |           |          | [2] obj2 |       |" + LINE_SEPARATOR +
                           "| 2  | obj2 |       |         |      |           |          |          |       |" + LINE_SEPARATOR +
                           "" + LINE_SEPARATOR, DummyObject.TYPE);
+  }
+
+  public void testSingleGlob() throws Exception {
+    Glob glob = repository.create(DummyObject.TYPE,
+                                  value(DummyObject.ID, 1),
+                                  value(DummyObject.NAME, "obj1"),
+                                  value(DummyObject.LINK, 2));
+
+    checkOutput(glob,
+                "===== dummyObject[id=1] ======\n" +
+                "| Field     | Value |\n" +
+                "| date      |       |\n" +
+                "| id        | 1     |\n" +
+                "| link      | 2     |\n" +
+                "| link2     |       |\n" +
+                "| name      | obj1  |\n" +
+                "| password  |       |\n" +
+                "| present   |       |\n" +
+                "| timestamp |       |\n" +
+                "| value     |       |");
+  }
+
+  private void checkOutput(Glob glob, String expected) {
+    StringWriter writer = new StringWriter();
+    GlobPrinter.print(glob, writer);
+    assertEquals(expected, writer.getBuffer().toString().trim());
   }
 
   private void checkOutput(String expected, GlobType... types) {
