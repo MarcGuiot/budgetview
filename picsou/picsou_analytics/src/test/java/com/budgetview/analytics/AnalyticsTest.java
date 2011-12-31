@@ -4,6 +4,7 @@ import com.budgetview.analytics.model.User;
 import junit.framework.TestCase;
 import org.designup.picsou.functests.QifImportTest;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.io.File;
@@ -32,10 +33,13 @@ public class AnalyticsTest extends TestCase {
     load("log1.txt");
 
     Glob bernard = checker.findUnique(User.EMAIL, "bernard@wanadoo.fr");
+    GlobPrinter.print(bernard);
     checker.checkFields(bernard,
                         value(User.FIRST_DATE, parseDate("20110923")),
                         value(User.LAST_DATE, parseDate("20111007")),
-                        value(User.PURCHASE_DATE, parseDate("20110925")));
+                        value(User.PURCHASE_DATE, parseDate("20110925")),
+                        value(User.PING_COUNT, 8),
+                        value(User.PREVIOUS_USER, false));
   }
 
   private Date parseDate(String text) throws ParseException {

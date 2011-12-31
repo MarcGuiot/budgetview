@@ -3,14 +3,19 @@ package com.budgetview.analytics.functors;
 import com.budgetview.analytics.model.LogEntry;
 import com.budgetview.analytics.model.LogEntryType;
 import com.budgetview.analytics.model.User;
+import com.budgetview.analytics.utils.AnalyticsUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.InvalidState;
+import org.joda.time.Days;
 
 import java.util.Date;
+
+import static com.budgetview.analytics.utils.AnalyticsUtils.daysBetween;
+import static org.globsframework.model.FieldValue.value;
 
 public class UserEntriesFunctor implements GlobFunctor {
 
@@ -32,14 +37,17 @@ public class UserEntriesFunctor implements GlobFunctor {
       case KNOWN_USER:
       case LICENCE_CHECK:
       case DIFFERENT_CODE:
-        updateDates(user, date, email, repository);
+        updateDates(user, date, repository);
         break;
       case PURCHASE:
         if (user.get(User.PURCHASE_DATE) != null) {
           throw new InvalidState("Purchase date already exists for " + user);
         }
-        repository.update(user.getKey(), User.PURCHASE_DATE, date);
-        updateDates(user, date, email, repository);
+        repository.update(user.getKey(), 
+                          value(User.PURCHASE_DATE, date),
+                          value(User.PING_COUNT_ON_PURCHASE, user.get(User.PING_COUNT)),
+                          value(User.DAYS_BEFORE_PURCHASE, getDaysBeforePurchase(user, date)));
+        updateDates(user, date, repository);
         break;
       default:
     }
@@ -54,7 +62,15 @@ public class UserEntriesFunctor implements GlobFunctor {
     }
   }
 
-  private void updateDates(Glob user, Date date, String email, GlobRepository repository) {
+  private int getDaysBeforePurchase(Glob user, Date date) {
+    Date firstDate = user.get(User.FIRST_DATE);
+    if (firstDate == null) {
+      return 0;
+    }
+    return daysBetween(firstDate, date);
+  }
+
+  private void updateDates(Glob user, Date date, GlobRepository repository) {
     Date firstDate = user.get(User.FIRST_DATE);
     if ((firstDate == null) || firstDate.after(date)) {
       repository.update(user.getKey(), User.FIRST_DATE, date);

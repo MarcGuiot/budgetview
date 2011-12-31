@@ -8,6 +8,7 @@ import com.budgetview.analytics.parsing.LogParser;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.utils.GlobMatchers;
 
 import java.io.File;
 import java.io.FileReader;
@@ -23,6 +24,7 @@ public class Analytics {
     run(reader, repository);
 
     GlobPrinter.print(repository.getAll(WeekStat.TYPE).sort(WeekStat.ID));
+    GlobPrinter.print(repository.getAll(User.TYPE, GlobMatchers.isNotNull(User.PURCHASE_DATE)).sort(User.PURCHASE_DATE));
   }
 
   public static void run(Reader reader, GlobRepository repository) {

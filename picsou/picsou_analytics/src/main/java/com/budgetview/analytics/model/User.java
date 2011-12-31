@@ -20,8 +20,10 @@ public class User {
   public static DateField FIRST_DATE;
   public static DateField LAST_DATE;
   public static BooleanField PREVIOUS_USER;
-  public static DateField PURCHASE_DATE;
   public static IntegerField PING_COUNT;
+  public static DateField PURCHASE_DATE;
+  public static IntegerField DAYS_BEFORE_PURCHASE;
+  public static IntegerField PING_COUNT_ON_PURCHASE;
 
   static {
     GlobTypeLoader.init(User.class);
