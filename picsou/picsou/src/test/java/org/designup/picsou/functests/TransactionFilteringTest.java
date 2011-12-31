@@ -21,7 +21,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .check();
     transactions.checkGraph("Main accounts - may 2006")
       .checkRange(200605, 200605)
-      .checkCurrentDay(200605, 8)
+      .checkCurrentDay(200605, 8, "May 8")
       .checkValue(200605, 15, 500.00)
       .checkValue(200605, 6, 900.00)
       .checkValue(200605, 1, 1200.00);
@@ -33,7 +33,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .check();
     transactions.checkGraph("Account n. 1 - may 2006")
       .checkRange(200605, 200605)
-      .checkCurrentDay(200605, 8)
+      .checkCurrentDay(200605, 8, "May 8")
       .checkValue(200605, 15, 500.00)
       .checkValue(200605, 6, 900.00)
       .checkValue(200605, 1, 1200.00);
@@ -86,7 +86,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .check();
     transactions.checkGraph("Main accounts - may 2006")
       .checkRange(200605, 200605)
-      .checkCurrentDay(200605, 11)
+      .checkCurrentDay(200605, 11, "May 11")
       .checkValue(200605, 15, 1500.00)
       .checkValue(200605, 9, 1800.00)
       .checkValue(200605, 6, 2000.00)

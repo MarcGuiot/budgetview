@@ -34,7 +34,9 @@ Mode opératoire pour la creation du DMG sous Mac.
 
 10. Drag&Drop de BudgetView dans /Applications
 
-11. Lancer BudgetView dans /Applications, et vérifier la version dans la fenêtre About.
+11. Lancer BudgetView dans /Applications, et vérifier :
+   * la version dans la fenêtre About.
+   * toutes les fenêtres s'affichent
 
 12. Uploader en FTP sur le site.
 

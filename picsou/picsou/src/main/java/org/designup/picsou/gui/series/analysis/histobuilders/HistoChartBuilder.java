@@ -123,6 +123,7 @@ public class HistoChartBuilder {
     accountDailyColors = new HistoDailyColors(
       accountColors,
       "histo.account.daily.current",
+      "histo.account.daily.current.annotation",
       "histo.account.inner.label.positive",
       "histo.account.inner.label.negative",
       "histo.account.inner.rollover.day",

@@ -1,9 +1,6 @@
 package org.designup.picsou.gui.components.charts.histo.daily;
 
-import org.designup.picsou.gui.components.charts.histo.HistoChartMetrics;
-import org.designup.picsou.gui.components.charts.histo.HistoDataset;
-import org.designup.picsou.gui.components.charts.histo.HistoPainter;
-import org.designup.picsou.gui.components.charts.histo.HistoRollover;
+import org.designup.picsou.gui.components.charts.histo.*;
 import org.designup.picsou.gui.components.charts.histo.utils.HorizontalBlocksClickMap;
 import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.model.Key;
@@ -29,7 +26,7 @@ public class HistoDailyPainter implements HistoPainter {
     return clickMap.getKey(x, y);
   }
 
-  public void paint(Graphics2D g2, HistoChartMetrics chartMetrics, HistoRollover rollover) {
+  public void paint(Graphics2D g2, HistoChartMetrics chartMetrics, HistoChartConfig config, HistoRollover rollover) {
 
     HistoDailyMetrics metrics = new HistoDailyMetrics(chartMetrics);
 
@@ -93,6 +90,10 @@ public class HistoDailyPainter implements HistoPainter {
         if (dataset.isCurrent(monthIndex, dayIndex)) {
           g2.setColor(colors.getCurrentDayColor());
           g2.drawLine(x, metrics.currentDayLineTop(), x, metrics.currentDayLineBottom());
+
+          if (config.drawInnerAnnotations) {
+            drawCurrentDayAnnotation(g2, metrics, x);
+          }
         }
 
         if (Math.signum(previousValue) == Math.signum(value)) {
@@ -116,6 +117,16 @@ public class HistoDailyPainter implements HistoPainter {
     blockPainter.complete();
 
     clickMap.complete(maxX);
+  }
+
+  private void drawCurrentDayAnnotation(Graphics2D g2, HistoDailyMetrics metrics, int x) {
+    int labelX = x + metrics.currentDayXOffset();
+    int labelY = metrics.currentDayY();
+    String label = dataset.getCurrentDayLabel();
+    g2.setColor(Color.WHITE);
+    g2.drawString(label, labelX + 1, labelY + 1);
+    g2.setColor(colors.getCurrentDayAnnotationColor());
+    g2.drawString(label, labelX, labelY);
   }
 
   private void drawMinLabel(Graphics2D g2, HistoDailyDataset dataset, int dayIndex, HistoDailyMetrics metrics) {

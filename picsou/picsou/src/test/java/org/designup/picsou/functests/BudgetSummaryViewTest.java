@@ -74,7 +74,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.getSummary().getChart()
       .checkRange(200807, 200808)
-      .checkCurrentDay(200807, 5)
+      .checkCurrentDay(200807, 5, "Jul 5")
       .checkValue(200807, 1, 1550.00)
       .checkValue(200807, 5, 1500.00)
       .checkValue(200807, 6, 2500.00)

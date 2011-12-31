@@ -24,7 +24,7 @@ public class TransactionAccountPositionsChartView extends AccountsChartView {
   public TransactionAccountPositionsChartView(String componentName, HistoChartRange range,
                                               final GlobRepository repository, final Directory directory) {
     super(range,
-          new HistoChartConfig(false, false, false, true, true, true, true, true),
+          new HistoChartConfig(false, false, false, true, true, true, true, true, true),
           componentName, repository, directory);
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {

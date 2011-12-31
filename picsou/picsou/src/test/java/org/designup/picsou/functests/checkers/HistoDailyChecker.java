@@ -87,6 +87,12 @@ public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
     return this;
   }
 
+  public HistoDailyChecker checkCurrentDay(int monthId, int dayId, String label) {
+    checkCurrentDay(monthId, dayId);
+    Assert.assertEquals(label, getDataset().getCurrentDayLabel());
+    return this;
+  }
+
   protected HistoDailyDataset getDataset() {
     return getDataset(HistoDailyDataset.class);
   }

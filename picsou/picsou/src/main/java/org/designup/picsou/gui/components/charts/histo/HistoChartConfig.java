@@ -9,6 +9,7 @@ public class HistoChartConfig {
   public final boolean drawColumnDividers;
   public final boolean columnClickEnabled;
   public final boolean objectClickEnabled;
+  public final boolean drawInnerAnnotations;
 
   public HistoChartConfig(boolean drawLabels,
                           boolean drawSections,
@@ -17,7 +18,8 @@ public class HistoChartConfig {
                           boolean keepScaleZone,
                           boolean drawColumnDividers,
                           boolean columnClickEnabled,
-                          boolean objectClickEnabled) {
+                          boolean objectClickEnabled,
+                          boolean drawInnerAnnotations) {
     this.drawLabels = drawLabels;
     this.drawSections = drawSections;
     this.drawInnerLabels = drawInnerLabels;
@@ -26,5 +28,6 @@ public class HistoChartConfig {
     this.drawColumnDividers = drawColumnDividers;
     this.columnClickEnabled = columnClickEnabled;
     this.objectClickEnabled = objectClickEnabled;
+    this.drawInnerAnnotations = drawInnerAnnotations;
   }
 }

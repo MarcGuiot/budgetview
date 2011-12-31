@@ -78,4 +78,12 @@ public class HistoDailyMetrics {
   public int currentDayLineBottom() {
     return metrics.usableColumnBottom();
   }
+
+  public int currentDayXOffset() {
+    return 4;
+  }
+  
+  public int currentDayY() {
+    return currentDayLineTop() + 12;
+  }
 }

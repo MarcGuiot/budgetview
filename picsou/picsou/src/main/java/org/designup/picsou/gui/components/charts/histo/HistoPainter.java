@@ -6,12 +6,12 @@ import java.awt.*;
 
 public interface HistoPainter {
 
-  void paint(Graphics2D g, HistoChartMetrics metrics, HistoRollover rollover);
+  void paint(Graphics2D g, HistoChartMetrics metrics, HistoChartConfig config, HistoRollover rollover);
 
   HistoDataset getDataset();
 
   public static final HistoPainter NULL = new HistoPainter() {
-    public void paint(Graphics2D g, HistoChartMetrics metrics, HistoRollover rollover) {
+    public void paint(Graphics2D g, HistoChartMetrics metrics, HistoChartConfig config, HistoRollover rollover) {
     }
 
     public HistoDataset getDataset() {

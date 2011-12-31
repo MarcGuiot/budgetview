@@ -139,7 +139,7 @@ public class HistoChartMetricsTest extends ChartTestCase {
                                           boolean snapToScale) {
     return new HistoChartMetrics(panelWidth, panelHeight, getFontMetrics(), columnCount,
                                  maxNegativeValue, maxPositiveValue,
-                                 new HistoChartConfig(drawLabels, drawSections, drawInnerLabels, true, true, true, true, true),
+                                 new HistoChartConfig(drawLabels, drawSections, drawInnerLabels, true, true, true, true, true, false),
                                  true, snapToScale);
 
   }

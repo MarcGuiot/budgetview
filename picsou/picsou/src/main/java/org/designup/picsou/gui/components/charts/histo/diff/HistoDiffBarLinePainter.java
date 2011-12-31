@@ -1,9 +1,6 @@
 package org.designup.picsou.gui.components.charts.histo.diff;
 
-import org.designup.picsou.gui.components.charts.histo.HistoChartMetrics;
-import org.designup.picsou.gui.components.charts.histo.HistoDataset;
-import org.designup.picsou.gui.components.charts.histo.HistoPainter;
-import org.designup.picsou.gui.components.charts.histo.HistoRollover;
+import org.designup.picsou.gui.components.charts.histo.*;
 import org.globsframework.model.Key;
 
 import java.awt.*;
@@ -32,7 +29,7 @@ public class HistoDiffBarLinePainter implements HistoPainter {
     return null;
   }
 
-  public void paint(Graphics2D g2, HistoChartMetrics metrics, HistoRollover rollover) {
+  public void paint(Graphics2D g2, HistoChartMetrics metrics, HistoChartConfig config, HistoRollover rollover) {
 
     if (dataset.size() == 0) {
       return;

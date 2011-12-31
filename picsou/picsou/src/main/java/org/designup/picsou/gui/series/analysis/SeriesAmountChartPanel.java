@@ -21,7 +21,7 @@ public class SeriesAmountChartPanel {
   public SeriesAmountChartPanel(GlobRepository repository, Directory directory) {
 
     final HistoChartBuilder histoChartBuilder =
-      new HistoChartBuilder(new HistoChartConfig(true, true, false, true, true, true, true, false),
+      new HistoChartBuilder(new HistoChartConfig(true, true, false, true, true, true, true, false, false),
                             new ScrollableHistoChartRange(4, 12, true, repository),
                             repository, directory, directory.get(SelectionService.class));
     histoChartBuilder.addListener(new HistoChartListenerAdapter() {

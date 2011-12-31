@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.components.charts.histo;
 
-import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyDataset;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
@@ -8,7 +7,6 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Date;
 
 public class HistoChart extends JPanel {
 
@@ -114,12 +112,12 @@ public class HistoChart extends JPanel {
 
     paintBg(g2);
     paintLabels(g2, dataset);
-    paintScale(g2, panelWidth, dataset);
+    paintScale(g2, panelWidth);
     paintSelectionBorder(g2, dataset);
     paintBorder(g2);
 
     g2.setFont(getFont());
-    painter.paint(g2, metrics, selectionManager.getRollover());
+    painter.paint(g2, metrics, config, selectionManager.getRollover());
 
     paintSections(g2, dataset);
   }
@@ -206,7 +204,7 @@ public class HistoChart extends JPanel {
     }
   }
 
-  private void paintScale(Graphics2D g2, int panelWidth, HistoDataset dataset) {
+  private void paintScale(Graphics2D g2, int panelWidth) {
     if (!config.drawScale) {
       return;
     }

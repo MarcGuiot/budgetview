@@ -1,9 +1,6 @@
 package org.designup.picsou.gui.components.charts.histo.button;
 
-import org.designup.picsou.gui.components.charts.histo.HistoChartMetrics;
-import org.designup.picsou.gui.components.charts.histo.HistoDataset;
-import org.designup.picsou.gui.components.charts.histo.HistoPainter;
-import org.designup.picsou.gui.components.charts.histo.HistoRollover;
+import org.designup.picsou.gui.components.charts.histo.*;
 import org.designup.picsou.gui.components.charts.histo.utils.BasicClickMap;
 import org.globsframework.model.Key;
 
@@ -24,7 +21,7 @@ public class HistoButtonPainter implements HistoPainter {
     this.colors = colors;
   }
 
-  public void paint(Graphics2D g2, HistoChartMetrics chartMetrics, HistoRollover rollover) {
+  public void paint(Graphics2D g2, HistoChartMetrics chartMetrics, HistoChartConfig config, HistoRollover rollover) {
 
     clickMap.reset();
 

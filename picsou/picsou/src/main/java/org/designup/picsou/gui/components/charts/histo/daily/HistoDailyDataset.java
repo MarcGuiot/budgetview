@@ -10,11 +10,13 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
 
   private Integer currentMonthId;
   private Integer currentDayId;
+  private String currentDayLabel;
 
-  public HistoDailyDataset(String tooltipKey, Integer currentMonthId, Integer currentDayId) {
+  public HistoDailyDataset(String tooltipKey, Integer currentMonthId, Integer currentDayId, String currentDayLabel) {
     super(tooltipKey);
     this.currentMonthId = currentMonthId;
     this.currentDayId = currentDayId;
+    this.currentDayLabel = currentDayLabel;
   }
 
   public void add(int monthId, Double[] values, String label, String section, boolean current, boolean selected, boolean[] daySelections) {
@@ -65,6 +67,10 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
     int monthId = getElement(monthIndex).id;
     int dayId = dayIndex + 1;
     return monthId == currentMonthId && dayId == currentDayId;
+  }
+
+  public String getCurrentDayLabel() {
+    return currentDayLabel;
   }
 
   public boolean isFuture(int monthIndex, int dayIndex) {

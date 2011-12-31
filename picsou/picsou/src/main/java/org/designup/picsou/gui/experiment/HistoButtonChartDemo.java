@@ -57,7 +57,7 @@ public class HistoButtonChartDemo {
       directory
     );
 
-    HistoChart chart = new HistoChart(new HistoChartConfig(true, true, false, false, true, true, true, false), directory);
+    HistoChart chart = new HistoChart(new HistoChartConfig(true, true, false, false, true, true, true, false, false), directory);
 
     chart.addListener(new HistoChartListenerAdapter() {
       public void processClick(HistoSelection selection, Key objectKey) {
