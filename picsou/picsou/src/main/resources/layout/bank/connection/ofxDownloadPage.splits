@@ -18,6 +18,9 @@
             <textField ref="password" gridPos="(1,1)"/>
           </grid>
           <button action="validate" fill="none" anchor="center"/>
+          <button ref="securityInfo" styleClass="iconOnly"
+                  marginLeft="5" marginTop="5" fill="none" anchor="center"
+                  icon="security_lock.png" rolloverIcon="security_lock_rollover.png"/>
           <filler fill="horizontal"/>
         </row>
 

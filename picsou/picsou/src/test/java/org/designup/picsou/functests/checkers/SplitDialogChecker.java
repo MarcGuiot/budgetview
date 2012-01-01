@@ -2,8 +2,6 @@ package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.transactions.split.SplitTransactionDialog;
-import org.designup.picsou.gui.utils.AmountColors;
-import org.designup.picsou.model.util.Amounts;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Window;
@@ -57,7 +55,7 @@ public class SplitDialogChecker extends GuiChecker {
   private void checkError(String expectedMessage, String buttonName) {
     window.getButton(buttonName).click();
     assertTrue(window.isVisible());
-    checkErrorTipVisible(window, window.getInputTextBox("amount"), expectedMessage);
+    checkTipVisible(window, window.getInputTextBox("amount"), expectedMessage);
   }
 
   public SplitDialogChecker checkNoError() {

@@ -72,6 +72,8 @@ public class BankDownloadPanel implements GlobSelectionListener {
       }
     });
 
+    builder.add("securityInfo", OfxSecurityInfoButton.create(directory));
+
     openHelpAction = new OpenHelpAction();
     builder.add("openHelp", openHelpAction);
 

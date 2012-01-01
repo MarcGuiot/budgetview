@@ -127,7 +127,10 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     }
     );
     ImportDialogChecker dialogChecker = operations.openImportDialog();
-    OfxSynchoChecker synchro = dialogChecker.openOfxSynchro("la banque postale");
+    OfxSynchoChecker synchro = dialogChecker
+      .selectBankForDownload("la banque postale")
+      .checkSecurityInfo("Secure connection")
+      .openOfxSynchro();
     synchro.checkPasswordEmpty();
     synchro.enter("a", "b");
 

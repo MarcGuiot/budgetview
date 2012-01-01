@@ -17,6 +17,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -220,6 +221,18 @@ public class PicsouDialog extends JDialog {
     this.directory = directory;
     setTitle(Lang.get("application"));
     colorService = directory.get(ColorService.class);
+
+    if (GuiUtils.isMacOSX()) {
+      addWindowFocusListener(new WindowFocusListener() {
+        public void windowLostFocus(WindowEvent e) {
+          ToolTipManager.sharedInstance().setEnabled(false);
+        }
+
+        public void windowGainedFocus(WindowEvent e) {
+          ToolTipManager.sharedInstance().setEnabled(true);
+        }
+      });
+    }
   }
 
   private void notifyOnClose() {

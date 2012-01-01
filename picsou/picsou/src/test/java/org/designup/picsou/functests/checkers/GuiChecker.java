@@ -36,7 +36,7 @@ public abstract class GuiChecker {
     String prefix = (forcePlus && value > 0) ? "+" : "";
     return prefix + format.format(value);
   }
-  
+
   protected String toString(int monthId, int dayId) {
     return monthId + Formatting.TWO_DIGIT_INTEGER_FORMAT.format(dayId);
   }
@@ -59,9 +59,9 @@ public abstract class GuiChecker {
     BalloonTipTesting.checkNoBalloonTipVisible(enclosingPanel);
   }
 
-  protected void checkErrorTipVisible(Panel enclosingPanel,
-                                      UIComponent targetUIComponent,
-                                      String text) {
+  protected void checkTipVisible(Panel enclosingPanel,
+                                 UIComponent targetUIComponent,
+                                 String text) {
     BalloonTipTesting.checkBalloonTipVisible(enclosingPanel, targetUIComponent, text);
   }
 

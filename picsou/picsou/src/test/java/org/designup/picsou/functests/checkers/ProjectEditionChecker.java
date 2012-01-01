@@ -146,12 +146,12 @@ public class ProjectEditionChecker extends GuiChecker {
   }
 
   public ProjectEditionChecker checkProjectNameMessage(String expectedMessage) {
-    checkErrorTipVisible(dialog, dialog.getTextBox("projectName"), expectedMessage);
+    checkTipVisible(dialog, dialog.getTextBox("projectName"), expectedMessage);
     return this;
   }
 
   public ProjectEditionChecker checkProjectItemMessage(int index, String expectedMessage) {
-    checkErrorTipVisible(dialog, getItemComponent(index, TextBox.class, "itemLabel"), expectedMessage);
+    checkTipVisible(dialog, getItemComponent(index, TextBox.class, "itemLabel"), expectedMessage);
     return this;
   }
 

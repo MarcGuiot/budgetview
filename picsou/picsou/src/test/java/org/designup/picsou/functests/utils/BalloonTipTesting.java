@@ -15,6 +15,7 @@ import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.utils.Utils;
 
 import java.awt.*;
+import java.util.Arrays;
 
 import static org.uispec4j.finder.ComponentMatchers.*;
 
@@ -49,7 +50,6 @@ public class BalloonTipTesting {
     org.uispec4j.Window window = getEnclosingWindow(enclosingSwingPanel);
     ComponentFinder finder = new ComponentFinder(window.getAwtContainer(), window);
     Component[] tips = finder.getComponents(ComponentMatchers.fromClass(BalloonTip.class));
-
     for (Component component : tips) {
       BalloonTip tip = (BalloonTip)component;
       if (tip.getAttachedComponent() == targetSwingComponent) {

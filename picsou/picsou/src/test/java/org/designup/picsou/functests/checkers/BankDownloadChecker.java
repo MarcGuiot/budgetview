@@ -10,39 +10,47 @@ import org.uispec4j.interception.WindowInterceptor;
 import javax.swing.*;
 
 public class BankDownloadChecker extends GuiChecker {
+  private Window dialog;
   private Panel panel;
 
-  BankDownloadChecker(Panel panel) {
-    this.panel = panel;
+  BankDownloadChecker(Window dialog) {
+    this.dialog = dialog;
+  }
+
+  public Panel getPanel() {
+    if (panel == null) {
+      panel = dialog.getPanel("bankDownload");
+    }
+    return panel;
   }
 
   public BankDownloadChecker selectBank(String bankName) {
-    panel.getListBox("bankList").select(bankName);
+    getPanel().getListBox("bankList").select(bankName);
     return this;
   }
 
   public BankDownloadChecker checkBankList(String... banks) {
-    assertThat(panel.getListBox("bankList").contentEquals(banks));
+    assertThat(getPanel().getListBox("bankList").contentEquals(banks));
     return this;
   }
 
   public BankDownloadChecker checkContainsBanks(String... banks) {
-    assertThat(panel.getListBox("bankList").contains(banks));
+    assertThat(getPanel().getListBox("bankList").contains(banks));
     return this;
   }
 
   public BankDownloadChecker checkNoBankSelected() {
-    assertThat(panel.getListBox("bankList").selectionIsEmpty());
+    assertThat(getPanel().getListBox("bankList").selectionIsEmpty());
     return this;
   }
 
   public BankDownloadChecker checkSelectedBank(String bank) {
-    assertThat(panel.getListBox("bankList").selectionEquals(bank));
+    assertThat(getPanel().getListBox("bankList").selectionEquals(bank));
     return this;
   }
 
   public BankDownloadChecker setFilter(String filter) {
-    panel.getTextBox("bankEditor").setText(filter, false);
+    getPanel().getTextBox("bankEditor").setText(filter, false);
     return this;
   }
 
@@ -52,24 +60,32 @@ public class BankDownloadChecker extends GuiChecker {
   }
 
   public BankDownloadChecker checkHelpAvailable(String buttonLabel) {
-    Button button = panel.getButton("openHelp");
+    Button button = getPanel().getButton("openHelp");
     UISpecAssert.assertThat(button.isEnabled());
     UISpecAssert.assertThat(button.textEquals(buttonLabel));
     return this;
   }
 
   public HelpChecker openHelp() {
-    return HelpChecker.open(panel.getButton("openHelp").triggerClick());
+    return HelpChecker.open(getPanel().getButton("openHelp").triggerClick());
   }
 
   public OtherBankSynchroChecker openSynchro(ImportDialogChecker checker) {
-    Window window = WindowInterceptor.getModalDialog(panel.getButton("synchronize").triggerClick());
+    Window window = WindowInterceptor.getModalDialog(getPanel().getButton("synchronize").triggerClick());
     return new OtherBankSynchroChecker(checker, window);
   }
 
   public OfxSynchoChecker openOfxSynchro(ImportDialogChecker checker) {
-    Window window = WindowInterceptor.getModalDialog(panel.getButton("synchronize").triggerClick());
+    Window window = WindowInterceptor.getModalDialog(getPanel().getButton("synchronize").triggerClick());
     return new OfxSynchoChecker(checker, window);
   }
 
+  public BankDownloadChecker checkSecurityMessage(String content) {
+    Button button = getPanel().getButton("securityInfo");
+    UISpecAssert.assertThat(button.tooltipContains(content));
+// Does not work in test environment
+//    button.click();
+//    checkTipVisible(dialog, button, content);
+    return this;
+  }
 }

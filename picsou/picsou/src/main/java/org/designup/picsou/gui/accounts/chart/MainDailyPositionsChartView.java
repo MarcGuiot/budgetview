@@ -13,6 +13,7 @@ import org.designup.picsou.model.Day;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -92,7 +93,9 @@ public class MainDailyPositionsChartView extends AccountsChartView {
     Integer day = objectKey.get(Day.DAY);
     GlobList transactions = getTransactions(monthId, day, repository);
     if (transactions.isEmpty()) {
-      DetailsTip tip = new DetailsTip(chart, "Il n'y aucune opération le " + Day.getFullLabel(objectKey), directory);
+      DetailsTip tip =
+        new DetailsTip(chart, Lang.get("seriesAnalysis.chart.histo.daily.budgetSummary.noData.tooltip",
+                                       Day.getFullLabel(objectKey)), directory);
       tip.show();
       return;
     }

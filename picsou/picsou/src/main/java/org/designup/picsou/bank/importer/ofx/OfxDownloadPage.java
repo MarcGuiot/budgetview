@@ -2,6 +2,7 @@ package org.designup.picsou.bank.importer.ofx;
 
 import org.designup.picsou.bank.importer.BankPage;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.importer.components.OfxSecurityInfoButton;
 import org.designup.picsou.importer.ofx.OfxConnection;
 import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.utils.Lang;
@@ -56,6 +57,8 @@ public class OfxDownloadPage extends BankPage {
     builder.add("fid", fidField);
 
     builder.add("validate", new ValidateAction());
+
+    builder.add("securityInfo", OfxSecurityInfoButton.create(directory));
 
     JPanel detailsPanel = new JPanel();
     detailsPanel.setVisible(false);

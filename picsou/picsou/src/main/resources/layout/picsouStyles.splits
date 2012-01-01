@@ -79,7 +79,7 @@
     <style selector="scrollPane" opaque="true" viewportBackground="block.inner.bg"/>
 
     <style selector="button.iconOnly" weightX="0"
-           text="" opaque="false" borderPainted="false"/>
+           text="" opaque="false" borderPainted="false" cursor="hand"/>
 
     <style selector="button.editIcon" weightX="0" cursor="hand"
            icon="magnifier_small.png" rolloverIcon="magnifier_rollover.png" pressedIcon="magnifier_rollover.png"

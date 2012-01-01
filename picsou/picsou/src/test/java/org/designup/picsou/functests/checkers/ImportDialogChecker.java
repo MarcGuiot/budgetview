@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.checkers;
 
-import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.importer.ImportCompletionPanel;
@@ -17,10 +16,11 @@ import java.io.File;
 import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class ImportDialogChecker extends GuiChecker {
-  private Panel dialog;
+  private Window dialog;
   private TextBox fileField;
   private Button importButton;
   private AccountEditionChecker accountEditionChecker;
+  private BankDownloadChecker bankDownload;
 
   public static ImportDialogChecker open(Trigger trigger) {
     Window window = WindowInterceptor.getModalDialog(trigger);
@@ -32,7 +32,7 @@ public class ImportDialogChecker extends GuiChecker {
     return new ImportDialogChecker(window, false);
   }
 
-  public ImportDialogChecker(Panel dialog, final boolean step1) {
+  public ImportDialogChecker(Window dialog, final boolean step1) {
     this.dialog = dialog;
     if (step1) {
       fileField = dialog.getInputTextBox("fileField");
@@ -44,7 +44,7 @@ public class ImportDialogChecker extends GuiChecker {
   private ImportDialogChecker() {
   }
 
-  static public ImportDialogChecker create(Panel dialog) {
+  static public ImportDialogChecker create(Window dialog) {
     ImportDialogChecker importDialog = new ImportDialogChecker();
     importDialog.dialog = dialog;
     return importDialog;
@@ -85,7 +85,10 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public BankDownloadChecker getBankDownload() {
-    return new BankDownloadChecker(dialog.getPanel("bankDownload"));
+    if (bankDownload == null) {
+      bankDownload = new BankDownloadChecker(dialog);
+    }
+    return bankDownload;
   }
 
   public ImportDialogChecker checkDates(String... dates) {
@@ -470,9 +473,18 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public OfxSynchoChecker openOfxSynchro(String bankName) {
-    return getBankDownload().selectBank(bankName)
-      .openOfxSynchro(this);
+  public ImportDialogChecker checkSecurityInfo(String content) {
+    getBankDownload().checkSecurityMessage(content);
+    return this;
+  }
+
+  public ImportDialogChecker selectBankForDownload(String bankName) {
+    getBankDownload().selectBank(bankName);
+    return this;
+  }
+
+  public OfxSynchoChecker openOfxSynchro() {
+    return getBankDownload().openOfxSynchro(this);
   }
 
   public ImportDialogChecker checkAstericsErrorOnName() {

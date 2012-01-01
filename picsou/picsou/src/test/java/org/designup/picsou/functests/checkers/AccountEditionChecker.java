@@ -111,7 +111,7 @@ public class AccountEditionChecker extends GuiChecker {
     dialog.getButton("OK").click();
     UISpecAssert.assertTrue(dialog.isVisible());
 
-    checkErrorTipVisible(dialog, getNameEditor(), message);
+    checkTipVisible(dialog, getNameEditor(), message);
     return this;
   }
 
@@ -283,7 +283,7 @@ public class AccountEditionChecker extends GuiChecker {
     dialog.getButton("OK").click();
     UISpecAssert.assertTrue(dialog.isVisible());
 
-    checkErrorTipVisible(dialog, getBankButton(), message);
+    checkTipVisible(dialog, getBankButton(), message);
     return this;
   }
 

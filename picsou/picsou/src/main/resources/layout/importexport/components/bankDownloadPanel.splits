@@ -37,7 +37,15 @@
             <column ref="synchroPanel" opaque="false">
               <htmlEditorPane name="synchroMessage" text="$bankDownload.synchro.message" styleClass="multiLineLabel"
                               hyperlinkListener="hyperlinkHandler"/>
-              <button action="synchronize" styleClass="synchronize"/>
+              <row>
+                <filler fill="horizontal"/>
+                <button action="synchronize" styleClass="synchronize"/>
+                <button ref="securityInfo" styleClass="iconOnly"
+                        tooltipText="$synchro.security.info.tooltip"
+                        fill="none" anchor="center" marginLeft="5" marginTop="5"
+                        icon="security_lock.png" rolloverIcon="security_lock_rollover.png"/>
+                <filler fill="horizontal"/>
+              </row>
             </column>
             <htmlEditorPane text="$bankDownload.message" styleClass="multiLineLabel"/>
             <htmlEditorPane text="$bankDownload.helpIntro" styleClass="multiLineLabel"/>
