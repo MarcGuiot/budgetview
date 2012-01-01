@@ -81,6 +81,12 @@ public class LoginTest extends StartUpFunctionalTestCase {
     }
   }
 
+  private void requestExit() {
+    if (window != null) {
+      new OperationChecker(window).requestExit();
+    }
+  }
+
   public void testCreatingAUserAndLoggingInAgain() throws Exception {
     String filePath = OfxBuilder
       .init(this)
@@ -252,6 +258,15 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .validate();
 
     login.checkLoggedIn();
+  }
+
+  public void testDoubleExitProtection() throws Exception {
+    login.logNewUser("toto", "p4ssw0rd");
+
+    requestExit();
+    requestExit();
+
+    UISpecAssert.assertFalse(window.isVisible());
   }
 
   public void testTransactionAndCategorisationWorkAfterReload() throws Exception {

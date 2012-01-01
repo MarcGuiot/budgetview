@@ -419,8 +419,12 @@ public class OperationChecker {
   }
 
   public void exit() {
-    getFileMenu().getSubMenu(Lang.get("exit")).click();
+    requestExit();
     assertFalse(window.isVisible());
+  }
+
+  public void requestExit() {
+    getFileMenu().getSubMenu(Lang.get("exit")).click();
   }
 
   public void checkExitWithoutDialog() {

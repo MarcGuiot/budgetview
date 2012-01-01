@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.actions;
 
+import org.designup.picsou.gui.WindowManager;
 import org.designup.picsou.gui.feedback.UserEvaluationDialog;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.gui.WindowManager;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -15,6 +15,7 @@ public class ExitAction extends AbstractAction {
   private GlobRepository repository;
   private Directory directory;
   private boolean showUserEvaluation = true;
+  private boolean exitRequested = false;
 
   public ExitAction(WindowManager windowManager, GlobRepository repository, Directory directory) {
     super(Lang.get("exit"));
@@ -30,8 +31,12 @@ public class ExitAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent e) {
+    if (exitRequested) {
+      return;
+    }
+    exitRequested = true;
 
-    if (showUserEvaluation){
+    if (showUserEvaluation) {
       UserEvaluationDialog.showIfNeeded(repository, directory);
     }
 
