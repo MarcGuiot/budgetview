@@ -94,10 +94,12 @@ public class AskForCodeServlet extends HttpServlet {
         }
         replyBadAdress(resp);
       }
+      resp.setStatus(HttpServletResponse.SC_OK);
     }
     catch (Exception e) {
       logger.error("AskForCodeServlet:doPost", e);
       replyFailed(resp);
+      resp.setStatus(HttpServletResponse.SC_OK);
     }
   }
 

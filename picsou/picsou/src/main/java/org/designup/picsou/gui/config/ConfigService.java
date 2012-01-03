@@ -56,10 +56,12 @@ public class ConfigService {
   public static final String HEADER_NEW_JAR_VERSION = "newJarVersion";
   public static final String HEADER_REPO_ID = "repoId";
   public static final String HEADER_LANG = "lang";
+  public static final String HEADER_USE_INFO = "use";
   public static final String REQUEST_FOR_REGISTER = "/register";
   public static final String REQUEST_FOR_CONFIG = "/requestForConfig";
   public static final String REQUEST_FOR_MAIL = "/mailTo";
   public static final String REQUEST_SEND_MAIL = "/sendMailToUs";
+  public static final String SEND_USE_INFO = "/sendUseInfo";
   public static final String HEADER_BAD_ADRESS = "badAdress";
 
   private String URL = PicsouApplication.REGISTER_URL;
@@ -354,6 +356,19 @@ public class ConfigService {
     }
     finally {
       repository.completeChangeSet();
+    }
+  }
+
+  public void sendUse(String msg) {
+    String url = URL + SEND_USE_INFO;
+    try {
+      PostMethod postMethod = new PostMethod(url);
+      postMethod.getParams().setContentCharset("UTF-8");
+      postMethod.setRequestHeader(HEADER_USE_INFO, msg);
+      HttpClient httpClient = getNewHttpClient();
+      httpClient.executeMethod(postMethod);
+    }
+    catch (Exception e) {
     }
   }
 

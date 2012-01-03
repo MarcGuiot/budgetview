@@ -127,5 +127,6 @@ public class RegisterServlet extends HttpServlet {
         resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "false");
       }
     }
+    resp.setStatus(HttpServletResponse.SC_OK);
   }
 }
