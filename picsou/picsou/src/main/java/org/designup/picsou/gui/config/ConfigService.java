@@ -2,7 +2,6 @@ package org.designup.picsou.gui.config;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpConnectionManager;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.designup.picsou.bank.BankPluginService;
@@ -56,10 +55,12 @@ public class ConfigService {
   public static final String HEADER_NEW_JAR_VERSION = "newJarVersion";
   public static final String HEADER_REPO_ID = "repoId";
   public static final String HEADER_LANG = "lang";
+  public static final String HEADER_USE_INFO = "use";
   public static final String REQUEST_FOR_REGISTER = "/register";
   public static final String REQUEST_FOR_CONFIG = "/requestForConfig";
   public static final String REQUEST_FOR_MAIL = "/mailTo";
   public static final String REQUEST_SEND_MAIL = "/sendMailToUs";
+  public static final String SEND_USE_INFO = "/sendUseInfo";
   public static final String HEADER_BAD_ADRESS = "badAdress";
 
   private String URL = PicsouApplication.REGISTER_URL;
@@ -148,7 +149,7 @@ public class ConfigService {
       updateConnectionStatus(e);
       return Lang.get("license.mail.send.error");
     }
-    catch (Exception e){
+    catch (Exception e) {
       updateConnectionStatus(e);
       return Lang.get("license.mail.send.error");
     }
@@ -357,6 +358,16 @@ public class ConfigService {
     }
   }
 
+  public void sendUsageData(String msg) throws IOException {
+    String url = URL + SEND_USE_INFO;
+
+    PostMethod postMethod = new PostMethod(url);
+    postMethod.getParams().setContentCharset("UTF-8");
+    postMethod.setRequestHeader(HEADER_USE_INFO, msg);
+    HttpClient httpClient = getNewHttpClient();
+    httpClient.executeMethod(postMethod);
+  }
+
   public interface Listener {
     void sent(String mail, String title, String content);
 
@@ -371,7 +382,7 @@ public class ConfigService {
   }
 
   private void updateConnectionStatus(Exception e) {
-    if (e instanceof IOException){
+    if (e instanceof IOException) {
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
           repository.update(User.KEY, User.CONNECTED, false);
@@ -683,7 +694,7 @@ public class ConfigService {
         return;
       }
       finally {
-          postMethod.releaseConnection();
+        postMethod.releaseConnection();
       }
       final int statusCode = postMethod.getStatusCode();
       if (statusCode == 200) {
