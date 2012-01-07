@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.description;
 
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -20,7 +21,13 @@ public class TransactionSeriesStringifier extends AbstractGlobStringifier {
     if (Series.UNCATEGORIZED_SERIES_ID.equals(seriesId)) {
       return "";
     }
+    
     Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-    return seriesStringifier.toString(series, repository);
+    String seriesName = seriesStringifier.toString(series, repository);
+    Glob subSeries = repository.findLinkTarget(transaction, Transaction.SUB_SERIES);
+    if (subSeries != null) {
+      return seriesName + " / " + subSeries.get(SubSeries.NAME);
+    }
+    return seriesName;
   }
 }

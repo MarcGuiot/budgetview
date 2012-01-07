@@ -2,6 +2,7 @@ package org.designup.picsou.gui.transactions.search;
 
 import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
+import org.designup.picsou.gui.description.TransactionSeriesStringifier;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -13,8 +14,7 @@ import org.globsframework.utils.directory.Directory;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import static org.globsframework.model.utils.GlobMatchers.fieldContainsIgnoreCase;
-import static org.globsframework.model.utils.GlobMatchers.or;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class TransactionFilterPanel extends TextFilterPanel {
   private static DescriptionService descriptionService;
@@ -29,7 +29,7 @@ public class TransactionFilterPanel extends TextFilterPanel {
     return or(fieldContainsIgnoreCase(Transaction.LABEL, searchFilter),
               fieldContainsIgnoreCase(Transaction.NOTE, searchFilter),
               new AmountMatcher(searchFilter, descriptionService),
-              new SeriesMatcher(searchFilter, descriptionService));
+              new SeriesMatcher(searchFilter));
   }
 
   private class AmountMatcher implements GlobMatcher {
@@ -48,23 +48,43 @@ public class TransactionFilterPanel extends TextFilterPanel {
   }
 
   private class SeriesMatcher implements GlobMatcher {
-    private Map<Integer, String> cachedNames;
+    private Map<Integer, String> seriesNamesCache;
+    private Map<Integer, String> subSeriesNamesCache;
     private final GlobStringifier seriesNameStringifier;
     private final String searchFilter;
 
-    public SeriesMatcher(String searchFilter, DescriptionService descriptionService) {
-      this.searchFilter = searchFilter;
-      cachedNames = new WeakHashMap<Integer, String>();
-      seriesNameStringifier = descriptionService.getStringifier(Transaction.SERIES);
+    public SeriesMatcher(String searchFilter) {
+      this.searchFilter = searchFilter.toLowerCase();
+      seriesNamesCache = new WeakHashMap<Integer, String>();
+      subSeriesNamesCache = new WeakHashMap<Integer, String>();
+      seriesNameStringifier = new TransactionSeriesStringifier();
     }
 
-    public boolean matches(Glob item, GlobRepository repository) {
-      String seriesName = cachedNames.get(item.get(Transaction.SERIES));
+    public boolean matches(Glob transaction, GlobRepository repository) {
+      Integer subSeriesId = transaction.get(Transaction.SUB_SERIES);
+      String text =
+        subSeriesId != null ?
+        getSubSeriesText(transaction, subSeriesId, repository) :
+        getSeriesText(transaction, repository);
+      return text != null && text.toLowerCase().contains(searchFilter);
+    }
+
+    private String getSeriesText(Glob transaction, GlobRepository repository) {
+      String seriesName = seriesNamesCache.get(transaction.get(Transaction.SERIES));
       if (seriesName == null) {
-        seriesName = seriesNameStringifier.toString(item, repository);
-        cachedNames.put(item.get(Transaction.SERIES), seriesName);
+        seriesName = seriesNameStringifier.toString(transaction, repository);
+        seriesNamesCache.put(transaction.get(Transaction.SERIES), seriesName);
       }
-      return seriesName != null && seriesName.toLowerCase().contains(searchFilter);
+      return seriesName;
+    }
+
+    private String getSubSeriesText(Glob transaction, Integer subSeriesId, GlobRepository repository) {
+      String seriesName = subSeriesNamesCache.get(subSeriesId);
+      if (seriesName == null) {
+        seriesName = seriesNameStringifier.toString(transaction, repository);
+        subSeriesNamesCache.put(subSeriesId, seriesName);
+      }
+      return seriesName;
     }
   }
 }

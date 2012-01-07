@@ -34,6 +34,7 @@ public class TransactionChecker extends ViewChecker {
   private Table table;
   private Table amountTable;
   private CheckBox showPlannedTransactionsCheckbox;
+  private TextBox searchField;
 
   public static TransactionChecker init(Window window) {
     return new TransactionChecker(window);
@@ -143,7 +144,11 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public TextBox getSearchField() {
-    return mainWindow.getInputTextBox("searchField");
+    if (searchField == null) {
+      views.selectData();
+      searchField = mainWindow.getInputTextBox("searchField");
+    }
+    return searchField;
   }
 
   public TransactionChecker checkClearFilterButtonShown() {

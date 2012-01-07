@@ -45,11 +45,21 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkSeriesNotSelected("SubSeries 1")
       .checkSeriesIsSelected("SubSeries 2");
 
+    transactions.initContent()
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "TX 2", "", -40.00, "Series / SubSeries 2")
+      .add("01/07/2008", TransactionType.PRELEVEMENT, "TX 1", "", -29.00, "Series / SubSeries 1")
+      .check();
+
     categorization
       .selectTransaction("Tx 1")
       .selectVariable()
       .selectSeries("Series")
       .checkSeriesIsSelected("Series");
+
+    transactions.initContent()
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "TX 2", "", -40.00, "Series / SubSeries 2")
+      .add("01/07/2008", TransactionType.PRELEVEMENT, "TX 1", "", -29.00, "Series")
+      .check();
   }
 
   public void testCreationChecks() throws Exception {
@@ -102,9 +112,9 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
       {"30/06/2008", "Health / Pharmacy", "PHARMAPLUS", -129.90},
     });
 
-    transactions.checkSeries(0, "Health");
+    transactions.checkSeries(0, "Health / Pharmacy");
     transactions.initContent()
-      .add("30/06/2008", TransactionType.PRELEVEMENT, "PHARMAPLUS", "", -129.90, "Health")
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "PHARMAPLUS", "", -129.90, "Health / Pharmacy")
       .check();
   }
 
@@ -140,7 +150,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkSeriesIsSelectedWithSubSeries("Groceries", "Misc");
 
     transactions.initContent()
-      .add("30/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -129.90, "Groceries")
+      .add("30/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -129.90, "Groceries / Misc")
       .check();
   }
 

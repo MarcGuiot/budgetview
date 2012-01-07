@@ -16,7 +16,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
-import java.util.*;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class TextFilterPanel {
@@ -94,11 +94,23 @@ public abstract class TextFilterPanel {
     }
   }
 
+  public void reapplyFilterIfActive() {
+    String text = textField.getText();
+    if (text.isEmpty()) {
+      return;
+    }
+    filterManager.set(SEARCH_FILTER, createMatcher(text));
+  }
+
   protected abstract GlobMatcher createMatcher(String searchFilter);
 
   protected void finalize() throws Throwable {
     super.finalize();
     colorService.removeListener(listener);
+  }
+
+  public boolean isActive() {
+    return Strings.isNotEmpty(textField.getText());
   }
 
   public void reset() {

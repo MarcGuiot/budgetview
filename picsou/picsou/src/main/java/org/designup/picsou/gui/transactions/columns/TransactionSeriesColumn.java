@@ -2,7 +2,6 @@ package org.designup.picsou.gui.transactions.columns;
 
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.HyperlinkTableColumn;
-import org.designup.picsou.gui.description.SeriesDescriptionStringifier;
 import org.designup.picsou.gui.description.TransactionSeriesStringifier;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.Series;
@@ -105,8 +104,22 @@ public class TransactionSeriesColumn extends HyperlinkTableColumn {
     rendererColors.setForeground(button, isSelected, transaction, true);
     button.setFont(normalFont);
     button.setUnderline(false);
-    button.setText(seriesStringifier.toString(transaction, repository));
-    button.setToolTipText(SeriesDescriptionStringifier.getTransactionText(transaction, repository));
+    String seriesText = getSeriesText(transaction);
+    button.setText(seriesText);
+    button.setToolTipText(getTooltipText(transaction, seriesText));
+  }
+
+  private String getSeriesText(Glob transaction) {
+    return seriesStringifier.toString(transaction, repository);
+  }
+
+  private String getTooltipText(Glob transaction, String seriesText) {
+    Glob series = repository.findLinkTarget(transaction, Transaction.SERIES);
+    if ((series != null) && !Series.UNCATEGORIZED_SERIES_ID.equals(series.get(Series.ID))) {
+      String description = series.get(Series.DESCRIPTION);
+      return "<html>" + seriesText + ":<br>" + description + "</html>";
+    }
+    return seriesText;
   }
 
   public GlobStringifier getStringifier() {

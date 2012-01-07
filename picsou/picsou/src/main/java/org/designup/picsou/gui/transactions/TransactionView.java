@@ -39,6 +39,7 @@ import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -61,7 +62,7 @@ public class TransactionView extends View implements Filterable {
   public static final int BALANCE_INDEX = 7;
   public static final int ACCOUNT_NAME_INDEX = 8;
 
-  private static final int[] COLUMN_SIZES = {10, 10, 15, 40, 9, 15, 10, 10, 30};
+  private static final int[] COLUMN_SIZES = {10, 10, 20, 40, 9, 15, 10, 10, 25};
   private static final GlobMatcher HIDE_PLANNED_MATCHER = not(isTrue(Transaction.PLANNED));
 
   private GlobTableView view;
@@ -100,6 +101,12 @@ public class TransactionView extends View implements Filterable {
 
     search = new TransactionFilterPanel(filterManager, repository, directory);
     builder.add("transactionSearch", search.getPanel());
+    
+    repository.addChangeListener(new TypeChangeSetListener(Series.TYPE, SubSeries.TYPE) {
+      protected void update(GlobRepository repository) {
+        search.reapplyFilterIfActive();
+      }
+    });
 
     builder.addLabel("sum", Transaction.TYPE,
                      GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, false, Transaction.AMOUNT))
