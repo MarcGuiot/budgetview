@@ -607,5 +607,52 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .check();
     mainAccounts.checkSummary(-101., "2011/09/02");
   }
-  
+
+
+  public void testDefferedWithBankDateInTheFuture() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2009/11/03", 1000, "salaire")
+      .addTransaction("2009/11/05", -15, "edf")
+      .addTransaction("2009/11/07", -20, "ecole")
+      .load();
+
+    categorization.setNewRecurring("salaire", "salaire")
+      .setNewRecurring("edf", "edf")
+      .setNewRecurring("ecole", "ecole");
+
+    OfxBuilder.init(this)
+      .addCardAccount("carte 1", -100, "2009/12/09")
+      .addTransaction("2009/11/03", "2010/01/29", -10, "op d. 1")
+      .addTransaction("2009/11/14", "2010/01/29", -10, "op d. 2")
+      .addTransaction("2009/11/30", "2010/01/29", -10, "op d. 3")
+      .addTransaction("2009/12/02", "2010/01/29", -10, "op d. 4")
+      .addTransaction("2009/12/06", "2010/01/29", -10, "op d. 5")
+      .addTransaction("2009/12/09", "2010/01/29", -10, "op d. 6")
+      .loadOneDeferredCard("boursorama");
+
+    timeline.selectAll();
+    transactions
+      .showPlannedTransactions()
+      .sortByBankDate()
+      .initAmountContent()
+      .add("11/02/2010", "Planned: salaire", 1000.00, "salaire", 2835.00, "Main accounts")
+      .add("04/02/2010", "Planned: ecole", -20.00, "ecole", 1835.00, "Main accounts")
+      .add("04/02/2010", "Planned: edf", -15.00, "edf", 1855.00, "Main accounts")
+      .add("09/12/2009", "OP D. 6", -10.00, "To categorize", -60.00, 1870.00, "Card n. carte 1")
+      .add("06/12/2009", "OP D. 5", -10.00, "To categorize", -50.00, 1880.00, "Card n. carte 1")
+      .add("02/12/2009", "OP D. 4", -10.00, "To categorize", -40.00, 1890.00, "Card n. carte 1")
+      .add("30/11/2009", "OP D. 3", -10.00, "To categorize", -30.00, 1900.00, "Card n. carte 1")
+      .add("14/11/2009", "OP D. 2", -10.00, "To categorize", -20.00, 1910.00, "Card n. carte 1")
+      .add("03/11/2009", "OP D. 1", -10.00, "To categorize", -10.00, 1920.00, "Card n. carte 1")
+      .add("11/01/2010", "Planned: salaire", 1000.00, "salaire", 1930.00, "Main accounts")
+      .add("04/01/2010", "Planned: ecole", -20.00, "ecole", 930.00, "Main accounts")
+      .add("04/01/2010", "Planned: edf", -15.00, "edf", 950.00, "Main accounts")
+      .add("11/12/2009", "Planned: salaire", 1000.00, "salaire", 965.00, "Main accounts")
+      .add("04/12/2009", "Planned: ecole", -20.00, "ecole", -35.00, "Main accounts")
+      .add("04/12/2009", "Planned: edf", -15.00, "edf", -15.00, "Main accounts")
+      .add("07/11/2009", "ECOLE", -20.00, "ecole", 0.00, 0.00, "Account n. 00001123")
+      .add("05/11/2009", "EDF", -15.00, "edf", 20.00, 20.00, "Account n. 00001123")
+      .add("03/11/2009", "SALAIRE", 1000.00, "salaire", 35.00, 35.00, "Account n. 00001123")
+      .check();
+   }
 }

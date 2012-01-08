@@ -357,6 +357,13 @@ public class TransactionChecker extends ViewChecker {
     return new HistoDailyChecker(panel, "accountChart");
   }
 
+  public TransactionChecker sortByBankDate() {
+    getTable()
+      .getHeader()
+      .click(TransactionView.BANK_DATE_COLUMN_INDEX);
+    return this;
+  }
+
   public class TransactionAmountChecker {
     java.util.List<Object[]> expected = new ArrayList<Object[]>();
     private Table table;
