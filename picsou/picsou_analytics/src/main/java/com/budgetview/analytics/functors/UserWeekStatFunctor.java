@@ -46,7 +46,7 @@ public class UserWeekStatFunctor implements GlobFunctor {
   }
 
   private Glob getWeekStat(DateTime date, GlobRepository repository) {
-    int weekId = date.getYear() * 100 + date.getWeekOfWeekyear();
+    int weekId = date.getWeekyear() * 100 + date.getWeekOfWeekyear();
     Glob week = repository.find(Key.create(WeekStat.TYPE, weekId));
     if (week == null) {
       int dayOfWeek = date.getDayOfWeek();
