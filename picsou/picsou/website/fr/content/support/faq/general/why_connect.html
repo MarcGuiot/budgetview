@@ -1,17 +1,53 @@
 <div class="faq support">
 
-  <h1>Why does BudgetView connect to the Internet on startup?</h1>
+  <h1>Pourquoi BudgetView se connecte-t-il à Internet ?</h1>
 
-  <div class="light-block">
+  <div class="light-block full-separators">
 
-    <p><img src="/files/images/support/faq.png" class="faq-icon"/>
-      On startup, BudgetView connects to our servers to check for new product updates and also to 
-      make sure that your activation code is still valid.
-      <b>Absolutely no financial information is sent to our servers.</b>.</p>
+    <p>BudgetView se connecte à internet pour vérifier votre code d'activation, télécharger de nouvelles
+      versions et recenser quelques informations sur l'utilisation de l'outil.
+      <b>Aucun code de connexion bancaire et aucune donnée financière ou personnelle vous concernant ne nous est
+        jamais transmise.</b>
+      Les informations liées à vos comptes bancaires ou votre budget restent sur votre propre ordinateur.
+    </p>
+
+    <h2>Connexion initiale</h2>
+
+    <p><img src="/files/images/support/faq.png" class="faq-icon"/>Au lancement, BudgetView se connecte
+      à nos serveurs pour vérifier si une nouvelle
+      version est disponible, et pour s'assurer que votre clef d'activation est toujours valide.</p>
 
     <div class="centered">
-      <img src="/files/images/support/security.png"/>
+      <img src="/files/images/support/securite.png"/>
     </div>
+
+    <h2>Import des données</h2>
+
+    <p>Il existe deux façons d'<a href="/support/guides/import">importer vos relevés d'opérations</a>
+      à partir du site de votre banque :</p>
+    <ol>
+      <li>Dans la plupart des cas, vous téléchargez vous-même un fichier en vous rendant sur le site internet
+        de votre banque avec un navigateur, et une fois le fichier sur votre ordinateur vous l'importez
+        dans BudgetView. Dans ce cas, BudgetView ne se connecte pas à Internet.</li>
+      <li>Dans le cas où votre banque propose un téléchargement direct OFX, comme le fait par exemple La Banque Postale
+        en France, vous indiquez vos identifiants de connexion à BudgetView pour qu'il se connecte lui-même
+        aux serveurs de votre banque. Dans ce cas, BudgetView se connecte à Internet pour joindre les serveurs
+        de votre banque et récupérer vos relevés bancaires. Notez que si vous ne souhaitez pas utiliser ce
+        système, il vous est proposé de récupérer vos relevés par la méthode 1.</li>
+    </ol>
+    <p>Dans les deux cas de figure, la récupération des relevés sur le site de votre banque est protégée par le
+      système mis en place par votre banque - le plus souvent via une connexion sécurisée SSL comme
+      l'utilisent la très grande majorité des sites de vente en ligne.</p>
+
+    <h2>Connexion à la sortie de l'application</h2>
+
+    <p>Au moment de quitter, lors des deux premières utilisations, BudgetView nous transmet une information
+      anonyme sur le niveau d'avancement dans l'utilisation de l'outil. Il s'agit de quelques indications de
+      type oui/non qui indiquent si vous êtes parvenu à télécharger quoi que ce soit, si vous êtes parvenu à classer
+      quelques opérations, et si vous êtes allé au bout de l'assistant initial. Ces données nous sont très
+      utiles pour continuer d'améliorer l'expérience de la première utilisation du logiciel.</p>
+    <p>Notez bien qu'il ne s'agit que d'informations succintes et anonymes sur l'utilisation de l'outil.
+      Aucune information ne nous est transmise sur vos comptes, votre banque, vos opérations, ou votre budget.</p>
 
   </div>
 </div>
