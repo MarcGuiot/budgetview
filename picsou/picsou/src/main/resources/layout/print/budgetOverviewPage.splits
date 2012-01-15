@@ -1,0 +1,20 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="panel.chart" margin="5" marginTop="10" opaque="false"/>
+    <style selector="label.chartLabel" fill="horizontal" horizontalAlignment="left" weightY="0"
+           marginTop="4" font="-,bold,11" foreground="#000000" opaque="false"/>
+  </styles>
+
+  <grid>
+    <label gridPos="(0,0)" ref="balanceChartLabel" weightX="1" styleClass="chartLabel"/>
+    <label gridPos="(1,0)" ref="seriesChartLabel" weightX="1" styleClass="chartLabel"/>
+    <panel gridPos="(0,1)" ref="balanceChart" weightX="1" styleClass="chart" background="stack.bg"/>
+    <panel gridPos="(1,1)" ref="seriesChart" weightX="1" styleClass="chart" background="stack.bg"/>
+    <label gridPos="(0,2)" ref="histoChartLabel" styleClass="chartLabel"/>
+    <panel gridPos="(1,2)" ref="histoChartLegend" weightY="0" fill="horizontal" anchor="right"/>
+    <panel gridPos="(0,3,2,1)" ref="histoChart" styleClass="chart"/>
+  </grid>
+
+</splits>

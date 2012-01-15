@@ -166,16 +166,18 @@ public class HistoChartBuilder {
     List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
 
     Map<Integer, Double> lastValueForAccounts = new HashMap<Integer, Double>();
-    for (Integer accountId : accountIds) {
-      GlobMatcher accountMatcher = Matchers.transactionsForAccount(accountId);
-      Double lastValue = getLastValue(accountMatcher, monthIdsToShow, Transaction.ACCOUNT_POSITION);
-      if (lastValue == null) {
-        Glob account = repository.get(Key.create(Account.TYPE, accountId));
-        lastValue = account.get(Account.POSITION);
+    if (!monthIdsToShow.isEmpty()) {
+      for (Integer accountId : accountIds) {
+        GlobMatcher accountMatcher = Matchers.transactionsForAccount(accountId);
+        Double lastValue = getLastValue(accountMatcher, monthIdsToShow, Transaction.ACCOUNT_POSITION);
+        if (lastValue == null) {
+          Glob account = repository.get(Key.create(Account.TYPE, accountId));
+          lastValue = account.get(Account.POSITION);
+        }
+        lastValueForAccounts.put(accountId, lastValue);
       }
-      lastValueForAccounts.put(accountId, lastValue);
     }
-    
+
     for (int monthId : monthIdsToShow) {
       int maxDay = Month.getLastDayNumber(monthId);
       Double[] minValuesForAll = new Double[maxDay];
@@ -210,7 +212,7 @@ public class HistoChartBuilder {
         }
 
         lastValueForAccounts.put(accountId, newLastValue);
-        
+
         accountIndex++;
       }
 

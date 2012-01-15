@@ -54,7 +54,7 @@ public class SummaryView extends View {
     parentBuilder.add("summaryView", builder);
   }
 
-  private HistoChartConfig getChartConfigWithoutLabels(boolean drawInnerAnnotations) {
+  public static HistoChartConfig getChartConfigWithoutLabels(boolean drawInnerAnnotations) {
     return new HistoChartConfig(false, false, false, true, true, true, true, true, drawInnerAnnotations);
   }
 }
