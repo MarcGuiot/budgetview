@@ -25,15 +25,13 @@ public class SeriesTablePage extends ReportPage {
                              PrintMetrics printMetrics,
                              PrintColors colors) {
 
-    System.out.println("SeriesTablePage.printContent: ");
-
     SeriesTableMetrics metrics = new SeriesTableMetrics(printMetrics, g2, fonts, table.getColumnCount());
 
     g2.setColor(colors.getTableTextColor());
     g2.setFont(fonts.getTableTextFont());
     for (int col = 0; col < table.getColumnCount(); col++) {
       String label = table.getColumnTitle(col);
-      g2.drawString(label, metrics.tableTextX(label, col, Alignment.CENTER), metrics.tableTextY(0));
+      g2.drawString(label, metrics.tableTextX(label, col, Alignment.RIGHT), metrics.tableTextY(0));
     }
     g2.drawLine(metrics.tableLeft(), metrics.tableRowBottom(0),
                 metrics.tableRight(), metrics.tableRowBottom(0));
@@ -49,9 +47,7 @@ public class SeriesTablePage extends ReportPage {
     g2.setColor(colors.getTableTextColor());
     int rowIndex = 1;
     for (SeriesTable.SeriesRow row : table.rows()) {
-      String label = row.getLabel();
-      g2.drawString(label, metrics.tableTextX(label, 0, Alignment.LEFT), metrics.tableTextY(rowIndex));
-      for (int col = 1; col < table.getColumnCount(); col++) {
+      for (int col = 0; col < table.getColumnCount(); col++) {
         String value = row.getValue(col);
         g2.drawString(value, metrics.tableTextX(value, col, Alignment.RIGHT), metrics.tableTextY(rowIndex));
       }

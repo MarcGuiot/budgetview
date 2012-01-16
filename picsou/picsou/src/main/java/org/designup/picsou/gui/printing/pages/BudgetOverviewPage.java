@@ -21,7 +21,7 @@ public class BudgetOverviewPage extends ReportPage {
   private Directory directory;
   private JPanel panel;
 
-  public BudgetOverviewPage(GlobRepository repository, Directory directory) {
+  public BudgetOverviewPage(MonthRange monthRange, GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
     this.panel = createPanel();

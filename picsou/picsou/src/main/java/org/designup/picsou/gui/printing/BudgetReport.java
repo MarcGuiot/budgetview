@@ -5,6 +5,7 @@ import org.designup.picsou.gui.printing.pages.SeriesTablePage;
 import org.designup.picsou.gui.printing.pages.BudgetOverviewPage;
 import org.designup.picsou.gui.printing.reports.SeriesTable;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.util.MonthRange;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -17,17 +18,18 @@ import java.util.List;
 
 public class BudgetReport implements Pageable {
 
+  private static BudgetArea[] BUDGET_AREA_TABLES =
+    {BudgetArea.INCOME, BudgetArea.RECURRING, BudgetArea.VARIABLE, BudgetArea.SAVINGS, BudgetArea.EXTRAS};
+  
   private PageFormat format;
   private List<ReportPage> pages = new ArrayList<ReportPage>();
 
-  public BudgetReport(GlobRepository repository, Directory directory, PageFormat format) {
+  public BudgetReport(MonthRange monthRange, GlobRepository repository, Directory directory, PageFormat format) {
     this.format = initFormat(format);
-    this.pages.add(new BudgetOverviewPage(repository, directory));
-    this.pages.add(new SeriesTablePage(new SeriesTable(BudgetArea.INCOME, repository, directory)));
-    this.pages.add(new SeriesTablePage(new SeriesTable(BudgetArea.RECURRING, repository, directory)));
-    this.pages.add(new SeriesTablePage(new SeriesTable(BudgetArea.VARIABLE, repository, directory)));
-    this.pages.add(new SeriesTablePage(new SeriesTable(BudgetArea.SAVINGS, repository, directory)));
-    this.pages.add(new SeriesTablePage(new SeriesTable(BudgetArea.EXTRAS, repository, directory)));
+    this.pages.add(new BudgetOverviewPage(monthRange, repository, directory));
+    for (BudgetArea budgetArea : BUDGET_AREA_TABLES) {
+      this.pages.add(new SeriesTablePage(new SeriesTable(budgetArea, monthRange, repository, directory)));
+    }
   }
 
   private static PageFormat initFormat(PageFormat format) {

@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.printing.actions;
 
 import org.designup.picsou.gui.printing.BudgetReport;
+import org.designup.picsou.model.util.MonthRange;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -25,11 +26,10 @@ public class PrintAction extends AbstractAction {
     PrinterJob printJob = PrinterJob.getPrinterJob();
     printJob.setJobName(Lang.get("application"));
 
-    printJob.setPageable(new BudgetReport(repository, directory, printJob.defaultPage()));
+    printJob.setPageable(new BudgetReport(new MonthRange(201101, 201112), repository, directory, printJob.defaultPage()));
 
     if (printJob.printDialog()) {
       try {
-        System.out.println("PrintAction.actionPerformed: printing...");
         printJob.print();
       }
       catch (PrinterException exc) {

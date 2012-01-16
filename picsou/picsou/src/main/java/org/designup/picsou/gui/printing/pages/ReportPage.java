@@ -26,7 +26,13 @@ public abstract class ReportPage implements Printable {
     g2.drawLine(metrics.titleLineX(), metrics.titleLineY(),
                 metrics.getTitleLineXEnd(), metrics.titleLineY());
 
-    return printContent(g2, fonts, metrics, colors);
+    try {
+      return printContent(g2, fonts, metrics, colors);
+    }
+    catch (RuntimeException e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
   }
 
   protected abstract String getTitle();

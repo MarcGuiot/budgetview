@@ -200,6 +200,15 @@ public class Month {
     return Lang.get("month." + toMonth(month) + ".medium") + " " + year;
   }
 
+  public static String getShortMonthLabelWithShortYear(Integer monthId) {
+    if (monthId == null) {
+      return "";
+    }
+    int month = toMonth(monthId);
+    int year = toYear(monthId);
+    return Lang.get("month." + toMonth(month) + ".medium") + " " + (year % 100);
+  }
+
   private static String getTwoDigitsYearLabel(int year) {
     synchronized (TWO_DIGITS_YEAR_FORMAT){
       return TWO_DIGITS_YEAR_FORMAT.format(year % 100);

@@ -20,4 +20,8 @@ public class MonthRange extends Range<Integer> {
     }
     return result;
   }
+
+  public int length() {
+    return Month.distance(getMin(), getMax());
+  }
 }
