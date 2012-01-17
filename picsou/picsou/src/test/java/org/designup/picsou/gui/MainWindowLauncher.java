@@ -5,7 +5,6 @@ import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
 import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.gui.components.PicsouFrame;
-import org.designup.picsou.gui.startup.SlaValidationDialog;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.about.AboutAction;
@@ -63,7 +62,7 @@ import net.roydesign.mac.MRJAdapter;
     init.loadUserData(user, false, false).load();
 
     Directory initDirectory = init.getDirectory();
-    final PicsouFrame frame = new PicsouFrame(Lang.get("application"));
+    final PicsouFrame frame = new PicsouFrame(Lang.get("application"), directory);
     MainPanel.init(init.getRepository(), initDirectory, new WindowManager() {
       public PicsouFrame getFrame() {
         return frame;

@@ -1,5 +1,6 @@
 package org.designup.picsou.license.servlet;
 
+import org.apache.log4j.Logger;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.generator.LicenseGenerator;
 import org.designup.picsou.license.mail.Mailer;
@@ -17,7 +18,6 @@ import org.globsframework.streams.accessors.utils.ValueLongAccessor;
 import org.globsframework.streams.accessors.utils.ValueStringAccessor;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
-import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -75,6 +75,7 @@ public class RequestForConfigServlet extends HttpServlet {
     String lang = req.getHeader(ConfigService.HEADER_LANG);
     String signature = req.getHeader(ConfigService.HEADER_SIGNATURE);
     String applicationVersion = req.getHeader(ConfigService.HEADER_CONFIG_VERSION);
+    String jarVersion = req.getHeader(ConfigService.HEADER_JAR_VERSION);
     Integer group = 0;
     if (mail != null && activationCode != null) {
       if (count == null || id == null || lang == null) {
@@ -83,17 +84,20 @@ public class RequestForConfigServlet extends HttpServlet {
         resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
       }
       else {
-        group = computeLicense(resp, mail, activationCode, Long.parseLong(count), id, lang, ip);
+        group = computeLicenseWithRetry(resp, mail, activationCode, Long.parseLong(count), id, lang, ip);
       }
     }
     else {
       computeAnonymous(id, resp, ip);
     }
-    ValueLongAccessor jarVersion = new ValueLongAccessor();
+    ValueLongAccessor jarVersionAccessor = new ValueLongAccessor();
     ValueLongAccessor configVersion = new ValueLongAccessor();
-    versionService.getVersion(mail, group, jarVersion, configVersion);
-    resp.setHeader(ConfigService.HEADER_NEW_JAR_VERSION, Long.toString(jarVersion.getValue()));
-    resp.setHeader(ConfigService.HEADER_NEW_CONFIG_VERSION, Long.toString(configVersion.getValue()));
+    versionService.getVersion(mail, group, jarVersionAccessor, configVersion);
+    long newJarVersion = jarVersionAccessor.getValue();
+    if (Long.parseLong(jarVersion) != 82 || newJarVersion != 83) {
+      resp.setHeader(ConfigService.HEADER_NEW_JAR_VERSION, Long.toString(newJarVersion));
+      resp.setHeader(ConfigService.HEADER_NEW_CONFIG_VERSION, Long.toString(configVersion.getValue()));
+    }
     resp.setStatus(HttpServletResponse.SC_OK);
   }
 
@@ -232,20 +236,20 @@ public class RequestForConfigServlet extends HttpServlet {
     }
   }
 
-  private Integer computeLicense(HttpServletResponse resp, String mail, String activationCode,
-                              Long count, String repoId, String lang, String ip) {
+  private Integer computeLicenseWithRetry(HttpServletResponse resp, String mail, String activationCode,
+                                          Long count, String repoId, String lang, String ip) {
     logInfo("compute_license ip = " + ip + " mail = " + mail + " count = " + count +
             " id = " + repoId + " code = " + activationCode);
     Integer group = null;
     try {
-      group = computeLicense(resp, mail, activationCode, count, lang, ip);
+      group = computeLicense(resp, mail, activationCode, count, lang, ip, repoId);
     }
     catch (Exception e) {
       logger.error("RequestForConfigServlet:computeLicense", e);
       try {
         closeDb();
         initDb();
-        group = computeLicense(resp, mail, activationCode, count, lang, ip);
+        group = computeLicense(resp, mail, activationCode, count, lang, ip, repoId);
       }
       catch (Exception ex) {
         logger.error("RequestForConfigServlet:computeLicense retry", e);
@@ -260,7 +264,8 @@ public class RequestForConfigServlet extends HttpServlet {
   }
 
   private Integer computeLicense(HttpServletResponse resp, String mail,
-                              String activationCode, Long count, String lang, String ip) {
+                                 String activationCode, Long count, String lang,
+                                 String ip, String repoId) {
     GlobList globList = licenseRequest.execute(mail);
     db.commit();
     if (globList.isEmpty()) {
@@ -269,34 +274,37 @@ public class RequestForConfigServlet extends HttpServlet {
       logInfo("unknown_mail mail = " + mail);
     }
     else {
-      Glob license = globList.get(0);
-      if (count < license.get(License.ACCESS_COUNT)) {
-        resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
-        if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
-          String code = LicenseGenerator.generateActivationCode();
-          updateNewActivationCodeRequest.execute(mail, code);
-          db.commit();
-          resp.setHeader(ConfigService.HEADER_MAIL_SENT, "true");
-          if (mailer.reSendExistingLicenseOnError(lang, code, mail)) {
-            logInfo("Run_count_decrease_send_new_license_to mail = " + mail);
+      for (Glob license : globList) {
+        if (license.get(License.REPO_ID).equals(repoId)) {
+          if (count < license.get(License.ACCESS_COUNT)) {
+            resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
+            if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
+              String code = LicenseGenerator.generateActivationCode();
+              updateNewActivationCodeRequest.execute(mail, code);
+              db.commit();
+              resp.setHeader(ConfigService.HEADER_MAIL_SENT, "true");
+              if (mailer.reSendExistingLicenseOnError(lang, code, mail)) {
+                logInfo("Run_count_decrease_send_new_license_to mail = " + mail);
+              }
+            }
+            else {
+              logInfo("Run_count_decrease_with_different_activation_code_for mail = " + mail);
+            }
           }
-        }
-        else {
-          logInfo("Run_count_decrease_with_different_activation_code_for mail = " + mail);
-        }
-      }
-      else {
-        if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
-          updateLastAccessRequest.execute(mail, count, new Date());
-          db.commit();
-          resp.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
-          logInfo("ok_for mail = " + mail + " count = " + count);
-          return license.get(License.GROUP_ID);
-        }
-        else {
-          resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
-          resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
-          logInfo("Different_code_for mail = " + mail);
+          else {
+            if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
+              updateLastAccessRequest.execute(mail, count, new Date());
+              db.commit();
+              resp.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
+              logInfo("ok_for mail = " + mail + " count = " + count);
+              return license.get(License.GROUP_ID);
+            }
+            else {
+              resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
+              resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
+              logInfo("Different_code_for mail = " + mail);
+            }
+          }
         }
       }
     }

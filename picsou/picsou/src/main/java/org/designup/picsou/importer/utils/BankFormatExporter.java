@@ -21,7 +21,8 @@ public class BankFormatExporter {
     Set<Glob> accounts = new HashSet<Glob>();
 
     for (Glob transaction : transactions) {
-      if (transaction.isTrue(Transaction.IS_OFX)) {
+      boolean isOfx = transaction.get(Transaction.IS_OFX, false);
+      if (isOfx) {
         accounts.add(repository.findLinkTarget(transaction, Transaction.ACCOUNT));
         root.createChildTag("ofxEntry")
           .addAttribute("bankId", transaction.get(Transaction.ACCOUNT))
