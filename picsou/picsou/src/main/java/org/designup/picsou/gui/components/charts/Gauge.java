@@ -130,7 +130,7 @@ public class Gauge extends ActionablePanel {
       setDetailsTooltipKey("gauge.complete");
     }
     else if (this.targetValue > 0) {
-      if (this.actualValue > this.targetValue) { // if (overrun == 0 && remaining != 0)
+      if (this.actualValue > this.targetValue) {
         fillPercent = absTarget / absActual;  //==> differencie passé et futur
         overrunPercent = 1 - fillPercent;
         setDetailsTooltipKey("gauge.overrun.ok", Math.abs(remainder));

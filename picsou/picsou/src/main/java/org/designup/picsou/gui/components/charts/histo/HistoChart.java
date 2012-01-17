@@ -22,12 +22,14 @@ public class HistoChart extends JPanel {
 
   public static final BasicStroke SCALE_STROKE = new BasicStroke(1);
   public static final BasicStroke SCALE_ORIGIN_STROKE = new BasicStroke(1.2f);
+  private Font defaultFont;
 
   public HistoChart(HistoChartConfig config, Directory directory) {
     this.config = config;
     this.selectionManager = new HistoSelectionManager();
     this.colors = new HistoChartColors(directory);
-    setFont(getFont().deriveFont(9f));
+    this.defaultFont = getFont().deriveFont(9f);
+    setFont(defaultFont);
     this.selectedLabelFont = getFont().deriveFont(Font.BOLD);
     this.sectionLabelFont = getFont().deriveFont(11f).deriveFont(Font.BOLD);
     registerMouseActions();
@@ -110,6 +112,7 @@ public class HistoChart extends JPanel {
                                       snapToScale);
     }
 
+    g2.setFont(defaultFont);
     paintBg(g2);
     paintLabels(g2, dataset);
     paintScale(g2, panelWidth);

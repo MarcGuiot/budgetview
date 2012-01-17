@@ -2,6 +2,7 @@ package org.designup.picsou.gui.accounts.chart;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.series.analysis.histobuilders.AccountHistoChartUpdater;
@@ -47,7 +48,7 @@ public abstract class AccountsChartView extends View implements HistoChartRangeL
     });
   }
 
-  protected void update() {
+  public void update() {
     updater.update(false);
   }
 
@@ -59,7 +60,11 @@ public abstract class AccountsChartView extends View implements HistoChartRangeL
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
-    builder.add(componentName, histoChartBuilder.getChart());
+    builder.add(componentName, getChart());
+  }
+
+  public HistoChart getChart() {
+    return histoChartBuilder.getChart();
   }
 
   protected abstract void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition);

@@ -349,7 +349,7 @@ public class GlobList extends ArrayList<Glob> {
     GlobList result = new GlobList();
     for (Glob glob : this) {
       Glob target = repository.findLinkTarget(glob, link);
-      if (target != null) {
+      if ((target != null) && !result.contains(target)) {
         result.add(target);
       }
     }
