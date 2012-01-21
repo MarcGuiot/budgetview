@@ -16,6 +16,7 @@ import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.streams.accessors.utils.ValueDateAccessor;
 import org.globsframework.streams.accessors.utils.ValueLongAccessor;
 import org.globsframework.streams.accessors.utils.ValueStringAccessor;
+import org.globsframework.streams.accessors.utils.ValueIntegerAccessor;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -275,7 +276,7 @@ public class RequestForConfigServlet extends HttpServlet {
     }
     else {
       for (Glob license : globList) {
-        if (license.get(License.REPO_ID).equals(repoId)) {
+        if (license.get(License.REPO_ID) != null && license.get(License.REPO_ID).equals(repoId)) {
           if (count < license.get(License.ACCESS_COUNT)) {
             resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
             if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
@@ -293,7 +294,7 @@ public class RequestForConfigServlet extends HttpServlet {
           }
           else {
             if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
-              updateLastAccessRequest.execute(mail, count, new Date());
+              updateLastAccessRequest.execute(license.get(License.ID), count, new Date());
               db.commit();
               resp.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
               logInfo("ok_for mail = " + mail + " count = " + count);
@@ -320,6 +321,8 @@ public class RequestForConfigServlet extends HttpServlet {
       query = db.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
         .select(License.ACCESS_COUNT)
         .select(License.ACTIVATION_CODE)
+        .select(License.REPO_ID)
+        .select(License.LAST_ACCESS_DATE)
         .select(License.LAST_ACTIVATION_CODE)
         .select(License.GROUP_ID)
         .getNotAutoCloseQuery();
@@ -369,26 +372,30 @@ public class RequestForConfigServlet extends HttpServlet {
 
   static class UpdateLastAccessRequest {
 
-    private ValueStringAccessor mail;
+    private ValueIntegerAccessor id;
 
     private SqlRequest request;
     private ValueLongAccessor count;
     private ValueDateAccessor date;
+    private ValueLongAccessor timestamp;
 
     UpdateLastAccessRequest(SqlConnection db) {
-      mail = new ValueStringAccessor();
+      id = new ValueIntegerAccessor();
       count = new ValueLongAccessor();
       this.date = new ValueDateAccessor();
-      request = db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
+      timestamp = new ValueLongAccessor();
+      request = db.getUpdateBuilder(License.TYPE, Constraints.equal(License.ID, id))
         .update(License.ACCESS_COUNT, count)
         .update(License.LAST_ACCESS_DATE, this.date)
+        .update(License.TIME_STAMP, timestamp)
         .getRequest();
     }
 
-    public void execute(String mail, long count, Date date) {
-      this.mail.setValue(mail);
+    public void execute(int id, long count, Date date) {
+      this.id.setValue(id);
       this.count.setValue(count);
       this.date.setValue(date);
+      timestamp.setValue(System.currentTimeMillis());
       request.run();
     }
 

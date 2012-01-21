@@ -7,11 +7,14 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.license.ConnectedTestCase;
+import org.designup.picsou.license.DuplicateLine;
+import org.designup.picsou.license.servlet.RegisterServlet;
 import org.designup.picsou.license.checkers.DbChecker;
 import org.designup.picsou.license.checkers.Email;
 import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.model.RepoInfo;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.utils.Dates;
@@ -26,6 +29,8 @@ public class LicenseTest extends ConnectedTestCase {
   private LoginChecker login;
   private static final String MAIL = "alfred@free.fr";
   private static final String SECOND_PATH = "tmp/otherprevayler";
+  private static final String THIRD_PATH = "tmp/otherprevayler_2";
+  private static final String FOURTH_PATH = "tmp/otherprevayler_3";
 
   protected void setUp() throws Exception {
     LoggedInFunctionalTestCase.resetWindow();
@@ -425,6 +430,116 @@ public class LicenseTest extends ConnectedTestCase {
     checkDaysLeftMessage();
   }
 
+  public void testMultipleActivation() throws Exception {
+    TimeService.setCurrentDate(Dates.parse("2008/10/10"));
+    db.registerMail(MAIL, "4321");
+    db.registerMail(MAIL, "4321");
+    db.registerMail(MAIL, "4321");
+
+    register(MAIL, "4321");
+    exit();
+
+
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
+    restartAppAndLogAndDispose();
+
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+    startApplication(true);
+    register(MAIL, "4321");
+    exit();
+
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, THIRD_PATH);
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+    startApplication(true);
+    register(MAIL, "4321");
+    exit();
+
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
+    startApplication(false);
+    login.logExistingUser("user", "passw@rd", false);
+    checkValidLicense(false);
+    exit();
+
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, FOURTH_PATH);
+    startApplication(true);
+    login.logNewUser("user", "passw@rd");
+    LicenseActivationChecker.enterBadLicense(window, MAIL, "4321",
+                                             "Activation failed. An email was sent at alfred@free.fr with further information.");
+    String newCode = checkMailAndExtractCode();
+
+    LicenseActivationChecker.enterLicense(window, MAIL, newCode);
+    checkValidLicense(false);
+    exit();
+
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
+    startApplication(false);
+    login.logExistingUser("user", "passw@rd", false);
+    checkDaysLeftMessage();
+    exit();
+
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
+    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
+    startApplication(false);
+    login.logExistingUser("user", "passw@rd", false);
+    checkValidLicense(false);
+  }
+
+  private static final String OTHERMAIL_FREE_FR = "othermail@free.Fr";
+
+  public void testUpgrade() throws Exception {
+    TimeService.setCurrentDate(Dates.parse("2008/10/10"));
+    db.registerMail(MAIL, "4321");
+    register(MAIL, "4321");
+
+    SqlConnection connection = db.getConnection();
+    connection.getCreateBuilder(License.TYPE)
+      .set(License.MAIL, OTHERMAIL_FREE_FR)
+      .set(License.ACTIVATION_CODE, "1111")
+      .getRequest()
+      .run();
+    connection.commit();
+
+    DuplicateLine.complete(db.getConnection());
+    GlobList list = connection.getQueryBuilder(License.TYPE)
+      .selectAll()
+      .getQuery().executeAsGlobs();
+
+    assertEquals(6, list.size());
+
+    list = connection.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, MAIL))
+      .selectAll()
+      .getQuery().executeAsGlobs().sort(RegisterServlet.COMPARATOR);
+    assertEquals(3, list.size());
+    Glob l11 = list.get(0);
+    Glob l12 = list.get(1);
+    Glob l13 = list.get(2);
+    assertEquals(l11.get(License.ACTIVATION_CODE), "4321");
+    assertNull(l11.get(License.REPO_ID));
+    assertEquals(l12.get(License.ACTIVATION_CODE), "4321");
+    assertNull(l12.get(License.REPO_ID));
+    assertNull(l13.get(License.ACTIVATION_CODE));
+    assertNotNull(l13.get(License.REPO_ID));
+
+    list = connection.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, OTHERMAIL_FREE_FR))
+      .selectAll()
+      .getQuery().executeAsGlobs().sort(RegisterServlet.COMPARATOR);
+    assertEquals(3, list.size());
+
+    l11 = list.get(0);
+    l12 = list.get(1);
+    l13 = list.get(2);
+    assertEquals(l11.get(License.ACTIVATION_CODE), "1111");
+    assertNull(l11.get(License.REPO_ID));
+    assertEquals(l12.get(License.ACTIVATION_CODE), "1111");
+    assertNull(l12.get(License.REPO_ID));
+    assertEquals(l13.get(License.ACTIVATION_CODE), "1111");
+    assertNull(l13.get(License.REPO_ID));
+  }
+
   private void checkLicenseExpired() {
     OperationChecker operations = new OperationChecker(window);
     Window dialog = WindowInterceptor.getModalDialog(operations.getImportTrigger());
@@ -519,12 +634,16 @@ public class LicenseTest extends ConnectedTestCase {
 
   private void register(DbChecker db, String email, final String code) throws InterruptedException {
     db.checkRepoIdIsUpdated(1L, null);
+    register(email, code);
+    db.checkLicenseCount(email, 1);
+  }
+
+  public void register(String email, String code) {
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
     LicenseActivationChecker.enterLicense(window, email, code);
     OperationChecker operation = new OperationChecker(window);
     operation.openPreferences().setFutureMonthsCount(24).validate();
-    db.checkLicenseCount(email, 1);
   }
 
   private void exit() {

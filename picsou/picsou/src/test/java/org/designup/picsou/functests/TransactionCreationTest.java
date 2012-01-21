@@ -2,6 +2,9 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.utils.Dates;
+
+import java.util.Date;
 
 public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
@@ -186,5 +189,123 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     categorization.checkTable(new Object[][]{
       {"03/08/2008", "", "TRANSACTION 1", -10.00},
     });
+  }
+
+  public void testCreateOperationUpdateAccountPosition() throws Exception {
+    setInMemory(false);
+    restartApplication(true);
+    setDeleteLocalPrevayler(false);
+
+    mainAccounts.createNewAccount()
+      .setAccountName("Cash")
+      .setAccountNumber("012345")
+      .setUpdateModeToManualInput()
+      .setPosition(100.)
+      .selectBank("CIC")
+      .validate();
+
+    transactionCreation
+      .show()
+      .selectAccount("Cash")
+      .enterAmountWithoutValidating(10.00)
+      .enterDayWithoutValidating(1)
+      .enterLabelWithoutValidating("Transaction 1")
+      .create();
+
+    mainAccounts.checkPosition("Cash", 100.);
+    
+    setCurrentDate("2008/09/02");
+    restartApplication();
+    timeline.selectMonth(200809);
+
+    transactionCreation
+      .show()
+      .selectAccount("Cash")
+      .enterAmountWithoutValidating(10.00)
+      .enterDayWithoutValidating(1)
+      .enterLabelWithoutValidating("Transaction 1")
+      .create();
+
+    mainAccounts.checkPosition("Cash", 90.);
+
+    views.selectCategorization();
+    transactionCreation
+      .enterAmountWithoutValidating(20.00)
+      .enterDayWithoutValidating(2)
+      .enterLabelWithoutValidating("Transaction 2")
+      .create();
+
+    mainAccounts.checkPosition("Cash", 70.);
+  }
+
+
+  public void testMiroirOperationIsUpdated() throws Exception {
+    setInMemory(false);
+    restartApplication(true);
+    setDeleteLocalPrevayler(false);
+
+    mainAccounts.createNewAccount()
+      .setAccountName("Cash")
+      .setAccountNumber("012345")
+      .setUpdateModeToManualInput()
+      .setPosition(100.)
+      .selectBank("CIC")
+      .validate();
+
+    mainAccounts.createSavingsAccount("Livret A", 100.);
+
+    budgetView.savings
+      .createSeries()
+      .setName("virement manuel vers livret A")
+      .setFromAccount("Main account")
+      .setToAccount("Livret A")
+      .validate();
+
+    transactionCreation
+      .show()
+      .selectAccount("Cash")
+      .enterAmountWithoutValidating(10.00)
+      .enterDayWithoutValidating(1)
+      .enterLabelWithoutValidating("Transaction 1")
+      .create();
+    categorization.selectTransaction("Transaction 1")
+      .selectSavings()
+      .selectSeries("virement manuel vers livret A");
+
+    mainAccounts.checkPosition("Cash", 100.);
+    savingsAccounts.checkPosition("Livret A", 100.);
+
+    setCurrentDate("2008/09/02");
+    restartApplication();
+    timeline.selectMonth(200809);
+
+    transactionCreation
+      .show()
+      .selectAccount("Cash")
+      .enterAmountWithoutValidating(10.00)
+      .enterDayWithoutValidating(4)
+      .enterLabelWithoutValidating("Transaction 2")
+      .create();
+    categorization.selectTransaction("Transaction 2")
+      .selectSavings()
+      .selectSeries("virement manuel vers livret A");
+
+    mainAccounts.checkPosition("Cash", 90.);
+    savingsAccounts.checkPosition("Livret A", 110.);
+
+    views.selectCategorization();
+    transactionCreation
+      .selectAccount("Cash")
+      .enterAmountWithoutValidating(20.00)
+      .enterDayWithoutValidating(4)
+      .enterLabelWithoutValidating("Transaction 3")
+      .create();
+    categorization.selectTransaction("Transaction 3")
+      .selectSavings()
+      .selectSeries("virement manuel vers livret A");
+
+    mainAccounts.checkPosition("Cash", 70.);
+    savingsAccounts.checkPosition("Livret A", 130.);
+
   }
 }

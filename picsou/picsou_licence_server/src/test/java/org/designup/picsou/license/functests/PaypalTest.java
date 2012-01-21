@@ -7,7 +7,6 @@ import org.designup.picsou.license.ConnectedTestCase;
 import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.servlet.LicenseServer;
 import org.designup.picsou.license.servlet.NewUserServlet;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.mortbay.jetty.servlet.ServletHolder;
@@ -49,13 +48,14 @@ public class PaypalTest extends ConnectedTestCase {
     PayPalConfirm.STATUS = PayPalConfirm.VERIFIED;
     int status = client.executeMethod(postMethod);
     assertEquals(200, status);
-    Glob glob = db.getConnection().getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, "toto@bv.fr"))
+    GlobList glob = db.getConnection().getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, "toto@bv.fr"))
       .selectAll()
-      .getQuery().executeUnique();
-    assertNotNull(glob);
-    String code = glob.get(License.ACTIVATION_CODE);
+      .getQuery().executeAsGlobs();
+    assertFalse(glob.isEmpty());
+    assertEquals(3, glob.size());
+    String code = glob.get(0).get(License.ACTIVATION_CODE);
     mailServer.checkReceivedMail("toto@bv.fr").checkContains(code);
-    assertEquals(glob.get(License.TRANSACTION_ID), transactionId);
+    assertEquals(glob.get(0).get(License.TRANSACTION_ID), transactionId);
     mailServer.checkReceivedMail("support@mybudgetview.fr").checkContains("toto@bv.fr");
   }
 
@@ -73,8 +73,8 @@ public class PaypalTest extends ConnectedTestCase {
     assertEquals(412, status);
     GlobList glob =
       db.getConnection().getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, "toto@bv.fr"))
-      .selectAll()
-      .getQuery().executeAsGlobs();
+        .selectAll()
+        .getQuery().executeAsGlobs();
     assertTrue(glob.isEmpty());
   }
 
@@ -90,15 +90,15 @@ public class PaypalTest extends ConnectedTestCase {
     postMethod.setParameter(PARAMETER_WITH_ACCENT, RAPHAËL);
     int status = client.executeMethod(postMethod);
     assertEquals(200, status);
-    Glob glob =
+    GlobList globs =
       db.getConnection().getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, "toto@bv.fr"))
-      .selectAll()
-      .getQuery().executeUnique();
-    assertNotNull(glob);
-    String code = glob.get(License.ACTIVATION_CODE);
+        .selectAll()
+        .getQuery().executeAsGlobs();
+    assertEquals(3, globs.size());
+    String code = globs.get(0).get(License.ACTIVATION_CODE);
     mailServer.checkReceivedMail("support@mybudgetview.fr");
     mailServer.checkReceivedMail("toto@bv.fr").checkContains(code);
-    assertEquals(glob.get(License.TRANSACTION_ID), "12345");
+    assertEquals(globs.get(0).get(License.TRANSACTION_ID), "12345");
   }
 
   static class PayPalConfirm extends HttpServlet {

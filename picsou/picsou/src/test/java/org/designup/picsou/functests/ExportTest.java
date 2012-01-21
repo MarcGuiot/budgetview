@@ -172,23 +172,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testManualTransaction() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2008/06/30", -1129.90, "WorldCo/june")
-      .load();
-
-    transactionCreation.selectAccount("")
-      .setAmount(-100)
-      .setLabel("label")
-      .setDay(10)
-      .create();
-
-
-  }
-
   public void testTSVExport() throws Exception {
-
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
     OfxBuilder.init(this)

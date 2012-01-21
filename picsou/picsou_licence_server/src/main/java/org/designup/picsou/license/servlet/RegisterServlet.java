@@ -31,6 +31,8 @@ import java.util.Date;
 
 public class RegisterServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("RegisterServlet");
+  public static final GlobFieldsComparator COMPARATOR = 
+    new GlobFieldsComparator(License.ACTIVATION_CODE, false, License.TIME_STAMP, true);
   private SqlService sqlService;
   private Mailer mailer;
 
@@ -79,7 +81,7 @@ public class RegisterServlet extends HttpServlet {
       .selectAll()
       .getQuery();
     GlobList globList = query.executeAsGlobs()
-      .sort(new GlobFieldsComparator(License.ACTIVATION_CODE, false, License.LAST_ACCESS_DATE, true);
+      .sort(COMPARATOR);
     db.commit();
     if (globList.isEmpty()) {
       resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
@@ -88,14 +90,18 @@ public class RegisterServlet extends HttpServlet {
     else {
       for (Glob license : globList) {
         if (activationCode.equals(license.get(License.ACTIVATION_CODE))) {
-          logger.info("License activation ok");
+          logger.info("License activation ok " + license.get(License.ID));
+          if (license.get(License.REPO_ID) != null) {
+            logger.info("Invalidating " + license.get(License.ID) + " ropId : " + license.get(License.REPO_ID));
+          }
           byte[] signature = LicenseGenerator.generateSignature(mail);
-          db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
+          db.getUpdateBuilder(License.TYPE, Constraints.equal(License.ID, license.get(License.ID)))
             .update(License.ACCESS_COUNT, 1L)
             .update(License.SIGNATURE, signature)
             .update(License.ACTIVATION_CODE, (String)null)
             .update(License.LAST_ACTIVATION_CODE, activationCode)
             .update(License.REPO_ID, repoId)
+            .update(License.TIME_STAMP, System.currentTimeMillis())
             .update(License.KILLED_REPO_ID, license.get(License.REPO_ID))
             .update(License.DATE_KILLED_1, new Date())
             .update(License.DATE_KILLED_2, license.get(License.DATE_KILLED_1))
@@ -110,8 +116,12 @@ public class RegisterServlet extends HttpServlet {
             .run();
           db.commit();
           resp.setHeader(ConfigService.HEADER_SIGNATURE, Encoder.byteToString(signature));
+          resp.setStatus(HttpServletResponse.SC_OK);
+          return;
         }
-        else if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
+      }
+      for (Glob license : globList) {
+        if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
           String newCode = LicenseGenerator.generateActivationCode();
           logger.info("Mail sent with new code " + newCode);
           db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
@@ -123,12 +133,12 @@ public class RegisterServlet extends HttpServlet {
           if (!mailer.reSendExistingLicenseOnError(lang, newCode, mail)) {
             logger.error("Fail to send mail retrying.");
           }
-        }
-        else {
-          logger.info("No mail sent");
-          resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "false");
+          resp.setStatus(HttpServletResponse.SC_OK);
+          return;
         }
       }
+      logger.info("No mail sent (activation failed)");
+      resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "false");
     }
     resp.setStatus(HttpServletResponse.SC_OK);
   }
