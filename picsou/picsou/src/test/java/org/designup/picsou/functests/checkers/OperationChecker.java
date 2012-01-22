@@ -679,4 +679,8 @@ public class OperationChecker {
   public void checkGotoWebsite(String url) {
     BrowsingChecker.checkDisplay(getHelpMenu().getSubMenu(Lang.get("gotoWebsite")).triggerClick(), url);
   }
+
+  public PrintDialogChecker print() {
+    return PrintDialogChecker.init(getDevMenu().getSubMenu("Print...").triggerClick());
+  }
 }

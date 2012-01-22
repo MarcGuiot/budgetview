@@ -13,6 +13,10 @@ import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.plaf.ApplicationLAF;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
+import org.designup.picsou.gui.printing.PrinterService;
+import org.designup.picsou.gui.printing.utils.DefaultPrinterService;
+import org.designup.picsou.gui.startup.AppLogger;
+import org.designup.picsou.gui.startup.AppPaths;
 import org.designup.picsou.gui.startup.OpenRequestManager;
 import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.time.TimeService;
@@ -26,13 +30,13 @@ import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.font.FontLocator;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.directory.AddIfNotPresentDirectory;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
@@ -40,9 +44,10 @@ import picsou.AwtExceptionHandler;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.io.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.*;
-import java.util.logging.LogManager;
 import java.util.regex.Pattern;
 
 public class PicsouApplication {
@@ -50,29 +55,29 @@ public class PicsouApplication {
   public static final String APPLICATION_VERSION = "2.20";
   public static final Long JAR_VERSION = 81L;
   public static final Long BANK_CONFIG_VERSION = 7L;
-  private static final String JAR_DIRECTORY = "jars";
-  private static final String BANK_CONFIG_DIRECTORY = "configs";
+
   public static final String APPNAME = "budgetview";
   private static final String CONFIG = "config";
   private static final Pattern CONFIG_FILTER = Pattern.compile(CONFIG + "[0-9][0-9]*" + "\\.jar");
 
-  public static final String LOG_SOUT = APPNAME + ".log.sout";
+  public static final String LOG_TO_SOUT = APPNAME + ".log.sout";
   public static final String LOCAL_PREVAYLER_PATH_PROPERTY = APPNAME + ".prevayler.path";
   public static final String DEFAULT_ADDRESS_PROPERTY = APPNAME + ".server.url";
   public static String DELETE_LOCAL_PREVAYLER_PROPERTY = APPNAME + ".prevayler.delete";
   public static String IS_DATA_IN_MEMORY = APPNAME + ".data.in.memory";
+
   public static String FORCE_DATE = APPNAME + ".today";
-  private static String DEFAULT_ADDRESS = "https://startupxp.dynalias.org";
-  public static final String REGISTER_URL = "https://register.mybudgetview.fr:443"; //startupxp.dynalias.org";
-  public static final String FTP_URL = "ftp://ftpjar.mybudgetview.fr"; //startupxp.dynalias.org";
+
+  public static final String REGISTER_URL = "https://register.mybudgetview.fr:443";
+  public static final String FTP_URL = "ftp://ftpjar.mybudgetview.fr";
+
+  public static boolean EXIT_ON_DATA_ERROR = true;
 
   private OpenRequestManager openRequestManager = new OpenRequestManager();
   private SingleApplicationInstanceListener singleInstanceListener;
-  private Directory directory;
-
   private AbstractAction mrjDocumentListener;
 
-  public static boolean EXIT_ON_DATA_ERROR = true;
+  private DefaultDirectory directory = new DefaultDirectory();
 
   static {
     AwtExceptionHandler.registerHandler();
@@ -126,44 +131,6 @@ public class PicsouApplication {
     }
   }
 
-  private static void initLogger() {
-    try {
-      System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.Jdk14Logger");
-      String sout = System.getProperty(LOG_SOUT);
-      InputStream propertiesStream = PicsouApplication.class.getResourceAsStream("/logging.properties");
-      LogManager.getLogManager().readConfiguration(propertiesStream);
-
-      if ("true".equalsIgnoreCase(sout)) {
-        return;
-      }
-      File logFilePath = new File(getDataPath() + "/" + "logs");
-      logFilePath.mkdirs();
-      File logFile = new File(logFilePath, "log.txt");
-      if (logFile.exists() && logFile.length() > 2 * 1024 * 1024) {
-        File oldFile = new File(logFilePath, "oldLog.txt");
-        if (oldFile.exists()) {
-          oldFile.delete();
-        }
-        logFile.renameTo(oldFile);
-      }
-
-      FileOutputStream stream = new FileOutputStream(logFile, true);
-      PrintStream output = new PrintStream(stream);
-      output.println("---------------------------");
-      output.println("version : " + PicsouApplication.JAR_VERSION + " ; " + TimeService.getToday());
-      Log.init(output);
-    }
-    catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  public static File getLogFile() {
-    File logFilePath = new File(getDataPath() + "/" + "logs");
-    logFilePath.mkdirs();
-    return new File(logFilePath, "log.txt");
-  }
-
   public void run(String... args) throws Exception {
     initEncryption();
     mrjDocumentListener = new AbstractAction() {
@@ -193,13 +160,14 @@ public class PicsouApplication {
       Thread.sleep(2000);
       return;
     }
-    initLogger();
+    AppLogger.init();
     clearRepositoryIfNeeded();
 
-    directory = createDirectory(openRequestManager);
+    preinitDirectory(directory);
+    initDirectory(directory, openRequestManager);
 
     try {
-      final MainWindow mainWindow = new MainWindow(this, getServerAddress(), getLocalPrevaylerPath(), isDataInMemory(), directory);
+      final MainWindow mainWindow = new MainWindow(this, getServerAddress(), AppPaths.getLocalPrevaylerPath(), isDataInMemory(), directory);
       mainWindow.show();
     }
     catch (InvalidState e) {
@@ -215,6 +183,7 @@ public class PicsouApplication {
           MD5PasswordBasedEncryptor.init();
         }
         catch (Exception e) {
+          // Ignore
         }
       }
     };
@@ -222,7 +191,7 @@ public class PicsouApplication {
     thread.start();
   }
 
-  void showMultipleInstanceError(String message) {
+  private void showMultipleInstanceError(String message) {
     SplitsBuilder builder = SplitsBuilder.init(directory)
       .setSource(getClass(), "/layout/utils/messageDialog.splits");
 
@@ -230,7 +199,7 @@ public class PicsouApplication {
     JEditorPane editorPane = new JEditorPane("text/html", Lang.get("init.dialog.lock.content", message));
     builder.add("message", editorPane);
 
-    PicsouDialog dialog = PicsouDialog.create((JFrame)null, directory);
+    PicsouDialog dialog = PicsouDialog.create(null, directory);
     dialog.addPanelWithButtons(builder.<JPanel>load(), new AbstractAction(Lang.get("close")) {
       public void actionPerformed(ActionEvent e) {
         System.exit(1);
@@ -243,7 +212,7 @@ public class PicsouApplication {
   public static String[] parseLanguage(String... args) {
     List<String> arguments = new ArrayList<String>();
     arguments.addAll(Arrays.asList(args));
-    for (Iterator<String> iterator = arguments.iterator(); iterator.hasNext();) {
+    for (Iterator<String> iterator = arguments.iterator(); iterator.hasNext(); ) {
       String arg = iterator.next();
       if (arg.equals("-l")) {
         iterator.remove();
@@ -274,35 +243,8 @@ public class PicsouApplication {
     return "true".equalsIgnoreCase(System.getProperty(IS_DATA_IN_MEMORY));
   }
 
-  public static String getLocalPrevaylerPath() {
-    return getDataPath() + "/data";
-  }
-
-  public static String getDataPath() {
-    if (System.getProperty(LOCAL_PREVAYLER_PATH_PROPERTY) == null) {
-      if (GuiUtils.isMacOSX()) {
-        return System.getProperty("user.home") + "/Library/Application Support/BudgetView";
-      }
-      if (GuiUtils.isVista()) {
-        return System.getProperty("user.home") + "/AppData/Local/BudgetView";
-      }
-      if (GuiUtils.isWindows()) {
-        return System.getProperty("user.home") + "/Application Data/BudgetView";
-      }
-    }
-    return getSystemValue(LOCAL_PREVAYLER_PATH_PROPERTY, System.getProperty("user.home") + "/.budgetview");
-  }
-
-  public static String getBankConfigPath() {
-    return getDataPath() + "/" + PicsouApplication.BANK_CONFIG_DIRECTORY;
-  }
-
-  public static String getJarPath() {
-    return getDataPath() + "/" + PicsouApplication.JAR_DIRECTORY;
-  }
-
   public static void clearRepository() {
-    Files.deleteSubtree(new File(getDataPath()));
+    Files.deleteSubtree(new File(AppPaths.getDataPath()));
   }
 
   public static void clearRepositoryIfNeeded() {
@@ -324,7 +266,7 @@ public class PicsouApplication {
     }
   }
 
-  private static String getSystemValue(String propertyName, String defaultPropertyValue) {
+  public static String getSystemValue(String propertyName, String defaultPropertyValue) {
     String value;
     try {
       value = System.getProperty(propertyName);
@@ -339,32 +281,39 @@ public class PicsouApplication {
   }
 
   public static Directory createDirectory() throws IOException {
-    return createDirectory(new OpenRequestManager());
+    Directory directory = new DefaultDirectory();
+    initDirectory(directory, new OpenRequestManager());
+    return directory;
   }
 
-  private static Directory createDirectory(OpenRequestManager openRequestManager) throws IOException {
-    Directory directory = new DefaultDirectory();
-    directory.add(OpenRequestManager.class, openRequestManager);
-    directory.add(ApplicationLAF.initUiService());
-    directory.add(new TimeService());
-    directory.add(new UpgradeService(directory));
-    directory.add(DescriptionService.class, new PicsouDescriptionService());
-    directory.add(GlobModel.class, PicsouGuiModel.get());
-    directory.add(SelectionService.class, new SelectionService());
-    ApplicationColors.registerColorService(directory);
-    directory.add(ImageLocator.class, Gui.IMAGE_LOCATOR);
-    directory.add(TextLocator.class, Lang.TEXT_LOCATOR);
-    directory.add(FontLocator.class, Gui.FONT_LOCATOR);
-    directory.add(PasswordBasedEncryptor.class, new RedirectPasswordBasedEncryptor());
-    directory.add(createConfigService());
-    directory.add(new BankPluginService());
-    directory.add(new BankSynchroService());
-    return directory;
+  private static void initDirectory(Directory directory,
+                                    OpenRequestManager openRequestManager) throws IOException {
+    AddIfNotPresentDirectory wrapper = new AddIfNotPresentDirectory(directory);
+    ApplicationColors.registerColorService(wrapper);
+    wrapper.add(OpenRequestManager.class, openRequestManager);
+    wrapper.add(OpenRequestManager.class, openRequestManager);
+    wrapper.add(ApplicationLAF.initUiService());
+    wrapper.add(new TimeService());
+    wrapper.add(new UpgradeService(directory));
+    wrapper.add(DescriptionService.class, new PicsouDescriptionService());
+    wrapper.add(GlobModel.class, PicsouGuiModel.get());
+    wrapper.add(SelectionService.class, new SelectionService());
+    wrapper.add(ImageLocator.class, Gui.IMAGE_LOCATOR);
+    wrapper.add(TextLocator.class, Lang.TEXT_LOCATOR);
+    wrapper.add(FontLocator.class, Gui.FONT_LOCATOR);
+    wrapper.add(PasswordBasedEncryptor.class, new RedirectPasswordBasedEncryptor());
+    wrapper.add(createConfigService());
+    wrapper.add(new BankPluginService());
+    wrapper.add(new BankSynchroService());
+    wrapper.add(PrinterService.class, new DefaultPrinterService());
+  }
+
+  protected void preinitDirectory(Directory directory) {
   }
 
   private static ConfigService createConfigService() {
     Long localConfigVersion;
-    String configPath = getBankConfigPath();
+    String configPath = AppPaths.getBankConfigPath();
     File lastJar = findLastJar(configPath);
     if (lastJar != null) {
       localConfigVersion = extractVersion(lastJar.getName());
@@ -375,7 +324,7 @@ public class PicsouApplication {
     return new ConfigService(APPLICATION_VERSION, JAR_VERSION, localConfigVersion, lastJar);
   }
 
-  static private File findLastJar(String path) {
+  private static File findLastJar(String path) {
     File directory = new File(path);
     File[] files = directory.listFiles(new FilenameFilter() {
       public boolean accept(File dir, String name) {
@@ -394,7 +343,7 @@ public class PicsouApplication {
     return files[files.length - 1];
   }
 
-  static private Long extractVersion(String fileName) {
+  private static Long extractVersion(String fileName) {
     if (fileName != null && CONFIG_FILTER.matcher(fileName).matches()) {
       return Long.parseLong(fileName.substring(fileName.indexOf(CONFIG) + CONFIG.length(),
                                                fileName.indexOf(".")));

@@ -5,6 +5,7 @@ import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.CloseDialogAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.startup.AppPaths;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
@@ -83,7 +84,7 @@ public class AboutDialog {
 
     builder
       .append("<h2>").append(Lang.get("about.datapath")).append("</h2>")
-      .append("<p>").append(PicsouApplication.getDataPath()).append("</p>");
+      .append("<p>").append(AppPaths.getDataPath()).append("</p>");
 
     builder
       .append("<h2>").append(Lang.get("about.system.properties")).append("</h2>");

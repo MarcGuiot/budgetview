@@ -20,6 +20,12 @@ public class MonthRange extends Range<Integer> {
     }
     return result;
   }
+  
+  public MonthRange intersection(MonthRange other) {
+    int min = (other.getMin() > getMin()) ? other.getMin() : getMin();
+    int max = (other.getMax() < getMax()) ? other.getMax() : getMax();
+    return new MonthRange(min, max);
+  }
 
   public int length() {
     return Month.distance(getMin(), getMax());

@@ -27,7 +27,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "");
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "");
-    System.setProperty(PicsouApplication.LOG_SOUT, "true");
+    System.setProperty(PicsouApplication.LOG_TO_SOUT, "true");
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
 
     final ApplicationChecker application = new ApplicationChecker();

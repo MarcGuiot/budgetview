@@ -23,7 +23,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/11", -40.00, "SomethingElse")
       .load();
 
-    categorization.setNewVariable("Auchan", "Groceries", -100.);
+    categorization.setNewVariable("Auchan", "Groceries", -100.00);
     categorization.setNewRecurring("Free Telecom", "Internet");
     categorization.setNewRecurring("EDF", "Energy");
     categorization.setNewIncome("WorldCo", "Salary");

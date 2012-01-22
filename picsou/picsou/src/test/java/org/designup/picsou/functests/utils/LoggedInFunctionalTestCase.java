@@ -13,7 +13,6 @@ import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.repository.GlobRepositoryValidator;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
@@ -50,6 +49,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public SignpostViewChecker signpostView;
   public FeedbackViewChecker feedbackView;
   public ReconciliationChecker reconciliation;
+  public PrinterChecker printer;
 
   protected GlobRepository repository;
 
@@ -66,6 +66,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected String password = null;
   private boolean firstLogin = true;
   private boolean initialGuidesShown = false;
+  private ApplicationChecker application;
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -75,24 +76,21 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, Boolean.toString(deleteLocalPrevayler));
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, Boolean.toString(isInMemory));
-    System.setProperty(PicsouApplication.LOG_SOUT, "true");
+    System.setProperty(PicsouApplication.LOG_TO_SOUT, "true");
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
     System.setProperty(ConfigService.COM_APP_LICENSE_URL, "");
     System.setProperty(ConfigService.COM_APP_LICENSE_FTP_URL, "");
     DefaultSeriesFactory.AUTO_CREATE_DEFAULT_SERIES = createDefaultSeries;
 
+    application = new ApplicationChecker();
     setAdapter(new UISpecAdapter() {
       public Window getMainWindow() {
         if (mainWindow == null) {
           if (firstLogin) {
-            mainWindow = new ApplicationChecker().start();
+            mainWindow = application.start();
           }
           else {
-            mainWindow = WindowInterceptor.run(new Trigger() {
-              public void run() throws Exception {
-                PicsouApplication.main();
-              }
-            });
+            mainWindow = application.startWithoutSLA();
           }
         }
         return mainWindow;
@@ -128,10 +126,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   public void setInitialGuidesShown(boolean initialGuidesShown) {
     this.initialGuidesShown = initialGuidesShown;
-  }
-
-  protected void disableSignposts() {
-    operations.hideSignposts();
   }
 
   protected void selectInitialView() {
@@ -173,6 +167,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     signpostView = new SignpostViewChecker(mainWindow);
     feedbackView = new FeedbackViewChecker(mainWindow);
     reconciliation = new ReconciliationChecker(mainWindow);
+    printer = application.getPrinter();
   }
 
   protected void tearDown() throws Exception {

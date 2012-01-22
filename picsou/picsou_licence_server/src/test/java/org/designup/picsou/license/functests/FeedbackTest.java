@@ -5,6 +5,7 @@ import org.designup.picsou.functests.checkers.FeedbackDialogChecker;
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.gui.startup.AppLogger;
 import org.designup.picsou.license.ConnectedTestCase;
 import org.globsframework.utils.Files;
 
@@ -62,7 +63,7 @@ public class FeedbackTest extends ConnectedTestCase {
     startServers();
     application.start();
 
-    Files.dumpStringToFile(PicsouApplication.getLogFile(), "Something in the logs");
+    Files.dumpStringToFile(AppLogger.getLogFile(), "Something in the logs");
 
     openFeedback()
       .setLogsAdded()
@@ -79,7 +80,7 @@ public class FeedbackTest extends ConnectedTestCase {
     startServers();
     application.start();
 
-    File logFile = PicsouApplication.getLogFile();
+    File logFile = AppLogger.getLogFile();
     if (logFile.exists()) {
       logFile.delete();
     }

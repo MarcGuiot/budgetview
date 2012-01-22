@@ -6,6 +6,7 @@ import org.designup.picsou.functests.checkers.NewVersionChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.gui.startup.AppPaths;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.license.ConnectedTestCase;
 import org.designup.picsou.license.checkers.FtpServerChecker;
@@ -98,7 +99,7 @@ public class DownloadTest extends ConnectedTestCase {
     application.getTransactions().initContent()
       .add("10/09/2008", TransactionType.VIREMENT, "GOOD HEADER", "", -234.00)
       .check();
-    String path = PicsouApplication.getDataPath();
+    String path = AppPaths.getDataPath();
     File pathToJar = new File(path + "/jars");
     String[] jars = pathToJar.list(new FilenameFilter() {
       public boolean accept(File dir, String name) {

@@ -1,7 +1,10 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.utils.DummyPrinterService;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.printing.PrinterService;
+import org.globsframework.utils.directory.Directory;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
@@ -10,6 +13,7 @@ import org.uispec4j.interception.WindowInterceptor;
 public class ApplicationChecker extends GuiChecker {
   private PicsouApplication application;
   private static Window window;
+  private DummyPrinterService printService = new DummyPrinterService();
 
   private NewVersionChecker newVersion;
   private OperationChecker operations;
@@ -17,7 +21,7 @@ public class ApplicationChecker extends GuiChecker {
   private TransactionChecker transactions;
 
   public Window start() {
-    application = new PicsouApplication();
+    application = new DummyPicsouApplication();
     Window slaWindow = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
         application.run();
@@ -28,7 +32,7 @@ public class ApplicationChecker extends GuiChecker {
 
 
   public Window startWithoutSLA() {
-    application = new PicsouApplication();
+    application = new DummyPicsouApplication();
     clearCheckers();
     window = WindowInterceptor.run(new Trigger() {
       public void run() throws Exception {
@@ -128,6 +132,16 @@ public class ApplicationChecker extends GuiChecker {
   private void checkApplicationStarted() {
     if (window == null) {
       Assert.fail("Application not started");
+    }
+  }
+
+  public PrinterChecker getPrinter() {
+    return new PrinterChecker(printService);
+  }
+
+  private class DummyPicsouApplication extends PicsouApplication {
+    protected void preinitDirectory(Directory directory) {
+      directory.add(PrinterService.class, printService);
     }
   }
 }

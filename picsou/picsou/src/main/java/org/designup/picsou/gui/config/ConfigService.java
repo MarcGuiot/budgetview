@@ -8,6 +8,7 @@ import org.designup.picsou.bank.BankPluginService;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.http.HttpsClientTransport;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.startup.AppPaths;
 import org.designup.picsou.gui.utils.KeyService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.AppVersionInformation;
@@ -192,7 +193,7 @@ public class ConfigService {
         if (localConfigVersion < newConfigVersion) {
           configReceive = new ConfigReceive(directory, repository);
           dowloadConfigThread =
-            new DownloadThread(FTP_URL, PicsouApplication.getBankConfigPath(),
+            new DownloadThread(FTP_URL, AppPaths.getBankConfigPath(),
                                generateConfigJarName(newConfigVersion), newConfigVersion, configReceive);
           dowloadConfigThread.start();
         }
@@ -203,7 +204,7 @@ public class ConfigService {
         if (localJarVersion < newJarVersion) {
           jarReceive = new JarReceive(directory, repository, serverAccess);
           dowloadJarThread =
-            new DownloadThread(FTP_URL, PicsouApplication.getJarPath(),
+            new DownloadThread(FTP_URL, AppPaths.getJarPath(),
                                generatePicsouJarName(newJarVersion), newJarVersion, jarReceive);
           dowloadJarThread.start();
         }

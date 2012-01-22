@@ -66,7 +66,6 @@ public class Range<T extends Comparable> {
       return false;
     }
     return true;
-
   }
 
   public String toString() {

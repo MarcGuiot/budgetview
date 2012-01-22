@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.printing.pages;
+package org.designup.picsou.gui.printing.report;
 
 import org.designup.picsou.gui.printing.PrintColors;
 import org.designup.picsou.gui.printing.PrintFonts;

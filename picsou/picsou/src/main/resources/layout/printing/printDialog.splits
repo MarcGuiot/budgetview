@@ -1,0 +1,23 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="radioButton" marginLeft="20"/>
+  </styles>
+
+  <panel styleClass="dialog" preferredSize="(380,200)">
+    <column styleClass="innerDialog">
+
+      <label text="$print.dialog.title" styleClass="title"/>
+
+      <htmlEditorPane text="$print.dialog.choice" marginTop="5" marginBottom="10" weightY="0.1"/>
+
+      <radioButton ref="currentMonth"/>
+      <radioButton ref="currentYear"/>
+
+      <filler fill="vertical"/>
+
+    </column>
+  </panel>
+
+</splits>

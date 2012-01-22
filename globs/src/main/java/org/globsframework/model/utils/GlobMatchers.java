@@ -395,7 +395,7 @@ public class GlobMatchers {
   }
 
 
-  public static GlobMatcher fieldIn(final IntegerField field, final Set<Integer> values) {
+  public static GlobMatcher fieldIn(final IntegerField field, final Collection<Integer> values) {
     return new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
         Integer value = item.get(field);

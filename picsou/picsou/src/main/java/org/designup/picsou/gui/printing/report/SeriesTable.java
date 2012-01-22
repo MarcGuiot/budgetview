@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.printing.reports;
+package org.designup.picsou.gui.printing.report;
 
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.SeriesStat;
@@ -22,7 +22,7 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesTable {
 
-  List<SeriesRow> seriesRows = new ArrayList<SeriesRow>();
+  private List<SeriesRow> seriesRows = new ArrayList<SeriesRow>();
   private BudgetArea budgetArea;
   private GlobRepository repository;
   private List<Integer> months;
@@ -35,6 +35,7 @@ public class SeriesTable {
     GlobList SeriesStatList =
       repository.getAll(SeriesStat.TYPE,
                         and(linkTargetFieldEquals(SeriesStat.SERIES, Series.BUDGET_AREA, budgetArea.getId()),
+                            fieldIn(SeriesStat.MONTH, months),
                             isTrue(SeriesStat.ACTIVE),
                             isNotNull(SeriesStat.SUMMARY_AMOUNT),
                             not(fieldEquals(SeriesStat.SUMMARY_AMOUNT, 0.00))));
@@ -73,9 +74,22 @@ public class SeriesTable {
 
   public class SeriesRow {
     private Glob series;
+    private Double total;
 
     public SeriesRow(Glob series) {
       this.series = series;
+      this.total = getTotalForPeriod();
+    }
+
+    private Double getTotalForPeriod() {
+      Double result = null;
+      for (Integer monthId : months) {
+        Double value = getValueForMonth(monthId);
+        if (value != null) {
+          result = result == null ? value : result + value;
+        }
+      }
+      return result;
     }
 
     public String getValue(int column) {
@@ -83,19 +97,23 @@ public class SeriesTable {
         return series.get(Series.NAME);
       }
       if (column == 1) {
-        return "???";
+        return total != null ? Formatting.toString(total, budgetArea) : "";
       }
       int monthId = months.get(column - 2);
-      Glob stat = repository.find(Key.create(SeriesStat.SERIES, series.get(Series.ID),
-                                             SeriesStat.MONTH, monthId));
-      if (stat == null) {
-        return "";
-      }
-      Double value = stat.get(SeriesStat.SUMMARY_AMOUNT);
+      Double value = getValueForMonth(monthId);
       if (Amounts.isNullOrZero(value)) {
         return "";
       }
       return Formatting.toString(value, budgetArea);
+    }
+
+    private Double getValueForMonth(int monthId) {
+      Glob stat = repository.find(Key.create(SeriesStat.SERIES, series.get(Series.ID),
+                                             SeriesStat.MONTH, monthId));
+      if (stat == null) {
+        return null;
+      }
+      return stat.get(SeriesStat.SUMMARY_AMOUNT);
     }
   }
 }

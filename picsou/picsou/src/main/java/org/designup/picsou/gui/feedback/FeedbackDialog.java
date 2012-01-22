@@ -5,6 +5,7 @@ import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.server.DisconnectionTip;
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.gui.startup.AppLogger;
 import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -64,7 +65,7 @@ public class FeedbackDialog {
       .append("\n\n--------------\n\n")
       .append("version: ").append(PicsouApplication.APPLICATION_VERSION).append("\n");
     if (addLogsCheckbox.isSelected()) {
-      File logFile = PicsouApplication.getLogFile();
+      File logFile = AppLogger.getLogFile();
       if (logFile.exists()) {
         builder
           .append("logs:\n")

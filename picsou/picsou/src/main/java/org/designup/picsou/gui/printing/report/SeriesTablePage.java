@@ -1,9 +1,8 @@
-package org.designup.picsou.gui.printing.pages;
+package org.designup.picsou.gui.printing.report;
 
 import org.designup.picsou.gui.printing.PrintColors;
 import org.designup.picsou.gui.printing.PrintFonts;
 import org.designup.picsou.gui.printing.PrintMetrics;
-import org.designup.picsou.gui.printing.reports.SeriesTable;
 import org.globsframework.gui.views.Alignment;
 
 import java.awt.*;
@@ -55,5 +54,9 @@ public class SeriesTablePage extends ReportPage {
     }
 
     return PAGE_EXISTS;
+  }
+
+  public SeriesTable getSeriesTable() {
+    return table;
   }
 }

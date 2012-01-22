@@ -1,8 +1,9 @@
-package org.designup.picsou.gui.printing.pages;
+package org.designup.picsou.gui.printing.report;
 
 import org.designup.picsou.gui.printing.PrintFonts;
 import org.designup.picsou.gui.printing.PrintMetrics;
 import org.globsframework.gui.views.Alignment;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.awt.*;
@@ -18,6 +19,8 @@ public class SeriesTableMetrics {
   private int columnCount;
   private int textYOffset;
 
+  private int firstColumnWidth;
+
   public SeriesTableMetrics(PrintMetrics metrics, Graphics2D g2, PrintFonts fonts, int columnCount) {
     Rectangle contentArea = metrics.getContentArea();
     this.x0 = contentArea.x;
@@ -26,10 +29,12 @@ public class SeriesTableMetrics {
     this.height = contentArea.height;
     this.columnCount = columnCount;
 
-    tableFontMetrics = g2.getFontMetrics(fonts.getTableTextFont());
+    this.tableFontMetrics = g2.getFontMetrics(fonts.getTableTextFont());
     int textHeight = tableFontMetrics.getHeight();
-    rowHeight = textHeight + 4;
-    textYOffset = (rowHeight - textHeight) / 2 + tableFontMetrics.getDescent();
+    this.rowHeight = textHeight + 4;
+    this.textYOffset = (rowHeight - textHeight) / 2 + tableFontMetrics.getDescent();
+
+    this.firstColumnWidth = tableFontMetrics.stringWidth(Strings.repeat("a", 20));
   }
 
   public int tableLeft() {
@@ -53,8 +58,8 @@ public class SeriesTableMetrics {
   }
 
   public int tableTextX(String text, int col, Alignment alignment) {
-    int left = x0 + (col + 0) * width / columnCount;
-    int right = x0 + (col + 1) * width / columnCount;
+    int left = leftX(col);
+    int right = leftX(col + 1);
     switch (alignment) {
       case LEFT:
         return left;
@@ -67,6 +72,16 @@ public class SeriesTableMetrics {
         return right - tableFontMetrics.stringWidth(text) - 1;
     }
     throw new InvalidParameter("Unknown alignment: " + alignment);
+  }
+
+  private int leftX(int col) {
+    if (col == 0) {
+      return x0;
+    }
+    if (col == 1) {
+      return x0 + firstColumnWidth;
+    }
+    return x0 + firstColumnWidth + (col - 1) * (width - firstColumnWidth) / columnCount;
   }
 
   public int tableTextY(int row) {
