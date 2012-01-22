@@ -1,5 +1,6 @@
 package org.designup.picsou.license.servlet;
 
+import org.apache.log4j.Logger;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.generator.LicenseGenerator;
 import org.designup.picsou.license.mail.Mailer;
@@ -7,6 +8,7 @@ import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.model.RepoInfo;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.sqlstreams.SelectQuery;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlService;
@@ -14,7 +16,6 @@ import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.Encoder;
-import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,6 +31,8 @@ import java.util.Date;
 
 public class RegisterServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("RegisterServlet");
+  public static final GlobFieldsComparator COMPARATOR = 
+    new GlobFieldsComparator(License.ACTIVATION_CODE, false, License.TIME_STAMP, true);
   private SqlService sqlService;
   private Mailer mailer;
 
@@ -77,55 +80,65 @@ public class RegisterServlet extends HttpServlet {
                                            Constraints.equal(License.MAIL, mail))
       .selectAll()
       .getQuery();
-    GlobList globList = query.executeAsGlobs();
+    GlobList globList = query.executeAsGlobs()
+      .sort(COMPARATOR);
     db.commit();
     if (globList.isEmpty()) {
       resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
       logger.info("unknown user " + mail);
     }
     else {
-      Glob license = globList.get(0);
-      if (activationCode.equals(license.get(License.ACTIVATION_CODE))) {
-        logger.info("License activation ok");
-        byte[] signature = LicenseGenerator.generateSignature(mail);
-        db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
-          .update(License.ACCESS_COUNT, 1L)
-          .update(License.SIGNATURE, signature)
-          .update(License.ACTIVATION_CODE, (String)null)
-          .update(License.LAST_ACTIVATION_CODE, activationCode)
-          .update(License.REPO_ID, repoId)
-          .update(License.KILLED_REPO_ID, license.get(License.REPO_ID))
-          .update(License.DATE_KILLED_1, new Date())
-          .update(License.DATE_KILLED_2, license.get(License.DATE_KILLED_1))
-          .update(License.DATE_KILLED_3, license.get(License.DATE_KILLED_2))
-          .update(License.DATE_KILLED_4, license.get(License.DATE_KILLED_3))
-          .update(License.KILLED_COUNT, license.get(License.KILLED_COUNT) + 1)
-          .getRequest()
-          .run();
-        db.getUpdateBuilder(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, repoId))
-          .update(RepoInfo.LICENSE_ID, license.get(License.ID))
-          .getRequest()
-          .run();
-        db.commit();
-        resp.setHeader(ConfigService.HEADER_SIGNATURE, Encoder.byteToString(signature));
-      }
-      else if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
-        String newCode = LicenseGenerator.generateActivationCode();
-        logger.info("Mail sent with new code " + newCode);
-        db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
-          .update(License.ACTIVATION_CODE, newCode)
-          .getRequest()
-          .run();
-        db.commit();
-        resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "true");
-        if (!mailer.reSendExistingLicenseOnError(lang, newCode, mail)) {
-          logger.error("Fail to send mail retrying.");
+      for (Glob license : globList) {
+        if (activationCode.equals(license.get(License.ACTIVATION_CODE))) {
+          logger.info("License activation ok " + license.get(License.ID));
+          if (license.get(License.REPO_ID) != null) {
+            logger.info("Invalidating " + license.get(License.ID) + " ropId : " + license.get(License.REPO_ID));
+          }
+          byte[] signature = LicenseGenerator.generateSignature(mail);
+          db.getUpdateBuilder(License.TYPE, Constraints.equal(License.ID, license.get(License.ID)))
+            .update(License.ACCESS_COUNT, 1L)
+            .update(License.SIGNATURE, signature)
+            .update(License.ACTIVATION_CODE, (String)null)
+            .update(License.LAST_ACTIVATION_CODE, activationCode)
+            .update(License.REPO_ID, repoId)
+            .update(License.TIME_STAMP, System.currentTimeMillis())
+            .update(License.KILLED_REPO_ID, license.get(License.REPO_ID))
+            .update(License.DATE_KILLED_1, new Date())
+            .update(License.DATE_KILLED_2, license.get(License.DATE_KILLED_1))
+            .update(License.DATE_KILLED_3, license.get(License.DATE_KILLED_2))
+            .update(License.DATE_KILLED_4, license.get(License.DATE_KILLED_3))
+            .update(License.KILLED_COUNT, license.get(License.KILLED_COUNT) + 1)
+            .getRequest()
+            .run();
+          db.getUpdateBuilder(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, repoId))
+            .update(RepoInfo.LICENSE_ID, license.get(License.ID))
+            .getRequest()
+            .run();
+          db.commit();
+          resp.setHeader(ConfigService.HEADER_SIGNATURE, Encoder.byteToString(signature));
+          resp.setStatus(HttpServletResponse.SC_OK);
+          return;
         }
       }
-      else {
-        logger.info("No mail sent");
-        resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "false");
+      for (Glob license : globList) {
+        if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
+          String newCode = LicenseGenerator.generateActivationCode();
+          logger.info("Mail sent with new code " + newCode);
+          db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
+            .update(License.ACTIVATION_CODE, newCode)
+            .getRequest()
+            .run();
+          db.commit();
+          resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "true");
+          if (!mailer.reSendExistingLicenseOnError(lang, newCode, mail)) {
+            logger.error("Fail to send mail retrying.");
+          }
+          resp.setStatus(HttpServletResponse.SC_OK);
+          return;
+        }
       }
+      logger.info("No mail sent (activation failed)");
+      resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "false");
     }
     resp.setStatus(HttpServletResponse.SC_OK);
   }

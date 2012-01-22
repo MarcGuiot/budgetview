@@ -15,7 +15,7 @@ import java.util.*;
 
 public class PositionTrigger implements ChangeSetListener {
 
-  // donnée menmbre utilisé temporairement
+  // donnée membre utilisé temporairement
   private double positionBefore;
   private double positionAfter;
   private Integer lastUpdateTransactionId;

@@ -96,7 +96,7 @@ public abstract class TextFilterPanel {
 
   public void reapplyFilterIfActive() {
     String text = textField.getText();
-    if (text.isEmpty()) {
+    if (Strings.isNullOrEmpty(text)) {
       return;
     }
     filterManager.set(SEARCH_FILTER, createMatcher(text));

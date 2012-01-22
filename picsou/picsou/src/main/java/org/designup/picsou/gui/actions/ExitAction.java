@@ -46,8 +46,6 @@ public class ExitAction extends AbstractAction {
       UserEvaluationDialog.showIfNeeded(repository, directory);
     }
 
-    UserProgressInfoSender.send(repository, directory);
-
     frame.setVisible(false);
     frame.dispose();
     windowManager.shutdown();

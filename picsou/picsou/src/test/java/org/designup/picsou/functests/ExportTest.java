@@ -173,7 +173,6 @@ public class ExportTest extends LoggedInFunctionalTestCase {
   }
 
   public void testTSVExport() throws Exception {
-
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
     OfxBuilder.init(this)

@@ -14,17 +14,15 @@ import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Dates;
-import org.uispec4j.Trigger;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.interception.toolkit.UISpecDisplay;
 
 import java.util.Date;
 
 public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
-  static protected Window mainWindow;
+  protected static Window mainWindow;
 
   public ViewSelectionChecker views;
   public MainAccountViewChecker mainAccounts;

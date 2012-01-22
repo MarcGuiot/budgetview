@@ -6,6 +6,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
@@ -32,12 +33,18 @@ public class SignpostStatus {
 
   public static BooleanField WELCOME_SHOWN;
   public static BooleanField GOTO_DATA_DONE;
+  @NoObfuscation
   public static BooleanField IMPORT_DONE;
   public static BooleanField GOTO_CATEGORIZATION_DONE;
+  @NoObfuscation
   public static BooleanField CATEGORIZATION_SELECTION_DONE;
+  @NoObfuscation
   public static BooleanField CATEGORIZATION_AREA_SELECTION_DONE;
+  @NoObfuscation
   public static BooleanField FIRST_CATEGORIZATION_DONE;
+  @NoObfuscation
   public static BooleanField CATEGORIZATION_SKIPPED;
+  @NoObfuscation
   public static BooleanField GOTO_BUDGET_SHOWN;
   public static BooleanField GOTO_BUDGET_DONE;
   public static BooleanField SERIES_AMOUNT_SHOWN;

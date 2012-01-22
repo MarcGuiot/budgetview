@@ -22,7 +22,10 @@ public class UserProgressInfoSender {
   };
 
   public static void send(GlobRepository repository, Directory directory) {
-    Glob userPrefs = repository.get(UserPreferences.KEY);
+    Glob userPrefs = repository.find(UserPreferences.KEY);
+    if (userPrefs == null){
+      return;
+    }
     int exitCount = userPrefs.get(UserPreferences.EXIT_COUNT, 0);
 
     if (!repository.get(User.KEY).isTrue(User.CONNECTED) || exitCount >= 3) {
@@ -36,7 +39,6 @@ public class UserProgressInfoSender {
     for (BooleanField field : FIELDS_TO_SEND) {
       builder.append(", " + field.getName() + ": " + status.get(field, Boolean.FALSE));
     }
-
     try {
       directory.get(ConfigService.class).sendUsageData(builder.toString());
     }

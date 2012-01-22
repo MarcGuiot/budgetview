@@ -1,17 +1,14 @@
 package org.designup.picsou.functests;
 
-import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.ApplicationChecker;
 import org.designup.picsou.functests.checkers.CategorizationGaugeChecker;
 import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
-import org.uispec4j.Trigger;
 import org.uispec4j.assertion.UISpecAssert;
-import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.io.File;
@@ -612,11 +609,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     mainWindow = null;
     operations = null;
 
-    mainWindow = WindowInterceptor.run(new Trigger() {
-      public void run() throws Exception {
-        PicsouApplication.main();
-      }
-    });
+    ApplicationChecker application = new ApplicationChecker();
+    mainWindow = application.start();
     UISpecAssert.waitUntil(mainWindow.containsSwingComponent(JPasswordField.class), 10000);
     LoginChecker.init(mainWindow).checkErrorMessage("data.load.error.journal");
     mainWindow.dispose();
@@ -656,7 +650,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     );
 
     restartApplication();
-    
+
     reconciliation.checkColumnAndMenuShown();
     categorization.checkTable(new Object[][]{
       {"-", "20/08/2008", "", "AUCHAN", 100.0},

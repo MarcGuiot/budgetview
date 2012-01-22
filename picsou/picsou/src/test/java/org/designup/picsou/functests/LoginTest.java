@@ -16,10 +16,10 @@ import javax.swing.*;
 public class LoginTest extends StartUpFunctionalTestCase {
 
   private Window window;
-  private PicsouApplication picsouApplication;
   private LoginChecker login;
   private OperationChecker operations;
   private boolean firstLogin;
+  private ApplicationChecker application;
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -30,27 +30,19 @@ public class LoginTest extends StartUpFunctionalTestCase {
     System.setProperty(PicsouApplication.LOG_TO_SOUT, "true");
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
 
-    final ApplicationChecker application = new ApplicationChecker();
+    application = new ApplicationChecker();
     setAdapter(new UISpecAdapter() {
       public Window getMainWindow() {
         if (firstLogin) {
           return application.start();
         }
         else {
-          return WindowInterceptor.run(new Trigger() {
-            public void run() throws Exception {
-              picsouApplication = new PicsouApplication();
-              picsouApplication.run();
-            }
-          });
+          return application.startWithoutSLA();
         }
       }
     });
 
     openNewLoginWindow(true);
-    if (firstLogin) {
-      picsouApplication = application.getApplication();
-    }
   }
 
   protected void tearDown() throws Exception {
@@ -59,8 +51,8 @@ public class LoginTest extends StartUpFunctionalTestCase {
     window.dispose();
     window = null;
     login = null;
-    picsouApplication.shutdown();
-    picsouApplication = null;
+    application.dispose();
+    application = null;
     operations = null;
   }
 

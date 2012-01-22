@@ -118,10 +118,6 @@ public class UpgradeTrigger implements ChangeSetListener {
       correctSavingMiror(repository);
     }
 
-    if (!PicsouApplication.JAR_VERSION.equals(currentJarVersion)){
-      SignpostStatus.setAllCompleted(repository);
-    }
-
     deleteDeprecatedGlobs(repository);
 
     Glob appVersion = repository.get(AppVersionInformation.KEY);

@@ -76,7 +76,7 @@ public class MainWindow implements WindowManager {
     thread = new ShutDownThread(serverAccess);
     Runtime.getRuntime().addShutdownHook(thread);
 
-    this.frame = new PicsouFrame(Lang.get("application"));
+    this.frame = new PicsouFrame(Lang.get("application"), directory);
 
     ConfigService configService = directory.get(ConfigService.class);
     ServerAccess.LocalInfo info = initServerAccess(serverAddress, prevaylerPath, dataInMemory);
@@ -108,6 +108,9 @@ public class MainWindow implements WindowManager {
   }
 
   public void shutdown() {
+    if(thread == null){
+      return ;
+    }
     try {
       LicenseCheckerThread local = licenseCheckerThread;
       local.shutdown();

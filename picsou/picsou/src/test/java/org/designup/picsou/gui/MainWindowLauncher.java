@@ -1,14 +1,15 @@
 package org.designup.picsou.gui;
 
+import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
 import org.designup.picsou.client.local.LocalClientTransport;
+import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.startup.AppPaths;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
-import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -22,9 +23,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import net.roydesign.mac.MRJAdapter;
 
-  public class MainWindowLauncher {
+public class MainWindowLauncher {
 
   static {
     PicsouMacLookAndFeel.initApplicationName();
@@ -63,7 +63,7 @@ import net.roydesign.mac.MRJAdapter;
     init.loadUserData(user, false, false).load();
 
     Directory initDirectory = init.getDirectory();
-    final PicsouFrame frame = new PicsouFrame(Lang.get("application"));
+    final PicsouFrame frame = new PicsouFrame(Lang.get("application"), directory);
     MainPanel.init(init.getRepository(), initDirectory, new WindowManager() {
       public PicsouFrame getFrame() {
         return frame;
@@ -115,7 +115,7 @@ import net.roydesign.mac.MRJAdapter;
   }
 
   private static String parseArguments(List<String> args, String key, String defaultValue) {
-    for (Iterator<String> it = args.iterator(); it.hasNext();) {
+    for (Iterator<String> it = args.iterator(); it.hasNext(); ) {
       String arg = it.next();
       if (key.equals(arg)) {
         it.remove();

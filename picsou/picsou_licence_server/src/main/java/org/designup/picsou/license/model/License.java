@@ -45,6 +45,9 @@ public class License {
 
   public static IntegerField GROUP_ID;
 
+  public static LongField TIME_STAMP;
+
+
   static {
     GlobTypeLoader.init(License.class);
   }

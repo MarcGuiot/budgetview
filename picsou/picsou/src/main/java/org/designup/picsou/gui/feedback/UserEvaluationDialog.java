@@ -30,8 +30,10 @@ public class UserEvaluationDialog {
   private JProgressBar sendingState = new JProgressBar();
 
   public static void showIfNeeded(GlobRepository repository, Directory directory) {
-
-    Glob userPrefs = repository.get(UserPreferences.KEY);
+    Glob userPrefs = repository.find(UserPreferences.KEY);
+    if (userPrefs == null){
+      return;
+    }
     int exitCount = userPrefs.get(UserPreferences.EXIT_COUNT, 0);
     repository.update(UserPreferences.KEY, UserPreferences.EXIT_COUNT, exitCount + 1);
     if (!repository.get(User.KEY).isTrue(User.CONNECTED)) {

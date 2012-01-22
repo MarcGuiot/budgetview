@@ -12,6 +12,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SelectQuery;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlService;
+import org.globsframework.sqlstreams.SqlRequest;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.utils.directory.Directory;
 
@@ -30,6 +31,7 @@ import java.util.Map;
 
 public class NewUserServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("NewUserServlet");
+  public static final int LICENCE_COUNT = Integer.parseInt(System.getProperty("budgetview.licence.count", "3"));
   public static final String PAYPAL_CONFIRM_URL_PROPERTY = "PAYPAL_CONFIRM_URL";
   //  private static String PAYPAL_CONFIRM_URL = "http://www.sandbox.paypal.com/fr/cgi-bin/webscr";
   private static String PAYPAL_CONFIRM_URL = "http://www.paypal.com/fr/cgi-bin/webscr";
@@ -157,14 +159,18 @@ public class NewUserServlet extends HttpServlet {
     if (globList.isEmpty()) {
       String code = LicenseGenerator.generateActivationCode();
       byte[] signature = LicenseGenerator.generateSignature(mail);
-      db.getCreateBuilder(License.TYPE)
+      SqlRequest sqlRequest = db.getCreateBuilder(License.TYPE)
         .set(License.ACCESS_COUNT, 1L)
         .set(License.SIGNATURE, signature)
         .set(License.ACTIVATION_CODE, code)
         .set(License.MAIL, mail)
         .set(License.TRANSACTION_ID, transactionId)
-        .getRequest()
-        .run();
+        .getRequest();
+      for (int i = 0; i < LICENCE_COUNT; i++){
+        sqlRequest.run();
+      }
+      sqlRequest.close();
+
       db.commit();
       logger.info("NewUser : ok  for " + mail + " code is " + code);
       mailer.sendNewLicense(mail, code, "fr");

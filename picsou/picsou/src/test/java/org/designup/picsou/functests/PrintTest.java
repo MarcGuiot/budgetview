@@ -8,6 +8,7 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 public class PrintTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
+    this.mainWindow = null;
     setCurrentMonth("2012/05");
     super.setUp();
   }
