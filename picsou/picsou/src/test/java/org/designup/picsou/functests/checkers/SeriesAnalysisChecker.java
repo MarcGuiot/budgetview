@@ -2,6 +2,9 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
+import org.designup.picsou.functests.checkers.components.HistoChartChecker;
+import org.designup.picsou.functests.checkers.components.StackChecker;
+import org.designup.picsou.functests.checkers.components.TableChecker;
 import org.designup.picsou.gui.series.analysis.SeriesEvolutionTableView;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;

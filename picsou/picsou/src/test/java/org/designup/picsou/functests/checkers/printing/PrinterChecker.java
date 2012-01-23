@@ -1,4 +1,4 @@
-package org.designup.picsou.functests.checkers;
+package org.designup.picsou.functests.checkers.printing;
 
 import org.designup.picsou.functests.checkers.utils.DummyPrinterService;
 

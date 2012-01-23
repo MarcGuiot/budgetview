@@ -1,6 +1,7 @@
 package com.budgetview;
 
 import org.designup.picsou.functests.checkers.*;
+import org.designup.picsou.functests.checkers.components.TimeViewChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.model.TransactionType;

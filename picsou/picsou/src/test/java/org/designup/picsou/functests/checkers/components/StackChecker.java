@@ -1,6 +1,8 @@
-package org.designup.picsou.functests.checkers;
+package org.designup.picsou.functests.checkers.components;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.GuiChecker;
+import org.designup.picsou.functests.checkers.ViewSelectionChecker;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
 import org.uispec4j.Key;
@@ -10,14 +12,19 @@ import org.uispec4j.interception.toolkit.Empty;
 
 import java.awt.*;
 
-public class StackChecker extends ViewChecker {
+public class StackChecker extends GuiChecker {
 
+  private Panel panel;
+  private Window window;
   private String containerName;
   private String name;
-  private Panel panel;
+
+  public StackChecker(Panel panel) {
+    this.panel = panel;
+  }
 
   public StackChecker(Window window, String containerName, String name) {
-    super(window);
+    this.window = window;
     this.containerName = containerName;
     this.name = name;
   }
@@ -122,8 +129,9 @@ public class StackChecker extends ViewChecker {
 
   private StackChart getChart() {
     if (panel == null) {
+      ViewSelectionChecker views = new ViewSelectionChecker(window);
       views.selectAnalysis();
-      panel = mainWindow.getPanel(containerName).getPanel(name);
+      panel = window.getPanel(containerName).getPanel(name);
     }
     return (StackChart)panel.getAwtComponent();
   }

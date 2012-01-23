@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.components.HistoChartChecker;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.ProfileType;
 import org.designup.picsou.utils.Lang;

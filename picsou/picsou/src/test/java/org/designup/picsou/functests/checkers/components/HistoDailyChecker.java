@@ -1,6 +1,7 @@
-package org.designup.picsou.functests.checkers;
+package org.designup.picsou.functests.checkers.components;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.AbstractHistoChecker;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyDataset;
@@ -93,7 +94,7 @@ public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
     return this;
   }
 
-  protected HistoDailyDataset getDataset() {
+  public HistoDailyDataset getDataset() {
     return getDataset(HistoDailyDataset.class);
   }
 
@@ -122,7 +123,7 @@ public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
     Mouse.doubleClick(new Panel(getChart()));
   }
 
-  protected HistoChart getChart() {
+  public HistoChart getChart() {
     return (HistoChart)chartPanel.getAwtComponent();
   }
 

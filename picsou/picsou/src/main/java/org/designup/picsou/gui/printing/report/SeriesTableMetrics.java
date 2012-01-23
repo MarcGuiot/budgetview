@@ -17,8 +17,8 @@ public class SeriesTableMetrics {
   private int height;
   private int rowHeight;
   private int columnCount;
-  private int textYOffset;
 
+  private int textYOffset;
   private int firstColumnWidth;
 
   public SeriesTableMetrics(PrintMetrics metrics, Graphics2D g2, PrintFonts fonts, int columnCount) {
@@ -29,7 +29,7 @@ public class SeriesTableMetrics {
     this.height = contentArea.height;
     this.columnCount = columnCount;
 
-    this.tableFontMetrics = g2.getFontMetrics(fonts.getTableTextFont());
+    this.tableFontMetrics = g2.getFontMetrics(fonts.getTableTextFont(true));
     int textHeight = tableFontMetrics.getHeight();
     this.rowHeight = textHeight + 4;
     this.textYOffset = (rowHeight - textHeight) / 2 + tableFontMetrics.getDescent();
@@ -58,8 +58,8 @@ public class SeriesTableMetrics {
   }
 
   public int tableTextX(String text, int col, Alignment alignment) {
-    int left = leftX(col);
-    int right = leftX(col + 1);
+    int left = tableColumnLeft(col);
+    int right = tableColumnLeft(col + 1);
     switch (alignment) {
       case LEFT:
         return left;
@@ -74,14 +74,14 @@ public class SeriesTableMetrics {
     throw new InvalidParameter("Unknown alignment: " + alignment);
   }
 
-  private int leftX(int col) {
+  public int tableColumnLeft(int col) {
     if (col == 0) {
       return x0;
     }
     if (col == 1) {
       return x0 + firstColumnWidth;
     }
-    return x0 + firstColumnWidth + (col - 1) * (width - firstColumnWidth) / columnCount;
+    return x0 + firstColumnWidth + (col -1) * (width - firstColumnWidth) / (columnCount - 1);
   }
 
   public int tableTextY(int row) {

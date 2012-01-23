@@ -1,4 +1,4 @@
-package org.designup.picsou.functests.checkers;
+package org.designup.picsou.functests.checkers.components;
 
 import junit.framework.Assert;
 import org.designup.picsou.gui.components.charts.Gauge;
@@ -27,7 +27,7 @@ public class GaugeChecker extends AbstractUIComponent {
     Assert.assertNotNull(gauge);
   }
 
-  Panel getPanel() {
+  public Panel getPanel() {
     return new Panel(gauge);
   }
 

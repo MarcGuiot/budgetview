@@ -2,6 +2,8 @@ package org.designup.picsou.functests.utils;
 
 import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.functests.checkers.*;
+import org.designup.picsou.functests.checkers.components.TimeViewChecker;
+import org.designup.picsou.functests.checkers.printing.PrinterChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.PicsouFrame;

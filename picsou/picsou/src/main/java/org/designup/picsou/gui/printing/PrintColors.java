@@ -8,7 +8,7 @@ public class PrintColors {
   private final Color titleColor = Color.BLACK;
   private final Color tableTextColor = Color.BLACK;
   private final Color tableRowColor = Colors.toColor("EEEEEE");
-  private final Color tableBorderColor = Color.GRAY;
+  private final Color tableLineColor = Colors.toColor("999999");
 
   public Color getTitleColor() {
     return titleColor;
@@ -20,5 +20,9 @@ public class PrintColors {
 
   public Color getTableRowColor() {
     return tableRowColor;
+  }
+
+  public Color getTableLineColor() {
+    return tableLineColor;
   }
 }

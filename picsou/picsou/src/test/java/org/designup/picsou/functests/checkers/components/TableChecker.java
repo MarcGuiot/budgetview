@@ -1,4 +1,4 @@
-package org.designup.picsou.functests.checkers;
+package org.designup.picsou.functests.checkers.components;
 
 import org.uispec4j.Table;
 

@@ -12,6 +12,7 @@ import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
+import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
@@ -53,7 +54,8 @@ public class SeriesChartsPanel implements GlobSelectionListener {
   private StackChartColors expensesStackColors;
   private SelectionService selectionService;
 
-  public SeriesChartsPanel(final GlobRepository repository,
+  public SeriesChartsPanel(HistoChartRange range,
+                           final GlobRepository repository,
                            Directory directory,
                            final SelectionService parentSelectionService) {
     this.repository = repository;
@@ -64,7 +66,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     setMainSummaryWrapperKey();
 
     histoChartBuilder = new HistoChartBuilder(new HistoChartConfig(true, true, false, true, true, false, true, false, false),
-                                              new ScrollableHistoChartRange(12, 6, false, repository),
+                                              range,
                                               repository, directory, parentSelectionService);
     histoChartBuilder.addListener(new HistoChartListenerAdapter() {
       public void scroll(int count) {

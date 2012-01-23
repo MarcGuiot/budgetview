@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.components;
 
 import junit.framework.TestCase;
-import org.designup.picsou.functests.checkers.GaugeChecker;
+import org.designup.picsou.functests.checkers.components.GaugeChecker;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.tips.ShowDetailsTipAction;

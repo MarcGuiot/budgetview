@@ -1,6 +1,7 @@
-package org.designup.picsou.functests.checkers;
+package org.designup.picsou.functests.checkers.components;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.GuiChecker;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.gui.time.selectable.Selectable;

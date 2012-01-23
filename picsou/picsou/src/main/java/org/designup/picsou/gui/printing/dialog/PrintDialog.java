@@ -24,6 +24,7 @@ public class PrintDialog {
   private Period currentPeriod;
   private PrintDialog.CurrentMonthAction currentMonthAction;
   private PrintDialog.CurrentYearAction currentYearAction;
+  private Integer currentMonth;
 
   public PrintDialog(GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -32,6 +33,7 @@ public class PrintDialog {
   }
 
   public void show(Integer currentMonth) {
+    this.currentMonth = currentMonth;
     currentMonthAction.update(currentMonth);
     currentYearAction.update(currentMonth);
     dialog.showCentered();
@@ -71,10 +73,10 @@ public class PrintDialog {
 
     public void actionPerformed(ActionEvent actionEvent) {
       try {
+        // Build report before closing the window
+        BudgetReport report = new BudgetReport(currentMonth, currentPeriod.getRange(), repository, directory);
         dialog.setVisible(false);
-        directory.get(PrinterService.class).print(Lang.get("application"),
-                                                  new BudgetReport(currentPeriod.getRange(),
-                                                                   repository, directory));
+        directory.get(PrinterService.class).print(Lang.get("application"), report);
       }
       catch (OperationFailed e) {
         throw new RuntimeException(e);

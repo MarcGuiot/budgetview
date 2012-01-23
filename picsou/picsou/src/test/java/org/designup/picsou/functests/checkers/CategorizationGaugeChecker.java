@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.functests.checkers.components.GaugeChecker;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.uispec4j.*;
 import static org.uispec4j.assertion.UISpecAssert.*;

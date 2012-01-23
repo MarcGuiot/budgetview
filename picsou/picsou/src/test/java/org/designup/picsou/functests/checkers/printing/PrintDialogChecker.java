@@ -1,5 +1,6 @@
-package org.designup.picsou.functests.checkers;
+package org.designup.picsou.functests.checkers.printing;
 
+import org.designup.picsou.functests.checkers.GuiChecker;
 import org.uispec4j.RadioButton;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;

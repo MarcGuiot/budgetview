@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.printing.report;
 
 import org.designup.picsou.gui.printing.PrintableReport;
-import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.util.MonthRange;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -15,16 +14,14 @@ import java.util.List;
 
 public class BudgetReport implements PrintableReport {
 
-  private static BudgetArea[] BUDGET_AREA_TABLES =
-    {BudgetArea.INCOME, BudgetArea.RECURRING, BudgetArea.VARIABLE, BudgetArea.SAVINGS, BudgetArea.EXTRAS};
-  
   private PageFormat format;
   private List<ReportPage> pages = new ArrayList<ReportPage>();
 
-  public BudgetReport(MonthRange monthRange, GlobRepository repository, Directory directory) {
-    this.pages.add(new BudgetOverviewPage(monthRange, repository, directory));
-    for (BudgetArea budgetArea : BUDGET_AREA_TABLES) {
-      this.pages.add(new SeriesTablePage(new SeriesTable(budgetArea, monthRange, repository, directory)));
+  public BudgetReport(Integer currentMonth, MonthRange monthRange, GlobRepository repository, Directory directory) {
+    this.pages.add(new BudgetOverviewPage(currentMonth, monthRange, repository, directory));
+    List<SeriesTable> tables = SeriesTable.getAll(currentMonth, monthRange, repository);
+    for (SeriesTable table : tables) {
+      this.pages.add(new SeriesTablePage(table));
     }
   }
 

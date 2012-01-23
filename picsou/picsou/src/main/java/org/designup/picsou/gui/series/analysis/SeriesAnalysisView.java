@@ -4,6 +4,7 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.actions.SelectNextMonthAction;
 import org.designup.picsou.gui.actions.SelectPreviousMonthAction;
 import org.designup.picsou.gui.series.analysis.components.SeriesAnalysisBreadcrumb;
+import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -62,7 +63,7 @@ public class SeriesAnalysisView extends View {
     SeriesAnalysisBreadcrumb breadcrumb = new SeriesAnalysisBreadcrumb(repository, directory);
     builder.add("breadcrumb", breadcrumb.getEditor());
 
-    this.chartPanel = new SeriesChartsPanel(repository, directory, parentSelectionService);
+    this.chartPanel = new SeriesChartsPanel(new ScrollableHistoChartRange(12, 6, false, repository), repository, directory, parentSelectionService);
     this.chartPanel.registerCharts(builder);
 
     JPanel tablePanel = new JPanel();

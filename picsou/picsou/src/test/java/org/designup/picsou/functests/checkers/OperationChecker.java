@@ -1,9 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
+import org.designup.picsou.functests.checkers.printing.PrintDialogChecker;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.feedback.UserEvaluationDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Ref;

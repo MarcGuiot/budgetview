@@ -12,7 +12,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,28 +22,50 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesTable {
 
-  private List<SeriesRow> seriesRows = new ArrayList<SeriesRow>();
+  private static final int MAX_ROWS_PER_PAGE = 30;
+
+  private static BudgetArea[] BUDGET_AREA_TABLES =
+    {BudgetArea.INCOME, BudgetArea.RECURRING, BudgetArea.VARIABLE, BudgetArea.SAVINGS, BudgetArea.EXTRAS};
+
+  public static List<SeriesTable> getAll(Integer currentMonth,
+                                         MonthRange monthRange,
+                                         GlobRepository repository) {
+    List<SeriesTable> result = new ArrayList<SeriesTable>();
+
+    List<Integer> months = monthRange.asList();
+    for (BudgetArea budgetArea : BUDGET_AREA_TABLES) {
+      List<SeriesRow> rows = new ArrayList<SeriesRow>();
+      GlobList SeriesStatList =
+        repository.getAll(SeriesStat.TYPE,
+                          and(linkTargetFieldEquals(SeriesStat.SERIES, Series.BUDGET_AREA, budgetArea.getId()),
+                              fieldIn(SeriesStat.MONTH, months),
+                              isTrue(SeriesStat.ACTIVE),
+                              isNotNull(SeriesStat.SUMMARY_AMOUNT),
+                              not(fieldEquals(SeriesStat.SUMMARY_AMOUNT, 0.00))));
+
+      GlobList seriesList = SeriesStatList.getTargets(SeriesStat.SERIES, repository).sort(Series.NAME);
+      for (Glob series : seriesList) {
+        rows.add(new SeriesRow(series, months, budgetArea, repository));
+      }
+      Collections.sort(rows);
+      for (List<SeriesRow> subList : Utils.split(rows, MAX_ROWS_PER_PAGE)) {
+        result.add(new SeriesTable(subList, budgetArea, currentMonth, months));
+      }
+    }
+    return result;
+  }
+
+  private List<SeriesRow> seriesRows;
   private BudgetArea budgetArea;
-  private GlobRepository repository;
+  private Integer currentMonth;
   private List<Integer> months;
 
-  public SeriesTable(BudgetArea budgetArea, MonthRange monthRange, GlobRepository repository, Directory directory) {
+  public SeriesTable(List<SeriesRow> rows, BudgetArea budgetArea,
+                     Integer currentMonth, List<Integer> months) {
+    this.seriesRows = rows;
     this.budgetArea = budgetArea;
-    this.repository = repository;
-    this.months = monthRange.asList();
-
-    GlobList SeriesStatList =
-      repository.getAll(SeriesStat.TYPE,
-                        and(linkTargetFieldEquals(SeriesStat.SERIES, Series.BUDGET_AREA, budgetArea.getId()),
-                            fieldIn(SeriesStat.MONTH, months),
-                            isTrue(SeriesStat.ACTIVE),
-                            isNotNull(SeriesStat.SUMMARY_AMOUNT),
-                            not(fieldEquals(SeriesStat.SUMMARY_AMOUNT, 0.00))));
-
-    GlobList seriesList = SeriesStatList.getTargets(SeriesStat.SERIES, repository).sort(Series.NAME);
-    for (Glob series : seriesList) {
-      seriesRows.add(new SeriesRow(series));
-    }
+    this.currentMonth = currentMonth;
+    this.months = months;
   }
 
   public String getTitle() {
@@ -64,6 +86,10 @@ public class SeriesTable {
     return Month.getShortMonthLabelWithShortYear(months.get(column - 2));
   }
 
+  public boolean isColumnSelected(int column) {
+    return column > 2 && Utils.equal(currentMonth, months.get(column - 2));
+  }
+
   public List<SeriesRow> rows() {
     return Collections.unmodifiableList(seriesRows);
   }
@@ -72,12 +98,18 @@ public class SeriesTable {
     return rows().size();
   }
 
-  public class SeriesRow {
+  public static class SeriesRow implements Comparable<SeriesRow> {
     private Glob series;
+    private List<Integer> months;
+    private BudgetArea budgetArea;
+    private GlobRepository repository;
     private Double total;
 
-    public SeriesRow(Glob series) {
+    public SeriesRow(Glob series, List<Integer> months, BudgetArea budgetArea, GlobRepository repository) {
       this.series = series;
+      this.months = months;
+      this.budgetArea = budgetArea;
+      this.repository = repository;
       this.total = getTotalForPeriod();
     }
 
@@ -114,6 +146,11 @@ public class SeriesTable {
         return null;
       }
       return stat.get(SeriesStat.SUMMARY_AMOUNT);
+    }
+
+    public int compareTo(SeriesRow other) {
+      int multiplier = budgetArea.isIncome() ? -1 : 1;
+      return Double.compare(total, other.total) * multiplier;
     }
   }
 }

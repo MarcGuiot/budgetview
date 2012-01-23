@@ -1,6 +1,7 @@
-package org.designup.picsou.functests.checkers;
+package org.designup.picsou.functests.checkers.components;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.AbstractHistoChecker;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyDataset;
@@ -10,18 +11,21 @@ import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.utils.TablePrinter;
 import org.uispec4j.Mouse;
 import org.uispec4j.Panel;
-import org.uispec4j.Window;
 import org.uispec4j.utils.Utils;
 
 public class HistoChartChecker extends AbstractHistoChecker<HistoChartChecker> {
 
-  public Window window;
+  public Panel container;
   private String panelName;
   private String chartName;
   private Panel panel;
 
-  public HistoChartChecker(Window window, String panelName, String chartName) {
-    this.window = window;
+  public HistoChartChecker(Panel panel) {
+    this.panel = panel;
+  }
+
+  public HistoChartChecker(Panel container, String panelName, String chartName) {
+    this.container = container;
     this.panelName = panelName;
     this.chartName = chartName;
   }
@@ -116,7 +120,7 @@ public class HistoChartChecker extends AbstractHistoChecker<HistoChartChecker> {
         .append(dataset.isSelected(i) ? ", true" : "")
         .append(")\n");
     }
-    System.out.println(builder.toString());
+    Assert.fail("Insert:\n" + builder.toString());
   }
 
   private TablePrinter createPrinter() {
@@ -146,7 +150,7 @@ public class HistoChartChecker extends AbstractHistoChecker<HistoChartChecker> {
 
   protected Panel getPanel() {
     if (panel == null) {
-      panel = window.getPanel(panelName).getPanel(chartName);
+      panel = container.getPanel(panelName).getPanel(chartName);
     }
     return panel;
   }

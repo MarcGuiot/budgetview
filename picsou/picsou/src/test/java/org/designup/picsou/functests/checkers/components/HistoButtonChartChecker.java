@@ -1,4 +1,4 @@
-package org.designup.picsou.functests.checkers;
+package org.designup.picsou.functests.checkers.components;
 
 import junit.framework.Assert;
 import org.designup.picsou.gui.components.charts.histo.HistoSelectionManager;

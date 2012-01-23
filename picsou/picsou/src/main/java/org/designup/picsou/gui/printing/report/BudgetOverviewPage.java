@@ -4,6 +4,8 @@ import org.designup.picsou.gui.printing.PrintColors;
 import org.designup.picsou.gui.printing.PrintFonts;
 import org.designup.picsou.gui.printing.PrintMetrics;
 import org.designup.picsou.gui.series.analysis.SeriesChartsPanel;
+import org.designup.picsou.gui.series.analysis.histobuilders.range.FixedHistoChartRange;
+import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.model.util.MonthRange;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -17,11 +19,15 @@ import java.util.TreeSet;
 
 public class BudgetOverviewPage extends ReportPage {
 
+  private Integer currentMonth;
+  private MonthRange monthRange;
   private GlobRepository repository;
   private Directory directory;
   private JPanel panel;
 
-  public BudgetOverviewPage(MonthRange monthRange, GlobRepository repository, Directory directory) {
+  public BudgetOverviewPage(Integer currentMonth, MonthRange monthRange, GlobRepository repository, Directory directory) {
+    this.currentMonth = currentMonth;
+    this.monthRange = monthRange;
     this.repository = repository;
     this.directory = directory;
     this.panel = createPanel();
@@ -31,13 +37,14 @@ public class BudgetOverviewPage extends ReportPage {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/print/budgetOverviewPage.splits",
                                                       repository, directory);
 
-    SeriesChartsPanel chartsPanel = new SeriesChartsPanel(repository, directory, directory.get(SelectionService.class));
+    SeriesChartsPanel chartsPanel = new SeriesChartsPanel(new FixedHistoChartRange(monthRange, repository),
+                                                          repository, directory,
+                                                          directory.get(SelectionService.class));
     chartsPanel.registerCharts(builder);
     chartsPanel.reset();
 
-    SortedSet<Integer> monthIds = new TreeSet<Integer>(new MonthRange(201106, 201205).asList());
-
-    chartsPanel.monthSelected(201112, monthIds);
+    SortedSet<Integer> monthIds = new TreeSet<Integer>(monthRange.asList());
+    chartsPanel.monthSelected(currentMonth, monthIds);
 
     return builder.load();
   }
@@ -56,5 +63,9 @@ public class BudgetOverviewPage extends ReportPage {
     panel.printAll(g2);
 
     return PAGE_EXISTS;
+  }
+  
+  public JPanel getPanel() {
+    return panel;
   }
 }

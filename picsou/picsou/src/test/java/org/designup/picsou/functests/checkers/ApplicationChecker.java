@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.printing.PrinterChecker;
 import org.designup.picsou.functests.checkers.utils.DummyPrinterService;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.printing.PrinterService;

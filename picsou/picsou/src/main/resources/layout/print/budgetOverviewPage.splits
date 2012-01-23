@@ -7,7 +7,7 @@
            marginTop="4" font="-,bold,11" foreground="#000000" opaque="false"/>
   </styles>
 
-  <grid>
+  <grid name="budgetOverview">
     <label gridPos="(0,0)" ref="balanceChartLabel" weightX="1" styleClass="chartLabel"/>
     <label gridPos="(1,0)" ref="seriesChartLabel" weightX="1" styleClass="chartLabel"/>
     <panel gridPos="(0,1)" ref="balanceChart" weightX="1" styleClass="chart" background="stack.bg"/>

@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.functests.checkers.components.HistoDailyChecker;
 import org.designup.picsou.gui.components.charts.histo.HistoSelectionManager;
 import org.designup.picsou.model.Day;
 import org.globsframework.model.Key;
@@ -7,7 +8,6 @@ import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
-import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 

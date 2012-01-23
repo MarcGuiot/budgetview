@@ -1,5 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.functests.checkers.components.HistoChartChecker;
+import org.designup.picsou.functests.checkers.components.HistoDailyChecker;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
 
