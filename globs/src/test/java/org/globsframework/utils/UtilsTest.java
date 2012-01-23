@@ -1,6 +1,12 @@
 package org.globsframework.utils;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
+import org.globsframework.utils.exceptions.InvalidParameter;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class UtilsTest extends TestCase {
 
@@ -15,6 +21,46 @@ public class UtilsTest extends TestCase {
     String[] second = {"c", "d", "e"};
     String[] result = {"a", "b", "c", "d", "e"};
     TestUtils.assertEquals(result, Utils.join(first, second));
+  }
+
+  public void testSplitList() throws Exception {
+
+    checkSplit(Arrays.asList("a", "b", "c"), 1,
+               Arrays.asList("a"),
+               Arrays.asList("b"),
+               Arrays.asList("c"));
+
+    checkSplit(Arrays.asList("a", "b", "c", "d", "e"), 2,
+               Arrays.asList("a", "b"),
+               Arrays.asList("c", "d"),
+               Arrays.asList("e"));
+
+    checkSplit(Arrays.asList("a", "b"), 2,
+               Arrays.asList("a", "b"));
+
+    checkSplit(Arrays.asList("a", "b", "c", "d", "e"), 6,
+               Arrays.asList("a", "b", "c", "d", "e"));
+  }
+
+  private void checkSplit(List<String> input, int count,
+                          List<String>... result) {
+    String actual = Utils.split(input, count).toString() + "\n";
+    String expected = Arrays.asList(result).toString() + "\n";
+    Assert.assertEquals(expected, actual);
+  }
+
+  public void testSplitAnEmptyList() throws Exception {
+    List<List<String>> result = Utils.split(new ArrayList<String>(), 2);
+    Assert.assertTrue(result.isEmpty());
+  }
+
+  public void testSplitListParameterCheck() throws Exception {
+    try {
+      Utils.split(Arrays.asList("a", "b"), 0);
+    }
+    catch (InvalidParameter e) {
+      Assert.assertEquals("Parameter 'count' must be > 0 - actual: 0", e.getMessage());
+    }
   }
 
   public void testMinMax() throws Exception {

@@ -310,6 +310,21 @@ public class Utils {
     return list;
   }
 
+  public static <T> List<List<T>> split(List<T> list, int count) {
+    if (count <= 0) {
+      throw new InvalidParameter("Parameter 'count' must be > 0 - actual: " + count);
+    }
+    
+    ArrayList<List<T>> result = new ArrayList<List<T>>();
+    int pos = 0;
+    while (pos < list.size()) {
+      int nextPos = Math.min(pos + count, list.size());
+      result.add(list.subList(pos, nextPos));
+      pos = nextPos;
+    }
+    return result;
+  }
+
   public static String replace(Matcher groupMatcher, final Pattern placementRegexp, final String targetString) {
     StringBuffer buffer = new StringBuffer();
     Matcher matcher = placementRegexp.matcher(targetString);
