@@ -1,4 +1,5 @@
 C org.designup.picsou.license.AddUser
+C org.designup.picsou.license.DuplicateLine
 C org.designup.picsou.license.DbCreateTable
 C org.designup.picsou.license.servlet.LicenseServer
 C org.designup.picsou.license.generator.LicenseGenerator
