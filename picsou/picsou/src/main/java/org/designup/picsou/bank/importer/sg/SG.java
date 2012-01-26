@@ -276,7 +276,13 @@ public class SG extends WebBankPage {
                   name = cell.getTextContent();
                 }
                 else if (columnName.equalsIgnoreCase("solde")) {
-                  position = cell.getTextContent();
+                  List<HtmlElement> htmlElements = cell.getElementsByAttribute(HtmlDivision.TAG_NAME, "class", "Solde");
+                  if (htmlElements.size() > 0){
+                    position = htmlElements.get(0).getTextContent();
+                  }
+                  else {
+                    position = cell.getTextContent();
+                  }
                 }
               }
               createOrUpdateRealAccount(type, name, position, SG_ID);
