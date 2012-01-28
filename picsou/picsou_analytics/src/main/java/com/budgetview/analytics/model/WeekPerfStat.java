@@ -9,7 +9,7 @@ import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
-public class WeekStat {
+public class WeekPerfStat {
 
   public static GlobType TYPE;
 
@@ -36,7 +36,7 @@ public class WeekStat {
   public static DoubleField REVENUE_RATIO;
 
   static {
-    GlobTypeLoader.init(WeekStat.class);
+    GlobTypeLoader.init(WeekPerfStat.class);
   }
 
 }

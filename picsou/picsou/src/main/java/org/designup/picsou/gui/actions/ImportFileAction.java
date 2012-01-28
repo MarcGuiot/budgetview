@@ -119,7 +119,7 @@ public class ImportFileAction extends AbstractAction {
 
     public void run() {
       if (dialog != null) {
-        SignpostStatus.setCompleted(SignpostStatus.IMPORT_DONE, repository);
+        SignpostStatus.setCompleted(SignpostStatus.IMPORT_STARTED, repository);
         dialog.show();
       }
       else {

@@ -1,15 +1,11 @@
 package com.budgetview.analytics;
 
 import com.budgetview.analytics.checker.AnalyticsChecker;
-import com.budgetview.analytics.model.LogEntry;
 import com.budgetview.analytics.model.User;
-import com.budgetview.analytics.model.WeekStat;
+import com.budgetview.analytics.model.UserProgressInfoEntry;
 import junit.framework.TestCase;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
-import org.globsframework.model.GlobRepositoryChecker;
-import org.globsframework.model.format.GlobPrinter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -71,6 +67,21 @@ public class AnalyticsTest extends TestCase {
                         value(User.PURCHASE_DATE, parseDate("20120101")),
                         value(User.PING_COUNT, 3),
                         value(User.PREVIOUS_USER, false));
+  }
+
+  public void testUserProgressParsing() throws Exception {
+    analytics.createLog()
+      .logUseInfo("1 Jan 2012", 1, true, false, true, false, true, false, true)
+      .load();
+
+    analytics.checkUseInfo(parseDate("20120101"),
+                           value(UserProgressInfoEntry.INITIAL_STEPS_COMPLETED, true),
+                           value(UserProgressInfoEntry.IMPORT_STARTED, false),
+                           value(UserProgressInfoEntry.CATEGORIZATION_SELECTION_DONE, true),
+                           value(UserProgressInfoEntry.CATEGORIZATION_AREA_SELECTION_DONE, false),
+                           value(UserProgressInfoEntry.FIRST_CATEGORIZATION_DONE, true),
+                           value(UserProgressInfoEntry.CATEGORIZATION_SKIPPED, false),
+                           value(UserProgressInfoEntry.GOTO_BUDGET_SHOWN, true));
   }
 
   private Date parseDate(String text) throws ParseException {

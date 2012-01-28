@@ -13,7 +13,7 @@ import org.globsframework.utils.directory.Directory;
 public class UserProgressInfoSender {
 
   private static BooleanField[] FIELDS_TO_SEND = new BooleanField[]{
-    SignpostStatus.IMPORT_DONE,
+    SignpostStatus.IMPORT_STARTED,
     SignpostStatus.CATEGORIZATION_SELECTION_DONE,
     SignpostStatus.CATEGORIZATION_AREA_SELECTION_DONE,
     SignpostStatus.FIRST_CATEGORIZATION_DONE,

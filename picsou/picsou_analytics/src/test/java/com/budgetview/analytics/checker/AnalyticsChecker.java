@@ -2,19 +2,22 @@ package com.budgetview.analytics.checker;
 
 import com.budgetview.analytics.Analytics;
 import com.budgetview.analytics.model.User;
+import com.budgetview.analytics.model.UserProgressInfoEntry;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.designup.picsou.functests.QifImportTest;
+import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryChecker;
 import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.io.*;
+import java.util.Date;
 
 public class AnalyticsChecker {
   private TestCase test;
@@ -34,14 +37,22 @@ public class AnalyticsChecker {
   }
 
   public void checkUser(String email, FieldValue... values) {
-    Glob user = checker.findUnique(User.EMAIL, email);
+    doCheck(User.TYPE, User.EMAIL, email, values);
+  }
+
+  public void checkUseInfo(Date date, FieldValue... values) {
+    doCheck(UserProgressInfoEntry.TYPE, UserProgressInfoEntry.DATE, date, values);
+  }
+
+  private void doCheck(GlobType type, Field field, Object value, FieldValue[] values) {
+    Glob user = checker.doFindUnique(field, value);
     if (user == null) {
-      GlobPrinter.print(repository, User.TYPE);
-      Assert.fail("No user found with address " + email);
+      GlobPrinter.print(repository, type);
+      Assert.fail("No " + type.getName() + " found with value: " + value);
     }
     checker.checkFields(user, values);
   }
-  
+
   private InputStreamReader getReader(String fileNameToImport) {
     InputStream stream = QifImportTest.class.getResourceAsStream(DIRECTORY + fileNameToImport);
     if (stream == null) {
@@ -62,9 +73,9 @@ public class AnalyticsChecker {
       this.fileName = fileName;
       this.writer = new FileWriter(fileName);
     }
-    
+
     public DummyServerLogBuilder logNewAnonymous(String date, String repoId) throws IOException {
-      writeLogLine("INFO " + date + " 01:28:32,306 - thread 120 msg : new_anonymous ip = 82.225.65.17 id ="+ repoId);
+      writeLogLine("INFO " + date + " 01:28:32,306 - thread 120 msg : new_anonymous ip = 82.225.65.17 id =" + repoId);
       return this;
     }
 
@@ -76,6 +87,25 @@ public class AnalyticsChecker {
     public DummyServerLogBuilder logOkForMail(String date, String address, String repoId, int count) throws IOException {
       writeLogLine("INFO " + date + " 10:17:16,171 - thread 16 msg : compute_license ip = 88.164.73.52 mail = " + address + " count = 151 id = " + repoId + " code = 9005");
       writeLogLine("INFO " + date + " 16:24:05,641 - thread 16 msg : ok_for mail = " + address + "count = " + count);
+      return this;
+    }
+
+    public DummyServerLogBuilder logUseInfo(String date, int count,
+                                            boolean initialStepsCompleted,
+                                            boolean g,
+                                            boolean i,
+                                            boolean j,
+                                            boolean k,
+                                            boolean l,
+                                            boolean m) throws IOException {
+      writeLogLine("INFO " + date + " 12:24:31,096 - use info = use: " + count + ", " +
+                   "initialStepsCompleted: " + initialStepsCompleted + ", " +
+                   "g: " + g + ", " +
+                   "i: " + i + " , " +
+                   "j: " + j + " , " +
+                   "k: " + k + " , " +
+                   "l: " + l + " , " +
+                   "m: " + m + " ");
       return this;
     }
 

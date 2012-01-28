@@ -2,9 +2,12 @@ package org.globsframework.model;
 
 import junit.framework.Assert;
 import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.DateField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
+
+import java.util.Date;
 
 public class GlobRepositoryChecker {
   private GlobRepository repository;
@@ -16,7 +19,11 @@ public class GlobRepositoryChecker {
   public Glob findUnique(StringField field, String value) {
     return doFindUnique(field, value);
   }
-  
+
+  public Glob findUnique(DateField field, Date value) {
+    return doFindUnique(field, value);
+  }
+
   public Glob doFindUnique(Field field, Object value) {
     Glob glob = repository.findUnique(field.getGlobType(), GlobMatchers.fieldEqualsObject(field, value));
     if (glob == null) {

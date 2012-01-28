@@ -34,7 +34,7 @@ public class SignpostStatus {
   public static BooleanField WELCOME_SHOWN;
   public static BooleanField GOTO_DATA_DONE;
   @NoObfuscation
-  public static BooleanField IMPORT_DONE;
+  public static BooleanField IMPORT_STARTED;
   public static BooleanField GOTO_CATEGORIZATION_DONE;
   @NoObfuscation
   public static BooleanField CATEGORIZATION_SELECTION_DONE;
@@ -113,7 +113,7 @@ public class SignpostStatus {
     setCompleted(FIRST_CATEGORIZATION_DONE, repository);
     setCompleted(GOTO_CATEGORIZATION_DONE, repository);
     setCompleted(GOTO_DATA_DONE, repository);
-    setCompleted(IMPORT_DONE, repository);
+    setCompleted(IMPORT_STARTED, repository);
     repository.completeChangeSet();
   }
 
@@ -192,7 +192,7 @@ public class SignpostStatus {
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
-      outputStream.writeBoolean(values.get(IMPORT_DONE));
+      outputStream.writeBoolean(values.get(IMPORT_STARTED));
       outputStream.writeBoolean(values.get(WELCOME_SHOWN));
       outputStream.writeBoolean(values.get(GOTO_DATA_DONE));
       outputStream.writeBoolean(values.get(GOTO_CATEGORIZATION_DONE));
@@ -215,7 +215,7 @@ public class SignpostStatus {
 
     private void deserializeDataV8(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(IMPORT_DONE, input.readBoolean());
+      fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
       fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
@@ -237,7 +237,7 @@ public class SignpostStatus {
 
     private void deserializeDataV7(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(IMPORT_DONE, input.readBoolean());
+      fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
       fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
@@ -258,7 +258,7 @@ public class SignpostStatus {
 
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(IMPORT_DONE, input.readBoolean());
+      fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
       fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
@@ -277,7 +277,7 @@ public class SignpostStatus {
 
     private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(IMPORT_DONE, input.readBoolean());
+      fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
       fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
@@ -298,7 +298,7 @@ public class SignpostStatus {
 
     private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(IMPORT_DONE, input.readBoolean());
+      fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
       fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
@@ -318,7 +318,7 @@ public class SignpostStatus {
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(IMPORT_DONE, input.readBoolean());
+      fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
       fieldSetter.set(GOTO_DATA_DONE, true);
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, true);
@@ -340,7 +340,7 @@ public class SignpostStatus {
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(IMPORT_DONE, input.readBoolean());
+      fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
       fieldSetter.set(GOTO_DATA_DONE, true);
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, true);
@@ -361,7 +361,7 @@ public class SignpostStatus {
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(IMPORT_DONE, input.readBoolean());
+      fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
       fieldSetter.set(GOTO_DATA_DONE, true);
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, true);

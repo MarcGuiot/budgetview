@@ -1,7 +1,8 @@
 package com.budgetview.analytics.parsing;
 
-import com.budgetview.analytics.model.LogEntryType;
 import com.budgetview.analytics.model.LogEntry;
+import com.budgetview.analytics.model.LogEntryType;
+import com.budgetview.analytics.model.UserProgressInfoEntry;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -24,10 +25,19 @@ public class LogParser {
   private static Pattern IP_FORMAT = Pattern.compile("ip = ([0-9\\.]+)");
   private static Pattern REPO_ID_FORMAT = Pattern.compile("id =[ ]*([A-z0-9/+=]+)");
   private static Pattern MAIL_FORMAT = Pattern.compile("mail =[ ]*([A-z-_@\\.]+)");
+  private static Pattern USER_PROGRESS_FORMAT =
+    Pattern.compile("INFO ([0-9]+ [A-z]+ [0-9]+) [0-9:,]+ - use info =[ ]*use:[ ]*([0-9]+),[ ]*" +
+                    "initialStepsCompleted:[ ]*([a-z]+),[ ]*" +
+                    "g:[ ]*([a-z]+)[ ]*, " +
+                    "i:[ ]*([a-z]+)[ ]*, " +
+                    "j:[ ]*([a-z]+)[ ]*, " +
+                    "k:[ ]*([a-z]+)[ ]*, " +
+                    "l:[ ]*([a-z]+)[ ]*, " +
+                    "m:[ ]*([a-z]+)[ ]*");
 
   public static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy");
 
-  public static void load(Reader input, GlobRepository repository) {
+  public void load(Reader input, GlobRepository repository) {
     String line = null;
     try {
       BufferedReader reader = new BufferedReader(input);
@@ -46,6 +56,20 @@ public class LogParser {
           processPurchase(purchaseMatcher.group(1), purchaseMatcher.group(2), repository);
           continue;
         }
+        Matcher progressMatcher = USER_PROGRESS_FORMAT.matcher(trimmed);
+        if (progressMatcher.matches()) {
+          processProgress(parseDate(progressMatcher.group(1)),
+                          parseInt(progressMatcher.group(2)),
+                          parseBoolean(progressMatcher.group(3)),
+                          parseBoolean(progressMatcher.group(4)),
+                          parseBoolean(progressMatcher.group(5)),
+                          parseBoolean(progressMatcher.group(6)),
+                          parseBoolean(progressMatcher.group(7)),
+                          parseBoolean(progressMatcher.group(8)),
+                          parseBoolean(progressMatcher.group(9)),
+                          repository);
+          continue;
+        }
 //        System.out.println("COULD NOT PARSE: " + line);
       }
       reader.close();
@@ -55,7 +79,7 @@ public class LogParser {
     }
   }
 
-  private static void processCommand(String date, String entryType, String args, GlobRepository repository) {
+  private void processCommand(String date, String entryType, String args, GlobRepository repository) {
     if (entryType.equals("ok_for")) {
       return;
     }
@@ -67,14 +91,14 @@ public class LogParser {
                       value(LogEntry.EMAIL, parseArg(args, MAIL_FORMAT)));
   }
 
-  private static void processPurchase(String date, String email, GlobRepository repository) {
+  private void processPurchase(String date, String email, GlobRepository repository) {
     repository.create(LogEntry.TYPE,
                       value(LogEntry.DATE, parseDate(date)),
                       value(LogEntry.ENTRY_TYPE, LogEntryType.PURCHASE.getId()),
                       value(LogEntry.EMAIL, email));
   }
 
-  private static Date parseDate(String date) {
+  private Date parseDate(String date) {
     try {
       return DEFAULT_DATE_FORMAT.parse(date);
     }
@@ -83,7 +107,15 @@ public class LogParser {
     }
   }
 
-  private static String parseArg(String text, Pattern pattern) {
+  private boolean parseBoolean(String text) {
+    return Boolean.parseBoolean(text);
+  }
+
+  private int parseInt(String text) {
+    return Integer.parseInt(text);
+  }
+
+  private String parseArg(String text, Pattern pattern) {
     Matcher matcher = pattern.matcher(text);
     if (matcher.find()) {
       return matcher.group(1).trim();
@@ -91,7 +123,7 @@ public class LogParser {
     return null;
   }
 
-  private static LogEntryType parseEntryType(String command) {
+  private LogEntryType parseEntryType(String command) {
     if (command.equalsIgnoreCase("known_anonymous")) {
       return LogEntryType.KNOWN_USER;
     }
@@ -105,5 +137,27 @@ public class LogParser {
       return LogEntryType.DIFFERENT_CODE;
     }
     throw new InvalidParameter("Unknown command type: " + command);
+  }
+
+  private void processProgress(Date date,
+                               int count,
+                               boolean initialStepsCompleted,
+                               boolean importDone,
+                               boolean categorizationSelectionDone,
+                               boolean categorizationAreaSelectionDone,
+                               boolean firstCategorizationDone,
+                               boolean categorizationSkipped,
+                               boolean gotoBudgetShown,
+                               GlobRepository repository) {
+    repository.create(UserProgressInfoEntry.TYPE,
+                      value(UserProgressInfoEntry.DATE, date),
+                      value(UserProgressInfoEntry.COUNT, count),
+                      value(UserProgressInfoEntry.INITIAL_STEPS_COMPLETED, initialStepsCompleted),
+                      value(UserProgressInfoEntry.IMPORT_STARTED, importDone),
+                      value(UserProgressInfoEntry.CATEGORIZATION_SELECTION_DONE, categorizationSelectionDone),
+                      value(UserProgressInfoEntry.CATEGORIZATION_AREA_SELECTION_DONE, categorizationAreaSelectionDone),
+                      value(UserProgressInfoEntry.FIRST_CATEGORIZATION_DONE, firstCategorizationDone),
+                      value(UserProgressInfoEntry.CATEGORIZATION_SKIPPED, categorizationSkipped),
+                      value(UserProgressInfoEntry.GOTO_BUDGET_SHOWN, gotoBudgetShown));
   }
 }

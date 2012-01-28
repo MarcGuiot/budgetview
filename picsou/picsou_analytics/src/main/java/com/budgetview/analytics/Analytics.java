@@ -1,9 +1,7 @@
 package com.budgetview.analytics;
 
 import com.budgetview.analytics.functors.*;
-import com.budgetview.analytics.model.LogEntry;
-import com.budgetview.analytics.model.User;
-import com.budgetview.analytics.model.WeekStat;
+import com.budgetview.analytics.model.*;
 import com.budgetview.analytics.parsing.LogParser;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
@@ -17,18 +15,24 @@ import java.io.Reader;
 public class Analytics {
   public static void main(String[] args) throws Exception {
 
-    File in = new File("/Users/rmedina/Code/all_hg/ref/budgetview_server.log");
-    FileReader reader = new FileReader(in);
     GlobRepository repository = GlobRepositoryBuilder.createEmpty();
 
+    File in = new File(args[0]);
+    FileReader reader = new FileReader(in);
     run(reader, repository);
 
-    GlobPrinter.print(repository.getAll(WeekStat.TYPE).sort(WeekStat.ID));
-    GlobPrinter.print(repository.getAll(User.TYPE, GlobMatchers.isNotNull(User.PURCHASE_DATE)).sort(User.PURCHASE_DATE));
+    GlobPrinter.print(repository.getAll(WeekPerfStat.TYPE).sort(WeekPerfStat.ID));
+//    GlobPrinter.print(repository.getAll(User.TYPE, GlobMatchers.isNotNull(User.PURCHASE_DATE)).sort(User.PURCHASE_DATE));
+    GlobPrinter.print(repository.getAll(WeekUsageCount.TYPE).sort(WeekUsageCount.LAST_DAY));
+    GlobPrinter.print(repository.getAll(WeekUsageStat.TYPE).sort(WeekUsageStat.LAST_DAY));
   }
 
   public static void run(Reader reader, GlobRepository repository) {
-    LogParser.load(reader, repository);
+
+    repository.startChangeSet();
+
+    LogParser parser = new LogParser();
+    parser.load(reader, repository);
 
     repository.getAll(LogEntry.TYPE).sort(LogEntry.ID)
       .safeApply(new UserCreationFunctor(), repository)
@@ -38,8 +42,16 @@ public class Analytics {
       .safeApply(new UserFieldsFunctor(), repository)
       .safeApply(new UserWeekStatFunctor(), repository);
 
-    repository.getAll(WeekStat.TYPE)
+    repository.getAll(UserProgressInfoEntry.TYPE)
+      .safeApply(new UserProgressCountFunctor(), repository);
+
+    repository.getAll(WeekPerfStat.TYPE)
       .safeApply(new WeekFieldsFunctor(), repository)
       .safeApply(new UserWeekRatiosFunctor(), repository);
+
+    repository.getAll(WeekUsageCount.TYPE)
+      .safeApply(new UserProgressStatFunctor(), repository);
+
+    repository.completeChangeSet();
   }
 }
