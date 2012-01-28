@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.printing.BudgetReportChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
@@ -14,7 +13,82 @@ public class PrintTest extends LoggedInFunctionalTestCase {
     super.setUp();
   }
 
-  public void testStandardTablePrint() throws Exception {
+  public void testCompleteDocument() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00000123", -125.0, "2008/07/12")
+      .addTransaction("2012/03/10", 1000.00, "WorldCo")
+      .addTransaction("2012/04/10", 1500.00, "WorldCo")
+      .addTransaction("2012/05/10", 1500.00, "WorldCo")
+      .addTransaction("2012/03/10", -50.00, "EDF")
+      .addTransaction("2012/04/10", -50.00, "EDF")
+      .addTransaction("2012/05/10", -50.00, "EDF")
+      .addTransaction("2012/03/10", -400.00, "Mortgage")
+      .addTransaction("2012/04/10", -400.00, "Mortgage")
+      .addTransaction("2012/05/10", -400.00, "Mortgage")
+      .addTransaction("2012/03/10", -200.00, "Auchan")
+      .addTransaction("2012/04/10", -200.00, "Auchan")
+      .addTransaction("2012/05/10", -250.00, "Auchan")
+      .addTransaction("2012/03/10", -50.00, "FNAC")
+      .addTransaction("2012/04/10", -50.00, "FNAC")
+      .addTransaction("2012/05/10", -100.00, "FNAC")
+      .load();
+
+    categorization.setNewIncome("WorldCo", "Salary");
+    categorization.setNewRecurring("EDF", "Electricity");
+    categorization.setNewRecurring("Mortgage", "House");
+    categorization.setNewVariable("Auchan", "Groceries", -100.00);
+    categorization.setNewVariable("FNAC", "Leisures", -100.00);
+
+    timeline.selectMonth(201204);
+    operations.print()
+      .checkOptions("April 2012", "Year 2012")
+      .selectCurrentYear()
+      .print();
+
+    BudgetReportChecker year2012Report = printer.getBudgetReport();
+    year2012Report.getChartPage().getOverviewStack()
+      .getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 4000.00);
+    year2012Report.getChartPage().getOverviewStack()
+      .getRightDataset()
+      .checkSize(2)
+      .checkValue("Recurring", 1350.00)
+      .checkValue("Variable", 850.00);
+
+    year2012Report.getChartPage().getExpensesStack()
+      .getSingleDataset()
+      .checkValue("House", 1200.00)
+      .checkValue("Groceries", 650.00)
+      .checkValue("Leisures", 200.00)
+      .checkValue("Electricity", 150.00);
+
+    year2012Report.getChartPage().getHistoChart()
+      .checkColumnCount(3)
+      .checkDiffColumn(0, "Mar", "2012", 1000.00, 700.00)
+      .checkDiffColumn(1, "Apr", "2012", 1500.00, 700.00, true)
+      .checkDiffColumn(2, "May", "2012", 1500.00, 800.00);
+
+    year2012Report.initTablePage(1)
+      .checkTitle("Income")
+      .add("Series", "Total", "Mar 12", "Apr 12", "May 12")
+      .add("Salary", "4000.00", "1000.00", "1500.00", "1500.00")
+      .check();
+    year2012Report.initTablePage(2)
+      .checkTitle("Recurring")
+      .add("Series", "Total", "Mar 12", "Apr 12", "May 12")
+      .add("House", "1200.00", "400.00", "400.00", "400.00")
+      .add("Electricity", "150.00", "50.00", "50.00", "50.00")
+      .check();
+    year2012Report.initTablePage(3)
+      .checkTitle("Variable")
+      .add("Series", "Total", "Mar 12", "Apr 12", "May 12")
+      .add("Groceries", "650.00", "200.00", "200.00", "250.00")
+      .add("Leisures", "200.00", "50.00", "50.00", "100.00")
+      .check();
+  }
+
+  public void testRangeSelections() throws Exception {
 
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
@@ -115,63 +189,6 @@ public class PrintTest extends LoggedInFunctionalTestCase {
       .checkDiffColumn(6, "Jul", "2012", 0.00, 300.00);
   }
 
-  public void testCharts() throws Exception {
-    OfxBuilder.init(this)
-      .addBankAccount(-1, 10674, "00000123", -125.0, "2008/07/12")
-      .addTransaction("2012/03/10", 1000.00, "WorldCo")
-      .addTransaction("2012/04/10", 1500.00, "WorldCo")
-      .addTransaction("2012/05/10", 1500.00, "WorldCo")
-      .addTransaction("2012/03/10", -50.00, "EDF")
-      .addTransaction("2012/04/10", -50.00, "EDF")
-      .addTransaction("2012/05/10", -50.00, "EDF")
-      .addTransaction("2012/03/10", -400.00, "Mortgage")
-      .addTransaction("2012/04/10", -400.00, "Mortgage")
-      .addTransaction("2012/05/10", -400.00, "Mortgage")
-      .addTransaction("2012/03/10", -200.00, "Auchan")
-      .addTransaction("2012/04/10", -200.00, "Auchan")
-      .addTransaction("2012/05/10", -250.00, "Auchan")
-      .addTransaction("2012/03/10", -50.00, "FNAC")
-      .addTransaction("2012/04/10", -50.00, "FNAC")
-      .addTransaction("2012/05/10", -100.00, "FNAC")
-      .load();
-
-    categorization.setNewIncome("WorldCo", "Salary");
-    categorization.setNewRecurring("EDF", "Electricity");
-    categorization.setNewRecurring("Mortgage", "House");
-    categorization.setNewVariable("Auchan", "Groceries", -100.00);
-    categorization.setNewVariable("FNAC", "Leisures", -100.00);
-
-    timeline.selectMonth(201204);
-    operations.print()
-      .checkOptions("April 2012", "Year 2012")
-      .selectCurrentYear()
-      .print();
-
-    BudgetReportChecker year2012Report = printer.getBudgetReport();
-    year2012Report.getChartPage().getOverviewStack()
-      .getLeftDataset()
-      .checkSize(1)
-      .checkValue("Income", 4000.00);
-    year2012Report.getChartPage().getOverviewStack()
-      .getRightDataset()
-      .checkSize(2)
-      .checkValue("Recurring", 1350.00)
-      .checkValue("Variable", 850.00);
-
-    year2012Report.getChartPage().getExpensesStack()
-      .getSingleDataset()
-      .checkValue("House", 1200.00)
-      .checkValue("Groceries", 650.00)
-      .checkValue("Leisures", 200.00)
-      .checkValue("Electricity", 150.00);
-
-    year2012Report.getChartPage().getHistoChart()
-      .checkColumnCount(3)
-      .checkDiffColumn(0, "Mar", "2012", 1000.00, 700.00)
-      .checkDiffColumn(1, "Apr", "2012", 1500.00, 700.00, true)
-      .checkDiffColumn(2, "May", "2012", 1500.00, 800.00);
-  }
-
   public void testTablePagination() throws Exception {
     OfxBuilder builder = OfxBuilder.init(this);
     for (int i = 1; i <= 40; i++) {
@@ -207,11 +224,13 @@ public class PrintTest extends LoggedInFunctionalTestCase {
       .checkRow(10, "Series01", "651.00", "201.00", "200.00", "250.00");
   }
 
-  private String getLabel(String label, int i) {
-    return label + Formatting.TWO_DIGIT_INTEGER_FORMAT.format(i);
+  public void testExceptionRaisedDuringPrint() throws Exception {
+    printer.setException("Boum");
+    operations.print()
+      .printWithErrorMessage("Print failed", "An error occurred: Boum");
   }
 
-  public void __testExceptionRaisedDuringPrint() throws Exception {
-    Assert.fail("tbd");
+  private String getLabel(String label, int i) {
+    return label + Formatting.TWO_DIGIT_INTEGER_FORMAT.format(i);
   }
 }

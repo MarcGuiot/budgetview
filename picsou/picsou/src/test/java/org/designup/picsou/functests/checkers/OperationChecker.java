@@ -680,6 +680,6 @@ public class OperationChecker {
   }
 
   public PrintDialogChecker print() {
-    return PrintDialogChecker.init(getDevMenu().getSubMenu("Print...").triggerClick());
+    return PrintDialogChecker.init(getFileMenu().getSubMenu("Print...").triggerClick());
   }
 }

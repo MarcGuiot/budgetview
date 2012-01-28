@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers.printing;
 
 import org.designup.picsou.functests.checkers.GuiChecker;
+import org.designup.picsou.functests.checkers.MessageDialogChecker;
 import org.uispec4j.RadioButton;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
@@ -49,6 +50,13 @@ public class PrintDialogChecker extends GuiChecker {
 
   public void print() {
     dialog.getButton("Print").click();
+    assertFalse(dialog.isVisible());
+  }
+
+  public void printWithErrorMessage(String title, String errorMessage) {
+    MessageDialogChecker.init(dialog.getButton("Print").triggerClick())
+    .checkTitle(title)
+    .checkMessageContains(errorMessage);
     assertFalse(dialog.isVisible());
   }
 

@@ -12,4 +12,8 @@ public class PrinterChecker {
   public BudgetReportChecker getBudgetReport() {
     return new BudgetReportChecker(printService.getLastReport());
   }
+
+  public void setException(String exceptionMessage) {
+    printService.setException(exceptionMessage);
+  }
 }

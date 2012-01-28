@@ -282,6 +282,10 @@ public class MainPanel {
     menu.add(protectAction);
     menu.add(logoutAction);
     menu.add(deleteUserAction);
+
+    menu.addSeparator();
+    menu.add(new PrintAction(repository, directory));
+
     if (Gui.useMacOSMenu()) {
       if (exitActionWhitoutUserEvaluation != null){
         MRJAdapter.removeQuitApplicationListener(exitActionWhitoutUserEvaluation);
@@ -321,8 +325,6 @@ public class MainPanel {
 
   private JMenu createDevMenu(final Directory directory) {
     JMenu devMenu = new JMenu("[Dev]");
-    devMenu.add(new PrintAction(repository, directory));
-    devMenu.addSeparator();
     devMenu.add(new DumpDataAction(repository));
     devMenu.add(new DataCheckerAction(repository, directory));
     devMenu.add(new ThrowExceptionAction());
