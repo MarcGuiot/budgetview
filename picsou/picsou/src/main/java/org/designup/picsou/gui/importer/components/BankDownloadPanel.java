@@ -131,7 +131,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
         helpService.showBankHelp(lastBank, parent);
       }
       else {
-        helpService.show("import", parent);
+        helpService.show("manualDownload", parent);
       }
     }
 

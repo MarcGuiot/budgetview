@@ -23,7 +23,6 @@ public class Analytics {
 
     GlobPrinter.print(repository.getAll(WeekPerfStat.TYPE).sort(WeekPerfStat.ID));
 //    GlobPrinter.print(repository.getAll(User.TYPE, GlobMatchers.isNotNull(User.PURCHASE_DATE)).sort(User.PURCHASE_DATE));
-    GlobPrinter.print(repository.getAll(WeekUsageCount.TYPE).sort(WeekUsageCount.LAST_DAY));
     GlobPrinter.print(repository.getAll(WeekUsageStat.TYPE).sort(WeekUsageStat.LAST_DAY));
   }
 
