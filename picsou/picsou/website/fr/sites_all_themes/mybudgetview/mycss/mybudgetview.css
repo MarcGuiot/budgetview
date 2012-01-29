@@ -1195,6 +1195,30 @@ div#support-footer p {
   font-size: 14pt;
 }
 
+/* ========= FAQ FOOTER ========== */
+
+div#faq-footer {
+  text-align: left;
+  text-shadow: white 0 2px 0;
+  color: #AAAAAA;
+  margin-bottom: 20px;
+}
+
+div#faq-footer A:link {
+  text-decoration: none;
+  color: #AAAAAA;
+}
+
+div#faq-footer A:visited {
+  text-decoration: none;
+  color: #999999;
+}
+
+div#faq-footer A:hover {
+  text-decoration: underline;
+  color: #0000FF;
+}
+
 /* ========= CHANGE LOG ========== */
 
 div#changelog span.date {
