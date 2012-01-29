@@ -43,6 +43,8 @@ public class HelpDialog {
     GuiUtils.initHtmlComponent(editor);
     GuiUtils.loadCssResource("/help/help.css", editor, HelpDialog.class);
 
+    builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
+
     builder.add("home", homePageAction);
     builder.add("forward", forwardPageAction);
     builder.add("back", backPageAction);

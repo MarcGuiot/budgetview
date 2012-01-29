@@ -604,7 +604,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .selectBank("Autre")
       .checkHelpAvailable("Show help")
       .openHelp()
-      .checkTitle("Importing data")
+      .checkTitle("Manual download")
       .close();
 
     bankDownload

@@ -64,4 +64,9 @@ public class HelpChecker extends GuiChecker {
   public void home() {
     dialog.getButton("home").click();
   }
+
+  public HelpChecker checkBottomTextLink(String link, String expectedUrl) {
+    BrowsingChecker.checkDisplay(dialog.getTextBox("bottomMessage").triggerClickOnHyperlink(link), expectedUrl);
+    return this;
+  }
 }

@@ -25,6 +25,13 @@ public class HelpTest extends LoggedInFunctionalTestCase {
     operations.openHelp("Operations View").checkTitle("Operations View").close();
   }
 
+  public void testDefaultLinks() throws Exception {
+    operations.openHelp()
+      .checkBottomTextLink("support site", "http://support.mybudgetview.com")
+      .checkBottomTextLink("contact us", "http://support.mybudgetview.com/tickets/new")
+      .close();
+  }
+
   public void testAccessToWebsite() throws Exception {
     String url = Lang.get("site.url");
     operations.checkGotoWebsite(url);
