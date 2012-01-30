@@ -50,6 +50,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public FeedbackViewChecker feedbackView;
   public ReconciliationChecker reconciliation;
   public PrinterChecker printer;
+  private ApplicationChecker application;
 
   protected GlobRepository repository;
 
@@ -66,7 +67,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected String password = null;
   private boolean firstLogin = true;
   private boolean initialGuidesShown = false;
-  private ApplicationChecker application;
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -219,6 +219,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     signpostView = null;
     feedbackView = null;
     reconciliation = null;
+    printer = null;
+    application =null;
     repository = null;
   }
 
@@ -269,6 +271,12 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   protected void restartApplication() throws Exception {
     restartApplication(false);
+  }
+
+  protected void restartApplicationFromBackup() throws Exception {
+    String path = operations.backup(this);
+    restartApplication(true);
+    operations.restore(path);
   }
 
   public void restartApplication(boolean firstLogin) throws Exception {

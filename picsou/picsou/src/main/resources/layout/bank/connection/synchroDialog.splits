@@ -5,7 +5,7 @@
   <panel styleClass="dialog" preferredSize="(500,450)">
     <column styleClass="innerDialog">
       <label text="$synchro.title" styleClass="title"/>
-        <panel ref="bankSpecific"/>
+      <panel ref="bankSpecific"/>
     </column>
   </panel>
 

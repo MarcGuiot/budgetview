@@ -25,6 +25,7 @@
         </row>
 
         <button ref="showDetails" styleClass="showHide"/>
+        <!--<component ref="occupedPanel" opaque="false" visible="false"/>-->
       </column>
 
       <row ref="detailsPanel">

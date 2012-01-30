@@ -1870,8 +1870,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   }
 
 
-  public void testSavingsWithoutAccountPosition() throws Exception {
+//2008/08/31
 
+  public void __testSavingsWithoutAccountPosition() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/06", -100.00, "Savings")
       .load();
@@ -1884,6 +1885,27 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectSavings()
       .selectSeries("epargne");
 
-  }
+    savingsAccounts.editPosition("epargne") // ==> au 31
+      .setAmount(100.)
+      .validate();
+    savingsAccounts.checkPosition("epargne", 100.);
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/15", -100.00, "Savings 1")  // ne doit pas impacté le solde
+      .load();
+    savingsAccounts.checkPosition("epargne", 100.);
+    categorization.selectTransaction("Savings 1")
+      .selectSavings()
+      .selectSeries("epargne");
 
+    setCurrentDate("2008/09/03");
+    restartApplicationFromBackup();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/31", -100.00, "Savings 2")  // doit impacté le solde
+      .addTransaction("2008/09/02", -100.00, "Savings 3")
+      .load();
+
+    savingsAccounts.checkPosition("epargne", 300.);
+
+  }
 }

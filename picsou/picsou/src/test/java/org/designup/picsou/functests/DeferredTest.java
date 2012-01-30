@@ -606,6 +606,23 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("23/08/2011", "DIFFE 1", -12.00, "To categorize", -12.00, 100.00, "card 1111")
       .check();
     mainAccounts.checkSummary(-101., "2011/09/02");
+    views.selectCategorization();
+    categorization.selectTransaction("VIREMENT CDD")
+      .selectUncategorized()
+      .setUncategorized();
+    transactions
+      .initAmountContent()
+      .add("07/09/2011", "DIFFE 9", -23.00, "To categorize", -35.00, -136.00, "card 1111")
+      .add("03/09/2011", "DIFFE 7", -12.00, "To categorize", -12.00, -113.00, "card 1111")
+      .add("02/09/2011", "8", -53.00, "To categorize", -101.00, -101.00, "Main account")
+      .add("31/08/2011", "VIREMENT CDD", -148.00, "To categorize", -48.00, -48.00, "Main account")
+      .add("31/08/2011", "DIFFE 6", -100.00, "To categorize", -148.00, 100.00, "card 1111")
+      .add("30/08/2011", "DIFFE 4", -12.00, "To categorize", -48.00, 100.00, "card 1111")
+      .add("26/08/2011", "DIFFE 3", -12.00, "To categorize", -36.00, 100.00, "card 1111")
+      .add("25/08/2011", "DIFFE 2", -12.00, "To categorize", -24.00, 100.00, "card 1111")
+      .add("24/08/2011", "5", -12.00, "To categorize", 100.00, 100.00, "Main account")
+      .add("23/08/2011", "DIFFE 1", -12.00, "To categorize", -12.00, 100.00, "card 1111")
+      .check();
   }
 
 

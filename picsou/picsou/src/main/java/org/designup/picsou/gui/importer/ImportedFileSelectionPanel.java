@@ -152,7 +152,7 @@ public class ImportedFileSelectionPanel implements MessageHandler {
       return false;
     }
 
-    String[] strings = path.split(";");
+    String[] strings = path.trim().split(";");
     for (String fileName : strings) {
       File file = new File(fileName);
       if (!file.exists()) {

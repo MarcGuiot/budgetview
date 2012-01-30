@@ -99,7 +99,7 @@ public class SG extends WebBankPage {
   public JPanel getPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/sgPanel.splits");
-
+//    builder.add("occupedPanel", accupedPanel);
     initCardCode(builder);
     progressPanel.setVisible(true);
     progressPanel.start();
@@ -225,6 +225,7 @@ public class SG extends WebBankPage {
 
       public void actionPerformed(ActionEvent e) {
         try {
+          startOccuped();
           page = (HtmlPage)img.click();
           client.waitForBackgroundJavaScript(10000);
 
@@ -293,6 +294,8 @@ public class SG extends WebBankPage {
         }
         catch (IOException e1) {
           e1.printStackTrace();
+        }finally {
+          endOccuped();
         }
       }
     }

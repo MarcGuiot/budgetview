@@ -127,10 +127,13 @@ public class Transaction {
 
   public static MultiFieldNotUniqueIndex SERIES_INDEX;
 
+  public static NotUniqueIndex POSITION_INDEX;
+
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(Transaction.class, "transaction");
     loader.defineNonUniqueIndex(LABEL_FOR_CATEGORISATION_INDEX, LABEL_FOR_CATEGORISATION);
     loader.defineMultiFieldNotUniqueIndex(SERIES_INDEX, SERIES, POSITION_MONTH);
+    loader.defineNonUniqueIndex(POSITION_INDEX, POSITION_MONTH);
   }
 
   public static int fullDate(Glob transaction) {

@@ -1,10 +1,14 @@
 package org.designup.picsou.bank.importer;
 
 import com.gargoylesoftware.htmlunit.*;
+import com.gargoylesoftware.htmlunit.javascript.JavaScriptEngine;
+import com.gargoylesoftware.htmlunit.javascript.configuration.JavaScriptConfiguration;
+import com.gargoylesoftware.htmlunit.javascript.configuration.ClassConfiguration;
 import com.gargoylesoftware.htmlunit.attachment.AttachmentHandler;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.jidesoft.swing.InfiniteProgressPanel;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -15,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Iterator;
 
 public abstract class WebBankPage extends BankPage {
   protected WebClient client;
