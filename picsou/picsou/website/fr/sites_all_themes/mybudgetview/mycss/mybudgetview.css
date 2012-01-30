@@ -1206,12 +1206,12 @@ div#faq-footer {
 
 div#faq-footer A:link {
   text-decoration: none;
-  color: #AAAAAA;
+  color: #666666;
 }
 
 div#faq-footer A:visited {
   text-decoration: none;
-  color: #999999;
+  color: #666666;
 }
 
 div#faq-footer A:hover {
