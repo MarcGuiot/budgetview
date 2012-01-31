@@ -1,0 +1,96 @@
+Mise à jour des sites de download pour une nouvelle release :
+
+
+================================================
+    01Net
+================================================
+
+1. Aller sur :
+
+  http://referencement.01net.com/modifclient.php?Ref=eJwzqTE0NzSqMTWwNLOsMTQ2tqgBACzcBMw-3D
+
+
+2. Copier le message ci-dessous, en remplaçant le numéro de version :
+
+
+Modifications souhaitées pour le logiciel BudgetView (id = 50969)
+
+Bonjour,
+
+J'ai le plaisir de vous informer qu'une nouvelle version de BudgetView est disponible. Il ne s'agit plus de la version 2.14, mais de la version 2.23, dont les liens directs de téléchargement sont les suivants :
+
+- Windows : http://www.mybudgetview.fr/files/app/BudgetView-2.23-fr-Setup.exe
+
+- Mac : http://www.mybudgetview.fr/files/app/BudgetView-2.23-fr.dmg
+
+- Linux : http://www.mybudgetview.fr/files/app/budgetview-2.23-fr.tar.gz
+
+L'historique des modifications est visible sur cette page : 
+
+ http://www.mybudgetview.fr/support/derniers-changements
+
+Pourriez-vous je vous prie mettre la fiche du logiciel à jour ?
+
+N'hésitez pas à me contacter si vous rencontrez la moindre difficulté ou si je peux vous être utile en quoi que ce soit.
+
+Vous remerciant par avance,
+
+Régis.
+
+
+================================================
+    Toocharger.com
+================================================
+
+1. Aller sur :
+
+  http://www.toocharger.com/membres/
+
+2. S'identifier avec :
+
+  budgetview
+  BV!dl1000
+
+3. Aller sur :
+
+  http://www.toocharger.com/membres/logiciels/gestion/
+
+4. Mettre à jour chaque version Windows/Mac/Linux en changeant :
+  * la version
+  * la date de sortie
+  * l'URL du fichier d'install
+
+
+================================================
+    Toocharger.com
+================================================
+
+>> Email à jetelecharge@gmail.com :
+
+Titre: Mise à jour du logiciel BudgetView
+
+Bonjour,
+
+J'ai le plaisir de vous informer qu'une nouvelle version est disponible pour le logiciel BudgetView :
+
+ http://www.jetelecharge.com/Bureautique/6452.php
+
+La nouvelle version porte le numéro 2.23, et le fichier d'installation correspondant est disponible à l'adresse suivante :
+
+- Windows : http://www.mybudgetview.fr/files/app/BudgetView-2.23-fr-Setup.exe
+
+- Mac : http://www.mybudgetview.fr/files/app/BudgetView-2.23-fr.dmg
+
+- Linux : http://www.mybudgetview.fr/files/app/budgetview-2.23-fr.tar.gz
+
+L'historique des modifications est visible sur cette page :
+
+ http://www.mybudgetview.fr/support/derniers-changements
+
+Pourriez-vous je vous prie mettre la fiche du logiciel à jour ?
+
+N'hésitez pas à me contacter si vous rencontrez la moindre difficulté ou si je peux vous être utile en quoi que ce soit.
+
+Vous remerciant par avance,
+
+Régis.
