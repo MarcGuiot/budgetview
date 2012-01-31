@@ -94,3 +94,26 @@ N'hésitez pas à me contacter si vous rencontrez la moindre difficulté ou si j
 Vous remerciant par avance,
 
 Régis.
+
+
+================================================
+    Anshare
+================================================
+
+1. Aller sur :
+
+  http://www.anshare.org/login/accespasse.asp
+
+2. S'identifier avec :
+
+  regis@mybudgetview.fr
+  fr912m
+
+3. Aller sur :
+
+  http://www.anshare.org/logue/logiciel_new.asp?EMail=&Passe=&ID=34763
+
+4. Mettre à jour :
+
+  * version
+  * URL download
