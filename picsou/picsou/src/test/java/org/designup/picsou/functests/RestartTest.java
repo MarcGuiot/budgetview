@@ -610,7 +610,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     operations = null;
 
     ApplicationChecker application = new ApplicationChecker();
-    mainWindow = application.start();
+    mainWindow = application.startWithoutSLA();
     UISpecAssert.waitUntil(mainWindow.containsSwingComponent(JPasswordField.class), 10000);
     LoginChecker.init(mainWindow).checkErrorMessage("data.load.error.journal");
     mainWindow.dispose();

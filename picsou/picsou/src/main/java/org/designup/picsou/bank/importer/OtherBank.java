@@ -35,6 +35,8 @@ public class OtherBank extends WebBankPage {
     final SelectionService selectionService = directory.get(SelectionService.class);
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/bank/connection/otherPanel.splits", repository, directory);
 
+//    builder.add("occupedPanel", accupedPanel);
+    
     builder.addEditor("type", RealAccount.NUMBER);
     builder.addEditor("name", RealAccount.NAME);
     builder.addEditor("position", RealAccount.POSITION);
@@ -62,12 +64,18 @@ public class OtherBank extends WebBankPage {
     update.addActionListener(new ActionListener() {
 
       public void actionPerformed(ActionEvent e) {
-        GlobList globList = table.getGlobs();
-        for (Glob glob : globList) {
-          files.put(glob.getKey(), glob.get(RealAccount.FILE_NAME));
+        startOccuped();
+        try {
+          GlobList globList = table.getGlobs();
+          for (Glob glob : globList) {
+            files.put(glob.getKey(), glob.get(RealAccount.FILE_NAME));
+          }
+          accounts.addAll(globList);
+          doImport();
         }
-        accounts.addAll(globList);
-        doImport();
+        finally {
+          endOccuped();
+        }
       }
     });
     repository.getAll(RealAccount.TYPE, GlobMatchers.fieldEquals(RealAccount.BANK,

@@ -38,6 +38,7 @@ public class OfxDownloadPage extends BankPage {
   public JPanel getPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/ofxDownloadPage.splits");
+//    builder.add("occupedPanel", accupedPanel);
 
     codeField = new JTextField();
     codeField.setName("code");
@@ -93,6 +94,7 @@ public class OfxDownloadPage extends BankPage {
 
     public void actionPerformed(ActionEvent e) {
       try {
+        startOccuped();
         List<OfxConnection.AccountInfo> list = OfxConnection.getInstance().getAccounts(codeField.getText(), new String(passwordField.getPassword()),
                                                                                        urlField.getText(), orgField.getText(), fidField.getText());
 
@@ -103,6 +105,9 @@ public class OfxDownloadPage extends BankPage {
       }
       catch (RuntimeException exception) {
         MessageDialog.show("synchro.ofx.error.title", directory, "synchro.ofx.error.content", exception.getMessage());
+      }
+      finally {
+        endOccuped();
       }
     }
   }

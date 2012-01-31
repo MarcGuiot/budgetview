@@ -5,8 +5,8 @@ import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatchers;
 
-import java.util.Set;
 import java.util.Calendar;
+import java.util.Set;
 
 public class DeferredOperationTrigger extends DefaultChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
@@ -21,20 +21,21 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
         if (deferredAccount.contains(accountId)) {
           Integer monthId = values.get(Transaction.BANK_MONTH);
           Integer day = values.get(Transaction.BANK_DAY);
-          Glob deferredCardDate = 
+          Glob deferredCardDate =
             repository.findByIndex(DeferredCardDate.ACCOUNT_AND_DATE, DeferredCardDate.ACCOUNT, accountId)
               .findByIndex(DeferredCardDate.MONTH, monthId).getGlobs().getFirst();
           Integer deferredDay;
-          if (deferredCardDate == null){
+          if (deferredCardDate == null) {
             Glob account = repository.get(Key.create(Account.TYPE, accountId));
-            if (account.get(Account.OPEN_DATE) != null && monthId < Month.getMonthId(account.get(Account.OPEN_DATE))){
+            if (account.get(Account.OPEN_DATE) != null && monthId < Month.getMonthId(account.get(Account.OPEN_DATE))) {
               deferredCardDate =
                 repository
                   .findByIndex(DeferredCardDate.ACCOUNT_AND_DATE, DeferredCardDate.ACCOUNT, accountId)
                   .findByIndex(DeferredCardDate.MONTH, Month.getMonthId(account.get(Account.OPEN_DATE))).getGlobs().getFirst();
               deferredDay = deferredCardDate.get(DeferredCardDate.DAY);
             }
-            else if (account.get(Account.CLOSED_DATE) != null && monthId > Month.getMonthId(account.get(Account.CLOSED_DATE))){
+            else
+            if (account.get(Account.CLOSED_DATE) != null && monthId > Month.getMonthId(account.get(Account.CLOSED_DATE))) {
               deferredCardDate =
                 repository
                   .findByIndex(DeferredCardDate.ACCOUNT_AND_DATE, DeferredCardDate.ACCOUNT, accountId)
@@ -65,7 +66,7 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
             Integer deferredDayForNextMonth = deferredCardDateForNextMonth.get(DeferredCardDate.DAY);
             repository.update(key,
                               FieldValue.value(Transaction.POSITION_DAY,
-                                                    Month.getDay(deferredDayForNextMonth, nextMonthId, Calendar.getInstance())),
+                                               Month.getDay(deferredDayForNextMonth, nextMonthId, Calendar.getInstance())),
                               FieldValue.value(Transaction.POSITION_MONTH, nextMonthId),
                               FieldValue.value(Transaction.BUDGET_DAY, 1),
                               FieldValue.value(Transaction.BUDGET_MONTH, nextMonthId));
@@ -74,11 +75,11 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(Transaction.SERIES)){
+        if (values.contains(Transaction.SERIES)) {
           Integer seriesId = values.get(Transaction.SERIES);
           Glob series = repository.get(Key.create(Series.TYPE, seriesId));
           if (series.get(Series.BUDGET_AREA).equals(BudgetArea.OTHER.getId())
-              && series.get(Series.FROM_ACCOUNT) != null){
+              && series.get(Series.FROM_ACCOUNT) != null) {
             int accountId = series.get(Series.FROM_ACCOUNT);
             Glob transaction = repository.get(key);
             Integer month = transaction.get(Transaction.BANK_MONTH);
@@ -103,7 +104,7 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
     Glob previousSeries = repository.find(Key.create(Series.TYPE, previousSeriesId));
     if (previousSeries != null
         && previousSeries.get(Series.BUDGET_AREA).equals(BudgetArea.OTHER.getId())
-        && previousSeries.get(Series.FROM_ACCOUNT) != null){
+        && previousSeries.get(Series.FROM_ACCOUNT) != null) {
       Integer accountId = previousSeries.get(Series.FROM_ACCOUNT);
       Glob transaction = repository.get(key);
       Integer month = transaction.get(Transaction.POSITION_MONTH);
@@ -113,11 +114,13 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
         .findByIndex(Transaction.POSITION_MONTH, month).getGlobs().sort(Transaction.BANK_DAY).getFirst();
 
       Integer day = 31;
-      if (operation != null){
+      if (operation != null) {
         day = operation.get(Transaction.BANK_DAY);
       }
-      repository.update(Key.create(DeferredCardDate.ACCOUNT, accountId, DeferredCardDate.MONTH, month),
-                        DeferredCardDate.DAY, Month.getDay(day, month, Calendar.getInstance()));
+       Key deferredCardKey = repository
+         .findByIndex(DeferredCardDate.ACCOUNT_AND_DATE, DeferredCardDate.ACCOUNT, accountId)
+         .findByIndex(DeferredCardDate.MONTH, month).getGlobs().getFirst().getKey();
+      repository.update(deferredCardKey, DeferredCardDate.DAY, Month.getDay(day, month, Calendar.getInstance()));
     }
   }
 }

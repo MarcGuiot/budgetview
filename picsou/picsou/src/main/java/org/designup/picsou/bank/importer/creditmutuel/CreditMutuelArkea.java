@@ -163,13 +163,14 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
   private class ValiderActionListener implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
+      try {
+              startOccuped();
       HtmlForm form = page.getFormByName("formIdentification");
       HtmlInput personne = form.getInputByName("noPersonne");
       HtmlInput password = form.getInputByName("motDePasse");
       personne.setValueAttribute(codeField.getText());
       password.setValueAttribute(new String(passwordTextField.getPassword()));
       HtmlElement element = getAnchor(form);
-      try {
         page = element.click();
         client.waitForBackgroundJavaScript(10000);
         HtmlElement elementById = getElementById("quotidien");
@@ -188,6 +189,9 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
       }
       catch (IOException e1) {
         throw new RuntimeException(page.asXml(), e1);
+      }
+      finally {
+        endOccuped();
       }
     }
 

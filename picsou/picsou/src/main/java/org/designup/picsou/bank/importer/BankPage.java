@@ -24,13 +24,15 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
 
-public abstract class BankPage {
+import com.jidesoft.swing.InfiniteProgressPanel;
 
+public abstract class BankPage {
   protected Directory directory;
   protected Integer bankId;
   protected LocalGlobRepository repository;
   protected PicsouDialog dialog;
   protected GlobList accounts = new GlobList();
+//  protected InfiniteProgressPanel accupedPanel = new InfiniteProgressPanel();
 
   public BankPage(Directory directory, GlobRepository repository, Integer bankId) {
     this.directory = directory;
@@ -130,6 +132,14 @@ public abstract class BankPage {
     loadFile();
     dialog.setVisible(false);
     repository.commitChanges(true);
+  }
+
+  public void endOccuped() {
+//    accupedPanel.start();
+  }
+
+  public void startOccuped() {
+//    accupedPanel.stop();
   }
 
   protected class CancelAction extends AbstractAction {

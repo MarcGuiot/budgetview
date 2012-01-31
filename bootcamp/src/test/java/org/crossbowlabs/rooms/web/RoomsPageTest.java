@@ -42,7 +42,7 @@ public class RoomsPageTest extends TestCase {
   }
 
   private HtmlPage getPage(String s) throws IOException {
-    WebClient webClient = new WebClient(BrowserVersion.FIREFOX_2);
+    WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3_6);
     webClient.setJavaScriptEnabled(true);
     webClient.setThrowExceptionOnScriptError(true);
     webClient.setThrowExceptionOnFailingStatusCode(true);

@@ -26,6 +26,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -187,11 +188,9 @@ public class HistoChartBuilder {
 
         GlobMatcher accountMatcher = Matchers.transactionsForAccount(accountId);
 
-        GlobList transactions =
-          repository.getAll(Transaction.TYPE,
-                            and(fieldEquals(Transaction.POSITION_MONTH, monthId),
-                                accountMatcher))
-            .sort(TransactionComparator.ASCENDING_ACCOUNT);
+        GlobList transactions = repository.findByIndex(Transaction.POSITION_INDEX, monthId)
+          .filterSelf(accountMatcher, repository)
+          .sort(TransactionComparator.ASCENDING_ACCOUNT);
 
         if (!transactions.isEmpty()) {
           maxDay = Math.max(maxDay, transactions.getSortedSet(Transaction.POSITION_DAY).last());
@@ -234,11 +233,9 @@ public class HistoChartBuilder {
     Double lastValue = getLastValue(accountMatcher, monthIdsToShow, Transaction.SUMMARY_POSITION);
 
     for (int monthId : monthIdsToShow) {
-      GlobList transactions =
-        repository.getAll(Transaction.TYPE,
-                          and(fieldEquals(Transaction.POSITION_MONTH, monthId),
-                              accountMatcher))
-          .sort(TransactionComparator.ASCENDING_ACCOUNT);
+      GlobList transactions = repository.findByIndex(Transaction.POSITION_INDEX, monthId)
+        .filterSelf(accountMatcher, repository)
+        .sort(TransactionComparator.ASCENDING_ACCOUNT);
 
       int maxDay = Month.getLastDayNumber(monthId);
       if (!transactions.isEmpty()) {
@@ -298,25 +295,23 @@ public class HistoChartBuilder {
   }
 
   private Double getLastValue(GlobMatcher accountMatcher, List<Integer> monthIdsToShow, DoubleField positionField) {
-    GlobList previousTransactions =
-      repository.getAll(Transaction.TYPE,
+
+    LastGlobFunctor callback = new LastGlobFunctor();
+    repository.safeApply(Transaction.TYPE,
                         and(fieldStrictlyLessThan(Transaction.POSITION_MONTH, monthIdsToShow.get(0)),
-                            accountMatcher))
-        .sort(TransactionComparator.ASCENDING_ACCOUNT);
-    if (!previousTransactions.isEmpty()) {
-      return previousTransactions.getLast().get(positionField);
+                            accountMatcher), callback);
+    if (callback.transaction != null) {
+      return callback.transaction.get(positionField);
     }
 
-    GlobList nextTransactions =
-      repository.getAll(Transaction.TYPE,
-                        and(fieldGreaterOrEqual(Transaction.POSITION_MONTH, monthIdsToShow.get(0)),
-                            accountMatcher))
-        .sort(TransactionComparator.ASCENDING_ACCOUNT);
-    if (nextTransactions.isEmpty()) {
+    FirstGlobFunctor firstCallback = new FirstGlobFunctor();
+    repository.safeApply(Transaction.TYPE,
+                         and(fieldGreaterOrEqual(Transaction.POSITION_MONTH, monthIdsToShow.get(0)),
+                             accountMatcher), firstCallback);
+    if (firstCallback.transaction == null) {
       return null;
     }
-    Glob firstTransaction = nextTransactions.getFirst();
-    return Amounts.diff(firstTransaction.get(positionField), firstTransaction.get(Transaction.AMOUNT));
+    return Amounts.diff(firstCallback.transaction.get(positionField), firstCallback.transaction.get(Transaction.AMOUNT));
   }
 
   public void showMainBalanceHisto(int selectedMonthId, boolean resetPosition) {
@@ -529,5 +524,29 @@ public class HistoChartBuilder {
 
   private List<Integer> getMonthIdsToShow(Integer selectedMonthId) {
     return range.getMonthIds(selectedMonthId);
+  }
+
+  private static class LastGlobFunctor implements GlobFunctor {
+    Glob transaction;
+    public void run(Glob glob, GlobRepository repository) throws Exception {
+      if (transaction == null){
+        transaction = glob;
+      }
+      if (TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, glob) < 0){
+        transaction = glob;
+      }
+    }
+  }
+
+  private static class FirstGlobFunctor implements GlobFunctor {
+    Glob transaction;
+    public void run(Glob glob, GlobRepository repository) throws Exception {
+      if (transaction == null){
+        transaction = glob;
+      }
+      if (TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, glob) > 0){
+        transaction = glob;
+      }
+    }
   }
 }

@@ -515,7 +515,7 @@ public class OperationChecker {
       args.add(password);
     }
     args.add("-l");
-    args.add("fr");
+    args.add(Lang.getLang());
     args.add("-s");
     args.add(backupFile);
     Process process = Runtime.getRuntime().exec(args.toArray(new String[args.size()]));

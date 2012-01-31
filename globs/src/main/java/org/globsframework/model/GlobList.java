@@ -19,11 +19,11 @@ public class GlobList extends ArrayList<Glob> {
   public static final GlobList EMPTY = new EmptyGlobList();
 
   public GlobList() {
-    this(new ArrayList<Glob>());
+    super();
   }
 
   public GlobList(int capacity) {
-    this(new ArrayList<Glob>(capacity));
+    super(capacity);
   }
 
   public GlobList(Glob... globs) {
@@ -35,7 +35,7 @@ public class GlobList extends ArrayList<Glob> {
   }
 
   public GlobList(Collection<Glob> globs) {
-    super(new ArrayList(globs));
+    super(globs);
   }
 
   public void addAll(Glob... globs) {
