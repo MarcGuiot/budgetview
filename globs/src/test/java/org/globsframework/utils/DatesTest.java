@@ -43,6 +43,10 @@ public class DatesTest extends TestCase {
                              toCalendar(Dates.parseTimestamp("2002/10/03 12:34:25")),
                              4999));
   }
+  
+  public void testExtractDate() throws Exception {
+    assertEquals(Dates.parse("2012/02/10"), Dates.extractDateDDMMYYYY("sdf sdf 10/02/2012 sdf sf"));
+  }
 
   private Calendar toCalendar(Date date) {
     Calendar calendar = Calendar.getInstance();

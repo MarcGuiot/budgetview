@@ -94,4 +94,16 @@ public class Dates {
   public static long millisBetween(Calendar date1, Calendar date2) {
     return Math.abs(date1.getTimeInMillis() - date2.getTimeInMillis());
   }
+  
+  public static Date extractDateDDMMYYYY(String str){
+    str = str.replaceAll(".*([0-9]{2}/[0-9]{2}/[0-9]{4}).*", "$1");
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    try {
+      return simpleDateFormat.parse(str);
+    }
+    catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
 }

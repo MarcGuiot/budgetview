@@ -23,6 +23,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
+import java.util.Date;
 
 import com.jidesoft.swing.InfiniteProgressPanel;
 
@@ -53,7 +54,7 @@ public abstract class BankPage {
 
   public abstract JPanel getPanel();
 
-  protected void createOrUpdateRealAccount(String name, String number, String position, final Integer bankId) {
+  protected void createOrUpdateRealAccount(String name, String number, String position, Date date, final Integer bankId) {
     if (Strings.isNotEmpty(name) || Strings.isNotEmpty(number)) {
       Glob account = repository.getAll(RealAccount.TYPE,
                                        and(fieldEquals(RealAccount.NAME, name.trim()),
@@ -65,11 +66,14 @@ public abstract class BankPage {
                                     value(RealAccount.NAME, name.trim()),
                                     value(RealAccount.NUMBER, number.trim()),
                                     value(RealAccount.BANK, bankId),
+                                    value(RealAccount.POSITION_DATE, date),
                                     value(RealAccount.POSITION, position.trim()),
                                     value(RealAccount.FROM_SYNCHRO, true));
       }
       else {
-        repository.update(account.getKey(), RealAccount.POSITION, position.trim());
+        repository.update(account.getKey(),
+                          value(RealAccount.POSITION_DATE, date),
+                          value(RealAccount.POSITION, position.trim()));
       }
       accounts.add(account);
     }

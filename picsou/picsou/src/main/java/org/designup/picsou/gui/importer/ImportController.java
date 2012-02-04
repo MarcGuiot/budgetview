@@ -92,7 +92,8 @@ public class ImportController {
       if (target != null) {
         localRepository.update(target.getKey(),
                                FieldValue.value(Account.POSITION, Amounts.extractAmount(glob.get(RealAccount.POSITION))),
-                               FieldValue.value(Account.POSITION_DATE, glob.get(RealAccount.POSITION_DATE)));
+                               FieldValue.value(Account.POSITION_DATE, glob.get(RealAccount.POSITION_DATE)),
+                               FieldValue.value(Account.TRANSACTION_ID, null));
       }
     }
     if (nextImport()) {

@@ -136,7 +136,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
 
   public T changePosition(String accountName, final double balance, final String operationLabel) {
     editPosition(accountName)
-      .checkOperationLabel(operationLabel.toUpperCase())
+//      .checkOperationLabel(operationLabel.toUpperCase())
       .setAmountAndEnter(balance);
     return (T)this;
   }
