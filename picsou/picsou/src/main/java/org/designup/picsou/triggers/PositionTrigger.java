@@ -10,6 +10,7 @@ import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.Dates;
 
 import java.util.*;
 
@@ -290,15 +291,34 @@ public class PositionTrigger implements ChangeSetListener {
         }
       }
     }
-    repository.update(account.getKey(), Account.TRANSACTION_ID, lastUpdateTransactionId);
-    if (lastUpdateTransactionId != null) {
-      Glob lastTransaction = repository.get(Key.create(Transaction.TYPE, lastUpdateTransactionId));
-      repository.update(account.getKey(),
-                        FieldValue.value(Account.POSITION_DATE,
-                                         Month.toDate(lastTransaction.get(Transaction.POSITION_MONTH),
-                                                      lastTransaction.get(Transaction.POSITION_DAY))),
-                        FieldValue.value(Account.POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION))
-      );
+
+    if (Account.isManualUpdateAccount(account) || !account.isTrue(Account.IS_IMPORTED_ACCOUNT)) {
+      if (lastUpdateTransactionId != null) {
+        Glob lastTransaction = repository.get(Key.create(Transaction.TYPE, lastUpdateTransactionId));
+
+        Date posDate = Month.toDate(lastTransaction.get(Transaction.POSITION_MONTH), lastTransaction.get(Transaction.POSITION_DAY));
+        Date accountDate = account.get(Account.POSITION_DATE);
+        if (accountDate == null || accountDate.before(posDate)){
+          repository.update(account.getKey(), Account.TRANSACTION_ID, lastUpdateTransactionId);
+          accountDate = posDate;
+        }
+        repository.update(account.getKey(),
+                          FieldValue.value(Account.POSITION_DATE, accountDate),
+                          FieldValue.value(Account.POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION))
+        );
+      }
+    }
+    else {
+      repository.update(account.getKey(), Account.TRANSACTION_ID, lastUpdateTransactionId);
+      if (lastUpdateTransactionId != null) {
+        Glob lastTransaction = repository.get(Key.create(Transaction.TYPE, lastUpdateTransactionId));
+        repository.update(account.getKey(),
+                          FieldValue.value(Account.POSITION_DATE,
+                                           Month.toDate(lastTransaction.get(Transaction.POSITION_MONTH),
+                                                        lastTransaction.get(Transaction.POSITION_DAY))),
+                          FieldValue.value(Account.POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION))
+        );
+      }
     }
     if (firstTransaction != null) {
       repository.update(account.getKey(),

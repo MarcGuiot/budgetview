@@ -215,10 +215,10 @@ public class ImportPreviewPanel implements MessageHandler {
     else {
       accountId = AccountFinder.findBestAccount(importedTransactions, repository);
 
-      Glob associatedImportedAccout = sessionRepository.getAll(RealAccount.TYPE)
+      Glob associatedImportedAccount = sessionRepository.getAll(RealAccount.TYPE)
         .filter(GlobMatchers.fieldEquals(RealAccount.ACCOUNT, accountId), sessionRepository)
         .getFirst();
-      if (associatedImportedAccout != null && !RealAccount.areNearEquivalent(associatedImportedAccout, importedAccount)) {
+      if (associatedImportedAccount != null && !RealAccount.areNearEquivalent(associatedImportedAccount, importedAccount)) {
         accountId = null;
       }
 

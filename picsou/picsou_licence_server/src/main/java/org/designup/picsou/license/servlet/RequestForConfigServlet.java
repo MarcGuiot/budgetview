@@ -95,10 +95,8 @@ public class RequestForConfigServlet extends HttpServlet {
     ValueLongAccessor configVersion = new ValueLongAccessor();
     versionService.getVersion(mail, group, jarVersionAccessor, configVersion);
     long newJarVersion = jarVersionAccessor.getValue();
-    if (Long.parseLong(jarVersion) != 82 || newJarVersion != 83) {
-      resp.setHeader(ConfigService.HEADER_NEW_JAR_VERSION, Long.toString(newJarVersion));
-      resp.setHeader(ConfigService.HEADER_NEW_CONFIG_VERSION, Long.toString(configVersion.getValue()));
-    }
+    resp.setHeader(ConfigService.HEADER_NEW_JAR_VERSION, Long.toString(newJarVersion));
+    resp.setHeader(ConfigService.HEADER_NEW_CONFIG_VERSION, Long.toString(configVersion.getValue()));
     resp.setStatus(HttpServletResponse.SC_OK);
   }
 

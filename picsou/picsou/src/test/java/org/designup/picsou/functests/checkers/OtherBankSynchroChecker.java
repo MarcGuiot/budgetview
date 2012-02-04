@@ -38,7 +38,7 @@ public class OtherBankSynchroChecker extends SynchroChecker {
     return this;
   }
 
-  public OtherBankSynchroChecker select(String name) {
+  public OtherBankSynchroChecker selectAccount(String name) {
     Table table = window.getTable();
     table.selectRow(table.getRowIndex(1, name));
     return this;

@@ -240,10 +240,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
 
   public void testMiroirOperationIsUpdated() throws Exception {
-    setInMemory(false);
-    restartApplication(true);
-    setDeleteLocalPrevayler(false);
-
     mainAccounts.createNewAccount()
       .setAccountName("Cash")
       .setAccountNumber("012345")
@@ -275,8 +271,8 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkPosition("Cash", 100.);
     savingsAccounts.checkPosition("Livret A", 100.);
 
-    setCurrentDate("2008/09/02");
-    restartApplication();
+    setCurrentDate("2008/09/05");
+    restartApplicationFromBackup();
     timeline.selectMonth(200809);
 
     transactionCreation

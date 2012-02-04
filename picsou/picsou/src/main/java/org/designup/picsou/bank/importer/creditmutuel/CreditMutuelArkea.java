@@ -183,7 +183,7 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
         for (int i = 1; i < count; i++) {
           HtmlTableCell name = accountsTable.getCellAt(i, 1);
           HtmlTableCell position = accountsTable.getCellAt(i, 2);
-          createOrUpdateRealAccount(name.getTextContent(), "", position.getTextContent(), ID);
+          createOrUpdateRealAccount(name.getTextContent(), "", position.getTextContent(), null, ID);
         }
         doImport();
       }

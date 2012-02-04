@@ -20,6 +20,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.repository.DefaultGlobIdGenerator;
 import org.globsframework.model.repository.DefaultGlobRepository;
+import org.globsframework.utils.Dates;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -260,6 +261,7 @@ public class SG extends WebBankPage {
               String type = null;
               String name = null;
               String position = null;
+              Date date = null;
               for (HtmlTableCell cell : row.getCells()) {
                 if (cell.getTagName().equals(HtmlTableHeaderCell.TAG_NAME)) {
                   continue;
@@ -279,14 +281,19 @@ public class SG extends WebBankPage {
                 else if (columnName.equalsIgnoreCase("solde")) {
                   List<HtmlElement> htmlElements = cell.getElementsByAttribute(HtmlDivision.TAG_NAME, "class", "Solde");
                   if (htmlElements.size() > 0){
-                    position = htmlElements.get(0).getTextContent();
+                    HtmlDivision element = (HtmlDivision)htmlElements.get(0);
+                    String title = element.getAttribute("title");
+                    if (Strings.isNotEmpty(title)){
+                      date = Dates.extractDateDDMMYYYY(title);
+                    }
+                    position = element.getTextContent();
                   }
                   else {
                     position = cell.getTextContent();
                   }
                 }
               }
-              createOrUpdateRealAccount(type, name, position, SG_ID);
+              createOrUpdateRealAccount(type, name, position, date, SG_ID);
             }
             page = client.getPage(URL_TELECHARGEMENT);
             doImport();

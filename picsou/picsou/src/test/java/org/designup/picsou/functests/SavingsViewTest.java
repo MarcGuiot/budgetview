@@ -220,23 +220,53 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
 
     operations.nextMonth();
     operations.nextSixDays();
-    timeline.selectMonth("2009/06");
-    savingsView.checkTotalEstimatedPosition("200.00", "30/06/2009");
-    timeline.selectMonth("2009/07");
-    savingsView.checkTotalEstimatedPosition("210.00", "31/07/2009");
-    timeline.selectMonth("2009/08");
-    savingsView.checkTotalEstimatedPosition("220.00", "31/08/2009");
+    timeline.selectAll();
+    transactions.showPlannedTransactions()
+      .initAmountContent()
+      .add("11/10/2009", "Planned: Epargne", -200.00, "Epargne", 30.00, 30.00, "ING")
+      .add("11/10/2009", "Planned: External", 210.00, "External", 230.00, 230.00, "ING")
+      .add("11/10/2009", "Planned: Epargne", 200.00, "Epargne", 1600.00, "Main accounts")
+      .add("11/09/2009", "Planned: Epargne", -200.00, "Epargne", 20.00, 20.00, "ING")
+      .add("11/09/2009", "Planned: External", 210.00, "External", 220.00, 220.00, "ING")
+      .add("11/09/2009", "Planned: Epargne", 200.00, "Epargne", 1400.00, "Main accounts")
+      .add("11/08/2009", "Planned: Epargne", -200.00, "Epargne", 10.00, 10.00, "ING")
+      .add("11/08/2009", "Planned: External", 210.00, "External", 210.00, 210.00, "ING")
+      .add("11/08/2009", "Planned: Epargne", 200.00, "Epargne", 1200.00, "Main accounts")
+      .add("15/07/2009", "EXTERNAL", 210.00, "External", 0.00, 0.00, "ING")
+      .add("10/07/2009", "VIRT", -200.00, "Epargne", -210.00, -210.00, "ING")
+      .add("10/07/2009", "VIRT", 200.00, "Epargne", 1000.00, 1000.00, "Account n. 00000123")
+      .add("15/06/2009", "EXTERNAL", 210.00, "External", -10.00, -10.00, "ING")
+      .add("04/06/2009", "MCDO", -10.00, "To categorize", 800.00, 800.00, "Account n. 00000123")
+      .add("15/05/2009", "EXTERNAL", 210.00, "External", -220.00, -220.00, "ING")
+      .add("04/05/2009", "MCDO", -10.00, "To categorize", 810.00, 810.00, "Account n. 00000123")
+      .check();
+
 
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/08/25")
       .addTransaction("2009/08/25", -10.00, "ed")
       .load();
 
-    timeline.selectMonth("2009/06");
-    savingsView.checkTotalEstimatedPosition("200.00", "30/06/2009");
-    timeline.selectMonth("2009/07");
-    savingsView.checkTotalEstimatedPosition("210.00", "31/07/2009");
-    timeline.selectMonth("2009/08");
-    savingsView.checkTotalEstimatedPosition("220.00", "31/08/2009");
+    timeline.selectAll();
+    transactions.showPlannedTransactions()
+      .initAmountContent()
+      .add("11/10/2009", "Planned: Epargne", -200.00, "Epargne", 30.00, 30.00, "ING")
+      .add("11/10/2009", "Planned: External", 210.00, "External", 230.00, 230.00, "ING")
+      .add("11/10/2009", "Planned: Epargne", 200.00, "Epargne", 1600.00, "Main accounts")
+      .add("11/09/2009", "Planned: Epargne", -200.00, "Epargne", 20.00, 20.00, "ING")
+      .add("11/09/2009", "Planned: External", 210.00, "External", 220.00, 220.00, "ING")
+      .add("11/09/2009", "Planned: Epargne", 200.00, "Epargne", 1400.00, "Main accounts")
+      .add("25/08/2009", "Planned: Epargne", -200.00, "Epargne", 10.00, 10.00, "ING")
+      .add("25/08/2009", "Planned: Epargne", 200.00, "Epargne", 1200.00, "Main accounts")
+      .add("25/08/2009", "EXTERNAL", 210.00, "External", 210.00, 210.00, "ING")
+      .add("25/08/2009", "ED", -10.00, "To categorize", 1000.00, 1000.00, "Account n. 00000123")
+      .add("15/07/2009", "EXTERNAL", 210.00, "External", 0.00, 0.00, "ING")
+      .add("10/07/2009", "VIRT", -200.00, "Epargne", -210.00, -210.00, "ING")
+      .add("10/07/2009", "VIRT", 200.00, "Epargne", 1010.00, 1010.00, "Account n. 00000123")
+      .add("15/06/2009", "EXTERNAL", 210.00, "External", -10.00, -10.00, "ING")
+      .add("04/06/2009", "MCDO", -10.00, "To categorize", 810.00, 810.00, "Account n. 00000123")
+      .add("15/05/2009", "EXTERNAL", 210.00, "External", -220.00, -220.00, "ING")
+      .add("04/05/2009", "MCDO", -10.00, "To categorize", 820.00, 820.00, "Account n. 00000123")
+      .check();
   }
 }
