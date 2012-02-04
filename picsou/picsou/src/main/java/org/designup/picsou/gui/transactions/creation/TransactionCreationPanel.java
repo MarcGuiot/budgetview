@@ -192,6 +192,12 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
         updateInProgress = false;
       }
 
+      Integer account = prototypeTransaction.get(Transaction.ACCOUNT);
+      if (account == null) {
+        showErrorMessage("transactionCreation.error.account");
+        return;
+      }
+
       Double amount = prototypeTransaction.get(Transaction.AMOUNT);
       if (amount == null) {
         amountField.requestFocus();

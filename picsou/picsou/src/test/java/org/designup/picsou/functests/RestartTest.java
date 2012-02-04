@@ -657,4 +657,32 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       {"x", "20/08/2008", "", "WORLDCO", 1000.0}}
     );
   }
+
+  public void testUserMustSelectAccountForTransactionCreation() throws Exception {
+
+    mainAccounts.createNewAccount()
+      .setAccountName("Cash")
+      .setAccountNumber("012345")
+      .setUpdateModeToManualInput()
+      .setPosition(100.)
+      .selectBank("CIC")
+      .validate();
+
+    restartApplication();
+
+    transactionCreation
+      .show()
+      .checkNoErrorMessage()
+      .createAndCheckErrorMessage("You must select an account")
+      .selectAccount("Cash")
+      .setAmount(-12.50)
+      .setDay(15)
+      .checkMonth("August 2008")
+      .setLabel("Transaction 1")
+      .create();
+
+    categorization.checkTable(new Object[][]{
+      {"15/08/2008", "", "TRANSACTION 1", -12.50}
+    });
+  }
 }

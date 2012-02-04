@@ -127,6 +127,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     transactionCreation
       .show()
+      .checkSelectedAccount("Cash")
       .checkNoErrorMessage()
       .createAndCheckErrorMessage("You must enter an amount")
       .checkNegativeAmountsSelected()
