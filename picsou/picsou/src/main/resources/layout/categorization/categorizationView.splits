@@ -29,8 +29,8 @@
            ui="hyperlinkButtonWithoutUnderline"
            font="-,plain,12"
            foreground="categorization.createTransaction.button"
-           icon="arrow_right_grey.png"
-           rolloverIcon="arrow_right_grey_rollover.png"/>
+           icon="rightArrow(10,12,9,9,categorization.createTransaction.button.arrow)"
+           rolloverIcon="rightArrow(10,12,9,9,categorization.createTransaction.button.arrow.rollover)"/>
   </styles>
 
   <column styleClass="main">
@@ -65,7 +65,7 @@
               <label text="$transactionCreation.title" styleClass="separatorTitle" marginTop="15"
                      autoHideSource="transactionCreation"/>
               <filler fill="horizontal"/>
-              <button action="showHideTransactionCreation" styleClass="showTransactionCreation"/>
+              <button ref="showHideTransactionCreation" styleClass="showTransactionCreation"/>
             </row>
             <panel ref="transactionCreation"/>
           </column>

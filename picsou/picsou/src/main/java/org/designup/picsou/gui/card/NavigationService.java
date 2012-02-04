@@ -70,18 +70,8 @@ public class NavigationService implements GlobSelectionListener {
     gotoCard(Card.CATEGORIZATION);
   }
 
-  public void gotoCategorizationForCurrentSelection() {
-    categorizationView.setFilteringMode(CategorizationFilteringMode.SELECTED_MONTHS);
-    gotoCategorization();
-  }
-
   public void gotoCategorizationAndShowAll() {
     categorizationView.setFilteringMode(CategorizationFilteringMode.ALL);
-    gotoCategorization();
-  }
-
-  public void gotoCategorizationAndSelectLastImported() {
-    categorizationView.setFilteringMode(CategorizationFilteringMode.LAST_IMPORTED_FILE);
     gotoCategorization();
   }
 
@@ -115,7 +105,12 @@ public class NavigationService implements GlobSelectionListener {
     transactionView.setSeriesFilter(series);
     select(Card.DATA, false);
   }
-
+  
+  public void highlightTransactionCreation() {
+    select(Card.CATEGORIZATION, true);
+    categorizationView.highlightTransactionCreation();
+  }
+  
   public boolean backEnabled() {
     return !backStack.isEmpty();
   }

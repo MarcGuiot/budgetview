@@ -288,7 +288,7 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker checkNoErrorDisplayed() {
-    checkNoErrorTip(dialog);
+    checkNoTipVisible(dialog);
     return this;
   }
 
@@ -308,7 +308,7 @@ public class AccountEditionChecker extends GuiChecker {
         Assert.fail("Validation failed. Error message: " + message);
       }
       else {
-        checkNoErrorTip(dialog);
+        checkNoTipVisible(dialog);
       }
       Assert.fail("Creation failed");
     }

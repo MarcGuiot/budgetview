@@ -1,9 +1,7 @@
 package org.designup.picsou.gui.components.tips;
 
 import net.java.balloontip.BalloonTip;
-import net.java.balloontip.positioners.BalloonTipPositioner;
 import net.java.balloontip.positioners.Left_Above_Positioner;
-import net.java.balloontip.positioners.Right_Above_Positioner;
 import net.java.balloontip.styles.RoundedBalloonStyle;
 import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.splits.color.ColorChangeListener;
@@ -28,7 +26,7 @@ public class ErrorTip implements Disposable, ColorChangeListener {
   private Directory directory;
 
   public static ErrorTip showLeft(JComponent component, String text, Directory directory) {
-    return show(component, text, directory, new Left_Above_Positioner(10, 20));
+    return show(component, text, directory, TipPosition.TOP_LEFT);
   }
 
   public static ErrorTip showLeft(JTextField component, String text, Directory directory) {
@@ -37,21 +35,15 @@ public class ErrorTip implements Disposable, ColorChangeListener {
     return tip;
   }
 
-  public static ErrorTip showRight(JTextField component, String text, Directory directory) {
-    ErrorTip tip = showRight((JComponent)component, text, directory);
-    AutoDispose.registerTextEdition(component, tip);
-    return tip;
-  }
-
   public static ErrorTip showRight(JComponent component, String text, Directory directory) {
-    return show(component, text, directory, new Right_Above_Positioner(10, 20));
+    return show(component, text, directory, TipPosition.TOP_RIGHT);
   }
 
-  private static ErrorTip show(JComponent component, String text, Directory directory, BalloonTipPositioner positioner) {
-    return new ErrorTip(component, text, directory, positioner);
+  public static ErrorTip show(JComponent component, String text, Directory directory, TipPosition position) {
+    return new ErrorTip(component, text, directory, position);
   }
 
-  private ErrorTip(final JComponent component, final String text, Directory directory, BalloonTipPositioner positioner) {
+  private ErrorTip(final JComponent component, final String text, Directory directory, TipPosition position) {
     this.component = component;
     this.directory = directory;
 
@@ -64,7 +56,7 @@ public class ErrorTip implements Disposable, ColorChangeListener {
                                 BalloonTip.AttachLocation.NORTHEAST,
                                 0, 20,
                                 false);
-    balloonTip.setPositioner(positioner);
+    balloonTip.setPositioner(position.getPositioner());
     balloonTip.setVisible(true);
 
     visibilityUpdater = new HierarchyListener() {

@@ -627,6 +627,10 @@ public class OperationChecker {
     return AccountEditionChecker.open(getEditMenu().getSubMenu(Lang.get("account.create.menu")).triggerClick());
   }
 
+  public void createTransactions() {
+    getEditMenu().getSubMenu("Enter transactions").click();
+  }
+
   private MenuItem getFileMenu() {
     return window.getMenuBar().getMenu(Lang.get("file"));
   }

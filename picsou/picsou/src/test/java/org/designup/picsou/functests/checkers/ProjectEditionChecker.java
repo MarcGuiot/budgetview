@@ -161,7 +161,7 @@ public class ProjectEditionChecker extends GuiChecker {
   }
 
   public ProjectEditionChecker checkNoErrorTipDisplayed() {
-    super.checkNoErrorTip(dialog);
+    super.checkNoTipVisible(dialog);
     return this;
   }
 

@@ -1,16 +1,12 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.uispec4j.Button;
-import org.uispec4j.Panel;
-import org.uispec4j.TextBox;
-import org.uispec4j.Window;
+import org.uispec4j.*;
 
 import javax.swing.*;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.designup.picsou.utils.Lang;
-import org.uispec4j.assertion.UISpecAssert;
 
 public class TransactionCreationChecker extends ViewChecker {
   private Panel panel;
@@ -108,18 +104,22 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public TransactionCreationChecker checkAccounts(String... accountNames) {
-    assertThat(getPanel().getComboBox("account").contentEquals(accountNames));
+    assertThat(getAccountCombo().contentEquals(accountNames));
     return this;
   }
 
-  public TransactionCreationChecker checkAccount(String accountName) {
-    assertThat(getPanel().getComboBox("account").selectionEquals(accountName));
+  public TransactionCreationChecker checkSelectedAccount(String accountName) {
+    assertThat(getAccountCombo().selectionEquals(accountName));
     return this;
   }
 
   public TransactionCreationChecker selectAccount(String accountName) {
-    getPanel().getComboBox("account").select(accountName);
+    getAccountCombo().select(accountName);
     return this;
+  }
+
+  private ComboBox getAccountCombo() {
+    return getPanel().getComboBox("account");
   }
 
   public TransactionCreationChecker checkFieldsAreEmpty() {
@@ -201,6 +201,18 @@ public class TransactionCreationChecker extends ViewChecker {
     LicenseActivationChecker.open(getShowHideButton().triggerClick())
       .checkCodeIsEmpty()
       .cancel();
+  }
+
+  public void checkPanelSignpostShown(String text) {
+    checkSignpostVisible(getPanel(), getAccountCombo(), text);
+  }
+
+  public void checkSignpostShown(String text) {
+    checkSignpostVisible(getPanel(), getShowHideButton(), text);
+  }
+
+  public void checkSignpostHidden() {
+    checkNoTipVisible(getPanel());
   }
 
   private Panel getPanel() {

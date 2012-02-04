@@ -2,9 +2,6 @@ package org.designup.picsou.functests;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.utils.Dates;
-
-import java.util.Date;
 
 public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
@@ -30,7 +27,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .checkHidden()
       .show()
       .checkAccounts("Cash")
-      .checkAccount("Cash")
+      .checkSelectedAccount("Cash")
       .checkNegativeAmountsSelected()
       .setAmount(-12.50)
       .setDay(15)
@@ -58,7 +55,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     transactionCreation
       .checkShowing()
       .checkAccounts("Cash", "Misc")
-      .checkAccount("Cash")
+      .checkSelectedAccount("Cash")
       .selectAccount("Misc")
       .checkNegativeAmountsSelected()
       .setAmount(20.00)
@@ -239,7 +236,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
   }
 
 
-  public void testMiroirOperationIsUpdated() throws Exception {
+  public void testMirrorTransactionIsUpdated() throws Exception {
     setInMemory(false);
     restartApplication(true);
     setDeleteLocalPrevayler(false);
@@ -306,6 +303,48 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkPosition("Cash", 70.);
     savingsAccounts.checkPosition("Livret A", 130.);
+  }
 
+  public void testTransactionCreationMenuShowsTip() throws Exception {
+
+    operations.hideSignposts();
+
+    mainAccounts.createNewAccount()
+      .setAccountName("Cash")
+      .setAccountNumber("012345")
+      .setUpdateModeToManualInput()
+      .setPosition(100.)
+      .selectBank("CIC")
+      .validate();
+
+    views.selectHome();
+    operations.createTransactions();
+
+    views.checkCategorizationSelected();
+    transactionCreation.checkSignpostShown("Click here to enter transactions");
+    transactionCreation.show();
+    transactionCreation.checkSignpostHidden();
+
+    views.selectHome();
+    operations.createTransactions();
+
+    views.checkCategorizationSelected();
+    transactionCreation.checkPanelSignpostShown("Enter your transactions here");
+    transactionCreation.hide();
+    transactionCreation.checkSignpostHidden();
+
+    operations.createTransactions();
+    transactionCreation.checkHidden();
+    transactionCreation.checkSignpostShown("Click here to enter transactions");
+    transactionCreation
+      .show()
+      .checkSelectedAccount("Cash")
+      .checkNegativeAmountsSelected()
+      .setAmount(-12.50)
+      .setDay(15)
+      .checkMonth("August 2008")
+      .setLabel("Transaction 1")
+      .create();
+    transactionCreation.checkSignpostHidden();
   }
 }

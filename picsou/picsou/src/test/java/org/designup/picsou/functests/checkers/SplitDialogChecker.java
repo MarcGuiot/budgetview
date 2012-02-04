@@ -59,7 +59,7 @@ public class SplitDialogChecker extends GuiChecker {
   }
 
   public SplitDialogChecker checkNoError() {
-    checkNoErrorTip(window);
+    checkNoTipVisible(window);
     return this;
   }
 

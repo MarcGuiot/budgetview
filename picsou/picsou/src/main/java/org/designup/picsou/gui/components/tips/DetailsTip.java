@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.components.tips;
 
 import net.java.balloontip.BalloonTip;
-import net.java.balloontip.positioners.Right_Above_Positioner;
 import net.java.balloontip.styles.RoundedBalloonStyle;
 import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.splits.color.ColorChangeListener;
@@ -24,7 +23,8 @@ public class DetailsTip implements Disposable {
   private JComponent component;
   private String text;
   private AWTEventListener mouseListener;
-  private Right_Above_Positioner positioner = new Right_Above_Positioner(10, 20);
+  private boolean clickThrough;
+  private TipPosition position = TipPosition.TOP_RIGHT;
 
   public DetailsTip(final JComponent component, String text, Directory directory) {
     this.component = component;
@@ -41,6 +41,14 @@ public class DetailsTip implements Disposable {
     });
   }
 
+  public void setPosition(TipPosition position) {
+    this.position = position;
+  }
+
+  public void setClickThrough() {
+    this.clickThrough = true;
+  }
+
   public void show() {
     balloonTip = new BalloonTip(component,
                                 text,
@@ -49,7 +57,7 @@ public class DetailsTip implements Disposable {
                                 BalloonTip.AttachLocation.NORTHEAST,
                                 0, 20,
                                 false);
-    balloonTip.setPositioner(positioner);
+    balloonTip.setPositioner(position.getPositioner());
     balloonTip.setVisible(true);
 
     visibilityUpdater = new HierarchyListener() {
@@ -92,7 +100,7 @@ public class DetailsTip implements Disposable {
           if (mouseEvent.getID() != MouseEvent.MOUSE_PRESSED) {
             return;
           }
-          if (mouseEvent.getComponent() == component) {
+          if ((mouseEvent.getComponent() == component) && (!clickThrough)) {
             mouseEvent.consume();
           }
           dispose();

@@ -106,6 +106,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private CategorizationLevel categorizationLevel;
   private ReconciliationColumn column;
   private boolean isShowing = false;
+  private TransactionCreationPanel transactionCreation;
 
   public CategorizationView(final GlobRepository repository, Directory parentDirectory) {
     super(repository, createLocalDirectory(parentDirectory));
@@ -238,7 +239,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
     SkipCategorizationPanel skipPanel = new SkipCategorizationPanel(repository, directory);
     builder.add("skipCategorizationPanel", skipPanel.getPanel());
 
-    TransactionCreationPanel transactionCreation = new TransactionCreationPanel(repository, directory);
+    transactionCreation = new TransactionCreationPanel(repository, directory);
     transactionCreation.registerComponents(builder);
 
     BudgetAreaSelector selector = new BudgetAreaSelector(repository, directory);
@@ -442,6 +443,10 @@ public class CategorizationView extends View implements TableView, Filterable, C
                       new SpecialCategorizationRepeatFactory());
 
     parentBuilder.add(name, builder);
+  }
+
+  public void highlightTransactionCreation() {
+    transactionCreation.showTip();
   }
 
   public void reset() {

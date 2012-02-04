@@ -47,6 +47,7 @@ import org.designup.picsou.gui.time.actions.SelectCurrentYearAction;
 import org.designup.picsou.gui.time.actions.SelectLast12MonthsAction;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
+import org.designup.picsou.gui.transactions.creation.CreateTransactionMenuAction;
 import org.designup.picsou.gui.transactions.reconciliation.ShowReconciliationAction;
 import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
@@ -308,18 +309,19 @@ public class MainPanel {
     editMenu.add(undoAction);
     editMenu.add(redoAction);
 
-    editMenu.addSeparator();
-    CreateAccountAction createAccount =
-      new CreateAccountAction("account.create.menu", AccountType.MAIN, repository, directory, frame);
-    createAccount.setGotoAccountViewEnabled(true);
-    editMenu.add(createAccount);
-
     JRootPane rootPane = frame.getRootPane();
     GuiUtils.addShortcut(rootPane, "UNDO", undoAction, GuiUtils.ctrl(KeyEvent.VK_Z));
     GuiUtils.addShortcut(rootPane, "REDO", redoAction, GuiUtils.ctrl(KeyEvent.VK_Y));
     GuiUtils.addShortcut(rootPane, "Data check", new DataCheckerAction(repository, directory),
                          GuiUtils.ctrl(KeyEvent.VK_D));
 
+    editMenu.addSeparator();
+    CreateAccountAction createAccount =
+      new CreateAccountAction("account.create.menu", AccountType.MAIN, repository, directory, frame);
+    createAccount.setGotoAccountViewEnabled(true);
+    editMenu.add(createAccount);
+    editMenu.add(new CreateTransactionMenuAction(directory));
+  
     return editMenu;
   }
 

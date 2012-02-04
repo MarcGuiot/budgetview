@@ -6,6 +6,7 @@ import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.CustomFocusTraversalPolicy;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.tips.DetailsTip;
 import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.model.*;
@@ -15,8 +16,6 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
-
 import org.globsframework.model.repository.ReplicationGlobRepository;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
@@ -25,6 +24,8 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class TransactionCreationPanel extends View implements GlobSelectionListener, ChangeSetListener {
   private GlobRepository parentRepository;
@@ -38,8 +39,10 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
   private JTextField labelField;
   private JComboBox accountCombo;
   private AbstractAction showHideAction = new ShowHideAction();
-  private boolean isShowing;
+  private JButton showHideButton;
   private AmountEditor amountEditor;
+  private DetailsTip buttonTip;
+  private boolean isShowing;
 
   public TransactionCreationPanel(GlobRepository repository, Directory directory) {
     super(createLocalRepository(repository), directory);
@@ -55,7 +58,10 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
   public void registerComponents(GlobsPanelBuilder builder) {
     builder.add("transactionCreation", createPanel());
-    builder.add("showHideTransactionCreation", showHideAction);
+    if (showHideButton == null) {
+      showHideButton = new JButton(showHideAction);
+    }
+    builder.add("showHideTransactionCreation", showHideButton);
     updateAccount();
     hide();
   }
@@ -141,6 +147,22 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     }
   }
 
+  public void showTip() {
+    if (buttonTip != null) {
+      buttonTip.dispose();
+    }
+    if (isShowing) {
+      buttonTip = new DetailsTip(accountCombo,
+                                 Lang.get("transactionCreation.tip.open"), directory);
+    }
+    else {
+      buttonTip = new DetailsTip(showHideButton,
+                                 Lang.get("transactionCreation.tip.closed"), directory);
+    }
+    buttonTip.show();
+    buttonTip.setClickThrough();
+  }
+
   private class CreateTransactionAction extends AbstractAction {
 
     private boolean updateInProgress = false;
@@ -153,6 +175,12 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
       if (updateInProgress) {
         return;
       }
+
+      if (buttonTip != null) {
+        buttonTip.dispose();
+        buttonTip = null;
+      }
+
       Glob prototypeTransaction = repository.find(PROTOTYPE_TRANSACTION_KEY);
       updateInProgress = true;
       try {
@@ -246,7 +274,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
   private void show() {
 
-    if (User.isDemoUser(repository.get(User.KEY))){
+    if (User.isDemoUser(repository.get(User.KEY))) {
       MessageDialog.show("demo.transaction.creation.title", directory.get(JFrame.class), directory, "demo.transaction.creation.content");
       return;
     }
