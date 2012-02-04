@@ -19,13 +19,13 @@ import static org.globsframework.model.FieldValue.value;
 public class LogParser {
 
   private static Pattern ENTRY_FORMAT =
-    Pattern.compile("INFO ([0-9]+ [A-z]+ [0-9]+) [0-9:,]+ - thread [0-9]+ msg : ([a-z_]+) (.*)");
+    Pattern.compile("INFO ([0-9]+ [A-z]+ [0-9]+) [0-9:,]+ - thread [0-9]+ msg : ([a-z0-9_]+) (.*)");
   private static Pattern PURCHASE_FORMAT =
-    Pattern.compile("INFO ([0-9]+ [A-z]+ [0-9]+) [0-9:,]+ - NewUser : mail : '([A-z-_@\\.]*) VERIFIED");
+    Pattern.compile("INFO ([0-9]+ [A-z]+ [0-9]+) [0-9:,]+ - NewUser : mail : '([A-z0-9-_@\\.]*) VERIFIED");
   private static Pattern IP_FORMAT = Pattern.compile("ip = ([0-9\\.]+)");
   private static Pattern REPO_ID_FORMAT = Pattern.compile("id =[ ]*([A-z0-9/+=]+)");
-  private static Pattern MAIL_FORMAT = Pattern.compile("mail =[ ]*([A-z-_@\\.]+)");
-  private static Pattern USER_PROGRESS_FORMAT =
+  private static Pattern MAIL_FORMAT = Pattern.compile("mail =[ ]*([A-z0-9-_@\\.]+)");
+  private static Pattern USER_PROGRESS_FORMAT_OBFUSCATED =
     Pattern.compile("INFO ([0-9]+ [A-z]+ [0-9]+) [0-9:,]+ - use info =[ ]*use:[ ]*([0-9]+),[ ]*" +
                     "initialStepsCompleted:[ ]*([a-z]+),[ ]*" +
                     "g:[ ]*([a-z]+)[ ]*, " +
@@ -34,6 +34,15 @@ public class LogParser {
                     "k:[ ]*([a-z]+)[ ]*, " +
                     "l:[ ]*([a-z]+)[ ]*, " +
                     "m:[ ]*([a-z]+)[ ]*");
+  private static Pattern USER_PROGRESS_FORMAT =
+    Pattern.compile("INFO ([0-9]+ [A-z]+ [0-9]+) [0-9:,]+ - use info =[ ]*use:[ ]*([0-9]+),[ ]*" +
+                    "initialStepsCompleted:[ ]*([a-z]+),[ ]*" +
+                    "importStarted:[ ]*([a-z]+)[ ]*, " +
+                    "categorizationSelectionDone:[ ]*([a-z]+)[ ]*, " +
+                    "categorizationAreaSelectionDone:[ ]*([a-z]+)[ ]*, " +
+                    "firstCategorizationDone:[ ]*([a-z]+)[ ]*, " +
+                    "categorizationSkipped:[ ]*([a-z]+)[ ]*, " +
+                    "gotoBudgetShown:[ ]*([a-z]+)[ ]*");
 
   public static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy");
 
@@ -67,6 +76,20 @@ public class LogParser {
                           parseBoolean(progressMatcher.group(7)),
                           parseBoolean(progressMatcher.group(8)),
                           parseBoolean(progressMatcher.group(9)),
+                          repository);
+          continue;
+        }
+        Matcher oldProgressMatcher = USER_PROGRESS_FORMAT_OBFUSCATED.matcher(trimmed);
+        if (oldProgressMatcher.matches()) {
+          processProgress(parseDate(oldProgressMatcher.group(1)),
+                          parseInt(oldProgressMatcher.group(2)),
+                          parseBoolean(oldProgressMatcher.group(3)),
+                          parseBoolean(oldProgressMatcher.group(4)),
+                          parseBoolean(oldProgressMatcher.group(5)),
+                          parseBoolean(oldProgressMatcher.group(6)),
+                          parseBoolean(oldProgressMatcher.group(7)),
+                          parseBoolean(oldProgressMatcher.group(8)),
+                          parseBoolean(oldProgressMatcher.group(9)),
                           repository);
           continue;
         }

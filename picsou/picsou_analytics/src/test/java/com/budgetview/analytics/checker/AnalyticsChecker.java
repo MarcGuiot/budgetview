@@ -90,14 +90,14 @@ public class AnalyticsChecker {
       return this;
     }
 
-    public DummyServerLogBuilder logUseInfo(String date, int count,
-                                            boolean initialStepsCompleted,
-                                            boolean g,
-                                            boolean i,
-                                            boolean j,
-                                            boolean k,
-                                            boolean l,
-                                            boolean m) throws IOException {
+    public DummyServerLogBuilder logOldUseInfo(String date, int count,
+                                               boolean initialStepsCompleted,
+                                               boolean g,
+                                               boolean i,
+                                               boolean j,
+                                               boolean k,
+                                               boolean l,
+                                               boolean m) throws IOException {
       writeLogLine("INFO " + date + " 12:24:31,096 - use info = use: " + count + ", " +
                    "initialStepsCompleted: " + initialStepsCompleted + ", " +
                    "g: " + g + ", " +
@@ -106,6 +106,25 @@ public class AnalyticsChecker {
                    "k: " + k + " , " +
                    "l: " + l + " , " +
                    "m: " + m + " ");
+      return this;
+    }
+
+    public DummyServerLogBuilder logUseInfo(String date, int count,
+                                               boolean initialStepsCompleted,
+                                               boolean importStarted,
+                                               boolean categorizationSelectionDone,
+                                               boolean categorizationAreaSelectionDone,
+                                               boolean firstCategorizationDone,
+                                               boolean categorizationSkipped,
+                                               boolean gotoBudgetShown) throws IOException {
+      writeLogLine("INFO " + date + " 12:24:31,096 - use info = use: " + count + ", " +
+                   "initialStepsCompleted: " + initialStepsCompleted + ", " +
+                   "importStarted: " + importStarted + ", " +
+                   "categorizationSelectionDone: " + categorizationSelectionDone + " , " +
+                   "categorizationAreaSelectionDone: " + categorizationAreaSelectionDone + " , " +
+                   "firstCategorizationDone: " + firstCategorizationDone + " , " +
+                   "categorizationSkipped: " + categorizationSkipped + " , " +
+                   "gotoBudgetShown: " + gotoBudgetShown + " ");
       return this;
     }
 

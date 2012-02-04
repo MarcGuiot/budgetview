@@ -39,13 +39,13 @@ public class AnalyticsTest extends TestCase {
   public void testStandardPurchase() throws Exception {
     analytics.createLog()
       .logNewAnonymous("22 Dec 2011", "xyz1")
-      .logPurchase("29 Dec 2011", "marc@free.fr")
+      .logPurchase("29 Dec 2011", "marc1@free.fr")
       .logKnownAnonymous("31 Dec 2011", "xyz1")
-      .logOkForMail("2 Jan 2012", "marc@free.fr", "xyz1", 145)
-      .logOkForMail("9 Jan 2012", "marc@free.fr", "xyz1", 146)
+      .logOkForMail("2 Jan 2012", "marc1@free.fr", "xyz1", 145)
+      .logOkForMail("9 Jan 2012", "marc1@free.fr", "xyz1", 146)
       .load();
 
-    analytics.checkUser("marc@free.fr",
+    analytics.checkUser("marc1@free.fr",
                         value(User.FIRST_DATE, parseDate("20111222")),
                         value(User.LAST_DATE, parseDate("20120109")),
                         value(User.PURCHASE_DATE, parseDate("20111229")),
@@ -67,6 +67,21 @@ public class AnalyticsTest extends TestCase {
                         value(User.PURCHASE_DATE, parseDate("20120101")),
                         value(User.PING_COUNT, 3),
                         value(User.PREVIOUS_USER, false));
+  }
+
+  public void testOldUserProgressParsing() throws Exception {
+    analytics.createLog()
+      .logOldUseInfo("1 Jan 2012", 1, true, false, true, false, true, false, true)
+      .load();
+
+    analytics.checkUseInfo(parseDate("20120101"),
+                           value(UserProgressInfoEntry.INITIAL_STEPS_COMPLETED, true),
+                           value(UserProgressInfoEntry.IMPORT_STARTED, false),
+                           value(UserProgressInfoEntry.CATEGORIZATION_SELECTION_DONE, true),
+                           value(UserProgressInfoEntry.CATEGORIZATION_AREA_SELECTION_DONE, false),
+                           value(UserProgressInfoEntry.FIRST_CATEGORIZATION_DONE, true),
+                           value(UserProgressInfoEntry.CATEGORIZATION_SKIPPED, false),
+                           value(UserProgressInfoEntry.GOTO_BUDGET_SHOWN, true));
   }
 
   public void testUserProgressParsing() throws Exception {

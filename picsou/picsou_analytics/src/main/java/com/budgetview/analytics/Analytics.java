@@ -17,6 +17,11 @@ public class Analytics {
 
     GlobRepository repository = GlobRepositoryBuilder.createEmpty();
 
+    if (args.length == 0) {
+      System.out.println("Usage: analytics <log_file>");
+      return;
+    }
+
     File in = new File(args[0]);
     FileReader reader = new FileReader(in);
     run(reader, repository);
