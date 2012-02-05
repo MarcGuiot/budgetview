@@ -1111,3 +1111,114 @@ p#close-showroom A {
   color: #AAA;
   font-size: 9pt;
 }
+
+/*=== "SUPPORT" PAGE ===*/
+
+.support h1 {
+  font-size: 20pt;
+}
+
+.support div.light-block {
+  padding-top: 20px;
+}
+
+.faq p, .faq li, .faq td {
+  font-size: 11pt;
+  line-height: 1.45em;
+  margin-bottom: 10px;
+}
+
+.guide p, .guide li, .guide td {
+  font-size: 10pt;
+  line-height: 1.35em;
+  margin-bottom: 10px;
+}
+
+.support .video {
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+table#guides-table tr.titles td {
+  font-size: 11pt;
+}
+
+table#faq-menu td li {
+  margin-bottom: 0px;
+}
+
+div#support-breadcrumb {
+  text-align: center;
+  text-shadow: white 0 2px 0;
+  color: #AAAAAA;
+}
+
+div#support-breadcrumb A:link {
+  text-decoration: none;
+  color: #AAAAAA;
+}
+
+div#support-breadcrumb A:visited {
+  text-decoration: none;
+  color: #999999;
+}
+
+div#support-breadcrumb A:hover {
+  text-decoration: underline;
+  color: #0000FF;
+}
+
+img.faq-icon {
+  float:left;
+  margin: 0 5px 2px 0;
+}
+
+div#block-block-5 {
+  margin-top: 0;
+}
+
+div#support-sidebar {
+  margin-top: 80px;
+}
+
+div#support-footer {
+  text-align: center;
+  margin-top: 10px;
+}
+
+div#support-footer p {
+  font-size: 14pt;
+}
+
+/* ========= FAQ FOOTER ========== */
+
+div#faq-footer {
+  text-align: left;
+  text-shadow: white 0 2px 0;
+  color: #AAAAAA;
+  margin-bottom: 20px;
+}
+
+div#faq-footer A:link {
+  text-decoration: none;
+  color: #666666;
+}
+
+div#faq-footer A:visited {
+  text-decoration: none;
+  color: #666666;
+}
+
+div#faq-footer A:hover {
+  text-decoration: underline;
+  color: #0000FF;
+}
+
+/* ========= CHANGE LOG ========== */
+
+div#changelog span.date {
+  margin-left: 10px;
+  font-size: 10pt;
+  font-weight: normal;
+  color: #888;
+}

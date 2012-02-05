@@ -7,136 +7,74 @@
       them directly from your bank's website, as indicated in this guide.</p>
 
     <p>To download your bank statements, use the "File / Import transactions" menu. This will open
-     the import dialog, where you can select your bank.</p>
+     the import dialog, where you can select your bank. BudgetView will then indicate the most 
+     appropriate way to download transactions from your bank, among two main options:</p>
+    <ul>
+      <li>Direct download from your bank's servers</li>
+      <li>Manual file download from your bank's website</li>
+    </ul>
     
     <p>Note: If your bank is not listed, you can select "Other" and then proceed to the
-      <a href="">manual download</a> instructions.</p>
-    
-    <h2>Direct download</h2>
-    
-    <p></p>
-    
-    <h2>Downloading an OFX/QIF file from your bank's website.</h2>
+      "<a href="#manual-download">Download from website</a>" instructions.</p>
 
-    <p>La plupart des banques proposent aujourd'hui sur leur site internet un moyen de
-      télécharger vos relevés d'opérations. </p>
 
-    <p>Voici les principales étapes du téléchargement:</p>
+    <h2 id="direct-download">Direct download</h2>
+    
+    <p>If your bank supports a direct download from its servers, you will be asked to enter
+      your login information. BudgetView will then propose the list of accounts to download,
+      and then retrieve the corresponding transactions automatically.</p>
+
+    <p>Please note that your login information will only be sent to your bank's servers -
+      it will not be sent to us, nor even saved on your computer.</p>
+
+
+    <h2 id="manual-download">Downloading an OFX/QIF file from your bank's website</h2>
+
+    <p>Here are the main steps for downloading bank statements manually:</p>
 
     <table class="field-value">
       <tr>
         <td class="field">1</td>
         <td class="value"><p>
-          Vous vous connectez au site internet de votre banque
+          Visit your bank's website with a brower, and login to access your personal account.
         </p></td>
       </tr>
       <tr>
         <td class="field">2</td>
         <td class="value"><p>
-          Vous vous rendez sur la page de téléchargement
+          Find the "downloads" page - you should usually find it near the space where your
+          main account transactions are displayed.
         </p></td>
       </tr>
       <tr>
         <td class="field">3</td>
         <td class="value"><p>
-          Vous sélectionnez les comptes et la période souhaités, ainsi que le format d'export (ces notions sont
-          détaillées ci-dessous)
+          Select the accounts to download, using the OFX (Microsoft Money) or QIF (Intuit Quicken) format.
+          You can retrieve as many transactions as you want, BudgetView will take care of ignoring duplicate
+          transactions.
         </p></td>
       </tr>
       <tr>
         <td class="field">4</td>
         <td class="value"><p>
-          Vous lancez le téléchargement proprement dit
+          Start the download.
         </p></td>
       </tr>
       <tr>
         <td class="field">5</td>
         <td class="value"><p>
-          Si votre navigateur vous propose un choix entre "Ouvrir avec BudgetView" et "Enregistrer sous",
-          vous pouvez choisir "Ouvrir avec BudgetView": le fichier sera alors automatiquement redirigé vers
-          BudgetView, où vous pourrez poursuivre l'import.
-        </p></td>
-      </tr>
-      <tr>
-        <td class="field">6</td>
-        <td class="value"><p>
-          Si vous n'avez pas opté pour l'option "Ouvrir avec", vous devez enregistrer le fichier de relevés
-          sur votre ordinateur, puis l'ouvrir à partir de BudgetView.
+          If your browser allows it, use the "Open with..." option and select BudgetView. You can also
+          save the file on your Windows desktop, and then double click on it to open it in BudgetView.
         </p></td>
       </tr>
     </table>
 
-    <p>BudgetView fonctionne avec les principales banques Françaises, mais aussi avec la plupart
-      des banques qui proposent un service de téléchargement en ligne.</p>
-
-    <p>Si votre banque ne figure pas dans la liste qui vous est proposée, sélectionnez la banque "Autre" - BudgetView
-      fonctionnera normalement, seuls les libellés de vos opérations seront peut-être moins lisibles. </p>
-
-    <p>BudgetView reconnaît les deux formats de fichiers les plus couramment utilisés:</p>
-
-    <table class="field-value">
-      <tr>
-        <td class="field">OFX</td>
-        <td class="value"><p>
-          Format proposé pour des logiciels tels que Microsoft Money.
-          Il est recommandé d'utiliser ce format, qui contient les informations de compte et de solde.
-        </p></td>
-      </tr>
-      <tr>
-        <td class="field">QIF</td>
-        <td class="value"><p>
-          Format géré par le logiciel Quicken d'Intuit. Il ne doit être utilisé qu'en absence
-          de fichiers OFX, car il ne contient pas d'informations sur le compte des opérations téléchargées, en
-          particulier
-          les soldes de ces comptes.
-        </p></td>
-      </tr>
-    </table>
-
-    <p>Dans un premier temps, vous pouvez vous contenter d'importer les opérations de vos comptes chèques. Vous pourrez
-      récupérer vos autres comptes par la suite.</p>
-
-    <p>Pour établir un budget réaliste, il est recommandé d'importer environ un ou deux mois complets de données.</p>
-
-    <h2>Banques supportées</h2>
-
-    <p>BudgetView est aujourd'hui utilisé avec des relevés des banques suivantes:</p>
-
-    <table>
-      <tr>
-        <td>
-          <ul>
-            <li>BNP</li>
-            <li>Banque Populaire</li>
-            <li>Caisse d'Epargne</li>
-          </ul>
-        </td>
-        <td>
-          <ul>
-            <li>CIC</li>
-            <li>Crédit Agricole</li>
-            <li>Crédit Mutuel</li>
-          </ul>
-        </td>
-        <td>
-          <ul>
-            <li>La Poste</li>
-            <li>LCL</li>
-            <li>Société Générale</li>
-          </ul>
-        </td>
-      </tr>
-    </table>
-
-    <p>Cette liste n'est pas exhaustive. BudgetView peut parfaitement fonctionner avec les exports d'autres banques
-      pourvu qu'elles proposent un export de vos relevés aux formats QIF et OFX.</p>
-
-    <h2>Etape suivante</h2>
+    <h2>Next step</h2>
 
     <div class="summary">
       <p>
-        Une fois vos opérations importées, vous devez les
-        <a href="/support/guides/categorisation" class="highlighted">catégoriser</a>.</p>
+        When your transactions are imported, you have to 
+        <a href="/support/guides/categorization" class="highlighted">categorize</a> them.</p>
     </div>
 
   </div>
