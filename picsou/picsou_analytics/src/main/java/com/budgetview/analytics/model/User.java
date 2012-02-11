@@ -1,5 +1,6 @@
 package com.budgetview.analytics.model;
 
+import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.BooleanField;
@@ -24,6 +25,7 @@ public class User {
   public static DateField PURCHASE_DATE;
   public static IntegerField DAYS_BEFORE_PURCHASE;
   public static IntegerField PING_COUNT_ON_PURCHASE;
+  public static DateField PROBABLE_EVALUATION_DATE;
 
   static {
     GlobTypeLoader.init(User.class);

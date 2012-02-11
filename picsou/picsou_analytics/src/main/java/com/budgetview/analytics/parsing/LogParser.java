@@ -2,6 +2,7 @@ package com.budgetview.analytics.parsing;
 
 import com.budgetview.analytics.model.LogEntry;
 import com.budgetview.analytics.model.LogEntryType;
+import com.budgetview.analytics.model.UserEvaluationEntry;
 import com.budgetview.analytics.model.UserProgressInfoEntry;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -43,6 +44,8 @@ public class LogParser {
                     "firstCategorizationDone:[ ]*([a-z]+)[ ]*, " +
                     "categorizationSkipped:[ ]*([a-z]+)[ ]*, " +
                     "gotoBudgetShown:[ ]*([a-z]+)[ ]*");
+  private static Pattern USER_EVALUATION_FORMAT =
+    Pattern.compile("INFO ([0-9]+ [A-z]+ [0-9]+) [0-9:,]+ -.*User evaluation[ ]*:[ ]*([A-z]*).*");
 
   public static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy");
 
@@ -93,6 +96,13 @@ public class LogParser {
                           repository);
           continue;
         }
+
+        Matcher userEvaluationMatcher = USER_EVALUATION_FORMAT.matcher(trimmed);
+        if (userEvaluationMatcher.matches()) {
+          processUserEvaluation(userEvaluationMatcher.group(1), userEvaluationMatcher.group(2), repository);
+          continue;
+        }
+
 //        System.out.println("COULD NOT PARSE: " + line);
       }
       reader.close();
@@ -119,6 +129,12 @@ public class LogParser {
                       value(LogEntry.DATE, parseDate(date)),
                       value(LogEntry.ENTRY_TYPE, LogEntryType.PURCHASE.getId()),
                       value(LogEntry.EMAIL, email));
+  }
+
+  private void processUserEvaluation(String date, String result, GlobRepository repository) {
+    repository.create(UserEvaluationEntry.TYPE,
+                      value(UserEvaluationEntry.DATE, parseDate(date)),
+                      value(UserEvaluationEntry.SATISFIED, "yes".equalsIgnoreCase(result.trim())));
   }
 
   private Date parseDate(String date) {

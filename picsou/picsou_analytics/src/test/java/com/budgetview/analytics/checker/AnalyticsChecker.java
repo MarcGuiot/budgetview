@@ -3,6 +3,7 @@ package com.budgetview.analytics.checker;
 import com.budgetview.analytics.Analytics;
 import com.budgetview.analytics.model.User;
 import com.budgetview.analytics.model.UserProgressInfoEntry;
+import com.budgetview.analytics.model.WeekPerfStat;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.designup.picsou.functests.QifImportTest;
@@ -13,6 +14,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryChecker;
 import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -42,6 +44,10 @@ public class AnalyticsChecker {
 
   public void checkUseInfo(Date date, FieldValue... values) {
     doCheck(UserProgressInfoEntry.TYPE, UserProgressInfoEntry.DATE, date, values);
+  }
+
+  public void checkWeekPerf(int weekId, FieldValue... values) {
+    doCheck(WeekPerfStat.TYPE, WeekPerfStat.ID, weekId, values);
   }
 
   private void doCheck(GlobType type, Field field, Object value, FieldValue[] values) {
@@ -110,13 +116,13 @@ public class AnalyticsChecker {
     }
 
     public DummyServerLogBuilder logUseInfo(String date, int count,
-                                               boolean initialStepsCompleted,
-                                               boolean importStarted,
-                                               boolean categorizationSelectionDone,
-                                               boolean categorizationAreaSelectionDone,
-                                               boolean firstCategorizationDone,
-                                               boolean categorizationSkipped,
-                                               boolean gotoBudgetShown) throws IOException {
+                                            boolean initialStepsCompleted,
+                                            boolean importStarted,
+                                            boolean categorizationSelectionDone,
+                                            boolean categorizationAreaSelectionDone,
+                                            boolean firstCategorizationDone,
+                                            boolean categorizationSkipped,
+                                            boolean gotoBudgetShown) throws IOException {
       writeLogLine("INFO " + date + " 12:24:31,096 - use info = use: " + count + ", " +
                    "initialStepsCompleted: " + initialStepsCompleted + ", " +
                    "importStarted: " + importStarted + ", " +
@@ -136,6 +142,12 @@ public class AnalyticsChecker {
       writeLogLine("INFO " + date + " 10:03:57,302 - NewUser : ok  for " + email + " code is 1594");
       writeLogLine("INFO " + date + " 10:03:57,425 - mail sent : " + email + "  Votre code d'activation BudgetView");
       writeLogLine("INFO " + date + " 10:03:57,433 - mail sent : support@mybudgetview.fr  New User");
+      return this;
+    }
+
+    public DummyServerLogBuilder logUserEvaluation(String date, boolean value) throws IOException {
+      writeLogLine("INFO " + date + " 14:31:32,217 - mail sent : support@mybudgetview.fr  User evaluation: " + Strings.toYesNo(value));
+      writeLogLine("title User evaluation: " + Strings.toYesNo(value));
       return this;
     }
 

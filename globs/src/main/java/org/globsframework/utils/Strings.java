@@ -183,4 +183,8 @@ public class Strings {
       .replaceAll("[ ]*$", "")
       ;
   }
+
+  public static String toYesNo(boolean value) {
+    return value ? "yes" : "no";
+  }
 }

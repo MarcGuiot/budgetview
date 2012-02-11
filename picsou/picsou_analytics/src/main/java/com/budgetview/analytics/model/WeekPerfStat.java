@@ -27,6 +27,10 @@ public class WeekPerfStat {
 
   public static DoubleField RETENTION_RATIO;
 
+  public static DoubleField EVALUATIONS_RATIO;
+
+  public static DoubleField EVALUATIONS_RESULT;
+
   @DefaultInteger(0)
   public static IntegerField POTENTIAL_BUYERS;
 
