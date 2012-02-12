@@ -34,16 +34,9 @@ public class WeekStatsFunctor implements GlobFunctor {
 
     int potentialEvaluationUsers = getProbableUserEvaluations(weekId, repository).size();
 
-    System.out.println("potentialEvaluationUsers = " + potentialEvaluationUsers);
-    
     GlobList entries = getUserEvaluations(weekId, repository);
     int evaluationCount = entries.size();
-
-    System.out.println("evaluationCount = " + evaluationCount);    
-
     int yesCount = entries.filter(fieldEquals(UserEvaluationEntry.SATISFIED, true), repository).size();
-
-    System.out.println("yesCount = " + yesCount);
 
     repository.update(weekStat.getKey(),
                       value(WeekPerfStat.EVALUATIONS_RATIO,
