@@ -330,7 +330,7 @@ public class UpgradeTrigger implements ChangeSetListener {
         repository.update(account.getKey(),
                           value(Account.BANK_ENTITY, -1),
                           value(Account.BANK_ENTITY_LABEL, ""),
-                          value(Account.BANK, -123456));
+                          value(Account.BANK, Bank.GENERIC_BANK_ID));
       }
     }
   }
