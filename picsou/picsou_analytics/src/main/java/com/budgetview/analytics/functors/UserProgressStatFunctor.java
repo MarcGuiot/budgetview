@@ -1,5 +1,6 @@
 package com.budgetview.analytics.functors;
 
+import com.budgetview.analytics.model.WeekPerfStat;
 import com.budgetview.analytics.model.WeekUsageCount;
 import com.budgetview.analytics.model.WeekUsageStat;
 import com.budgetview.analytics.utils.AnalyticsUtils;
@@ -69,5 +70,8 @@ public class UserProgressStatFunctor implements GlobFunctor {
                             AnalyticsUtils.lossRatio(categorizationFinishedOnSecondTry, completedOnSecondTry, lostOnSecondTry))
     );
 
+    repository.update(Key.create(WeekPerfStat.TYPE, usageStat.get(WeekUsageStat.ID)),
+                      WeekPerfStat.COMPLETION_ON_FIRST_SESSION,
+                      usageStat.get(WeekUsageStat.COMPLETION_RATE_ON_FIRST_TRY));
   }
 }

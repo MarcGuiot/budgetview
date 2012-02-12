@@ -27,6 +27,8 @@ public class WeekPerfStat {
 
   public static DoubleField RETENTION_RATIO;
 
+  public static DoubleField COMPLETION_ON_FIRST_SESSION;
+
   public static DoubleField EVALUATIONS_RATIO;
 
   public static DoubleField EVALUATIONS_RESULT;

@@ -15,7 +15,7 @@
     <tabs weightX="2">
       <tab title="Performance">
         <column margin="15">
-          <repeat ref="charts" layout="column">
+          <repeat ref="performanceCharts" layout="column">
             <column marginTop="10">
               <label ref="chartTitle"/>
               <panel ref="chart"/>
@@ -30,6 +30,17 @@
           <scrollPane>
             <table ref="users"/>
           </scrollPane>
+        </column>
+      </tab>
+
+      <tab title="User progress">
+        <column margin="15">
+          <repeat ref="userProgressCharts" layout="column">
+            <column marginTop="10">
+              <label ref="chartTitle"/>
+              <panel ref="chart"/>
+            </column>
+          </repeat>
         </column>
       </tab>
 

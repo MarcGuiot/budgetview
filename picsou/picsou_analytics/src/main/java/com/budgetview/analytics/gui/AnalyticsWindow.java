@@ -1,36 +1,26 @@
 package com.budgetview.analytics.gui;
 
-import com.budgetview.analytics.AnalyticsApp;
 import com.budgetview.analytics.model.Experiment;
 import com.budgetview.analytics.model.User;
 import com.budgetview.analytics.model.WeekPerfStat;
+import com.budgetview.analytics.model.WeekUsageStat;
 import com.budgetview.analytics.utils.Weeks;
-import org.designup.picsou.gui.components.charts.histo.HistoChart;
-import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
-import org.designup.picsou.gui.components.charts.histo.line.HistoBarPainter;
-import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
-import org.designup.picsou.gui.components.charts.histo.line.HistoLineDataset;
 import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsEditor;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
-import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.metamodel.Field;
-import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -40,30 +30,31 @@ import static org.globsframework.gui.views.utils.LabelCustomizers.ALIGN_CENTER;
 import static org.globsframework.model.utils.GlobComparators.descending;
 
 public class AnalyticsWindow {
+
   private static final List<Field> PERF_CHART_FIELDS =
     Arrays.asList(WeekPerfStat.NEW_USERS,
                   WeekPerfStat.RETENTION_RATIO,
                   WeekPerfStat.EVALUATIONS_RESULT,
+                  WeekPerfStat.COMPLETION_ON_FIRST_SESSION,
                   WeekPerfStat.REVENUE_RATIO,
                   WeekPerfStat.PURCHASES);
+
+  private static final List<Field> USER_PROGRESS_FIELDS =
+    Arrays.asList((Field)WeekUsageStat.COMPLETION_RATE_ON_FIRST_TRY,
+                  WeekUsageStat.LOSS_BEFORE_FIRST_IMPORT,
+                  WeekUsageStat.LOSS_DURING_FIRST_IMPORT,
+                  WeekUsageStat.LOSS_DURING_FIRST_CATEGORIZATION,
+                  WeekUsageStat.LOSS_AFTER_FIRST_CATEGORIZATION);
+
   private GlobRepository repository;
   private Directory directory;
   private JFrame frame;
-  private HistoLineColors chartColors;
   private SelectionService selectionService;
 
   public AnalyticsWindow(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
     this.selectionService = directory.get(SelectionService.class);
-
-    this.chartColors = new HistoLineColors(
-      "histo.line.positive",
-      "histo.line.negative",
-      "histo.fill.positive",
-      "histo.fill.negative",
-      directory
-    );
 
     this.frame = new JFrame();
     JPanel panel = createPanel();
@@ -83,6 +74,7 @@ public class AnalyticsWindow {
     addExperimentElements(builder);
     addPerfElements(builder);
     addUserElements(builder);
+    addUserProgressElements(builder);
 
     setupSelectionListeners();
 
@@ -95,18 +87,30 @@ public class AnalyticsWindow {
       public void selectionUpdated(GlobSelection selection) {
         GlobList experiments = selection.getAll(Experiment.TYPE);
         if (experiments.isEmpty()) {
+          selectionService.clear(WeekPerfStat.TYPE);
+          selectionService.clear(WeekUsageStat.TYPE);
+          selectionService.clear(User.TYPE);
           return;
         }
+
         int weekId = experiments.getFirst().get(Experiment.WEEK);
-        Glob stat = repository.find(Key.create(WeekPerfStat.TYPE, weekId));
-        if (stat != null) {
-          selectionService.select(stat);
-        }
+        selectStat(weekId, WeekPerfStat.TYPE);
+        selectStat(weekId, WeekUsageStat.TYPE);
 
         GlobList users =
           repository.getAll(User.TYPE,
                             GlobMatchers.fieldAfter(User.FIRST_DATE, Weeks.getFirstDay(weekId)));
         selectionService.select(users, User.TYPE);
+      }
+
+      private void selectStat(int weekId, GlobType type) {
+        Glob stat = repository.find(Key.create(type, weekId));
+        if (stat != null) {
+          selectionService.select(stat);
+        }
+        else {
+          selectionService.clear(type);
+        }
       }
     }, Experiment.TYPE);
   }
@@ -122,69 +126,15 @@ public class AnalyticsWindow {
   }
 
   private void addPerfElements(GlobsPanelBuilder builder) {
-    builder.addRepeat("charts", PERF_CHART_FIELDS, new FieldRepeatComponentFactory());
+    builder.addRepeat("performanceCharts", PERF_CHART_FIELDS,
+                      new FieldRepeatComponentFactory(WeekPerfStat.ID, PERF_CHART_FIELDS,
+                                                      repository, directory));
   }
 
-  private class FieldRepeatComponentFactory implements RepeatComponentFactory<Field> {
-    public void registerComponents(RepeatCellBuilder cellBuilder, Field field) {
-      cellBuilder.add("chartTitle", new JLabel(field.getName()));
-      cellBuilder.add("chart", createPerfChart(field));
-    }
-
-    private HistoChart createPerfChart(final Field field) {
-      HistoChartConfig chartConfig =
-        new HistoChartConfig(true, field == PERF_CHART_FIELDS.get(0),
-                             false, true, true, true, false, false, false);
-      final HistoChart chart = new HistoChart(chartConfig, directory);
-
-      selectionService.addListener(new GlobSelectionListener() {
-        public void selectionUpdated(GlobSelection selection) {
-          updateChart(field, chart);
-        }
-      }, WeekPerfStat.TYPE);
-
-      updateChart(field, chart);
-
-      return chart;
-    }
-
-    private void updateChart(Field field, HistoChart chart) {
-
-      GlobList selection = selectionService.getSelection(WeekPerfStat.TYPE);
-
-      HistoLineDataset dataset = new HistoLineDataset("histo.tooltip");
-      for (Glob stat : getWeekStat().sort(new GlobFieldComparator(WeekPerfStat.ID))) {
-        Integer weekId = stat.get(WeekPerfStat.ID);
-        dataset.add(weekId,
-                    getValue(stat, field),
-                    Integer.toString(weekId % 100),
-                    Integer.toString(weekId),
-                    Integer.toString(weekId / 100),
-                    true,
-                    false,
-                    selection.contains(stat));
-      }
-      chart.update(new HistoBarPainter(dataset, chartColors));
-    }
-
-    private GlobList getWeekStat() {
-      return repository.getAll(WeekPerfStat.TYPE,
-                                         GlobMatchers.fieldGreaterOrEqual(WeekPerfStat.ID, AnalyticsApp.MIN_WEEK));
-    }
-  }
-
-  private Double getValue(Glob stat, Field field) {
-    if (field instanceof DoubleField) {
-      return (Double)stat.getValue(field);
-    }
-    else if (field instanceof IntegerField) {
-      Integer value = (Integer)stat.getValue(field);
-      if (value == null) {
-        return null;
-      }
-      return value.doubleValue();
-    }
-    throw new InvalidParameter("Unexpected field type: " + field.getFullName());
+  private void addUserProgressElements(GlobsPanelBuilder builder) {
+    builder.addRepeat("userProgressCharts", USER_PROGRESS_FIELDS,
+                      new FieldRepeatComponentFactory(WeekUsageStat.ID, USER_PROGRESS_FIELDS,
+                                                      repository, directory));
   }
 
   private void addUserElements(GlobsPanelBuilder builder) {
