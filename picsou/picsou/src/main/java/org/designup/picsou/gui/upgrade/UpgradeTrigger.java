@@ -2,6 +2,7 @@ package org.designup.picsou.gui.upgrade;
 
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
@@ -10,14 +11,10 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.*;
-import static org.globsframework.model.utils.GlobMatchers.fieldStrictlyGreaterThan;
-
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
@@ -26,6 +23,9 @@ import org.globsframework.utils.directory.Directory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class UpgradeTrigger implements ChangeSetListener {
   private Directory directory;
@@ -46,7 +46,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
     if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
       repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
-                        Month.addDurationMonth(TimeService.getToday()));
+                        LicenseService.getEndOfTrialPeriod());
     }
 
     repository.update(CurrentMonth.KEY,
@@ -105,16 +105,16 @@ public class UpgradeTrigger implements ChangeSetListener {
       updateTargetSavings(repository);
       createMirorSeries(repository, savingsSeriesToOp);
     }
-    if (currentJarVersion < 61){
+    if (currentJarVersion < 61) {
       repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
-                        Month.addDurationMonth(TimeService.getToday()));
+                        LicenseService.getEndOfTrialPeriod());
     }
-    if (currentJarVersion < 65){
+    if (currentJarVersion < 65) {
       repository.update(userPreferences.getKey(),
-                        FieldValue.value(UserPreferences.MONTH_FOR_PLANNED, 3),
-                        FieldValue.value(UserPreferences.PERIOD_COUNT_FOR_PLANNED, 10));
+                        value(UserPreferences.MONTH_FOR_PLANNED, 3),
+                        value(UserPreferences.PERIOD_COUNT_FOR_PLANNED, 10));
     }
-    if (currentJarVersion < 68){
+    if (currentJarVersion < 68) {
       correctSavingMiror(repository);
     }
 
@@ -133,10 +133,10 @@ public class UpgradeTrigger implements ChangeSetListener {
     GlobList savingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
     for (Glob series : savingsSeries) {
       Glob mirorSeries = repository.findLinkTarget(series, Series.MIRROR_SERIES);
-      if (mirorSeries.get(Series.TARGET_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))){
+      if (mirorSeries.get(Series.TARGET_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
         updateSavingsSeries(repository, series);
         //finalement deux series sont identiques
-        if (mirorSeries.get(Series.TARGET_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))){
+        if (mirorSeries.get(Series.TARGET_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
           Log.write("Correcting savings series.");
           repository.update(mirorSeries.getKey(), Series.TARGET_ACCOUNT, mirorSeries.get(Series.FROM_ACCOUNT));
           repository.update(series.getKey(), Series.TARGET_ACCOUNT, mirorSeries.get(Series.TO_ACCOUNT));
@@ -159,7 +159,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     Boolean sens = null;
     GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID)).getGlobs();
     for (Glob budget : budgets) {
-      if (budget.get(SeriesBudget.AMOUNT) == null){
+      if (budget.get(SeriesBudget.AMOUNT) == null) {
         continue;
       }
       if (budget.get(SeriesBudget.AMOUNT) > 0) {
@@ -243,10 +243,9 @@ public class UpgradeTrigger implements ChangeSetListener {
       repository.update(series.getKey(), accountField, Account.MAIN_SUMMARY_ACCOUNT_ID);
       GlobList planned =
         repository.getAll(Transaction.TYPE,
-                          GlobMatchers.and(
-                            GlobMatchers.fieldEquals(Transaction.SERIES, series.get(Series.ID)),
-                            GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)),
-                            GlobMatchers.isTrue(Transaction.PLANNED)));
+                          and(fieldEquals(Transaction.SERIES, series.get(Series.ID)),
+                              fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)),
+                              isTrue(Transaction.PLANNED)));
       for (Glob glob : planned) {
         repository.update(glob.getKey(),
                           value(Transaction.ACCOUNT_POSITION, null),
@@ -433,11 +432,10 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
   }
 
-
   public void postTraitement(GlobRepository repository) {
     for (Map.Entry<Integer, Key[]> entry : savingsSeriesToOp.entrySet()) {
       Glob series = repository.find(Key.create(Series.TYPE, entry.getKey()));
-      if (series == null){
+      if (series == null) {
         continue;
       }
       Glob targetAccount = repository.findLinkTarget(series, Series.TARGET_ACCOUNT);

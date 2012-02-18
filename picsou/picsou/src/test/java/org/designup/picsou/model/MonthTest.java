@@ -1,6 +1,7 @@
 package org.designup.picsou.model;
 
 import junit.framework.TestCase;
+import org.designup.picsou.gui.license.LicenseService;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.Dates;
 
@@ -86,8 +87,7 @@ public class MonthTest extends TestCase {
   }
 
   private void shift(final String from, final String to) {
-    Date date = Month.addDurationMonth(Dates.parse(from));
+    Date date = LicenseService.addTrialPeriod(Dates.parse(from));
     assertEquals(Dates.parse(to), date);
   }
-
 }

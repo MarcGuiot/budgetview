@@ -9,8 +9,6 @@ import org.uispec4j.assertion.UISpecAssert;
 
 public class LicenseTest extends LoggedInFunctionalTestCase {
 
-  private TextBox textBox;
-
   protected void setUp() throws Exception {
     resetWindow();
     setNotRegistered();
@@ -20,57 +18,43 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
     setDeleteLocalPrevayler(false);
   }
 
-  protected void tearDown() throws Exception {
-    super.tearDown();
-    textBox = null;
-  }
-
   protected void selectInitialView() {
     views.selectHome();
   }
 
-  public void testMessage() throws Exception {
-    TextBox box = getLicenseMessage();
-    assertThat(box.isVisible());
-    assertThat(box.textEquals("46 days left for trying BudgetView."));
+  public void testMessageIsNotDisplayedInitially() throws Exception {
+    licenseMessage.checkHidden();
+  }
+
+  public void test15DaysLeft() throws Exception {
+
+    TimeService.setCurrentDate(Dates.parse("2008/10/01"));
+    restartApplication();
+    licenseMessage.checkVisible("15 days left for trying BudgetView.");
 
     LicenseActivationChecker.enterLicense(mainWindow, "admin", "1234");
-    UISpecAssert.assertFalse(box.isVisible());
+    licenseMessage.checkHidden();
   }
 
   public void testOneDayLeft() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2008/10/15"));
 
     restartApplication();
-    TextBox box = getLicenseMessage();
-    assertThat(box.isVisible());
-    assertThat(box.textEquals("You have one day left for trying BudgetView."));
+    licenseMessage.checkVisible("You have one day left for trying BudgetView.");
   }
 
   public void testLastDay() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2008/10/16"));
 
     restartApplication();
-    TextBox box = getLicenseMessage();
-    assertThat(box.isVisible());
-    assertThat(box.textEquals("This is your last day for trying BudgetView."));
-  }
-
-  private TextBox getLicenseMessage() {
-    if (textBox == null) {
-      views.selectHome();
-      textBox = mainWindow.getTextBox("licenseInfoMessage");
-    }
-    return textBox;
+    licenseMessage.checkVisible("This is your last day for trying BudgetView.");
   }
 
   public void testTrialOver() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2008/10/18"));
 
     restartApplication();
-    TextBox box = getLicenseMessage();
-    assertThat(box.isVisible());
-    assertThat(box.textContains("Your free trial period is over."));
+    licenseMessage.checkVisible("Your free trial period is over.");
   }
 
   public void testCannotCreateTransactionsWhenTrialIsOver() throws Exception {

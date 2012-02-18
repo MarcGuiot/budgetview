@@ -84,17 +84,24 @@ public class LicenseInfoView extends View {
       return;
     }
 
+    long days = getDaysLeft(userPreferences);
     if (user.isTrue(User.IS_REGISTERED_USER)) {
       licenseMessage.setVisible(false);
       licenseMessage.setText("");
       return;
     }
 
-    licenseMessage.setVisible(true);
-    long days = getDaysLeft(userPreferences);
-    licenseMessage.setText(getTrialMessage(user, days));
-  }
+    Integer state = user.get(User.ACTIVATION_STATE);
+    if (user.get(User.EMAIL) == null && state == null && (days > LicenseService.TRIAL_SHOWN_DURATION)) {
+      licenseMessage.setVisible(false);
+      licenseMessage.setText("");
+      return;
+    }
 
+    licenseMessage.setText(getTrialMessage(user, days, state));
+    licenseMessage.setVisible(true);
+  }
+  
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/general/licenseInfoView.splits",
@@ -106,8 +113,7 @@ public class LicenseInfoView extends View {
     parentBuilder.add("licenseInfo", builder);
   }
 
-  private String getTrialMessage(Glob user, long days) {
-    Integer state = user.get(User.ACTIVATION_STATE);
+  private String getTrialMessage(Glob user, long days, Integer state) {
     StringBuilder htmlText = new StringBuilder();
     htmlText.append("<html>");
     htmlText.append(getDaysLeftMessage(user, days, state));
@@ -131,10 +137,14 @@ public class LicenseInfoView extends View {
     else if (days == 0) {
       return Lang.get("license.info.last.day");
     }
-    else if (user.get(User.EMAIL) == null || state == null) {
+    else if (licenseExpired(user, state)) {
       return Lang.get("license.expiration.message");
     }
     return "";
+  }
+
+  private boolean licenseExpired(Glob user, Integer state) {
+    return user.get(User.EMAIL) == null || state == null;
   }
 
   private String getRegisterMessage(Glob user, long days, Integer state) {

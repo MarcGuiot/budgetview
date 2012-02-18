@@ -36,6 +36,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public OperationChecker operations;
   public TitleChecker title;
   public LicenseActivationChecker license;
+  public LicenseMessageChecker licenseMessage;
   public BudgetViewChecker budgetView;
   public SavingsViewChecker savingsView;
   public CategorizationChecker categorization;
@@ -50,6 +51,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public FeedbackViewChecker feedbackView;
   public ReconciliationChecker reconciliation;
   public PrinterChecker printer;
+
   private ApplicationChecker application;
 
   protected GlobRepository repository;
@@ -159,6 +161,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     categorization = new CategorizationChecker(mainWindow);
     seriesAnalysis = new SeriesAnalysisChecker(mainWindow);
     license = new LicenseActivationChecker(mainWindow);
+    licenseMessage = new LicenseMessageChecker(mainWindow);
     newVersion = new NewVersionChecker(mainWindow);
     importPanel = new ImportPanelChecker(mainWindow);
     notes = new NotesViewChecker(operations, mainWindow);
@@ -212,6 +215,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     categorization = null;
     seriesAnalysis = null;
     license = null;
+    licenseMessage = null;
     importPanel = null;
     notes = null;
     projects = null;
