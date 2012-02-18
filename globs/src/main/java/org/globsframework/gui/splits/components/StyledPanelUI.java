@@ -96,17 +96,6 @@ public class StyledPanelUI extends BasicPanelUI {
       BufferedImage bufferedImage = config.createCompatibleImage(width, height, Transparency.BITMASK);
       g2d = bufferedImage.createGraphics();
       image = bufferedImage;
-//      if (cornerRadius != 0) {
-//        type = BufferedImage.TYPE_INT_ARGB;
-//        BufferedImage bufferedImage = new BufferedImage(width, height, type);
-//        image = bufferedImage;
-//        g2d = bufferedImage.createGraphics();
-//      }
-//      else {
-//        VolatileImage volatileImage = c.createVolatileImage(c.getWidth(), c.getHeight());
-//        image = volatileImage;
-//        g2d = volatileImage.createGraphics();
-//      }
     }
     catch (OutOfMemoryError e) {
       image = null;
