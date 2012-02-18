@@ -27,21 +27,6 @@ public class SignpostViewChecker extends ViewChecker {
     return this;
   }
 
-  public SignpostViewChecker checkInnerHelpLink(String link, String title) {
-    HelpChecker.open(getContentBox().triggerClickOnHyperlink(link)).checkTitle(title).close();
-    return this;
-  }
-
-  public SignpostViewChecker checkSupportSiteLink(String link, String url) {
-    BrowsingChecker.checkDisplay(getContentBox().triggerClickOnHyperlink(link), url);
-    return this;
-  }
-
-  public SignpostViewChecker checkFeedbackLink(String link) {
-    FeedbackDialogChecker.init(getContentBox().triggerClickOnHyperlink(link)).checkComponents().cancel();
-    return this;
-  }
-
   private TextBox getContentBox() {
     return getPanel().getTextBox("content");
   }

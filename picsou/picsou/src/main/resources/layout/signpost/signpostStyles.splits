@@ -1,6 +1,6 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
   <styles>
-    <style selector=".content" font="-,plain,14" foreground="signpostView.content"/>
+    <style selector=".content" font="-,plain,14" foreground="signpostView.content" anchor="center"/>
 
     <style selector=".signpostSection" marginTop="5" marginBottom="5"/>
 
@@ -16,7 +16,7 @@
     <style id="completedPanel" selector="x"
            ui="standard" border=""/>
 
-    <style selector="#sectionTitle" font="-,bold,16"/>
+    <style selector="#sectionTitle" font="-,bold,18" iconTextGap="10"/>
     <style id="unavailableLabel" selector="x"
            foreground="signpostView.section.title.unavailable"
            enabled="false" icon="status_unavailable.png" disabledIcon="status_unavailable.png"/>
@@ -27,12 +27,15 @@
            foreground="signpostView.section.title.completed"
            enabled="false" icon="status_completed.png" disabledIcon="status_completed.png"/>
 
-    <style selector="#sectionDescription" border="empty(5,0,5,0)"/>
-    <style id="unavailableDescription" selector="x" visible="true"
-           font="-,plain,11" foreground="signpostView.section.description.unavailable"/>
-    <style id="inprogressDescription" selector="x" visible="true"
-           font="-,plain,13" foreground="signpostView.section.description.inprogress"/>
-    <style id="completedDescription" selector="x" visible="false"/>
+    <style selector="#sectionIcon" marginTop="10" marginBottom="15"/>
+
+    <style selector="#sectionDescription" border="empty(5,0,5,0)" font="-,plain,14"/>
+    <style id="unavailableDescription" selector="x"
+           foreground="signpostView.section.description.unavailable"/>
+    <style id="inprogressDescription" selector="x"
+           foreground="signpostView.section.description.inprogress"/>
+    <style id="completedDescription" selector="x"
+           foreground="signpostView.section.description.completed"/>
 
   </styles>
 
