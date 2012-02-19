@@ -85,8 +85,7 @@
               <card name="noSelection">
                 <panel styleClass="innerBlockBackground">
                   <column margin="15">
-                    <htmlEditorPane name="noSelectionInfoMessage" text="$categorization.no.selection"
-                                    hyperlinkListener="hyperlinkHandler"/>
+                    <htmlEditorPane ref="noSelectionInfoMessage" hyperlinkListener="hyperlinkHandler"/>
                     <filler fill="vertical"/>
                   </column>
                 </panel>

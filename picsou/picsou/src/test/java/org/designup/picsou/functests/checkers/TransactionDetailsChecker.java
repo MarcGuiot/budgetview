@@ -146,8 +146,12 @@ public class TransactionDetailsChecker extends ViewChecker {
     assertThat(getPanel().getTextBox("noSelectionMessage").textContains(message));
   }
 
-  public void checkNoDataMessage() {
-    assertThat(getPanel().getPanel("noData").getTextBox().textContains("No data"));
+  public void checkNoDataImportedMessage() {
+    assertThat(getPanel().getPanel("noData").getTextBox().textContains("No data imported"));
+  }
+
+  public void checkNoDataShownMessage() {
+    assertThat(getPanel().getPanel("noData").getTextBox().textContains("No data shown"));
   }
 
   public void shift() {

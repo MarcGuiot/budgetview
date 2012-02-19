@@ -148,10 +148,10 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     OfxBuilder
       .init(this)
       .addTransaction("2010/05/27", -100, "rent")
-      .addTransaction("2010/05/28", +500, "income")
-      .addTransaction("2010/05/29", -100, "auchan")
-      .addTransaction("2010/04/29", -100, "auchan")
-      .addTransaction("2010/03/29", -100, "auchan")
+      .addTransaction("2010/05/28", +2500, "income")
+      .addTransaction("2010/05/29", -200, "auchan")
+      .addTransaction("2010/04/29", -200, "auchan")
+      .addTransaction("2010/03/29", -200, "auchan")
       .addTransaction("2010/05/29", -100, "Chausse")
       .load();
 

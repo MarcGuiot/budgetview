@@ -41,6 +41,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
   private JToggleButton multiBudgetAreaToggle;
 
   private GlobList selectedTransactions = GlobList.EMPTY;
+  private JEditorPane noSelectionMessage;
   private JEditorPane uncategorizedMessage;
 
   public BudgetAreaSelector(GlobRepository repository, Directory directory) {
@@ -63,6 +64,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
       }
     });
 
+    noSelectionMessage = builder.add("noSelectionInfoMessage", new JEditorPane()).getComponent();
     uncategorizedMessage = builder.add("uncategorizedMessage", new JEditorPane()).getComponent();
 
     builder.add("uncategorizeSelected", new UncategorizeTransactionsAction());
@@ -151,6 +153,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsChanges(Transaction.TYPE)) {
+      updateNoSelectionMessage(repository);
       for (Glob transaction : selectedTransactions) {
         if (changeSet.containsChanges(transaction.getKey(), Transaction.SERIES)) {
           updateSelection();
@@ -164,8 +167,13 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    updateNoSelectionMessage(repository);
     this.selectedTransactions = GlobList.EMPTY;
     showNoSelection();
+  }
+
+  private void updateNoSelectionMessage(GlobRepository repository) {
+    noSelectionMessage.setText(repository.contains(Transaction.TYPE) ? Lang.get("categorization.no.selection") : "");
   }
 
   private void updateSelection() {

@@ -4,9 +4,12 @@
   <styles>
     <style selector="label.formLabel" foreground="block.outer.text" marginRight="5"/>
     <style selector="radioButton" foreground="block.outer.text" opaque="false" font="-,plain,10"/>
+    
+    <style selector=".transactionCreation"
+           opaque="true" border="line(transactionCreation.border)" background="transactionCreation.bg"/>
   </styles>
 
-  <column styleClass="separator">
+  <column styleClass="transactionCreation">
     <grid marginLeft="10" marginRight="10" defaultMarginTop="5">
       <label gridPos="(0,0)" text="$account" styleClass="formLabel"/>
       <comboBox gridPos="(1,0)" ref="account"/>

@@ -81,7 +81,7 @@ public class CategorizationChecker extends ViewChecker {
     return this;
   }
 
-  public void checkNoSelectionPanelDisplayed() {
+  public void checkNoSelectionPanelDisplayed(String text) {
     Panel panel = getPanel();
     for (BudgetArea area : BudgetArea.values()) {
       if ((area != BudgetArea.UNCATEGORIZED) && (area != BudgetArea.ALL)) {
@@ -89,7 +89,7 @@ public class CategorizationChecker extends ViewChecker {
         assertFalse(area.getName(), panel.containsUIComponent(ToggleButton.class, area.getName()));
       }
     }
-    assertThat(panel.getTextBox("noSelectionInfoMessage").textContains("You must select an operation"));
+    assertThat(panel.getTextBox("noSelectionInfoMessage").textEquals(text));
   }
 
   public void checkBudgetAreaIsSelected(BudgetArea budgetArea) {

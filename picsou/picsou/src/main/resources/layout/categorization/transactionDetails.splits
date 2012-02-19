@@ -35,9 +35,16 @@
 
     <cards ref="cards">
 
-      <card name="noData">
+      <card name="noDataImported">
         <column marginBottom="10">
-          <htmlEditorPane text="$transaction.details.nodata" hyperlinkListener="hyperlinkHandler"/>
+          <htmlEditorPane text="$transaction.details.noDataImported" hyperlinkListener="hyperlinkHandler"/>
+          <filler fill="vertical"/>
+        </column>
+      </card>
+
+      <card name="noDataShown">
+        <column marginBottom="10">
+          <htmlEditorPane text="$transaction.details.noDataShown" hyperlinkListener="hyperlinkHandler"/>
           <filler fill="vertical"/>
         </column>
       </card>
@@ -46,7 +53,7 @@
         <column marginBottom="10">
           <row>
             <label icon="leftArrow(14,40,8,30,categorization.selection.arrow)" margin="5" marginLeft="0" weightX="0.01"/>
-            <htmlEditorPane name="noSelectionMessage" text="$transaction.details.noselection" hyperlinkListener="hyperlinkHandler"/>
+            <htmlEditorPane name="noSelectionMessage" text="$transaction.details.noSelection" hyperlinkListener="hyperlinkHandler"/>
           </row>
           <filler fill="vertical"/>
         </column>
