@@ -120,7 +120,9 @@ public enum ApplicationColors {
   public static ColorService createColorService() {
     ColorService colorService = new ColorService(ApplicationColors.class,
                                                  "/colors/color.properties",
-                                                 "/colors/color_blue.properties",
+                                                 "/colors/color_blue_2.properties",
+                                                 "/colors/color_blue_5.properties",
+                                                 "/colors/color_blue_6.properties",
                                                  "/colors/color_blue_initial.properties",
                                                  "/colors/color_grey.properties",
                                                  "/colors/color_gold.properties",
