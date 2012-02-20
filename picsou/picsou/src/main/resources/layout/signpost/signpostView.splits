@@ -10,33 +10,30 @@
 
     <style selector="label.contentTitle" font="-,bold,24" foreground="signpostView.title"
            fill="none" anchor="center"/>
+
+    <style selector="#centerPanel" border="matte(0,0,0,1,signpostView.verticalDivider)"/>
   </styles>
 
-  <panel opaque="true" background="block.inner.bg">
+  <row opaque="true" background="block.inner.bg">
+    <filler fill="horizontal"/>
     <column marginLeft="20" marginRight="20">
-      <filler fill="vertical" weightY="0.1"/>
-      <label text="$signpostView.title" styleClass="contentTitle" icon="app_icon_48.png"/>
-      <filler fill="vertical" weightY="0.1"/>
-      <row>
-        <column border="matte(0,0,0,1,signpostView.verticalDivider)" weightX="4">
-          <htmlEditorPane text="$signpostView.intro" name="content" styleClass="content" marginRight="5"
-                          useImageLocator="true" hyperlinkListener="hyperlinkHandler"/>
-        </column>
-        <column weightX="2" minimumSize="(150,200)" preferredSize="(200,350)">
-          <column marginLeft="10">
-            <repeat ref="signpostRepeat">
-              <panel ref="sectionPanel" weightY="0">
-                <column margin="10">
-                  <button ref="sectionTitle"/>
-                  <htmlEditorPane ref="sectionDescription"/>
-                </column>
-              </panel>
-            </repeat>
-          </column>
-        </column>
-      </row>
-      <filler fill="vertical" weightY="0.2"/>
+      <label text="$signpostView.title" styleClass="contentTitle" icon="app_icon_48.png"
+             marginTop="30" marginBottom="30"/>
+      <label text="$signpostView.intro" name="content" styleClass="content" marginBottom="20"/>
+      <column marginLeft="10">
+        <repeat ref="signpostRepeat" layout="row">
+          <panel ref="sectionPanel" weightY="0" preferredSize="(290,300)">
+            <column margin="10" marginLeft="20" marginRight="20">
+              <button ref="sectionTitle"/>
+              <label ref="sectionIcon" preferredSize="(210,100)" fill="both" anchor="center"/>
+              <htmlEditorPane ref="sectionDescription"/>
+            </column>
+          </panel>
+        </repeat>
+        <filler fill="vertical"/>
+      </column>
     </column>
-  </panel>
+    <filler fill="horizontal"/>
+  </row>
 
 </splits>

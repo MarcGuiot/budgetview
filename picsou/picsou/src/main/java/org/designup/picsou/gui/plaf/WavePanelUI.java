@@ -7,7 +7,6 @@ import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
-import java.awt.image.VolatileImage;
 import java.awt.image.BufferedImage;
 
 public class WavePanelUI extends BasicPanelUI {
@@ -50,10 +49,7 @@ public class WavePanelUI extends BasicPanelUI {
       createImage(g, component, dimension);
     }
     if (image != null) {
-//      do {
-        g.drawImage(image, 0, 0, null);
-//      }
-//      while (image != null && image.contentsLost());
+      g.drawImage(image, 0, 0, null);
     }
   }
 
@@ -67,8 +63,6 @@ public class WavePanelUI extends BasicPanelUI {
         g2 = (Graphics2D)g;
       }
       else {
-//        image = component.createVolatileImage(width, height);
-//        g2 = image.createGraphics();
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice device = env.getDefaultScreenDevice();
         GraphicsConfiguration config = device.getDefaultConfiguration();
@@ -82,6 +76,8 @@ public class WavePanelUI extends BasicPanelUI {
       image = null;
       g2 = (Graphics2D)g;
     }
+
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
     Rectangle rect = new Rectangle(0, 0, width, height);
     GradientPaint gradient = new GradientPaint(0, 0, topColor, 0, height, bottomColor, true);

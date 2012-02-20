@@ -48,6 +48,10 @@ public enum SignpostSection {
     return card;
   }
 
+  public String getIconPath() {
+    return "signpostView/signpostView_" + key + ".png";
+  }
+
   public String toString() {
     return key;
   }

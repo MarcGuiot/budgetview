@@ -1,8 +1,10 @@
 package org.designup.picsou.gui.signpost.sections;
 
+import org.apache.wicket.IConverterLocator;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.model.SignpostSectionType;
 import org.designup.picsou.model.SignpostStatus;
+import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -44,6 +46,10 @@ public abstract class SignpostSectionPanel {
         directory.get(NavigationService.class).gotoCard(section.getCard());
       }
     }));
+
+    ImageLocator imageLocator = directory.get(ImageLocator.class);
+    cellBuilder.add("sectionIcon", new JLabel(imageLocator.get(section.getIconPath())));
+    
     descriptionEditor = cellBuilder.add("sectionDescription",
                                         GuiUtils.createReadOnlyHtmlComponent(section.getDescription()));
   }

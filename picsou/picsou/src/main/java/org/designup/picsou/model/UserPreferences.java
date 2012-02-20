@@ -1,5 +1,6 @@
 package org.designup.picsou.model;
 
+import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
@@ -399,7 +400,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, Month.addDurationMonth(TimeService.getToday()));
+      fieldSetter.set(LAST_VALID_DAY, LicenseService.getEndOfTrialPeriod());
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
@@ -412,7 +413,7 @@ public class UserPreferences {
       fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readJavaString());
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
-      fieldSetter.set(LAST_VALID_DAY, Month.addDurationMonth(TimeService.getToday()));
+      fieldSetter.set(LAST_VALID_DAY, LicenseService.getEndOfTrialPeriod());
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);

@@ -1,0 +1,51 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styles>
+  </styles>
+
+  <horizontalSplit>
+
+    <column margin="10" weightX="1">
+      <label text="Experiments"/>
+      <scrollPane>
+        <table ref="experiments"/>
+      </scrollPane>
+    </column>
+
+    <tabs weightX="2">
+      <tab title="Performance">
+        <column margin="15">
+          <repeat ref="performanceCharts" layout="column">
+            <column marginTop="10">
+              <label ref="chartTitle"/>
+              <panel ref="chart"/>
+            </column>
+          </repeat>
+        </column>
+      </tab>
+
+      <tab title="Users">
+        <column margin="15">
+          <label text="Known users"/>
+          <scrollPane>
+            <table ref="users"/>
+          </scrollPane>
+        </column>
+      </tab>
+
+      <tab title="User progress">
+        <column margin="15">
+          <repeat ref="userProgressCharts" layout="column">
+            <column marginTop="10">
+              <label ref="chartTitle"/>
+              <panel ref="chart"/>
+            </column>
+          </repeat>
+        </column>
+      </tab>
+
+    </tabs>
+
+  </horizontalSplit>
+
+</splits>

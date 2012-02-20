@@ -255,6 +255,12 @@ public class GuiUtils {
                        origin.y + parentSize.height / 2 - windowSize.height / 2);
   }
 
+  public static void showFullSize(Window window) {
+    Dimension screenSize = getMaxSize(window);
+    window.setSize(screenSize);
+    window.setVisible(true);
+  }
+
   public static void setSizeWithinScreen(JFrame frame, int preferredWidth, int preferredHeight) {
     Dimension screenSize = getMaxSize(frame);
     frame.setSize(new Dimension(Math.min(preferredWidth, screenSize.width),

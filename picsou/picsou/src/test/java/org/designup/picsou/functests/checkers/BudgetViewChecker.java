@@ -172,7 +172,7 @@ public class BudgetViewChecker extends ViewChecker {
     public BudgetAreaChecker checkPlannedUnsetAndHighlighted(String seriesName) {
       Button button = getSeriesPanel(seriesName).getPlannedAmount();
       assertThat(button.textEquals("To define"));
-      assertThat(button.backgroundNear("yellow"));
+      assertThat(button.backgroundNear("FFFB00"));
       return this;
     }
 

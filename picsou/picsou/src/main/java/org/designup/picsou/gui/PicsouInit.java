@@ -7,6 +7,7 @@ import org.designup.picsou.gui.backup.BackupService;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.config.RegistrationTrigger;
+import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.series.view.SeriesWrapperUpdateTrigger;
 import org.designup.picsou.gui.time.TimeService;
@@ -255,7 +256,7 @@ public class PicsouInit {
       Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
       if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
         repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
-                          Month.addDurationMonth(TimeService.getToday()));
+                          LicenseService.getEndOfTrialPeriod());
       }
 
       repository.findOrCreate(CurrentMonth.KEY,

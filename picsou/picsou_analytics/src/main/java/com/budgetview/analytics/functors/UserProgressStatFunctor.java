@@ -1,5 +1,6 @@
 package com.budgetview.analytics.functors;
 
+import com.budgetview.analytics.model.WeekPerfStat;
 import com.budgetview.analytics.model.WeekUsageCount;
 import com.budgetview.analytics.model.WeekUsageStat;
 import com.budgetview.analytics.utils.AnalyticsUtils;
@@ -37,45 +38,40 @@ public class UserProgressStatFunctor implements GlobFunctor {
                       value(WeekUsageStat.FIRST_TRY_COUNT, firstTry),
 
                       value(WeekUsageStat.COMPLETION_RATE_ON_FIRST_TRY,
-                            ratio(completedOnFirstTry, firstTry)),
+                            AnalyticsUtils.ratio(completedOnFirstTry, firstTry)),
 
                       value(WeekUsageStat.LOSS_BEFORE_FIRST_IMPORT,
-                            lossRatio(firstTry, importStartedOnFirstTry, lostOnFirstTry)),
+                            AnalyticsUtils.lossRatio(firstTry, importStartedOnFirstTry, lostOnFirstTry)),
 
                       value(WeekUsageStat.LOSS_DURING_FIRST_IMPORT,
-                            lossRatio(importStartedOnFirstTry, categorizationStartedOnFirstTry, lostOnFirstTry)),
+                            AnalyticsUtils.lossRatio(importStartedOnFirstTry, categorizationStartedOnFirstTry, lostOnFirstTry)),
 
                       value(WeekUsageStat.LOSS_DURING_FIRST_CATEGORIZATION,
-                            lossRatio(categorizationStartedOnFirstTry, categorizationFinishedOnFirstTry, lostOnFirstTry)),
+                            AnalyticsUtils.lossRatio(categorizationStartedOnFirstTry, categorizationFinishedOnFirstTry, lostOnFirstTry)),
 
                       value(WeekUsageStat.LOSS_AFTER_FIRST_CATEGORIZATION,
-                            lossRatio(categorizationFinishedOnFirstTry, completedOnFirstTry, lostOnFirstTry)),
+                            AnalyticsUtils.lossRatio(categorizationFinishedOnFirstTry, completedOnFirstTry, lostOnFirstTry)),
 
                       value(WeekUsageStat.SECOND_TRY_COUNT, secondTry),
 
                       value(WeekUsageStat.COMPLETION_RATE_ON_SECOND_TRY,
-                            ratio(completedOnSecondTry, secondTry)),
+                            AnalyticsUtils.ratio(completedOnSecondTry, secondTry)),
 
                       value(WeekUsageStat.LOSS_BEFORE_SECOND_IMPORT,
-                            lossRatio(secondTry, importStartedOnSecondTry, lostOnSecondTry)),
+                            AnalyticsUtils.lossRatio(secondTry, importStartedOnSecondTry, lostOnSecondTry)),
 
                       value(WeekUsageStat.LOSS_DURING_SECOND_IMPORT,
-                            lossRatio(importStartedOnSecondTry, categorizationStartedOnSecondTry, lostOnSecondTry)),
+                            AnalyticsUtils.lossRatio(importStartedOnSecondTry, categorizationStartedOnSecondTry, lostOnSecondTry)),
 
                       value(WeekUsageStat.LOSS_DURING_SECOND_CATEGORIZATION,
-                            lossRatio(categorizationStartedOnSecondTry, categorizationFinishedOnSecondTry, lostOnSecondTry)),
+                            AnalyticsUtils.lossRatio(categorizationStartedOnSecondTry, categorizationFinishedOnSecondTry, lostOnSecondTry)),
 
                       value(WeekUsageStat.LOSS_AFTER_SECOND_CATEGORIZATION,
-                            lossRatio(categorizationFinishedOnSecondTry, completedOnSecondTry, lostOnSecondTry))
+                            AnalyticsUtils.lossRatio(categorizationFinishedOnSecondTry, completedOnSecondTry, lostOnSecondTry))
     );
 
-  }
-
-  private double lossRatio(int before, int after, int lost) {
-    return AnalyticsUtils.round2(((double)before - (double)after) / (double)lost);
-  }
-
-  private double ratio(int nominator, int denominator) {
-    return AnalyticsUtils.round2((double)nominator / (double)denominator);
+    repository.update(Key.create(WeekPerfStat.TYPE, usageStat.get(WeekUsageStat.ID)),
+                      WeekPerfStat.COMPLETION_ON_FIRST_SESSION,
+                      usageStat.get(WeekUsageStat.COMPLETION_RATE_ON_FIRST_TRY));
   }
 }

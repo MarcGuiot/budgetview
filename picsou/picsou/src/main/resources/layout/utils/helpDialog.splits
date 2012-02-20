@@ -29,7 +29,8 @@
         </row>
       </column>
 
-      <htmlEditorPane text="$helpDialog.message.bottom" name="bottomMessage" hyperlinkListener="hyperlinkHandler"/>
+      <htmlEditorPane text="$helpDialog.message.bottom" name="bottomMessage"
+                      hyperlinkListener="hyperlinkHandler" marginTop="5" marginBottom="5"/>
 
     </column>
   </panel>

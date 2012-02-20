@@ -280,14 +280,6 @@ public class Month {
     }
   }
 
-  public static Date addDurationMonth(Date date) {
-    synchronized (CALENDAR) {
-      CALENDAR.setTime(date);
-      CALENDAR.add(Calendar.DAY_OF_MONTH, 46);
-      return CALENDAR.getTime();
-    }
-  }
-
   public static boolean isContinuousSequence(int[] months) {
     int previous = months[0];
     for (int i = 1; i < months.length; i++) {

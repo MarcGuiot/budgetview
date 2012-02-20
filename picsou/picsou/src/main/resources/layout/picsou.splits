@@ -4,8 +4,8 @@
 
   <styles>
     <ui name="masterViewSelector" class="org.globsframework.gui.splits.components.StyledToggleButtonUI"
-        topColor="viewselector.top" bottomColor="viewselector.bottom"
-        borderColor="viewselector.border" borderWidth="1" cornerRadius="10"/>
+        topColor="views.selector.top" bottomColor="views.selector.bottom"
+        borderColor="views.selector.border" borderWidth="1" cornerRadius="10"/>
 
     <style selector="toggleButton.masterViewSelector" ui="masterViewSelector" opaque="false"
            minimumSize="(40,40)" preferredSize="(40,40)" margin="0" marginLeft="5" weightX="0" fill="none"/>
@@ -15,37 +15,37 @@
     <!-- Timeview buttons -->
     <ui name="arrowLeft" class="org.designup.picsou.gui.components.ArrowButtonUI"
         rotation="180" doubleArrow="false"
-        rolloverColor="periods.button.rollover" pressedColor="periods.button.pressed"/>
+        rolloverColor="timeview.period.arrow.rollover" pressedColor="timeview.period.arrow.pressed"/>
     <ui name="doubleArrowLeft" class="org.designup.picsou.gui.components.ArrowButtonUI"
         rotation="180" doubleArrow="true"
-        rolloverColor="periods.button.rollover" pressedColor="periods.button.pressed"/>
+        rolloverColor="timeview.period.arrow.rollover" pressedColor="timeview.period.arrow.pressed"/>
     <ui name="arrowRight" class="org.designup.picsou.gui.components.ArrowButtonUI"
         rotation="0" doubleArrow="false"
-        rolloverColor="periods.button.rollover" pressedColor="periods.button.pressed"/>
+        rolloverColor="timeview.period.arrow.rollover" pressedColor="timeview.period.arrow.pressed"/>
     <ui name="doubleArrowRight" class="org.designup.picsou.gui.components.ArrowButtonUI"
         rotation="0" doubleArrow="true"
-        rolloverColor="periods.button.rollover" pressedColor="periods.button.pressed"/>
+        rolloverColor="timeview.period.arrow.rollover" pressedColor="timeview.period.arrow.pressed"/>
 
     <style selector="button.periodButton"
            anchor="south" margin="2" marginBottom="2"
-           foreground="periods.button.normal"
+           foreground="timeview.period.arrow"
            minimumSize="(20,14)" preferredSize="(20,14)"/>
     <style selector="button.doublePeriodButton"
            anchor="south" margin="2" marginBottom="10"
-           foreground="periods.button.normal"
+           foreground="timeview.period.arrow"
            minimumSize="(20,10)" preferredSize="(20,10)"/>
 
     <!-- Back/forward buttons -->
     <ui name="backArrow" class="org.designup.picsou.gui.components.ArrowButtonUI"
         rotation="180" doubleArrow="false"
-        rolloverColor="backforward.rollover" pressedColor="backforward.pressed" disabledColor="backforward.disabled"
+        rolloverColor="views.backforward.rollover" pressedColor="views.backforward.pressed" disabledColor="views.backforward.disabled"
         size="(16,12)"/>
     <ui name="forwardArrow" class="org.designup.picsou.gui.components.ArrowButtonUI"
         rotation="0" doubleArrow="false"
-        rolloverColor="backforward.rollover" pressedColor="backforward.pressed" disabledColor="backforward.disabled"
+        rolloverColor="views.backforward.rollover" pressedColor="views.backforward.pressed" disabledColor="views.backforward.disabled"
         size="(16,12)"/>
     <style selector="button.backforward"
-           minimumSize="(20,16)" preferredSize="(16,12)" foreground="backforward.normal"
+           minimumSize="(20,16)" preferredSize="(16,12)" foreground="views.backforward.normal"
            fill="none" margin="3" weightX="0"/>
     <style selector="button#backView" ui="backArrow"/>
     <style selector="button#forwardView" ui="forwardArrow" marginRight="10"/>
@@ -61,11 +61,11 @@
               <button name="backView" action="backView" styleClass="backforward" tooltipText="$back"/>
               <button name="forwardView" action="forwardView" styleClass="backforward" tooltipText="$forward"/>
               <label ref="sectionTitle" opaque="false" font="Arial,bold,18" weightX="0"
-                     horizontalAlignment="center" foreground="title" shadowDirection="northwest"
-                     shadowColor="#222222" anchor="south"/>
+                     horizontalAlignment="center" foreground="views.title" shadowDirection="northwest"
+                     shadowColor="views.title.shadow" anchor="south"/>
               <label ref="periodTitle" opaque="false" font="Arial,bold,11" weightX="0" marginLeft="8"
-                     horizontalAlignment="center" foreground="title" shadowDirection="northwest"
-                     shadowColor="#222222" anchor="south" marginBottom="2"/>
+                     horizontalAlignment="center" foreground="views.title" shadowDirection="northwest"
+                     shadowColor="views.title.shadow" anchor="south" marginBottom="2"/>
               <filler fill="horizontal"/>
             </row>
             <row weightY="1" preferredSize="(230,26)">

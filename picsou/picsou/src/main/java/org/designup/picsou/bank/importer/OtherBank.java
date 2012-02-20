@@ -2,6 +2,7 @@ package org.designup.picsou.bank.importer;
 
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.gui.time.TimeService;
+import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -9,10 +10,8 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFieldComparator;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.sqlstreams.accessors.DateSqlAccessor;
-import org.globsframework.utils.Dates;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -22,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class OtherBank extends WebBankPage {
-  public static int ID = -123456;
+  public static int ID = Bank.GENERIC_BANK_ID;
   private Map<Key, String> files = new HashMap<Key, String>();
 
   public static class Init implements BankSynchroService.BankSynchro {
@@ -81,10 +80,10 @@ public class OtherBank extends WebBankPage {
     repository.getAll(RealAccount.TYPE, GlobMatchers.fieldEquals(RealAccount.BANK,
                                                                  OtherBank.ID))
       .safeApply(new GlobFunctor() {
-      public void run(Glob glob, GlobRepository repository) throws Exception {
-        repository.update(glob.getKey(), RealAccount.FILE_NAME, null);
-      }
-    }, repository);
+        public void run(Glob glob, GlobRepository repository) throws Exception {
+          repository.update(glob.getKey(), RealAccount.FILE_NAME, null);
+        }
+      }, repository);
     return builder.load();
   }
 

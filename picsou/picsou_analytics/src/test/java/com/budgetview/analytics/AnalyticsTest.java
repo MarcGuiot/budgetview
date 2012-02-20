@@ -2,10 +2,13 @@ package com.budgetview.analytics;
 
 import com.budgetview.analytics.checker.AnalyticsChecker;
 import com.budgetview.analytics.model.User;
+import com.budgetview.analytics.model.UserEvaluationEntry;
 import com.budgetview.analytics.model.UserProgressInfoEntry;
+import com.budgetview.analytics.model.WeekPerfStat;
 import junit.framework.TestCase;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.model.format.GlobPrinter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -97,6 +100,43 @@ public class AnalyticsTest extends TestCase {
                            value(UserProgressInfoEntry.FIRST_CATEGORIZATION_DONE, true),
                            value(UserProgressInfoEntry.CATEGORIZATION_SKIPPED, false),
                            value(UserProgressInfoEntry.GOTO_BUDGET_SHOWN, true));
+  }
+
+  public void testUserEvaluation() throws Exception {
+    analytics.createLog()
+      // 6 returning users 
+      .logNewAnonymous("3 Jan 2012", "xyz1")
+      .logKnownAnonymous("3 Jan 2012", "xyz1")
+      .logNewAnonymous("4 Jan 2012", "xyz2")
+      .logKnownAnonymous("4 Jan 2012", "xyz2")
+      .logNewAnonymous("4 Jan 2012", "xyz3")
+      .logKnownAnonymous("4 Jan 2012", "xyz3")
+      .logNewAnonymous("4 Jan 2012", "xyz4")
+      .logKnownAnonymous("4 Jan 2012", "xyz4")
+      .logNewAnonymous("5 Jan 2012", "xyz5")
+      .logKnownAnonymous("5 Jan 2012", "xyz5")
+      .logNewAnonymous("5 Jan 2012", "xyz6")
+      .logKnownAnonymous("5 Jan 2012", "xyz6")
+      // 3 one-time visitors
+      .logNewAnonymous("3 Jan 2012", "xyz7")
+      .logNewAnonymous("4 Jan 2012", "xyz8")
+      .logNewAnonymous("5 Jan 2012", "xyz9")
+      // 3 feedback
+      .logUserEvaluation("3 Jan 2012", true)
+      .logUserEvaluation("4 Jan 2012", true)
+      .logUserEvaluation("5 Jan 2012", false)
+      // other weeks - ignored
+      .logNewAnonymous("1 Jan 2012", "xyz1")
+      .logKnownAnonymous("1 Jan 2012", "xyz1")
+      .logNewAnonymous("9 Jan 2012", "xyz1")
+      .logKnownAnonymous("9 Jan 2012", "xyz1")
+      .logUserEvaluation("1 Jan 2012", false)
+      .load();
+
+    analytics.checkWeekPerf(201201,
+                            value(WeekPerfStat.EVALUATIONS_RATIO, 50.0),
+                            value(WeekPerfStat.EVALUATIONS_RESULT, 66.7));
+
   }
 
   private Date parseDate(String text) throws ParseException {

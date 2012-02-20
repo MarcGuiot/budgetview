@@ -23,10 +23,14 @@ import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 
+import java.sql.Date;
+
 public class LicenseTest extends ConnectedTestCase {
   private PicsouApplication picsouApplication;
   private Window window;
   private LoginChecker login;
+  private LicenseMessageChecker licenseMessage;
+  
   private static final String MAIL = "alfred@free.fr";
   private static final String SECOND_PATH = "tmp/otherprevayler";
   private static final String THIRD_PATH = "tmp/otherprevayler_2";
@@ -74,6 +78,7 @@ public class LicenseTest extends ConnectedTestCase {
       picsouApplication = application.getApplication();
     }
     login = new LoginChecker(window);
+    licenseMessage = new LicenseMessageChecker(window);
   }
 
   public void testConnectAtStartup() throws Exception {
@@ -110,10 +115,12 @@ public class LicenseTest extends ConnectedTestCase {
 
   public void testResendsActivationKeyIfCountDecreases() throws Exception {
     String repoId = loggingAndRegisterFirstPicsou();
+
     exit();
     restartAppAndLogAndDispose();
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+
     startApplication(true);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
 
@@ -121,10 +128,10 @@ public class LicenseTest extends ConnectedTestCase {
     login.logNewUser("user", "passw@rd");
 
     db.checkRepoIdIsUpdated(1L, Constraints.notEqual(RepoInfo.REPO_ID, repoId));
-    checkDaysLeftMessage();
+    licenseMessage.checkHidden();
 
     LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed. An email was sent at " + MAIL + " with further information.");
-    checkDaysLeftMessage();
+    licenseMessage.checkVisible("Activation failed. An email was sent");
     Email email = mailServer.checkReceivedMail(MAIL);
     email.checkContains("Multiple use of the same license");
 
@@ -133,6 +140,8 @@ public class LicenseTest extends ConnectedTestCase {
     String newActivationCode = emailcontent.substring(startCode, startCode + 4);
     Integer.parseInt(newActivationCode);
     exit();
+
+    TimeService.setCurrentDate(Dates.parse("2008/08/01"));
 
     checkVersionValidity(false, PATH_TO_DATA);
     activateNewLicenseInNewVersion(newActivationCode);
@@ -244,10 +253,13 @@ public class LicenseTest extends ConnectedTestCase {
 
   public void testStartRegistrationAndStopServer() throws Exception {
     login.logNewUser("user", "passw@rd");
-    LicenseActivationChecker license = LicenseActivationChecker.open(window)
+
+    LicenseActivationChecker license =
+      LicenseActivationChecker.open(window)
       .enterLicense("titi@foo.org", "az");
 
     stopServers();
+
     license.validate();
     license.checkErrorMessage("You must be connected to the Internet")
       .cancel();
@@ -288,10 +300,8 @@ public class LicenseTest extends ConnectedTestCase {
     checkLicenseExpired();
   }
 
-  private void checkMessage(final String messageTxt) {
-    TextBox message = getMessageBox();
-    assertThat(message.isVisible());
-    assertTrue(message.textContains(messageTxt));
+  private void checkMessage(final String messageText) {
+    licenseMessage.checkVisible(messageText);
   }
 
   public void testRegisterAndReRegisterToOtherFailedAndSendAMail() throws Exception {
@@ -555,10 +565,10 @@ public class LicenseTest extends ConnectedTestCase {
     importDialog.close();
     TextBox messageBox = window.getTextBox("licenseInfoMessage");
     if (!anonymous) {
-      assertFalse(messageBox.isVisible());
+      assertFalse("licenseInfoMessage shown with text: " + messageBox.getText(), messageBox.isVisible());
     }
     else {
-      assertTrue(messageBox.isVisible());
+      assertTrue("licenseInfoMessage not shown", messageBox.isVisible());
     }
   }
 
@@ -600,9 +610,7 @@ public class LicenseTest extends ConnectedTestCase {
   }
 
   private void checkDaysLeftMessage() {
-    TextBox message = getMessageBox();
-    assertThat(message.isVisible());
-    assertTrue(message.textContains("days left"));
+    licenseMessage.checkVisible("days left");
   }
 
   private TextBox getMessageBox() {
@@ -614,9 +622,7 @@ public class LicenseTest extends ConnectedTestCase {
   }
 
   private void checkWithMailKilled() {
-    TextBox message = getMessageBox();
-    assertThat(message.isVisible());
-    assertTrue(message.textContains("Activation failed. An email was sent at " + MAIL + " with further information."));
+    licenseMessage.checkVisible("Activation failed. An email was sent at " + MAIL + " with further information.");
   }
 
   private void checkActivationFailed() {

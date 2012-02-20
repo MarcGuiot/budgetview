@@ -101,7 +101,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
     cards.show(bank == null ? "noSelection" : "gotoSite");
     boolean synchro = bank != null && (bank.get(Bank.SYNCHRO_ENABLE, false) && BankSynchroService.SHOW_SYNCHRO);
     Utils.beginRemove();
-    if (bank != null && bank.get(Bank.ID).equals(-123456)){
+    if (bank != null && bank.get(Bank.ID).equals(Bank.GENERIC_BANK_ID)){
       synchro = true;
     }
     Utils.endRemove();

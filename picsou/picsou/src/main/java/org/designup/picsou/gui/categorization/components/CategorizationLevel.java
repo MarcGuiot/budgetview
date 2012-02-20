@@ -69,10 +69,6 @@ public class CategorizationLevel implements ChangeSetListener {
     }
   }
 
-  public boolean hasNoTransactions() {
-    return hasNoTransactions;
-  }
-
   private void update() {
     GlobMatcher monthFilter =
       filterOnCurrentMonth ? GlobMatchers.fieldIn(Transaction.MONTH, selectedMonths) : GlobMatchers.ALL;
