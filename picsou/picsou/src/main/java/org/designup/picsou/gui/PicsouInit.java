@@ -9,6 +9,7 @@ import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.config.RegistrationTrigger;
 import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
+import org.designup.picsou.gui.preferences.components.ColorThemeUpdater;
 import org.designup.picsou.gui.series.view.SeriesWrapperUpdateTrigger;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.upgrade.ConfigUpgradeTrigger;
@@ -77,7 +78,7 @@ public class PicsouInit {
     this.repository.addChangeListener(changeSetListenerToDb);
 
     upgradeTrigger = new UpgradeTrigger(directory);
-    initTriggerRepository(serverAccess, directory, this.repository);
+    initTriggers(serverAccess, directory, this.repository);
     repository.addTrigger(new SeriesWrapperUpdateTrigger());
 
     initDirectory(this.repository);
@@ -86,11 +87,14 @@ public class PicsouInit {
       directory.get(TransactionAnalyzerFactory.class)
         .load(this.getClass().getClassLoader(), PicsouApplication.BANK_CONFIG_VERSION, repository, directory);
     }
-    SpecificBankLoader loader = new SpecificBankLoader();
-    loader.load(repository, directory);
+
+    SpecificBankLoader bankLoader = new SpecificBankLoader();
+    bankLoader.load(repository, directory);
+
+    ColorThemeUpdater.register(repository, directory);
   }
 
-  public static void initTriggerRepository(ServerAccess serverAccess, Directory directory, final GlobRepository repository) {
+  public static void initTriggers(ServerAccess serverAccess, Directory directory, final GlobRepository repository) {
     repository.addTrigger(new DeleteInitialSeriesTrigger());
     repository.addTrigger(new SavingsAccountUpdateSeriesTrigger());
     repository.addTrigger(new SavingsUpdateSeriesMirrorTrigger());
@@ -213,7 +217,7 @@ public class PicsouInit {
           repository.removeTrigger(upgradeTrigger);
           repository.startChangeSet();
           try {
-            upgradeTrigger.postTraitement(repository);
+            upgradeTrigger.postProcessing(repository);
           }
           finally {
             repository.completeChangeSet();

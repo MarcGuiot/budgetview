@@ -42,6 +42,18 @@ public class WavePanelUI extends BasicPanelUI {
     this.image = null;
   }
 
+  public Color getTopColor() {
+    return topColor;
+  }
+
+  public Color getBottomColor() {
+    return bottomColor;
+  }
+
+  public Color getWaveColor() {
+    return waveColor;
+  }
+
   public void paint(Graphics g, JComponent component) {
     component.setOpaque(true);
     Dimension dimension = component.getSize();

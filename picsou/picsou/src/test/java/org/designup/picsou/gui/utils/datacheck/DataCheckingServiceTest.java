@@ -155,7 +155,7 @@ public class DataCheckingServiceTest extends TestCase {
   }
 
   private void doCheck(final String... expectedError) {
-    PicsouInit.initTriggerRepository(ServerAccess.NULL, directory, repository);
+    PicsouInit.initTriggers(ServerAccess.NULL, directory, repository);
     DataCheckingService checkerAction = new DataCheckingService(repository, directory);
     DataCheckReport builder = new DataCheckReport();
     assertTrue(checkerAction.doCheck(builder));

@@ -179,10 +179,6 @@ public class OperationChecker {
   }
 
   public void importQifFiles(String bank, String file) {
-//    String txt = "";
-//    for (String name : files) {
-//      txt += name + ";";
-//    }
     ImportDialogChecker importDialogChecker = openImportDialog()
       .setFilePath(file)
       .acceptFile();

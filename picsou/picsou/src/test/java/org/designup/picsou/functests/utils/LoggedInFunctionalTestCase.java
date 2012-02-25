@@ -26,6 +26,7 @@ import java.util.Date;
 public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected static Window mainWindow;
 
+  public ScreenChecker screen;
   public ViewSelectionChecker views;
   public MainAccountViewChecker mainAccounts;
   public SavingsAccountViewChecker savingsAccounts;
@@ -34,7 +35,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public TransactionDetailsChecker transactionDetails;
   public TransactionCreationChecker transactionCreation;
   public OperationChecker operations;
-  public TitleChecker title;
   public LicenseActivationChecker license;
   public LicenseMessageChecker licenseMessage;
   public BudgetViewChecker budgetView;
@@ -154,9 +154,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     transactions = new TransactionChecker(mainWindow);
     transactionDetails = new TransactionDetailsChecker(mainWindow);
     transactionCreation = new TransactionCreationChecker(mainWindow);
-    title = new TitleChecker(mainWindow);
+    screen = new ScreenChecker(mainWindow);
     budgetView = new BudgetViewChecker(mainWindow);
-    savingsView = new SavingsViewChecker(mainWindow);
     savingsView = new SavingsViewChecker(mainWindow);
     categorization = new CategorizationChecker(mainWindow);
     seriesAnalysis = new SeriesAnalysisChecker(mainWindow);
@@ -208,7 +207,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     transactionCreation = null;
     operations = null;
     backup = null;
-    title = null;
+    screen = null;
     newVersion = null;
     budgetView = null;
     savingsView = null;

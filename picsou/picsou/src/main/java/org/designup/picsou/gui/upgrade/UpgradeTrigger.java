@@ -115,7 +115,10 @@ public class UpgradeTrigger implements ChangeSetListener {
                         value(UserPreferences.PERIOD_COUNT_FOR_PLANNED, 10));
     }
     if (currentJarVersion < 68) {
-      correctSavingMiror(repository);
+      correctSavingMirror(repository);
+    }
+    if (currentJarVersion < 85) {
+      updateColorTheme(repository);
     }
 
     deleteDeprecatedGlobs(repository);
@@ -129,7 +132,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
   }
 
-  private void correctSavingMiror(GlobRepository repository) {
+  private void correctSavingMirror(GlobRepository repository) {
     GlobList savingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
     for (Glob series : savingsSeries) {
       Glob mirorSeries = repository.findLinkTarget(series, Series.MIRROR_SERIES);
@@ -432,7 +435,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
   }
 
-  public void postTraitement(GlobRepository repository) {
+  public void postProcessing(GlobRepository repository) {
     for (Map.Entry<Integer, Key[]> entry : savingsSeriesToOp.entrySet()) {
       Glob series = repository.find(Key.create(Series.TYPE, entry.getKey()));
       if (series == null) {
@@ -464,4 +467,12 @@ public class UpgradeTrigger implements ChangeSetListener {
            (targetAccount.get(Account.ID) == Account.MAIN_SUMMARY_ACCOUNT_ID && Account.isMain(account));
   }
 
+  private void updateColorTheme(GlobRepository repository) {
+//    Glob prefs = repository.find(UserPreferences.KEY);
+//    if (prefs.get(UserPreferences.COLOR_THEME) == null) {
+//      repository.update(UserPreferences.KEY,
+//                        UserPreferences.COLOR_THEME,
+//                        ColorTheme.STANDARD.getId());
+//    }
+  }
 }

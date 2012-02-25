@@ -24,7 +24,8 @@ public class PicsouGuiModel {
     SeriesStat.TYPE,
     SeriesWrapper.TYPE,
     SeriesWrapperType.TYPE,
-    MonthDay.TYPE
+    MonthDay.TYPE,
+    ColorTheme.TYPE
   );
 
   public static GlobModel get() {

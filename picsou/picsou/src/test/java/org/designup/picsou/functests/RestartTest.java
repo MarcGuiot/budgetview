@@ -3,9 +3,11 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.checkers.ApplicationChecker;
 import org.designup.picsou.functests.checkers.CategorizationGaugeChecker;
 import org.designup.picsou.functests.checkers.LoginChecker;
+import org.designup.picsou.functests.checkers.PreferencesChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.time.TimeService;
+import org.designup.picsou.model.ColorTheme;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Dates;
 import org.uispec4j.assertion.UISpecAssert;
@@ -684,5 +686,25 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     categorization.checkTable(new Object[][]{
       {"15/08/2008", "", "TRANSACTION 1", -12.50}
     });
+  }
+
+  public void testColorThemeSelection() throws Exception {
+    screen.checkBackgroundColorIsStandard();
+
+    PreferencesChecker preferences = operations.openPreferences();
+    preferences.selectColorTheme(ColorTheme.CLASSIC_BLUE);
+    preferences.validate();
+    screen.checkBackgroundColorIsClassic();
+
+    restartApplication();
+    screen.checkBackgroundColorIsClassic();
+
+    PreferencesChecker preferences2 = operations.openPreferences();
+    preferences2.checkColorThemeSelected(ColorTheme.CLASSIC_BLUE);
+    preferences2.selectColorTheme(ColorTheme.STANDARD);
+    preferences2.validate();
+
+    screen.checkBackgroundColorIsStandard();
+
   }
 }

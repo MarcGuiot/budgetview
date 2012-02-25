@@ -63,6 +63,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -197,6 +198,7 @@ public class MainPanel {
       licenseInfoView);
 
     createMenuBar(parent, directory);
+
     builder.load();
   }
 

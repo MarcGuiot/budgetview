@@ -6,7 +6,6 @@
     <ui name="masterViewSelector" class="org.globsframework.gui.splits.components.StyledToggleButtonUI"
         topColor="views.selector.top" bottomColor="views.selector.bottom"
         borderColor="views.selector.border" borderWidth="1" cornerRadius="10"/>
-
     <style selector="toggleButton.masterViewSelector" ui="masterViewSelector" opaque="false"
            minimumSize="(40,40)" preferredSize="(40,40)" margin="0" marginLeft="5" weightX="0" fill="none"/>
 
@@ -51,7 +50,7 @@
     <style selector="button#forwardView" ui="forwardArrow" marginRight="10"/>
   </styles>
 
-  <panel styleClass="main" ui="wave">
+  <panel name="backgroundPanel" styleClass="main" ui="wave">
     <column marginTop="10" marginLeft="15" marginRight="15" marginBottom="10">
 
       <horizontalBoxes weightY="0.1" name="mainWindowHeader">

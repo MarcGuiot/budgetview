@@ -1,85 +1,99 @@
 package org.designup.picsou.gui.preferences;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.components.CancelAction;
+import org.designup.picsou.gui.preferences.components.ColorThemeItemFactory;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
+import org.designup.picsou.model.ColorTheme;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.repository.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
+import org.globsframework.model.utils.GlobComparators;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class PreferencesDialog {
   private PicsouDialog dialog;
-  private GlobRepository repository;
-  private JComboBox futureMonth;
-  private GlobsPanelBuilder builder;
-  private JComboBox periodComboBox;
-  private JComboBox monthBackComboBox;
 
-  public PreferencesDialog(Window parent, final GlobRepository repository, Directory directory) {
-    this.repository = repository;
+  private LocalGlobRepository repository;
+
+  private GlobsPanelBuilder builder;
+  private ColorThemeItemFactory colorThemeFactory;
+  private GlobRepository parentRepository;
+
+  public PreferencesDialog(Window parent, final GlobRepository parentRepository, Directory directory) {
+    this.parentRepository = parentRepository;
+    this.repository = createLocalRepository(parentRepository);
 
     builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
                                     "/layout/general/preferencesDialog.splits",
-                                                      repository, directory);
-    Integer[] items= new Integer[]{12, 18, 24, 36};
+                                    repository, directory);
+    int[] items = new int[]{12, 18, 24, 36};
     Utils.beginRemove();
-    items = new Integer[]{0, 1, 2, 3, 4, 6, 12, 18, 24, 36};
+    items = new int[]{0, 1, 2, 3, 4, 6, 12, 18, 24, 36};
     Utils.endRemove();
-    futureMonth = new JComboBox(items);
-    builder.add("futureMonth", futureMonth);
-    periodComboBox = new JComboBox(new Integer[]{4, 5, 6, 7, 10});
-    builder.add("period", periodComboBox);
-    monthBackComboBox = new JComboBox(new Integer[]{1, 2, 3});
-    builder.add("monthBack", monthBackComboBox);
+
+    builder.addComboEditor("futureMonth", UserPreferences.KEY,
+                           UserPreferences.FUTURE_MONTH_COUNT, items);
+
+    builder.addComboEditor("period", UserPreferences.KEY,
+                           UserPreferences.PERIOD_COUNT_FOR_PLANNED,
+                           new int[]{4, 5, 6, 7, 10});
+
+    builder.addComboEditor("monthBack", UserPreferences.KEY,
+                           UserPreferences.MONTH_FOR_PLANNED,
+                           new int[]{1, 2, 3});
+
+    colorThemeFactory = new ColorThemeItemFactory(repository, directory);
+
+    builder.addRepeat("colorThemes", ColorTheme.TYPE, GlobMatchers.ALL, GlobComparators.ascending(ColorTheme.ID),
+                      colorThemeFactory);
+
     dialog = PicsouDialog.create(parent, directory);
-    dialog.addPanelWithButtons((JPanel)builder.load(),
-                               new AbstractAction(Lang.get("ok")) {
-                                 public void actionPerformed(ActionEvent e) {
-                                   repository.startChangeSet();
-                                   try {
-                                     Integer futureMonth =
-                                       (Integer)PreferencesDialog.this.futureMonth.getSelectedItem();
-                                     if (futureMonth != null) {
-                                       repository.update(UserPreferences.KEY,
-                                                         UserPreferences.FUTURE_MONTH_COUNT,
-                                                         futureMonth);
-                                     }
-                                     repository.update(UserPreferences.KEY,
-                                                       UserPreferences.MONTH_FOR_PLANNED, monthBackComboBox.getSelectedItem());
-                                     repository.update(UserPreferences.KEY,
-                                                       UserPreferences.PERIOD_COUNT_FOR_PLANNED, periodComboBox.getSelectedItem());
-                                   }
-                                   finally {
-                                     repository.completeChangeSet();
-                                   }
-                                   dialog.setVisible(false);
-                                 }
-                               },
-                               new CancelAction(dialog));
+    dialog.addPanelWithButtons((JPanel)builder.load(), new OkAction(), new CancelAction());
+  }
+
+  private static LocalGlobRepository createLocalRepository(GlobRepository parentRepository) {
+    return LocalGlobRepositoryBuilder.init(parentRepository)
+      .copy(UserPreferences.TYPE, ColorTheme.TYPE)
+      .get();
   }
 
   public void show() {
-    Glob preference = repository.get(UserPreferences.KEY);
-    futureMonth.setSelectedItem(preference.get(UserPreferences.FUTURE_MONTH_COUNT));
-    Boolean isMultiPlanned = preference.get(UserPreferences.MULTIPLE_PLANNED);
-    monthBackComboBox.setEnabled(isMultiPlanned);
-    periodComboBox.setEnabled(isMultiPlanned);
-    if (isMultiPlanned) {
-      monthBackComboBox.setSelectedItem(preference.get(UserPreferences.MONTH_FOR_PLANNED));
-      periodComboBox.setSelectedItem(preference.get(UserPreferences.PERIOD_COUNT_FOR_PLANNED));
-    }
+    colorThemeFactory.init();
     dialog.pack();
     dialog.showCentered();
     builder.dispose();
+  }
+
+  private class OkAction extends AbstractAction {
+    public OkAction() {
+      super(Lang.get("ok"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      repository.commitChanges(true);
+      colorThemeFactory.complete(parentRepository);
+      dialog.setVisible(false);
+    }
+  }
+
+  private class CancelAction extends AbstractAction {
+    public CancelAction() {
+      super(Lang.get("cancel"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      colorThemeFactory.complete(parentRepository);
+      dialog.setVisible(false);
+    }
   }
 }

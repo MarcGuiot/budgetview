@@ -1,21 +1,37 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <ui name="themeSelector" class="org.globsframework.gui.splits.components.StyledToggleButtonUI"
+        topColor="preferences.themeSelector.top" bottomColor="preferences.themeSelector.bottom"
+        borderColor="preferences.themeSelector.border" borderWidth="1" cornerRadius="10"/>
+    <style selector="toggleButton.themeSelector" ui="themeSelector" opaque="false"
+           minimumSize="(110,90)" preferredSize="(110,90)" margin="0" marginLeft="5" weightX="0" fill="none"/>
+  </styles>
 
-  <panel styleClass="dialog" preferredSize="(400, 200)" opaque="true">
+  <panel styleClass="dialog" preferredSize="(600, 500)" opaque="true">
     <column styleClass="innerDialog">
 
       <label text="$preferences.title" name="title" styleClass="title"/>
-      <grid>
-        <label gridPos="(0,0)" text="$preferences.future.month" styleClass="formLabel"/>
-        <comboBox gridPos="(1,0)" ref="futureMonth"/>
-        <label gridPos="(0,1)" text="$preferences.future.monthBack" styleClass="formLabel" marginTop="5"/>
-        <comboBox gridPos="(1,1)" ref="monthBack" marginTop="5"/>
-        <label gridPos="(0,2)" text="$preferences.future.period" styleClass="formLabel" marginTop="5"/>
-        <comboBox gridPos="(1,2)" ref="period" marginTop="5"/>
-      </grid>
 
-      <filler fill="vertical"/>
+      <column>
+        <grid weightY="0.1">
+          <label gridPos="(0,0)" text="$preferences.future.month" styleClass="formLabel"/>
+          <comboBox gridPos="(1,0)" ref="futureMonth"/>
+          <label gridPos="(0,1)" text="$preferences.future.monthBack" styleClass="formLabel" marginTop="5"/>
+          <comboBox gridPos="(1,1)" ref="monthBack" marginTop="5"/>
+          <label gridPos="(0,2)" text="$preferences.future.period" styleClass="formLabel" marginTop="5"/>
+          <comboBox gridPos="(1,2)" ref="period" marginTop="5"/>
+        </grid>
+
+        <label text="$preferences.tabs.main" marginTop="10"/>
+        <scrollPane>
+          <repeat ref="colorThemes" layout="wrappedRow">
+            <toggleButton ref="themeToggle" styleClass="themeSelector"/>
+          </repeat>
+        </scrollPane>
+      </column>
+
     </column>
   </panel>
 

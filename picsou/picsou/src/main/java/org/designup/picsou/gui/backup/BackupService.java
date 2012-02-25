@@ -140,7 +140,7 @@ public class BackupService {
     repository.removeTrigger(upgradeTrigger);
     repository.startChangeSet();
     try {
-      upgradeTrigger.postTraitement(repository);
+      upgradeTrigger.postProcessing(repository);
       SignpostStatus.setAllCompleted(repository);
     }
     finally {
