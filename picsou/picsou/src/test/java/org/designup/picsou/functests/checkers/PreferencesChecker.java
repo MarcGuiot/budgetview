@@ -24,18 +24,6 @@ public class PreferencesChecker extends GuiChecker {
     return this;
   }
 
-  public PreferencesChecker setPeriodInMonth(int count){
-    window.getComboBox("period").select(Integer.toString(count));
-    assertThat(window.getComboBox("period").selectionEquals(Integer.toString(count)));
-    return this;
-  }
-
-  public PreferencesChecker setMonthBack(int count){
-    window.getComboBox("monthBack").select(Integer.toString(count));
-    assertThat(window.getComboBox("monthBack").selectionEquals(Integer.toString(count)));
-    return this;
-  }
-  
   public void selectColorTheme(ColorTheme theme) {
     window.getToggleButton(theme.name()).click();
   }

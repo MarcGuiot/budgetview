@@ -6,7 +6,7 @@ import org.designup.picsou.model.TransactionType;
 
 public class SeriesShapeTest extends LoggedInFunctionalTestCase {
 
-  public void test3month() throws Exception {
+  public void test3Months() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/10", -50.00, "ED1")
       .addTransaction("2008/06/14", -100.00, "Auchan")
@@ -32,7 +32,7 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .add("10/07/2008", TransactionType.PRELEVEMENT, "ED1", "", -50.00, "Courses")
       .check();
 
-    operations.openPreferences().setMonthBack(2).validate();
+    operations.openDevOptions().setMonthBack(2).validate();
 
     transactions
       .initContent()
@@ -42,7 +42,7 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .add("10/07/2008", TransactionType.PRELEVEMENT, "ED1", "", -50.00, "Courses")
       .check();
 
-    operations.openPreferences().setMonthBack(3).validate();
+    operations.openDevOptions().setMonthBack(3).validate();
 
     transactions
       .initContent()
@@ -54,7 +54,6 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .add("10/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 330.00, "Salaire")
       .add("10/07/2008", TransactionType.PRELEVEMENT, "ED1", "", -50.00, "Courses")
       .check();
-
 
     categorization.setNewIncome("Remboursement", "frais");
 
@@ -68,12 +67,15 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
 
   }
 
-  public void testObservedNearPlannnedInCurentMonth() throws Exception {
+  public void testObservedNearPlannnedInCurrentMonth() throws Exception {
 
     operations.openPreferences()
       .setFutureMonthsCount(1)
-      .setMonthBack(1)
+      .validate();
+
+    operations.openDevOptions()
       .setPeriodInMonth(7)
+      .setMonthBack(1)
       .validate();
 
     OfxBuilder.init(this)
@@ -84,7 +86,6 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/09", -50.00, "ED")
       .addTransaction("2008/08/01", 1000.00, "Salaire")
       .load();
-
 
     categorization.setNewIncome("Salaire", "Salaire", 1000.)
       .setNewVariable("Auchan", "Courses", -200.)
@@ -137,7 +138,7 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .add("01/08/2008", TransactionType.VIREMENT, "SALAIRE", "", 1000.00, "Salaire")
       .check();
 
-    operations.openPreferences()
+    operations.openDevOptions()
       .setMonthBack(2)
       .validate();
 

@@ -28,6 +28,7 @@ public class ColorThemeUpdater {
         }
       }
     });
+    apply(repository, directory);
   }
 
   public static void apply(GlobRepository repository, Directory directory) {

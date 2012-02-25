@@ -30,6 +30,7 @@ import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.notes.ShowNotesAction;
 import org.designup.picsou.gui.preferences.PreferencesAction;
+import org.designup.picsou.gui.preferences.dev.DevOptionsAction;
 import org.designup.picsou.gui.printing.actions.PrintAction;
 import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodBudgetAreaTrigger;
@@ -329,6 +330,7 @@ public class MainPanel {
 
   private JMenu createDevMenu(final Directory directory) {
     JMenu devMenu = new JMenu("[Dev]");
+    devMenu.add(new DevOptionsAction(repository, directory));
     devMenu.add(new DumpDataAction(repository));
     devMenu.add(new DataCheckerAction(repository, directory));
     devMenu.add(new ThrowExceptionAction());

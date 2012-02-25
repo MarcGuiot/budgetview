@@ -51,6 +51,13 @@ public class PreferencesDialog {
     builder.addComboEditor("monthBack", UserPreferences.KEY,
                            UserPreferences.MONTH_FOR_PLANNED,
                            new int[]{1, 2, 3});
+    
+    JPanel devPanel = new JPanel();
+    builder.add("devPanel", devPanel);
+    devPanel.setVisible(false);
+    Utils.beginRemove();
+//    devPanel.setVisible(true);
+    Utils.endRemove();
 
     colorThemeFactory = new ColorThemeItemFactory(repository, directory);
 

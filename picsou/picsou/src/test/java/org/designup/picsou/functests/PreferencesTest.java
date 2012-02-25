@@ -5,6 +5,8 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.ColorTheme;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.model.UserPreferences;
+import org.globsframework.model.format.GlobPrinter;
 
 public class PreferencesTest extends LoggedInFunctionalTestCase {
 
@@ -59,6 +61,7 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
   }
 
   public void testChangeColorTheme() throws Exception {
+
     screen.checkBackgroundColorIsStandard();
 
     PreferencesChecker preferences = operations.openPreferences();

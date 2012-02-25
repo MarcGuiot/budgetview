@@ -375,6 +375,10 @@ public class OperationChecker {
     return new PreferencesChecker(WindowInterceptor.getModalDialog(getPreferencesMenu().triggerClick()));
   }
 
+  public DevOptionsChecker openDevOptions() {
+    return DevOptionsChecker.open(getDevMenu().getSubMenu("Show Dev Options Dialog").triggerClick());
+  }
+
   public void undo(int count) {
     for (int i = 0; i < count; i++) {
       undo();

@@ -86,7 +86,7 @@ public class ColorThemeItemFactory implements RepeatComponentFactory<Glob> {
   public void init() {
     getCurrentToggle().doClick();
   }
-  
+
   public void complete(GlobRepository parentRepository) {
     ColorThemeUpdater.apply(parentRepository, directory);
   }
