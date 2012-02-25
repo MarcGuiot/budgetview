@@ -50,6 +50,16 @@ public class ColorService implements ColorLocator {
     return colorSets;
   }
 
+  public void setCurrentSet(String name) {
+    for (ColorSet colorSet : colorSets) {
+      if (colorSet.getName().equals(name)) {
+        setCurrentSet(colorSet);
+        return;
+      }
+    }
+    throw new ItemNotFound("No color set found with name: " + name);
+  }
+
   public void setCurrentSet(ColorSet colorSet) {
     if (!colorSets.contains(colorSet)) {
       colorSets.add(colorSet);

@@ -17,12 +17,6 @@ import java.util.Locale;
 public class GlobNumericEditorTest extends GuiComponentTestCase {
   protected Glob glob;
 
-  protected TextBox init(Field name) {
-    JTextField textField =
-      GlobNumericEditor.init(name, repository, directory).getComponent();
-    return new TextBox(textField);
-  }
-
   protected void setUp() throws Exception {
     super.setUp();
     repository =
@@ -30,6 +24,12 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
                     "<dummyObject2 id='0'/>");
     repository.addChangeListener(changeListener);
     glob = repository.get(key1);
+  }
+
+  protected TextBox init(Field name) {
+    JTextField textField =
+      GlobNumericEditor.init(name, repository, directory).getComponent();
+    return new TextBox(textField);
   }
 
   public void testUpdateWithNullValue() throws Exception {

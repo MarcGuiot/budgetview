@@ -21,6 +21,7 @@ public class DummyObject {
   public static StringField NAME;
 
   public static DoubleField VALUE;
+  public static IntegerField COUNT;
   public static BooleanField PRESENT;
   public static DateField DATE;
   public static TimeStampField TIMESTAMP;

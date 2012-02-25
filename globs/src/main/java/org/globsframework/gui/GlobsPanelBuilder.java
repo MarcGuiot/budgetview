@@ -17,6 +17,7 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
@@ -60,8 +61,8 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return store(GlobLinkComboEditor.init(field, repository, directory).setName(name));
   }
 
-  public GlobLinkComboEditor addComboEditor(Link field) {
-    return store(GlobLinkComboEditor.init(field, repository, directory));
+  public GlobComboEditor addComboEditor(String name, Key key, IntegerField field, int[] values) {
+    return store(GlobComboEditor.init(key, field, values, repository, directory).setName(name));
   }
 
   public GlobCheckBoxView addCheckBox(String name, BooleanField field) {
