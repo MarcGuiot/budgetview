@@ -468,11 +468,11 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   private void updateColorTheme(GlobRepository repository) {
-//    Glob prefs = repository.find(UserPreferences.KEY);
-//    if (prefs.get(UserPreferences.COLOR_THEME) == null) {
-//      repository.update(UserPreferences.KEY,
-//                        UserPreferences.COLOR_THEME,
-//                        ColorTheme.STANDARD.getId());
-//    }
+    Glob prefs = repository.find(UserPreferences.KEY);
+    if (prefs.get(UserPreferences.COLOR_THEME) == null) {
+      repository.update(UserPreferences.KEY,
+                        UserPreferences.COLOR_THEME,
+                        ColorTheme.STANDARD.getId());
+    }
   }
 }

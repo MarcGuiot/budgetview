@@ -91,7 +91,7 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
     }
     return new TablecellBalloonTip(table, text,
                                    selectedRow, 1,
-                                   BALLOON_STYLE,
+                                   getBalloonStyle(),
                                    BalloonTip.Orientation.RIGHT_ABOVE,
                                    BalloonTip.AttachLocation.CENTER,
                                    20, 20, false);

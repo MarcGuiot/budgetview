@@ -22,15 +22,18 @@ public class DetailsTip implements Disposable {
   private HierarchyListener visibilityUpdater;
   private JComponent component;
   private String text;
+  private Directory directory;
   private AWTEventListener mouseListener;
   private boolean clickThrough;
   private TipPosition position = TipPosition.TOP_RIGHT;
+  private ColorChangeListener colorListener;
 
   public DetailsTip(final JComponent component, String text, Directory directory) {
     this.component = component;
     this.text = text;
+    this.directory = directory;
 
-    directory.get(ColorService.class).addListener(new ColorChangeListener() {
+    colorListener = new ColorChangeListener() {
       public void colorsChanged(ColorLocator colorLocator) {
         fillColor = colorLocator.get("detailsTip.bg");
         borderColor = colorLocator.get("detailsTip.border");
@@ -38,7 +41,8 @@ public class DetailsTip implements Disposable {
           balloonTip.setStyle(createStyle());
         }
       }
-    });
+    };
+    directory.get(ColorService.class).addListener(colorListener);
   }
 
   public void setPosition(TipPosition position) {
@@ -123,6 +127,10 @@ public class DetailsTip implements Disposable {
     GuiUtils.removeShortcut(GuiUtils.getEnclosingFrame(component).getRootPane(),
                             "ESCAPE", KeyStroke.getKeyStroke("ESCAPE"));
     component.removeHierarchyListener(visibilityUpdater);
+
+    directory.get(ColorService.class).removeListener(colorListener);
+    colorListener = null;
+
     component = null;
     balloonTip.closeBalloon();
     balloonTip = null;

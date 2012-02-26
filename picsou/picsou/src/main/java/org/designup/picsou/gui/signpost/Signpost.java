@@ -5,6 +5,9 @@ import net.java.balloontip.styles.ModernBalloonStyle;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.SignpostStatus;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.color.ColorChangeListener;
+import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.model.GlobRepository;
@@ -29,16 +32,14 @@ public abstract class Signpost implements Disposable {
   private BalloonTip.Orientation orientation;
   private BalloonTip.AttachLocation attachLocation;
 
-  protected static final ModernBalloonStyle BALLOON_STYLE = createBalloonStyle();
+  protected ModernBalloonStyle balloonStyle;
+
   private KeyChangeListener completionListener;
   private HierarchyListener hierarchyListener;
 
-  public static ModernBalloonStyle createBalloonStyle() {
-    ModernBalloonStyle style =
-      new ModernBalloonStyle(15, 7, Color.YELLOW.brighter(), Color.YELLOW, Color.ORANGE);
-    style.setBorderThickness(2);
-    return style;
-  }
+  public Color fillTopColor;
+  public Color fillBottomColor;
+  public Color borderColor;
 
   protected Signpost(BooleanField completionField, GlobRepository repository, Directory directory) {
     this.completionField = completionField;
@@ -47,6 +48,25 @@ public abstract class Signpost implements Disposable {
     this.selectionService = directory.get(SelectionService.class);
     this.orientation = BalloonTip.Orientation.RIGHT_BELOW;
     this.attachLocation = BalloonTip.AttachLocation.SOUTH;
+
+    directory.get(ColorService.class).addListener(new ColorChangeListener() {
+      public void colorsChanged(ColorLocator colorLocator) {
+        fillTopColor = colorLocator.get("signpost.bg.top");
+        fillBottomColor = colorLocator.get("signpost.bg.bottom");
+        borderColor = colorLocator.get("signpost.border");
+        balloonStyle = createBalloonStyle();
+        if (balloonTip != null) {
+          balloonTip.setStyle(balloonStyle);
+        }
+      }
+    });
+  }
+
+  private ModernBalloonStyle createBalloonStyle() {
+    ModernBalloonStyle style =
+      new ModernBalloonStyle(15, 7, fillTopColor, fillBottomColor, borderColor);
+    style.setBorderThickness(2);
+    return style;
   }
 
   protected void setLocation(BalloonTip.Orientation orientation, BalloonTip.AttachLocation attachLocation) {
@@ -123,7 +143,7 @@ public abstract class Signpost implements Disposable {
   protected BalloonTip createBalloonTip(JComponent component, String text) {
     return new BalloonTip(component,
                           text,
-                          BALLOON_STYLE,
+                          getBalloonStyle(),
                           orientation,
                           attachLocation,
                           40, 20, false);
@@ -151,5 +171,9 @@ public abstract class Signpost implements Disposable {
   public void dispose() {
     hide();
     SignpostStatus.setCompleted(completionField, repository);
+  }
+
+  public ModernBalloonStyle getBalloonStyle() {
+    return balloonStyle;
   }
 }

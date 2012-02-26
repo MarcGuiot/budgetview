@@ -62,7 +62,7 @@ public abstract class AbstractTableSignpost extends Signpost {
   protected BalloonTip createBalloonTip(JComponent component, String text) {
     return new TablecellBalloonTip(table, text,
                                    getRow(), getColumn(),
-                                   BALLOON_STYLE,
+                                   getBalloonStyle(),
                                    BalloonTip.Orientation.RIGHT_BELOW,
                                    BalloonTip.AttachLocation.CENTER,
                                    20, 20, false);
