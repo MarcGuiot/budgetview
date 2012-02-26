@@ -14,24 +14,23 @@
            marginLeft="5" weightX="0" fill="none"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(600, 500)" opaque="true">
+  <panel styleClass="dialog" preferredSize="(680, 320)" opaque="true">
     <column styleClass="innerDialog">
 
       <label text="$preferences.title" name="title" styleClass="title"/>
 
-      <column>
-        <grid weightY="0.1">
-          <label gridPos="(0,0)" text="$preferences.future.month" styleClass="formLabel"/>
-          <comboBox gridPos="(1,0)" ref="futureMonth"/>
-        </grid>
-
-        <label text="$preferences.tabs.main" marginTop="10"/>
-        <scrollPane>
+        <label text="$preferences.colors" marginTop="10"/>
+        <scrollPane weightY="100">
           <repeat ref="colorThemes" layout="wrappedRow" margin="5">
             <toggleButton ref="themeToggle" styleClass="themeSelector"/>
           </repeat>
         </scrollPane>
-      </column>
+
+      <row weightY="0.1" marginTop="10">
+        <label gridPos="(0,0)" text="$preferences.future.month" styleClass="formLabel"/>
+        <comboBox gridPos="(1,0)" ref="futureMonth"/>
+        <filler fill="horizontal"/>
+      </row>
 
     </column>
   </panel>

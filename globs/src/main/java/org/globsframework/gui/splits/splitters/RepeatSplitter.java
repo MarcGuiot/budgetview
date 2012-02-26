@@ -96,7 +96,7 @@ public class RepeatSplitter extends AbstractSplitter {
     else if ("wrappedRow".equalsIgnoreCase(layoutProperty)) {
       return new ColumnRepeatLayout() {
         protected LayoutManager getLayout(JPanel panel) {
-          return new FlowLayout(FlowLayout.LEFT, 10, 0);
+          return new FlowLayout(FlowLayout.CENTER, 10, 0);
         }
       };
     }

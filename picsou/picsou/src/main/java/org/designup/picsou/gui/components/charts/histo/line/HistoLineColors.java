@@ -68,7 +68,7 @@ public class HistoLineColors  {
       return future ? 0.3f : 0.7f;
     }
     if (future) {
-      return 0.2f;
+      return 0.3f;
     }
     if (current) {
       return 0.9f;

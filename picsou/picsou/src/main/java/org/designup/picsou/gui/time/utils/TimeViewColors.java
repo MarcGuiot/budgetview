@@ -14,8 +14,8 @@ public class TimeViewColors implements ColorChangeListener {
   public Color yearBackground;
   public Color yearSeparator;
 
-  public Color currentBackgroundTop;
-  public Color currentBackgroundBottom;
+  public Color futureBackgroundTop;
+  public Color futureBackgroundBottom;
   public Color monthTop;
   public Color monthBottom;
   public Color selectedMonthTop;
@@ -42,8 +42,8 @@ public class TimeViewColors implements ColorChangeListener {
   public void colorsChanged(ColorLocator colorLocator) {
     monthTop = colorLocator.get(ApplicationColors.TIMEVIEW_MONTH_TOP);
     monthBottom = colorLocator.get(ApplicationColors.TIMEVIEW_MONTH_BOTTOM);
-    currentBackgroundTop = colorLocator.get(ApplicationColors.TIMEVIEW_CURRENT_MONTH_TOP);
-    currentBackgroundBottom = colorLocator.get(ApplicationColors.TIMEVIEW_CURRENT_MONTH_BOTTOM);
+    futureBackgroundTop = colorLocator.get(ApplicationColors.TIMEVIEW_FUTURE_MONTH_TOP);
+    futureBackgroundBottom = colorLocator.get(ApplicationColors.TIMEVIEW_FUTURE_MONTH_BOTTOM);
     selectedMonthBottom = colorLocator.get(ApplicationColors.TIMEVIEW_SELECTED_MONTH_BOTTOM);
     selectedMonthTop = colorLocator.get(ApplicationColors.TIMEVIEW_SELECTED_MONTH_TOP);
 

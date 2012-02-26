@@ -44,21 +44,6 @@ public class PreferencesDialog {
     builder.addComboEditor("futureMonth", UserPreferences.KEY,
                            UserPreferences.FUTURE_MONTH_COUNT, items);
 
-    builder.addComboEditor("period", UserPreferences.KEY,
-                           UserPreferences.PERIOD_COUNT_FOR_PLANNED,
-                           new int[]{4, 5, 6, 7, 10});
-
-    builder.addComboEditor("monthBack", UserPreferences.KEY,
-                           UserPreferences.MONTH_FOR_PLANNED,
-                           new int[]{1, 2, 3});
-    
-    JPanel devPanel = new JPanel();
-    builder.add("devPanel", devPanel);
-    devPanel.setVisible(false);
-    Utils.beginRemove();
-//    devPanel.setVisible(true);
-    Utils.endRemove();
-
     colorThemeFactory = new ColorThemeItemFactory(repository, directory);
 
     builder.addRepeat("colorThemes", ColorTheme.TYPE, GlobMatchers.ALL, GlobComparators.ascending(ColorTheme.ID),

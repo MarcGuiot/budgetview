@@ -58,11 +58,11 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
     if (selected) {
       graphics2D.setPaint(new GradientPaint(0, 0, colors.selectedMonthTop, 0, height, colors.selectedMonthBottom));
     }
-    else if (timeService.getCurrentMonthId() != month.get(Month.ID)) {
+    else if (month.get(Month.ID) <= timeService.getCurrentMonthId()) {
       graphics2D.setPaint(new GradientPaint(0, 0, colors.monthTop, 0, height, colors.monthBottom));
     }
-    else if (timeService.getCurrentMonthId() == month.get(Month.ID)) {
-      graphics2D.setPaint(new GradientPaint(0, 0, colors.currentBackgroundTop, 0, height, colors.currentBackgroundBottom));
+    else if (month.get(Month.ID) > timeService.getCurrentMonthId()) {
+      graphics2D.setPaint(new GradientPaint(0, 0, colors.futureBackgroundTop, 0, height, colors.futureBackgroundBottom));
     }
     graphics2D.fillRect(0, 0, width, height);
 

@@ -12,6 +12,11 @@
 
         <verticalSplit>
           <column weightY="10">
+            <row>
+              <filler fill="horizontal"/>
+              <panel ref="customFilterMessage" fill="none" anchor="center"/>
+              <filler fill="horizontal"/>
+            </row>
             <scrollPane borderPos="center" viewportBackground="transactions.bg"
                         border="line(transaction.border)" opaque="false"
                         marginTop="5" marginLeft="5">
@@ -20,10 +25,6 @@
             </scrollPane>
 
             <row>
-              <filler fill="horizontal"/>
-
-              <panel ref="customFilterMessage" fill="none" anchor="center"/>
-
               <filler fill="horizontal"/>
 
               <label text="$amount" styleClass="formLabelTop" autoHideSource="sum"
