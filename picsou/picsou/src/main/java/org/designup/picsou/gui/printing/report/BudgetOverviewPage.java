@@ -7,6 +7,7 @@ import org.designup.picsou.gui.series.analysis.SeriesChartsPanel;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.FixedHistoChartRange;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.model.util.MonthRange;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobRepository;
@@ -50,7 +51,7 @@ public class BudgetOverviewPage extends ReportPage {
   }
 
   protected String getTitle() {
-    return "Tableau de bord";
+    return Lang.get("print.overview");
   }
 
   protected int printContent(Graphics2D g2, PrintFonts fonts, PrintMetrics metrics, PrintColors colors) {
