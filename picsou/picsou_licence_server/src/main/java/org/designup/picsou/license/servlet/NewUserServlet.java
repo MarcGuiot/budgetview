@@ -35,12 +35,14 @@ public class NewUserServlet extends HttpServlet {
   public static final String PAYPAL_CONFIRM_URL_PROPERTY = "PAYPAL_CONFIRM_URL";
   //  private static String PAYPAL_CONFIRM_URL = "http://www.sandbox.paypal.com/fr/cgi-bin/webscr";
   private static String PAYPAL_CONFIRM_URL = "http://www.paypal.com/fr/cgi-bin/webscr";
+  private static final String CUSTOM = "custom";
   private SqlService sqlService;
   private Mailer mailer;
   public static final String PAYER_EMAIL = "payer_email";
   public static final String TRANSACTION_ID = "txn_id";
   public static final String PAYMENT_STATUS_ID = "payment_status";
   public static final String RECEIVER_EMAIL = "receiver_email";
+  private static final String MC_CURRENCY = "mc_currency";
   private HttpClient client;
 
 
@@ -67,6 +69,7 @@ public class NewUserServlet extends HttpServlet {
       String transactionId = "";
       String paymentStatus = "";
       String receiverEmail = "";
+      String lang = null;
       PostMethod postMethod = new PostMethod(PAYPAL_CONFIRM_URL);
       postMethod.getParams().setContentCharset("UTF-8");
       postMethod.setParameter("cmd", "_notify-validate");
@@ -87,6 +90,23 @@ public class NewUserServlet extends HttpServlet {
         }
         else if (key.equalsIgnoreCase(RECEIVER_EMAIL)) {
           receiverEmail = req.getParameter(key);
+        }
+        else if (key.equalsIgnoreCase(CUSTOM)){
+          String parameter = req.getParameter(CUSTOM);
+          if ("1".equalsIgnoreCase(parameter)){
+            lang = "fr";
+          }
+          else if ("2".equalsIgnoreCase(parameter)){
+            lang = "en";
+          }
+        }
+        else if (key.equalsIgnoreCase(MC_CURRENCY) && lang == null) {
+          if (req.getParameter(MC_CURRENCY).equalsIgnoreCase("EUR")) {
+            lang = "fr";
+          }
+          else {
+            lang = "en";
+          }
         }
       }
       logger.info(paramaters.toString());
@@ -112,13 +132,13 @@ public class NewUserServlet extends HttpServlet {
           logger.info("NewUser : mail : '" + mail + " VERIFIED");
           SqlConnection db = sqlService.getDb();
           try {
-            register(resp, mail, transactionId, sqlService.getDb());
+            register(resp, mail, transactionId, sqlService.getDb(), lang);
           }
           catch (Exception e) {
             logger.error("NewUser : RegisterServlet:doPost", e);
             SqlConnection db2 = sqlService.getDb();
             try {
-              register(resp, mail, transactionId, db2);
+              register(resp, mail, transactionId, db2, lang);
             }
             catch (Exception e1) {
               resp.setStatus(HttpServletResponse.SC_OK);
@@ -148,7 +168,7 @@ public class NewUserServlet extends HttpServlet {
     }
   }
 
-  private void register(HttpServletResponse resp, String mail, String transactionId, SqlConnection db)
+  private void register(HttpServletResponse resp, String mail, String transactionId, SqlConnection db, String lang)
     throws NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException {
     SelectQuery query = db.getQueryBuilder(License.TYPE,
                                            Constraints.equal(License.MAIL, mail))
@@ -166,15 +186,15 @@ public class NewUserServlet extends HttpServlet {
         .set(License.MAIL, mail)
         .set(License.TRANSACTION_ID, transactionId)
         .getRequest();
-      for (int i = 0; i < LICENCE_COUNT; i++){
+      for (int i = 0; i < LICENCE_COUNT; i++) {
         sqlRequest.run();
       }
       sqlRequest.close();
 
       db.commit();
-      logger.info("NewUser : ok  for " + mail + " code is " + code);
-      mailer.sendNewLicense(mail, code, "fr");
-      mailer.sendToSupport(mail, "New User", " Licence code : " + code);
+      logger.info("NewUser : ok  for " + mail + " code is " + code + " in " + lang);
+      mailer.sendNewLicense(mail, code, lang);
+      mailer.sendToSupport(mail, "New User", " Licence code : " + code + "\nLang: " + lang);
       resp.setStatus(HttpServletResponse.SC_OK);
     }
     else {
@@ -193,11 +213,11 @@ public class NewUserServlet extends HttpServlet {
       }
       else {
         String message = "NewUser : Receive different TransactionId for the same mail txId='" + transactionId +
-                         "' previousTxId='" + previousTrId + "' for '" + mail + "'";
+                         "' previousTxId='" + previousTrId + "' for '" + mail + "' lang " + lang;
         logger.error(message);
         mailer.sendToSupport(mail, "different TransactionId", message + "'. We should contact them to ask them for an other mail.");
       }
-      mailer.sendNewLicense(mail, code, "fr");
+      mailer.sendNewLicense(mail, code, lang);
       resp.setStatus(HttpServletResponse.SC_OK);
     }
   }
