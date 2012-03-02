@@ -27,8 +27,6 @@ public class UserEvaluationTest extends ConnectedTestCase {
   public void testSendYesWithCommentAndEmail() throws Exception {
     startServers();
 
-    application.restart();
-
     application.getOperations().exitWithUserEvaluation()
       .checkSendDisabled()
       .selectYes()
@@ -50,8 +48,6 @@ public class UserEvaluationTest extends ConnectedTestCase {
 
   public void testSendNo() throws Exception {
     startServers();
-
-    application.restart();
 
     application.getOperations().exitWithUserEvaluation()
       .checkSendDisabled()

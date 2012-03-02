@@ -16,8 +16,6 @@ public class Experiment {
 
   public static IntegerField WEEK;
 
-  public static StringField CAUSE;
-
   public static StringField ACTION;
 
   static {
