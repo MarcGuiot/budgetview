@@ -6,7 +6,7 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
+import org.designup.picsou.gui.startup.components.SingleApplicationInstanceListener;
 import org.designup.picsou.license.checkers.DbChecker;
 import org.designup.picsou.license.checkers.FtpServerChecker;
 import org.designup.picsou.license.checkers.MailServerChecker;

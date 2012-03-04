@@ -9,7 +9,7 @@ import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.LoginPanel;
-import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
+import org.designup.picsou.gui.startup.components.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.model.SignpostStatus;
@@ -28,13 +28,13 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   public ScreenChecker screen;
   public ViewSelectionChecker views;
+  public TimeViewChecker timeline;
+  public OperationChecker operations;
   public MainAccountViewChecker mainAccounts;
   public SavingsAccountViewChecker savingsAccounts;
-  public TimeViewChecker timeline;
   public TransactionChecker transactions;
   public TransactionDetailsChecker transactionDetails;
   public TransactionCreationChecker transactionCreation;
-  public OperationChecker operations;
   public LicenseActivationChecker license;
   public LicenseMessageChecker licenseMessage;
   public BudgetViewChecker budgetView;
@@ -42,6 +42,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public CategorizationChecker categorization;
   public SeriesAnalysisChecker seriesAnalysis;
   public NewVersionChecker newVersion;
+  public DemoMessageChecker demoMessage;
   public ImportPanelChecker importPanel;
   public NotesViewChecker notes;
   public BackupChecker backup;
@@ -165,6 +166,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     license = new LicenseActivationChecker(mainWindow);
     licenseMessage = new LicenseMessageChecker(mainWindow);
     newVersion = new NewVersionChecker(mainWindow);
+    demoMessage = new DemoMessageChecker(mainWindow);
     importPanel = new ImportPanelChecker(mainWindow);
     notes = new NotesViewChecker(operations, mainWindow);
     projects = new ProjectViewChecker(mainWindow);
@@ -212,6 +214,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     backup = null;
     screen = null;
     newVersion = null;
+    demoMessage = null;
     budgetView = null;
     savingsView = null;
     categorization = null;

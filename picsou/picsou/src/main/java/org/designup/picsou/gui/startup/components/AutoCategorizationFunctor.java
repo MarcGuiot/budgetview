@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.startup;
+package org.designup.picsou.gui.startup.components;
 
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;

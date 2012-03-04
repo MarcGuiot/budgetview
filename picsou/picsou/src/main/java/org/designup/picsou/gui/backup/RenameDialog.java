@@ -3,7 +3,7 @@ package org.designup.picsou.gui.backup;
 import org.designup.picsou.client.exceptions.RemoteException;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.startup.Passwords;
+import org.designup.picsou.gui.startup.components.Passwords;
 import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;

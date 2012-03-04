@@ -27,9 +27,4 @@ public class GotoDataSignpost extends SimpleSignpost implements GlobSelectionLis
       dispose();
     }
   }
-
-  public void dispose() {
-    directory.get(SelectionService.class).removeListener(this);
-    super.dispose();
-  }
 }

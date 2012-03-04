@@ -1,6 +1,7 @@
-package org.designup.picsou.gui.startup;
+package org.designup.picsou.gui.startup.components;
 
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.startup.AppPaths;
 import org.designup.picsou.gui.time.TimeService;
 import org.globsframework.utils.Log;
 

@@ -5,7 +5,7 @@ import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.server.DisconnectionTip;
 import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsou.gui.startup.AppLogger;
+import org.designup.picsou.gui.startup.components.AppLogger;
 import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;

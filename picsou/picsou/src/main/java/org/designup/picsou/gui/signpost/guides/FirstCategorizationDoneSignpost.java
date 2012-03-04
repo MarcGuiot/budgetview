@@ -3,10 +3,11 @@ package org.designup.picsou.gui.signpost.guides;
 import net.java.balloontip.BalloonTip;
 import net.java.balloontip.TablecellBalloonTip;
 import org.designup.picsou.gui.signpost.Signpost;
+import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SignpostSectionType;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -22,7 +23,7 @@ import javax.swing.*;
 import java.util.Set;
 
 public class FirstCategorizationDoneSignpost extends Signpost implements ChangeSetListener, GlobSelectionListener {
-  private boolean operationCategorized = false;
+
   private JTable table;
 
   public FirstCategorizationDoneSignpost(GlobRepository repository, Directory directory) {
@@ -40,7 +41,7 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
   }
 
   protected boolean canShow() {
-    return super.canShow() && operationCategorized;
+    return super.canShow() && hasCategorizedOperations();
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -54,20 +55,24 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
     if (!isCompleted() && changeSet.containsChanges(Transaction.TYPE)) {
       Set<Key> keySet = changeSet.getUpdated(Transaction.SERIES);
       if (!keySet.isEmpty()) {
-        operationCategorized = true;
         update();
       }
+    }
+  }
+
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    if (changedTypes.contains(SignpostStatus.TYPE) || changedTypes.contains(Transaction.TYPE)) {
+      update();
     }
   }
 
   protected void update() {
     if (SignpostStatus.isCompleted(SignpostStatus.CATEGORIZATION_AREA_SELECTION_DONE, repository)) {
       if (canShow()) {
-        if (!repository.contains(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID))){
+        if (!hasUncategorizedOperations()) {
           SignpostStatus.setCompleted(SignpostStatus.FIRST_CATEGORIZATION_DONE, repository);
-          repository.removeChangeListener(this);
-          selectionService.removeListener(this);
-        }else {
+        }
+        else {
           show(Lang.get("signpost.firstCategorizationDone"));
         }
       }
@@ -75,13 +80,8 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
     else {
       if (isShowing()) {
         hide();
-        repository.removeChangeListener(this);
-        selectionService.removeListener(this);
       }
     }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 
   protected BalloonTip createBalloonTip(JComponent component, String text) {
@@ -98,9 +98,17 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    if (!isCompleted() && operationCategorized && !selection.getAll(Transaction.TYPE).isEmpty()) {
+    if (!isCompleted() && hasCategorizedOperations() && !selection.getAll(Transaction.TYPE).isEmpty()) {
       SignpostStatus.setCompleted(SignpostStatus.FIRST_CATEGORIZATION_DONE, repository);
       update();
     }
+  }
+
+  private boolean hasUncategorizedOperations() {
+    return repository.contains(Transaction.TYPE, Matchers.uncategorizedTransactions());
+  }
+
+  private boolean hasCategorizedOperations() {
+    return repository.contains(Transaction.TYPE, Matchers.categorizedTransactions());
   }
 }

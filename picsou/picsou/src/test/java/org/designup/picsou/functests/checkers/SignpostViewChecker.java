@@ -27,8 +27,8 @@ public class SignpostViewChecker extends ViewChecker {
     return this;
   }
 
-  private TextBox getContentBox() {
-    return getPanel().getTextBox("content");
+  public void gotoDemoAccount() {
+    getPanel().getButton("gotoDemoAccount").click();
   }
 
   private Panel getPanel() {

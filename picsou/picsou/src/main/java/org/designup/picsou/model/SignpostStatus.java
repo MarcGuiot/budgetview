@@ -5,8 +5,8 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.annotations.NoObfuscation;
+import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
@@ -15,6 +15,7 @@ import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -77,6 +78,13 @@ public class SignpostStatus {
     }
     finally {
       repository.completeChangeSet();
+    }
+  }
+
+  public static void print(GlobRepository repository) {
+    Glob status = repository.find(SignpostStatus.KEY);
+    if (status != null) {
+      GlobPrinter.print(status);
     }
   }
 

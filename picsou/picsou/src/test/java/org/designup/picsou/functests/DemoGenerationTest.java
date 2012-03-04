@@ -71,6 +71,8 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
   public void test() throws Exception {
 
+    operations.hideSignposts();
+
     OfxBuilder.init(OFX_PATH)
       .addBankAccount(30066, 10678, "00000123456", 1410.20, third(20))
         // Income

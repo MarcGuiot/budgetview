@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.functests.checkers.components.FooterBannerChecker;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 
@@ -7,30 +8,29 @@ import javax.swing.*;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
-public class NewVersionChecker extends GuiChecker {
-  private Window mainWindow;
+public class NewVersionChecker {
+
+  private FooterBannerChecker footerBanner;
 
   public NewVersionChecker(Window mainWindow) {
-    this.mainWindow = mainWindow;
+    this.footerBanner = new FooterBannerChecker(mainWindow, "newVersionView");
   }
 
   public NewVersionChecker checkNewVersionShown() {
-    checkComponentVisible(mainWindow, JPanel.class, "newVersionPanel", true);
-    checkComponentVisible(mainWindow, JLabel.class, "newVersionMessage", true);
-    assertThat(mainWindow.getTextBox("newVersionMessage").textContains("new version"));
+    footerBanner.checkVisible("new version");
     return this;
   }
 
   public NewVersionChecker checkNoNewVersionShown() {
-    checkComponentVisible(mainWindow, JPanel.class, "newVersionPanel", false);
+    footerBanner.checkHidden();
     return this;
   }
 
   public void checkLink(String url) {
-    BrowsingChecker.checkDisplay(mainWindow.getPanel("newVersionPanel").getButton("showChangeLog"), url);
+    BrowsingChecker.checkDisplay(footerBanner.getActionButton(), url);
   }
 
   public void hide() {
-    mainWindow.getPanel("newVersionPanel").getButton("hide").click();
+    footerBanner.hide();
   }
 }

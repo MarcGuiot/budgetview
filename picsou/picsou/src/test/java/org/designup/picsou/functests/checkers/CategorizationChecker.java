@@ -345,6 +345,11 @@ public class CategorizationChecker extends ViewChecker {
     return this;
   }
 
+  public CategorizationChecker checkTableContains(String label) {
+    assertTrue(getTable().containsRow(2, label));
+    return this;
+  }
+
   public CategorizationChecker checkNoSelectedTableRows() {
     assertTrue(getTable().selectionIsEmpty());
     return this;

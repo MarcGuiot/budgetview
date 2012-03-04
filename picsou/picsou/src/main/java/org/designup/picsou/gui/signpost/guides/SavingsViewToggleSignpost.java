@@ -37,6 +37,13 @@ public class SavingsViewToggleSignpost extends Signpost implements ChangeSetList
     }
   }
 
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    if (!isCompleted() &&
+        (changedTypes.contains(SignpostStatus.TYPE) || (changedTypes.contains(Series.TYPE)))) {
+      update();
+    }
+  }
+
   private boolean containsExternalSavingsSeries(GlobRepository repository) {
     for (Glob series : repository.getAll(Series.TYPE)) {
       if (BudgetArea.get(series.get(Series.BUDGET_AREA)) == BudgetArea.SAVINGS) {
@@ -61,13 +68,5 @@ public class SavingsViewToggleSignpost extends Signpost implements ChangeSetList
     if (canShow() && containsExternalSavingsSeries(repository)) {
       show(Lang.get("signpost.savingsViewToggle"));
     }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-  }
-
-
-  public void dispose() {
-    super.dispose();
   }
 }

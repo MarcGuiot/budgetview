@@ -4,7 +4,7 @@ import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.checkers.components.TimeViewChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
+import org.designup.picsou.gui.startup.components.SingleApplicationInstanceListener;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.uispec4j.*;

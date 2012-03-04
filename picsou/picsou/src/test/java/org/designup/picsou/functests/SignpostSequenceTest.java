@@ -5,6 +5,7 @@ import org.designup.picsou.functests.checkers.SignpostDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.banks.SpecificBankTestCase;
+import org.designup.picsou.model.SignpostStatus;
 
 public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
@@ -504,8 +505,120 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
 
     categorization.checkFirstCategorizationSignpostDisplayed("Select the transactions to see it's categorization or categorize it");
-//    categorization.selectTableRow(0);
+  }
+
+  public void testSwitchingToTheDemoAccountAndBackPreservesSignposts() throws Exception {
+
+    demoMessage.checkHidden();
+
+    // === Goto data ===
+
+    views.checkDataSignpostVisible();
+
+    gotoDemoAccountAndBack();
+    signpostView.checkSignpostViewShown();
+    demoMessage.checkHidden();
+    views.checkDataSignpostVisible();
+
+    // === Import file ===
+
+    views.selectData();
+    importPanel.checkImportSignpostDisplayed("Click here to import your operations");
+    gotoDemoAccountAndBack();
+    views.selectData();
+    importPanel.checkImportSignpostDisplayed("Click here to import your operations");
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2010/05/29", -100, "rent")
+      .addTransaction("2010/05/29", -100, "auchan")
+      .load();
+
+    // === Categorization selection ===
+
+    views.checkCategorizationSignpostVisible("Categorization");
+    gotoDemoAccountAndBack(false);
+    views.checkCategorizationSignpostVisible("Categorization");
+
+    views.selectCategorization();
+    categorization.selectTableRow(0);
+
+    // === Back to the categorization ===
+
+    categorization.checkAreaSelectionSignpostDisplayed("Select the budget area for this operation");
+    gotoDemoAccountAndBack();
+    views.selectCategorization();
+    categorization.checkTableContains("AUCHAN");
+    categorization.selectTableRow(0);
+    categorization.checkAreaSelectionSignpostDisplayed("Select the budget area for this operation");
+
+    categorization.selectVariable();
+    checkNoSignpostVisible();
+
+    // === Categorization completion ===
+
+    categorization.setNewRecurring("rent", "Rent"); // SED shown
+
+    categorization.checkFirstCategorizationSignpostDisplayed("The operation is categorized, continue");
+    gotoDemoAccountAndBack();
+    views.selectCategorization();
+    categorization.checkFirstCategorizationSignpostDisplayed("The operation is categorized, continue");
+    categorization.setVariable("auchan", "Groceries");
     
-    //categorization.checkGotoBudgetSignpostShown();
+    categorization.checkGotoBudgetSignpostShown();
+    gotoDemoAccountAndBack();
+    categorization.checkGotoBudgetSignpostShown();
+
+    // === Editing series amounts in SeriesEvolution does not remove budget view signpost ===
+
+    views.selectAnalysis();
+    seriesAnalysis.editSeries("Groceries", "May 2010").validate();
+
+    // === Series amounts ===
+
+    views.selectBudget();
+    budgetView.variable.checkAmountSignpostDisplayed(
+      "Groceries", "Click on the planned amounts to set your own values");
+    gotoDemoAccountAndBack();
+    views.selectBudget();
+    budgetView.variable.checkAmountSignpostDisplayed(
+      "Groceries", "Click on the planned amounts to set your own values");
+
+    budgetView.variable.checkPlannedUnsetButNotHighlighted("Health");
+    budgetView.variable.checkPlannedUnsetButNotHighlighted("Fuel");
+    budgetView.variable.checkPlannedUnsetAndHighlighted("Groceries");
+    SeriesAmountEditionDialogChecker amountDialog = budgetView.variable.editPlannedAmount("Groceries");
+    checkNoSignpostVisible();
+    amountDialog.cancel();
+
+    // === Edit series amounts ===
+
+    signpostView.checkSignpostViewShown();
+
+    views.selectBudget();
+    SignpostDialogChecker
+      .open(
+        budgetView.variable.editPlannedAmount("Groceries").setAmount(10.00).triggerValidate())
+      .close();
+
+    views.checkHomeSelected();
+    signpostView.checkSummaryViewShown();
+  }
+
+  private void gotoDemoAccountAndBack() {
+    gotoDemoAccountAndBack(true);
+  }
+
+  private void gotoDemoAccountAndBack(boolean checkData) {
+    signpostView.gotoDemoAccount();
+    signpostView.checkSummaryViewShown();
+    demoMessage.checkVisible();
+    checkNoSignpostVisible();
+    if (checkData) {
+      transactions.checkNotEmpty();
+      categorization.checkTableContains("WORLDCO");
+    }
+    demoMessage.exit();
+    demoMessage.checkHidden();
   }
 }
