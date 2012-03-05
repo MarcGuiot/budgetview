@@ -527,6 +527,10 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
+  public ImportCsvChecker acceptCsvFile() {
+    return new ImportCsvChecker(this, WindowInterceptor.getModalDialog(importButton.triggerClick()));
+  }
+
   public static class CompletionChecker {
     private int loadedTransactionCount;
     private final int importedTransactionCount;

@@ -35,7 +35,7 @@ public class NewUserServlet extends HttpServlet {
   public static final String PAYPAL_CONFIRM_URL_PROPERTY = "PAYPAL_CONFIRM_URL";
   //  private static String PAYPAL_CONFIRM_URL = "http://www.sandbox.paypal.com/fr/cgi-bin/webscr";
   private static String PAYPAL_CONFIRM_URL = "http://www.paypal.com/fr/cgi-bin/webscr";
-  private static final String CUSTOM = "custom";
+  private static final String CUSTOM = "item_number";
   private SqlService sqlService;
   private Mailer mailer;
   public static final String PAYER_EMAIL = "payer_email";

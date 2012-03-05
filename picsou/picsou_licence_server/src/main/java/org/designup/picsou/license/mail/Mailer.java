@@ -158,7 +158,7 @@ public class Mailer {
         return true;
       }
       catch (Exception e) {
-        logger.warn(toString());
+        logger.warn(toString(), e);
         return false;
       }
     }
@@ -188,7 +188,7 @@ public class Mailer {
         return true;
       }
       catch (Exception e) {
-        logger.warn("Mail not sent : " + toString());
+        logger.warn("Mail not sent : " + toString(), e);
         return false;
       }
     }
@@ -266,7 +266,7 @@ public class Mailer {
         return true;
       }
       catch (Exception e) {
-        logger.warn(toString());
+        logger.warn(toString(), e);
         return false;
       }
     }

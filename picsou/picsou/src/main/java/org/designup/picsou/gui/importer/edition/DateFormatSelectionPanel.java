@@ -1,5 +1,7 @@
 package org.designup.picsou.gui.importer.edition;
 
+import org.designup.picsou.gui.components.tips.ErrorTip;
+import org.designup.picsou.gui.components.tips.TipPosition;
 import org.designup.picsou.importer.utils.DateFormatAnalyzer;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -18,18 +20,22 @@ public class DateFormatSelectionPanel {
   private JPanel panel;
   private JComboBox combo;
   private String selectedFormat;
+  private Directory directory;
   private Callback callback;
-  private JEditorPane messageLabel;
   protected GlobsPanelBuilder builder;
+  private ErrorTip errorTip;
 
-  public DateFormatSelectionPanel(GlobRepository repository, Directory directory, final Callback callback,
-                                  JEditorPane messageLabel) {
+  public DateFormatSelectionPanel(GlobRepository repository, Directory directory, final Callback callback) {
+    this.directory = directory;
     this.callback = callback;
-    this.messageLabel = messageLabel;
     combo = new JComboBox();
     combo.setRenderer(new DateFormatRenderer());
     combo.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        if (errorTip != null) {
+          errorTip.dispose();
+          errorTip = null;
+        }
         callback.dateFormatSelected(getSelectedFormat());
       }
     });
@@ -82,11 +88,10 @@ public class DateFormatSelectionPanel {
   public boolean check() {
     boolean b = getSelectedFormat() != null;
     if (!b) {
-      messageLabel.setText(Lang.get("import.dateformat.undefined"));
+      errorTip = ErrorTip.show(combo, Lang.get("import.dateformat.undefined"), directory, TipPosition.TOP_RIGHT);
     }
     return b;
   }
-
 
   public String getSelectedFormat() {
     return selectedFormat != null ? selectedFormat : (String)combo.getSelectedItem();
