@@ -52,13 +52,6 @@ public abstract class AbstractTableSignpost extends Signpost {
     repository.addChangeListener(changeSetListener);
   }
 
-  public void dispose() {
-    table.getModel().removeTableModelListener(tableListener);
-    selectionService.removeListener(selectionListener);
-    repository.removeChangeListener(changeSetListener);
-    super.dispose();
-  }
-
   protected BalloonTip createBalloonTip(JComponent component, String text) {
     return new TablecellBalloonTip(table, text,
                                    getRow(), getColumn(),

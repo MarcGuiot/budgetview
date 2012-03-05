@@ -84,11 +84,13 @@ public class CategorizationGaugeTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNothingIsShownIfThereAreNoTransactionsToCategorize() throws Exception {
+    views.selectData();
     OfxBuilder
       .init(this)
       .addTransaction("2008/05/10", 1000.0, "WorldCo")
       .load();
 
+    views.selectCategorization();
     categorization.setNewVariable("WorldCo", "Income");
 
     categorization.getCompletionGauge().checkHidden();

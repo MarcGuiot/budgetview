@@ -79,9 +79,19 @@ public class MainWindowLauncher {
       }
 
       public void logOutAndDeleteUser(String name, char[] passwd) {
+        System.exit(1);
+      }
+
+      public void logOutAndOpenDemo() {
+        System.exit(1);
+      }
+
+      public void logOutAndAutoLogin() {
+        System.exit(1);
       }
 
       public void shutdown() {
+        System.exit(1);
       }
     })
       .show();

@@ -13,5 +13,9 @@ public interface WindowManager {
 
   void logOutAndDeleteUser(String name, char[] passwd);
 
+  void logOutAndOpenDemo();
+
+  void logOutAndAutoLogin();
+
   void shutdown();
 }

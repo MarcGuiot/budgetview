@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components.dialogs;
 
-import org.designup.picsou.gui.startup.OpenRequestManager;
+import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.ColorService;

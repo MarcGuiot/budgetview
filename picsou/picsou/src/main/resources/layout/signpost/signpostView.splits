@@ -11,7 +11,14 @@
     <style selector="label.contentTitle" font="-,bold,24" foreground="signpostView.title"
            fill="none" anchor="center"/>
 
-    <style selector="#centerPanel" border="matte(0,0,0,1,signpostView.verticalDivider)"/>
+
+    <style selector=".demoPanel" background="signpostView.demoPanel.bg"
+           border="matte(1,0,1,0,signpostView.demoPanel.border)" opaque="true"/>
+    <style selector=".demoPanel button" marginTop="5" marginBottom="5" marginRight="20"
+           fill="none" anchor="center"/>
+    <style selector=".demoPanel label" foreground="signpostView.content"
+           font="-,plain,14"
+           marginTop="5" marginBottom="5" marginLeft="20" marginRight="10"/>
   </styles>
 
   <row opaque="true" background="block.inner.bg">
@@ -19,7 +26,10 @@
     <column marginLeft="20" marginRight="20">
       <label text="$signpostView.title" styleClass="contentTitle" icon="app_icon_48.png"
              marginTop="30" marginBottom="30"/>
-      <label text="$signpostView.intro" name="content" styleClass="content" marginBottom="20"/>
+      <row styleClass="demoPanel" marginBottom="20">
+        <label text="$signpostView.intro" name="content" styleClass="content"
+               margin="10" marginRight="10"/>
+      </row>
       <column marginLeft="10">
         <repeat ref="signpostRepeat" layout="row">
           <panel ref="sectionPanel" weightY="0" preferredSize="(290,300)">
@@ -30,6 +40,13 @@
             </column>
           </panel>
         </repeat>
+        <filler fill="vertical"/>
+        <row styleClass="demoPanel">
+          <filler fill="horizontal"/>
+          <label text="$signpostView.gotoDemo.label" styleClass="content"/>
+          <button action="gotoDemoAccount"/>
+          <filler fill="horizontal"/>
+        </row>
         <filler fill="vertical"/>
       </column>
     </column>

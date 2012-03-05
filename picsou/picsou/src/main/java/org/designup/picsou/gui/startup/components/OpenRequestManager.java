@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.startup;
+package org.designup.picsou.gui.startup.components;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -2,7 +2,7 @@ package org.designup.picsou.gui.license;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.startup.LogoutService;
+import org.designup.picsou.gui.startup.components.LogoutService;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.User;
@@ -202,7 +202,7 @@ public class LicenseInfoView extends View {
   private class HideAction extends AbstractAction {
 
     private HideAction() {
-      super(Lang.get("newVersion.hide.text"));
+      super(Lang.get("footerBanner.hide"));
     }
 
     public void actionPerformed(ActionEvent actionEvent) {

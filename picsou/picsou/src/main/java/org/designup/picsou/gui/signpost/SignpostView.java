@@ -2,6 +2,7 @@ package org.designup.picsou.gui.signpost;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.signpost.actions.GotoDemoAccountAction;
 import org.designup.picsou.gui.signpost.sections.BudgetSectionPanel;
 import org.designup.picsou.gui.signpost.sections.CategorizationSectionPanel;
 import org.designup.picsou.gui.signpost.sections.ImportSectionPanel;
@@ -53,6 +54,8 @@ public class SignpostView extends View {
                           section.registerComponents(cellBuilder);
                         }
                       });
+
+    builder.add("gotoDemoAccount", new GotoDemoAccountAction(directory));
 
     parentBuilder.add("signpostView", builder);
 

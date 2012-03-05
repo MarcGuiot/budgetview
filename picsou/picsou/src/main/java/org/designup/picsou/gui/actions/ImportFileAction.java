@@ -4,7 +4,7 @@ import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.importer.ImportDialog;
 import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
-import org.designup.picsou.gui.startup.OpenRequestManager;
+import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;

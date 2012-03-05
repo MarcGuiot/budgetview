@@ -7,7 +7,9 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
@@ -35,10 +37,11 @@ public class ImportSignpost extends Signpost implements ChangeSetListener {
     }
   }
 
+  protected boolean canShow() {
+    return SignpostStatus.isCompleted(SignpostStatus.GOTO_DATA_DONE, repository) && super.canShow();
+  }
+
   private void update() {
-    if (!SignpostStatus.isCompleted(SignpostStatus.GOTO_DATA_DONE, repository)) {
-      return;
-    }
 
     if (SignpostStatus.isCompleted(SignpostStatus.IMPORT_STARTED, repository)) {
       dispose();

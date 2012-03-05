@@ -5,7 +5,7 @@ import org.designup.picsou.functests.checkers.FeedbackDialogChecker;
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsou.gui.startup.AppLogger;
+import org.designup.picsou.gui.startup.components.AppLogger;
 import org.designup.picsou.license.ConnectedTestCase;
 import org.globsframework.utils.Files;
 

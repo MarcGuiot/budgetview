@@ -11,7 +11,6 @@ import org.globsframework.utils.directory.Directory;
 import java.util.Set;
 
 public class SimpleSignpost extends Signpost implements ChangeSetListener {
-  private boolean registered = false;
   private String text;
   protected BooleanField prerequisiteField;
 
@@ -26,16 +25,8 @@ public class SimpleSignpost extends Signpost implements ChangeSetListener {
   }
 
   protected void init() {
-    registered = true;
     repository.addChangeListener(this);
     update();
-  }
-
-  protected void onHide() {
-    if (registered) {
-      repository.removeChangeListener(this);
-      registered = false;
-    }
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {

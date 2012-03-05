@@ -38,8 +38,9 @@ import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.analysis.SeriesAnalysisView;
 import org.designup.picsou.gui.signpost.SignpostView;
-import org.designup.picsou.gui.startup.LogoutService;
-import org.designup.picsou.gui.startup.OpenRequestManager;
+import org.designup.picsou.gui.startup.components.DemoMessageView;
+import org.designup.picsou.gui.startup.components.LogoutService;
+import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.summary.SummaryView;
 import org.designup.picsou.gui.summary.version.NewVersionView;
 import org.designup.picsou.gui.time.TimeView;
@@ -64,14 +65,11 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import static org.globsframework.model.utils.GlobMatchers.isFalse;
-
 import org.globsframework.model.repository.ReplicationGlobRepository;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Log;
@@ -84,6 +82,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Date;
 import java.util.Map;
+
+import static org.globsframework.model.utils.GlobMatchers.isFalse;
 
 public class MainPanel {
   private PicsouFrame parent;
@@ -130,11 +130,7 @@ public class MainPanel {
     directory.add(new UndoRedoService(repository));
     directory.add(new HelpService(repository, directory));
     directory.add(new FeedbackService(repository, directory));
-    LogoutService logoutService = new LogoutService() {
-      public void logout() {
-        MainPanel.this.logout();
-      }
-    };
+    LogoutService logoutService = new MainPanelLogoutService();
     directory.add(LogoutService.class, logoutService);
 
     directory.addFactory(SeriesEditor.class, new Directory.Factory<SeriesEditor>() {
@@ -187,6 +183,7 @@ public class MainPanel {
       transactionView,
       timeView,
       new NewVersionView(repository, directory),
+      new DemoMessageView(repository, directory),
       new AccountView(repository, directory),
       categorizationView,
       cardView,
@@ -291,7 +288,7 @@ public class MainPanel {
     menu.add(new PrintAction(repository, directory));
 
     if (Gui.useMacOSMenu()) {
-      if (exitActionWhitoutUserEvaluation != null){
+      if (exitActionWhitoutUserEvaluation != null) {
         MRJAdapter.removeQuitApplicationListener(exitActionWhitoutUserEvaluation);
         exitActionWhitoutUserEvaluation = null;
       }
@@ -324,7 +321,7 @@ public class MainPanel {
     createAccount.setGotoAccountViewEnabled(true);
     editMenu.add(createAccount);
     editMenu.add(new CreateTransactionMenuAction(directory));
-  
+
     return editMenu;
   }
 
@@ -379,27 +376,34 @@ public class MainPanel {
   }
 
   public void logout() {
-    if (Gui.useMacOSMenu()){
-      MRJAdapter.removeQuitApplicationListener(exitAction);
-      if (exitActionWhitoutUserEvaluation == null){
-        exitActionWhitoutUserEvaluation = new ExitAction(windowManager, repository, directory, false);
-        MRJAdapter.addQuitApplicationListener(exitActionWhitoutUserEvaluation);
-      }
-    }
-    directory.get(OpenRequestManager.class).popCallback();
+    prepareForLogout();
     windowManager.logout();
   }
 
+  public void gotoDemoAccount() {
+    prepareForLogout();
+    windowManager.logOutAndOpenDemo();
+  }
+
+  public void gotoAutoLogin() {
+    prepareForLogout();
+    windowManager.logOutAndAutoLogin();
+  }
+
   public void deleteUser(String userName, char[] chars) {
-    if (Gui.useMacOSMenu()){
+    prepareForLogout();
+    windowManager.logOutAndDeleteUser(userName, chars);
+  }
+
+  private void prepareForLogout() {
+    if (Gui.useMacOSMenu()) {
       MRJAdapter.removeQuitApplicationListener(exitAction);
-      if (exitActionWhitoutUserEvaluation == null){
+      if (exitActionWhitoutUserEvaluation == null) {
         exitActionWhitoutUserEvaluation = new ExitAction(windowManager, repository, directory, false);
         MRJAdapter.addQuitApplicationListener(exitActionWhitoutUserEvaluation);
       }
     }
     directory.get(OpenRequestManager.class).popCallback();
-    windowManager.logOutAndDeleteUser(userName, chars);
   }
 
   private static class SendStackTracesAction extends AbstractAction {
@@ -512,6 +516,20 @@ public class MainPanel {
       thread.setDaemon(true);
       thread.start();
 
+    }
+  }
+
+  private class MainPanelLogoutService implements LogoutService {
+    public void logout() {
+      MainPanel.this.logout();
+    }
+
+    public void gotoDemoAccount() {
+      MainPanel.this.gotoDemoAccount();
+    }
+
+    public void gotoAutologin() {
+      MainPanel.this.gotoAutoLogin();
     }
   }
 }

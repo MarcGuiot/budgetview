@@ -70,6 +70,18 @@ public class Matchers {
     };
   }
 
+  public static GlobMatcher uncategorizedTransactions() {
+    return fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID);
+  }
+
+  public static GlobMatcher categorizedTransactions() {
+    return and(
+      isNotNull(Transaction.SERIES),
+      not(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)),
+      not(isTrue(Transaction.PLANNED))
+    );
+  }
+
   public static GlobMatcher exportableTransactions() {
     return and(
       not(isTrue(Transaction.PLANNED)),

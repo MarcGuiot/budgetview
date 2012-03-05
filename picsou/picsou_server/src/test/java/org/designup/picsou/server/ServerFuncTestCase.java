@@ -7,7 +7,7 @@ import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.checkers.ViewSelectionChecker;
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.startup.SingleApplicationInstanceListener;
+import org.designup.picsou.gui.startup.components.SingleApplicationInstanceListener;
 import org.uispec4j.*;
 import org.uispec4j.interception.WindowInterceptor;
 

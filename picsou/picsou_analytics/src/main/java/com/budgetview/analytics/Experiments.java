@@ -14,18 +14,18 @@ public class Experiments {
   }
 
   public void register() {
-    add(201205, "2.23: corrections dates + aide interne import + impression", "");
-    add(201202, "Refonte site /support", "Nécessité aide");
-    add(201149, "Enregistrement toocharger", "Efficacité sites download");
-    add(201148, "Mailing Franck", "");
-    add(201147, "Enregistrement 01net", "Efficacité sites download");
-    add(201146, "Article Olivier Lobet", "Manque références indépendantes");
+    add(201209, "2.24: version EN relookee sur plusieurs sites");
+    add(201205, "2.23: corrections dates + aide interne import + impression");
+    add(201202, "Refonte site /support");
+    add(201149, "Enregistrement toocharger");
+    add(201148, "Mailing Franck");
+    add(201147, "Enregistrement 01net");
+    add(201146, "Article Olivier Lobet");
   }
 
-  private void add(int weekId, String action, String cause) {
+  private void add(int weekId, String action) {
     repository.create(Experiment.TYPE,
                       value(Experiment.WEEK, weekId),
-                      value(Experiment.CAUSE, cause),
                       value(Experiment.ACTION, action));
   }
 }

@@ -36,9 +36,4 @@ public class SkipAndGotoBudgetSignpost extends SimpleSignpost implements GlobSel
       SignpostStatus.setAllBeforeBudgetCompleted(repository);
     }
   }
-
-  public void dispose() {
-    super.dispose();
-    selectionService.removeListener(this);
-  }
 }

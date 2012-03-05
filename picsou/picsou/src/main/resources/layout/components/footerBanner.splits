@@ -1,0 +1,26 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <styles>
+    <ui name="newVersionPanelUI" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="footerBanner.top" bottomColor="footerBanner.bottom"
+        borderColor="footerBanner.border" borderWidth="1" cornerRadius="10"/>
+    <style selector="#footerBannerPanel" ui="newVersionPanelUI" marginTop="10" opaque="false"/>
+
+    <style selector="label#message" font="-,bold,13"/>
+
+    <style selector="#footerBannerPanel button" marginTop="2" marginBottom="2"/>
+  </styles>
+
+  <panel opaque="false">
+    <row name="footerBannerPanel">
+      <filler fill="horizontal"/>
+      <label ref="message" anchor="center" fill="none"/>
+      <filler fill="horizontal"/>
+      <button action="action" anchor="center" fill="none" marginRight="5"/>
+      <button ref="hideButton" anchor="center" fill="none"/>
+    </row>
+  </panel>
+
+</splits>

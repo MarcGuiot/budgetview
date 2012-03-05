@@ -51,10 +51,4 @@ public class GotoCategorizationSignpost extends Signpost implements GlobSelectio
       dispose();
     }
   }
-
-  public void dispose() {
-    directory.get(SelectionService.class).removeListener(this);
-    repository.removeChangeListener(this);
-    super.dispose();
-  }
 }

@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.importer;
 
-import org.designup.picsou.gui.startup.AutoCategorizationFunctor;
-import org.designup.picsou.gui.startup.OpenRequestManager;
+import org.designup.picsou.gui.startup.components.AutoCategorizationFunctor;
+import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.importer.ImportSession;
 import org.designup.picsou.model.*;

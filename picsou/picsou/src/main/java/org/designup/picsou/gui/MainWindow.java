@@ -215,6 +215,16 @@ public class MainWindow implements WindowManager {
     logout();
   }
 
+  public void logOutAndOpenDemo() {
+    login(DEMO_USER_NAME,  DEMO_PASSWORD.toCharArray(), false, true, false);
+  }
+
+  public void logOutAndAutoLogin() {
+    initServerAccess(serverAddress, prevaylerPath, dataInMemory);
+    login(LoginPanel.AUTOLOG_USER, LoginPanel.AUTOLOG_USER.toCharArray(), false, false, true);
+    directory.get(UndoRedoService.class).reset();
+  }
+
   private ServerAccess.LocalInfo initServerAccess(String remoteAdress, String prevaylerPath, boolean dataInMemory) {
     if (remoteAdress.startsWith("http")) {
       this.serverAccess.takeSnapshot();
@@ -250,6 +260,9 @@ public class MainWindow implements WindowManager {
     }
     String name = "/demo/demo-" + lang + ".snapshot";
     InputStream stream = this.getClass().getResourceAsStream(name);
+    if (stream == null) {
+      throw new InvalidState("Could not find '" + name + "' in classpath");
+    }
     if (serverDirectory != null) {
       serverDirectory.close();
     }

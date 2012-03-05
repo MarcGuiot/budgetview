@@ -43,9 +43,7 @@ public class UserEvaluationDialog {
     if (userPrefs.isTrue(UserPreferences.EVALUATION_SHOWN)) {
       return;
     }
-    if (exitCount >= 1) {
-      doShow(repository, directory);
-    }
+    doShow(repository, directory);
   }
 
   public static void doShow(GlobRepository repository, Directory directory) {

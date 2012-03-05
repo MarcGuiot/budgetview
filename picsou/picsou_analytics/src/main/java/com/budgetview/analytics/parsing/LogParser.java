@@ -103,7 +103,7 @@ public class LogParser {
           continue;
         }
 
-//        System.out.println("COULD NOT PARSE: " + line);
+        System.out.println("COULD NOT PARSE: " + line);
       }
       reader.close();
     }

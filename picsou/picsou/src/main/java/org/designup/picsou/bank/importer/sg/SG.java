@@ -6,7 +6,7 @@ import com.jidesoft.swing.InfiniteProgressPanel;
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.bank.importer.WebBankPage;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
-import org.designup.picsou.gui.startup.OpenRequestManager;
+import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.model.util.Amounts;

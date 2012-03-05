@@ -193,12 +193,14 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.getCompletionGauge().checkLevel(0.5);
-    checkNoSignpostVisible();
+    categorization.checkFirstCategorizationSignpostDisplayed("The operation is categorized, continue");
 
     categorization
       .selectTableRow(0)
       .selectIncome()
       .checkDescriptionHidden();
+
+    checkNoSignpostVisible();
   }
 
   public void testProjects() throws Exception {

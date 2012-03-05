@@ -53,6 +53,10 @@ public interface ServerAccess {
       this.name = name;
       this.autologin = autologin;
     }
+
+    public String toString() {
+      return name + "(" + autologin + ")";
+    }
   }
 
   class SnapshotInfo implements Comparable<SnapshotInfo> {

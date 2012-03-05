@@ -34,9 +34,6 @@ public abstract class Signpost implements Disposable {
 
   protected ModernBalloonStyle balloonStyle;
 
-  private KeyChangeListener completionListener;
-  private HierarchyListener hierarchyListener;
-
   public Color fillTopColor;
   public Color fillBottomColor;
   public Color borderColor;
@@ -86,17 +83,16 @@ public abstract class Signpost implements Disposable {
     if (isCompleted()) {
       return;
     }
-    completionListener = new KeyChangeListener(SignpostStatus.KEY) {
+
+    repository.addChangeListener(new KeyChangeListener(SignpostStatus.KEY) {
       protected void update() {
         if (isShowing() && isCompleted()) {
           dispose();
         }
       }
-    };
+    });
 
-    repository.addChangeListener(completionListener);
-
-    hierarchyListener = new HierarchyListener() {
+    component.addHierarchyListener(new HierarchyListener() {
       public void hierarchyChanged(HierarchyEvent e) {
         if (balloonTip == null) {
           return;
@@ -107,8 +103,8 @@ public abstract class Signpost implements Disposable {
           balloonTip.setVisible(componentVisible);
         }
       }
-    };
-    component.addHierarchyListener(hierarchyListener);
+    });
+
     init();
   }
 
@@ -154,18 +150,6 @@ public abstract class Signpost implements Disposable {
       balloonTip.closeBalloon();
       balloonTip = null;
     }
-    if (hierarchyListener != null) {
-      component.removeHierarchyListener(hierarchyListener);
-      hierarchyListener = null;
-    }
-    if (completionListener != null) {
-      repository.removeChangeListener(completionListener);
-      completionListener = null;
-    }
-    onHide();
-  }
-
-  protected void onHide() {
   }
 
   public void dispose() {

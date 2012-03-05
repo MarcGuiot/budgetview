@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.actions;
 
+import org.designup.picsou.gui.startup.components.LogoutService;
 import org.designup.picsou.utils.Lang;
-import org.designup.picsou.gui.startup.LogoutService;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
