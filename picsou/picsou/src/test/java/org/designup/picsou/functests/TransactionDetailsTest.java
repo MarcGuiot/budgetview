@@ -220,7 +220,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkDetailsNotVisible();
 
     categorization.selectTableRow(0);
-    transactionDetails.checkBankDate("15/06/2008");
+    transactionDetails.checkBankDate("2008/06/15");
 
     categorization.selectTableRows(0, 1);
     transactionDetails.checkBankDateNotVisible();

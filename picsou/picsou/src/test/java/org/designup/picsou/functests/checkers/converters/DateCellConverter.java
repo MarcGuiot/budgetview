@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers.converters;
 
+import org.designup.picsou.gui.description.TransactionDateStringifier;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.model.Glob;
@@ -8,8 +9,24 @@ import org.uispec4j.TableCellValueConverter;
 import java.awt.*;
 
 public class DateCellConverter implements TableCellValueConverter {
+
+  private boolean useDisplayedDates;
+  private TransactionDateStringifier stringifier = new TransactionDateStringifier(null);
+
+  public DateCellConverter() {
+    this(false);
+  }
+
+  public DateCellConverter(boolean useDisplayedDates) {
+    this.useDisplayedDates = useDisplayedDates;
+  }
+
   public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
     Glob transaction = (Glob)modelObject;
+    if (useDisplayedDates) {
+      return stringifier.toString(transaction, null);
+    }
+
     int yearMonth = transaction.get(Transaction.MONTH);
     int year = Month.toYear(yearMonth);
     int month = Month.toMonth(yearMonth);

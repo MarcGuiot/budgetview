@@ -26,8 +26,4 @@ public class SavingsAccountViewPanel extends AccountViewPanel {
   protected AccountType getAccountType() {
     return AccountType.SAVINGS;
   }
-
-  protected AccountPositionLabels createPositionLabels(Key accountKey) {
-    return new SavingsAccountPositionLabels(accountKey, repository, directory);
-  }
 }

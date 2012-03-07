@@ -21,8 +21,8 @@ public class SendImportedFileTest extends LoggedInFunctionalTestCase {
 
     String fileName = TestUtils.getFileName(this);
     operations.openSendImportedFile()
-      .checkChoices("31/08/2008 - sendimportedfiletest_testshow_0.ofx")
-      .select("31/08/2008 - sendimportedfiletest_testshow_0.ofx")
+      .checkChoices("2008/08/31 - sendimportedfiletest_testshow_0.ofx")
+      .select("2008/08/31 - sendimportedfiletest_testshow_0.ofx")
       .checkMessageContains("<STMTTRN>\n" +
                             "<TRNTYPE>DEBIT\n" +
                             "<DTPOSTED>20090202\n" +
@@ -75,11 +75,11 @@ public class SendImportedFileTest extends LoggedInFunctionalTestCase {
     }
 
     operations.openSendImportedFile()
-      .checkChoices("31/08/2008 - sendimportedfiletest_testcleanafter5_5.ofx",
-                    "31/08/2008 - sendimportedfiletest_testcleanafter5_4.ofx",
-                    "31/08/2008 - sendimportedfiletest_testcleanafter5_3.ofx",
-                    "31/08/2008 - sendimportedfiletest_testcleanafter5_2.ofx",
-                    "31/08/2008 - sendimportedfiletest_testcleanafter5_1.ofx")
+      .checkChoices("2008/08/31 - sendimportedfiletest_testcleanafter5_5.ofx",
+                    "2008/08/31 - sendimportedfiletest_testcleanafter5_4.ofx",
+                    "2008/08/31 - sendimportedfiletest_testcleanafter5_3.ofx",
+                    "2008/08/31 - sendimportedfiletest_testcleanafter5_2.ofx",
+                    "2008/08/31 - sendimportedfiletest_testcleanafter5_1.ofx")
       .close();
   }
 }

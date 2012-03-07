@@ -38,7 +38,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .setMainAccount()
       .checkFileContent(new Object[][]{
-        {"10/01/2006", "Menu K", "-1.10"}
+        {"2006/01/10", "Menu K", "-1.10"}
       })
       .completeImport();
 
@@ -79,12 +79,12 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(path1 + ";" + path2)
       .acceptFile()
       .checkFileContent(new Object[][]{
-        {"10/01/2006", "Menu K", "-1.10"}
+        {"2006/01/10", "Menu K", "-1.10"}
       })
       .setMainAccount()
       .doImport()
       .checkFileContent(new Object[][]{
-        {"20/02/2006", "Menu K", "-2.20"}
+        {"2006/02/20", "Menu K", "-2.20"}
       })
       .completeImport();
 
@@ -144,7 +144,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(path1)
       .acceptFile()
       .checkFileContent(new Object[][]{
-        {"10/01/2006", "Menu K", "-1.10"}
+        {"2006/01/10", "Menu K", "-1.10"}
       })
       .defineAccount(SOCIETE_GENERALE, "My SG account", "0123546");
     importDialog.doImportWithBalance()
@@ -284,14 +284,14 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .checkAccountMessage("Operations for single account:")
       .checkFileContent(new Object[][]{
-        {"10/01/2006", "First operation", "-1.10"}
+        {"2006/01/10", "First operation", "-1.10"}
       })
       .doImport()
       .checkMessageCreateFirstAccount()
       .skipFile()
       .checkMessageCreateFirstAccount()
       .checkFileContent(new Object[][]{
-        {"20/01/2006", "Second operation", "-2.20"}
+        {"2006/01/20", "Second operation", "-2.20"}
       })
       .defineAccount(SOCIETE_GENERALE, "main", "1111")
       .completeImport(0.00);
@@ -350,7 +350,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     importDialog
       .selectBank(SOCIETE_GENERALE)
       .checkFileContent(new Object[][]{
-        {"10/06/2008", "Metro", "71.00"},
+        {"2008/06/10", "Metro", "71.00"},
       })
       .setMainAccount()
       .setDeferredAccount()
@@ -359,19 +359,19 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     importDialog.selectBank(SOCIETE_GENERALE)
       .setMainAccount()
       .checkFileContent(new Object[][]{
-        {"10/06/2008", "V'lib", "1.00"},
+        {"2008/06/10", "V'lib", "1.00"},
       })
       .doImport();
 
     importDialog.selectBank(SOCIETE_GENERALE)
       .setMainAccount()
       .checkFileContent(new Object[][]{
-        {"21/06/2008", "V'lib", "1.00"},
+        {"2008/06/21", "V'lib", "1.00"},
       })
       .doImport();
     importDialog
       .checkFileContent(new Object[][]{
-        {"10/06/2008", "McDo", "10.00"},
+        {"2008/06/10", "McDo", "10.00"},
       })
       .selectBank(SOCIETE_GENERALE)
       .setMainAccount();
@@ -439,11 +439,11 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkErrorMessage("import.dateformat.undefined")
       .selectDate("Day/Month/Year")
       .checkFileContent(new Object[][]{
-        {"02/01/2001", "Menu K", "-1.10"}
+        {"2001/01/02", "Menu K", "-1.10"}
       })
       .selectDate("Month/Day/Year")
       .checkFileContent(new Object[][]{
-        {"01/02/2001", "Menu K", "-1.10"}
+        {"2001/02/01", "Menu K", "-1.10"}
       })
       .completeImport(0.00);
 
@@ -875,7 +875,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .checkSelectedAccount("Account n. 113")
       .checkAccountNotEditable()
-      .checkAccountDescription("Account n.113 Autre Position: 100.00 on 01/10/2011")
+      .checkAccountDescription("Account n.113 Autre Position: 100.00 on 2011/10/01")
       .selectAccount("a new account")
       .checkAstericsErrorOnName()
       .checkAccountPosition(300.)
@@ -915,7 +915,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkAccountSelectionMessage("Update:")
       .selectAccount("Account n. 00001123")
       .checkAccountNotEditable()
-      .checkAccountDescription("Account n.00001123 CIC Position: 100.00 on 01/10/2011")
+      .checkAccountDescription("Account n.00001123 CIC Position: 100.00 on 2011/10/01")
       .selectAccount("a new account")
       .checkAccountMessage("Account 2/3 - No operations")
       .checkAccountSelectionMessage("Update:")

@@ -2,7 +2,7 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.categorization.actions.CategorizationTableActions;
-import org.designup.picsou.gui.description.TransactionDateStringifier;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.utils.TableView;
 import org.designup.picsou.model.Month;
@@ -153,9 +153,9 @@ public class TransactionDetailsView extends View {
       if (values.size() == 1) {
         int value = values.iterator().next();
         int monthId = Month.intToMonthId(value);
-        return prefix + TransactionDateStringifier.toString(Month.toYear(monthId),
-                                                            Month.toMonth(monthId),
-                                                            Month.intToDay(value));
+        return prefix + Formatting.toString(Month.toYear(monthId),
+                                            Month.toMonth(monthId),
+                                            Month.intToDay(value));
       }
       return "";
     }

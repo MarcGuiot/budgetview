@@ -199,9 +199,9 @@ public class ExportTest extends LoggedInFunctionalTestCase {
       .run();
 
     assertEquals("Date\tBank date\tLabel\tAmount\tBudget area\tSeries\n" +
-                 "13/06/2008\t15/06/2008\tCAROUF\t1.00\tTo categorize\t\n" +
-                 "10/06/2008\t10/06/2008\tFNAC\t-100.00\tTo categorize\t\n" +
-                 "05/06/2008\t05/06/2008\tMONOP'S\t-256.00\tVariable\tGroceries\n",
+                 "2008/06/13\t2008/06/15\tCAROUF\t1.00\tTo categorize\t\n" +
+                 "2008/06/10\t2008/06/10\tFNAC\t-100.00\tTo categorize\t\n" +
+                 "2008/06/05\t2008/06/05\tMONOP'S\t-256.00\tVariable\tGroceries\n",
                  Files.loadFileToString(fileName));
   }
 

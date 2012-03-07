@@ -20,7 +20,7 @@ public class DatePicker {
 
   public DatePicker(final DateField dateField, final GlobRepository repository, Directory directory) {
     datePicker = new JXDatePicker();
-    datePicker.setFormats(Formatting.DATE_FORMAT);
+    datePicker.setFormats(Formatting.getDateFormat());
     datePicker.getEditor().setName(dateField.getName() + "Field");
     datePicker.addPropertyChangeListener(new PropertyChangeListener() {
       public void propertyChange(PropertyChangeEvent evt) {

@@ -6,13 +6,13 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import org.globsframework.utils.Files;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.*;
 import java.io.InputStream;
 
 public class Lang {
   private static ResourceBundle bundle;
+
   public static final Locale ROOT = new Locale("");
   public static final Locale EN = Locale.ENGLISH;
   public static final Locale FR = Locale.FRENCH;
@@ -33,6 +33,10 @@ public class Lang {
     bundle = null;
   }
 
+  public static Locale getLocale() {
+    return LOCALE;
+  }
+  
   public static String getLang(){
     return LOCALE.getLanguage();
   }
@@ -53,6 +57,10 @@ public class Lang {
 
   public static MessageFormat getFormat(String key) {
     String message = getMessage(key);
+    return createMessageFormatFromText(message);
+  }
+
+  public static MessageFormat createMessageFormatFromText(String message) {
     MessageFormat formatter = new MessageFormat(message.replace("'", "''"));
     formatter.setLocale(LOCALE);
     return formatter;

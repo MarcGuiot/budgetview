@@ -5,7 +5,9 @@ import org.designup.picsou.functests.checkers.AbstractHistoChecker;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyDataset;
+import org.designup.picsou.model.Day;
 import org.designup.picsou.model.util.Amounts;
+import org.globsframework.model.Key;
 import org.globsframework.utils.Utils;
 import org.uispec4j.Mouse;
 import org.uispec4j.Panel;
@@ -92,6 +94,16 @@ public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
     checkCurrentDay(monthId, dayId);
     Assert.assertEquals(label, getDataset().getCurrentDayLabel());
     return this;
+  }
+
+  public void checkTooltip(int monthId, int dayId, String expected) {
+    HistoDailyDataset dataset = getDataset();
+    int monthIndex = dataset.getIndex(monthId);
+    if (monthIndex < 0) {
+      Assert.fail("Month " + monthId + " not found");
+    }
+    String actual = dataset.getTooltip(monthIndex, Key.create(Day.MONTH, monthId, Day.DAY, dayId - 1));
+    Assert.assertEquals(expected, actual);
   }
 
   public HistoDailyDataset getDataset() {

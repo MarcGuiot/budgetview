@@ -9,6 +9,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.Formats;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.format.utils.DefaultDescriptionService;
@@ -23,10 +24,19 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
   public static final SimpleDateFormat LOCAL_TIME_STAMP = new SimpleDateFormat("EEEE d MMM yyyy HH:mm");
 
   public PicsouDescriptionService() {
-    super(new org.globsframework.model.format.Formats(Formatting.DATE_FORMAT,
-                                                      new SimpleDateFormat("dd/MM/yyyy hh:mm:ss"),
-                                                      Formatting.DECIMAL_FORMAT,
-                                                      Lang.get("yes"), Lang.get("no")));
+    super(createFormats());
+  }
+
+
+  public void updateFormats() {
+    setFormats(createFormats());
+  }
+
+  private static Formats createFormats() {
+    return new Formats(Formatting.getDateFormat(),
+                       Formatting.getDateAndTimeFormat(),
+                       Formatting.DECIMAL_FORMAT,
+                       Lang.get("yes"), Lang.get("no"));
   }
 
   public String getLabel(GlobType type) {
@@ -74,13 +84,13 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
     if (globType.equals(MonthDay.TYPE)) {
       return new DayGlobStringifier();
     }
-    if (globType.equals(AccountType.TYPE)){
+    if (globType.equals(AccountType.TYPE)) {
       return new BundleBasedStringifier(AccountType.NAME, "account.type.");
     }
     if (globType.equals(Month.TYPE)) {
       return new AbstractGlobStringifier() {
         public String toString(Glob glob, GlobRepository repository) {
-          if (glob == null){
+          if (glob == null) {
             return null;
           }
           return Month.getFullLabel(glob.get(Month.ID));
@@ -113,7 +123,7 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
     }
 
     public String toString(Glob transaction, GlobRepository repository) {
-      if (transaction == null){
+      if (transaction == null) {
         return null;
       }
       if (transaction.isTrue(Transaction.PLANNED)) {
@@ -130,7 +140,7 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
 
   private static class DayGlobStringifier implements GlobStringifier {
     public String toString(Glob glob, GlobRepository repository) {
-      if (glob == null){
+      if (glob == null) {
         return null;
       }
       return Integer.toString(glob.get(MonthDay.ID));

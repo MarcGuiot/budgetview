@@ -110,11 +110,11 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewSavings("Virt", "Epargne", "Main accounts", "ING");
 
     timeline.selectMonth("2009/06");
-    savingsView.checkTotalEstimatedPosition("-", "30/06/2009");
+    savingsView.checkTotalEstimatedPosition("-", "2009/06/30");
 
     timeline.selectMonth("2009/10");
     savingsAccounts.edit("ING").setEndDate("2009/09/02").validate();
-    savingsView.checkTotalEstimatedPosition("-", "31/10/2009");
+    savingsView.checkTotalEstimatedPosition("-", "2009/10/31");
   }
 
   public void testAddMonth() throws Exception {
@@ -140,7 +140,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     budgetView.savings.alignAndPropagate("Epargne");
 
     timeline.selectMonth("2009/05");
-    savingsView.checkTotalEstimatedPosition("-", "31/05/2009");
+    savingsView.checkTotalEstimatedPosition("-", "2009/05/31");
 
     views.selectHome();
     timeline.selectMonth("2009/07");
@@ -149,17 +149,17 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .setEndDate("2009/11/02")
       .validate();
 
-    savingsView.checkTotalEstimatedPosition("0.00", "31/07/2009");
+    savingsView.checkTotalEstimatedPosition("0.00", "2009/07/31");
 
     operations.openPreferences()
       .setFutureMonthsCount(6)
       .validate();
 
     timeline.selectMonth("2009/11");
-    savingsView.checkTotalEstimatedPosition("800.00", "30/11/2009");
+    savingsView.checkTotalEstimatedPosition("800.00", "2009/11/30");
 
     timeline.selectMonth("2009/12");
-    savingsView.checkTotalEstimatedPosition("-", "31/12/2009");
+    savingsView.checkTotalEstimatedPosition("-", "2009/12/31");
 
     timeline.selectMonth("2009/10");
     savingsAccounts.edit("ING")
@@ -167,10 +167,10 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2009/10");
-    savingsView.checkTotalEstimatedPosition("600.00", "31/10/2009");
+    savingsView.checkTotalEstimatedPosition("600.00", "2009/10/31");
 
     timeline.selectMonth("2009/12");
-    savingsView.checkTotalEstimatedPosition("-", "31/12/2009");
+    savingsView.checkTotalEstimatedPosition("-", "2009/12/31");
 
     timeline.selectMonth("2009/10");
     savingsAccounts.edit("ING")
@@ -178,13 +178,13 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2009/08");
-    savingsView.checkTotalEstimatedPosition("200.00", "31/08/2009");
+    savingsView.checkTotalEstimatedPosition("200.00", "2009/08/31");
 
     timeline.selectMonth("2009/10");
-    savingsView.checkTotalEstimatedPosition("600.00", "31/10/2009");
+    savingsView.checkTotalEstimatedPosition("600.00", "2009/10/31");
 
     timeline.selectMonth("2009/12");
-    savingsView.checkTotalEstimatedPosition("-", "31/12/2009");
+    savingsView.checkTotalEstimatedPosition("-", "2009/12/31");
   }
 
   public void testAutomaticCreation() throws Exception {

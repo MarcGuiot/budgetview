@@ -3,9 +3,11 @@ package org.designup.picsou.gui.utils.datacheck;
 import junit.framework.TestCase;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.globsframework.model.Key;
+import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.repository.DefaultGlobIdGenerator;
 import org.globsframework.model.repository.DefaultGlobRepository;
 import org.globsframework.utils.Dates;
@@ -24,6 +26,7 @@ public class DataCheckingServiceTest extends TestCase {
     directory = new DefaultDirectory();
     TimeService timeService = new TimeService();
     directory.add(TimeService.class, timeService);
+    directory.add(DescriptionService.class, new PicsouDescriptionService());
     repository.create(CurrentMonth.KEY,
                       value(CurrentMonth.LAST_TRANSACTION_MONTH, timeService.getCurrentMonthId()),
                       value(CurrentMonth.LAST_TRANSACTION_DAY, 1));

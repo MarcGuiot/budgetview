@@ -1511,8 +1511,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.copy(0, 1);
     
     Assert.assertEquals("Date\tSeries\tLabel\tAmount\n" +
-                        "25/06/2008\tInternet\tFREE TELECOM\t-29.90\n" +
-                        "30/06/2008\tInternet\tFREE TELECOM\t-29.90\n",
+                        "2008/06/25\tInternet\tFREE TELECOM\t-29.90\n" +
+                        "2008/06/30\tInternet\tFREE TELECOM\t-29.90\n",
                         Clipboard.getContentAsText());
 
   }

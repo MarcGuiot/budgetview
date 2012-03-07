@@ -54,10 +54,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.utils.DefaultChangeSetListener;
-import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.TypeChangeSetListener;
+import org.globsframework.model.utils.*;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.Strings;
@@ -264,6 +261,12 @@ public class CategorizationView extends View implements TableView, Filterable, C
             changeSet.containsUpdates(Transaction.SERIES)) {
           table.repaint();
         }
+      }
+    });
+    
+    repository.addChangeListener(new KeyChangeListener(UserPreferences.KEY) {
+      protected void update() {
+        transactionTable.setFilter(currentTableFilter);
       }
     });
 

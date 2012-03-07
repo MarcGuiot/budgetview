@@ -10,6 +10,7 @@ import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -28,6 +29,7 @@ import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.utils.ChangeSetMatchers;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
@@ -141,7 +143,8 @@ public abstract class AccountViewPanel {
       cellBuilder.add("gotoWebsite", new GotoAccountWebsiteAction(account, repository, directory));
 
       add("accountUpdateDate",
-          GlobLabelView.init(Account.POSITION_DATE, repository, directory),
+          GlobLabelView.init(Account.POSITION_DATE, repository, directory)
+            .setUpdateMatcher(ChangeSetMatchers.changesForKey(UserPreferences.KEY)),
           account, cellBuilder);
 
       final GlobButtonView balance =
@@ -168,10 +171,6 @@ public abstract class AccountViewPanel {
         ).forceSelection(account.getKey());
       cellBuilder.add("accountPosition", balance.getComponent());
 
-      AccountPositionLabels positionLabels = createPositionLabels(account.getKey());
-      cellBuilder.add("estimatedAccountPosition", positionLabels.getEstimatedAccountPositionLabel(false));
-      cellBuilder.add("estimatedAccountPositionDate", positionLabels.getEstimatedAccountPositionDateLabel());
-
       cellBuilder.addDisposeListener(balance);
     }
 
@@ -181,8 +180,6 @@ public abstract class AccountViewPanel {
       cellBuilder.addDisposeListener(labelView);
     }
   }
-
-  protected abstract AccountPositionLabels createPositionLabels(Key accountKey);
 
   public static GlobButtonView createShowAccountButton(final GlobRepository repository,
                                                        final Directory directory) {

@@ -65,8 +65,8 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .validate();
     transactionDetails.checkShiftInverted();
 
-    categorization.checkUserDate(transactionDetails, "01/07/2008", "SHIFTABLE TO NEXT");
-    categorization.checkUserDate(transactionDetails, "31/05/2008", "SHIFTABLE TO PREVIOUS");
+    categorization.checkUserDate(transactionDetails, "2008/07/01", "SHIFTABLE TO NEXT");
+    categorization.checkUserDate(transactionDetails, "2008/05/31", "SHIFTABLE TO PREVIOUS");
 
     categorization.selectTransaction("SHIFTABLE TO NEXT");
     transactionDetails.checkShiftInverted();
@@ -104,8 +104,8 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .validate();
     transactionDetails.checkShiftInverted();
 
-    categorization.checkUserDate(transactionDetails, "01/01/2009", "SHIFTABLE TO NEXT");
-    categorization.checkUserDate(transactionDetails, "31/12/2008", "SHIFTABLE TO PREVIOUS");
+    categorization.checkUserDate(transactionDetails, "2009/01/01", "SHIFTABLE TO NEXT");
+    categorization.checkUserDate(transactionDetails, "2008/12/31", "SHIFTABLE TO PREVIOUS");
   }
 
   public void testAmountsAreProperlyUpdatedDuringAShiftAndAnUnshift() throws Exception {
@@ -135,7 +135,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTransaction("Monoprix / End of june");
     transactionDetails.shift();
-    categorization.checkUserDate(transactionDetails, "01/07/2008", "MONOPRIX / END OF JUNE");
+    categorization.checkUserDate(transactionDetails, "2008/07/01", "MONOPRIX / END OF JUNE");
 
     // Account positions are unchanged
     timeline.selectMonth("2008/06");
@@ -188,7 +188,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRow(2);
     categorization.selectRecurring().selectNewSeries("Leisures");
     transactionDetails.shift();
-    transactionDetails.checkBudgetDate("01/07/2008");
+    transactionDetails.checkBudgetDate("2008/07/01");
 
     // Account positions are unchanged
     timeline.selectMonth("2008/06");
@@ -241,7 +241,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .validate();
     transactionDetails.checkShiftEnabled();
     transactionDetails.shift();
-    categorization.checkUserDate(transactionDetails, "01/07/2008", "MONOPRIX / JUNE");
+    categorization.checkUserDate(transactionDetails, "2008/07/01", "MONOPRIX / JUNE");
 
     transactionDetails.unshift();
     categorization.setUncategorized();
@@ -263,7 +263,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .validate();
     transactionDetails.shift();
 
-    categorization.checkUserDate(transactionDetails, "30/06/2008", "MONOPRIX / JULY");
+    categorization.checkUserDate(transactionDetails, "2008/06/30", "MONOPRIX / JULY");
   }
 
   public void testShiftingAMirroredTransaction() throws Exception {
@@ -312,7 +312,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     transactionDetails.shift();
 
-    categorization.checkUserDate(transactionDetails, "01/01/2008", "ORANGE");
+    categorization.checkUserDate(transactionDetails, "2008/01/01", "ORANGE");
     transactions
       .initContent()
       .add("03/01/2008", TransactionType.VIREMENT, "MCDO", "", 15.00)
@@ -347,7 +347,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .add("03/01/2008", TransactionType.VIREMENT, "MCDO", "", 15.00)
       .add("25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
       .check();
-    categorization.checkUserDate(transactionDetails, "01/01/2008", "ORANGE");
+    categorization.checkUserDate(transactionDetails, "2008/01/01", "ORANGE");
 
     operations.undo();
     transactions
@@ -361,6 +361,6 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .add("03/01/2008", TransactionType.VIREMENT, "MCDO", "", 15.00)
       .add("25/12/2007", TransactionType.PRELEVEMENT, "ORANGE", "", -50.00)
       .check();
-    categorization.checkUserDate(transactionDetails, "01/01/2008", "ORANGE");
+    categorization.checkUserDate(transactionDetails, "2008/01/01", "ORANGE");
   }
 }

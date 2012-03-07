@@ -129,17 +129,17 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     // sur savings
     timeline.selectMonth("2008/06");
     savingsAccounts
-      .checkEstimatedPositionDate("30/06/2008")
+      .checkEstimatedPositionDate("2008/06/30")
       .checkEstimatedPosition(300);
 
     timeline.selectMonth("2008/07");
     savingsAccounts
-      .checkEstimatedPositionDate("31/07/2008")
+      .checkEstimatedPositionDate("2008/07/31")
       .checkEstimatedPosition(300);
 
     timeline.selectMonth("2008/08");
     savingsAccounts
-      .checkEstimatedPositionDate("31/08/2008")
+      .checkEstimatedPositionDate("2008/08/31")
       .checkEstimatedPosition(0);
   }
 

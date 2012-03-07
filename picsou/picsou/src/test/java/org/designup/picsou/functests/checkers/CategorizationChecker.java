@@ -30,6 +30,7 @@ public class CategorizationChecker extends ViewChecker {
   public static final int LABEL_COLUMN_INDEX = 2;
   public static final int AMOUNT_COLUMN_INDEX = 3;
   private Panel panel;
+  private boolean useDisplayedDates;
 
   public CategorizationChecker(Window mainWindow) {
     super(mainWindow);
@@ -435,6 +436,10 @@ public class CategorizationChecker extends ViewChecker {
     return this;
   }
 
+  public void setUseDisplayedDates() {
+    this.useDisplayedDates = true;
+  }
+
   public Table getTable() {
     views.selectCategorization();
     Table table = getPanel().getTable("transactionsToCategorize");
@@ -443,7 +448,7 @@ public class CategorizationChecker extends ViewChecker {
       offset = 1;
       table.setCellValueConverter(0, new ReconciliationCellConverter());
     }
-    table.setCellValueConverter(offset, new DateCellConverter());
+    table.setCellValueConverter(offset, new DateCellConverter(useDisplayedDates));
     table.setCellValueConverter(3 + offset, new TableCellValueConverter() {
       public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
         Glob transaction = (Glob)modelObject;

@@ -3,9 +3,9 @@ package org.designup.picsou.gui.accounts.position;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.utils.AmountColors;
 import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountPositionThreshold;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.views.GlobLabelView;
@@ -46,6 +46,7 @@ public abstract class AccountPositionLabels {
       .setAutoHideIfEmpty(true)
       .forceSelection(summaryAccount);
     builder.addLabel(titleLabelName, Account.TYPE, new ReferenceAmountStringifier(titleLabelKey))
+      .setUpdateMatcher(ChangeSetMatchers.changesForKey(UserPreferences.KEY))
       .setAutoHideIfEmpty(true)
       .forceSelection(summaryAccount);
   }
@@ -56,14 +57,12 @@ public abstract class AccountPositionLabels {
 
   protected abstract Color getLabelColor(Double position, AmountColors amountColors);
 
-  /**
-   * @deprecated
-   */
   public JLabel getEstimatedAccountPositionLabel(boolean updateColor) {
-    accountPosition = GlobLabelView.init(Month.TYPE, repository, directory,
-                                         new EstimatedPositionStringifier(accountKey, updateColor))
-      .setUpdateMatcher(ChangeSetMatchers.changesForTypes(getType()))
-      .setAutoHideIfEmpty(true);
+    accountPosition =
+      GlobLabelView.init(Month.TYPE, repository, directory,
+                         new EstimatedPositionStringifier(accountKey, updateColor))
+        .setUpdateMatcher(ChangeSetMatchers.changesForTypes(getType()))
+        .setAutoHideIfEmpty(true);
     Glob account = repository.find(accountKey);
     if (account != null) {
       accountPosition.setName("estimatedAccountPosition." + account.get(Account.NAME));
@@ -74,7 +73,8 @@ public abstract class AccountPositionLabels {
   public JLabel getEstimatedAccountPositionDateLabel() {
     GlobLabelView accountPosition =
       GlobLabelView.init(Month.TYPE, repository, directory,
-                         new EstimatedPositionDateStringifier());
+                         new EstimatedPositionDateStringifier())
+        .setUpdateMatcher(ChangeSetMatchers.changesForKey(UserPreferences.KEY));
     Glob account = repository.find(accountKey);
     if (account != null) {
       accountPosition.setName("estimatedAccountPositionDate." + account.get(Account.NAME));

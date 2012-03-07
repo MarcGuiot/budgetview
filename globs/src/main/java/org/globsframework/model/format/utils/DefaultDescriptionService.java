@@ -42,6 +42,10 @@ public class DefaultDescriptionService implements DescriptionService {
     return formats;
   }
 
+  protected void setFormats(Formats formats) {
+    this.formats = formats;
+  }
+
   public String getLabel(GlobType type) {
     return getBundleValue(type.getName(), type.getName());
   }

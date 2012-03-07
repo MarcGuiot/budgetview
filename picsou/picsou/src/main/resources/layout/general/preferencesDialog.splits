@@ -14,7 +14,7 @@
            marginLeft="5" weightX="0" fill="none"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(680, 320)" opaque="true">
+  <panel styleClass="dialog" preferredSize="(680, 350)" opaque="true">
     <column styleClass="innerDialog">
 
       <label text="$preferences.title" name="title" styleClass="title"/>
@@ -27,8 +27,16 @@
         </scrollPane>
 
       <row weightY="0.1" marginTop="10">
-        <label gridPos="(0,0)" text="$preferences.future.month" styleClass="formLabel"/>
-        <comboBox gridPos="(1,0)" ref="futureMonth"/>
+        <label text="$preferences.future.month" styleClass="formLabel"/>
+        <comboBox ref="futureMonth"/>
+        <filler fill="horizontal"/>
+      </row>
+
+      <row weightY="0.1" marginTop="10" marginBottom="20">
+        <label text="$preferences.textDate" styleClass="formLabel"/>
+        <comboBox ref="textDate"/>
+        <label text="$preferences.numericDate" styleClass="formLabel" marginLeft="10"/>
+        <comboBox ref="numericDate"/>
         <filler fill="horizontal"/>
       </row>
 

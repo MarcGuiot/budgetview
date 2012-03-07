@@ -90,52 +90,11 @@ public class AccountPositionEditionPanel {
   }
 
   private void updateTransactionInfo(Glob account, GlobRepository transactionsRepository) {
-//    Glob transaction = getLatestTransactions(account, transactionsRepository);
-
-//    String date = "";
-//    String label = "";
-//    String amount = "";
-//    if (transaction != null) {
-//      Integer monthId = transaction.get(Transaction.BANK_MONTH);
-//      int month = Month.toMonth(monthId);
-//      Integer day = transaction.get(Transaction.BANK_DAY);
-//      date = Lang.get("transactionView.dateFormat",
-//                      (day < 10 ? "0" : "") + day,
-//                      (month < 10 ? "0" : "") + month,
-//                      Integer.toString(Month.toYear(monthId)));
-//      balanceDate = Month.toDate(monthId, day);
-//      label = transaction.get(Transaction.LABEL);
-//      amount = Formatting.DECIMAL_FORMAT.format(transaction.get(Transaction.AMOUNT));
-//    }
-//    else {
       balanceDate = Month.toDate(TimeService.getCurrentMonth(), TimeService.getCurrentDay());
-//    }
-
-//    transactionDateField.setText(date);
-//    transactionLabelField.setText(label);
-//    transactionAmountField.setText(amount);
-//
-//    if (transaction == null) {
       transactionDateField.setVisible(false);
       transactionLabelField.setVisible(false);
       transactionAmountField.setVisible(false);
-//    }
   }
-
-//  private Glob getLatestTransactions(Glob account, GlobRepository repository) {
-//    SortedSet<Glob> globSortedSet =
-//      repository.getSorted(
-//        Transaction.TYPE, TransactionComparator.ASCENDING_BANK_SPLIT_AFTER,
-//        and(fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)),
-//            isFalse(Transaction.PLANNED),
-//            or(fieldStrictlyLessThan(Transaction.BANK_MONTH, TimeService.getCurrentMonth()),
-//               and(fieldEquals(Transaction.BANK_MONTH, TimeService.getCurrentMonth()),
-//                   fieldLessOrEqual(Transaction.DAY, TimeService.getCurrentDay())))));
-//    if (!globSortedSet.isEmpty()) {
-//      return globSortedSet.last();
-//    }
-//    return null;
-//  }
 
   public void apply() {
     if (balanceDate != null) {

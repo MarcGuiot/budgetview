@@ -1,8 +1,6 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.model.BudgetStat;
-import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
-import org.designup.picsou.gui.accounts.position.MainAccountPositionLabels;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -10,7 +8,6 @@ import org.globsframework.model.utils.GlobMatcher;
 import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
 import java.util.Set;
 
 public class MainAccountViewPanel extends AccountViewPanel {
@@ -43,9 +40,5 @@ public class MainAccountViewPanel extends AccountViewPanel {
 
   protected AccountType getAccountType() {
     return AccountType.MAIN;
-  }
-
-  protected AccountPositionLabels createPositionLabels(Key accountKey) {
-    return new MainAccountPositionLabels(accountKey, repository, directory);
   }
 }

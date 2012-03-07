@@ -37,7 +37,9 @@ public class PicsouModel {
                           SeriesOrder.TYPE,
                           Project.TYPE,
                           ProjectItem.TYPE,
-                          RealAccount.TYPE
+                          RealAccount.TYPE,
+                          NumericDateType.TYPE,
+                          TextDateType.TYPE
                           )
       .get();
 

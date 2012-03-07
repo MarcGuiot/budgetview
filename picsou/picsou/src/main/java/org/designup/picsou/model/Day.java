@@ -1,5 +1,6 @@
 package org.designup.picsou.model;
 
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
@@ -28,6 +29,6 @@ public class Day {
   public static String getFullLabel(org.globsframework.model.Key dayKey) {
     int month = dayKey.get(Day.MONTH);
     int day = dayKey.get(Day.DAY);
-    return Lang.get("day.full", Integer.toString(Month.toYear(month)), Month.getFullMonthLabel(month), day);
+    return Formatting.getFullLabel(month, day);
   }
 }

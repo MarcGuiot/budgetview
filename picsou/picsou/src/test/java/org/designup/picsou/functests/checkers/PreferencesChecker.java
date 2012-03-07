@@ -19,17 +19,39 @@ public class PreferencesChecker extends GuiChecker {
     return this;
   }
 
-  public PreferencesChecker checkFutureMonthsCount(int month){
+  public PreferencesChecker checkFutureMonthsCount(int month) {
     assertThat(window.getComboBox("futureMonth").selectionEquals(Integer.toString(month)));
     return this;
   }
 
-  public void selectColorTheme(ColorTheme theme) {
+  public PreferencesChecker selectColorTheme(ColorTheme theme) {
     window.getToggleButton(theme.name()).click();
+    return this;
   }
 
-  public void checkColorThemeSelected(ColorTheme theme) {
+  public PreferencesChecker checkColorThemeSelected(ColorTheme theme) {
     assertThat(window.getToggleButton(theme.name()).isSelected());
+    return this;
+  }
+
+  public PreferencesChecker checkTextDateSelected(String text) {
+    assertThat(window.getComboBox("textDate").selectionEquals(text));
+    return this;
+  }
+
+  public PreferencesChecker selectTextDate(String text) {
+    window.getComboBox("textDate").select(text);
+    return this;
+  }
+
+  public PreferencesChecker checkNumericDateSelected(String numeric) {
+    assertThat(window.getComboBox("numericDate").selectionEquals(numeric));
+    return this;
+  }
+
+  public PreferencesChecker selectNumericDate(String numeric) {
+    window.getComboBox("numericDate").select(numeric);
+    return this;
   }
 
   public void cancel() {

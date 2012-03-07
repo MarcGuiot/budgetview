@@ -68,7 +68,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.getSummary()
       .checkMultiSelectionNotShown()
-      .checkReferencePosition("Position on 05/07/2008", 1500.00)
+      .checkReferencePosition("Position on 2008/07/05", 1500.00)
       .checkEndPosition(2300.00)
       .checkUncategorized(50.00);
 
@@ -104,7 +104,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.getSummary()
       .checkMultiSelectionNotShown()
-      .checkReferencePosition("Position on 05/07/2008", 1500.00)
+      .checkReferencePosition("Position on 2008/07/05", 1500.00)
       .checkEndPosition(2300.00)
       .checkUncategorizedNotShown();
 
@@ -112,7 +112,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.getSummary()
       .checkMultiSelectionNotShown()
-      .checkReferencePosition("Position on 05/07/2008", 1500.00)
+      .checkReferencePosition("Position on 2008/07/05", 1500.00)
       .checkEndPosition(3800.00)
       .checkUncategorizedNotShown();
   }

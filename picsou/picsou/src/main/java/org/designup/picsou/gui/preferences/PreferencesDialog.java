@@ -4,6 +4,8 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.preferences.components.ColorThemeItemFactory;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.ColorTheme;
+import org.designup.picsou.model.NumericDateType;
+import org.designup.picsou.model.TextDateType;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -49,13 +51,19 @@ public class PreferencesDialog {
     builder.addRepeat("colorThemes", ColorTheme.TYPE, GlobMatchers.ALL, GlobComparators.ascending(ColorTheme.ID),
                       colorThemeFactory);
 
+    builder.addComboEditor("textDate", UserPreferences.TEXT_DATE_TYPE)
+      .forceSelection(UserPreferences.KEY);
+
+    builder.addComboEditor("numericDate", UserPreferences.NUMERIC_DATE_TYPE)
+      .forceSelection(UserPreferences.KEY);
+
     dialog = PicsouDialog.create(parent, directory);
     dialog.addPanelWithButtons((JPanel)builder.load(), new OkAction(), new CancelAction());
   }
 
   private static LocalGlobRepository createLocalRepository(GlobRepository parentRepository) {
     return LocalGlobRepositoryBuilder.init(parentRepository)
-      .copy(UserPreferences.TYPE, ColorTheme.TYPE)
+      .copy(UserPreferences.TYPE, ColorTheme.TYPE, NumericDateType.TYPE, TextDateType.TYPE)
       .get();
   }
 

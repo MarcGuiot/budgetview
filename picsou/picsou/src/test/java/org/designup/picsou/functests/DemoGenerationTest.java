@@ -12,6 +12,9 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DemoGenerationTest extends LoggedInFunctionalTestCase {
+
+  private static final String LANG = "fr";
+
   private static final String PREVAYLER_DIR = "tmp/demo/";
   private static final String OFX_PATH = "tmp/demo.ofx";
   private static final String OFX_UPDATE_PATH = "tmp/demo_update.ofx";
@@ -46,8 +49,8 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   public static void main(String[] args) throws Exception {
 
     System.setProperty("uispec4j.test.library", "junit");
-    String lang = System.getProperty("LANG", "fr"); // sert dans le picous/pom.xml
-    Lang.setLocale(lang.equalsIgnoreCase("fr") ? Locale.FRANCE : Locale.ENGLISH);
+    String lang = System.getProperty("LANG", LANG); // sert dans le picous/pom.xml
+    Lang.setLocale(lang.equalsIgnoreCase(LANG) ? Locale.FRANCE : Locale.ENGLISH);
 
     DemoGenerationTest test = createTest();
     test.test();

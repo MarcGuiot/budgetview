@@ -2,17 +2,14 @@ package org.designup.picsou.gui.description;
 
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 
-import java.text.MessageFormat;
 import java.util.Comparator;
 
 public class TransactionDateStringifier extends AbstractGlobStringifier {
-  private static MessageFormat DATE_FORMAT = Lang.getFormat("transactionView.dateFormat");
   protected IntegerField monthField;
   protected IntegerField dayField;
 
@@ -38,11 +35,6 @@ public class TransactionDateStringifier extends AbstractGlobStringifier {
   }
 
   public static String toString(int year, int month, int day) {
-    return DATE_FORMAT.format(
-      new Object[]{
-        (day < 10 ? "0" : "") + day,
-        (month < 10 ? "0" : "") + month,
-        Integer.toString(year)
-      });
+    return Formatting.toString(year, month, day);
   }
 }

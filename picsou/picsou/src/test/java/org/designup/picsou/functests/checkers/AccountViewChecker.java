@@ -97,6 +97,11 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
     }
   }
 
+  public void checkAccountUpdateDate(String accountName, String dateText) {
+    Panel parentPanel = getAccountPanel(accountName);
+    UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals(dateText));
+  }
+
   public void checkAccountWithoutPosition(String accountName, String yyyymmdd) {
     Panel parentPanel = getAccountPanel(accountName);
     assertThat(parentPanel.getButton("accountPosition").textEquals("Click here to set the account position"));
@@ -107,7 +112,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
   public void checkDisplayIsEmpty(String accountName) {
     Panel parentPanel = getAccountPanel(accountName);
     UISpecAssert.assertTrue(parentPanel.getButton("accountPosition").textEquals("0.00"));
-    UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals("01/02/2006"));
+    UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals("2006/02/01"));
   }
 
   public T checkSummary(double amount, String updateDate) {
@@ -116,6 +121,12 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
     assertThat(getAccountsPanel().getTextBox("referencePositionDate").textEquals("on " + Formatting.toString(date)));
     return (T)this;
   }
+
+  public T checkReferencePositionDate(String text) {
+    assertThat(getAccountsPanel().getTextBox("referencePositionDate").textEquals(text));
+    return (T)this;
+  }
+
 
   public void checkPosition(String accountName, double position){
     Panel parentPanel = getAccountPanel(accountName);
@@ -201,6 +212,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
     Panel panel = getAccountPanel(accountName);
     checkComponentVisible(panel, JButton.class, "gotoWebsite", false);
   }
+
 
   private Panel getAccountsPanel() {
     if (accountsPanel == null) {

@@ -1,11 +1,16 @@
 package org.designup.picsou.gui.description;
 
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.NumericDateType;
+import org.designup.picsou.model.TextDateType;
 import org.designup.picsou.model.util.Amounts;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Strings;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -16,8 +21,13 @@ public class Formatting {
   public static final DecimalFormat TWO_DIGIT_INTEGER_FORMAT = new DecimalFormat("00");
   public static final DecimalFormat DECIMAL_FORMAT =
     new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.US));
-  public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
-  public static SimpleDateFormat YEAR_MONTH_FORMAT = new SimpleDateFormat("MMMMMMMMMM yyyy", Locale.FRANCE);
+
+  private static SimpleDateFormat dateFormat;
+  private static SimpleDateFormat yearMonthFormat;
+
+  private static MessageFormat dateMessageFormat;
+  private static SimpleDateFormat dateAndTimeFormat;
+  private static MessageFormat fullLabelFormat;
 
   public static String toString(Double value) {
     if (value == null) {
@@ -27,6 +37,27 @@ public class Formatting {
       value = +0.00;
     }
     return DECIMAL_FORMAT.format(value);
+  }
+
+  public static SimpleDateFormat getDateFormat() {
+    if (dateFormat == null) {
+      updateWithDefaults();
+    }
+    return dateFormat;
+  }
+
+  public static SimpleDateFormat getYearMonthFormat() {
+    if (yearMonthFormat == null) {
+      updateWithDefaults();
+    }
+    return yearMonthFormat;
+  }
+
+  public static SimpleDateFormat getDateAndTimeFormat() {
+    if (dateAndTimeFormat == null) {
+      updateWithDefaults();
+    }
+    return dateAndTimeFormat;
   }
 
   public static String toStringWithPlus(Double value) {
@@ -57,13 +88,13 @@ public class Formatting {
   }
 
   public static String toString(Date date) {
-    return DATE_FORMAT.format(date);
+    return dateFormat.format(date);
   }
 
   public static String toString(int year, int month) {
     GregorianCalendar calendar =
       new GregorianCalendar(year, month - 1, 1);
-    return Strings.capitalize(YEAR_MONTH_FORMAT.format(calendar.getTime()));
+    return Strings.capitalize(yearMonthFormat.format(calendar.getTime()));
   }
 
   public static String toString(Double value, BudgetArea area) {
@@ -79,5 +110,31 @@ public class Formatting {
     else {
       return "+" + toString(value);
     }
+  }
+
+  public static String toString(int year, int month, int day) {
+    return dateMessageFormat.format(
+      new Object[]{
+        Integer.toString(year),
+        (month < 10 ? "0" : "") + month,
+        (day < 10 ? "0" : "") + day
+      });
+  }
+
+  public static String getFullLabel(int month, int day) {
+    return fullLabelFormat.format(
+      new Object[]{Integer.toString(Month.toYear(month)), Month.getFullMonthLabel(month), day});
+  }
+
+  private static void updateWithDefaults() {
+    update(TextDateType.getDefault(), NumericDateType.getDefault());
+  }
+
+  public static void update(TextDateType textDate, NumericDateType numericDate) {
+    dateFormat = new SimpleDateFormat(numericDate.getFormat());
+    dateAndTimeFormat = new SimpleDateFormat(numericDate.getFormat() + " hh:mm:ss");
+    dateMessageFormat = Lang.createMessageFormatFromText(numericDate.getMessageFormat());
+    yearMonthFormat = new SimpleDateFormat("MMMMMMMMMM yyyy", Lang.getLocale());
+    fullLabelFormat = Lang.createMessageFormatFromText(textDate.getFormat());
   }
 }

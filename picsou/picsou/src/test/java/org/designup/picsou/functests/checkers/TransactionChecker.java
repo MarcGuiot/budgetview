@@ -36,6 +36,7 @@ public class TransactionChecker extends ViewChecker {
   private Table amountTable;
   private CheckBox showPlannedTransactionsCheckbox;
   private TextBox searchField;
+  private boolean useDisplayedDates;
 
   public static TransactionChecker init(Window window) {
     return new TransactionChecker(window);
@@ -57,8 +58,8 @@ public class TransactionChecker extends ViewChecker {
     if (table == null) {
       views.selectData();
       table = mainWindow.getTable("transactionsTable");
-      table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
-      table.setCellValueConverter(TransactionView.BANK_DATE_COLUMN_INDEX, new BankDateCellConverter());
+      table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter(useDisplayedDates));
+      table.setCellValueConverter(TransactionView.BANK_DATE_COLUMN_INDEX, new BankDateCellConverter(useDisplayedDates));
       table.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter(true));
     }
     return table;
@@ -363,6 +364,11 @@ public class TransactionChecker extends ViewChecker {
       .getHeader()
       .click(TransactionView.BANK_DATE_COLUMN_INDEX);
     return this;
+  }
+
+  public void setUseDisplayedDates() {
+    this.useDisplayedDates= true;
+    this.table = null;
   }
 
   public class TransactionAmountChecker {
