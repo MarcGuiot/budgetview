@@ -100,7 +100,7 @@ public class ImportSession {
     importRepository.startChangeSet();
     final Set<Integer> tmpAccountIds = new HashSet<Integer>();
     typedStream = new TypedInputStream(file);
-    importService.run(typedStream, referenceRepository, importRepository);
+    importService.run(typedStream, referenceRepository, importRepository, directory);
     importRepository.completeChangeSet();
     changes = importRepository.getCurrentChanges();
     changes.safeVisit(RealAccount.TYPE, new ChangeSetVisitor() {

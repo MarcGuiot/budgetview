@@ -30,6 +30,8 @@ public class ImportedTransaction {
 
   public static StringField QIF_P;
 
+  public static StringField CVS_LINE;
+
   public static StringField BANK_TRANSACTION_TYPE;  // N for qif, TRNTYPE for ofx. 
 
   public static BooleanField IS_CARD;

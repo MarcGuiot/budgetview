@@ -2,7 +2,8 @@ package org.designup.picsou.importer;
 
 public enum BankFileType {
   OFX,
-  QIF;
+  QIF,
+  CSV;
 
   public static BankFileType getTypeFromName(String fileName) {
     String lowerCase = fileName.toLowerCase();
@@ -14,6 +15,12 @@ public enum BankFileType {
     }
     if (lowerCase.endsWith(".qif")) {
       return QIF;
+    }
+    if (lowerCase.endsWith(".csv")) {
+      return CSV;
+    }
+    if (lowerCase.endsWith(".tsv")) {
+      return CSV;
     }
     return null;
   }

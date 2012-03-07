@@ -88,7 +88,7 @@ public class ImportPreviewPanel implements MessageHandler {
                                                               public void dateFormatSelected(String format) {
                                                                 dateRenderer.changeDateFormat(format);
                                                               }
-                                                            }, message);
+                                                            });
     builder.add("dateSelectionPanel", dateFormatSelectionPanel.getBuilder());
     sessionDirectory = new DefaultDirectory(localDirectory);
     sessionDirectory.add(new SelectionService());

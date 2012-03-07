@@ -5,6 +5,7 @@ import org.designup.picsou.model.SignpostSectionType;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -39,6 +40,7 @@ public class UserProgressInfoSender {
     for (BooleanField field : FIELDS_TO_SEND) {
       builder.append(", " + field.getName() + ": " + status.get(field, Boolean.FALSE));
     }
+    builder.append(" lang: " + Lang.getLang());
     try {
       directory.get(ConfigService.class).sendUsageData(builder.toString());
     }

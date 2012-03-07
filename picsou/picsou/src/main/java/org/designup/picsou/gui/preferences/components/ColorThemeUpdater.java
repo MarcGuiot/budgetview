@@ -10,6 +10,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
 import java.util.Set;
 
 public class ColorThemeUpdater {
@@ -39,5 +40,9 @@ public class ColorThemeUpdater {
     Integer themeId = preferences.get(UserPreferences.COLOR_THEME);
     ColorTheme theme = ColorTheme.get(themeId);
     directory.get(ColorService.class).setCurrentSet(theme.getFilePath());
+    JFrame frame = directory.get(JFrame.class);
+    if (frame != null) {
+      frame.repaint();
+    }
   }
 }

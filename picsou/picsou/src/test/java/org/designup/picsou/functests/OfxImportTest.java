@@ -298,7 +298,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
         public Trigger process(Window window) throws Exception {
           window.getInputTextBox("fileField").setText(file.getAbsolutePath());
           window.getButton("Import").click();
-          assertTrue(window.getTextBox("importMessage").textContains("only OFX and QIF files are supported"));
+          assertTrue(window.getTextBox("importMessage").textContains("only OFX, QIF and CSV or TSV files are supported"));
           return window.getButton("Close").triggerClick();
         }
       })

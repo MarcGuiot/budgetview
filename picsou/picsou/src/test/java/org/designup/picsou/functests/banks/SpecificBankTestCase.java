@@ -24,6 +24,9 @@ public abstract class SpecificBankTestCase extends LoggedInFunctionalTestCase {
     if (fileNameToImport.endsWith(".qif")) {
       fileExtension = ".qif";
     }
+    if (fileNameToImport.endsWith(".csv")){
+      fileExtension = ".csv";
+    }
     String fileName = TestUtils.getFileName(test, fileExtension);
     InputStream stream = QifImportTest.class.getResourceAsStream(DIRECTORY + fileNameToImport);
     if (stream == null) {

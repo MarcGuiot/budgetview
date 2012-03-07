@@ -136,6 +136,9 @@ public class SavingsSeriesView implements Disposable {
   private class SavingsSeriesFilter implements GlobMatcher {
     public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
       Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
+      if (series == null){
+        return false;
+      }
       ReadOnlyGlobRepository.MultiFieldIndexed seriesBudgetIndex =
         repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID));
       int notActive = 0;

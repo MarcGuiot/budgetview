@@ -14,6 +14,7 @@ public class DateFormatAnalyzer {
   }
 
   public List<String> parse(Set<String> dates) throws InvalidData {
+    dates.remove(null);
     List<String> result = getAllFormats();
 
     int maxFirst = 0;
