@@ -41,7 +41,7 @@ public class DateFormatTrigger implements ChangeSetListener {
       return;
     }
     if (preferences.get(UserPreferences.TEXT_DATE_TYPE) == null) {
-      repository.update(UserPreferences.KEY, 
+      repository.update(UserPreferences.KEY,
                         UserPreferences.TEXT_DATE_TYPE, 
                         TextDateType.getDefault().getId());
     }

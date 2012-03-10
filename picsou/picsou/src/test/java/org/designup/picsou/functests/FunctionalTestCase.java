@@ -26,9 +26,15 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
-    Locale.setDefault(Lang.ROOT);
+    Locale locale = getDefaultLocale();
+    Locale.setDefault(locale);
+    Lang.setLocale(locale);
     Log.reset();
     AWTAutoShutdown.notifyToolkitThreadBusy();
+  }
+
+  protected Locale getDefaultLocale() {
+    return Lang.ROOT;
   }
 
   protected void tearDown() throws Exception {

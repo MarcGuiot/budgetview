@@ -97,13 +97,24 @@ public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
   }
 
   public void checkTooltip(int monthId, int dayId, String expected) {
+    String actual = getTooltip(monthId, dayId);
+    Assert.assertEquals(expected, actual);
+  }
+
+  public void checkTooltipContains(int monthId, int dayId, String text) {
+    String actual = getTooltip(monthId, dayId);
+    if (!actual.contains(text)) {
+      Assert.fail("'" + text + "' not found in:\n" + actual);
+    }
+  }
+
+  private String getTooltip(int monthId, int dayId) {
     HistoDailyDataset dataset = getDataset();
     int monthIndex = dataset.getIndex(monthId);
     if (monthIndex < 0) {
       Assert.fail("Month " + monthId + " not found");
     }
-    String actual = dataset.getTooltip(monthIndex, Key.create(Day.MONTH, monthId, Day.DAY, dayId - 1));
-    Assert.assertEquals(expected, actual);
+    return dataset.getTooltip(monthIndex, Key.create(Day.MONTH, monthId, Day.DAY, dayId - 1));
   }
 
   public HistoDailyDataset getDataset() {

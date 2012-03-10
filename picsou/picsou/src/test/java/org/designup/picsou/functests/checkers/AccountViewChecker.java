@@ -127,6 +127,11 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
     return (T)this;
   }
 
+  public T checkReferencePositionDateContains(String text) {
+    assertThat(getAccountsPanel().getTextBox("referencePositionDate").textContains(text));
+    return (T)this;
+  }
+
 
   public void checkPosition(String accountName, double position){
     Panel parentPanel = getAccountPanel(accountName);

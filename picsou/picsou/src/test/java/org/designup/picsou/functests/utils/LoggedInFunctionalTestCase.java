@@ -203,6 +203,10 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     catch (Exception e) {
       e.printStackTrace();
     }
+    clearCheckers();
+  }
+
+  protected void clearCheckers() {
     views = null;
     mainAccounts = null;
     savingsAccounts = null;
@@ -231,6 +235,14 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     printer = null;
     application =null;
     repository = null;
+  }
+
+  protected void shutdown() {
+    if (application != null) {
+      application.dispose();
+    }
+    mainWindow = null;
+    clearCheckers();
   }
 
   public OperationChecker getOperations() {

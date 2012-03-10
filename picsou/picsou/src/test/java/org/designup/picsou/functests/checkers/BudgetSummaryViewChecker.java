@@ -26,6 +26,11 @@ public class BudgetSummaryViewChecker extends ViewChecker {
     return this;
   }
 
+  public BudgetSummaryViewChecker checkReferencePositionTitleContains(String title) {
+    assertThat(getPanel().getTextBox("lastPositionTitle").textContains(title));
+    return this;
+  }
+
   public BudgetSummaryViewChecker checkReferencePosition(String title, double amount) {
     assertThat(getPanel().getTextBox("lastPositionTitle").textEquals(title));
     return checkReferencePosition(amount);

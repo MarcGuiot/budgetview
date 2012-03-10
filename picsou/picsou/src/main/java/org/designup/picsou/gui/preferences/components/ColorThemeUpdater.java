@@ -40,7 +40,7 @@ public class ColorThemeUpdater {
     Integer themeId = preferences.get(UserPreferences.COLOR_THEME);
     ColorTheme theme = ColorTheme.get(themeId);
     directory.get(ColorService.class).setCurrentSet(theme.getFilePath());
-    JFrame frame = directory.get(JFrame.class);
+    JFrame frame = directory.find(JFrame.class);
     if (frame != null) {
       frame.repaint();
     }
