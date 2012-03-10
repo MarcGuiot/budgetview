@@ -19,11 +19,9 @@ public class CsvMapping {
   @Key
   public static IntegerField ID;
   
-  public static IntegerField IMPORT;
+  public static StringField FIELD_NAME;
 
-  public static StringField FROM;
-
-  public static StringField TO;
+  public static StringField CSV_TYPE_NAME;
 
   static {
     GlobTypeLoader.init(CsvMapping.class);
@@ -38,22 +36,17 @@ public class CsvMapping {
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
-      outputStream.writeInteger(values.get(IMPORT));
-      outputStream.writeUtf8String(values.get(FROM));
-      outputStream.writeUtf8String(values.get(TO));
+      outputStream.writeUtf8String(values.get(FIELD_NAME));
+      outputStream.writeUtf8String(values.get(CSV_TYPE_NAME));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
       if (version == 1) {
         SerializedInput input = SerializedInputOutputFactory.init(data);
-        fieldSetter.set(IMPORT, input.readInteger());
-        fieldSetter.set(FROM, input.readUtf8String());
-        fieldSetter.set(TO, input.readUtf8String());
+        fieldSetter.set(FIELD_NAME, input.readUtf8String());
+        fieldSetter.set(CSV_TYPE_NAME, input.readUtf8String());
       }
     }
-
   }
-
-  ;
 }

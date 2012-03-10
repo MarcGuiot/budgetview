@@ -18,9 +18,9 @@ public class CsvType {
   @Key
   public static IntegerField ID;
 
-  public static StringField DATE_OPERATION;
+  public static StringField USER_DATE;
 
-  public static StringField DATE_BANK;
+  public static StringField BANK_DATE;
 
   public static StringField LABEL;
 
@@ -42,80 +42,89 @@ public class CsvType {
     GlobTypeLoader.init(CsvType.class);
   }
 
-  interface Translate {
-    Translate NULL = new Translate() {
-      public String getUpdate(Object previous, String newValue) {
+  interface CsvConverter {
+    CsvConverter DEFAULT = new CsvConverter() {
+      public String convert(Object previous, String newValue) {
         return newValue;
       }
     };
 
-    Object getUpdate(Object previous, String newValue);
+    Object convert(Object previous, String newValue);
   }
 
-  private static Name[] NAMES = new Name[]{getName(NOT_IMPORTED, null, null),
-                            getName(DATE_OPERATION, ImportedTransaction.BANK_DATE, Translate.NULL),
-                            getName(DATE_BANK, ImportedTransaction.DATE, Translate.NULL),
-                            getName(LABEL, ImportedTransaction.QIF_M, new CancatTranslate()),
-                            getName(NOTE, ImportedTransaction.NOTE, new CancatTranslate()),
-                            getName(AMOUNT, ImportedTransaction.AMOUNT, new Translate() {
-                              public Object getUpdate(Object previous, String newValue) {
-                                return Amounts.extractAmount(newValue);
-                              }
-                            }),
-                            getName(DEBIT, ImportedTransaction.AMOUNT, new Translate() {
-                              public Object getUpdate(Object previous, String newValue) {
-                                if (Strings.isNullOrEmpty(newValue)) {
-                                  return previous;
-                                }
-                                return -(Math.abs(Amounts.extractAmount(newValue)));
-                              }
-                            }),
-                            getName(CREDIT, ImportedTransaction.AMOUNT, new Translate() {
-                              public Object getUpdate(Object previous, String newValue) {
-                                if (Strings.isNullOrEmpty(newValue)) {
-                                  return previous;
-                                }
-                                return (Math.abs(Amounts.extractAmount(newValue)));
-                              }
-                            }),
-                            getName(ENVELOPE, null, null),
-                            getName(SUB_ENVELOPE, null, null)};
+  private static Mapper[] MAPPERS = new Mapper[]{
+    getMapper(NOT_IMPORTED, null, null),
+    getMapper(USER_DATE, ImportedTransaction.DATE, CsvConverter.DEFAULT,
+              "user date", "date d'operation"),
+    getMapper(BANK_DATE, ImportedTransaction.BANK_DATE, CsvConverter.DEFAULT,
+              "bank date", "date banque", "date de banque", "date valeur","date de valeur"),
+    getMapper(LABEL, ImportedTransaction.QIF_M, new ConcatCsvConverter(),
+              "label", "libelle"),
+    getMapper(NOTE, ImportedTransaction.NOTE, new ConcatCsvConverter(),
+              "note"),
+    getMapper(AMOUNT, ImportedTransaction.AMOUNT, new CsvConverter() {
+      public Object convert(Object previous, String newValue) {
+        return Amounts.extractAmount(newValue);
+      }
+    }, "amount", "montant"),
+    getMapper(DEBIT, ImportedTransaction.AMOUNT, new CsvConverter() {
+      public Object convert(Object previous, String newValue) {
+        if (Strings.isNullOrEmpty(newValue)) {
+          return previous;
+        }
+        return -(Math.abs(Amounts.extractAmount(newValue)));
+      }
+    }, "debit"),
+    getMapper(CREDIT, ImportedTransaction.AMOUNT, new CsvConverter() {
+      public Object convert(Object previous, String newValue) {
+        if (Strings.isNullOrEmpty(newValue)) {
+          return previous;
+        }
+        return (Math.abs(Amounts.extractAmount(newValue)));
+      }
+    }, "credit"),
+    getMapper(ENVELOPE, null, null,
+              "envelope", "enveloppe", "category", "categorie"),
+    getMapper(SUB_ENVELOPE, null, null,
+              "sub envelope", "sub category", "sous enveloppe", "sous categorie")
+  };
 
-  public static class Name {
+  public static class Mapper {
     public final StringField field;
     public final String name;
-    public final Field importTransactionField;
-    public final Translate translate;
+    public final Field importedTransactionField;
+    public final CsvConverter converter;
+    public final String[] defaultFieldNames;
 
-
-    public Name(StringField field, String name, Field importTransactionField, Translate translate) {
+    public Mapper(StringField field, String name, Field importedTransactionField, CsvConverter converter, String[] defaultFieldNames) {
       this.field = field;
       this.name = name;
-      this.importTransactionField = importTransactionField;
-      this.translate = translate;
+      this.importedTransactionField = importedTransactionField;
+      this.converter = converter;
+      this.defaultFieldNames = defaultFieldNames;
     }
   }
-  
-  public static Name get(String lookForName){
-    for (Name name : NAMES) {
-      if (name.field.getName().equals(lookForName)){
-        return name;
+
+  public static Mapper get(String name) {
+    for (Mapper mapper : MAPPERS) {
+      if (mapper.field.getName().equals(name)) {
+        return mapper;
       }
     }
     return null;
   }
 
-  public static Name[] getValues() {
-    return NAMES;
+  public static Mapper[] getMappers() {
+    return MAPPERS;
   }
 
-  private static Name getName(final StringField field, Field importTransactionField, Translate translate) {
-    String name = Lang.get("importer.csv.field.name." + field.getName());
-    return new Name(field, name, importTransactionField, translate);
+  private static Mapper getMapper(final StringField field, Field importedTransactionField, CsvConverter translate, String... defaultFieldNames) {
+    String name = Lang.get("importer.csv.field.mapper." + field.getName());
+    return new Mapper(field, name, importedTransactionField, translate, defaultFieldNames);
   }
 
-  private static class CancatTranslate implements Translate {
-    public String getUpdate(Object previous, String newValue) {
+  private static class ConcatCsvConverter implements CsvConverter {
+    public String convert(Object previous, String newValue) {
       return previous == null ? newValue : previous + " " + newValue;
     }
   }

@@ -295,20 +295,18 @@ public class ImportPreviewPanel implements MessageHandler {
     }
 
     public void actionPerformed(ActionEvent event) {
-      Log.write("finish");
       setEnabled(false);
       try {
         if (currentlySelectedAccount == null && !accountEditionPanel.check()) {
-          Log.write("finish account check fail");
+          Log.write("Import: finish account check failed");
           return;
         }
         if (currentlySelectedAccount != null && Account.SUMMARY_ACCOUNT_IDS.contains(currentlySelectedAccount.get(Account.ID))){
-          Log.write("BUG : Summary account");
+          Log.write("Import bug: Using summary account");
           return;
         }
         showStep2Message("");
         if (!dateFormatSelectionPanel.check()) {
-          Log.write("finish missing date");
           return;
         }
         if (currentlySelectedAccount == null) {
@@ -325,7 +323,6 @@ public class ImportPreviewPanel implements MessageHandler {
         sessionRepository.update(currentlySelectedAccount.getKey(), Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
         newAccount = null;
         controller.completeImport(importedAccount, currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
-        Log.write("finish ok");
       }
       finally {
         setEnabled(true);

@@ -93,4 +93,9 @@ public class StringsTest extends TestCase {
                                    "  Three  "));
 
   }
+
+  public void testUnaccent() throws Exception {
+    assertEquals("aaaa eeeee iii ooo uuu", Strings.unaccent("aàäâ eéèêë iïî oöô uùü"));
+    assertEquals("AAAA EEEEE III OOO UUU", Strings.unaccent("AÀÄÂ EÉÈÊË IÏÎ OÖÔ UÙÜ"));
+  }
 }

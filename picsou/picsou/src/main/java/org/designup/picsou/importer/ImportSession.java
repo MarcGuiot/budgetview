@@ -79,7 +79,6 @@ public class ImportSession {
   }
 
   public List<String> loadFile(File file, final Glob synchronizedAccount) throws IOException, TruncatedFile, NoOperations {
-    Log.write("loadFile");
     this.importSeries = null;
     this.realAccount = synchronizedAccount;
     importChangeSet = new DefaultChangeSet();
@@ -140,7 +139,7 @@ public class ImportSession {
     accountCount = accountIds.size();
     if (synchronizedAccount != null) {
       if (accountIds.size() > 1) {
-        Log.write("mulitple account : ignoring realAccount");
+        Log.write("Import multiple accounts: ignoring realAccount");
       }
       else {
         if (accountIds.size() == 1) {
@@ -157,15 +156,12 @@ public class ImportSession {
       }
     }
     List<String> dateFormat = getImportedTransactionFormat(importRepository);
-    Log.write("loadFile ok");
     return dateFormat;
   }
 
   private Glob readNext() throws NoOperations {
-    Log.write("readNext");
     if (accountIds.isEmpty()) {
       load = false;
-      Log.write("readNext no op");
       throw new NoOperations();
     }
 
@@ -196,7 +192,6 @@ public class ImportSession {
     }
 
     lastLoadOperationsCount = importedOperations.size();
-    Log.write("readNext ok with " + lastLoadOperationsCount);
     return currentImportedAccount;
   }
 
@@ -234,10 +229,8 @@ public class ImportSession {
   }
 
   public Key importTransactions(Glob importedAccount, Glob currentlySelectedAccount, String selectedDateFormat) {
-    Log.write("importTransactions");
     localRepository.delete(Key.create(CurrentAccountInfo.TYPE, 0));
     if (!load) {
-      Log.write("importTransactions !load");
       return null;
     }
     if (accountIds.isEmpty()) {
@@ -298,7 +291,6 @@ public class ImportSession {
       referenceRepository.completeChangeSet();
     }
     importedOperationsCount += lastLoadOperationsCount;
-    Log.write("importTransactions ok");
     return importKey;
   }
 

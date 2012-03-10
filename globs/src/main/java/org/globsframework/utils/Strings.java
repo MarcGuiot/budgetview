@@ -166,6 +166,21 @@ public class Strings {
     return result.toString();
   }
 
+  public static String unaccent(String text) {
+    return text
+      .replaceAll("[èéêë]", "e")
+      .replaceAll("[ûùü]", "u")
+      .replaceAll("[ïî]", "i")
+      .replaceAll("[àâä]", "a")
+      .replaceAll("[ôö]", "o")
+
+      .replaceAll("[ÈÉÊË]", "E")
+      .replaceAll("[ÛÙÜ]", "U")
+      .replaceAll("[ÏÎ]", "I")
+      .replaceAll("[ÀÂÄ]", "A")
+      .replaceAll("[ÔÖ]", "O");
+  }
+
   public static String[] toUpperCase(String[] labels) {
     String[] result = new String[labels.length];
     for (int i = 0; i < labels.length; i++) {

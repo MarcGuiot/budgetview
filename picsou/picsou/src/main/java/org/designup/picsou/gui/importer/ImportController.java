@@ -79,11 +79,10 @@ public class ImportController {
   }
 
   private void next(boolean first) {
-    Log.write("next");
     if (!isSynchro) {
       if (!realAccountWithoutImport.isEmpty()) {
         importDialog.showNoImport(realAccountWithoutImport.remove(0), first);
-        Log.write("next noAccount");
+        Log.write("Import:next: noAccount");
         return;
       }
     }
@@ -99,18 +98,15 @@ public class ImportController {
     if (nextImport()) {
       importDialog.showPreview();
     }
-    Log.write("next ok");
   }
 
   public boolean nextImport() {
-    Log.write("nextImport");
     {
       Ref<Integer> accountCount = new Ref<Integer>();
       Ref<Integer> accountNumber = new Ref<Integer>();
       Glob importedAccount = importSession.gotoNextContent(accountNumber, accountCount);
       if (importedAccount != null) {
         importDialog.updateForNextImport(null, null, importedAccount, accountNumber.get(), accountCount.get());
-        Log.write("nextImport as next");
         return true;
       }
     }
@@ -118,7 +114,6 @@ public class ImportController {
     synchronized (selectedFiles) {
       if (selectedFiles.isEmpty() && realAccountWithImport.isEmpty()) {
         step2 = false;
-        Log.write("nextImport no more file");
       }
     }
     if (!step2) {
@@ -131,11 +126,10 @@ public class ImportController {
                                          importSession.getImportedOperationsCount(),
                                          autoCategorizationFunctor.getAutocategorizedTransaction(),
                                          autoCategorizationFunctor.getTransactionCount());
-        Log.write("nextImport complete");
         return false;
       }
       catch (Exception e) {
-        Log.write("nextImport", e);
+        Log.write("Exception in Import:nextImport", e);
         return false;
       }
     }
@@ -159,12 +153,10 @@ public class ImportController {
       Glob importedAccount = importSession.gotoNextContent(accountNumber, accountCount);
       if (importedAccount != null) {
         importDialog.updateForNextImport(file.getAbsolutePath(),  dateFormats, importedAccount, accountNumber.get(), accountCount.get());
-        Log.write("nextImport as next content");
         return true;
       }
       String message = Lang.get("import.file.empty", file.getAbsolutePath());
       importDialog.showMessage(message);
-      Log.write("nextImport empty file");
       return false;
     }
     catch (Exception e) {
@@ -176,7 +168,6 @@ public class ImportController {
   }
 
   public void commitAndClose(Set<Integer> months) {
-    Log.write("import end");
     openRequestManager.popCallback();
     localRepository.commitChanges(true);
     importDialog.showLastImportedMonthAndClose(months);
@@ -200,7 +191,6 @@ public class ImportController {
   }
 
   public void completeImport(Glob importedAccount, Glob currentAccount, String dateFormat) {
-    Log.write("completeImport");
     Set<Key> newSeries = importSession.getNewSeries();
     if (!newSeries.isEmpty()){
       importSession.importSeries(importDialog.askForSeriesImport(newSeries));
@@ -210,7 +200,6 @@ public class ImportController {
       importKeys.add(importKey.get(TransactionImport.ID));
     }
     nextImport();
-    Log.write("completeImport ok");
   }
 
   public void complete() {

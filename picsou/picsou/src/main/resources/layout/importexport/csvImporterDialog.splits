@@ -1,0 +1,42 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd" xmlns="">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="header label" font="-,plain,11"
+           foreground="block.inner.columnTitle" horizontalTextPosition="right"
+           fill="none"/>
+    <style selector="column#association" margin="4"/>
+    <style selector="label#first" font="-,bold,13" fill="none" anchor="right"
+           marginRight="10" marginBottom="5" marginTop="5"/>
+    <style selector="label#second" marginLeft="10" font="-,plain,11" fill="none" anchor="right" marginRight="10"/>
+    <style selector="comboBox#dataName"  marginBottom="5" marginTop="5"/>
+    <style selector="scrollPane" border="matte(1,1,0,1,block.inner.border)"/>
+  </styles>
+
+  <panel styleClass="dialog" preferredSize="(600,650)">
+
+    <column styleClass="innerDialog">
+
+      <label text="$import.csv.title" name="title" styleClass="title"/>
+
+      <scrollPane forceVerticalScroll="true" weightY="100">
+        <repeat ref="csvAssociationsRepeat" layout="verticalGrid">
+          <column name="association">
+            <label ref="first"/>
+            <label ref="second"/>
+          </column>
+          <comboBox ref="dataName"/>
+        </repeat>
+      </scrollPane>
+
+      <row weightY="0.1" marginTop="5" marginBottom="15">
+        <label text="$import.csv.separator"/>
+        <radioButton ref="separatorSep1"/>
+        <radioButton ref="separatorSep2"/>
+        <radioButton ref="separatorSep3"/>
+        <radioButton ref="separatorSep4"/>
+        <filler fill="horizontal"/>
+      </row>
+    </column>
+  </panel>
+</splits>
