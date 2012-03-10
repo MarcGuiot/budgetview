@@ -1,11 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
-import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.FooterBannerChecker;
-import org.uispec4j.TextBox;
 import org.uispec4j.Window;
-
-import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 
 public class DemoMessageChecker {
 

@@ -3,6 +3,7 @@ package org.designup.picsou.gui.importer.csv;
 import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.importer.utils.TypedInputStream;
+import org.designup.picsou.model.CsvMapping;
 import org.designup.picsou.model.ImportedSeries;
 import org.designup.picsou.model.ImportedTransaction;
 import org.designup.picsou.model.RealAccount;
@@ -24,18 +25,16 @@ import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.ItemNotFound;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
 
 public class CsvImporterPanel {
@@ -49,10 +48,16 @@ public class CsvImporterPanel {
   private final GlobsPanelBuilder builder;
   private final List<FieldToAssociate> associates = new ArrayList<FieldToAssociate>();
   private Repeat<FieldToAssociate> repeat;
+  private GlobRepository initialRepository;
 
-  public CsvImporterPanel(Window parent, TypedInputStream inputStream, GlobRepository globRepository, Directory directory) {
+  public CsvImporterPanel(Window parent, TypedInputStream inputStream, GlobRepository initialRepository,
+                          GlobRepository globRepository, Directory directory) {
+    this.initialRepository = initialRepository;
     this.localDirectory = new DefaultDirectory(directory);
-    this.localRepository = LocalGlobRepositoryBuilder.init(globRepository).get();
+    this.localRepository =
+      LocalGlobRepositoryBuilder.init(globRepository)
+        .copy(CsvMapping.TYPE, ImportedSeries.TYPE)
+        .get();
     builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importCsvPanel.splits", localRepository, localDirectory);
     initPanel(builder, inputStream);
     this.dialog = PicsouDialog.create(parent, directory);
@@ -106,11 +111,19 @@ public class CsvImporterPanel {
       }
       localRepository.update(targetGlob.getKey(), ImportedTransaction.ACCOUNT, accountId);
     }
+    initialRepository.deleteAll(CsvMapping.TYPE);
+    for (FieldToAssociate associate : associates) {
+      if (associate.target != null){
+        initialRepository.create(CsvMapping.TYPE,
+                               FieldValue.value((CsvMapping.FROM), associate.field.getName()),
+                               FieldValue.value((CsvMapping.TO), associate.target.field.getName()));
+      }
+    }
     localRepository.commitChanges(true);
   }
 
   static class FieldToAssociate {
-    StringField field;
+    public final StringField field;
     public CsvType.Name target;
 
     public FieldToAssociate(StringField field) {
@@ -182,7 +195,7 @@ public class CsvImporterPanel {
     });
   }
 
-  private void initFirstCsvLine(){
+  private void initFirstCsvLine() {
     try {
       globs.clear();
       associates.clear();
@@ -218,6 +231,17 @@ public class CsvImporterPanel {
         FieldToAssociate associate = new FieldToAssociate((StringField)item);
         associates.add(associate);
       }
+      GlobList csvMappings = initialRepository.getAll(CsvMapping.TYPE);
+      Map<String, Glob> csvMapping = new HashMap<String, Glob>();
+      for (Glob mapping : csvMappings) {
+        csvMapping.put(mapping.get(CsvMapping.FROM), mapping);
+      }
+      for (FieldToAssociate associate : associates) {
+        Glob glob = csvMapping.get(associate.field.getName());
+        if (glob != null){
+          associate.target = CsvType.get(glob.get(CsvMapping.TO)); 
+        }
+      }
       repeat.set(associates);
     }
     catch (Exception e) {
@@ -236,6 +260,9 @@ public class CsvImporterPanel {
       cellBuilder.add("first", new JLabel(field.getName()));
       cellBuilder.add("second", new JLabel(globs.get(0).get(field)));
       final JComboBox component = new JComboBox(CsvType.getValues());
+      if (fieldToAssociate.target != null) {
+        component.setSelectedItem(fieldToAssociate.target);
+      }
       component.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           fieldToAssociate.target = (CsvType.Name)component.getSelectedItem();

@@ -14,10 +14,10 @@ import java.io.IOException;
 
 public class ImportService {
 
-  public void run(TypedInputStream fileStream, ReadOnlyGlobRepository initialRepository,
+  public void run(TypedInputStream fileStream, GlobRepository initialRepository,
                   GlobRepository targetRepository, Directory directory) throws IOException, ItemNotFound, TruncatedFile {
     if (fileStream.getType() == BankFileType.CSV) {
-      new CsvImporterPanel(null, fileStream, targetRepository, directory).show();
+      new CsvImporterPanel(null, fileStream, initialRepository, targetRepository, directory).show();
       return;
     }
     AccountFileImporter importer = getImporter(fileStream.getType());

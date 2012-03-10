@@ -1,12 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.functests.checkers.components.FooterBannerChecker;
-import org.uispec4j.TextBox;
 import org.uispec4j.Window;
-
-import javax.swing.*;
-
-import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class NewVersionChecker {
 
