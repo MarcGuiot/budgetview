@@ -39,7 +39,8 @@ public class PicsouModel {
                           ProjectItem.TYPE,
                           RealAccount.TYPE,
                           NumericDateType.TYPE,
-                          TextDateType.TYPE
+                          TextDateType.TYPE,
+                          CsvMapping.TYPE
                           )
       .get();
 

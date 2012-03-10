@@ -102,7 +102,7 @@ public class Dates {
       return simpleDateFormat.parse(str);
     }
     catch (ParseException e) {
-      e.printStackTrace();
+      Log.write("No date in " + str);
       return null;
     }
   }

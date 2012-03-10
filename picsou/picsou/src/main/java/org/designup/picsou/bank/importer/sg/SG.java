@@ -13,6 +13,7 @@ import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -55,6 +56,7 @@ public class SG extends WebBankPage {
 
   public static void main(String[] args) throws IOException {
     DefaultDirectory defaultDirectory = new DefaultDirectory();
+    defaultDirectory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     defaultDirectory.add(SelectionService.class, new SelectionService());
     defaultDirectory.add(DescriptionService.class, new PicsouDescriptionService());
     OpenRequestManager openRequestManager = new OpenRequestManager();
@@ -250,7 +252,7 @@ public class SG extends WebBankPage {
               hasError = false;
               return;
             }
-            List<HtmlTable> tables = content.getElementsByAttribute(HtmlTable.TAG_NAME, "class", "LGNTableA");
+            List<HtmlTable> tables = content.getElementsByAttribute(HtmlTable.TAG_NAME, "class", "LGNTableA ListePrestation");
             if (tables.size() != 1) {
               throw new RuntimeException("Find " + tables.size() + " table(s) in " + page.asXml());
             }
