@@ -86,10 +86,10 @@ public class ImportSession {
     importChangeSetAggregator = new ChangeSetAggregator(localRepository, importChangeSet);
     load = true;
     localRepository.reset(GlobList.EMPTY, Transaction.TYPE, ImportedTransaction.TYPE, MonthDay.TYPE, CurrentMonth.TYPE,
-                          DeferredCardDate.TYPE, AccountCardType.TYPE, AccountType.TYPE, BudgetArea.TYPE);
+                          DeferredCardDate.TYPE, AccountCardType.TYPE, AccountType.TYPE, BudgetArea.TYPE, CsvMapping.TYPE);
     GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, MonthDay.TYPE, DeferredCardDate.TYPE,
                         AccountCardType.TYPE, CurrentMonth.TYPE, Month.TYPE, CurrentAccountInfo.TYPE,
-                        RealAccount.TYPE, Series.TYPE, SubSeries.TYPE, TransactionImport.TYPE};
+                        RealAccount.TYPE, Series.TYPE, SubSeries.TYPE, TransactionImport.TYPE, CsvMapping.TYPE};
     localRepository.reset(referenceRepository.getAll(types), types);
 
     LocalGlobRepository importRepository;

@@ -106,7 +106,7 @@ public class ImportDialog {
     GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, MonthDay.TYPE,
                             Account.TYPE, AccountUpdateMode.TYPE, BudgetArea.TYPE,
                             Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE,
-                            Series.TYPE, SubSeries.TYPE, ImportedSeries.TYPE, TransactionImport.TYPE};
+                            Series.TYPE, SubSeries.TYPE, ImportedSeries.TYPE, TransactionImport.TYPE, CsvMapping.TYPE};
 
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)

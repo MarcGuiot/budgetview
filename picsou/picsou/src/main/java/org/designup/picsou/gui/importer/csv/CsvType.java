@@ -52,6 +52,35 @@ public class CsvType {
     Object getUpdate(Object previous, String newValue);
   }
 
+  private static Name[] NAMES = new Name[]{getName(NOT_IMPORTED, null, null),
+                            getName(DATE_OPERATION, ImportedTransaction.BANK_DATE, Translate.NULL),
+                            getName(DATE_BANK, ImportedTransaction.DATE, Translate.NULL),
+                            getName(LABEL, ImportedTransaction.QIF_M, new CancatTranslate()),
+                            getName(NOTE, ImportedTransaction.NOTE, new CancatTranslate()),
+                            getName(AMOUNT, ImportedTransaction.AMOUNT, new Translate() {
+                              public Object getUpdate(Object previous, String newValue) {
+                                return Amounts.extractAmount(newValue);
+                              }
+                            }),
+                            getName(DEBIT, ImportedTransaction.AMOUNT, new Translate() {
+                              public Object getUpdate(Object previous, String newValue) {
+                                if (Strings.isNullOrEmpty(newValue)) {
+                                  return previous;
+                                }
+                                return -(Math.abs(Amounts.extractAmount(newValue)));
+                              }
+                            }),
+                            getName(CREDIT, ImportedTransaction.AMOUNT, new Translate() {
+                              public Object getUpdate(Object previous, String newValue) {
+                                if (Strings.isNullOrEmpty(newValue)) {
+                                  return previous;
+                                }
+                                return (Math.abs(Amounts.extractAmount(newValue)));
+                              }
+                            }),
+                            getName(ENVELOPE, null, null),
+                            getName(SUB_ENVELOPE, null, null)};
+
   public static class Name {
     public final StringField field;
     public final String name;
@@ -66,36 +95,18 @@ public class CsvType {
       this.translate = translate;
     }
   }
+  
+  public static Name get(String lookForName){
+    for (Name name : NAMES) {
+      if (name.field.getName().equals(lookForName)){
+        return name;
+      }
+    }
+    return null;
+  }
 
   public static Name[] getValues() {
-    return new Name[]{getName(NOT_IMPORTED, null, null),
-                      getName(DATE_OPERATION, ImportedTransaction.BANK_DATE, Translate.NULL),
-                      getName(DATE_BANK, ImportedTransaction.DATE, Translate.NULL),
-                      getName(LABEL, ImportedTransaction.QIF_M, new CancatTranslate()),
-                      getName(NOTE, ImportedTransaction.NOTE, new CancatTranslate()),
-                      getName(AMOUNT, ImportedTransaction.AMOUNT, new Translate() {
-                        public Object getUpdate(Object previous, String newValue) {
-                          return Amounts.extractAmount(newValue);
-                        }
-                      }),
-                      getName(DEBIT, ImportedTransaction.AMOUNT, new Translate() {
-                        public Object getUpdate(Object previous, String newValue) {
-                          if (Strings.isNullOrEmpty(newValue)){
-                            return previous;
-                          }
-                          return -(Math.abs(Amounts.extractAmount(newValue)));
-                        }
-                      }),
-                      getName(CREDIT, ImportedTransaction.AMOUNT, new Translate() {
-                        public Object getUpdate(Object previous, String newValue) {
-                          if (Strings.isNullOrEmpty(newValue)){
-                            return previous;
-                          }
-                          return (Math.abs(Amounts.extractAmount(newValue)));
-                        }
-                      }),
-                      getName(ENVELOPE, null, null),
-                      getName(SUB_ENVELOPE, null, null)};
+    return NAMES;
   }
 
   private static Name getName(final StringField field, Field importTransactionField, Translate translate) {

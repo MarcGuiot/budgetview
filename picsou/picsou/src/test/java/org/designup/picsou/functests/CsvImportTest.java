@@ -101,6 +101,38 @@ public class CsvImportTest extends SpecificBankTestCase {
       .add("02/01/2008", "AUCHAN", -100.00, "course", 100.00, 100.00, "imported")
       .add("01/01/2008", "RATP", -10.00, "transport", 200.00, 200.00, "imported")
       .check();
+
+    //test mapping is keep
+
+    String file2 =
+      new CsvBuilder(this, "\t")
+        .add("Date", "Libelle", "montant", "envelop")
+        .add("08/01/04", "ED", "-100", "course")
+        .getFile();
+
+    importDialogChecker = operations.openImportDialog()
+      .setFilePath(file2);
+    checker = importDialogChecker.acceptCsvFile();
+    checker.checkContains("Date", "Libelle", "montant")
+      .checkIsOperationUserDate("date")
+      .checkIsLabel("Libelle")
+      .checkIsAmount("montant")
+      .checkIsEnvelop("envelop")
+      .validate();
+
+    importDialogChecker
+      .checkFileContent(new Object[][]{
+        {"08/01/04", "ED", "-100.00"}
+      })
+      .selectDate("Year/Month/Day")
+      .selectAccount("imported")
+      .completeImport();
+
+    transactions.initAmountContent()
+      .add("04/01/2008", "ED", -100.00, "course", 0.0, 0.0, "imported")
+      .add("02/01/2008", "AUCHAN", -100.00, "course", 100.00, 100.00, "imported")
+      .add("01/01/2008", "RATP", -10.00, "transport", 200.00, 200.00, "imported")
+      .check();
   }
 
   public void testImport() throws Exception {
