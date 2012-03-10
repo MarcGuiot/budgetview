@@ -205,6 +205,11 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
+  public ImportDialogChecker checkDateMessage(String message, String... arg) {
+    checkSignpostVisible(dialog, dialog.getComboBox("dateFormatCombo"), Lang.get(message, arg));
+    return this;
+  }
+
   public ImportDialogChecker checkHtmlErrorMessage(String message, String... arg) {
     assertTrue(dialog.getTextBox("importMessage").htmlEquals(Lang.get(message, arg)));
     return this;

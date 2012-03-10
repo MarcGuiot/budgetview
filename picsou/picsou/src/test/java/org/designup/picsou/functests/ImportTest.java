@@ -436,7 +436,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .defineAccount(SOCIETE_GENERALE, "main acount", "0123546")
       .checkDates("Year/Month/Day", "Month/Day/Year", "Day/Month/Year")
       .doImport()
-      .checkErrorMessage("import.dateformat.undefined")
+      .checkDateMessage("import.dateformat.undefined")
       .selectDate("Day/Month/Year")
       .checkFileContent(new Object[][]{
         {"2001/01/02", "Menu K", "-1.10"}
