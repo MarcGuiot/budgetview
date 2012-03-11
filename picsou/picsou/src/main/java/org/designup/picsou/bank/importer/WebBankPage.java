@@ -1,14 +1,12 @@
 package org.designup.picsou.bank.importer;
 
 import com.gargoylesoftware.htmlunit.*;
-import com.gargoylesoftware.htmlunit.javascript.JavaScriptEngine;
-import com.gargoylesoftware.htmlunit.javascript.configuration.JavaScriptConfiguration;
-import com.gargoylesoftware.htmlunit.javascript.configuration.ClassConfiguration;
 import com.gargoylesoftware.htmlunit.attachment.AttachmentHandler;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.jidesoft.swing.InfiniteProgressPanel;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -19,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Iterator;
 
 public abstract class WebBankPage extends BankPage {
   protected WebClient client;
@@ -37,6 +34,18 @@ public abstract class WebBankPage extends BankPage {
     client.setCssEnabled(false);
     client.setJavaScriptEnabled(true);
     client.setCache(new Cache());
+    client.setWebConnection(new HttpWebConnection(client) {
+      protected DownloadedContent downloadResponseBody(final HttpResponse httpResponse) throws IOException {
+        final DownloadedContent content = super.downloadResponseBody(httpResponse);
+        return new DownloadedContent() {
+          public InputStream getInputStream() throws IOException {
+            Header type = httpResponse.getEntity().getContentType();
+            System.out.println("WebBankPage.getInputStream " + type.getName() + "  " + type.getValue());
+            return content.getInputStream();
+          }
+        };
+      }
+    });
     client.setAjaxController(new NicelyResynchronizingAjaxController());
     page = (HtmlPage)client.getPage(index);
     errorAlertHandler = new ErrorAlertHandler();

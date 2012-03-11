@@ -89,25 +89,25 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
             repository.update(deferredCardKey, DeferredCardDate.DAY, day);
           }
           else {
-            updateDay(key, repository, values.getPrevious(Transaction.SERIES));
+            updateDay(key, repository.get(key), repository, values.getPrevious(Transaction.SERIES));
           }
         }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        updateDay(key, repository, previousValues.get(Transaction.SERIES));
+        updateDay(key, previousValues, repository, previousValues.get(Transaction.SERIES));
       }
     });
   }
 
-  private void updateDay(Key key, GlobRepository repository, final Integer previousSeriesId) {
+  private void updateDay(Key key, FieldValues values, GlobRepository repository, final Integer previousSeriesId) {
     Glob previousSeries = repository.find(Key.create(Series.TYPE, previousSeriesId));
     if (previousSeries != null
         && previousSeries.get(Series.BUDGET_AREA).equals(BudgetArea.OTHER.getId())
         && previousSeries.get(Series.FROM_ACCOUNT) != null) {
       Integer accountId = previousSeries.get(Series.FROM_ACCOUNT);
-      Glob transaction = repository.get(key);
-      Integer month = transaction.get(Transaction.POSITION_MONTH);
+//      Glob transaction = repository.get(key);
+      Integer month = values.get(Transaction.POSITION_MONTH);
       // cas ou plusieurs operations auraient été associées
       // a la Serie.
       Glob operation = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, previousSeriesId)
