@@ -12,7 +12,9 @@ public class CsvImportTest extends SpecificBankTestCase {
   public void testStandardCase() throws Exception {
     String file =
       CsvBuilder.init(this, '\t')
+        .addEmpty()
         .add("Col1", "Col2", "Col3")
+        .addEmpty()
         .add("08/01/01", "RATP", "-10")
         .add("08/01/02", "AUCHAN", "-100")
         .getFile();

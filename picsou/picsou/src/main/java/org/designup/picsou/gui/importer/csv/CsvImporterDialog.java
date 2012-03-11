@@ -104,7 +104,7 @@ public class CsvImporterDialog {
     associations.clear();
 
     BufferedReader reader = getReader();
-    String firstLine = reader.readLine();
+    String firstLine = readSkipEmpty(reader);
 
     if (Strings.isNotEmpty(firstLine)) {
 
@@ -126,7 +126,7 @@ public class CsvImporterDialog {
   }
 
   private void parseLineGlobs(BufferedReader reader, GlobType type, CsvSeparator separator) throws IOException {
-    List<String> elements = CsvReader.parseLine(reader.readLine(), separator);
+    List<String> elements = CsvReader.parseLine(readSkipEmpty(reader), separator);
     while (elements != null) {
       GlobBuilder globBuilder = GlobBuilder.init(type);
       int i = 1;
@@ -136,8 +136,16 @@ public class CsvImporterDialog {
         i++;
       }
       globs.add(globBuilder.get());
-      elements = CsvReader.parseLine(reader.readLine(), separator);
+      elements = CsvReader.parseLine(readSkipEmpty(reader), separator);
     }
+  }
+
+  private String readSkipEmpty(BufferedReader reader) throws IOException {
+    String s = reader.readLine();
+    while (s != null && s.length() == 0){
+      s = reader.readLine();
+    }
+    return s;
   }
 
   private GlobType createGlobType(String firstLine, CsvSeparator separator) {
@@ -186,6 +194,7 @@ public class CsvImporterDialog {
     return new BufferedReader(inputStream.getBestProbableReader());
   }
 
+
   private class CsvImporterFieldRepeatComponentFactory implements RepeatComponentFactory<FieldAssociation> {
 
     private static final int MAX_LABEL_LENGTH = 40;
@@ -199,7 +208,19 @@ public class CsvImporterDialog {
       String secondLineContent = globs.size() > 0 ? Strings.cut(globs.get(0).get(field), MAX_LABEL_LENGTH) : "";
       cellBuilder.add("second", new JLabel(secondLineContent));
 
-      final JComboBox component = new JComboBox(CsvType.getMappers());
+      CsvReader.TextType textType = null;
+      for (Glob glob : globs) {
+        if (textType == null){
+          textType = CsvReader.getTextType(glob.get(field));
+        }
+        else {
+          break;
+        }
+      }
+
+      CsvType.Mapper[] mappers = CsvType.getMappers(textType);
+
+      final JComboBox component = new JComboBox(mappers);
       if (fieldAssociation.mapper != null) {
         component.setSelectedItem(fieldAssociation.mapper);
       }
@@ -240,7 +261,7 @@ public class CsvImporterDialog {
         if (association.mapper == null || association.mapper.field == CsvType.NOT_IMPORTED) {
           continue;
         }
-        if (association.mapper.converter != null) {
+        if (association.mapper.importedTransactionField != null) {
           localRepository.update(targetGlob.getKey(), association.mapper.importedTransactionField,
                                  association.mapper.converter.convert(targetGlob.getValue(association.mapper.importedTransactionField),
                                                                       glob.get(association.fileField)));

@@ -11,6 +11,9 @@ import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.utils.Strings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CsvType {
 
   public static GlobType CSV_TYPE;
@@ -38,25 +41,42 @@ public class CsvType {
 
   public static StringField NOT_IMPORTED;
 
+  public static Mapper[] getMappers(CsvReader.TextType type) {
+    List<Mapper> mappers = new ArrayList<Mapper>();
+    for (Mapper mapper : MAPPERS) {
+      if (type == null || mapper.getType() == null || mapper.getType() == type){
+        mappers.add(mapper);
+      }
+    }
+    return mappers.toArray(new Mapper[mappers.size()]);
+  }
+
   static {
     GlobTypeLoader.init(CsvType.class);
   }
 
   public interface CsvConverter {
-    CsvConverter DEFAULT = new CsvConverter() {
-      public String convert(Object previous, String newValue) {
-        return newValue;
-      }
-    };
 
     Object convert(Object previous, String newValue);
+
+    CsvReader.TextType getType();
   }
+
+  public static CsvConverter DATE_CONVERTER = new CsvConverter() {
+    public String convert(Object previous, String newValue) {
+      return newValue;
+    }
+
+    public CsvReader.TextType getType() {
+      return CsvReader.TextType.DATE;
+    }
+  };
 
   private static Mapper[] MAPPERS = new Mapper[]{
     getMapper(NOT_IMPORTED, null, null),
-    getMapper(USER_DATE, ImportedTransaction.DATE, CsvConverter.DEFAULT,
+    getMapper(USER_DATE, ImportedTransaction.DATE, DATE_CONVERTER,
               "user date", "date d'operation"),
-    getMapper(BANK_DATE, ImportedTransaction.BANK_DATE, CsvConverter.DEFAULT,
+    getMapper(BANK_DATE, ImportedTransaction.BANK_DATE, DATE_CONVERTER,
               "bank date", "date banque", "date de banque", "date valeur","date de valeur"),
     getMapper(LABEL, ImportedTransaction.QIF_M, new ConcatCsvConverter(),
               "label", "libelle"),
@@ -66,6 +86,11 @@ public class CsvType {
       public Object convert(Object previous, String newValue) {
         return Amounts.extractAmount(newValue);
       }
+
+      public CsvReader.TextType getType() {
+        return CsvReader.TextType.NUMBER;
+      }
+
     }, "amount", "montant"),
     getMapper(DEBIT, ImportedTransaction.AMOUNT, new CsvConverter() {
       public Object convert(Object previous, String newValue) {
@@ -74,6 +99,10 @@ public class CsvType {
         }
         return -(Math.abs(Amounts.extractAmount(newValue)));
       }
+      public CsvReader.TextType getType() {
+        return CsvReader.TextType.NUMBER;
+      }
+
     }, "debit"),
     getMapper(CREDIT, ImportedTransaction.AMOUNT, new CsvConverter() {
       public Object convert(Object previous, String newValue) {
@@ -82,10 +111,14 @@ public class CsvType {
         }
         return (Math.abs(Amounts.extractAmount(newValue)));
       }
+      public CsvReader.TextType getType() {
+        return CsvReader.TextType.NUMBER;
+      }
+
     }, "credit"),
-    getMapper(ENVELOPE, null, null,
+    getMapper(ENVELOPE, null, new ConcatCsvConverter(),
               "envelope", "enveloppe", "category", "categorie"),
-    getMapper(SUB_ENVELOPE, null, null,
+    getMapper(SUB_ENVELOPE, null, new ConcatCsvConverter(),
               "sub envelope", "sub category", "sous enveloppe", "sous categorie")
   };
 
@@ -102,6 +135,13 @@ public class CsvType {
       this.importedTransactionField = importedTransactionField;
       this.converter = converter;
       this.defaultFieldNames = defaultFieldNames;
+    }
+
+    public CsvReader.TextType getType() {
+      if (converter == null){
+        return null;
+      }
+      return converter.getType();
     }
   }
 
@@ -127,5 +167,10 @@ public class CsvType {
     public String convert(Object previous, String newValue) {
       return previous == null ? newValue : previous + " " + newValue;
     }
+
+    public CsvReader.TextType getType() {
+      return CsvReader.TextType.TEXT;
+    }
+
   }
 }

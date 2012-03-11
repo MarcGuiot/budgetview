@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.*;
+import org.uispec4j.ComboBox;
+import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 
 import javax.swing.*;
@@ -45,6 +46,8 @@ public class ImportCsvChecker extends GuiChecker {
   }
 
   public ImportCsvChecker setAsBankDate(String name) {
+    ComboBox box = getTypeSelectionCombo(name);
+    assertThat(box.contentEquals("Do not import", "User date", "Bank date"));
     return select(name, "Bank date");
   }
 
@@ -55,6 +58,8 @@ public class ImportCsvChecker extends GuiChecker {
   }
 
   public ImportCsvChecker setAsLabel(String name) {
+    ComboBox box = getTypeSelectionCombo(name);
+    assertThat(box.contentEquals("Do not import", "Label", "Note", "Envelope name", "Sub-envelope name"));
     return select(name, "Label");
   }
 
@@ -65,11 +70,12 @@ public class ImportCsvChecker extends GuiChecker {
   }
 
   public ImportCsvChecker setAsNote(String name) {
-    return select(name, "note");
+   return select(name, "note");
   }
 
   public ImportCsvChecker checkIsNote(String name) {
     ComboBox box = getTypeSelectionCombo(name);
+    assertThat(box.contentEquals("Do not import", "Label", "Note", "Envelope name", "Sub-envelope name"));
     assertThat(box.selectionEquals("Note"));
     return this;
   }
@@ -79,6 +85,8 @@ public class ImportCsvChecker extends GuiChecker {
   }
 
   public ImportCsvChecker setAsEnvelope(String name) {
+    ComboBox box = getTypeSelectionCombo(name);
+    assertThat(box.contentEquals("Do not import", "Label", "Note", "Envelope name", "Sub-envelope name"));
     return select(name, "Envelope name");
   }
 
@@ -89,10 +97,14 @@ public class ImportCsvChecker extends GuiChecker {
   }
 
   public ImportCsvChecker setAsSubEnvelope(String name) {
+    ComboBox box = getTypeSelectionCombo(name);
+    assertThat(box.contentEquals("Do not import", "Label", "Note", "Envelope name", "Sub-envelope name"));
     return select(name, "Sub-envelope name");
   }
 
   public ImportCsvChecker setAsAmount(String name) {
+    ComboBox box = getTypeSelectionCombo(name);
+    assertThat(box.contentEquals("Do not import", "Amount", "Debit", "Credit"));
     return select(name, "Amount");
   }
 
@@ -103,6 +115,8 @@ public class ImportCsvChecker extends GuiChecker {
   }
 
   public ImportCsvChecker setAsDebit(String name) {
+    ComboBox box = getTypeSelectionCombo(name);
+    assertThat(box.contentEquals("Do not import", "Amount", "Debit", "Credit"));
     return select(name, "Debit");
   }
 
@@ -113,6 +127,8 @@ public class ImportCsvChecker extends GuiChecker {
   }
 
   public ImportCsvChecker setAsCredit(String name) {
+    ComboBox box = getTypeSelectionCombo(name);
+    assertThat(box.contentEquals("Do not import", "Amount", "Debit", "Credit"));
     return select(name, "Credit");
   }
 

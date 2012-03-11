@@ -10,6 +10,7 @@ import org.globsframework.utils.exceptions.InvalidFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class CsvReader {
 
@@ -73,6 +74,28 @@ public class CsvReader {
     return name.replaceAll("^\"(.*)\"$", "$1");
   }
 
+  public static TextType getTextType(String str) {
+    str = str.replaceAll("\\s", "");
+    if (Strings.isNullOrEmpty(str)){
+      return null;
+    }
+    Pattern compile = Pattern.compile("[0-9]{2,4}/[0-9]{2,4}/[0-9]{2,4}");
+    if (compile.matcher(str).matches()) {
+      return TextType.DATE;
+    }
+    int count = 0;
+    for (int i = 0; i < str.length(); i++) {
+      char c = str.charAt(i);
+      if (c >= '0' && c <= '9' || c == '.' || c == ',' || c == '-' || c == '+') {
+        count++;
+      }
+    }
+    if (count == str.length()) {
+      return TextType.NUMBER;
+    }
+    return TextType.TEXT;
+  }
+
   private static class CsvSeparatorCounter implements Comparable<CsvSeparatorCounter> {
     private final CsvSeparator separator;
     private int count;
@@ -88,5 +111,11 @@ public class CsvReader {
     public int compareTo(CsvSeparatorCounter other) {
       return Integer.signum(other.count - count);
     }
+  }
+
+  public enum TextType {
+    DATE,
+    NUMBER,
+    TEXT
   }
 }

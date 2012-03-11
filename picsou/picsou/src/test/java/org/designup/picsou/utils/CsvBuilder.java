@@ -53,4 +53,15 @@ public class CsvBuilder {
     }
     return fileName;
   }
+
+  public CsvBuilder addEmpty() {
+    try {
+      writer.append("\n");
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return this;
+  }
+  
 }
