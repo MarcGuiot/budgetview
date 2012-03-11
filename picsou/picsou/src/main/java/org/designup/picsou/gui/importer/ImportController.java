@@ -16,6 +16,7 @@ import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.OperationCancelled;
 
 import javax.swing.*;
 import java.io.File;
@@ -152,11 +153,14 @@ public class ImportController {
       Ref<Integer> accountNumber = new Ref<Integer>();
       Glob importedAccount = importSession.gotoNextContent(accountNumber, accountCount);
       if (importedAccount != null) {
-        importDialog.updateForNextImport(file.getAbsolutePath(),  dateFormats, importedAccount, accountNumber.get(), accountCount.get());
+        importDialog.updateForNextImport(file.getAbsolutePath(), dateFormats, importedAccount, accountNumber.get(), accountCount.get());
         return true;
       }
       String message = Lang.get("import.file.empty", file.getAbsolutePath());
       importDialog.showMessage(message);
+      return false;
+    }
+    catch (OperationCancelled e) {
       return false;
     }
     catch (Exception e) {

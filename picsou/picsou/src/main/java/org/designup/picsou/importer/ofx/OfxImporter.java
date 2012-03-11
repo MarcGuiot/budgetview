@@ -29,7 +29,7 @@ public class OfxImporter implements AccountFileImporter {
   }
 
   public GlobList loadTransactions(Reader reader,
-                                   ReadOnlyGlobRepository initialRepository,
+                                   GlobRepository initialRepository,
                                    GlobRepository targetRepository) throws TruncatedFile {
     OfxParser parser = new OfxParser();
     try {

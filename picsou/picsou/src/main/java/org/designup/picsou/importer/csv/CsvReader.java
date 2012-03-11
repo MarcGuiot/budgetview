@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.importer.csv;
+package org.designup.picsou.importer.csv;
 
 import org.globsframework.utils.Strings;
 

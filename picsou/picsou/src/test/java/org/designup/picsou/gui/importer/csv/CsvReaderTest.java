@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.importer.csv;
 
 import junit.framework.TestCase;
+import org.designup.picsou.importer.csv.CsvReader;
 import org.globsframework.utils.TestUtils;
 
 public class CsvReaderTest extends TestCase {

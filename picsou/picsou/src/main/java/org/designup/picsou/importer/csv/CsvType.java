@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.importer.csv;
+package org.designup.picsou.importer.csv;
 
 import org.designup.picsou.model.ImportedTransaction;
 import org.designup.picsou.model.util.Amounts;
@@ -42,7 +42,7 @@ public class CsvType {
     GlobTypeLoader.init(CsvType.class);
   }
 
-  interface CsvConverter {
+  public interface CsvConverter {
     CsvConverter DEFAULT = new CsvConverter() {
       public String convert(Object previous, String newValue) {
         return newValue;

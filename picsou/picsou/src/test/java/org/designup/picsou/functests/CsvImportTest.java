@@ -95,7 +95,32 @@ public class CsvImportTest extends SpecificBankTestCase {
     importDialog.acceptCsvFile()
       .cancel();
 
-    importDialog.close();
+    importDialog
+      .checkNoErrorMessage()
+      .close();
+  }
+
+  public void testEmptyFile() throws Exception {
+    String file =
+      CsvBuilder.init(this, '\t')
+        .add("Bank date", "Label", "Amount")
+        .getFile();
+
+    operations.openImportDialog()
+      .setFilePath(file)
+      .acceptFile()
+      .checkMessageEmptyFile()
+      .close();
+  }
+
+  public void testBlankFile() throws Exception {
+    String fileName = saveFile("");
+
+    operations.openImportDialog()
+      .setFilePath(fileName)
+      .acceptFile()
+      .checkMessageEmptyFile()
+      .close();
   }
 
   public void testImportWithEnvelopes() throws Exception {
@@ -177,11 +202,6 @@ public class CsvImportTest extends SpecificBankTestCase {
       "Date d'operation,Date de valeur,Debit,Credit,Libelle,Solde\n" +
       "01/05/2008,01/05/2008,-24.80,,PRLV FINAREF VIE 15515580008302 0501120006,625.35\n" +
       "01/05/2008,01/05/2008,-64.45,,CHEQUE 0650079,436.06\n" +
-      "01/05/2008,01/05/2008,-85.00,,CHEQUE 0650080,351.06\n" +
-      "01/06/2008,01/06/2008,-60.64,,PAIEMENT CB 0401 LA VILLE DU BO CARREFOURDACLVDB CARTE 41257115,290.42\n" +
-      "01/06/2008,01/06/2008,-26.76,,PAIEMENT CB 0401 LA VILLE DU BO CARREFOUR LVDB CARTE 41257115,263.66\n" +
-      "01/06/2008,01/06/2008,-38.55,,PAIEMENT CB 0501 VELIZY VILLACO AUCHAN VELIZY CARTE 41257115,133.02\n" +
-      "01/06/2008,01/06/2008,-4.99,,PAIEMENT CB 0401 LU LUXEMBOURG APPLE ITUNES STO CARTE 41257115,128.03\n" +
       "01/06/2008,01/06/2008,-7.57,,PAIEMENT CB 0501 PARIS0003859/ NATURALIA CARTE 41257115,120.46\n" +
       "01/10/2008,01/10/2008,-51.55,,PRLV FREE TELECOM FREE HAUTDEBIT 319609820,916.28\n" +
       "01/10/2008,01/10/2008,-31.25,,PAIEMENT CB 0901 CHATENAY MALA CASINO GENEDIS CARTE 41257115,704.57\n" +
@@ -217,13 +237,8 @@ public class CsvImportTest extends SpecificBankTestCase {
       .add("10/01/2008", "PAIEMENT CB 0901 CHATENAY MALA CASINO GENEDIS CARTE 41257115", -31.25, "To categorize", 397.18, 397.18, "imported")
       .add("10/01/2008", "PRLV FREE TELECOM FREE HAUTDEBIT 319609820", -51.55, "To categorize", 428.43, 428.43, "imported")
       .add("06/01/2008", "PAIEMENT CB 0501 PARIS0003859/ NATURALIA CARTE 41257115", -7.57, "To categorize", 479.98, 479.98, "imported")
-      .add("06/01/2008", "PAIEMENT CB 0401 LU LUXEMBOURG APPLE ITUNES STO CARTE 41257115", -4.99, "To categorize", 487.55, 487.55, "imported")
-      .add("06/01/2008", "PAIEMENT CB 0501 VELIZY VILLACO AUCHAN VELIZY CARTE 41257115", -38.55, "To categorize", 492.54, 492.54, "imported")
-      .add("06/01/2008", "PAIEMENT CB 0401 LA VILLE DU BO CARREFOUR LVDB CARTE 41257115", -26.76, "To categorize", 531.09, 531.09, "imported")
-      .add("06/01/2008", "PAIEMENT CB 0401 LA VILLE DU BO CARREFOURDACLVDB CARTE 41257115", -60.64, "To categorize", 557.85, 557.85, "imported")
-      .add("05/01/2008", "CHEQUE 0650080", -85.00, "To categorize", 618.49, 618.49, "imported")
-      .add("05/01/2008", "CHEQUE 0650079", -64.45, "To categorize", 703.49, 703.49, "imported")
-      .add("05/01/2008", "PRLV FINAREF VIE 15515580008302 0501120006", -24.80, "To categorize", 767.94, 767.94, "imported")
+      .add("05/01/2008", "CHEQUE 0650079", -64.45, "To categorize", 487.55, 487.55, "imported")
+      .add("05/01/2008", "PRLV FINAREF VIE 15515580008302 0501120006", -24.80, "To categorize", 552.00, 552.00, "imported")
       .check();
   }
 

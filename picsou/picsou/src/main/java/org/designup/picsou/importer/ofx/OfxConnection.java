@@ -166,38 +166,6 @@ public class OfxConnection {
     }
   }
 
-//  public static void main(String[] args) throws IOException {
-//    XMLReader xmlReader = XmlUtils.getXmlReader();
-//    final List<InstitutionNode> institutions = new ArrayList<InstitutionNode>();
-//    SaxStackParser.parse(xmlReader, new DefaultXmlNode(){
-//      public XmlNode getSubNode(String childName, Attributes xmlAttrs) {
-//        if (childName.equals("institution")){
-//          InstitutionNode node = new InstitutionNode();
-//          institutions.add(node);
-//          return node;
-//        }
-//        return this;
-//      }
-//    }, new File(args[0]));
-//    OutputStreamWriter writer = new OutputStreamWriter(System.out);
-//    XmlTag tag = XmlWriter.startTag(writer, "globs");
-//    XmlTag childTag = tag.createChildTag("bankFormat");
-//    childTag.addAttribute("id", 100);
-//    for (InstitutionNode institution : institutions) {
-//      childTag.createChildTag("bank")
-//        .addAttribute("name", institution.name)
-//        .addAttribute("downloadUrl", institution.url)
-//        .addAttribute("id", institution.id)
-//        .addAttribute("fid", institution.fid)
-//        .addAttribute("org", institution.org)
-//        .addAttribute("ofxDownload", "true")
-//        .end();
-//    }
-//    childTag.end();
-//    tag.end();
-//    writer.flush();
-//  }
-
   public static String previousDate(final int dayBefore) {
     String fromDate;
     synchronized (format) {

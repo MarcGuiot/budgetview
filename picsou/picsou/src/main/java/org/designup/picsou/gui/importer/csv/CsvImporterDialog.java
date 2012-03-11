@@ -2,6 +2,8 @@ package org.designup.picsou.gui.importer.csv;
 
 import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.importer.csv.CsvReader;
+import org.designup.picsou.importer.csv.CsvType;
 import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.CsvMapping;
 import org.designup.picsou.model.ImportedSeries;
@@ -26,6 +28,7 @@ import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.OperationCancelled;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,6 +55,7 @@ public class CsvImporterDialog {
   private final GlobsPanelBuilder builder;
   private final List<FieldAssociation> associations = new ArrayList<FieldAssociation>();
   private Repeat<FieldAssociation> repeat;
+  private boolean cancelled;
 
   public CsvImporterDialog(Window parent, TypedInputStream inputStream, GlobRepository initialRepository,
                            GlobRepository repository, Directory directory) {
@@ -66,13 +70,25 @@ public class CsvImporterDialog {
                                     localRepository, directory);
     initPanel(builder, inputStream);
     this.dialog = PicsouDialog.create(parent, directory);
-    dialog.addPanelWithButtons(builder.<JPanel>load(), new OkAction(), new CancelAction(dialog));
+    dialog.addPanelWithButtons(builder.<JPanel>load(), new OkAction(), new CancelAction(dialog) {
+      public void actionPerformed(ActionEvent e) {
+        cancelled = true;
+        super.actionPerformed(e);
+      }
+    });
   }
 
-  public void show() {
+  public GlobList show() throws OperationCancelled {
+    if (globs.isEmpty()) {
+      return globs;
+    }
     dialog.pack();
     GuiUtils.showCentered(dialog);
     builder.dispose();
+    if (cancelled) {
+      throw new OperationCancelled("CSV import cancelled");
+    }
+    return globs;
   }
 
   private static class FieldAssociation {
@@ -116,19 +132,23 @@ public class CsvImporterDialog {
   private void preloadFile() {
     try {
       globs.clear();
+      associations.clear();
 
       BufferedReader reader = getReader();
-      GlobType type = createGlobType(reader.readLine());
+      String firstLine = reader.readLine();
+      if (Strings.isNotEmpty(firstLine)) {
+        GlobType type = createGlobType(firstLine);
 
-      parseLineGlobs(reader, type);
+        parseLineGlobs(reader, type);
 
-      associations.clear();
-      List<Field> fields = Arrays.asList(type.getFields()).subList(1, type.getFieldCount());
-      for (Field field : fields) {
-        FieldAssociation association = new FieldAssociation((StringField)field);
-        associations.add(association);
+        List<Field> fields = Arrays.asList(type.getFields()).subList(1, type.getFieldCount());
+        for (Field field : fields) {
+          FieldAssociation association = new FieldAssociation((StringField)field);
+          associations.add(association);
+        }
+        presetAssociations();
       }
-      presetAssociations();
+
       repeat.set(associations);
     }
     catch (Exception e) {
@@ -171,7 +191,7 @@ public class CsvImporterDialog {
     Map<String, CsvType.Mapper> csvTypesByName = new HashMap<String, CsvType.Mapper>();
     for (CsvType.Mapper mapper : CsvType.getMappers()) {
       for (String fieldName : mapper.defaultFieldNames) {
-        csvTypesByName.put(normalize(fieldName), mapper);       
+        csvTypesByName.put(normalize(fieldName), mapper);
       }
     }
     for (Glob csvMapping : initialRepository.getAll(CsvMapping.TYPE)) {
@@ -203,8 +223,10 @@ public class CsvImporterDialog {
 
     public void registerComponents(RepeatCellBuilder cellBuilder, final FieldAssociation fieldAssociation) {
       final StringField field = fieldAssociation.fileField;
-      cellBuilder.add("first", new JLabel(Strings.cut(field.getName(), MAX_LABEL_LENGTH)));
-      cellBuilder.add("second", new JLabel(Strings.cut(globs.get(0).get(field), MAX_LABEL_LENGTH)));
+      String firstLineContent = Strings.cut(field.getName(), MAX_LABEL_LENGTH);
+      cellBuilder.add("first", new JLabel(firstLineContent));
+      String secondLineContent = globs.size() > 0 ? Strings.cut(globs.get(0).get(field), MAX_LABEL_LENGTH) : "";
+      cellBuilder.add("second", new JLabel(secondLineContent));
       final JComboBox component = new JComboBox(CsvType.getMappers());
       if (fieldAssociation.mapper != null) {
         component.setSelectedItem(fieldAssociation.mapper);
