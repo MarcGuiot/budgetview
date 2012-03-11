@@ -49,6 +49,14 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("28/06/2008", "PRELEVEMENT", -550.00, "Card n. 1111", 1000.00, 1000.00, "Account n. 1234")
       .add("27/06/2008", "AUCHAN", -50.00, "To categorize", 100.00, 1550.00, "Card n. 1111")
       .check();
+
+    transactions
+      .delete("PRELEVEMENT");
+
+    transactions
+      .initAmountContent()
+      .add("27/06/2008", "AUCHAN", -50.00, "To categorize", 100.00, 950.00, "Card n. 1111")
+      .check();
   }
 
   public void testCategorizationMessageAllowsToImportTheCardAccount() throws Exception {

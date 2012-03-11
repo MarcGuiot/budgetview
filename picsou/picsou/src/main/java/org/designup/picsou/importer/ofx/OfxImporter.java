@@ -1,5 +1,6 @@
 package org.designup.picsou.importer.ofx;
 
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.importer.utils.InvalidFileFormat;
 import org.designup.picsou.importer.AccountFileImporter;
 import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
@@ -11,7 +12,6 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.TruncatedFile;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class OfxImporter implements AccountFileImporter {
 
   public GlobList loadTransactions(Reader reader,
                                    GlobRepository initialRepository,
-                                   GlobRepository targetRepository) throws TruncatedFile {
+                                   GlobRepository targetRepository, PicsouDialog current) throws TruncatedFile {
     OfxParser parser = new OfxParser();
     try {
       Functor functor = new Functor(targetRepository, initialRepository);

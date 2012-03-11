@@ -161,7 +161,7 @@ public class OfxConnection {
       OfxConnection.getInstance().loadOperation(glob, fromDate, "0350763423L", password,
                                                 "https://ofx.videoposte.com", "0", "0", outputFile);
       OfxImporter importer = new OfxImporter();
-      GlobList list = importer.loadTransactions(new FileReader(outputFile), repository, repository);
+      GlobList list = importer.loadTransactions(new FileReader(outputFile), repository, repository, null);
       System.out.println("OfxConnection.main " + list.size());
     }
   }
