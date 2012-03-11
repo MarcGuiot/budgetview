@@ -119,6 +119,10 @@ public class ImportDialog {
     }
   }
 
+  public PicsouDialog getDialog() {
+    return dialog;
+  }
+
   public void synchronize(GlobList importedAccount) {
     this.fileSelectionPanel.synchronize(importedAccount);
   }

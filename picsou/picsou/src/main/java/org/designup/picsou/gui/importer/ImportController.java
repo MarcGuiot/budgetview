@@ -150,7 +150,7 @@ public class ImportController {
       }
     }
     try {
-      List<String> dateFormats = importSession.loadFile(file, realAccount);
+      List<String> dateFormats = importSession.loadFile(file, realAccount, importDialog.getDialog());
       Ref<Integer> accountCount = new Ref<Integer>();
       Ref<Integer> accountNumber = new Ref<Integer>();
       Glob importedAccount = importSession.gotoNextContent(accountNumber, accountCount);

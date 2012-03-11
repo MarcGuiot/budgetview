@@ -75,10 +75,10 @@ public class CsvReader {
   }
 
   public static TextType getTextType(String str) {
-    str = str.replaceAll("\\s", "");
     if (Strings.isNullOrEmpty(str)){
       return null;
     }
+    str = str.replaceAll("\\s", "");
     Pattern compile = Pattern.compile("[0-9]{2,4}/[0-9]{2,4}/[0-9]{2,4}");
     if (compile.matcher(str).matches()) {
       return TextType.DATE;

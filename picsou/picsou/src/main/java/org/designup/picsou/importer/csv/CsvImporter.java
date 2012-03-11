@@ -1,5 +1,6 @@
 package org.designup.picsou.importer.csv;
 
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.importer.csv.CsvImporterDialog;
 import org.designup.picsou.importer.AccountFileImporter;
 import org.designup.picsou.importer.utils.TypedInputStream;
@@ -20,8 +21,8 @@ public class CsvImporter implements AccountFileImporter {
     this.directory = directory;
   }
 
-  public GlobList loadTransactions(Reader reader, GlobRepository initialRepository, GlobRepository targetRepository) throws OperationCancelled, IOException {
-    CsvImporterDialog dialog = new CsvImporterDialog(null, fileStream, initialRepository, targetRepository, directory);
+  public GlobList loadTransactions(Reader reader, GlobRepository initialRepository, GlobRepository targetRepository, PicsouDialog current) throws OperationCancelled, IOException {
+    CsvImporterDialog dialog = new CsvImporterDialog(current, fileStream, initialRepository, targetRepository, directory);
     return dialog.show();
   }
 }

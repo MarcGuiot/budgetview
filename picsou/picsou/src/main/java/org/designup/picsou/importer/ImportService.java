@@ -1,5 +1,6 @@
 package org.designup.picsou.importer;
 
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.importer.csv.CsvImporter;
 import org.designup.picsou.importer.ofx.OfxImporter;
 import org.designup.picsou.importer.qif.QifImporter;
@@ -16,11 +17,11 @@ import java.io.IOException;
 public class ImportService {
 
   public void run(TypedInputStream fileStream, GlobRepository initialRepository,
-                  GlobRepository targetRepository, Directory directory)
+                  GlobRepository targetRepository, Directory directory, PicsouDialog current)
     throws IOException, ItemNotFound, InvalidFormat, OperationCancelled, TruncatedFile {
 
     AccountFileImporter importer = getImporter(fileStream, directory);
-    importer.loadTransactions(fileStream.getBestProbableReader(), initialRepository, targetRepository);
+    importer.loadTransactions(fileStream.getBestProbableReader(), initialRepository, targetRepository, current);
   }
 
   private AccountFileImporter getImporter(TypedInputStream fileStream, Directory directory) throws ItemNotFound {

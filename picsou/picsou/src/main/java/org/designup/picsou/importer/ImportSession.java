@@ -4,6 +4,7 @@ import org.apache.commons.collections.iterators.ReverseListIterator;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.designup.picsou.bank.BankPluginService;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.importer.utils.NoOperations;
 import org.designup.picsou.gui.model.CurrentAccountInfo;
 import org.designup.picsou.gui.time.TimeService;
@@ -80,7 +81,7 @@ public class ImportSession {
     return localRepository;
   }
 
-  public List<String> loadFile(File file, final Glob synchronizedAccount)
+  public List<String> loadFile(File file, final Glob synchronizedAccount, PicsouDialog dialog)
     throws IOException, TruncatedFile, NoOperations, InvalidFormat, OperationCancelled {
     this.importSeries = null;
     this.realAccount = synchronizedAccount;
@@ -102,7 +103,7 @@ public class ImportSession {
     importRepository.startChangeSet();
     final Set<Integer> tmpAccountIds = new HashSet<Integer>();
     typedStream = new TypedInputStream(file);
-    importService.run(typedStream, referenceRepository, importRepository, directory);
+    importService.run(typedStream, referenceRepository, importRepository, directory, dialog);
     importRepository.completeChangeSet();
     changes = importRepository.getCurrentChanges();
     changes.safeVisit(RealAccount.TYPE, new ChangeSetVisitor() {
