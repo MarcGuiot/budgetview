@@ -7,19 +7,18 @@ import org.uispec4j.Window;
 import javax.swing.*;
 import java.awt.*;
 
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.*;
 
-public class ImportCsvChecker extends GuiChecker {
+public class CsvImporterChecker extends GuiChecker {
   private ImportDialogChecker parent;
   private Window window;
 
-  public ImportCsvChecker(ImportDialogChecker parent, Window window) {
+  public CsvImporterChecker(ImportDialogChecker parent, Window window) {
     this.parent = parent;
     this.window = window;
   }
 
-  public ImportCsvChecker checkContains(String... items) {
+  public CsvImporterChecker checkContains(String... items) {
     for (String item : items) {
       assertThat(window.containsLabel(item));
     }
@@ -34,113 +33,132 @@ public class ImportCsvChecker extends GuiChecker {
     }
     return -1;
   }
+  
+  public CsvImporterChecker checkFieldsError(String message) {
+    TextBox messageField = window.getTextBox("message");
+    assertThat(messageField.textEquals(message));
+    assertFalse(window.getButton("ok").isEnabled());
+    return this;
+  }
 
-  public ImportCsvChecker setAsUserDate(String name) {
+  public CsvImporterChecker checkFieldsComplete(String message) {
+    TextBox messageField = window.getTextBox("message");
+    assertThat(messageField.textEquals(message));
+    assertThat(window.getButton("ok").isEnabled());
+    return this;
+  }
+
+  public CsvImporterChecker setAsUserDate(String name) {
     return select(name, "User date");
   }
 
-  public ImportCsvChecker checkIsUserDate(String name) {
+  public CsvImporterChecker checkIsUserDate(String name) {
     ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.selectionEquals("User date"));
     return this;
   }
 
-  public ImportCsvChecker setAsBankDate(String name) {
+  public CsvImporterChecker setAsBankDate(String name) {
     ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.contentEquals("Do not import", "User date", "Bank date"));
     return select(name, "Bank date");
   }
 
-  public ImportCsvChecker checkIsBankDate(String name) {
+  public CsvImporterChecker checkIsBankDate(String name) {
     ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.selectionEquals("Bank date"));
     return this;
   }
 
-  public ImportCsvChecker setAsLabel(String name) {
+  public CsvImporterChecker setAsLabel(String name) {
     ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.contentEquals("Do not import", "Label", "Note", "Envelope name", "Sub-envelope name"));
     return select(name, "Label");
   }
 
-  public ImportCsvChecker checkIsLabel(String name) {
+  public CsvImporterChecker checkIsLabel(String name) {
     ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.selectionEquals("Label"));
     return this;
   }
 
-  public ImportCsvChecker setAsNote(String name) {
+  public CsvImporterChecker setAsNote(String name) {
    return select(name, "note");
   }
 
-  public ImportCsvChecker checkIsNote(String name) {
+  public CsvImporterChecker checkIsNote(String name) {
     ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.contentEquals("Do not import", "Label", "Note", "Envelope name", "Sub-envelope name"));
     assertThat(box.selectionEquals("Note"));
     return this;
   }
 
-  public ImportCsvChecker setAsIgnore(String name) {
+  public CsvImporterChecker setAsIgnore(String name) {
     return select(name, "Do not import");
   }
 
-  public ImportCsvChecker setAsEnvelope(String name) {
+  public CsvImporterChecker setAsEnvelope(String name) {
     ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.contentEquals("Do not import", "Label", "Note", "Envelope name", "Sub-envelope name"));
     return select(name, "Envelope name");
   }
 
-  public ImportCsvChecker checkIsEnvelope(String name) {
+  public CsvImporterChecker checkIsEnvelope(String name) {
     ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.selectionEquals("Envelope name"));
     return this;
   }
 
-  public ImportCsvChecker setAsSubEnvelope(String name) {
+  public CsvImporterChecker setAsSubEnvelope(String name) {
     ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.contentEquals("Do not import", "Label", "Note", "Envelope name", "Sub-envelope name"));
     return select(name, "Sub-envelope name");
   }
 
-  public ImportCsvChecker setAsAmount(String name) {
+  public CsvImporterChecker setAsAmount(String name) {
     ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.contentEquals("Do not import", "Amount", "Debit", "Credit"));
     return select(name, "Amount");
   }
 
-  public ImportCsvChecker checkIsAmount(String name) {
+  public CsvImporterChecker checkIsAmount(String name) {
     ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.selectionEquals("Amount"));
     return this;
   }
 
-  public ImportCsvChecker setAsDebit(String name) {
+  public CsvImporterChecker setAsDebit(String name) {
     ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.contentEquals("Do not import", "Amount", "Debit", "Credit"));
     return select(name, "Debit");
   }
 
-  public ImportCsvChecker checkIsDebit(String name) {
+  public CsvImporterChecker checkIsDebit(String name) {
     ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.selectionEquals("Debit"));
     return this;
   }
 
-  public ImportCsvChecker setAsCredit(String name) {
+  public CsvImporterChecker setAsCredit(String name) {
     ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.contentEquals("Do not import", "Amount", "Debit", "Credit"));
     return select(name, "Credit");
   }
 
-  public ImportCsvChecker checkIsCredit(String name) {
+  public CsvImporterChecker checkIsCredit(String name) {
     ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.selectionEquals("Credit"));
     return this;
   }
 
-  private ImportCsvChecker select(String name, String value) {
+  private CsvImporterChecker select(String name, String value) {
     ComboBox box = getTypeSelectionCombo(name);
     box.select(value);
+    return this;
+  }
+
+  public CsvImporterChecker checkAvailableTypes(String name, String... values) {
+    assertThat(getTypeSelectionCombo(name).contentEquals(values));
     return this;
   }
 

@@ -53,6 +53,8 @@ public class CsvImporterDialog {
   private final PicsouDialog dialog;
   private final GlobsPanelBuilder builder;
   private boolean cancelled;
+  private JEditorPane messageField;
+  private CsvImporterDialog.OkAction okAction;
 
   public CsvImporterDialog(Window parent, TypedInputStream inputStream, GlobRepository initialRepository,
                            GlobRepository repository, Directory directory) throws IOException, InvalidFormat {
@@ -65,14 +67,23 @@ public class CsvImporterDialog {
 
     builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/csvImporterDialog.splits",
                                     localRepository, directory);
-    initPanel(builder, inputStream);
+
+    initAssociations(inputStream);
+    builder.addRepeat("csvAssociationsRepeat", associations, new CsvImporterFieldRepeatComponentFactory());
+
+    messageField = GuiUtils.createReadOnlyHtmlComponent("blah");
+    builder.add("message", messageField);
+
     this.dialog = PicsouDialog.create(parent, directory);
-    dialog.addPanelWithButtons(builder.<JPanel>load(), new OkAction(), new CancelAction(dialog) {
+    this.okAction = new OkAction();
+    this.dialog.addPanelWithButtons(builder.<JPanel>load(), okAction, new CancelAction(dialog) {
       public void actionPerformed(ActionEvent e) {
         cancelled = true;
         super.actionPerformed(e);
       }
     });
+
+    updateMessage();
   }
 
   public GlobList show() throws OperationCancelled {
@@ -97,7 +108,7 @@ public class CsvImporterDialog {
     }
   }
 
-  private void initPanel(GlobsPanelBuilder builder, TypedInputStream inputStream) throws IOException {
+  private void initAssociations(TypedInputStream inputStream) throws IOException {
     this.inputStream = inputStream;
 
     globs.clear();
@@ -121,8 +132,6 @@ public class CsvImporterDialog {
       }
       presetAssociations();
     }
-
-    builder.addRepeat("csvAssociationsRepeat", associations, new CsvImporterFieldRepeatComponentFactory());
   }
 
   private void parseLineGlobs(BufferedReader reader, GlobType type, CsvSeparator separator) throws IOException {
@@ -141,11 +150,11 @@ public class CsvImporterDialog {
   }
 
   private String readSkipEmpty(BufferedReader reader) throws IOException {
-    String s = reader.readLine();
-    while (s != null && s.length() == 0){
-      s = reader.readLine();
+    String line = reader.readLine();
+    while (line != null && line.length() == 0) {
+      line = reader.readLine();
     }
-    return s;
+    return line;
   }
 
   private GlobType createGlobType(String firstLine, CsvSeparator separator) {
@@ -194,6 +203,70 @@ public class CsvImporterDialog {
     return new BufferedReader(inputStream.getBestProbableReader());
   }
 
+  private void updateMessage() {
+    String message = getMessage();
+    if (Strings.isNullOrEmpty(message)) {
+      messageField.setText(Lang.get("import.csv.message.complete"));
+      okAction.setEnabled(true);
+    }
+    else {
+      messageField.setText(message);
+      okAction.setEnabled(false);
+    }
+  }
+
+  private String getMessage() {
+    Set<StringField> actualTypes = new HashSet<StringField>();
+    for (FieldAssociation association : associations) {
+      if (association.mapper != null) {
+        actualTypes.add(association.mapper.field);
+      }
+    }
+
+    if (actualTypes.contains(CsvType.AMOUNT)) {
+      if (actualTypes.contains(CsvType.DEBIT)) {
+        return Lang.get("import.csv.message.amountAndDebit");
+      }
+      else if (actualTypes.contains(CsvType.CREDIT)) {
+        return Lang.get("import.csv.message.amountAndCredit");
+      }
+    }
+
+    List<CsvType.Mapper> missingMappers = new ArrayList<CsvType.Mapper>();
+    if (!actualTypes.contains(CsvType.BANK_DATE)) {
+      missingMappers.add(CsvType.get(CsvType.BANK_DATE));
+    }
+    if (!actualTypes.contains(CsvType.LABEL)) {
+      missingMappers.add(CsvType.get(CsvType.LABEL));
+    }
+    if (!actualTypes.contains(CsvType.AMOUNT) &&
+        !actualTypes.contains(CsvType.DEBIT) &&
+        !actualTypes.contains(CsvType.CREDIT)) {
+      missingMappers.add(CsvType.get(CsvType.AMOUNT));
+    }
+    else if (actualTypes.contains(CsvType.DEBIT) &&
+             !actualTypes.contains(CsvType.CREDIT)) {
+      missingMappers.add(CsvType.get(CsvType.CREDIT));
+    }
+    else if (!actualTypes.contains(CsvType.DEBIT) &&
+             actualTypes.contains(CsvType.CREDIT)) {
+      missingMappers.add(CsvType.get(CsvType.DEBIT));
+    }
+
+    List<String> names = new ArrayList<String>();
+    for (CsvType.Mapper mapper : missingMappers) {
+      names.add(mapper.name);
+    }
+    if (missingMappers.isEmpty()) {
+      return null;
+    }
+    else if (missingMappers.size() == 1) {
+      return Lang.get("import.csv.message.missing.one", names.get(0));
+    }
+    else {
+      return Lang.get("import.csv.message.missing.many", Strings.joinWithSeparator(", ", names));
+    }
+  }
 
   private class CsvImporterFieldRepeatComponentFactory implements RepeatComponentFactory<FieldAssociation> {
 
@@ -210,7 +283,7 @@ public class CsvImporterDialog {
 
       CsvReader.TextType textType = null;
       for (Glob glob : globs) {
-        if (textType == null){
+        if (textType == null) {
           textType = CsvReader.getTextType(glob.get(field));
         }
         else {
@@ -220,23 +293,17 @@ public class CsvImporterDialog {
 
       CsvType.Mapper[] mappers = CsvType.getMappers(textType);
 
-      final JComboBox component = new JComboBox(mappers);
+      final JComboBox combo = new JComboBox(mappers);
       if (fieldAssociation.mapper != null) {
-        component.setSelectedItem(fieldAssociation.mapper);
+        combo.setSelectedItem(fieldAssociation.mapper);
       }
-      component.addActionListener(new ActionListener() {
+      combo.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          fieldAssociation.mapper = (CsvType.Mapper)component.getSelectedItem();
+          fieldAssociation.mapper = (CsvType.Mapper)combo.getSelectedItem();
+          updateMessage();
         }
       });
-      cellBuilder.add("dataName", component);
-      final JLabel label = new JLabel();
-      component.setRenderer(new ListCellRenderer() {
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-          label.setText(((CsvType.Mapper)value).name);
-          return label;
-        }
-      });
+      cellBuilder.add("dataName", combo);
     }
   }
 

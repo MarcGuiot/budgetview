@@ -545,8 +545,8 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public ImportCsvChecker acceptCsvFile() {
-    return new ImportCsvChecker(this, WindowInterceptor.getModalDialog(importButton.triggerClick()));
+  public CsvImporterChecker acceptCsvFile() {
+    return new CsvImporterChecker(this, WindowInterceptor.getModalDialog(importButton.triggerClick()));
   }
 
   public static class CompletionChecker {

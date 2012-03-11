@@ -5,10 +5,7 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Strings {
   public static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -93,19 +90,24 @@ public class Strings {
   }
 
   public static String join(String... items) {
+    return joinWithSeparator(" ", Arrays.asList(items));
+  }
+
+  public static String joinWithSeparator(String separator, List<String> items) {
     StringBuilder buf = new StringBuilder();
     for (String item : items) {
       if (isNullOrEmpty(item)) {
         continue;
       }
       if (buf.length() != 0) {
-        buf.append(" ");
+        buf.append(separator);
       }
       buf.append(item);
     }
     return buf.toString();
   }
 
+  
   public static String nullIfEmpty(String text) {
     if (isNullOrEmpty(text)) {
       return null;

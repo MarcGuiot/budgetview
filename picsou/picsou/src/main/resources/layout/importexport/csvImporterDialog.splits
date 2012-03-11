@@ -19,6 +19,8 @@
 
       <label text="$import.csv.title" name="title" styleClass="title"/>
 
+      <htmlEditorPane text="$import.csv.intro" marginTop="5"  marginBottom="5" weightY="0.1"/>
+      
       <scrollPane forceVerticalScroll="true" weightY="100">
         <repeat ref="csvAssociationsRepeat" layout="verticalGrid">
           <column name="association">
@@ -28,6 +30,9 @@
           <comboBox ref="dataName"/>
         </repeat>
       </scrollPane>
+
+      <htmlEditorPane ref="message" marginTop="5" marginBottom="10" weightY="0.1"/>
+
     </column>
   </panel>
 </splits>

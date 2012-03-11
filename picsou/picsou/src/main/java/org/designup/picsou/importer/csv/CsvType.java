@@ -44,7 +44,7 @@ public class CsvType {
   public static Mapper[] getMappers(CsvReader.TextType type) {
     List<Mapper> mappers = new ArrayList<Mapper>();
     for (Mapper mapper : MAPPERS) {
-      if (type == null || mapper.getType() == null || mapper.getType() == type){
+      if (type == null || mapper.getTextType() == null || mapper.getTextType() == type){
         mappers.add(mapper);
       }
     }
@@ -122,6 +122,11 @@ public class CsvType {
               "sub envelope", "sub category", "sous enveloppe", "sous categorie")
   };
 
+  private static Mapper getMapper(final StringField field, Field importedTransactionField, CsvConverter translate, String... defaultFieldNames) {
+    String name = Lang.get("import.csv.field.mapper." + field.getName());
+    return new Mapper(field, name, importedTransactionField, translate, defaultFieldNames);
+  }
+
   public static class Mapper {
     public final StringField field;
     public final String name;
@@ -137,12 +142,25 @@ public class CsvType {
       this.defaultFieldNames = defaultFieldNames;
     }
 
-    public CsvReader.TextType getType() {
+    public CsvReader.TextType getTextType() {
       if (converter == null){
         return null;
       }
       return converter.getType();
     }
+
+    public String toString() {
+      return name;
+    }
+  }
+  
+  public static Mapper get(StringField field) {
+    for (Mapper mapper : MAPPERS) {
+      if (mapper.field.equals(field)) {
+        return mapper;
+      }
+    }
+    return null;
   }
 
   public static Mapper get(String name) {
@@ -156,11 +174,6 @@ public class CsvType {
 
   public static Mapper[] getMappers() {
     return MAPPERS;
-  }
-
-  private static Mapper getMapper(final StringField field, Field importedTransactionField, CsvConverter translate, String... defaultFieldNames) {
-    String name = Lang.get("importer.csv.field.mapper." + field.getName());
-    return new Mapper(field, name, importedTransactionField, translate, defaultFieldNames);
   }
 
   private static class ConcatCsvConverter implements CsvConverter {
