@@ -1,5 +1,6 @@
 package org.designup.picsou.importer.ofx;
 
+import org.designup.picsou.gui.importer.utils.InvalidFileFormat;
 import org.designup.picsou.importer.AccountFileImporter;
 import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.*;
@@ -78,19 +79,19 @@ public class OfxImporter implements AccountFileImporter {
 
     public void processHeader(String key, String value) {
       if (ofxTagFound) {
-        throw new InvalidFormat("Found header properties after <OFX> tag (" + key + "=" + value + ")");
+        throw new InvalidFileFormat("Found header properties after <OFX> tag (" + key + "=" + value + ")");
       }
     }
 
     public void enterTag(String tag) {
       if (tag.equals("OFX") || tag.equals("OFC")) {
         if (ofxTagFound) {
-          throw new InvalidFormat("Found <OFX> tag twice");
+          throw new InvalidFileFormat("Found <OFX> tag twice");
         }
         ofxTagFound = true;
       }
       if (!ofxTagFound) {
-        throw new InvalidFormat("Found tag <" + tag + "> before <OFX>");
+        throw new InvalidFileFormat("Found tag <" + tag + "> before <OFX>");
       }
 
       if (tag.equals("BANKMSGSRSV1")) {
@@ -236,7 +237,7 @@ public class OfxImporter implements AccountFileImporter {
 
     public void end() {
       if (!ofxTagFound) {
-        throw new InvalidFormat("Tag <OFX> not found");
+        throw new InvalidFileFormat("Tag <OFX> not found");
       }
     }
 

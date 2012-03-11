@@ -20,7 +20,6 @@ public class CsvImportTest extends SpecificBankTestCase {
     ImportDialogChecker importDialog = operations.openImportDialog().setFilePath(file);
 
     importDialog.acceptCsvFile()
-      .checkSeparator('\t')
       .checkContains("Col1", "Col2", "Col3")
       .setAsBankDate("Col1")
       .setAsLabel("Col2")
@@ -33,7 +32,7 @@ public class CsvImportTest extends SpecificBankTestCase {
         {"08/01/02", "AUCHAN", "-100.00"}
       })
       .setAccountName("imported")
-      .selectDate("Year/Month/Day")
+      .selectDateFormat("Year/Month/Day")
       .setMainAccount()
       .selectBank("CIC")
       .setPosition(100)
@@ -56,7 +55,6 @@ public class CsvImportTest extends SpecificBankTestCase {
     ImportDialogChecker importDialog = operations.openImportDialog().setFilePath(file);
 
     importDialog.acceptCsvFile()
-      .checkSeparator(';')
       .checkContains("Bank date", "Libellé", "Montant")
       .checkIsBankDate("Bank date")
       .checkIsLabel("Libellé")
@@ -70,7 +68,7 @@ public class CsvImportTest extends SpecificBankTestCase {
         {"08/01/02", "AUCHAN", "-100.00"}
       })
       .setAccountName("imported")
-      .selectDate("Year/Month/Day")
+      .selectDateFormat("Year/Month/Day")
       .setMainAccount()
       .selectBank("CIC")
       .setPosition(100)
@@ -126,20 +124,20 @@ public class CsvImportTest extends SpecificBankTestCase {
   public void testImportWithEnvelopes() throws Exception {
     String file =
       CsvBuilder.init(this, '\t')
-        .add("Date", "Libelle", "montant", "envelope")
-        .add("08/01/01", "RATP", "-10", "transport")
-        .add("08/01/02", "AUCHAN", "-100", "course")
+        .add("date", "libelle", "montant", "enveloppe")
+        .add("08/01/01", "RATP", "-10", "Transport")
+        .add("08/01/02", "AUCHAN", "-100", "Groceries")
         .getFile();
 
     ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(file);
 
     importDialog.acceptCsvFile()
-      .checkContains("Date", "Libelle", "montant")
+      .checkContains("date", "libelle", "montant")
       .setAsBankDate("date")
-      .setAsLabel("Libelle")
+      .setAsLabel("libelle")
       .setAsAmount("montant")
-      .setAsEnvelope("envelope")
+      .setAsEnvelope("enveloppe")
       .validate();
 
     importDialog
@@ -148,20 +146,20 @@ public class CsvImportTest extends SpecificBankTestCase {
         {"08/01/02", "AUCHAN", "-100.00"}
       })
       .setAccountName("imported")
-      .selectDate("Year/Month/Day")
+      .selectDateFormat("Year/Month/Day")
       .setMainAccount()
       .selectBank("CIC")
       .setPosition(100);
 
     importDialog.importSeries()
-      .checkContains("transport", "course")
-      .setRecurring("transport")
-      .setRecurring("course")
+      .checkContains("Transport", "Groceries")
+      .setRecurring("Transport")
+      .setRecurring("Groceries")
       .validateAndFinishImport();
 
     transactions.initAmountContent()
-      .add("02/01/2008", "AUCHAN", -100.00, "course", 100.00, 100.00, "imported")
-      .add("01/01/2008", "RATP", -10.00, "transport", 200.00, 200.00, "imported")
+      .add("02/01/2008", "AUCHAN", -100.00, "Groceries", 100.00, 100.00, "imported")
+      .add("01/01/2008", "RATP", -10.00, "Transport", 200.00, 200.00, "imported")
       .check();
 
     // test mapping is kept
@@ -169,7 +167,7 @@ public class CsvImportTest extends SpecificBankTestCase {
     String file2 =
       CsvBuilder.init(this, '\t')
         .add("Date", "Libellé", "Montant", "Enveloppe")
-        .add("08/01/04", "ED", "-100", "course")
+        .add("08/01/04", "ED", "-100", "Groceries")
         .getFile();
 
     importDialog = operations.openImportDialog().setFilePath(file2);
@@ -178,21 +176,21 @@ public class CsvImportTest extends SpecificBankTestCase {
       .checkIsBankDate("date")
       .checkIsLabel("Libellé")
       .checkIsAmount("Montant")
-      .checkIsEnvelop("Enveloppe")
+      .checkIsEnvelope("Enveloppe")
       .validate();
 
     importDialog
       .checkFileContent(new Object[][]{
         {"08/01/04", "ED", "-100.00"}
       })
-      .selectDate("Year/Month/Day")
+      .selectDateFormat("Year/Month/Day")
       .selectAccount("imported")
       .completeImport();
 
     transactions.initAmountContent()
-      .add("04/01/2008", "ED", -100.00, "course", 0.0, 0.0, "imported")
-      .add("02/01/2008", "AUCHAN", -100.00, "course", 100.00, 100.00, "imported")
-      .add("01/01/2008", "RATP", -10.00, "transport", 200.00, 200.00, "imported")
+      .add("04/01/2008", "ED", -100.00, "Groceries", 0.0, 0.0, "imported")
+      .add("02/01/2008", "AUCHAN", -100.00, "Groceries", 100.00, 100.00, "imported")
+      .add("01/01/2008", "RATP", -10.00, "Transport", 200.00, 200.00, "imported")
       .check();
   }
 
@@ -213,7 +211,6 @@ public class CsvImportTest extends SpecificBankTestCase {
       .setFilePath(fileName);
 
     importDialog.acceptCsvFile()
-      .checkSeparator(',')
       .setAsUserDate("Date d'operation")
       .setAsBankDate("Date de valeur")
       .setAsDebit("Debit")
@@ -242,10 +239,6 @@ public class CsvImportTest extends SpecificBankTestCase {
       .check();
   }
 
-  public void testSeparatorSelection() throws Exception {
-    fail("tbd");
-  }
-
   public void testImportIngFileWithDoubleQuoteStrings() throws Exception {
 
     String fileName = saveFile(
@@ -257,7 +250,6 @@ public class CsvImportTest extends SpecificBankTestCase {
       .setFilePath(fileName);
 
     importDialog.acceptCsvFile()
-      .checkSeparator(';')
       .setAsUserDate("Date comptable")
       .checkIsBankDate("Date valeur")
       .setAsAmount("Montant dans la devise du compte")
@@ -278,6 +270,52 @@ public class CsvImportTest extends SpecificBankTestCase {
       .add("19/03/2010", "PAIEMENT ACHAT BANCONTACT/MISTER CASH IKEA ANDERLECHT ANDERLECHT, 19/03, 14H17", -12.98, "To categorize", 100.00, 100.00, "imported")
       .add("19/03/2010", "PAIEMENT ACHAT BANCONTACT/MISTER CASH IKEA ANDERLECHT ANDERLECHT, 19/03, 14H23", -9.10, "To categorize", 112.98, 112.98, "imported")
       .check();
+  }
+
+  public void testSeparatorSelection() throws Exception {
+    String file =
+      CsvBuilder.init(this, ';')
+        .add("Date:Bank", "Label", "Amount", "Envelope,with:others")
+        .add("2008/01/01", "RATP:Navigo,Jan08", "-10,000.00", "Transport")
+        .add("2008/01/02", "AUCHAN", "100.00", "groceries")
+        .getFile();
+
+    ImportDialogChecker importDialog = operations.openImportDialog()
+      .setFilePath(file);
+
+    importDialog.acceptCsvFile()
+      .checkContains("Date:Bank", "Label", "Amount", "Envelope")
+      .setAsBankDate("date")
+      .checkIsLabel("Label")
+      .checkIsAmount("Amount")
+      .setAsEnvelope("Envelope,with:others")
+      .validate();
+
+    importDialog
+      .checkFileContent(new Object[][]{
+        {"2008/01/02", "AUCHAN", "100.00"},
+        {"2008/01/01", "RATP:Navigo,Jan08", "-10000.00"}
+      })
+      .setAccountName("imported")
+      .setMainAccount()
+      .selectBank("CIC")
+      .setPosition(100);
+
+    importDialog.importSeries()
+      .checkContains("Transport", "Groceries")
+      .setRecurring("Transport")
+      .setRecurring("Groceries")
+      .validateAndFinishImport();
+  }
+
+  public void testNoSeparatorFound() throws Exception {
+    String fileName = saveFile("Blah;,:\tblah");
+
+    operations.openImportDialog()
+      .setFilePath(fileName)
+      .acceptFile()
+      .checkHtmlErrorMessage("import.csv.invalidFileFormat")
+      .close();
   }
 
   private String saveFile(String content) {

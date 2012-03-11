@@ -228,8 +228,8 @@ public class ImportDialog {
     messageLabel.showFileErrorMessage(message);
   }
 
-  public void showMessage(String message, Exception exception) {
-    messageLabel.showFileErrorMessage(message, exception);
+  public void showMessage(String message, String details) {
+    messageLabel.showFileErrorMessage(message, details);
   }
 
   public void showNoImport(Glob glob, boolean first) {
@@ -245,10 +245,10 @@ public class ImportDialog {
     return dialog.show(newSeries);
   }
 
-  public static void showLastException(Exception exception, Directory directory) {
+  public static void showLastException(String details, Directory directory) {
     MessageAndDetailsDialog dialog = new MessageAndDetailsDialog("import.file.error.title",
                                                                  "import.file.error.message",
-                                                                 Strings.toString(exception),
+                                                                 details,
                                                                  directory.get(JFrame.class),
                                                                  directory);
     dialog.show();

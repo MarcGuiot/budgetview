@@ -28,15 +28,6 @@
           <comboBox ref="dataName"/>
         </repeat>
       </scrollPane>
-
-      <row weightY="0.1" marginTop="5" marginBottom="15">
-        <label text="$import.csv.separator"/>
-        <radioButton ref="separatorSep1"/>
-        <radioButton ref="separatorSep2"/>
-        <radioButton ref="separatorSep3"/>
-        <radioButton ref="separatorSep4"/>
-        <filler fill="horizontal"/>
-      </row>
     </column>
   </panel>
 </splits>

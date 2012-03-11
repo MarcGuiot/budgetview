@@ -1,7 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.*;
-import org.uispec4j.Panel;
 import org.uispec4j.Window;
 
 import javax.swing.*;
@@ -19,9 +18,9 @@ public class ImportCsvChecker extends GuiChecker {
     this.window = window;
   }
 
-  public ImportCsvChecker checkContains(String... lines) {
-    for (String line : lines) {
-      assertThat(window.containsLabel(line));
+  public ImportCsvChecker checkContains(String... items) {
+    for (String item : items) {
+      assertThat(window.containsLabel(item));
     }
     return this;
   }
@@ -40,7 +39,7 @@ public class ImportCsvChecker extends GuiChecker {
   }
 
   public ImportCsvChecker checkIsUserDate(String name) {
-    ComboBox box = getCombo(name);
+    ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.selectionEquals("User date"));
     return this;
   }
@@ -50,7 +49,7 @@ public class ImportCsvChecker extends GuiChecker {
   }
 
   public ImportCsvChecker checkIsBankDate(String name) {
-    ComboBox box = getCombo(name);
+    ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.selectionEquals("Bank date"));
     return this;
   }
@@ -60,7 +59,7 @@ public class ImportCsvChecker extends GuiChecker {
   }
 
   public ImportCsvChecker checkIsLabel(String name) {
-    ComboBox box = getCombo(name);
+    ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.selectionEquals("Label"));
     return this;
   }
@@ -70,7 +69,7 @@ public class ImportCsvChecker extends GuiChecker {
   }
 
   public ImportCsvChecker checkIsNote(String name) {
-    ComboBox box = getCombo(name);
+    ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.selectionEquals("Note"));
     return this;
   }
@@ -83,8 +82,8 @@ public class ImportCsvChecker extends GuiChecker {
     return select(name, "Envelope name");
   }
 
-  public ImportCsvChecker checkIsEnvelop(String name) {
-    ComboBox box = getCombo(name);
+  public ImportCsvChecker checkIsEnvelope(String name) {
+    ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.selectionEquals("Envelope name"));
     return this;
   }
@@ -98,7 +97,7 @@ public class ImportCsvChecker extends GuiChecker {
   }
 
   public ImportCsvChecker checkIsAmount(String name) {
-    ComboBox box = getCombo(name);
+    ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.selectionEquals("Amount"));
     return this;
   }
@@ -108,7 +107,7 @@ public class ImportCsvChecker extends GuiChecker {
   }
 
   public ImportCsvChecker checkIsDebit(String name) {
-    ComboBox box = getCombo(name);
+    ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.selectionEquals("Debit"));
     return this;
   }
@@ -118,18 +117,18 @@ public class ImportCsvChecker extends GuiChecker {
   }
 
   public ImportCsvChecker checkIsCredit(String name) {
-    ComboBox box = getCombo(name);
+    ComboBox box = getTypeSelectionCombo(name);
     assertThat(box.selectionEquals("Credit"));
     return this;
   }
 
   private ImportCsvChecker select(String name, String value) {
-    ComboBox box = getCombo(name);
+    ComboBox box = getTypeSelectionCombo(name);
     box.select(value);
     return this;
   }
 
-  private ComboBox getCombo(String name) {
+  private ComboBox getTypeSelectionCombo(String name) {
     TextBox component = window.getTextBox(name);
     Container associationPanel = component.getContainer("association").getAwtComponent();
     Container container = associationPanel.getParent();
@@ -147,42 +146,5 @@ public class ImportCsvChecker extends GuiChecker {
   public void cancel() {
     window.getButton("cancel").click();
     assertFalse(window.isVisible());
-  }
-
-  public ImportCsvChecker checkSeparator(char sep) {
-    if (sep == '\t'){
-      assertThat(window.getRadioButton("tab").isSelected());
-    }
-    if (sep == ':'){
-      assertThat(window.getRadioButton(" : ").isSelected());
-    }
-    if (sep == ';'){
-      assertThat(window.getRadioButton(" ; ").isSelected());
-    }
-    if (sep == ','){
-      assertThat(window.getRadioButton(" , ").isSelected());
-    }
-    return this;
-  }
-
-  public ImportCsvChecker setSeparator(char sep) {
-    if (sep == '\t'){
-      window.getRadioButton("tab").click();
-    }
-    if (sep == ':'){
-      window.getRadioButton(" : ").click();
-    }
-    if (sep == ';'){
-      window.getRadioButton(" ; ").click();
-    }
-    if (sep == ','){
-      window.getRadioButton(" , ").click();
-    }
-    return this;
-  }
-
-  public ImportCsvChecker checkFirstLine(String line) {
-    assertThat(window.getTextBox(line).textEquals(line));
-    return this;
   }
 }

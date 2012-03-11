@@ -1,23 +1,60 @@
 package org.designup.picsou.importer.csv;
 
+import org.designup.picsou.gui.importer.csv.CsvSeparator;
+import org.designup.picsou.gui.importer.utils.InvalidFileFormat;
+import org.designup.picsou.importer.csv.utils.InvalidCsvFileFormat;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.exceptions.InvalidFormat;
 
-import java.io.BufferedReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CsvReader {
-  public static List<String> readLine(String line, final char sep) {
-    if (line == null){
+
+  public static CsvSeparator findSeparator(String firstLine) throws InvalidCsvFileFormat {
+    List<CsvSeparatorCounter> counters = new ArrayList<CsvSeparatorCounter>();
+    for (CsvSeparator separator : CsvSeparator.values()) {
+      counters.add(new CsvSeparatorCounter(separator));
+    }
+
+    for (int i = 0; i < firstLine.length(); i++) {
+      char c = firstLine.charAt(i);
+      for (CsvSeparatorCounter counter : counters) {
+        if (c == counter.separator.getSeparator()) {
+          counter.increment();
+        }
+      }
+    }
+
+    Collections.sort(counters);
+
+    List<CsvSeparator> separators = new ArrayList<CsvSeparator>();
+    for (CsvSeparatorCounter counter : counters) {
+      if (counter.count > 1) {
+        separators.add(counter.separator);
+      }
+    }
+
+    if (separators.isEmpty()) {
+      throw new InvalidCsvFileFormat("Could not find separator for line: " + firstLine);
+    }
+
+    return separators.get(0);
+  }
+
+  public static List<String> parseLine(String line, CsvSeparator separator) {
+    if (line == null) {
       return null;
     }
     List<String> elements = new ArrayList<String>();
     String name = "";
     for (int i = 0; i < line.length(); ++i) {
       char c = line.charAt(i);
-      if (c == sep) {
+      if (c == separator.getSeparator()) {
         if (Strings.isNotEmpty(name)) {
-          elements.add(normalize(name));
+          elements.add(normalizeItem(name));
         }
         else {
           elements.add("");
@@ -28,51 +65,28 @@ public class CsvReader {
         name += c;
       }
     }
-    elements.add(normalize(name));
+    elements.add(normalizeItem(name));
     return elements;
   }
 
-  private static String normalize(String name) {
+  private static String normalizeItem(String name) {
     return name.replaceAll("^\"(.*)\"$", "$1");
   }
 
-  public static char findSeparator(BufferedReader reader) {
-    try {
-      String line = reader.readLine();
-      int tabs = 0;
-      int semicolons = 0;
-      int commas = 0;
-      int colons = 0;
-      for (int i = 0; i < line.length(); i++) {
-        char c = line.charAt(i);
-        if (c == '\t') {
-          tabs++;
-        }
-        if (c == ';') {
-          semicolons++;
-        }
-        if (c == ',') {
-          commas++;
-        }
-        if (c == ':') {
-          colons++;
-        }
-      }
-      if (tabs > 1) {
-        return '\t';
-      }
-      else if (semicolons > 1) {
-        return ';';
-      }
-      else if (commas > 1) {
-        return ',';
-      }
-      else if (colons > 1) {
-        return ':';
-      }
+  private static class CsvSeparatorCounter implements Comparable<CsvSeparatorCounter> {
+    private final CsvSeparator separator;
+    private int count;
+
+    private CsvSeparatorCounter(CsvSeparator separator) {
+      this.separator = separator;
     }
-    catch (Exception e) {
+
+    public void increment() {
+      count++;
     }
-    return 0;
+
+    public int compareTo(CsvSeparatorCounter other) {
+      return Integer.signum(other.count - count);
+    }
   }
 }

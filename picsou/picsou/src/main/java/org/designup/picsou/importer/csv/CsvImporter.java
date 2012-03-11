@@ -8,6 +8,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.OperationCancelled;
 
+import java.io.IOException;
 import java.io.Reader;
 
 public class CsvImporter implements AccountFileImporter {
@@ -19,7 +20,7 @@ public class CsvImporter implements AccountFileImporter {
     this.directory = directory;
   }
 
-  public GlobList loadTransactions(Reader reader, GlobRepository initialRepository, GlobRepository targetRepository) throws OperationCancelled {
+  public GlobList loadTransactions(Reader reader, GlobRepository initialRepository, GlobRepository targetRepository) throws OperationCancelled, IOException {
     CsvImporterDialog dialog = new CsvImporterDialog(null, fileStream, initialRepository, targetRepository, directory);
     return dialog.show();
   }

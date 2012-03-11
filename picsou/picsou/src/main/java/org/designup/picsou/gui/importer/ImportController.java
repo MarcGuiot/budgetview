@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.importer;
 
+import org.designup.picsou.gui.importer.utils.InvalidFileFormat;
 import org.designup.picsou.gui.startup.components.AutoCategorizationFunctor;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.time.TimeService;
@@ -16,6 +17,7 @@ import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.OperationCancelled;
 
 import javax.swing.*;
@@ -163,10 +165,16 @@ public class ImportController {
     catch (OperationCancelled e) {
       return false;
     }
+    catch (InvalidFileFormat e) {
+      String message = e.getMessage(file.getAbsolutePath());
+      Log.write(message, e);
+      importDialog.showMessage(message, e.getDetails());
+      return false;
+    }
     catch (Exception e) {
       String message = Lang.get("import.file.error", file.getAbsolutePath());
       Log.write(message, e);
-      importDialog.showMessage(message, e);
+      importDialog.showMessage(message, e.getMessage());
       return false;
     }
   }

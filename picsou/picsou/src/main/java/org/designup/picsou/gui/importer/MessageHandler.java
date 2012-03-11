@@ -4,5 +4,5 @@ public interface MessageHandler {
 
   void showFileErrorMessage(String message);
 
-  void showFileErrorMessage(String message, Exception e);
+  void showFileErrorMessage(String message, String details);
 }

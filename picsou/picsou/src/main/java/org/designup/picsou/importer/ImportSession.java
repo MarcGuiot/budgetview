@@ -25,6 +25,7 @@ import org.globsframework.utils.*;
 import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
+import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.OperationCancelled;
 import org.globsframework.utils.exceptions.TruncatedFile;
 
@@ -79,7 +80,8 @@ public class ImportSession {
     return localRepository;
   }
 
-  public List<String> loadFile(File file, final Glob synchronizedAccount) throws IOException, TruncatedFile, NoOperations, OperationCancelled {
+  public List<String> loadFile(File file, final Glob synchronizedAccount)
+    throws IOException, TruncatedFile, NoOperations, InvalidFormat, OperationCancelled {
     this.importSeries = null;
     this.realAccount = synchronizedAccount;
     importChangeSet = new DefaultChangeSet();

@@ -436,12 +436,12 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .defineAccount(SOCIETE_GENERALE, "main acount", "0123546")
       .checkDates("Year/Month/Day", "Month/Day/Year", "Day/Month/Year")
       .doImport()
-      .checkDateMessage("import.dateformat.undefined")
-      .selectDate("Day/Month/Year")
+      .checkDateFormatMessageShown("import.dateformat.undefined")
+      .selectDateFormat("Day/Month/Year")
       .checkFileContent(new Object[][]{
         {"2001/01/02", "Menu K", "-1.10"}
       })
-      .selectDate("Month/Day/Year")
+      .selectDateFormat("Month/Day/Year")
       .checkFileContent(new Object[][]{
         {"2001/02/01", "Menu K", "-1.10"}
       })
@@ -468,7 +468,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .clickErrorMessage()
       .checkTitle("Invalid file")
       .checkMessageContains("The content of this file is invalid")
-      .checkDetailsContain("InvalidData")
+      .checkDetailsContain("Invalid date: / - items: []")
       .close();
 
     importDialog.close();

@@ -1,5 +1,6 @@
 package org.designup.picsou.importer.utils;
 
+import org.designup.picsou.gui.importer.utils.InvalidFileFormat;
 import org.globsframework.utils.exceptions.InvalidData;
 
 import java.util.*;
@@ -33,7 +34,7 @@ public class DateFormatAnalyzer {
 
       String[] items = date.split("[-\\./]");
       if (items.length != 3) {
-        throw new InvalidData(date + " - items: " + Arrays.toString(items));
+        throw new InvalidFileFormat("Invalid date: " + date + " - items: " + Arrays.toString(items));
       }
       maxFirst = getMax(maxFirst, items, 0);
       maxSecond = getMax(maxSecond, items, 1);

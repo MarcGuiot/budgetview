@@ -33,7 +33,7 @@ public class ImportedFileSelectionPanel implements MessageHandler {
 
   private boolean usePreferredPath;
   private JEditorPane importMessage = new JEditorPane();
-  private Exception lastException;
+  private String lastExceptionDetails;
   private BankDownloadPanel bankDownload;
 
   public ImportedFileSelectionPanel(ImportController controller,
@@ -72,7 +72,8 @@ public class ImportedFileSelectionPanel implements MessageHandler {
 
     hyperlinkHandler.registerLinkAction("openErrorDetails", new Runnable() {
       public void run() {
-        ImportDialog.showLastException(ImportedFileSelectionPanel.this.lastException, ImportedFileSelectionPanel.this.directory);
+        ImportDialog.showLastException(ImportedFileSelectionPanel.this.lastExceptionDetails,
+                                       ImportedFileSelectionPanel.this.directory);
       }
     });
     builder.add("hyperlinkHandler", hyperlinkHandler);
@@ -96,8 +97,8 @@ public class ImportedFileSelectionPanel implements MessageHandler {
     showFileErrorMessage(message, null);
   }
 
-  public void showFileErrorMessage(String message, Exception exception) {
-    lastException = exception;
+  public void showFileErrorMessage(String message, String details) {
+    lastExceptionDetails = details;
     this.importMessage.setText(message);
   }
 

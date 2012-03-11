@@ -205,11 +205,6 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public ImportDialogChecker checkDateMessage(String message, String... arg) {
-    checkSignpostVisible(dialog, dialog.getComboBox("dateFormatCombo"), Lang.get(message, arg));
-    return this;
-  }
-
   public ImportDialogChecker checkHtmlErrorMessage(String message, String... arg) {
     assertTrue(dialog.getTextBox("importMessage").htmlEquals(Lang.get(message, arg)));
     return this;
@@ -220,9 +215,27 @@ public class ImportDialogChecker extends GuiChecker {
       dialog.getTextBox("importMessage").triggerClickOnHyperlink("Click here"));
   }
 
-  public ImportDialogChecker selectDate(String dateFormat) {
+  public ImportDialogChecker selectDateFormat(String dateFormat) {
     ComboBox dateFormatCombo = dialog.getComboBox("dateFormatCombo");
+    assertThat(dateFormatCombo.isVisible());
     dateFormatCombo.select(dateFormat);
+    return this;
+  }
+
+  public ImportDialogChecker checkDateFormatHidden() {
+    assertFalse(dialog.getComboBox("dateFormatCombo").isVisible());
+    return this;
+  }
+
+  public ImportDialogChecker checkDateFormatSelected(String selection) {
+    ComboBox combo = dialog.getComboBox("dateFormatCombo");
+    assertThat(combo.isVisible());
+    assertThat(combo.selectionEquals(selection));
+    return this;
+  }
+
+  public ImportDialogChecker checkDateFormatMessageShown(String messageKey) {
+    checkSignpostVisible(dialog, dialog.getComboBox("dateFormatCombo"), Lang.get(messageKey));
     return this;
   }
 

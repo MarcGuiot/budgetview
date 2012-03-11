@@ -7,12 +7,12 @@ import org.globsframework.utils.TestUtils;
 public class CsvReaderTest extends TestCase {
 
   public void testName() throws Exception {
-    check(";az;RE", ';', "", "az", "RE");
-    check("az;RE", ';', "az", "RE");
-    check("az;RE;", ';', "az", "RE", "");
+    check(";az;RE", CsvSeparator.SEMICOLON, "", "az", "RE");
+    check("az;RE", CsvSeparator.SEMICOLON, "az", "RE");
+    check("az;RE;", CsvSeparator.SEMICOLON, "az", "RE", "");
   }
 
-  private void check(final String line, final char sep, String ...expected) {
-    TestUtils.assertEquals(CsvReader.readLine(line, sep), expected);
+  private void check(final String line, CsvSeparator separator, String ...expected) {
+    TestUtils.assertEquals(CsvReader.parseLine(line, separator), expected);
   }
 }

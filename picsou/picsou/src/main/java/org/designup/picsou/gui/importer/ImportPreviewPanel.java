@@ -61,7 +61,7 @@ public class ImportPreviewPanel implements MessageHandler {
   private LocalGlobRepository accountEditionRepository;
   private Glob importedAccount;
   private ImportPreviewPanel.FinishAction finishAction;
-  private Exception lastException;
+  private String lastExceptionDetails;
   private Glob newAccount;
   private CardHandler cardHandler;
   private JEditorPane noOperationLabel;
@@ -139,7 +139,7 @@ public class ImportPreviewPanel implements MessageHandler {
 
     hyperlinkHandler.registerLinkAction("openErrorDetails", new Runnable() {
       public void run() {
-        ImportDialog.showLastException(lastException, sessionDirectory);
+        ImportDialog.showLastException(lastExceptionDetails, sessionDirectory);
       }
     });
     builder.add("hyperlinkHandler", hyperlinkHandler);
@@ -284,9 +284,9 @@ public class ImportPreviewPanel implements MessageHandler {
     finishAction.setEnabled(false);
   }
 
-  public void showFileErrorMessage(String message, Exception exception) {
+  public void showFileErrorMessage(String message, String details) {
     showFileErrorMessage(message);
-    this.message.setText(message);
+    this.lastExceptionDetails = details;
   }
 
   private class FinishAction extends AbstractAction {
@@ -342,7 +342,7 @@ public class ImportPreviewPanel implements MessageHandler {
   }
 
   private void clearFileError() {
-    lastException = null;
+    lastExceptionDetails = null;
   }
 
   private class SkipFileAction extends AbstractAction {
