@@ -151,7 +151,7 @@ public class CsvImporterDialog {
 
   private String readSkipEmpty(BufferedReader reader) throws IOException {
     String line = reader.readLine();
-    while (line != null && line.length() == 0) {
+    while (line != null && line.trim().length() == 0) {
       line = reader.readLine();
     }
     return line;
