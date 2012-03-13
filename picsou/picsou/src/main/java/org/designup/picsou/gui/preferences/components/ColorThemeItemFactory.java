@@ -113,7 +113,7 @@ public class ColorThemeItemFactory implements RepeatComponentFactory<Glob> {
       try {
         selectionInProgress = true;
         repository.update(UserPreferences.KEY, UserPreferences.COLOR_THEME, theme.getId());
-        directory.get(ColorService.class).setCurrentSet(theme.getFilePath());
+        complete(repository);
       }
       finally {
         selectionInProgress = false;
