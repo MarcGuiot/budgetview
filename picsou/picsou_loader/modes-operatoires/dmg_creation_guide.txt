@@ -28,6 +28,7 @@ Mode opératoire pour la creation du DMG sous Mac.
   
 8. Executer : 
 
+  rm ~/Desktop/budgetview_template.dmg
 
 
 9. Dans le Desktop, double-cliquer le nouveau dmg pour l'ouvrir

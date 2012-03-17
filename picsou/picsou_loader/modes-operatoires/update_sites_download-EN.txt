@@ -1,0 +1,97 @@
+
+Mise à jour des sites de download pour une nouvelle release :
+
+
+================================================
+    Macupdate.com
+================================================
+
+1. Aller sur : https://www.macupdate.com/developers/login/
+
+2. Login : regis@mybudgetview.fr / P&cs0U17
+
+3. Cliquer sur "Update listing"
+
+4. Mettre à jour les champs
+
+
+================================================
+    Snapfiles
+================================================
+
+1. Aller sur : http://www.snapfiles.com/submit/newdeveloper.php?script_name=/dev/
+
+2. Login : 7150439 / Pic)(sou444
+
+3. Cliquer sur "Submit update", mettre à jour le formulaire (notamment le change log)
+
+
+================================================
+    Softonic.com
+================================================
+
+1. Aller sur : https://developer.softonic.com
+
+2. Login : regis@mybudgetview.fr / 12=Picsou+21
+
+3. Actions / Update current version ==> mettre à jour le formulaire
+
+
+================================================
+    Softpedia.com
+================================================
+
+1. Aller sur : http://www.softpedia.com/get/Others/Finances-Business/BudgetView.shtml
+
+2. Cliquer sur "Tell us about un update"
+
+3. Saisir le formulaire :
+
+>> 
+
+Hello,
+
+I have the pleasure to announce that the 2.25 release of BudgetView is now available.
+
+The Windows installer file can be downloaded from the following link:
+
+- http://www.mybudgetview.com/files/app/BudgetView-2.25-en-Setup.exe
+
+The change log for this release is available here:
+
+- http://www.mybudgetview.com/support/last-changes
+
+Please do not hesitate to contact me if you have any question about BudgetView.
+
+Kind regards,
+
+Regis.
+
+
+================================================
+    Soft32.com
+================================================
+
+1. Aller sur : http://budgetview.soft32.com/
+
+2. Au bas de la page, cliquer sur "update this product info"
+
+3. Copier l'email ci-dessus
+
+
+================================================
+    CNET
+================================================
+
+1. Aller sur : https://upload.cnet.com/
+
+2. Login : regis@mybudgetview.fr / g1_XX_3R
+
+3. Cliquer sur "Modify", mettre à jour le formulaire (notamment release notes)
+
+
+================================================
+    Alternativeto.net
+================================================
+
+tbd

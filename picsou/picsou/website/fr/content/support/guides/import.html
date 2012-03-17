@@ -84,7 +84,7 @@
     <p>Si votre banque ne figure pas dans la liste qui vous est proposée, sélectionnez la banque "Autre" - BudgetView
       fonctionnera normalement, seuls les libellés de vos opérations seront peut-être moins lisibles. </p>
 
-    <p>BudgetView reconnaît les deux formats de fichiers les plus couramment utilisés:</p>
+    <p>BudgetView reconnaît les trois formats de fichiers les plus couramment utilisés:</p>
 
     <table class="field-value">
       <tr>
@@ -99,8 +99,15 @@
         <td class="value"><p>
           Format géré par le logiciel Quicken d'Intuit. Il ne doit être utilisé qu'en absence
           de fichiers OFX, car il ne contient pas d'informations sur le compte des opérations téléchargées, en
-          particulier
-          les soldes de ces comptes.
+          particulier les soldes de ces comptes.
+        </p></td>
+      </tr>
+      <tr>
+        <td class="field">CSV</td>
+        <td class="value"><p>
+          Format habituellement utilisé par les tableurs tels que Microsoft Excel, Open Office ou Apple Numbers.
+          Il ne doit être utilisé qu'en absence de fichiers OFX, car l'import de ces fichiers
+          ne permet pas d'obtenir les informations liées aux comptes des opérations téléchargées.
         </p></td>
       </tr>
     </table>
@@ -118,22 +125,37 @@
       <tr>
         <td>
           <ul>
-            <li>BNP</li>
+            <li>BNP Paribas</li>
+            <li>Banque Accord</li>
             <li>Banque Populaire</li>
+            <li>Banque Palatine</li>
+            <li>BforBank</li>
+            <li>Barclays</li>
+            <li>Boursorama</li>
+            <li>BRED - Banque Populaire</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
             <li>Caisse d'Epargne</li>
-          </ul>
-        </td>
-        <td>
-          <ul>
             <li>CIC</li>
+            <li>Cortal Consors</li>
             <li>Crédit Agricole</li>
+            <li>Crédit du Nord</li>
             <li>Crédit Mutuel</li>
+            <li>Dexia</li>
+            <li>Groupama Banque</li>
+            <li>HSBC</li>
           </ul>
         </td>
         <td>
           <ul>
+            <li>ING Direct</li>
+            <li>Fortis</li>
+            <li>Fortuneo</li>
             <li>La Poste</li>
             <li>LCL</li>
+            <li>Monabanq</li>
             <li>Société Générale</li>
           </ul>
         </td>
@@ -141,7 +163,7 @@
     </table>
 
     <p>Cette liste n'est pas exhaustive. BudgetView peut parfaitement fonctionner avec les exports d'autres banques
-      pourvu qu'elles proposent un export de vos relevés aux formats QIF et OFX.</p>
+      Françaises ou étrangères, pourvu qu'elles proposent un export de vos relevés aux formats QIF et OFX.</p>
 
     <h2>Etape suivante</h2>
 

@@ -27,7 +27,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   private int firstMonth;
 
   protected void setUp() throws Exception {
-    Locale.setDefault(Lang.ROOT);
+    Locale.setDefault(getDefaultLocale());
 
     thirdMonth = Month.getMonthId(new Date());
     secondMonth = Month.previous(thirdMonth);
@@ -46,11 +46,20 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(12).validate();
   }
 
+  protected Locale getDefaultLocale() {
+    return getLocale();
+  }
+
+  private static Locale getLocale() {
+    String lang = System.getProperty("LANG", LANG); // sert dans le picsou/pom.xml
+    return lang.equalsIgnoreCase("fr") ? Locale.FRANCE : Locale.ENGLISH;
+  }
+
   public static void main(String[] args) throws Exception {
 
+    Lang.setLocale(getLocale());
+
     System.setProperty("uispec4j.test.library", "junit");
-    String lang = System.getProperty("LANG", LANG); // sert dans le picous/pom.xml
-    Lang.setLocale(lang.equalsIgnoreCase(LANG) ? Locale.FRANCE : Locale.ENGLISH);
 
     DemoGenerationTest test = createTest();
     test.test();
@@ -73,6 +82,8 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   }
 
   public void test() throws Exception {
+
+    System.out.println("Lang: " + Lang.getLocale());
 
     operations.hideSignposts();
 
@@ -375,6 +386,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     budgetView.savings.editSeries(toAccount("savings")).deleteCurrentSeries();
 
     operations.hideSignposts();
+
     //======== BACKUP ===========
 
     // ne pas supprimer ce code il permet de generer les snaphots de demo qui sont integre a la version

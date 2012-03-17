@@ -1,0 +1,61 @@
+<div class="faq support">
+
+  <h1>Comment importer les fichiers au format CSV ?</h1>
+
+  <div class="light-block">
+
+    <p><img src="/files/images/support/faq.png" class="faq-icon"/>
+      BudgetView peut importer des fichiers au format CSV (Comma-Separated Values) pourvu qu'ils respectent les
+      propriétés suivantes:</p>
+    <ul>
+      <li>Le séparateur est l'un des suivants: virgule (,), tabulation (\\t), deux-points (:) ou point-virgule (;).</li>
+      <li>La première ligne du fichier contient les titres de chaque colonne</li>
+      <li>Pour chaque opération, il y a au moins la date de valeur (date à laquelle l'opération apparaît sur le compte), le libellé et le montant.</li>
+      <li>Le montant peut être contenu soit dans une unique colonne s'il porte son propre signe, soit dans deux colonnes
+        "crédit" et "débit".</li>
+      <li>Le format de date peut être AAAA/MM/JJ, MM/JJ/AAAA ou JJ/MM/AAAA.</li>
+    </ul>
+
+    <p>Par exemple:</p>
+
+    <code>
+<pre>
+Date valeur;Libellé;Montant
+2012/05/15;Supermarche;-10.00
+2012/05/18;Station service;-50.00
+</pre>
+    </code>
+    
+    <p>Ou bien, en séparant les montants en deux colonnes débit/crédit&nbsp;:</p>
+
+    <code>
+<pre>
+Date valeur;Libellé;Credit;Debit
+2012/05/15;Supermarche;;-10.00
+2012/05/18;Station service;;-50.00
+2012/05/27;Salaire WorldCo;1000.00;
+</pre>
+    </code>
+
+    <p>Les colonnes suivantes peuvent être ajoutées :</p>
+    <ul>
+      <li>La date de l'opération, c'est-à-dire le jour où la transaction a été faite, par opposition au jour où
+        l'opération correspondante a été prise en compte par la banque.</li>
+      <li>L'enveloppe ou la catégorie de l'opération.</li>
+      <li>La sous-enveloppe ou la sous-catégorie de l'opération, s'il y a une colonne pour l'enveloppe
+        ou la catégorie.</li>
+      <li>Des notes ou commentaires</li>
+    </ul>
+
+    <p>Un exemple complet :</p>
+    
+    <code>
+<pre>
+Date operation;Date valeur;Libellé;Montant;Note;Enveloppe;Sous-enveloppe
+2012/05/13;2012/05/15;Supermarche;-10.00;Produits d'entretien;Courses;Maison
+2012/05/18;2012/05/18;Station service;-50.00;Auto;Essence
+</pre>
+    </code>
+
+  </div>
+</div>

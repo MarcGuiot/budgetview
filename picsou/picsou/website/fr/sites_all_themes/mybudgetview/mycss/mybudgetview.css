@@ -436,6 +436,11 @@ div.transparent-80 {
   width: 80%;
 }
 
+div.light-block pre {
+  font-size: 11pt;
+  margin-left: 10px;
+}
+
 /* ========== DOWNLOAD PAGE ========== */
 
 table#download-platforms {
