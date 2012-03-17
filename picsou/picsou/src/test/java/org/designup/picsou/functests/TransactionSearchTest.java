@@ -12,8 +12,8 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
   public void testSearchIsUpdatedOnEveryTextChange() throws Exception {
     OfxBuilder
       .init(this)
-      .addTransactionWithNote("2008/07/20", -500, "Fouquet's", "un cafe")
-      .addTransactionWithNote("2008/07/19", -50, "Mac Do", "mmhhh")
+      .addTransactionWithNote("2008/07/20", -500, "Fouquet's", "un café")
+      .addTransactionWithNote("2008/07/19", -50, "Léon", "mmhhh")
       .addTransactionWithNote("2008/07/18", -10, "Pizza Hut", "miam")
       .addTransactionWithNote("2008/07/17", -20, "Pizza Lapino", "beurk")
       .addTransactionWithNote("2008/07/16", -15, "Pizza Pino", "miam miam")
@@ -29,8 +29,8 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
 
     searchField.clear();
     transactions.initContent()
-      .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un cafe", -500.00)
-      .add("19/07/2008", TransactionType.PRELEVEMENT, "Mac Do", "mmhhh", -50.00)
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un café", -500.00)
+      .add("19/07/2008", TransactionType.PRELEVEMENT, "Léon", "mmhhh", -50.00)
       .add("18/07/2008", TransactionType.PRELEVEMENT, "Pizza Hut", "miam", -10.00)
       .add("17/07/2008", TransactionType.PRELEVEMENT, "Pizza Lapino", "beurk", -20.00)
       .add("16/07/2008", TransactionType.PRELEVEMENT, "Pizza Pino", "miam miam", -15.00)
@@ -38,8 +38,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
 
     searchField.appendText("a");
     transactions.initContent()
-      .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un cafe", -500.00)
-      .add("19/07/2008", TransactionType.PRELEVEMENT, "Mac Do", "mmhhh", -50.00)
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un café", -500.00)
       .add("18/07/2008", TransactionType.PRELEVEMENT, "Pizza Hut", "miam", -10.00)
       .add("17/07/2008", TransactionType.PRELEVEMENT, "Pizza Lapino", "beurk", -20.00)
       .add("16/07/2008", TransactionType.PRELEVEMENT, "Pizza Pino", "miam miam", -15.00)
@@ -47,14 +46,13 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
 
     searchField.insertText("c", 0);
     transactions.initContent()
-      .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un cafe", -500.00)
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un café", -500.00)
       .check();
 
     searchField.pressKey(Key.DELETE);
     assertEquals("a", searchField.getText());
     transactions.initContent()
-      .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un cafe", -500.00)
-      .add("19/07/2008", TransactionType.PRELEVEMENT, "Mac Do", "mmhhh", -50.00)
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un café", -500.00)
       .add("18/07/2008", TransactionType.PRELEVEMENT, "Pizza Hut", "miam", -10.00)
       .add("17/07/2008", TransactionType.PRELEVEMENT, "Pizza Lapino", "beurk", -20.00)
       .add("16/07/2008", TransactionType.PRELEVEMENT, "Pizza Pino", "miam miam", -15.00)
@@ -62,7 +60,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
 
     searchField.setText("50.");
     transactions.initContent()
-      .add("19/07/2008", TransactionType.PRELEVEMENT, "Mac Do", "mmhhh", -50.00)
+      .add("19/07/2008", TransactionType.PRELEVEMENT, "Léon", "mmhhh", -50.00)
       .check();
 
     searchField.setText("unknown");
@@ -70,7 +68,28 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
 
     searchField.setText("50.");
     transactions.initContent()
-      .add("19/07/2008", TransactionType.PRELEVEMENT, "Mac Do", "mmhhh", -50.00)
+      .add("19/07/2008", TransactionType.PRELEVEMENT, "Léon", "mmhhh", -50.00)
+      .check();
+    
+    searchField.setText("é");
+    transactions.initContent()
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un café", -500.00)
+      .add("19/07/2008", TransactionType.PRELEVEMENT, "Léon", "mmhhh", -50.00)
+      .add("17/07/2008", TransactionType.PRELEVEMENT, "Pizza Lapino", "beurk", -20.00)
+      .check();
+
+    searchField.setText("É");
+    transactions.initContent()
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un café", -500.00)
+      .add("19/07/2008", TransactionType.PRELEVEMENT, "Léon", "mmhhh", -50.00)
+      .add("17/07/2008", TransactionType.PRELEVEMENT, "Pizza Lapino", "beurk", -20.00)
+      .check();
+
+    searchField.setText("e");
+    transactions.initContent()
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un café", -500.00)
+      .add("19/07/2008", TransactionType.PRELEVEMENT, "Léon", "mmhhh", -50.00)
+      .add("17/07/2008", TransactionType.PRELEVEMENT, "Pizza Lapino", "beurk", -20.00)
       .check();
   }
 

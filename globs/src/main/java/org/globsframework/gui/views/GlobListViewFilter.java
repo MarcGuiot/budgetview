@@ -7,6 +7,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
@@ -27,6 +28,8 @@ public class GlobListViewFilter implements ComponentHolder {
   private GlobRepository repository;
   private GlobMatcher defaultMatcher = GlobMatchers.ALL;
   private OnKeyActionListener filter;
+  private String[] filters = new String[0];
+  private boolean ignoreAccents;
 
   public static GlobListViewFilter init(final GlobListView listView) {
     return new GlobListViewFilter(listView);
@@ -79,39 +82,66 @@ public class GlobListViewFilter implements ComponentHolder {
     this.listView = null;
   }
 
-  private class OnKeyActionListener implements GlobMatcher, DocumentListener {
-    private String[] filters = new String[0];
+  public GlobListViewFilter setIgnoreAccents(boolean value) {
+    ignoreAccents = value;
+    update();
+    return this;
+  }
 
-    public void update() {
-      String filter = textField.getText();
-      filters = filter.split(" ");
-      for (int i = 0; i < filters.length; i++) {
-        filters[i] = filters[i].toUpperCase();
-      }
+  public void update() {
+    String filter = textField.getText();
+    filters = filter.split(" ");
+    for (int i = 0; i < filters.length; i++) {
+      filters[i] = normalize(filters[i]);
+    }
 
-      listView.setFilter(this);
+    listView.setFilter(this.filter);
 
-      GlobList listContent = listView.getGlobList();
-      if (defaultSelectionKey != null) {
-        Glob defaultGlob = repository.get(defaultSelectionKey);
-        if (!textMatches(defaultGlob)) {
-          listContent.remove(defaultGlob);
-        }
-      }
-
-      if (listContent.size() == 1) {
-        listView.select(listContent.getFirst());
-      }
-      if (listContent.size() == 0) {
-        textField.setForeground(Color.RED);
-        if (defaultSelectionKey != null) {
-          listView.selectFirst();
-        }
-      }
-      else {
-        textField.setForeground(null);
+    GlobList listContent = listView.getGlobList();
+    if (defaultSelectionKey != null) {
+      Glob defaultGlob = repository.get(defaultSelectionKey);
+      if (!textMatches(defaultGlob)) {
+        listContent.remove(defaultGlob);
       }
     }
+
+    if (listContent.size() == 1) {
+      listView.select(listContent.getFirst());
+    }
+    if (listContent.size() == 0) {
+      textField.setForeground(Color.RED);
+      if (defaultSelectionKey != null) {
+        listView.selectFirst();
+      }
+    }
+    else {
+      textField.setForeground(null);
+    }
+  }
+
+  private String normalize(String text) {
+    String upper = text.toUpperCase();
+    if (ignoreAccents) {
+      return Strings.unaccent(upper);
+    }
+    return upper;
+  }
+
+  private boolean textMatches(Glob item) {
+    String text = listView.toString(item);
+    if (text == null) {
+      return false;
+    }
+    text = normalize(text);
+    for (String filter : filters) {
+      if (text.indexOf(filter) < 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private class OnKeyActionListener implements GlobMatcher, DocumentListener {
 
     public boolean matches(Glob item, GlobRepository repository) {
       if ((defaultSelectionKey != null) && (item != null)
@@ -120,20 +150,6 @@ public class GlobListViewFilter implements ComponentHolder {
       }
 
       return defaultMatcher.matches(item, repository) && textMatches(item);
-    }
-
-    private boolean textMatches(Glob item) {
-      String text = listView.toString(item);
-      if (text == null) {
-        return false;
-      }
-      text = text.toUpperCase();
-      for (String filter : filters) {
-        if (text.indexOf(filter) < 0) {
-          return false;
-        }
-      }
-      return true;
     }
 
     public void insertUpdate(DocumentEvent e) {

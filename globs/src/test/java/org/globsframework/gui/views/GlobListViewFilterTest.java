@@ -1,12 +1,10 @@
 package org.globsframework.gui.views;
 
-import org.globsframework.gui.DummySelectionListener;
 import org.globsframework.gui.splits.utils.DummyAction;
 import org.globsframework.gui.utils.GuiComponentTestCase;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.uispec4j.Key;
@@ -80,7 +78,7 @@ public class GlobListViewFilterTest extends GuiComponentTestCase {
     assertThat(list.contentEquals("name1", "name12", "name2", "name20"));
     assertThat(list.selectionIsEmpty());
 
-    viewFilter.setDefaultMatcher(GlobMatchers.fieldContainsIgnoreCase(DummyObject.NAME, "2"));
+    viewFilter.setDefaultMatcher(GlobMatchers.fieldContainsIgnoreCaseAndAccents(DummyObject.NAME, "2"));
 
     assertThat(list.contentEquals("name12", "name2", "name20"));
     assertThat(list.selectionIsEmpty());
@@ -95,7 +93,7 @@ public class GlobListViewFilterTest extends GuiComponentTestCase {
     filter.clear();
     assertThat(list.contentEquals("name12", "name2", "name20"));
 
-    viewFilter.setDefaultMatcher(GlobMatchers.fieldContainsIgnoreCase(DummyObject.NAME, "1"));
+    viewFilter.setDefaultMatcher(GlobMatchers.fieldContainsIgnoreCaseAndAccents(DummyObject.NAME, "1"));
 
     assertThat(list.contentEquals("name1", "name12"));
     assertThat(list.selectionIsEmpty());
@@ -186,6 +184,26 @@ public class GlobListViewFilterTest extends GuiComponentTestCase {
     catch (InvalidParameter e) {
       assertEquals("Key must be of type 'dummyObject' instead of 'dummyObject2'", e.getMessage());
     }
+  }
+
+  public void testIgnoringAccents() throws Exception {
+    GlobRepository repository =
+      checker.parse("<dummyObject id='1' name='Crédit'/>" +
+                    "<dummyObject id='2' name='Crête'/>" +
+                    "<dummyObject id='3' name='Sucre'/>");
+    init(repository);
+
+    assertThat(list.contentEquals("Crédit","Crête","Sucre"));
+    assertThat(list.selectionIsEmpty());
+
+    filter.setText("cré");
+    assertThat(list.contentEquals("Crédit"));
+
+    viewFilter.setIgnoreAccents(true);
+    assertThat(list.contentEquals("Crédit", "Crête", "Sucre"));
+
+    viewFilter.setIgnoreAccents(false);
+    assertThat(list.contentEquals("Crédit"));
   }
 
   private void init(GlobRepository repository) {

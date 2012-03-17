@@ -127,20 +127,25 @@ public class GlobMatchers {
     };
   }
 
-  public static GlobMatcher fieldContainsIgnoreCase(final StringField field, final String value) {
+  public static GlobMatcher fieldContainsIgnoreCaseAndAccents(final StringField field, final String value) {
     if (Strings.isNullOrEmpty(value)) {
       return ALL;
     }
+    final String rawValue = normalize(value);
     return new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
         String actual = item.get(field);
-        return actual != null && actual.toLowerCase().contains(value);
+        return actual != null && normalize(actual).contains(rawValue);
       }
 
       public String toString() {
-        return "field " + field.getFullName() + " contains[ignoreCase] " + value;
+        return "field " + field.getFullName() + " contains[ignoreCase+Accents] " + value;
       }
     };
+  }
+
+  private static String normalize(String value) {
+    return Strings.unaccent(value.toLowerCase());
   }
 
   public static GlobMatcher contained(Field field, Object... values) {

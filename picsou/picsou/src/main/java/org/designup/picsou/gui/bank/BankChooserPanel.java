@@ -20,7 +20,7 @@ public class BankChooserPanel {
   private BankChooserPanel(GlobsPanelBuilder builder, Action validateAction, GlobMatcher matcher) {
     GlobListView bankListView = builder.addList("bankList", Bank.TYPE)
       .addDoubleClickAction(validateAction);
-    filter = GlobListViewFilter.init(bankListView);
+    filter = GlobListViewFilter.init(bankListView).setIgnoreAccents(true);
     if (matcher == null) {
       filter.setDefaultValue(Key.create(Bank.TYPE, Bank.GENERIC_BANK_ID));
     }

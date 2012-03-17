@@ -608,6 +608,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .close();
 
     bankDownload
+      .setFilter("crédit")
+      .checkContainsBanks("Crédit Agricole", "Chesterfield Federal Credit Union", "Autre")
       .setFilter("BNP")
       .checkBankList("BNP Paribas", "BNPPF", "Autre")
       .selectBank("BNP Paribas")
