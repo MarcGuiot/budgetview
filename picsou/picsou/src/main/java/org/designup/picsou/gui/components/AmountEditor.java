@@ -61,7 +61,7 @@ public class AmountEditor {
     try {
       updateInProgress = true;
       this.preferredPositive = preferredPositive;
-      updateRadios(preferredPositive);
+      update(numericEditor.getConvertedDisplayedValue());
       positiveToggle.setVisible(!hideRadio);
       negativeToggle.setVisible(!hideRadio);
     }
@@ -154,16 +154,19 @@ public class AmountEditor {
 
     protected void setDisplayedValue(Object value) {
       super.setDisplayedValue(value);
-      if (value != null) {
-        double amount = (Double)value;
-        boolean positive = (amount > 0) || ((amount == 0) && preferredPositive);
-        updateInProgress = true;
-        try {
-          updateRadios(positive);
-        }
-        finally {
-          updateInProgress = false;
-        }
+      update((Double)value);
+    }
+  }
+
+  private void update(Double amount) {
+    if (amount != null) {
+      boolean positive = (amount > 0) || ((amount == 0) && preferredPositive);
+      updateInProgress = true;
+      try {
+        updateRadios(positive);
+      }
+      finally {
+        updateInProgress = false;
       }
     }
   }

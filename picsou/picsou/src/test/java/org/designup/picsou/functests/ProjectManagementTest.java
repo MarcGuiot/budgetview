@@ -360,4 +360,28 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkItems("Trip | January 2011 | -150.00")
       .validate();
   }
+
+  public void testManagesProjectsWithPositiveAmounts() throws Exception {
+    operations.hideSignposts();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/01/10")
+      .addTransaction("2010/11/01", 1000.00, "Income")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2011/01/05", 100.00, "Resa")
+      .load();
+
+    projects
+      .create()
+      .setName("My project")
+      .setItem(0, "Bonus", 201101, 1000.00)
+      .validate();
+
+    projects.checkProjectList("My project");
+    projects.edit("My project")
+      .checkItems("Bonus | January 2011 | +1000.00")
+      .validate();
+
+    budgetView.extras.checkSeries("My project", 0, 1000.00);
+  }
 }
