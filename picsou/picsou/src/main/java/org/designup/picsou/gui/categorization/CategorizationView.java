@@ -236,7 +236,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
     SkipCategorizationPanel skipPanel = new SkipCategorizationPanel(repository, directory);
     builder.add("skipCategorizationPanel", skipPanel.getPanel());
 
-    transactionCreation = new TransactionCreationPanel(repository, directory);
+    transactionCreation = new TransactionCreationPanel(repository, directory, parentDirectory);
     transactionCreation.registerComponents(builder);
 
     BudgetAreaSelector selector = new BudgetAreaSelector(repository, directory);

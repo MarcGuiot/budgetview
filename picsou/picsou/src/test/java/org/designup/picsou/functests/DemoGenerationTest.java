@@ -25,9 +25,11 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   private int thirdMonth;
   private int secondMonth;
   private int firstMonth;
+  
+  private static Locale DEFAULT_LOCALE = Locale.ROOT;
 
   protected void setUp() throws Exception {
-    Locale.setDefault(getDefaultLocale());
+    Locale.setDefault(DEFAULT_LOCALE);
 
     thirdMonth = Month.getMonthId(new Date());
     secondMonth = Month.previous(thirdMonth);
@@ -47,7 +49,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   }
 
   protected Locale getDefaultLocale() {
-    return getLocale();
+    return DEFAULT_LOCALE;
   }
 
   private static Locale getLocale() {
@@ -57,7 +59,8 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
   public static void main(String[] args) throws Exception {
 
-    Lang.setLocale(getLocale());
+    DEFAULT_LOCALE = getLocale();
+    Lang.setLocale(DEFAULT_LOCALE);
 
     System.setProperty("uispec4j.test.library", "junit");
 
@@ -82,8 +85,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   }
 
   public void test() throws Exception {
-
-    System.out.println("Lang: " + Lang.getLocale());
 
     operations.hideSignposts();
 

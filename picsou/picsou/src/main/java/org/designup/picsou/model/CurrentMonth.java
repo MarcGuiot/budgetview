@@ -1,5 +1,6 @@
 package org.designup.picsou.model;
 
+import org.designup.picsou.gui.description.MonthYearStringifier;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
@@ -64,6 +65,10 @@ public class CurrentMonth {
   public static boolean isCurrentMonth(int monthId, GlobRepository repository) {
     Glob currentMonth = repository.find(CurrentMonth.KEY);
     return currentMonth != null && currentMonth.get(LAST_TRANSACTION_MONTH) == monthId;
+  }
+  
+  public static Integer getLastMonth(GlobRepository repository) {
+    return repository.getAll(Month.TYPE).getSortedSet(Month.ID).last();
   }
 
   public static class Serializer implements PicsouGlobSerializer {

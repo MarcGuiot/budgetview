@@ -1,14 +1,12 @@
 package org.designup.picsou.gui.components;
 
 import org.designup.picsou.functests.checkers.MonthChooserChecker;
+import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.time.TimeService;
-import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.globsframework.gui.GuiTestCase;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
-import org.uispec4j.Window;
-import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -56,8 +54,8 @@ public class MonthChooserTest extends GuiTestCase {
   }
 
   public void checkMonthIs(int expectedMonthId) throws InterruptedException {
-    synchronized (this){
-      if (!ok){
+    synchronized (this) {
+      if (!ok) {
         wait(1000);
       }
     }
@@ -66,12 +64,11 @@ public class MonthChooserTest extends GuiTestCase {
 
   public void testEnable() throws Exception {
     final MonthChooserDialog monthChooser = new MonthChooserDialog(new JFrame(), directory);
-    Window window = WindowInterceptor.getModalDialog(new Trigger() {
+    MonthChooserChecker month = MonthChooserChecker.open(new Trigger() {
       public void run() throws Exception {
         selectedMonth = monthChooser.show(200805, MonthRangeBound.LOWER, 200705);
       }
     });
-    MonthChooserChecker month = new MonthChooserChecker(window);
     month.checkVisibleYears(2005, 2006, 2007)
       .checkEnabledInCurrentYear(4)
       .checkEnabledInCurrentYear(5)
@@ -83,12 +80,11 @@ public class MonthChooserTest extends GuiTestCase {
 
   public void testEnableMultipleMonth() throws Exception {
     final MonthChooserDialog monthChooser = new MonthChooserDialog(new JFrame(), directory);
-    Window window = WindowInterceptor.getModalDialog(new Trigger() {
+    MonthChooserChecker month = MonthChooserChecker.open(new Trigger() {
       public void run() throws Exception {
         selectedMonth = monthChooser.show(200805, 200705, 200809, Arrays.asList(200707, 200804, 200805));
       }
     });
-    MonthChooserChecker month = new MonthChooserChecker(window);
     month.checkVisibleYears(2007, 2008, 2009)
       .checkIsDisabled(200707, 200804)
       .checkEnabledInCurrentYear(5)
@@ -104,12 +100,11 @@ public class MonthChooserTest extends GuiTestCase {
 
   public void testWithoutSelectedMonth() throws Exception {
     final MonthChooserDialog monthChooser = new MonthChooserDialog(new JFrame(), directory);
-    Window window = WindowInterceptor.getModalDialog(new Trigger() {
+    MonthChooserChecker month = MonthChooserChecker.open(new Trigger() {
       public void run() throws Exception {
         selectedMonth = monthChooser.show(200800, MonthRangeBound.NONE, 200801);
       }
     });
-    MonthChooserChecker month = new MonthChooserChecker(window);
     month.checkNoneSelected();
   }
 
@@ -128,15 +123,14 @@ public class MonthChooserTest extends GuiTestCase {
 
   private MonthChooserChecker createChooser() {
     final MonthChooserDialog monthChooser = new MonthChooserDialog(new JFrame(), directory);
-    Window window = WindowInterceptor.getModalDialog(new Trigger() {
+    return MonthChooserChecker.open(new Trigger() {
       public void run() throws Exception {
         selectedMonth = monthChooser.show(200805, MonthRangeBound.NONE, 200805);
-        synchronized (this){
+        synchronized (this) {
           ok = true;
           notify();
         }
       }
     });
-    return new MonthChooserChecker(window);
   }
 }

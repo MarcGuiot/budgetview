@@ -24,8 +24,12 @@ public class MonthChooserChecker extends GuiChecker {
         }
       }).run();
   }
+  
+  public static MonthChooserChecker open(Trigger trigger) {
+    return new MonthChooserChecker(WindowInterceptor.getModalDialog(trigger));
+  }
 
-  public MonthChooserChecker(Window dialog) {
+  private MonthChooserChecker(Window dialog) {
     this.dialog = dialog;
   }
 

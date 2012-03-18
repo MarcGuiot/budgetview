@@ -41,12 +41,12 @@ public class TimeViewChecker extends GuiChecker {
       list.clear();
       timeViewPanel.getAllSelectableMonth(list);
     }
-    List<Integer> ids = new ArrayList<Integer>();
+    List<Integer> expectedIds = new ArrayList<Integer>();
     for (String month : months) {
-      ids.add(parseMonthId(month));
+      expectedIds.add(parseMonthId(month));
     }
-    Set<Integer> valueSet = list.getValueSet(Month.ID);
-    TestUtils.assertSetEquals(ids, valueSet);
+    Set<Integer> actualIds = list.getValueSet(Month.ID);
+    TestUtils.assertSetEquals(actualIds, expectedIds);
   }
 
   public void checkSelection(final String... yyyymm) {

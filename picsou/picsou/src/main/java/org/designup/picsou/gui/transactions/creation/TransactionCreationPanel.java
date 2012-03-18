@@ -4,9 +4,12 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.AccountEditionDialog;
 import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.CustomFocusTraversalPolicy;
+import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.tips.DetailsTip;
+import org.designup.picsou.gui.description.MonthFieldListStringifier;
 import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.model.*;
@@ -14,9 +17,11 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.ReplicationGlobRepository;
+import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -28,11 +33,13 @@ import java.util.Set;
 import static org.globsframework.model.FieldValue.value;
 
 public class TransactionCreationPanel extends View implements GlobSelectionListener, ChangeSetListener {
-  private GlobRepository parentRepository;
+
   private static final Key PROTOTYPE_TRANSACTION_KEY = Key.create(Transaction.TYPE, 0);
 
+  private GlobRepository parentRepository;
+  private SelectionService parentSelectionService;
+
   private JPanel panel = new JPanel();
-  private JLabel monthLabel;
   private JLabel errorMessageLabel;
   private JTextField amountField;
   private JTextField dayField;
@@ -44,11 +51,12 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
   private DetailsTip buttonTip;
   private boolean isShowing;
 
-  public TransactionCreationPanel(GlobRepository repository, Directory directory) {
+  public TransactionCreationPanel(GlobRepository repository, Directory directory, Directory parentDirectory) {
     super(createLocalRepository(repository), directory);
     this.parentRepository = repository;
     this.directory = directory;
     this.selectionService.addListener(this, Month.TYPE);
+    this.parentSelectionService = parentDirectory.get(SelectionService.class);
     this.parentRepository.addChangeListener(this);
   }
 
@@ -86,7 +94,11 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     dayField = builder.addEditor("day", Transaction.DAY).forceSelection(PROTOTYPE_TRANSACTION_KEY).getComponent();
     labelField = builder.addEditor("label", Transaction.LABEL).forceSelection(PROTOTYPE_TRANSACTION_KEY).getComponent();
 
-    monthLabel = builder.add("month", new JLabel()).getComponent();
+    builder.addButton("month",
+                      Transaction.TYPE,
+                      new MonthFieldListStringifier(Transaction.MONTH),
+                      new EditMonthCallback())
+      .forceSelection(PROTOTYPE_TRANSACTION_KEY);
 
     errorMessageLabel = builder.add("errorMessage", new JLabel()).getComponent();
     errorMessageLabel.setVisible(false);
@@ -120,7 +132,6 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
                       value(Transaction.BUDGET_MONTH, currentMonth),
                       value(Transaction.POSITION_MONTH, currentMonth),
                       value(Transaction.BANK_MONTH, currentMonth));
-    monthLabel.setText(Month.getFullLabel(currentMonth));
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -161,6 +172,20 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     }
     buttonTip.show();
     buttonTip.setClickThrough();
+  }
+
+  private class EditMonthCallback implements GlobListFunctor {
+    public void run(GlobList list, GlobRepository repository) {
+      MonthChooserDialog monthChooser = new MonthChooserDialog(directory.get(JFrame.class), directory);
+      Integer currentMonthId = repository.get(PROTOTYPE_TRANSACTION_KEY).get(Transaction.MONTH);
+      int selectedMonthId = monthChooser.show(currentMonthId,
+                                              MonthRangeBound.LOWER,
+                                              CurrentMonth.getLastMonth(repository));
+      if (selectedMonthId < 0) {
+        return;
+      }
+      repository.update(PROTOTYPE_TRANSACTION_KEY, Transaction.MONTH, selectedMonthId);
+    }
   }
 
   private class CreateTransactionAction extends AbstractAction {
@@ -212,7 +237,8 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
         return;
       }
 
-      int maxDay = Month.getLastDayNumber(prototypeTransaction.get(Transaction.MONTH));
+      Integer month = prototypeTransaction.get(Transaction.MONTH);
+      int maxDay = Month.getLastDayNumber(month);
       if ((day < 1) || (day > maxDay)) {
         dayField.requestFocus();
         showErrorMessage("transactionCreation.error.day.range", Integer.toString(maxDay));
@@ -241,7 +267,25 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
         .set(Transaction.TRANSACTION_TYPE, TransactionType.MANUAL.getId())
         .get();
 
-      Glob createdTransaction = parentRepository.create(Transaction.TYPE, values.toArray());
+      Glob createdTransaction;
+      try {
+        
+        parentRepository.startChangeSet();
+        for (int monthId = month; 
+             monthId < CurrentMonth.getCurrentMonth(parentRepository); 
+             monthId = Month.next(monthId)) {
+          Key monthKey = Key.create(Month.TYPE, monthId);
+          if (parentRepository.contains(monthKey)) {
+            break;
+          }
+          parentRepository.create(Month.TYPE, value(Month.ID, monthId));
+        }
+        
+        createdTransaction = parentRepository.create(Transaction.TYPE, values.toArray());
+      }
+      finally {
+        parentRepository.completeChangeSet();
+      }
 
       amountField.setText("");
       dayField.setText("");
@@ -257,6 +301,10 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
       amountField.requestFocus();
 
+      Glob monthToSelect = repository.get(Key.create(Month.TYPE, month));
+      if (!parentSelectionService.getSelection(Month.TYPE).contains(monthToSelect)) {
+        parentSelectionService.select(monthToSelect);
+      }
       selectionService.select(createdTransaction);
     }
 

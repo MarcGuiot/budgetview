@@ -7,6 +7,15 @@
     
     <style selector=".transactionCreation"
            opaque="true" border="line(transactionCreation.border)" background="transactionCreation.bg"/>
+
+    <style selector="button#month" ui="hyperlinkButtonWithoutUnderline"
+           icon="button_calendar.png"
+           pressedIcon="button_calendar_pressed.png"
+           disabledIcon="button_calendar_disabled.png"
+           rolloverIcon="button_calendar_rollover.png"
+           horizontalTextPosition="left"
+           horizontalAlignment="left" fill="none" anchor="east"/>
+
   </styles>
 
   <column styleClass="transactionCreation">
@@ -23,7 +32,7 @@
       <label gridPos="(0,2)" text="$day" styleClass="formLabel" marginLeft="30"/>
       <row gridPos="(1,2)">
         <textField ref="day" columns="3" weightX="10" marginRight="5"/>
-        <label ref="month" styleClass="formLabel" marginLeft="5"/>
+        <button ref="month" styleClass="formLabel"/>
         <filler fill="horizontal" weightX="10"/>
       </row>
 

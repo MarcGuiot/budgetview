@@ -73,9 +73,18 @@ public class TransactionCreationChecker extends ViewChecker {
     return this;
   }
 
-  public TransactionCreationChecker checkMonth(String text) {
-    assertThat(getPanel().getTextBox("month").textEquals(text));
+  public TransactionCreationChecker selectMonth(int monthId) {
+    editMonth().selectMonth(monthId);
     return this;
+  }
+  
+  public TransactionCreationChecker checkMonth(String text) {
+    assertThat(getPanel().getButton("month").textEquals(text));
+    return this;
+  }
+  
+  public MonthChooserChecker editMonth() {
+    return MonthChooserChecker.open(getPanel().getButton("month").triggerClick());
   }
 
   public TransactionCreationChecker setLabel(String label) {

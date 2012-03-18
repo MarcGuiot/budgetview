@@ -366,8 +366,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   private MonthChooserChecker getMonthChooser(String labelName) {
-    return new MonthChooserChecker(
-      WindowInterceptor.getModalDialog(dialog.getButton(labelName).triggerClick()));
+    return MonthChooserChecker.open(dialog.getButton(labelName).triggerClick());
   }
 
   private void checkDate(String labelName, String text) {

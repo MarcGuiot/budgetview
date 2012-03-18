@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.MonthChooserChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.model.TransactionType;
 
@@ -342,5 +343,82 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .setLabel("Transaction 1")
       .create();
     transactionCreation.checkSignpostHidden();
+  }
+
+  public void testSelectingTheMonth() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+
+    mainAccounts.createNewAccount()
+      .setAccountName("Cash")
+      .setAccountNumber("012345")
+      .setUpdateModeToManualInput()
+      .setPosition(100.00)
+      .selectBank("CIC")
+      .validate();
+
+    timeline.checkSelection("2008/08");
+
+    transactionCreation
+      .show()
+      .checkSelectedAccount("Cash")
+      .setAmount(-10.00)
+      .setLabel("Transaction 1");
+
+    MonthChooserChecker monthChooser = transactionCreation
+      .setDay(15)
+      .checkMonth("August 2008")
+      .editMonth();
+
+    monthChooser
+      .checkIsDisabled(200811)
+      .checkIsEnabled(200810)
+      .checkIsEnabled(200801)
+      .selectMonth(200805);
+
+    timeline.checkDisplays("2008/08", "2008/09", "2008/10");
+    timeline.checkSelection("2008/08");
+
+    transactionCreation
+      .checkMonth("May 2008")
+      .create();
+    categorization.checkTable(new Object[][]{
+      {"15/05/2008", "", "TRANSACTION 1", -10.00},
+    });
+
+    timeline.checkDisplays("2008/05", "2008/06", "2008/07", "2008/08", "2008/09", "2008/10");
+    timeline.checkSelection("2008/05");
+
+    transactionCreation
+      .setDay(20)
+      .checkMonth("May 2008")
+      .setAmount(-100.00)
+      .setLabel("Transaction 2")
+      .create();
+
+    categorization.checkTable(new Object[][]{
+      {"15/05/2008", "", "TRANSACTION 1", -10.00},
+      {"20/05/2008", "", "TRANSACTION 2", -100.00},
+    });
+
+    transactionCreation
+      .setDay(25)
+      .checkMonth("May 2008")
+      .selectMonth(200807)
+      .checkMonth("July 2008")
+      .setAmount(-200.00)
+      .setLabel("Transaction 3");
+
+    timeline.checkSelection("2008/05");
+
+    transactionCreation
+      .create();
+
+    timeline.checkSelection("2008/07");
+
+    categorization.checkTable(new Object[][]{
+      {"15/05/2008", "", "TRANSACTION 1", -10.00},
+      {"20/05/2008", "", "TRANSACTION 2", -100.00},
+      {"25/07/2008", "", "TRANSACTION 3", -200.00},
+    });
   }
 }
