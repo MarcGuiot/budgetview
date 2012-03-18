@@ -23,6 +23,7 @@ import org.designup.picsou.gui.feedback.actions.SendFeedbackAction;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.help.actions.GotoSupportAction;
 import org.designup.picsou.gui.help.actions.GotoWebsiteAction;
+import org.designup.picsou.gui.help.actions.SendLogsAction;
 import org.designup.picsou.gui.license.LicenseExpirationAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
@@ -366,12 +367,17 @@ public class MainPanel {
     menu.addSeparator();
     menu.add(new GotoWebsiteAction(directory));
     menu.add(new GotoSupportAction(directory));
+
+    menu.addSeparator();
     menu.add(sendFeedbackAction);
+    menu.add(new SendLogsAction(directory));
     menu.add(sendImportedFileAction);
+
     if (!Gui.useMacOSMenu()) {
       menu.addSeparator();
       menu.add(new AboutAction(directory));
     }
+
     return menu;
   }
 

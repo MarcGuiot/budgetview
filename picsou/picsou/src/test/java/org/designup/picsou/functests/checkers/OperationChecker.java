@@ -686,4 +686,8 @@ public class OperationChecker {
   public PrintDialogChecker print() {
     return PrintDialogChecker.init(getFileMenu().getSubMenu("Print...").triggerClick());
   }
+
+  public MessageAndDetailsDialogChecker openSendLogs() {
+    return MessageAndDetailsDialogChecker.init(getHelpMenu().getSubMenu(Lang.get("sendLogs.action")).triggerClick());
+  }
 }
