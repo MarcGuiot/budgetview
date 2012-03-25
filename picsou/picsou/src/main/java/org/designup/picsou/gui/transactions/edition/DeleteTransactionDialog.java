@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.transactions;
+package org.designup.picsou.gui.transactions.edition;
 
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.model.Account;

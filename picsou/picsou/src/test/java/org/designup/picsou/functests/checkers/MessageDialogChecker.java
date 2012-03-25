@@ -8,7 +8,7 @@ import org.uispec4j.interception.WindowInterceptor;
 public class MessageDialogChecker extends GuiChecker {
   protected Window dialog;
 
-  public static MessageDialogChecker init(Trigger trigger) {
+  public static MessageDialogChecker open(Trigger trigger) {
     return new MessageDialogChecker(WindowInterceptor.getModalDialog(trigger));
   }
 

@@ -293,8 +293,8 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
     }
 
     public void check() {
-      Object[][] expectedContent = content.toArray(new Object[content.size()][]);
-      org.uispec4j.assertion.UISpecAssert.assertTrue(getTable().blockEquals(0, 0, COUNT_COLUMN, content.size(), expectedContent));
+      Object[][] expectedContent = rows.toArray(new Object[rows.size()][]);
+      org.uispec4j.assertion.UISpecAssert.assertTrue(getTable().blockEquals(0, 0, COUNT_COLUMN, rows.size(), expectedContent));
     }
   }
 

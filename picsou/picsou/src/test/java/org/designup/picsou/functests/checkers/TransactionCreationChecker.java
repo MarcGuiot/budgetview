@@ -196,7 +196,7 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public void checkDemoMessage() {
-    MessageDialogChecker.init(getShowHideButton().triggerClick())
+    MessageDialogChecker.open(getShowHideButton().triggerClick())
       .checkMessageContains("You cannot create transactions in the demo account")
       .close();
   }

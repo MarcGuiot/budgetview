@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.transactions.actions;
 
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
-import org.designup.picsou.gui.transactions.DeleteTransactionDialog;
+import org.designup.picsou.gui.transactions.edition.DeleteTransactionDialog;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;

@@ -264,8 +264,6 @@
            icon="button_minus.png" disabledIcon="button_minus_disabled.png"/>
     <style selector=".iconButtonGroup button.rename"
            icon="button_rename.png" disabledIcon="button_rename_disabled.png"/>
-    <style selector=".iconButtonGroup button.list"
-           icon="button_list.png" disabledIcon="button_list_disabled.png"/>
     <style selector=".iconButtonGroup button.up"
            icon="button_up.png" disabledIcon="button_up_disabled.png"/>
     <style selector=".iconButtonGroup button.down"

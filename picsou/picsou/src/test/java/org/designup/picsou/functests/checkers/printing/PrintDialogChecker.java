@@ -54,7 +54,7 @@ public class PrintDialogChecker extends GuiChecker {
   }
 
   public void printWithErrorMessage(String title, String errorMessage) {
-    MessageDialogChecker.init(dialog.getButton("Print").triggerClick())
+    MessageDialogChecker.open(dialog.getButton("Print").triggerClick())
     .checkTitle(title)
     .checkMessageContains(errorMessage);
     assertFalse(dialog.isVisible());

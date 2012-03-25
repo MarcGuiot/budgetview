@@ -80,7 +80,6 @@ public class TransactionAnalyzerFactory {
   private void parseDefinitionFile(Loader loader, final GlobRepository repository) {
     repository.startChangeSet();
     try {
-//      repository.deleteAll(Bank.TYPE, BankEntity.TYPE, PreTransactionTypeMatcher.TYPE);
       InputStream bankListStream = loader.load(BANK_LIST_FILE_NAME);
       if (bankListStream == null) {
         throw new ResourceAccessFailed("Missing bank file list: " + BANK_LIST_FILE_NAME);

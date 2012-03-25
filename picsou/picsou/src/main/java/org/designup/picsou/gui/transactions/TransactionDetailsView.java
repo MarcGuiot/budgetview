@@ -4,6 +4,7 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.categorization.actions.CategorizationTableActions;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.transactions.actions.EditTransactionAction;
 import org.designup.picsou.gui.utils.TableView;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -74,6 +75,8 @@ public class TransactionDetailsView extends View {
     builder.add("userLabel",
                 GlobHtmlView.init(Transaction.TYPE, repository, directory, new UserLabelStringifier())
                   .setAutoHideIfEmpty(true));
+
+    builder.add("editTransaction", new EditTransactionAction(repository, directory));
 
     CompositeGlobListStringifier detailsStringifier = new CompositeGlobListStringifier(" - ");
     detailsStringifier.add(new TransactionTypeStringifier());

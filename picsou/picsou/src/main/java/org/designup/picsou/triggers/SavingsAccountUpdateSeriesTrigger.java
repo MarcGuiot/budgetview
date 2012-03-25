@@ -9,6 +9,8 @@ import org.globsframework.model.*;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobMatchers;
+
+import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 import java.util.Set;
@@ -98,8 +100,9 @@ public class SavingsAccountUpdateSeriesTrigger implements ChangeSetListener {
               GlobMatchers.fieldEquals(Transaction.SERIES, otherSeries.get(Series.ID))
             ));
             for (Glob transation : transations) {
-              repository.update(transation.getKey(), FieldValue.value(Transaction.NOT_IMPORTED_TRANSACTION, null),
-                                FieldValue.value(Transaction.MIRROR, Boolean.FALSE));
+              repository.update(transation.getKey(),
+                                value(Transaction.NOT_IMPORTED_TRANSACTION, null),
+                                value(Transaction.MIRROR, Boolean.FALSE));
             }
           }
         }
@@ -141,45 +144,25 @@ public class SavingsAccountUpdateSeriesTrigger implements ChangeSetListener {
 
     {
       localRespository.create(Series.TYPE,
-                              FieldValue.value(Series.INITIAL_AMOUNT, 0.),
-                              FieldValue.value(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()),
-                              FieldValue.value(Series.FROM_ACCOUNT, values.get(Account.ID)),
-                              FieldValue.value(Series.TO_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
-                              FieldValue.value(Series.NAME,
-                                               getSeriesName(values, "savings.series.auto.create.name.from.savings")),
-                              FieldValue.value(Series.IS_AUTOMATIC, false));
+                              value(Series.INITIAL_AMOUNT, 0.),
+                              value(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()),
+                              value(Series.FROM_ACCOUNT, values.get(Account.ID)),
+                              value(Series.TO_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
+                              value(Series.NAME,
+                                    getSeriesName(values, "savings.series.auto.create.name.from.savings")),
+                              value(Series.IS_AUTOMATIC, false));
     }
     {
       localRespository.create(Series.TYPE,
-                              FieldValue.value(Series.INITIAL_AMOUNT, 0.),
-                              FieldValue.value(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()),
-                              FieldValue.value(Series.TO_ACCOUNT, values.get(Account.ID)),
-                              FieldValue.value(Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
-                              FieldValue.value(Series.NAME,
-                                               getSeriesName(values, "savings.series.auto.create.name.to.savings")),
-                              FieldValue.value(Series.IS_AUTOMATIC, false));
+                              value(Series.INITIAL_AMOUNT, 0.),
+                              value(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()),
+                              value(Series.TO_ACCOUNT, values.get(Account.ID)),
+                              value(Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
+                              value(Series.NAME,
+                                    getSeriesName(values, "savings.series.auto.create.name.to.savings")),
+                              value(Series.IS_AUTOMATIC, false));
     }
     localRespository.commitChanges(true);
-//    repository.completeChangeSet();
-//    ChangeSet currentChanges = localRespository.getCurrentChanges();
-//
-//    localRespository.startChangeSet();
-//    try {
-//      currentChanges.safeVisit(Series.TYPE, new UpdateMirrorSeriesChangeSetVisitor(localRespository));
-//    }
-//    finally {
-//      localRespository.completeChangeSet();
-//    }
-//
-//    localRespository.startChangeSet();
-//    try {
-//      currentChanges.safeVisit(SeriesBudget.TYPE, new UpdateMirrorSeriesBudgetChangeSetVisitor(localRespository));
-//    }
-//    finally {
-//      localRespository.completeChangeSet();
-//    }
-
-//    repository.apply(currentChanges);
   }
 
   private String getSeriesName(FieldValues values, final String key) {

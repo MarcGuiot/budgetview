@@ -575,7 +575,7 @@ public class OperationChecker {
   }
 
   public void checkDataIsOk() {
-    MessageDialogChecker.init(getCheckMenu().triggerClick())
+    MessageDialogChecker.open(getCheckMenu().triggerClick())
       .checkMessageContains("No error was found").close();
   }
 

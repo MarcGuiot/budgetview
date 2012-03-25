@@ -5,6 +5,7 @@ import org.designup.picsou.functests.checkers.components.TableChecker;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.functests.checkers.converters.ReconciliationCellConverter;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -15,8 +16,6 @@ import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
-import static org.uispec4j.assertion.UISpecAssert.*;
-
 import org.uispec4j.interception.PopupMenuInterceptor;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.KeyUtils;
@@ -25,6 +24,8 @@ import javax.swing.AbstractButton;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
+
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class CategorizationChecker extends ViewChecker {
   public static final int LABEL_COLUMN_INDEX = 2;
@@ -216,6 +217,13 @@ public class CategorizationChecker extends ViewChecker {
 
   public void checkSearchCleared() {
     assertThat(getPanel().getTextBox("searchField").textIsEmpty());
+  }
+
+  public TransactionEditionChecker edit(int rowIndex) {
+    return TransactionEditionChecker.open(PopupMenuInterceptor
+                                            .run(getTable().triggerRightClick(rowIndex, 0))
+                                            .getSubMenu("Edit")
+                                            .triggerClick());
   }
 
   public class SavingsCategorizationChecker extends BudgetAreaCategorizationChecker {
@@ -787,7 +795,6 @@ public class CategorizationChecker extends ViewChecker {
     selectTransactionFilterMode(CategorizationFilteringMode.UNCATEGORIZED);
   }
 
-
   public CategorizationChecker checkSelectionSignpostDisplayed(String message) {
     checkSignpostVisible(getPanel(), getTable(), message);
     return this;
@@ -856,15 +863,28 @@ public class CategorizationChecker extends ViewChecker {
     }
 
     public CategorizationTableChecker add(String date, String series, String label, double amount) {
-      add(new Object[]{date, series, convertLabel(label), amount});
+      add(new Object[]{date, series, label.toUpperCase(), amount});
       return this;
     }
 
-    private String convertLabel(String label) {
-      if (!label.startsWith("Planned")) {
-        return label.toUpperCase();
+    public void dumpCode() {
+      StringBuilder builder = new StringBuilder();
+
+      Table table = getTable();
+      for (int row = 0; row < table.getRowCount(); row++) {
+        builder
+          .append("  .add(\"")
+          .append(table.getContentAt(row, 0).toString())
+          .append("\", \"")
+          .append(table.getContentAt(row, 1).toString())
+          .append("\", \"")
+          .append(table.getContentAt(row, 2).toString())
+          .append("\", ")
+          .append(Formatting.toString((Double)table.getContentAt(row, 3)))
+          .append(")\n");
       }
-      return label;
+      builder.append("  .check();");
+      Assert.fail("Add this:\n" + builder.toString());
     }
 
     protected Table getTable() {

@@ -44,8 +44,36 @@ public class LogParser {
                     "firstCategorizationDone:[ ]*([a-z]+)[ ]*, " +
                     "categorizationSkipped:[ ]*([a-z]+)[ ]*, " +
                     "gotoBudgetShown:[ ]*([a-z]+)[ ]*");
+  private static Pattern USER_PROGRESS_FORMAT_WITH_LANG =
+    Pattern.compile("INFO ([0-9]+ [A-z]+ [0-9]+) [0-9:,]+ - use info =[ ]*use:[ ]*([0-9]+),[ ]*" +
+                    "initialStepsCompleted:[ ]*([a-z]+),[ ]*" +
+                    "importStarted:[ ]*([a-z]+)[ ]*, " +
+                    "categorizationSelectionDone:[ ]*([a-z]+)[ ]*, " +
+                    "categorizationAreaSelectionDone:[ ]*([a-z]+)[ ]*, " +
+                    "firstCategorizationDone:[ ]*([a-z]+)[ ]*, " +
+                    "categorizationSkipped:[ ]*([a-z]+)[ ]*, " +
+                    "gotoBudgetShown:[ ]*([a-z]+)[ ]*" +
+                    "lang:[ ]*([a-z]+)[ ]*");
   private static Pattern USER_EVALUATION_FORMAT =
     Pattern.compile("INFO ([0-9]+ [A-z]+ [0-9]+) [0-9:,]+ -.*User evaluation[ ]*:[ ]*([A-z]*).*");
+
+  private static Pattern[] IGNORED_PATTERNS = new Pattern[]{
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - mail sent.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - mail from.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - License activation ok.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - new jar version mail.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - mail :.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - No mail sent"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - Mail sent with new code.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - receive new User[ ]+:.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - NewUser :.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - item_number=.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - Send new activation code.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - code requested for.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - No mail sent (activation failed).*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - item_number.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - thread [0-9]+ msg :.*"),
+  };
 
   public static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy");
 
@@ -82,6 +110,20 @@ public class LogParser {
                           repository);
           continue;
         }
+        Matcher progressMatcherWithLang = USER_PROGRESS_FORMAT_WITH_LANG.matcher(trimmed);
+        if (progressMatcherWithLang.matches()) {
+          processProgress(parseDate(progressMatcherWithLang.group(1)),
+                          parseInt(progressMatcherWithLang.group(2)),
+                          parseBoolean(progressMatcherWithLang.group(3)),
+                          parseBoolean(progressMatcherWithLang.group(4)),
+                          parseBoolean(progressMatcherWithLang.group(5)),
+                          parseBoolean(progressMatcherWithLang.group(6)),
+                          parseBoolean(progressMatcherWithLang.group(7)),
+                          parseBoolean(progressMatcherWithLang.group(8)),
+                          parseBoolean(progressMatcherWithLang.group(9)),
+                          repository);
+          continue;
+        }
         Matcher oldProgressMatcher = USER_PROGRESS_FORMAT_OBFUSCATED.matcher(trimmed);
         if (oldProgressMatcher.matches()) {
           processProgress(parseDate(oldProgressMatcher.group(1)),
@@ -103,7 +145,17 @@ public class LogParser {
           continue;
         }
 
-        System.out.println("COULD NOT PARSE: " + line);
+        boolean ignored = false;
+        for (Pattern pattern : IGNORED_PATTERNS) {
+          Matcher matcher = pattern.matcher(trimmed);
+          if (matcher.matches()) {
+            ignored = true;
+            continue;
+          }
+        }
+        if (!ignored) {
+          System.out.println("COULD NOT PARSE: " + line);
+        }
       }
       reader.close();
     }

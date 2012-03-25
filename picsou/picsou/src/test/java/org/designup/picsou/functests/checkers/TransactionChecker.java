@@ -371,6 +371,24 @@ public class TransactionChecker extends ViewChecker {
     this.table = null;
   }
 
+  public TransactionEditionChecker edit(int rowIndex) {
+    return TransactionEditionChecker.open(PopupMenuInterceptor
+                                            .run(getTable().triggerRightClick(rowIndex, 0))
+                                            .getSubMenu("Edit")
+                                            .triggerClick());
+  }
+  
+  public void checkEditionRejected(int[] rowIndices, String message) {
+    Table table = getTable();
+    table.selectRows(rowIndices);
+    MessageDialogChecker.open(PopupMenuInterceptor
+                                .run(table.triggerRightClick(rowIndices[0], 0))
+                                .getSubMenu("Edit")
+                                .triggerClick())
+      .checkMessageContains(message)
+      .close();
+  }
+
   public class TransactionAmountChecker {
     java.util.List<Object[]> expected = new ArrayList<Object[]>();
     private Table table;

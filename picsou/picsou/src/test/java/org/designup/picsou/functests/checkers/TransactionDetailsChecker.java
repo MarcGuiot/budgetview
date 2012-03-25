@@ -37,6 +37,10 @@ public class TransactionDetailsChecker extends ViewChecker {
     assertFalse(getPanel().getTextBox("userLabel").isEditable());
   }
 
+  public TransactionEditionChecker edit() {
+    return TransactionEditionChecker.open(getPanel().getButton("editTransaction").triggerClick());
+  }
+
   private void checkValue(String name, String label) {
     assertThat(getPanel().getTextBox(name).textEquals(label));
   }
@@ -55,11 +59,11 @@ public class TransactionDetailsChecker extends ViewChecker {
 
   public void split(String amount, String note) {
     Button splitLink = getPanel().getButton("split");
-    SplitDialogChecker splitDialogChecker =
+    SplitDialogChecker splitDialog =
       new SplitDialogChecker(WindowInterceptor.getModalDialog(splitLink.triggerClick()));
-    splitDialogChecker.enterAmount(amount);
-    splitDialogChecker.enterNote(note);
-    splitDialogChecker.validateAndClose();
+    splitDialog.enterAmount(amount);
+    splitDialog.enterNote(note);
+    splitDialog.validateAndClose();
   }
 
   public void checkOriginalLabelNotVisible() {

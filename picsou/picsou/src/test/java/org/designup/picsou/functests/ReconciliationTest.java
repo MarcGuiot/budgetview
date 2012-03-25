@@ -183,51 +183,6 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     });
   }
 
-  public void testManuallyCategorizedTransactionsAreAutomaticallyReconciled() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2010/06/20", 1000.00, "WorldCo")
-      .addTransaction("2010/06/15", 150.00, "Auchan")
-      .addTransaction("2010/06/20", 200.00, "Fnac")
-      .load();
-
-    reconciliation.show();
-    categorization.checkTable(new Object[][]{
-      {"-", "15/06/2010", "", "AUCHAN", 150.0},
-      {"-", "20/06/2010", "", "FNAC", 200.0},
-      {"-", "20/06/2010", "", "WORLDCO", 1000.0}
-    });
-
-    categorization.setNewRecurring(1, "Leisures");
-    categorization.checkTable(new Object[][]{
-      {"-", "15/06/2010", "", "AUCHAN", 150.0},
-      {"x", "20/06/2010", "Leisures", "FNAC", 200.0},
-      {"-", "20/06/2010", "", "WORLDCO", 1000.0}
-    });
-
-    OfxBuilder
-      .init(this)
-      .addTransaction("2010/06/25", 15.00, "Auchan")
-      .addTransaction("2010/06/25", 20.00, "Fnac")
-      .load();
-    categorization.checkTable(new Object[][]{
-      {"-", "15/06/2010", "", "AUCHAN", 150.0},
-      {"-", "25/06/2010", "", "AUCHAN", 15.0},
-      {"x", "20/06/2010", "Leisures", "FNAC", 200.0},
-      {"-", "25/06/2010", "Leisures", "FNAC", 20.0},
-      {"-", "20/06/2010", "", "WORLDCO", 1000.0}
-    });
-
-    categorization.setRecurring(3, "Leisures");
-    categorization.checkTable(new Object[][]{
-      {"-", "15/06/2010", "", "AUCHAN", 150.0},
-      {"-", "25/06/2010", "", "AUCHAN", 15.0},
-      {"x", "20/06/2010", "Leisures", "FNAC", 200.0},
-      {"x", "25/06/2010", "Leisures", "FNAC", 20.0},
-      {"-", "20/06/2010", "", "WORLDCO", 1000.0}
-    });
-  }
-
   public void testMultiSelection() throws Exception {
     OfxBuilder
       .init(this)
@@ -355,6 +310,51 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     categorization.checkTableIsEmpty();
   }
 
+  public void testManuallyCategorizedTransactionsAreAutomaticallyReconciled() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2010/06/20", 1000.00, "WorldCo")
+      .addTransaction("2010/06/15", 150.00, "Auchan")
+      .addTransaction("2010/06/20", 200.00, "Fnac")
+      .load();
+
+    reconciliation.show();
+    categorization.checkTable(new Object[][]{
+      {"-", "15/06/2010", "", "AUCHAN", 150.0},
+      {"-", "20/06/2010", "", "FNAC", 200.0},
+      {"-", "20/06/2010", "", "WORLDCO", 1000.0}
+    });
+
+    categorization.setNewRecurring(1, "Leisures");
+    categorization.checkTable(new Object[][]{
+      {"-", "15/06/2010", "", "AUCHAN", 150.0},
+      {"x", "20/06/2010", "Leisures", "FNAC", 200.0},
+      {"-", "20/06/2010", "", "WORLDCO", 1000.0}
+    });
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2010/06/25", 15.00, "Auchan")
+      .addTransaction("2010/06/25", 20.00, "Fnac")
+      .load();
+    categorization.checkTable(new Object[][]{
+      {"-", "15/06/2010", "", "AUCHAN", 150.0},
+      {"-", "25/06/2010", "", "AUCHAN", 15.0},
+      {"x", "20/06/2010", "Leisures", "FNAC", 200.0},
+      {"-", "25/06/2010", "Leisures", "FNAC", 20.0},
+      {"-", "20/06/2010", "", "WORLDCO", 1000.0}
+    });
+
+    categorization.setRecurring(3, "Leisures");
+    categorization.checkTable(new Object[][]{
+      {"-", "15/06/2010", "", "AUCHAN", 150.0},
+      {"-", "25/06/2010", "", "AUCHAN", 15.0},
+      {"x", "20/06/2010", "Leisures", "FNAC", 200.0},
+      {"x", "25/06/2010", "Leisures", "FNAC", 20.0},
+      {"-", "20/06/2010", "", "WORLDCO", 1000.0}
+    });
+  }
+
   public void testManuallyCreatedTransactionsAreNotAutomaticallyReconciled() throws Exception {
 
     mainAccounts.createNewAccount()
@@ -363,7 +363,6 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .setUpdateModeToManualInput()
       .selectBank("CIC")
       .validate();
-
 
     transactionCreation.show()
       .setLabel("FNAC").setAmount(-50.00).setDay(25)
