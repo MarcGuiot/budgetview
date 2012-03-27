@@ -50,7 +50,11 @@ public class Bank {
 
   @DefaultBoolean(false)
   @NoObfuscation
-  public static BooleanField SYNCHRO_ENABLE;
+  public static BooleanField SYNCHRO_ENABLED;
+
+  @NoObfuscation
+  @DefaultBoolean(false)
+  public static BooleanField USER_CREATED;
 
   public static org.globsframework.model.Key GENERIC_BANK_KEY;
 
@@ -60,6 +64,10 @@ public class Bank {
   }
 
   public static class Serializer implements PicsouGlobSerializer {
+
+    public int getWriteVersion() {
+      return 5;
+    }
 
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
@@ -71,44 +79,40 @@ public class Bank {
       outputStream.writeUtf8String(values.get(ORG));
       outputStream.writeBoolean(values.get(INVALID_POSITION));
       outputStream.writeBoolean(values.get(OFX_DOWNLOAD));
-      outputStream.writeBoolean(values.get(SYNCHRO_ENABLE));
+      outputStream.writeBoolean(values.get(SYNCHRO_ENABLED));
+      outputStream.writeBoolean(values.get(USER_CREATED));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 1) {
-        deserializeDataV1(fieldSetter, data);
-      }
-      else if (version == 2) {
-        deserializeDataV2(fieldSetter, data);
-      }
-      else if (version == 3) {
-        deserializeDataV3(fieldSetter, data);
+      if (version == 5) {
+        deserializeDataV5(fieldSetter, data);
       }
       else if (version == 4) {
         deserializeDataV4(fieldSetter, data);
       }
+      else if (version == 3) {
+        deserializeDataV3(fieldSetter, data);
+      }
+      else if (version == 2) {
+        deserializeDataV2(fieldSetter, data);
+      }
+      else if (version == 1) {
+        deserializeDataV1(fieldSetter, data);
+      }
     }
 
-    private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
-      SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(NAME, input.readJavaString());
-      fieldSetter.set(URL, input.readJavaString());
-    }
-
-    private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
+    private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(URL, input.readUtf8String());
-    }
-
-    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
-      SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(NAME, input.readUtf8String());
-      String url = input.readUtf8String();
-      fieldSetter.set(URL, url);
-      fieldSetter.set(DOWNLOAD_URL, url);
-      fieldSetter.set(SYNCHRO_ENABLE, input.readBoolean());
+      fieldSetter.set(DOWNLOAD_URL, input.readUtf8String());
+      fieldSetter.set(FID, input.readUtf8String());
+      fieldSetter.set(ORG, input.readUtf8String());
+      fieldSetter.set(INVALID_POSITION, input.readBoolean());
+      fieldSetter.set(OFX_DOWNLOAD, input.readBoolean());
+      fieldSetter.set(SYNCHRO_ENABLED, input.readBoolean());
+      fieldSetter.set(USER_CREATED, input.readBoolean());
     }
 
     private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
@@ -120,11 +124,32 @@ public class Bank {
       fieldSetter.set(ORG, input.readUtf8String());
       fieldSetter.set(INVALID_POSITION, input.readBoolean());
       fieldSetter.set(OFX_DOWNLOAD, input.readBoolean());
-      fieldSetter.set(SYNCHRO_ENABLE, input.readBoolean());
+      fieldSetter.set(SYNCHRO_ENABLED, input.readBoolean());
+      fieldSetter.set(USER_CREATED, false);
     }
 
-    public int getWriteVersion() {
-      return 4;
+    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NAME, input.readUtf8String());
+      String url = input.readUtf8String();
+      fieldSetter.set(URL, url);
+      fieldSetter.set(DOWNLOAD_URL, url);
+      fieldSetter.set(SYNCHRO_ENABLED, input.readBoolean());
+      fieldSetter.set(USER_CREATED, false);
+    }
+
+    private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(URL, input.readUtf8String());
+      fieldSetter.set(USER_CREATED, false);
+    }
+
+    private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NAME, input.readJavaString());
+      fieldSetter.set(URL, input.readJavaString());
+      fieldSetter.set(USER_CREATED, false);
     }
   }
 

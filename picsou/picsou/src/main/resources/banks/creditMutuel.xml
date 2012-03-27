@@ -19,7 +19,7 @@
   </bankFormat>
 
   <bankFormat id='15'>
-    <bank name="Crédit Mutuel Arkéa" url="https://www.cmso.com/domiweb/accueil.jsp" downloadUrl="https://www.cmso.com/domiweb/accueil.jsp" id='15'  synchroEnable="true">
+    <bank name="Crédit Mutuel Arkéa" url="https://www.cmso.com/domiweb/accueil.jsp" downloadUrl="https://www.cmso.com/domiweb/accueil.jsp" id='15'  synchroEnabled="true">
       <bankEntity id="15589"/>
     </bank>
 

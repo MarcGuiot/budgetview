@@ -14,6 +14,7 @@ public class Experiments {
   }
 
   public void register() {
+    add(201211, "2.25: acces demo + CSV + format dates");
     add(201209, "2.24: version EN relookee sur plusieurs sites");
     add(201205, "2.23: corrections dates + aide interne import + impression");
     add(201202, "Refonte site /support");

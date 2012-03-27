@@ -41,5 +41,7 @@ public class SerializationManager {
     ProjectItem.TYPE.updateProperty(SERIALIZATION_PROPERTY, new ProjectItem.Serializer());
     RealAccount.TYPE.updateProperty(SERIALIZATION_PROPERTY, new RealAccount.Serializer());
     CsvMapping.TYPE.updateProperty(SERIALIZATION_PROPERTY, new CsvMapping.Serializer());
+//    Bank.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Bank.Serializer());
+//    BankEntity.TYPE.updateProperty(SERIALIZATION_PROPERTY, new BankEntity.Serializer());
   }
 }

@@ -125,6 +125,9 @@ public class TransactionAnalyzerFactory {
         }
       }
     }
+    catch (Throwable e) {
+      e.printStackTrace();
+    }
     finally {
       repository.completeChangeSet();
     }

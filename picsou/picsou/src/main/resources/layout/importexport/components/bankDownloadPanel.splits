@@ -10,6 +10,7 @@
            foreground="hyperlink" font="-,plain,12"
            icon="arrow_right_blue_full.png" iconTextGap="5"
            marginTop="5" marginBottom="10" fill="none" anchor="center"/>
+    <style selector="button.addBank" ui="hyperlinkButton" marginTop="5"/>
   </styles>
 
   <column>
@@ -28,6 +29,7 @@
         <scrollPane>
           <list ref="bankList"/>
         </scrollPane>
+        <button action="addBank" styleClass="addBank"/>
       </column>
 
       <cards ref="cards" weightX="2.2" marginLeft="10">

@@ -213,17 +213,24 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
 
   public void select(Iterable<Glob> globs) {
     jList.setValueIsAdjusting(true);
+    Integer firstIndex = null;
     try {
       jList.clearSelection();
       for (Glob glob : globs) {
         int index = model.model.indexOf(glob);
         if (index >= 0) {
           jList.addSelectionInterval(index, index);
+          if (firstIndex == null) {
+            firstIndex = index;
+          }
         }
       }
     }
     finally {
       jList.setValueIsAdjusting(false);
+    }
+    if (firstIndex != null) {
+      jList.scrollRectToVisible(jList.getCellBounds(firstIndex, firstIndex));
     }
   }
 

@@ -83,9 +83,10 @@ public class BankDownloadChecker extends GuiChecker {
   public BankDownloadChecker checkSecurityMessage(String content) {
     Button button = getPanel().getButton("securityInfo");
     UISpecAssert.assertThat(button.tooltipContains(content));
-// Does not work in test environment
-//    button.click();
-//    checkTipVisible(dialog, button, content);
     return this;
+  }
+
+  public BankEditionDialogChecker addNewBank() {
+     return BankEditionDialogChecker.open(getPanel().getButton("addBank").triggerClick());
   }
 }

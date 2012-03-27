@@ -1,0 +1,25 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="dialog" preferredSize="(350,280)">
+
+    <column styleClass="innerDialog">
+
+      <label ref="title" styleClass="title"/>
+
+      <grid>
+        <label gridPos="(0,0)" text="$bank.edition.name" styleClass="formLabel"/>
+        <textField gridPos="(1,0)" ref="nameField"/>
+        <label ref="nameFlag" gridPos="(2,0)" styleClass="mandatoryFieldFlag"/>
+
+        <label gridPos="(0,1)" text="$bank.edition.url" styleClass="formLabel"/>
+        <textField gridPos="(1,1)" ref="urlField"/>
+      </grid>
+
+      <filler fill="vertical"/>
+    </column>
+
+  </panel>
+
+</splits>

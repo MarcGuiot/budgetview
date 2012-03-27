@@ -77,7 +77,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
     openHelpAction = new OpenHelpAction();
     builder.add("openHelp", openHelpAction);
 
-    bankChooser = BankChooserPanel.registerComponents(builder, openHelpAction, null);
+    bankChooser = BankChooserPanel.registerComponents(builder, repository, openHelpAction, null, parent);
 
     final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(directory, parent);
     builder.add("hyperlinkHandler", hyperlinkHandler);
@@ -99,7 +99,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
     bankId = bank != null ? bank.get(Bank.ID) : null;
     openHelpAction.setBank(bank);
     cards.show(bank == null ? "noSelection" : "gotoSite");
-    boolean synchro = bank != null && (bank.get(Bank.SYNCHRO_ENABLE, false) && BankSynchroService.SHOW_SYNCHRO);
+    boolean synchro = bank != null && (bank.get(Bank.SYNCHRO_ENABLED, false) && BankSynchroService.SHOW_SYNCHRO);
     Utils.beginRemove();
     if (bank != null && bank.get(Bank.ID).equals(Bank.GENERIC_BANK_ID)){
       synchro = true;

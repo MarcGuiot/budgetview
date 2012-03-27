@@ -549,6 +549,10 @@ public class ImportDialogChecker extends GuiChecker {
     return new CsvImporterChecker(this, WindowInterceptor.getModalDialog(importButton.triggerClick()));
   }
 
+  public BankEditionDialogChecker addNewBank() {
+    return getBankDownload().addNewBank();
+  }
+
   public static class CompletionChecker {
     private int loadedTransactionCount;
     private final int importedTransactionCount;
