@@ -32,6 +32,7 @@ public class SeriesShape {
   public static IntegerField PERCENT_10; //25->31
   public static DoubleField TOTAL;
   public static IntegerField LAST_MONTH;
+  public static IntegerField FIXED_DATE;
 
   static {
     GlobTypeLoader.init(SeriesShape.class);

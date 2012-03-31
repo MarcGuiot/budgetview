@@ -41,6 +41,7 @@ public abstract class WebBankPage extends BankPage {
           public InputStream getInputStream() throws IOException {
             Header type = httpResponse.getEntity().getContentType();
             System.out.println("WebBankPage.getInputStream " + type.getName() + "  " + type.getValue());
+
             return content.getInputStream();
           }
         };

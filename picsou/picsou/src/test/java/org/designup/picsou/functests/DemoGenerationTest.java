@@ -26,7 +26,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   private int secondMonth;
   private int firstMonth;
   
-  private static Locale DEFAULT_LOCALE = Locale.ROOT;
+  private static Locale DEFAULT_LOCALE = new Locale("__", "", ""  );
 
   protected void setUp() throws Exception {
     Locale.setDefault(DEFAULT_LOCALE);

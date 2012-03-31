@@ -1,0 +1,6 @@
+base de données :
+
+ajout manuel d'utilisateur:
+
+redemarage du serveur de licence:
+

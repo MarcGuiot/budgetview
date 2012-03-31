@@ -138,7 +138,7 @@ public class Series {
 
   @DefaultBoolean(false)
   public static BooleanField IS_INITIAL;
-
+  
   @DefaultBoolean(false)
   public static BooleanField FORCE_SINGLE_OPERATION;
 
