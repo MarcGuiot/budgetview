@@ -37,7 +37,9 @@ public class RestoreSnapshotTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/08/27", 500, "Company")
       .load();
-    operations.protectFromAnonymous("user1", "pass1");
+    operations.setPasswordForAnonymous()
+      .setPassword("user1", "pass1")
+      .validate();
 
     OfxBuilder.init(this)
       .addTransaction("2008/08/27", -100, "Auchan")

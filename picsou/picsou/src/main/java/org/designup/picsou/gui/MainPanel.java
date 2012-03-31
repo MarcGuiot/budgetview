@@ -91,7 +91,7 @@ public class MainPanel {
   private ImportFileAction importFileAction;
   private ExportFileAction exportFileAction;
   private SendFeedbackAction sendFeedbackAction;
-  private ProtectAction protectAction;
+  private SetPasswordAction setPasswordAction;
   private BackupAction backupAction;
   private RestoreFileAction restoreActionFileAction;
   private RestoreSnapshotMenuAction restoreSnapshotMenuAction;
@@ -164,7 +164,7 @@ public class MainPanel {
     registerAction = new RegisterLicenseAction(repository, directory);
     exitAction = new ExitAction(windowManager, repository, directory);
     logoutAction = new LogoutAction(logoutService);
-    protectAction = new ProtectAction(repository, directory);
+    setPasswordAction = new SetPasswordAction(repository, directory);
     deleteUserAction = new DeleteUserAction(this, repository, directory);
     threadsAction = new SendStackTracesAction(repository, directory);
 
@@ -281,7 +281,7 @@ public class MainPanel {
 
     menu.addSeparator();
     menu.add(registerAction);
-    menu.add(protectAction);
+    menu.add(setPasswordAction);
     menu.add(logoutAction);
     menu.add(deleteUserAction);
 

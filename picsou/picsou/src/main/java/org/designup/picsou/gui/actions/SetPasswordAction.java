@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.actions;
 
 import org.designup.picsou.gui.backup.AbstractBackupRestoreAction;
-import org.designup.picsou.gui.backup.RenameDialog;
+import org.designup.picsou.gui.backup.SetPasswordDialog;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.model.User;
 import org.globsframework.model.GlobRepository;
@@ -15,10 +15,10 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
-public class ProtectAction extends AbstractBackupRestoreAction {
+public class SetPasswordAction extends AbstractBackupRestoreAction {
 
-  public ProtectAction(GlobRepository repository, Directory directory) {
-    super(Lang.get("protect"), repository, directory);
+  public SetPasswordAction(GlobRepository repository, Directory directory) {
+    super(Lang.get("setPassword.menu.protect"), repository, directory);
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(User.KEY)){
@@ -38,16 +38,16 @@ public class ProtectAction extends AbstractBackupRestoreAction {
     Glob user = repository.find(User.KEY);
     if (user != null){
       if (user.get(User.AUTO_LOGIN)){
-        putValue(Action.NAME, Lang.get("protect"));
+        putValue(Action.NAME, Lang.get("setPassword.menu.protect"));
       }
       else {
-        putValue(Action.NAME, Lang.get("changePassword"));
+        putValue(Action.NAME, Lang.get("setPassword.menu.change"));
       }
     }
   }
 
   public void actionPerformed(ActionEvent e) {
-    RenameDialog dialog = new RenameDialog(repository, directory);
+    SetPasswordDialog dialog = new SetPasswordDialog(repository, directory);
     dialog.show();
   }
 }

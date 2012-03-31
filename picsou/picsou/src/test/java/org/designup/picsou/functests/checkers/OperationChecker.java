@@ -9,7 +9,6 @@ import org.globsframework.utils.Ref;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
-
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
@@ -48,12 +47,12 @@ public class OperationChecker {
       .acceptFile();
 
     int count = 0;
-    while (!importDialogChecker.isLastStep() && count < 10){
-      if (importDialogChecker.isNew()){
+    while (!importDialogChecker.isLastStep() && count < 10) {
+      if (importDialogChecker.isNew()) {
         importDialogChecker.setMainAccount();
       }
       count++;
-      if (!importDialogChecker.isLastStep()){
+      if (!importDialogChecker.isLastStep()) {
         importDialogChecker.checkNoErrorMessage();
       }
       importDialogChecker.doImport();
@@ -129,7 +128,7 @@ public class OperationChecker {
     ImportDialogChecker importDialogChecker = openImportDialog()
       .selectFiles(name)
       .acceptFile();
-    while  (!importDialogChecker.isLastStep()){
+    while (!importDialogChecker.isLastStep()) {
       importDialogChecker.selectBank(bank)
         .setMainAccount()
         .doImport();
@@ -183,7 +182,7 @@ public class OperationChecker {
       .setFilePath(file)
       .acceptFile();
 
-    while (!importDialogChecker.isLastStep()){
+    while (!importDialogChecker.isLastStep()) {
       importDialogChecker
         .setAccountName("Main account")
         .setPosition(0)
@@ -552,26 +551,22 @@ public class OperationChecker {
     return MessageAndDetailsDialogChecker.init(getThrowExceptionInRepositoryMenu().triggerClick());
   }
 
-  public void protect(String userName, String password) {
-    MenuItem protectMenu = getFileMenu().getSubMenu("Change identifier");
-    RenameChecker checker =
-      new RenameChecker(WindowInterceptor.getModalDialog(protectMenu.triggerClick()));
-    checker.set("password", userName, password);
+  public SetPasswordChecker changeAccountIdentifiers() {
+    MenuItem protectMenu = getFileMenu().getSubMenu("Change user name and password");
+    return new SetPasswordChecker(WindowInterceptor.getModalDialog(protectMenu.triggerClick()));
   }
 
-  public void protectFromAnonymous(String userName, String password) {
-    MenuItem protectMenu = getFileMenu().getSubMenu("protect");
-    RenameChecker checker =
-      new RenameChecker(WindowInterceptor.getModalDialog(protectMenu.triggerClick()));
-    checker.set(userName, password);
+  public SetPasswordChecker setPasswordForAnonymous() {
+    MenuItem protectMenu = getFileMenu().getSubMenu("Protect account with a password");
+    return new SetPasswordChecker(WindowInterceptor.getModalDialog(protectMenu.triggerClick()));
   }
 
-  public void checkProtect() {
-    UISpecAssert.assertThat(getFileMenu().contain("protect"));
+  public void checkSetPasswordIsProtect() {
+    UISpecAssert.assertThat(getFileMenu().contain("Protect account with a password"));
   }
 
-  public void checkChangeUserName() {
-    UISpecAssert.assertThat(getFileMenu().contain("Change identifiers..."));
+  public void checkSetPasswordIsChange() {
+    UISpecAssert.assertThat(getFileMenu().contain("Change user name and password"));
   }
 
   public void checkDataIsOk() {

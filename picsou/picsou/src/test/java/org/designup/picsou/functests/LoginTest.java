@@ -90,7 +90,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     login.logNewUser("toto", "p4ssw0rd");
     OperationChecker operationChecker = OperationChecker.init(window);
     operationChecker.importOfxFile(filePath);
-    operationChecker.checkChangeUserName();
+    operationChecker.checkSetPasswordIsChange();
     getTransactionView()
       .initContent()
       .add("11/01/2006", TransactionType.CHECK, "CHEQUE N°12345", "", -12.00)
@@ -355,7 +355,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
     operations = new OperationChecker(window);
-    operations.checkProtect();
+    operations.checkSetPasswordIsProtect();
     operations.importOfxFile(path);
     operations.logout();
     firstLogin = false;
