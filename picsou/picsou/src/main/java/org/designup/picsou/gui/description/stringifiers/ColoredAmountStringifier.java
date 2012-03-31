@@ -1,5 +1,6 @@
-package org.designup.picsou.gui.description;
+package org.designup.picsou.gui.description.stringifiers;
 
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.utils.AmountColors;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;

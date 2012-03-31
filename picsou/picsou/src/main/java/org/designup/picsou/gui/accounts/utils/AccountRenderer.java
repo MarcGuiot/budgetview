@@ -1,8 +1,6 @@
 package org.designup.picsou.gui.accounts.utils;
 
-import org.designup.picsou.model.Account;
-import org.designup.picsou.utils.Lang;
-import org.designup.picsou.gui.description.AccountStringifier;
+import org.designup.picsou.gui.description.stringifiers.AccountStringifier;
 import org.globsframework.model.Glob;
 
 import javax.swing.*;

@@ -6,8 +6,9 @@ import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.description.MonthYearStringifier;
+import org.designup.picsou.gui.description.stringifiers.MonthYearStringifier;
 import org.designup.picsou.gui.series.edition.MonthCheckBoxUpdater;
+import org.designup.picsou.gui.series.edition.SeriesForecastPanel;
 import org.designup.picsou.gui.series.subseries.SubSeriesEditionPanel;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
@@ -78,6 +79,7 @@ public class SeriesEditionDialog {
   private CardHandler monthSelectionCards;
   private JLabel savingsMessage;
   private SubSeriesEditionPanel subSeriesEditionPanel;
+  private SeriesForecastPanel forecastPanel;
   private GlobMatcher accountFilter;
   private GlobLinkComboEditor budgetAreaCombo;
   private JTabbedPane tabbedPane;
@@ -99,7 +101,7 @@ public class SeriesEditionDialog {
     localRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(BudgetArea.TYPE, Month.TYPE, CurrentMonth.TYPE,
             ProfileType.TYPE, Account.TYPE, SubSeries.TYPE,
-            Bank.TYPE, BankEntity.TYPE, AccountUpdateMode.TYPE)
+            Bank.TYPE, BankEntity.TYPE, AccountUpdateMode.TYPE, DayOfMonth.TYPE)
       .get();
 
     localRepository.addTrigger(new SingleMonthProfileTypeUpdater());
@@ -289,6 +291,9 @@ public class SeriesEditionDialog {
 
     subSeriesEditionPanel = new SubSeriesEditionPanel(localRepository, localDirectory, dialog);
     builder.add("subSeriesEditionPanel", subSeriesEditionPanel.getPanel());
+
+    forecastPanel = new SeriesForecastPanel(localRepository, localDirectory);
+    builder.add("forecastPanel", forecastPanel.getPanel());
 
     localRepository.addChangeListener(new OkButtonUpdater());
 
@@ -664,6 +669,7 @@ public class SeriesEditionDialog {
   public void setCurrentSeries(Glob currentSeries) {
     this.currentSeries = currentSeries;
     this.subSeriesEditionPanel.setCurrentSeries(currentSeries);
+    this.forecastPanel.setCurrentSeries(currentSeries);
     endDateTextFieldView.getComponent().setEnabled(this.currentSeries != null);
     startTextFieldView.getComponent().setEnabled(this.currentSeries != null);
     reportCheckBox.getComponent().setEnabled(this.currentSeries != null);

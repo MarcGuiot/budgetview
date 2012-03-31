@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.description;
+package org.designup.picsou.gui.description.stringifiers;
 
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;

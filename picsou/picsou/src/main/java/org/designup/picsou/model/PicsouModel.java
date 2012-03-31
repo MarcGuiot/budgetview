@@ -40,7 +40,8 @@ public class PicsouModel {
                           RealAccount.TYPE,
                           NumericDateType.TYPE,
                           TextDateType.TYPE,
-                          CsvMapping.TYPE
+                          CsvMapping.TYPE,
+                          DayOfMonth.TYPE
                           )
       .get();
 

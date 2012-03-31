@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.description;
 
 import org.designup.picsou.gui.accounts.utils.MonthDay;
+import org.designup.picsou.gui.description.stringifiers.*;
 import org.designup.picsou.gui.projects.utils.ProjectStringifier;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -102,6 +103,9 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
     }
     if (globType.equals(Project.TYPE)) {
       return new ProjectStringifier();
+    }
+    if (globType.equals(DayOfMonth.TYPE)) {
+      return new DayOfMonthStringifier();
     }
     return super.getStringifier(globType);
   }

@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.series.analysis.evolution;
 
-import org.designup.picsou.gui.description.SeriesWrapperDescriptionStringifier;
+import org.designup.picsou.gui.description.stringifiers.SeriesWrapperDescriptionStringifier;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.analysis.SeriesChartsColors;
 import org.designup.picsou.gui.series.view.SeriesWrapperStringifier;

@@ -12,6 +12,7 @@ import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -681,6 +682,55 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   public SeriesEditionDialogChecker checkMainTabIsSelected() {
     assertThat(dialog.getTabGroup().selectedTabEquals("Terms"));
     return this;
+  }
+
+  public SeriesEditionDialogChecker forceSingleOperationForecast() {
+    getForceSingleOperationCheckBox().select();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker unselectedForceSingleOperationForecast() {
+    getForceSingleOperationCheckBox().unselect();
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkForceSingleOperationSelected(boolean selected) {
+    assertEquals(selected, getForceSingleOperationCheckBox().isSelected());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkForceSingleOperationDayEnabled(boolean enabled) {
+    assertEquals(enabled, getForceSingleOperationDayCombo().isEnabled());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkForceSingleOperationDay(int day) {
+    assertThat(getForceSingleOperationDayCombo().selectionEquals(Integer.toString(day)));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker setForceSingleOperationDay(int day) {
+    getForceSingleOperationDayCombo().select(Integer.toString(day));
+    return this;
+  }
+
+  private CheckBox getForceSingleOperationCheckBox() {
+    dialog.getTabGroup().selectTab("Forecast");
+    return dialog.getCheckBox("forceSingleOperationCheckbox");
+  }
+
+  public SeriesEditionDialogChecker checkForceSingleOperationDayList(Integer[] values) {
+    List<String> content = new ArrayList<String>();
+    for (Integer value : values) {
+      content.add(Integer.toString(value));
+    }
+    assertThat(getForceSingleOperationDayCombo().contentEquals(content.toArray(new String[content.size()])));
+    return this;
+  }
+
+  private ComboBox getForceSingleOperationDayCombo() {
+    dialog.getTabGroup().selectTab("Forecast");
+    return dialog.getComboBox("forceSingleOperationDayCombo");
   }
 
   private HistoChartChecker getChart() {

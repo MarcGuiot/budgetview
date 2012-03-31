@@ -3,7 +3,7 @@ package org.designup.picsou.gui.accounts;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.utils.GotoAccountWebsiteAction;
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.description.AccountComparator;
+import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.utils.Matchers;

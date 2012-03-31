@@ -15,7 +15,8 @@ import java.util.Set;
 public class GlobCheckBoxView extends AbstractGlobComponentHolder<GlobCheckBoxView> implements GlobSelectionListener, ChangeSetListener {
   private JCheckBox checkBox;
   private BooleanField field;
-  private GlobList currentsGlob;
+  private GlobList currentGlobs = new GlobList();
+  private Key forcedKey;
 
   public static GlobCheckBoxView init(BooleanField field, GlobRepository globRepository, Directory directory) {
     return new GlobCheckBoxView(field, globRepository, directory);
@@ -36,7 +37,7 @@ public class GlobCheckBoxView extends AbstractGlobComponentHolder<GlobCheckBoxVi
 
   private void apply() {
     repository.startChangeSet();
-    for (Glob glob : currentsGlob) {
+    for (Glob glob : currentGlobs) {
       repository.update(glob.getKey(), field, checkBox.isSelected());
     }
     repository.completeChangeSet();
@@ -46,43 +47,53 @@ public class GlobCheckBoxView extends AbstractGlobComponentHolder<GlobCheckBoxVi
     return checkBox;
   }
 
-  public void dispose() {
-    repository.removeTrigger(this);
-    selectionService.removeListener(this);
-  }
-
-  public void selectionUpdated(GlobSelection selection) {
-    currentsGlob = selection.getAll(type);
-    updateBox();
-  }
-
-  private void updateBox() {
-    if (currentsGlob != null) {
-      Set set = currentsGlob.getValueSet(field);
-      checkBox.setEnabled(set.size() != 0);
-      if (set.size() == 1) {
-        checkBox.setSelected(Boolean.TRUE.equals(set.iterator().next()));
-      }
-    }
-  }
-
   public GlobCheckBoxView forceSelection(Key key) {
+    this.forcedKey = key;
     selectionService.removeListener(this);
-    Glob glob = repository.find(key);
+    Glob glob = repository.find(forcedKey);
     if (glob != null) {
-      currentsGlob = new GlobList(glob);
-      updateBox();
+      currentGlobs = new GlobList(glob);
     }
+    else {
+      currentGlobs = new GlobList();
+    }
+    updateBox();
     return this;
   }
 
-  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+  public void selectionUpdated(GlobSelection selection) {
+    currentGlobs = selection.getAll(type);
     updateBox();
+  }
+
+  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+    if (changeSet.containsChanges(type)) {
+      currentGlobs.keepExistingGlobsOnly(repository);
+      if ((forcedKey != null)) {
+        Glob glob = repository.find(forcedKey);
+        if (glob != null && !currentGlobs.contains(glob)) {
+          currentGlobs.add(glob);
+        }
+      }
+      updateBox();
+    }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(type)) {
-      currentsGlob = GlobList.EMPTY;
+      currentGlobs = new GlobList();
+      updateBox();
     }
+  }
+
+  private void updateBox() {
+    Set values = currentGlobs.getValueSet(field);
+    checkBox.setSelected(!values.isEmpty() && Boolean.TRUE.equals(values.iterator().next()));
+    checkBox.setEnabled(values.size() > 0);
+  }
+
+  public void dispose() {
+    repository.removeTrigger(this);
+    selectionService.removeListener(this);
   }
 }

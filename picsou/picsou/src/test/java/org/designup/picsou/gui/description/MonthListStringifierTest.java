@@ -1,8 +1,9 @@
 package org.designup.picsou.gui.description;
 
 import junit.framework.TestCase;
+import org.designup.picsou.gui.description.stringifiers.MonthListStringifier;
+import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.model.Month;
-import org.globsframework.model.FieldValue;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
 import static org.globsframework.model.FieldValue.value;

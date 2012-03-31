@@ -10,7 +10,7 @@ import org.designup.picsou.gui.components.charts.*;
 import org.designup.picsou.gui.components.highlighting.HighlightUpdater;
 import org.designup.picsou.gui.components.tips.ShowDetailsTipAction;
 import org.designup.picsou.gui.components.utils.BlankAction;
-import org.designup.picsou.gui.description.ForcedPlusGlobListStringifier;
+import org.designup.picsou.gui.description.stringifiers.ForcedPlusGlobListStringifier;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;

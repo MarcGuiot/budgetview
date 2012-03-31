@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.description;
+package org.designup.picsou.gui.description.stringifiers;
 
 import org.designup.picsou.gui.time.TimeService;
 import static org.designup.picsou.model.Account.*;

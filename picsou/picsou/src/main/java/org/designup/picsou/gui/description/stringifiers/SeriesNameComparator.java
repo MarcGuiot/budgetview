@@ -1,8 +1,7 @@
-package org.designup.picsou.gui.description;
+package org.designup.picsou.gui.description.stringifiers;
 
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Utils;
-import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.model.Series;
 
 import java.util.Comparator;

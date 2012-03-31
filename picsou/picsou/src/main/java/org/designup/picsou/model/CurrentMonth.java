@@ -1,6 +1,5 @@
 package org.designup.picsou.model;
 
-import org.designup.picsou.gui.description.MonthYearStringifier;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;

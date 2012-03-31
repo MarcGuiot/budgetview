@@ -3,6 +3,7 @@ package org.designup.picsou.functests;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.utils.Utils;
 
 public class SeriesShapeTest extends LoggedInFunctionalTestCase {
 
@@ -64,7 +65,6 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .add("10/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("10/07/2008", TransactionType.PRELEVEMENT, "ED1", "", -50.00, "Courses")
       .check();
-
   }
 
   public void testObservedNearPlannnedInCurrentMonth() throws Exception {
@@ -195,4 +195,112 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testUserCanForceSingleOperationModeWithPredefinedDay() throws Exception {
+
+    operations.openPreferences()
+      .setFutureMonthsCount(2)
+      .validate();
+
+    operations.openDevOptions()
+      .setPeriodInMonth(4)
+      .setMonthBack(3)
+      .validate();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/05", -30.00, "Auchan")
+      .addTransaction("2008/08/10", -60.00, "Auchan")
+      .addTransaction("2008/07/15", -20.00, "Auchan")
+      .addTransaction("2008/07/20", -70.00, "Auchan")
+      .addTransaction("2008/06/25", -90.00, "Auchan")
+      .load();
+
+    categorization.setNewVariable("Auchan", "Courses", -90.00);
+
+    timeline.selectAll();
+    transactions.showPlannedTransactions()
+      .initContent()
+      .add("27/10/2008", TransactionType.PLANNED, "Planned: Courses", "", -33.00, "Courses")
+      .add("19/10/2008", TransactionType.PLANNED, "Planned: Courses", "", -22.00, "Courses")
+      .add("11/10/2008", TransactionType.PLANNED, "Planned: Courses", "", -26.00, "Courses")
+      .add("04/10/2008", TransactionType.PLANNED, "Planned: Courses", "", -9.00, "Courses")
+      .add("27/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -33.00, "Courses")
+      .add("19/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -22.00, "Courses")
+      .add("11/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -26.00, "Courses")
+      .add("04/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -9.00, "Courses")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -60.00, "Courses")
+      .add("05/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -30.00, "Courses")
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -70.00, "Courses")
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -20.00, "Courses")
+      .add("25/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -90.00, "Courses")
+      .check();
+
+    budgetView.variable.editSeries("Courses")
+      .checkForceSingleOperationSelected(false)
+      .checkForceSingleOperationDayEnabled(false)
+      .forceSingleOperationForecast()
+      .checkForceSingleOperationDayEnabled(true)
+      .checkForceSingleOperationDayList(Utils.range(1, 31))
+      .checkForceSingleOperationDay(15)
+      .setForceSingleOperationDay(20)
+      .validate();
+
+    fail("TODO: A CODER!");
+    
+    transactions.showPlannedTransactions()
+      .initContent()
+      .add("20/10/2008", TransactionType.PLANNED, "Planned: Courses", "", -90.00, "Courses")
+      .add("20/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -90.00, "Courses")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -60.00, "Courses")
+      .add("05/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -30.00, "Courses")
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -70.00, "Courses")
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -20.00, "Courses")
+      .add("25/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -90.00, "Courses")
+      .check();
+
+    budgetView.variable.editSeries("Courses")
+      .checkForceSingleOperationSelected(true)
+      .checkForceSingleOperationDayEnabled(true)
+      .checkForceSingleOperationDay(20)
+      .unselectedForceSingleOperationForecast()
+      .checkForceSingleOperationDayEnabled(false)
+      .validate();
+
+    transactions.showPlannedTransactions()
+      .initContent()
+      .add("27/10/2008", TransactionType.PLANNED, "Planned: Courses", "", -33.00, "Courses")
+      .add("19/10/2008", TransactionType.PLANNED, "Planned: Courses", "", -22.00, "Courses")
+      .add("11/10/2008", TransactionType.PLANNED, "Planned: Courses", "", -26.00, "Courses")
+      .add("04/10/2008", TransactionType.PLANNED, "Planned: Courses", "", -9.00, "Courses")
+      .add("27/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -33.00, "Courses")
+      .add("19/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -22.00, "Courses")
+      .add("11/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -26.00, "Courses")
+      .add("04/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -9.00, "Courses")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -60.00, "Courses")
+      .add("05/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -30.00, "Courses")
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -70.00, "Courses")
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -20.00, "Courses")
+      .add("25/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -90.00, "Courses")
+      .check();
+
+    budgetView.variable.editSeries("Courses")
+      .checkForceSingleOperationSelected(false)
+      .checkForceSingleOperationDayEnabled(false)
+      .forceSingleOperationForecast()
+      .checkForceSingleOperationDayEnabled(true)
+      .checkForceSingleOperationDay(20)
+      .setForceSingleOperationDay(31)
+      .validate();
+
+    // Takes into account actual last day of month in september
+    transactions.showPlannedTransactions()
+      .initContent()
+      .add("31/10/2008", TransactionType.PLANNED, "Planned: Courses", "", -90.00, "Courses")
+      .add("30/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -90.00, "Courses")
+      .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -60.00, "Courses")
+      .add("05/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -30.00, "Courses")
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -70.00, "Courses")
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -20.00, "Courses")
+      .add("25/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -90.00, "Courses")
+      .check();
+  }
 }

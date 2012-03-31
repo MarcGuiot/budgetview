@@ -139,6 +139,10 @@
             <panel ref="subSeriesEditionPanel" border="empty(10)"/>
           </tab>
 
+          <tab title="$seriesEdition.tabs.forecast">
+            <panel ref="forecastPanel" border="empty(10)"/>
+          </tab>
+
           <tab title="$seriesEdition.tabs.description">
             <row border="empty(10)">
               <label text="$seriesEdition.description" styleClass="formLabel" anchor="top"/>
@@ -150,6 +154,7 @@
               </scrollPane>
             </row>
           </tab>
+          
         </tabs>
 
       </column>

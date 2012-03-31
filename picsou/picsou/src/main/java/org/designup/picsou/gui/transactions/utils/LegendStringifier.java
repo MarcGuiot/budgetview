@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.transactions.utils;
 
-import org.designup.picsou.gui.description.AccountListStringifier;
-import org.designup.picsou.gui.description.MonthListStringifier;
+import org.designup.picsou.gui.description.stringifiers.AccountListStringifier;
+import org.designup.picsou.gui.description.stringifiers.MonthListStringifier;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;

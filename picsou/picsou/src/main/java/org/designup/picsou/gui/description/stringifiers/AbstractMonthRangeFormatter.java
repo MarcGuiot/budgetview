@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.description;
+package org.designup.picsou.gui.description.stringifiers;
 
 public abstract class AbstractMonthRangeFormatter implements MonthRangeFormatter {
   public String year(int year) {

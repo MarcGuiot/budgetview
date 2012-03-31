@@ -2,7 +2,7 @@ package org.designup.picsou.gui.transactions.search;
 
 import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
-import org.designup.picsou.gui.description.TransactionSeriesStringifier;
+import org.designup.picsou.gui.description.stringifiers.TransactionSeriesStringifier;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;

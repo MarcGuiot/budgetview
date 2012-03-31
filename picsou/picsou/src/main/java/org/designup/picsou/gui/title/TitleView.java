@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.title;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.description.MonthListStringifier;
-import org.designup.picsou.gui.description.MonthRangeFormatter;
+import org.designup.picsou.gui.description.stringifiers.MonthListStringifier;
+import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;

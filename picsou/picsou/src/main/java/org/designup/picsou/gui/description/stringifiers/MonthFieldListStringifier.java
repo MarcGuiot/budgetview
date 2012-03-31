@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.description;
+package org.designup.picsou.gui.description.stringifiers;
 
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.GlobList;

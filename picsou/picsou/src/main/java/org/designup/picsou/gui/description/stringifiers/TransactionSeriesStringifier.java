@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.description;
+package org.designup.picsou.gui.description.stringifiers;
 
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SubSeries;

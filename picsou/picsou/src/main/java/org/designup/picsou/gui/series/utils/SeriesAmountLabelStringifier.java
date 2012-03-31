@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.series.utils;
 
-import org.designup.picsou.gui.description.MonthListStringifier;
+import org.designup.picsou.gui.description.stringifiers.MonthListStringifier;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.utils.Lang;

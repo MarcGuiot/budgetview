@@ -1,5 +1,6 @@
-package org.designup.picsou.gui.description;
+package org.designup.picsou.gui.description.stringifiers;
 
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.fields.IntegerField;

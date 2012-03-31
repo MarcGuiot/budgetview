@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.designup.picsou.gui.description.SeriesDescriptionStringifier;
+import org.designup.picsou.gui.description.stringifiers.SeriesDescriptionStringifier;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;

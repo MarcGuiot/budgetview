@@ -3,6 +3,7 @@ package org.designup.picsou.gui.description;
 import junit.framework.TestCase;
 import static org.designup.picsou.model.Account.*;
 
+import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.AccountCardType;
 import org.globsframework.model.*;

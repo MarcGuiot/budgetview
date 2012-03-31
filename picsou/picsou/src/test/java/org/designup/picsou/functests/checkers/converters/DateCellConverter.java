@@ -1,6 +1,6 @@
 package org.designup.picsou.functests.checkers.converters;
 
-import org.designup.picsou.gui.description.TransactionDateStringifier;
+import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.model.Glob;

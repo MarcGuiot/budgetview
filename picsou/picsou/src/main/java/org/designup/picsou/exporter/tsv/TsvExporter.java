@@ -1,8 +1,8 @@
 package org.designup.picsou.exporter.tsv;
 
 import org.designup.picsou.exporter.Exporter;
-import org.designup.picsou.gui.description.AmountStringifier;
-import org.designup.picsou.gui.description.TransactionDateStringifier;
+import org.designup.picsou.gui.description.stringifiers.AmountStringifier;
+import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
