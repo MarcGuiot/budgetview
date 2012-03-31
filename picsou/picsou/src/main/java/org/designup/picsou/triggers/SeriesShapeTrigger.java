@@ -136,32 +136,55 @@ public class SeriesShapeTrigger implements ChangeSetListener {
                   seriesToReCompute, repository, lastTransactionMonthId, monthCount);
       }
     });
+    changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+        addSeries(lastTransactionMonthId, key.get(Series.ID), seriesToReCompute, 
+                  repository, lastTransactionMonthId, monthCount);
+     }
+
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+        if (values.contains(Series.FORCE_SINGLE_OPERATION) || values.contains(Series.FORCE_SINGLE_OPERATION_DAY))
+        addSeries(lastTransactionMonthId, key.get(Series.ID), seriesToReCompute,
+                  repository, lastTransactionMonthId, monthCount);
+      }
+
+      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+      }
+    });
 
     Integer periodInMonth = userPreference.get(UserPreferences.PERIOD_COUNT_FOR_PLANNED);
     for (SeriesToReCompute series : seriesToReCompute.values()) {
-      final Glob seriesShape = repository.findOrCreate(Key.create(SeriesShape.TYPE, series.seriesId));
-      TransactionGlobFunctor transactionGlobFunctor =
-        new TransactionGlobFunctor(repository, periodInMonth, monthCount, series);
-      repository
-        .findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.seriesId)
-        .saveApply(transactionGlobFunctor, repository);
-      Field[] fields = SeriesShape.TYPE.getFields();
-      repository.startChangeSet();
-
-      if (!transactionGlobFunctor.hasData()) {
-        repository.delete(seriesShape.getKey());
-      }
-      else {
-
-        transactionGlobFunctor.updateForSingleOp();
-
-        for (int i = 1; i < fields.length - 1; i++) {
-          repository.update(seriesShape.getKey(), fields[i], transactionGlobFunctor.getPercent(i));
+      Glob seriesData = repository.find(Key.create(Series.TYPE, series.seriesId));
+      if (seriesData != null) {
+        final Glob seriesShape = repository.findOrCreate(Key.create(SeriesShape.TYPE, series.seriesId));
+        if (seriesData.isTrue(Series.FORCE_SINGLE_OPERATION)) {
+          setFixedDateToSeriesShape(repository, seriesData, seriesShape);
         }
-        repository.update(seriesShape.getKey(), SeriesShape.TOTAL, transactionGlobFunctor.getTotal());
-        repository.update(seriesShape.getKey(), SeriesShape.LAST_MONTH, series.monthId1);
+        else {
+          TransactionGlobFunctor transactionGlobFunctor =
+            new TransactionGlobFunctor(repository, periodInMonth, monthCount, series);
+          repository
+            .findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.seriesId)
+            .saveApply(transactionGlobFunctor, repository);
+          Field[] fields = SeriesShape.TYPE.getFields();
+          repository.startChangeSet();
+
+          if (!transactionGlobFunctor.hasData()) {
+            repository.delete(seriesShape.getKey());
+          }
+          else {
+            transactionGlobFunctor.updateForSingleOp();
+
+            for (int i = 1; i < fields.length - 1; i++) {
+              repository.update(seriesShape.getKey(), fields[i], transactionGlobFunctor.getPercent(i));
+            }
+            repository.update(seriesShape.getKey(), SeriesShape.TOTAL, transactionGlobFunctor.getTotal());
+            repository.update(seriesShape.getKey(), SeriesShape.LAST_MONTH, series.monthId1);
+            repository.update(seriesShape.getKey(), SeriesShape.FIXED_DATE, null);
+          }
+          repository.completeChangeSet();
+        }
       }
-      repository.completeChangeSet();
     }
   }
 
@@ -223,28 +246,42 @@ public class SeriesShapeTrigger implements ChangeSetListener {
       Integer monthCount = userPreference.get(UserPreferences.MONTH_FOR_PLANNED);
       repository.deleteAll(SeriesShape.TYPE);
       for (Glob series : repository.getAll(Series.TYPE)) {
-        SeriesToReCompute seriesToReCompute = findValidMonth(repository, series.get(Series.ID), lastTransactionMonthId, userPreference.get(UserPreferences.MONTH_FOR_PLANNED));
-        TransactionGlobFunctor transactionGlobFunctor =
-          new TransactionGlobFunctor(repository, periodInMonth, monthCount, seriesToReCompute);
-        repository
-          .findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
-          .saveApply(transactionGlobFunctor, repository);
-        Field[] fields = SeriesShape.TYPE.getFields();
-
-        if (transactionGlobFunctor.hasData()) {
-          transactionGlobFunctor.updateForSingleOp();
+        if (series.isTrue(Series.FORCE_SINGLE_OPERATION)) {
           final Glob seriesShape = repository.findOrCreate(Key.create(SeriesShape.TYPE, series.get(Series.ID)));
-          for (int i = 1; i < fields.length - 1; i++) {
-            repository.update(seriesShape.getKey(), fields[i], transactionGlobFunctor.getPercent(i));
+          setFixedDateToSeriesShape(repository, series, seriesShape);
+        }
+        else {
+          SeriesToReCompute seriesToReCompute = findValidMonth(repository, series.get(Series.ID), lastTransactionMonthId, userPreference.get(UserPreferences.MONTH_FOR_PLANNED));
+          TransactionGlobFunctor transactionGlobFunctor =
+            new TransactionGlobFunctor(repository, periodInMonth, monthCount, seriesToReCompute);
+          repository
+            .findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
+            .saveApply(transactionGlobFunctor, repository);
+          Field[] fields = SeriesShape.TYPE.getFields();
+
+          if (transactionGlobFunctor.hasData()) {
+            transactionGlobFunctor.updateForSingleOp();
+            final Glob seriesShape = repository.findOrCreate(Key.create(SeriesShape.TYPE, series.get(Series.ID)));
+            for (int i = 1; i < fields.length - 1; i++) {
+              repository.update(seriesShape.getKey(), fields[i], transactionGlobFunctor.getPercent(i));
+            }
+            repository.update(seriesShape.getKey(), SeriesShape.TOTAL, transactionGlobFunctor.getTotal());
+            repository.update(seriesShape.getKey(), SeriesShape.LAST_MONTH, seriesToReCompute.monthId1);
           }
-          repository.update(seriesShape.getKey(), SeriesShape.TOTAL, transactionGlobFunctor.getTotal());
-          repository.update(seriesShape.getKey(), SeriesShape.LAST_MONTH, seriesToReCompute.monthId1);
         }
       }
     }
     finally {
       repository.completeChangeSet();
     }
+  }
+
+  private void setFixedDateToSeriesShape(GlobRepository repository, Glob series, Glob seriesShape) {
+    Field[] fields = SeriesShape.TYPE.getFields();
+    for (int i = 1; i < fields.length - 1; i++) {
+      repository.update(seriesShape.getKey(), fields[i], 0.);
+    }
+    repository.update(seriesShape.getKey(), SeriesShape.FIXED_DATE, series.get(Series.FORCE_SINGLE_OPERATION_DAY));
   }
 
   private SeriesToReCompute findValidMonth(GlobRepository repository, Integer seriesId,
@@ -378,16 +415,16 @@ public class SeriesShapeTrigger implements ChangeSetListener {
           int day2 = getDay(amountForMonth2);
           int day3 = getDay(amountForMonth3);
           int day = (day1 + day2 + day3) / (opCount1 + opCount2 + opCount3);
-          if (day1 != 0 ){
-            if (day != day1){
+          if (day1 != 0) {
+            if (day != day1) {
               amountForMonth1[day] = amountForMonth1[day1];
               amountForMonth1[day1] = 0;
             }
           }
-          else if (day2 != 0){
+          else if (day2 != 0) {
             amountForMonth1[day] = amountForMonth2[day2];
           }
-          else if (day3 != 0){
+          else if (day3 != 0) {
             amountForMonth1[day] = amountForMonth2[day3];
           }
           monthCount = 1;

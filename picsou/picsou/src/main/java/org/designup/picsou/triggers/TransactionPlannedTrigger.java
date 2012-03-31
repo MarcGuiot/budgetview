@@ -7,16 +7,18 @@ import org.designup.picsou.model.util.Amounts;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import org.globsframework.utils.Dates;
 import org.globsframework.utils.Log;
-import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.collections.Pair;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
+
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class TransactionPlannedTrigger implements ChangeSetListener {
 
@@ -161,7 +163,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         continue;
       }
 
-     Double observedAmount = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT);
+      Double observedAmount = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT);
       if (Amounts.isNullOrZero(seriesBudget.get(SeriesBudget.AMOUNT)) || !seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
         repository.delete(transactions);
       }
@@ -366,39 +368,43 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         seriesShape = repository.find(Key.create(SeriesShape.TYPE, miroirId));
       }
     }
-    if (seriesShape == null
-        || seriesShape.get(SeriesShape.TOTAL, 0) == 0
-        || Math.abs(amount / seriesShape.get(SeriesShape.TOTAL)) > 3) {
-      seriesShape = SeriesShape.getDefault(key, period);
+    if (seriesShape != null && seriesShape.get(SeriesShape.FIXED_DATE) != null) {
+      planned.declare(account, Month.getDay(seriesShape.get(SeriesShape.FIXED_DATE), monthId), amount);
     }
-
-    Integer percentToPropagate = 0;
-    double alreadyAssignedAmount = 0;
-    for (int i = 1; i <= period; i++) {
-      IntegerField field = SeriesShape.getField(i);
-      Integer percent = seriesShape.get(field);
-      percent = percent == null ? 0 : percent;
-      int day = SeriesShape.getDay(period, i, monthId, series.get(Series.BUDGET_AREA).equals(BudgetArea.INCOME.getId()));
-      if (minDay != 0 && day < minDay) {
-        int nextDay = SeriesShape.getDay(period, i + 1, monthId, series.get(Series.BUDGET_AREA).equals(BudgetArea.INCOME.getId()));
-        if (nextDay < minDay && i != period) {
-          percentToPropagate += percent;
+    else {
+      if (seriesShape == null
+          || seriesShape.get(SeriesShape.TOTAL, 0) == 0
+          || Math.abs(amount / seriesShape.get(SeriesShape.TOTAL)) > 3) {
+        seriesShape = SeriesShape.getDefault(key, period);
+      }
+      Integer percentToPropagate = 0;
+      double alreadyAssignedAmount = 0;
+      for (int i = 1; i <= period; i++) {
+        IntegerField field = SeriesShape.getField(i);
+        Integer percent = seriesShape.get(field);
+        percent = percent == null ? 0 : percent;
+        int day = SeriesShape.getDay(period, i, monthId, series.get(Series.BUDGET_AREA).equals(BudgetArea.INCOME.getId()));
+        if (minDay != 0 && day < minDay) {
+          int nextDay = SeriesShape.getDay(period, i + 1, monthId, series.get(Series.BUDGET_AREA).equals(BudgetArea.INCOME.getId()));
+          if (nextDay < minDay && i != period) {
+            percentToPropagate += percent;
+          }
+          else {
+            double amountForPeriod = getAmount(alreadyAssignedAmount, amount, percentToPropagate + percent, i == period);
+            if (!Amounts.isNearZero(amountForPeriod)) {
+              alreadyAssignedAmount += amountForPeriod;
+              percentToPropagate = 0;
+              planned.declare(account, minDay, amountForPeriod);
+            }
+          }
         }
         else {
           double amountForPeriod = getAmount(alreadyAssignedAmount, amount, percentToPropagate + percent, i == period);
           if (!Amounts.isNearZero(amountForPeriod)) {
             alreadyAssignedAmount += amountForPeriod;
             percentToPropagate = 0;
-            planned.declare(account, minDay, amountForPeriod);
+            planned.declare(account, day, amountForPeriod);
           }
-        }
-      }
-      else {
-        double amountForPeriod = getAmount(alreadyAssignedAmount, amount, percentToPropagate + percent, i == period);
-        if (!Amounts.isNearZero(amountForPeriod)) {
-          alreadyAssignedAmount += amountForPeriod;
-          percentToPropagate = 0;
-          planned.declare(account, day, amountForPeriod);
         }
       }
     }

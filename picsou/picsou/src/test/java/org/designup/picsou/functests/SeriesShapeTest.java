@@ -244,8 +244,6 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .setForceSingleOperationDay(20)
       .validate();
 
-    fail("TODO: A CODER!");
-    
     transactions.showPlannedTransactions()
       .initContent()
       .add("20/10/2008", TransactionType.PLANNED, "Planned: Courses", "", -90.00, "Courses")
