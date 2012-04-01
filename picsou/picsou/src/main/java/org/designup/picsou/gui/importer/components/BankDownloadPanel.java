@@ -13,6 +13,7 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -30,13 +31,19 @@ public class BankDownloadPanel implements GlobSelectionListener {
   private GlobRepository repository;
   private Directory directory;
   private JPanel panel;
-  private OpenHelpAction openHelpAction;
+
   private BankChooserPanel bankChooser;
-  private CardHandler cards;
+  private CardHandler mainCards;
+  private CardHandler selectionCards;
+  private JEditorPane manualDownloadMessage;
+
   private JPanel synchroPanel;
   private Integer bankId;
 
-  public BankDownloadPanel(Window parent, ImportController controller, GlobRepository repository, Directory directory) {
+  public BankDownloadPanel(Window parent,
+                           ImportController controller,
+                           GlobRepository repository,
+                           Directory directory) {
     this.parent = parent;
     this.controller = controller;
     this.repository = repository;
@@ -57,7 +64,9 @@ public class BankDownloadPanel implements GlobSelectionListener {
                             "/layout/importexport/components/bankDownloadPanel.splits",
                             repository, directory);
 
-    cards = builder.addCardHandler("cards");
+    mainCards = builder.addCardHandler("mainCards");
+
+    selectionCards = builder.addCardHandler("selectionCards");
 
     synchroPanel = new JPanel();
     builder.add("synchroPanel", synchroPanel);
@@ -74,10 +83,25 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
     builder.add("securityInfo", OfxSecurityInfoButton.create(directory));
 
-    openHelpAction = new OpenHelpAction();
-    builder.add("openHelp", openHelpAction);
+    builder.add("gotoBankSelection",
+                new AbstractAction(Lang.get("bankDownload.manualDownload.back.button")) {
+                  public void actionPerformed(ActionEvent actionEvent) {
+                    mainCards.show("bankSelection");
+                  }
+                });
 
-    bankChooser = BankChooserPanel.registerComponents(builder, repository, openHelpAction, null, parent);
+    AbstractAction gotoManualDownload =
+      new AbstractAction(Lang.get("bankDownload.selection.manual.button")) {
+        public void actionPerformed(ActionEvent actionEvent) {
+          mainCards.show("manualDownload");
+        }
+      };
+    builder.add("gotoManualDownload", gotoManualDownload);
+
+    manualDownloadMessage = GuiUtils.createReadOnlyHtmlComponent();
+    builder.add("manualDownloadMessage", manualDownloadMessage);
+
+    bankChooser = BankChooserPanel.registerComponents(builder, repository, gotoManualDownload, null, parent);
 
     final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(directory, parent);
     builder.add("hyperlinkHandler", hyperlinkHandler);
@@ -97,15 +121,26 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
   private void update(Glob bank) {
     bankId = bank != null ? bank.get(Bank.ID) : null;
-    openHelpAction.setBank(bank);
-    cards.show(bank == null ? "noSelection" : "gotoSite");
+    selectionCards.show(bank == null ? "noSelection" : "gotoSite");
+
     boolean synchro = bank != null && (bank.get(Bank.SYNCHRO_ENABLED, false) && BankSynchroService.SHOW_SYNCHRO);
     Utils.beginRemove();
-    if (bank != null && bank.get(Bank.ID).equals(Bank.GENERIC_BANK_ID)){
+    if (bank != null && bank.get(Bank.ID).equals(Bank.GENERIC_BANK_ID)) {
       synchro = true;
     }
     Utils.endRemove();
     synchroPanel.setVisible(bank != null && (synchro || bank.get(Bank.OFX_DOWNLOAD, false)));
+
+    if (bank != null) {
+      String url = bank.get(Bank.URL);
+      if (Strings.isNotEmpty(url)) {
+        manualDownloadMessage.setText(Lang.get("bankDownload.manualDownload.message.url", bank.get(Bank.NAME), url));
+      }
+      else {
+        manualDownloadMessage.setText(Lang.get("bankDownload.manualDownload.message.nourl", bank.get(Bank.NAME)));
+      }
+      GuiUtils.scrollToTop(manualDownloadMessage);
+    }
   }
 
   public void requestFocus() {
@@ -118,12 +153,6 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
     public OpenHelpAction() {
       helpService = directory.get(HelpService.class);
-      setBank(null);
-    }
-
-    public void setBank(Glob bank) {
-      this.lastBank = bank;
-      putValue(Action.NAME, getLabel());
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -132,15 +161,6 @@ public class BankDownloadPanel implements GlobSelectionListener {
       }
       else {
         helpService.show("manualDownload", parent);
-      }
-    }
-
-    private Object getLabel() {
-      if (hasSpecificHelp()) {
-        return Lang.get("bankDownload.guide.button.specific", lastBank.get(Bank.NAME));
-      }
-      else {
-        return Lang.get("bankDownload.guide.button");
       }
     }
 

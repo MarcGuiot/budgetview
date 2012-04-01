@@ -3,70 +3,91 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <styles>
+    <style selector="htmlEditorPane" hyperlinkListener="hyperlinkHandler"/>
     <style selector="htmlEditorPane.multiLineLabel" font="-,plain,11"/>
-    <style selector="button.synchronize"
-           marginTop="10" fill="none" anchor="center"/>
-    <style selector="button.openHelp" ui="hyperlinkButton"
-           foreground="hyperlink" font="-,plain,12"
-           icon="arrow_right_blue_full.png" iconTextGap="5"
-           marginTop="5" marginBottom="10" fill="none" anchor="center"/>
+    <style selector="button.synchronize" marginTop="10" fill="none" anchor="center"/>
     <style selector="button.addBank" ui="hyperlinkButton" marginTop="5"/>
   </styles>
 
+
   <column>
 
-    <label text="$bankDownload.select" styleClass="formLabelTop" font="-,plain,11" marginBottom="6"/>
+    <cards ref="mainCards">
 
-    <row>
+      <card name="bankSelection">
+        <column>
+          <row>
+            <filler fill="horizontal" weightX="0.5"/>
 
-      <filler fill="horizontal" weightX="0.5"/>
-
-      <column weightX="2" preferredSize="(200,200)">
-        <row>
-          <label icon="button_magnifier.png" marginRight="5"/>
-          <textField ref="bankEditor"/>
-        </row>
-        <scrollPane>
-          <list ref="bankList"/>
-        </scrollPane>
-        <button action="addBank" styleClass="addBank"/>
-      </column>
-
-      <cards ref="cards" weightX="2.2" marginLeft="10">
-
-        <card name="gotoSite">
-          <column>
-            <column ref="synchroPanel" opaque="false">
-              <htmlEditorPane name="synchroMessage" text="$bankDownload.synchro.message" styleClass="multiLineLabel"
-                              hyperlinkListener="hyperlinkHandler"/>
+            <column weightX="2" preferredSize="(200,200)">
+              <label text="$bankDownload.select" marginBottom="5" font="-,plain,11"/>
               <row>
-                <filler fill="horizontal"/>
-                <button action="synchronize" styleClass="synchronize"/>
-                <button ref="securityInfo" styleClass="iconOnly"
-                        tooltipText="$synchro.security.info.tooltip"
-                        fill="none" anchor="center" marginLeft="5" marginTop="5"
-                        icon="security_lock.png" rolloverIcon="security_lock_rollover.png"/>
-                <filler fill="horizontal"/>
+                <label icon="button_magnifier.png" marginRight="5"/>
+                <textField ref="bankEditor"/>
               </row>
+              <scrollPane>
+                <list ref="bankList"/>
+              </scrollPane>
+              <button action="addBank" styleClass="addBank"/>
             </column>
-            <htmlEditorPane text="$bankDownload.message" styleClass="multiLineLabel"/>
-            <htmlEditorPane text="$bankDownload.helpIntro" styleClass="multiLineLabel"/>
-            <button action="openHelp" styleClass="openHelp"/>
-            <htmlEditorPane text="$bankDownload.openwith" styleClass="multiLineLabel"/>
-            <filler fill="vertical"/>
-          </column>
-        </card>
 
-        <card name="noSelection">
-          <column marginTop="25">
-            <htmlEditorPane text="$bankDownload.noSelection" styleClass="multiLineLabel"
-                            hyperlinkListener="hyperlinkHandler"/>
-          </column>
-        </card>
-      </cards>
+            <cards ref="selectionCards" weightX="2.2" marginLeft="10">
 
-    </row>
+              <card name="gotoSite">
+                <column border="empty(20,0,0,0)">
 
+                  <column ref="synchroPanel" opaque="false" border="matte(0,0,1,0,#AAAAAA)">
+                    <htmlEditorPane name="synchroMessage" text="$bankDownload.synchro.message"
+                                    styleClass="multiLineLabel"/>
+                    <row weightY="0.01" marginBottom="10">
+                      <filler fill="horizontal"/>
+                      <button action="synchronize" styleClass="synchronize"/>
+                      <button ref="securityInfo" styleClass="iconOnly"
+                              tooltipText="$synchro.security.info.tooltip"
+                              fill="none" anchor="center" marginLeft="5" marginTop="5"
+                              icon="security_lock.png" rolloverIcon="security_lock_rollover.png"/>
+                      <filler fill="horizontal"/>
+                    </row>
+                  </column>
+
+                  <htmlEditorPane text="$bankDownload.selection.manual.message"
+                                  styleClass="multiLineLabel" marginTop="10"/>
+                  <button action="gotoManualDownload" anchor="center" fill="none" marginTop="5"/>
+
+                  <filler fill="vertical"/>
+                </column>
+              </card>
+
+              <card name="noSelection">
+                <column marginTop="25">
+                  <htmlEditorPane text="$bankDownload.noSelection" styleClass="multiLineLabel"/>
+                </column>
+              </card>
+            </cards>
+          </row>
+
+        </column>
+      </card>
+
+      <card name="manualDownload">
+        <column>
+          <scrollPane forceVerticalScroll="true">
+            <column margin="5">
+              <htmlEditorPane ref="manualDownloadMessage" styleClass="multiLineLabel" font="-,plain,12"/>
+              <filler fill="vertical"/>
+            </column>
+          </scrollPane>
+
+          <button action="gotoBankSelection" marginTop="5"
+                  foreground="#222222"
+                  font="-,plain,11"
+                  styleClass="hyperlink"
+                  icon="leftArrow(10,14,8,8, #222222)"
+                  rolloverIcon="leftArrow(10,14,8,8, #0000FF)"
+                  anchor="left" fill="none"/>
+        </column>
+      </card>
+
+    </cards>
   </column>
-
 </splits>

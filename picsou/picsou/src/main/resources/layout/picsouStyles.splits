@@ -64,8 +64,10 @@
 
     <style selector="textField" fill="horizontal" weightX="10.0"/>
 
-    <style id="mandatoryFieldFlagHidden" selector="x" foreground="#FFFFFF" icon="empty(12,12)"/>
-    <style id="mandatoryFieldFlagShown" selector="x" foreground="#FF0000" icon="leftArrow(12,12,10,10,field.mandatory)"/>
+    <style id="mandatoryFieldFlagHidden" selector="x" foreground="#FFFFFF"
+           icon="empty(12,12)"/>
+    <style id="mandatoryFieldFlagShown" selector="x" foreground="#FF0000"
+           icon="leftArrow(12,12,10,10,field.mandatory)"/>
     <style selector="label.mandatoryFieldFlag" marginLeft="4"/>
 
     <style selector="row.buttons"

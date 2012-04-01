@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
+import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
@@ -54,20 +55,39 @@ public class BankDownloadChecker extends GuiChecker {
     return this;
   }
 
-  public BankDownloadChecker checkBankAccessHidden() {
-    checkComponentVisible(panel, JButton.class, "openHelp", false);
+  public BankDownloadChecker checkManualDownloadHidden() {
+    checkComponentVisible(panel, JButton.class, "gotoManualDownload", false);
     return this;
   }
 
-  public BankDownloadChecker checkHelpAvailable(String buttonLabel) {
-    Button button = getPanel().getButton("openHelp");
+  public BankDownloadChecker checkManualDownloadAvailable() {
+    Button button = getPanel().getButton("gotoManualDownload");
     UISpecAssert.assertThat(button.isEnabled());
-    UISpecAssert.assertThat(button.textEquals(buttonLabel));
+    UISpecAssert.assertThat(button.textEquals("Download"));
     return this;
   }
 
-  public HelpChecker openHelp() {
-    return HelpChecker.open(getPanel().getButton("openHelp").triggerClick());
+  public BankDownloadChecker selectManualDownload() {
+    getPanel().getButton("gotoManualDownload").click();
+    return this;
+  }
+
+  public BankDownloadChecker goBackToBankSelection() {
+    getPanel().getButton("gotoBankSelection").click();
+    return this;
+  }
+
+  public BankDownloadChecker checkManualDownloadHelp(String bankName, String url) {
+    TextBox manualDownloadMessage = getPanel().getTextBox("manualDownloadMessage");
+    assertThat(manualDownloadMessage.textContains(bankName));
+    assertThat(manualDownloadMessage.textContains(url));
+    return this;
+  }
+
+  public BankDownloadChecker checkManualDownloadHelp(String bankName) {
+    TextBox manualDownloadMessage = getPanel().getTextBox("manualDownloadMessage");
+    assertThat(manualDownloadMessage.textContains(bankName));
+    return this;
   }
 
   public OtherBankSynchroChecker openSynchro(ImportDialogChecker checker) {

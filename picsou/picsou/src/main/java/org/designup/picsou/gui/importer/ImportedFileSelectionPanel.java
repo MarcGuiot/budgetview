@@ -7,6 +7,7 @@ import org.designup.picsou.gui.importer.edition.BrowseFilesAction;
 import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.repository.LocalGlobRepository;

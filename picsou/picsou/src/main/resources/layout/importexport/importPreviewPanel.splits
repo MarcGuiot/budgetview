@@ -8,7 +8,7 @@
     <style selector="scrollPane" marginBottom="10"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(600,650)">
+  <panel styleClass="dialog" preferredSize="(600,690)">
 
     <column styleClass="innerDialog">
 

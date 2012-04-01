@@ -325,7 +325,7 @@ public class GuiUtils {
     HTMLEditorKit kit = (HTMLEditorKit)editorPane.getEditorKit();
     StyleSheet css = kit.getStyleSheet();
     css.addRule("h1 { font-size:16;font-weight:bold; }");
-    css.addRule("h2 { font-size:14;font-weight:bold; }");
+    css.addRule("h2 { font-size:14;font-weight:bold; margin-bottom:0px; }");
     css.addRule("p  { margin-top:4px; margin-bottom:4px;margin-left:0;margin-right:0;}");
     css.addRule("table { border:none; }");
     css.addRule("td { vertical-align:top;}");
@@ -352,7 +352,11 @@ public class GuiUtils {
   public static void scrollToTop(JScrollPane scrollPane) {
     final JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
     verticalScrollBar.setValue(verticalScrollBar.getMinimum());
-
+  }
+  
+  public static void scrollToTop(JEditorPane editor) {
+    editor.setSelectionStart(0);
+    editor.setSelectionEnd(0);
   }
 
   public static void runInSwingThread(Runnable runnable) {

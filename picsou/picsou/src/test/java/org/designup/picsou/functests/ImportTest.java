@@ -600,24 +600,22 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     bankDownload
       .checkContainsBanks("BNP Paribas", "CIC", "Crédit Agricole", "ING Direct", "Société Générale")
       .checkNoBankSelected()
-      .checkBankAccessHidden()
-      .selectBank("Autre")
-      .checkHelpAvailable("Show help")
-      .openHelp()
-      .checkTitle("Manual download")
-      .close();
+      .checkManualDownloadHidden()
+      .selectBank("CIC")
+      .checkManualDownloadAvailable()
+      .selectManualDownload()
+      .checkManualDownloadHelp("CIC", "http://www.cic.fr");
 
     bankDownload
+      .goBackToBankSelection()
       .setFilter("crédit")
       .checkContainsBanks("Crédit Agricole", "Chesterfield Federal Credit Union", "Autre")
       .setFilter("BNP")
       .checkBankList("BNP Paribas", "BNPPF", "Autre")
       .selectBank("BNP Paribas")
-      .checkHelpAvailable("Show help for BNP Paribas")
-      .openHelp()
-      .checkTitle("BNP Paribas downloads")
-      .checkContains("http://www.bnpparibas.net")
-      .close();
+      .checkManualDownloadAvailable()
+      .selectManualDownload()
+      .checkManualDownloadHelp("BNP Paribas", "http://www.bnpparibas.net");
 
     importDialog.close();
   }
@@ -933,7 +931,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccountNames("Account n. 00001123", "Account n. 112", "Account n. 113");
   }
 
-
   public void testAssociatToAccountAndDeleteIt() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/8", 2.0, "V'lib")
@@ -965,7 +962,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 //      .add("08/06/2008", TransactionType.VIREMENT, "V'LIB", "", 2.00)
 //      .check();
 
-    
     mainAccounts.checkSummary(0., "2008/09/02");
 
   }
