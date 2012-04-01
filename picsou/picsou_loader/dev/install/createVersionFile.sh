@@ -2,3 +2,4 @@ SOFT_VERSION=`java -jar ../picsou/obfuscated/budgetview.jar -v -soft | grep "Sof
               sed -e 's/Software version://g' | sed -e 's/  *//g'`
 
 echo "budgetviewVersion="${SOFT_VERSION} > budgetviewVersion.properties
+
