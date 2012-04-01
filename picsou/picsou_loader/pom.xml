@@ -42,6 +42,8 @@
             <phase>install</phase>
             <configuration>
               <tasks>
+                <exec executable="${basedir}/dev/install/createVersionFile.sh"/>
+                <property file="${basedir}/budgetviewVersion.properties"/>
                 <exec executable="${basedir}/dev/install/createLinuxZip.sh"/>
                 <manifest file="target/classes/MANIFEST.MF">
                   <attribute name="Main-Class" value="com.budgetview.Main"/>
@@ -61,6 +63,7 @@
                             jar="target/budgetviewloader-1.0.jar"
                             stubfile="dev/install/JavaApplicationStub"
                             icon="dev/images/budgetview_icon.icns"
+                            version="${budgetviewVersion}"
                             jvmversion="1.5+"
                             arguments="-l fr"
                             vmoptions="-Xmx128m -Dapple.awt.graphics.UseQuartz=false">
@@ -81,6 +84,7 @@
                             jar="target/budgetviewloader-1.0.jar"
                             stubfile="dev/install/JavaApplicationStub"
                             icon="dev/images/budgetview_icon.icns"
+                            version="${budgetviewVersion}"
                             jvmversion="1.5+"
                             arguments="-l en"
                             vmoptions="-Xmx128m -Dapple.awt.graphics.UseQuartz=false">
