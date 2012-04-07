@@ -1,7 +1,9 @@
 package org.designup.picsou.importer.qif;
 
 import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.ImportedSeries;
+import org.designup.picsou.model.ImportedTransaction;
+import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.GlobIdGenerator;
@@ -61,7 +63,7 @@ public class QifParser {
           int start = reader.read();
           switch (start) {
             case -1: {
-              if (updated) {
+              if (updated && date != null) {
                 Glob transaction = createTransaction(values);
                 result.add(transaction);
               }
@@ -71,7 +73,6 @@ public class QifParser {
               reader.readLine();
               break;
             case 'D':
-              updated = true;
               date = readDate(values);
               break;
             case 'T':
@@ -93,17 +94,25 @@ public class QifParser {
               break;
             }
             case 'S': {
-              values.set(ImportedTransaction.SPLIT, Boolean.TRUE);
-              completeDefault(values);
-              Glob transaction = createTransaction(values);
-              seriesId = null;
-              result.add(transaction);
-              return new SplitedNextTransactionReader(transaction.get(ImportedTransaction.ID), this);
+              if (updated && date != null) {
+                values.set(ImportedTransaction.SPLIT, Boolean.TRUE);
+                completeDefault(values);
+                Glob transaction = createTransaction(values);
+                seriesId = null;
+                result.add(transaction);
+                return new SplitedNextTransactionReader(transaction.get(ImportedTransaction.ID), this);
+              }
+              else {
+                reader.readLine();
+              }
+              return this;
             }
             case '^':
-              completeDefault(values);
-              Glob transaction = createTransaction(values);
-              result.add(transaction);
+              if (updated && date != null) {
+                completeDefault(values);
+                Glob transaction = createTransaction(values);
+                result.add(transaction);
+              }
               reader.readLine();
               seriesId = null;
               date = null;

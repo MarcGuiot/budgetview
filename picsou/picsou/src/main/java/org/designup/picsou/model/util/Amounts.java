@@ -38,23 +38,24 @@ public class Amounts {
   }
 
   static public double extractAmount(String amount) {
-    double coef = 100.0;
+    double coef;
     amount = amount.trim();
     amount = amount.replaceAll("[^0-9-+,.]", "");
     int len = amount.length();
     int commaSep = amount.lastIndexOf(",");
-    if (commaSep == len - 2) {
+
+    if (commaSep != -1 && commaSep == len - 2) {
       coef = 10.;
     }
-    else if (commaSep == len - 3) {
+    else if (commaSep != -1 && commaSep == len - 3) {
       coef = 100.;
     }
     else {
       int dotSep = amount.lastIndexOf(".");
-      if (dotSep == len - 2) {
+      if (dotSep != -1 && dotSep == len - 2) {
         coef = 10.;
       }
-      else if (dotSep == len - 3) {
+      else if (dotSep != -1 && dotSep == len - 3) {
         coef = 100.;
       }
       else {

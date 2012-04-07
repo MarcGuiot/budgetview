@@ -83,6 +83,11 @@ public class PicsouInit {
 
     initDirectory(this.repository);
 
+
+    ColorThemeUpdater.register(repository, directory);
+  }
+
+  private void initBank(Directory directory) {
     if (!directory.get(ConfigService.class).loadConfigFileFromLastestJar(directory, this.repository)) {
       directory.get(TransactionAnalyzerFactory.class)
         .load(this.getClass().getClassLoader(), PicsouApplication.BANK_CONFIG_VERSION, repository, directory);
@@ -90,8 +95,6 @@ public class PicsouInit {
 
     SpecificBankLoader bankLoader = new SpecificBankLoader();
     bankLoader.load(repository, directory);
-
-    ColorThemeUpdater.register(repository, directory);
   }
 
   public static void initTriggers(ServerAccess serverAccess, Directory directory, final GlobRepository repository) {
@@ -204,9 +207,13 @@ public class PicsouInit {
             PicsouInit.this.repository.reset(userData, typesToReplace);
           }
         }
+
+        initBank(directory);
+
         serverAccess.applyChanges(changeSet, repository);
       }
       catch (Exception e) {
+        e.printStackTrace();
         throw new InvalidData(Lang.get("login.data.load.fail"), e);
       }
       finally {

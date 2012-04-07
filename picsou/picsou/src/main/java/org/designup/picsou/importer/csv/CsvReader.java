@@ -1,11 +1,8 @@
 package org.designup.picsou.importer.csv;
 
 import org.designup.picsou.gui.importer.csv.CsvSeparator;
-import org.designup.picsou.gui.importer.utils.InvalidFileFormat;
 import org.designup.picsou.importer.csv.utils.InvalidCsvFileFormat;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.exceptions.InvalidFormat;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +10,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class CsvReader {
+  private static final Pattern DATE_PATTERN = Pattern.compile("[0-9]{2,4}[\\.-/][0-9]{2,4}[\\.-/][0-9]{2,4}");
+  private static final Pattern PATTERN_NORMALIZE = Pattern.compile("^\"(.*)\"$");
 
   public static CsvSeparator findSeparator(String firstLine) throws InvalidCsvFileFormat {
     List<CsvSeparatorCounter> counters = new ArrayList<CsvSeparatorCounter>();
@@ -71,7 +70,7 @@ public class CsvReader {
   }
 
   private static String normalizeItem(String name) {
-    return name.replaceAll("^\"(.*)\"$", "$1");
+    return PATTERN_NORMALIZE.matcher(name).replaceAll("$1");
   }
 
   public static TextType getTextType(String str) {
@@ -79,8 +78,7 @@ public class CsvReader {
       return null;
     }
     str = str.replaceAll("\\s", "");
-    Pattern compile = Pattern.compile("[0-9]{2,4}/[0-9]{2,4}/[0-9]{2,4}");
-    if (compile.matcher(str).matches()) {
+    if (DATE_PATTERN.matcher(str).matches()) {
       return TextType.DATE;
     }
     int count = 0;

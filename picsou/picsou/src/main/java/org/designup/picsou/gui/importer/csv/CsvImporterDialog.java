@@ -4,6 +4,7 @@ import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.importer.csv.CsvReader;
 import org.designup.picsou.importer.csv.CsvType;
+import org.designup.picsou.importer.csv.utils.InvalidCsvFileFormat;
 import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.model.CsvMapping;
 import org.designup.picsou.model.ImportedSeries;
@@ -28,6 +29,7 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidFormat;
+import org.globsframework.utils.exceptions.ItemAlreadyExists;
 import org.globsframework.utils.exceptions.OperationCancelled;
 
 import javax.swing.*;
@@ -111,32 +113,60 @@ public class CsvImporterDialog {
   private void initAssociations(TypedInputStream inputStream) throws IOException {
     this.inputStream = inputStream;
 
-    globs.clear();
-    associations.clear();
+    InvalidCsvFileFormat lastError = null;
+    int ignoreFirstLine = 0;
+    while (true) {
+      globs.clear();
+      associations.clear();
 
-    BufferedReader reader = getReader();
-    String firstLine = readSkipEmpty(reader);
-
-    if (Strings.isNotEmpty(firstLine)) {
-
-      CsvSeparator separator = CsvReader.findSeparator(firstLine);
-
-      GlobType type = createGlobType(firstLine, separator);
-
-      parseLineGlobs(reader, type, separator);
-
-      List<Field> fields = Arrays.asList(type.getFields()).subList(1, type.getFieldCount());
-      for (Field field : fields) {
-        FieldAssociation association = new FieldAssociation((StringField)field);
-        associations.add(association);
+      BufferedReader reader = getReader();
+      String firstLine = readSkipEmpty(reader);
+      for (int i = 0; i < ignoreFirstLine; i++) {
+        firstLine = readSkipEmpty(reader);
       }
-      presetAssociations();
+
+      if (Strings.isNotEmpty(firstLine)) {
+
+        CsvSeparator separator = null;
+        try {
+          separator = CsvReader.findSeparator(firstLine);
+
+          GlobType type = createGlobType(firstLine, separator);
+
+          if (type != null && parseLineGlobs(reader, type, separator)) {
+
+            List<Field> fields = Arrays.asList(type.getFields()).subList(1, type.getFieldCount());
+            for (Field field : fields) {
+              FieldAssociation association = new FieldAssociation((StringField)field);
+              associations.add(association);
+            }
+            presetAssociations();
+            return;
+          }
+        }
+        catch (ItemAlreadyExists exists){
+        }
+        catch (InvalidCsvFileFormat format) {
+          lastError = format;
+        }
+        ignoreFirstLine++;
+      }
+      else {
+        if (lastError != null){
+          throw lastError;
+        }
+        return;
+      }
     }
   }
 
-  private void parseLineGlobs(BufferedReader reader, GlobType type, CsvSeparator separator) throws IOException {
+  private boolean parseLineGlobs(BufferedReader reader, GlobType type, CsvSeparator separator) throws IOException {
     List<String> elements = CsvReader.parseLine(readSkipEmpty(reader), separator);
+    int expectedCount = type.getFieldCount() - 1;
     while (elements != null) {
+      if (Math.abs(elements.size() - expectedCount) > 2) {
+        return false;
+      }
       GlobBuilder globBuilder = GlobBuilder.init(type);
       int i = 1;
       for (String element : elements) {
@@ -147,6 +177,7 @@ public class CsvImporterDialog {
       globs.add(globBuilder.get());
       elements = CsvReader.parseLine(readSkipEmpty(reader), separator);
     }
+    return true;
   }
 
   private String readSkipEmpty(BufferedReader reader) throws IOException {
@@ -160,11 +191,10 @@ public class CsvImporterDialog {
   private GlobType createGlobType(String firstLine, CsvSeparator separator) {
     GlobTypeBuilder typeBuilder = GlobTypeBuilder.init("CSV");
     typeBuilder.addIntegerKey("ID");
-    int columnCount = 0;
     List<String> elements = CsvReader.parseLine(firstLine, separator);
     for (String element : elements) {
       if (Strings.isNullOrEmpty(element)) {
-        typeBuilder.addStringField(Lang.get("import.csv.first.column", columnCount));
+        return null;
       }
       else {
         typeBuilder.addStringField(element);
@@ -287,6 +317,10 @@ public class CsvImporterDialog {
           textType = CsvReader.getTextType(glob.get(field));
         }
         else {
+          CsvReader.TextType tmp = CsvReader.getTextType(glob.get(field));
+          if (tmp != textType){
+            textType = null;
+          }
           break;
         }
       }

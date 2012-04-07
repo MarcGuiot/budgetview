@@ -4,10 +4,10 @@ import junit.framework.TestCase;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class DateFormatAnalyzerTest extends TestCase {
   private DateFormatAnalyzer analyzer = new DateFormatAnalyzer(Dates.parse("2008/06/11"));
@@ -49,16 +49,19 @@ public class DateFormatAnalyzerTest extends TestCase {
     checkUndecidable(new String[]{"dd/MM/yy", "MM/dd/yy"}, "04/10/2001");
   }
 
-  private void check(String expected, String date) {
+  private void check(String expected, String date) throws ParseException {
     check(date, expected, '/');
     check(date, expected, '-');
     check(date, expected, '.');
   }
 
-  private void check(String date, String expected, char separator) {
-    date = date.replace('/', separator);
+  private void check(String dateToCheck, String expected, char separator) throws ParseException {
+    String date = dateToCheck.replace('/', separator);
     Set<String> list = new HashSet<String>(Arrays.asList(date));
-    TestUtils.assertEquals(Collections.singletonList(expected), analyzer.parse(list));
+    List<String> findFormat = analyzer.parse(list);
+    TestUtils.assertEquals(Collections.singletonList(expected.replace('/', separator)), findFormat);
+    assertEquals(new SimpleDateFormat(findFormat.get(0)).parse(date),
+                 new SimpleDateFormat(expected).parse(dateToCheck));
   }
 
   private void checkUndecidable(String[] expected, String date) {
