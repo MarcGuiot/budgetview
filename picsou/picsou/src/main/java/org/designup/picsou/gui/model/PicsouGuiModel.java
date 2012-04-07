@@ -35,7 +35,7 @@ public class PicsouGuiModel {
   public static Collection<GlobType> getUserSpecificType(){
     Collection<GlobType> globTypeCollection = new ArrayList<GlobType>(MODEL.getAll());
     Set<GlobType> typeNotToRemove = MODEL.getConstants().getTypes();
-    typeNotToRemove.addAll(Arrays.asList(PreTransactionTypeMatcher.TYPE, BankFormat.TYPE, Bank.TYPE, BankEntity.TYPE,
+    typeNotToRemove.addAll(Arrays.asList(PreTransactionTypeMatcher.TYPE, BankFormat.TYPE,
                                          User.TYPE, AppVersionInformation.TYPE));
 
     globTypeCollection.removeAll(typeNotToRemove);

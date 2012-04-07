@@ -8,14 +8,14 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 public class BankEditionTest extends LoggedInFunctionalTestCase {
 
 // TODO: a retablir pour le restartApplication()
-//  protected void setUp() throws Exception {
-//    resetWindow();
-//    setCurrentDate("2008/08/30");
-//    setInMemory(false);
-//    setDeleteLocalPrevayler(true);
-//    super.setUp();
-//    setDeleteLocalPrevayler(false);
-//  }
+  protected void setUp() throws Exception {
+    resetWindow();
+    setCurrentDate("2008/08/30");
+    setInMemory(false);
+    setDeleteLocalPrevayler(true);
+    super.setUp();
+    setDeleteLocalPrevayler(false);
+  }
 
   public void testCanAddBankFromImportDialog() throws Exception {
 
@@ -59,7 +59,7 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
 
     /** Restart **/
 
-    fail("TODO: Retablir le setUp et l'enregistrement des serializers dans SerializationManager");
+//    fail("TODO: Retablir le setUp et l'enregistrement des serializers dans SerializationManager");
     
     restartApplication();
 

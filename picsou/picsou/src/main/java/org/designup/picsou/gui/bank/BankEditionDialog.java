@@ -112,7 +112,7 @@ public class BankEditionDialog {
   }
 
   private void updateMandatoryFlag() {
-    if (currentBank != null) {
+    if (currentBank != null && localRepository.contains(createdBankKey)) {
       nameFlag.update(Strings.isNullOrEmpty(currentBank.get(Bank.NAME)));
     }
     else {

@@ -269,6 +269,51 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
 
   }
 
+  public void testInvalidFormatDoubleEnd() throws Exception {
+    String file =
+      createQifFile("file",
+                    "!Type:Bank\n" +
+                    "D20/04/2006\n" +
+                    "T-17.65\n" +
+                    "N\n" +
+                    "MSome info\n" +
+                    "^\n" +
+                    "^\n");
+
+    operations.importQifFile(file, SOCIETE_GENERALE, 0.);
+
+    views.selectData();
+    transactions.initContent()
+      .add("20/04/2006", TransactionType.PRELEVEMENT, "SOME INFO", "", -17.65)
+      .check();
+  }
+
+  public void testPartialInvalidFormat() throws Exception {
+    String file =
+      createQifFile("file",
+                    "!Type:Bank\n" +
+                    "D20/04/2006\n" +
+                    "T-17.65\n" +
+                    "N\n" +
+                    "MSome info\n" +
+                    "^\n" +
+                    "D20/04/2006\n" +
+                    "^\n" +
+                    "T-17.65\n" +
+                    "^\n" +
+                    "N\n" +
+                    "MSome info\n" +
+                    "^\n" +
+                    "^\n");
+
+    operations.importQifFile(file, SOCIETE_GENERALE, 0.);
+
+    views.selectData();
+    transactions.initContent()
+      .add("20/04/2006", TransactionType.PRELEVEMENT, "SOME INFO", "", -17.65)
+      .check();
+  }
+
   private String createQifFile(String discriminant, String content) {
     String fileName = TestUtils.getFileName(this, discriminant + ".qif");
     Files.dumpStringToFile(fileName, content);

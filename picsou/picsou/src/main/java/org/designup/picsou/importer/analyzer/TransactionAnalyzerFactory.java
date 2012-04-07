@@ -26,7 +26,7 @@ public class TransactionAnalyzerFactory {
 
   private GlobModel model;
   private DefaultTransactionAnalyzer analyzer;
-  private Long version = 0L;
+//  private Long version = 0L;
   public static Pattern BLANK = Pattern.compile("[\\s]+");
   private static final String BANK_LIST_FILE_NAME = "banks/bankList.txt";
 
@@ -58,14 +58,14 @@ public class TransactionAnalyzerFactory {
   }
 
   synchronized public void load(Loader loader, Long version, final GlobRepository repository, Directory directory) {
-    if (this.version < version) {
-      this.version = version;
+//    if (this.version < version) {
+//      this.version = version;
       this.analyzer = new DefaultTransactionAnalyzer();
       loadMatchers(loader, repository);
       analyzer.add(new LabelForCategorizationUpdater());
       analyzer.add(new TransactionDateUpdater());
       loader.loadBank(directory.get(BankPluginService.class));
-    }
+//    }
   }
 
   synchronized public TransactionAnalyzer getAnalyzer() {

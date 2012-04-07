@@ -261,7 +261,10 @@ public class CsvImportTest extends SpecificBankTestCase {
       "01/11/2008,01/10/2008,-327.02,,CIC-ASSURANCES JK4537737 1201099 JK4537737,313.7\n" +
       "01/13/2008,01/13/2008,-0.16,,FRAIS PAIE CB OP 7 00 USD,975.74\n" +
       "03/03/2008,03/05/2008,,30.00,REM CHQ REF10674R04,143.68");
+    doImport(fileName);
+  }
 
+  private void doImport(String fileName) throws Exception {
     ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName);
 
@@ -376,6 +379,113 @@ public class CsvImportTest extends SpecificBankTestCase {
       .checkHtmlErrorMessage("import.csv.invalidFileFormat")
       .close();
   }
+
+  public void testWithNotFoundSeparator() throws Exception {
+    String fileName = saveFile(
+      "more,infos\n" +
+      "123,321\n" +
+      "\n" +
+      "Date d'operation,Date de valeur,Debit,Credit,Libelle,Solde\n" +
+      "01/05/2008,01/05/2008,-24.80,,PRLV FINAREF VIE 15515580008302 0501120006,625.35\n" +
+      "01/05/2008,01/05/2008,-64.45,,CHEQUE 0650079,436.06\n" +
+      "01/06/2008,01/06/2008,-7.57,,PAIEMENT CB 0501 PARIS0003859/ NATURALIA CARTE 41257115,120.46\n" +
+      "01/10/2008,01/10/2008,-51.55,,PRLV FREE TELECOM FREE HAUTDEBIT 319609820,916.28\n" +
+      "01/10/2008,01/10/2008,-31.25,,PAIEMENT CB 0901 CHATENAY MALA CASINO GENEDIS CARTE 41257115,704.57\n" +
+      "01/11/2008,01/10/2008,-327.02,,CIC-ASSURANCES JK4537737 1201099 JK4537737,313.7\n" +
+      "01/13/2008,01/13/2008,-0.16,,FRAIS PAIE CB OP 7 00 USD,975.74\n" +
+      "03/03/2008,03/05/2008,,30.00,REM CHQ REF10674R04,143.68");
+    doImport(fileName);
+  }
+
+  public void testWithStrangeHeader() throws Exception {
+    String fileName = saveFile(
+      "more,infos,B\n" +
+      "123,321,QSD\n" +
+      "\n" +
+      "Date d'operation,Date de valeur,Debit,Credit,Libelle,Solde\n" +
+      "01/05/2008,01/05/2008,-24.80,,PRLV FINAREF VIE 15515580008302 0501120006,625.35\n" +
+      "01/05/2008,01/05/2008,-64.45,,CHEQUE 0650079,436.06\n" +
+      "01/06/2008,01/06/2008,-7.57,,PAIEMENT CB 0501 PARIS0003859/ NATURALIA CARTE 41257115,120.46\n" +
+      "01/10/2008,01/10/2008,-51.55,,PRLV FREE TELECOM FREE HAUTDEBIT 319609820,916.28\n" +
+      "01/10/2008,01/10/2008,-31.25,,PAIEMENT CB 0901 CHATENAY MALA CASINO GENEDIS CARTE 41257115,704.57\n" +
+      "01/11/2008,01/10/2008,-327.02,,CIC-ASSURANCES JK4537737 1201099 JK4537737,313.7\n" +
+      "01/13/2008,01/13/2008,-0.16,,FRAIS PAIE CB OP 7 00 USD,975.74\n" +
+      "03/03/2008,03/05/2008,,30.00,REM CHQ REF10674R04,143.68");
+    doImport(fileName);
+  }
+
+  public void testOther1() throws Exception {
+    String fileName = saveFile(
+      "Extrait de compte jusqu'au: 04.04.2012 ;;;\n" +
+      ";;;\n" +
+      "N° de compte: L 3277.77.15;;;\n" +
+      "Description: BCGE Privé;;;\n" +
+      "Solde: CHF 1679.53;;;\n" +
+      ";;;\n" +
+      "LARCINESE MASSIMO;;;\n" +
+      "BOULEVARD D'YVOY 31;;;\n" +
+      "1205 Genève;;;\n" +
+      ";;;\n" +
+      ";;;\n" +
+      "Date;Libellé;Montant;Valeur\n" +
+      "04.04.12;Ordre de paiement au 02.04.12;-500.00;04.04.12\n" +
+      "04.04.12;Ordre permanent;-780.00;04.04.12\n" +
+      "04.04.12;Ordre permanent;-900.00;04.04.12\n" +
+      "03.04.12;Crédit;3954.45;03.04.12\n" +
+      "31.03.12;Solde des écritures de bouclement;-7.85;31.03.12\n" +
+      "27.03.12;Achat Maestro 26.03.2012 19:05 IKEA SA VERNIER Numéro de carte: 78868866;-27.10;26.03.12\n");
+
+    ImportDialogChecker importDialog = operations.openImportDialog()
+      .setFilePath(fileName);
+
+    importDialog.acceptCsvFile()
+      .checkContains("Date", "Libellé", "Montant", "Valeur")
+      .checkAvailableTypes("Date", "Do not import", "User date", "Bank date")
+      .checkAvailableTypes("Libellé", "Do not import", "Label", "Note", "Envelope name", "Sub-envelope name")
+      .checkAvailableTypes("Valeur", "Do not import", "User date", "Bank date")
+      .setAsAmount("Montant")
+      .setAsBankDate("Date")
+      .setAsUserDate("Valeur")
+      .setAsLabel("Libellé")
+      .validate();
+    
+    importDialog
+      .setAccountName("imported")
+      .selectDateFormat("Day/Month/Year")
+      .setMainAccount()
+      .selectBank("Autre")
+      .setPosition(100)
+      .completeImport();
+
+    timeline.selectAll();
+
+    transactions.initAmountContent()
+      .add("04/04/2012", "ORDRE DE PAIEMENT AU 02.04.12", -500.00, "To categorize", 100.00, 100.00, "imported")
+      .add("04/04/2012", "ORDRE PERMANENT", -780.00, "To categorize", 600.00, 600.00, "imported")
+      .add("04/04/2012", "ORDRE PERMANENT", -900.00, "To categorize", 1380.00, 1380.00, "imported")
+      .add("03/04/2012", "CRÉDIT", 3954.45, "To categorize", 2280.00, 2280.00, "imported")
+      .add("31/03/2012", "SOLDE DES ÉCRITURES DE BOUCLEMENT", -7.85, "To categorize", -1674.45, -1674.45, "imported")
+      .add("26/03/2012", "ACHAT MAESTRO 26.03.2012 19:05 IKEA SA VERNIER NUMÉRO DE CARTE: 78868866", -27.10, "To categorize", -1666.60, -1666.60, "imported")
+      .check();
+
+  }
+
+  public void testOther2() throws Exception {
+    String fileName = saveFile(
+      "Aperçu du solde au 05.04.12 01:23;;;\n" +
+      ";;;\n" +
+      ";;;\n" +
+      "N° de compte;Description;Monnaie;Solde\n" +
+      ";;;\n" +
+      "L 3277.77.15;BCGE Privé;CHF;1679.53");
+    ImportDialogChecker importDialog = operations.openImportDialog()
+      .setFilePath(fileName);
+
+    importDialog.acceptCsvFile()
+      .checkContains("N° de compte", "Description", "Monnaie", "Solde")
+      .cancel();
+  }
+
 
   private String saveFile(String content) {
     String fileName = TestUtils.getFileName(this, ".csv");

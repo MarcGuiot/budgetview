@@ -30,12 +30,14 @@ public class DateFormatAnalyzer {
       }
     }
 
+    char separator = '/';
     for (String date : dates) {
 
       String[] items = date.split("[-\\./]");
       if (items.length != 3) {
         throw new InvalidFileFormat("Invalid date: " + date + " - items: " + Arrays.toString(items));
       }
+      separator = date.charAt(items[0].length());
       maxFirst = getMax(maxFirst, items, 0);
       maxSecond = getMax(maxSecond, items, 1);
       maxThird = getMax(maxThird, items, 2);
@@ -79,6 +81,12 @@ public class DateFormatAnalyzer {
       result.remove("yyyy/MM/dd");
     }
 
+    if (result.isEmpty()){
+      result = getAllFormats();
+    }
+    for (int i = 0, size = result.size(); i < size; i++) {
+      result.set(i, result.get(i).replace('/', separator));
+    }
     return result;
   }
 

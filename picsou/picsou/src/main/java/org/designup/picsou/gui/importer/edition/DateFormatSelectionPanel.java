@@ -102,7 +102,7 @@ public class DateFormatSelectionPanel {
                                                   boolean isSelected, boolean cellHasFocus) {
       String translatedFormat = "";
       if (value != null) {
-        translatedFormat = Lang.get("import.dateformat." + ((String)value).toLowerCase().replace("/", ""));
+        translatedFormat = Lang.get("import.dateformat." + ((String)value).toLowerCase().replaceAll("[-/\\.]", ""));
       }
       return super.getListCellRendererComponent(list, translatedFormat, index, isSelected, cellHasFocus);
     }

@@ -5,6 +5,13 @@ import junit.framework.TestCase;
 public class AmountsTest extends TestCase {
 
   public void testExtractAmount() throws Exception {
+    checkExtract(0.2, "0.2");
+    checkExtract(0.2, "0,20");
+    checkExtract(0.20, "0.2");
+    checkExtract(0.02, "0.02");
+    checkExtract(6, "6");
+    checkExtract(33, "33");
+    checkExtract(100, "100");
     checkExtract(2223.9, "2,223.9");
     checkExtract(2223.9, "2,223.90");
     checkExtract(2223.9, "2223,9");

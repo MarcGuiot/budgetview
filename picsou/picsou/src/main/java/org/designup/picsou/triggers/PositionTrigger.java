@@ -10,7 +10,6 @@ import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
-import org.globsframework.utils.Dates;
 
 import java.util.*;
 
@@ -298,7 +297,7 @@ public class PositionTrigger implements ChangeSetListener {
 
         Date posDate = Month.toDate(lastTransaction.get(Transaction.POSITION_MONTH), lastTransaction.get(Transaction.POSITION_DAY));
         Date accountDate = account.get(Account.POSITION_DATE);
-        if (accountDate == null || accountDate.before(posDate)){
+        if (accountDate == null || accountDate.before(posDate)) {
           repository.update(account.getKey(), Account.TRANSACTION_ID, lastUpdateTransactionId);
           accountDate = posDate;
         }
