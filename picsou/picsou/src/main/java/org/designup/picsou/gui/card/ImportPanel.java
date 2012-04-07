@@ -114,7 +114,8 @@ public class ImportPanel extends View {
 
     Glob bank = repository.findLinkTarget(realAccount, RealAccount.BANK);
     if (bank != null) {
-      String bankName = bank.get(Bank.NAME);
+
+      String bankName = descriptionService.getStringifier(Bank.TYPE).toString(bank, repository);
       if (Strings.isNotEmpty(bankName)) {
         return Lang.get("importPanel.synchro.label.single", bankName);
       }

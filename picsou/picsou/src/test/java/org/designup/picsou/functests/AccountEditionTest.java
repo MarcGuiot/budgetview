@@ -92,13 +92,13 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setAccountName("Main")
       .checkNoBankSelected()
       .checkBankValidationError("You must select a bank for this account")
-      .selectBank("Autre")
+      .selectBank("Other")
       .checkNoErrorDisplayed()
       .validate();
 
     mainAccounts.edit("Main")
       .checkTitle("Edit account")
-      .checkSelectedBank("Autre")
+      .checkSelectedBank("Other")
       .cancel();
   }
 
@@ -542,14 +542,14 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.createNewAccount()
       .setAccountName("No site account")
-      .selectBank("Autre")
+      .selectBank("Other")
       .validate();
 
     mainAccounts.checkAccountWebsite("Account 1", "BNP Paribas website", "http://www.bnpparibas.net");
     mainAccounts.checkAccountWebsiteLinkNotShown("No site account");
 
     mainAccounts.edit("Account 1")
-      .selectBank("Autre")
+      .selectBank("Other")
       .validate();
     mainAccounts.checkAccountWebsiteLinkNotShown("Account 1");
 

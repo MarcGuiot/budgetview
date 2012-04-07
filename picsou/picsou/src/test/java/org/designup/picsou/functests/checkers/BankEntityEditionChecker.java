@@ -34,7 +34,7 @@ public class BankEntityEditionChecker extends GuiChecker {
     Window bankChooserWindow = WindowInterceptor.getModalDialog(dialog.getButton("bankChooser").triggerClick());
     BankChooserChecker chooserChecker = new BankChooserChecker(bankChooserWindow);
     chooserChecker.selectBank(bank);
-    chooserChecker.checkListContent("Autre", "AXA Banque", "Banque Populaire", "BNP Paribas",
+    chooserChecker.checkListContent("Other", "AXA Banque", "Banque Populaire", "BNP Paribas",
                                     "BNPPF", "Caisse d'épargne", "CIC",
                                     "Crédit Agricole", "Crédit Mutuel", "HSBC", "ING Direct", "La Banque Postale",
                                     "LCL",

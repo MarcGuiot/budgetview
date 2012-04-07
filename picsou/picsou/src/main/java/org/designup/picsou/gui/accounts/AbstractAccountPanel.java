@@ -20,6 +20,7 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.Strings;
@@ -249,7 +250,8 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         bankSelectionAction.setText(Lang.get("account.bankSelector.choose"));
       }
       else {
-        accountBank.setText(bank.get(Bank.NAME));
+        accountBank.setText(localDirectory.get(DescriptionService.class).getStringifier(Bank.TYPE)
+                              .toString(bank, localRepository));
         bankSelectionAction.setText(Lang.get("account.bankSelector.modify"));
       }
     }

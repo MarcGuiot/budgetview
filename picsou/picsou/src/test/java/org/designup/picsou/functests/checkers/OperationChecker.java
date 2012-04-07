@@ -214,7 +214,7 @@ public class OperationChecker {
         .defineAccount(bank, "Main account", DEFAULT_ACCOUNT_NUMBER);
     }
     else if (bank != null && asSelectBank(dialog)) { // OFX
-      importDialog.selectBank("Autre");
+      importDialog.selectBank("Other");
     }
     if (targetAccount != null) {
       dialog.getComboBox("accountCombo").select(targetAccount);

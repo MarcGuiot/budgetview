@@ -17,6 +17,7 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
@@ -133,11 +134,14 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
     if (bank != null) {
       String url = bank.get(Bank.URL);
+      String bankName = directory.get(DescriptionService.class).getStringifier(Bank.TYPE)
+        .toString(bank, repository);
+
       if (Strings.isNotEmpty(url)) {
-        manualDownloadMessage.setText(Lang.get("bankDownload.manualDownload.message.url", bank.get(Bank.NAME), url));
+        manualDownloadMessage.setText(Lang.get("bankDownload.manualDownload.message.url", bankName, url));
       }
       else {
-        manualDownloadMessage.setText(Lang.get("bankDownload.manualDownload.message.nourl", bank.get(Bank.NAME)));
+        manualDownloadMessage.setText(Lang.get("bankDownload.manualDownload.message.nourl", bankName));
       }
       GuiUtils.scrollToTop(manualDownloadMessage);
     }

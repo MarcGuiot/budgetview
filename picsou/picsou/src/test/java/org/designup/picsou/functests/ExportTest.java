@@ -23,7 +23,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
       .addBankAccount(30006, 1024, "12345678b", 12.0, "15/06/2008")
       .addTransaction("2008/06/05", -256.0, "Monop's")
       .addTransaction("2008/06/13", "2008/06/15", 1.0, "Carouf")
-      .loadUnknown("Autre");
+      .loadUnknown("Other");
 
     views.selectCategorization();
     categorization.setNewVariable("MONOP'S", "Groceries");

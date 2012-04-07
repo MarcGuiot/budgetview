@@ -6,6 +6,7 @@ import org.designup.picsou.model.Bank;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -18,12 +19,14 @@ public class GotoAccountWebsiteAction extends AbstractAction implements ChangeSe
   private GlobRepository repository;
   private Key accountKey;
   private BrowsingService browsingService;
+  private final DescriptionService descriptionService;
 
   public GotoAccountWebsiteAction(Glob account, GlobRepository repository, Directory directory) {
-    super(getName(account, repository));
+    super(getName(account, repository, directory.get(DescriptionService.class)));
     putValue(Action.SHORT_DESCRIPTION, Lang.get("accountView.goto.website.tooltip"));
     this.repository = repository;
     this.browsingService = directory.get(BrowsingService.class);
+    descriptionService = directory.get(DescriptionService.class);
     this.accountKey = account.getKey();
     repository.addChangeListener(this);
     update();
@@ -43,7 +46,7 @@ public class GotoAccountWebsiteAction extends AbstractAction implements ChangeSe
       url = bank.get(Bank.URL);
     }
     setEnabled(Strings.isNotEmpty(url));
-    putValue(Action.NAME, bank != null ? getName(account, repository) : "");
+    putValue(Action.NAME, bank != null ? getName(account, repository, descriptionService) : "");
   }
 
   public void actionPerformed(ActionEvent e) {
@@ -62,11 +65,13 @@ public class GotoAccountWebsiteAction extends AbstractAction implements ChangeSe
     }
   }
 
-  private static String getName(Glob account, GlobRepository repository) {
+  private static String getName(Glob account, GlobRepository repository, DescriptionService descriptionService) {
     Glob bank = Account.findBank(account, repository);
     if (bank == null) {
       return "";
     }
-    return Lang.get("accountView.goto.website", bank.get(Bank.NAME));
+    String bankName = descriptionService.getStringifier(Bank.TYPE)
+      .toString(bank, repository);
+    return Lang.get("accountView.goto.website", bankName);
   }
 }

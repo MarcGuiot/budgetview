@@ -35,7 +35,7 @@ public class InitialImportTest extends LoggedInFunctionalTestCase {
     importPanel.openImport()
       .selectFiles(file)
       .acceptFile()
-      .selectBank("Autre")
+      .selectBank("Other")
       .setMainAccount()
       .doImport()
       .completeLastStep();

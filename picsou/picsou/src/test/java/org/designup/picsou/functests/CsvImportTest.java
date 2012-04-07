@@ -322,7 +322,7 @@ public class CsvImportTest extends SpecificBankTestCase {
     importDialog
       .setAccountName("imported")
       .setMainAccount()
-      .selectBank("Autre")
+      .selectBank("Other")
       .setPosition(100)
       .completeImport();
 
@@ -453,7 +453,7 @@ public class CsvImportTest extends SpecificBankTestCase {
       .setAccountName("imported")
       .selectDateFormat("Day/Month/Year")
       .setMainAccount()
-      .selectBank("Autre")
+      .selectBank("Other")
       .setPosition(100)
       .completeImport();
 
