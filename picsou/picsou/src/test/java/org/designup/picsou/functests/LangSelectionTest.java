@@ -12,6 +12,11 @@ public class LangSelectionTest extends LangTestCase {
     setDeleteLocalPrevayler(false);
   }
 
+  protected void tearDown() throws Exception {
+    resetWindow();
+    super.tearDown();
+  }
+
   public void testDateFormats() throws Exception {
 
     OfxBuilder.init(this)

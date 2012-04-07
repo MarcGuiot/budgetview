@@ -31,6 +31,11 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     setDeleteLocalPrevayler(false);
   }
 
+  protected void tearDown() throws Exception {
+    resetWindow();
+    super.tearDown();
+  }
+
   public void testRestoreIsNotPossibleAndBackupWarnsThatRestoreIsNotPossibleDuringTheTrialPeriod() throws Exception {
     setDeleteLocalPrevayler(true);
     setNotRegistered();

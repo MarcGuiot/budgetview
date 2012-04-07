@@ -84,14 +84,17 @@ public class ImportPanel extends View {
     if (accounts.isEmpty()) {
       importLabel.setText(Lang.get("importPanel.import.label"));
       syncLabel.setText("");
+      syncLabel.setEnabled(false);
     }
     else if (accounts.size() == 1) {
       importLabel.setText(Lang.get("importPanel.import.label.other"));
       syncLabel.setText(getSyncLabel(accounts.getFirst()));
+      syncLabel.setEnabled(true);
     }
     else {
       importLabel.setText(Lang.get("importPanel.import.label.other"));
       syncLabel.setText(Lang.get("importPanel.synchro.label.multi"));
+      syncLabel.setEnabled(true);
     }
   }
 

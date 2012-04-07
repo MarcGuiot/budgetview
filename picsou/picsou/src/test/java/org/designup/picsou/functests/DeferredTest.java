@@ -631,6 +631,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("24/08/2011", "5", -12.00, "To categorize", 100.00, 100.00, "Main account")
       .add("23/08/2011", "DIFFE 1", -12.00, "To categorize", -12.00, 100.00, "card 1111")
       .check();
+    resetWindow();
   }
 
 

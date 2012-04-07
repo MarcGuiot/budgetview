@@ -17,6 +17,11 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
     setDeleteLocalPrevayler(false);
   }
 
+  protected void tearDown() throws Exception {
+    resetWindow();
+    super.tearDown();
+  }
+
   public void testCanAddBankFromImportDialog() throws Exception {
 
     /** Create bank and load first file **/
