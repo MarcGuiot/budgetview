@@ -2,40 +2,20 @@ package org.designup.picsou.gui.transactions.split;
 
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.actions.SingleSelectionAction;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 
-public class SplitTransactionAction extends AbstractAction implements GlobSelectionListener {
-
-  private Glob selectedTransaction;
-  private GlobRepository repository;
-  private Directory directory;
+public class SplitTransactionAction extends SingleSelectionAction {
 
   public SplitTransactionAction(GlobRepository repository, Directory directory) {
-    super(Lang.get("split.transaction.new"));
-    this.repository = repository;
-    this.directory = directory;
-    directory.get(SelectionService.class).addListener(this, Transaction.TYPE);
-    setEnabled(false);
+    super(Lang.get("split.transaction.new"), Transaction.TYPE, repository, directory);
   }
 
-  public void selectionUpdated(GlobSelection selection) {
-    if (!selection.isRelevantForType(Transaction.TYPE)) {
-      return;
-    }
-
-    GlobList transactions = selection.getAll(Transaction.TYPE);
-    selectedTransaction = transactions.size() == 1 ? transactions.get(0) : null;
-    setEnabled(selectedTransaction != null);
-
+  protected void processSelection(Glob selectedTransaction) {
     this.putValue(Action.NAME, getLabel(selectedTransaction));
   }
 
@@ -48,7 +28,7 @@ public class SplitTransactionAction extends AbstractAction implements GlobSelect
     return Lang.get("split.transaction.new");
   }
 
-  public void actionPerformed(ActionEvent e) {
+  protected void process(Glob selectedTransaction, GlobRepository repository, Directory directory) {
     SplitTransactionDialog dialog = new SplitTransactionDialog(repository, directory);
     dialog.show(selectedTransaction);
   }

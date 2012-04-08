@@ -15,7 +15,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectLast();
     views.selectHome();
     savingsAccounts.createNewAccount().setAsSavings()
-      .setAccountName("Epargne LCL")
+      .setName("Epargne LCL")
       .selectBank("LCL")
       .setPosition(1000)
       .validate();
@@ -52,13 +52,13 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectLast();
     views.selectHome();
     savingsAccounts.createNewAccount().setAsSavings()
-      .setAccountName("Epargne LCL")
+      .setName("Epargne LCL")
       .selectBank("LCL")
       .setPosition(1000)
       .validate();
 
     savingsAccounts.createNewAccount().setAsSavings()
-      .setAccountName("Epargne CA")
+      .setName("Epargne CA")
       .selectBank("Crédit Agricole")
       .setPosition(1000)
       .validate();
@@ -107,7 +107,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectLast();
     views.selectHome();
     savingsAccounts.createNewAccount().setAsSavings()
-      .setAccountName("Epargne LCL")
+      .setName("Epargne LCL")
       .selectBank("LCL")
       .setPosition(1000)
       .validate();
@@ -165,7 +165,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectLast();
     views.selectHome();
     savingsAccounts.createNewAccount().setAsSavings()
-      .setAccountName("Epargne LCL")
+      .setName("Epargne LCL")
       .selectBank("LCL")
       .setPosition(1000)
       .validate();
@@ -233,7 +233,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectLast();
     views.selectHome();
     savingsAccounts.createNewAccount().setAsSavings()
-      .setAccountName("Epargne LCL")
+      .setName("Epargne LCL")
       .selectBank("LCL")
       .setPosition(1000)
       .validate();
@@ -255,7 +255,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
   public void testSavingsSeriesDescriptionsAreShownInTooltips() throws Exception {
     views.selectHome();
     savingsAccounts.createNewAccount().setAsSavings()
-      .setAccountName("Epargne LCL")
+      .setName("Epargne LCL")
       .selectBank("LCL")
       .setPosition(1000)
       .validate();

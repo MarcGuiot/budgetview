@@ -51,13 +51,13 @@ public class GotoAccountWebsiteAction extends AbstractAction implements ChangeSe
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(accountKey)) {
+    if (changeSet.containsChanges(accountKey) || changeSet.containsChanges(Bank.TYPE)) {
       update();
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(Account.TYPE)) {
+    if (changedTypes.contains(Account.TYPE) || changedTypes.contains(Bank.TYPE)) {
       update();
     }
   }

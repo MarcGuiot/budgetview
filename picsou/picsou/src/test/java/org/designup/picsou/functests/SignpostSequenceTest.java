@@ -5,7 +5,6 @@ import org.designup.picsou.functests.checkers.SignpostDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.banks.SpecificBankTestCase;
-import org.designup.picsou.model.SignpostStatus;
 
 public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
@@ -417,7 +416,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     checkNoSignpostVisible();
 
     savingsAccounts.createNewAccount()
-      .setAccountName("Livret")
+      .setName("Livret")
       .selectBank("ING Direct")
       .validate();
 

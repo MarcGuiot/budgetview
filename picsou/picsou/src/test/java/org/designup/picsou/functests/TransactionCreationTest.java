@@ -13,12 +13,12 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     timeline.checkSelection("2008/08");
 
     mainAccounts.createNewAccount()
-      .setAccountName("Main")
+      .setName("Main")
       .setUpdateModeToFileImport()
       .selectBank("CIC")
       .validate();
     mainAccounts.createNewAccount()
-      .setAccountName("Cash")
+      .setName("Cash")
       .setAccountNumber("012345")
       .setUpdateModeToManualInput()
       .selectBank("CIC")
@@ -45,7 +45,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     categorization.checkSelectedTableRow("TRANSACTION 1");
 
     mainAccounts.createNewAccount()
-      .setAccountName("Misc")
+      .setName("Misc")
       .setAccountNumber("012345")
       .setUpdateModeToManualInput()
       .selectBank("CIC")
@@ -88,7 +88,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .checkNoAccountAvailableMessage();
 
     mainAccounts.createNewAccount()
-      .setAccountName("Main")
+      .setName("Main")
       .setUpdateModeToFileImport()
       .selectBank("CIC")
       .validate();
@@ -97,7 +97,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .checkHidden()
       .checkNoAccountMessageAndOpenCreationDialog()
       .checkUpdateModeIsManualInput()
-      .setAccountName("Cash")
+      .setName("Cash")
       .setAccountNumber("012345")
       .selectBank("CIC")
       .validate();
@@ -120,7 +120,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(3).validate();
 
     mainAccounts.createNewAccount()
-      .setAccountName("Cash")
+      .setName("Cash")
       .setAccountNumber("012345")
       .setUpdateModeToManualInput()
       .selectBank("CIC")
@@ -171,7 +171,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
   public void testCreateButtonValidatesAllFields() throws Exception {
     mainAccounts.createNewAccount()
-      .setAccountName("Cash")
+      .setName("Cash")
       .setAccountNumber("012345")
       .setUpdateModeToManualInput()
       .selectBank("CIC")
@@ -196,7 +196,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     setDeleteLocalPrevayler(false);
 
     mainAccounts.createNewAccount()
-      .setAccountName("Cash")
+      .setName("Cash")
       .setAccountNumber("012345")
       .setUpdateModeToManualInput()
       .setPosition(100.)
@@ -239,7 +239,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
   public void testMirrorTransactionIsUpdated() throws Exception {
     mainAccounts.createNewAccount()
-      .setAccountName("Cash")
+      .setName("Cash")
       .setAccountNumber("012345")
       .setUpdateModeToManualInput()
       .setPosition(100.)
@@ -307,7 +307,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     operations.hideSignposts();
 
     mainAccounts.createNewAccount()
-      .setAccountName("Cash")
+      .setName("Cash")
       .setAccountNumber("012345")
       .setUpdateModeToManualInput()
       .setPosition(100.)
@@ -349,7 +349,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
     mainAccounts.createNewAccount()
-      .setAccountName("Cash")
+      .setName("Cash")
       .setAccountNumber("012345")
       .setUpdateModeToManualInput()
       .setPosition(100.00)

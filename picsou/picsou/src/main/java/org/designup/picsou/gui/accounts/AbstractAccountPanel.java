@@ -16,10 +16,8 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.Strings;
@@ -29,6 +27,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 
 public class AbstractAccountPanel<T extends GlobRepository> {
   protected JPanel panel;
@@ -74,8 +73,17 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     selectionService.addListener(bankSelectionAction, Account.TYPE);
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if ((currentAccount != null) && changeSet.containsChanges(currentAccount.getKey())) {
-          accountTypeCombo.updateAccountTypeCombo(currentAccount);
+        if (currentAccount == null) {
+          return;
+        }
+        Key currentAccountKey = currentAccount.getKey();
+        if (!repository.contains(currentAccountKey)) {
+          currentAccount = null;
+          accountTypeCombo.update(currentAccount);
+          return;
+        }
+        if (changeSet.containsChanges(currentAccountKey) || changeSet.containsChanges(Bank.TYPE)) {
+          accountTypeCombo.update(currentAccount);
           updateBank(currentAccount);
           updateMandatoryFlags();
           clearMessage();
@@ -143,7 +151,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
   public void setAccount(Glob account) {
     this.currentAccount = account;
-    accountTypeCombo.updateAccountTypeCombo(currentAccount);
+    accountTypeCombo.update(currentAccount);
     Integer accountType = account.get(Account.ACCOUNT_TYPE);
     setWarning(accountType, account.get(Account.CARD_TYPE));
     if (account != null) {
@@ -185,6 +193,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         return false;
       }
       if (localRepository.getAll(Account.TYPE, fieldEquals(Account.NAME, currentAccount.get(Account.NAME))).size() != 1) {
+        GlobPrinter.print(localRepository, Account.TYPE);
         errorTip = ErrorTip.showLeft(nameField.getComponent(), Lang.get("account.error.duplicate.name"), localDirectory);
         return false;
       }
@@ -218,11 +227,18 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
     public void actionPerformed(ActionEvent e) {
       clearMessage();
+      Key currentAccountKey = currentAccount.getKey();
+
       BankChooserDialog bankChooserDialog = new BankChooserDialog(dialog, localRepository, localDirectory);
-      Integer bankId = bankChooserDialog.show();
+      Integer bankId = bankChooserDialog.show(getCurrentBankId(),
+                                              Collections.singleton(currentAccountKey.get(Account.ID)));
       if (bankId != null) {
-        localRepository.update(currentAccount.getKey(), Account.BANK, bankId);
+        localRepository.update(currentAccountKey, Account.BANK, bankId);
       }
+    }
+
+    private Integer getCurrentBankId() {
+      return currentAccount.get(Account.BANK);
     }
 
     public void selectionUpdated(GlobSelection selection) {

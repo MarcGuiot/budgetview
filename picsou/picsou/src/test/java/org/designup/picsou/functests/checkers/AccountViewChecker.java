@@ -182,7 +182,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
 
   public void createSavingsAccount(String name, Double position) {
     AccountEditionChecker accountEditionChecker = createNewAccount()
-      .setAccountName(name)
+      .setName(name)
       .setAccountNumber("1234")
       .selectBank("LCL")
       .setAsSavings()
@@ -197,7 +197,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
 
   public void createMainAccount(String name, double balance) {
     createNewAccount()
-      .setAccountName(name)
+      .setName(name)
       .setAccountNumber("4321")
       .selectBank("CIC")
       .setAsMain()

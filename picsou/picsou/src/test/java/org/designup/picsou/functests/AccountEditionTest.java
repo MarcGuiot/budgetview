@@ -21,7 +21,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkBalanceDisplayed(false)
       .checkUpdateModeIsFileImport()
       .checkUpdateModeIsDisabled()
-      .setAccountName("My account")
+      .setName("My account")
       .setAccountNumber("12345")
       .validate();
 
@@ -35,7 +35,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkTitle("Create account")
       .checkAccountName("")
       .checkAstericsErrorOnName()
-      .setAccountName("Main CIC account")
+      .setName("Main CIC account")
       .checkAstericsClearOnName()
       .checkTypes("Main", "Credit card", "Deferred debit card", "Savings")
       .checkTypesHelp("Account types")
@@ -53,7 +53,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     savingsAccounts.createNewAccount()
       .checkTitle("Create account")
-      .setAccountName("Savings")
+      .setName("Savings")
       .setAccountNumber("123")
       .checkUpdateModeIsFileImport()
       .checkUpdateModeIsEditable()
@@ -76,7 +76,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     operations.createAccount()
       .checkAccountTypeEditable()
       .checkUpdateModeIsEditable()
-      .setAccountName("Livret")
+      .setName("Livret")
       .setAsSavings()
       .selectBank("CIC")
       .validate();
@@ -89,7 +89,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectHome();
 
     mainAccounts.createNewAccount()
-      .setAccountName("Main")
+      .setName("Main")
       .checkNoBankSelected()
       .checkBankValidationError("You must select a bank for this account")
       .selectBank("Autre")
@@ -112,9 +112,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.edit("Account n. 0000123")
       .checkAccountName("Account n. 0000123")
-      .setAccountName("")
+      .setName("")
       .checkNameValidationError("You must enter a name for this account")
-      .setAccountName("a")
+      .setName("a")
       .checkNoErrorDisplayed()
       .cancel();
 
@@ -125,7 +125,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectHome();
 
     mainAccounts.createNewAccount()
-      .setAccountName("Main CIC account")
+      .setName("Main CIC account")
       .selectBank("CIC")
       .checkIsMain()
       .validate();
@@ -178,7 +178,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
   public void testUpdateModeCanBeChangedUntilTransactionsAreImportedIntoTheAccount() throws Exception {
     views.selectHome();
     mainAccounts.createNewAccount()
-      .setAccountName("Main")
+      .setName("Main")
       .setAccountNumber("0000123")
       .selectBank("CIC")
       .validate();
@@ -203,7 +203,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
   public void testUpdateModeCanBeChangedUntilTransactionsAreCreatedIntoTheAccount() throws Exception {
     views.selectHome();
     mainAccounts.createNewAccount()
-      .setAccountName("Main")
+      .setName("Main")
       .setAccountNumber("0000123")
       .selectBank("CIC")
       .validate();
@@ -231,7 +231,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
   public void testDeletingAnEmptyAccount() throws Exception {
     views.selectHome();
     mainAccounts.createNewAccount()
-      .setAccountName("Main")
+      .setName("Main")
       .selectBank("CIC")
       .validate();
 
@@ -308,12 +308,12 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     mainAccounts.edit("Account n. 0000123")
-      .setAccountName("Livret")
+      .setName("Livret")
       .selectBank("ING Direct")
       .setAsSavings()
       .validate();
     savingsAccounts.createNewAccount()
-      .setAccountName("Codevi")
+      .setName("Codevi")
       .selectBank("ING Direct")
       .validate();
 
@@ -367,7 +367,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     mainAccounts.createNewAccount()
-      .setAccountName("Main")
+      .setName("Main")
       .selectBank("ING Direct")
       .setPosition(1000)
       .setStartDate("2008/10/01")
@@ -403,13 +403,13 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(12).validate();
     views.selectHome();
     mainAccounts.createNewAccount()
-      .setAccountName("Main")
+      .setName("Main")
       .selectBank("ING Direct")
       .setPosition(1000)
       .validate();
 
     mainAccounts.createNewAccount()
-      .setAccountName("Closed main")
+      .setName("Closed main")
       .selectBank("ING Direct")
       .setEndDate("2008/12/03")
       .setPosition(1000)
@@ -488,7 +488,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     AccountEditionChecker newAccount = mainAccounts.createNewAccount();
     AccountEditionChecker accountEditionChecker = newAccount
-      .setAccountName("Carte a débit Différé")
+      .setName("Carte a débit Différé")
       .selectBank("ING Direct")
       .setAsDeferredCard()
       .setPosition(1000);
@@ -507,7 +507,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     mainAccounts.edit("Carte a débit Différé")
-      .setAccountName("other name")
+      .setName("other name")
       .validate();
     views.selectCategorization();
 
@@ -526,7 +526,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     AccountEditionChecker newAccount = mainAccounts.createNewAccount();
     newAccount
-      .setAccountName("Carte a DD")
+      .setName("Carte a DD")
       .selectBank("ING Direct")
       .setAsDeferredCard()
       .setPosition(1000)
@@ -536,12 +536,12 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
   public void testAccountViewDisplaysLinksToWebsites() throws Exception {
     mainAccounts.createNewAccount()
-      .setAccountName("Account 1")
+      .setName("Account 1")
       .selectBank("BNP Paribas")
       .validate();
 
     mainAccounts.createNewAccount()
-      .setAccountName("No site account")
+      .setName("No site account")
       .selectBank("Autre")
       .validate();
 

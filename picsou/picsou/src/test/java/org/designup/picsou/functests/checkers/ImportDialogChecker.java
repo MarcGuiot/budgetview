@@ -265,7 +265,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker browseAndSelect(String path) {
-    WindowInterceptor.init(dialog.getButton(Lang.get("browse")).triggerClick())
+    WindowInterceptor.init(dialog.getButton(Lang.get("browse")))
       .process(FileChooserHandler.init().select(new String[]{path}))
       .run();
     return this;
@@ -312,7 +312,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker defineAccount(String bank, String accountName, String number) {
-    accountEditionChecker.setAccountName(accountName)
+    accountEditionChecker.setName(accountName)
       .setAccountNumber(number)
       .setAsMain();
     if (bank != null) {
@@ -326,14 +326,14 @@ public class ImportDialogChecker extends GuiChecker {
     accountEditionChecker
       .selectBank(bank)
       .setAsMain()
-      .setAccountName(accountName)
+      .setName(accountName)
       .setAccountNumber(number)
       .setPosition(initialBalance);
     return this;
   }
 
   public ImportDialogChecker checkDirectory(String directory) {
-    WindowInterceptor.init(dialog.getButton(Lang.get("browse")).triggerClick())
+    WindowInterceptor.init(dialog.getButton(Lang.get("browse")))
       .process(FileChooserHandler.init().assertCurrentDirEquals(new File(directory)).cancelSelection())
       .run();
     return this;
@@ -442,7 +442,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker setAccountName(String name) {
-    accountEditionChecker.setAccountName(name);
+    accountEditionChecker.setName(name);
     return this;
   }
 

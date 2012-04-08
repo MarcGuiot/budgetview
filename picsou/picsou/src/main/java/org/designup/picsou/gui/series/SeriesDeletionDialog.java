@@ -10,6 +10,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.actions.SingleSelectionAction;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobListView;
 import org.globsframework.gui.views.GlobListViewFilter;
@@ -18,6 +19,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 

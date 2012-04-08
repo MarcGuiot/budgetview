@@ -36,7 +36,7 @@ public class RestoreSnapshotChecker extends GuiChecker {
   private void restore(int position, final boolean ok) {
     Component[] swingComponents = dialog.getSwingComponents(JButton.class, "date");
     org.uispec4j.Button button = new org.uispec4j.Button(((JButton)swingComponents[position]));
-    WindowInterceptor interceptor = WindowInterceptor.init(button.triggerClick())
+    WindowInterceptor interceptor = WindowInterceptor.init(button)
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           ConfirmationDialogChecker confirmationDialogChecker = new ConfirmationDialogChecker(window);

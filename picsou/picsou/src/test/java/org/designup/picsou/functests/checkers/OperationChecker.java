@@ -255,7 +255,7 @@ public class OperationChecker {
 
   public void exportOfxFile(String name) {
     WindowInterceptor
-      .init(getExportMenu().triggerClick())
+      .init(getExportMenu())
       .processWithButtonClick(Lang.get("ok"))
       .process(FileChooserHandler.init().select(name))
       .run();

@@ -5,37 +5,32 @@ import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.actions.MultiSelectionAction;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.util.Set;
 
-public class AlignSeriesBudgetAmountsAction extends AbstractAction implements GlobSelectionListener {
-  private GlobRepository repository;
-  private Directory directory;
-  private GlobList seriesBudgets;
-  private JLabel label = new JLabel();
+public class AlignSeriesBudgetAmountsAction extends MultiSelectionAction {
+  private GlobList seriesBudgets = new GlobList();
+  private JLabel label;
 
   public AlignSeriesBudgetAmountsAction(GlobRepository repository, Directory directory) {
-    this.repository = repository;
-    this.directory = directory;
-    directory.get(SelectionService.class).addListener(this, SeriesBudget.TYPE);
-    setEnabled(false);
-    label.setToolTipText(Lang.get("seriesAmountEdition.alignValue.actual.tooltip"));
+    super("", SeriesBudget.TYPE, repository, directory);
+    getActualAmountLabel().setToolTipText(Lang.get("seriesAmountEdition.alignValue.actual.tooltip"));
   }
 
   public JLabel getActualAmountLabel() {
+    if (label == null) {
+      label = new JLabel();
+    }
     return label;
   }
 
-  public void selectionUpdated(GlobSelection selection) {
+  protected void processSelection(GlobList selection) {
     seriesBudgets = selection.getAll(SeriesBudget.TYPE);
     setEnabled(!seriesBudgets.isEmpty());
     updateLabel();
@@ -44,17 +39,17 @@ public class AlignSeriesBudgetAmountsAction extends AbstractAction implements Gl
   private void updateLabel() {
     Set<Double> amounts = seriesBudgets.getValueSet(SeriesBudget.OBSERVED_AMOUNT);
     if (amounts.size() != 1) {
-      label.setText(Lang.get("seriesAmountEdition.alignValue.actual"));
+      getActualAmountLabel().setText(Lang.get("seriesAmountEdition.alignValue.actual"));
       return;
     }
     Double value = amounts.iterator().next();
     if (value == null) {
       value = 0.00;
     }
-    label.setText(Formatting.toString(value, getBudgetArea()));
+    getActualAmountLabel().setText(Formatting.toString(value, getBudgetArea()));
   }
 
-  public void actionPerformed(ActionEvent e) {
+  protected void process(GlobList selection, GlobRepository repository, Directory directory) {
     repository.startChangeSet();
     try {
       double lastValue = 0.00;

@@ -1,40 +1,34 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.Panel;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
+
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
-public class BankChooserChecker extends GuiChecker {
-  private Panel panel;
+public class BankChooserChecker extends BankChooserPanelChecker<BankChooserChecker> {
 
-  public BankChooserChecker(Panel panel) {
-    this.panel = panel;
+  public static BankChooserChecker open(Trigger trigger) {
+    Window window = WindowInterceptor.getModalDialog(trigger);
+    return new BankChooserChecker(window);
   }
 
-  public BankChooserChecker selectBank(String bankName) {
-    panel.getListBox("bankList").select(bankName);
-    return this;
+  public BankChooserChecker(Window window) {
+    super(window);
   }
 
-  public void cancel(){
+  public void cancel() {
     panel.getButton("cancel").click();
     assertFalse(panel.isVisible());
   }
 
+  public BankChooserChecker checkValidateDisabled() {
+    assertFalse(panel.getButton("Ok").isEnabled());
+    return this;
+  }
+  
   public void validate() {
     panel.getButton("Ok").click();
     assertFalse(panel.isVisible());
-  }
-
-  public void checkListContent(String... banks) {
-    assertThat(panel.getListBox("bankList").contentEquals(banks));
-  }
-
-  public static BankChooserChecker init(Trigger trigger) {
-    Window window = WindowInterceptor.getModalDialog(trigger);
-    return new BankChooserChecker(window);
   }
 }

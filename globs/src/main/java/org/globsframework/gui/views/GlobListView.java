@@ -108,6 +108,8 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     return repository;
   }
 
+
+
   public interface GlobSelectionHandler {
     void processSelection(GlobList selection);
   }

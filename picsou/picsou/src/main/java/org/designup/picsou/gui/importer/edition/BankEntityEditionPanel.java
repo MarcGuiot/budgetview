@@ -2,7 +2,6 @@ package org.designup.picsou.gui.importer.edition;
 
 import org.designup.picsou.gui.bank.BankChooserDialog;
 import org.designup.picsou.model.Account;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -42,11 +41,11 @@ public class BankEntityEditionPanel implements Disposable {
                       valueSet,
                       new RepeatComponentFactory<String>() {
                         public void registerComponents(RepeatCellBuilder cellBuilder, String bankEntityLabel) {
-                          GlobList filteredAccount =
+                          GlobList filteredAccounts =
                             accounts.filter(GlobMatchers.fieldEquals(Account.BANK_ENTITY_LABEL, bankEntityLabel), repository)
                               .sort(Account.NUMBER);
-                          cellBuilder.add("accounts", createTextArea(filteredAccount, bankEntityLabel));
-                          AccountBankAction action = new AccountBankAction(filteredAccount, container);
+                          cellBuilder.add("accounts", createTextArea(filteredAccounts, bankEntityLabel));
+                          AccountBankAction action = new AccountBankAction(filteredAccounts, container);
                           JButton button = new JButton(action);
                           cellBuilder.add("banksChooser", button);
                           button.setName("bankChooser:" + bankEntityLabel);
@@ -85,12 +84,23 @@ public class BankEntityEditionPanel implements Disposable {
 
     public void actionPerformed(ActionEvent e) {
       BankChooserDialog bankChooserDialog = new BankChooserDialog(dialog, repository, directory);
-      Integer bankId = bankChooserDialog.show();
+      Integer bankId = bankChooserDialog.show(getCurrentBankId(), accounts.getValueSet(Account.ID));
       if (bankId != null) {
-        for (Glob account : accounts) {
-          repository.update(account.getKey(), Account.BANK, bankId);
+        try {
+          repository.startChangeSet();
+          for (Glob account : accounts) {
+            repository.update(account.getKey(), Account.BANK, bankId);
+          }
+        }
+        finally {
+          repository.completeChangeSet();
         }
       }
+    }
+
+    private Integer getCurrentBankId() {
+      Set<Integer> bankIds = accounts.getValueSet(Account.BANK);
+      return bankIds.isEmpty() ? null : bankIds.iterator().next();
     }
 
   }

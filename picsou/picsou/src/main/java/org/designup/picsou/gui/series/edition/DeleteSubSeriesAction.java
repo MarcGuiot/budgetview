@@ -3,42 +3,28 @@ package org.designup.picsou.gui.series.edition;
 import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.actions.MultiSelectionAction;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 
-public class DeleteSubSeriesAction extends AbstractAction implements GlobSelectionListener {
-  private GlobRepository repository;
-  private Directory directory;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+
+public class DeleteSubSeriesAction extends MultiSelectionAction {
   private JDialog owner;
-  private GlobList subSeriesList = GlobList.EMPTY;
 
   public DeleteSubSeriesAction(GlobRepository repository, Directory directory, JDialog owner) {
-    super(Lang.get("delete"));
-    this.repository = repository;
-    this.directory = directory;
+    super(Lang.get("delete"), SubSeries.TYPE, repository, directory);
     this.owner = owner;
-    directory.get(SelectionService.class).addListener(this, SubSeries.TYPE);
-    setEnabled(false);
   }
 
-  public void selectionUpdated(GlobSelection selection) {
-    subSeriesList = selection.getAll(SubSeries.TYPE);
-    setEnabled(!subSeriesList.isEmpty());
-  }
-
-  public void actionPerformed(ActionEvent e) {
+  protected void process(GlobList subSeriesList, GlobRepository repository, Directory directory) {
     GlobList transactions =
       repository.getAll(Transaction.TYPE,
-                        GlobMatchers.fieldIn(Transaction.SUB_SERIES,
-                                             subSeriesList.getValueSet(SubSeries.ID)));
+                        fieldIn(Transaction.SUB_SERIES,
+                                subSeriesList.getValueSet(SubSeries.ID)));
     if (!transactions.isEmpty()) {
       DeleteSubSeriesDialog dialog = new DeleteSubSeriesDialog(subSeriesList,
                                                                repository, directory,
@@ -48,7 +34,6 @@ public class DeleteSubSeriesAction extends AbstractAction implements GlobSelecti
     else {
       repository.delete(subSeriesList);
       setEnabled(false);
-      subSeriesList = GlobList.EMPTY;
     }
   }
 }

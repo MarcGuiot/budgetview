@@ -614,7 +614,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   public SeriesEditionDialogChecker renameSubSeries(String previousName, final String newName) {
     Panel tab = getSelectedTab();
     tab.getListBox().select(previousName);
-    WindowInterceptor.init(tab.getButton("renameSubSeries").triggerClick())
+    WindowInterceptor.init(tab.getButton("renameSubSeries"))
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           window.getInputTextBox().setText(newName);
@@ -630,7 +630,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
                                                                 final String errorMessage) {
     Panel tab = getSelectedTab();
     tab.getListBox().select(subSeriesName);
-    WindowInterceptor.init(tab.getButton("renameSubSeries").triggerClick())
+    WindowInterceptor.init(tab.getButton("renameSubSeries"))
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           window.getInputTextBox().setText(newName, false);

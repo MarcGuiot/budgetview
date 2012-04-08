@@ -67,14 +67,16 @@ public abstract class AccountTypeCombo {
     return accountTypeCombo;
   }
 
-  public void updateAccountTypeCombo(Glob account) {
+  public void update(Glob account) {
     currentAccount = account;
-    for (AccountTypeSelector selector : accountTypeSelectors) {
-      if (selector.isApplied(currentAccount)) {
-        accountTypeCombo.setSelectedItem(selector);
-        return;
+    if (currentAccount != null) {
+      for (AccountTypeSelector selector : accountTypeSelectors) {
+        if (selector.isApplied(currentAccount)) {
+          accountTypeCombo.setSelectedItem(selector);
+          return;
+        }
+        accountTypeCombo.setSelectedIndex(-1);
       }
-      accountTypeCombo.setSelectedIndex(-1);
     }
   }
 

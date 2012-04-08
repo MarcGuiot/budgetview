@@ -32,7 +32,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     savingsAccounts.createNewAccount()
-      .setAccountName("Livret")
+      .setName("Livret")
       .selectBank("ING Direct")
       .setPosition(0)
       .validate();
@@ -183,7 +183,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .load();
 
     savingsAccounts.createNewAccount()
-      .setAccountName("Livret")
+      .setName("Livret")
       .selectBank("ING Direct")
       .setPosition(0)
       .validate();
@@ -462,15 +462,15 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2009/06");
 
     mainAccounts.edit("Account n. 0001")
-      .setAccountName("Main")
+      .setName("Main")
       .validate();
     mainAccounts.edit("Account n. 0002")
-      .setAccountName("Imported Savings")
+      .setName("Imported Savings")
       .setAsSavings()
       .selectBank("ING Direct")
       .validate();
     savingsAccounts.createNewAccount()
-      .setAccountName("Non-imported Savings")
+      .setName("Non-imported Savings")
       .setAsSavings()
       .selectBank("ING Direct")
       .setPosition(5000.00)

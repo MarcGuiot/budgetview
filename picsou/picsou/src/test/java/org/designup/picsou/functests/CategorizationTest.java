@@ -1025,7 +1025,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectSavings();
 
     categorization.createAccount()
-      .setAccountName("Epargne")
+      .setName("Epargne")
       .selectBank("ING Direct")
       .checkIsSavings()
       .checkAccountTypeNotEditable()
@@ -1059,7 +1059,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .clickSeriesMessageAccountCreationLink("create a savings account")
       .checkIsSavings()
       .checkUpdateModeIsEditable()
-      .setAccountName("Epargne")
+      .setName("Epargne")
       .selectBank("CIC")
       .setPosition(0.00)
       .validate();
@@ -1118,7 +1118,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .createSavingsAccount()
       .checkIsSavings()
       .checkAccountTypeNotEditable()
-      .setAccountName("Epargne ING")
+      .setName("Epargne ING")
       .selectBank("ING Direct")
       .setPosition(200.00)
       .validate();

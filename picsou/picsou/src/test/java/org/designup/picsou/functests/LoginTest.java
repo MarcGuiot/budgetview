@@ -325,20 +325,12 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
   public void testCannotCreateOperationsInDemoMode() throws Exception {
     login.clickDemoLink();
-    AccountViewChecker mainAccounts = new MainAccountViewChecker(window);
-    mainAccounts.createNewAccount()
-      .setAccountName("Cash")
-      .setAccountNumber("012345")
-      .setUpdateModeToManualInput()
-      .selectBank("CIC")
-      .validate();
 
     ViewSelectionChecker views = new ViewSelectionChecker(window);
-
     views.selectCategorization();
+
     TransactionCreationChecker transactionCreation = new TransactionCreationChecker(window);
-    transactionCreation
-      .checkDemoMessage();
+    transactionCreation.checkDemoMessage();
   }
 
   public void testLicenseInfoInDemoMode() throws Exception {

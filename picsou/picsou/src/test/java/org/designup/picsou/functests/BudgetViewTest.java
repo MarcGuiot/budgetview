@@ -112,7 +112,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
   public void testSavingsSeries() throws Exception {
     savingsAccounts.createNewAccount()
-      .setAccountName("Livret")
+      .setName("Livret")
       .selectBank("ING Direct")
       .setPosition(1000)
       .validate();

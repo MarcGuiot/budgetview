@@ -14,9 +14,8 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
@@ -24,6 +23,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Set;
 
 public class BankDownloadPanel implements GlobSelectionListener {
   private Window parent;
@@ -101,7 +101,8 @@ public class BankDownloadPanel implements GlobSelectionListener {
     manualDownloadMessage = GuiUtils.createReadOnlyHtmlComponent();
     builder.add("manualDownloadMessage", manualDownloadMessage);
 
-    bankChooser = BankChooserPanel.registerComponents(builder, repository, gotoManualDownload, null, parent);
+    bankChooser = new BankChooserPanel(repository, directory, gotoManualDownload, null, parent);
+    builder.add("bankChooserPanel", bankChooser.getPanel());
 
     final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(directory, parent);
     builder.add("hyperlinkHandler", hyperlinkHandler);
@@ -111,6 +112,18 @@ public class BankDownloadPanel implements GlobSelectionListener {
     SelectionService selectionService = directory.get(SelectionService.class);
     selectionService.addListener(this, Bank.TYPE);
     selectionService.clear(Bank.TYPE);
+
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (bankId != null && changeSet.containsChanges(Key.create(Bank.TYPE, bankId))) {
+          update(repository.find(Key.create(Bank.TYPE, bankId)));
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        update(bankId == null ? null : repository.find(Key.create(Bank.TYPE, bankId)));
+      }
+    });
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -145,28 +158,6 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
   public void requestFocus() {
     bankChooser.requestFocus();
-  }
-
-  public class OpenHelpAction extends AbstractAction {
-    private Glob lastBank;
-    private HelpService helpService;
-
-    public OpenHelpAction() {
-      helpService = directory.get(HelpService.class);
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      if (hasSpecificHelp()) {
-        helpService.showBankHelp(lastBank, parent);
-      }
-      else {
-        helpService.show("manualDownload", parent);
-      }
-    }
-
-    private boolean hasSpecificHelp() {
-      return (lastBank != null) && helpService.hasBankHelp(lastBank);
-    }
   }
 
   public void synchronize(GlobList realAccount) {

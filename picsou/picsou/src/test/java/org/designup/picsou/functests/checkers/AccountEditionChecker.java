@@ -2,21 +2,21 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
-import org.globsframework.utils.Dates;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.model.format.Formats;
+import org.globsframework.utils.Dates;
 import org.jdesktop.swingx.JXDatePicker;
 import org.uispec4j.ComboBox;
 import org.uispec4j.TextBox;
 import org.uispec4j.Trigger;
-import org.uispec4j.Window;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
-import org.designup.picsou.utils.Lang;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class AccountEditionChecker extends GuiChecker {
   private org.uispec4j.Panel dialog;
@@ -37,10 +37,45 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker selectBank(String bankName) {
-    Window bankChooserWindow = WindowInterceptor.getModalDialog(getBankButton().triggerClick());
-    BankChooserChecker chooserChecker = new BankChooserChecker(bankChooserWindow);
-    chooserChecker.selectBank(bankName);
-    chooserChecker.validate();
+    BankChooserChecker.open(getBankButton().triggerClick())
+      .selectBank(bankName)
+      .validate();
+    return this;
+  }
+
+  public AccountEditionChecker selectNewBank(String bankName, String url) {
+    BankChooserChecker.open(getBankButton().triggerClick())
+      .addNewBank(bankName, url)
+      .validate();
+    return this;
+  }
+
+  public AccountEditionChecker modifyBank(String initialBank, String newBankName, String newURL) {
+    BankChooserChecker bankChooser = openBankSelection().checkSelectedBank(initialBank);
+
+    bankChooser.edit()
+      .checkName(initialBank)
+      .setName(newBankName)
+      .setUrlAndValidate(newURL);
+
+    bankChooser
+      .checkSelectedBank(newBankName)
+      .validate();
+    return this;
+  }
+
+  public AccountEditionChecker deleteBankAndSelect(String newBank) {
+    openBankSelection()
+      .delete()
+      .selectBank(newBank)
+      .validate();
+    return this;
+  }
+
+  public AccountEditionChecker checkDeleteBankRejected(String title, String message) {
+    openBankSelection()
+      .checkDeleteRejected(title, message)
+      .validate();
     return this;
   }
 
@@ -49,8 +84,7 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public BankChooserChecker openBankSelection() {
-    Window bankChooserWindow = WindowInterceptor.getModalDialog(getBankButton().triggerClick());
-    return new BankChooserChecker(bankChooserWindow);
+    return BankChooserChecker.open(getBankButton().triggerClick());
   }
 
   public AccountEditionChecker checkNoBankSelected() {
@@ -64,6 +98,13 @@ public class AccountEditionChecker extends GuiChecker {
     assertThat(getBankButton().textEquals("Modify"));
     return this;
   }
+  
+  public AccountEditionChecker checkBankNotPresentInList(String bankName) {
+    openBankSelection()
+      .checkBankNotPresent(bankName)
+      .cancel();
+    return this;
+  }
 
   public AccountEditionChecker checkAccountName(String name) {
     TextBox accountNameField = getNameEditor();
@@ -71,37 +112,37 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public AccountEditionChecker checkAstericsErrorOnName(){
+  public AccountEditionChecker checkAstericsErrorOnName() {
     assertThat(dialog.getTextBox("nameFlag").foregroundNear("FF0000"));
     return this;
   }
 
-  public AccountEditionChecker checkAstericsClearOnName(){
+  public AccountEditionChecker checkAstericsClearOnName() {
     assertThat(dialog.getTextBox("nameFlag").foregroundNear("FFFFFF"));
     return this;
   }
 
-  public AccountEditionChecker checkAstericsErrorOnBank(){
+  public AccountEditionChecker checkAstericsErrorOnBank() {
     assertThat(dialog.getTextBox("bankFlag").foregroundNear("FF0000"));
     return this;
   }
 
-  public AccountEditionChecker checkAstericsClearOnBank(){
+  public AccountEditionChecker checkAstericsClearOnBank() {
     assertThat(dialog.getTextBox("bankFlag").foregroundNear("FFFFFF"));
     return this;
   }
 
-  public AccountEditionChecker checkAstericsErrorOnType(){
+  public AccountEditionChecker checkAstericsErrorOnType() {
     assertThat(dialog.getTextBox("accountTypeFlag").foregroundNear("FF0000"));
     return this;
   }
 
-  public AccountEditionChecker checkAstericsClearOnType(){
+  public AccountEditionChecker checkAstericsClearOnType() {
     assertThat(dialog.getTextBox("accountTypeFlag").foregroundNear("FFFFFF"));
     return this;
   }
 
-  public AccountEditionChecker setAccountName(final String name) {
+  public AccountEditionChecker setName(final String name) {
     TextBox accountNameField = getNameEditor();
     accountNameField.setText(name);
     return this;
@@ -175,7 +216,7 @@ public class AccountEditionChecker extends GuiChecker {
 
   public AccountEditionChecker checkCreditCardWarning() {
     assertTrue(dialog.getTextBox("messageWarning")
-      .textContains("Credit card are not managed"));
+                 .textContains("Credit card are not managed"));
     return this;
   }
 

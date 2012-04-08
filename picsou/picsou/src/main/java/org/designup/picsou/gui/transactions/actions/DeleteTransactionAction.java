@@ -4,40 +4,21 @@ import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.transactions.edition.DeleteTransactionDialog;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.actions.MultiSelectionAction;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.util.Iterator;
 
-public class DeleteTransactionAction extends AbstractAction implements GlobSelectionListener {
-
-  private GlobRepository repository;
-  private Directory directory;
-  private SelectionService selectionService;
+public class DeleteTransactionAction extends MultiSelectionAction {
 
   public DeleteTransactionAction(GlobRepository repository, Directory directory) {
-    super(Lang.get("transaction.delete.action"));
-    this.repository = repository;
-    this.directory = directory;
-
-    this.selectionService = directory.get(SelectionService.class);
-    this.selectionService.addListener(this, Transaction.TYPE);
+    super(Lang.get("transaction.delete.action"), Transaction.TYPE, repository, directory);
   }
 
-  public void selectionUpdated(GlobSelection selection) {
-    setEnabled(!selection.getAll(Transaction.TYPE).isEmpty());
-  }
-
-  public void actionPerformed(ActionEvent actionEvent) {
-    GlobList transactions = selectionService.getSelection(Transaction.TYPE);
-
+  protected void process(GlobList transactions, GlobRepository repository, Directory directory) {
     if (hasPlanned(transactions)) {
       MessageDialog.show("transaction.delete.title.forbidden", directory,
                          "transaction.delete.planned");

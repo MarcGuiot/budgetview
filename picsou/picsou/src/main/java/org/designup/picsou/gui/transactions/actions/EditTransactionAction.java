@@ -7,6 +7,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.actions.MultiSelectionAction;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -17,28 +18,15 @@ import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EditTransactionAction extends AbstractAction implements GlobSelectionListener {
+public class EditTransactionAction extends MultiSelectionAction {
 
   private EditTransactionDialog dialog;
-  private GlobRepository repository;
-  private Directory directory;
-  private SelectionService selectionService;
 
   public EditTransactionAction(GlobRepository repository, Directory directory) {
-    super(Lang.get("transaction.edition.action"));
-    this.repository = repository;
-    this.directory = directory;
-    selectionService = directory.get(SelectionService.class);
-    selectionService.addListener(this, Transaction.TYPE);
+    super(Lang.get("transaction.edition.action"), Transaction.TYPE, repository, directory);
   }
 
-  public void selectionUpdated(GlobSelection selection) {
-    setEnabled(!selection.getAll(Transaction.TYPE).isEmpty());
-  }
-
-  public void actionPerformed(ActionEvent actionEvent) {
-
-    GlobList transactions = selectionService.getSelection(Transaction.TYPE);
+  protected void process(GlobList transactions, GlobRepository repository, Directory directory) {
     for (Glob transaction : transactions) {
       if (transaction.isTrue(Transaction.PLANNED)) {
         MessageDialog.show("transaction.edition.planned.title",

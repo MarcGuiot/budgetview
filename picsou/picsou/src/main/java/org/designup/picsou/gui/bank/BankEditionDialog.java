@@ -39,7 +39,7 @@ public class BankEditionDialog {
   private MandatoryFieldFlag nameFlag;
 
   private Glob currentBank;
-  private Key createdBankKey;
+  private Key currentBankKey;
 
   public BankEditionDialog(Window owner, GlobRepository parentRepository, Directory directory) {
     this.localRepository =
@@ -80,7 +80,8 @@ public class BankEditionDialog {
       }
     });
 
-    builder.addEditor("urlField", Bank.URL);
+    builder.addEditor("urlField", Bank.URL)
+      .setValidationAction(okAction);
 
     dialog.addPanelWithButtons(builder.<JPanel>load(), okAction, new CancelAction());
     dialog.pack();
@@ -91,14 +92,27 @@ public class BankEditionDialog {
 
     title.setText(Lang.get("bank.edition.title.create"));
 
-    currentBank = localRepository.create(Bank.TYPE,
-                                         value(Bank.USER_CREATED, true));
-    createdBankKey = currentBank.getKey();
-    localRepository.create(BankEntity.TYPE,
-                           value(BankEntity.ID, getEntityId()),
-                           value(BankEntity.BANK, currentBank.get(Bank.ID)));
+    Glob bank = localRepository.create(Bank.TYPE,
+                                       value(Bank.USER_CREATED, true));
+    localRepository.create(Key.create(BankEntity.TYPE, getEntityId()),
+                           value(BankEntity.BANK, bank.get(Bank.ID)));
 
-    selectionService.select(currentBank);
+    return doShow(bank);
+  }
+
+  public void show(Glob bank) {
+    localRepository.rollback();
+
+    title.setText(Lang.get("bank.edition.title.edit"));
+
+    doShow(bank);
+  }
+
+  private Key doShow(Glob bank) {
+    currentBank = bank;
+    currentBankKey = bank.getKey();
+
+    selectionService.select(bank);
 
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
@@ -108,11 +122,11 @@ public class BankEditionDialog {
 
     GuiUtils.showCentered(dialog);
 
-    return createdBankKey;
+    return currentBankKey;
   }
 
   private void updateMandatoryFlag() {
-    if (currentBank != null && localRepository.contains(createdBankKey)) {
+    if (currentBank != null && localRepository.contains(currentBankKey)) {
       nameFlag.update(Strings.isNullOrEmpty(currentBank.get(Bank.NAME)));
     }
     else {
@@ -167,7 +181,7 @@ public class BankEditionDialog {
     public void actionPerformed(ActionEvent actionEvent) {
       localRepository.rollback();
       currentBank = null;
-      createdBankKey = null;
+      currentBankKey = null;
       dialog.setVisible(false);
     }
   }

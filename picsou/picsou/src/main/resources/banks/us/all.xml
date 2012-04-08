@@ -90,7 +90,7 @@
           fid="7772" org="Intuit" ofxDownload="true"/>
     <bank name="Prudential Retirement" downloadUrl="https://ofx.prudential.com/eftxweb/EFTXWebRedirector" id="26542488"
           fid="1271" org="Prudential Retirement Services" ofxDownload="true"/>
-    <bank name="Municipal Employees Credit Union of Baltimore, Inc."
+    <bank name="Municipal ECU of Baltimore, Inc."
           downloadUrl="https://mec.usersonlnet.com/scripts/isaofx.dll" id="26980954" fid="252076468"
           org="Municipal ECU of Baltimore,Inc." ofxDownload="true"/>
     <bank name="National Penn Bank" downloadUrl="https://www.oasis.cfree.com/6301.ofxgp" id="14314484" fid="6301"

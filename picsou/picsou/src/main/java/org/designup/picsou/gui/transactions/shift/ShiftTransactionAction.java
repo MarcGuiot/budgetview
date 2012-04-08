@@ -4,26 +4,21 @@ import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.actions.SingleSelectionAction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
 
-public class ShiftTransactionAction extends AbstractAction implements GlobSelectionListener, ChangeSetListener {
+public class ShiftTransactionAction extends SingleSelectionAction implements ChangeSetListener {
   protected static final int DAY_LIMIT_FOR_PREVIOUS = 10;
   protected static final int DAY_LIMIT_FOR_NEXT = 20;
 
-  protected final GlobRepository repository;
-  protected final Directory directory;
   private Glob transaction;
   private ShiftDirection direction;
   private Glob series;
@@ -31,22 +26,13 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
   private int targetMonth;
 
   public ShiftTransactionAction(GlobRepository repository, Directory directory) {
-    super(Lang.get("shift.transaction.button"));
-    this.repository = repository;
-    this.directory = directory;
+    super(Lang.get("shift.transaction.button"), Transaction.TYPE, repository, directory);
     this.repository.addChangeListener(this);
-    this.directory.get(SelectionService.class).addListener(this, Transaction.TYPE);
     setEnabled(false);
   }
 
-  public void selectionUpdated(GlobSelection selection) {
-    GlobList transactions = selection.getAll(Transaction.TYPE);
-    if (transactions.size() != 1) {
-      setEnabled(false);
-      return;
-    }
-
-    transaction = transactions.getFirst();
+  protected void processSelection(Glob selectedTransaction) {
+    this.transaction = selectedTransaction;
     updateState();
   }
 
@@ -125,7 +111,7 @@ public class ShiftTransactionAction extends AbstractAction implements GlobSelect
     setEnabled(false);
   }
 
-  public void actionPerformed(ActionEvent e) {
+  protected void process(Glob transaction, GlobRepository repository, Directory directory) {
     if (transaction.get(Transaction.DAY_BEFORE_SHIFT) != null) {
       unshift();
       return;

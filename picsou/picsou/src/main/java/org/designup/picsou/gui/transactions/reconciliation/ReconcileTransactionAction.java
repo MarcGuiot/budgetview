@@ -2,9 +2,8 @@ package org.designup.picsou.gui.transactions.reconciliation;
 
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.actions.MultiSelectionAction;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -12,25 +11,19 @@ import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 
-public class ReconcileTransactionAction extends AbstractAction implements GlobSelectionListener {
-
-  private GlobRepository repository;
-  private SelectionService selectionService;
+public class ReconcileTransactionAction extends MultiSelectionAction {
 
   public ReconcileTransactionAction(GlobRepository repository, Directory directory) {
-    this.repository = repository;
+    super("", Transaction.TYPE, repository, directory);
     repository.addChangeListener(new TypeChangeSetListener(Transaction.TYPE) {
       protected void update(GlobRepository repository) {
         updateLabel();
       }
     });
-    selectionService = directory.get(SelectionService.class);
-    selectionService.addListener(this, Transaction.TYPE);
   }
 
-  public void selectionUpdated(GlobSelection selection) {
+  protected void processSelection(GlobList selection) {
     updateLabel();
   }
 
@@ -39,8 +32,8 @@ public class ReconcileTransactionAction extends AbstractAction implements GlobSe
     putValue(Action.NAME, Lang.get(reconcile ? "reconciliation.action.do" : "reconciliation.action.undo"));
   }
 
-  public void actionPerformed(ActionEvent actionEvent) {
-    boolean reconcile = shouldReconcile(selectionService.getSelection(Transaction.TYPE));
+  protected void process(GlobList transactions, GlobRepository repository, Directory directory) {
+    boolean reconcile = shouldReconcile(transactions);
     try {
       repository.startChangeSet();
       for (Glob transaction : selectionService.getSelection(Transaction.TYPE)) {

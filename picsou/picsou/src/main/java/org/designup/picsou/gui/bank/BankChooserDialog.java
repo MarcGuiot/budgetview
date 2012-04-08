@@ -2,7 +2,9 @@ package org.designup.picsou.gui.bank;
 
 import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
+import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -11,6 +13,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobMatcher;
@@ -20,16 +23,17 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Set;
 
 public class BankChooserDialog implements GlobSelectionListener {
   private Window parent;
-  private GlobRepository repository;
   private Directory directory;
   private GlobMatcher matcher;
   private PicsouDialog dialog;
   private Glob selectedBank;
   private BankChooserDialog.ValidateAction validateAction;
   private SelectionService selectionService;
+  private LocalGlobRepository localRepository;
 
   public BankChooserDialog(Window parent, GlobRepository repository, Directory directory) {
     this(parent, repository, directory, null);
@@ -37,15 +41,16 @@ public class BankChooserDialog implements GlobSelectionListener {
 
   public BankChooserDialog(Window parent, GlobRepository repository, Directory directory, GlobMatcher matcher) {
     this.parent = parent;
-    this.repository = repository;
+
+    localRepository = LocalGlobRepositoryBuilder.init(repository)
+      .copy(Bank.TYPE, BankEntity.TYPE, Account.TYPE)
+      .get();
+
     this.directory = directory;
     this.matcher = matcher;
   }
 
-  public Integer show() {
-    LocalGlobRepository localRepository = LocalGlobRepositoryBuilder.init(repository)
-      .copy(Bank.TYPE)
-      .get();
+  public Integer show(Integer currentBankId, Set<Integer> excludedAccountIds) {
 
     Directory localDirectory = new DefaultDirectory(directory);
     selectionService = new SelectionService();
@@ -60,12 +65,19 @@ public class BankChooserDialog implements GlobSelectionListener {
     dialog = PicsouDialog.create(parent, localDirectory);
 
     BankChooserPanel bankChooser =
-      BankChooserPanel.registerComponents(builder, repository, validateAction, matcher, dialog);
+      new BankChooserPanel(localRepository, localDirectory, validateAction, matcher, dialog);
+    bankChooser.setExcludedAccounts(excludedAccountIds);
+    builder.add("bankChooserPanel", bankChooser.getPanel());
 
     dialog.addPanelWithButtons(builder.<JPanel>load(), validateAction, new CancelAction(dialog));
-
+    
     dialog.pack();
     bankChooser.requestFocus();
+
+    if (currentBankId != null) {
+      selectionService.select(localRepository.find(Key.create(Bank.TYPE, currentBankId)));
+    }
+
     dialog.showCentered();
 
     builder.dispose();
@@ -87,6 +99,7 @@ public class BankChooserDialog implements GlobSelectionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+      localRepository.commitChanges(true);
       dialog.setVisible(false);
       selectedBank = selectionService.getSelection(Bank.TYPE).getFirst();
     }

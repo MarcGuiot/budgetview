@@ -120,7 +120,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     savingsAccounts.createNewAccount()
       .setAsSavings()
-      .setAccountName("Epargne LCL")
+      .setName("Epargne LCL")
       .selectBank("LCL")
       .setPosition(1000)
       .validate();
@@ -195,7 +195,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     savingsAccounts.createNewAccount()
       .setAsSavings()
-      .setAccountName("Epargne LCL")
+      .setName("Epargne LCL")
       .selectBank("LCL")
       .setPosition(1000)
       .validate();
@@ -236,7 +236,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     savingsAccounts.createNewAccount()
       .setAsSavings()
-      .setAccountName("Epargne LCL")
+      .setName("Epargne LCL")
       .selectBank("LCL")
       .setPosition(1000)
       .validate();
@@ -269,7 +269,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .check();
     savingsAccounts.createNewAccount()
       .setAsSavings()
-      .setAccountName("Epargne CIC")
+      .setName("Epargne CIC")
       .selectBank("CIC")
       .setPosition(100)
       .validate();
@@ -1114,12 +1114,12 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     categorization.setNewSavings("Virement", "Epargne", "Main accounts", "External account");
 
     savingsAccounts.createNewAccount()
-      .setAccountName("Livret")
+      .setName("Livret")
       .selectBank("ING Direct")
       .setPosition(0)
       .validate();
     savingsAccounts.createNewAccount()
-      .setAccountName("Livret 2")
+      .setName("Livret 2")
       .selectBank("ING Direct")
       .validate();
     categorization.selectTransactions("Virement")
@@ -1143,7 +1143,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
     savingsAccounts.createNewAccount()
-      .setAccountName("Livret")
+      .setName("Livret")
       .selectBank("ING Direct")
       .setPosition(100)
       .validate();
@@ -1165,7 +1165,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsView.checkNoEstimatedTotalPosition();
 
     mainAccounts.createNewAccount()
-      .setAccountName("Main")
+      .setName("Main")
       .setAccountNumber("4321")
       .selectBank("CIC")
       .setAsMain()
@@ -1192,14 +1192,14 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAllInManualTransactionModeFromSavingsToMainWithCreationOfTransactionInMain() throws Exception {
-    mainAccounts.createNewAccount().setAccountName("Main")
+    mainAccounts.createNewAccount().setName("Main")
       .setAsMain()
       .setPosition(1000)
       .selectBank(SOCIETE_GENERALE)
       .setUpdateModeToManualInput()
       .validate();
 
-    savingsAccounts.createNewAccount().setAccountName("Savings")
+    savingsAccounts.createNewAccount().setName("Savings")
       .selectBank(SOCIETE_GENERALE)
       .setAsSavings()
       .setPosition(1000)
@@ -1232,14 +1232,14 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
-    mainAccounts.createNewAccount().setAccountName("Main")
+    mainAccounts.createNewAccount().setName("Main")
       .setAsMain()
       .setPosition(1000)
       .selectBank(SOCIETE_GENERALE)
       .setUpdateModeToManualInput()
       .validate();
 
-    savingsAccounts.createNewAccount().setAccountName("Savings")
+    savingsAccounts.createNewAccount().setName("Savings")
       .selectBank(SOCIETE_GENERALE)
       .setAsSavings()
       .setPosition(1000)
@@ -1483,7 +1483,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectSavings()
       .createSeries()
       .setName("Financement");
-    editionDialogChecker.createAccount().setAccountName("CODEVI")
+    editionDialogChecker.createAccount().setName("CODEVI")
       .selectBank("CIC")
       .setPosition(0).validate();
     editionDialogChecker
@@ -1497,7 +1497,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .editSeries("Financement");
     seriesEdition
       .createAccount()
-      .setAccountName("Livret A")
+      .setName("Livret A")
       .selectBank("CIC")
       .setPosition(0)
       .validate();
@@ -1661,7 +1661,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTransaction("Virement vers Epargne")
       .selectSavings()
-      .createSavingsAccount().setAccountName("suisse account")
+      .createSavingsAccount().setName("suisse account")
       .selectBank("CIC").validate();
 
     OfxBuilder.init(this)

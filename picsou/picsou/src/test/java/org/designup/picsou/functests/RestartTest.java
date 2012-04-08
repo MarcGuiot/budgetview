@@ -665,7 +665,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
   public void testUserMustSelectAccountForTransactionCreation() throws Exception {
 
     mainAccounts.createNewAccount()
-      .setAccountName("Cash")
+      .setName("Cash")
       .setAccountNumber("012345")
       .setUpdateModeToManualInput()
       .setPosition(100.)

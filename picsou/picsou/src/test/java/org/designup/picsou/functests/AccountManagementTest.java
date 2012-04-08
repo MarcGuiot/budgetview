@@ -159,7 +159,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
   public void testAccountWithoutPosition() throws Exception {
     views.selectHome();
     AccountEditionChecker accountEditionChecker = mainAccounts.createNewAccount()
-      .setAccountName("no position");
+      .setName("no position");
     accountEditionChecker
       .openBankSelection()
       .selectBank("CIC")

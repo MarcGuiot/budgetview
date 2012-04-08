@@ -1188,7 +1188,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     SeriesEditionDialogChecker dialog = budgetView.savings.createSeries().setName("ING");
 
     dialog.createAccount()
-      .setAccountName("Virt ING")
+      .setName("Virt ING")
       .setAccountNumber("1234")
       .selectBank("ING Direct")
       .checkUpdateModeIsFileImport()

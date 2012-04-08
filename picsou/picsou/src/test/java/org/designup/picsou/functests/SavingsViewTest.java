@@ -1,6 +1,5 @@
 package org.designup.picsou.functests;
 
-import junit.framework.Assert;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
@@ -20,7 +19,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     savingsView
       .createAccount()
       .checkIsSavings()
-      .setAccountName("ING")
+      .setName("ING")
       .selectBank("ING Direct")
       .setPosition(200)
       .validate();
@@ -50,7 +49,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
 
     savingsAccounts
       .createNewAccount()
-      .setAccountName("ING")
+      .setName("ING")
       .selectBank("ING Direct")
       .setPosition(200)
       .validate();
@@ -102,7 +101,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
 
     savingsAccounts
       .createNewAccount()
-      .setAccountName("ING")
+      .setName("ING")
       .selectBank("ING Direct")
       .setPosition(0)
       .setStartDate("2009/07/02")
@@ -128,7 +127,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
 
     savingsAccounts
       .createNewAccount()
-      .setAccountName("ING")
+      .setName("ING")
       .selectBank("ING Direct")
       .setPosition(0)
       .setStartDate("2009/06/02")
@@ -198,7 +197,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
 
     savingsAccounts
       .createNewAccount()
-      .setAccountName("ING")
+      .setName("ING")
       .selectBank("ING Direct")
       .setPosition(0)
       .validate();

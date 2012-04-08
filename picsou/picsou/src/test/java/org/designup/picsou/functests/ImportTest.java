@@ -167,14 +167,14 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   public void testManualInputAccountsAreShownInQifImport() throws Exception {
 
     mainAccounts.createNewAccount()
-      .setAccountName("Main")
+      .setName("Main")
       .setAccountNumber("012345")
       .setUpdateModeToFileImport()
       .selectBank("CIC")
       .validate();
 
     mainAccounts.createNewAccount()
-      .setAccountName("Cash")
+      .setName("Cash")
       .setUpdateModeToManualInput()
       .selectBank("Autre")
       .validate();
@@ -404,7 +404,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   public void testUsingAnOfxImportForAManualAccountTurnsItIntoFileImportMode() throws Exception {
     views.selectHome();
     mainAccounts.createNewAccount()
-      .setAccountName("Cash")
+      .setName("Cash")
       .setAccountNumber("012345")
       .setUpdateModeToManualInput()
       .selectBank("CIC")
@@ -563,7 +563,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.importQifFile(file1, SOCIETE_GENERALE, 100.00);
 
     mainAccounts.createNewAccount()
-      .setAccountName("other")
+      .setName("other")
       .setPosition(100)
       .setAccountNumber("1213")
       .selectBank(SOCIETE_GENERALE)
@@ -611,7 +611,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilter("crédit")
       .checkContainsBanks("Crédit Agricole", "Chesterfield Federal Credit Union", "Autre")
       .setFilter("BNP")
-      .checkBankList("BNP Paribas", "BNPPF", "Autre")
+      .checkBankListEquals("BNP Paribas", "BNPPF", "Autre")
       .selectBank("BNP Paribas")
       .checkManualDownloadAvailable()
       .selectManualDownload()

@@ -194,11 +194,11 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     mainAccounts.edit("00000123456")
-      .setAccountName(account("main"))
+      .setName(account("main"))
       .validate();
 
     mainAccounts.createNewAccount()
-      .setAccountName(account("cash"))
+      .setName(account("cash"))
       .selectBank("Autre")
       .setUpdateModeToManualInput()
       .setPosition(0.00)
@@ -255,7 +255,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     savingsAccounts.createNewAccount()
-      .setAccountName(account("savings"))
+      .setName(account("savings"))
       .selectBank("ING Direct")
       .setPosition(1000)
       .validate();
@@ -346,7 +346,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     savingsAccounts.createNewAccount()
-      .setAccountName(account("provisions"))
+      .setName(account("provisions"))
       .selectBank("CIC")
       .setPosition(1000)
       .validate();

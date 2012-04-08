@@ -137,22 +137,23 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   private static LocalGlobRepository createLocalRepository(GlobRepository parentRepository) {
     return LocalGlobRepositoryBuilder.init(parentRepository)
       .copy(Bank.TYPE, BankEntity.TYPE, AccountUpdateMode.TYPE, MonthDay.TYPE, CurrentMonth.TYPE,
-            AccountCardType.TYPE, AccountType.TYPE, Month.TYPE, DeferredCardDate.TYPE)
+            Account.TYPE, AccountCardType.TYPE, AccountType.TYPE, Month.TYPE, DeferredCardDate.TYPE)
       .get();
   }
 
-  public void show(Glob account) {
-    GlobList globs = parentRepository.findByIndex(DeferredCardDate.ACCOUNT_AND_DATE, DeferredCardDate.ACCOUNT, account.get(Account.ID))
-      .getGlobs();
-    globs.add(account);
-    localRepository.reset(globs, Account.TYPE, DeferredCardDate.TYPE);
+  public void show(Key accountKey) {
+    localRepository.rollback();
+
+    Glob localAccount = localRepository.get(accountKey);
     setBalanceEditorVisible(false);
-    updateModeCombo.setEnabled(!accountHasTransactions(account));
-    doShow(localRepository.get(account.getKey()), false);
+    updateModeCombo.setEnabled(!accountHasTransactions(localAccount));
+
+    doShow(localAccount, false);
   }
 
   public void showWithNewAccount(AccountType type, boolean accountTypeEditable,
                                  AccountUpdateMode updateMode, boolean updateModeEditable) {
+    localRepository.rollback();
     accountTypeCombo.setEnabled(accountTypeEditable);
     updateModeCombo.setEnabled(updateModeEditable);
     Glob newAccount = localRepository.create(Account.TYPE,
@@ -162,25 +163,6 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
                                              value(Account.POSITION, accountInfo != null ? accountInfo.get(CurrentAccountInfo.POSITION) : null),
                                              value(Account.POSITION_DATE, accountInfo != null ? accountInfo.get(CurrentAccountInfo.POSITION_DATE) : null));
     doShow(newAccount, true);
-    builder.dispose();
-  }
-
-  public void showWithNewAccount(FieldValue... defaultValues) {
-    localRepository.reset(GlobList.EMPTY, Account.TYPE);
-
-    FieldValues values = FieldValuesBuilder.init()
-      .set(Account.NAME, Lang.get("account.default.current.name"))
-      .set(defaultValues)
-      .get();
-
-    Glob account = localRepository.create(Account.TYPE, values.toArray());
-    localRepository.update(account.getKey(),
-                           value(Account.BANK, accountInfo != null ? accountInfo.get(CurrentAccountInfo.BANK) : null),
-                           value(Account.POSITION, accountInfo != null ? accountInfo.get(CurrentAccountInfo.POSITION) : null),
-                           value(Account.POSITION_DATE, accountInfo != null ? accountInfo.get(CurrentAccountInfo.POSITION_DATE) : null));
-    setBalanceEditorVisible(false);
-    updateModeCombo.setEnabled(!accountHasTransactions(account));
-    doShow(localRepository.get(account.getKey()), true);
     builder.dispose();
   }
 
@@ -249,13 +231,8 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
                                                                 Lang.get(getMessageKey()),
                                                                 dialog, localDirectory) {
         protected void postValidate() {
-          try {
-            parentRepository.startChangeSet();
-            parentRepository.delete(currentAccount.getKey());
-          }
-          finally {
-            parentRepository.completeChangeSet();
-          }
+          localRepository.delete(currentAccount.getKey());
+          localRepository.commitChanges(false);
           dialog.setVisible(false);
         }
       };

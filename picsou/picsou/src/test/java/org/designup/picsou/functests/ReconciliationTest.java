@@ -358,7 +358,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
   public void testManuallyCreatedTransactionsAreNotAutomaticallyReconciled() throws Exception {
 
     mainAccounts.createNewAccount()
-      .setAccountName("Cash")
+      .setName("Cash")
       .setAccountNumber("012345")
       .setUpdateModeToManualInput()
       .selectBank("CIC")

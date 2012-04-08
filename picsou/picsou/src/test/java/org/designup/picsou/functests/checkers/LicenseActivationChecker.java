@@ -55,7 +55,7 @@ public class LicenseActivationChecker {
   private static void enterLicense(Window window, WindowHandler windowHandler) {
     UISpecAssert.waitUntil(window.containsMenuBar(), 10000);
     MenuItem registerMenu = window.getMenuBar().getMenu(Lang.get("file")).getSubMenu(Lang.get("license.register"));
-    WindowInterceptor.init(registerMenu.triggerClick())
+    WindowInterceptor.init(registerMenu)
       .process(windowHandler)
       .run();
   }

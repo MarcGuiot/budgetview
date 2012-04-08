@@ -7,8 +7,6 @@ import org.uispec4j.Trigger;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.PopupMenuInterceptor;
 
-import javax.swing.*;
-
 public class JPopupButtonChecker {
 
   private Button button;
@@ -20,6 +18,12 @@ public class JPopupButtonChecker {
   public void checkChoices(String... actions) {
     MenuItem menu = openMenu();
     menu.contentEquals(actions).check();
+    menu.getAwtComponent().setVisible(false);
+  }
+
+  public void checkItemDisabled(String menuItem) {
+    MenuItem menu = openMenu();
+    UISpecAssert.assertFalse(menu.getSubMenu(menuItem).isEnabled());
     menu.getAwtComponent().setVisible(false);
   }
 

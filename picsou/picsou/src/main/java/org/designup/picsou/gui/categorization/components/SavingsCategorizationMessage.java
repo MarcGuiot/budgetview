@@ -76,7 +76,7 @@ public class SavingsCategorizationMessage extends DynamicMessage implements Glob
         return;
       }
       AccountEditionDialog dialog = new AccountEditionDialog(repository, directory);
-      dialog.show(repository.get(Key.create(Account.TYPE, accountIds.iterator().next())));
+      dialog.show(Key.create(Account.TYPE, accountIds.iterator().next()));
     }
   }
 
