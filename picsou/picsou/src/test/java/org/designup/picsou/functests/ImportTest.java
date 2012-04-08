@@ -176,7 +176,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setName("Cash")
       .setUpdateModeToManualInput()
-      .selectBank("Autre")
+      .selectBank("Other")
       .validate();
 
     String firstQif = QifBuilder.init(this)
@@ -540,13 +540,13 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addBankAccount(666, 1024, "12345678a", 12.0, "2008/06/11")
       .addTransaction("2008/06/10", 1.0, "V'lib")
       .save();
-    operations.importOfxFile(fileName1, "Autre");
+    operations.importOfxFile(fileName1, "Other");
 
     String fileName2 = OfxBuilder.init(this)
       .addBankAccount(666, 1024, "12345678b", 12.0, "2008/06/11")
       .addTransaction("2008/06/10", 1.0, "V'lib")
       .save();
-    operations.importOfxFile(fileName2, "Autre");
+    operations.importOfxFile(fileName2, "Other");
     transactions
       .initContent()
       .add("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
@@ -609,9 +609,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     bankDownload
       .goBackToBankSelection()
       .setFilter("crédit")
-      .checkContainsBanks("Crédit Agricole", "Chesterfield Federal Credit Union", "Autre")
+      .checkContainsBanks("Crédit Agricole", "Chesterfield Federal Credit Union", "Other")
       .setFilter("BNP")
-      .checkBankListEquals("BNP Paribas", "BNPPF", "Autre")
+      .checkBankListEquals("BNP Paribas", "BNPPF", "Other")
       .selectBank("BNP Paribas")
       .checkManualDownloadAvailable()
       .selectManualDownload()
@@ -620,7 +620,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     importDialog.close();
   }
 
-  public void testImportTwiceTheSameFile() throws Exception {
+  public void testImportingTheSameFileTwice() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/11", -1.3, "Menu K 1")
@@ -875,7 +875,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .checkSelectedAccount("Account n. 113")
       .checkAccountNotEditable()
-      .checkAccountDescription("Account n.113 Autre Position: 100.00 on 2011/10/01")
+      .checkAccountDescription("Account n.113 Other Position: 100.00 on 2011/10/01")
       .selectAccount("a new account")
       .checkAstericsErrorOnName()
       .checkAccountPosition(300.)

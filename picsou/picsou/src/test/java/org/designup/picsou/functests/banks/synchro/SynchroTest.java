@@ -30,14 +30,14 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     importPanel.checkImportMessage("Import your operations");
     importPanel.checkSynchroButtonHidden();
 
-    OtherBankSynchroChecker synchro = operations.openImportDialog().openSynchro("Autre");
+    OtherBankSynchroChecker synchro = operations.openImportDialog().openSynchro("Other");
     synchro.createNew("princi", "princi", "100.", path);
     synchro.doImport()
       .setMainAccount()
       .completeImport();
 
     importPanel.checkImportMessage("Import other operations");
-    importPanel.checkSynchroMessage("Download your accounts from Autre");
+    importPanel.checkSynchroMessage("Download your accounts from Other");
 
     transactions.initContent()
       .add("23/01/2006", TransactionType.PRELEVEMENT, "MENU K", "", -1.10)
@@ -73,7 +73,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .save();
     ImportDialogChecker dialogChecker = operations.openImportDialog();
 
-    OtherBankSynchroChecker synchro = dialogChecker.openSynchro("Autre");
+    OtherBankSynchroChecker synchro = dialogChecker.openSynchro("Other");
     synchro.createNew("princi", "princi", "100.", path);
     synchro.createNew("secondary", "secondary", "10.", null);
     synchro.createNew("Livret A", "Livret A", "110.", null);
@@ -228,10 +228,10 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "TX 1")
       .addTransaction("2006/01/11", -2.2, "TX 2")
       .save();
-    operations.importQifFile(fileName, "Autre", 100.);
+    operations.importQifFile(fileName, "Other", 100.);
     importPanel.checkSynchroNotVisible();
     ImportDialogChecker dialogChecker = operations.openImportDialog();
-    OtherBankSynchroChecker checker = dialogChecker.openSynchro("Autre");
+    OtherBankSynchroChecker checker = dialogChecker.openSynchro("Other");
     checker.createNew("princi", "princi", "100.", fileName);
     ImportDialogChecker importDialogChecker = checker.doImport();
     importDialogChecker

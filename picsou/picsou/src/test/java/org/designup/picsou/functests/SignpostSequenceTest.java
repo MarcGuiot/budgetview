@@ -19,6 +19,12 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     setDeleteLocalPrevayler(false);
   }
 
+  protected void tearDown() throws Exception {
+    resetWindow();
+    super.tearDown();
+  }
+
+
   protected void selectInitialView() {
     views.selectHome();
   }

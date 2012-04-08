@@ -199,7 +199,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.createNewAccount()
       .setName(account("cash"))
-      .selectBank("Autre")
+      .selectBank("Other")
       .setUpdateModeToManualInput()
       .setPosition(0.00)
       .validate();

@@ -15,6 +15,12 @@ public class RestoreSnapshotTest extends LoggedInFunctionalTestCase {
     setDeleteLocalPrevayler(false);
   }
 
+  protected void tearDown() throws Exception {
+    resetWindow();
+    super.tearDown();
+  }
+
+
   public void testRestorePrevious() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")

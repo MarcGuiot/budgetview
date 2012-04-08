@@ -84,14 +84,17 @@ public class ImportPanel extends View {
     if (accounts.isEmpty()) {
       importLabel.setText(Lang.get("importPanel.import.label"));
       syncLabel.setText("");
+      syncLabel.setEnabled(false);
     }
     else if (accounts.size() == 1) {
       importLabel.setText(Lang.get("importPanel.import.label.other"));
       syncLabel.setText(getSyncLabel(accounts.getFirst()));
+      syncLabel.setEnabled(true);
     }
     else {
       importLabel.setText(Lang.get("importPanel.import.label.other"));
       syncLabel.setText(Lang.get("importPanel.synchro.label.multi"));
+      syncLabel.setEnabled(true);
     }
   }
 
@@ -111,7 +114,8 @@ public class ImportPanel extends View {
 
     Glob bank = repository.findLinkTarget(realAccount, RealAccount.BANK);
     if (bank != null) {
-      String bankName = bank.get(Bank.NAME);
+
+      String bankName = descriptionService.getStringifier(Bank.TYPE).toString(bank, repository);
       if (Strings.isNotEmpty(bankName)) {
         return Lang.get("importPanel.synchro.label.single", bankName);
       }

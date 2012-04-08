@@ -145,7 +145,7 @@ public class DownloadTest extends ConnectedTestCase {
       .addTransaction("2008/09/10", -100., "STUPID HEADER blabla")
       .save();
 
-    application.getOperations().importOfxFile(fileName, "Autre");
+    application.getOperations().importOfxFile(fileName, "Other");
 
     final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
     final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);

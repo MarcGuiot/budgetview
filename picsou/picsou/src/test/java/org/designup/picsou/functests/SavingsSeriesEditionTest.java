@@ -208,20 +208,20 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRow(0)
       .selectSavings()
       .editSeries("CA")
-      .setName("Autre")
+      .setName("Other")
       .validate();
 
     views.selectBudget();
-    budgetView.savings.checkSeriesPresent("Autre");
+    budgetView.savings.checkSeriesPresent("Other");
 
     SeriesEditionDialogChecker firstSeriesChecker =
-      budgetView.savings.editSeries("Autre");
+      budgetView.savings.editSeries("Other");
     firstSeriesChecker.selectAllMonths().setAmount(50).validate();
     savingsView.editSeries("Account n. 111", "CA")
-      .checkName("Autre")
+      .checkName("Other")
       .validate();
     views.selectBudget();
-    firstSeriesChecker = budgetView.savings.editSeries("Autre");
+    firstSeriesChecker = budgetView.savings.editSeries("Other");
     firstSeriesChecker.validate();
   }
 

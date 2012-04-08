@@ -18,6 +18,11 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
     setDeleteLocalPrevayler(false);
   }
 
+  protected void tearDown() throws Exception {
+    resetWindow();
+    super.tearDown();
+  }
+
   public void testChangeFutureMonths() throws Exception {
     timeline.checkDisplays("2008/08");
     operations.openPreferences().setFutureMonthsCount(24).validate();

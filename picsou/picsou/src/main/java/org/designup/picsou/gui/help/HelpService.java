@@ -4,6 +4,7 @@ import org.designup.picsou.utils.Lang;
 import org.designup.picsou.model.Bank;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Glob;
+import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Functor;
@@ -59,7 +60,10 @@ public class HelpService {
 
   public void showBankHelp(Glob bank, Window owner) {
     String siteRef = getBankSiteRef(bank);
-    bankTitles.put(siteRef, Lang.get("help.bankDownloadInstructions", bank.get(Bank.NAME)));
+    String bankName = directory.get(DescriptionService.class).getStringifier(Bank.TYPE)
+      .toString(bank, repository);
+
+    bankTitles.put(siteRef, Lang.get("help.bankDownloadInstructions", bankName));
     show(siteRef, owner);
   }
 

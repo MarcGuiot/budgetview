@@ -17,7 +17,6 @@ import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.OperationCancelled;
 
 import javax.swing.*;

@@ -17,9 +17,9 @@ import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.model.*;
+import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.DefaultChangeSetListener;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -28,6 +28,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
+
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class AbstractAccountPanel<T extends GlobRepository> {
   protected JPanel panel;
@@ -265,7 +267,8 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         bankSelectionAction.setText(Lang.get("account.bankSelector.choose"));
       }
       else {
-        accountBank.setText(bank.get(Bank.NAME));
+        accountBank.setText(localDirectory.get(DescriptionService.class).getStringifier(Bank.TYPE)
+                              .toString(bank, localRepository));
         bankSelectionAction.setText(Lang.get("account.bankSelector.modify"));
       }
     }
@@ -278,7 +281,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     this.accountTypeCombo.setEnabled(editable);
     this.bankSelectionButton.setEnabled(editable);
     this.positionEditor.setEnabled(editable);
-    if (!editable){
+    if (!editable) {
       clearMandatoryFlags();
     }
     else {

@@ -29,6 +29,11 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     setDeleteLocalPrevayler(false);
   }
 
+  protected void tearDown() throws Exception {
+    resetWindow();
+    super.tearDown();
+  }
+
   public void testTransactionsOnly() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")
@@ -556,17 +561,17 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .addBankAccount("unknown", 111, "111", 1000.00, "2008/08/19")
       .addTransaction("2008/08/10", -50.00, "Virement")
       .addTransaction("2008/08/06", -30.00, "Virement")
-      .loadUnknown("Autre");
+      .loadUnknown("Other");
 
     OfxBuilder.init(this)
       .addCardAccount("123", 1000.00, "2008/08/19")
       .addTransaction("2008/08/06", -30.00, "FNAC")
-      .loadOneDeferredCard("Autre");
+      .loadOneDeferredCard("Other");
 
     OfxBuilder.init(this)
       .addBankAccount("unknown 222", 222, "222", 1000.00, "2008/08/19")
       .addTransaction("2008/08/10", -50.00, "Virement")
-      .loadUnknown("Autre");
+      .loadUnknown("Other");
 
     // On veut juste verifier que l'import marche toujours.
     restartApplication();

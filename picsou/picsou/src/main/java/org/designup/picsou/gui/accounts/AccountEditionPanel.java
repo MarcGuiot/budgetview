@@ -10,6 +10,7 @@ import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -56,7 +57,8 @@ public class AccountEditionPanel extends AbstractAccountPanel {
 
     Glob bank = repository.findLinkTarget(account, Account.BANK);
     if (bank != null) {
-      String bankName = bank.get(Bank.NAME);
+      String bankName = localDirectory.get(DescriptionService.class).getStringifier(Bank.TYPE)
+        .toString(bank, repository);
       if (Strings.isNotEmpty(bankName)) {
         html.appendParagraph(Lang.get("account.readOnly.bank", bankName));
       }

@@ -235,6 +235,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .create();
 
     mainAccounts.checkPosition("Cash", 70.);
+    resetWindow();
   }
 
   public void testMirrorTransactionIsUpdated() throws Exception {
