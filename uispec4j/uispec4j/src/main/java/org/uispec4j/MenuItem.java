@@ -20,7 +20,7 @@ import java.util.Arrays;
  * A given MenuItem can be either a command, or a sub-menu containing other MenuItem
  * components.
  */
-public class MenuItem extends AbstractUIComponent {
+public class MenuItem extends AbstractUIComponent implements Clickable {
   public static final String TYPE_NAME = "menu";
   public static final Class[] SWING_CLASSES = {JMenuItem.class, JPopupMenu.class};
 

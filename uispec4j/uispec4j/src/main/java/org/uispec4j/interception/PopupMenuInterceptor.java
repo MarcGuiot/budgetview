@@ -25,6 +25,11 @@ import javax.swing.*;
  */
 public class PopupMenuInterceptor {
 
+  /** @see #run(org.uispec4j.Trigger) */
+  public static MenuItem run(final Clickable clickable) {
+    return run(clickable.triggerClick());
+  }
+
   /**
    * Runs the given trigger and returns the intercepted popup menu.<p/>
    * This method will wait for the popup to be shown, up to a time specified with

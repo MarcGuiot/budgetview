@@ -184,7 +184,7 @@ public abstract class MenuItemTestCase extends UIComponentTestCase {
         })
         .getMenuItem();
     WindowInterceptor
-      .init(menuItem.getSubMenu("menu").triggerClick())
+      .init(menuItem.getSubMenu("menu"))
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           logger.log("handleWindow");

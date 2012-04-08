@@ -1,5 +1,6 @@
 package org.uispec4j.interception;
 
+import org.uispec4j.Clickable;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpec4J;
 import org.uispec4j.Window;
@@ -87,6 +88,11 @@ public final class WindowInterceptor {
    */
   public static WindowInterceptor init(Trigger trigger) {
     return new WindowInterceptor(trigger);
+  }
+  
+  /** @see #init(org.uispec4j.Trigger) */
+  public static WindowInterceptor init(Clickable clickable) {
+    return init(clickable.triggerClick());
   }
 
   private WindowInterceptor(Trigger trigger) {

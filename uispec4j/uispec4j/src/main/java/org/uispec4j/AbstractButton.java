@@ -9,7 +9,7 @@ import javax.swing.*;
 /**
  * Base class for button-like components (toggle buttons, check boxes, etc.)
  */
-public abstract class AbstractButton extends AbstractSwingUIComponent {
+public abstract class AbstractButton extends AbstractSwingUIComponent implements Clickable {
   private javax.swing.AbstractButton abstractButton;
 
   protected AbstractButton(javax.swing.AbstractButton abstractButton) {
