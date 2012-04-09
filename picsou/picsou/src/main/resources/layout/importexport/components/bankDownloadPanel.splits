@@ -39,9 +39,16 @@
                     </row>
                   </column>
 
-                  <htmlEditorPane text="$bankDownload.selection.manual.message"
-                                  styleClass="multiLineLabel" marginTop="10"/>
-                  <button action="gotoManualDownload" anchor="center" fill="none" marginTop="5"/>
+                  <column opaque="false" border="matte(0,0,1,0,#AAAAAA)">
+                    <htmlEditorPane text="$bankDownload.selection.manual.message"
+                                    styleClass="multiLineLabel" marginTop="5"/>
+                    <button action="gotoManualDownload" anchor="center" fill="none"
+                            marginTop="5" marginBottom="5"/>
+                  </column>
+
+                  <htmlEditorPane name="manualInput"
+                                  text="$bankDownload.selection.manualInput.message"
+                                  styleClass="multiLineLabel" marginTop="5"/>
 
                   <filler fill="vertical"/>
                 </column>

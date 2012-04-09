@@ -1,16 +1,16 @@
 package org.designup.picsou.gui.signpost.guides;
 
 import org.designup.picsou.gui.categorization.components.CategorizationLevel;
-import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.model.Card;
+import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Updatable;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.GlobSelection;
 
 public class GotoBudgetSignpost extends Signpost implements Updatable {
   private CategorizationLevel categorizationLevel;
@@ -41,12 +41,13 @@ public class GotoBudgetSignpost extends Signpost implements Updatable {
   }
 
   public void update() {
-    if (!SignpostStatus.isCompleted(SignpostStatus.FIRST_CATEGORIZATION_DONE, repository)){
+    if (!SignpostStatus.isCompleted(SignpostStatus.FIRST_CATEGORIZATION_DONE, repository) ||
+        SignpostStatus.isCompleted(SignpostStatus.CREATED_TRANSACTIONS_MANUALLY, repository)) {
       return;
     }
+
     double total = categorizationLevel.getTotal();
     double percentage = categorizationLevel.getPercentage();
-
     if ((total == 0) && isShowing()) {
       dispose();
     }

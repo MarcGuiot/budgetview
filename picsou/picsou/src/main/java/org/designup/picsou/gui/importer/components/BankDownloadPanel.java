@@ -2,6 +2,7 @@ package org.designup.picsou.gui.importer.components;
 
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.gui.bank.BankChooserPanel;
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.importer.ImportController;
 import org.designup.picsou.model.Bank;
@@ -105,6 +106,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
     builder.add("bankChooserPanel", bankChooser.getPanel());
 
     final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(directory, parent);
+    hyperlinkHandler.registerLinkAction("manualInput", new GotoTransactionCreationFunctor());
     builder.add("hyperlinkHandler", hyperlinkHandler);
 
     panel = builder.load();
@@ -176,5 +178,11 @@ public class BankDownloadPanel implements GlobSelectionListener {
     controller.doImport();
   }
 
-
+  private class GotoTransactionCreationFunctor implements Runnable {
+    public void run() {
+      controller.complete();
+      controller.closeDialog();
+      directory.get(NavigationService.class).highlightTransactionCreation();
+    }
+  }
 }

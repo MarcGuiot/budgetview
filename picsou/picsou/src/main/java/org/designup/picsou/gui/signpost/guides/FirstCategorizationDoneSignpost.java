@@ -4,7 +4,6 @@ import net.java.balloontip.BalloonTip;
 import net.java.balloontip.TablecellBalloonTip;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.utils.Matchers;
-import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SignpostSectionType;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
@@ -16,7 +15,6 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -69,7 +67,7 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
   protected void update() {
     if (SignpostStatus.isCompleted(SignpostStatus.CATEGORIZATION_AREA_SELECTION_DONE, repository)) {
       if (canShow()) {
-        if (!hasUncategorizedOperations()) {
+        if (allOperationsAreCategorized()) {
           SignpostStatus.setCompleted(SignpostStatus.FIRST_CATEGORIZATION_DONE, repository);
         }
         else {
@@ -104,8 +102,12 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
     }
   }
 
-  private boolean hasUncategorizedOperations() {
-    return repository.contains(Transaction.TYPE, Matchers.uncategorizedTransactions());
+  private boolean allOperationsAreCategorized() {
+    return !repository.contains(Transaction.TYPE, Matchers.uncategorizedTransactions());
+  }
+
+  private boolean createdTransactionsManually() {
+    return SignpostStatus.isCompleted(SignpostStatus.CREATED_TRANSACTIONS_MANUALLY, repository);
   }
 
   private boolean hasCategorizedOperations() {

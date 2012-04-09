@@ -1,10 +1,10 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.banks.SpecificBankTestCase;
 import org.designup.picsou.functests.checkers.SeriesAmountEditionDialogChecker;
 import org.designup.picsou.functests.checkers.SignpostDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.functests.banks.SpecificBankTestCase;
 
 public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
@@ -23,7 +23,6 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     resetWindow();
     super.tearDown();
   }
-
 
   protected void selectInitialView() {
     views.selectHome();
@@ -224,7 +223,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth(201005);
-    
+
     SignpostDialogChecker
       .open(
         budgetView.variable.editPlannedAmount("Groceries")
@@ -486,7 +485,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
 
     categorization.checkFirstCategorizationSignpostDisplayed("Select the operations to categorize");
-    
+
     categorization.selectTableRow(0);
 
     categorization.checkSkipMessageDisplayed();
@@ -569,7 +568,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.checkFirstCategorizationSignpostDisplayed("The operation is categorized, continue");
     categorization.setVariable("auchan", "Groceries");
-    
+
     categorization.checkGotoBudgetSignpostShown();
     gotoDemoAccountAndBack();
     categorization.checkGotoBudgetSignpostShown();
@@ -609,6 +608,76 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     views.checkHomeSelected();
     signpostView.checkSummaryViewShown();
   }
+
+  public void testStartEnteringTransactionsManually() throws Exception {
+
+    signpostView.checkSignpostViewShown();
+
+    operations.openImportDialog()
+      .getBankDownload()
+      .selectBank("CIC")
+      .enterTransactionsManually();
+
+    transactionCreation.checkSignpostShown("Click here to enter transactions");
+
+    transactionCreation
+      .clickAndOpenAccountCreationMessage()
+      .setName("Cash")
+      .setAccountNumber("012345")
+      .selectBank("CIC")
+      .validate();
+
+    transactionCreation
+      .setAmount(10.00)
+      .setDay(10)
+      .setLabel("Mc do")
+      .create();
+
+    categorization.checkAreaSelectionSignpostDisplayed("Select the budget area for this operation");
+
+    categorization.selectVariable();
+
+    categorization.getVariable().selectSeries("Groceries");
+
+    categorization.checkSkipMessageDisplayed();
+
+    transactionCreation
+      .setAmount(10.00)
+      .setDay(10)
+      .setLabel("Quick")
+      .create();
+    categorization.setVariable("QUICK", "Groceries");
+
+    categorization.checkSkipMessageDisplayed();
+
+    categorization.skipAndCloseSignpostDialog();
+
+    categorization.checkSkipAndGotoBudgetSignpostShown();
+
+    views.selectBudget();
+    budgetView.variable.checkAmountSignpostDisplayed(
+      "Groceries", "Click on the planned amounts to set your own values");
+
+    SeriesAmountEditionDialogChecker amountDialog = budgetView.variable.editPlannedAmount("Groceries");
+    checkNoSignpostVisible();
+    amountDialog.cancel();
+
+    signpostView.checkSignpostViewShown();
+    views.selectBudget();
+    SignpostDialogChecker
+      .open(
+        budgetView.variable.editPlannedAmount("Groceries").setAmount(10.00).triggerValidate())
+      .close();
+
+    views.checkHomeSelected();
+    signpostView.checkSummaryViewShown();
+
+    views.selectBudget();
+    checkNoSignpostVisible();
+
+    views.selectCategorization();
+    checkNoSignpostVisible();
+}
 
   private void gotoDemoAccountAndBack() {
     gotoDemoAccountAndBack(true);

@@ -85,7 +85,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     transactionCreation
       .checkHidden()
-      .checkNoAccountAvailableMessage();
+      .checkShowOpensAccountCreationMessage();
 
     mainAccounts.createNewAccount()
       .setName("Main")
@@ -95,7 +95,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     transactionCreation
       .checkHidden()
-      .checkNoAccountMessageAndOpenCreationDialog()
+      .clickAndOpenAccountCreationMessage()
       .checkUpdateModeIsManualInput()
       .setName("Cash")
       .setAccountNumber("012345")
@@ -112,7 +112,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     transactionCreation
       .checkHidden()
-      .checkNoAccountAvailableMessage();
+      .checkShowOpensAccountCreationMessage();
   }
 
   public void testCreationErrors() throws Exception {

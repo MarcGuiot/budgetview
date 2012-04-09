@@ -3,15 +3,11 @@ package org.designup.picsou.gui.signpost.sections;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.model.SignpostStatus;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.util.Set;
 
 public class SkipCategorizationPanel {
 

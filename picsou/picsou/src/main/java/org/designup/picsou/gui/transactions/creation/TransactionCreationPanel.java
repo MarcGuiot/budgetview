@@ -269,10 +269,13 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
       Glob createdTransaction;
       try {
-        
+
         parentRepository.startChangeSet();
-        for (int monthId = month; 
-             monthId < CurrentMonth.getCurrentMonth(parentRepository); 
+
+        SignpostStatus.setCompleted(SignpostStatus.CREATED_TRANSACTIONS_MANUALLY, parentRepository);
+
+        for (int monthId = month;
+             monthId < CurrentMonth.getCurrentMonth(parentRepository);
              monthId = Month.next(monthId)) {
           Key monthKey = Key.create(Month.TYPE, monthId);
           if (parentRepository.contains(monthKey)) {
@@ -280,7 +283,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
           }
           parentRepository.create(Month.TYPE, value(Month.ID, monthId));
         }
-        
+
         createdTransaction = parentRepository.create(Transaction.TYPE, values.toArray());
       }
       finally {
@@ -338,6 +341,28 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
                                                                    repository, directory);
       dialog.showExpiration();
       return;
+    }
+
+    try {
+      repository.startChangeSet();
+      repository.update(SignpostStatus.KEY,
+                        value(SignpostStatus.GOTO_DATA_DONE, true),
+                        value(SignpostStatus.GOTO_CATEGORIZATION_DONE, true),
+                        value(SignpostStatus.IMPORT_STARTED, true),
+                        value(SignpostStatus.WELCOME_SHOWN, true));
+      switch (SignpostStatus.getCurrentSection(repository)) {
+        case NOT_STARTED:
+        case IMPORT:
+          SignpostStatus.setSection(SignpostSectionType.CATEGORIZATION, repository);
+          break;
+        case CATEGORIZATION:
+        case BUDGET:
+        case COMPLETED:
+          break;
+      }
+    }
+    finally {
+      repository.completeChangeSet();
     }
 
     if (accountCombo.getItemCount() == 0) {

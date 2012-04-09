@@ -4,6 +4,8 @@ import org.uispec4j.Button;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
+
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -64,5 +66,10 @@ public class BankDownloadChecker extends BankChooserPanelChecker<BankDownloadChe
     Button button = panel.getButton("securityInfo");
     UISpecAssert.assertThat(button.tooltipContains(content));
     return this;
+  }
+
+  public void enterTransactionsManually() {
+    panel.getTextBox("manualInput").clickOnHyperlink("enter transactions manually");
+    assertFalse(panel.isVisible());
   }
 }

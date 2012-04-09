@@ -53,6 +53,7 @@ public class SignpostStatus {
   public static BooleanField FIRST_RECONCILIATION_SHOWN;
   public static BooleanField FIRST_RECONCILIATION_DONE;
   public static BooleanField SAVINGS_VIEW_TOGGLE_SHOWN;
+  public static BooleanField CREATED_TRANSACTIONS_MANUALLY;
 
   @Target(SignpostSectionType.class)
   @DefaultInteger(0)
@@ -93,6 +94,10 @@ public class SignpostStatus {
     return (status != null) && status.isTrue(completionField);
   }
 
+  public static SignpostSectionType getCurrentSection(GlobRepository repository) {
+    return SignpostSectionType.getType(repository.get(KEY).get(CURRENT_SECTION));
+  }
+  
   public static void setCompleted(BooleanField completionField, GlobRepository repository) {
     repository.findOrCreate(KEY);
     repository.update(KEY, completionField, true);
@@ -167,11 +172,14 @@ public class SignpostStatus {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 8;
+      return 9;
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 8) {
+      if (version == 9) {
+        deserializeDataV9(fieldSetter, data);
+      }
+      else if (version == 8) {
         deserializeDataV8(fieldSetter, data);
       }
       else if (version == 7) {
@@ -218,7 +226,31 @@ public class SignpostStatus {
       outputStream.writeBoolean(values.get(FIRST_RECONCILIATION_SHOWN));
       outputStream.writeBoolean(values.get(FIRST_RECONCILIATION_DONE));
       outputStream.writeBoolean(values.get(SAVINGS_VIEW_TOGGLE_SHOWN));
+      outputStream.writeBoolean(values.get(CREATED_TRANSACTIONS_MANUALLY));
       return serializedByteArrayOutput.toByteArray();
+    }
+
+    private void deserializeDataV9(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(IMPORT_STARTED, input.readBoolean());
+      fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
+      fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
+      fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
+      fieldSetter.set(GOTO_BUDGET_SHOWN, input.readBoolean());
+      fieldSetter.set(GOTO_BUDGET_DONE, input.readBoolean());
+      fieldSetter.set(SERIES_AMOUNT_SHOWN, input.readBoolean());
+      fieldSetter.set(SERIES_AMOUNT_DONE, input.readBoolean());
+      fieldSetter.set(AMOUNT_SERIES, input.readInteger());
+      fieldSetter.set(PERIODICITY_SERIES, input.readInteger());
+      fieldSetter.set(FIRST_CATEGORIZATION_DONE, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_SKIPPED, input.readBoolean());
+      fieldSetter.set(CURRENT_SECTION, input.readInteger());
+      fieldSetter.set(FIRST_RECONCILIATION_SHOWN, input.readBoolean());
+      fieldSetter.set(FIRST_RECONCILIATION_DONE, input.readBoolean());
+      fieldSetter.set(SAVINGS_VIEW_TOGGLE_SHOWN, input.readBoolean());
+      fieldSetter.set(CREATED_TRANSACTIONS_MANUALLY, input.readBoolean());
     }
 
     private void deserializeDataV8(FieldSetter fieldSetter, byte[] data) {
