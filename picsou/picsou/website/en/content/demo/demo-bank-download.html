@@ -1,0 +1,233 @@
+<div id="demo-bank-download">
+
+<h1 class="multiline">Welcome to our Demo Bank!</h1>
+
+<div class="light-block full-separators">
+
+<p>This page simulates a demo bank website. It is used solely for testing purposes.</p>
+
+<p>We recommend that you avoid using the Safari web browser for this test - Firefox or Chrome will work better.</p>
+
+<p>You can select the file format below, and then click the "Download" button at the bottom of this page to
+  initiate the file download.</p>
+
+<h2>Download format</h2>
+
+  <table class="formats" style="border:none; margin-top: 20px;width:70%">
+    <tr>
+      <td class="format"><input name="format" value="OFX" type="radio">OFX</td>
+      <td>
+        <table class="label-content">
+          <tbody>
+          <tr>
+            <td colspan="2" class="description">
+              <b>Files to use with Microsoft Money and Intuit Quicken</b>
+            </td>
+          </tr>
+          <tr>
+            <td class="label">Format&nbsp;</td>
+            <td class="content">
+              <select name="formatOFX">
+                <option value="Q98">Quicken 98</option>
+                <option value="Q2000">Quicken 2000</option>
+                <option value="M98">Money 98</option>
+                <option value="M99">Money 99</option>
+
+                <option value="M2000">Money 2000</option>
+                <option value="M2001">Money 2001</option>
+                <option value="M2002">Money 2002</option>
+                <option value="M2003">Money 2003 and later</option>
+              </select>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td class="format">
+        <input name="format" value="QIF" type="radio"> QIF
+      </td>
+      <td>
+        <table class="label-content">
+          <tbody>
+          <tr>
+            <td colspan="2" class="description">
+              <b>Files to use with Microsoft Money, Quicken d'Intuit and others</b><br>&nbsp;
+            </td>
+          </tr>
+          <tr>
+            <td class="label">Format&nbsp;</td>
+            <td class="content">
+              <select name="formatQIF" onchange="ChangeTypeQIF(this.selectedIndex)">
+                <option value="Q98">Quicken 98</option>
+                <option value="Q2000">Quicken 2000</option>
+                <option value="M98">Money 98</option>
+                <option value="M99">Money 99</option>
+                <option value="M2000">Money 2000</option>
+                <option value="M2001">Money 2001</option>
+                <option value="M2002" selected="selected">Money 2002</option>
+                <option value="M2003">Money 2003 and later</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="label">Dates&nbsp;</td>
+            <td class="content">
+
+              <select name="formatDate_QIF">
+                <option value="dateQIF_FR2">French short (JJ/MM/AA)</option>
+                <option value="dateQIF_FR4">French long (JJ/MM/AAAA)</option>
+                <option value="dateQIF_US2">US short(MM/JJ/AA)</option>
+                <option value="dateQIF_US4">US long (MM/JJ/AAAA)</option>
+              </select>
+            </td>
+          </tr>
+          <input name="format2000_QIF" value="2000QIF_Jamais" type="hidden">
+          <tr>
+            <td class="label">Amounts&nbsp;</td>
+            <td class="content">
+
+              <select name="formatMontant_QIF">
+                <option value="montantQIF_US">US (9,999.99)</option>
+                <option value="montantQIF_FR">French(9999,99)</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="label">Header&nbsp;</td>
+            <td class="content">
+              <select name="formatEntete_QIF">
+                <option value="enteteQIF_Complet">!Type:Bank</option>
+                <option value="enteteQIF_Simple">!</option>
+
+                <option value="enteteQIF_Demi">!Type:</option>
+                <option value="enteteQIF_CompletF">!Type:Banque</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="description" colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="ALERTE" colspan="2">
+              Warning: this file format is used for single-account downloads.
+            </td>
+
+          </tr>
+          </tbody>
+        </table>
+
+      </td>
+    </tr>
+
+    <tr>
+      <td class="format"><input name="format" value="CSV" type="radio"> CSV</td>
+      <td>
+
+        <table class="label-content">
+          <tbody>
+          <tr>
+            <td colspan="2" class="description">
+              <b>File to use with a spreadsheet program such as Microsoft Excel or Apple's Numbers</b><br>&nbsp;
+            </td>
+          </tr>
+          <tr>
+            <td class="label">Format&nbsp;</td>
+            <td class="content">
+              <select name="typeCSV">
+                <option value="97">Excel 97</option>
+                <option value="2000" selected="selected">Excel 2000</option>
+                <option value="XP">Excel XP</option>
+                <option value="Numbers">Numbers</option>
+              </select>
+
+            </td>
+          </tr>
+          <tr>
+            <td class="label">Dates&nbsp;</td>
+            <td class="content">
+              <select name="dateCSV">
+                <option value="US">US (MM/JJ/AAAA)</option>
+                <option value="FR">French (JJ/MM/AAAA)</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="label">Field separator&nbsp;</td>
+            <td class="content">
+              <select name="formatCSV">
+                <option value="pv">semicolon</option>
+                <option value="v">coma</option>
+                <option value="dp">colon</option>
+                <option value="tab">tab</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="label">Amounts written on&nbsp;</td>
+            <td>
+
+              <select name="montantCSV">
+                <option value="1col">a single column</option>
+                <option value="2col">two columns (debit/credit)</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="label">Separator&nbsp;</td>
+            <td>
+              <select name="sepDecCSV">
+                <option value=",">comma</option>
+                <option value=".">dot</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+
+  </table>
+
+
+<h2>Accounts</h2>
+
+<p>
+  <input type="checkbox">
+  00012654321&nbsp;01 Checking Account
+</p>
+<p>
+  <input type="checkbox">
+  00023425234&nbsp;04 Savings account
+</p>
+
+<h2>Period</h2>
+
+<table>
+  <tbody>
+  <tr>
+    <td class="SUNIE"><input value="" name="debut_tel" checked="checked" type="radio"></td>
+    <td class="SUNIE" nowrap="nowrap">All available transactions&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td class="SUNIE"><input value="ok" name="debut_tel" type="radio"></td>
+    <td class="SUNIE" nowrap="nowrap">Transactions since &nbsp;
+      <input size="10" name="date_tel" value="">&nbsp;
+      until&nbsp;
+      <input size="10" name="date_tel2"> (Example: 03/17/2012)
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<div align="center" style="margin-top:20px;">
+  <p><a href="/download-ofx-demo" target="_blank">
+    <input type="submit" value="Download" style="font-size: 12pt;"/>
+  </a></p>
+</div>
+
+</div>
+
+</div>

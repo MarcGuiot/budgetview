@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<globs>
+
+  <bankFormat id='98'>
+
+    <bank name="BudgetView Demo Bank" url="http://www.mybudgetview.com/demo-bank" id='-99999'>
+      <bankEntity id="-99999"/>
+    </bank>
+
+  </bankFormat>
+</globs>

@@ -16,3 +16,4 @@ hsbc.xml
 fortis.xml
 barclays.xml
 dexia.xml
+budgetview_demo_bank.xml
