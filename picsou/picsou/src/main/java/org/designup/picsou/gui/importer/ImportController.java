@@ -23,6 +23,8 @@ import javax.swing.*;
 import java.io.File;
 import java.util.*;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class ImportController {
 
   private GlobRepository repository;
@@ -92,9 +94,9 @@ public class ImportController {
       Glob target = localRepository.findLinkTarget(glob, RealAccount.ACCOUNT);
       if (target != null) {
         localRepository.update(target.getKey(),
-                               FieldValue.value(Account.POSITION, Amounts.extractAmount(glob.get(RealAccount.POSITION))),
-                               FieldValue.value(Account.POSITION_DATE, glob.get(RealAccount.POSITION_DATE)),
-                               FieldValue.value(Account.TRANSACTION_ID, null));
+                               value(Account.POSITION, Amounts.extractAmount(glob.get(RealAccount.POSITION))),
+                               value(Account.POSITION_DATE, glob.get(RealAccount.POSITION_DATE)),
+                               value(Account.TRANSACTION_ID, null));
       }
     }
     if (nextImport()) {

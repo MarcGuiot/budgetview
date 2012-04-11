@@ -5,6 +5,8 @@ import org.designup.picsou.functests.checkers.BankDownloadChecker;
 import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.functests.utils.QifBuilder;
+import org.designup.picsou.model.TransactionType;
 
 public class BankEditionTest extends LoggedInFunctionalTestCase {
 
@@ -153,7 +155,7 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
       .checkDeleteDisabled()
       .selectBank("NewBank")
       .checkDeleteRejected("Delete bank", "This bank is used by account TestAccount. You cannot delete it.");
-    
+
     secondImportDialog.close();
 
     mainAccounts.edit("TestAccount")
@@ -210,7 +212,7 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccountWebsite("OtherAccount", "NewBank", "http://www.newbank.net");
 
     /** ------ Try to delete the bank while it is used by another account -- */
-        
+
     mainAccounts.edit("TestAccount")
       .checkSelectedBank("NewBank")
       .checkDeleteBankRejected("Delete bank", "This bank is used by account OtherAccount. You cannot delete it.")
@@ -235,7 +237,7 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkAccountWebsite("TestAccount", "BNP Paribas", "http://www.bnpparibas.net");
     mainAccounts.checkAccountWebsite("OtherAccount", "CIC", "http://www.cic.fr");
-    
+
     mainAccounts.edit("OtherAccount")
       .checkBankNotPresentInList("NewBank")
       .cancel();
@@ -271,5 +273,28 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     mainAccounts.checkAccountWebsite("TestAccount", "NewBank", "http://www.newbank.net");
+  }
+
+  public void testCreatingABankInFileImportPreview() throws Exception {
+    String qifPath = QifBuilder.init(this)
+      .addTransaction("2008/08/30", -50.00, "MacDo")
+      .save();
+
+    operations.openImportDialog()
+      .setFilePath(qifPath)
+      .acceptFile()
+      .setAccountName("NewAccount")
+      .addNewAccountBank("NewBank", "http://www.newbank.net")
+      .setMainAccount()
+      .checkFileContent(new Object[][]{
+        {"2008/08/30", "MacDo", "-50.00"},
+      })
+      .completeImport();
+
+    mainAccounts.checkAccountWebsite("NewAccount", "NewBank", "http://www.newbank.net");
+
+    transactions.initContent()
+      .add("30/08/2008", TransactionType.PRELEVEMENT, "MACDO", "", -50.00)
+      .check();
   }
 }

@@ -20,7 +20,7 @@ public class BankPluginService {
   private BankPlugin defaultPlugin = new AbstractBankPlugin() {
 
     public boolean apply(Glob importedAccount, Glob account, GlobList transactions, ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
-      Glob bank = referenceRepository.findLinkTarget(account, Account.BANK);
+      Glob bank = localRepository.find(Key.create(Bank.TYPE, account.get(Account.BANK)));
       if (bank.get(Bank.INVALID_POSITION)) {
 //      localRepository.update(account.getKey(), Account.);
       }

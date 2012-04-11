@@ -344,6 +344,11 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
+  public ImportDialogChecker addNewAccountBank(String bankName, String url) {
+    accountEditionChecker.selectNewBank(bankName, url);
+    return this;
+  }
+
   public CardTypeChooserChecker openCardTypeChooser() {
     Window window = WindowInterceptor.getModalDialog(dialog.getButton(Lang.get("account.error.missing.cardType.button")).triggerClick());
     return new CardTypeChooserChecker(window);
@@ -552,7 +557,7 @@ public class ImportDialogChecker extends GuiChecker {
   public BankEditionDialogChecker addNewBank() {
     return getBankDownload().addNewBank();
   }
-
+  
   public static class CompletionChecker {
     private int loadedTransactionCount;
     private final int importedTransactionCount;
