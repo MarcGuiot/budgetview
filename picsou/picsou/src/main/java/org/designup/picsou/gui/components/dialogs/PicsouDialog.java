@@ -9,6 +9,7 @@ import org.globsframework.gui.splits.color.utils.BackgroundColorUpdater;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
 
@@ -26,6 +27,7 @@ public class PicsouDialog extends JDialog {
 
   public static boolean FORCE_NONMODAL = false;
   private static final Insets BUTTON_INSETS = new Insets(0, 10, 10, 10);
+  private List<Disposable> disposables = new ArrayList<Disposable>();
   private ColorService colorService;
   private static final int HORIZONTAL_BUTTON_MARGIN = GuiUtils.isMacOSX() ? 20 : 0;
   private Action closeAction;
@@ -147,6 +149,10 @@ public class PicsouDialog extends JDialog {
       colorUpdater.dispose();
     }
     colorUpdater = null;
+    for (Disposable disposable : disposables) {
+      disposable.dispose();
+    }
+    disposables.clear();
     super.dispose();
   }
 
@@ -297,6 +303,10 @@ public class PicsouDialog extends JDialog {
         });
       }
     }
+  }
+
+  public void registerDisposable(Disposable disposable){
+    this.disposables.add(disposable);
   }
 
   public JButton getOkButton() {

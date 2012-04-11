@@ -8,6 +8,7 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -46,6 +47,10 @@ public class TransactionImport {
 
     public int getWriteVersion() {
       return 4;
+    }
+
+    public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
+      return true;
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {

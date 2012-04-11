@@ -109,6 +109,7 @@ public class ImportedFileSelectionPanel implements MessageHandler {
 
   public void dispose() {
     builder.dispose();
+    bankDownload.dispose();
   }
 
   public void preselectFiles(List<File> files) {

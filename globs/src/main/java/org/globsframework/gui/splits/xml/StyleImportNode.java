@@ -56,7 +56,7 @@ public class StyleImportNode extends DefaultXmlNode {
       }
     }
 
-    cache.put(fileName, localContext);
+//    cache.put(fileName, localContext);
 
     return localContext;
   }

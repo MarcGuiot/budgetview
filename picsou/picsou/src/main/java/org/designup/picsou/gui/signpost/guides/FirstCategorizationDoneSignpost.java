@@ -18,6 +18,8 @@ import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import javax.swing.event.AncestorListener;
+import java.awt.event.ComponentListener;
 import java.util.Set;
 
 public class FirstCategorizationDoneSignpost extends Signpost implements ChangeSetListener, GlobSelectionListener {
@@ -92,7 +94,25 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
                                    getBalloonStyle(),
                                    BalloonTip.Orientation.RIGHT_ABOVE,
                                    BalloonTip.AttachLocation.CENTER,
-                                   20, 20, false);
+                                   20, 20, false){
+      public void closeBalloon() {
+        super.closeBalloon();
+        if (topLevelContainer != null) {
+          for (ComponentListener listener : topLevelContainer.getComponentListeners()) {
+            if (listener.getClass().getName().startsWith("net.java.balloontip")) {
+              topLevelContainer.removeComponentListener(listener);
+            }
+          }
+        }
+        if (attachedComponent != null){
+          for (AncestorListener listener : attachedComponent.getAncestorListeners()) {
+            if (listener.getClass().getName().startsWith("net.java.balloontip")) {
+              attachedComponent.removeAncestorListener(listener);
+            }
+          }
+        }
+      }
+    };
   }
 
   public void selectionUpdated(GlobSelection selection) {

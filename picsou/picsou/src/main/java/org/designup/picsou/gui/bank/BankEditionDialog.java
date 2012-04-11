@@ -10,6 +10,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobTextEditor;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -61,7 +62,7 @@ public class BankEditionDialog {
     dialog = PicsouDialog.create(owner, true, localDirectory);
     OkAction okAction = new OkAction();
 
-    GlobsPanelBuilder builder =
+    final GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/bank/bankEditionDialog.splits",
                             localRepository, localDirectory);
 
@@ -82,7 +83,11 @@ public class BankEditionDialog {
 
     builder.addEditor("urlField", Bank.URL)
       .setValidationAction(okAction);
-
+    dialog.registerDisposable(new Disposable() {
+      public void dispose() {
+        builder.dispose();
+      }
+    });
     dialog.addPanelWithButtons(builder.<JPanel>load(), okAction, new CancelAction());
     dialog.pack();
   }

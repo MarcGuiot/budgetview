@@ -23,6 +23,7 @@ public class BankChooserPanel {
   private JPanel panel;
   private GlobListViewFilter filter;
   private DeleteBankAction deleteBankAction;
+  private GlobsPanelBuilder builder;
 
   public BankChooserPanel(GlobRepository repository,
                           Directory directory,
@@ -30,7 +31,7 @@ public class BankChooserPanel {
                           GlobMatcher matcher,
                           Window owner) {
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(),
+    builder = new GlobsPanelBuilder(getClass(),
                                                       "/layout/bank/bankChooserPanel.splits",
                                                       repository, directory);
 
@@ -66,5 +67,9 @@ public class BankChooserPanel {
 
   public JPanel getPanel() {
     return panel;
+  }
+
+  public void dispose(){
+    builder.dispose();
   }
 }

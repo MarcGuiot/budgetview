@@ -8,6 +8,7 @@ import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -31,6 +32,10 @@ public class CsvMapping {
 
     public int getWriteVersion() {
       return 1;
+    }
+
+    public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
+      return true;
     }
 
     public byte[] serializeData(FieldValues values) {

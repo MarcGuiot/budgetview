@@ -175,6 +175,10 @@ public class SignpostStatus {
       return 9;
     }
 
+    public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
+      return true;
+    }
+
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
       if (version == 9) {
         deserializeDataV9(fieldSetter, data);

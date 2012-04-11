@@ -1,6 +1,5 @@
 package org.designup.picsou.model;
 
-import org.apache.http.impl.cookie.PublicSuffixFilter;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
@@ -9,6 +8,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -364,6 +364,10 @@ public class Month {
 
     public int getWriteVersion() {
       return 1;
+    }
+
+    public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
+      return true;
     }
   }
 }

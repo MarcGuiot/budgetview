@@ -7,6 +7,7 @@ import org.designup.picsou.utils.HtmlBuilder;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -20,8 +21,8 @@ import java.awt.*;
 import java.util.Date;
 
 public class AccountEditionPanel extends AbstractAccountPanel {
-
   private CardHandler cards;
+  private GlobsPanelBuilder builder;
 
   public AccountEditionPanel(Window owner, GlobRepository repository, Directory parentDirectory) {
     super(repository, parentDirectory);
@@ -29,9 +30,8 @@ public class AccountEditionPanel extends AbstractAccountPanel {
   }
 
   private void createPanel(Window owner) {
-    GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/accounts/accountEditionPanel.splits", localRepository,
-                            localDirectory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountEditionPanel.splits", localRepository,
+                          localDirectory);
     createComponents(builder, owner);
     cards = builder.addCardHandler("cards");
     cards.show("editable");
@@ -87,5 +87,9 @@ public class AccountEditionPanel extends AbstractAccountPanel {
   public void setEditable(boolean editable) {
     cards.show(editable ? "editable" : "readonly");
     super.setEditable(editable);
+  }
+
+  public void dispose() {
+    builder.dispose();
   }
 }

@@ -14,6 +14,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -78,6 +79,11 @@ public class CsvImporterDialog {
 
     this.dialog = PicsouDialog.create(parent, directory);
     this.okAction = new OkAction();
+    dialog.registerDisposable(new Disposable() {
+      public void dispose() {
+        builder.dispose();
+      }
+    });
     this.dialog.addPanelWithButtons(builder.<JPanel>load(), okAction, new CancelAction(dialog) {
       public void actionPerformed(ActionEvent e) {
         cancelled = true;

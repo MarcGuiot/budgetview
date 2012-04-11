@@ -5,6 +5,7 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.repository.LocalGlobRepository;
@@ -19,6 +20,7 @@ public class AccountPositionEditionDialog {
   private PicsouDialog dialog;
   private LocalGlobRepository localRepository;
   private AccountPositionEditionPanel editionPanel;
+  private GlobsPanelBuilder builder;
 
   public AccountPositionEditionDialog(Glob account, boolean accountInitialization,
                                       GlobRepository repository, Directory directory, Window parent) {
@@ -28,9 +30,8 @@ public class AccountPositionEditionDialog {
         .copy(Account.TYPE)
         .get();
 
-    GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/accounts/accountPositionEditionDialog.splits",
-                            localRepository, directory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountPositionEditionDialog.splits",
+                          localRepository, directory);
 
     ValidateAction validateAction = new ValidateAction();
 
@@ -54,7 +55,12 @@ public class AccountPositionEditionDialog {
     }
 
     dialog.setAutoFocusOnOpen(editionPanel.getEditor());
-
+    dialog.registerDisposable(new Disposable() {
+      public void dispose() {
+        builder.dispose();
+        editionPanel.dispose();
+      }
+    });
     dialog.pack();
   }
 

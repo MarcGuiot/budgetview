@@ -49,7 +49,7 @@ public class ErrorTip implements Disposable, ColorChangeListener {
 
     directory.get(ColorService.class).addListener(this);
 
-    balloonTip = new BalloonTip(component,
+    balloonTip = new PatchedBallonTip(component,
                                 text,
                                 new RoundedBalloonStyle(5, 5, fillColor, borderColor),
                                 BalloonTip.Orientation.LEFT_ABOVE,

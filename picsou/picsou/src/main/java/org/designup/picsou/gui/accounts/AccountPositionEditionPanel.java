@@ -30,15 +30,15 @@ public class AccountPositionEditionPanel {
   private JLabel transactionAmountField;
   private JLabel accountNameField;
   private JPanel panel;
+  private GlobsPanelBuilder builder;
 
   public AccountPositionEditionPanel(AbstractAction validateAction,
                                      GlobRepository repository,
                                      Directory directory) {
     this.repository = repository;
 
-    GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/accounts/accountPositionEditionPanel.splits",
-                            repository, directory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountPositionEditionPanel.splits",
+                          repository, directory);
 
     editor = builder.addEditor("amountField", Account.POSITION)
       .setValidationAction(validateAction)
@@ -94,5 +94,9 @@ public class AccountPositionEditionPanel {
       repository.update(account.getKey(), Account.POSITION_DATE, balanceDate);
     }
     repository.update(account.getKey(), Account.TRANSACTION_ID, null);
+  }
+
+  public void dispose() {
+    builder.dispose();
   }
 }

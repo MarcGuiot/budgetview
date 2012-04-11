@@ -69,6 +69,10 @@ public class Bank {
       return 5;
     }
 
+    public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
+      return fieldValues.isTrue(USER_CREATED);
+    }
+
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();

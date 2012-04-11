@@ -8,6 +8,7 @@ import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Log;
@@ -57,7 +58,7 @@ public class UserEvaluationDialog {
 
     dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/feedback/userEvaluationDialog.splits",
+    final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/feedback/userEvaluationDialog.splits",
                                                       repository, directory);
 
     Action toggleAction = new AbstractAction() {
@@ -89,6 +90,11 @@ public class UserEvaluationDialog {
     emailField = new JTextField(userMail);
     builder.add("email", emailField);
 
+    dialog.registerDisposable(new Disposable() {
+      public void dispose() {
+        builder.dispose();
+      }
+    });
     dialog.addPanelWithButtons(builder.<JPanel>load(),
                                new SendAction(),
                                new CancelAction(Lang.get("userEvaluation.discard"), dialog));

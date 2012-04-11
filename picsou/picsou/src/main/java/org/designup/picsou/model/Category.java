@@ -12,8 +12,6 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.exceptions.ItemAmbiguity;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -98,6 +96,10 @@ public class Category {
 
     public int getWriteVersion() {
       return 2;
+    }
+
+    public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
+      return true;
     }
   }
 

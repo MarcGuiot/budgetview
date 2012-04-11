@@ -13,8 +13,10 @@ import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import javax.swing.event.AncestorListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import java.awt.event.ComponentListener;
 
 public abstract class AbstractTableSignpost extends Signpost {
   private JTable table;
@@ -58,7 +60,26 @@ public abstract class AbstractTableSignpost extends Signpost {
                                    getBalloonStyle(),
                                    BalloonTip.Orientation.RIGHT_BELOW,
                                    BalloonTip.AttachLocation.CENTER,
-                                   20, 20, false);
+                                   20, 20, false){
+      public void closeBalloon() {
+        super.closeBalloon();
+        if (topLevelContainer != null) {
+          for (ComponentListener listener : topLevelContainer.getComponentListeners()) {
+            if (listener.getClass().getName().startsWith("net.java.balloontip")) {
+              topLevelContainer.removeComponentListener(listener);
+            }
+          }
+          if (attachedComponent != null){
+            for (AncestorListener listener : attachedComponent.getAncestorListeners()) {
+              if (listener.getClass().getName().startsWith("net.java.balloontip")) {
+                attachedComponent.removeAncestorListener(listener);
+              }
+            }
+          }
+        }
+      }
+
+    };
   }
 
   protected int getRow() {
