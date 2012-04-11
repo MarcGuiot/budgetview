@@ -1,7 +1,6 @@
 package org.designup.picsou.model;
 
 import org.designup.picsou.gui.license.LicenseService;
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
@@ -115,7 +114,11 @@ public class UserPreferences {
     public int getWriteVersion() {
       return 14;
     }
-    
+
+    public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
+      return true;
+    }
+
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();

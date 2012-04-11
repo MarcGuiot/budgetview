@@ -11,6 +11,7 @@ import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -45,7 +46,7 @@ public class ExportDialog {
   }
 
   private void createDialog() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/exportDialog.splits", repository, directory);
+    final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/exportDialog.splits", repository, directory);
 
     builder.addRepeat("types",
                       exporters.getAll(),
@@ -72,6 +73,11 @@ public class ExportDialog {
     });
 
     dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    dialog.registerDisposable(new Disposable() {
+      public void dispose() {
+        builder.dispose();
+      }
+    });
     dialog.addPanelWithButtons(builder.<JPanel>load(), new OkAction(), new CloseDialogAction(dialog));
     dialog.pack();
   }

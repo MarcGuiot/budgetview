@@ -31,11 +31,14 @@ import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.repository.DefaultGlobIdGenerator;
 import org.globsframework.model.utils.DefaultChangeSetListener;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import picsou.AwtExceptionHandler;
 
 import java.util.Collection;
+import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
 
@@ -83,6 +86,7 @@ public class PicsouInit {
 
     initDirectory(this.repository);
 
+    initBank(directory);
 
     ColorThemeUpdater.register(repository, directory);
   }
@@ -163,6 +167,8 @@ public class PicsouInit {
     }
 
     public void load() {
+      GlobList additionalGlobToInsert = additionalGlobToAdd(PicsouInit.this.repository);
+
       repository.reset(GlobList.EMPTY, typesToReplace);
       repository.addTriggerAtFirst(upgradeTrigger);
 
@@ -175,9 +181,12 @@ public class PicsouInit {
         if (userData.isEmpty()) {
           createTransientDataForNewUser(repository);
           createPersistentDataForNewUser(repository, directory);
+          Set<GlobType> types = additionalGlobToInsert.getTypes();
+          repository.reset(additionalGlobToInsert, types.toArray(new GlobType[types.size()]));
         }
         else {
           exceptionHandler.setFirstReset(true);
+          userData.addAll(additionalGlobToInsert);
           try {
             repository.reset(userData, typesToReplace);
           }
@@ -194,6 +203,7 @@ public class PicsouInit {
                 idGenerator.update(field, lastAllocatedId);
               }
             });
+            userData.addAll(additionalGlobToInsert);
             repository.reset(userData, typesToReplace);
             DataCheckingService dataChecker = new DataCheckingService(repository, directory);
             dataChecker.check(e);
@@ -208,12 +218,10 @@ public class PicsouInit {
           }
         }
 
-        initBank(directory);
-
         serverAccess.applyChanges(changeSet, repository);
       }
       catch (Exception e) {
-        e.printStackTrace();
+        Log.write("In load ", e);
         throw new InvalidData(Lang.get("login.data.load.fail"), e);
       }
       finally {
@@ -233,6 +241,18 @@ public class PicsouInit {
         }
       }
     }
+  }
+
+  public static GlobList additionalGlobToAdd(final GlobRepository globRepository) {
+    GlobList additionalGlobToInsert = new GlobList();
+    for (Glob glob : globRepository.getAll(Bank.TYPE, GlobMatchers.isFalse(Bank.USER_CREATED))) {
+      additionalGlobToInsert.add(glob);
+    }
+    for (Glob glob : globRepository.getAll(BankEntity.TYPE,
+                                           GlobMatchers.linkTargetFieldEquals(BankEntity.BANK, Bank.USER_CREATED, Boolean.FALSE))) {
+      additionalGlobToInsert.add(glob);
+    }
+    return additionalGlobToInsert;
   }
 
   private void initDirectory(GlobRepository repository) {

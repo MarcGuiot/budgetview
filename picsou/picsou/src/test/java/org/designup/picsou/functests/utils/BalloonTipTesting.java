@@ -14,6 +14,7 @@ import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.utils.Utils;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 

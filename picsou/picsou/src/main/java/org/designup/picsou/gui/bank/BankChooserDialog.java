@@ -80,6 +80,7 @@ public class BankChooserDialog implements GlobSelectionListener {
 
     dialog.showCentered();
 
+    bankChooser.dispose();
     builder.dispose();
 
     if (selectedBank != null) {

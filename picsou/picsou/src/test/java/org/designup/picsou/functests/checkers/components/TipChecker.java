@@ -5,6 +5,8 @@ import net.java.balloontip.BalloonTip;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 
+import javax.swing.*;
+
 public class TipChecker {
   private BalloonTip tip;
 

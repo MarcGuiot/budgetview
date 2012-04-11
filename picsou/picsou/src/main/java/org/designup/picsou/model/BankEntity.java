@@ -11,13 +11,14 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import org.globsframework.utils.exceptions.ItemAmbiguity;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
+
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class BankEntity {
 
@@ -72,6 +73,14 @@ public class BankEntity {
 
     public int getWriteVersion() {
       return 2;
+    }
+
+    public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
+      Glob glob = repository.find(org.globsframework.model.Key.create(Bank.TYPE, fieldValues.get(BANK)));
+      if (glob != null){
+        return glob.isTrue(Bank.USER_CREATED);
+      }
+      return false;
     }
 
     public byte[] serializeData(FieldValues values) {

@@ -40,14 +40,17 @@ class ChangeSetSerializerVisitor implements ChangeSetVisitor {
   }
 
   private void writeData(Key key, ServerState state, PicsouGlobSerializer serializer) {
-    GlobType globType = key.getGlobType();
-    Field keyField = globType.getKeyFields()[0];
-    ServerDelta delta = new ServerDelta((Integer)key.getValue(keyField));
-    delta.setState(state);
-    deltaGlobMap.put(globType.getName(), delta);
-    delta.setVersion(serializer.getWriteVersion());
-    byte[] bytes = serializer.serializeData(repository.get(key));
-    delta.setData(passwordBasedEncryptor.encrypt(bytes));
+    Glob values = repository.get(key);
+    if (serializer.shouldBeSaved(repository, values)) {
+      GlobType globType = key.getGlobType();
+      Field keyField = globType.getKeyFields()[0];
+      ServerDelta delta = new ServerDelta((Integer)key.getValue(keyField));
+      delta.setState(state);
+      deltaGlobMap.put(globType.getName(), delta);
+      delta.setVersion(serializer.getWriteVersion());
+      byte[] bytes = serializer.serializeData(values);
+      delta.setData(passwordBasedEncryptor.encrypt(bytes));
+    }
   }
 
   public void visitDeletion(Key key, FieldValues values) throws Exception {

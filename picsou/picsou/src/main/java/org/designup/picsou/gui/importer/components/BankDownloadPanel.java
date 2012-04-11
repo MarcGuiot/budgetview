@@ -40,6 +40,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
   private JPanel synchroPanel;
   private Integer bankId;
+  private GlobsPanelBuilder builder;
 
   public BankDownloadPanel(Window parent,
                            ImportController controller,
@@ -60,10 +61,9 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
   private void createPanel() {
 
-    GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(),
-                            "/layout/importexport/components/bankDownloadPanel.splits",
-                            repository, directory);
+    builder = new GlobsPanelBuilder(getClass(),
+                          "/layout/importexport/components/bankDownloadPanel.splits",
+                          repository, directory);
 
     mainCards = builder.addCardHandler("mainCards");
 
@@ -176,6 +176,11 @@ public class BankDownloadPanel implements GlobSelectionListener {
       }
     }
     controller.doImport();
+  }
+
+  public void dispose() {
+    builder.dispose();
+    bankChooser.dispose();
   }
 
   private class GotoTransactionCreationFunctor implements Runnable {

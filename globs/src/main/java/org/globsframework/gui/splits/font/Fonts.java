@@ -5,6 +5,9 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,21 +29,30 @@ public class Fonts {
     }
     return parseFont(value);
   }
+  
+  static Map<String, Font> fonts = new ConcurrentHashMap<String, Font>();
 
   public static Font parseFont(String desc) throws InvalidFormat {
     String trimmed = desc.trim();
+    if (fonts.containsKey(trimmed)){
+      return fonts.get(trimmed);
+    }
     Matcher completeMatcher = FONT_FORMAT.matcher(trimmed);
     if (completeMatcher.matches()) {
-    return new Font(completeMatcher.group(1),
-                    getFontStyle(completeMatcher.group(2)),
-                    Integer.parseInt(completeMatcher.group(3)));
+      Font font = new Font(completeMatcher.group(1),
+                           getFontStyle(completeMatcher.group(2)),
+                           Integer.parseInt(completeMatcher.group(3)));
+      fonts.put(trimmed, font);
+      return font;
     }
 
     Matcher derivedMatcher = DERIVED_FONT_FORMAT.matcher(trimmed);
     if (derivedMatcher.matches()) {
-    return new Font(DEFAULT_LABEL_FONT.getFamily(),
-                    getFontStyle(derivedMatcher.group(1)),
-                    Integer.parseInt(derivedMatcher.group(2)));
+      Font font = new Font(DEFAULT_LABEL_FONT.getFamily(),
+                           getFontStyle(derivedMatcher.group(1)),
+                           Integer.parseInt(derivedMatcher.group(2)));
+      fonts.put(trimmed, font);
+      return font;
     }
 
     throw new InvalidFormat(FONT_ERROR_MESSAGE);

@@ -245,6 +245,10 @@ public class Account {
       return 9;
     }
 
+    public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
+      return true;
+    }
+
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();

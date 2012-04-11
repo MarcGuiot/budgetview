@@ -83,4 +83,9 @@ public class ImportAccountPanel {
     accountPanel.setAccount(account);
     this.localDirectory.get(SelectionService.class).select(account);
   }
+
+  public void dispose() {
+    builder.dispose();
+    accountPanel.dispose();
+  }
 }

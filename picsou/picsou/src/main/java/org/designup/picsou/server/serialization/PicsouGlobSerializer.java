@@ -2,8 +2,11 @@ package org.designup.picsou.server.serialization;
 
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.GlobRepository;
 
 public interface PicsouGlobSerializer {
+
+  boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues);
 
   byte[] serializeData(FieldValues fieldValues);
 

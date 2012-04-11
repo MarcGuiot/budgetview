@@ -107,4 +107,8 @@ public class DateFormatSelectionPanel {
       return super.getListCellRendererComponent(list, translatedFormat, index, isSelected, cellHasFocus);
     }
   }
+  
+  public void dispose(){
+    builder.dispose();
+  }
 }

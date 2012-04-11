@@ -119,5 +119,9 @@ public class SeriesBudget {
     public int getWriteVersion() {
       return 2;
     }
+
+    public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
+      return true;
+    }
   }
 }

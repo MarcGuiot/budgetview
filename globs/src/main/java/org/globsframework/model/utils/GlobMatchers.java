@@ -225,7 +225,8 @@ public class GlobMatchers {
         if (target == null) {
           return false;
         }
-        return target.getValue(targetField).equals(targetFieldValue);
+        Object value = target.getValue(targetField);
+        return value != null ? value.equals(targetFieldValue) : targetFieldValue == null;
       }
 
       public String toString() {

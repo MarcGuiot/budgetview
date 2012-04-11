@@ -58,6 +58,7 @@ public class UISpecDisplay {
   }
 
   public void reset() {
+    currentPopup = null;
     synchronized (handlerStack) {
       handlerStack.clear();
     }

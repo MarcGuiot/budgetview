@@ -20,8 +20,8 @@ import java.awt.*;
 import java.util.Date;
 
 public class AccountEditionPanel extends AbstractAccountPanel<GlobRepository> {
-
   private CardHandler cards;
+  private GlobsPanelBuilder builder;
 
   public AccountEditionPanel(Window owner, GlobRepository repository, Directory parentDirectory) {
     super(repository, parentDirectory);
@@ -29,9 +29,8 @@ public class AccountEditionPanel extends AbstractAccountPanel<GlobRepository> {
   }
 
   private void createPanel(Window owner) {
-    GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/accounts/accountEditionPanel.splits", localRepository,
-                            localDirectory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountEditionPanel.splits", localRepository,
+                                    localDirectory);
     createComponents(builder, owner);
     cards = builder.addCardHandler("cards");
     cards.show("editable");
@@ -87,5 +86,9 @@ public class AccountEditionPanel extends AbstractAccountPanel<GlobRepository> {
   public void setEditable(boolean editable) {
     cards.show(editable ? "editable" : "readonly");
     super.setEditable(editable);
+  }
+
+  public void dispose() {
+    builder.dispose();
   }
 }

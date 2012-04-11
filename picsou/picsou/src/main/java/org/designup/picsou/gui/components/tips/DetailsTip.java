@@ -60,7 +60,8 @@ public class DetailsTip implements Disposable {
                                 BalloonTip.Orientation.LEFT_ABOVE,
                                 BalloonTip.AttachLocation.NORTHEAST,
                                 0, 20,
-                                false);
+                                false){
+    };
     balloonTip.setPositioner(position.getPositioner());
     balloonTip.setVisible(true);
 

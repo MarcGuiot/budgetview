@@ -168,6 +168,8 @@ public class ImportPreviewPanel implements MessageHandler {
   public void dispose() {
     builder.dispose();
     importedTransactionTable.dispose();
+    accountEditionPanel.dispose();
+    dateFormatSelectionPanel.dispose();
   }
 
   public JPanel getPanel() {

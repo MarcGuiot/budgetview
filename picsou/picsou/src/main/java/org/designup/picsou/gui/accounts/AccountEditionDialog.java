@@ -11,6 +11,7 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -46,7 +47,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
 
     dialog = PicsouDialog.create(owner, localDirectory);
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountEditionDialog.splits",
+    final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountEditionDialog.splits",
                                                       localRepository, localDirectory);
 
     titleLabel = builder.add("title", new JLabel("accountEditionDialog")).getComponent();
@@ -129,6 +130,11 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     });
 
     this.builder = builder;
+    dialog.registerDisposable(new Disposable() {
+      public void dispose() {
+        builder.dispose();
+      }
+    });
     dialog.addPanelWithButtons(this.builder.<JPanel>load(),
                                new OkAction(), new CancelAction(dialog),
                                new DeleteAction());

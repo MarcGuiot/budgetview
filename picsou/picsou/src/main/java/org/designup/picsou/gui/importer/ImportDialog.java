@@ -21,7 +21,6 @@ import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -193,9 +192,11 @@ public class ImportDialog {
   }
 
   private void dispose() {
+    importAccountsPanel.dispose();
     fileSelectionPanel.dispose();
     previewPanel.dispose();
     completionPanel.dispose();
+    dialog.dispose();
   }
 
   public void showLastImportedMonthAndClose(Set<Integer> months) {

@@ -70,6 +70,10 @@ public class Project {
       return 1;
     }
 
+    public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
+      return true;
+    }
+
     public byte[] serializeData(FieldValues fieldValues) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput output = serializedByteArrayOutput.getOutput();

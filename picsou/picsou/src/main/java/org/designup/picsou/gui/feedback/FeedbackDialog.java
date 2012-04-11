@@ -9,6 +9,7 @@ import org.designup.picsou.gui.startup.components.AppLogger;
 import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
@@ -35,7 +36,7 @@ public class FeedbackDialog {
 
     dialog = PicsouDialog.create(parent, directory);
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/feedback/feedbackDialog.splits",
+    final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/feedback/feedbackDialog.splits",
                                                       repository, directory);
     this.contentEditor = new JTextArea();
     builder.add("mailContent", contentEditor);
@@ -51,6 +52,11 @@ public class FeedbackDialog {
     this.addLogsCheckbox = new JCheckBox(Lang.get("feedback.addLogs"));
     builder.add("addLogs", addLogsCheckbox);
 
+    dialog.registerDisposable(new Disposable() {
+      public void dispose() {
+        builder.dispose();
+      }
+    });
     dialog.addPanelWithButtons(builder.<JPanel>load(),
                                new ValidateAction(),
                                new CancelAction(dialog));

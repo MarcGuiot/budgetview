@@ -2,6 +2,7 @@ package org.designup.picsou.gui.signpost;
 
 import net.java.balloontip.BalloonTip;
 import net.java.balloontip.styles.ModernBalloonStyle;
+import org.designup.picsou.gui.components.tips.PatchedBallonTip;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.SignpostStatus;
 import org.globsframework.gui.SelectionService;
@@ -137,7 +138,7 @@ public abstract class Signpost implements Disposable {
   }
 
   protected BalloonTip createBalloonTip(JComponent component, String text) {
-    return new BalloonTip(component,
+    return new PatchedBallonTip(component,
                           text,
                           getBalloonStyle(),
                           orientation,

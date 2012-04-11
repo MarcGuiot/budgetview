@@ -5,7 +5,6 @@ import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.annotations.DefaultString;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Glob;
 import org.globsframework.model.FieldValues;
@@ -15,7 +14,6 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
-import org.designup.picsou.utils.Lang;
 
 public class Notes {
   public static final Integer SINGLETON_ID = 0;
@@ -42,6 +40,10 @@ public class Notes {
 
     public int getWriteVersion() {
       return 1;
+    }
+
+    public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
+      return true;
     }
 
     public byte[] serializeData(FieldValues values) {

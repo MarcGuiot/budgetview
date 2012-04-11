@@ -9,6 +9,7 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.FieldSetter;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -38,6 +39,10 @@ public class DeferredCardPeriod {
 
     public int getWriteVersion() {
       return 2;
+    }
+
+    public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
+      return true;
     }
 
     public byte[] serializeData(FieldValues values) {

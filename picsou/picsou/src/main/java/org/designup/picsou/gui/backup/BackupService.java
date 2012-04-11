@@ -5,6 +5,7 @@ import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
 import org.designup.picsou.client.http.MD5PasswordBasedEncryptor;
 import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.PicsouInit;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.model.User;
@@ -116,6 +117,7 @@ public class BackupService {
 
     MutableChangeSet changeSet = new DefaultChangeSet();
     GlobList userData = serverAccess.getUserData(changeSet, new BackupIdUpdater());
+    userData.addAll(PicsouInit.additionalGlobToAdd(repository));
 
     try {
       repository.startChangeSet();
