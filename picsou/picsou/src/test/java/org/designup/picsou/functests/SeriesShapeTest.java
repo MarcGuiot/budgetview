@@ -301,4 +301,59 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .add("25/06/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -90.00, "Courses")
       .check();
   }
+
+  public void testForceDate() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/09", 1000.00, "Salaire")
+      .addTransaction("2008/05/11", 1000.00, "Salaire")
+      .addTransaction("2008/04/10", 1000.00, "Salaire")
+      .load();
+
+    categorization.setNewIncome("Salaire", "Salaire", 1000.);
+
+    operations.openDevOptions().setMonthBack(3).validate();
+    operations.openPreferences().setFutureMonthsCount(3);
+
+    timeline.selectAll();
+    transactions.showPlannedTransactions()
+      .initContent()
+      .add("11/08/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("11/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("09/06/2008", TransactionType.VIREMENT, "SALAIRE", "", 1000.00, "Salaire")
+      .add("11/05/2008", TransactionType.VIREMENT, "SALAIRE", "", 1000.00, "Salaire")
+      .add("10/04/2008", TransactionType.VIREMENT, "SALAIRE", "", 1000.00, "Salaire")
+      .check();
+
+    budgetView
+      .income
+      .editSeries("SALAIRE")
+      .forceSingleOperationForecast()
+      .setForceSingleOperationDay(9)
+      .validate();
+
+    transactions.showPlannedTransactions()
+      .initContent()
+      .add("09/08/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("09/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("09/06/2008", TransactionType.VIREMENT, "SALAIRE", "", 1000.00, "Salaire")
+      .add("11/05/2008", TransactionType.VIREMENT, "SALAIRE", "", 1000.00, "Salaire")
+      .add("10/04/2008", TransactionType.VIREMENT, "SALAIRE", "", 1000.00, "Salaire")
+      .check();
+
+    budgetView
+      .income
+      .editSeries("SALAIRE")
+      .unselectedForceSingleOperationForecast()
+      .validate();
+
+    transactions.showPlannedTransactions()
+      .initContent()
+      .add("11/08/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("11/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
+      .add("09/06/2008", TransactionType.VIREMENT, "SALAIRE", "", 1000.00, "Salaire")
+      .add("11/05/2008", TransactionType.VIREMENT, "SALAIRE", "", 1000.00, "Salaire")
+      .add("10/04/2008", TransactionType.VIREMENT, "SALAIRE", "", 1000.00, "Salaire")
+      .check();
+
+  }
 }

@@ -138,14 +138,15 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     });
     changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        addSeries(lastTransactionMonthId, key.get(Series.ID), seriesToReCompute, 
+        addSeries(-1, key.get(Series.ID), seriesToReCompute,
                   repository, lastTransactionMonthId, monthCount);
-     }
+      }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(Series.FORCE_SINGLE_OPERATION) || values.contains(Series.FORCE_SINGLE_OPERATION_DAY))
-        addSeries(lastTransactionMonthId, key.get(Series.ID), seriesToReCompute,
-                  repository, lastTransactionMonthId, monthCount);
+        if (values.contains(Series.FORCE_SINGLE_OPERATION) || values.contains(Series.FORCE_SINGLE_OPERATION_DAY)) {
+          addSeries(-1, key.get(Series.ID), seriesToReCompute,
+                    repository, lastTransactionMonthId, monthCount);
+        }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
@@ -198,8 +199,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     if (budgetMonthId.equals(lastTransactionMonthId)) {
       Glob seriesShape = repository.find(Key.create(SeriesShape.TYPE, budget.get(SeriesBudget.SERIES)));
       boolean smallDiff = isSmallDiff(budget);
-      if (budget != null && (smallDiff ||
-                             (seriesShape != null && seriesShape.get(SeriesShape.LAST_MONTH).equals(lastTransactionMonthId)))
+      if ((smallDiff || (seriesShape != null && seriesShape.get(SeriesShape.LAST_MONTH).equals(lastTransactionMonthId)))
           && budget.get(SeriesBudget.ACTIVE)) {
         addSeries(budgetMonthId, budget.get(SeriesBudget.SERIES), seriesToReCompute, repository, lastTransactionMonthId, monthCount);
       }
@@ -217,7 +217,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
                          GlobRepository repository, Integer lastTransactionMonthId, Integer monthCount) {
     if (!seriesToReCompute.containsKey(seriesId)) {
       SeriesToReCompute toReCompute = findValidMonth(repository, seriesId, lastTransactionMonthId, monthCount);
-      if (budgetMonthId >= toReCompute.monthId3 && budgetMonthId <= toReCompute.monthId1) {
+      if (budgetMonthId == -1 || (budgetMonthId >= toReCompute.monthId3 && budgetMonthId <= toReCompute.monthId1)) {
         seriesToReCompute.put(seriesId, toReCompute);
       }
     }
@@ -262,7 +262,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
           if (transactionGlobFunctor.hasData()) {
             transactionGlobFunctor.updateForSingleOp();
             final Glob seriesShape = repository.findOrCreate(Key.create(SeriesShape.TYPE, series.get(Series.ID)));
-            for (int i = 1; i < fields.length - 1; i++) {
+            for (int i = 1; i < SeriesShape.TOTAL.getIndex(); i++) {
               repository.update(seriesShape.getKey(), fields[i], transactionGlobFunctor.getPercent(i));
             }
             repository.update(seriesShape.getKey(), SeriesShape.TOTAL, transactionGlobFunctor.getTotal());
@@ -278,7 +278,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
 
   private void setFixedDateToSeriesShape(GlobRepository repository, Glob series, Glob seriesShape) {
     Field[] fields = SeriesShape.TYPE.getFields();
-    for (int i = 1; i < fields.length - 1; i++) {
+    for (int i = 1; i < SeriesShape.TOTAL.getIndex(); i++) {
       repository.update(seriesShape.getKey(), fields[i], 0.);
     }
     repository.update(seriesShape.getKey(), SeriesShape.FIXED_DATE, series.get(Series.FORCE_SINGLE_OPERATION_DAY));

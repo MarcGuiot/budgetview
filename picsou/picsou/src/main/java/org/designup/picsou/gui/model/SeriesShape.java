@@ -30,7 +30,7 @@ public class SeriesShape {
   public static IntegerField PERCENT_8; //25->31
   public static IntegerField PERCENT_9; //25->31
   public static IntegerField PERCENT_10; //25->31
-  public static DoubleField TOTAL;
+  public static DoubleField TOTAL;  //=> premier champ apres le PERCENT ne pas changer de place
   public static IntegerField LAST_MONTH;
   public static IntegerField FIXED_DATE;
 

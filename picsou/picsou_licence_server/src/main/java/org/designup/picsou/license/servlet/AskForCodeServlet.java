@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,16 +72,16 @@ public class AskForCodeServlet extends HttpServlet {
             }
           }
           if (mailer.sendRequestLicence(lang, activationCode, registeredMail.get(0).get(License.MAIL))) {
-            logger.info("Send new activation code " + activationCode + " to " + mailTo);
+            logger.info("Send new activation code " + activationCode + " t  o " + mailTo);
             resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT);
           }
           else {
             resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT_FAILED);
           }
         }
-        if (registeredMail.size() > 1) {
-          logger.error("mail registered multiple time '" + mailTo + "'");
-        }
+//        if (registeredMail.size() > 1) {
+//          logger.error("mail registered multiple time '" + mailTo + "'");
+//        }
       }
       else {
         SqlConnection db = sqlService.getDb();
