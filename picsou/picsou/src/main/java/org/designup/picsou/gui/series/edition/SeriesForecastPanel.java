@@ -13,6 +13,7 @@ import javax.swing.*;
 import java.util.Set;
 
 public class SeriesForecastPanel {
+  private static final int DEFAULT_DAY = 15;
   private GlobRepository repository;
   private Directory directory;
   private JPanel panel;
@@ -57,8 +58,11 @@ public class SeriesForecastPanel {
   }
 
   private void update() {
-    dayCombo.setEnabled((currentSeriesKey != null)
-                        && repository.get(currentSeriesKey).isTrue(Series.FORCE_SINGLE_OPERATION));
+    Glob series = repository.find(currentSeriesKey);
+    dayCombo.setEnabled(series != null && series.isTrue(Series.FORCE_SINGLE_OPERATION));
+    if (series != null && series.get(Series.FORCE_SINGLE_OPERATION_DAY) == null) {
+      repository.update(currentSeriesKey, Series.FORCE_SINGLE_OPERATION_DAY, DEFAULT_DAY);
+    }
   }
 
   public JPanel getPanel() {

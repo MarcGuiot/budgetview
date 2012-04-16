@@ -10,18 +10,25 @@ import org.globsframework.model.repository.ReplicationGlobRepository;
 
 public class ReplicationGlobRepositoryTest extends TestCase {
   private GlobChecker checker = new GlobChecker();
+  private GlobRepository source;
+  private ReplicationGlobRepository repository;
 
-  public void testStandardCase() throws Exception {
-    GlobRepository source = checker.parse(
+  public void setUp() throws Exception {
+    source = checker.parse(
       "<dummyObject id='0' name='name'/>" +
       "<dummyObject id='1' name='name' value='1.1'/>" +
       "<dummyObject id='2' name='name' value='2.2'/>");
 
-    ReplicationGlobRepository repository = new ReplicationGlobRepository(source, DummyObject2.TYPE);
+    repository = new ReplicationGlobRepository(source, DummyObject2.TYPE);
+  }
+
+  public void testStandardCase() throws Exception {
     checker.assertEquals(repository,
                          "<dummyObject id='0' name='name'/>" +
                          "<dummyObject id='1' name='name' value='1.1'/>" +
                          "<dummyObject id='2' name='name' value='2.2'/>");
+
+    assertNull(repository.find(null));
 
     repository.create(DummyObject.TYPE,
                       value(DummyObject.ID, 3),
@@ -63,4 +70,10 @@ public class ReplicationGlobRepositoryTest extends TestCase {
                     "<dummyObject2 id='1' label='new label 1'/>");
 
   }
+
+  public void testFindWithNullKeyReturnsNull() throws Exception {
+    assertNull(repository.find(null));
+    assertFalse(repository.contains((Key)null));
+  }
+
 }

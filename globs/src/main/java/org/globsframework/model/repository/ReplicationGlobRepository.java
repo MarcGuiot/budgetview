@@ -38,6 +38,9 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
   }
 
   public Glob find(Key key) {
+    if (key == null) {
+      return null;
+    }
     if (managedTypes.contains(key.getGlobType())) {
       return super.find(key);
     }
