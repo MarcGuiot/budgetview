@@ -1,6 +1,5 @@
 
-Mise à jour des sites de download pour une nouvelle release :
-
+Mise à jour des sites de download EN pour une nouvelle release :
 
 ================================================
     Macupdate.com
@@ -12,7 +11,7 @@ Mise à jour des sites de download pour une nouvelle release :
 
 3. Cliquer sur "Update listing"
 
-4. Mettre à jour les champs
+4. Mettre à jour les champs (notamment derniers changements !)
 
 
 ================================================
@@ -51,11 +50,11 @@ Mise à jour des sites de download pour une nouvelle release :
 
 Hello,
 
-I have the pleasure to announce that the 2.25 release of BudgetView is now available.
+I have the pleasure to announce that the 2.27 release of BudgetView is now available.
 
 The Windows installer file can be downloaded from the following link:
 
-- http://www.mybudgetview.com/files/app/BudgetView-2.25-en-Setup.exe
+- http://www.mybudgetview.com/files/app/BudgetView-2.27-en-Setup.exe
 
 The change log for this release is available here:
 

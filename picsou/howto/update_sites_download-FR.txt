@@ -1,5 +1,5 @@
-Mise à jour des sites de download pour une nouvelle release :
 
+Mise à jour des sites de download FR pour une nouvelle release :
 
 ================================================
     01Net
@@ -17,13 +17,13 @@ Modifications souhaitées pour le logiciel BudgetView (id = 50969)
 
 Bonjour,
 
-J'ai le plaisir de vous informer qu'une nouvelle version de BudgetView est disponible. Il ne s'agit plus de la version 2.23, mais de la version 2.25, dont les liens directs de téléchargement sont les suivants :
+J'ai le plaisir de vous informer qu'une nouvelle version de BudgetView est disponible. Il agit de la version 2.27, dont les liens directs de téléchargement sont les suivants :
 
-- Windows : http://www.mybudgetview.fr/files/app/BudgetView-2.25-fr-Setup.exe
+- Windows : http://www.mybudgetview.fr/files/app/BudgetView-2.27-fr-Setup.exe
 
-- Mac : http://www.mybudgetview.fr/files/app/BudgetView-2.25-fr.dmg
+- Mac : http://www.mybudgetview.fr/files/app/BudgetView-2.27-fr.dmg
 
-- Linux : http://www.mybudgetview.fr/files/app/budgetview-2.25-fr.tar.gz
+- Linux : http://www.mybudgetview.fr/files/app/budgetview-2.27-fr.tar.gz
 
 L'historique des modifications est visible sur cette page : 
 
@@ -75,13 +75,13 @@ J'ai le plaisir de vous informer qu'une nouvelle version est disponible pour le 
 
  http://www.jetelecharge.com/Bureautique/6452.php
 
-La nouvelle version porte le numéro 2.25, et le fichier d'installation correspondant est disponible à l'adresse suivante :
+La nouvelle version porte le numéro 2.27, et le fichier d'installation correspondant est disponible à l'adresse suivante :
 
-- Windows : http://www.mybudgetview.fr/files/app/BudgetView-2.25-fr-Setup.exe
+- Windows : http://www.mybudgetview.fr/files/app/BudgetView-2.27-fr-Setup.exe
 
-- Mac : http://www.mybudgetview.fr/files/app/BudgetView-2.25-fr.dmg
+- Mac : http://www.mybudgetview.fr/files/app/BudgetView-2.27-fr.dmg
 
-- Linux : http://www.mybudgetview.fr/files/app/budgetview-2.25-fr.tar.gz
+- Linux : http://www.mybudgetview.fr/files/app/budgetview-2.27-fr.tar.gz
 
 L'historique des modifications est visible sur cette page :
 
@@ -135,7 +135,7 @@ Régis.
 
 Bonjour,
 
-La version 2.25 de BudgetView est disponible. Les derniers changements sont décrits sur cette page :
+La version 2.27 de BudgetView est disponible. Les derniers changements sont décrits sur cette page :
 
   http://www.mybudgetview.fr/support/derniers-changements
 

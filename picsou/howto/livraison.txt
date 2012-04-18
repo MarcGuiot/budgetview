@@ -1,0 +1,58 @@
+
+================================================
+Préparer la version
+================================================
+
+ Finaliser derniers_changements.html / last_changes.html en repartant des mails de commit
+ Tester les fonctionnalités décrites dans ces fichiers
+ PicsouApplication : incrémenter APPLICATION_VERSION et JAR_VERSION
+ Tests auto OK
+ hg commit -m "Publication 2.xx" (changer le numéro de version)
+ hg push ssh://fourmics@91.121.123.100
+
+================================================
+Fabriquer les installers Windows/Linux
+================================================
+
+Sous Linux :
+
+  cd $BV_HOME
+  hg pull ssh://fourmics@91.121.123.100
+  hg update
+  mvn install -DskipTests
+  cd picsou/picsou_loader
+  ./deploy.sh
+
+================================================
+Fabriquer les packages d'installation Mac
+================================================
+
+Sous MacOSX :
+
+  cd $BV_HOME
+  hg pull ssh://fourmics@91.121.123.100
+  hg update
+  suivre instructions 'create_dmg.txt'
+  upload FTP
+
+================================================
+Mettre à jour sites
+================================================
+
+Sur site .fr, puis site .com
+
+  Mise à jour liens Windows/Linux/Mac
+  Mise à jour change log
+
+================================================
+Mettre en download auto
+================================================
+
+
+
+================================================
+Publier les changemts web
+================================================
+
+Suivre instructions dans update_sites_download*.txt
+
