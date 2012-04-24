@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.components.ArrowIcon;
+import org.globsframework.gui.splits.components.CircledArrowIcon;
 import org.globsframework.gui.splits.components.EmptyIcon;
 import org.globsframework.gui.splits.impl.DefaultSplitsContext;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -30,6 +31,21 @@ public class IconParserTest extends TestCase {
 
     ArrowIcon icon = parseArrow("leftArrow(100, 200, 10, 20,my.color)");
     checkArrow(icon, 100, 200, 10, 20, "left", Color.BLUE);
+
+    colorService.set("my.color", Color.GREEN);
+    assertEquals(Color.GREEN, icon.getColor());
+  }
+
+  public void testCircledArrowWithFixedColor() throws Exception {
+    CircledArrowIcon icon = (CircledArrowIcon)parse("circledArrow(#FF0000)");
+    assertEquals(Color.RED, icon.getColor());
+  }
+
+  public void testCircledArrowWithNamedColor() throws Exception {
+    colorService.set("my.color", Color.BLUE);
+
+    CircledArrowIcon icon = (CircledArrowIcon)parse("circledArrow(my.color)");
+    assertEquals(Color.BLUE, icon.getColor());
 
     colorService.set("my.color", Color.GREEN);
     assertEquals(Color.GREEN, icon.getColor());
