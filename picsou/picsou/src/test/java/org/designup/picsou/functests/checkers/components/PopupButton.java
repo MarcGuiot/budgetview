@@ -7,11 +7,11 @@ import org.uispec4j.Trigger;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.PopupMenuInterceptor;
 
-public class JPopupButtonChecker {
+public class PopupButton {
 
   private Button button;
 
-  public JPopupButtonChecker(Button button) {
+  public PopupButton(Button button) {
     this.button = button;
   }
 
@@ -42,10 +42,6 @@ public class JPopupButtonChecker {
   }
 
   private MenuItem openMenu() {
-    return PopupMenuInterceptor.run(new Trigger() {
-      public void run() throws Exception {
-        Mouse.click(button);
-      }
-    });
+    return PopupMenuInterceptor.run(Mouse.triggerClick(button));
   }
 }

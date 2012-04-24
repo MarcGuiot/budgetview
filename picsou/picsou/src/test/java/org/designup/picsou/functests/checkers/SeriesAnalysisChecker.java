@@ -122,7 +122,7 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
   }
 
   protected int getLabelColumnIndex() {
-    return 0;
+    return SeriesEvolutionTableView.LABEL_COLUMN_INDEX;
   }
 
   protected Panel getPanel() {
@@ -137,16 +137,16 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
     Table table = getTable();
     int row = getRow(rowLabel.toUpperCase(), table);
     if (row == -1) {
-      row = table.getRowIndex(SeriesEvolutionTableView.LABEL_COLUMN_INDEX, rowLabel);
+      row = table.getRowIndex(getLabelColumnIndex(), rowLabel);
     }
-    return SeriesEditionDialogChecker.open(table.editCell(row, SeriesEvolutionTableView.LABEL_COLUMN_INDEX).getButton().triggerClick());
+    return SeriesEditionDialogChecker.open(table.editCell(row, getLabelColumnIndex()).getButton().triggerClick());
   }
 
   public SeriesAmountEditionDialogChecker editSeries(String rowLabel, String columnLabel) {
     Table table = getTable();
     int row = getRow(rowLabel.toUpperCase(), table);
     if (row == -1) {
-      row = table.getRowIndex(SeriesEvolutionTableView.LABEL_COLUMN_INDEX, rowLabel);
+      row = table.getRowIndex(getLabelColumnIndex(), rowLabel);
     }
     int column = table.getHeader().findColumnIndex(columnLabel);
     table.selectRow(row);
@@ -164,7 +164,7 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
   }
 
   public void checkSeriesNotShown(String seriesName) {
-    assertFalse(getTable().containsRow(SeriesEvolutionTableView.LABEL_COLUMN_INDEX, seriesName));
+    assertFalse(getTable().containsRow(getLabelColumnIndex(), seriesName));
   }
 
   public SeriesAnalysisChecker checkForeground(String rowLabel, String columnLabel, String expectedColor) {
@@ -290,6 +290,23 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
 
     protected Table getTable() {
       return SeriesAnalysisChecker.this.getTable();
+    }
+
+    public void dumpCode() {
+      StringBuilder builder = new StringBuilder();
+      Object[][] actual = rows.toArray(new Object[rows.size()][]);
+      for (int row = 0; row < actual.length; row++) {
+        builder.append("  .add(");
+        Object[] line = actual[row];
+        for (int col = 0; col < line.length; col++) {
+          if (col > 0) {
+            builder.append(", ");
+          }
+          builder.append('"').append(line[col]).append('"');
+        }
+        builder.append(")\n");
+      }
+      Assert.fail("Write this:\n" + builder.toString());
     }
 
     public void check() {

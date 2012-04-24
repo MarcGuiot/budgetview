@@ -220,9 +220,11 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     savingsView.editSeries("Account n. 111", "CA")
       .checkName("Other")
       .validate();
-    views.selectBudget();
-    firstSeriesChecker = budgetView.savings.editSeries("Other");
-    firstSeriesChecker.validate();
+    savingsView.returnToBudgetView();
+
+    views.checkBudgetSelected();
+    budgetView.savings.editSeries("Other")
+      .validate();
   }
 
   public void testToAndFromInExternalIsNotPossible() throws Exception {

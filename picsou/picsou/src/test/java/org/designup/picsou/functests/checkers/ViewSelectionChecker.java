@@ -56,6 +56,10 @@ public class ViewSelectionChecker extends GuiChecker {
     assertSelected("budget");
   }
 
+  public void checkAnalysisSelected() {
+    assertSelected("analysis");
+  }
+
   public void checkSavingsSelected() {
     assertSelected("savings");
   }

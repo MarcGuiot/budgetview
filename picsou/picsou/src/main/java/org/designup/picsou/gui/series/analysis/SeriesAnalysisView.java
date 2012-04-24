@@ -5,13 +5,17 @@ import org.designup.picsou.gui.actions.SelectNextMonthAction;
 import org.designup.picsou.gui.actions.SelectPreviousMonthAction;
 import org.designup.picsou.gui.series.analysis.components.SeriesAnalysisBreadcrumb;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
+import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.ToggleVisibilityAction;
+import org.globsframework.gui.utils.GlobSelectionBuilder;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -59,6 +63,16 @@ public class SeriesAnalysisView extends View {
         }
       }
     }, Month.TYPE);
+
+    parentSelectionService.addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+        GlobSelectionBuilder builder = GlobSelectionBuilder.init();
+        for (Glob series : selection.getAll(Series.TYPE)) {
+          builder.add(SeriesWrapper.getWrapperForSeries(series.get(Series.ID), repository));
+        }
+        selectionService.select(builder.get());
+      }
+    }, Series.TYPE);
 
     SeriesAnalysisBreadcrumb breadcrumb = new SeriesAnalysisBreadcrumb(repository, directory);
     builder.add("breadcrumb", breadcrumb.getEditor());

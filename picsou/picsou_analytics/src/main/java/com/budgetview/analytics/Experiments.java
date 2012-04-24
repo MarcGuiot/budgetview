@@ -14,10 +14,12 @@ public class Experiments {
   }
 
   public void register() {
+    add(201216, "2.27: force day + guidage import + creation banque + modif libelles");
+    add(201214, "Mailing Franck");
     add(201211, "2.25: acces demo + CSV + format dates");
     add(201209, "2.24: version EN relookee sur plusieurs sites");
     add(201205, "2.23: corrections dates + aide interne import + impression");
-    add(201202, "Refonte site /support");
+    add(201202, "2.21: refonte site /support");
     add(201149, "Enregistrement toocharger");
     add(201148, "Mailing Franck");
     add(201147, "Enregistrement 01net");

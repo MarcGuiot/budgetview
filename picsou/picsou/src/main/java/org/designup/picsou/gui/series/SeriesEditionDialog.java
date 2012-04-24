@@ -111,8 +111,6 @@ public class SeriesEditionDialog {
         return selectedTransactions.getSortedSet(Transaction.BUDGET_MONTH);
       }
     }, repository);
-//    localRepository.addTrigger(new UpdateUpdateMirror());
-//    localRepository.addTrigger(new UpdateBudgetOnSeriesAccountsChange());
     localRepository.addChangeListener(new ProfileTypeChangeListener());
 
     localRepository.addChangeListener(new ChangeSetListener() {
@@ -746,8 +744,8 @@ public class SeriesEditionDialog {
         seriesToDelete.add(mirrorSeries);
       }
 
-      Set<Integer> series = seriesToDelete.getValueSet(Series.ID);
-      GlobList transactionsForSeries = localRepository.getAll(Transaction.TYPE, fieldIn(Transaction.SERIES, series));
+      Set<Integer> seriesIds = seriesToDelete.getValueSet(Series.ID);
+      GlobList transactionsForSeries = localRepository.getAll(Transaction.TYPE, fieldIn(Transaction.SERIES, seriesIds));
       final Ref<Boolean> deleted = new Ref<Boolean>(false);
       if (transactionsForSeries.isEmpty()) {
         doDelete(deleted);

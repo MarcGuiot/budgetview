@@ -29,6 +29,9 @@ public abstract class ExpandableTableChecker extends ViewChecker {
   public void checkExpanded(String label, boolean expanded) {
     Table table = getTable();
     int row = table.getRowIndex(getLabelColumnIndex(), label);
+    if (row < 0) {
+      Assert.fail(label + " not found in table. Actual content:\n" + table.toString());
+    }
     JButton button = (JButton)table.getSwingRendererComponentAt(row, 0);
     if (expanded) {
       Assert.assertSame(TableExpansionColumn.EXPANDED_ICON, button.getIcon());

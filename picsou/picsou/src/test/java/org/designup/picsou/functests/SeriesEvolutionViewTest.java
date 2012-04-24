@@ -341,6 +341,55 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testNavigatingFromTheBudgetView() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00000123", 1000.0, "2008/07/30")
+      .addTransaction("2008/07/01", 320.00, "WorldCo")
+      .addTransaction("2008/07/15", 350.00, "Big Inc.")
+      .load();
+
+    categorization.setNewIncome("WorldCo", "John's");
+    categorization.setNewIncome("Big Inc.", "Mary's");
+
+    timeline.selectMonth("2008/07");
+
+    budgetView.income.gotoAnalysis("John's");
+
+    views.checkAnalysisSelected();
+    seriesAnalysis.checkBreadcrumb("Overall budget > Income > John's");
+
+    seriesAnalysis.balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 670.00, true);
+
+    seriesAnalysis.seriesChart.getSingleDataset()
+      .checkSize(2)
+      .checkValue("Mary's", 350.00)
+      .checkValue("John's", 320.00, true);
+
+    seriesAnalysis.toggleTable();
+    seriesAnalysis.checkSelected("John's");
+
+    seriesAnalysis.collapseAll();
+
+    views.selectBudget();
+    budgetView.income.gotoAnalysis("Mary's");
+
+    seriesAnalysis.checkBreadcrumb("Overall budget > Income > Mary's");
+
+    seriesAnalysis.balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 670.00, true);
+
+    seriesAnalysis.seriesChart.getSingleDataset()
+      .checkSize(2)
+      .checkValue("Mary's", 350.00, true)
+      .checkValue("John's", 320.00);
+
+    seriesAnalysis.checkExpanded("Income", true);
+    seriesAnalysis.checkSelected("Mary's");
+  }
+
   public void testDeletingTheShownSeries() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "00000123", 1000.0, "2008/07/30")

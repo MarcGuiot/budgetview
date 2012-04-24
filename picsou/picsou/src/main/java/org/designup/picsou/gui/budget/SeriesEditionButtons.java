@@ -1,16 +1,19 @@
 package org.designup.picsou.gui.budget;
 
+import org.designup.picsou.gui.budget.components.SeriesPopupButton;
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.series.SeriesEditor;
-import org.designup.picsou.gui.signpost.actions.SetSignpostStatusAction;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobListFunctor;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -47,8 +50,12 @@ public class SeriesEditionButtons {
     GlobButtonView buttonView =
       GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())
         .forceSelection(series.getKey());
-    repository.addChangeListener(new TooltipUpdater(series.getKey(), buttonView));
+    repository.addChangeListener(new TooltipUpdater(series.getKey(), buttonView.getComponent()));
     return buttonView;
+  }
+
+  public SeriesPopupButton createSeriesPopupButton(Glob series) {
+    return new SeriesPopupButton(series, new SeriesPopupFactory(series), repository, directory);
   }
 
   public void setNames(String createButtonName) {
@@ -63,8 +70,8 @@ public class SeriesEditionButtons {
 
     public void actionPerformed(ActionEvent e) {
       SeriesEditor.get(directory).showNewSeries(GlobList.EMPTY,
-                                 selectionService.getSelection(Month.TYPE),
-                                 budgetArea);
+                                                selectionService.getSelection(Month.TYPE),
+                                                budgetArea);
     }
   }
 
@@ -76,19 +83,49 @@ public class SeriesEditionButtons {
 
   private void showSeriesEdition(Glob series) {
     Set<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getValueSet(Month.ID);
-    if (repository.contains(Project.TYPE, GlobMatchers.linkedTo(series.getKey(), Project.SERIES))) {
-
-    }
     SeriesEditor.get(directory).showSeries(series, selectedMonthIds);
+  }
+
+  private class SeriesPopupFactory implements PopupMenuFactory {
+
+    private Glob series;
+    private JPopupMenu menu;
+
+    private SeriesPopupFactory(Glob series) {
+      this.series = series;
+    }
+
+    public JPopupMenu createPopup() {
+      if (menu == null) {
+        menu = new JPopupMenu();
+        menu.add(new AbstractAction(Lang.get("series.edit")) {
+          public void actionPerformed(ActionEvent actionEvent) {
+            showSeriesEdition(series);
+          }
+        });
+        menu.addSeparator();
+        menu.add(new AbstractAction(Lang.get("series.goto.operations")) {
+          public void actionPerformed(ActionEvent actionEvent) {
+            directory.get(NavigationService.class).gotoDataForSeries(series);
+          }
+        });
+        menu.add(new AbstractAction(Lang.get("series.goto.analysis")) {
+          public void actionPerformed(ActionEvent actionEvent) {
+            directory.get(NavigationService.class).gotoAnalysisForSeries(series);
+          }
+        });
+      }
+      return menu;
+    }
   }
 
   private class TooltipUpdater implements ChangeSetListener {
     private Key seriesKey;
-    private GlobButtonView buttonView;
+    private JButton button;
 
-    public TooltipUpdater(Key seriesKey, GlobButtonView buttonView) {
+    public TooltipUpdater(Key seriesKey, JButton button) {
       this.seriesKey = seriesKey;
-      this.buttonView = buttonView;
+      this.button = button;
       updateTooltip(repository);
     }
 
@@ -102,7 +139,7 @@ public class SeriesEditionButtons {
       Glob series = repository.find(seriesKey);
       if (series != null) {
         String description = series.get(Series.DESCRIPTION);
-        buttonView.getComponent().setToolTipText(Strings.toSplittedHtml(description, 50));
+        button.setToolTipText(Strings.toSplittedHtml(description, 50));
       }
       else {
         repository.removeChangeListener(this);

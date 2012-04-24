@@ -79,7 +79,6 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     Boolean existingValue = expandedMap.get(id);
     expandedMap.put(id, !existingValue);
     table.setFilter(this);
-    table.select(glob);
   }
 
   public void expandAll() {

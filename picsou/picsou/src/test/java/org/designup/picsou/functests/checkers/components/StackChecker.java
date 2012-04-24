@@ -110,8 +110,11 @@ public class StackChecker extends GuiChecker {
       for (int i = 0; i < dataset.size(); i++) {
         double value = dataset.getValue(i);
         builder.append("  .checkValue(\"").append(dataset.getLabel(i)).append("\", ")
-          .append(StackChecker.this.toString(value))
-          .append(")");
+          .append(StackChecker.this.toString(value));
+        if (dataset.isSelected(i)) {
+          builder.append(", true");
+        }
+        builder.append(")");
         if (i < dataset.size() - 1) {
           builder.append("\n");
         }

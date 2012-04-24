@@ -2,6 +2,7 @@ package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.budget.components.SeriesOrderManager;
+import org.designup.picsou.gui.budget.components.SeriesPopupButton;
 import org.designup.picsou.gui.budget.footers.BudgetAreaSeriesFooter;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.JPopupButton;
@@ -273,7 +274,7 @@ public class BudgetAreaSeriesView extends View {
 
       final Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
 
-      final GlobButtonView seriesNameButton = seriesButtons.createSeriesButton(series);
+      final SeriesPopupButton seriesNameButton = seriesButtons.createSeriesPopupButton(series);
       final SplitsNode<JButton> seriesName = cellBuilder.add("seriesName", seriesNameButton.getComponent());
       cellBuilder.addDisposeListener(seriesNameButton);
 
@@ -464,5 +465,6 @@ public class BudgetAreaSeriesView extends View {
         return stringifier.toString(periodStatList, repository);
       }
     }
+
   }
 }

@@ -3,18 +3,19 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.DeltaGaugeChecker;
 import org.designup.picsou.functests.checkers.components.GaugeChecker;
-import org.designup.picsou.functests.checkers.components.JPopupButtonChecker;
+import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.gui.components.charts.DeltaGauge;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.TestUtils;
+import org.uispec4j.*;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
-import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.interception.PopupMenuInterceptor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -274,7 +275,8 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public SeriesEditionDialogChecker editSeries(String seriesName) {
-      return openSeriesEditionDialog(seriesName);
+      return SeriesEditionDialogChecker.open(
+        getSeriesPanel(seriesName).getSeriesButton().triggerClick("Edit"));
     }
 
     public SeriesAmountEditionDialogChecker editPlannedAmount(String seriesName) {
@@ -315,16 +317,16 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
-    private SeriesEditionDialogChecker openSeriesEditionDialog(String seriesName) {
-      return SeriesEditionDialogChecker.open(getSeriesPanel(seriesName).getSeriesButton().triggerClick());
-    }
-
-    protected JPopupButtonChecker getActionPopup() {
-      return new JPopupButtonChecker(getPanel().getButton("seriesActions"));
+    protected PopupButton getActionPopup() {
+      return new PopupButton(getPanel().getButton("seriesActions"));
     }
 
     public void gotoData(String seriesName) {
       getObservedAmountButton(seriesName).click();
+    }
+
+    public void gotoDataThroughMenu(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton().click("Show operations");
     }
 
     public BudgetAreaChecker checkSeriesTooltip(String seriesName, String tooltipText) {
@@ -386,6 +388,10 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
+    public void gotoAnalysis(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton().click("See in Analysis view");
+    }
+
     public BudgetAreaChecker checkDeltaGauge(String seriesName, Double previousValue, Double newValue, double ratio, String tooltip) {
       getDeltaGauge(seriesName).check(previousValue, newValue, ratio, tooltip);
       return this;
@@ -406,7 +412,8 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public ProjectEditionChecker editProjectSeries(String seriesName) {
-      return ProjectEditionChecker.open(getSeriesPanel(seriesName).getSeriesButton().triggerClick());
+      return ProjectEditionChecker.open(
+        getSeriesPanel(seriesName).getSeriesButton().triggerClick("Edit"));
     }
 
     public ProjectEditionChecker editPlannedAmountForProject(String seriesName) {
@@ -460,8 +467,8 @@ public class BudgetViewChecker extends ViewChecker {
       this.budgetArea = budgetArea;
     }
 
-    public Button getSeriesButton() {
-      return new Button((JButton)getComponent(SERIES_OFFSET));
+    private PopupButton getSeriesButton() {
+      return new PopupButton(new Button((JButton)getComponent(SERIES_OFFSET)));
     }
 
     public GaugeChecker getGauge() {

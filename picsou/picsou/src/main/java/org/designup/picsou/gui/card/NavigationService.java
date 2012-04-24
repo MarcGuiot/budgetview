@@ -105,7 +105,12 @@ public class NavigationService implements GlobSelectionListener {
     transactionView.setSeriesFilter(series);
     select(Card.DATA, false);
   }
-  
+
+  public void gotoAnalysisForSeries(Glob series) {
+    selectionService.select(series);
+    gotoCard(Card.ANALYSIS);
+  }
+
   public void highlightTransactionCreation() {
     select(Card.CATEGORIZATION, true);
     categorizationView.highlightTransactionCreation();

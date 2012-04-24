@@ -22,6 +22,17 @@ public class Mouse {
   }
 
   /**
+   * Trigger that clicks in the center of a UIComponent.
+   */
+  public static Trigger triggerClick(final UIComponent uiComponent) {
+    return new Trigger() {
+      public void run() throws Exception {
+        Mouse.click(uiComponent);
+      }
+    };
+  }
+
+  /**
    * Clicks in the center of a UIComponent.
    */
   public static void click(UIComponent uiComponent, Key.Modifier keyModifier) {

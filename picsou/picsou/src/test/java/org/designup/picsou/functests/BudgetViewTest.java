@@ -524,7 +524,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectBudget();
-    budgetView.variable.gotoData("Groceries");
+    budgetView.variable.gotoDataThroughMenu("Groceries");
     views.checkDataSelected();
     transactions.initContent()
       .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00, "Groceries")

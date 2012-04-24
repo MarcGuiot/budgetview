@@ -1,10 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
-import org.designup.picsou.functests.checkers.components.JPopupButtonChecker;
-import org.uispec4j.MenuItem;
+import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.uispec4j.Panel;
 import org.uispec4j.Trigger;
-import org.uispec4j.interception.PopupMenuInterceptor;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
@@ -66,19 +64,19 @@ public class BankChooserPanelChecker<T extends BankChooserPanelChecker> extends 
 
   public BankEditionDialogChecker edit() {
     String menuItem = "Edit bank";
-    JPopupButtonChecker popupButton = new JPopupButtonChecker(panel.getButton("bankActions"));
+    PopupButton popupButton = new PopupButton(panel.getButton("bankActions"));
     Trigger trigger = popupButton.triggerClick(menuItem);
     return BankEditionDialogChecker.open(trigger);
   }
 
   public T checkEditDisabled() {
-    JPopupButtonChecker popupButton = new JPopupButtonChecker(panel.getButton("bankActions"));
+    PopupButton popupButton = new PopupButton(panel.getButton("bankActions"));
     popupButton.checkItemDisabled("Edit bank");
     return (T)this;
   }
 
   public T deleteAndCancel() {
-    JPopupButtonChecker popupButton = new JPopupButtonChecker(panel.getButton("bankActions"));
+    PopupButton popupButton = new PopupButton(panel.getButton("bankActions"));
     ConfirmationDialogChecker.init(popupButton.triggerClick("Delete bank"))
       .cancel();
     return (T)this;
@@ -89,7 +87,7 @@ public class BankChooserPanelChecker<T extends BankChooserPanelChecker> extends 
   }
 
   public T delete(String title, String message) {
-    JPopupButtonChecker popupButton = new JPopupButtonChecker(panel.getButton("bankActions"));
+    PopupButton popupButton = new PopupButton(panel.getButton("bankActions"));
     ConfirmationDialogChecker.init(popupButton.triggerClick("Delete bank"))
       .checkTitle(title)
       .checkMessageContains(message)
@@ -98,13 +96,13 @@ public class BankChooserPanelChecker<T extends BankChooserPanelChecker> extends 
   }
 
   public T checkDeleteDisabled() {
-    JPopupButtonChecker popupButton = new JPopupButtonChecker(panel.getButton("bankActions"));
+    PopupButton popupButton = new PopupButton(panel.getButton("bankActions"));
     popupButton.checkItemDisabled("Delete bank");
     return (T)this;
   }
 
   public T checkDeleteRejected(String title, String message) {
-    JPopupButtonChecker popupButton = new JPopupButtonChecker(panel.getButton("bankActions"));
+    PopupButton popupButton = new PopupButton(panel.getButton("bankActions"));
     MessageDialogChecker.open(popupButton.triggerClick("Delete bank"))
       .checkTitle(title)
       .checkMessageContains(message)

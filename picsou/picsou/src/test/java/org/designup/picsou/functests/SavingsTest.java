@@ -420,6 +420,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectBudget();
+    savingsView.returnToBudgetView();
     budgetView.savings.editSeries("CAF")
       .checkDateChooserIsHidden()
       .cancel();
@@ -709,7 +710,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     budgetView.savings.checkSeries("CA", 100, 100);
 
+    budgetView.savings.toggleSavingsView();
     savingsView.checkSeriesAmounts("Account n. 111", "CA", 100, 100);
+    savingsView.returnToBudgetView();
 
     budgetView.savings.checkTotalAmounts(100, 100);
     budgetView.savings.editSeries("CA")
@@ -717,6 +720,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setAmount(200)
       .validate();
 
+    budgetView.savings.toggleSavingsView();
     savingsView.editSeries("Account n. 111", "CA")
       .selectAllMonths()
       .checkAmount(200.00)
@@ -729,6 +733,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       )
       .validate();
 
+    savingsView.returnToBudgetView();
     budgetView.savings.checkTotalAmounts(100, 200);
   }
 

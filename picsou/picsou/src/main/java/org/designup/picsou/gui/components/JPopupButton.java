@@ -1,31 +1,22 @@
 package org.designup.picsou.gui.components;
 
+import org.globsframework.gui.utils.PopupMenuFactory;
+
 import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class JPopupButton extends JButton {
-  public JPopupButton(String text, final JPopupMenu menu) {
+
+  public JPopupButton(String text, final PopupMenuFactory factory) {
     super(text);
+    addMouseListener(new PopupMouseAdapter(factory));
+  }
 
-    addMouseListener(new MouseAdapter() {
-      public void mousePressed(MouseEvent e) {
-        checkPopup(e);
-      }
-
-      public void mouseClicked(MouseEvent e) {
-        checkPopup(e);
-      }
-
-      public void mouseReleased(MouseEvent e) {
-        checkPopup(e);
-      }
-
-      private void checkPopup(MouseEvent e) {
-        if (!menu.isShowing()) {
-          menu.show(e.getComponent(), 0, getHeight());
-        }
+  public JPopupButton(String text, final JPopupMenu menu) {
+    this(text, new PopupMenuFactory() {
+      public JPopupMenu createPopup() {
+        return menu;
       }
     });
   }
+
 }
