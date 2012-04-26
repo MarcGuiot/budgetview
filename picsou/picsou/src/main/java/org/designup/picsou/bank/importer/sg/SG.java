@@ -29,6 +29,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.imageio.ImageReader;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -77,26 +78,26 @@ public class SG extends WebBankPage {
     defaultDirectory.add(JFrame.class, frame);
     frame.setSize(100, 100);
     frame.setVisible(true);
-    SG sg = new SG(defaultDirectory, new DefaultGlobRepository(new DefaultGlobIdGenerator()));
+    SG sg = new SG(frame, defaultDirectory, new DefaultGlobRepository(new DefaultGlobIdGenerator()));
     sg.init();
     sg.show();
   }
 
   public static class Init implements BankSynchroService.BankSynchro {
 
-    public GlobList show(Directory directory, GlobRepository repository) {
-      SG sg = SG.init(directory, repository);
+    public GlobList show(Window parent, Directory directory, GlobRepository repository) {
+      SG sg = SG.init(parent, directory, repository);
       sg.init();
       return sg.show();
     }
   }
 
-  public SG(final Directory directory, GlobRepository repository) {
-    super(directory, repository, SG_ID);
+  public SG(Window parent, final Directory directory, GlobRepository repository) {
+    super(parent, directory, repository, SG_ID);
   }
 
-  public static SG init(final Directory directory, GlobRepository repository) {
-    return new SG(directory, repository);
+  public static SG init(Window parent, final Directory directory, GlobRepository repository) {
+    return new SG(parent, directory, repository);
   }
 
   public JPanel getPanel() {

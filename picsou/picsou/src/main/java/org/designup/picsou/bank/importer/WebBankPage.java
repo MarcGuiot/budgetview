@@ -13,6 +13,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,8 +25,8 @@ public abstract class WebBankPage extends BankPage {
   protected ErrorAlertHandler errorAlertHandler;
   protected boolean hasError = false;
 
-  public WebBankPage(Directory directory, GlobRepository repository, Integer bankId) {
-    super(directory, repository, bankId);
+  public WebBankPage(Window parent, Directory directory, GlobRepository repository, Integer bankId) {
+    super(parent, directory, repository, bankId);
     this.bankId = bankId;
   }
 

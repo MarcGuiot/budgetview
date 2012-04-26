@@ -21,6 +21,7 @@ import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
 import java.util.Date;
@@ -28,6 +29,7 @@ import java.util.Date;
 import com.jidesoft.swing.InfiniteProgressPanel;
 
 public abstract class BankPage {
+  private Window parent;
   protected Directory directory;
   protected Integer bankId;
   protected LocalGlobRepository repository;
@@ -35,7 +37,8 @@ public abstract class BankPage {
   protected GlobList accounts = new GlobList();
 //  protected InfiniteProgressPanel accupedPanel = new InfiniteProgressPanel();
 
-  public BankPage(Directory directory, GlobRepository repository, Integer bankId) {
+  public BankPage(Window parent, Directory directory, GlobRepository repository, Integer bankId) {
+    this.parent = parent;
     this.directory = directory;
     this.bankId = bankId;
     this.repository = LocalGlobRepositoryBuilder.init(repository)
@@ -47,7 +50,7 @@ public abstract class BankPage {
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/synchroDialog.splits");
     builder.add("bankSpecific", getPanel());
-    dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    dialog = PicsouDialog.create(parent, directory);
     JPanel panel = builder.load();
     dialog.setPanelAndButton(panel, new CancelAction());
   }

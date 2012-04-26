@@ -26,6 +26,7 @@ import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -41,8 +42,8 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
   private HtmlTable accountsTable;
   public static final int ID = 15;
 
-  public CreditMutuelArkea(Directory directory, GlobRepository repository, Integer bankId) {
-    super(directory, repository, bankId);
+  public CreditMutuelArkea(Window parent, Directory directory, GlobRepository repository, Integer bankId) {
+    super(parent, directory, repository, bankId);
   }
 
   public HtmlPage getPage() {
@@ -55,15 +56,15 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
 
   public static class Init implements BankSynchroService.BankSynchro {
 
-    public GlobList show(Directory directory, GlobRepository repository) {
-      CreditMutuelArkea creditMutuelArkea = CreditMutuelArkea.init(directory, repository);
+    public GlobList show(Window parent, Directory directory, GlobRepository repository) {
+      CreditMutuelArkea creditMutuelArkea = CreditMutuelArkea.init(parent, directory, repository);
       creditMutuelArkea.init();
       return creditMutuelArkea.show();
     }
   }
 
-  private static CreditMutuelArkea init(Directory directory, GlobRepository repository) {
-    return new CreditMutuelArkea(directory, repository, ID);
+  private static CreditMutuelArkea init(Window parent, Directory directory, GlobRepository repository) {
+    return new CreditMutuelArkea(parent, directory, repository, ID);
   }
 
 
@@ -227,7 +228,7 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
     defaultDirectory.add(JFrame.class, frame);
     frame.setSize(100, 100);
     frame.setVisible(true);
-    CreditMutuelArkea creditMutuelArkea = new CreditMutuelArkea(defaultDirectory,
+    CreditMutuelArkea creditMutuelArkea = new CreditMutuelArkea(frame, defaultDirectory,
                                                                 new DefaultGlobRepository(new DefaultGlobIdGenerator()), -1);
     creditMutuelArkea.init();
     creditMutuelArkea.show();

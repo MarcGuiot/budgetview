@@ -10,9 +10,9 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
@@ -23,7 +23,7 @@ public class BankSynchroService {
     System.getProperty("budgetview.synchro", "false").equalsIgnoreCase("true");
 
   public interface BankSynchro {
-    GlobList show(Directory directory, GlobRepository repository);
+    GlobList show(Window parent, Directory directory, GlobRepository repository);
   }
 
   public BankSynchroService() {
@@ -36,7 +36,7 @@ public class BankSynchroService {
     banks.put(bankId, synchro);
   }
 
-  public GlobList show(GlobList realAccounts, Directory directory, GlobRepository repository) {
+  public GlobList show(Window parent, GlobList realAccounts, Directory directory, GlobRepository repository) {
     Map<String, Glob> realAccountByUrl = new HashMap<String, Glob>();
     Map<Integer, Glob> bankToRealAccount = new HashMap<Integer, Glob>();
     for (Glob account : realAccounts) {
@@ -53,7 +53,7 @@ public class BankSynchroService {
     GlobList importedAccount = new GlobList();
     for (Glob glob : realAccountByUrl.values()) {
       OfxDownloadPage download =
-        new OfxDownloadPage(repository, directory, glob.get(RealAccount.BANK), glob.get(RealAccount.URL),
+        new OfxDownloadPage(parent, repository, directory, glob.get(RealAccount.BANK), glob.get(RealAccount.URL),
                         glob.get(RealAccount.ORG), glob.get(RealAccount.FID));
       download.init();
       importedAccount.addAll(download.show());
@@ -61,7 +61,7 @@ public class BankSynchroService {
     for (Integer bankId : bankToRealAccount.keySet()) {
       BankSynchro synchro = banks.get(bankId);
       if (synchro != null) {
-        importedAccount.addAll(synchro.show(directory, repository));
+        importedAccount.addAll(synchro.show(parent, directory, repository));
       }
     }
     for (Iterator<Glob> iterator = importedAccount.iterator(); iterator.hasNext();) {
@@ -73,10 +73,10 @@ public class BankSynchroService {
     return importedAccount;
   }
 
-  public GlobList show(Integer bankId, Directory directory, GlobRepository repository) {
+  public GlobList show(Window parent, Integer bankId, Directory directory, GlobRepository repository) {
     BankSynchro synchro = banks.get(bankId);
     if (synchro != null) {
-      GlobList importedAccount = synchro.show(directory, repository);
+      GlobList importedAccount = synchro.show(parent, directory, repository);
       filterRemoveAccountWithNoImport(importedAccount);
       return importedAccount;
     }
@@ -85,7 +85,7 @@ public class BankSynchroService {
       if (glob != null) {
         if (glob.isTrue(Bank.OFX_DOWNLOAD)) {
           OfxDownloadPage download =
-            new OfxDownloadPage(repository, directory, bankId, glob.get(Bank.DOWNLOAD_URL),
+            new OfxDownloadPage(parent, repository, directory, bankId, glob.get(Bank.DOWNLOAD_URL),
                             glob.get(Bank.ORG), glob.get(Bank.FID));
           download.init();
           GlobList importedAccount = download.show();

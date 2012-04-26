@@ -13,6 +13,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +29,8 @@ public class OfxDownloadPage extends BankPage {
   private String org;
   private String fid;
 
-  public OfxDownloadPage(GlobRepository repository, Directory directory, Integer bankId, String url, String org, String fid) {
-    super(directory, repository, bankId);
+  public OfxDownloadPage(Window parent, GlobRepository repository, Directory directory, Integer bankId, String url, String org, String fid) {
+    super(parent, directory, repository, bankId);
     this.url = url;
     this.org = org;
     this.fid = fid;
