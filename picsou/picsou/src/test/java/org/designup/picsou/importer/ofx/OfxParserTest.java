@@ -1,13 +1,15 @@
 package org.designup.picsou.importer.ofx;
 
 import junit.framework.TestCase;
+import org.designup.picsou.gui.time.TimeService;
+import org.globsframework.utils.Dates;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
 public class OfxParserTest extends TestCase {
-  private static final String TEXT =
+  public static final String TEXT =
     "OFXHEADER:100\n" +
     "DATA:OFXSGML\n" +
     "VERSION:102\n" +

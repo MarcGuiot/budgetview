@@ -371,6 +371,7 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .validate();
     timeline.selectAll();
     transactions.initAmountContent()
-      .dumpCode();
+      .add("22/08/2008", "ED", -100.00, "Courses", 0.00, 0.00, "Account n. 00001123")
+      .check();
   }
 }
