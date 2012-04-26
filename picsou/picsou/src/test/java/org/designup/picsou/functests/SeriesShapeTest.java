@@ -1,5 +1,6 @@
 package org.designup.picsou.functests;
 
+import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
@@ -354,6 +355,22 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .add("11/05/2008", TransactionType.VIREMENT, "SALAIRE", "", 1000.00, "Salaire")
       .add("10/04/2008", TransactionType.VIREMENT, "SALAIRE", "", 1000.00, "Salaire")
       .check();
+  }
 
+  public void testCreateWithFixedDate() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/22", -100.00, "ED")
+      .load();
+
+    SeriesEditionDialogChecker courses = categorization.selectTransaction("ED")
+      .selectIncome()
+      .createSeries();
+    courses
+      .setName("Courses")
+      .forceSingleOperationForecast()
+      .validate();
+    timeline.selectAll();
+    transactions.initAmountContent()
+      .dumpCode();
   }
 }
