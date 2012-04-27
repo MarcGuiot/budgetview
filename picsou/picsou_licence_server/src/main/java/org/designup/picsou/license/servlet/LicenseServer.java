@@ -131,7 +131,7 @@ public class LicenseServer {
     queryVersionTask = new QueryVersionTask(directory.get(SqlService.class),
                                             directory.get(VersionService.class));
     queryVersionTask.run();
-    timer.schedule(queryVersionTask, 1000, 5000);
+    timer.schedule(queryVersionTask, 5000, 5000);
 
     context = new Context(jetty, "/", Context.SESSIONS);
     context.setResourceBase("resources");

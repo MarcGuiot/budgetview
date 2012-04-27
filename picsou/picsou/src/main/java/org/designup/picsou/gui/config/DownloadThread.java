@@ -36,7 +36,6 @@ public class DownloadThread extends Thread {
     if (splitedUrl.length == 3) {
       client.setDefaultPort(Integer.parseInt(splitedUrl[2]));
     }
-    client.enterLocalPassiveMode();
     try {
       client.connect(splitedUrl[1].substring("//" .length()));
       if (client.isConnected()) {
@@ -47,6 +46,7 @@ public class DownloadThread extends Thread {
         String fileSuffix = PicsouApplication.APPNAME + "Jar";
         tempFile = File.createTempFile(fileSuffix, ".tmp", pathToConfig);
         FileOutputStream fileOutputStream = new FileOutputStream(tempFile);
+        client.enterLocalPassiveMode();
         if (client.retrieveFile(fileName, fileOutputStream)) {
           fileOutputStream.close();
           File targetFile = new File(pathToConfig, fileName);
