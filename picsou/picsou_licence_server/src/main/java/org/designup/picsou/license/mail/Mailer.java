@@ -152,8 +152,8 @@ public class Mailer {
       try {
         inc();
         sendMail(mail, fromAdress, Lang.get("new.license.subject", lang),
-                 Lang.get("new.license.message", lang, code, mail),
-                 Lang.get("new.license.message.text", lang, code, mail));
+                 Lang.get("new.license.message", lang, code, mail));
+                 //,Lang.get("new.license.message.text", lang, code, mail));
         return true;
       }
       catch (Exception e) {
@@ -183,8 +183,8 @@ public class Mailer {
       try {
         inc();
         sendMail(mail, fromAdress, Lang.get(prefix + ".license.subject", lang),
-                 Lang.get(prefix + ".license.message", lang, activationCode, mail),
-                 Lang.get(prefix + ".license.message.text", lang, activationCode, mail));
+                 Lang.get(prefix + ".license.message", lang, activationCode, mail));
+                 //, Lang.get(prefix + ".license.message.text", lang, activationCode, mail));
         return true;
       }
       catch (Exception e) {

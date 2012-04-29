@@ -278,6 +278,11 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     String fileName = TestUtils.getFileName(this, ".ofx");
     Files.dumpStringToFile(fileName, text);
     operations.importOfxFile(fileName);
+
+    text = OfxImportTest.TEXT.replace("<DTASOF>20060704000000", "<DTASOF>2006/07/04");
+    fileName = TestUtils.getFileName(this, ".ofx");
+    Files.dumpStringToFile(fileName, text);
+    operations.importOfxFile(fileName);
   }
 
   public void testTruncatedFile() throws Exception {

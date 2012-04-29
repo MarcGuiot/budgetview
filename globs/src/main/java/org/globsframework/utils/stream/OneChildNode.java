@@ -26,10 +26,6 @@ public class OneChildNode implements Node {
     return path.length;
   }
 
-  public int[] getPath() {
-    return path;
-  }
-
   public int[] getReplacement() {
     throw new RuntimeException("Not terminal");
   }

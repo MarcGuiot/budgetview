@@ -30,10 +30,6 @@ public class ManyChildNode implements Node {
     return partialPath.length;
   }
 
-  public int[] getPath() {
-    return partialPath;
-  }
-
   public int[] getReplacement() {
     throw new RuntimeException("Not terminal " + partialPath);
   }

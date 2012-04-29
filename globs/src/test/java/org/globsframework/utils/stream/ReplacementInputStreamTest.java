@@ -19,9 +19,23 @@ public class ReplacementInputStreamTest extends TestCase {
 
   public void testRegexp() throws Exception {
     ReplacementInputStreamBuilder builder = new ReplacementInputStreamBuilder();
-    builder.replace("somm (.*)data", "some $1 data");
+    builder.replace("<SCRIPT language=javascript>.*</SCRIPT>\n" +
+                    "</font>",
+                    "<INPUT size=\"10\" maxlength=\"6\" name=\"ch2\" value=\"\" type=\"password\" disabled &gt;>\n" +
+                    "</font>");
 
-    check(builder, "somm data to toto", "some data to titi");
+    check(builder, "<font face=\"Arial, Helvetica, sans-serif\" class=\"gras\">\n" +
+                   "<font size=\"2\"><b style=\"color:#000000;font-size:12px;font-weight:900;\">Code secret</b>\n" +
+                   "<SCRIPT language=javascript>\n" +
+                   "  if (navigator.appName != \"Microsoft Internet Explorer\") { document.write('<INPUT size=\"5\" '); } \n" +
+                   "   else { document.write('<INPUT size=\"10\" '); }\n" +
+                   "   </SCRIPT>\n" +
+                   "     maxlength=\"6\" name=\"ch2\" value=\"\" type=\"password\" disabled &gt;>\n" +
+                   "</font>",
+          "<font face=\"Arial, Helvetica, sans-serif\" class=\"gras\">\n" +
+          "<font size=\"2\"><b style=\"color:#000000;font-size:12px;font-weight:900;\">Code secret</b>\n" +
+          "<INPUT size=\"10\" maxlength=\"6\" name=\"ch2\" value=\"\" type=\"password\" disabled &gt;>\n" +
+          "</font>");
 
   }
 

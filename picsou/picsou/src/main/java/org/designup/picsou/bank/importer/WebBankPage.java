@@ -4,6 +4,7 @@ import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.attachment.AttachmentHandler;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -12,8 +13,11 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.stream.ReplacementInputStreamBuilder;
 
+import javax.imageio.ImageReader;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,8 +34,19 @@ public abstract class WebBankPage extends BankPage {
     this.bankId = bankId;
   }
 
+  public static BufferedImage getFirstImage(HtmlImage img) {
+    try {
+      final ImageReader imageReader = img.getImageReader();
+      return imageReader.read(0);
+    }
+    catch (IOException e) {
+      throw new RuntimeException("Can not load image " + img.getId());
+    }
+  }
+
   protected void loadPage(final String index) throws IOException {
     client = new WebClient();
+    client.setThrowExceptionOnScriptError(false);
     client.setCssEnabled(false);
     client.setJavaScriptEnabled(true);
     client.setCache(new Cache());
@@ -42,8 +57,14 @@ public abstract class WebBankPage extends BankPage {
           public InputStream getInputStream() throws IOException {
             Header type = httpResponse.getEntity().getContentType();
             System.out.println("WebBankPage.getInputStream " + type.getName() + "  " + type.getValue());
-
-            return content.getInputStream();
+            ReplacementInputStreamBuilder builder = new ReplacementInputStreamBuilder();
+            builder.replace("maxlength=\"10\" value=\"\" name=\"ch1\" type=\"text\"&gt;".getBytes(),
+                            "<INPUT size=\"10\" maxlength=\"6\" name=\"ch1\" value=\"\" type=\"text\" > ".getBytes());
+            builder.replace("maxlength=\"6\" name=\"ch2\" value=\"\" type=\"password\" disabled &gt;>".getBytes(),
+                            "<INPUT size=\"10\" maxlength=\"6\" name=\"ch2\" value=\"\" type=\"password\" disabled > ".getBytes());
+            builder.replace("document.write('<INPUT size=\"10\" ');".getBytes(), " ".getBytes());
+            builder.replace("document.write('<INPUT size=\"5\" ');".getBytes(), " ".getBytes());
+            return builder.create(content.getInputStream());
           }
         };
       }

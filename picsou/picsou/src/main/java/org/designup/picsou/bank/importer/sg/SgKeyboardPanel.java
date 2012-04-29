@@ -3,6 +3,7 @@ package org.designup.picsou.bank.importer.sg;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
+import org.designup.picsou.bank.importer.WebBankPage;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
@@ -62,7 +63,7 @@ class SgKeyboardPanel extends JPanel {
 
     public void init(HtmlElement map) {
       this.surlignage = map.getElementById("surlignage");
-      imageSurlignage = SG.getFirstImage(surlignage);
+      imageSurlignage = WebBankPage.getFirstImage(surlignage);
 
       scare = new HtmlElement[4][4];
       for (int i = 0; i < 4; i++) {

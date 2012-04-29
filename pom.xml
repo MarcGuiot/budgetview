@@ -13,6 +13,7 @@
     <module>uispec4j</module>
     <module>saxstack</module>
     <module>prevayler</module>
+    <!--<module>htmlunit</module>-->
     <!--<module>globs/samples</module>-->
   </modules>
 
