@@ -112,8 +112,8 @@ public class OfxConnection {
       connection.setRequestProperty("Content-Length", String.valueOf(outBuffer.size()));
       connection.setRequestProperty("Accept", "*/*, application/x-ofx");
       connection.setDoOutput(true);
-      connection.setConnectTimeout(10000);
-      connection.setReadTimeout(10000);
+      connection.setConnectTimeout(60000);
+      connection.setReadTimeout(60000);
       connection.connect();
 
       OutputStream out = connection.getOutputStream();
@@ -134,7 +134,7 @@ public class OfxConnection {
       Log.write("ofx time out", e);
       throw new RuntimeException(Lang.get("synchro.ofx.timeout"));
     }
-
+    
     return in;
   }
 
