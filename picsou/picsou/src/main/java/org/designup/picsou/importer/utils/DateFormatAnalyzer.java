@@ -16,8 +16,10 @@ public class DateFormatAnalyzer {
 
   public List<String> parse(Set<String> dates) throws InvalidData {
     dates.remove(null);
-    List<String> result = getAllFormats();
+    return parse(dates, getAllFormats());
+  }
 
+  public List<String> parse(Set<String> dates, List<String> possibleFormat) {
     int maxFirst = 0;
     int maxSecond = 0;
     int maxThird = 0;
@@ -47,47 +49,46 @@ public class DateFormatAnalyzer {
     calendar.setTime(referenceDate);
     int maxYear = calendar.get(Calendar.YEAR) + 1;
     if (toYear(maxFirst) > maxYear && maxFirst < 100) {
-      result.remove("yy/MM/dd");
-      result.remove("yyyy/MM/dd");
+      possibleFormat.remove("yy/MM/dd");
     }
     if (toYear(maxThird) > maxYear && maxThird < 100) {
-      result.remove("dd/MM/yyyy");
-      result.remove("dd/MM/yy");
-      result.remove("MM/dd/yyyy");
-      result.remove("MM/dd/yy");
+      possibleFormat.remove("dd/MM/yyyy");
+      possibleFormat.remove("dd/MM/yy");
+      possibleFormat.remove("MM/dd/yyyy");
+      possibleFormat.remove("MM/dd/yy");
     }
 
     if (maxFirst > 12) {
-      result.remove("MM/dd/yy");
-      result.remove("MM/dd/yyyy");
+      possibleFormat.remove("MM/dd/yy");
+      possibleFormat.remove("MM/dd/yyyy");
     }
     if (maxSecond > 12) {
-      result.remove("dd/MM/yy");
-      result.remove("dd/MM/yyyy");
-      result.remove("yy/MM/dd");
-      result.remove("yyyy/MM/dd");
+      possibleFormat.remove("dd/MM/yy");
+      possibleFormat.remove("dd/MM/yyyy");
+      possibleFormat.remove("yy/MM/dd");
+      possibleFormat.remove("yyyy/MM/dd");
     }
 
     if (maxFirst > 31) {
-      result.remove("dd/MM/yy");
-      result.remove("dd/MM/yyyy");
+      possibleFormat.remove("dd/MM/yy");
+      possibleFormat.remove("dd/MM/yyyy");
     }
     if (maxSecond > 31) {
-      result.remove("MM/dd/yy");
-      result.remove("MM/dd/yyyy");
+      possibleFormat.remove("MM/dd/yy");
+      possibleFormat.remove("MM/dd/yyyy");
     }
     if (maxThird > 31) {
-      result.remove("yy/MM/dd");
-      result.remove("yyyy/MM/dd");
+      possibleFormat.remove("yy/MM/dd");
+      possibleFormat.remove("yyyy/MM/dd");
     }
 
-    if (result.isEmpty()){
-      result = getAllFormats();
+    if (possibleFormat.isEmpty()){
+      possibleFormat = getAllFormats();
     }
-    for (int i = 0, size = result.size(); i < size; i++) {
-      result.set(i, result.get(i).replace('/', separator));
+    for (int i = 0, size = possibleFormat.size(); i < size; i++) {
+      possibleFormat.set(i, possibleFormat.get(i).replace('/', separator));
     }
-    return result;
+    return possibleFormat;
   }
 
   public static List<String> getAllFormats() {

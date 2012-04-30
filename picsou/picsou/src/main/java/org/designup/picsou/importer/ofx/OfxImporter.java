@@ -269,10 +269,11 @@ public class OfxImporter implements AccountFileImporter {
     private Date parseDate(String content) {
       Date value;
       try {
-        // on supprime les 6 zero
+        // on supprime les 6 zeros si il y en a
         String substring = content.length() == 14 ? content.substring(0, 8) : content;
         DateFormatAnalyzer formatAnalyzer = new DateFormatAnalyzer(TimeService.getToday());
-        List<String> parse = formatAnalyzer.parse(Collections.singleton(substring));
+        List<String> parse = formatAnalyzer.parse(Collections.singleton(substring), 
+                                                  new ArrayList<String>(Arrays.asList("yy/MM/dd", "dd/MM/yy")));
         SimpleDateFormat format = DATE_FORMAT;
         if (parse.size() == 1) {
           format = new SimpleDateFormat(parse.get(0));
