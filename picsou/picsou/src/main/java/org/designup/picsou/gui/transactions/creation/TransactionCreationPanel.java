@@ -127,11 +127,15 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
     Integer currentMonth = months.getSortedSet(Month.ID).last();
     repository.findOrCreate(PROTOTYPE_TRANSACTION_KEY);
+    updateMonth(repository, currentMonth);
+  }
+
+  static private void updateMonth(GlobRepository repository, Integer currentMonth) {
     repository.update(PROTOTYPE_TRANSACTION_KEY,
-                      value(Transaction.MONTH, currentMonth),
-                      value(Transaction.BUDGET_MONTH, currentMonth),
-                      value(Transaction.POSITION_MONTH, currentMonth),
-                      value(Transaction.BANK_MONTH, currentMonth));
+                           value(Transaction.MONTH, currentMonth),
+                           value(Transaction.BUDGET_MONTH, currentMonth),
+                           value(Transaction.POSITION_MONTH, currentMonth),
+                           value(Transaction.BANK_MONTH, currentMonth));
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -184,7 +188,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
       if (selectedMonthId < 0) {
         return;
       }
-      repository.update(PROTOTYPE_TRANSACTION_KEY, Transaction.MONTH, selectedMonthId);
+      updateMonth(repository, selectedMonthId);
     }
   }
 

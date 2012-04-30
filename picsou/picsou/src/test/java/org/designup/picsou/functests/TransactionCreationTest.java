@@ -421,5 +421,13 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       {"20/05/2008", "", "TRANSACTION 2", -100.00},
       {"25/07/2008", "", "TRANSACTION 3", -200.00},
     });
+
+    timeline.selectAll();
+    transactions.initContent()
+      .add("25/07/2008", "25/07/2008", TransactionType.MANUAL, "TRANSACTION 3", "", -200.00)
+      .add("20/05/2008", TransactionType.MANUAL, "TRANSACTION 2", "", -100.00)
+      .add("15/05/2008", "15/05/2008", TransactionType.MANUAL, "TRANSACTION 1", "", -10.00)
+      .check();
+
   }
 }
