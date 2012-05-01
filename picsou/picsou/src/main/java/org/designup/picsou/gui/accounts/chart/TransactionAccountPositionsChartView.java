@@ -52,7 +52,7 @@ public class TransactionAccountPositionsChartView extends AccountsChartView {
     if (accountIds == null || accountIds.isEmpty()) {
       histoChartBuilder.showDailyHisto(currentMonthId, true,
                                        Matchers.transactionsForMainAccounts(repository),
-                                       daySelection, "daily");
+                                       daySelection, "daily", Transaction.SUMMARY_POSITION);
     }
     else {
       histoChartBuilder.showAccountDailyHisto(currentMonthId, true, accountIds, daySelection, "daily");

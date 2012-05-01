@@ -12,10 +12,7 @@ import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.gui.utils.DaySelection;
 import org.designup.picsou.gui.utils.Matchers;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountType;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Month;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -133,7 +130,7 @@ public class SavingsView extends View implements GlobSelectionListener {
           if (account.exists()) {
             histoChartBuilder.showDailyHisto(currentMonthId, false,
                                              Matchers.transactionsForAccount(account.get(Account.ID)),
-                                             DaySelection.EMPTY, "daily");
+                                             DaySelection.EMPTY, "daily", Transaction.ACCOUNT_POSITION);
           }
         }
       };

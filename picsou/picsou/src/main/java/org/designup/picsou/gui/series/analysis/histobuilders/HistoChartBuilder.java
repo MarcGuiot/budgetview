@@ -154,11 +154,11 @@ public class HistoChartBuilder {
   }
 
   public void showMainDailyHisto(int selectedMonthId, boolean showFullMonthLabels, String daily) {
-    showDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForMainAccounts(repository), DaySelection.EMPTY, daily);
+    showDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForMainAccounts(repository), DaySelection.EMPTY, daily, Transaction.SUMMARY_POSITION);
   }
 
   public void showSavingsDailyHisto(int selectedMonthId, boolean showFullMonthLabels) {
-    showDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForSavingsAccounts(repository), DaySelection.EMPTY, "daily");
+    showDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForSavingsAccounts(repository), DaySelection.EMPTY, "daily", Transaction.SUMMARY_POSITION);
   }
 
   public void showAccountDailyHisto(int selectedMonthId, boolean showFullMonthLabels, Set<Integer> accountIds, DaySelection daySelection, String daily) {
@@ -222,7 +222,7 @@ public class HistoChartBuilder {
 
   }
 
-  public void showDailyHisto(int selectedMonthId, boolean showFullMonthLabels, GlobMatcher accountMatcher, DaySelection daySelection, String daily) {
+  public void showDailyHisto(int selectedMonthId, boolean showFullMonthLabels, GlobMatcher accountMatcher, DaySelection daySelection, String daily, final DoubleField position) {
     HistoDailyDatasetBuilder builder = createDailyDataset(daily, showFullMonthLabels);
 
     List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
@@ -230,7 +230,7 @@ public class HistoChartBuilder {
       return;
     }
 
-    Double lastValue = getLastValue(accountMatcher, monthIdsToShow, Transaction.SUMMARY_POSITION);
+    Double lastValue = getLastValue(accountMatcher, monthIdsToShow, position);
 
     for (int monthId : monthIdsToShow) {
       GlobList transactions = repository.findByIndex(Transaction.POSITION_INDEX, monthId)
@@ -243,7 +243,7 @@ public class HistoChartBuilder {
       }
 
       Double[] minValues = new Double[maxDay];
-      lastValue = getDailyValues(monthId, transactions, lastValue, maxDay, minValues, Transaction.SUMMARY_POSITION);
+      lastValue = getDailyValues(monthId, transactions, lastValue, maxDay, minValues, position);
 
       builder.add(monthId, minValues, monthId == selectedMonthId, daySelection.getValues(monthId, maxDay));
     }

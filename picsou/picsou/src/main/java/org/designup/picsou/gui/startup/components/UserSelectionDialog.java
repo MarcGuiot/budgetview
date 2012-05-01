@@ -1,9 +1,7 @@
 package org.designup.picsou.gui.startup.components;
 
-import com.sun.java.swing.action.OkAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
@@ -49,7 +47,7 @@ public class UserSelectionDialog {
       }
     });
     dialog = PicsouDialog.create(directory.get(JFrame.class), true, directory);
-    
+
     JPanel panel = builder.load();
     dialog.addPanelWithButtons(panel, new OkAction(), new CancelAction());
   }
@@ -64,7 +62,7 @@ public class UserSelectionDialog {
     GuiUtils.showCentered(dialog);
     return result;
   }
-  
+
   private class OkAction extends AbstractAction {
 
     public OkAction() {
