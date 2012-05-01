@@ -150,5 +150,31 @@ public class PropertySetter {
     public String toString() {
       return "ComponentColorUpdater for " + objectClass + "." + setter.getName() + "(...)";
     }
+
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+
+      ComponentColorUpdater updater = (ComponentColorUpdater)o;
+
+      if (object != null ? !object.equals(updater.object) : updater.object != null) {
+        return false;
+      }
+      if (property != null ? !property.equals(updater.property) : updater.property != null) {
+        return false;
+      }
+
+      return true;
+    }
+
+    public int hashCode() {
+      int result = property != null ? property.hashCode() : 0;
+      result = 31 * result + (object != null ? object.hashCode() : 0);
+      return result;
+    }
   }
 }

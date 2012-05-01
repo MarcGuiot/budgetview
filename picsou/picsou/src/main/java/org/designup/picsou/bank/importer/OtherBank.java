@@ -15,6 +15,7 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -26,8 +27,8 @@ public class OtherBank extends WebBankPage {
 
   public static class Init implements BankSynchroService.BankSynchro {
 
-    public GlobList show(Directory directory, GlobRepository repository) {
-      OtherBank bank = new OtherBank(directory, repository);
+    public GlobList show(Window parent, Directory directory, GlobRepository repository) {
+      OtherBank bank = new OtherBank(parent, directory, repository);
       bank.init();
       return bank.show();
     }
@@ -87,8 +88,8 @@ public class OtherBank extends WebBankPage {
     return builder.load();
   }
 
-  public OtherBank(Directory directory, GlobRepository repository) {
-    super(directory, repository, ID);
+  public OtherBank(Window parent, Directory directory, GlobRepository repository) {
+    super(parent, directory, repository, ID);
   }
 
   public void loadFile() {

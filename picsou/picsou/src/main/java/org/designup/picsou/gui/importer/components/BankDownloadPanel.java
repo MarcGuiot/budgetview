@@ -75,7 +75,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
     builder.add("synchronize", new AbstractAction(Lang.get("synchro.open")) {
       public void actionPerformed(ActionEvent actionEvent) {
         BankSynchroService bankSynchroService = directory.get(BankSynchroService.class);
-        GlobList realAccount = bankSynchroService.show(bankId, directory, repository);
+        GlobList realAccount = bankSynchroService.show(parent, bankId, directory, repository);
         if (!realAccount.isEmpty()) {
           synchronize(realAccount);
         }

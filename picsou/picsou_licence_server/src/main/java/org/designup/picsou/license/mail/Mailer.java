@@ -3,13 +3,8 @@ package org.designup.picsou.license.mail;
 import org.designup.picsou.license.Lang;
 import org.apache.log4j.Logger;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.AddressException;
+import javax.mail.*;
+import javax.mail.internet.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -84,6 +79,9 @@ public class Mailer {
     Session session = Session.getDefaultInstance(mailProperties);
 
     MimeMessage message = new MimeMessage(session);
+    Multipart multipart = new MimeMultipart();
+    BodyPart text = new MimeBodyPart();
+    text.setText(content);
     message.setFrom(new InternetAddress(from));
     message.setSubject(subjet);
     message.setSentDate(new Date());
@@ -155,6 +153,7 @@ public class Mailer {
         inc();
         sendMail(mail, fromAdress, Lang.get("new.license.subject", lang),
                  Lang.get("new.license.message", lang, code, mail));
+                 //,Lang.get("new.license.message.text", lang, code, mail));
         return true;
       }
       catch (Exception e) {
@@ -185,6 +184,7 @@ public class Mailer {
         inc();
         sendMail(mail, fromAdress, Lang.get(prefix + ".license.subject", lang),
                  Lang.get(prefix + ".license.message", lang, activationCode, mail));
+                 //, Lang.get(prefix + ".license.message.text", lang, activationCode, mail));
         return true;
       }
       catch (Exception e) {

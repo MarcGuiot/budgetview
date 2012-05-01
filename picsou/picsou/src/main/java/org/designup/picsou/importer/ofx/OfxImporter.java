@@ -2,7 +2,9 @@ package org.designup.picsou.importer.ofx;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.importer.utils.InvalidFileFormat;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.importer.AccountFileImporter;
+import org.designup.picsou.importer.utils.DateFormatAnalyzer;
 import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;
@@ -18,10 +20,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OfxImporter implements AccountFileImporter {
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
@@ -270,7 +269,16 @@ public class OfxImporter implements AccountFileImporter {
     private Date parseDate(String content) {
       Date value;
       try {
-        value = DATE_FORMAT.parse(content.substring(0, 8));
+        // on supprime les 6 zeros si il y en a
+        String substring = content.length() == 14 ? content.substring(0, 8) : content;
+        DateFormatAnalyzer formatAnalyzer = new DateFormatAnalyzer(TimeService.getToday());
+        List<String> parse = formatAnalyzer.parse(Collections.singleton(substring), 
+                                                  new ArrayList<String>(Arrays.asList("yy/MM/dd", "dd/MM/yy")));
+        SimpleDateFormat format = DATE_FORMAT;
+        if (parse.size() == 1) {
+          format = new SimpleDateFormat(parse.get(0));
+        }
+        value = format.parse(substring);
       }
       catch (ParseException e) {
         throw new RuntimeException(e);

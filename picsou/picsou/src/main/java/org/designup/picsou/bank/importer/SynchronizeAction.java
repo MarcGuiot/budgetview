@@ -35,7 +35,7 @@ public class SynchronizeAction extends AbstractAction {
   public void actionPerformed(ActionEvent e) {
     GlobList realAccounts = repository.getAll(RealAccount.TYPE);
     BankSynchroService bankSynchroService = directory.get(BankSynchroService.class);
-    GlobList list = bankSynchroService.show(realAccounts, directory, repository);
+    GlobList list = bankSynchroService.show(directory.get(JFrame.class), realAccounts, directory, repository);
     if (!list.isEmpty()) {
       ImportFileAction fileAction = ImportFileAction.sync(repository, directory, list);
       fileAction.actionPerformed(null);

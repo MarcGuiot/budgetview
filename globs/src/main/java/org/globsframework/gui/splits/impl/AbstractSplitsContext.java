@@ -13,9 +13,7 @@ import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractSplitsContext implements SplitsContext {
   private Map<String, SplitsNode<Component>> componentsByName = new HashMap<String, SplitsNode<Component>>();
@@ -25,7 +23,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
   private java.util.List<AutoHideListener> autoHideListeners = new ArrayList<AutoHideListener>();
   private Map<String, RepeatHandler> repeats = new HashMap<String, RepeatHandler>();
   private Map<JLabel, String> labelForAssociations = new HashMap<JLabel, String>();
-  private java.util.List<Disposable> disposables = new ArrayList<Disposable>();
+  private Map<Disposable, Disposable> disposables = new HashMap<Disposable, Disposable>();
   private Map<String, HyperlinkListener> hyperlinkListenersByName = new HashMap<String, HyperlinkListener>();
 
   public void addComponent(String id, SplitsNode<Component> component) {
@@ -160,7 +158,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     for (RepeatHandler repeatHandler : repeats.values()) {
       repeatHandler.dispose();
     }
-    for (Disposable listener : disposables) {
+    for (Disposable listener : disposables.values()) {
       listener.dispose();
     }
   }
@@ -201,7 +199,10 @@ public abstract class AbstractSplitsContext implements SplitsContext {
   }
 
   public void addDisposable(Disposable listener) {
-    this.disposables.add(listener);
+    Disposable previous = this.disposables.put(listener, listener);
+    if (previous != null){
+      previous.dispose();
+    }
   }
 
   protected static class AutoHideListener {

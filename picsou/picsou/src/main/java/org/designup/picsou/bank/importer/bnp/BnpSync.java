@@ -1,4 +1,4 @@
-package org.designup.picsou.bank.importer.sg;
+package org.designup.picsou.bank.importer.bnp;
 
 import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.javascript.host.Event;
@@ -27,6 +27,7 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
+import javax.imageio.ImageReader;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -39,24 +40,26 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class SG extends WebBankPage {
-  private static final String INDEX = "https://particuliers.secure.societegenerale.fr/index.html";
-  private static final String URL_TELECHARGEMENT = "https://particuliers.secure.societegenerale.fr/restitution/tel_telechargement.html";
+public class BnpSync extends WebBankPage {
+  private static final int BANK_ID = 5;
+
+  private static final String INDEX = "https://www.secure.bnpparibas.net/banque/portail/particulier/HomeConnexion?type=homeconnex";
+  private static final String URL_TELECHARGEMENT
+    = "https://particuliers.secure.societegenerale.fr/restitution/tel_telechargement.html";
   //  private static final String INDEX = "file:index.html";
   //  private static final String URL_TELECHARGEMENT = "file:tel_telechargement.html";
-  public static final Integer SG_ID = 4;
   private JButton corriger;
-  private SgKeyboardPanel keyboardPanel;
+  private BnpKeyboardPanel keyboardPanel;
   private JButton valider;
-  private JButton validerCode;
   private JTextField code;
   private JTextField passwordField;
   private InfiniteProgressPanel progressPanel = new InfiniteProgressPanel();
+  private HtmlElement input;
+  private BufferedImage clavier;
 
 
   public static void main(String[] args) throws IOException {
     DefaultDirectory defaultDirectory = new DefaultDirectory();
-    defaultDirectory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     defaultDirectory.add(SelectionService.class, new SelectionService());
     defaultDirectory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     defaultDirectory.add(DescriptionService.class, new PicsouDescriptionService());
@@ -74,11 +77,11 @@ public class SG extends WebBankPage {
       }
     });
 
-    JFrame frame = new JFrame("test SG");
+    JFrame frame = new JFrame("test BNP");
     defaultDirectory.add(JFrame.class, frame);
     frame.setSize(100, 100);
     frame.setVisible(true);
-    SG sg = new SG(frame, defaultDirectory, new DefaultGlobRepository(new DefaultGlobIdGenerator()));
+    BnpSync sg = new BnpSync(frame, defaultDirectory, new DefaultGlobRepository(new DefaultGlobIdGenerator()));
     sg.init();
     sg.show();
   }
@@ -86,23 +89,23 @@ public class SG extends WebBankPage {
   public static class Init implements BankSynchroService.BankSynchro {
 
     public GlobList show(Window parent, Directory directory, GlobRepository repository) {
-      SG sg = SG.init(parent, directory, repository);
+      BnpSync sg = BnpSync.init(parent, directory, repository);
       sg.init();
       return sg.show();
     }
   }
 
-  public SG(Window parent, final Directory directory, GlobRepository repository) {
-    super(parent, directory, repository, SG_ID);
+  public BnpSync(Window parent, Directory directory, GlobRepository repository) {
+    super(parent, directory, repository, BANK_ID);
   }
 
-  public static SG init(Window parent, final Directory directory, GlobRepository repository) {
-    return new SG(parent, directory, repository);
+  public static BnpSync init(Window parent, final Directory directory, GlobRepository repository) {
+    return new BnpSync(parent, directory, repository);
   }
 
   public JPanel getPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
-    builder.setSource(getClass(), "/layout/bank/connection/sgPanel.splits");
+    builder.setSource(getClass(), "/layout/bank/connection/bnpPanel.splits");
 //    builder.add("occupedPanel", accupedPanel);
     initCardCode(builder);
     progressPanel.setVisible(true);
@@ -111,10 +114,12 @@ public class SG extends WebBankPage {
       public void run() {
         try {
           loadPage(INDEX);
+          String s = page.asXml();
+          System.out.println("BnpSync.run " + s);
           progressPanel.stop();
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-              validerCode.setEnabled(true);
+              initImg();
             }
           });
         }
@@ -123,6 +128,7 @@ public class SG extends WebBankPage {
           e.printStackTrace();
         }
       }
+
     };
     thread.start();
     return builder.load();
@@ -133,16 +139,11 @@ public class SG extends WebBankPage {
     code.setName("code");
     builder.add(code);
 
-    validerCode = new JButton(Lang.get("bank.sg.code.valider"));
-    validerCode.setName("validerCode");
-    builder.add(validerCode);
-    validerCode.addActionListener(new ValiderActionListener());
-
     passwordField = new JTextField();
     passwordField.setEditable(false);
     builder.add("password", passwordField);
 
-    keyboardPanel = new SgKeyboardPanel(passwordField);
+    keyboardPanel = new BnpKeyboardPanel(passwordField);
     keyboardPanel.setName("imageClavier");
     builder.add(keyboardPanel);
 
@@ -153,13 +154,44 @@ public class SG extends WebBankPage {
     valider = new JButton(Lang.get("bank.sg.valider"));
     valider.setName("valider");
     builder.add(valider);
+    valider.addActionListener(new ValiderActionListener());
 
     builder.add("progressPanel", progressPanel);
 
-    validerCode.setEnabled(false);
     corriger.setEnabled(false);
     valider.setEnabled(false);
   }
+
+  private void initImg() {
+    HtmlElement body = page.getBody();
+    client.waitForBackgroundJavaScript(10000);
+    List<HtmlElement> attribute = body.getElementsByAttribute(HtmlInput.TAG_NAME, "name", "ch1");
+    if (attribute.size() != 1) {
+      throw new RuntimeException("Fail to find input name='ch1' (" + attribute.size() + " element ) in " + page.asXml());
+    }
+    input = attribute.get(0);
+
+    List<HtmlElement> usemap = body.getElementsByAttribute(HtmlImage.TAG_NAME, "usemap", "#MapGril");
+    if (usemap.size() != 1) {
+      throw new RuntimeException("Can not find image " + usemap.size() + " in " + page.asXml());
+    }
+    HtmlImage image = (HtmlImage)usemap.get(0);
+    image.fireEvent(Event.TYPE_LOAD);
+    clavier = getFirstImage(image);
+    keyboardPanel.setSize(clavier.getWidth(), clavier.getHeight());
+    List<HtmlElement> name = page.getElementsByName("MapGril");
+    if (name.size() == 0) {
+      throw new RuntimeException("Can not find MapGril"+ " in " + page.asXml());
+    }
+    List<HtmlElement> password = body.getElementsByAttribute(HtmlInput.TAG_NAME, "name", "ch2");
+    if (password.size() == 0) {
+      throw new RuntimeException("Can not find input name='ch2'"+ " in " + page.asXml());
+    }
+    keyboardPanel.setImage(clavier, name.get(0), (HtmlInput)password.get(0));
+    corriger.setEnabled(true);
+    valider.setEnabled(true);
+  }
+
 
   protected Double extractAmount(String position) {
     return Amounts.extractAmount(position.replace("EUR", ""));
@@ -167,35 +199,11 @@ public class SG extends WebBankPage {
 
   private class ValiderActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
-      try {
-        HtmlElement elementById = page.getElementById("codcli");
-        ((HtmlInput)elementById).setValueAttribute(code.getText());
-        page = page.getElementById("button").click();
-        if (hasError) {
-          hasError = false;
-          return;
-        }
-
-        HtmlElement zoneClavier = page.getElementById("tc_cvcs");
-        HtmlInput password = (HtmlInput)zoneClavier.getElementById("tc_visu_saisie");
-        HtmlImage htmlImageClavier = zoneClavier.getElementById("img_clavier");
-        htmlImageClavier.fireEvent(Event.TYPE_LOAD);
-        final BufferedImage imageClavier = getFirstImage(htmlImageClavier);
-        keyboardPanel.setSize(imageClavier.getWidth(), imageClavier.getHeight());
-        HtmlElement map = zoneClavier.getElementById("tc_tclavier");
-        keyboardPanel.setImage(imageClavier, map, password);
-
-        HtmlImage corrigerImg = zoneClavier.getElementById("tc_corriger");
-        corriger.setAction(new CorrigerActionListener(corrigerImg, password));
-        corriger.setEnabled(true);
-
-        HtmlImage validerImg = zoneClavier.getElementById("tc_valider");
-        valider.setAction(new ValiderPwdActionListener(validerImg));
-        valider.setEnabled(true);
-      }
-      catch (IOException e1) {
-        e1.printStackTrace();
-      }
+      String text = code.getText();
+      System.out.println(text);
+      input.setTextContent(text);
+      String s = page.asXml();
+      System.out.println("BnpSync$ValiderActionListener.actionPerformed " + s);
     }
 
     private class CorrigerActionListener extends AbstractAction {
@@ -253,7 +261,7 @@ public class SG extends WebBankPage {
               hasError = false;
               return;
             }
-            List<HtmlTable> tables = content.getElementsByAttribute(HtmlTable.TAG_NAME, "class", "LGNTableA ListePrestation");
+            List<HtmlTable> tables = content.getElementsByAttribute(HtmlTable.TAG_NAME, "class", "LGNTableA");
             if (tables.size() != 1) {
               throw new RuntimeException("Find " + tables.size() + " table(s) in " + page.asXml());
             }
@@ -283,10 +291,10 @@ public class SG extends WebBankPage {
                 }
                 else if (columnName.equalsIgnoreCase("solde")) {
                   List<HtmlElement> htmlElements = cell.getElementsByAttribute(HtmlDivision.TAG_NAME, "class", "Solde");
-                  if (htmlElements.size() > 0){
+                  if (htmlElements.size() > 0) {
                     HtmlDivision element = (HtmlDivision)htmlElements.get(0);
                     String title = element.getAttribute("title");
-                    if (Strings.isNotEmpty(title)){
+                    if (Strings.isNotEmpty(title)) {
                       date = Dates.extractDateDDMMYYYY(title);
                     }
                     position = element.getTextContent();
@@ -296,7 +304,7 @@ public class SG extends WebBankPage {
                   }
                 }
               }
-              createOrUpdateRealAccount(type, name, position, date, SG_ID);
+              createOrUpdateRealAccount(type, name, position, date, BANK_ID);
             }
             page = client.getPage(URL_TELECHARGEMENT);
             doImport();
@@ -304,7 +312,8 @@ public class SG extends WebBankPage {
         }
         catch (IOException e1) {
           e1.printStackTrace();
-        }finally {
+        }
+        finally {
           endOccuped();
         }
       }
@@ -317,10 +326,10 @@ public class SG extends WebBankPage {
     for (HtmlOption option : accountList) {
       Glob realAccount = find(option, this.accounts);
       if (realAccount != null) {
-          page = (HtmlPage)compte.setSelectedAttribute(option, true);
-          File file = downloadFor(realAccount);
-          if (file != null) {
-            repository.update(realAccount.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+        page = (HtmlPage)compte.setSelectedAttribute(option, true);
+        File file = downloadFor(realAccount);
+        if (file != null) {
+          repository.update(realAccount.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
         }
       }
     }
@@ -409,6 +418,10 @@ public class SG extends WebBankPage {
     HtmlAnchor anchor = findLink(page.getAnchors(), "telecharger");
 
     return downloadFile(realAccount, anchor);
+  }
+
+  public static BufferedImage getFirstImage(HtmlImage img) {
+    return WebBankPage.getFirstImage(img);
   }
 
 }
