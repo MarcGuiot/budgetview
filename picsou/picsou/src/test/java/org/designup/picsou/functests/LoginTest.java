@@ -127,12 +127,26 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .checkSelected("toto")
       .validate();
     login.checkUserName("toto");
-    
-    
+
     login.logNewUser("titi", "p4ssw0rd");
     openNewLoginWindow(false);
 
-    login.logExistingUser("toto", "p4ssw0rd", false);
+    login.checkUserName("");
+    login.checkUserSelectionAvailable();
+    login.openUserSelection()
+      .checkNames("titi", "toto")
+      .checkSelected("titi")
+      .select("toto")
+      .validate();
+    login.checkUserName("toto")
+      .enterPassword("p4ssw0rd")
+      .clickEnter();
+
+    getTransactionView()
+      .initContent()
+      .add("11/01/2006", TransactionType.CHECK, "CHEQUE N°12345", "", -12.00)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
+      .check();
   }
 
   public void testCreatingAUserWithDefaultUserSeriesModeActivated() throws Exception {
