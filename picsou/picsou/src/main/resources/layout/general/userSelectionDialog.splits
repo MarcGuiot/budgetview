@@ -1,0 +1,20 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.formLabel" fill="horizontal" horizontalAlignment="left" marginBottom="4"/>
+  </styles>
+
+  <panel styleClass="dialog" preferredSize="(380,370)" opaque="true">
+    <column styleClass="innerDialog">
+      <label text="$userSelection.title" styleClass="title"/>
+      <label text="$userSelection.intro" styleClass="formLabel"/>
+      <column styleClass="blockScrollBorder">
+        <scrollPane>
+          <list ref="userList"/>
+        </scrollPane>
+      </column>
+    </column>
+  </panel>
+
+</splits>

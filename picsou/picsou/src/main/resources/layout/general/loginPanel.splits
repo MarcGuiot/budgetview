@@ -13,6 +13,13 @@
 
     <style selector=".centered" fill="none" anchor="center" foreground="#707070"/>
 
+    <ui name="autoHideButton"
+        class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        autoHideEnabled="true"/>
+    <style selector="button.userSelectionLink" ui="autoHideButton"
+           font="-,plain,11"
+           foreground="#0000FF" fill="none" anchor="right"/>
+
   </styles>
 
   <panel ui="wave">
@@ -21,7 +28,7 @@
       <filler fill="vertical" weightY="10"/>
 
       <panel ui="loginPanel" name="loginPanel" opaque="false" anchor="center" fill="none" weightY="20"
-             preferredSize="(600,630)">
+             preferredSize="(600,650)">
 
         <column margin="20" anchor="center" fill="none" marginBottom="20">
 
@@ -70,6 +77,8 @@
                   <textField ref="password" gridPos="(1,1)" columns="20"/>
 
                 </grid>
+
+                <button action="selectUser" styleClass="userSelectionLink"/>
 
                 <checkBox ref="createAccountCheckBox"
                           text="$login.create.user.checkbox"

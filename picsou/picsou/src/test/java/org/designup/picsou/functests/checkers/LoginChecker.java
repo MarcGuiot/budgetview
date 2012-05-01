@@ -30,6 +30,11 @@ public class LoginChecker extends GuiChecker {
     loginButton = window.getButton(Lang.get("login.enter"));
   }
 
+  public LoginChecker checkUserName(String name) {
+    assertThat(userField.textEquals(name));
+    return this;
+  }
+
   public LoginChecker enterUserName(String name) {
     userField.setText(name);
     return this;
@@ -114,6 +119,22 @@ public class LoginChecker extends GuiChecker {
 
   public SlaValidationDialogChecker clickEnterAndGetSlaDialog() {
     return SlaValidationDialogChecker.init(loginButton.triggerClick());
+  }
+  
+  public LoginChecker checkUserSelectionAvailable() {
+    checkComponentVisible(window, JButton.class, "selectUser", true);
+    return this;
+  }
+
+  public LoginChecker checkUserSelectionHidden() {
+    Button selectUser = window.getButton("selectUser");
+    assertFalse(selectUser.isEnabled());
+    assertFalse(selectUser.isVisible());
+    return this;
+  }
+
+  public UserSelectionDialogChecker openUserSelection() {
+    return UserSelectionDialogChecker.open(window.getButton("selectUser"));
   }
 
   public void checkComponentsVisible() {

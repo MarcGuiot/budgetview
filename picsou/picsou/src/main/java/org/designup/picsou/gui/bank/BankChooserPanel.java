@@ -32,8 +32,8 @@ public class BankChooserPanel {
                           Window owner) {
 
     builder = new GlobsPanelBuilder(getClass(),
-                                                      "/layout/bank/bankChooserPanel.splits",
-                                                      repository, directory);
+                                    "/layout/bank/bankChooserPanel.splits",
+                                    repository, directory);
 
     GlobListView bankListView = builder.addList("bankList", Bank.TYPE)
       .addDoubleClickAction(validateAction);
@@ -69,7 +69,7 @@ public class BankChooserPanel {
     return panel;
   }
 
-  public void dispose(){
+  public void dispose() {
     builder.dispose();
   }
 }

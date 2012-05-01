@@ -5,6 +5,7 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.components.CustomFocusTraversalPolicy;
 import org.designup.picsou.gui.startup.components.Passwords;
+import org.designup.picsou.gui.startup.components.UserSelectionDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
@@ -19,6 +20,8 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginPanel {
   private JTextField userField = new JTextField(15);
@@ -31,13 +34,13 @@ public class LoginPanel {
   private JEditorPane messageLabel = new JEditorPane();
   private InfiniteProgressPanel progressPanel = new InfiniteProgressPanel();
   private Passwords password = new LoginPasswords();
+  private SelectUserAction selectUserAction = new SelectUserAction();
 
   private JComponent[] creationComponents = {confirmPasswordLabel, confirmPasswordField};
   private MainWindow mainWindow;
   private Directory directory;
   private JPanel panel;
   private boolean useDemoAccount;
-  private java.util.List<ServerAccess.UserInfo> users;
   private String autoLoginUser;
   public static final String AUTOLOG_USER = "autologUser";
 
@@ -92,6 +95,7 @@ public class LoginPanel {
     GuiUtils.initHtmlComponent(messageLabel);
     builder.add("demoMode", new DemoModeAction());
     builder.add("userLogin", loginButton);
+    builder.add("selectUser", selectUserAction);
     builder.addLoader(new SplitsLoader() {
       public void load(Component component, SplitsNode node) {
         panel = (JPanel)component;
@@ -140,7 +144,6 @@ public class LoginPanel {
 
   public JPanel preparePanelForShow(java.util.List<ServerAccess.UserInfo> users) {
     setComponentsEnabled(true);
-    this.users = users;
     autoLoginUser = null;
     for (ServerAccess.UserInfo user : users) {
       if (user.autologin) {
@@ -164,6 +167,9 @@ public class LoginPanel {
     mainWindow.getFrame().setFocusTraversalPolicy(
       new CustomFocusTraversalPolicy(userField, passwordField, confirmPasswordField,
                                      loginButton, creationCheckBox));
+
+    selectUserAction.update(users);
+
     return panel;
   }
 
@@ -188,7 +194,6 @@ public class LoginPanel {
     }
     return true;
   }
-
 
   private void clearMessage() {
     messageLabel.setText("");
@@ -265,6 +270,38 @@ public class LoginPanel {
 
     public void clearMessage() {
       LoginPanel.this.clearMessage();
+    }
+  }
+
+  private class SelectUserAction extends AbstractAction {
+
+    private List<String> names;
+
+    private SelectUserAction() {
+      super(Lang.get("login.selectUser"));
+    }
+
+    public void update(List<ServerAccess.UserInfo> users) {
+      this.names = getNames(users);
+      setEnabled(!names.isEmpty());
+    }
+    
+    private List<String> getNames(List<ServerAccess.UserInfo> users) {
+      List<String> result = new ArrayList<String>();
+      for (ServerAccess.UserInfo user : users) {
+        if (!user.autologin) {
+          result.add(user.name);
+        }
+      }
+      return result;
+    }
+
+    public void actionPerformed(ActionEvent actionEvent) {
+      String selected = UserSelectionDialog.select(names, directory);
+      if (Strings.isNotEmpty(selected)) {
+        userField.setText(selected);
+        passwordField.requestFocus();
+      }
     }
   }
 }

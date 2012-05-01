@@ -88,9 +88,9 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .save();
 
     login.logNewUser("toto", "p4ssw0rd");
-    OperationChecker operationChecker = OperationChecker.init(window);
-    operationChecker.importOfxFile(filePath);
-    operationChecker.checkSetPasswordIsChange();
+    OperationChecker operations = OperationChecker.init(window);
+    operations.importOfxFile(filePath);
+    operations.checkSetPasswordIsChange();
     getTransactionView()
       .initContent()
       .add("11/01/2006", TransactionType.CHECK, "CHEQUE N°12345", "", -12.00)
@@ -104,6 +104,35 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .add("11/01/2006", TransactionType.CHECK, "CHEQUE N°12345", "", -12.00)
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
+  }
+
+  public void testSelectingTheUserInAList() throws Exception {
+    String filePath = OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "Menu K")
+      .addTransaction("2006/01/11", -12.0, "Cheque 12345")
+      .save();
+
+    login.checkUserSelectionHidden();
+    login.logNewUser("toto", "p4ssw0rd");
+    OperationChecker operations = OperationChecker.init(window);
+    operations.importOfxFile(filePath);
+
+    openNewLoginWindow(false);
+
+    login.checkUserName("");
+    login.checkUserSelectionAvailable();
+    login.openUserSelection()
+      .checkNames("toto")
+      .checkSelected("toto")
+      .validate();
+    login.checkUserName("toto");
+    
+    
+    login.logNewUser("titi", "p4ssw0rd");
+    openNewLoginWindow(false);
+
+    login.logExistingUser("toto", "p4ssw0rd", false);
   }
 
   public void testCreatingAUserWithDefaultUserSeriesModeActivated() throws Exception {
