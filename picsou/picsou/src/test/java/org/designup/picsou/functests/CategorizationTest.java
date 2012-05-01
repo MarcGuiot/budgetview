@@ -794,7 +794,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   public void testAutomaticWithInactiveMonth() throws Exception {
     views.selectBudget();
     budgetView.recurring.createSeries().setName("Tel")
-      .setCustom()
+      .setRepeatCustom()
       .toggleMonth(1, 3, 5, 7, 9, 11)
       .validate();
     OfxBuilder
@@ -1185,14 +1185,14 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("Courses 2")
-      .setCustom()
+      .setRepeatCustom()
       .toggleMonth(6)
       .setStartDate(200805)
       .validate();
 
     budgetView.variable.createSeries()
       .setName("Courses 1")
-      .setCustom()
+      .setRepeatCustom()
       .toggleMonth(5)
       .validate();
 
@@ -1229,7 +1229,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("Courses")
-      .setCustom()
+      .setRepeatCustom()
       .setStartDate(200804)
       .validate();
 

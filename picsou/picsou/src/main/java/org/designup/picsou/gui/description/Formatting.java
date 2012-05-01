@@ -29,6 +29,11 @@ public class Formatting {
   private static SimpleDateFormat dateAndTimeFormat;
   private static MessageFormat fullLabelFormat;
 
+
+  public static String toAbsString(Double value) {
+    return toString(Math.abs(value));
+  }
+
   public static String toString(Double value) {
     if (value == null) {
       return "";

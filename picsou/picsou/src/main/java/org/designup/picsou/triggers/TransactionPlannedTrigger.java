@@ -7,7 +7,6 @@ import org.designup.picsou.model.util.Amounts;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
-import org.globsframework.utils.Dates;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.collections.Pair;
@@ -102,7 +101,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(SeriesBudget.AMOUNT)
+        if (values.contains(SeriesBudget.PLANNED_AMOUNT)
             || values.contains(SeriesBudget.ACTIVE)) {
           Glob seriesBudget = repository.get(key);
           listOfSeriesAndMonth.add(new Pair<Integer, Integer>(seriesBudget.get(SeriesBudget.SERIES),
@@ -164,11 +163,11 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       }
 
       Double observedAmount = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT);
-      if (Amounts.isNullOrZero(seriesBudget.get(SeriesBudget.AMOUNT)) || !seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
+      if (Amounts.isNullOrZero(seriesBudget.get(SeriesBudget.PLANNED_AMOUNT)) || !seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
         repository.delete(transactions);
       }
       else if (monthId >= currentMonthId) {
-        Double wantedAmount = seriesBudget.get(SeriesBudget.AMOUNT, 0);
+        Double wantedAmount = seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0);
         double diff = wantedAmount - Utils.zeroIfNull(observedAmount);
         if (((wantedAmount > 0 && diff > 0) || (wantedAmount < 0 && diff < 0)) && !Amounts.isNearZero(diff)) {
           if (repository.get(UserPreferences.KEY).isTrue(UserPreferences.MULTIPLE_PLANNED)) {
@@ -213,7 +212,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     }
     else {
       TheoricalPlanned[] theoricalPlanneds =
-        getTheoricalPlanned(series, repository, monthId, seriesBudget.get(SeriesBudget.AMOUNT));
+        getTheoricalPlanned(series, repository, monthId, seriesBudget.get(SeriesBudget.PLANNED_AMOUNT));
       Double observedAmount = Utils.zeroIfNull(seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT));
       for (TheoricalPlanned theoricalPlanned : theoricalPlanneds) {
         Double wantedAmount = theoricalPlanned.amountForPeriod;

@@ -1,15 +1,15 @@
 package org.designup.picsou.gui.series.analysis.histobuilders.range;
 
-import org.designup.picsou.model.util.MonthRange;
+import org.designup.picsou.model.util.ClosedMonthRange;
 import org.globsframework.model.GlobRepository;
 
 import java.util.List;
 
 public class FixedHistoChartRange extends AbstractHistoChartRange {
 
-  private MonthRange range;
+  private ClosedMonthRange range;
   
-  public FixedHistoChartRange(MonthRange range, GlobRepository repository) {
+  public FixedHistoChartRange(ClosedMonthRange range, GlobRepository repository) {
     super(repository);
     this.range = range;
   }

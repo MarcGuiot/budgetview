@@ -73,7 +73,7 @@ public class ProjectTrigger implements ChangeSetListener {
     Key seriesKey = project.getTargetKey(Project.SERIES);
     for (Glob seriesBudget : repository.getAll(SeriesBudget.TYPE, linkedTo(seriesKey, SeriesBudget.SERIES))) {
       repository.update(seriesBudget.getKey(),
-                        value(SeriesBudget.AMOUNT, 0.00),
+                        value(SeriesBudget.PLANNED_AMOUNT, 0.00),
                         value(SeriesBudget.ACTIVE, false));
     }
 
@@ -97,7 +97,7 @@ public class ProjectTrigger implements ChangeSetListener {
       }
       Glob seriesBudget = seriesBudgetList.getFirst();
       repository.update(seriesBudget.getKey(),
-                        value(SeriesBudget.AMOUNT, seriesBudget.get(SeriesBudget.AMOUNT, 0) + itemAmount),
+                        value(SeriesBudget.PLANNED_AMOUNT, seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0) + itemAmount),
                         value(SeriesBudget.ACTIVE, true));
     }
     repository.update(project.getKey(), value(Project.TOTAL_AMOUNT, totalAmount));

@@ -208,12 +208,12 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     budgetView.savings.alignAndPropagate("Epargne");
 
     budgetView.recurring.editSeries("Courses")
-      .setCustom()
+      .setRepeatCustom()
       .setPeriodMonths(1, 5, 9)
       .validate();
 
     budgetView.savings.editSeries("Epargne")
-      .setCustom()
+      .setRepeatCustom()
       .toggleMonth(1, 3, 6)
       .validate();
 

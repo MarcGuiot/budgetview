@@ -115,14 +115,14 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
         if (seriesBudget.get(SeriesBudget.MONTH) < monthId
             && seriesBudget.isTrue(SeriesBudget.ACTIVE)
             && seriesBudget.get(SeriesBudget.MONTH) > lastmonthId) {
-          amount = seriesBudget.get(SeriesBudget.AMOUNT);
+          amount = seriesBudget.get(SeriesBudget.PLANNED_AMOUNT);
           lastmonthId = seriesBudget.get(SeriesBudget.MONTH);
         }
         if (seriesBudget.get(SeriesBudget.MONTH) == nextMonth) {
           break;
         }
       }
-      repository.update(budget.getKey(), SeriesBudget.AMOUNT, amount);
+      repository.update(budget.getKey(), SeriesBudget.PLANNED_AMOUNT, amount);
     }
     else {
       Double seriesAmount = null; // pour les tests de triggers
@@ -139,7 +139,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
         while (pos >= 0) {
           Glob budgets = existingSeriesBudget[pos];
           if (budgets.isTrue(SeriesBudget.ACTIVE) && !budgets.get(SeriesBudget.MONTH).equals(monthId)) {
-            seriesAmount = budgets.get(SeriesBudget.AMOUNT);
+            seriesAmount = budgets.get(SeriesBudget.PLANNED_AMOUNT);
             break;
           }
           pos--;
@@ -149,7 +149,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
           while (pos < existingSeriesBudget.length - 1) {
             Glob budgets = existingSeriesBudget[pos];
             if (budgets.isTrue(SeriesBudget.ACTIVE) && !budgets.get(SeriesBudget.MONTH).equals(monthId)) {
-              seriesAmount = budgets.get(SeriesBudget.AMOUNT);
+              seriesAmount = budgets.get(SeriesBudget.PLANNED_AMOUNT);
               break;
             }
             pos++;
@@ -159,7 +159,7 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
       if (seriesAmount == null) {
         seriesAmount = series.get(Series.INITIAL_AMOUNT);
       }
-      repository.update(budget.getKey(), SeriesBudget.AMOUNT, seriesAmount);
+      repository.update(budget.getKey(), SeriesBudget.PLANNED_AMOUNT, seriesAmount);
     }
   }
 

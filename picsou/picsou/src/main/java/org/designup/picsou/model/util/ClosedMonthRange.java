@@ -7,9 +7,9 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MonthRange extends Range<Integer> {
+public class ClosedMonthRange extends Range<Integer> {
 
-  public MonthRange(int min, int max) throws InvalidParameterException {
+  public ClosedMonthRange(int min, int max) throws InvalidParameterException {
     super(min, max);
   }
 
@@ -21,10 +21,10 @@ public class MonthRange extends Range<Integer> {
     return result;
   }
   
-  public MonthRange intersection(MonthRange other) {
+  public ClosedMonthRange intersection(ClosedMonthRange other) {
     int min = (other.getMin() > getMin()) ? other.getMin() : getMin();
     int max = (other.getMax() < getMax()) ? other.getMax() : getMax();
-    return new MonthRange(min, max);
+    return new ClosedMonthRange(min, max);
   }
 
   public int length() {

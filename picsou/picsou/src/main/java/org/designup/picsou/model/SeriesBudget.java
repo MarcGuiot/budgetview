@@ -34,7 +34,7 @@ public class SeriesBudget {
   public static LinkField MONTH;
 
   @DoublePrecision(4)
-  public static DoubleField AMOUNT;
+  public static DoubleField PLANNED_AMOUNT;
 
   @DoublePrecision(4)
   public static DoubleField OBSERVED_AMOUNT;
@@ -61,6 +61,16 @@ public class SeriesBudget {
   }
 
   public static Glob findOrCreate(Integer seriesId, Integer monthId, GlobRepository repository) {
+    Glob result = find(seriesId, monthId, repository);
+    if (result != null) {
+      return result;
+    }
+    return repository.create(SeriesBudget.TYPE,
+                             value(SeriesBudget.SERIES, seriesId),
+                             value(SeriesBudget.MONTH, monthId));
+  }
+
+  public static Glob find(Integer seriesId, Integer monthId, GlobRepository repository) {
     GlobList list = getAll(seriesId, monthId, repository);
     if (list.size() > 1) {
       throw new InvalidState("Only one budget should exist for " + seriesId + " / " + monthId);
@@ -68,9 +78,7 @@ public class SeriesBudget {
     if (list.size() == 1) {
       return list.getFirst();
     }
-    return repository.create(SeriesBudget.TYPE,
-                             value(SeriesBudget.SERIES, seriesId),
-                             value(SeriesBudget.MONTH, monthId));
+    return null;
   }
 
   public static class Serializer implements PicsouGlobSerializer {
@@ -80,7 +88,7 @@ public class SeriesBudget {
       SerializedOutput output = serializedByteArrayOutput.getOutput();
       output.writeInteger(fieldValues.get(SeriesBudget.SERIES));
       output.writeInteger(fieldValues.get(SeriesBudget.MONTH));
-      output.writeDouble(fieldValues.get(SeriesBudget.AMOUNT));
+      output.writeDouble(fieldValues.get(SeriesBudget.PLANNED_AMOUNT));
       output.writeInteger(fieldValues.get(SeriesBudget.DAY));
       output.writeBoolean(fieldValues.get(SeriesBudget.ACTIVE));
       output.writeDouble(fieldValues.get(SeriesBudget.OBSERVED_AMOUNT));
@@ -100,7 +108,7 @@ public class SeriesBudget {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(SeriesBudget.SERIES, input.readInteger());
       fieldSetter.set(SeriesBudget.MONTH, input.readInteger());
-      fieldSetter.set(SeriesBudget.AMOUNT, input.readDouble());
+      fieldSetter.set(SeriesBudget.PLANNED_AMOUNT, input.readDouble());
       fieldSetter.set(SeriesBudget.DAY, input.readInteger());
       fieldSetter.set(SeriesBudget.ACTIVE, input.readBoolean());
       fieldSetter.set(SeriesBudget.OBSERVED_AMOUNT, null);
@@ -110,7 +118,7 @@ public class SeriesBudget {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(SeriesBudget.SERIES, input.readInteger());
       fieldSetter.set(SeriesBudget.MONTH, input.readInteger());
-      fieldSetter.set(SeriesBudget.AMOUNT, input.readDouble());
+      fieldSetter.set(SeriesBudget.PLANNED_AMOUNT, input.readDouble());
       fieldSetter.set(SeriesBudget.DAY, input.readInteger());
       fieldSetter.set(SeriesBudget.ACTIVE, input.readBoolean());
       fieldSetter.set(SeriesBudget.OBSERVED_AMOUNT, input.readDouble());

@@ -166,7 +166,7 @@ public class TransactionDetailsChecker extends ViewChecker {
     Button button = getPanel().getButton("shift");
     assertThat(button.isVisible());
     assertThat(button.textEquals("Shift..."));
-    return ConfirmationDialogChecker.init(button.triggerClick());
+    return ConfirmationDialogChecker.open(button.triggerClick());
   }
 
   public void checkShiftEnabled() {

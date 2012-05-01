@@ -28,7 +28,7 @@ public class UpdateActiveBudgetTrigger extends DefaultChangeSetListener {
                 if (!budget.isTrue(SeriesBudget.ACTIVE)) {
                   repository.update(budget.getKey(),
                                     value(SeriesBudget.ACTIVE, true),
-                                    value(SeriesBudget.AMOUNT, 0.00));
+                                    value(SeriesBudget.PLANNED_AMOUNT, 0.00));
                 }
               }
             }

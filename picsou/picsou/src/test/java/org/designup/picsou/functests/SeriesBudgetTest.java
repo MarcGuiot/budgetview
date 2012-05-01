@@ -22,7 +22,7 @@ public class SeriesBudgetTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("Free Telecom", "Free");
     views.selectBudget();
     budgetView.recurring.editSeries("Free")
-      .setTwoMonths()
+      .setRepeatEveryTwoMonths()
       .validate();
 
     timeline.selectMonth("2009/01");

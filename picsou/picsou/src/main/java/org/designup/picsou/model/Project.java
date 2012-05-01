@@ -45,6 +45,9 @@ public class Project {
   }
 
   public static Glob findProject(Glob series, GlobRepository repository) {
+    if (series == null) {
+      return null;
+    }
     GlobList projects = repository.getAll(Project.TYPE, GlobMatchers.linkedTo(series, Project.SERIES));
     if (projects.isEmpty()) {
       return null;

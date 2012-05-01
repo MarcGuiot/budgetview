@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.printing.report;
 
 import org.designup.picsou.gui.printing.PrintableReport;
-import org.designup.picsou.model.util.MonthRange;
+import org.designup.picsou.model.util.ClosedMonthRange;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
@@ -17,7 +17,7 @@ public class BudgetReport implements PrintableReport {
   private PageFormat format;
   private List<ReportPage> pages = new ArrayList<ReportPage>();
 
-  public BudgetReport(Integer currentMonth, MonthRange monthRange, GlobRepository repository, Directory directory) {
+  public BudgetReport(Integer currentMonth, ClosedMonthRange monthRange, GlobRepository repository, Directory directory) {
     this.pages.add(new BudgetOverviewPage(currentMonth, monthRange, repository, directory));
     List<SeriesTable> tables = SeriesTable.getAll(currentMonth, monthRange, repository);
     for (SeriesTable table : tables) {

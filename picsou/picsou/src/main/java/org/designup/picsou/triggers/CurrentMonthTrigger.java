@@ -70,12 +70,12 @@ public class CurrentMonthTrigger implements ChangeSetListener {
               ReadOnlyGlobRepository.MultiFieldIndexed index =
                 repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, aSeries.get(Series.ID));
               Glob previousBudget = index.findByIndex(SeriesBudget.MONTH, previousMonth).getGlobs().getFirst();
-              double diff = previousBudget.get(SeriesBudget.AMOUNT, 0.) - previousBudget.get(SeriesBudget.OBSERVED_AMOUNT, 0.);
+              double diff = previousBudget.get(SeriesBudget.PLANNED_AMOUNT, 0.) - previousBudget.get(SeriesBudget.OBSERVED_AMOUNT, 0.);
               int maxMonthCount = 3;
               for (int month = Month.next(previousMonth); !Amounts.isNearZero(diff) && maxMonthCount != 0; month = Month.next(month), maxMonthCount--) {
                 Glob newBudget = index.findByIndex(SeriesBudget.MONTH, month).getGlobs().getFirst();
                 if (newBudget != null) {
-                  Double newAmount = newBudget.get(SeriesBudget.AMOUNT, 0.);
+                  Double newAmount = newBudget.get(SeriesBudget.PLANNED_AMOUNT, 0.);
                   if (Amounts.sameSign(newAmount + diff, newAmount) || Amounts.isNearZero(newAmount)) {
                     newAmount += diff;
                     diff = 0;
@@ -84,10 +84,10 @@ public class CurrentMonthTrigger implements ChangeSetListener {
                     diff += newAmount;
                     newAmount = 0.;
                   }
-                  repository.update(newBudget.getKey(), SeriesBudget.AMOUNT, newAmount);
+                  repository.update(newBudget.getKey(), SeriesBudget.PLANNED_AMOUNT, newAmount);
                 }
               }
-              repository.update(previousBudget.getKey(), SeriesBudget.AMOUNT,
+              repository.update(previousBudget.getKey(), SeriesBudget.PLANNED_AMOUNT,
                                 previousBudget.get(SeriesBudget.OBSERVED_AMOUNT, 0.) + diff);
             }
           }

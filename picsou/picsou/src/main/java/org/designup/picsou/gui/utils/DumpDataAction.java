@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.utils;
 
-import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.globsframework.model.GlobList;
@@ -8,18 +7,11 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Glob;
 import org.globsframework.model.format.GlobPrinter;
 import static org.globsframework.model.utils.GlobMatchers.*;
-import org.globsframework.model.utils.GlobMatchers;
+
 import org.globsframework.utils.TablePrinter;
-import org.globsframework.utils.Utils;
-import org.globsframework.utils.Strings;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.Comparator;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +54,7 @@ public class DumpDataAction extends AbstractAction {
         series.get(Series.ID),
         budget.get(SeriesBudget.MONTH),
         series.get(Series.NAME),
-        budget.get(SeriesBudget.AMOUNT, 0.),
+        budget.get(SeriesBudget.PLANNED_AMOUNT, 0.),
         budget.get(SeriesBudget.ACTIVE)
       );
     }
@@ -70,6 +62,6 @@ public class DumpDataAction extends AbstractAction {
     System.out.println("SeriesBudget");
     table.print();
 
-    System.out.println("Total " + budgets.getSum(SeriesBudget.AMOUNT));
+    System.out.println("Total " + budgets.getSum(SeriesBudget.PLANNED_AMOUNT));
   }
 }

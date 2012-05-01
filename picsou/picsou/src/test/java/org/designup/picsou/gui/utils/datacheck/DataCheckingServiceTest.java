@@ -85,7 +85,7 @@ public class DataCheckingServiceTest extends TestCase {
                       value(SeriesBudget.MONTH, 200907),
                       value(SeriesBudget.DAY, 1),
                       value(SeriesBudget.SERIES, 1233),
-                      value(SeriesBudget.AMOUNT, 9.));
+                      value(SeriesBudget.PLANNED_AMOUNT, 9.));
     doCheck("Missing series 1233");
   }
 
@@ -135,7 +135,7 @@ public class DataCheckingServiceTest extends TestCase {
                       value(SeriesBudget.DAY, 1),
                       value(SeriesBudget.ACTIVE, true),
                       value(SeriesBudget.SERIES, 123),
-                      value(SeriesBudget.AMOUNT, 9.));
+                      value(SeriesBudget.PLANNED_AMOUNT, 9.));
   }
 
   private void createTransaction(final int monthId) {

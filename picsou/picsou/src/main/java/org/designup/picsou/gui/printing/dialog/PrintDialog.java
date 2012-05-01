@@ -1,13 +1,12 @@
 package org.designup.picsou.gui.printing.dialog;
 
 import org.designup.picsou.gui.components.CancelAction;
-import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.printing.PrinterService;
 import org.designup.picsou.gui.printing.report.BudgetReport;
 import org.designup.picsou.model.Month;
-import org.designup.picsou.model.util.MonthRange;
+import org.designup.picsou.model.util.ClosedMonthRange;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
@@ -88,30 +87,30 @@ public class PrintDialog {
   }
 
   private interface Period {
-    MonthRange getRange();
+    ClosedMonthRange getRange();
   }
 
   private abstract class PeriodSelectionAction extends AbstractAction implements Period {
 
-    private MonthRange range;
+    private ClosedMonthRange range;
 
     public void update(Integer currentMonthId) {
-      MonthRange target = getTargetRange(currentMonthId);
-      MonthRange available = getExistingRange(repository);
+      ClosedMonthRange target = getTargetRange(currentMonthId);
+      ClosedMonthRange available = getExistingRange(repository);
       this.range = target.intersection(available);
       putValue(Action.NAME, getLabel(currentMonthId));
     }
 
     protected abstract String getLabel(Integer currentMonthId);
 
-    protected abstract MonthRange getTargetRange(int currentMonthId);
+    protected abstract ClosedMonthRange getTargetRange(int currentMonthId);
 
-    protected MonthRange getExistingRange(GlobRepository repository) {
+    protected ClosedMonthRange getExistingRange(GlobRepository repository) {
       SortedSet<Integer> months = repository.getAll(Month.TYPE).getSortedSet(Month.ID);
-      return new MonthRange(months.first(), months.last());
+      return new ClosedMonthRange(months.first(), months.last());
     }
 
-    public MonthRange getRange() {
+    public ClosedMonthRange getRange() {
       return range;
     }
 
@@ -126,8 +125,8 @@ public class PrintDialog {
       return Lang.get("print.dialog.option.month", Month.getFullLabel(currentMonthId));
     }
 
-    protected MonthRange getTargetRange(int currentMonthId) {
-      return new MonthRange(Month.previous(currentMonthId),
+    protected ClosedMonthRange getTargetRange(int currentMonthId) {
+      return new ClosedMonthRange(Month.previous(currentMonthId),
                             Month.next(currentMonthId, 10));
     }
   }
@@ -138,9 +137,9 @@ public class PrintDialog {
       return Lang.get("print.dialog.option.year", Integer.toString(Month.toYear(currentMonthId)));
     }
 
-    protected MonthRange getTargetRange(int currentMonthId) {
+    protected ClosedMonthRange getTargetRange(int currentMonthId) {
       int year = Month.toYear(currentMonthId) * 100;
-      return new MonthRange(year + 1, year + 12);
+      return new ClosedMonthRange(year + 1, year + 12);
     }
   }
 }

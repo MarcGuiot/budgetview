@@ -113,7 +113,7 @@ public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
     private boolean from = false;
 
     public void run(Glob budget, GlobRepository repository) throws Exception {
-      if (budget.get(SeriesBudget.AMOUNT, 0) < 0) {
+      if (budget.get(SeriesBudget.PLANNED_AMOUNT, 0) < 0) {
         from = true;
       }
     }

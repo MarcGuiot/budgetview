@@ -1,13 +1,9 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.model.Transaction;
-import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.Key;
-import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import static org.globsframework.model.utils.GlobMatchers.*;
+
+import static org.globsframework.model.utils.GlobMatchers.isTrue;
 
 public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
 
@@ -18,15 +14,14 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
   }
 
   public void testCreateSeriesGeneratesSeriesBudgetsAndTransactions() throws Exception {
-    Integer[] occasional = getBudgetId(0);
     Integer[] free = getBudgetId(FREE_SERIES_ID);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "  <create active='true' amount='-29.9' day='7' id='" + free[2] + "'" +
+      "  <create active='true' plannedAmount='-29.9' day='7' id='" + free[2] + "'" +
       "          month='200809' series='100' type='seriesBudget' />" +
-      "  <create active='true' amount='-29.9' day='7' id='" + free[1] + "'" +
+      "  <create active='true' plannedAmount='-29.9' day='7' id='" + free[1] + "'" +
       "          month='200808' series='100' type='seriesBudget' />" +
-      "  <create active='true' amount='-29.9' day='7' id='" + free[0] + "'" +
+      "  <create active='true' plannedAmount='-29.9' day='7' id='" + free[0] + "'" +
       "          month='200807' series='100' type='seriesBudget' />");
 
     Integer[] ids =

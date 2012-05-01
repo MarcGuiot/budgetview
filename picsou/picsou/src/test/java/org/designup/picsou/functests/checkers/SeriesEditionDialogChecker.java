@@ -269,14 +269,14 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   public void deleteSavingsSeriesWithConfirmation() {
-    ConfirmationDialogChecker.init(dialog.getButton("Delete...").triggerClick())
+    ConfirmationDialogChecker.open(dialog.getButton("Delete...").triggerClick())
       .checkMessageContains("Some operations have been associated")
       .validate();
     assertFalse(dialog.isVisible());
   }
 
   public SeriesEditionDialogChecker deleteSavingsSeriesWithConfirmationAndCancel() {
-    ConfirmationDialogChecker.init(dialog.getButton("Delete...").triggerClick())
+    ConfirmationDialogChecker.open(dialog.getButton("Delete...").triggerClick())
       .checkMessageContains("Some operations have been associated")
       .cancel();
     assertTrue(dialog.isVisible());
@@ -427,52 +427,57 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  public SeriesEditionDialogChecker setIrregular() {
+  public SeriesEditionDialogChecker setRepeatIrregular() {
     getProfileCombo().select(ProfileType.IRREGULAR.getLabel());
     return this;
   }
 
-  public SeriesEditionDialogChecker setSixMonths() {
+  public SeriesEditionDialogChecker setRepeatEverySixMonths() {
     getProfileCombo().select(ProfileType.SIX_MONTHS.getLabel());
     return this;
   }
 
-  public SeriesEditionDialogChecker setTwoMonths() {
+  public SeriesEditionDialogChecker setRepeatEveryTwoMonths() {
     getProfileCombo().select(ProfileType.TWO_MONTHS.getLabel());
     return this;
   }
 
-  public SeriesEditionDialogChecker setThreeMonths() {
+  public SeriesEditionDialogChecker setRepeatEveryThreeMonths() {
     getProfileCombo().select(ProfileType.THREE_MONTHS.getLabel());
     return this;
   }
 
-  public SeriesEditionDialogChecker setCustom() {
+  public SeriesEditionDialogChecker setRepeatCustom() {
     getProfileCombo().select(ProfileType.CUSTOM.getLabel());
     return this;
   }
 
-  public SeriesEditionDialogChecker setEveryMonth() {
+  public SeriesEditionDialogChecker setRepeatEveryMonth() {
     getProfileCombo().select(ProfileType.EVERY_MONTH.getLabel());
     return this;
   }
 
-  public SeriesEditionDialogChecker setOnceAYear() {
+  public SeriesEditionDialogChecker setRepeatOnceAYear() {
     getProfileCombo().select(ProfileType.ONCE_A_YEAR.getLabel());
     return this;
   }
 
-  public SeriesEditionDialogChecker setSingleMonth() {
+  public SeriesEditionDialogChecker setRepeatSingleMonth() {
     getProfileCombo().select(ProfileType.SINGLE_MONTH.getLabel());
     return this;
   }
 
-  public SeriesEditionDialogChecker checkEveryMonthSelected() {
+  public SeriesEditionDialogChecker checkRepeatsEveryMonth() {
     assertThat(getProfileCombo().selectionEquals(ProfileType.EVERY_MONTH.getLabel()));
     return this;
   }
 
-  public SeriesEditionDialogChecker checkSingleMonthSelected() {
+  public SeriesEditionDialogChecker checkRepeatsEveryTwoMonths() {
+    assertThat(getProfileCombo().selectionEquals(ProfileType.TWO_MONTHS.getLabel()));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkRepeatsASingleMonth() {
     assertThat(getProfileCombo().selectionEquals(ProfileType.SINGLE_MONTH.getLabel()));
     return this;
   }

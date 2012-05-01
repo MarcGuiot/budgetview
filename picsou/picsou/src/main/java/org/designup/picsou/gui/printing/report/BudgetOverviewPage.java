@@ -5,8 +5,7 @@ import org.designup.picsou.gui.printing.PrintFonts;
 import org.designup.picsou.gui.printing.PrintMetrics;
 import org.designup.picsou.gui.series.analysis.SeriesChartsPanel;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.FixedHistoChartRange;
-import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
-import org.designup.picsou.model.util.MonthRange;
+import org.designup.picsou.model.util.ClosedMonthRange;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -21,12 +20,12 @@ import java.util.TreeSet;
 public class BudgetOverviewPage extends ReportPage {
 
   private Integer currentMonth;
-  private MonthRange monthRange;
+  private ClosedMonthRange monthRange;
   private GlobRepository repository;
   private Directory directory;
   private JPanel panel;
 
-  public BudgetOverviewPage(Integer currentMonth, MonthRange monthRange, GlobRepository repository, Directory directory) {
+  public BudgetOverviewPage(Integer currentMonth, ClosedMonthRange monthRange, GlobRepository repository, Directory directory) {
     this.currentMonth = currentMonth;
     this.monthRange = monthRange;
     this.repository = repository;

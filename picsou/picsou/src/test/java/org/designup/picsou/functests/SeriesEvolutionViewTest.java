@@ -28,7 +28,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("EDF", "Energy");
     categorization.setNewIncome("WorldCo", "Salary");
 
-    budgetView.recurring.editSeries("Energy").setTwoMonths().validate();
+    budgetView.recurring.editSeries("Energy").setRepeatEveryTwoMonths().validate();
 
     timeline.selectMonth("2008/11");
     budgetView.extras.createSeries()
@@ -300,7 +300,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .checkAmount(500.00)
       .checkPeriodicity("Every month")
       .editSeries()
-      .setTwoMonths()
+      .setRepeatEveryTwoMonths()
       .setEndDate(200812)
       .validate();
 

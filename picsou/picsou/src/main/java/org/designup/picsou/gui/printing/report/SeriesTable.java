@@ -6,7 +6,7 @@ import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.util.Amounts;
-import org.designup.picsou.model.util.MonthRange;
+import org.designup.picsou.model.util.ClosedMonthRange;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -28,7 +28,7 @@ public class SeriesTable {
     {BudgetArea.INCOME, BudgetArea.RECURRING, BudgetArea.VARIABLE, BudgetArea.SAVINGS, BudgetArea.EXTRAS};
 
   public static List<SeriesTable> getAll(Integer currentMonth,
-                                         MonthRange monthRange,
+                                         ClosedMonthRange monthRange,
                                          GlobRepository repository) {
     List<SeriesTable> result = new ArrayList<SeriesTable>();
 

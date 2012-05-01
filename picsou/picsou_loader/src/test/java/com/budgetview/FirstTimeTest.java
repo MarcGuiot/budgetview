@@ -156,7 +156,7 @@ public class FirstTimeTest extends UISpecTestCase {
 
     categorization.selectRecurring().createSeries()
       .setName("impots")
-      .setCustom().toggleMonth(1, 3, 4, 5, 7, 8, 10, 11, 12)
+      .setRepeatCustom().toggleMonth(1, 3, 4, 5, 7, 8, 10, 11, 12)
       .validate();
 
     categorization

@@ -482,7 +482,7 @@ public class CategorizationChecker extends ViewChecker {
       if (first) {
         selectIncome().createSeries()
           .setName(seriesName)
-          .setIrregular()
+          .setRepeatIrregular()
           .validate();
       }
       else {

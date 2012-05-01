@@ -41,11 +41,11 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
     for (Glob seriesBudget : seriesBudgets) {
       if (!seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
         repository.update(seriesBudget.getKey(),
-                          value(SeriesBudget.AMOUNT, 0.00));
+                          value(SeriesBudget.PLANNED_AMOUNT, 0.00));
       }
       else {
         repository.update(seriesBudget.getKey(),
-                          value(SeriesBudget.AMOUNT, Utils.zeroIfNull(previousAmount)));
+                          value(SeriesBudget.PLANNED_AMOUNT, Utils.zeroIfNull(previousAmount)));
         Double currentAmount = previousAmount;
         if (seriesBudget.get(SeriesBudget.MONTH) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
           previousAmount = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT);
@@ -67,7 +67,7 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
         }
         if (firstUpdate && Amounts.isNotZero(previousAmount)) {
           repository.update(seriesBudget.getKey(),
-                            value(SeriesBudget.AMOUNT, Utils.zeroIfNull(previousAmount)));
+                            value(SeriesBudget.PLANNED_AMOUNT, Utils.zeroIfNull(previousAmount)));
           firstUpdate = false;
         }
       }

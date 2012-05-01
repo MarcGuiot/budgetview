@@ -77,7 +77,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("Veranda")
       .setToAccount("Main accounts")
       .setFromAccount("Epargne CA")
-      .setSingleMonth()
+      .setRepeatSingleMonth()
       .setSingleMonthDate(200810)
       .selectMonth(200810)
       .setAmount(10000)
@@ -85,11 +85,11 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/10");
     budgetView.savings.editSeries("Veranda")
-      .checkSingleMonthSelected()
+      .checkRepeatsASingleMonth()
       .checkSingleMonthDate("Oct 2008")
       .checkFromAccount("Epargne CA")
       .checkToAccount("Main accounts")
-      .checkSingleMonthSelected()
+      .checkRepeatsASingleMonth()
       .cancel();
 
     budgetView.savings.editSeries("Epargne")
@@ -176,8 +176,8 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setFromAccount("Main accounts")
       .setToAccount("Epargne LCL")
       .setName("Epargne")
-      .setSixMonths()
-      .setSingleMonth()
+      .setRepeatEverySixMonths()
+      .setRepeatSingleMonth()
       .setSingleMonthDate(200810)
       .checkChart(new Object[][]{
         {"2008", "October", 0.00, 0.00, true}})

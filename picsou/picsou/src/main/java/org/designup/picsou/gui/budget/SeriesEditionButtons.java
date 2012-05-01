@@ -1,15 +1,14 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.budget.components.SeriesPopupButton;
-import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.series.SeriesEditor;
+import org.designup.picsou.gui.series.utils.SeriesPopupFactory;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -28,6 +27,7 @@ public class SeriesEditionButtons {
   private Directory directory;
   private SelectionService selectionService;
   private String createButtonName = "createSeries";
+  private EditSeriesFunctor editSeriesFunctor;
 
   public SeriesEditionButtons(final BudgetArea budgetArea,
                               final GlobRepository repository,
@@ -36,7 +36,8 @@ public class SeriesEditionButtons {
     this.repository = repository;
     this.directory = directory;
     this.selectionService = directory.get(SelectionService.class);
-  }
+    this.editSeriesFunctor = new EditSeriesFunctor();
+}
 
   public void registerButtons(SplitsBuilder builder) {
     builder.add(createButtonName, new CreateSeriesAction());
@@ -48,14 +49,16 @@ public class SeriesEditionButtons {
 
   public GlobButtonView createSeriesButton(Glob series) {
     GlobButtonView buttonView =
-      GlobButtonView.init(Series.TYPE, repository, directory, new EditSeriesFunctor())
+      GlobButtonView.init(Series.TYPE, repository, directory, editSeriesFunctor)
         .forceSelection(series.getKey());
     repository.addChangeListener(new TooltipUpdater(series.getKey(), buttonView.getComponent()));
     return buttonView;
   }
 
   public SeriesPopupButton createSeriesPopupButton(Glob series) {
-    return new SeriesPopupButton(series, new SeriesPopupFactory(series), repository, directory);
+    return new SeriesPopupButton(series,
+                                 editSeriesFunctor,
+                                 repository, directory);
   }
 
   public void setNames(String createButtonName) {
@@ -84,39 +87,6 @@ public class SeriesEditionButtons {
   private void showSeriesEdition(Glob series) {
     Set<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getValueSet(Month.ID);
     SeriesEditor.get(directory).showSeries(series, selectedMonthIds);
-  }
-
-  private class SeriesPopupFactory implements PopupMenuFactory {
-
-    private Glob series;
-    private JPopupMenu menu;
-
-    private SeriesPopupFactory(Glob series) {
-      this.series = series;
-    }
-
-    public JPopupMenu createPopup() {
-      if (menu == null) {
-        menu = new JPopupMenu();
-        menu.add(new AbstractAction(Lang.get("series.edit")) {
-          public void actionPerformed(ActionEvent actionEvent) {
-            showSeriesEdition(series);
-          }
-        });
-        menu.addSeparator();
-        menu.add(new AbstractAction(Lang.get("series.goto.operations")) {
-          public void actionPerformed(ActionEvent actionEvent) {
-            directory.get(NavigationService.class).gotoDataForSeries(series);
-          }
-        });
-        menu.add(new AbstractAction(Lang.get("series.goto.analysis")) {
-          public void actionPerformed(ActionEvent actionEvent) {
-            directory.get(NavigationService.class).gotoAnalysisForSeries(series);
-          }
-        });
-      }
-      return menu;
-    }
   }
 
   private class TooltipUpdater implements ChangeSetListener {

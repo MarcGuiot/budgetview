@@ -42,7 +42,7 @@ public class TransactionUtils {
                                                             Integer currentDay,
                                                             GlobRepository repository) {
     double multiplier = series.get(Series.FROM_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT)) ? -1 : 1;
-    Double amount = multiplier * Math.abs(seriesBudget.get(SeriesBudget.AMOUNT, 0));
+    Double amount = multiplier * Math.abs(seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0));
     boolean isPlanned = (seriesBudget.get(SeriesBudget.MONTH) >= currentMonthId) &&
                         ((seriesBudget.get(SeriesBudget.MONTH) > currentMonthId)
                          || (seriesBudget.get(SeriesBudget.DAY) > currentDay));

@@ -147,7 +147,7 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
         }
         for (Glob budget : seriesBudgets) {
           if (budget.isTrue(SeriesBudget.ACTIVE) && budget.get(SeriesBudget.MONTH) > currentMonthId) {
-            repository.update(budget.getKey(), SeriesBudget.AMOUNT, Utils.zeroIfNull(futureAmount));
+            repository.update(budget.getKey(), SeriesBudget.PLANNED_AMOUNT, Utils.zeroIfNull(futureAmount));
           }
         }
       }
@@ -155,7 +155,7 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
         // c'est le premier
         for (Glob budget : seriesBudgets) {
           if (budget.isTrue(SeriesBudget.ACTIVE) && budget.get(SeriesBudget.MONTH) >= currentMonthId) {
-            repository.update(budget.getKey(), SeriesBudget.AMOUNT, Utils.zeroIfNull(observedAmount));
+            repository.update(budget.getKey(), SeriesBudget.PLANNED_AMOUNT, Utils.zeroIfNull(observedAmount));
           }
         }
       }
@@ -183,22 +183,22 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
       }
 
       if (firstMonthWithObserved == statMonthId && statMonthId.equals(budget.get(SeriesBudget.MONTH))) {
-        repository.update(budget.getKey(), SeriesBudget.AMOUNT, Utils.zeroIfNull(firstMonthAmout));
+        repository.update(budget.getKey(), SeriesBudget.PLANNED_AMOUNT, Utils.zeroIfNull(firstMonthAmout));
         observedAmount = firstMonthAmout;
       }
 
       if (firstMonthWithObserved == 0) {
-        repository.update(budget.getKey(), SeriesBudget.AMOUNT, 0.);
+        repository.update(budget.getKey(), SeriesBudget.PLANNED_AMOUNT, 0.);
         continue;
       }
       // Le premier mois reel de la series, c-a-d celui dans laquel il y a un observedAmount != 0
 
       if (budget.get(SeriesBudget.MONTH) > statMonthId) {
         if (firstMonthWithObserved == budget.get(SeriesBudget.MONTH)) {
-          repository.update(budget.getKey(), SeriesBudget.AMOUNT, Utils.zeroIfNull(firstMonthAmout));
+          repository.update(budget.getKey(), SeriesBudget.PLANNED_AMOUNT, Utils.zeroIfNull(firstMonthAmout));
         }
         else {
-          repository.update(budget.getKey(), SeriesBudget.AMOUNT, Utils.zeroIfNull(observedAmount));
+          repository.update(budget.getKey(), SeriesBudget.PLANNED_AMOUNT, Utils.zeroIfNull(observedAmount));
         }
         Double futureAmount = observedAmount;
         if (budget.get(SeriesBudget.MONTH).equals(currentMonthId)) {
@@ -213,7 +213,7 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
           while (it.hasNext()) {
             Glob futureBudget = (Glob)it.next();
             if (futureBudget.isTrue(SeriesBudget.ACTIVE)) {
-              repository.update(futureBudget.getKey(), SeriesBudget.AMOUNT, Utils.zeroIfNull(futureAmount));
+              repository.update(futureBudget.getKey(), SeriesBudget.PLANNED_AMOUNT, Utils.zeroIfNull(futureAmount));
             }
           }
         }

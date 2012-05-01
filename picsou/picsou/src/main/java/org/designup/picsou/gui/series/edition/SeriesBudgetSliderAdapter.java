@@ -105,7 +105,7 @@ public class SeriesBudgetSliderAdapter implements GlobSliderAdapter, ColorChange
     double maxValue = absValue;
     Set<Double> allValues =
       repository.getAll(SeriesBudget.TYPE, isTrue(SeriesBudget.ACTIVE))
-        .getValueSet(SeriesBudget.AMOUNT);
+        .getValueSet(SeriesBudget.PLANNED_AMOUNT);
     for (Double value : allValues) {
       if (value != null) {
         maxValue = Math.max(maxValue, Math.abs(value));

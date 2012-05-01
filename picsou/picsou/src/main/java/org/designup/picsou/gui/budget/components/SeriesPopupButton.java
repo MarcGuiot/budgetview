@@ -1,9 +1,10 @@
 package org.designup.picsou.gui.budget.components;
 
+import org.designup.picsou.gui.budget.SeriesEditionButtons;
 import org.designup.picsou.gui.components.PopupMouseAdapter;
+import org.designup.picsou.gui.series.utils.SeriesPopupFactory;
 import org.designup.picsou.model.Series;
 import org.globsframework.gui.ComponentHolder;
-import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -17,18 +18,17 @@ public class SeriesPopupButton implements ComponentHolder {
 
   private GlobButtonView buttonView;
   private PopupMouseAdapter mouseAdapter;
+  private SeriesPopupFactory popupFactory;
 
-  public SeriesPopupButton(Glob series,
-                           PopupMenuFactory factory,
-                           GlobRepository repository,
-                           Directory directory) {
-
+  public SeriesPopupButton(Glob series, GlobListFunctor editSeriesFunctor, GlobRepository repository, Directory directory) {
     buttonView = GlobButtonView.init(Series.TYPE, repository, directory, new GlobListFunctor() {
       public void run(GlobList list, GlobRepository repository) {
       }
     })
       .forceSelection(series.getKey());
-    mouseAdapter = new PopupMouseAdapter(factory);
+
+    popupFactory = new SeriesPopupFactory(series, editSeriesFunctor, repository, directory);
+    mouseAdapter = new PopupMouseAdapter(popupFactory);
     buttonView.getComponent().addMouseListener(mouseAdapter);
   }
 
@@ -42,5 +42,9 @@ public class SeriesPopupButton implements ComponentHolder {
 
   public void dispose() {
     buttonView.getComponent().removeMouseListener(mouseAdapter);
+    buttonView.dispose();
+    popupFactory.dispose();
+    popupFactory = null;
+    mouseAdapter = null;
   }
 }

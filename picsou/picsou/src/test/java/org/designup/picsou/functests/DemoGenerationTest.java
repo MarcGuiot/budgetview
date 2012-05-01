@@ -248,7 +248,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction(transaction("plumber")).selectExtras()
       .createSeries()
       .setName(series("plumber"))
-      .setSingleMonth()
+      .setRepeatSingleMonth()
       .validate();
 
     //  ================ SAVINGS   ================
@@ -300,7 +300,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth(Month.toString(secondMonth));
-    budgetView.recurring.editSeries(series("electricity")).setTwoMonths().validate();
+    budgetView.recurring.editSeries(series("electricity")).setRepeatEveryTwoMonths().validate();
 
     timeline.selectMonth(Month.toString(secondMonth));
     budgetView.variable.editSeries(series("groceries"))
@@ -367,7 +367,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setName(series("trip.payment"))
       .setFromAccount(account("provisions"))
       .setToAccount(mainAccounts())
-      .setIrregular()
+      .setRepeatIrregular()
       .setPropagationDisabled()
       .selectMonth(holidaysMonth1)
       .setAmount(700)

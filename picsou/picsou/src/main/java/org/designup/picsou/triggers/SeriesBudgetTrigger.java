@@ -88,7 +88,7 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
 
           FieldValue[] values = new FieldValue[]{
             value(SeriesBudget.SERIES, seriesId),
-            value(SeriesBudget.AMOUNT, getInitialAmount(series, active)),
+            value(SeriesBudget.PLANNED_AMOUNT, getInitialAmount(series, active)),
             value(SeriesBudget.MONTH, monthId),
             value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
             value(SeriesBudget.ACTIVE, active)};
@@ -110,11 +110,11 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
                             value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
                             value(SeriesBudget.ACTIVE, active));
           if (BudgetArea.EXTRAS.getId().equals(series.get(Series.BUDGET_AREA))) {
-            repository.update(seriesBudget.getKey(), SeriesBudget.AMOUNT, seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT));
+            repository.update(seriesBudget.getKey(), SeriesBudget.PLANNED_AMOUNT, seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT));
           }
           else if ((series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId()) &&
                     seriesBudget.get(SeriesBudget.MONTH) > currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))) {
-            repository.update(seriesBudget.getKey(), SeriesBudget.AMOUNT, 0.0);
+            repository.update(seriesBudget.getKey(), SeriesBudget.PLANNED_AMOUNT, 0.0);
           }
         }
       }

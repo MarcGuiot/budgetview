@@ -58,7 +58,7 @@ public class AlignSeriesBudgetAmountsAction extends MultiSelectionAction {
         if (newValue == null) {
           newValue = lastValue;
         }
-        repository.update(seriesBudget.getKey(), SeriesBudget.AMOUNT, newValue);
+        repository.update(seriesBudget.getKey(), SeriesBudget.PLANNED_AMOUNT, newValue);
         lastValue = newValue;
       }
     }

@@ -8,7 +8,7 @@ import org.uispec4j.interception.WindowInterceptor;
 public class ConfirmationDialogChecker extends GuiChecker {
   private Window dialog;
 
-  public static ConfirmationDialogChecker init(Trigger trigger) {
+  public static ConfirmationDialogChecker open(Trigger trigger) {
     return new ConfirmationDialogChecker(WindowInterceptor.getModalDialog(trigger));
   }
 

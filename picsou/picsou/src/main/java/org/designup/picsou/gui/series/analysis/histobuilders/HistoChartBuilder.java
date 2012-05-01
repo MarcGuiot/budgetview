@@ -485,7 +485,7 @@ public class HistoChartBuilder {
       if (!monthsToShow.contains(monthId)) {
         continue;
       }
-      Double planned = adjust(seriesBudget.get(SeriesBudget.AMOUNT, 0.), multiplier);
+      Double planned = adjust(seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0.), multiplier);
       Double actual = adjust(seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT), multiplier);
       builder.add(monthId, planned, actual, selectedMonths.contains(monthId));
     }

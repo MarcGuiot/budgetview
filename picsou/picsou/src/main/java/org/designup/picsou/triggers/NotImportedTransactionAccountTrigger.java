@@ -179,17 +179,17 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
               }
             }
           }
-          if (values.contains(SeriesBudget.AMOUNT)) {
+          if (values.contains(SeriesBudget.PLANNED_AMOUNT)) {
             GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
               .findByIndex(Transaction.POSITION_MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs()
               .filterSelf(and(fieldIn(Transaction.ACCOUNT, accounts),
                               or(isTrue(Transaction.CREATED_BY_SERIES), isTrue(Transaction.PLANNED))), repository);
             for (Glob transaction : transactions) {
               if (transaction.isTrue(Transaction.MIRROR)) {
-                repository.update(transaction.getKey(), Transaction.AMOUNT, -values.get(SeriesBudget.AMOUNT, 0));
+                repository.update(transaction.getKey(), Transaction.AMOUNT, -values.get(SeriesBudget.PLANNED_AMOUNT, 0));
               }
               else {
-                repository.update(transaction.getKey(), Transaction.AMOUNT, values.get(SeriesBudget.AMOUNT, 0));
+                repository.update(transaction.getKey(), Transaction.AMOUNT, values.get(SeriesBudget.PLANNED_AMOUNT, 0));
               }
             }
           }

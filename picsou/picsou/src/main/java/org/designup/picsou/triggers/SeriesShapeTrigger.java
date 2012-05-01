@@ -125,7 +125,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(SeriesBudget.AMOUNT) || values.contains(SeriesBudget.OBSERVED_AMOUNT)) {
+        if (values.contains(SeriesBudget.PLANNED_AMOUNT) || values.contains(SeriesBudget.OBSERVED_AMOUNT)) {
           addFromSeriesBudget(key, repository, lastTransactionMonthId, seriesToReCompute, monthCount);
         }
       }
@@ -475,10 +475,10 @@ public class SeriesShapeTrigger implements ChangeSetListener {
   }
 
   static private boolean isSmallDiff(Glob budget) {
-    if (Amounts.isNearZero(Amounts.zeroIfNull(budget.get(SeriesBudget.AMOUNT)))) {
+    if (Amounts.isNearZero(Amounts.zeroIfNull(budget.get(SeriesBudget.PLANNED_AMOUNT)))) {
       return false;
     }
-    double v = Amounts.zeroIfNull(budget.get(SeriesBudget.OBSERVED_AMOUNT)) / (budget.get(SeriesBudget.AMOUNT));
+    double v = Amounts.zeroIfNull(budget.get(SeriesBudget.OBSERVED_AMOUNT)) / (budget.get(SeriesBudget.PLANNED_AMOUNT));
     return Math.abs(v) > 0.90;
   }
 }

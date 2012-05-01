@@ -334,7 +334,7 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public ConfirmationDialogChecker delete() {
-    return ConfirmationDialogChecker.init(dialog.getButton("Delete...").triggerClick());
+    return ConfirmationDialogChecker.open(dialog.getButton("Delete...").triggerClick());
   }
 
   public void doDelete() {

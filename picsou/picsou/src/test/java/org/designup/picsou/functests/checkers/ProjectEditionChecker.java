@@ -181,7 +181,7 @@ public class ProjectEditionChecker extends GuiChecker {
   }
 
   public void deleteWithConfirmation(String title, String message) {
-    ConfirmationDialogChecker.init(dialog.getButton("Delete").triggerClick())
+    ConfirmationDialogChecker.open(dialog.getButton("Delete").triggerClick())
     .checkTitle(title)
     .checkMessageContains(message)
     .validate("Delete project");
@@ -189,7 +189,7 @@ public class ProjectEditionChecker extends GuiChecker {
   }
 
   public void openDeleteAndNavigate() {
-    ConfirmationDialogChecker.init(dialog.getButton("Delete").triggerClick())
+    ConfirmationDialogChecker.open(dialog.getButton("Delete").triggerClick())
     .clickOnHyperlink("see these operations")
     .checkHidden();
     assertFalse(dialog.isVisible());

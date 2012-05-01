@@ -34,13 +34,13 @@ public class SavingsUpdateSeriesMirrorTrigger extends DefaultChangeSetListener {
             if (value.getField().equals(SeriesBudget.SERIES)) {
               fieldValues[i] = new FieldValue(SeriesBudget.SERIES, mirrorSeriesId);
             }
-            else if (value.getField().equals(SeriesBudget.AMOUNT)) {
-              fieldValues[i] = new FieldValue(SeriesBudget.AMOUNT,
-                                              values.get(SeriesBudget.AMOUNT) == null ? null :
-                                              -sign * Math.abs(values.get(SeriesBudget.AMOUNT)));
-              repository.update(key, SeriesBudget.AMOUNT,
-                                values.get(SeriesBudget.AMOUNT) == null ? null :
-                                sign * Math.abs(values.get(SeriesBudget.AMOUNT)));
+            else if (value.getField().equals(SeriesBudget.PLANNED_AMOUNT)) {
+              fieldValues[i] = new FieldValue(SeriesBudget.PLANNED_AMOUNT,
+                                              values.get(SeriesBudget.PLANNED_AMOUNT) == null ? null :
+                                              -sign * Math.abs(values.get(SeriesBudget.PLANNED_AMOUNT)));
+              repository.update(key, SeriesBudget.PLANNED_AMOUNT,
+                                values.get(SeriesBudget.PLANNED_AMOUNT) == null ? null :
+                                sign * Math.abs(values.get(SeriesBudget.PLANNED_AMOUNT)));
             }
           }
           repository.create(Key.create(SeriesBudget.TYPE, repository.getIdGenerator()
@@ -61,7 +61,7 @@ public class SavingsUpdateSeriesMirrorTrigger extends DefaultChangeSetListener {
             .findByIndex(SeriesBudget.MONTH, budget.get(SeriesBudget.MONTH)).getGlobs().getFirst();
           values.safeApply(new FieldValues.Functor() {
             public void process(Field field, Object value) throws Exception {
-              if (field.equals(SeriesBudget.AMOUNT)) {
+              if (field.equals(SeriesBudget.PLANNED_AMOUNT)) {
                 repository.update(mirrorBudget.getKey(), field, value == null ? null : -((Double)value));
               }
               else {

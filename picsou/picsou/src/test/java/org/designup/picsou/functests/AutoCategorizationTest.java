@@ -223,14 +223,14 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("Courses")
-      .setCustom()
+      .setRepeatCustom()
       .setStartDate(200804)
       .setEndDate(200805)
       .validate();
 
     budgetView.variable.createSeries()
       .setName("Courses_2")
-      .setCustom()
+      .setRepeatCustom()
       .validate();
 
     views.selectCategorization();

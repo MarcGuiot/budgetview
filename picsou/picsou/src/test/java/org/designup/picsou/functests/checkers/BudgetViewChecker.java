@@ -15,7 +15,6 @@ import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
-import org.uispec4j.interception.PopupMenuInterceptor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -403,6 +402,51 @@ public class BudgetViewChecker extends ViewChecker {
 
     public void checkNotHighlighted(String seriesName) {
       assertTrue(getSeriesPanel(seriesName).getObservedAmount().backgroundNear("FFFFFF"));
+    }
+
+    public void carryExpensesOverdrawOver(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton().click("Carry expenses overdraw over next month");
+    }
+
+    public CarryOverDialogChecker carryExpensesOverdrawOverWithDialog(String seriesName) {
+      return CarryOverDialogChecker.open(getExpensesOverdrawTrigger(seriesName));
+    }
+
+    public ConfirmationDialogChecker carryExpensesOverdrawOverWithConfirm(String seriesName) {
+      return ConfirmationDialogChecker.open(getExpensesOverdrawTrigger(seriesName));
+    }
+
+    public MessageDialogChecker carryExpensesOverdrawOverWithMessage(String seriesName) {
+      return MessageDialogChecker.open(getExpensesOverdrawTrigger(seriesName));
+    }
+
+    private Trigger getExpensesOverdrawTrigger(String seriesName) {
+      PopupButton seriesButton = getSeriesPanel(seriesName).getSeriesButton();
+      return seriesButton.triggerClick("Carry expenses overdraw over next month");
+    }
+
+    public void carryExpensesRemainderOver(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton().click("Carry expenses remainder over next month");
+    }
+
+    public void carryIncomeOverrunOver(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton().click("Deduce income overrun from next month");
+    }
+
+    public void carryIncomeRemainderOver(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton().click("Carry income remainder over next month");
+    }
+
+    public void checkCarryExpensesOverdrawOverEnabled(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton().checkItemEnabled("Carry expenses overdraw over next month");
+    }
+
+    public void checkCarryExpensesRemainderOverEnabled(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton().checkItemEnabled("Carry expenses remainder over next month");
+    }
+
+    public void checkCarryOverDisabled(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton().checkItemDisabled("Carry over next month");
     }
   }
 

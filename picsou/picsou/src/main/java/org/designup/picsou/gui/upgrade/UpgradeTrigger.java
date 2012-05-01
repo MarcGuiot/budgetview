@@ -162,14 +162,14 @@ public class UpgradeTrigger implements ChangeSetListener {
     Boolean sens = null;
     GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID)).getGlobs();
     for (Glob budget : budgets) {
-      if (budget.get(SeriesBudget.AMOUNT) == null) {
+      if (budget.get(SeriesBudget.PLANNED_AMOUNT) == null) {
         continue;
       }
-      if (budget.get(SeriesBudget.AMOUNT) > 0) {
+      if (budget.get(SeriesBudget.PLANNED_AMOUNT) > 0) {
         sens = true;
         break;
       }
-      if (budget.get(SeriesBudget.AMOUNT) < 0) {
+      if (budget.get(SeriesBudget.PLANNED_AMOUNT) < 0) {
         sens = false;
         break;
       }
@@ -206,8 +206,8 @@ public class UpgradeTrigger implements ChangeSetListener {
         for (Glob budget : seriesBudgets) {
           GlobBuilder builder = GlobBuilder.init(SeriesBudget.TYPE);
           for (Field field : SeriesBudget.TYPE.getFields()) {
-            if (field == SeriesBudget.AMOUNT) {
-              builder.set(SeriesBudget.AMOUNT, budget.get(SeriesBudget.AMOUNT) == null ? null : -budget.get(SeriesBudget.AMOUNT));
+            if (field == SeriesBudget.PLANNED_AMOUNT) {
+              builder.set(SeriesBudget.PLANNED_AMOUNT, budget.get(SeriesBudget.PLANNED_AMOUNT) == null ? null : -budget.get(SeriesBudget.PLANNED_AMOUNT));
             }
             else if (field == SeriesBudget.SERIES) {
               builder.setValue(SeriesBudget.SERIES, mirorSeriesId);
@@ -303,7 +303,7 @@ public class UpgradeTrigger implements ChangeSetListener {
                     fieldStrictlyGreaterThan(SeriesBudget.MONTH, lastMonthId)))
         .safeApply(new GlobFunctor() {
           public void run(Glob seriesBudget, GlobRepository repository) throws Exception {
-            repository.update(seriesBudget.getKey(), value(SeriesBudget.AMOUNT, 0.0));
+            repository.update(seriesBudget.getKey(), value(SeriesBudget.PLANNED_AMOUNT, 0.0));
           }
         }, repository);
     }

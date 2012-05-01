@@ -173,7 +173,7 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public TransactionCreationChecker checkShowOpensAccountCreationMessage() {
-    ConfirmationDialogChecker dialog = ConfirmationDialogChecker.init(getShowHideButton().triggerClick());
+    ConfirmationDialogChecker dialog = ConfirmationDialogChecker.open(getShowHideButton().triggerClick());
     dialog.checkTitle("No manual accounts");
     dialog.checkMessageContains("you must create a dedicated account");
     dialog.cancel();
@@ -181,7 +181,7 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public AccountEditionChecker clickAndOpenAccountCreationMessage() {
-    ConfirmationDialogChecker dialog = ConfirmationDialogChecker.init(getShowHideButton().triggerClick());
+    ConfirmationDialogChecker dialog = ConfirmationDialogChecker.open(getShowHideButton().triggerClick());
     dialog.checkTitle("No manual accounts");
     dialog.checkMessageContains("you must create a dedicated account");
     return AccountEditionChecker.open(dialog.getOkTrigger("Create a manual account"));

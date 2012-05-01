@@ -7,6 +7,9 @@ import org.uispec4j.Trigger;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.PopupMenuInterceptor;
 
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.assertTrue;
+
 public class PopupButton {
 
   private Button button;
@@ -21,9 +24,15 @@ public class PopupButton {
     menu.getAwtComponent().setVisible(false);
   }
 
+  public void checkItemEnabled(String menuItem) {
+    MenuItem menu = openMenu();
+    assertTrue(menu.getSubMenu(menuItem).isEnabled());
+    menu.getAwtComponent().setVisible(false);
+  }
+
   public void checkItemDisabled(String menuItem) {
     MenuItem menu = openMenu();
-    UISpecAssert.assertFalse(menu.getSubMenu(menuItem).isEnabled());
+    assertFalse(menu.getSubMenu(menuItem).isEnabled());
     menu.getAwtComponent().setVisible(false);
   }
 

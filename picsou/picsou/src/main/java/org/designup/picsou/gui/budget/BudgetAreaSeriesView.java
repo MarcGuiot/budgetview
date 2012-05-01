@@ -274,7 +274,7 @@ public class BudgetAreaSeriesView extends View {
 
       final Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
 
-      final SeriesPopupButton seriesNameButton = seriesButtons.createSeriesPopupButton(series);
+      SeriesPopupButton seriesNameButton = seriesButtons.createSeriesPopupButton(series);
       final SplitsNode<JButton> seriesName = cellBuilder.add("seriesName", seriesNameButton.getComponent());
       cellBuilder.addDisposeListener(seriesNameButton);
 

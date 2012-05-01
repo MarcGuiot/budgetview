@@ -112,7 +112,7 @@ public class SeriesAmountEditionPanel {
           }
         }
 
-        if (changeSet.containsUpdates(SeriesBudget.AMOUNT) && (currentSeries != null)) {
+        if (changeSet.containsUpdates(SeriesBudget.PLANNED_AMOUNT) && (currentSeries != null)) {
           Glob series = repository.get(currentSeries);
           if (series.isTrue(Series.IS_AUTOMATIC)) {
             repository.update(currentSeries, Series.IS_AUTOMATIC, false);
@@ -151,7 +151,7 @@ public class SeriesAmountEditionPanel {
     chart = new SeriesAmountChartPanel(repository, directory);
     builder.add("chart", chart.getChart());
 
-    amountEditor = new AmountEditor(SeriesBudget.AMOUNT, repository, directory, true, 0.0);
+    amountEditor = new AmountEditor(SeriesBudget.PLANNED_AMOUNT, repository, directory, true, 0.0);
     builder.add("amountEditor", amountEditor.getPanel());
 
     propagationCheckBox = new JCheckBox();
@@ -167,7 +167,7 @@ public class SeriesAmountEditionPanel {
     builder.add("actualAmountLabel", alignAction.getActualAmountLabel());
 
     builder.addSlider("slider",
-                      SeriesBudget.AMOUNT,
+                      SeriesBudget.PLANNED_AMOUNT,
                       new SeriesBudgetSliderAdapter(amountEditor, repository));
 
     final JButton editSeriesButton;
@@ -216,7 +216,7 @@ public class SeriesAmountEditionPanel {
       !repository.contains(SeriesBudget.TYPE,
                            and(linkedTo(currentSeries, SeriesBudget.SERIES),
                                isTrue(SeriesBudget.ACTIVE),
-                               isNotNull(SeriesBudget.AMOUNT)));
+                               isNotNull(SeriesBudget.PLANNED_AMOUNT)));
 
     boolean canAutoPropagate = (seriesKey != null) && !BudgetArea.EXTRAS.getId().equals(repository.get(seriesKey).get(Series.BUDGET_AREA));
 
@@ -274,7 +274,7 @@ public class SeriesAmountEditionPanel {
   public void completeBeforeCommit() {
 
     if (!repository.contains(SeriesBudget.TYPE,
-                             and(isNotNull(SeriesBudget.AMOUNT),
+                             and(isNotNull(SeriesBudget.PLANNED_AMOUNT),
                                  linkedTo(currentSeries, SeriesBudget.SERIES)))) {
       return;
     }
@@ -282,10 +282,10 @@ public class SeriesAmountEditionPanel {
     repository.startChangeSet();
     try {
       for (Glob seriesBudget : repository.getAll(SeriesBudget.TYPE,
-                                                 and(isNull(SeriesBudget.AMOUNT),
+                                                 and(isNull(SeriesBudget.PLANNED_AMOUNT),
                                                      linkedTo(currentSeries, SeriesBudget.SERIES)))) {
-        if (seriesBudget.get(SeriesBudget.AMOUNT) == null) {
-          repository.update(seriesBudget.getKey(), SeriesBudget.AMOUNT, 0.00);
+        if (seriesBudget.get(SeriesBudget.PLANNED_AMOUNT) == null) {
+          repository.update(seriesBudget.getKey(), SeriesBudget.PLANNED_AMOUNT, 0.00);
         }
       }
     }
@@ -435,7 +435,7 @@ public class SeriesAmountEditionPanel {
                              fieldEquals(SeriesBudget.SERIES, currentSeries.get(Series.ID)),
                              isTrue(SeriesBudget.ACTIVE),
                              fieldGreaterOrEqual(SeriesBudget.MONTH, startMonth)),
-                           update(SeriesBudget.AMOUNT, Utils.zeroIfNull(amount)));
+                           update(SeriesBudget.PLANNED_AMOUNT, Utils.zeroIfNull(amount)));
     }
     finally {
       repository.completeChangeSet();

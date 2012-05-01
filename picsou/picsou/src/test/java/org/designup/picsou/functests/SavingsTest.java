@@ -674,7 +674,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setName("Project")
       .setFromAccount("Account n. 111")
       .setToAccount("Main accounts")
-      .setOnceAYear()
+      .setRepeatOnceAYear()
       .toggleMonth(7)
       .validate();
 
@@ -975,7 +975,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setName("Project")
       .setFromAccount("Account n. 111")
       .setToAccount("Main accounts")
-      .setCustom()
+      .setRepeatCustom()
       .setStartDate(200807)
       .setEndDate(200809)
       .validate();

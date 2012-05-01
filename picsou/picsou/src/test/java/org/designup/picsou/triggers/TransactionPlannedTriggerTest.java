@@ -29,11 +29,11 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     Integer[] unknownBudget = getBudgetId(Series.UNCATEGORIZED_SERIES_ID);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<create active='true' amount='-29.9' day='7' id='" + budgetId[2] + "'" +
+      "<create active='true' plannedAmount='-29.9' day='7' id='" + budgetId[2] + "'" +
       "        month='200809' series='100' type='seriesBudget' />" +
-      "<create active='true' amount='-29.9' day='7' id='" + budgetId[1] + "'" +
+      "<create active='true' plannedAmount='-29.9' day='7' id='" + budgetId[1] + "'" +
       "        month='200808' series='100' type='seriesBudget' />" +
-      "<create active='true' amount='-29.9' day='7' id='" + budgetId[0] + "'" +
+      "<create active='true' plannedAmount='-29.9' day='7' id='" + budgetId[0] + "'" +
       "        month='200807' series='100' type='seriesBudget' />" +
       "<create active='true' id='" + unknownBudget[2] + "' month='200809'" +
       "        series='1' day='1' type='seriesBudget'/>" +
@@ -117,17 +117,17 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     Integer[] enveloppeBudgetIds = getBudgetId(ENVELOPPE_SERIES_ID);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<create active='true' amount='2000.0' day='4' id='" + incomeBudgetIds[0] + "'" +
+      "<create active='true' plannedAmount='2000.0' day='4' id='" + incomeBudgetIds[0] + "'" +
       "        month='200807' series='102' type='seriesBudget'/>" +
-      "<create active='true' amount='2000.0' day='4' id='" + incomeBudgetIds[1] + "'" +
+      "<create active='true' plannedAmount='2000.0' day='4' id='" + incomeBudgetIds[1] + "'" +
       "        month='200808' series='102' type='seriesBudget'/>" +
-      "<create active='true' amount='2000.0' day='4' id='" + incomeBudgetIds[2] + "'" +
+      "<create active='true' plannedAmount='2000.0' day='4' id='" + incomeBudgetIds[2] + "'" +
       "        month='200809' series='102' type='seriesBudget'/>" +
-      "<create active='true' amount='-1000.0' day='25' id='" + enveloppeBudgetIds[0] + "'" +
+      "<create active='true' plannedAmount='-1000.0' day='25' id='" + enveloppeBudgetIds[0] + "'" +
       "        month='200807' series='101' type='seriesBudget'/>" +
-      "<create active='true' amount='-1000.0' day='25' id='" + enveloppeBudgetIds[1] + "'" +
+      "<create active='true' plannedAmount='-1000.0' day='25' id='" + enveloppeBudgetIds[1] + "'" +
       "        month='200808' series='101' type='seriesBudget'/>" +
-      "<create active='true' amount='-1000.0' day='25' id='" + enveloppeBudgetIds[2] + "'" +
+      "<create active='true' plannedAmount='-1000.0' day='25' id='" + enveloppeBudgetIds[2] + "'" +
       "        month='200809' series='101' type='seriesBudget'/>" +
       "<create active='true' id='" + unknownBudgetIds[2] + "' day='1' month='200809'" +
       "        series='1' type='seriesBudget'/>" +

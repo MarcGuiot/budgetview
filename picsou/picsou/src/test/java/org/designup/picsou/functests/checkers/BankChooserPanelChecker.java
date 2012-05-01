@@ -77,7 +77,7 @@ public class BankChooserPanelChecker<T extends BankChooserPanelChecker> extends 
 
   public T deleteAndCancel() {
     PopupButton popupButton = new PopupButton(panel.getButton("bankActions"));
-    ConfirmationDialogChecker.init(popupButton.triggerClick("Delete bank"))
+    ConfirmationDialogChecker.open(popupButton.triggerClick("Delete bank"))
       .cancel();
     return (T)this;
   }
@@ -88,7 +88,7 @@ public class BankChooserPanelChecker<T extends BankChooserPanelChecker> extends 
 
   public T delete(String title, String message) {
     PopupButton popupButton = new PopupButton(panel.getButton("bankActions"));
-    ConfirmationDialogChecker.init(popupButton.triggerClick("Delete bank"))
+    ConfirmationDialogChecker.open(popupButton.triggerClick("Delete bank"))
       .checkTitle(title)
       .checkMessageContains(message)
       .validate();

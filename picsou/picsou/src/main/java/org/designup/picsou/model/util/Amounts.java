@@ -1,9 +1,5 @@
 package org.designup.picsou.model.util;
 
-import org.designup.picsou.gui.components.charts.Gauge;
-import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 
@@ -111,5 +107,9 @@ public class Amounts {
   public static double upperOrder(double value) {
     int power = (int)Math.log10(value);
     return Math.pow(10, power + 1);
+  }
+
+  public static boolean isSameSign(double first, double second) {
+    return Math.signum(first) * Math.signum(second) > 0;
   }
 }

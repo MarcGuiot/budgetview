@@ -37,7 +37,7 @@ public class IrregularSeriesBudgetCreationTrigger implements ChangeSetListener {
   private void createSeriesBudget(FieldValues values, GlobRepository repository, Integer monthId, ReadOnlyGlobRepository.MultiFieldIndexed index) {
     if (index.findByIndex(SeriesBudget.MONTH, monthId).getGlobs().isEmpty()) {
       repository.create(SeriesBudget.TYPE,
-                        value(SeriesBudget.AMOUNT, 0.00),
+                        value(SeriesBudget.PLANNED_AMOUNT, 0.00),
                         value(SeriesBudget.MONTH, monthId),
                         value(SeriesBudget.DAY, Month.getDay(null, monthId)),
                         value(SeriesBudget.ACTIVE, true),

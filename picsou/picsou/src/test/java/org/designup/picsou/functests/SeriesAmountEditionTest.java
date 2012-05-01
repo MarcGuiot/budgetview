@@ -100,7 +100,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.recurring.editSeries("Internet")
-      .setTwoMonths()
+      .setRepeatEveryTwoMonths()
       .validate();
     budgetView.recurring.editPlannedAmount("Internet")
       .checkAmountLabel("Planned amount for july 2008")
@@ -108,7 +108,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.recurring.editSeries("Internet")
-      .setTwoMonths()
+      .setRepeatEveryTwoMonths()
       .setEndDate(200810)
       .validate();
     budgetView.recurring.editPlannedAmount("Internet")
@@ -117,7 +117,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.recurring.editSeries("Internet")
-      .setTwoMonths()
+      .setRepeatEveryTwoMonths()
       .setStartDate(200807)
       .validate();
     budgetView.recurring.editPlannedAmount("Internet")
@@ -126,7 +126,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.recurring.editSeries("Internet")
-      .setEveryMonth()
+      .setRepeatEveryMonth()
       .setEndDate(200807)
       .validate();
     budgetView.recurring.editPlannedAmount("Internet")
@@ -135,7 +135,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.recurring.editSeries("Internet")
-      .setIrregular()
+      .setRepeatIrregular()
       .clearEndDate()
       .validate();
     budgetView.recurring.editPlannedAmount("Internet")
@@ -144,7 +144,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.recurring.editSeries("Internet")
-      .setCustom()
+      .setRepeatCustom()
       .setStartDate(200801)
       .setEndDate(200812)
       .validate();
@@ -153,7 +153,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.recurring.editSeries("Internet")
-      .setCustom()
+      .setRepeatCustom()
       .setStartDate(200801)
       .setEndDate(200912)
       .validate();

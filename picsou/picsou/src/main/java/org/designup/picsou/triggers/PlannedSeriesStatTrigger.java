@@ -31,7 +31,7 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(SeriesBudget.AMOUNT) || values.contains(SeriesBudget.ACTIVE)) {
+        if (values.contains(SeriesBudget.PLANNED_AMOUNT) || values.contains(SeriesBudget.ACTIVE)) {
           updateSeriesStat(repository, repository.get(key));
         }
       }
@@ -79,7 +79,7 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
 
   // Do not allow autoboxing - amount can be null
   private Double getActiveAmount(FieldValues seriesBudget, Boolean active) {
-    return active ? seriesBudget.get(SeriesBudget.AMOUNT) : new Double(0.00);
+    return active ? seriesBudget.get(SeriesBudget.PLANNED_AMOUNT) : new Double(0.00);
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
@@ -107,7 +107,7 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
   }
 
   private Pair<Double, Double> computeRemainingAndOverrun(FieldValues seriesBudget, Glob seriesStat, Boolean isActive) {
-    Double plannedAmount = isActive ? seriesBudget.get(SeriesBudget.AMOUNT, 0) : 0.00;
+    Double plannedAmount = isActive ? seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0) : 0.00;
     Double obervedAmount = Amounts.zeroIfNull(seriesStat.get(SeriesStat.AMOUNT));
     double remaining = 0;
     double overrun = 0;

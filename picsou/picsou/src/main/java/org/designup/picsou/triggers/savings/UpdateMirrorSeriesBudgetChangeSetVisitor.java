@@ -49,8 +49,8 @@ public class UpdateMirrorSeriesBudgetChangeSetVisitor implements ChangeSetVisito
           if (field.equals(SeriesBudget.OBSERVED_AMOUNT) || field.equals(SeriesBudget.SERIES)) {
             return;
           }
-          if (field.equals(SeriesBudget.AMOUNT)) {
-            localRepository.update(mirrorBudget.getKey(), SeriesBudget.AMOUNT, value == null ? null : -((Double)value));
+          if (field.equals(SeriesBudget.PLANNED_AMOUNT)) {
+            localRepository.update(mirrorBudget.getKey(), SeriesBudget.PLANNED_AMOUNT, value == null ? null : -((Double)value));
           }
           else {
             localRepository.update(mirrorBudget.getKey(), field, value);

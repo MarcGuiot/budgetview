@@ -187,7 +187,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonths("2008/08", "2008/06");
     SeriesEditionDialogChecker editionDialogChecker = budgetView.recurring.editSeries("Internet");
     editionDialogChecker
-      .setCustom()
+      .setRepeatCustom()
       .toggleMonth("May")
       .checkChart(new Object[][]{
         {"2008", "May", 0.00, 0.00},
@@ -377,7 +377,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("groceries")
       .checkNoStartDate()
       .checkNoEndDate()
-      .setSingleMonth()
+      .setRepeatSingleMonth()
       .checkSingleMonthDate("June 2008")
       .validate();
 
@@ -399,15 +399,15 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("groceries")
       .setStartDate(200806)
       .setEndDate(200808)
-      .setSingleMonth()
+      .setRepeatSingleMonth()
       .checkSingleMonthDate("June 2008")
       .checkMonthSelectorsVisible(false)
       .setSingleMonthDate(200808)
       .checkSingleMonthDate("Aug 2008")
-      .setEveryMonth()
+      .setRepeatEveryMonth()
       .checkStartDate("Aug 2008")
       .checkEndDate("Aug 2008")
-      .setSingleMonth()
+      .setRepeatSingleMonth()
       .setSingleMonthDate(200807)
       .checkSingleMonthDate("Jul 2008")
       .validate();
@@ -422,7 +422,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/06");
     budgetView.variable.createSeries()
       .setName("manualThenSingleMonth")
-      .setSingleMonth()
+      .setRepeatSingleMonth()
       .checkSingleMonthDate("June 2008")
       .checkChart(new Object[][]{
         {"2008", "June", 0.00, 0.00, true}
@@ -431,7 +431,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.createSeries()
       .setName("singleMonthThenManual")
-      .setSingleMonth()
+      .setRepeatSingleMonth()
       .checkSingleMonthDate("June 2008")
       .checkChart(new Object[][]{
         {"2008", "June", 0.00, 0.00, true}
@@ -445,7 +445,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     SeriesEditionDialogChecker edition = budgetView.recurring.createSeries();
-    edition.setCustom()
+    edition.setRepeatCustom()
       .toggleMonth("Jan", "Mar", "Jul", "Sep", "Nov");
 
     edition.selectAllMonths()
@@ -574,13 +574,13 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
   public void testMonthsAreShownOrNotDependingOnThePeriodicity() throws Exception {
     SeriesEditionDialogChecker edition = budgetView.variable.createSeries();
-    edition.setIrregular()
+    edition.setRepeatIrregular()
       .checkMonthsAreHidden()
-      .setSixMonths()
+      .setRepeatEverySixMonths()
       .checkMonthsAreVisible()
-      .setCustom()
+      .setRepeatCustom()
       .checkMonthsAreVisible()
-      .setIrregular()
+      .setRepeatIrregular()
       .checkMonthsAreHidden()
       .cancel();
   }
@@ -588,7 +588,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
   public void testChangeMonthChangeOtherMonth() throws Exception {
     SeriesEditionDialogChecker edition = budgetView.variable.createSeries();
     edition.setName("S1");
-    edition.setSixMonths()
+    edition.setRepeatEverySixMonths()
       .checkMonthIsChecked(1, 7);
 
     edition.toggleMonth(1)
@@ -599,7 +599,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkMonthIsChecked(2, 8)
       .checkMonthIsNotChecked(1, 5, 7);
 
-    edition.setTwoMonths()
+    edition.setRepeatEveryTwoMonths()
       .checkMonthIsChecked(2, 4, 6, 8, 10)
       .toggleMonth(3)
       .checkMonthIsChecked(1, 3, 5, 7, 9, 11)
@@ -613,14 +613,14 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.createSeries()
       .setName("S1")
-      .setSixMonths()
+      .setRepeatEverySixMonths()
       .toggleMonth(3)
       .checkMonthIsChecked(3, 9)
       .validate();
 
     budgetView.variable.createSeries()
       .setName("S2")
-      .setTwoMonths()
+      .setRepeatEveryTwoMonths()
       .checkMonthIsChecked(1, 3, 5, 7, 9, 11)
       .toggleMonth(2)
       .checkMonthIsChecked(2, 4, 6, 8, 10)
@@ -813,7 +813,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.createSeries()
       .setName("S1")
-      .setSixMonths()
+      .setRepeatEverySixMonths()
       .checkMonthSelectorsVisible(true)
       .toggleMonth(3)
       .checkMonthIsChecked(3, 9)
@@ -844,7 +844,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.setRecurring("EAU", "EAU");
     categorization.selectRecurring()
       .editSeries("EAU")
-      .setTwoMonths()
+      .setRepeatEveryTwoMonths()
       .toggleMonth(6)
       .validate();
 
@@ -867,7 +867,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTransactions("EAU");
     categorization.selectVariable().createSeries().setName("Eau")
-      .setTwoMonths()
+      .setRepeatEveryTwoMonths()
       .checkMonthSelectorsVisible(true)
       .checkMonthIsChecked(2, 4, 6, 8, 10, 12)
       .checkMonthIsNotChecked(1, 3, 5, 7, 9, 11)
@@ -883,12 +883,12 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTransactions("EAU");
     categorization.selectVariable().createSeries().setName("Eau")
-      .setCustom()
+      .setRepeatCustom()
       .checkMonthIsChecked(6, 8)
       .checkMonthIsNotChecked(1, 2, 3, 4, 5, 7, 9, 10, 11, 12)
-      .setEveryMonth()
+      .setRepeatEveryMonth()
       .checkMonthIsChecked(1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12)
-      .setCustom()
+      .setRepeatCustom()
       .checkMonthIsChecked(6, 8)
       .validate();
   }
@@ -913,7 +913,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .check();
 
     categorization.selectSavings().editSeries("Epargne")
-      .setIrregular()
+      .setRepeatIrregular()
       .checkChart(new Object[][]{
         {"2008", "June", 100.00, 100.00, true},
         {"2008", "July", 0.00, 0.00, true},
@@ -938,17 +938,17 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectSavings()
       .editSeries("Epargne")
-      .setIrregular()
-      .setTwoMonths()
+      .setRepeatIrregular()
+      .setRepeatEveryTwoMonths()
       .validate();
 
     categorization.selectSavings().editSeries("Epargne")
-      .setIrregular()
+      .setRepeatIrregular()
       .validate();
 
     categorization.selectSavings().editSeries("Epargne")
-      .setIrregular()
-      .setTwoMonths()
+      .setRepeatIrregular()
+      .setRepeatEveryTwoMonths()
       .validate();
   }
 
@@ -961,7 +961,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectSavings()
       .selectAndCreateSavingsSeries("Epargne", "Main accounts");
     categorization.selectSavings().editSeries("Epargne")
-      .setIrregular()
+      .setRepeatIrregular()
       .setEndDate(200807)
       .validate();
 
@@ -988,7 +988,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectAndCreateSavingsSeries("Epargne", "Main accounts");
 
     categorization.selectSavings().editSeries("Epargne")
-      .setTwoMonths()
+      .setRepeatEveryTwoMonths()
       .validate();
     timeline.selectMonth("2008/06");
     budgetView.savings.alignAndPropagate("Epargne");
@@ -1025,7 +1025,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectSavings().editSeries("Epargne")
       .selectMonth(200809)
       .setAmount("0")
-      .setTwoMonths()
+      .setRepeatEveryTwoMonths()
       .validate();
 
     timeline.selectMonth("2008/06");
@@ -1135,7 +1135,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.extras.editSeries("Center Parc")
-      .setSingleMonth()
+      .setRepeatSingleMonth()
       .setSingleMonthDate(200807)
       .checkAmountEditionEnabled()
       .checkMonthSelected(200807)
@@ -1143,7 +1143,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths(200806, 200807);
     budgetView.extras.editSeries("Center Parc")
-      .setEveryMonth()
+      .setRepeatEveryMonth()
       .clearStartDate()
       .checkAmountEditionEnabled()
       .checkMonthSelected(200807)
@@ -1175,7 +1175,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransactions("PointP");
     categorization.selectVariable().createSeries()
       .setName("Brico")
-      .setOnceAYear()
+      .setRepeatOnceAYear()
       .toggleMonth(11)
       .checkMonthIsChecked(11)
       .cancel();
@@ -1335,7 +1335,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectRecurring()
       .createSeries()
       .setName("Telephone")
-      .setCustom()
+      .setRepeatCustom()
       .setPeriodMonths(1, 3, 5)
       .validate();
 
