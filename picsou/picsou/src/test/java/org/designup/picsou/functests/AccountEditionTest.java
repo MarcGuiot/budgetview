@@ -59,7 +59,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkUpdateModeIsEditable()
       .checkUpdateModes()
       .checkIsSavings()
-      .selectBank("cic")
+      .selectBank("CIC")
       .validate();
 
     savingsAccounts.edit("Savings")
@@ -634,7 +634,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     mainAccounts.edit("Account n. 1111")
-      .selectBank("cic")
+      .selectBank("CIC")
       .validate();
     views.selectData();
     transactions.initContent()

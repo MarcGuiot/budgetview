@@ -49,7 +49,7 @@ public class OfxParser {
 
   private static class OfxReader {
     private BufferedReader buffer;
-    private StringBuffer stringBuffer = new StringBuffer();
+    private String stringBuffer = new String();
 
     public OfxReader(BufferedReader buffer) {
       this.buffer = buffer;
@@ -59,28 +59,27 @@ public class OfxParser {
       if (stringBuffer == null) {
         return null;
       }
-      String tmp = stringBuffer.toString();
+      String tmp = stringBuffer;
       if (tmp.length() > 1) {
         int index = tmp.indexOf('<', 1);
         if (index != -1) {
-          stringBuffer = new StringBuffer();
-          stringBuffer.append(tmp.substring(index));
+          stringBuffer = tmp.substring(index);
           return tmp.substring(0, index);
         }
-        stringBuffer = new StringBuffer();
+        stringBuffer = "";
         return tmp;
       }
 
       String line = buffer.readLine();
       if (line == null) {
-        String ret = stringBuffer.toString();
+        String ret = stringBuffer;
         stringBuffer = null;
         return ret;
       }
       line = line.trim();
       int index = line.indexOf('<', 1);
       if (index != -1) {
-        stringBuffer.append(line.substring(index));
+        stringBuffer = line.substring(index);
         return line.substring(0, index);
       }
       return line;

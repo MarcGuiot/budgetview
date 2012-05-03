@@ -654,7 +654,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/12/02", "2010/01/29", -10, "op d. 4")
       .addTransaction("2009/12/06", "2010/01/29", -10, "op d. 5")
       .addTransaction("2009/12/09", "2010/01/29", -10, "op d. 6")
-      .loadOneDeferredCard("boursorama");
+      .loadOneDeferredCard("Boursorama");
 
     timeline.selectAll();
     transactions

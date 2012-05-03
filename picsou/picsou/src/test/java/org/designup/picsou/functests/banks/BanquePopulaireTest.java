@@ -94,7 +94,7 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
   public void testNewFormat() throws Exception {
 
     operations.importOfxFile(getFile("CyberPlus_CB_1_20110723224814.ofx"));
-    operations.importOfxFile(getFile("CyberPlus_CB_1_20110723224838.ofx"), "banque populaire");
+    operations.importOfxFile(getFile("CyberPlus_CB_1_20110723224838.ofx"), "Banque Populaire");
     operations.importOfxFile(getFile("CyberPlus_OP_1_20110723225107.ofx"));
 
     mainAccounts.checkAccountNames("Account n. 01019640927", "Card n. 01019640927");
