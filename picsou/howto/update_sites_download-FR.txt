@@ -17,13 +17,13 @@ Modifications souhaitées pour le logiciel BudgetView (id = 50969)
 
 Bonjour,
 
-J'ai le plaisir de vous informer qu'une nouvelle version de BudgetView est disponible. Il agit de la version 2.27, dont les liens directs de téléchargement sont les suivants :
+J'ai le plaisir de vous informer qu'une nouvelle version de BudgetView est disponible. Il agit de la version 2.28, dont les liens directs de téléchargement sont les suivants :
 
-- Windows : http://www.mybudgetview.fr/files/app/BudgetView-2.27-fr-Setup.exe
+- Windows : http://www.mybudgetview.fr/files/app/BudgetView-2.28-fr-Setup.exe
 
-- Mac : http://www.mybudgetview.fr/files/app/BudgetView-2.27-fr.dmg
+- Mac : http://www.mybudgetview.fr/files/app/BudgetView-2.28-fr.dmg
 
-- Linux : http://www.mybudgetview.fr/files/app/budgetview-2.27-fr.tar.gz
+- Linux : http://www.mybudgetview.fr/files/app/budgetview-2.28-fr.tar.gz
 
 L'historique des modifications est visible sur cette page : 
 
@@ -56,18 +56,20 @@ Régis.
   http://www.toocharger.com/membres/logiciels/gestion/
 
 4. Mettre à jour chaque version Windows/Mac/Linux en changeant :
-  * la version
-  * la date de sortie
-  * l'URL du fichier d'install
+  * Version
+  * Date de sortie
+  * Lien de téléchargement 1
 
 
 ================================================
     jetelecharge.com
 ================================================
 
->> Email à jetelecharge@gmail.com :
+1. Se rendre sur :
 
-Titre: Mise à jour du logiciel BudgetView
+   http://www.jetelecharge.com/contact/contact.php
+
+2. Message :
 
 Bonjour,
 
@@ -75,13 +77,13 @@ J'ai le plaisir de vous informer qu'une nouvelle version est disponible pour le 
 
  http://www.jetelecharge.com/Bureautique/6452.php
 
-La nouvelle version porte le numéro 2.27, et le fichier d'installation correspondant est disponible à l'adresse suivante :
+La nouvelle version porte le numéro 2.28, et le fichier d'installation correspondant est disponible à l'adresse suivante :
 
-- Windows : http://www.mybudgetview.fr/files/app/BudgetView-2.27-fr-Setup.exe
+- Windows : http://www.mybudgetview.fr/files/app/BudgetView-2.28-fr-Setup.exe
 
-- Mac : http://www.mybudgetview.fr/files/app/BudgetView-2.27-fr.dmg
+- Mac : http://www.mybudgetview.fr/files/app/BudgetView-2.28-fr.dmg
 
-- Linux : http://www.mybudgetview.fr/files/app/budgetview-2.27-fr.tar.gz
+- Linux : http://www.mybudgetview.fr/files/app/budgetview-2.28-fr.tar.gz
 
 L'historique des modifications est visible sur cette page :
 
@@ -131,11 +133,17 @@ Régis.
 
 3. Message :
 
->>
+Nom et version : BudgetView 2.28
+
+Adresse (directe) de téléchargement : 
+
+http://www.mybudgetview.fr/files/app/BudgetView-2.28-fr-Setup.exe
+
+Email : regis@mybudgetview.fr
 
 Bonjour,
 
-La version 2.27 de BudgetView est disponible. Les derniers changements sont décrits sur cette page :
+La version 2.28 de BudgetView est disponible. Les derniers changements sont décrits sur cette page :
 
   http://www.mybudgetview.fr/support/derniers-changements
 

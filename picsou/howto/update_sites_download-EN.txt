@@ -35,6 +35,8 @@ Mise à jour des sites de download EN pour une nouvelle release :
 
 3. Actions / Update current version ==> mettre à jour le formulaire
 
+http://www.mybudgetview.com/files/app/BudgetView-2.28-en-Setup.exe
+
 
 ================================================
     Softpedia.com
@@ -50,11 +52,11 @@ Mise à jour des sites de download EN pour une nouvelle release :
 
 Hello,
 
-I have the pleasure to announce that the 2.27 release of BudgetView is now available.
+I have the pleasure to announce that the 2.28 release of BudgetView is now available.
 
 The Windows installer file can be downloaded from the following link:
 
-- http://www.mybudgetview.com/files/app/BudgetView-2.27-en-Setup.exe
+- http://www.mybudgetview.com/files/app/BudgetView-2.28-en-Setup.exe
 
 The change log for this release is available here:
 
