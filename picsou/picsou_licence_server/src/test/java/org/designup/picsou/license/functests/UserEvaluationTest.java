@@ -49,7 +49,8 @@ public class UserEvaluationTest extends ConnectedTestCase {
   public void testSendNo() throws Exception {
     startServers();
 
-    application.getOperations().exitWithUserEvaluation()
+    application.getOperations()
+      .exitWithUserEvaluation()
       .checkSendDisabled()
       .selectNo()
       .checkSendEnabled()

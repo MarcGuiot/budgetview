@@ -4,10 +4,8 @@ import org.designup.picsou.functests.checkers.CategorizationChecker;
 import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.utils.Dates;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Trigger;
@@ -193,7 +191,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     categorization.selectVariable().selectNewSeries("Series 1");
 
     categorization.selectTableRow(categorization.getTable()
-      .getRowIndex(CategorizationChecker.AMOUNT_COLUMN_INDEX, -4.2 + 1.5));
+                                    .getRowIndex(CategorizationChecker.AMOUNT_COLUMN_INDEX, -4.2 + 1.5));
     transactionDetails.split("-1.5", "info2");
     categorization.selectVariable().selectNewSeries("Series 2");
 
@@ -212,6 +210,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1)
       .check();
   }
+
   private static final String TEXT =
     "OFXHEADER:100\n" +
     "DATA:OFXSGML\n" +
@@ -279,12 +278,31 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     Files.dumpStringToFile(fileName, text);
     operations.importOfxFile(fileName);
 
+    transactions
+      .initAmountContent()
+      .dumpCode();
+
     text = OfxImportTest.TEXT.replace("<DTASOF>20060704000000", "<DTASOF>2006/07/04");
     fileName = TestUtils.getFileName(this, ".ofx");
     Files.dumpStringToFile(fileName, text);
     operations.importOfxFile(fileName);
 
     text = OfxImportTest.TEXT.replace("<DTASOF>20060704000000", "<DTASOF>04/07/2006");
+    fileName = TestUtils.getFileName(this, ".ofx");
+    Files.dumpStringToFile(fileName, text);
+    operations.importOfxFile(fileName);
+  }
+  
+  
+  public void testInlineOfx() throws Exception {
+    int i = TEXT.indexOf("<OFX>");
+    String text = TEXT.substring(0, i) + TEXT.substring(i).replaceAll("\n", "");
+    String fileName = TestUtils.getFileName(this, ".ofx");
+    Files.dumpStringToFile(fileName, text);
+    operations.importOfxFile(fileName);
+
+    int i1 = text.indexOf("DROITS DE GARDE") + 5;
+    text = text.substring(0, i1) + "\n" + text.substring(i1);
     fileName = TestUtils.getFileName(this, ".ofx");
     Files.dumpStringToFile(fileName, text);
     operations.importOfxFile(fileName);
