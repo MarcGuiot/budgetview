@@ -457,7 +457,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransaction(third(29), -6.50, transaction("newspaper2"))
       .addTransaction(fourth(5), -7.50, transaction("newspaper2"))
       .addTransaction(fourth(12), -8.80, transaction("newspaper2"))
-      .addTransaction(fourth(12), -14.20, transaction("newspaper3"))
       .addTransaction(fourth(12), -160.20, transaction("hifi"))
       .addTransaction(third(24), -16.80, transaction("health2"))
       .addTransaction(fourth(9), -16.80, transaction("health2"))
