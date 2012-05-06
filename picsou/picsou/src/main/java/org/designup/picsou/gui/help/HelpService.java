@@ -54,17 +54,9 @@ public class HelpService {
     dialog.show(helpRef, onCloseCallback);
   }
 
-  public boolean hasBankHelp(Glob bank) {
-    return Strings.isNotEmpty(source.findContent(getBankSiteRef(bank)));
-  }
-
-  public void showBankHelp(Glob bank, Window owner) {
-    String siteRef = getBankSiteRef(bank);
-    String bankName = directory.get(DescriptionService.class).getStringifier(Bank.TYPE)
-      .toString(bank, repository);
-
-    bankTitles.put(siteRef, Lang.get("help.bankDownloadInstructions", bankName));
-    show(siteRef, owner);
+  public String getBankHelp(Glob bank) {
+    String ref = getBankSiteRef(bank);
+    return source.findContent(ref);
   }
 
   private String getBankSiteRef(Glob bank) {

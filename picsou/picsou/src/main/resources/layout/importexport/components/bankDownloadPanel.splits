@@ -69,7 +69,8 @@
         <column>
           <scrollPane forceVerticalScroll="true">
             <column margin="5">
-              <htmlEditorPane ref="manualDownloadMessage" styleClass="multiLineLabel" font="-,plain,12"/>
+              <htmlEditorPane ref="manualDownloadMessage" styleClass="multiLineLabel"
+                              useImageLocator="true" font="-,plain,12"/>
               <filler fill="vertical"/>
             </column>
           </scrollPane>

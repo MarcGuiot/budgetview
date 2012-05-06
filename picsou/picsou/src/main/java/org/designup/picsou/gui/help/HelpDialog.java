@@ -40,8 +40,7 @@ public class HelpDialog {
     title = builder.add("title", new JLabel()).getComponent();
     editor = builder.add("editor", new JEditorPane()).getComponent();
     editor.addHyperlinkListener(new HyperlinkHandler(directory, owner));
-    GuiUtils.initHtmlComponent(editor);
-    GuiUtils.loadCssResource("/help/help.css", editor, HelpDialog.class);
+    initHtmlEditor(editor);
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
 
@@ -55,6 +54,11 @@ public class HelpDialog {
     dialog = PicsouDialog.create(owner, false, directory);
     dialog.setPanelAndButton(panel, new CloseHelpAction(dialog));
     dialog.pack();
+  }
+
+  public static void initHtmlEditor(JEditorPane editor) {
+    GuiUtils.initHtmlComponent(editor);
+    GuiUtils.loadCssResource("/help/help.css", editor, HelpDialog.class);
   }
 
   public void show(String ref, Functor onCloseCallback) {

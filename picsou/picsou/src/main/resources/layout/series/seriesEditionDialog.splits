@@ -66,7 +66,7 @@
                     <card name="monthRangeSelection">
                       <column>
                         <label text="$seriesEdition.begin" styleClass="formLabelTop"
-                               fill="horizontal" marginTop="2"/>
+                               fill="horizontal" marginTop="10"/>
                         <row>
                           <textField ref="seriesStartDate" fill="horizontal" columns="20"
                                      marginRight="5" cursor="hand"/>
@@ -98,7 +98,7 @@
                                   cursor="hand"/>
                           <filler fill="horizontal" weightX="0.1"/>
                         </row>
-                        <filler fill="horizontal"/>
+                        <filler fill="vertical"/>
                       </column>
                     </card>
 

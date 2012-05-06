@@ -615,7 +615,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .selectBank("BNP Paribas")
       .checkManualDownloadAvailable()
       .selectManualDownload()
-      .checkManualDownloadHelp("BNP Paribas", "http://www.bnpparibas.net");
+      .checkManualDownloadHelp("BNP Paribas", "http://www.bnpparibas.net",
+                               "Rendez-vous sur le site internet de BNP Paribas");
 
     importDialog.close();
   }

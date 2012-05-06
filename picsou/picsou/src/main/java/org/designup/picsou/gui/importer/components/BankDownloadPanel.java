@@ -3,6 +3,8 @@ package org.designup.picsou.gui.importer.components;
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.gui.bank.BankChooserPanel;
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.gui.help.HelpDialog;
+import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.importer.ImportController;
 import org.designup.picsou.model.Bank;
@@ -100,6 +102,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
     builder.add("gotoManualDownload", gotoManualDownload);
 
     manualDownloadMessage = GuiUtils.createReadOnlyHtmlComponent();
+    HelpDialog.initHtmlEditor(manualDownloadMessage);
     builder.add("manualDownloadMessage", manualDownloadMessage);
 
     bankChooser = new BankChooserPanel(repository, directory, gotoManualDownload, null, parent);
@@ -147,18 +150,26 @@ public class BankDownloadPanel implements GlobSelectionListener {
     synchroPanel.setVisible(bank != null && (synchro || bank.get(Bank.OFX_DOWNLOAD, false)));
 
     if (bank != null) {
-      String url = bank.get(Bank.URL);
-      String bankName = directory.get(DescriptionService.class).getStringifier(Bank.TYPE)
-        .toString(bank, repository);
-
-      if (Strings.isNotEmpty(url)) {
-        manualDownloadMessage.setText(Lang.get("bankDownload.manualDownload.message.url", bankName, url));
-      }
-      else {
-        manualDownloadMessage.setText(Lang.get("bankDownload.manualDownload.message.nourl", bankName));
-      }
+      String manualDownloadText = getManualDownloadText(bank);
+      manualDownloadMessage.setText(manualDownloadText);
       GuiUtils.scrollToTop(manualDownloadMessage);
     }
+  }
+
+  private String getManualDownloadText(Glob bank) {
+    String bankHelp = directory.get(HelpService.class).getBankHelp(bank);
+    if (Strings.isNotEmpty(bankHelp)) {
+      return bankHelp;
+    }
+
+    String url = bank.get(Bank.URL);
+    String bankName = directory.get(DescriptionService.class).getStringifier(Bank.TYPE)
+      .toString(bank, repository);
+    if (Strings.isNotEmpty(url)) {
+      return Lang.get("bankDownload.manualDownload.message.url", bankName, url);
+    }
+
+    return Lang.get("bankDownload.manualDownload.message.nourl", bankName);
   }
 
   public void requestFocus() {

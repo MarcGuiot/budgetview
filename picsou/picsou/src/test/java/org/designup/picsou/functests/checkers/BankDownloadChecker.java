@@ -39,16 +39,11 @@ public class BankDownloadChecker extends BankChooserPanelChecker<BankDownloadChe
     return this;
   }
 
-  public BankDownloadChecker checkManualDownloadHelp(String bankName, String url) {
+  public BankDownloadChecker checkManualDownloadHelp(String... chunks) {
     TextBox manualDownloadMessage = panel.getTextBox("manualDownloadMessage");
-    assertThat(manualDownloadMessage.textContains(bankName));
-    assertThat(manualDownloadMessage.textContains(url));
-    return this;
-  }
-
-  public BankDownloadChecker checkManualDownloadHelp(String bankName) {
-    TextBox manualDownloadMessage = panel.getTextBox("manualDownloadMessage");
-    assertThat(manualDownloadMessage.textContains(bankName));
+    for (String chunk : chunks) {
+      assertThat(manualDownloadMessage.textContains(chunk));
+    }
     return this;
   }
 
