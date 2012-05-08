@@ -802,14 +802,13 @@ table.field-value td.value {
   margin-top: 3em;
 }
 
-
 #home div#text h1 {
   font-family: helvetica, arial, sans-serif;
   color: #333;
   font-size: 38px;
   letter-spacing: -1px;
   line-height: 1.1em;
-  margin: 20px 0px 20px;
+  margin: 15px 0px 20px;
   padding: 0px;
   text-align: center;
   text-shadow: white 0 2px 0;
@@ -827,18 +826,26 @@ table.field-value td.value {
   text-shadow: white 0 1px 0;
 }
 
-#home div#text img {
-  margin-top: 10px;
+#home div#text img.trial {
+  margin-top: 0;
 }
 
 #home div#text #platforms {
   margin: 0;
-  color: #777;
+  margin-top: 25px;
+  color: #666;
+  font-size: 11pt;
 }
 
-#home div#text #price {
+#home div#text #trial {
   margin: -10px 0 0 0;
   color: #333;
+  font-size: 12pt;
+}
+
+#home div#text #purchase {
+  margin: 0;
+  color: #666;
   font-size: 11pt;
 }
 
