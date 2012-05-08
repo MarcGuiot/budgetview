@@ -1,10 +1,10 @@
 package org.designup.picsou.functests;
 
-import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.ProjectEditionChecker;
 import org.designup.picsou.functests.checkers.components.TipChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.TransactionType;
 
 public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
@@ -73,6 +73,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkGauge(0.00, -700.00)
       .validate();
 
+    views.selectCategorization();
     categorization.setExtra("Resa Travel Plus", "My project");
 
     timeline.selectMonth("2011/02");
@@ -105,6 +106,11 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
                                                        "Some operations have been assigned to this project");
     projects.checkNoProjectShown();
     budgetView.getSummary().checkEndPosition(1900.00);
+
+    transactions.initAmountContent()
+      .add("01/01/2011", "RESA TRAVEL PLUS", -100.00, "To categorize", 1900.00, 1900.00, "Account n. 001111")
+      .add("01/01/2011", "INCOME", 1000.00, "To categorize", 2000.00, 2000.00, "Account n. 001111")
+      .check();
   }
 
   public void testProjectDeletionWithNoAssignedTransactions() throws Exception {
@@ -211,7 +217,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     projects.checkProject("My project", 201101, 201101, 200.00);
   }
-  
+
   public void testDeletingAnItemWithTipDisablesTip() throws Exception {
     operations.hideSignposts();
 
@@ -234,6 +240,11 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     operations.hideSignposts();
 
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/12/01")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .load();
+
     projects.create()
       .checkTitle("Create a project")
       .setName("My project")
@@ -242,6 +253,12 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .setItemAmount(0, -200.00)
       .deleteItem(0)
       .checkItems(" | December 2010 | 0.00")
+      .setItemName(0, "Booking")
+      .validate();
+
+    timeline.selectMonth("2010/12");
+    budgetView.extras.editProjectSeries("My project")
+      .checkItems("Booking | December 2010 | 0.00")
       .cancel();
   }
 
@@ -383,5 +400,37 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.extras.checkSeries("My project", 0, 1000.00);
+  }
+
+  public void testMovingTheProjectWhenThereAreAlreadyAssociatedTransactions() throws Exception {
+    operations.hideSignposts();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/01/10")
+      .addTransaction("2010/11/01", 1000.00, "Income")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/11/15", -100.00, "Resa")
+      .load();
+
+    projects
+      .create()
+      .setName("Trip")
+      .setItem(0, "Booking", 201011, -200.00)
+      .validate();
+
+    timeline.selectMonth("2010/11");
+    categorization.setExtra("RESA", "Trip");
+
+    budgetView.extras
+      .checkTotalAmounts(-100.00, -200.00)
+      .checkSeries("Trip", -100.00, -200.00);
+
+    projects.edit("Trip")
+      .setItem(0, "Booking", 201012, -200.00)
+      .validate();
+
+    budgetView.extras
+      .checkTotalAmounts(-100.00, 0.00)
+      .checkSeries("Trip", -100.00, 0.00);
   }
 }

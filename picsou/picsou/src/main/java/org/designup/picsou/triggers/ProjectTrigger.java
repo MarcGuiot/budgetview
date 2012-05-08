@@ -1,11 +1,15 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.model.*;
+import org.designup.picsou.model.util.Amounts;
+import org.designup.picsou.model.util.ClosedMonthRange;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.linkedTo;
@@ -72,38 +76,49 @@ public class ProjectTrigger implements ChangeSetListener {
     Integer seriesId = project.get(Project.SERIES);
     Key seriesKey = project.getTargetKey(Project.SERIES);
     for (Glob seriesBudget : repository.getAll(SeriesBudget.TYPE, linkedTo(seriesKey, SeriesBudget.SERIES))) {
+      boolean hasTransactions = Amounts.isNotZero(seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT));
       repository.update(seriesBudget.getKey(),
                         value(SeriesBudget.PLANNED_AMOUNT, 0.00),
-                        value(SeriesBudget.ACTIVE, false));
+                        value(SeriesBudget.ACTIVE, hasTransactions));
     }
 
 
-    int firstMonth = Integer.MAX_VALUE;
-    int lastMonth = Integer.MIN_VALUE;
-    double totalAmount = 0.00;
-    for (Glob item : repository.getAll(ProjectItem.TYPE, linkedTo(project, ProjectItem.PROJECT))) {
-      Double itemAmount = item.get(ProjectItem.AMOUNT);
-      totalAmount += itemAmount;
+    GlobList projectItems = repository.getAll(ProjectItem.TYPE, linkedTo(project, ProjectItem.PROJECT));
+    SortedSet<Integer> months = new TreeSet<Integer>();
+    months.addAll(projectItems.getValueSet(ProjectItem.MONTH));
+    if (months.isEmpty()) {
+      repository.update(project.getKey(), value(Project.TOTAL_AMOUNT, 0.00));
+      repository.update(seriesKey, Series.FIRST_MONTH, null);
+      repository.update(seriesKey, Series.LAST_MONTH, null);
+      return;
+    }
 
-      Integer monthId = item.get(ProjectItem.MONTH);
-      firstMonth = Math.min(firstMonth, monthId);
-      lastMonth = Math.max(lastMonth, monthId);
-
+    ClosedMonthRange range = new ClosedMonthRange(months.first(), months.last());
+    for (Integer monthId : range.asList()) {
       GlobList seriesBudgetList = SeriesBudget.getAll(seriesId, monthId, repository);
       if (seriesBudgetList.isEmpty()) {
         seriesBudgetList.add(repository.create(SeriesBudget.TYPE,
                                                value(SeriesBudget.SERIES, seriesId),
                                                value(SeriesBudget.MONTH, monthId)));
-      }
-      Glob seriesBudget = seriesBudgetList.getFirst();
+      }      
+    }
+
+    double totalAmount = 0.00;
+    for (Glob item : projectItems) {
+      Double itemAmount = item.get(ProjectItem.AMOUNT);
+      totalAmount += itemAmount;
+
+      Integer monthId = item.get(ProjectItem.MONTH);
+
+      Glob seriesBudget = SeriesBudget.find(seriesId, monthId, repository);
       repository.update(seriesBudget.getKey(),
                         value(SeriesBudget.PLANNED_AMOUNT, seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0) + itemAmount),
                         value(SeriesBudget.ACTIVE, true));
     }
     repository.update(project.getKey(), value(Project.TOTAL_AMOUNT, totalAmount));
 
-    repository.update(seriesKey, Series.FIRST_MONTH, firstMonth);
-    repository.update(seriesKey, Series.LAST_MONTH, lastMonth);
+    repository.update(seriesKey, Series.FIRST_MONTH, range.getMin());
+    repository.update(seriesKey, Series.LAST_MONTH, range.getMax());
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {

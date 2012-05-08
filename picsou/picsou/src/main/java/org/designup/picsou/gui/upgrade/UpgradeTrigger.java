@@ -6,6 +6,7 @@ import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
+import org.designup.picsou.model.util.Amounts;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -39,6 +40,7 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+
     PicsouInit.createTransientDataForNewUser(repository);
 
     Glob userVersion = repository.get(UserVersionInformation.KEY);
@@ -119,6 +121,9 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
     if (currentJarVersion < 85) {
       updateColorTheme(repository);
+    }
+    if (currentJarVersion < 90) {
+      fixHiddenProjectSeriesBudget(repository);
     }
 
     deleteDeprecatedGlobs(repository);
@@ -473,6 +478,17 @@ public class UpgradeTrigger implements ChangeSetListener {
       repository.update(UserPreferences.KEY,
                         UserPreferences.COLOR_THEME,
                         ColorTheme.STANDARD.getId());
+    }
+  }
+  
+  private void fixHiddenProjectSeriesBudget(GlobRepository repository) {
+    System.out.println("UpgradeTrigger.fixHiddenProjectSeriesBudget: ");
+    Set<Integer> seriesIds = repository.getAll(Project.TYPE).getValueSet(Project.SERIES);
+    for (Glob seriesBudget : repository.getAll(SeriesBudget.TYPE, GlobMatchers.fieldIn(SeriesBudget.SERIES, seriesIds))) {
+      if (!seriesBudget.isTrue(SeriesBudget.ACTIVE) && 
+          Amounts.isNotZero(seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT))) {
+        repository.update(seriesBudget.getKey(), SeriesBudget.ACTIVE, true);
+      }
     }
   }
 }

@@ -196,7 +196,9 @@ public class ProjectEditionChecker extends GuiChecker {
   }
 
   public void validate() {
+    checkNoErrorTipDisplayed();
     dialog.getButton("OK").click();
+    checkNoErrorTipDisplayed();
     assertFalse(dialog.isVisible());
   }
 }
