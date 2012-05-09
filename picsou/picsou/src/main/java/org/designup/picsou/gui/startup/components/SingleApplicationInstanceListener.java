@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.startup.components;
 
 import org.globsframework.utils.Log;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.io.*;
@@ -20,6 +21,7 @@ public class SingleApplicationInstanceListener {
   private static final String RESPONSE_OK = "OK";
   private static final String RESPONSE_FAIL = "FAIL";
   private ThreadReader threadReader;
+  private Directory directory;
   private OpenRequestManager openRequestManager;
 
   public enum ReturnState {
@@ -27,7 +29,8 @@ public class SingleApplicationInstanceListener {
     CONTINUE
   }
 
-  public SingleApplicationInstanceListener(OpenRequestManager openRequestManager) {
+  public SingleApplicationInstanceListener(Directory directory, OpenRequestManager openRequestManager) {
+    this.directory = directory;
     this.openRequestManager = openRequestManager;
   }
 
@@ -122,6 +125,7 @@ public class SingleApplicationInstanceListener {
         if (FILES_MESSAGE_KEY.equals(message)) {
           final List<File> files = readFileName(inputStream);
           outputStream.writeObject(RESPONSE_OK);
+          bringToFront();
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
               openRequestManager.openFiles(files);
@@ -160,6 +164,13 @@ public class SingleApplicationInstanceListener {
   }
 
   private void bringToFront() {
+    JFrame frame = directory.find(JFrame.class);
+    if (frame != null){
+      if (frame.getState() == JFrame.ICONIFIED){
+        frame.setState(JFrame.NORMAL);
+      }
+      frame.toFront();
+    }
   }
 
   public void shutdown() {
@@ -225,9 +236,6 @@ public class SingleApplicationInstanceListener {
 
     public void openFiles(List<File> file) {
       trySendToRemote(file);
-    }
-
-    public void bringToFront() {
     }
 
     private boolean trySendToRemote(List<File> files) {

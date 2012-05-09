@@ -155,7 +155,7 @@ public class PicsouApplication {
       openRequestManager.openFiles(fileToOpen);
     }
 
-    singleInstanceListener = new SingleApplicationInstanceListener(openRequestManager);
+    singleInstanceListener = new SingleApplicationInstanceListener(directory, openRequestManager);
     if (singleInstanceListener.findRemoteOrListen() == SingleApplicationInstanceListener.ReturnState.EXIT) {
       Thread.sleep(2000);
       return;
