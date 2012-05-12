@@ -121,7 +121,7 @@
     <bank name="SafeAmerica Credit Union" downloadUrl="https://saf.usersonlnet.com/scripts/isaofx.dll" id="18871350"
           fid="321171757" org="SafeAmerica Credit Union" ofxDownload="true"/>
     <bank name="American Express Card"
-          downloadUrl="https://www99.americanexpress.com/myca/ofxdl/us/download?request_type=nl_desktopdownload"
+          downloadUrl="https://online.americanexpress.com/myca/ofxdl/desktop/desktopDownload.do?request_type=nl_ofxdownload"
           id="14301726" fid="3101" org="AMEX" ofxDownload="true"/>
     <bank name="Think Federal Credit Union" downloadUrl="https://ofx.ibmcu.com" id="18725445" fid="291975465"
           org="IBMCU" ofxDownload="true"/>
