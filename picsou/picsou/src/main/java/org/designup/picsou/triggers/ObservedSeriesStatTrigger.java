@@ -74,12 +74,12 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
           currentAmount = transaction.get(Transaction.AMOUNT);
         }
 
-        Glob previousStat = repository.find(createKey(previousSeriesId, previousMonthId));
+        Glob previousStat = repository.find(SeriesStat.createKey(previousSeriesId, previousMonthId));
         if (previousStat != null && (isPlanned == null || isPlanned)) {
           updateStat(previousStat, previousAmount, -1, repository);
         }
 
-        Glob currentStat = repository.findOrCreate(createKey(currentSeriesId, currentMonthId));
+        Glob currentStat = repository.findOrCreate(SeriesStat.createKey(currentSeriesId, currentMonthId));
         if ((isPlanned == null || !isPlanned)) {
           updateStat(currentStat, currentAmount, 1, repository);
         }
@@ -98,7 +98,7 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
       return;
     }
 
-    Glob stat = repository.findOrCreate(createKey(seriesId, values.get(Transaction.BUDGET_MONTH)));
+    Glob stat = repository.findOrCreate(SeriesStat.createKey(seriesId, values.get(Transaction.BUDGET_MONTH)));
     if (stat != null) {
       final Double transactionAmount = values.get(Transaction.AMOUNT);
       updateStat(stat, transactionAmount, multiplier, repository);
@@ -139,18 +139,13 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
     GlobList allSeries = repository.getAll(Series.TYPE);
     for (Glob month : repository.getAll(Month.TYPE)) {
       for (Glob series : allSeries) {
-        repository.create(createKey(series.get(Series.ID), month.get(Month.ID)));
+        repository.create(SeriesStat.createKey(series.get(Series.ID), month.get(Month.ID)));
       }
     }
 
     for (Glob transaction : repository.getAll(Transaction.TYPE)) {
       processTransaction(transaction, 1, repository, true);
     }
-  }
-
-  private Key createKey(Integer seriesId, Integer monthId) {
-    return Key.create(SeriesStat.SERIES, seriesId,
-                      SeriesStat.MONTH, monthId);
   }
 
   private static class IsTransactionPresent implements GlobFunctor {

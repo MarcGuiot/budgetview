@@ -51,4 +51,8 @@ public class SeriesStat {
     Glob series = repository.get(org.globsframework.model.Key.create(Series.TYPE, seriesStatKey.get(SeriesStat.SERIES)));
     return BudgetArea.get(series.get(Series.BUDGET_AREA));
   }
+
+  public static org.globsframework.model.Key createKey(Integer seriesId, Integer monthId) {
+    return org.globsframework.model.Key.create(SERIES, seriesId, MONTH, monthId);
+  }
 }

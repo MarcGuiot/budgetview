@@ -7,6 +7,8 @@ import org.globsframework.model.Key;
 
 public class HistoLineDataset extends AbstractHistoDataset<HistoLineElement> {
 
+  private int multiplier = 1;
+
   public HistoLineDataset(String tooltipKey) {
     super(tooltipKey);
   }
@@ -17,12 +19,30 @@ public class HistoLineDataset extends AbstractHistoDataset<HistoLineElement> {
     updateMax(value);
   }
 
+  public void setInverted() {
+    multiplier = -1;
+  }
+
   public Double getValue(int index) {
     Double result = getElement(index).value;
     if (result == null) {
       return 0.0;
     }
-    return result;
+    return result * multiplier;
+  }
+
+  public double getMaxPositiveValue() {
+    if (multiplier > 0) {
+      return super.getMaxPositiveValue();
+    }
+    return super.getMaxNegativeValue();
+  }
+
+  public double getMaxNegativeValue() {
+    if (multiplier > 0) {
+      return super.getMaxNegativeValue();
+    }
+    return super.getMaxPositiveValue();
   }
 
   public String getTooltip(int index, Key objectKey) {

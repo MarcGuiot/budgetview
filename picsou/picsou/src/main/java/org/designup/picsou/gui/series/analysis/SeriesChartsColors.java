@@ -181,8 +181,7 @@ public class SeriesChartsColors implements ColorChangeListener {
   }
 
   private Color getSeriesForeground(int referenceMonthId, Integer itemId) {
-    final Glob seriesStat = parentRepository.find(Key.create(SeriesStat.SERIES, itemId,
-                                                             SeriesStat.MONTH, referenceMonthId));
+    final Glob seriesStat = parentRepository.find(SeriesStat.createKey(itemId, referenceMonthId));
     if (seriesStat == null) {
       return seriesText;
     }

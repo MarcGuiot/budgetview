@@ -25,9 +25,10 @@ import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class SeriesAnalysisChecker extends ExpandableTableChecker {
 
-  public HistoChartChecker histoChart;
-  public StackChecker balanceChart;
-  public StackChecker seriesChart;
+  public final HistoChartChecker histoChart;
+  public final StackChecker balanceChart;
+  public final StackChecker seriesChart;
+  public final StackChecker subSeriesChart;
 
   private Table table;
 
@@ -40,6 +41,7 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
     this.histoChart = new HistoChartChecker(mainWindow, "seriesAnalysisView", "histoChart");
     this.balanceChart = new StackChecker(mainWindow, PANEL_NAME, "balanceChart");
     this.seriesChart = new StackChecker(mainWindow, PANEL_NAME, "seriesChart");
+    this.subSeriesChart = new StackChecker(mainWindow, PANEL_NAME, "subSeriesChart");
   }
 
   public void checkBreadcrumb(String text) {

@@ -124,7 +124,7 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     if (masterId == null) {
       return true;
     }
-    return expandedMap.get(masterId);
+    return expandedMap.get(masterId) == Boolean.TRUE;
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {

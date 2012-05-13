@@ -464,13 +464,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .checkHtmlErrorMessage("import.file.empty", path);
 
-//    importDialog
-//      .clickErrorMessage()
-//      .checkTitle("Invalid file")
-//      .checkMessageContains("The content of this file is invalid")
-//      .checkDetailsContain("Invalid date: / - items: []")
-//      .close();
-
     importDialog.close();
   }
 

@@ -2,13 +2,17 @@ package org.designup.picsou.gui.series.view;
 
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SubSeries;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
 
@@ -19,10 +23,19 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
         if (seriesId.equals(Series.UNCATEGORIZED_SERIES_ID) || Series.isSavingToExternal(values)) {
           return;
         }
+
         Glob budgetAreaWrapper =
           repository.findUnique(SeriesWrapper.TYPE,
                                 value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId()),
                                 value(SeriesWrapper.ITEM_ID, values.get(Series.BUDGET_AREA)));
+
+        if (repository.contains(SeriesWrapper.TYPE,
+                                           and(
+                                             fieldEquals(SeriesWrapper.ITEM_TYPE,
+                                                         SeriesWrapperType.SERIES.getId()),
+                                             fieldEquals(SeriesWrapper.ITEM_ID, seriesId)))) {
+          return;
+        }
 
         repository.create(SeriesWrapper.TYPE,
                           value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
@@ -48,10 +61,26 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        Integer seriesId = key.get(Series.ID);
-        // normalement il n'y en a qu'un mais...
-        GlobList wrapper = SeriesWrapper.findAll(repository, SeriesWrapperType.SERIES, seriesId);
-        repository.delete(wrapper);
+        delete(key, SeriesWrapperType.SERIES, Series.ID, repository);
+      }
+    });
+
+    changeSet.safeVisit(SubSeries.TYPE, new ChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+        Glob parentSeriesWrapper =
+          SeriesWrapper.getWrapperForSeries(values.get(SubSeries.SERIES), repository);
+
+        repository.create(SeriesWrapper.TYPE,
+                          value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
+                          value(SeriesWrapper.ITEM_ID, key.get(SubSeries.ID)),
+                          value(SeriesWrapper.MASTER, parentSeriesWrapper.get(SeriesWrapper.ID)));
+      }
+
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+      }
+
+      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+        delete(key, SeriesWrapperType.SUB_SERIES, SubSeries.ID, repository);
       }
     });
   }
@@ -110,10 +139,26 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
                           value(SeriesWrapper.ITEM_ID, series.get(Series.ID)),
                           value(SeriesWrapper.MASTER, budgetAreaWrapperId));
       }
+
+      for (Glob subSeries : repository.getAll(SubSeries.TYPE)) {
+        Glob seriesWrapper =
+          SeriesWrapper.getWrapperForSeries(subSeries.get(SubSeries.SERIES), repository);
+
+        repository.create(SeriesWrapper.TYPE,
+                          value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
+                          value(SeriesWrapper.ITEM_ID, subSeries.get(SubSeries.ID)),
+                          value(SeriesWrapper.MASTER, seriesWrapper.get(SeriesWrapper.ID)));
+
+      }
     }
     finally {
       repository.completeChangeSet();
     }
+  }
+
+  private void delete(Key key, SeriesWrapperType type, IntegerField idField, GlobRepository repository) {
+    GlobList wrappers = SeriesWrapper.findAll(repository, type, key.get(idField));
+    repository.delete(wrappers);
   }
 
 }

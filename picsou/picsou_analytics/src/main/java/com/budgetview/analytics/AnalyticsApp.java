@@ -26,7 +26,6 @@ public class AnalyticsApp {
 
     AnalyticsWindow window = new AnalyticsWindow(repository, directory);
     window.show();
-
   }
 
   private static Directory createDirectory() {

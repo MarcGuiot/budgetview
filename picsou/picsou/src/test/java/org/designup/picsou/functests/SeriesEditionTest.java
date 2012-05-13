@@ -1415,7 +1415,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
-  // En mode virement extern=>non importé on creé des operations automatiquement
+  // En mode virement externe=>non importé on crée des operations automatiquement
   // et du coup on ne peut plus changer la date de debut
   // il faut autoriser le changement meme si il y a des operations
   public void testAllowChangeOfBeginOfDayOnSavingsEnvelope() throws Exception {

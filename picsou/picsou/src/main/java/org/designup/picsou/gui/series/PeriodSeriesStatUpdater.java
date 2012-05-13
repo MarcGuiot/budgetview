@@ -106,7 +106,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       Integer seriesId = stat.get(SeriesStat.SERIES);
       Double newValue = stat.get(SeriesStat.SUMMARY_AMOUNT);
 
-      Glob previousStat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, previousMonth));
+      Glob previousStat = repository.find(SeriesStat.createKey(seriesId, previousMonth));
       Double previousValue = previousStat == null ? null : previousStat.get(SeriesStat.SUMMARY_AMOUNT);
 
       repository.update(Key.create(PeriodSeriesStat.TYPE, seriesId),

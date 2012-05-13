@@ -82,6 +82,14 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
     return (Double)doGetPrevious(field);
   }
 
+  public double getPrevious(DoubleField field, double defaultIfNull) throws ItemNotFound {
+    Double previous = getPrevious(field);
+    if (previous == null) {
+      return defaultIfNull;
+    }
+    return previous;
+  }
+
   public Date getPrevious(DateField field) throws ItemNotFound {
     return (Date)doGetPrevious(field);
   }

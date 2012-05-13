@@ -12,6 +12,7 @@ import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerA
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.model.SubSeriesStat;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.utils.DaySelection;
 import org.designup.picsou.gui.utils.Matchers;
@@ -45,6 +46,7 @@ public class HistoChartBuilder {
 
   private HistoDiffColors balanceColors;
   private HistoDiffColors incomeAndExpensesColors;
+  private HistoLineColors incomeAndExpensesLineColors;
   private HistoLineColors uncategorizedColors;
   private HistoLineColors accountColors;
   private HistoDailyColors accountDailyColors;
@@ -110,6 +112,14 @@ public class HistoChartBuilder {
       "histo.uncategorized.line",
       "histo.uncategorized.fill.positive",
       "histo.uncategorized.fill.negative",
+      directory
+    );
+
+    incomeAndExpensesLineColors = new HistoLineColors(
+      "histo.income.line",
+      "histo.expenses.line",
+      "histo.income.fill",
+      "histo.expenses.fill",
       directory
     );
 
@@ -399,7 +409,7 @@ public class HistoChartBuilder {
       double totalActual = 0.00;
       double totalPlanned = 0.00;
       for (Integer seriesId : seriesIds) {
-        Glob stat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
+        Glob stat = repository.find(SeriesStat.createKey(seriesId, monthId));
         if (stat != null) {
           totalPlanned += stat.get(SeriesStat.PLANNED_AMOUNT, 0.00);
           totalActual += stat.get(SeriesStat.AMOUNT, 0.00);
@@ -424,6 +434,41 @@ public class HistoChartBuilder {
     builder.showDiff(incomeAndExpensesColors,
                      "planned", "actual",
                      messageKey, messageArg);
+  }
+
+  public void showSubSeriesHisto(Set<Integer> subSeriesIds, int selectedMonthId, boolean resetPosition) {
+    if (resetPosition) {
+      range.reset();
+    }
+
+    HistoLineDatasetBuilder builder = createLineDataset("subSeries");
+
+    for (int monthId : getMonthIdsToShow(selectedMonthId)) {
+      double actual = 0.00;
+      for (Integer subSeriesId : subSeriesIds) {
+        Glob stat = repository.find(SubSeriesStat.createKey(subSeriesId, monthId));
+        if (stat != null) {
+          actual += stat.get(SubSeriesStat.AMOUNT, 0.00);
+        }
+      }
+      builder.add(monthId, actual, monthId == selectedMonthId);
+    }
+
+    String messageKey;
+    String messageArg;
+    if (subSeriesIds.size() == 1) {
+      messageKey = "subSeries";
+      Integer firstSubSeriesId = subSeriesIds.iterator().next();
+      Glob subSeries = repository.get(Key.create(SubSeries.TYPE, firstSubSeriesId));
+      messageArg = subSeries.get(SubSeries.NAME);
+    }
+    else {
+      messageKey = "subSeries.multi";
+      messageArg = Integer.toString(subSeriesIds.size());
+    }
+
+    builder.invertIfNeeded();
+    builder.showLine(incomeAndExpensesLineColors, messageKey, messageArg);
   }
 
   public void showMainAccountsHisto(int selectedMonthId, boolean resetPosition) {

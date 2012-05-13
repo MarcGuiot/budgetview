@@ -140,8 +140,7 @@ public class SeriesTable {
     }
 
     private Double getValueForMonth(int monthId) {
-      Glob stat = repository.find(Key.create(SeriesStat.SERIES, series.get(Series.ID),
-                                             SeriesStat.MONTH, monthId));
+      Glob stat = repository.find(SeriesStat.createKey(series.get(Series.ID), monthId));
       if (stat == null) {
         return null;
       }

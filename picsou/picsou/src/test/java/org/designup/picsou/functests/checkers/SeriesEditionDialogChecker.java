@@ -658,6 +658,13 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
+  public SeriesEditionDialogChecker deleteSubSeriesAndConfirm(String... names) {
+    Panel tab = getSelectedTab();
+    tab.getListBox().select(names);
+    DeleteSubSeriesDialogChecker.open(tab.getButton("deleteSubSeries").triggerClick()).validate();
+    return this;
+  }
+
   public DeleteSubSeriesDialogChecker deleteSubSeriesWithConfirmation(String... names) {
     Panel tab = getSelectedTab();
     tab.getListBox().select(names);

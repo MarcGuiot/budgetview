@@ -105,6 +105,10 @@ public class StackChecker extends GuiChecker {
     }
 
     public void dump() {
+      if (dataset == null) {
+        Assert.fail("Insert: \n  .checkEmpty();");
+      }
+
       StringBuilder builder = new StringBuilder();
       builder.append("  .checkSize(").append(dataset.size()).append(")\n");
       for (int i = 0; i < dataset.size(); i++) {
@@ -126,7 +130,9 @@ public class StackChecker extends GuiChecker {
     }
 
     public void checkEmpty() {
-      checkSize(0);
+      if (dataset != null) {
+        checkSize(0);
+      }
     }
   }
 

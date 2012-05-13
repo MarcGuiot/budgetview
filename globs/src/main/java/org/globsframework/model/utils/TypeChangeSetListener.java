@@ -13,6 +13,10 @@ public abstract class TypeChangeSetListener implements ChangeSetListener {
 
   private List<GlobType> types;
 
+  protected TypeChangeSetListener(GlobType[] types) {
+    this.types = Utils.list(types);
+  }
+
   protected TypeChangeSetListener(GlobType type, GlobType... additionalTypes) {
     this.types = Utils.list(type, additionalTypes);
   }

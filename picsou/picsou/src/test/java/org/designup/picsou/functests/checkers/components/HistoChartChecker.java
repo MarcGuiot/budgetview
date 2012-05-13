@@ -46,20 +46,22 @@ public class HistoChartChecker extends AbstractHistoChecker<HistoChartChecker> {
 
   public HistoChartChecker checkDiffColumn(int index, String label, String section, double reference, double actual, boolean selected) {
     HistoDiffDataset dataset = getDataset(HistoDiffDataset.class);
-    Assert.assertEquals(getErrorMessage(index, dataset), label, dataset.getLabel(index));
-    Assert.assertEquals(getErrorMessage(index, dataset), section, dataset.getSection(index));
-    Assert.assertEquals(getErrorMessage(index, dataset), reference, dataset.getReferenceValue(index), 0.01);
-    Assert.assertEquals(getErrorMessage(index, dataset), actual, dataset.getActualValue(index), 0.01);
-    Assert.assertEquals(getErrorMessage(index, dataset), selected, dataset.isSelected(index));
+    String errorMessage = getErrorMessage(index, dataset);
+    Assert.assertEquals(errorMessage, label, dataset.getLabel(index));
+    Assert.assertEquals(errorMessage, section, dataset.getSection(index));
+    Assert.assertEquals(errorMessage, reference, dataset.getReferenceValue(index), 0.01);
+    Assert.assertEquals(errorMessage, actual, dataset.getActualValue(index), 0.01);
+    Assert.assertEquals(errorMessage, selected, dataset.isSelected(index));
     return this;
   }
 
   public HistoChartChecker checkLineColumn(int index, String label, String section, double value, boolean selected) {
     HistoLineDataset dataset = getDataset(HistoLineDataset.class);
-    Assert.assertEquals(getErrorMessage(index, dataset), label, dataset.getLabel(index).substring(0, 1));
-    Assert.assertEquals(getErrorMessage(index, dataset), section, dataset.getSection(index));
-    Assert.assertEquals(getErrorMessage(index, dataset), value, dataset.getValue(index));
-    Assert.assertEquals(getErrorMessage(index, dataset), selected, dataset.isSelected(index));
+    String errorMessage = getErrorMessage(index, dataset);
+    Assert.assertEquals(errorMessage, label.substring(0,1), dataset.getLabel(index).substring(0,1));
+    Assert.assertEquals(errorMessage, section, dataset.getSection(index));
+    Assert.assertEquals(errorMessage, value, dataset.getValue(index), 0.01);
+    Assert.assertEquals(errorMessage, selected, dataset.isSelected(index));
     return this;
   }
 
@@ -109,16 +111,35 @@ public class HistoChartChecker extends AbstractHistoChecker<HistoChartChecker> {
 
   public void dump() {
     StringBuilder builder = new StringBuilder();
-    HistoDiffDataset dataset = getDataset(HistoDiffDataset.class);
+    HistoChart chart = getChart();
+    HistoDataset dataset = chart.getCurrentDataset();
     builder.append(".checkColumnCount(").append(dataset.size()).append(")\n");
-    for (int i = 0; i < dataset.size(); i++) {
-      builder.append(".checkDiffColumn(").append(i).append(", \"")
-        .append(dataset.getLabel(i)).append("\", \"")
-        .append(dataset.getSection(i)).append("\", ")
-        .append(Formatting.toString(dataset.getReferenceValue(i))).append(", ")
-        .append(Formatting.toString(dataset.getActualValue(i)))
-        .append(dataset.isSelected(i) ? ", true" : "")
-        .append(")\n");
+
+    if (dataset instanceof HistoDiffDataset) {
+      HistoDiffDataset diffDataset = (HistoDiffDataset)dataset;
+      for (int i = 0; i < diffDataset.size(); i++) {
+        builder.append(".checkDiffColumn(").append(i).append(", \"")
+          .append(diffDataset.getLabel(i)).append("\", \"")
+          .append(diffDataset.getSection(i)).append("\", ")
+          .append(Formatting.toString(diffDataset.getReferenceValue(i))).append(", ")
+          .append(Formatting.toString(diffDataset.getActualValue(i)))
+          .append(diffDataset.isSelected(i) ? ", true" : "")
+          .append(")\n");
+      }
+    }
+    else if (dataset instanceof HistoLineDataset) {
+      HistoLineDataset lineDataset = (HistoLineDataset)dataset;
+      for (int i = 0; i < lineDataset.size(); i++) {
+        builder.append(".checkLineColumn(").append(i).append(", \"")
+          .append(lineDataset.getLabel(i)).append("\", \"")
+          .append(lineDataset.getSection(i)).append("\", ")
+          .append(Formatting.toString(lineDataset.getValue(i)))
+          .append(lineDataset.isSelected(i) ? ", true" : "")
+          .append(")\n");
+      }
+    }
+    else {
+      Assert.fail("Unexpected dataset type: " + dataset);
     }
     Assert.fail("Insert:\n" + builder.toString());
   }

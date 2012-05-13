@@ -33,6 +33,8 @@ public interface FieldValuesWithPrevious extends FieldValues {
 
   Double getPrevious(DoubleField field) throws ItemNotFound;
 
+  double getPrevious(DoubleField field, double defaultIfNull) throws ItemNotFound;
+
   Date getPrevious(DateField field) throws ItemNotFound;
 
   Date getPrevious(TimeStampField field) throws ItemNotFound;

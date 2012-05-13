@@ -22,6 +22,7 @@ public class PicsouGuiModel {
     PeriodSeriesStat.TYPE,
     SavingsBudgetStat.TYPE,
     SeriesStat.TYPE,
+    SubSeriesStat.TYPE,
     SeriesWrapper.TYPE,
     SeriesWrapperType.TYPE,
     MonthDay.TYPE,
@@ -36,9 +37,7 @@ public class PicsouGuiModel {
     Collection<GlobType> globTypeCollection = new ArrayList<GlobType>(MODEL.getAll());
     Set<GlobType> typeNotToRemove = MODEL.getConstants().getTypes();
     typeNotToRemove.addAll(Arrays.asList(PreTransactionTypeMatcher.TYPE, BankFormat.TYPE,
-//                                         Bank.TYPE, BankEntity.TYPE,
                                          User.TYPE, AppVersionInformation.TYPE));
-
     globTypeCollection.removeAll(typeNotToRemove);
     return  globTypeCollection;
   }

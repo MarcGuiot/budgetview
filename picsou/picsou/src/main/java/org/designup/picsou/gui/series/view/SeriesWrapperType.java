@@ -12,8 +12,9 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum SeriesWrapperType implements GlobConstantContainer {
   SERIES(1),
-  BUDGET_AREA(2),
-  SUMMARY(3);
+  SUB_SERIES(2),
+  BUDGET_AREA(3),
+  SUMMARY(4);
 
   public static GlobType TYPE;
 
@@ -51,8 +52,10 @@ public enum SeriesWrapperType implements GlobConstantContainer {
       case 1:
         return SERIES;
       case 2:
-        return BUDGET_AREA;
+        return SUB_SERIES;
       case 3:
+        return BUDGET_AREA;
+      case 4:
         return SUMMARY;
     }
     throw new ItemNotFound(id + " is not associated to any SeriesWrapperType enum value");

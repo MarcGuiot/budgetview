@@ -7,6 +7,7 @@ import org.globsframework.metamodel.annotations.NamingField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.FieldSetter;
@@ -29,8 +30,11 @@ public class SubSeries {
   @NamingField
   public static StringField NAME;
 
+  public static NotUniqueIndex SERIES_INDEX;
+
   static {
-    GlobTypeLoader.init(SubSeries.class, "subSeries");
+    GlobTypeLoader loader = GlobTypeLoader.init(SubSeries.class, "subSeries");
+    loader.defineNonUniqueIndex(SERIES_INDEX, SERIES);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

@@ -92,6 +92,12 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
         colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, button, panel);
         return panel;
 
+      case SUB_SERIES:
+        label.setText(text);
+        label.setToolTipText(description);
+        colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, label, labelPanel);
+        return labelPanel;
+
       case SUMMARY:
         label.setText(text);
         label.setToolTipText(description);

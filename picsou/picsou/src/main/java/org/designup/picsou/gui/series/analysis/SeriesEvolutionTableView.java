@@ -29,6 +29,7 @@ import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobStringifiers;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -41,6 +42,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.SortedSet;
 
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.not;
 import static org.globsframework.utils.Utils.intRange;
 
 public class SeriesEvolutionTableView extends View {
@@ -262,8 +265,7 @@ public class SeriesEvolutionTableView extends View {
 
       for (int offset = -1; offset < -1 + monthColumnsCount; offset++) {
         int monthId = Month.offset(referenceMonthId, offset);
-        Glob seriesStat = repository.find(Key.create(SeriesStat.SERIES, wrapper.get(SeriesWrapper.ITEM_ID),
-                                                     SeriesStat.MONTH, monthId));
+        Glob seriesStat = repository.find(SeriesStat.createKey(wrapper.get(SeriesWrapper.ITEM_ID), monthId));
         if ((seriesStat != null) &&
             (Amounts.isNotZero(seriesStat.get(SeriesStat.PLANNED_AMOUNT))
              || Amounts.isNotZero(seriesStat.get(SeriesStat.AMOUNT)))) {

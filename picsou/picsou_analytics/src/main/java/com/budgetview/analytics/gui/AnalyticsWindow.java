@@ -35,7 +35,7 @@ public class AnalyticsWindow {
     Arrays.asList(WeekPerfStat.NEW_USERS,
                   WeekPerfStat.RETENTION_RATIO,
                   WeekPerfStat.EVALUATIONS_RESULT,
-                  WeekPerfStat.COMPLETION_ON_FIRST_SESSION,
+                  WeekPerfStat.POTENTIAL_BUYERS,
                   WeekPerfStat.REVENUE_RATIO,
                   WeekPerfStat.PURCHASES);
 
