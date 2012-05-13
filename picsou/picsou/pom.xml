@@ -236,11 +236,11 @@
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>piccolo</groupId>
-      <artifactId>piccolo</artifactId>
-      <version>1.0.4</version>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>piccolo</groupId>-->
+      <!--<artifactId>piccolo</artifactId>-->
+      <!--<version>1.0.4</version>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.apache.wicket</groupId>
       <artifactId>wicket</artifactId>
