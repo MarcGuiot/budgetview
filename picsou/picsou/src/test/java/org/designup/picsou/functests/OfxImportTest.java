@@ -280,7 +280,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     transactions
       .initAmountContent()
-      .dumpCode();
+      .add("31/01/2006", "DROITS DE GARDE 1 SEM. 2006 3006", -21.53, "To categorize", -683.25, -683.25, "Account n. 00010063701")
+      .check();
 
     text = OfxImportTest.TEXT.replace("<DTASOF>20060704000000", "<DTASOF>2006/07/04");
     fileName = TestUtils.getFileName(this, ".ofx");
@@ -291,8 +292,17 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     fileName = TestUtils.getFileName(this, ".ofx");
     Files.dumpStringToFile(fileName, text);
     operations.importOfxFile(fileName);
+
+    text = OfxImportTest.TEXT.replace("<DTASOF>20060704000000", "<DTASOF>20120510100000.000");
+    fileName = TestUtils.getFileName(this, ".ofx");
+    Files.dumpStringToFile(fileName, text);
+    operations.importOfxFile(fileName);
+
+    text = OfxImportTest.TEXT.replace("<DTASOF>20060704000000", "<DTASOF>20120510100000.000 EST");
+    fileName = TestUtils.getFileName(this, ".ofx");
+    Files.dumpStringToFile(fileName, text);
+    operations.importOfxFile(fileName);
   }
-  
   
   public void testInlineOfx() throws Exception {
     int i = TEXT.indexOf("<OFX>");

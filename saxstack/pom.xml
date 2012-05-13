@@ -14,10 +14,10 @@
   </organization>
 
   <repositories>
-    <repository>
-      <id>xml sax parser piccolo</id>
-      <url>http://mirrors.ibiblio.org/pub/mirrors/maven2/</url>
-    </repository>
+    <!--<repository>-->
+      <!--<id>xml sax parser piccolo</id>-->
+      <!--<url>http://mirrors.ibiblio.org/pub/mirrors/maven2/</url>-->
+    <!--</repository>-->
     <repository>
       <id>jgoodies, prevayler</id>
       <url>http://startupxp.dynalias.org/maven2/</url>
@@ -37,11 +37,11 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>piccolo</groupId>
-      <artifactId>piccolo</artifactId>
-      <version>1.0.4</version>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>piccolo</groupId>-->
+      <!--<artifactId>piccolo</artifactId>-->
+      <!--<version>1.0.4</version>-->
+    <!--</dependency>-->
 
     <!--<dependency>-->
     <!--<groupId>xerces</groupId>-->
