@@ -8,6 +8,7 @@ import org.designup.picsou.gui.components.charts.stack.StackChartColors;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
 import org.designup.picsou.gui.components.charts.stack.utils.StackChartAdapter;
 import org.designup.picsou.gui.model.*;
+import org.designup.picsou.gui.series.analysis.components.StackToggleController;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
@@ -24,6 +25,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -63,6 +65,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
   private static final GlobType[] USED_TYPES = 
     new GlobType[]{BudgetStat.TYPE, Series.TYPE, SubSeries.TYPE,
                    SavingsBudgetStat.TYPE, PeriodSeriesStat.TYPE, SeriesStat.TYPE, SubSeriesStat.TYPE};
+  private StackToggleController stackToggle;
 
   public SeriesChartsPanel(HistoChartRange range,
                            final GlobRepository repository,
@@ -103,6 +106,8 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     balanceChart.addListener(listener);
     seriesChart.addListener(listener);
     subSeriesChart.addListener(listener);
+
+    stackToggle = new StackToggleController(balanceChart, seriesChart, subSeriesChart);
   }
 
   public void reset() {
@@ -136,6 +141,8 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     balanceChartLabel = builder.add("balanceChartLabel", new JLabel()).getComponent();
     seriesChartLabel = builder.add("seriesChartLabel", new JLabel()).getComponent();
     subSeriesChartLabel = builder.add("subSeriesChartLabel", new JLabel()).getComponent();
+    
+    builder.add("stackToggle", stackToggle.getBackToBudgetButton());
   }
 
   public void monthSelected(Integer monthId, SortedSet<Integer> monthIds) {
@@ -153,6 +160,15 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       else {
         selectedWrapperKeys.clear();
         selectedWrapperKeys.addAll(selectedWrappers.getKeyList());
+        for (Glob wrapper : selectedWrappers) {
+          if (SeriesWrapper.isSeries(wrapper)) {
+            Glob series = SeriesWrapper.getSeries(wrapper, repository);
+            if (repository.contains(SubSeries.TYPE, GlobMatchers.linkedTo(series, SubSeries.SERIES))) {
+              stackToggle.showSubseriesStack();
+              break;
+            }
+          }
+        }
       }
     }
 

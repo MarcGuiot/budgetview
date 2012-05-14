@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers.components;
 
 import junit.framework.Assert;
+import junit.framework.AssertionFailedError;
 import org.designup.picsou.functests.checkers.GuiChecker;
 import org.designup.picsou.functests.checkers.ViewSelectionChecker;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
@@ -8,6 +9,8 @@ import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
 import org.uispec4j.Key;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.Assertion;
+import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.toolkit.Empty;
 
 import java.awt.*;
@@ -27,6 +30,26 @@ public class StackChecker extends GuiChecker {
     this.window = window;
     this.containerName = containerName;
     this.name = name;
+  }
+
+  public void checkVisible() {
+    UISpecAssert.assertTrue(new Assertion() {
+      public void check() {
+        if (!getChart().isVisible()) {
+          throw new AssertionFailedError(name + " is not visible");
+        }
+      }
+    });
+  }
+
+  public void checkHidden() {
+    UISpecAssert.assertTrue(new Assertion() {
+      public void check() {
+        if (getChart().isVisible()) {
+          throw new AssertionFailedError(name + " is visible");
+        }
+      }
+    });
   }
 
   public DatasetChecker getLeftDataset() {

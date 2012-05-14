@@ -41,7 +41,10 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
   public void test() throws Exception {
 
+    seriesAnalysis.checkBudgetStackShown();
+
     seriesAnalysis.select("Food");
+    seriesAnalysis.checkSubSeriesStackShown();
     seriesAnalysis.seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 260.00, true);
@@ -52,6 +55,7 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .checkValue("Restaurant", 60.00);
 
     seriesAnalysis.subSeriesChart.select("Restaurant");
+    seriesAnalysis.checkSubSeriesStackShown();
     seriesAnalysis.seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 260.00, true);
@@ -68,10 +72,6 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(3, "Jul", "2012", 0.00);
 
     seriesAnalysis.subSeriesChart.select("Groceries");
-    seriesAnalysis.balanceChart.getRightDataset()
-      .checkSize(2)
-      .checkValue("Variable", 260.00, true)
-      .checkValue("Recurring", 50.00);
     seriesAnalysis.seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 260.00, true);
@@ -86,6 +86,23 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(1, "May", "2012", 100.00, true)
       .checkLineColumn(2, "June", "2012", 0.00)
       .checkLineColumn(3, "Jul", "2012", 0.00);
+
+    seriesAnalysis.gotoBudgetStack();
+    seriesAnalysis.balanceChart.getRightDataset()
+      .checkSize(2)
+      .checkValue("Variable", 260.00, true)
+      .checkValue("Recurring", 50.00);
+
+    budgetView.variable.gotoAnalysis("Food");
+    seriesAnalysis.checkSubSeriesStackShown();
+    seriesAnalysis.seriesChart.getSingleDataset()
+      .checkSize(1)
+      .checkValue("Food", 260.00, true);
+    seriesAnalysis.subSeriesChart.getSingleDataset()
+      .checkSize(3)
+      .checkValue("Groceries", 100.00)
+      .checkValue("Food", 100.00)
+      .checkValue("Restaurant", 60.00);
   }
 
   public void testDeletingAndAddingSubSeries() throws Exception {

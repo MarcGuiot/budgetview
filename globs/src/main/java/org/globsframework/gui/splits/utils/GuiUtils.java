@@ -1,6 +1,7 @@
 package org.globsframework.gui.splits.utils;
 
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import sun.security.action.GetPropertyAction;
 
@@ -142,6 +143,14 @@ public class GuiUtils {
         actionForKeyStroke.actionPerformed(new ActionEvent(component, KeyEvent.KEY_PRESSED, ""));
       }
     }
+  }
+
+  public static <T> T getEnclosingComponent(Component component, final Class<T> containerClass, final String name) {
+    return (T)getEnclosingComponent(component, new ComponentMatcher() {
+      public boolean matches(Component component) {
+        return containerClass.isInstance(component) && Utils.equal(name, component.getName());
+      }
+    });
   }
 
   public static <T> T getEnclosingComponent(Component component, final Class<T> containerClass) {

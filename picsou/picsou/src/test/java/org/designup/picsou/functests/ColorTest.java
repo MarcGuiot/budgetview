@@ -14,7 +14,6 @@ public class ColorTest extends TestCase {
     ColorTheme[] themes = ColorTheme.values();
     for (int i = 1; i < themes.length; i++) {
       SortedSet<Object> reference = load(themes[0]);
-      System.out.println("ColorTest.test: " + reference);
       SortedSet<Object> underTest = load(themes[i]);
       reference.removeAll(underTest);
       TestUtils.checkEmpty(reference, "Missing entries in " + themes[i].getFilePath());

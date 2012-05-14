@@ -413,7 +413,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
     seriesAnalysis.seriesChart.select("Groceries");
     seriesAnalysis.checkSelected("Groceries");
-
+    seriesAnalysis.checkBudgetStackShown();
     seriesAnalysis.balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 500.00);
@@ -424,7 +424,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
     seriesAnalysis.balanceChart.select("Recurring");
     seriesAnalysis.checkSelected("Recurring");
-
+    seriesAnalysis.checkBudgetStackShown();
     seriesAnalysis.seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Mobile", 100.00)

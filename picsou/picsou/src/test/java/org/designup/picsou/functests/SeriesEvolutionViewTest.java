@@ -358,10 +358,10 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     views.checkAnalysisSelected();
     seriesAnalysis.checkBreadcrumb("Overall budget > Income > John's");
 
+    seriesAnalysis.checkBudgetStackShown();
     seriesAnalysis.balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 670.00, true);
-
     seriesAnalysis.seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Mary's", 350.00)
@@ -377,10 +377,10 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     seriesAnalysis.checkBreadcrumb("Overall budget > Income > Mary's");
 
+    seriesAnalysis.checkBudgetStackShown();
     seriesAnalysis.balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 670.00, true);
-
     seriesAnalysis.seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Mary's", 350.00, true)

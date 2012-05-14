@@ -282,6 +282,27 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
     assertFalse(legendPanel.isVisible());
     return this;
   }
+  
+  public SeriesAnalysisChecker checkBudgetStackShown() {
+    balanceChart.checkVisible();
+    seriesChart.checkVisible();
+    subSeriesChart.checkHidden();
+    assertFalse(getPanel().getButton("stackToggle").isEnabled());
+    return this;
+  }
+  
+  public SeriesAnalysisChecker checkSubSeriesStackShown() {
+    balanceChart.checkHidden();
+    seriesChart.checkVisible();
+    subSeriesChart.checkVisible();
+    assertTrue(panel.getButton("stackToggle").isEnabled());
+    return this;    
+  }
+  
+  public SeriesAnalysisChecker gotoBudgetStack() {
+    panel.getButton("stackToggle").click();
+    return this;
+  }
 
   public class SeriesTableChecker extends TableChecker {
 
