@@ -303,7 +303,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     Files.dumpStringToFile(fileName, text);
     operations.importOfxFile(fileName);
   }
-  
+
   public void testInlineOfx() throws Exception {
     int i = TEXT.indexOf("<OFX>");
     String text = TEXT.substring(0, i) + TEXT.substring(i).replaceAll("\n", "");

@@ -6,6 +6,8 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.io.*;
 import java.util.Properties;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class Files {
   private Files() {
@@ -153,6 +155,14 @@ public class Files {
       throw new ResourceAccessFailed("Could not load properties file");
     }
     return properties;
+  }
+
+  public static SortedSet<Object> loadPropertyKeys(String fileName, Class refClass) throws IOException {
+    Properties root = new Properties();
+    root.load(getStream(refClass, fileName));
+    TreeSet<Object> result = new TreeSet<Object>();
+    result.addAll(root.keySet());
+    return result;
   }
 
   public static InputStream getStream(Class refClass, String fileName) throws ResourceAccessFailed {

@@ -63,7 +63,7 @@ public enum ApplicationColors {
   TRANSACTION_TABLE_HEADER_FILTERED_MEDIUM,
   TRANSACTION_TABLE_HEADER_FILTERED_DARK,
   TRANSACTION_TABLE_HEADER_FILTERED_TITLE,
-  
+
   TRANSACTION_ERROR_TEXT,
   TRANSACTION_TEXT_PLANNED,
   TRANSACTION_TEXT_LINK,
@@ -96,6 +96,16 @@ public enum ApplicationColors {
   private boolean canBeNull;
   private String toString;
 
+  public static final String[] COLOR_FILES = {"/colors/color.properties",
+                                               "/colors/color_classic_blue.properties",
+                                               "/colors/color_blue.properties",
+                                               "/colors/color_green.properties",
+                                               "/colors/color_grey.properties",
+                                               "/colors/color_black.properties",
+                                               "/colors/color_pink.properties",
+                                               "/colors/color_purple.properties",
+                                               "/colors/color_print.properties"};
+
   ApplicationColors() {
     this(false);
     toString = name().toLowerCase().replaceAll("_", ".");
@@ -118,16 +128,7 @@ public enum ApplicationColors {
   }
 
   public static ColorService createColorService() {
-    ColorService colorService = new ColorService(ApplicationColors.class,
-                                                 "/colors/color.properties",
-                                                 "/colors/color_classic_blue.properties",
-                                                 "/colors/color_blue.properties",
-                                                 "/colors/color_green.properties",
-                                                 "/colors/color_grey.properties",
-                                                 "/colors/color_black.properties",
-                                                 "/colors/color_pink.properties",
-                                                 "/colors/color_purple.properties",
-                                                 "/colors/color_print.properties");
+    ColorService colorService = new ColorService(ApplicationColors.class, COLOR_FILES);
     check(colorService);
     return colorService;
   }

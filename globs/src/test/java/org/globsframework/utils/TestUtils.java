@@ -235,4 +235,15 @@ public class TestUtils {
     }
     childTag.end();
   }
+
+  public static <T> void checkEmpty(Collection<T> keys, String message) {
+    if (!keys.isEmpty()) {
+      StringBuilder text = new StringBuilder();
+      text.append(message);
+      for (Object key : keys) {
+        text.append("\n").append(key);
+      }
+      Assert.fail(text.toString());
+    }
+  }
 }
