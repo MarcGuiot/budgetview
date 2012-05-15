@@ -25,17 +25,10 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
         }
 
         Glob budgetAreaWrapper =
-          repository.findUnique(SeriesWrapper.TYPE,
-                                value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId()),
-                                value(SeriesWrapper.ITEM_ID, values.get(Series.BUDGET_AREA)));
-
-        if (repository.contains(SeriesWrapper.TYPE,
-                                           and(
-                                             fieldEquals(SeriesWrapper.ITEM_TYPE,
-                                                         SeriesWrapperType.SERIES.getId()),
-                                             fieldEquals(SeriesWrapper.ITEM_ID, seriesId)))) {
-          return;
-        }
+          repository.findByIndex(SeriesWrapper.INDEX,SeriesWrapper.ITEM_TYPE,  SeriesWrapperType.BUDGET_AREA.getId())
+            .findByIndex(SeriesWrapper.ITEM_ID, values.get(Series.BUDGET_AREA))
+            .findByIndex(SeriesWrapper.MASTER, null)
+            .getGlobs().getFirst();
 
         repository.create(SeriesWrapper.TYPE,
                           value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
@@ -49,9 +42,10 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
           if (wrapper != null) {
             repository.delete(wrapper.getKey());
             Glob budgetAreaWrapper =
-              repository.findUnique(SeriesWrapper.TYPE,
-                                    value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId()),
-                                    value(SeriesWrapper.ITEM_ID, values.get(Series.BUDGET_AREA)));
+              repository.findByIndex(SeriesWrapper.INDEX,SeriesWrapper.ITEM_TYPE,  SeriesWrapperType.BUDGET_AREA.getId())
+                .findByIndex(SeriesWrapper.ITEM_ID, values.get(Series.BUDGET_AREA))
+                .findByIndex(SeriesWrapper.MASTER, null)
+                .getGlobs().getFirst();
             repository.create(SeriesWrapper.TYPE,
                               value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
                               value(SeriesWrapper.ITEM_ID, key.get(Series.ID)),
@@ -104,7 +98,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
         repository.create(SeriesWrapper.TYPE,
                           value(SeriesWrapper.ID, id),
                           value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUMMARY.getId()),
-                          value(SeriesWrapper.ITEM_ID, null));
+                          value(SeriesWrapper.ITEM_ID, id));
       }
 
       Map<Integer, Integer> budgetAreaIds = new HashMap<Integer, Integer>();

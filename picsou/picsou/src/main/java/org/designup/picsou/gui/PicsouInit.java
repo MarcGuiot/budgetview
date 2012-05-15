@@ -182,10 +182,12 @@ public class PicsouInit {
         if (userData.isEmpty()) {
           createTransientDataForNewUser(repository);
           createPersistentDataForNewUser(repository, directory);
+          repository.completeChangeSet();
           Set<GlobType> types = additionalGlobToInsert.getTypes();
           repository.reset(additionalGlobToInsert, types.toArray(new GlobType[types.size()]));
         }
         else {
+          repository.completeChangeSet();
           exceptionHandler.setFirstReset(true);
           userData.addAll(additionalGlobToInsert);
           try {
@@ -226,19 +228,14 @@ public class PicsouInit {
         throw new InvalidData(Lang.get("login.data.load.fail"), e);
       }
       finally {
+        exceptionHandler.setFirstReset(false);
+        repository.removeTrigger(upgradeTrigger);
+        repository.startChangeSet();
         try {
-          repository.completeChangeSet();
+          upgradeTrigger.postProcessing(repository);
         }
         finally {
-          exceptionHandler.setFirstReset(false);
-          repository.removeTrigger(upgradeTrigger);
-          repository.startChangeSet();
-          try {
-            upgradeTrigger.postProcessing(repository);
-          }
-          finally {
-            repository.completeChangeSet();
-          }
+          repository.completeChangeSet();
         }
       }
     }

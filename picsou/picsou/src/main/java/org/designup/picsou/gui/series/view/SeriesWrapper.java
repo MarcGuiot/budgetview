@@ -8,6 +8,7 @@ import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
+import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 import static org.globsframework.model.FieldValue.value;
@@ -20,6 +21,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.InvalidState;
+import org.globsframework.utils.exceptions.ItemAmbiguity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,6 +41,8 @@ public class SeriesWrapper {
 
   @Target(SeriesWrapper.class)
   public static LinkField MASTER;
+  
+  public static MultiFieldUniqueIndex INDEX;
 
   public static final Integer ALL_ID = 0;
   public static final Integer UNCATEGORIZED_ID = 1;
@@ -52,19 +56,24 @@ public class SeriesWrapper {
                                                SAVINGS_POSITION_SUMMARY_ID};
 
   static {
-    GlobTypeLoader.init(SeriesWrapper.class);
+    GlobTypeLoader loader = GlobTypeLoader.init(SeriesWrapper.class);
+    loader.defineMultiFieldUniqueIndex(INDEX, ITEM_TYPE, ITEM_ID, MASTER);
+
   }
 
   public static Glob find(GlobRepository repository, SeriesWrapperType type, Integer itemId) {
-    return repository.findUnique(SeriesWrapper.TYPE,
-                                 value(SeriesWrapper.ITEM_TYPE, type.getId()),
-                                 value(SeriesWrapper.ITEM_ID, itemId));
+    return findUnique(itemId, repository, type.getId());
+//    return repository.findUnique(SeriesWrapper.TYPE,
+//                                 value(SeriesWrapper.ITEM_TYPE, type.getId()),
+//                                 value(SeriesWrapper.ITEM_ID, itemId));
   }
 
   public static GlobList findAll(GlobRepository repository, SeriesWrapperType type, Integer itemId) {
-    return repository.getAll(SeriesWrapper.TYPE,
-                             and(fieldEquals(SeriesWrapper.ITEM_TYPE, type.getId()),
-                                 fieldEquals(SeriesWrapper.ITEM_ID, itemId)));
+    return repository.findByIndex(INDEX, SeriesWrapper.ITEM_TYPE, type.getId())
+      .findByIndex(SeriesWrapper.ITEM_ID, itemId).getGlobs();
+//    return repository.getAll(SeriesWrapper.TYPE,
+//                             and(fieldEquals(SeriesWrapper.ITEM_TYPE, type.getId()),
+//                                 fieldEquals(SeriesWrapper.ITEM_ID, itemId)));
   }
 
   public static boolean isAll(Glob wrapper) {
@@ -125,21 +134,33 @@ public class SeriesWrapper {
   }
 
   public static Glob getWrapperForBudgetArea(BudgetArea budgetArea, GlobRepository repository) {
-    return repository.findUnique(SeriesWrapper.TYPE,
-                                 value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId()),
-                                 value(SeriesWrapper.ITEM_ID, budgetArea.getId()));
+    return findUnique(budgetArea.getId(), repository, SeriesWrapperType.BUDGET_AREA.getId());
+//    return repository.findUnique(SeriesWrapper.TYPE,
+//                                 value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId()),
+//                                 value(SeriesWrapper.ITEM_ID, budgetArea.getId()));
   }
 
   public static Glob getWrapperForSeries(Integer seriesId, GlobRepository repository) {
-    return repository.findUnique(SeriesWrapper.TYPE,
-                                 value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
-                                 value(SeriesWrapper.ITEM_ID, seriesId));
+    return findUnique(seriesId, repository, SeriesWrapperType.SERIES.getId());
+//    return repository.findUnique(SeriesWrapper.TYPE,
+//                                 value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
+//                                 value(SeriesWrapper.ITEM_ID, seriesId));
+  }
+
+  private static Glob findUnique(Integer itemId, GlobRepository repository, Integer id) {
+    GlobList globs = repository.findByIndex(INDEX, SeriesWrapper.ITEM_TYPE, id)
+      .findByIndex(SeriesWrapper.ITEM_ID, itemId).getGlobs();
+    if (globs.size() > 1){
+      throw new ItemAmbiguity("Several elements " + globs);
+    }
+    return globs.getFirst();
   }
 
   public static Glob getWrapperForSubSeries(Integer subSeriesId, GlobRepository repository) {
-    return repository.findUnique(SeriesWrapper.TYPE,
-                                 value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
-                                 value(SeriesWrapper.ITEM_ID, subSeriesId));
+    return findUnique(subSeriesId, repository, SeriesWrapperType.SUB_SERIES.getId());
+//    return repository.findUnique(SeriesWrapper.TYPE,
+//                                 value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
+//                                 value(SeriesWrapper.ITEM_ID, subSeriesId));
   }
 
   public static Glob getWrapper(Glob glob, GlobRepository repository) {

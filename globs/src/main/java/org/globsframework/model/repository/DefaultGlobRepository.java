@@ -665,8 +665,8 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         bulkDispatchingModeLevel++;
 
         if (applyTriggers) {
-//        System.err.println("DefaultGlobRepository.notifyListeners " + changeSetToDispatch);
-//        Thread.dumpStack();
+//          Thread.dumpStack();
+//          System.err.println("DefaultGlobRepository.notifyListeners " + changeSetToDispatch);
           for (ChangeSetListener trigger : triggers) {
             this.changeSetToDispatch = new DefaultChangeSet();
             trigger.globsChanged(currentChangeSetToDispatch, this);
