@@ -1,8 +1,12 @@
 package org.designup.picsou.bank.importer.bnp;
 
+import com.gargoylesoftware.htmlunit.DownloadedContent;
+import com.gargoylesoftware.htmlunit.HttpWebConnection;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.javascript.host.Event;
 import com.jidesoft.swing.InfiniteProgressPanel;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.bank.importer.WebBankPage;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
@@ -26,8 +30,8 @@ import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.stream.ReplacementInputStreamBuilder;
 
-import javax.imageio.ImageReader;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -35,6 +39,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -103,10 +108,36 @@ public class BnpSync extends WebBankPage {
     return new BnpSync(parent, directory, repository);
   }
 
+  protected HttpWebConnection getHttpConnection() {
+    return new HttpWebConnection(client) {
+      protected DownloadedContent downloadResponseBody(final HttpResponse httpResponse) throws IOException {
+        final DownloadedContent content = super.downloadResponseBody(httpResponse);
+        Header type = httpResponse.getEntity().getContentType();
+        if (type.getValue() != null && type.getValue().contains("text/html")) {
+          return new DownloadedContent() {
+            public InputStream getInputStream() throws IOException {
+              ReplacementInputStreamBuilder builder = new ReplacementInputStreamBuilder();
+              builder.replace("maxlength=\"10\" value=\"\" name=\"ch1\" type=\"text\"&gt;".getBytes(),
+                              "<INPUT size=\"10\" maxlength=\"6\" name=\"ch1\" value=\"\" type=\"text\" > ".getBytes());
+              builder.replace("maxlength=\"6\" name=\"ch2\" value=\"\" type=\"password\" disabled &gt;>".getBytes(),
+                              "<INPUT size=\"10\" maxlength=\"6\" name=\"ch2\" value=\"\" type=\"password\" disabled > ".getBytes());
+              builder.replace("document.write('<INPUT size=\"10\" ');".getBytes(), " ".getBytes());
+              builder.replace("document.write('<INPUT size=\"5\" ');".getBytes(), " ".getBytes());
+              return builder.create(content.getInputStream());
+            }
+          };
+        }
+        else {
+          return content;
+        }
+      }
+    };
+  }
+
   public JPanel getPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/bnpPanel.splits");
-//    builder.add("occupedPanel", accupedPanel);
+//    builder.add("occupedPanel", occupedPanel);
     initCardCode(builder);
     progressPanel.setVisible(true);
     progressPanel.start();
@@ -181,11 +212,11 @@ public class BnpSync extends WebBankPage {
     keyboardPanel.setSize(clavier.getWidth(), clavier.getHeight());
     List<HtmlElement> name = page.getElementsByName("MapGril");
     if (name.size() == 0) {
-      throw new RuntimeException("Can not find MapGril"+ " in " + page.asXml());
+      throw new RuntimeException("Can not find MapGril" + " in " + page.asXml());
     }
     List<HtmlElement> password = body.getElementsByAttribute(HtmlInput.TAG_NAME, "name", "ch2");
     if (password.size() == 0) {
-      throw new RuntimeException("Can not find input name='ch2'"+ " in " + page.asXml());
+      throw new RuntimeException("Can not find input name='ch2'" + " in " + page.asXml());
     }
     keyboardPanel.setImage(clavier, name.get(0), (HtmlInput)password.get(0));
     corriger.setEnabled(true);

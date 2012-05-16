@@ -103,7 +103,7 @@ public class SG extends WebBankPage {
   public JPanel getPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/sgPanel.splits");
-//    builder.add("occupedPanel", accupedPanel);
+//    builder.add("occupedPanel", occupedPanel);
     initCardCode(builder);
     progressPanel.setVisible(true);
     progressPanel.start();

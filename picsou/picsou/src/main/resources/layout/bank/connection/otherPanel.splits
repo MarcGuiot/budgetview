@@ -22,6 +22,7 @@
       <scrollPane>
         <table ref="table"/>
       </scrollPane>
+      <!--<component ref="occupedPanel" opaque="false" visible="true"/>-->
       <button ref="update"/>
     </column>
   </panel>

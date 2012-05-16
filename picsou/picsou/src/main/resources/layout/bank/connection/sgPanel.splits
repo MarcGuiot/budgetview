@@ -18,7 +18,7 @@
         <filler fill="horizontal" weightX="0.1"/>
         <button ref="corriger" fill="none"/>
         <button ref="valider" fill="none"/>
-        <!--<component ref="occupedPanel" opaque="false" visible="false"/>-->
+        <!--<component ref="occupedPanel" opaque="false" visible="true"/>-->
         <filler fill="horizontal" weightX="0.1"/>
       </row>
       <filler fill="vertical" weightY="0.1"/>

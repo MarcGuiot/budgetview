@@ -50,29 +50,15 @@ public abstract class WebBankPage extends BankPage {
     client.setCssEnabled(false);
     client.setJavaScriptEnabled(true);
     client.setCache(new Cache());
-    client.setWebConnection(new HttpWebConnection(client) {
-      protected DownloadedContent downloadResponseBody(final HttpResponse httpResponse) throws IOException {
-        final DownloadedContent content = super.downloadResponseBody(httpResponse);
-        return new DownloadedContent() {
-          public InputStream getInputStream() throws IOException {
-            Header type = httpResponse.getEntity().getContentType();
-            System.out.println("WebBankPage.getInputStream " + type.getName() + "  " + type.getValue());
-            ReplacementInputStreamBuilder builder = new ReplacementInputStreamBuilder();
-            builder.replace("maxlength=\"10\" value=\"\" name=\"ch1\" type=\"text\"&gt;".getBytes(),
-                            "<INPUT size=\"10\" maxlength=\"6\" name=\"ch1\" value=\"\" type=\"text\" > ".getBytes());
-            builder.replace("maxlength=\"6\" name=\"ch2\" value=\"\" type=\"password\" disabled &gt;>".getBytes(),
-                            "<INPUT size=\"10\" maxlength=\"6\" name=\"ch2\" value=\"\" type=\"password\" disabled > ".getBytes());
-            builder.replace("document.write('<INPUT size=\"10\" ');".getBytes(), " ".getBytes());
-            builder.replace("document.write('<INPUT size=\"5\" ');".getBytes(), " ".getBytes());
-            return builder.create(content.getInputStream());
-          }
-        };
-      }
-    });
+    client.setWebConnection(getHttpConnection());
     client.setAjaxController(new NicelyResynchronizingAjaxController());
     page = (HtmlPage)client.getPage(index);
     errorAlertHandler = new ErrorAlertHandler();
     client.setAlertHandler(errorAlertHandler);
+  }
+
+  protected HttpWebConnection getHttpConnection() {
+    return new HttpWebConnection(client);
   }
 
   protected <T extends HtmlElement> T getElementById(final String id) {

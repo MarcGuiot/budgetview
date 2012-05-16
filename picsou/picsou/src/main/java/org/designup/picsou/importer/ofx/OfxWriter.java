@@ -28,8 +28,9 @@ public class OfxWriter {
     }
   }
 
-  public void writeLoadOp(String date, String user, String password, final String org, final String fid, final String bankId, final String accountNumber, final String accountType){
-    writeHeader(user, password, org, fid);
+  public void writeLoadOp(String fromDate, String currentDate, String user, String password, final String org, final String fid, final String bankId,
+                          final String accountNumber, final String accountType){
+    writeHeader(user, password, org, fid, currentDate);
     String str = "<BANKMSGSRQV1>\n" +
                  "<STMTTRNRQ>\n" +
                  "<TRNUID>20110829000000\n" +
@@ -41,7 +42,7 @@ public class OfxWriter {
                  "<ACCTTYPE>" + accountType + "\n" +
                  "</BANKACCTFROM>\n" +
                  "<INCTRAN>\n" +
-                 "<DTSTART>" + date + "\n" +
+                 "<DTSTART>" + fromDate + "\n" +
                  "<INCLUDE>Y\n" +
                  "</INCTRAN>\n" +
                  "</STMTRQ>\n" +
@@ -51,22 +52,22 @@ public class OfxWriter {
     write(str);
   }
 
-  public void writeQuery(String user, String password, final String org, final String fid){
-      writeHeader(user, password, org, fid);
+  public void writeQuery(String user, String password, String currentDate, final String org, final String fid){
+      writeHeader(user, password, org, fid, currentDate);
       write(
       "<SIGNUPMSGSRQV1>\n" +
       "<ACCTINFOTRNRQ>\n" +
       "<TRNUID>" + UUID.randomUUID().toString() + "\n" +
       "<CLTCOOKIE>1\n" +
       "<ACCTINFORQ>\n" +
-      "<DTACCTUP>20110830000000\n" +
+      "<DTACCTUP>" + currentDate + "\n" +
       "</ACCTINFORQ>\n" +
       "</ACCTINFOTRNRQ>\n" +
       "</SIGNUPMSGSRQV1>\n" +
       "</OFX>");
   }
 
-  private void writeHeader(String user, String password, String org, String fid) {
+  private void writeHeader(String user, String password, String org, String fid, String currentDate) {
     String applicationId = "Money"; //many institutions just won't work with an unrecognized app id...
     String applicationVersion = "1600"; //many institutions just won't work with an unrecognized app id...
     write("OFXHEADER:100\n" +
@@ -81,7 +82,7 @@ public class OfxWriter {
     "<OFX>\n" +
     "<SIGNONMSGSRQV1>\n" +
     "<SONRQ>\n" +
-    "<DTCLIENT>20110704000000\n" +
+    "<DTCLIENT>" + currentDate + "\n" +
     "<USERID>" + user + "\n" +
     "<USERPASS>" + password + "\n" +
     "<LANGUAGE>ENG" +

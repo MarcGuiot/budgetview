@@ -54,9 +54,9 @@ public class OfxConnection {
     return connection;
   }
 
-  public List<AccountInfo> getAccounts(String user, String password, final String url,
+  public List<AccountInfo> getAccounts(String user, String password, String date, final String url,
                                        final String org, final String fid) {
-    String accountInfo = getAccountInfo(user, password, url, org, fid);
+    String accountInfo = getAccountInfo(user, password, date, url, org, fid);
     OfxParser parser = new OfxParser();
     AccountInfoOfxFunctor accountInfoOfxFunctor = new AccountInfoOfxFunctor();
     try {
@@ -73,7 +73,7 @@ public class OfxConnection {
                             final File outputFile) throws IOException {
     StringWriter stringWriter = new StringWriter();
     OfxWriter writer = new OfxWriter(stringWriter);
-    writer.writeLoadOp(fromDate, user, password, org, fid, realAccount.get(RealAccount.BANK_ID),
+    writer.writeLoadOp(fromDate, OfxConnection.previousDate(1), user, password, org, fid, realAccount.get(RealAccount.BANK_ID),
                        realAccount.get(RealAccount.NUMBER), realAccount.get(RealAccount.ACC_TYPE));
     String request = stringWriter.toString();
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -83,11 +83,11 @@ public class OfxConnection {
     Files.copyStream(inputStream, fileOutputStream);
   }
 
-  public String getAccountInfo(String user, String password, final String url, final String org, final String fid) {
+  public String getAccountInfo(String user, String password, String date, final String url, final String org, final String fid) {
     try {
       StringWriter stringWriter = new StringWriter();
       OfxWriter writer = new OfxWriter(stringWriter);
-      writer.writeQuery(user, password, org, fid);
+      writer.writeQuery(user, password, date, org, fid);
       String request = stringWriter.toString();
       ByteArrayOutputStream buffer = new ByteArrayOutputStream();
       buffer.write(request.getBytes("UTF-8"));
@@ -143,15 +143,14 @@ public class OfxConnection {
     char[] chars = new char[255];
     int count = reader.read(chars);
     String password = new String(chars, 0, count - 1);
-    System.out.println("OfxConnection.main '" + password + "'");
+    String fromDate = previousDate(120);
+    System.out.println("OfxConnection.main ");
     DefaultGlobRepository repository = new DefaultGlobRepository(new DefaultGlobIdGenerator());
-    List<AccountInfo> globList = OfxConnection.getInstance().getAccounts("0350763423L", password, "https://ofx.videoposte.com",
-                                                                         "0", "0");
+    List<AccountInfo> globList = OfxConnection.getInstance().getAccounts("0350763423L", password, previousDate(1),
+                                                                         "https://ofx.videoposte.com", "0", "0");
     System.out.println("OfxConnection.main " + globList);
     for (AccountInfo accountInfo : globList) {
       System.out.println("OfxConnection.main " + accountInfo.number + " " + accountInfo.accType);
-      String fromDate;
-      fromDate = previousDate(120);
       File outputFile = new File("/tmp/operation.ofx");
       Glob glob = repository.create(RealAccount.TYPE,
                                     FieldValue.value(RealAccount.ACC_TYPE, accountInfo.accType),

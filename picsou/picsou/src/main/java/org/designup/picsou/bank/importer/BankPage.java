@@ -26,8 +26,6 @@ import java.awt.event.ActionEvent;
 import java.io.*;
 import java.util.Date;
 
-import com.jidesoft.swing.InfiniteProgressPanel;
-
 public abstract class BankPage {
   private Window parent;
   protected Directory directory;
@@ -35,7 +33,7 @@ public abstract class BankPage {
   protected LocalGlobRepository repository;
   protected PicsouDialog dialog;
   protected GlobList accounts = new GlobList();
-//  protected InfiniteProgressPanel accupedPanel = new InfiniteProgressPanel();
+//  protected InfiniteProgressPanel occupedPanel = new InfiniteProgressPanel();
 
   public BankPage(Window parent, Directory directory, GlobRepository repository, Integer bankId) {
     this.parent = parent;
@@ -141,12 +139,12 @@ public abstract class BankPage {
     repository.commitChanges(true);
   }
 
-  public void endOccuped() {
-//    accupedPanel.start();
+  public void startOccuped() {
+//    occupedPanel.start();
   }
 
-  public void startOccuped() {
-//    accupedPanel.stop();
+  public void endOccuped() {
+//    occupedPanel.stop();
   }
 
   protected class CancelAction extends AbstractAction {

@@ -14,7 +14,7 @@ public class OfxConnectionTest extends TestCase {
   public void test() throws Exception {
     StringWriter stringWriter = new StringWriter();
     OfxWriter writer = new OfxWriter(stringWriter);
-    writer.writeQuery("user", "password", "0", "0");
+    writer.writeQuery("user", "password", "date", "0", "0");
     String request = stringWriter.toString()
       .replaceAll("NEWFILEUID:.*\n", "NEWFILEUID:123\n")
       .replaceAll("<TRNUID>.*\n", "<TRNUID>321\n");
@@ -31,7 +31,7 @@ public class OfxConnectionTest extends TestCase {
                  "<OFX>\n" +
                  "<SIGNONMSGSRQV1>\n" +
                  "<SONRQ>\n" +
-                 "<DTCLIENT>20110704000000\n" +
+                 "<DTCLIENT>date\n" +
                  "<USERID>user\n" +
                  "<USERPASS>password\n" +
                  "<LANGUAGE>ENG<FI>\n" +
@@ -47,7 +47,7 @@ public class OfxConnectionTest extends TestCase {
                  "<TRNUID>321\n" +
                  "<CLTCOOKIE>1\n" +
                  "<ACCTINFORQ>\n" +
-                 "<DTACCTUP>20110830000000\n" +
+                 "<DTACCTUP>date\n" +
                  "</ACCTINFORQ>\n" +
                  "</ACCTINFOTRNRQ>\n" +
                  "</SIGNUPMSGSRQV1>\n" +

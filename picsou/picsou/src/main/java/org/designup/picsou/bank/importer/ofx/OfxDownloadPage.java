@@ -39,7 +39,7 @@ public class OfxDownloadPage extends BankPage {
   public JPanel getPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/ofxDownloadPage.splits");
-//    builder.add("occupedPanel", accupedPanel);
+//    builder.add("occupedPanel", occupedPanel);
 
     codeField = new JTextField();
     codeField.setName("code");
@@ -96,8 +96,9 @@ public class OfxDownloadPage extends BankPage {
     public void actionPerformed(ActionEvent e) {
       try {
         startOccuped();
-        List<OfxConnection.AccountInfo> list = OfxConnection.getInstance().getAccounts(codeField.getText(), new String(passwordField.getPassword()),
-                                                                                       urlField.getText(), orgField.getText(), fidField.getText());
+        List<OfxConnection.AccountInfo> list = OfxConnection.getInstance()
+          .getAccounts(codeField.getText(), new String(passwordField.getPassword()), OfxConnection.previousDate(1),
+                       urlField.getText(), orgField.getText(), fidField.getText());
 
         for (OfxConnection.AccountInfo info : list) {
           createOrUpdateRealAccount(info.accType, info.number, urlField.getText(), orgField.getText(), fidField.getText());

@@ -72,6 +72,8 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/userAndPasswordPanel.splits");
 
+//    builder.add("occupedPanel", occupedPanel);
+
     codeField = new JTextField();
     codeField.setName("code");
     builder.add(codeField);
