@@ -1,5 +1,6 @@
 package org.designup.picsou.model;
 
+import org.designup.picsou.importer.csv.CsvType;
 import org.designup.picsou.server.serialization.SerializationManager;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.utils.GlobModelBuilder;
@@ -41,7 +42,8 @@ public class PicsouModel {
                           NumericDateType.TYPE,
                           TextDateType.TYPE,
                           CsvMapping.TYPE,
-                          DayOfMonth.TYPE
+                          DayOfMonth.TYPE,
+                          CsvType.CSV_TYPE
                           )
       .get();
 

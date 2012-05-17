@@ -182,7 +182,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     final ArrayList<OfxConnection.AccountInfo> accountInfoArrayList = new ArrayList<OfxConnection.AccountInfo>();
 
     OfxConnection.register(new OfxConnection() {
-      public List<AccountInfo> getAccounts(String user, String password, String url, String org, String fid) {
+      public List<AccountInfo> getAccounts(String user, String password, String date, String url, String org, String fid) {
         AccountInfo account1 = new AccountInfo(null, "1223", "any");
         accountInfoArrayList.add(account1);
         return accountInfoArrayList;
