@@ -482,7 +482,6 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
   
   private void fixHiddenProjectSeriesBudget(GlobRepository repository) {
-    System.out.println("UpgradeTrigger.fixHiddenProjectSeriesBudget: ");
     Set<Integer> seriesIds = repository.getAll(Project.TYPE).getValueSet(Project.SERIES);
     for (Glob seriesBudget : repository.getAll(SeriesBudget.TYPE, GlobMatchers.fieldIn(SeriesBudget.SERIES, seriesIds))) {
       if (!seriesBudget.isTrue(SeriesBudget.ACTIVE) && 

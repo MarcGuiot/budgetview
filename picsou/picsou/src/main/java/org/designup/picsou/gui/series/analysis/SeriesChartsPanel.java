@@ -107,11 +107,12 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     seriesChart.addListener(listener);
     subSeriesChart.addListener(listener);
 
-    stackToggle = new StackToggleController(balanceChart, seriesChart, subSeriesChart);
+    stackToggle = new StackToggleController(balanceChart, subSeriesChart);
   }
 
   public void reset() {
     setMainSummaryWrapperKey();
+    stackToggle.showBudgetStack();
   }
 
   private StackChartColors createStackColors(String leftBar, String leftBorder,
@@ -141,8 +142,9 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     balanceChartLabel = builder.add("balanceChartLabel", new JLabel()).getComponent();
     seriesChartLabel = builder.add("seriesChartLabel", new JLabel()).getComponent();
     subSeriesChartLabel = builder.add("subSeriesChartLabel", new JLabel()).getComponent();
-    
-    builder.add("stackToggle", stackToggle.getBackToBudgetButton());
+
+    builder.add("gotoBudgetButton", stackToggle.getGotoBudgetButton());
+    builder.add("gotoSubSeriesButton", stackToggle.getGotoSubSeriesButton());
   }
 
   public void monthSelected(Integer monthId, SortedSet<Integer> monthIds) {
@@ -153,26 +155,30 @@ public class SeriesChartsPanel implements GlobSelectionListener {
 
   public void selectionUpdated(GlobSelection selection) {
     if (selection.isRelevantForType(SeriesWrapper.TYPE)) {
-      GlobList selectedWrappers = selection.getAll(SeriesWrapper.TYPE);
-      if (selectedWrappers.isEmpty()) {
+      GlobList wrappers = selection.getAll(SeriesWrapper.TYPE);
+      if (wrappers.isEmpty()) {
         setMainSummaryWrapperKey();
       }
       else {
         selectedWrapperKeys.clear();
-        selectedWrapperKeys.addAll(selectedWrappers.getKeyList());
-        for (Glob wrapper : selectedWrappers) {
-          if (SeriesWrapper.isSeries(wrapper)) {
-            Glob series = SeriesWrapper.getSeries(wrapper, repository);
-            if (repository.contains(SubSeries.TYPE, GlobMatchers.linkedTo(series, SubSeries.SERIES))) {
-              stackToggle.showSubseriesStack();
-              break;
-            }
-          }
-        }
+        selectedWrapperKeys.addAll(wrappers.getKeyList());
+        stackToggle.setSubSeriesPresent(containsSubSeries(wrappers));
       }
     }
 
     updateCharts(true);
+  }
+
+  private boolean containsSubSeries(GlobList selectedWrappers) {
+    for (Glob wrapper : selectedWrappers) {
+      if (SeriesWrapper.isSeries(wrapper)) {
+        Glob series = SeriesWrapper.getSeries(wrapper, repository);
+        if (repository.contains(SubSeries.TYPE, GlobMatchers.linkedTo(series, SubSeries.SERIES))) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private void setMainSummaryWrapperKey() {
