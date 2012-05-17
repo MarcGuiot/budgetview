@@ -65,7 +65,7 @@ public class OtherBank extends WebBankPage {
     update.addActionListener(new ActionListener() {
 
       public void actionPerformed(ActionEvent e) {
-        startOccuped();
+        startProgress();
         try {
           GlobList globList = table.getGlobs();
           for (Glob glob : globList) {
@@ -75,7 +75,7 @@ public class OtherBank extends WebBankPage {
           doImport();
         }
         finally {
-          endOccuped();
+          endProgress();
         }
       }
     });

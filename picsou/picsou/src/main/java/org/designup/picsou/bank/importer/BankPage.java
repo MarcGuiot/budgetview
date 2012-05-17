@@ -33,7 +33,7 @@ public abstract class BankPage {
   protected LocalGlobRepository repository;
   protected PicsouDialog dialog;
   protected GlobList accounts = new GlobList();
-//  protected InfiniteProgressPanel occupedPanel = new InfiniteProgressPanel();
+  protected ProgressPanel progressPanel = new ProgressPanel();
 
   public BankPage(Window parent, Directory directory, GlobRepository repository, Integer bankId) {
     this.parent = parent;
@@ -139,12 +139,12 @@ public abstract class BankPage {
     repository.commitChanges(true);
   }
 
-  public void startOccuped() {
-//    occupedPanel.start();
+  public void startProgress() {
+    progressPanel.start();
   }
 
-  public void endOccuped() {
-//    occupedPanel.stop();
+  public void endProgress() {
+    progressPanel.stop();
   }
 
   protected class CancelAction extends AbstractAction {

@@ -23,10 +23,11 @@
                   icon="security_lock.png" rolloverIcon="security_lock_rollover.png"/>
           <filler fill="horizontal"/>
         </row>
-
-        <button ref="showDetails" styleClass="showHide"/>
-        <!--<component ref="occupedPanel" opaque="false" visible="true"/>-->
       </column>
+
+      <component ref="progressPanel" weightY="0.01"/>
+
+      <button ref="showDetails" styleClass="showHide"/>
 
       <row ref="detailsPanel">
         <grid marginLeft="30">
@@ -39,6 +40,7 @@
         </grid>
         <filler fill="horizontal"/>
       </row>
+
       <filler fill="vertical"/>
     </column>
   </panel>

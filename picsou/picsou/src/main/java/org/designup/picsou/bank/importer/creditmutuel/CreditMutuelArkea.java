@@ -167,7 +167,7 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
 
     public void actionPerformed(ActionEvent e) {
       try {
-              startOccuped();
+              startProgress();
       HtmlForm form = page.getFormByName("formIdentification");
       HtmlInput personne = form.getInputByName("noPersonne");
       HtmlInput password = form.getInputByName("motDePasse");
@@ -194,7 +194,7 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
         throw new RuntimeException(page.asXml(), e1);
       }
       finally {
-        endOccuped();
+        endProgress();
       }
     }
 

@@ -63,35 +63,15 @@ public class SeriesWrapper {
 
   public static Glob find(GlobRepository repository, SeriesWrapperType type, Integer itemId) {
     return findUnique(itemId, repository, type.getId());
-//    return repository.findUnique(SeriesWrapper.TYPE,
-//                                 value(SeriesWrapper.ITEM_TYPE, type.getId()),
-//                                 value(SeriesWrapper.ITEM_ID, itemId));
   }
 
   public static GlobList findAll(GlobRepository repository, SeriesWrapperType type, Integer itemId) {
     return repository.findByIndex(INDEX, SeriesWrapper.ITEM_TYPE, type.getId())
       .findByIndex(SeriesWrapper.ITEM_ID, itemId).getGlobs();
-//    return repository.getAll(SeriesWrapper.TYPE,
-//                             and(fieldEquals(SeriesWrapper.ITEM_TYPE, type.getId()),
-//                                 fieldEquals(SeriesWrapper.ITEM_ID, itemId)));
   }
 
   public static boolean isAll(Glob wrapper) {
     return wrapper.get(SeriesWrapper.ID).equals(ALL_ID);
-  }
-
-  public static boolean isUncategorized(Glob wrapper) {
-    return wrapper.get(SeriesWrapper.ID).equals(UNCATEGORIZED_ID);
-  }
-
-  public static boolean isSummary(Glob wrapper) {
-    Integer id = wrapper.get(SeriesWrapper.ID);
-    for (Integer summaryId : SUMMARY_IDS) {
-      if (id.equals(summaryId)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   public static boolean isSeries(Glob wrapper) {
@@ -135,16 +115,10 @@ public class SeriesWrapper {
 
   public static Glob getWrapperForBudgetArea(BudgetArea budgetArea, GlobRepository repository) {
     return findUnique(budgetArea.getId(), repository, SeriesWrapperType.BUDGET_AREA.getId());
-//    return repository.findUnique(SeriesWrapper.TYPE,
-//                                 value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId()),
-//                                 value(SeriesWrapper.ITEM_ID, budgetArea.getId()));
   }
 
   public static Glob getWrapperForSeries(Integer seriesId, GlobRepository repository) {
     return findUnique(seriesId, repository, SeriesWrapperType.SERIES.getId());
-//    return repository.findUnique(SeriesWrapper.TYPE,
-//                                 value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
-//                                 value(SeriesWrapper.ITEM_ID, seriesId));
   }
 
   private static Glob findUnique(Integer itemId, GlobRepository repository, Integer id) {
@@ -158,9 +132,6 @@ public class SeriesWrapper {
 
   public static Glob getWrapperForSubSeries(Integer subSeriesId, GlobRepository repository) {
     return findUnique(subSeriesId, repository, SeriesWrapperType.SUB_SERIES.getId());
-//    return repository.findUnique(SeriesWrapper.TYPE,
-//                                 value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
-//                                 value(SeriesWrapper.ITEM_ID, subSeriesId));
   }
 
   public static Glob getWrapper(Glob glob, GlobRepository repository) {
@@ -176,7 +147,6 @@ public class SeriesWrapper {
     else {
       throw new InvalidParameter("Unexpected type: " + glob.getType());
     }
-
   }
 
   public static String toString(Collection<Glob> wrappers, GlobRepository repository) {

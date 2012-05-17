@@ -2,7 +2,6 @@ package org.designup.picsou.bank.importer.sg;
 
 import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.javascript.host.Event;
-import com.jidesoft.swing.InfiniteProgressPanel;
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.bank.importer.WebBankPage;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
@@ -51,8 +50,6 @@ public class SG extends WebBankPage {
   private JButton validerCode;
   private JTextField code;
   private JTextField passwordField;
-  private InfiniteProgressPanel progressPanel = new InfiniteProgressPanel();
-
 
   public static void main(String[] args) throws IOException {
     DefaultDirectory defaultDirectory = new DefaultDirectory();
@@ -103,15 +100,13 @@ public class SG extends WebBankPage {
   public JPanel getPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/sgPanel.splits");
-//    builder.add("occupedPanel", occupedPanel);
     initCardCode(builder);
-    progressPanel.setVisible(true);
-    progressPanel.start();
+    startProgress();
     Thread thread = new Thread() {
       public void run() {
         try {
           loadPage(INDEX);
-          progressPanel.stop();
+          endProgress();
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
               validerCode.setEnabled(true);
@@ -119,7 +114,7 @@ public class SG extends WebBankPage {
           });
         }
         catch (Exception e) {
-          progressPanel.stop();
+          endProgress();
           e.printStackTrace();
         }
       }
@@ -229,7 +224,7 @@ public class SG extends WebBankPage {
 
       public void actionPerformed(ActionEvent e) {
         try {
-          startOccuped();
+          startProgress();
           page = (HtmlPage)img.click();
           client.waitForBackgroundJavaScript(10000);
 
@@ -305,7 +300,7 @@ public class SG extends WebBankPage {
         catch (IOException e1) {
           e1.printStackTrace();
         }finally {
-          endOccuped();
+          endProgress();
         }
       }
     }

@@ -38,14 +38,6 @@
                         label="{M.2}" originalLabel="{M.0}"
                         groupForDate="{M.1}" dateFormat="dd/MM/yy"/>
 
-    <!--<transactionMatcher qifM="CARTE [0-9]+ (\d{2,4}/\d{2}/\d{2,4}) REL\. (.*)" transactionTypeName="credit_card"-->
-    <!--label="{M.2}" originalLabel="{M.0}"-->
-    <!--groupForDate="{M.1}" dateFormat="dd/MM/yy"/>-->
-
-    <!--<transactionMatcher qifM="CARTE X[0-9]+ (\d{2}/\d{2}) REL\. (.*)" transactionTypeName="credit_card"-->
-    <!--label="{M.2}" originalLabel="{M.0}"-->
-    <!--groupForDate="{M.1}" dateFormat="dd/MM"/>-->
-
     <transactionMatcher qifM="CARTE [0-9]+ (\d{2,4}/\d{2}/\d{2,4}) (.*)" transactionTypeName="credit_card"
                         label="{M.2}" originalLabel="{M.0}"
                         groupForDate="{M.1}" dateFormat="dd/MM/yy"/>

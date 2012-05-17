@@ -4,7 +4,6 @@ import com.gargoylesoftware.htmlunit.DownloadedContent;
 import com.gargoylesoftware.htmlunit.HttpWebConnection;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.javascript.host.Event;
-import com.jidesoft.swing.InfiniteProgressPanel;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.designup.picsou.bank.BankSynchroService;
@@ -58,10 +57,8 @@ public class BnpSync extends WebBankPage {
   private JButton valider;
   private JTextField code;
   private JTextField passwordField;
-  private InfiniteProgressPanel progressPanel = new InfiniteProgressPanel();
   private HtmlElement input;
   private BufferedImage clavier;
-
 
   public static void main(String[] args) throws IOException {
     DefaultDirectory defaultDirectory = new DefaultDirectory();
@@ -137,17 +134,15 @@ public class BnpSync extends WebBankPage {
   public JPanel getPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/bnpPanel.splits");
-//    builder.add("occupedPanel", occupedPanel);
     initCardCode(builder);
-    progressPanel.setVisible(true);
-    progressPanel.start();
+    startProgress();
     Thread thread = new Thread() {
       public void run() {
         try {
           loadPage(INDEX);
           String s = page.asXml();
           System.out.println("BnpSync.run " + s);
-          progressPanel.stop();
+          endProgress();
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
               initImg();
@@ -155,7 +150,7 @@ public class BnpSync extends WebBankPage {
           });
         }
         catch (Exception e) {
-          progressPanel.stop();
+          endProgress();
           e.printStackTrace();
         }
       }
@@ -268,7 +263,7 @@ public class BnpSync extends WebBankPage {
 
       public void actionPerformed(ActionEvent e) {
         try {
-          startOccuped();
+          startProgress();
           page = (HtmlPage)img.click();
           client.waitForBackgroundJavaScript(10000);
 
@@ -345,7 +340,7 @@ public class BnpSync extends WebBankPage {
           e1.printStackTrace();
         }
         finally {
-          endOccuped();
+          endProgress();
         }
       }
     }

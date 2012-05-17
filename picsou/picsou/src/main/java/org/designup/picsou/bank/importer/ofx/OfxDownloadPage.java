@@ -28,6 +28,7 @@ public class OfxDownloadPage extends BankPage {
   private String url;
   private String org;
   private String fid;
+  private OfxDownloadPage.ValidateAction validateAction;
 
   public OfxDownloadPage(Window parent, GlobRepository repository, Directory directory, Integer bankId, String url, String org, String fid) {
     super(parent, directory, repository, bankId);
@@ -39,7 +40,7 @@ public class OfxDownloadPage extends BankPage {
   public JPanel getPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/ofxDownloadPage.splits");
-//    builder.add("occupedPanel", occupedPanel);
+    builder.add("progressPanel", progressPanel);
 
     codeField = new JTextField();
     codeField.setName("code");
@@ -58,7 +59,8 @@ public class OfxDownloadPage extends BankPage {
     fidField = new JTextField(fid);
     builder.add("fid", fidField);
 
-    builder.add("validate", new ValidateAction());
+    validateAction = new ValidateAction();
+    builder.add("validate", validateAction);
 
     builder.add("securityInfo", OfxSecurityInfoButton.create(directory));
 
@@ -88,29 +90,44 @@ public class OfxDownloadPage extends BankPage {
     }
   }
 
+  public void startProgress() {
+    super.startProgress();
+    validateAction.setEnabled(false);
+  }
+
+  public void endProgress() {
+    super.endProgress();
+    validateAction.setEnabled(true);
+  }
+
   private class ValidateAction extends AbstractAction {
     private ValidateAction() {
       super(Lang.get("synchro.ofx.validate"));
     }
 
     public void actionPerformed(ActionEvent e) {
-      try {
-        startOccuped();
-        List<OfxConnection.AccountInfo> list = OfxConnection.getInstance()
-          .getAccounts(codeField.getText(), new String(passwordField.getPassword()), OfxConnection.previousDate(1),
-                       urlField.getText(), orgField.getText(), fidField.getText());
+      startProgress();
+      Thread thread = new Thread(new Runnable() {
+        public void run() {
+          try {
+            List<OfxConnection.AccountInfo> list = OfxConnection.getInstance()
+              .getAccounts(codeField.getText(), new String(passwordField.getPassword()), OfxConnection.previousDate(1),
+                           urlField.getText(), orgField.getText(), fidField.getText());
 
-        for (OfxConnection.AccountInfo info : list) {
-          createOrUpdateRealAccount(info.accType, info.number, urlField.getText(), orgField.getText(), fidField.getText());
+            for (OfxConnection.AccountInfo info : list) {
+              createOrUpdateRealAccount(info.accType, info.number, urlField.getText(), orgField.getText(), fidField.getText());
+            }
+            doImport();
+          }
+          catch (RuntimeException exception) {
+            MessageDialog.show("synchro.ofx.error.title", directory, "synchro.ofx.error.content", exception.getMessage());
+          }
+          finally {
+            endProgress();
+          }
         }
-        doImport();
-      }
-      catch (RuntimeException exception) {
-        MessageDialog.show("synchro.ofx.error.title", directory, "synchro.ofx.error.content", exception.getMessage());
-      }
-      finally {
-        endOccuped();
-      }
+      });
+      thread.start();
     }
   }
 }
