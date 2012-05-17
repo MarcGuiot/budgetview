@@ -287,7 +287,7 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
     balanceChart.checkVisible();
     seriesChart.checkVisible();
     subSeriesChart.checkHidden();
-    assertFalse(getPanel().getButton("stackToggle").isEnabled());
+    assertFalse(getPanel().getButton("gotoBudgetButton").isEnabled());
     return this;
   }
   
@@ -295,12 +295,35 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
     balanceChart.checkHidden();
     seriesChart.checkVisible();
     subSeriesChart.checkVisible();
-    assertTrue(panel.getButton("stackToggle").isEnabled());
+    assertTrue(panel.getButton("gotoBudgetButton").isEnabled());
     return this;    
   }
   
+  public SeriesAnalysisChecker checkGotoBudgetShown() {
+    assertTrue(panel.getButton("gotoBudgetButton").isVisible());
+    assertFalse(panel.getButton("gotoSubSeriesButton").isVisible());
+    return this;
+  }
+
+  public SeriesAnalysisChecker checkGotoSubSeriesShown() {
+    assertFalse(panel.getButton("gotoBudgetButton").isVisible());
+    assertTrue(panel.getButton("gotoSubSeriesButton").isVisible());
+    return this;
+  }
+
+  public SeriesAnalysisChecker checkStackButtonsHidden() {
+    assertFalse(panel.getButton("gotoBudgetButton").isVisible());
+    assertFalse(panel.getButton("gotoSubSeriesButton").isVisible());
+    return this;
+  }
+
   public SeriesAnalysisChecker gotoBudgetStack() {
-    panel.getButton("stackToggle").click();
+    panel.getButton("gotoBudgetButton").click();
+    return this;
+  }
+
+  public SeriesAnalysisChecker gotoSubSeriesStack() {
+    panel.getButton("gotoSubSeriesButton").click();
     return this;
   }
 
