@@ -6,6 +6,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
@@ -21,24 +22,34 @@ public class CsvType {
   @Key
   public static IntegerField ID;
 
+  @NoObfuscation
   public static StringField USER_DATE;
 
+  @NoObfuscation
   public static StringField BANK_DATE;
 
+  @NoObfuscation
   public static StringField LABEL;
 
+  @NoObfuscation
   public static StringField NOTE;
 
+  @NoObfuscation
   public static StringField AMOUNT;
 
+  @NoObfuscation
   public static StringField CREDIT;
 
+  @NoObfuscation
   public static StringField DEBIT;
 
+  @NoObfuscation
   public static StringField ENVELOPE;
 
+  @NoObfuscation
   public static StringField SUB_ENVELOPE;
 
+  @NoObfuscation
   public static StringField NOT_IMPORTED;
 
   public static Mapper[] getMappers(CsvReader.TextType type) {
