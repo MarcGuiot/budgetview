@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.startup;
 
-import com.jidesoft.swing.InfiniteProgressPanel;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.gui.components.CustomFocusTraversalPolicy;
+import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.startup.components.Passwords;
 import org.designup.picsou.gui.startup.components.UserSelectionDialog;
 import org.designup.picsou.utils.Lang;
@@ -32,7 +32,7 @@ public class LoginPanel {
   private JButton autoLoginButton = new JButton(new AutoLogAction());
   private JCheckBox creationCheckBox = new JCheckBox();
   private JEditorPane messageLabel = new JEditorPane();
-  private InfiniteProgressPanel progressPanel = new InfiniteProgressPanel();
+  private ProgressPanel progressPanel = new ProgressPanel();
   private Passwords password = new LoginPasswords();
   private SelectUserAction selectUserAction = new SelectUserAction();
 
@@ -285,7 +285,7 @@ public class LoginPanel {
       this.names = getNames(users);
       setEnabled(!names.isEmpty());
     }
-    
+
     private List<String> getNames(List<ServerAccess.UserInfo> users) {
       List<String> result = new ArrayList<String>();
       for (ServerAccess.UserInfo user : users) {

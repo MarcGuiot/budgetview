@@ -26,7 +26,7 @@ import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
-import org.designup.picsou.gui.transactions.reconciliation.ReconciliationColumn;
+import org.designup.picsou.gui.transactions.reconciliation.ReconciliationAnnotationColumn;
 import org.designup.picsou.gui.transactions.search.TransactionFilterPanel;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.utils.Gui;
@@ -101,7 +101,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private Set<Key> categorizedTransactions = new HashSet<Key>();
   private Set<Key> reconciledTransactions = new HashSet<Key>();
   private CategorizationLevel categorizationLevel;
-  private ReconciliationColumn column;
+  private ReconciliationAnnotationColumn column;
   private boolean isShowing = false;
   private TransactionCreationPanel transactionCreation;
 
@@ -699,7 +699,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
   }
 
   private void installReconciliationUpdater(final GlobTableView tableView, GlobRepository repository) {
-    this.column = new ReconciliationColumn(tableView, repository, directory);
+    this.column = new ReconciliationAnnotationColumn(tableView, repository, directory);
     repository.addChangeListener(new TypeChangeSetListener(UserPreferences.TYPE) {
       protected void update(GlobRepository repository) {
         toggleReconciliationColumn(tableView);

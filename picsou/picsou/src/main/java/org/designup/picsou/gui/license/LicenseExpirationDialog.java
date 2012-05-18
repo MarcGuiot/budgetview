@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.license;
 
+import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.model.User;
@@ -21,15 +22,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
-import com.jidesoft.swing.InfiniteProgressPanel;
-
 public class LicenseExpirationDialog {
   private PicsouDialog dialog;
   private JLabel response = new JLabel();
   private LocalGlobRepository localGlobRepository;
   private AbstractAction sendAction;
   private GlobsPanelBuilder builder;
-  private InfiniteProgressPanel progressPanel = new InfiniteProgressPanel();
+  private ProgressPanel progressPanel = new ProgressPanel();
   private Thread sendRequestThread;
   private GlobTextEditor emailField;
 
@@ -37,7 +36,7 @@ public class LicenseExpirationDialog {
     localGlobRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(User.TYPE).get();
     builder = new GlobsPanelBuilder(getClass(), "/layout/general/licenseExpirationDialog.splits",
-                          localGlobRepository, directory);
+                                    localGlobRepository, directory);
 
     builder.add("mailResponse", response);
     sendAction = new AbstractAction(Lang.get("license.mail.request.send")) {

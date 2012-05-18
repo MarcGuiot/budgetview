@@ -1,5 +1,6 @@
 package org.designup.picsou.bank.importer;
 
+import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.RealAccount;

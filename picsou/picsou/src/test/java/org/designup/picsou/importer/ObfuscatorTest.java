@@ -2,7 +2,7 @@ package org.designup.picsou.importer;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import org.designup.picsou.functests.banks.SpecificBankTestCase;
+import org.designup.picsou.functests.specificbanks.SpecificBankTestCase;
 import org.designup.picsou.importer.utils.TypedInputStream;
 
 import java.io.File;

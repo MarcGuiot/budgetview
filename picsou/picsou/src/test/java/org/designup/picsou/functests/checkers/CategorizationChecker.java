@@ -3,7 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.TableChecker;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
-import org.designup.picsou.functests.checkers.converters.ReconciliationCellConverter;
+import org.designup.picsou.functests.checkers.converters.ReconciliationAnnotationCellConverter;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;
@@ -454,7 +454,7 @@ public class CategorizationChecker extends ViewChecker {
     int offset = 0;
     if (isReconciliationShown(table)) {
       offset = 1;
-      table.setCellValueConverter(0, new ReconciliationCellConverter());
+      table.setCellValueConverter(0, new ReconciliationAnnotationCellConverter());
     }
     table.setCellValueConverter(offset, new DateCellConverter(useDisplayedDates));
     table.setCellValueConverter(3 + offset, new TableCellValueConverter() {
