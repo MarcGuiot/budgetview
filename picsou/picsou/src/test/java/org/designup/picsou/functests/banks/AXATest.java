@@ -3,7 +3,8 @@ package org.designup.picsou.functests.banks;
 import org.designup.picsou.model.TransactionType;
 
 public class AXATest extends SpecificBankTestCase {
-  public void test() throws Exception {
+
+  public void testQif() throws Exception {
     operations.importQifFile(getFile("axa.qif"), "AXA Banque", 0.);
     timeline.selectAll();
 
@@ -39,6 +40,26 @@ public class AXATest extends SpecificBankTestCase {
       .add("01/09/2008", "02/09/2008", TransactionType.CREDIT_CARD, "MARCADET EXPL", "", -73.81)
       .add("28/08/2008", "01/09/2008", TransactionType.CREDIT_CARD, "NARITA INT.A ETRANG", "", -18.49)
       .add("28/08/2008", "01/09/2008", TransactionType.CREDIT_CARD, "NARITA AIRPO ETRANG", "", -79.72)
+      .check();
+  }
+
+  public void testOfx() throws Exception {
+    operations.importOfxFile(getFile("axa-banque.ofx"));
+    timeline.selectAll();
+
+    views.selectData();
+    transactions.initContent()
+      .add("10/05/2012", TransactionType.PRELEVEMENT, "RETRAIT DAB 09/05 VINCENNES", "", -300.00)
+      .add("10/05/2012", TransactionType.PRELEVEMENT, "CHEQUE N°6711256", "", -140.30)
+      .add("09/05/2012", TransactionType.VIREMENT, "VIR RECU CNAVTS", "", 1094.71)
+      .add("09/05/2012", TransactionType.PRELEVEMENT, "CHEQUE N°6711257", "", -1658.45)
+      .add("09/05/2012", TransactionType.PRELEVEMENT, "CHEQUE N°6711258", "", -246.00)
+      .add("07/05/2012", TransactionType.PRELEVEMENT, "PRLV UGC ILLIMITE", "", -20.08)
+      .add("07/05/2012", TransactionType.PRELEVEMENT, "PRLV NC NUMERICABLE", "", -69.78)
+      .add("02/05/2012", TransactionType.PRELEVEMENT, "TIP URSSAF PARIS", "", -374.00)
+      .add("02/05/2012", TransactionType.PRELEVEMENT, "TIP IMPOT CEC", "", -1819.00)
+      .add("30/04/2012", TransactionType.PRELEVEMENT, "ACHATS CARTE", "", -1196.79)
+      .add("27/04/2012", TransactionType.VIREMENT, "VIR RECU BABIN D", "", 8000.00)
       .check();
   }
 }
