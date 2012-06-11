@@ -4,6 +4,7 @@ import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.*;
+import org.globsframework.utils.Log;
 
 import java.util.Comparator;
 import java.util.HashSet;
@@ -278,6 +279,14 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
       for (Glob glob : toAdd) {
         if (matcher.matches(glob, repository)) {
           newList.add(glob);
+        }
+      }
+
+      for (Iterator<Glob> iterator = newList.iterator(); iterator.hasNext(); ) {
+        Glob glob = iterator.next();
+        if (!glob.exists()) {
+          Log.write("Bug : " + glob.getKey() + " is deleted");
+          iterator.remove();
         }
       }
       listener.globListPreReset();
