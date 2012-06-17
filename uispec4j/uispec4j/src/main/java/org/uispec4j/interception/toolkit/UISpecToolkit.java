@@ -91,6 +91,10 @@ public class UISpecToolkit extends ToolkitDelegate {
     return Empty.NULL_ROBOT;
   }
 
+  public KeyboardFocusManagerPeer createKeyboardFocusManagerPeer(KeyboardFocusManager manager) throws HeadlessException {
+    return null;
+  }
+
   protected int getScreenWidth() {
     return 0;
   }
@@ -101,6 +105,10 @@ public class UISpecToolkit extends ToolkitDelegate {
 
   protected MouseInfoPeer getMouseInfoPeer() {
     return Empty.NULL_MOUSE_INFO;
+  }
+
+  protected boolean syncNativeQueue(long l) {
+    return false;
   }
 
   private static void fail(String msg) {

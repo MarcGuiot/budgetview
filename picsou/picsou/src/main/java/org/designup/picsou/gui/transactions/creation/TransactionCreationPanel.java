@@ -120,14 +120,20 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    GlobList months = selection.getAll(Month.TYPE);
-    if (months.isEmpty()) {
-      return;
-    }
+    repository.startChangeSet();
+    try {
+      GlobList months = selection.getAll(Month.TYPE);
+      if (months.isEmpty()) {
+        return;
+      }
 
-    Integer currentMonth = months.getSortedSet(Month.ID).last();
-    repository.findOrCreate(PROTOTYPE_TRANSACTION_KEY);
-    updateMonth(repository, currentMonth);
+      Integer currentMonth = months.getSortedSet(Month.ID).last();
+      repository.findOrCreate(PROTOTYPE_TRANSACTION_KEY);
+      updateMonth(repository, currentMonth);
+    }
+    finally {
+      repository.completeChangeSet();
+    }
   }
 
   static private void updateMonth(GlobRepository repository, Integer currentMonth) {

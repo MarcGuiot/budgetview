@@ -1,5 +1,6 @@
 package org.designup.picsou.bank.importer.sg;
 
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.javascript.host.Event;
 import org.designup.picsou.bank.BankSynchroService;
@@ -55,7 +56,6 @@ public class SG extends WebBankPage {
     DefaultDirectory defaultDirectory = new DefaultDirectory();
     defaultDirectory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     defaultDirectory.add(SelectionService.class, new SelectionService());
-    defaultDirectory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     defaultDirectory.add(DescriptionService.class, new PicsouDescriptionService());
     OpenRequestManager openRequestManager = new OpenRequestManager();
     defaultDirectory.add(OpenRequestManager.class, openRequestManager);
@@ -165,7 +165,9 @@ public class SG extends WebBankPage {
       try {
         HtmlElement elementById = page.getElementById("codcli");
         ((HtmlInput)elementById).setValueAttribute(code.getText());
-        page = page.getElementById("button").click();
+        Page newPage = page.getElementById("button").click();
+//        System.out.println("SG$ValiderActionListener.actionPerformed " + newPage);
+//        page = (HtmlPage)newPage;
         if (hasError) {
           hasError = false;
           return;
@@ -177,7 +179,11 @@ public class SG extends WebBankPage {
         htmlImageClavier.fireEvent(Event.TYPE_LOAD);
         final BufferedImage imageClavier = getFirstImage(htmlImageClavier);
         keyboardPanel.setSize(imageClavier.getWidth(), imageClavier.getHeight());
-        HtmlElement map = zoneClavier.getElementById("tc_tclavier");
+        List<HtmlElement> attribute = zoneClavier.getElementsByAttribute(HtmlMap.TAG_NAME, "name", "tc_tclavier");
+        if (attribute.size() != 1){
+          throw new RuntimeException("Can not find tc_tclavier in" + zoneClavier.asXml());
+        }
+        HtmlElement map = (HtmlElement)attribute.get(0);
         keyboardPanel.setImage(imageClavier, map, password);
 
         HtmlImage corrigerImg = zoneClavier.getElementById("tc_corriger");
@@ -188,8 +194,9 @@ public class SG extends WebBankPage {
         valider.setAction(new ValiderPwdActionListener(validerImg));
         valider.setEnabled(true);
       }
-      catch (IOException e1) {
-        e1.printStackTrace();
+      catch (Exception e1) {
+        Log.write(page.asXml());
+        throw new RuntimeException(e1);
       }
     }
 
