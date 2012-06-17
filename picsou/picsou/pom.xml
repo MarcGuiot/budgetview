@@ -80,7 +80,7 @@
             <configuration>
               <tasks>
                 <mkdir dir="src/main/resources/demo"/>
-                <java fork="yes" classname="org.designup.picsou.functests.DemoGenerationTest" failonerror="true">
+                <java fork="yes" classname="org.designup.picsou.functests.general.DemoGenerationTest" failonerror="true">
                   <jvmarg line="-Doutfile=src/main/resources/demo/demo-fr.snapshot"/>
                   <jvmarg line="-DLANG=fr"/>
                   <classpath>
@@ -88,7 +88,7 @@
                   </classpath>
                 </java>
                 <copy file="src/main/resources/demo/demo-fr.snapshot" tofile="target/classes/demo/demo-fr.snapshot"/>
-                <java fork="yes" classname="org.designup.picsou.functests.DemoGenerationTest" failonerror="true">
+                <java fork="yes" classname="org.designup.picsou.functests.general.DemoGenerationTest" failonerror="true">
                   <jvmarg line="-Doutfile=src/main/resources/demo/demo-en.snapshot"/>
                   <jvmarg line="-DLANG=en"/>
                   <classpath>

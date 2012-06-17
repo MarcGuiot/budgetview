@@ -2,7 +2,7 @@ package org.designup.picsou.gui.categorization.actions;
 
 import org.designup.picsou.gui.transactions.actions.DeleteTransactionAction;
 import org.designup.picsou.gui.transactions.actions.EditTransactionAction;
-import org.designup.picsou.gui.transactions.reconciliation.ReconcileTransactionAction;
+import org.designup.picsou.gui.transactions.reconciliation.AnnotateReconciledTransactionAction;
 import org.designup.picsou.gui.transactions.shift.ShiftTransactionAction;
 import org.designup.picsou.gui.transactions.split.SplitTransactionAction;
 import org.designup.picsou.model.UserPreferences;
@@ -18,7 +18,7 @@ public class CategorizationTableActions implements PopupMenuFactory {
   private EditTransactionAction edit;
   private SplitTransactionAction split;
   private ShiftTransactionAction shift;
-  private ReconcileTransactionAction reconcile;
+  private AnnotateReconciledTransactionAction reconcile;
   private DeleteTransactionAction delete;
   private Action copy;
 
@@ -28,7 +28,7 @@ public class CategorizationTableActions implements PopupMenuFactory {
     this.edit = new EditTransactionAction(repository, directory);
     this.split = new SplitTransactionAction(repository, directory);
     this.shift = new ShiftTransactionAction(repository, directory);
-    this.reconcile = new ReconcileTransactionAction(repository, directory);
+    this.reconcile = new AnnotateReconciledTransactionAction(repository, directory);
     this.delete = new DeleteTransactionAction(repository, directory);
   }
 

@@ -5,7 +5,7 @@ import org.designup.picsou.client.exceptions.BadPassword;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.exceptions.UserNotRegistered;
 import org.designup.picsou.client.local.LocalClientTransport;
-import org.designup.picsou.functests.FunctionalTestCase;
+import org.designup.picsou.functests.utils.FunctionalTestCase;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.model.*;

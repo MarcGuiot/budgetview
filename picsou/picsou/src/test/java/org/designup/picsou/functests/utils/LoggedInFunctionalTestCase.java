@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.utils;
 
-import org.designup.picsou.functests.FunctionalTestCase;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.checkers.components.TimeViewChecker;
 import org.designup.picsou.functests.checkers.printing.PrinterChecker;
@@ -50,7 +49,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public SummaryViewChecker summary;
   public SignpostViewChecker signpostView;
   public FeedbackViewChecker feedbackView;
-  public ReconciliationChecker reconciliation;
+  public ReconciliationAnnotationChecker reconciliation;
   public PrinterChecker printer;
 
   private ApplicationChecker application;
@@ -173,7 +172,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     summary = new SummaryViewChecker(mainWindow);
     signpostView = new SignpostViewChecker(mainWindow);
     feedbackView = new FeedbackViewChecker(mainWindow);
-    reconciliation = new ReconciliationChecker(mainWindow);
+    reconciliation = new ReconciliationAnnotationChecker(mainWindow);
     printer = application.getPrinter();
   }
 
