@@ -4,12 +4,14 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.model.SubSeriesStat;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.analysis.SeriesChartsColors;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -51,6 +53,9 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
       case SUMMARY:
         return getSummaryLabelText(seriesWrapper);
 
+      case SUB_SERIES:
+        return getSubSeriesButtonText(itemId);
+
       default:
         throw new InvalidParameter("Unexpected type: " + SeriesWrapperType.get(seriesWrapper));
     }
@@ -73,16 +78,32 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
 
   private String getSeriesButtonText(Integer itemId) {
     Glob seriesStat = repository.find(KeyBuilder.init(SeriesStat.TYPE)
-      .set(SeriesStat.MONTH, referenceMonthId)
-      .set(SeriesStat.SERIES, itemId)
-      .get());
+                                        .set(SeriesStat.MONTH, referenceMonthId)
+                                        .set(SeriesStat.SERIES, itemId)
+                                        .get());
     if (seriesStat == null) {
       return "";
     }
 
-    Glob series = repository.find(Key.create(Series.TYPE, itemId));
+    Glob series = repository.get(Key.create(Series.TYPE, itemId));
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
     Double value = seriesStat.get(SeriesStat.SUMMARY_AMOUNT);
+    return format(value, budgetArea);
+  }
+
+  private String getSubSeriesButtonText(Integer itemId) {
+    Glob subSeriesStat = repository.find(KeyBuilder.init(SeriesStat.TYPE)
+                                        .set(SubSeriesStat.MONTH, referenceMonthId)
+                                        .set(SubSeriesStat.SUB_SERIES, itemId)
+                                        .get());
+    if (subSeriesStat == null) {
+      return "";
+    }
+
+    Glob subSeries = repository.get(Key.create(SubSeries.TYPE, itemId));
+    Glob series = repository.get(Key.create(Series.TYPE, subSeries.get(SubSeries.SERIES)));
+    BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
+    Double value = subSeriesStat.get(SeriesStat.SUMMARY_AMOUNT);
     return format(value, budgetArea);
   }
 

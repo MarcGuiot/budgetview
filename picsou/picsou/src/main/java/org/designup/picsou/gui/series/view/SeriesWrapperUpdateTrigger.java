@@ -6,6 +6,7 @@ import org.designup.picsou.model.SubSeries;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
+import org.globsframework.utils.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,11 +30,16 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
             .findByIndex(SeriesWrapper.ITEM_ID, values.get(Series.BUDGET_AREA))
             .findByIndex(SeriesWrapper.MASTER, null)
             .getGlobs().getFirst();
-
-        repository.create(SeriesWrapper.TYPE,
-                          value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
-                          value(SeriesWrapper.ITEM_ID, seriesId),
-                          value(SeriesWrapper.MASTER, budgetAreaWrapper.get(SeriesWrapper.ID)));
+        
+        if (budgetAreaWrapper == null){
+          Log.write("Bug : missing parent : " + values.get(Series.BUDGET_AREA));
+        }
+        else {
+          repository.create(SeriesWrapper.TYPE,
+                            value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
+                            value(SeriesWrapper.ITEM_ID, seriesId),
+                            value(SeriesWrapper.MASTER, budgetAreaWrapper.get(SeriesWrapper.ID)));
+        }
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
@@ -46,10 +52,15 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
                 .findByIndex(SeriesWrapper.ITEM_ID, values.get(Series.BUDGET_AREA))
                 .findByIndex(SeriesWrapper.MASTER, null)
                 .getGlobs().getFirst();
-            repository.create(SeriesWrapper.TYPE,
-                              value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
-                              value(SeriesWrapper.ITEM_ID, key.get(Series.ID)),
-                              value(SeriesWrapper.MASTER, budgetAreaWrapper.get(SeriesWrapper.ID)));
+            if (budgetAreaWrapper == null) {
+              Log.write("Bug : no seriesWrapper parent for " + values.get(Series.BUDGET_AREA));
+            }
+            else {
+              repository.create(SeriesWrapper.TYPE,
+                                value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
+                                value(SeriesWrapper.ITEM_ID, key.get(Series.ID)),
+                                value(SeriesWrapper.MASTER, budgetAreaWrapper.get(SeriesWrapper.ID)));
+            }
           }
         }
       }
@@ -63,11 +74,14 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Glob parentSeriesWrapper =
           SeriesWrapper.getWrapperForSeries(values.get(SubSeries.SERIES), repository);
-
-        repository.create(SeriesWrapper.TYPE,
-                          value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
-                          value(SeriesWrapper.ITEM_ID, key.get(SubSeries.ID)),
-                          value(SeriesWrapper.MASTER, parentSeriesWrapper.get(SeriesWrapper.ID)));
+        if (parentSeriesWrapper == null){
+          Log.write("Parent wrapper missing " + values.get(SubSeries.SERIES));
+        }else {
+          repository.create(SeriesWrapper.TYPE,
+                            value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
+                            value(SeriesWrapper.ITEM_ID, key.get(SubSeries.ID)),
+                            value(SeriesWrapper.MASTER, parentSeriesWrapper.get(SeriesWrapper.ID)));
+        }
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
@@ -137,11 +151,14 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
       for (Glob subSeries : repository.getAll(SubSeries.TYPE)) {
         Glob seriesWrapper =
           SeriesWrapper.getWrapperForSeries(subSeries.get(SubSeries.SERIES), repository);
-
-        repository.create(SeriesWrapper.TYPE,
-                          value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
-                          value(SeriesWrapper.ITEM_ID, subSeries.get(SubSeries.ID)),
-                          value(SeriesWrapper.MASTER, seriesWrapper.get(SeriesWrapper.ID)));
+        if (seriesWrapper == null){
+          Log.write("Missing parent " + subSeries.get(SubSeries.SERIES));
+        } else {
+          repository.create(SeriesWrapper.TYPE,
+                            value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
+                            value(SeriesWrapper.ITEM_ID, subSeries.get(SubSeries.ID)),
+                            value(SeriesWrapper.MASTER, seriesWrapper.get(SeriesWrapper.ID)));
+        }
 
       }
     }

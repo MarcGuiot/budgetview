@@ -328,6 +328,13 @@ public final class Empty {
 
     public void applyShape(Region shape) {
     }
+
+    public void setZOrder(ComponentPeer above) {
+    }
+
+    public boolean updateGraphicsData(GraphicsConfiguration gc) {
+      return false;
+    }
   }
 
   static class FramePeer extends Empty.WindowPeeer implements java.awt.peer.FramePeer {
@@ -770,6 +777,13 @@ public final class Empty {
 
     public void applyShape(Region shape) {
     }
+
+    public void setZOrder(ComponentPeer above) {
+    }
+
+    public boolean updateGraphicsData(GraphicsConfiguration gc) {
+      return false;
+    }
   }
 
   private static class DummyLightweightPeer extends DummyContainerPeer implements LightweightPeer {
@@ -782,6 +796,9 @@ public final class Empty {
 
   private static class DummyCanvasPeer extends DummyContainerPeer implements CanvasPeer {
 
+    public GraphicsConfiguration getAppropriateGraphicsConfiguration(GraphicsConfiguration gc) {
+      return null;
+    }
   }
 
   private static class DummyGraphicsDevice extends GraphicsDevice {
