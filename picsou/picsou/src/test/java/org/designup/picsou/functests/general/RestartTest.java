@@ -672,7 +672,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
-      .setUpdateModeToManualInput()
       .setPosition(100.)
       .selectBank("CIC")
       .validate();

@@ -63,18 +63,15 @@
               <label text="$account.number" gridPos="(0,3)" styleClass="formLabel"/>
               <textField ref="number" gridPos="(1,3)" marginBottom="10"/>
 
-              <label text="$account.updateMode" gridPos="(0,4)" styleClass="formLabel"/>
-              <comboBox ref="updateMode" gridPos="(1,4)" marginBottom="10"/>
-
-              <label text="$account.date.start" gridPos="(0,6)" styleClass="formLabel"/>
-              <row gridPos="(1,6)" marginBottom="10">
+              <label text="$account.date.start" gridPos="(0,4)" styleClass="formLabel"/>
+              <row gridPos="(1,4)" marginBottom="10">
                 <component ref="startDatePicker" styleClass="datePicker"/>
                 <button action="removeStartDate" icon="button_delete.png" styleClass="icon"
                         pressedIcon="button_delete_pressed.png" fill="none"/>
               </row>
 
-              <label text="$account.date.end" gridPos="(0,7)" styleClass="formLabel"/>
-              <row gridPos="(1,7)" marginBottom="10">
+              <label text="$account.date.end" gridPos="(0,5)" styleClass="formLabel"/>
+              <row gridPos="(1,5)" marginBottom="10">
                 <component ref="endDatePicker" styleClass="datePicker"/>
                 <button action="removeEndDate" icon="button_delete.png" styleClass="icon"
                         pressedIcon="button_delete_pressed.png" fill="none"/>

@@ -1,12 +1,12 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.designup.picsou.functests.checkers.components.TableChecker;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.functests.checkers.converters.ReconciliationAnnotationCellConverter;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.ReconciliationStatus;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.Colors;
@@ -342,8 +342,10 @@ public class CategorizationChecker extends ViewChecker {
   public CategorizationChecker checkTable(Object[][] content) {
     Table table = getTable();
     int labelColumnIndex = isReconciliationShown(table) ? 3 : 2;
+    int amountColumnIndex = isReconciliationShown(table) ? 4 : 3;
     for (Object[] objects : content) {
       objects[labelColumnIndex] = ((String)objects[labelColumnIndex]).toUpperCase();
+      objects[amountColumnIndex] = Formatting.toString((Double)objects[amountColumnIndex]);
     }
     assertTrue(table.contentEquals(content));
     return this;
@@ -430,6 +432,9 @@ public class CategorizationChecker extends ViewChecker {
   }
 
   public CategorizationChecker selectTableRow(int row) {
+    if (row < 0) {
+      Assert.fail("Row not found. Actual content:\n" + getTable().toString());
+    }
     selectTableRows(row);
     return this;
   }
@@ -457,10 +462,20 @@ public class CategorizationChecker extends ViewChecker {
       table.setCellValueConverter(0, new ReconciliationAnnotationCellConverter());
     }
     table.setCellValueConverter(offset, new DateCellConverter(useDisplayedDates));
+    table.setCellValueConverter(2 + offset, new TableCellValueConverter() {
+      public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
+        Glob transaction = (Glob)modelObject;
+        String label = transaction.get(Transaction.LABEL);
+        if (ReconciliationStatus.isToReconcile(transaction)) {
+          label = "[R] " + label;
+        }
+        return label;
+      }
+    });
     table.setCellValueConverter(3 + offset, new TableCellValueConverter() {
       public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
         Glob transaction = (Glob)modelObject;
-        return transaction.get(Transaction.AMOUNT);
+        return Formatting.toString(transaction.get(Transaction.AMOUNT));
       }
     });
     return table;
@@ -712,7 +727,7 @@ public class CategorizationChecker extends ViewChecker {
   }
 
   public CategorizationTableChecker initContent() {
-    return new CategorizationTableChecker();
+    return new CategorizationTableChecker(getTable());
   }
 
   public CategorizationChecker checkCustomFilterVisible(boolean visible) {
@@ -756,6 +771,10 @@ public class CategorizationChecker extends ViewChecker {
     checkTransactionFilterMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
   }
 
+  public void checkShowsToReconcile() {
+    checkTransactionFilterMode(CategorizationFilteringMode.TO_RECONCILE);
+  }
+
   private void checkTransactionFilterMode(final CategorizationFilteringMode mode) {
     assertThat(getPanel().getComboBox("transactionFilterCombo").selectionEquals(mode.toString()));
   }
@@ -775,7 +794,7 @@ public class CategorizationChecker extends ViewChecker {
   }
 
   public CategorizationChecker showUnreconciledOnly() {
-    selectTransactionFilterMode(CategorizationFilteringMode.UNRECONCILED);
+    selectTransactionFilterMode(CategorizationFilteringMode.MISSING_RECONCILIATION_ANNOTATION);
     return this;
   }
 
@@ -857,39 +876,29 @@ public class CategorizationChecker extends ViewChecker {
     return new ConfirmationDialogChecker(deleteDialog);
   }
 
-  public class CategorizationTableChecker extends TableChecker {
+  public void checkReconciliationShown() {
+    checkComponentVisible(getPanel(), JPanel.class, "reconciliationPanel", true);
+  }
 
-    private CategorizationTableChecker() {
-    }
+  public CategorizationChecker checkReconciliationWarningHidden() {
+    checkComponentVisible(getPanel(), JPanel.class, "reconciliationWarningPanel", false);
+    return this;
+  }
 
-    public CategorizationTableChecker add(String date, String series, String label, double amount) {
-      add(new Object[]{date, series, label.toUpperCase(), amount});
-      return this;
-    }
+  public CategorizationChecker checkReconciliationWarningShown(String text) {
+    checkComponentVisible(getPanel(), JPanel.class, "reconciliationWarningPanel", true);
+    assertTrue(getPanel().getPanel("reconciliationWarningPanel")
+                 .getTextBox("message").textContains(text));
+    return this;
+  }
 
-    public void dumpCode() {
-      StringBuilder builder = new StringBuilder();
+  public CategorizationChecker clickReconciliationWarningButton() {
+    getPanel().getPanel("reconciliationWarningPanel").getButton("activateReconciliationFilter").click();
+    return this;
+  }
 
-      Table table = getTable();
-      for (int row = 0; row < table.getRowCount(); row++) {
-        builder
-          .append("  .add(\"")
-          .append(table.getContentAt(row, 0).toString())
-          .append("\", \"")
-          .append(table.getContentAt(row, 1).toString())
-          .append("\", \"")
-          .append(table.getContentAt(row, 2).toString())
-          .append("\", ")
-          .append(Formatting.toString((Double)table.getContentAt(row, 3)))
-          .append(")\n");
-      }
-      builder.append("  .check();");
-      Assert.fail("Add this:\n" + builder.toString());
-    }
-
-    protected Table getTable() {
-      return CategorizationChecker.this.getTable();
-    }
+  public ReconciliationChecker getReconciliation() {
+    return new ReconciliationChecker(getPanel().getPanel("reconciliationPanel"));
   }
 
   public void checkQuasiCompleteProgressMessageShown() {

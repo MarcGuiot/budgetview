@@ -1058,7 +1058,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .checkNoSeriesMessage("No savings account is declared")
       .clickSeriesMessageAccountCreationLink("create a savings account")
       .checkIsSavings()
-      .checkUpdateModeIsEditable()
       .setName("Epargne")
       .selectBank("CIC")
       .setPosition(0.00)

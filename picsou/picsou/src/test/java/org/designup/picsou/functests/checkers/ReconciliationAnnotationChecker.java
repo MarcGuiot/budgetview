@@ -3,7 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.functests.checkers.converters.ReconciliationAnnotationCellConverter;
-import org.designup.picsou.gui.transactions.reconciliation.ReconciliationAnnotationColumn;
+import org.designup.picsou.gui.transactions.reconciliation.annotations.ReconciliationAnnotationColumn;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.model.Glob;
 import org.uispec4j.Button;

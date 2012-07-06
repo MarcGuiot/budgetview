@@ -76,7 +76,7 @@ public class Account {
   public static LinkField ACCOUNT_TYPE;
 
   @Target(AccountUpdateMode.class)
-  @DefaultInteger(1)
+  @DefaultInteger(2)
   @Required
   public static LinkField UPDATE_MODE;
 
@@ -179,6 +179,10 @@ public class Account {
       return !toAccount.isTrue(Account.IS_IMPORTED_ACCOUNT);
     }
     return !toAccount.isTrue(Account.IS_IMPORTED_ACCOUNT) && !fromAccount.isTrue(Account.IS_IMPORTED_ACCOUNT);
+  }
+
+  public static boolean isUserCreatedAccount(Glob account) {
+    return (account != null) && !SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID));
   }
 
   public static boolean isUserCreatedSavingsAccount(Glob account) {

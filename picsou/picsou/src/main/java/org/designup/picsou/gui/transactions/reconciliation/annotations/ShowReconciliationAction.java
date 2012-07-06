@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.transactions.reconciliation;
+package org.designup.picsou.gui.transactions.reconciliation.annotations;
 
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.model.SignpostStatus;
@@ -35,10 +35,10 @@ public class ShowReconciliationAction extends AbstractAction {
       setText("");
     }
     else if (preferences.isTrue(UserPreferences.SHOW_RECONCILIATION)) {
-      setText(Lang.get("reconciliation.hide"));
+      setText(Lang.get("reconciliation.annotation.hide"));
     }
     else {
-      setText(Lang.get("reconciliation.show"));
+      setText(Lang.get("reconciliation.annotation.show"));
     }
 
     setEnabled(repository.contains(Transaction.TYPE));

@@ -170,8 +170,8 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
             Key key = transaction.getKey();
             repository.setTarget(key, Transaction.SERIES, seriesKey);
             repository.setTarget(key, Transaction.SUB_SERIES, subSeriesKey);
-            if (!Transaction.isManuallyCreated(transaction, repository)) {
-              repository.update(key, Transaction.RECONCILED, true);
+            if (!Transaction.isManuallyCreated(transaction)) {
+              repository.update(key, Transaction.RECONCILIATION_ANNOTATION_SET, true);
             }
           }
         }

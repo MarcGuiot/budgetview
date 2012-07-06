@@ -14,21 +14,21 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.createNewAccount()
       .setName("Main")
-      .setUpdateModeToFileImport()
       .selectBank("CIC")
       .validate();
+
     mainAccounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
-      .setUpdateModeToManualInput()
       .selectBank("CIC")
       .validate();
 
     transactionCreation
       .checkHidden()
       .show()
-      .checkAccounts("Cash")
-      .checkSelectedAccount("Cash")
+      .checkAccounts("Cash", "Main")
+      .checkSelectedAccount("Main")
+      .selectAccount("Cash")
       .checkNegativeAmountsSelected()
       .setAmount(-12.50)
       .setDay(15)
@@ -38,7 +38,8 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .checkFieldsAreEmpty()
       .checkNegativeAmountsSelected();
 
-    categorization.checkTable(new Object[][]{
+    categorization
+      .checkTable(new Object[][]{
       {"15/08/2008", "", "TRANSACTION 1", -12.50},
     });
 
@@ -47,7 +48,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setName("Misc")
       .setAccountNumber("012345")
-      .setUpdateModeToManualInput()
       .selectBank("CIC")
       .validate();
 
@@ -55,7 +55,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     transactionCreation
       .checkShowing()
-      .checkAccounts("Cash", "Misc")
+      .checkAccounts("Cash", "Main", "Misc")
       .checkSelectedAccount("Cash")
       .selectAccount("Misc")
       .checkNegativeAmountsSelected()
@@ -81,22 +81,11 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testCreationPanelIsAvailableOnlyWhenManualInputAccountsExist() throws Exception {
-
-    transactionCreation
-      .checkHidden()
-      .checkShowOpensAccountCreationMessage();
-
-    mainAccounts.createNewAccount()
-      .setName("Main")
-      .setUpdateModeToFileImport()
-      .selectBank("CIC")
-      .validate();
+  public void testCreationPanelIsAvailableOnlyWhenThereIsAtLeastOneAccount() throws Exception {
 
     transactionCreation
       .checkHidden()
       .clickAndOpenAccountCreationMessage()
-      .checkUpdateModeIsManualInput()
       .setName("Cash")
       .setAccountNumber("012345")
       .selectBank("CIC")
@@ -122,7 +111,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
-      .setUpdateModeToManualInput()
       .selectBank("CIC")
       .validate();
 
@@ -173,7 +161,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
-      .setUpdateModeToManualInput()
       .selectBank("CIC")
       .validate();
 
@@ -198,7 +185,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
-      .setUpdateModeToManualInput()
       .setPosition(100.)
       .selectBank("CIC")
       .validate();
@@ -211,7 +197,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .enterLabelWithoutValidating("Transaction 1")
       .create();
 
-    mainAccounts.checkPosition("Cash", 100.);
+    mainAccounts.checkPosition("Cash", 100.00);
     
     setCurrentDate("2008/09/02");
     restartApplication();
@@ -225,7 +211,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .enterLabelWithoutValidating("Transaction 1")
       .create();
 
-    mainAccounts.checkPosition("Cash", 90.);
+    mainAccounts.checkPosition("Cash", 90.00);
 
     views.selectCategorization();
     transactionCreation
@@ -234,7 +220,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .enterLabelWithoutValidating("Transaction 2")
       .create();
 
-    mainAccounts.checkPosition("Cash", 70.);
+    mainAccounts.checkPosition("Cash", 70.00);
     resetWindow();
   }
 
@@ -242,12 +228,12 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
-      .setUpdateModeToManualInput()
-      .setPosition(100.)
+//      .setUpdateModeToManualInput()
+      .setPosition(100.00)
       .selectBank("CIC")
       .validate();
 
-    mainAccounts.createSavingsAccount("Livret A", 100.);
+    mainAccounts.createSavingsAccount("Livret A", 100.00);
 
     budgetView.savings
       .createSeries()
@@ -267,8 +253,8 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .selectSavings()
       .selectSeries("virement manuel vers livret A");
 
-    mainAccounts.checkPosition("Cash", 100.);
-    savingsAccounts.checkPosition("Livret A", 100.);
+    mainAccounts.checkPosition("Cash", 100.00);
+    savingsAccounts.checkPosition("Livret A", 100.00);
 
     setCurrentDate("2008/09/05");
     restartApplicationFromBackup();
@@ -285,8 +271,8 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .selectSavings()
       .selectSeries("virement manuel vers livret A");
 
-    mainAccounts.checkPosition("Cash", 90.);
-    savingsAccounts.checkPosition("Livret A", 110.);
+    mainAccounts.checkPosition("Cash", 90.00);
+    savingsAccounts.checkPosition("Livret A", 110.00);
 
     views.selectCategorization();
     transactionCreation
@@ -299,8 +285,8 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .selectSavings()
       .selectSeries("virement manuel vers livret A");
 
-    mainAccounts.checkPosition("Cash", 70.);
-    savingsAccounts.checkPosition("Livret A", 130.);
+    mainAccounts.checkPosition("Cash", 70.00);
+    savingsAccounts.checkPosition("Livret A", 130.00);
   }
 
   public void testTransactionCreationMenuShowsTip() throws Exception {
@@ -310,8 +296,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
-      .setUpdateModeToManualInput()
-      .setPosition(100.)
+      .setPosition(100.00)
       .selectBank("CIC")
       .validate();
 
@@ -352,7 +337,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
-      .setUpdateModeToManualInput()
       .setPosition(100.00)
       .selectBank("CIC")
       .validate();
@@ -429,5 +413,9 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .add("15/05/2008", "15/05/2008", TransactionType.MANUAL, "TRANSACTION 1", "", -10.00)
       .check();
 
+  }
+
+  public void testCreatingAManuallyCreatedTransactionInTheFuturePreservesCurrentMonth() throws Exception {
+    fail("tbd - http://support.mybudgetview.fr/tickets/1070");
   }
 }

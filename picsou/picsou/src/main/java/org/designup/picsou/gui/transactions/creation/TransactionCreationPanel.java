@@ -12,6 +12,7 @@ import org.designup.picsou.gui.components.tips.DetailsTip;
 import org.designup.picsou.gui.description.stringifiers.MonthFieldListStringifier;
 import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
+import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -22,7 +23,6 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.ReplicationGlobRepository;
 import org.globsframework.model.utils.GlobListFunctor;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -81,7 +81,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
     accountCombo = builder.addComboEditor("account", Transaction.ACCOUNT)
       .setShowEmptyOption(false)
-      .setFilter(GlobMatchers.fieldEquals(Account.UPDATE_MODE, AccountUpdateMode.MANUAL.getId()))
+      .setFilter(Matchers.userCreatedAccounts())
       .forceSelection(PROTOTYPE_TRANSACTION_KEY)
       .getComponent();
 
@@ -132,10 +132,10 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
   static private void updateMonth(GlobRepository repository, Integer currentMonth) {
     repository.update(PROTOTYPE_TRANSACTION_KEY,
-                           value(Transaction.MONTH, currentMonth),
-                           value(Transaction.BUDGET_MONTH, currentMonth),
-                           value(Transaction.POSITION_MONTH, currentMonth),
-                           value(Transaction.BANK_MONTH, currentMonth));
+                      value(Transaction.MONTH, currentMonth),
+                      value(Transaction.BUDGET_MONTH, currentMonth),
+                      value(Transaction.POSITION_MONTH, currentMonth),
+                      value(Transaction.BANK_MONTH, currentMonth));
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -269,6 +269,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
         .set(Transaction.ORIGINAL_LABEL, upperCaseLabel)
         .set(Transaction.LABEL_FOR_CATEGORISATION, Transaction.anonymise(upperCaseLabel))
         .set(Transaction.TRANSACTION_TYPE, TransactionType.MANUAL.getId())
+        .set(Transaction.MANUAL_CREATION, true)
         .get();
 
       Glob createdTransaction;
@@ -382,7 +383,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
         protected void postValidate() {
           AccountEditionDialog accountEdition = new AccountEditionDialog(frame, parentRepository, directory);
-          accountEdition.showWithNewAccount(AccountType.MAIN, true, AccountUpdateMode.MANUAL, true);
+          accountEdition.showWithNewAccount(AccountType.MAIN, true, AccountUpdateMode.MANUAL);
         }
       };
       dialog.show();

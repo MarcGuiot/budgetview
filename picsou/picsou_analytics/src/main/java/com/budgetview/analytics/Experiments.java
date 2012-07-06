@@ -14,6 +14,9 @@ public class Experiments {
   }
 
   public void register() {
+    add(201225, "2.31: changement de prix => 14€90");
+    add(201220, "2.29: sous-enveloppes dans la vue analyse + temoignages sur le site");
+    add(201218, "2.28: report du reste d'une enveloppe");
     add(201216, "2.27: force day + guidage import + creation banque + modif libelles");
     add(201214, "Mailing Franck");
     add(201211, "2.25: acces demo + CSV + format dates");

@@ -49,10 +49,10 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   private String name;
   private boolean headerHidden;
   private boolean headerActionsDisabled;
-  private LabelCustomizer headerLabelCustomizer = LabelCustomizer.NULL;
+  private LabelCustomizer headerLabelCustomizer = LabelCustomizer.NO_OP;
   private CellPainter headerBackgroundPainter = CellPainter.NULL;
   private CellPainter defaultBackgroundPainter = CellPainter.NULL;
-  private LabelCustomizer defaultLabelCustomizer = LabelCustomizer.NULL;
+  private LabelCustomizer defaultLabelCustomizer = LabelCustomizer.NO_OP;
   private LabelTableCellRenderer headerRenderer;
   private SavingInfo reorderInfo;
 
@@ -67,7 +67,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   public GlobTableView addColumn(Field field) {
-    return addColumn(field, LabelCustomizer.NULL, defaultBackgroundPainter);
+    return addColumn(field, LabelCustomizer.NO_OP, defaultBackgroundPainter);
   }
 
   public GlobTableView addColumn(String name, Field field) {
@@ -88,7 +88,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   public GlobTableView addColumn(Field field, TableCellEditor editor) {
-    return addColumn(field, LabelCustomizer.NULL, defaultBackgroundPainter, editor);
+    return addColumn(field, LabelCustomizer.NO_OP, defaultBackgroundPainter, editor);
   }
 
   public GlobTableView addColumn(String name, Field field, LabelCustomizer customizer) {
@@ -138,7 +138,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   }
 
   public GlobTableView addColumn(String name, GlobStringifier stringifier) {
-    return addColumn(name, stringifier, LabelCustomizer.NULL);
+    return addColumn(name, stringifier, LabelCustomizer.NO_OP);
   }
 
   public GlobTableView addColumn(String name, GlobStringifier stringifier, LabelCustomizer customizer) {

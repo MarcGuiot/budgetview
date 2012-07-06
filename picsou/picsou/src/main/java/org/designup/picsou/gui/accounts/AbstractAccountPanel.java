@@ -195,7 +195,6 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         return false;
       }
       if (localRepository.getAll(Account.TYPE, fieldEquals(Account.NAME, currentAccount.get(Account.NAME))).size() != 1) {
-        GlobPrinter.print(localRepository, Account.TYPE);
         errorTip = ErrorTip.showLeft(nameField.getComponent(), Lang.get("account.error.duplicate.name"), localDirectory);
         return false;
       }

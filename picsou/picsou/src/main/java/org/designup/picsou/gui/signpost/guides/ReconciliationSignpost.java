@@ -25,7 +25,7 @@ public class ReconciliationSignpost extends AbstractTableSignpost {
 
     boolean selection = table.getSelectedRows().length > 0;
     if (!selection && canShow()) {
-      show(Lang.get("reconciliation.signpost"));
+      show(Lang.get("reconciliation.annotation.signpost"));
     }
     else if (selection && isShowing()) {
       dispose();

@@ -49,6 +49,8 @@
               <comboBox ref="transactionFilterCombo"/>
             </row>
 
+            <panel ref="reconciliationWarningPanel" border="empty(0,0,10,0)"/>
+
             <scrollPane viewportBackground="#FFFFFF" marginBottom="0" weightY="100">
               <table ref="transactionsToCategorize" rowHeight="20"/>
             </scrollPane>
@@ -80,7 +82,7 @@
 
             <panel ref="transactionDetails" weightY="0.1" minimumSize="(200,120)"/>
 
-            <cards ref="budgetAreaCard" weightY="100">
+            <cards ref="categorizationCard" weightY="100">
 
               <card name="noSelection">
                 <panel styleClass="innerBlockBackground">
@@ -89,6 +91,10 @@
                     <filler fill="vertical"/>
                   </column>
                 </panel>
+              </card>
+
+              <card name="reconciliation">
+                <panel ref="reconciliationPanel"/>
               </card>
 
               <card name="series">

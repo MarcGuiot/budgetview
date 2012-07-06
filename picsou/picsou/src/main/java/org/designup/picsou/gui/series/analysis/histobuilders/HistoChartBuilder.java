@@ -198,7 +198,7 @@ public class HistoChartBuilder {
 
         GlobMatcher accountMatcher = Matchers.transactionsForAccount(accountId);
 
-        GlobList transactions = repository.findByIndex(Transaction.POSITION_INDEX, monthId)
+        GlobList transactions = repository.findByIndex(Transaction.POSITION_MONTH_INDEX, monthId)
           .filterSelf(accountMatcher, repository)
           .sort(TransactionComparator.ASCENDING_ACCOUNT);
 
@@ -243,7 +243,7 @@ public class HistoChartBuilder {
     Double lastValue = getLastValue(accountMatcher, monthIdsToShow, position);
 
     for (int monthId : monthIdsToShow) {
-      GlobList transactions = repository.findByIndex(Transaction.POSITION_INDEX, monthId)
+      GlobList transactions = repository.findByIndex(Transaction.POSITION_MONTH_INDEX, monthId)
         .filterSelf(accountMatcher, repository)
         .sort(TransactionComparator.ASCENDING_ACCOUNT);
 

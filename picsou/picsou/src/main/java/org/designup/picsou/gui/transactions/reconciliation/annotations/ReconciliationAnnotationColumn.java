@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.transactions.reconciliation;
+package org.designup.picsou.gui.transactions.reconciliation.annotations;
 
 import org.designup.picsou.gui.components.ButtonTableColumn;
 import org.designup.picsou.gui.utils.Gui;
@@ -46,25 +46,25 @@ public class ReconciliationAnnotationColumn extends ButtonTableColumn {
 
     if ((transaction == null) || (transaction.get(Transaction.SPLIT_SOURCE) != null)) {
       Glob source = repository.findLinkTarget(transaction, Transaction.SPLIT_SOURCE);
-      if (source.isTrue(Transaction.RECONCILED)) {
+      if (source.isTrue(Transaction.RECONCILIATION_ANNOTATION_SET)) {
         button.setDisabledIcon(RECONCILED_ICON_DISABLED);
-        setTooltip(button, panel, Lang.get("reconciliation.tooltip.yes.disabled"));
+        setTooltip(button, panel, Lang.get("reconciliation.annotation.tooltip.yes.disabled"));
       }
       else {
         button.setDisabledIcon(UNRECONCILED_ICON_DISABLED);
-        setTooltip(button, panel, Lang.get("reconciliation.tooltip.no.disabled"));
+        setTooltip(button, panel, Lang.get("reconciliation.annotation.tooltip.no.disabled"));
       }
       button.setEnabled(false);
     }
-    else if (transaction.isTrue(Transaction.RECONCILED)) {
+    else if (transaction.isTrue(Transaction.RECONCILIATION_ANNOTATION_SET)) {
       button.setIcon(RECONCILED_ICON);
       button.setEnabled(true);
-      setTooltip(button, panel, Lang.get("reconciliation.tooltip.yes"));
+      setTooltip(button, panel, Lang.get("reconciliation.annotation.tooltip.yes"));
     }
     else {
       button.setIcon(UNRECONCILED_ICON);
       button.setEnabled(true);
-      setTooltip(button, panel, Lang.get("reconciliation.tooltip.no"));
+      setTooltip(button, panel, Lang.get("reconciliation.annotation.tooltip.no"));
     }
   }
 
@@ -78,7 +78,7 @@ public class ReconciliationAnnotationColumn extends ButtonTableColumn {
       return;
     }
     tableView.select(transaction);
-    repository.update(transaction.getKey(), Transaction.RECONCILED, !transaction.isTrue(Transaction.RECONCILED));
+    repository.update(transaction.getKey(), Transaction.RECONCILIATION_ANNOTATION_SET, !transaction.isTrue(Transaction.RECONCILIATION_ANNOTATION_SET));
   }
 
   public String getName() {
@@ -88,7 +88,7 @@ public class ReconciliationAnnotationColumn extends ButtonTableColumn {
   public GlobStringifier getStringifier() {
     return new AbstractGlobStringifier() {
       public String toString(Glob transaction, GlobRepository repository) {
-        if ((transaction != null) && (transaction.isTrue(Transaction.RECONCILED))) {
+        if ((transaction != null) && (transaction.isTrue(Transaction.RECONCILIATION_ANNOTATION_SET))) {
           return "x";
         }
         return "";
@@ -97,7 +97,7 @@ public class ReconciliationAnnotationColumn extends ButtonTableColumn {
   }
 
   public Comparator<Glob> getComparator() {
-    return new GlobFieldsComparator(Transaction.RECONCILED, true, Transaction.LABEL, false);
+    return new GlobFieldsComparator(Transaction.RECONCILIATION_ANNOTATION_SET, true, Transaction.LABEL, false);
   }
 
   private void selectTransactionIfNeeded(Glob transaction) {

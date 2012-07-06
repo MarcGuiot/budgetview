@@ -88,6 +88,15 @@ public class Matchers {
       not(isTrue(Transaction.MIRROR))
     );
   }
+  
+  public static GlobMatcher transactionsToReconcile() {
+    return new GlobMatcher() {
+      public boolean matches(Glob transaction, GlobRepository repository) {
+        return Utils.equal(ReconciliationStatus.TO_RECONCILE.getId(),
+                           transaction.get(Transaction.RECONCILIATION_STATUS));
+      }
+    };
+  }
 
   public static MonthMatcher userSeriesActiveInPeriod() {
     return new SeriesFirstEndDateFilter(false) {
@@ -251,13 +260,20 @@ public class Matchers {
     protected abstract boolean isEligible(Glob series, GlobRepository repository);
   }
 
+  public static GlobMatcher userCreatedAccounts() {
+    return new GlobMatcher() {
+      public boolean matches(Glob account, GlobRepository repository) {
+        return Account.isUserCreatedAccount(account);
+      }
+    };
+  }
+
   public static GlobMatcher userCreatedSavingsAccounts() {
     return new GlobMatcher() {
       public boolean matches(Glob account, GlobRepository repository) {
         return Account.isUserCreatedSavingsAccount(account);
       }
     };
-
   }
 
   public static class AccountDateMatcher implements GlobMatcher {
@@ -307,7 +323,7 @@ public class Matchers {
     }
   }
 
-  public static GlobMatcher unreconciled(final Set<Key> reconciledTransactions) {
+  public static GlobMatcher missingReconciliationAnnotation(final Set<Key> reconciledTransactions) {
     return new GlobMatcher() {
       public boolean matches(Glob transaction, GlobRepository repository) {
         if (transaction == null) {
@@ -315,9 +331,21 @@ public class Matchers {
         }
         Glob source = repository.findLinkTarget(transaction, Transaction.SPLIT_SOURCE);
         if (source != null) {
-          return !source.isTrue(Transaction.RECONCILED) || reconciledTransactions.contains(source.getKey());
+          return !source.isTrue(Transaction.RECONCILIATION_ANNOTATION_SET) || reconciledTransactions.contains(source.getKey());
         }
-        return !transaction.isTrue(Transaction.RECONCILED) || reconciledTransactions.contains(transaction.getKey());
+        return !transaction.isTrue(Transaction.RECONCILIATION_ANNOTATION_SET) || reconciledTransactions.contains(transaction.getKey());
+      }
+    };
+  }
+  
+  public static GlobMatcher toReconcile() {
+    return new GlobMatcher() {
+      public boolean matches(Glob transaction, GlobRepository repository) {
+        if (transaction == null) {
+          return false;
+        }
+        return Utils.equal(ReconciliationStatus.TO_RECONCILE.getId(),
+                           transaction.get(Transaction.RECONCILIATION_STATUS));
       }
     };
   }

@@ -19,8 +19,6 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkAccountName("Account n. 0000123")
       .checkAccountNumber("0000123")
       .checkBalanceDisplayed(false)
-      .checkUpdateModeIsFileImport()
-      .checkUpdateModeIsDisabled()
       .setName("My account")
       .setAccountNumber("12345")
       .validate();
@@ -40,9 +38,6 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkTypes("Main", "Credit card", "Deferred debit card", "Savings")
       .checkTypesHelp("Account types")
       .selectBank("CIC")
-      .checkUpdateModeIsFileImport()
-      .checkUpdateModeIsEditable()
-      .checkUpdateModes()
       .checkIsMain()
       .validate();
 
@@ -55,9 +50,6 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkTitle("Create account")
       .setName("Savings")
       .setAccountNumber("123")
-      .checkUpdateModeIsFileImport()
-      .checkUpdateModeIsEditable()
-      .checkUpdateModes()
       .checkIsSavings()
       .selectBank("CIC")
       .validate();
@@ -75,7 +67,6 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     operations.createAccount()
       .checkAccountTypeEditable()
-      .checkUpdateModeIsEditable()
       .setName("Livret")
       .setAsSavings()
       .selectBank("CIC")
@@ -173,59 +164,6 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.edit("Account n. 0000123")
       .checkIsDeferredCard()
       .cancel();
-  }
-
-  public void testUpdateModeCanBeChangedUntilTransactionsAreImportedIntoTheAccount() throws Exception {
-    views.selectHome();
-    mainAccounts.createNewAccount()
-      .setName("Main")
-      .setAccountNumber("0000123")
-      .selectBank("CIC")
-      .validate();
-
-    mainAccounts.edit("Main")
-      .checkUpdateModeIsEditable()
-      .setUpdateModeToManualInput()
-      .validate();
-
-    OfxBuilder.init(this)
-      .addBankAccount(-1, 10674, "0000123", 100.00, "2008/10/15")
-      .addTransaction("2008/10/01", 1000.00, "WorldCo")
-      .addTransaction("2008/10/05", -15.00, "MacDo")
-      .loadInAccount("Main");
-
-    mainAccounts.edit("Main")
-      .checkUpdateModeIsDisabled()
-      .checkUpdateModeIsFileImport()
-      .validate();
-  }
-
-  public void testUpdateModeCanBeChangedUntilTransactionsAreCreatedIntoTheAccount() throws Exception {
-    views.selectHome();
-    mainAccounts.createNewAccount()
-      .setName("Main")
-      .setAccountNumber("0000123")
-      .selectBank("CIC")
-      .validate();
-
-    mainAccounts.edit("Main")
-      .checkUpdateModeIsEditable()
-      .setUpdateModeToManualInput()
-      .validate();
-
-    views.selectCategorization();
-    transactionCreation.show()
-      .setLabel("Expense")
-      .setAmount(10)
-      .setDay(5)
-      .selectAccount("Main")
-      .create();
-
-    views.selectHome();
-    mainAccounts.edit("Main")
-      .checkUpdateModeIsDisabled()
-      .checkUpdateModeIsManualInput()
-      .validate();
   }
 
   public void testDeletingAnEmptyAccount() throws Exception {

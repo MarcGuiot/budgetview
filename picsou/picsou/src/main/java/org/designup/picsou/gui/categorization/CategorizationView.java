@@ -4,6 +4,7 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.CreateAccountAction;
 import org.designup.picsou.gui.categorization.actions.CategorizationTableActions;
 import org.designup.picsou.gui.categorization.components.*;
+import org.designup.picsou.gui.categorization.reconciliation.ReconciliationWarningPanel;
 import org.designup.picsou.gui.categorization.special.*;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
@@ -26,8 +27,9 @@ import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
-import org.designup.picsou.gui.transactions.reconciliation.ReconciliationAnnotationColumn;
+import org.designup.picsou.gui.transactions.reconciliation.annotations.ReconciliationAnnotationColumn;
 import org.designup.picsou.gui.transactions.search.TransactionFilterPanel;
+import org.designup.picsou.gui.transactions.utils.TransactionLabelCustomizer;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.Matchers;
@@ -56,9 +58,9 @@ import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Log;
-import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -110,11 +112,11 @@ public class CategorizationView extends View implements TableView, Filterable, C
     this.colorService.addListener(this);
     this.parentDirectory = parentDirectory;
     parentDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
-                                                              public void selectionUpdated(GlobSelection selection) {
-                                                                selectionService.select(selection.getAll(Month.TYPE), Month.TYPE);
-                                                                updateTableFilter();
-                                                              }
-                                                            }, Month.TYPE);
+      public void selectionUpdated(GlobSelection selection) {
+        selectionService.select(selection.getAll(Month.TYPE), Month.TYPE);
+        updateTableFilter();
+      }
+    }, Month.TYPE);
 
     this.colors = new TransactionRendererColors(directory);
 
@@ -153,29 +155,22 @@ public class CategorizationView extends View implements TableView, Filterable, C
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(Transaction.TYPE) &&
             (changeSet.containsUpdates(Transaction.SERIES) ||
-             changeSet.containsUpdates(Transaction.RECONCILED))) {
+             changeSet.containsUpdates(Transaction.RECONCILIATION_ANNOTATION_SET))) {
           categorizedTransactions.clear();
           categorizedTransactions.addAll(changeSet.getUpdated(Transaction.SERIES));
           reconciledTransactions.clear();
-          reconciledTransactions.addAll(changeSet.getUpdated(Transaction.RECONCILED));
+          reconciledTransactions.addAll(changeSet.getUpdated(Transaction.RECONCILIATION_ANNOTATION_SET));
           updateTableFilter();
         }
       }
     });
 
     Comparator<Glob> transactionComparator = getTransactionComparator();
-    DescriptionService descriptionService = directory.get(DescriptionService.class);
     transactionTable =
-      builder.addTable("transactionsToCategorize", Transaction.TYPE, transactionComparator)
-        .setDefaultLabelCustomizer(new TransactionLabelCustomizer())
-        .setDefaultBackgroundPainter(colors.getBackgroundPainter())
-        .addColumn(Lang.get("date"), new TransactionDateStringifier(TransactionComparator.DESCENDING_SPLIT_AFTER),
-                   fontSize(9))
-        .addColumn(Lang.get("series"), new CompactSeriesStringifier(directory),
-                   chain(new OnChangeLabelCustomizer(fontSize(9)), tooltip(SeriesDescriptionStringifier.transactionSeries(), repository)))
-        .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL),
-                   chain(BOLD, autoTooltip()))
-        .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), ALIGN_RIGHT);
+      createTransactionTable("transactionsToCategorize", builder, colors,
+                             transactionComparator,
+                             new OnChangeLabelCustomizer(fontSize(9)),
+                             repository, directory);
 
     CategorizationTableActions actions = new CategorizationTableActions(transactionTable.getCopyAction(Lang.get("copy")),
                                                                         repository, directory);
@@ -197,7 +192,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     Signpost reconciliation = new ReconciliationSignpost(repository, directory);
     reconciliation.attach(table);
-    installReconciliationUpdater(transactionTable, repository);
+    installReconciliationAnnotationUpdater(transactionTable, repository);
 
     this.filterManager = new FilterManager(this);
     this.filterManager.addListener(new FilterListener() {
@@ -239,7 +234,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
     transactionCreation = new TransactionCreationPanel(repository, directory, parentDirectory);
     transactionCreation.registerComponents(builder);
 
-    BudgetAreaSelector selector = new BudgetAreaSelector(repository, directory);
+    CategorizationSelector selector = new CategorizationSelector(colors, repository, directory);
     selector.registerComponents(builder);
 
     addSeriesChooser("incomeSeriesChooser", BudgetArea.INCOME, builder);
@@ -263,7 +258,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
         }
       }
     });
-    
+
     repository.addChangeListener(new KeyChangeListener(UserPreferences.KEY) {
       protected void update() {
         transactionTable.setFilter(currentTableFilter);
@@ -275,7 +270,33 @@ public class CategorizationView extends View implements TableView, Filterable, C
     CategorizationAreaSignpost areaSignpost = new CategorizationAreaSignpost(repository, directory);
     areaSignpost.attach(budgetAreaSelectionPanel);
 
+    ReconciliationWarningPanel reconciliationWarningPanel =
+      new ReconciliationWarningPanel(this, repository, directory);
+    builder.add("reconciliationWarningPanel", reconciliationWarningPanel.getPanel());
+    
     return builder;
+  }
+
+  public static GlobTableView createTransactionTable(String name,
+                                                     GlobsPanelBuilder builder,
+                                                     TransactionRendererColors colors,
+                                                     Comparator<Glob> transactionComparator,
+                                                     LabelCustomizer extraLabelCustomizer,
+                                                     GlobRepository repository,
+                                                     Directory directory) {
+
+    DescriptionService descriptionService = directory.get(DescriptionService.class);
+
+    return builder.addTable(name, Transaction.TYPE, transactionComparator)
+      .setDefaultLabelCustomizer(new TransactionLabelCustomizer(colors))
+      .setDefaultBackgroundPainter(colors.getBackgroundPainter())
+      .addColumn(Lang.get("date"), new TransactionDateStringifier(TransactionComparator.DESCENDING_SPLIT_AFTER),
+                 fontSize(9))
+      .addColumn(Lang.get("series"), new CompactSeriesStringifier(directory),
+                 chain(extraLabelCustomizer, tooltip(SeriesDescriptionStringifier.transactionSeries(), repository)))
+      .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL),
+                 chain(BOLD, autoTooltip()))
+      .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), ALIGN_RIGHT);
   }
 
   private void registerBankFormatExporter(final GlobTableView transactionTable) {
@@ -340,19 +361,19 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
   private void initSelectionListener() {
     selectionService.addListener(new GlobSelectionListener() {
-                                   public void selectionUpdated(GlobSelection selection) {
-                                     currentTransactions = selection.getAll(Transaction.TYPE);
-                                     Set<Integer> months = currentTransactions.getValueSet(Transaction.BUDGET_MONTH);
-                                     for (Pair<Matchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
-                                       filter.getFirst().filterDates(months, currentTransactions);
-                                       filter.getSecond().setFilter(filter.getFirst());
-                                     }
-                                     colors.setSplitGroupSourceId(getSplitGroupSourceId());
-                                     transactionTable.getComponent().repaint();
-                                     categorizedTransactions.clear();
-                                     reconciledTransactions.clear();
-                                   }
-                                 }, Transaction.TYPE);
+      public void selectionUpdated(GlobSelection selection) {
+        currentTransactions = selection.getAll(Transaction.TYPE);
+        Set<Integer> months = currentTransactions.getValueSet(Transaction.BUDGET_MONTH);
+        for (Pair<Matchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
+          filter.getFirst().filterDates(months, currentTransactions);
+          filter.getSecond().setFilter(filter.getFirst());
+        }
+        colors.setSplitGroupSourceId(getSplitGroupSourceId());
+        transactionTable.getComponent().repaint();
+        categorizedTransactions.clear();
+        reconciledTransactions.clear();
+      }
+    }, Transaction.TYPE);
   }
 
   private Integer getSplitGroupSourceId() {
@@ -414,9 +435,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
   private Action getAdditionalAction(BudgetArea budgetArea) {
     if (BudgetArea.SAVINGS.equals(budgetArea)) {
-      CreateAccountAction action = new CreateAccountAction(AccountType.SAVINGS, repository, directory);
-      action.setAccountTypeEditable(false);
-      return action;
+      return new CreateAccountAction(AccountType.SAVINGS, repository, directory);
     }
     if (BudgetArea.EXTRAS.equals(budgetArea)) {
       return new CreateProjectAction(directory);
@@ -594,7 +613,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
       repository.update(transaction.getKey(),
                         value(Transaction.SERIES, series.get(Series.ID)),
                         value(Transaction.SUB_SERIES, subSeriesId),
-                        value(Transaction.RECONCILED, !Transaction.isManuallyCreated(transaction, repository)));
+                        value(Transaction.RECONCILIATION_ANNOTATION_SET, !Transaction.isManuallyCreated(transaction)));
       return true;
     }
   }
@@ -652,21 +671,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
     return mode.getMatcher(repository, selectionService, categorizedTransactions, reconciledTransactions);
   }
 
-  private class TransactionLabelCustomizer implements LabelCustomizer {
-    public void process(JLabel label, Glob transaction, boolean isSelected, boolean hasFocus, int row, int column) {
-      if (isSelected) {
-        label.setForeground(Color.WHITE);
-      }
-      else if ((transaction != null) && Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
-        label.setForeground(colors.getTransactionErrorTextColor());
-      }
-      else {
-        label.setForeground(colors.getTransactionTextColor());
-      }
-      colors.setBackground(label, transaction, isSelected, row);
-    }
-  }
-
   public void addTableListener(TableModelListener listener) {
     this.transactionTable.getComponent().getModel().addTableModelListener(listener);
   }
@@ -698,7 +702,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
     }
   }
 
-  private void installReconciliationUpdater(final GlobTableView tableView, GlobRepository repository) {
+  private void installReconciliationAnnotationUpdater(final GlobTableView tableView, GlobRepository repository) {
     this.column = new ReconciliationAnnotationColumn(tableView, repository, directory);
     repository.addChangeListener(new TypeChangeSetListener(UserPreferences.TYPE) {
       protected void update(GlobRepository repository) {

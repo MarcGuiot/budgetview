@@ -53,7 +53,7 @@ public class GlobTableColumnBuilder {
   }
 
   public GlobTableColumnBuilder addLabelCustomizer(LabelCustomizer customizer) {
-    if (customizer == LabelCustomizer.NULL) {
+    if (customizer == LabelCustomizer.NO_OP) {
       return this;
     }
     if (column.renderer != null) {

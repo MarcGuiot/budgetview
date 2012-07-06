@@ -5,6 +5,7 @@ import com.budgetview.analytics.model.LogEntryType;
 import com.budgetview.analytics.model.User;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -20,7 +21,8 @@ public class UserEntriesFunctor implements GlobFunctor {
   public void run(Glob entry, GlobRepository repository) throws Exception {
     Glob user = repository.findLinkTarget(entry, LogEntry.USER);
     if (user == null) {
-      throw new InvalidParameter("Entry without user: " + entry);
+      System.out.println("!! Entry without user: " + GlobPrinter.toString(entry));
+      return;
     }
 
     String email = entry.get(LogEntry.EMAIL);

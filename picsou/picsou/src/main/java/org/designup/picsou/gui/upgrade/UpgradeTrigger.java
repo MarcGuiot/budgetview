@@ -125,6 +125,9 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (currentJarVersion < 90) {
       fixHiddenProjectSeriesBudget(repository);
     }
+    if (currentJarVersion < 91) {
+      updateManualCreationFlag(repository);
+    }
 
     deleteDeprecatedGlobs(repository);
 
@@ -480,13 +483,23 @@ public class UpgradeTrigger implements ChangeSetListener {
                         ColorTheme.STANDARD.getId());
     }
   }
-  
+
   private void fixHiddenProjectSeriesBudget(GlobRepository repository) {
     Set<Integer> seriesIds = repository.getAll(Project.TYPE).getValueSet(Project.SERIES);
     for (Glob seriesBudget : repository.getAll(SeriesBudget.TYPE, GlobMatchers.fieldIn(SeriesBudget.SERIES, seriesIds))) {
-      if (!seriesBudget.isTrue(SeriesBudget.ACTIVE) && 
+      if (!seriesBudget.isTrue(SeriesBudget.ACTIVE) &&
           Amounts.isNotZero(seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT))) {
         repository.update(seriesBudget.getKey(), SeriesBudget.ACTIVE, true);
+      }
+    }
+  }
+
+  private void updateManualCreationFlag(GlobRepository repository) {
+    for (Glob transaction : repository.getAll(Transaction.TYPE)) {
+      Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
+      boolean manuallyCreated = (account != null) && Account.isManualUpdateAccount(account);
+      if (manuallyCreated) {
+        repository.update(transaction.getKey(), Transaction.MANUAL_CREATION, true);
       }
     }
   }

@@ -136,6 +136,7 @@ public class PicsouInit {
     repository.addTrigger(new SavingsBudgetStatTrigger());
     repository.addTrigger(new SubSeriesStatTrigger());
     repository.addTrigger(new ProjectStatTrigger());
+    repository.addTrigger(new ReconciliationDetectionTrigger());
     repository.addTrigger(new DateFormatTrigger(directory));
   }
 

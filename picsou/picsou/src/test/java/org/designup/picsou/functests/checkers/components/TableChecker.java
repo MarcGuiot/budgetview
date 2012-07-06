@@ -20,4 +20,5 @@ public abstract class TableChecker {
     org.uispec4j.assertion.UISpecAssert.assertTrue(getTable().contentEquals(expectedContent));
   }
 
+  public abstract void dumpCode();
 }

@@ -8,8 +8,11 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import static org.globsframework.model.FieldValue.value;
+
+import org.globsframework.model.Glob;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum AccountUpdateMode implements GlobConstantContainer {
@@ -62,5 +65,9 @@ public enum AccountUpdateMode implements GlobConstantContainer {
 
   public org.globsframework.model.Key getKey() {
     return org.globsframework.model.Key.create(AccountUpdateMode.TYPE, id);
+  }
+
+  public static boolean isAutomatic(Glob account) {
+    return Utils.equal(AUTOMATIC.id, account.get(Account.UPDATE_MODE));
   }
 }

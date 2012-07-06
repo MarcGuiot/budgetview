@@ -70,14 +70,12 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .setAsMain()
       .setPosition(1000)
       .selectBank(SOCIETE_GENERALE)
-      .setUpdateModeToManualInput()
       .validate();
 
     savingsAccounts.createNewAccount().setName("Savings")
       .selectBank(SOCIETE_GENERALE)
       .setAsSavings()
       .setPosition(1000)
-      .setUpdateModeToManualInput()
       .validate();
 
     views.selectCategorization();

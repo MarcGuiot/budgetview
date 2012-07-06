@@ -1,0 +1,12 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <column name="reconciliationWarningPanel">
+    <column styleClass="highlightedPanel">
+      <label ref="message" margin="10"/>
+      <button action="activateReconciliationFilter"/>
+    </column>
+  </column>
+
+</splits>

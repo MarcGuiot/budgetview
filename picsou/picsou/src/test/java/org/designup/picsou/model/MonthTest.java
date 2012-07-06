@@ -1,15 +1,15 @@
 package org.designup.picsou.model;
 
 import junit.framework.TestCase;
-import org.designup.picsou.gui.license.LicenseService;
-import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.Dates;
+import org.globsframework.utils.TestUtils;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Date;
 
 public class MonthTest extends TestCase {
+
   public void test() throws Exception {
     assertEquals(2006, Month.toYear(200601));
     assertEquals(1, Month.toMonth(200601));
@@ -74,20 +74,36 @@ public class MonthTest extends TestCase {
     TestUtils.assertEquals(Month.createCountMonthsWithFirst(200807, 3), 200807, 200808, 200809, 200810);
   }
 
-  public void testDistance() throws Exception {
+  public void testMonthDistance() throws Exception {
     assertEquals(4, Month.distance(200811, 200903));
     assertEquals(13, Month.distance(200811, 200912));
     assertEquals(-4, Month.distance(200903, 200811));
     assertEquals(-13, Month.distance(200912, 200811));
   }
 
-  public void testaddDurationMonth() throws Exception {
+  public void testDaysDistance() throws Exception {
+    assertEquals(0, Month.distance(201205, 20, 201205, 20));
+
+    assertEquals(4, Month.distance(201205, 20, 201205, 24));
+    assertEquals(4, Month.distance(201205, 24, 201205, 20));
+
+    assertEquals(1, Month.distance(201205, 31, 201206, 1));
+    assertEquals(1, Month.distance(201206, 1, 201205, 31));
+
+    assertEquals(11 + 5, Month.distance(201205, 20, 201206, 5));
+    assertEquals(11 + 5, Month.distance(201206, 5, 201205, 20));
+
+    assertEquals(11 + 30 + 5, Month.distance(201205, 20, 201207, 5));
+    assertEquals(11 + 30 + 5, Month.distance(201207, 5, 201205, 20));
+  }
+
+  public void testAddMonthDuration() throws Exception {
     shift("2010/11/10", "2010/12/26");
     shift("2010/12/10", "2011/01/25");
   }
 
   private void shift(final String from, final String to) {
-    Date date = LicenseService.addTrialPeriod(Dates.parse(from));
+    Date date = Month.addDays(Dates.parse(from), 46);
     assertEquals(Dates.parse(to), date);
   }
 }

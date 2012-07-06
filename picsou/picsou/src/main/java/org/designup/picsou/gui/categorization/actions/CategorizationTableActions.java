@@ -2,7 +2,7 @@ package org.designup.picsou.gui.categorization.actions;
 
 import org.designup.picsou.gui.transactions.actions.DeleteTransactionAction;
 import org.designup.picsou.gui.transactions.actions.EditTransactionAction;
-import org.designup.picsou.gui.transactions.reconciliation.AnnotateReconciledTransactionAction;
+import org.designup.picsou.gui.transactions.reconciliation.annotations.AnnotateReconciledTransactionAction;
 import org.designup.picsou.gui.transactions.shift.ShiftTransactionAction;
 import org.designup.picsou.gui.transactions.split.SplitTransactionAction;
 import org.designup.picsou.model.UserPreferences;

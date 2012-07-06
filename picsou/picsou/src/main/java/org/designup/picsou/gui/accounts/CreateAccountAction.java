@@ -18,7 +18,6 @@ public class CreateAccountAction extends AbstractAction {
   private Directory directory;
   private final Window owner;
   private boolean accountTypeEditable = true;
-  private boolean updateModeEditable = true;
   private boolean gotoAccountView = false;
   private Glob defaultAccountInfo;
 
@@ -43,11 +42,6 @@ public class CreateAccountAction extends AbstractAction {
     this.accountTypeEditable = accountTypeEditable;
   }
 
-  public CreateAccountAction setUpdateModeEditable(boolean editable) {
-    this.updateModeEditable = editable;
-    return this;
-  }
-
   public void setGotoAccountViewEnabled(boolean enabled) {
     this.gotoAccountView = enabled;
   }
@@ -59,7 +53,7 @@ public class CreateAccountAction extends AbstractAction {
 
     AccountEditionDialog dialog = new AccountEditionDialog(owner, repository, directory);
     dialog.setAccountInfo(defaultAccountInfo);
-    dialog.showWithNewAccount(accountType, accountTypeEditable, AccountUpdateMode.AUTOMATIC, updateModeEditable);
+    dialog.showWithNewAccount(accountType, accountTypeEditable, AccountUpdateMode.MANUAL);
   }
 
   private void initTooltip() {

@@ -19,7 +19,6 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import java.util.*;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
-import static org.globsframework.model.utils.GlobMatchers.isFalse;
 
 public enum CategorizationFilteringMode {
   ALL(1),
@@ -27,7 +26,8 @@ public enum CategorizationFilteringMode {
   LAST_IMPORTED_FILE(3),
   UNCATEGORIZED(4),
   UNCATEGORIZED_SELECTED_MONTHS(5),
-  UNRECONCILED(6);
+  MISSING_RECONCILIATION_ANNOTATION(6),
+  TO_RECONCILE(7);
 
   private int id;
 
@@ -76,8 +76,12 @@ public enum CategorizationFilteringMode {
              keyIn(categorizedTransactions));
       }
 
-      case UNRECONCILED: {
-        return Matchers.unreconciled(reconciledTransactions);
+      case MISSING_RECONCILIATION_ANNOTATION: {
+        return Matchers.missingReconciliationAnnotation(reconciledTransactions);
+      }
+
+      case TO_RECONCILE: {
+        return Matchers.toReconcile();
       }
     }
     throw new UnexpectedApplicationState(name());
@@ -94,7 +98,7 @@ public enum CategorizationFilteringMode {
     else {
       List<CategorizationFilteringMode> modes = new ArrayList<CategorizationFilteringMode>();
       modes.addAll(Arrays.asList(values()));
-      modes.remove(UNRECONCILED);
+      modes.remove(MISSING_RECONCILIATION_ANNOTATION);
       return modes.toArray(new CategorizationFilteringMode[modes.size()]);
     }
   }

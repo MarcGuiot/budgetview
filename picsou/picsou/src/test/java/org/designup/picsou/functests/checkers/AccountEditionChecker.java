@@ -281,45 +281,6 @@ public class AccountEditionChecker extends GuiChecker {
     return dialog.getComboBox("type");
   }
 
-  public AccountEditionChecker setUpdateModeToManualInput() {
-    return setUpdateMode(Lang.get("account.updateMode.manual"));
-  }
-
-  public AccountEditionChecker setUpdateModeToFileImport() {
-    return setUpdateMode(Lang.get("account.updateMode.automatic"));
-  }
-
-  private AccountEditionChecker setUpdateMode(String mode) {
-    getUpdateModeCombo().select(mode);
-    return this;
-  }
-
-  public AccountEditionChecker checkUpdateModes() {
-    assertThat(getUpdateModeCombo().contentEquals(Lang.get("account.updateMode.automatic"),
-                                                  Lang.get("account.updateMode.manual")));
-    return this;
-  }
-
-  public AccountEditionChecker checkUpdateModeIsFileImport() {
-    assertThat(getUpdateModeCombo().selectionEquals(Lang.get("account.updateMode.automatic")));
-    return this;
-  }
-
-  public AccountEditionChecker checkUpdateModeIsManualInput() {
-    assertThat(getUpdateModeCombo().selectionEquals(Lang.get("account.updateMode.manual")));
-    return this;
-  }
-
-  public AccountEditionChecker checkUpdateModeIsEditable() {
-    assertThat(getUpdateModeCombo().isEnabled());
-    return this;
-  }
-
-  public AccountEditionChecker checkUpdateModeIsDisabled() {
-    assertFalse(getUpdateModeCombo().isEnabled());
-    return this;
-  }
-
   public ComboBox getUpdateModeCombo() {
     return dialog.getComboBox("updateMode");
   }

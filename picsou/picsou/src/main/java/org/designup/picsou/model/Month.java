@@ -291,22 +291,45 @@ public class Month {
     return true;
   }
 
-  public static int distance(int from, int to) {
+  public static int distance(int fromMonth, int toMonth) {
     int distance = 0;
-    if (from <= to) {
-      while (from < to) {
-        from = next(from);
+    if (fromMonth <= toMonth) {
+      while (fromMonth < toMonth) {
+        fromMonth = next(fromMonth);
         distance++;
       }
       return distance;
     }
     else {
-      while (from > to) {
-        from = previous(from);
+      while (fromMonth > toMonth) {
+        fromMonth = previous(fromMonth);
         distance--;
       }
       return distance;
     }
+  }
+
+  public static int distance(int fromMonth, int fromDay, int toMonth, int toDay) {
+    if (fromMonth == toMonth) {
+      return Math.abs(fromDay - toDay);
+    }
+
+    int distance = 0;
+    if (fromMonth < toMonth) {
+      distance += getLastDayNumber(fromMonth) - fromDay;
+      for (int month = Month.next(fromMonth); month < toMonth; month = Month.next(month)) {
+        distance += getLastDayNumber(month);
+      }
+      distance += toDay;
+    }
+    else {
+      distance += getLastDayNumber(toMonth) - toDay;
+      for (int month = Month.next(toMonth); month < fromMonth; month = Month.next(month)) {
+        distance += getLastDayNumber(month);
+      }
+      distance += fromDay;
+    }
+    return distance;
   }
 
   public static Iterable<Integer> yearRange(int monthId) {

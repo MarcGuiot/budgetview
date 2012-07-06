@@ -51,7 +51,7 @@ import org.designup.picsou.gui.time.actions.SelectLast12MonthsAction;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.transactions.creation.CreateTransactionMenuAction;
-import org.designup.picsou.gui.transactions.reconciliation.ShowReconciliationAction;
+import org.designup.picsou.gui.transactions.reconciliation.annotations.ShowReconciliationAction;
 import org.designup.picsou.gui.undo.RedoAction;
 import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;

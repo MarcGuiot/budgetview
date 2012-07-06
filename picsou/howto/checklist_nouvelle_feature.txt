@@ -1,0 +1,13 @@
+
+- Interactions prises en comptes avec :
+  * Shift de transactions
+  * Split de transactions
+  * Savings : séries from/to, création auto
+
+- Upgrade des données utilisateur pris en compte
+
+- Couleurs des nouveaux éléments GUI réglées pour tous les thèmes
+
+- Traduction EN finalisée
+
+-

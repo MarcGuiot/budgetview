@@ -22,6 +22,7 @@ public class TransactionRendererColors implements ColorChangeListener {
   private Color transactionPlannedTextColor;
   private Color transactionLinkTextColor;
   private Color transactionErrorTextColor;
+  private Color transactionReconciliationColor;
   private Color splitSourceColor;
   private Color splitChildColor;
   private Color categoryColor;
@@ -44,6 +45,7 @@ public class TransactionRendererColors implements ColorChangeListener {
     transactionPlannedTextColor = colorLocator.get(ApplicationColors.TRANSACTION_TEXT_PLANNED);
     transactionLinkTextColor = colorLocator.get(ApplicationColors.TRANSACTION_TEXT_LINK);
     transactionErrorTextColor = colorLocator.get(ApplicationColors.TABLE_TEXT_ERROR);
+    transactionReconciliationColor = colorLocator.get(ApplicationColors.TRANSACTION_RECONCILIATION);
     splitSourceColor = colorLocator.get(ApplicationColors.TRANSACTION_SPLIT_SOURCE_BG);
     splitChildColor = colorLocator.get(ApplicationColors.TRANSACTION_SPLIT_BG);
   }
@@ -78,6 +80,10 @@ public class TransactionRendererColors implements ColorChangeListener {
 
   public Color getTransactionErrorTextColor() {
     return transactionErrorTextColor;
+  }
+
+  public Color getTransactionReconciliationColor() {
+    return transactionReconciliationColor;
   }
 
   public void update(Component component, boolean isSelected, Glob transaction, int row) {

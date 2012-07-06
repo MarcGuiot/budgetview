@@ -177,10 +177,8 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .setPosition(200)
       .validate();
 
-    views.selectCategorization();
     categorization.setNewSavings("Virt", "Epargne", "Main accounts", "ING");
 
-    views.selectBudget();
     budgetView.savings.alignAndPropagate("Epargne");
 
     views.selectAnalysis();

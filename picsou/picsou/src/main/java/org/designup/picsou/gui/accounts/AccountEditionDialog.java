@@ -32,7 +32,6 @@ import java.util.Set;
 public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobRepository> {
   private PicsouDialog dialog;
   private GlobRepository parentRepository;
-  private GlobLinkComboEditor updateModeCombo;
   private JLabel titleLabel;
   private GlobsPanelBuilder builder;
   private Glob accountInfo;
@@ -51,8 +50,6 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
                                                       localRepository, localDirectory);
 
     titleLabel = builder.add("title", new JLabel("accountEditionDialog")).getComponent();
-
-    updateModeCombo = builder.addComboEditor("updateMode", Account.UPDATE_MODE).setShowEmptyOption(false);
 
     DatePicker startDatePicker = new DatePicker(Account.OPEN_DATE, localRepository, localDirectory);
     builder.add("startDatePicker", startDatePicker.getComponent());
@@ -152,16 +149,13 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
 
     Glob localAccount = localRepository.get(accountKey);
     setBalanceEditorVisible(false);
-    updateModeCombo.setEnabled(!accountHasTransactions(localAccount));
 
     doShow(localAccount, false);
   }
 
-  public void showWithNewAccount(AccountType type, boolean accountTypeEditable,
-                                 AccountUpdateMode updateMode, boolean updateModeEditable) {
+  public void showWithNewAccount(AccountType type, boolean accountTypeEditable, AccountUpdateMode updateMode) {
     localRepository.rollback();
     accountTypeCombo.setEnabled(accountTypeEditable);
-    updateModeCombo.setEnabled(updateModeEditable);
     Glob newAccount = localRepository.create(Account.TYPE,
                                              value(Account.ACCOUNT_TYPE, type.getId()),
                                              value(Account.UPDATE_MODE, updateMode.getId()),

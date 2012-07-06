@@ -319,7 +319,9 @@ public class ImportPreviewPanel implements MessageHandler {
         sessionRepository.update(importedAccount.getKey(),
                                  FieldValue.value(RealAccount.ACCOUNT, currentlySelectedAccount.get(Account.ID)));
         deleteAccountIfDuplicate(importedAccount);
-        sessionRepository.update(currentlySelectedAccount.getKey(), Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId());
+        sessionRepository.update(currentlySelectedAccount.getKey(),
+                                 Account.UPDATE_MODE,
+                                 AccountUpdateMode.AUTOMATIC.getId());
         newAccount = null;
         controller.completeImport(importedAccount, currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
       }

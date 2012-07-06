@@ -360,7 +360,6 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
-      .setUpdateModeToManualInput()
       .selectBank("CIC")
       .validate();
 

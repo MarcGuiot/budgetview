@@ -1,8 +1,7 @@
-package org.designup.picsou.gui.transactions.reconciliation;
+package org.designup.picsou.gui.transactions.reconciliation.annotations;
 
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.actions.MultiSelectionAction;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -29,7 +28,7 @@ public class AnnotateReconciledTransactionAction extends MultiSelectionAction {
 
   private void updateLabel() {
     boolean reconcile = shouldReconcile(selectionService.getSelection(Transaction.TYPE));
-    putValue(Action.NAME, Lang.get(reconcile ? "reconciliation.action.do" : "reconciliation.action.undo"));
+    putValue(Action.NAME, Lang.get(reconcile ? "reconciliation.annotation.action.do" : "reconciliation.annotation.action.undo"));
   }
 
   protected void process(GlobList transactions, GlobRepository repository, Directory directory) {
@@ -37,7 +36,7 @@ public class AnnotateReconciledTransactionAction extends MultiSelectionAction {
     try {
       repository.startChangeSet();
       for (Glob transaction : selectionService.getSelection(Transaction.TYPE)) {
-        repository.update(transaction.getKey(), Transaction.RECONCILED, reconcile);
+        repository.update(transaction.getKey(), Transaction.RECONCILIATION_ANNOTATION_SET, reconcile);
       }
     }
     finally {
@@ -47,7 +46,7 @@ public class AnnotateReconciledTransactionAction extends MultiSelectionAction {
 
   private boolean shouldReconcile(GlobList transactions) {
     for (Glob transaction : transactions) {
-      if (!transaction.isTrue(Transaction.RECONCILED)) {
+      if (!transaction.isTrue(Transaction.RECONCILIATION_ANNOTATION_SET)) {
         return true;
       }
     }

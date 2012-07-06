@@ -29,8 +29,9 @@ public class TransactionDetailsChecker extends ViewChecker {
     return panel;
   }
 
-  public void checkLabel(String expected) {
+  public TransactionDetailsChecker checkLabel(String expected) {
     checkValue("userLabel", expected);
+    return this;
   }
 
   public void checkLabelIsNotEditable() {

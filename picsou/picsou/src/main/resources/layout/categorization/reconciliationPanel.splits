@@ -1,0 +1,24 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <styles>
+    <style selector="label.title" anchor="center" fill="none" font="-,bold,14" marginBottom="15"/>
+  </styles>
+
+  <column name="reconciliationPanel">
+    <column border="line(block.inner.border)" opaque="true" background="block.inner.bg.secondary">
+    <column margin="15">
+      <label text="$reconciliation.title" styleClass="title"/>
+      <htmlEditorPane text="$reconciliation.reconcile.message"/>
+      <scrollPane forceVerticalScroll="true" margin="10" weightY="200">
+        <table ref="possibleTransactions"/>
+      </scrollPane>
+      <button action="reconcile" fill="none" anchor="right"/>
+      <htmlEditorPane text="$reconciliation.keepManual.message" marginTop="30"/>
+      <button action="keepManual" fill="none" anchor="right"/>
+      <filler fill="vertical" weightY="100"/>
+    </column>
+    </column>
+  </column>
+</splits>

@@ -1,6 +1,6 @@
 package org.designup.picsou.functests.checkers.converters;
 
-import org.designup.picsou.gui.transactions.reconciliation.ReconciliationAnnotationColumn;
+import org.designup.picsou.gui.transactions.reconciliation.annotations.ReconciliationAnnotationColumn;
 import org.globsframework.gui.views.utils.CellPainterPanel;
 import org.uispec4j.TableCellValueConverter;
 

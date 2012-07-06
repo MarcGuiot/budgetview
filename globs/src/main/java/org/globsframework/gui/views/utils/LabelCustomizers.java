@@ -4,7 +4,6 @@ import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobStringifier;
-import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.StringField;
 
 import javax.swing.*;
@@ -24,7 +23,7 @@ public class LabelCustomizers {
   public static LabelCustomizer chain(Iterable<LabelCustomizer> customizers) {
     final java.util.List<LabelCustomizer> reducedList = new ArrayList<LabelCustomizer>();
     for (LabelCustomizer customizer : customizers) {
-      if (customizer != LabelCustomizer.NULL) {
+      if (customizer != LabelCustomizer.NO_OP) {
         reducedList.add(customizer);
       }
     }

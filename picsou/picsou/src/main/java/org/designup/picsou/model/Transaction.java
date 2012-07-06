@@ -10,6 +10,8 @@ import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -117,23 +119,29 @@ public class Transaction {
   @DefaultBoolean(false)
   public static BooleanField CREATED_BY_SERIES;
 
+  @DefaultBoolean(false)
+  public static BooleanField MANUAL_CREATION;
+
   @Target(Transaction.class)
   public static LinkField NOT_IMPORTED_TRANSACTION;
 
   @DefaultBoolean(false)
-  public static BooleanField RECONCILED;
+  public static BooleanField RECONCILIATION_ANNOTATION_SET;
+
+  @Target(ReconciliationStatus.class)
+  public static LinkField RECONCILIATION_STATUS;
 
   public static NotUniqueIndex LABEL_FOR_CATEGORISATION_INDEX;
 
   public static MultiFieldNotUniqueIndex SERIES_INDEX;
 
-  public static NotUniqueIndex POSITION_INDEX;
+  public static NotUniqueIndex POSITION_MONTH_INDEX;
 
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(Transaction.class, "transaction");
     loader.defineNonUniqueIndex(LABEL_FOR_CATEGORISATION_INDEX, LABEL_FOR_CATEGORISATION);
     loader.defineMultiFieldNotUniqueIndex(SERIES_INDEX, SERIES, POSITION_MONTH);
-    loader.defineNonUniqueIndex(POSITION_INDEX, POSITION_MONTH);
+    loader.defineNonUniqueIndex(POSITION_MONTH_INDEX, POSITION_MONTH);
   }
 
   public static int fullDate(Glob transaction) {
@@ -158,20 +166,6 @@ public class Transaction {
 
   public static double subtract(double initialValue, double amount) {
     return Math.rint(Math.signum(initialValue) * (Math.abs(initialValue) - Math.abs(amount)) * 100.0) / 100.0;
-  }
-
-  public static GlobList getSplittedTransactions(Glob transaction, GlobRepository repository) {
-    GlobList splittedTransactions = new GlobList();
-    if (isSplitSource(transaction)) {
-      splittedTransactions.add(transaction);
-      splittedTransactions.addAll(repository.findLinkedTo(transaction, SPLIT_SOURCE));
-    }
-    else if (isSplitPart(transaction)) {
-      Glob initialTransaction = repository.findLinkTarget(transaction, SPLIT_SOURCE);
-      splittedTransactions.add(initialTransaction);
-      splittedTransactions.addAll(repository.findLinkedTo(initialTransaction, SPLIT_SOURCE));
-    }
-    return splittedTransactions;
   }
 
   public static boolean isPlanned(Glob transaction) {
@@ -223,12 +217,8 @@ public class Transaction {
     return transaction.isTrue(CREATED_BY_SERIES);
   }
 
-  public static boolean isManuallyCreated(Glob transaction, GlobRepository repository) {
-    Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-    if (account == null) {
-      return false;
-    }
-    return Account.isManualUpdateAccount(account);
+  public static boolean isManuallyCreated(Glob transaction) {
+    return transaction != null && transaction.isTrue(Transaction.MANUAL_CREATION);
   }
 
   public static String getLabel(boolean planned, Glob series) {
@@ -240,16 +230,15 @@ public class Transaction {
     }
   }
 
-  static public boolean isTransactionBeforeOrEqual(Glob transaction, int month, int day) {
-    return (transaction.get(BANK_MONTH) < month || (transaction.get(BANK_MONTH) == month &&
-                                                    transaction.get(BANK_DAY) <= day));
-  }
-
   static public boolean isPositionTransactionBeforeOrEqual(Glob transaction, int month, int day) {
     return (transaction.get(POSITION_MONTH) < month || (transaction.get(POSITION_MONTH) == month &&
                                                         transaction.get(POSITION_DAY) <= day));
   }
 
+  public static boolean isCategorized(Glob transaction) {
+    return (transaction != null) && !Utils.equal(Series.UNCATEGORIZED_SERIES, transaction.get(SERIES));
+  }
+  
   public static GlobList getUncategorizedTransactions(Integer monthId, GlobRepository repository) {
     ReadOnlyGlobRepository.MultiFieldIndexed index = repository.findByIndex(SERIES_INDEX, SERIES, Series.UNCATEGORIZED_SERIES_ID);
     GlobList prefiltered = index.findByIndex(POSITION_MONTH, Month.previous(monthId)).getGlobs();
@@ -263,7 +252,7 @@ public class Transaction {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 9;
+      return 10;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -307,12 +296,17 @@ public class Transaction {
       output.writeUtf8String(fieldValues.get(Transaction.QIF_P));
       output.writeBoolean(fieldValues.get(Transaction.IS_OFX));
       output.writeInteger(fieldValues.get(Transaction.IMPORT));
-      output.writeBoolean(fieldValues.get(Transaction.RECONCILED));
+      output.writeBoolean(fieldValues.get(Transaction.RECONCILIATION_ANNOTATION_SET));
+      output.writeInteger(fieldValues.get(Transaction.RECONCILIATION_STATUS));
+      output.writeBoolean(fieldValues.get(Transaction.MANUAL_CREATION));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 9) {
+      if (version == 10) {
+        deserializeDataV10(fieldSetter, data);
+      }
+      else if (version == 9) {
         deserializeDataV9(fieldSetter, data);
       }
       else if (version == 8) {
@@ -339,6 +333,47 @@ public class Transaction {
       else if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+    }
+
+    private void deserializeDataV10(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readUtf8String());
+      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readUtf8String());
+      fieldSetter.set(Transaction.NOTE, input.readUtf8String());
+      fieldSetter.set(Transaction.MONTH, input.readInteger());
+      fieldSetter.set(Transaction.DAY, input.readInteger());
+      fieldSetter.set(Transaction.BUDGET_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.BUDGET_DAY, input.readInteger());
+      fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.BANK_DAY, input.readInteger());
+      fieldSetter.set(Transaction.POSITION_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.POSITION_DAY, input.readInteger());
+      fieldSetter.set(Transaction.AMOUNT, input.readDouble());
+      fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
+      fieldSetter.set(Transaction.SPLIT, input.readBoolean());
+      fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
+      fieldSetter.set(Transaction.DAY_BEFORE_SHIFT, input.readInteger());
+      fieldSetter.set(Transaction.SERIES, input.readInteger());
+      fieldSetter.set(Transaction.SUB_SERIES, input.readInteger());
+      fieldSetter.set(Transaction.PLANNED, input.readBoolean());
+      fieldSetter.set(Transaction.MIRROR, input.readBoolean());
+      fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
+      fieldSetter.set(Transaction.NOT_IMPORTED_TRANSACTION, input.readInteger());
+      fieldSetter.set(Transaction.OFX_CHECK_NUM, input.readUtf8String());
+      fieldSetter.set(Transaction.OFX_MEMO, input.readUtf8String());
+      fieldSetter.set(Transaction.OFX_NAME, input.readUtf8String());
+      fieldSetter.set(Transaction.QIF_M, input.readUtf8String());
+      fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
+      fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
+      fieldSetter.set(Transaction.IMPORT, input.readInteger());
+      fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, input.readBoolean());
+      fieldSetter.set(Transaction.RECONCILIATION_STATUS, input.readInteger());
+      fieldSetter.set(Transaction.MANUAL_CREATION, input.readBoolean());
     }
 
     private void deserializeDataV9(FieldSetter fieldSetter, byte[] data) {
@@ -377,7 +412,7 @@ public class Transaction {
       fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
       fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
-      fieldSetter.set(Transaction.RECONCILED, input.readBoolean());
+      fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, input.readBoolean());
     }
 
     private void deserializeDataV8(FieldSetter fieldSetter, byte[] data) {
@@ -420,7 +455,7 @@ public class Transaction {
       fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
       fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
-      fieldSetter.set(Transaction.RECONCILED, false);
+      fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, false);
     }
 
     private void deserializeDataV7(FieldSetter fieldSetter, byte[] data) {
@@ -463,7 +498,7 @@ public class Transaction {
       fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
       fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
-      fieldSetter.set(Transaction.RECONCILED, false);
+      fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, false);
     }
 
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
@@ -506,7 +541,7 @@ public class Transaction {
       fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
       fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
-      fieldSetter.set(Transaction.RECONCILED, false);
+      fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, false);
     }
 
     private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
@@ -548,7 +583,7 @@ public class Transaction {
       fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
       fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
-      fieldSetter.set(Transaction.RECONCILED, false);
+      fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, false);
     }
 
     private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
@@ -583,7 +618,7 @@ public class Transaction {
       fieldSetter.set(Transaction.MIRROR, input.readBoolean());
       fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
       fieldSetter.set(Transaction.NOT_IMPORTED_TRANSACTION, input.readInteger());
-      fieldSetter.set(Transaction.RECONCILED, false);
+      fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, false);
     }
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
@@ -617,7 +652,7 @@ public class Transaction {
       fieldSetter.set(Transaction.PLANNED, input.readBoolean());
       fieldSetter.set(Transaction.MIRROR, input.readBoolean());
       fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
-      fieldSetter.set(Transaction.RECONCILED, false);
+      fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, false);
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -662,7 +697,7 @@ public class Transaction {
       fieldSetter.set(Transaction.SERIES, input.readInteger());
       fieldSetter.set(Transaction.PLANNED, input.readBoolean());
       fieldSetter.set(Transaction.CREATED_BY_SERIES, false);
-      fieldSetter.set(Transaction.RECONCILED, false);
+      fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, false);
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
@@ -707,7 +742,7 @@ public class Transaction {
       fieldSetter.set(Transaction.SERIES, input.readInteger());
       fieldSetter.set(Transaction.PLANNED, input.readBoolean());
       fieldSetter.set(Transaction.CREATED_BY_SERIES, false);
-      fieldSetter.set(Transaction.RECONCILED, false);
+      fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, false);
     }
   }
 }

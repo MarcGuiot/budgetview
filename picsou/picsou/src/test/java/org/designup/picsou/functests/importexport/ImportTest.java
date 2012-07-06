@@ -157,28 +157,29 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Menu K", "", -1.1)
       .check();
-
-    views.selectHome();
-    mainAccounts.edit("My SG account")
-      .checkUpdateModeIsFileImport()
-      .validate();
   }
 
   public void testManualInputAccountsAreShownInQifImport() throws Exception {
 
+    // Create account in import mode
     mainAccounts.createNewAccount()
       .setName("Main")
       .setAccountNumber("012345")
-      .setUpdateModeToFileImport()
       .selectBank("CIC")
       .validate();
+    OfxBuilder.init(this)
+      .addTransaction("2006/01/01", 10, "monop")
+      .loadInAccount("Main");
 
+    // Create account in manual mode
     mainAccounts.createNewAccount()
       .setName("Cash")
-      .setUpdateModeToManualInput()
       .selectBank("Other")
       .validate();
+    transactionCreation.show()
+      .create(12, "BLAH", -100.00);
 
+    // Open QIF import
     String firstQif = QifBuilder.init(this)
       .addTransaction("2006/01/01", 10, "monop")
       .save();
@@ -191,15 +192,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .completeImport();
 
     mainAccounts.checkAccountNames("Main", "Cash", "SG");
-    mainAccounts.edit("Main")
-      .checkUpdateModeIsFileImport()
-      .cancel();
-    mainAccounts.edit("Cash")
-      .checkUpdateModeIsManualInput()
-      .cancel();
-    mainAccounts.edit("SG")
-      .checkUpdateModeIsFileImport()
-      .cancel();
   }
 
   public void testSettingInitialBalanceForQifFiles() throws Exception {
@@ -399,26 +391,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .add("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
       .add("10/06/2008", TransactionType.CREDIT_CARD, "Metro", "", 71.00)
       .check();
-  }
-
-  public void testUsingAnOfxImportForAManualAccountTurnsItIntoFileImportMode() throws Exception {
-    views.selectHome();
-    mainAccounts.createNewAccount()
-      .setName("Cash")
-      .setAccountNumber("012345")
-      .setUpdateModeToManualInput()
-      .selectBank("CIC")
-      .setPosition(0.00)
-      .validate();
-
-    OfxBuilder.init(this)
-      .addBankAccount(666, 1024, "012345", 12.0, "2008/06/11")
-      .addTransaction("2008/06/10", 1.0, "V'lib")
-      .loadInAccount("Cash");
-
-    mainAccounts.edit("Cash")
-      .checkUpdateModeIsFileImport()
-      .cancel();
   }
 
   public void testSelectDateFormat() throws Exception {

@@ -1,5 +1,7 @@
 package org.designup.picsou.gui.categorization.components;
 
+import org.designup.picsou.gui.categorization.reconciliation.ReconciliationPanel;
+import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -23,15 +25,17 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
 
-public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListener {
+public class CategorizationSelector implements GlobSelectionListener, ChangeSetListener {
 
   private BudgetArea[] budgetAreas =
     {BudgetArea.UNCATEGORIZED,
      BudgetArea.INCOME, BudgetArea.RECURRING, BudgetArea.VARIABLE,
      BudgetArea.SAVINGS, BudgetArea.EXTRAS, BudgetArea.OTHER};
 
+  private TransactionRendererColors colors;
   private GlobRepository repository;
-  private CardHandler budgetAreaCard;
+  private Directory directory;
+  private CardHandler categorizationCard;
   private CardHandler seriesCard;
   private JLabel title;
 
@@ -43,9 +47,12 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
   private GlobList selectedTransactions = GlobList.EMPTY;
   private JEditorPane noSelectionMessage;
   private JEditorPane uncategorizedMessage;
+  private ReconciliationPanel reconciliationPanel;
 
-  public BudgetAreaSelector(GlobRepository repository, Directory directory) {
+  public CategorizationSelector(TransactionRendererColors colors, GlobRepository repository, Directory directory) {
+    this.colors = colors;
     this.repository = repository;
+    this.directory = directory;
     this.budgetAreaStringifier = directory.get(DescriptionService.class).getStringifier(BudgetArea.TYPE);
 
     directory.get(SelectionService.class).addListener(this, Transaction.TYPE);
@@ -53,7 +60,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
-    budgetAreaCard = builder.addCardHandler("budgetAreaCard");
+    categorizationCard = builder.addCardHandler("categorizationCard");
     seriesCard = builder.addCardHandler("seriesCard");
 
     title = builder.add("budgetAreaSelectorTitle", new JLabel()).getComponent();
@@ -69,13 +76,16 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
 
     builder.add("uncategorizeSelected", new UncategorizeTransactionsAction());
 
+    reconciliationPanel = new ReconciliationPanel(colors, repository, directory);
+    builder.add("reconciliationPanel", reconciliationPanel.getPanel());
+    
     builder.addRepeat("budgetAreaToggles",
                       Arrays.asList(budgetAreas),
                       new ToggleFactory());
   }
 
   private void showNoSelection() {
-    budgetAreaCard.show("noSelection");
+    categorizationCard.show("noSelection");
   }
 
   private void select(BudgetArea budgetArea, boolean activateToggle) {
@@ -84,7 +94,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
       return;
     }
 
-    budgetAreaCard.show("series");
+    categorizationCard.show("series");
 
     if (BudgetArea.UNCATEGORIZED.equals(budgetArea)) {
       updateUncategorizedMessage(budgetArea);
@@ -182,10 +192,19 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
       showNoSelection();
       return;
     }
+    
+    if (selectedTransactions.size() == 1) {
+      Glob first = selectedTransactions.getFirst();
+      if (ReconciliationStatus.isToReconcile(first)) {
+        categorizationCard.show("reconciliation");
+        reconciliationPanel.update(first);
+        return;
+      }
+    }
 
     SortedSet<Integer> areas = getSelectedTransactionAreas();
     if (areas.size() != 1) {
-      budgetAreaCard.show("series");
+      categorizationCard.show("series");
       seriesCard.show("multipleAreas");
     }
 
@@ -211,7 +230,7 @@ public class BudgetAreaSelector implements GlobSelectionListener, ChangeSetListe
       select(budgetArea, true);
     }
     else {
-      budgetAreaCard.show("series");
+      categorizationCard.show("series");
       JToggleButton uncategorizedButton = this.toggles.get(BudgetArea.UNCATEGORIZED);
       for (JToggleButton button : toggles.values()) {
         if (button.isSelected()){

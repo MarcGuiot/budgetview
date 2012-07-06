@@ -23,7 +23,6 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setName("Manual")
       .selectBank("CIC")
-      .setUpdateModeToManualInput()
       .setPosition(0)
       .validate();
 
@@ -34,6 +33,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2009/05");
     transactionCreation
       .show()
+      .selectAccount("Manual")
       .setAmount(-10)
       .setLabel("prov")
       .setDay(22)
@@ -48,9 +48,10 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     categorization
       .setNewRecurring("prov", "Courses");
 
-    fail("MG a RM, on avait dit qu'on faisait quoi pour la creations d'operation dans le future?");
+    fail("Operations manuelles dans le futur ==> quelles règles de fonctionnement ? " +
+         "On met les tests correspondants dans TransactionCreationTest ?");
+
     timeline.selectAll();
-    views.selectData();
     transactions
       .showPlannedTransactions()
       .initAmountContent()
@@ -64,7 +65,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .add("19/05/2009", "Planned: Tel", -29.90, "Tel", -29.90, "Main accounts")
       .add("20/04/2009", "FREE TELECOM", -29.90, "Tel", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
-    views.selectHome();
+
     timeline.selectMonth("2009/05");
     mainAccounts
       .checkEstimatedPosition(-39.90)

@@ -200,7 +200,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setName(account("cash"))
       .selectBank(Lang.get("bank.other.name"))
-      .setUpdateModeToManualInput()
       .setPosition(0.00)
       .validate();
 
@@ -276,6 +275,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     // Gestion du liquide
     timeline.selectMonth(Month.toString(secondMonth));
     transactionCreation.show()
+      .selectAccount(account("cash"))
       .setLabel(transaction("manual1")).setAmount(20).setDay(8).create()
       .setLabel(transaction("manual1")).setAmount(40).setDay(12).create()
       .setLabel(transaction("manual1")).setAmount(20).setDay(22).create()

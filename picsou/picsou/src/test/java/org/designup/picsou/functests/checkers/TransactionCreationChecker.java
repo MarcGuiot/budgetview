@@ -100,6 +100,14 @@ public class TransactionCreationChecker extends ViewChecker {
     textBox.setText(label, false);
     return this;
   }
+  
+  public TransactionCreationChecker create(int day, String label, double amount) {
+    setDay(day);
+    setAmount(amount);
+    setLabel(label);
+    create();
+    return this;
+  }
 
   public TransactionCreationChecker create() {
     checkShowing();
@@ -174,16 +182,16 @@ public class TransactionCreationChecker extends ViewChecker {
 
   public TransactionCreationChecker checkShowOpensAccountCreationMessage() {
     ConfirmationDialogChecker dialog = ConfirmationDialogChecker.open(getShowHideButton().triggerClick());
-    dialog.checkTitle("No manual accounts");
-    dialog.checkMessageContains("you must create a dedicated account");
+    dialog.checkTitle("No account");
+    dialog.checkMessageContains("you must first create a bank account");
     dialog.cancel();
     return this;
   }
 
   public AccountEditionChecker clickAndOpenAccountCreationMessage() {
     ConfirmationDialogChecker dialog = ConfirmationDialogChecker.open(getShowHideButton().triggerClick());
-    dialog.checkTitle("No manual accounts");
-    dialog.checkMessageContains("you must create a dedicated account");
+    dialog.checkTitle("No account");
+    dialog.checkMessageContains("you must first create a bank account");
     return AccountEditionChecker.open(dialog.getOkTrigger("Create a manual account"));
   }
 

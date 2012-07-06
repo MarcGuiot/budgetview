@@ -1201,14 +1201,12 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setAsMain()
       .setPosition(1000)
       .selectBank(SOCIETE_GENERALE)
-      .setUpdateModeToManualInput()
       .validate();
 
     savingsAccounts.createNewAccount().setName("Savings")
       .selectBank(SOCIETE_GENERALE)
       .setAsSavings()
       .setPosition(1000)
-      .setUpdateModeToManualInput()
       .validate();
 
     transactionCreation.show()
@@ -1241,14 +1239,12 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setAsMain()
       .setPosition(1000)
       .selectBank(SOCIETE_GENERALE)
-      .setUpdateModeToManualInput()
       .validate();
 
     savingsAccounts.createNewAccount().setName("Savings")
       .selectBank(SOCIETE_GENERALE)
       .setAsSavings()
       .setPosition(1000)
-      .setUpdateModeToManualInput()
       .validate();
 
     mainAccounts
@@ -1873,9 +1869,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("06/08/2008", TransactionType.PRELEVEMENT, "OPE", "", -100.00)
       .check();
   }
-
-
-//2008/08/31
 
   public void testSavingsWithoutAccountPosition() throws Exception {
     OfxBuilder.init(this)
