@@ -850,7 +850,7 @@ table.field-value td.value {
 }
 
 #home table#front-table {
-  margin-bottom: 60px;
+  margin-bottom: 20px;
 }
 
 #home table#front-table td {
@@ -903,6 +903,52 @@ table.field-value td.value {
   width: 10px;
   padding: 0;
 }
+
+#home div#testimonials {
+  width: 90%;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+#home div#testimonials p {
+  color: #222;
+  font-size: 11pt;
+  font-style: italic;
+  text-align: center;
+  text-shadow: white 0 1px 0;
+  margin-bottom: 5px;
+}
+
+#home div#more-testimonials {
+  margin-top: 15px;
+}
+
+#home div#more-testimonials p {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+/*=== SHOW/HIDE ===*/
+
+.more {
+  display: none;
+}
+a.showLink, a.hideLink {
+  text-decoration: none;
+  color: #36f;
+  padding-left: 8px;
+  background: transparent url(down.gif) no-repeat left;
+}
+a.hideLink {
+  background: transparent url(up.gif) no-repeat left;
+}
+a.showLink:hover, a.hideLink:hover {
+  border-bottom: 1px dotted #36f;
+}
+
 
 /*=== HELP PAGE ===*/
 
