@@ -4,8 +4,10 @@ import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.gui.utils.Html;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
+import org.designup.picsou.utils.HtmlBuilder;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.Disposable;
@@ -122,11 +124,12 @@ public class UserEvaluationDialog {
 
   private String getMessageText() {
 
-    StringBuilder builder = new StringBuilder();
+    HtmlBuilder builder = new HtmlBuilder();
     builder
-      .append(commentEditor.getText())
-      .append("\n\n--------------\n\n")
-      .append("version: ").append(PicsouApplication.APPLICATION_VERSION).append("\n");
+      .appendField("version", PicsouApplication.APPLICATION_VERSION)
+      .appendField("lang", Lang.getLang())
+      .appendLine()
+      .appendParagraph(commentEditor.getText());
 
     return builder.toString();
   }

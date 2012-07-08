@@ -15,6 +15,18 @@ public class HtmlBuilder {
     builder.append("<p>").append(text).append("</p>\n");
     return this;
   }
+  
+  public HtmlBuilder appendField(String field, String value) {
+    checkNotClosed();
+    builder.append("<p>").append(field).append(": ").append(value).append("</p>\n");
+    return this;
+  }
+
+  public HtmlBuilder appendLine() {
+    checkNotClosed();
+    builder.append("<hr/>\n");
+    return this;
+  }
 
   public void close() {
     checkNotClosed();
