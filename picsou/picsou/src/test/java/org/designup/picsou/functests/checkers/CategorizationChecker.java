@@ -6,7 +6,6 @@ import org.designup.picsou.functests.checkers.converters.ReconciliationAnnotatio
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.ReconciliationStatus;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.Colors;
@@ -466,7 +465,7 @@ public class CategorizationChecker extends ViewChecker {
       public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
         Glob transaction = (Glob)modelObject;
         String label = transaction.get(Transaction.LABEL);
-        if (ReconciliationStatus.isToReconcile(transaction)) {
+        if (Transaction.isToReconcile(transaction)) {
           label = "[R] " + label;
         }
         return label;
@@ -876,8 +875,16 @@ public class CategorizationChecker extends ViewChecker {
     return new ConfirmationDialogChecker(deleteDialog);
   }
 
-  public void checkReconciliationShown() {
+  public CategorizationChecker checkCategorizationShown() {
+    checkComponentVisible(getPanel(), JPanel.class, "reconciliationPanel", false);
+    checkComponentVisible(getPanel(), JPanel.class, "seriesPanel", true);
+    return this;
+  }
+
+  public CategorizationChecker checkReconciliationShown() {
     checkComponentVisible(getPanel(), JPanel.class, "reconciliationPanel", true);
+    checkComponentVisible(getPanel(), JPanel.class, "seriesPanel", false);
+    return this;
   }
 
   public CategorizationChecker checkReconciliationWarningHidden() {
@@ -899,6 +906,39 @@ public class CategorizationChecker extends ViewChecker {
 
   public ReconciliationChecker getReconciliation() {
     return new ReconciliationChecker(getPanel().getPanel("reconciliationPanel"));
+  }
+
+  public CategorizationChecker checkSwitchToReconciliationLinkShown() {
+    Panel panel = getPanel().getPanel("reconciliationNavigationPanel");
+    checkComponentVisible(panel, JButton.class, "switchToReconciliation", true);
+    checkComponentVisible(panel, JButton.class, "switchToCategorization", false);
+    return this;
+  }
+
+  public ReconciliationChecker switchToReconciliation() {
+    Panel panel = getPanel().getPanel("reconciliationNavigationPanel");
+    panel.getButton("switchToReconciliation").click();
+    return getReconciliation();
+  }
+
+  public CategorizationChecker checkSwitchToCategorizationLinkShown() {
+    Panel panel = getPanel().getPanel("reconciliationNavigationPanel");
+    checkComponentVisible(panel, JButton.class, "switchToReconciliation", false);
+    checkComponentVisible(panel, JButton.class, "switchToCategorization", true);
+    return this;
+  }
+
+  public CategorizationChecker switchToCategorization() {
+    Panel panel = getPanel().getPanel("reconciliationNavigationPanel");
+    panel.getButton("switchToCategorization").click();
+    return this;
+  }
+
+  public CategorizationChecker checkReconciliationSwitchLinksHidden() {
+    Panel panel = getPanel().getPanel("reconciliationNavigationPanel");
+    checkComponentVisible(panel, JButton.class, "switchToReconciliation", false);
+    checkComponentVisible(panel, JButton.class, "switchToCategorization", false);
+    return this;
   }
 
   public void checkQuasiCompleteProgressMessageShown() {

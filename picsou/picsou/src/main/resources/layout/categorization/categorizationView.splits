@@ -99,7 +99,7 @@
 
               <card name="series">
 
-                <column weightY="0.1">
+                <column weightY="0.1" name="seriesPanel">
                   <row border="matte(1,1,0,1,#999999)" ref="budgetAreaSelectionPanel">
                     <repeat ref="budgetAreaToggles" layout="horizontalGrid" gridWrapLimit="4" margin="5">
                       <toggleButton ref="budgetAreaToggle" styleClass="budgetAreaSelector" anchor="left"/>
@@ -162,6 +162,9 @@
                 </column>
               </card>
             </cards>
+
+            <panel ref="reconciliationNavigationPanel" weightY="0.1"/>
+
           </column>
         </panel>
       </column>

@@ -9,13 +9,13 @@ import org.globsframework.metamodel.index.MultiFieldNotUniqueIndex;
 import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
+
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class Transaction {
   public static GlobType TYPE;
@@ -236,9 +236,9 @@ public class Transaction {
   }
 
   public static boolean isCategorized(Glob transaction) {
-    return (transaction != null) && !Utils.equal(Series.UNCATEGORIZED_SERIES, transaction.get(SERIES));
+    return (transaction != null) && !Utils.equal(Series.UNCATEGORIZED_SERIES_ID, transaction.get(SERIES));
   }
-  
+
   public static GlobList getUncategorizedTransactions(Integer monthId, GlobRepository repository) {
     ReadOnlyGlobRepository.MultiFieldIndexed index = repository.findByIndex(SERIES_INDEX, SERIES, Series.UNCATEGORIZED_SERIES_ID);
     GlobList prefiltered = index.findByIndex(POSITION_MONTH, Month.previous(monthId)).getGlobs();
@@ -247,6 +247,11 @@ public class Transaction {
     return prefiltered
       .filterSelf(fieldEquals(BUDGET_MONTH, monthId), repository)
       .filterSelf(fieldEquals(PLANNED, false), repository);
+  }
+
+  public static boolean isToReconcile(Glob transaction) {
+    Integer status = transaction.get(RECONCILIATION_STATUS);
+    return Utils.equal(status, ReconciliationStatus.TO_RECONCILE.id);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

@@ -44,9 +44,4 @@ public enum ReconciliationStatus implements GlobConstantContainer {
     Integer status = transaction.get(Transaction.RECONCILIATION_STATUS);
     return (status == null) || (status == TO_RECONCILE.id);
   }
-
-  public static boolean isToReconcile(Glob transaction) {
-    Integer status = transaction.get(Transaction.RECONCILIATION_STATUS);
-    return Utils.equal(status, TO_RECONCILE.id);
-  }
 }

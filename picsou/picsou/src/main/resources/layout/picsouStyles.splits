@@ -147,6 +147,17 @@
     <style selector="button.hyperlinkWithoutUnderline" ui="hyperlinkButtonWithoutUnderline"
            fill="none" anchor="right" foreground="hyperlink"/>
 
+    <style selector="button.leftArrowLink" ui="hyperlinkButtonWithoutUnderline"
+           icon="leftArrow(12,16,10,10, hyperlink)" iconTextGap="3"
+           horizontalTextPosition="right" horizontalAlignment="center"
+           fill="none" anchor="right" foreground="hyperlink"/>
+
+    <style selector="button.rightArrowLink" ui="hyperlinkButtonWithoutUnderline"
+           icon="rightArrow(12,16,10,10, hyperlink)" iconTextGap="3"
+           horizontalTextPosition="left" horizontalAlignment="center"
+           fill="none" anchor="right" foreground="hyperlink"/>
+
+
     <!-- Dialog components -->
     <ui name="showHideButtonUI" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         underline="false" rolloverColor="hyperlink"/>

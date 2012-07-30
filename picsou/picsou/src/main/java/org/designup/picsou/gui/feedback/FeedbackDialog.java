@@ -104,12 +104,11 @@ public class FeedbackDialog {
                                                   getMessageText(),
                                                   new ConfigService.Listener() {
                                                     public void sent(String mail, String title, String content) {
-                                                      Log.write("Mail sent from " + mail + " title : " + title + "\n" + content);
+                                                      Log.write("Mail sent from " + mail + " - title : " + title + "\n" + content);
                                                     }
 
                                                     public void sendFail(String mail, String title, String content) {
-                                                      Log.write("Fail to sent mail from " + mail + " title : " + title + "\n" + content);
-//                                                      MessageDialog.show("");
+                                                      Log.write("Failed to send mail from " + mail + " - title : " + title + "\n" + content);
                                                     }
                                                   });
       dialog.setVisible(false);

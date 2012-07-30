@@ -4,11 +4,14 @@ import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.TypeChangeSetListener;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -26,7 +29,7 @@ public class ReconciliationWarningPanel {
     this.categorizationView = categorizationView;
     this.repository = repository;
     this.directory = directory;
-    repository.addChangeListener(new TypeChangeSetListener(Transaction.TYPE) {
+    repository.addChangeListener(new TypeChangeSetListener(Transaction.TYPE, UserPreferences.TYPE) {
       protected void update(GlobRepository repository) {
         doUpdate();
       }
@@ -58,6 +61,16 @@ public class ReconciliationWarningPanel {
     if (panel == null) {
       return;
     }
+
+    Glob prefs = repository.find(UserPreferences.KEY);
+    if ((prefs != null) &&
+        Utils.equal(CategorizationFilteringMode.TO_RECONCILE.getId(),
+                    prefs.get(UserPreferences.CATEGORIZATION_FILTERING_MODE))) {
+      System.out.println("ReconciliationWarningPanel.doUpdate: to_reconcile filtering ("+prefs.get(UserPreferences.CATEGORIZATION_FILTERING_MODE)+") ==> false");
+      panel.setVisible(false);
+      return;
+    }
+
     if (repository.contains(Transaction.TYPE, Matchers.transactionsToReconcile())) {
       panel.setVisible(true);
       GlobList transactions =

@@ -21,7 +21,7 @@ public class HyperlinkButtonUIDemo {
              0, 1, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER)
         .getPanel();
     panel.setOpaque(true);
-    panel.setBackground(Color.CYAN);
+    panel.setBackground(Color.WHITE);
     GuiUtils.show(panel);
   }
 
@@ -37,7 +37,9 @@ public class HyperlinkButtonUIDemo {
     button.setText("hello");
     button.setIconTextGap(0);
 
-    button.setIcon(new ImageIcon("/Users/rmedina/Code/all_hg/ref/picsou/picsou/src/main/resources/images/arrow_right_blue.png"));
+    ArrowIcon icon = new ArrowIcon(15, 15, ArrowIcon.Orientation.RIGHT);
+    icon.setColor(Color.RED);
+    button.setIcon(icon);
     button.setUI(new HyperlinkButtonUI());
 
 

@@ -63,7 +63,10 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTableRow(0);
     transactionDetails.setNote("A comment...");
-    categorization.getReconciliation().initTable()
+    categorization
+      .checkReconciliationShown()
+      .getReconciliation()
+      .initTable()
       .add("2012/05/12", "Food", "VELIZY AUCHAN", -50.00)
       .add("2012/05/15", "", "CARREFOUR", -100.00)
       .check();
@@ -144,6 +147,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     categorization.clickReconciliationWarningButton();
     categorization.checkShowsToReconcile();
+    categorization.checkReconciliationWarningHidden();
     categorization.initContent()
       .add("09/04/2012", "", "[R] AUCHAN", -75.00)
       .add("07/05/2012", "", "[R] AUCHAN", -25.00)
@@ -152,6 +156,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth(201205);
     categorization.showSelectedMonthsOnly();
+    categorization.checkReconciliationWarningShown("3 transactions to reconcile");
     categorization.initContent()
       .add("07/05/2012", "", "[R] AUCHAN", -25.00)
       .add("08/05/2012", "", "[R] AUCHAN", -50.00)
@@ -205,7 +210,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .add("21/05/2012", "", "CHEQUE N°00012345", -100.00)
       .add("01/05/2012", "", "VELIZY AUCHAN", -50.00)
       .check();
-    
+
     categorization
       .selectTransaction("[R] CHEQUE N° 12345")
       .checkReconciliationShown();
@@ -247,7 +252,8 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .check();
 
     categorization.selectTransaction("[R] CHEQUE N° 12345");
-    categorization.getReconciliation().keepManualTransaction();
+
+    categorization.switchToReconciliation().keepManualTransaction();
 
     categorization.initContent()
       .add("10/05/2012", "", "[R] AUCHAN 1", -50.00)
@@ -270,6 +276,64 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testNavigation() throws Exception {
+    mainAccounts.createMainAccount("Main", 1000.00);
+
+    categorization.checkReconciliationSwitchLinksHidden();
+
+    transactionCreation
+      .show()
+      .create(10, "Manual 1", -100.00)
+      .create(10, "ToReconcile", -50.00);
+    categorization.initContent()
+      .add("10/05/2012", "", "MANUAL 1", -100.00)
+      .add("10/05/2012", "", "TORECONCILE", -50.00)
+      .check();
+
+    OfxBuilder.init(this)
+      .addTransaction("2012/05/10", -100.00, "ToReconcile-Imported")
+      .loadInAccount("Main");
+    categorization.initContent()
+      .add("10/05/2012", "", "[R] MANUAL 1", -100.00)
+      .add("10/05/2012", "", "[R] TORECONCILE", -50.00)
+      .add("10/05/2012", "", "TORECONCILE-IMPORTED", -100.00)
+      .check();
+
+    categorization.unselectAllTransactions();
+    categorization.checkReconciliationSwitchLinksHidden();
+
+    categorization.selectTableRow(0)
+      .checkCategorizationShown()
+      .setNewVariable(0, "Misc");
+
+    categorization.initContent()
+      .add("10/05/2012", "Misc", "[R] MANUAL 1", -100.00)
+      .add("10/05/2012", "", "[R] TORECONCILE", -50.00)
+      .add("10/05/2012", "", "TORECONCILE-IMPORTED", -100.00)
+      .check();
+
+    categorization.selectTableRow(1)
+      .checkCategorizationShown()
+      .checkSwitchToReconciliationLinkShown()
+      .switchToReconciliation();
+
+    categorization.checkReconciliationShown()
+      .checkSwitchToCategorizationLinkShown()
+      .switchToCategorization()
+      .checkCategorizationShown();
+
+    categorization.selectTableRow(0)
+      .checkReconciliationShown()
+      .checkSwitchToCategorizationLinkShown()
+      .switchToCategorization();
+
+    categorization.checkCategorizationShown()
+      .checkSwitchToReconciliationLinkShown()
+      .switchToReconciliation();
+
+    categorization.checkReconciliationShown();
+  }
+
   public void testReconciliationWithASplitTransaction() throws Exception {
     fail("tbd - voir les impacts sur le split");
   }
@@ -283,6 +347,6 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testReconciledTransactionsAreAutomaticallyAnnotated() throws Exception {
-    fail("tbd - es opérations réconciliées sont-elles automatiquement pointées ?");
+    fail("tbd - les opérations réconciliées sont-elles automatiquement pointées ?");
   }
 }

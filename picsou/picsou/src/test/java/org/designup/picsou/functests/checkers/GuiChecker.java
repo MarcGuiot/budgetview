@@ -45,7 +45,8 @@ public abstract class GuiChecker {
                                                               final Class<T> swingComponentClass,
                                                               final String componentName,
                                                               final boolean visible) {
-    UISpecAssert.assertThat(visible ? "is not visible" : "is visible",
+    String message = componentName + " " + (visible ? "is not visible" : "is visible");
+    UISpecAssert.assertThat(message,
                             new ComponentIsVisibleAssertion<T>(panel, swingComponentClass, componentName, visible));
   }
 

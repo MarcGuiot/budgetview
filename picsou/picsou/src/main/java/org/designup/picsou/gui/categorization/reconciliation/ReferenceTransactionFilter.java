@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.categorization.reconciliation;
 
 import org.designup.picsou.model.Month;
-import org.designup.picsou.model.ReconciliationStatus;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.util.ClosedMonthRange;
 import org.globsframework.model.Glob;
@@ -23,7 +22,7 @@ public class ReferenceTransactionFilter implements GlobMatcher {
   public boolean matches(Glob transaction, GlobRepository repository) {
     return !transaction.isTrue(Transaction.PLANNED) && 
            !transaction.isTrue(Transaction.MIRROR) && 
-           !ReconciliationStatus.isToReconcile(transaction) && 
+           !Transaction.isToReconcile(transaction) &&
            range.contains(transaction.get(Transaction.POSITION_MONTH)) &&
            Utils.equal(accountId, transaction.get(Transaction.ACCOUNT));
   }

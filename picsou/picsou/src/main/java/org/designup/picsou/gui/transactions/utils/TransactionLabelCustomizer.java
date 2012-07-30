@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.transactions.utils;
 
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
-import org.designup.picsou.model.ReconciliationStatus;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.views.LabelCustomizer;
@@ -25,7 +24,7 @@ public class TransactionLabelCustomizer implements LabelCustomizer {
     if (isSelected) {
       label.setForeground(Color.WHITE);
     }
-    else if (ReconciliationStatus.isToReconcile(transaction)) {
+    else if (Transaction.isToReconcile(transaction)) {
       label.setForeground(colors.getTransactionReconciliationColor());
     }
     else if (Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {

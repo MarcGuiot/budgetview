@@ -1,0 +1,14 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="button" foreground="categorization.reconciliationLink"/>
+  </styles>
+
+  <row name="reconciliationNavigationPanel">
+    <button ref="switchToCategorization" styleClass="leftArrowLink"/>
+    <filler fill="horizontal"/>
+    <button ref="switchToReconciliation" styleClass="rightArrowLink"/>
+  </row>
+
+</splits>

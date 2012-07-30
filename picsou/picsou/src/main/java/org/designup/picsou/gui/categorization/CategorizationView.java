@@ -4,6 +4,7 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.CreateAccountAction;
 import org.designup.picsou.gui.categorization.actions.CategorizationTableActions;
 import org.designup.picsou.gui.categorization.components.*;
+import org.designup.picsou.gui.categorization.reconciliation.ReconciliationNavigationPanel;
 import org.designup.picsou.gui.categorization.reconciliation.ReconciliationWarningPanel;
 import org.designup.picsou.gui.categorization.special.*;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
@@ -273,7 +274,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
     ReconciliationWarningPanel reconciliationWarningPanel =
       new ReconciliationWarningPanel(this, repository, directory);
     builder.add("reconciliationWarningPanel", reconciliationWarningPanel.getPanel());
-    
+
     return builder;
   }
 
@@ -328,25 +329,26 @@ public class CategorizationView extends View implements TableView, Filterable, C
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(UserPreferences.KEY, UserPreferences.CATEGORIZATION_FILTERING_MODE)) {
-          Glob preferences = repository.find(UserPreferences.KEY);
-          Integer defaultFilteringModeId =
-            preferences.get(UserPreferences.CATEGORIZATION_FILTERING_MODE);
-          Object mode = CategorizationFilteringMode.get(defaultFilteringModeId);
-          filteringModeCombo.setSelectedItem(mode);
+          updateFilteringCombo(repository);
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        Glob preferences = repository.find(UserPreferences.KEY);
-        if (preferences == null) {
-          return;
-        }
-        Integer defaultFilteringModeId =
-          preferences.get(UserPreferences.CATEGORIZATION_FILTERING_MODE);
-        Object mode = CategorizationFilteringMode.get(defaultFilteringModeId);
-        filteringModeCombo.setSelectedItem(mode);
+        updateFilteringCombo(repository);
       }
     });
+    updateFilteringCombo(repository);
+  }
+
+  private void updateFilteringCombo(GlobRepository repository) {
+    Glob preferences = repository.find(UserPreferences.KEY);
+    if (preferences == null) {
+      return;
+    }
+    Integer defaultFilteringModeId =
+      preferences.get(UserPreferences.CATEGORIZATION_FILTERING_MODE);
+    Object mode = CategorizationFilteringMode.get(defaultFilteringModeId);
+    filteringModeCombo.setSelectedItem(mode);
   }
 
   private void installDoubleClickHandler() {

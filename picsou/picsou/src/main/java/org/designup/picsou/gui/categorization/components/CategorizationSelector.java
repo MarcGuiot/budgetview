@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.categorization.components;
 
+import org.designup.picsou.gui.categorization.reconciliation.ReconciliationNavigationPanel;
 import org.designup.picsou.gui.categorization.reconciliation.ReconciliationPanel;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.model.*;
@@ -14,7 +15,6 @@ import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobUtils;
@@ -24,6 +24,8 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class CategorizationSelector implements GlobSelectionListener, ChangeSetListener {
 
@@ -35,7 +37,7 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
   private TransactionRendererColors colors;
   private GlobRepository repository;
   private Directory directory;
-  private CardHandler categorizationCard;
+  private CategorizationCard categorizationCard;
   private CardHandler seriesCard;
   private JLabel title;
 
@@ -48,6 +50,7 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
   private JEditorPane noSelectionMessage;
   private JEditorPane uncategorizedMessage;
   private ReconciliationPanel reconciliationPanel;
+  private ReconciliationNavigationPanel reconciliationNavigation;
 
   public CategorizationSelector(TransactionRendererColors colors, GlobRepository repository, Directory directory) {
     this.colors = colors;
@@ -60,7 +63,7 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
-    categorizationCard = builder.addCardHandler("categorizationCard");
+    categorizationCard = new CategorizationCard(builder.addCardHandler("categorizationCard"));
     seriesCard = builder.addCardHandler("seriesCard");
 
     title = builder.add("budgetAreaSelectorTitle", new JLabel()).getComponent();
@@ -78,14 +81,25 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
 
     reconciliationPanel = new ReconciliationPanel(colors, repository, directory);
     builder.add("reconciliationPanel", reconciliationPanel.getPanel());
-    
+
+    reconciliationNavigation = new ReconciliationNavigationPanel(repository, directory) {
+      protected void showCategorization() {
+        categorizationCard.showCategorization();
+      }
+
+      protected void showReconciliation() {
+        categorizationCard.showReconciliation();
+      }
+    };
+    builder.add("reconciliationNavigationPanel", reconciliationNavigation.getPanel());
+
     builder.addRepeat("budgetAreaToggles",
                       Arrays.asList(budgetAreas),
                       new ToggleFactory());
   }
 
   private void showNoSelection() {
-    categorizationCard.show("noSelection");
+    categorizationCard.showNoSelection();
   }
 
   private void select(BudgetArea budgetArea, boolean activateToggle) {
@@ -94,7 +108,7 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
       return;
     }
 
-    categorizationCard.show("series");
+    categorizationCard.showCategorization();
 
     if (BudgetArea.UNCATEGORIZED.equals(budgetArea)) {
       updateUncategorizedMessage(budgetArea);
@@ -192,19 +206,19 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
       showNoSelection();
       return;
     }
-    
+
     if (selectedTransactions.size() == 1) {
       Glob first = selectedTransactions.getFirst();
-      if (ReconciliationStatus.isToReconcile(first)) {
-        categorizationCard.show("reconciliation");
-        reconciliationPanel.update(first);
+      reconciliationPanel.update(first);
+      if (Transaction.isToReconcile(first) && Transaction.isCategorized(first)) {
+        categorizationCard.showReconciliation();
         return;
       }
     }
 
     SortedSet<Integer> areas = getSelectedTransactionAreas();
     if (areas.size() != 1) {
-      categorizationCard.show("series");
+      categorizationCard.showCategorization();
       seriesCard.show("multipleAreas");
     }
 
@@ -230,11 +244,11 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
       select(budgetArea, true);
     }
     else {
-      categorizationCard.show("series");
+      categorizationCard.showCategorization();
       JToggleButton uncategorizedButton = this.toggles.get(BudgetArea.UNCATEGORIZED);
       for (JToggleButton button : toggles.values()) {
-        if (button.isSelected()){
-          if (button == uncategorizedButton){
+        if (button.isSelected()) {
+          if (button == uncategorizedButton) {
             updateUncategorizedMessage(budgetArea);
           }
           return;
@@ -247,7 +261,7 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
   private void enableValidBudgetAreas(boolean enableAll) {
     for (Map.Entry<BudgetArea, JToggleButton> entry : toggles.entrySet()) {
       entry.getValue().setEnabled(enableAll
-                                  || entry.getKey() == BudgetArea.SAVINGS 
+                                  || entry.getKey() == BudgetArea.SAVINGS
                                   || entry.getKey() == BudgetArea.UNCATEGORIZED);
     }
   }
@@ -282,4 +296,26 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
     }
   }
 
+  private class CategorizationCard {
+    private CardHandler card;
+
+    public CategorizationCard(CardHandler card) {
+      this.card = card;
+    }
+
+    public void showCategorization() {
+      card.show("series");
+      reconciliationNavigation.categorizationShown();
+    }
+
+    public void showReconciliation() {
+      card.show("reconciliation");
+      reconciliationNavigation.reconciliationShown();
+    }
+
+    public void showNoSelection() {
+      card.show("noSelection");
+      reconciliationNavigation.noSelectionShown();
+    }
+  }
 }

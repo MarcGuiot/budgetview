@@ -43,7 +43,9 @@ public class ArrowIcon implements Icon {
 
   public ArrowIcon(int iconWidth, int iconHeight, Orientation orientation) {
     this.iconWidth = iconWidth;
+    this.arrowWidth = iconWidth;
     this.iconHeight = iconHeight;
+    this.arrowHeight = iconHeight;
     this.orientation = orientation;
   }
 
@@ -68,14 +70,14 @@ public class ArrowIcon implements Icon {
     Graphics2D g2 = (Graphics2D)graphics;
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-
     int areaWidth = iconWidth - 1;
     int areaHeight = iconHeight - 1;
 
     GeneralPath shape = createTriangleShape();
+
     Rectangle initialRectangle = shape.getBounds();
-    float widthRatio = arrowWidth / (float)initialRectangle.width;
-    float heightRatio = arrowHeight / (float)initialRectangle.height;
+    float widthRatio = ((float)arrowWidth) / ((float)initialRectangle.width);
+    float heightRatio = (float)arrowHeight / (float)initialRectangle.height;
     AffineTransform scaling = AffineTransform.getScaleInstance(widthRatio, heightRatio);
     shape.transform(scaling);
 
@@ -87,8 +89,8 @@ public class ArrowIcon implements Icon {
     }
 
     Rectangle rotatedRectangle = shape.getBounds();
-    shape.transform(getTranslateInstance(areaWidth / 2 - rotatedRectangle.width / 2,
-                                         areaHeight / 2 - rotatedRectangle.height / 2));
+    shape.transform(getTranslateInstance(x + areaWidth / 2 - rotatedRectangle.width / 2,
+                                         y + areaHeight / 2 - rotatedRectangle.height / 2));
 
     g2.setColor(color);
     g2.fill(shape);
