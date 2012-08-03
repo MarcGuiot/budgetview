@@ -2,6 +2,7 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.categorization.actions.CategorizationTableActions;
+import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.transactions.actions.EditTransactionAction;
@@ -32,6 +33,7 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.util.HashSet;
@@ -73,10 +75,8 @@ public class TransactionDetailsView extends View {
     });
 
     builder.add("userLabel",
-                GlobHtmlView.init(Transaction.TYPE, repository, directory, new UserLabelStringifier())
+                GlobLabelView.init(Transaction.TYPE, repository, directory, new UserLabelStringifier())
                   .setAutoHideIfEmpty(true));
-
-    builder.add("editTransaction", new EditTransactionAction(repository, directory));
 
     CompositeGlobListStringifier detailsStringifier = new CompositeGlobListStringifier(" - ");
     detailsStringifier.add(new TransactionTypeStringifier());
@@ -95,16 +95,18 @@ public class TransactionDetailsView extends View {
                 new AutoHideOnSelectionPanel(Transaction.TYPE, GlobListMatchers.AT_LEAST_ONE,
                                              repository, directory));
 
-    builder.add("shift", actions.getShift());
-
-    builder.add("split", actions.getSplit());
-
     builder.add("originalLabel",
                 GlobHtmlView.init(Transaction.TYPE, repository, directory,
                                   new GlobListStringFieldStringifier(Transaction.ORIGINAL_LABEL, "..."))
                   .setAutoHideMatcher(new OriginalLabelVisibilityMatcher()));
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
+
+    JPopupMenu menu = new JPopupMenu();
+    menu.add(new EditTransactionAction(repository, directory));
+    menu.add(actions.getShift());
+    menu.add(actions.getSplit());
+    builder.add("transactionActions", new JPopupButton(Lang.get("budgetView.actions"), menu));
 
     return builder;
   }
@@ -114,7 +116,7 @@ public class TransactionDetailsView extends View {
       cards.show("noDataImported");
       return;
     }
-    
+
     GlobList transactions = selectionService.getSelection(Transaction.TYPE);
     if (transactions.isEmpty()) {
       if (tableView.getDisplayedGlobs().isEmpty()) {

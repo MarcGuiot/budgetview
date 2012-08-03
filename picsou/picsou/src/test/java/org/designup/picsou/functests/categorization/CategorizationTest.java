@@ -270,7 +270,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
   public void testNoSelection() throws Exception {
     views.selectCategorization();
-    categorization.checkNoSelectionPanelDisplayed("");
+    categorization.checkNoSelectionPanelDisplayed();
 
     OfxBuilder
       .init(this)
@@ -284,7 +284,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"30/06/2008", "", "Carouf", -29.90},
     });
 
-    categorization.checkNoSelectionPanelDisplayed("You must select an operation");
+    categorization.checkNoSelectionPanelDisplayed();
 
     categorization.selectTableRows(0);
     categorization.checkBudgetAreaSelectionPanelDisplayed();

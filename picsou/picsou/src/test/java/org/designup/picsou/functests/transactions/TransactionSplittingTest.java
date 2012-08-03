@@ -21,7 +21,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .load();
 
     categorization.setNewVariable("Auchan", "Food");
-    transactionDetails.checkSplitButtonAvailable();
+    transactionDetails.checkSplitEnabled();
 
     transactionDetails.openSplitDialog()
       .checkTable(new Object[][]{

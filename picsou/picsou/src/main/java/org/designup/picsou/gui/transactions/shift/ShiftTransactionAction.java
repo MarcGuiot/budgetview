@@ -112,6 +112,7 @@ public class ShiftTransactionAction extends SingleSelectionAction implements Cha
   }
 
   protected void process(Glob transaction, GlobRepository repository, Directory directory) {
+
     if (transaction.get(Transaction.DAY_BEFORE_SHIFT) != null) {
       unshift();
       return;

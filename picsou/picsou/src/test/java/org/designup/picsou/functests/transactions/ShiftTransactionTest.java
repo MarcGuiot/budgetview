@@ -18,7 +18,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/25", -27.50, "shiftable - Last month")
       .load();
 
-    transactionDetails.checkShiftDisabled();
+    transactionDetails.checkActionsHidden();
 
     categorization.selectAllTransactions();
     categorization.selectVariable();
@@ -32,7 +32,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     transactionDetails.checkShiftEnabled();
 
     categorization.selectNoTableRow();
-    transactionDetails.checkShiftDisabled();
+    transactionDetails.checkActionsHidden();
 
     categorization.selectTransaction("NON SHIFTABLE - MIDDLE OF MONTH 1");
     transactionDetails.checkShiftDisabled();
@@ -89,8 +89,6 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/01/01", -13.00, "Shiftable to previous")
       .addTransaction("2008/01/15", -15.10, "Non shiftable 2")
       .load();
-
-    transactionDetails.checkShiftDisabled();
 
     categorization.selectTransaction("SHIFTABLE TO NEXT");
     transactionDetails.openShiftDialog()
@@ -202,6 +200,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     budgetView.recurring.checkTotalAmounts(-22.00, -25.00);
 
+    views.selectCategorization();
     transactionDetails.openSplitDialog()
       .deleteRow(1)
       .validateAndClose();

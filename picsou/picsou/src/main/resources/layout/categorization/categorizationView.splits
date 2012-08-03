@@ -1,4 +1,4 @@
-<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+ <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
@@ -11,26 +11,27 @@
     <style selector="#budgetAreas label.title" font="-,bold,12"
            fill="none" anchor="center" marginTop="10" marginBottom="20"/>
 
-    <ui name="budgetAreaSelector" class="org.globsframework.gui.splits.components.StyledToggleButtonUI"
-        borderWidth="1" cornerRadius="10"
-        topColor="categorization.budgetAreaSelector.top"
-        bottomColor="categorization.budgetAreaSelector.bottom"
-        rolloverColor="categorization.budgetAreaSelector.rollover"
+    <ui name="budgetAreaSelector" class="org.designup.picsou.gui.components.tabs.VerticalTabToggleUI"
+        rolloverTextColor="categorization.budgetAreaSelector.text.rollover"
+        disabledTextColor="categorization.budgetAreaSelector.text.disabled"
+        bgColor="categorization.budgetAreaSelector.bg"
         borderColor="categorization.budgetAreaSelector.border"/>
     <style selector="toggleButton.budgetAreaSelector" ui="budgetAreaSelector" margin="0"
-           font="-,bold,12" cursor="hand" rolloverEnabled="true" foreground="categorization.budgetAreaSelector.text"/>
+           font="-,bold,12" cursor="hand" rolloverEnabled="true"
+           foreground="categorization.budgetAreaSelector.text"/>
 
-    <ui name="budgetAreaSelectionPanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="categorization.budgetAreaSelectionPanel.top"
-        bottomColor="categorization.budgetAreaSelectionPanel.bottom"/>
-    <style selector="#budgetAreaSelectionPanel" ui="budgetAreaSelectionPanel"/>
+    <ui name="budgetAreaSelectionPanel" class="org.designup.picsou.gui.components.tabs.VerticalTabPanelUI"
+        innerBorderColor="categorization.budgetAreaSelector.border"/>
+    <style selector="#budgetAreaSelectionPanel" ui="budgetAreaSelectionPanel"
+           background="block.inner.bg.secondary"/>
 
     <style selector="button.showTransactionCreation"
-           ui="hyperlinkButtonWithoutUnderline"
-           font="-,plain,12"
-           foreground="categorization.createTransaction.button"
+           font="-,plain,11"
            icon="rightArrow(10,12,9,9,categorization.createTransaction.button.arrow)"
            rolloverIcon="rightArrow(10,12,9,9,categorization.createTransaction.button.arrow.rollover)"/>
+
+    <style selector="x" id="downArrowShown" icon="downArrow(50,20,40,10,categorization.downArrow)"/>
+    <style selector="x" id="downArrowHidden" icon="empty(50,20)"/>
   </styles>
 
   <column styleClass="main">
@@ -51,25 +52,25 @@
 
             <panel ref="reconciliationWarningPanel" border="empty(0,0,10,0)"/>
 
+            <panel ref="customFilterMessage" fill="none" anchor="center"/>
+
             <scrollPane viewportBackground="#FFFFFF" marginBottom="0" weightY="100">
               <table ref="transactionsToCategorize" rowHeight="20"/>
             </scrollPane>
 
             <row border="empty(5)">
-              <panel ref="customFilterMessage" fill="none" anchor="center"/>
+              <button ref="showHideTransactionCreation" styleClass="showTransactionCreation"/>
               <filler fill="horizontal"/>
               <panel ref="transactionSearch" fill="none" weightX="0.01"/>
             </row>
 
+            <label text="$transactionCreation.title" styleClass="separatorTitle"  border="empty(15,0,0,0)"
+                   autoHideSource="transactionCreation"/>
+
+            <panel ref="transactionCreation"/>
+
             <panel ref="skipCategorizationPanel"/>
 
-            <row>
-              <label text="$transactionCreation.title" styleClass="separatorTitle" marginTop="15"
-                     autoHideSource="transactionCreation"/>
-              <filler fill="horizontal"/>
-              <button ref="showHideTransactionCreation" styleClass="showTransactionCreation"/>
-            </row>
-            <panel ref="transactionCreation"/>
           </column>
         </panel>
       </column>
@@ -80,17 +81,18 @@
 
           <column styleClass="innerBlock">
 
-            <panel ref="transactionDetails" weightY="0.1" minimumSize="(200,120)"/>
+            <column weightY="0.1" minimumSize="(200,100)"
+                   opaque="true" background="block.inner.bg.secondary"
+                   border="line(block.inner.border)">
+              <panel ref="transactionDetails" margin="5"/>
+            </column>
+
+            <label ref="downArrow" anchor="center"/>
 
             <cards ref="categorizationCard" weightY="100">
 
               <card name="noSelection">
-                <panel styleClass="innerBlockBackground">
-                  <column margin="15">
-                    <htmlEditorPane ref="noSelectionInfoMessage" hyperlinkListener="hyperlinkHandler"/>
-                    <filler fill="vertical"/>
-                  </column>
-                </panel>
+                <panel name="noSelectionPanel" opaque="false"/>
               </card>
 
               <card name="reconciliation">
@@ -99,14 +101,15 @@
 
               <card name="series">
 
-                <column weightY="0.1" name="seriesPanel">
-                  <row border="matte(1,1,0,1,#999999)" ref="budgetAreaSelectionPanel">
-                    <repeat ref="budgetAreaToggles" layout="horizontalGrid" gridWrapLimit="4" margin="5">
+                <row weightX="0.1" name="seriesPanel">
+                  <column border="matte(1,1,1,0,#BBBBBB)" ref="budgetAreaSelectionPanel" weightX="0.1">
+                    <repeat ref="budgetAreaToggles" layout="column" gridWrapLimit="4" margin="5" marginRight="0">
                       <toggleButton ref="budgetAreaToggle" styleClass="budgetAreaSelector" anchor="left"/>
                     </repeat>
-                  </row>
+                    <filler fill="vertical"/>
+                  </column>
 
-                  <cards ref="seriesCard" weightY="100">
+                  <cards ref="seriesCard" weightX="100">
 
                     <card name="uncategorized">
                       <column styleClass="budgetAreaSelection">
@@ -159,7 +162,7 @@
 
                   </cards>
 
-                </column>
+                </row>
               </card>
             </cards>
 

@@ -1,12 +1,9 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
-import org.uispec4j.Button;
-import org.uispec4j.Panel;
-import org.uispec4j.TextBox;
-import org.uispec4j.Window;
-import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.*;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
@@ -39,29 +36,35 @@ public class TransactionDetailsChecker extends ViewChecker {
   }
 
   public TransactionEditionChecker edit() {
-    return TransactionEditionChecker.open(getPanel().getButton("editTransaction").triggerClick());
+    return TransactionEditionChecker.open(openActionPopup().triggerClick("edit"));
   }
 
   private void checkValue(String name, String label) {
     assertThat(getPanel().getTextBox(name).textEquals(label));
   }
 
-  public void checkSplitNotVisible() {
-    checkComponentVisible(getPanel(), JButton.class, "split", false);
+  public void checkActionsHidden() {
+    checkComponentVisible(getPanel(), JButton.class, "transactionActions", false);
+  }
+  
+  private PopupButton openActionPopup() {
+    return new PopupButton(getPanel().getButton("transactionActions"));
   }
 
-  public void checkSplitVisible() {
-    assertTrue(getPanel().getButton("split").isVisible());
+  public void checkSplitDisabled() {
+    openActionPopup().checkItemDisabled("split");
+  }
+
+  public void checkSplitEnabled() {
+    openActionPopup().checkItemEnabled("split");
   }
 
   public void checkSplitButtonLabel(String text) {
-    assertTrue(getPanel().getButton("split").textEquals(text));
+    openActionPopup().checkContains(text);
   }
 
   public void split(String amount, String note) {
-    Button splitLink = getPanel().getButton("split");
-    SplitDialogChecker splitDialog =
-      new SplitDialogChecker(WindowInterceptor.getModalDialog(splitLink.triggerClick()));
+    SplitDialogChecker splitDialog = openSplitDialog();
     splitDialog.enterAmount(amount);
     splitDialog.enterNote(note);
     splitDialog.validateAndClose();
@@ -122,13 +125,8 @@ public class TransactionDetailsChecker extends ViewChecker {
   }
 
   public SplitDialogChecker openSplitDialog() {
-    Window dialog = WindowInterceptor.getModalDialog(getPanel().getButton("splitLink").triggerClick());
+    Window dialog = WindowInterceptor.getModalDialog(openActionPopup().triggerClick("split"));
     return new SplitDialogChecker(dialog);
-  }
-
-  public void checkSplitButtonAvailable() {
-    Button splitMessage = getPanel().getButton("splitLink");
-    assertTrue(UISpecAssert.and(splitMessage.isVisible(), splitMessage.isEnabled()));
   }
 
   public TransactionDetailsChecker checkNote(String text) {
@@ -156,7 +154,7 @@ public class TransactionDetailsChecker extends ViewChecker {
   }
 
   public void checkNoDataShownMessage() {
-    assertThat(getPanel().getPanel("noData").getTextBox().textContains("No data shown"));
+    assertThat(getPanel().getPanel("noData").getTextBox("noDataShownMessage").textContains("No data shown"));
   }
 
   public void shift() {
@@ -164,31 +162,22 @@ public class TransactionDetailsChecker extends ViewChecker {
   }
 
   public ConfirmationDialogChecker openShiftDialog() {
-    Button button = getPanel().getButton("shift");
-    assertThat(button.isVisible());
-    assertThat(button.textEquals("Shift..."));
-    return ConfirmationDialogChecker.open(button.triggerClick());
+    return ConfirmationDialogChecker.open(openActionPopup().triggerClick("shift"));
   }
 
   public void checkShiftEnabled() {
-    Button button = getPanel().getButton("shift");
-    assertThat(button.isVisible());
-    assertThat(button.textEquals("Shift..."));
+    openActionPopup().checkItemEnabled("shift");
   }
 
   public void checkShiftInverted() {
-    Button button = getPanel().getButton("shift");
-    assertThat(button.isVisible());
-    assertThat(button.textEquals("Cancel shift"));
+    openActionPopup().checkItemEnabled("Cancel shift");
   }
 
   public void checkShiftDisabled() {
-    checkComponentVisible(getPanel(), JButton.class, "shift", false);
+    openActionPopup().checkItemDisabled("shift");
   }
 
   public void unshift() {
-    Button button = getPanel().getButton("shift");
-    assertThat(button.textEquals("Cancel shift"));
-    button.click();
+    openActionPopup().click("Cancel shift");
   }
 }

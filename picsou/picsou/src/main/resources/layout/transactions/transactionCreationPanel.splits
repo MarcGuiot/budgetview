@@ -6,7 +6,8 @@
     <style selector="radioButton" foreground="block.outer.text" opaque="false" font="-,plain,10"/>
     
     <style selector=".transactionCreation"
-           opaque="true" border="line(transactionCreation.border)" background="transactionCreation.bg"/>
+           opaque="true" border="line(block.inner.border)"
+           background="block.inner.bg.secondary"/>
 
     <style selector="button#month" ui="hyperlinkButtonWithoutUnderline"
            icon="button_calendar.png"

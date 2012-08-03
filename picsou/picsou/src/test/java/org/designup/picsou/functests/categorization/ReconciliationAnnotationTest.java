@@ -122,7 +122,8 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
                                        "Selected months",
                                        "Last imported file",
                                        "Uncategorized operations",
-                                       "Uncategorized operations for the selected months");
+                                       "Uncategorized operations for the selected months",
+                                       "Operations to reconcile");
     categorization.showUncategorizedTransactionsOnly();
 
     reconciliation.show();

@@ -66,7 +66,6 @@ public class ReconciliationWarningPanel {
     if ((prefs != null) &&
         Utils.equal(CategorizationFilteringMode.TO_RECONCILE.getId(),
                     prefs.get(UserPreferences.CATEGORIZATION_FILTERING_MODE))) {
-      System.out.println("ReconciliationWarningPanel.doUpdate: to_reconcile filtering ("+prefs.get(UserPreferences.CATEGORIZATION_FILTERING_MODE)+") ==> false");
       panel.setVisible(false);
       return;
     }

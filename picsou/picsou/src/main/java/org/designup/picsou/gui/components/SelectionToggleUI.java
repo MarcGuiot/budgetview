@@ -15,11 +15,6 @@ public class SelectionToggleUI extends BasicToggleButtonUI {
   private static final Color TOP_COLOR = new Color(203, 210, 221);
   private static final Color BOTTOM_COLOR = new Color(143, 159, 183);
 
-  private static final Color clrGlowInnerHi = new Color(253, 239, 175, 148);
-  private static final Color clrGlowInnerLo = new Color(255, 209, 0);
-  private static final Color clrGlowOuterHi = new Color(253, 239, 175, 124);
-  private static final Color clrGlowOuterLo = new Color(255, 179, 0);
-
   private boolean useBold = true;
   private int padding = 0;
   private int borderWidth = 2;

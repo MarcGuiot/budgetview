@@ -100,7 +100,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/15", -20.00, "McDo")
       .load();
     categorization.selectTableRow(0);
-    transactionDetails.checkSplitVisible();
+    transactionDetails.checkSplitEnabled();
   }
 
   public void testSplitButtonLabelChanges() throws Exception {
@@ -108,7 +108,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/15", -20.00, "McDo")
       .load();
     categorization.selectTableRow(0);
-    transactionDetails.checkSplitButtonLabel("Split...");
+    transactionDetails.checkSplitButtonLabel("Split into several transactions...");
 
     transactionDetails.openSplitDialog()
       .enterAmount("5")
@@ -122,16 +122,16 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/14", -10.00, "Fouquet's")
       .load();
 
-    transactionDetails.checkSplitNotVisible();
+    transactionDetails.checkActionsHidden();
 
     categorization.selectTableRows(0, 1);
-    transactionDetails.checkSplitNotVisible();
+    transactionDetails.checkSplitDisabled();
 
     categorization.selectTableRow(0);
-    transactionDetails.checkSplitVisible();
+    transactionDetails.checkSplitEnabled();
 
     categorization.selectTableRows(0, 1);
-    transactionDetails.checkSplitNotVisible();
+    transactionDetails.checkSplitDisabled();
   }
 
   public void testOriginalLabelNotVisible() throws Exception {

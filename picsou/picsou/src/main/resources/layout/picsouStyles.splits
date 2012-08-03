@@ -174,7 +174,7 @@
     <style selector=".block" ui="block" opaque="false" marginBottom="0"/>
     <style selector=".block .innerBlock" margin="8"/>
     <style selector=".budgetAreaSelection" opaque="true" background="block.inner.bg"
-           border="line(block.inner.border.noscroll)"/>
+           border="matte(1,0,1,1,block.inner.border)"/>
 
     <style selector=".budgetAreaSelection htmlEditorPane" border="empty(10)"/>
     <style selector=".budgetAreaSelection textArea" border="empty(10)"/>

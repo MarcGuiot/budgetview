@@ -9,6 +9,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -47,10 +48,10 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
   private JToggleButton multiBudgetAreaToggle;
 
   private GlobList selectedTransactions = GlobList.EMPTY;
-  private JEditorPane noSelectionMessage;
   private JEditorPane uncategorizedMessage;
   private ReconciliationPanel reconciliationPanel;
   private ReconciliationNavigationPanel reconciliationNavigation;
+  private SplitsNode<JLabel> downArrow;
 
   public CategorizationSelector(TransactionRendererColors colors, GlobRepository repository, Directory directory) {
     this.colors = colors;
@@ -74,7 +75,6 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
       }
     });
 
-    noSelectionMessage = builder.add("noSelectionInfoMessage", new JEditorPane()).getComponent();
     uncategorizedMessage = builder.add("uncategorizedMessage", new JEditorPane()).getComponent();
 
     builder.add("uncategorizeSelected", new UncategorizeTransactionsAction());
@@ -96,6 +96,8 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
     builder.addRepeat("budgetAreaToggles",
                       Arrays.asList(budgetAreas),
                       new ToggleFactory());
+
+    downArrow = builder.add("downArrow", new JLabel());
   }
 
   private void showNoSelection() {
@@ -177,7 +179,6 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsChanges(Transaction.TYPE)) {
-      updateNoSelectionMessage(repository);
       for (Glob transaction : selectedTransactions) {
         if (changeSet.containsChanges(transaction.getKey(), Transaction.SERIES)) {
           updateSelection();
@@ -191,13 +192,8 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    updateNoSelectionMessage(repository);
     this.selectedTransactions = GlobList.EMPTY;
     showNoSelection();
-  }
-
-  private void updateNoSelectionMessage(GlobRepository repository) {
-    noSelectionMessage.setText(repository.contains(Transaction.TYPE) ? Lang.get("categorization.no.selection") : "");
   }
 
   private void updateSelection() {
@@ -305,16 +301,19 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
 
     public void showCategorization() {
       card.show("series");
+      downArrow.applyStyle("downArrowShown");
       reconciliationNavigation.categorizationShown();
     }
 
     public void showReconciliation() {
       card.show("reconciliation");
+      downArrow.applyStyle("downArrowShown");
       reconciliationNavigation.reconciliationShown();
     }
 
     public void showNoSelection() {
       card.show("noSelection");
+      downArrow.applyStyle("downArrowHidden");
       reconciliationNavigation.noSelectionShown();
     }
   }
