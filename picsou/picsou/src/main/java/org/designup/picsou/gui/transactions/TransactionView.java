@@ -194,6 +194,7 @@ public class TransactionView extends View implements Filterable {
     table.setDragEnabled(false);
     table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     ToolTipManager.sharedInstance().unregisterComponent(table.getTableHeader());
+
     Gui.setColumnSizes(table, COLUMN_SIZES);
 
     return table;
@@ -212,11 +213,11 @@ public class TransactionView extends View implements Filterable {
     view.setDefaultBackgroundPainter(new DefaultTableCellPainter(directory));
 
     TransactionAmountColumn amountColumn =
-      new TransactionAmountColumn(view, Transaction.AMOUNT, rendererColors, descriptionService, repository, directory);
+      new TransactionAmountColumn(view, Transaction.AMOUNT, rendererColors, descriptionService, repository);
     TransactionAmountColumn accountBalanceColumn =
-      new TransactionAmountColumn(view, Transaction.ACCOUNT_POSITION, rendererColors, descriptionService, repository, directory);
+      new TransactionAmountColumn(view, Transaction.ACCOUNT_POSITION, rendererColors, descriptionService, repository);
     TransactionAmountColumn balanceColumn =
-      new TransactionAmountColumn(view, Transaction.SUMMARY_POSITION, rendererColors, descriptionService, repository, directory);
+      new TransactionAmountColumn(view, Transaction.SUMMARY_POSITION, rendererColors, descriptionService, repository);
 
     FontLocator fontLocator = directory.get(FontLocator.class);
     Font dateFont = fontLocator.get("transactionView.date");

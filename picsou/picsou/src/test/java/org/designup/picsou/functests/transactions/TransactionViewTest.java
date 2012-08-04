@@ -30,6 +30,24 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     table = null;
   }
 
+  public void testUsesColorsToHighlightAmountSign() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2006/05/11", 1000.0, "WorldCo")
+      .load();
+
+    transactions.initContent()
+      .add("11/05/2006", TransactionType.VIREMENT, "WORLDCO", "", 1000.00)
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00)
+      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00)
+      .check();
+
+    transactions.checkAmountLabelColor("WORLDCO", "green");
+    transactions.checkAmountLabelColor("PEAGE", "red");
+  }
+
   public void testEditingANoteByCellSelection() throws Exception {
     transactions.editNote("SG", "interets");
     transactions.initContent()

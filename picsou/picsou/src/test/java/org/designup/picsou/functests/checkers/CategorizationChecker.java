@@ -3,8 +3,10 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.functests.checkers.converters.ReconciliationAnnotationCellConverter;
+import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -223,6 +225,11 @@ public class CategorizationChecker extends ViewChecker {
                                             .run(getTable().triggerRightClick(rowIndex, 0))
                                             .getSubMenu("Edit")
                                             .triggerClick());
+  }
+
+  public CategorizationChecker checkAmountLabelColor(String label, String expectedColor) {
+    assertThat(getTable().foregroundNear(getRowIndex(label), AMOUNT_COLUMN_INDEX, expectedColor));
+    return this;
   }
 
   public class SavingsCategorizationChecker extends BudgetAreaCategorizationChecker {

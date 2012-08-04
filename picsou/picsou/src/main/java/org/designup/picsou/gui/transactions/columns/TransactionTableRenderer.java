@@ -21,15 +21,15 @@ public class TransactionTableRenderer implements TableCellRenderer {
   }
 
   public Component getTableCellRendererComponent(JTable table,
-                                                 Object value,
+                                                 Object object,
                                                  boolean isSelected,
                                                  boolean hasFocus,
                                                  int row,
                                                  int column) {
-    if (value == null){
+    if (object == null){
       return null;
     }
-    Component component = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    Component component = renderer.getTableCellRendererComponent(table, object, isSelected, hasFocus, row, column);
     if (component == null){
       return null;
     }
@@ -40,7 +40,7 @@ public class TransactionTableRenderer implements TableCellRenderer {
       JLabel label = (JLabel)component;
       label.setBorder(border);
     }
-    rendererColors.update(component, isSelected, (Glob)value, row);
+    rendererColors.update(component, isSelected, (Glob)object, TransactionRendererColors.Mode.DEFAULT, row);
     return component;
   }
 }

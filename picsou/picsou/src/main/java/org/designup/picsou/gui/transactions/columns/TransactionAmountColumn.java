@@ -1,12 +1,12 @@
 package org.designup.picsou.gui.transactions.columns;
 
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
-import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -15,6 +15,7 @@ import java.awt.*;
 public class TransactionAmountColumn implements TableCellRenderer {
   private GlobStringifier amountStringifier;
   private TransactionRendererColors rendererColors;
+  private DoubleField amountField;
   private GlobRepository repository;
   private JLabel label = new JLabel();
 
@@ -22,8 +23,8 @@ public class TransactionAmountColumn implements TableCellRenderer {
                                  DoubleField amountField,
                                  TransactionRendererColors transactionRendererColors,
                                  DescriptionService descriptionService,
-                                 GlobRepository repository,
-                                 Directory directory) {
+                                 GlobRepository repository) {
+    this.amountField = amountField;
     this.repository = repository;
     amountStringifier = descriptionService.getStringifier(amountField);
     label.setName("amount");
@@ -39,7 +40,9 @@ public class TransactionAmountColumn implements TableCellRenderer {
     }
     Glob transaction = (Glob)value;
     label.setText(amountStringifier.toString(transaction, repository));
-    rendererColors.update(label, isSelected, transaction, row);
+    Double amount = transaction.get(amountField);
+    rendererColors.update(label, isSelected, transaction,
+                          TransactionRendererColors.getMode(amount), row);
     return label;
   }
 

@@ -290,6 +290,22 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkBudgetAreaSelectionPanelDisplayed();
   }
 
+  public void testUsesColorsToHighlightAmountSign() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/15", 1000.00, "WorldCo")
+      .addTransaction("2008/03/17", -40.00, "MacDo")
+      .load();
+
+    categorization.initContent()
+      .add("17/03/2008", "", "MACDO", -40.00)
+      .add("15/05/2008", "", "WORLDCO", 1000.00)
+      .check();
+
+    categorization.checkAmountLabelColor("MACDO", "red");
+    categorization.checkAmountLabelColor("WORLDCO", "green");
+  }
+
   public void testTransactionFilteringMode() throws Exception {
 
     OfxBuilder

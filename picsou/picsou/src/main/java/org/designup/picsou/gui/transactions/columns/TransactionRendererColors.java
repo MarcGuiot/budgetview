@@ -2,6 +2,7 @@ package org.designup.picsou.gui.transactions.columns;
 
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -18,6 +19,8 @@ public class TransactionRendererColors implements ColorChangeListener {
   private Color oddRowsBgColor;
   private Color rolloverCategoryColor;
   private Color transactionTextColor;
+  private Color transactionTextPositiveColor;
+  private Color transactionTextNegativeColor;
   private Color transactionSelectedTextColor;
   private Color transactionPlannedTextColor;
   private Color transactionLinkTextColor;
@@ -28,6 +31,12 @@ public class TransactionRendererColors implements ColorChangeListener {
   private Color categoryColor;
   private ColorService colorService;
   private Integer splitGroupSourceId;
+
+  public enum Mode {
+    DEFAULT,
+    POSITIVE,
+    NEGATIVE
+  }
 
   public TransactionRendererColors(Directory directory) {
     colorService = directory.get(ColorService.class);
@@ -41,6 +50,8 @@ public class TransactionRendererColors implements ColorChangeListener {
     rolloverCategoryColor = colorLocator.get(ApplicationColors.CATEGORY_ROLLOVER_LABEL);
     categoryColor = colorLocator.get(ApplicationColors.CATEGORY_LABEL);
     transactionTextColor = colorLocator.get(ApplicationColors.TABLE_TEXT);
+    transactionTextPositiveColor = colorLocator.get(ApplicationColors.TABLE_TEXT_POSITIVE);
+    transactionTextNegativeColor = colorLocator.get(ApplicationColors.TABLE_TEXT_NEGATIVE);
     transactionSelectedTextColor = colorLocator.get(ApplicationColors.TRANSACTION_SELECTED_TEXT);
     transactionPlannedTextColor = colorLocator.get(ApplicationColors.TRANSACTION_TEXT_PLANNED);
     transactionLinkTextColor = colorLocator.get(ApplicationColors.TRANSACTION_TEXT_LINK);
@@ -86,16 +97,16 @@ public class TransactionRendererColors implements ColorChangeListener {
     return transactionReconciliationColor;
   }
 
-  public void update(Component component, boolean isSelected, Glob transaction, int row) {
-    setForeground(component, isSelected, transaction, false);
+  public void update(Component component, boolean isSelected, Glob transaction, Mode mode, int row) {
+    setForeground(component, isSelected, transaction, mode, false);
     setBackground(component, transaction, isSelected, row);
   }
 
-  public void setForeground(Component component, boolean isSelected, Glob transaction, boolean isLink) {
-    component.setForeground(getForeground(transaction, isSelected, isLink));
+  public void setForeground(Component component, boolean isSelected, Glob transaction, Mode mode, boolean isLink) {
+    component.setForeground(getForeground(transaction, mode, isSelected, isLink));
   }
 
-  private Color getForeground(Glob transaction, boolean isSelected, boolean isLink) {
+  private Color getForeground(Glob transaction, Mode mode, boolean isSelected, boolean isLink) {
     if (isSelected) {
       return transactionSelectedTextColor;
     }
@@ -105,7 +116,16 @@ public class TransactionRendererColors implements ColorChangeListener {
     if (isLink) {
       return transactionLinkTextColor;
     }
-    return transactionTextColor;
+    switch (mode) {
+      case POSITIVE:
+        return transactionTextPositiveColor;
+      case NEGATIVE:
+        return transactionTextNegativeColor;
+      case DEFAULT:
+        // falls through
+      default:
+        return transactionTextColor;
+    }
   }
 
   public void setBackground(Component component, Glob transaction, boolean isSelected, int row) {
@@ -146,5 +166,19 @@ public class TransactionRendererColors implements ColorChangeListener {
 
   public void dispose(){
     colorService.removeListener(this);
+  }
+
+  public static TransactionRendererColors.Mode getMode(Double amount) {
+    TransactionRendererColors.Mode mode;
+    if (Amounts.isNullOrZero(amount)) {
+      mode = TransactionRendererColors.Mode.DEFAULT;
+    }
+    else if (amount < 0) {
+      mode = TransactionRendererColors.Mode.NEGATIVE;
+    }
+    else {
+      mode = TransactionRendererColors.Mode.POSITIVE;
+    }
+    return mode;
   }
 }

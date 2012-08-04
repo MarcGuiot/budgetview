@@ -389,6 +389,13 @@ public class TransactionChecker extends ViewChecker {
       .close();
   }
 
+  public TransactionChecker checkAmountLabelColor(String label, String expectedColor) {
+    assertThat(getTable().foregroundNear(getIndexOf(label),
+                                         TransactionView.AMOUNT_COLUMN_INDEX,
+                                         expectedColor));
+    return this;
+  }
+
   public class TransactionAmountChecker {
     java.util.List<Object[]> expected = new ArrayList<Object[]>();
     private Table table;

@@ -4,7 +4,6 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.CreateAccountAction;
 import org.designup.picsou.gui.categorization.actions.CategorizationTableActions;
 import org.designup.picsou.gui.categorization.components.*;
-import org.designup.picsou.gui.categorization.reconciliation.ReconciliationNavigationPanel;
 import org.designup.picsou.gui.categorization.reconciliation.ReconciliationWarningPanel;
 import org.designup.picsou.gui.categorization.special.*;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
@@ -53,6 +52,7 @@ import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.utils.ShowHideButton;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
+import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
@@ -297,7 +297,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
                  chain(extraLabelCustomizer, tooltip(SeriesDescriptionStringifier.transactionSeries(), repository)))
       .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL),
                  chain(BOLD, autoTooltip()))
-      .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), ALIGN_RIGHT);
+      .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), 
+                 LabelCustomizers.chain(ALIGN_RIGHT, new TransactionAmountCustomizer(colors)));
   }
 
   private void registerBankFormatExporter(final GlobTableView transactionTable) {

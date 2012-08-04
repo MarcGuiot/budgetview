@@ -101,7 +101,7 @@ public class TransactionSeriesColumn extends HyperlinkTableColumn {
   }
 
   private void setSeriesText(HyperlinkButton button, Glob transaction) {
-    rendererColors.setForeground(button, isSelected, transaction, true);
+    rendererColors.setForeground(button, isSelected, transaction, TransactionRendererColors.Mode.DEFAULT, true);
     button.setFont(normalFont);
     button.setUnderline(false);
     String seriesText = getSeriesText(transaction);
