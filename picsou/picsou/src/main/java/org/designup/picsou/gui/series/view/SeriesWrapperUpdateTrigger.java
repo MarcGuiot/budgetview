@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
 
@@ -26,12 +25,12 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
         }
 
         Glob budgetAreaWrapper =
-          repository.findByIndex(SeriesWrapper.INDEX,SeriesWrapper.ITEM_TYPE,  SeriesWrapperType.BUDGET_AREA.getId())
+          repository.findByIndex(SeriesWrapper.INDEX, SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId())
             .findByIndex(SeriesWrapper.ITEM_ID, values.get(Series.BUDGET_AREA))
             .findByIndex(SeriesWrapper.MASTER, null)
             .getGlobs().getFirst();
-        
-        if (budgetAreaWrapper == null){
+
+        if (budgetAreaWrapper == null) {
           Log.write("Bug : missing parent : " + values.get(Series.BUDGET_AREA));
         }
         else {
@@ -48,7 +47,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
           if (wrapper != null) {
             repository.delete(wrapper.getKey());
             Glob budgetAreaWrapper =
-              repository.findByIndex(SeriesWrapper.INDEX,SeriesWrapper.ITEM_TYPE,  SeriesWrapperType.BUDGET_AREA.getId())
+              repository.findByIndex(SeriesWrapper.INDEX, SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId())
                 .findByIndex(SeriesWrapper.ITEM_ID, values.get(Series.BUDGET_AREA))
                 .findByIndex(SeriesWrapper.MASTER, null)
                 .getGlobs().getFirst();
@@ -74,9 +73,10 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Glob parentSeriesWrapper =
           SeriesWrapper.getWrapperForSeries(values.get(SubSeries.SERIES), repository);
-        if (parentSeriesWrapper == null){
+        if (parentSeriesWrapper == null) {
           Log.write("Parent wrapper missing " + values.get(SubSeries.SERIES));
-        }else {
+        }
+        else {
           repository.create(SeriesWrapper.TYPE,
                             value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
                             value(SeriesWrapper.ITEM_ID, key.get(SubSeries.ID)),
@@ -151,9 +151,10 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
       for (Glob subSeries : repository.getAll(SubSeries.TYPE)) {
         Glob seriesWrapper =
           SeriesWrapper.getWrapperForSeries(subSeries.get(SubSeries.SERIES), repository);
-        if (seriesWrapper == null){
+        if (seriesWrapper == null) {
           Log.write("Missing parent " + subSeries.get(SubSeries.SERIES));
-        } else {
+        }
+        else {
           repository.create(SeriesWrapper.TYPE,
                             value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
                             value(SeriesWrapper.ITEM_ID, subSeries.get(SubSeries.ID)),

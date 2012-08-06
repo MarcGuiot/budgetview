@@ -112,6 +112,7 @@ public class PicsouInit {
     repository.addTrigger(new SeriesRenameTrigger());
     repository.addTrigger(new AccountDeleteTrigger());
     repository.addTrigger(new SeriesDeletionTrigger());
+    repository.addTrigger(new SubSeriesDeletionTrigger());
     repository.addTrigger(new RegistrationTrigger(directory));
     repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
     repository.addTrigger(new MonthTrigger(directory));

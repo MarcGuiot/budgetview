@@ -12,6 +12,7 @@ import org.designup.picsou.gui.series.edition.SeriesForecastPanel;
 import org.designup.picsou.gui.series.subseries.SubSeriesEditionPanel;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
+import org.designup.picsou.model.util.AmountMap;
 import org.designup.picsou.triggers.AutomaticSeriesBudgetTrigger;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
 import org.designup.picsou.utils.Lang;
@@ -29,12 +30,9 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
-
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -46,6 +44,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
+
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesEditionDialog {
   private BudgetArea budgetArea;
@@ -494,15 +495,10 @@ public class SeriesEditionDialog {
   }
 
   private void initExtraBudgetAmounts(Glob createdSeries, GlobList transactions) {
-    Map<Integer, Double> amounts = new HashMap<Integer, Double>();
+    AmountMap amounts = new AmountMap();
     for (Glob transaction : transactions) {
-      int monthId = transaction.get(Transaction.MONTH);
-      double amount = transaction.get(Transaction.AMOUNT);
-      Double previousAmount = amounts.get(monthId);
-      if (previousAmount == null) {
-        previousAmount = 0.00;
-      }
-      amounts.put(monthId, previousAmount + amount);
+      amounts.add(transaction.get(Transaction.MONTH),
+                  transaction.get(Transaction.AMOUNT));
     }
 
     Integer seriesId = createdSeries.get(Series.ID);

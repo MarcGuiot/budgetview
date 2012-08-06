@@ -651,8 +651,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/20", 100.00, "Auchan")
       .load();
 
-    reconciliation.show();
-    reconciliation.toggle("WORLDCO");
+    reconciliationAnnotations.show();
+    reconciliationAnnotations.toggle("WORLDCO");
     categorization.checkTable(new Object[][]{
       {"-", "20/08/2008", "", "AUCHAN", 100.0},
       {"x", "20/08/2008", "", "WORLDCO", 1000.0}}
@@ -660,7 +660,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     restartApplication();
 
-    reconciliation.checkColumnAndMenuShown();
+    reconciliationAnnotations.checkColumnAndMenuShown();
     categorization.checkTable(new Object[][]{
       {"-", "20/08/2008", "", "AUCHAN", 100.0},
       {"x", "20/08/2008", "", "WORLDCO", 1000.0}}

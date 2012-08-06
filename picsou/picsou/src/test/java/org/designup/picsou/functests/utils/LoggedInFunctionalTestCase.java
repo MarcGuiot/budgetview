@@ -49,7 +49,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public SummaryViewChecker summary;
   public SignpostViewChecker signpostView;
   public FeedbackViewChecker feedbackView;
-  public ReconciliationAnnotationChecker reconciliation;
+  public ReconciliationAnnotationChecker reconciliationAnnotations;
   public PrinterChecker printer;
 
   private ApplicationChecker application;
@@ -172,7 +172,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     summary = new SummaryViewChecker(mainWindow);
     signpostView = new SignpostViewChecker(mainWindow);
     feedbackView = new FeedbackViewChecker(mainWindow);
-    reconciliation = new ReconciliationAnnotationChecker(mainWindow);
+    reconciliationAnnotations = new ReconciliationAnnotationChecker(mainWindow);
     printer = application.getPrinter();
   }
 
@@ -230,7 +230,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     summary = null;
     signpostView = null;
     feedbackView = null;
-    reconciliation = null;
+    reconciliationAnnotations = null;
     printer = null;
     application =null;
     repository = null;

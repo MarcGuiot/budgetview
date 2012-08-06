@@ -7,6 +7,7 @@ import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.Amounts;
+import org.designup.picsou.triggers.ProjectItemTrigger;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -128,6 +129,9 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (currentJarVersion < 91) {
       updateManualCreationFlag(repository);
     }
+    if (currentJarVersion < 93) {
+      createMissingSubSeriesForProjectItems(repository);
+    }
 
     deleteDeprecatedGlobs(repository);
 
@@ -138,6 +142,12 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
 
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
+  }
+
+  private void createMissingSubSeriesForProjectItems(GlobRepository repository) {
+    for (Glob projectItem : repository.getAll(ProjectItem.TYPE, isNull(ProjectItem.SUB_SERIES))) {
+      ProjectItemTrigger.createSubSeries(projectItem.getKey(), projectItem, repository);
+    }
   }
 
   private void correctSavingMirror(GlobRepository repository) {

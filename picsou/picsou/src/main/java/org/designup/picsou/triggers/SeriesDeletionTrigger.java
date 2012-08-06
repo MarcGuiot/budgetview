@@ -31,11 +31,6 @@ public class SeriesDeletionTrigger extends DefaultChangeSetListener {
       repository.delete(repository.findByIndex(SeriesBudget.SERIES_INDEX,
                                                SeriesBudget.SERIES, seriesId).getGlobs());
 
-//      repository.delete(Transaction.TYPE,
-//                        GlobMatchers.and(
-//                          GlobMatchers.fieldEquals(Transaction.SERIES, seriesId),
-//                          GlobMatchers.fieldEquals(Transaction.CREATED_BY_SERIES, Boolean.TRUE)));
-
       repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
         .getGlobs()
         .safeApply(new GlobFunctor() {

@@ -136,9 +136,10 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     SeriesEditionDialogChecker editionDialogChecker = createSeries()
       .setName(seriesName)
       .selectAllMonths();
-    if (amount>0){
+    if (amount > 0) {
       editionDialogChecker.selectPositiveAmounts();
-    }else {
+    }
+    else {
       editionDialogChecker.selectNegativeAmounts();
     }
     editionDialogChecker
@@ -177,6 +178,17 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     Panel seriesPanel = seriesRadio.getContainer("seriesBlock");
     for (String subName : subSeries) {
       assertTrue("No subSeries found with name: " + subName,
+                 seriesPanel.containsUIComponent(RadioButton.class, subName));
+    }
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkSeriesDoesNotContainSubSeries(String seriesName,
+                                                                            String... subSeriesNames) {
+    RadioButton seriesRadio = panel.getRadioButton(seriesName);
+    Panel seriesPanel = seriesRadio.getContainer("seriesBlock");
+    for (String subName : subSeriesNames) {
+      assertFalse("subSeries unexpectedly found with name: " + subName,
                  seriesPanel.containsUIComponent(RadioButton.class, subName));
     }
     return this;

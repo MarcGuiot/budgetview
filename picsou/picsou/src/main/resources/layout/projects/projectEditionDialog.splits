@@ -24,7 +24,7 @@
             font="-,plain,12" fill="none" anchor="west"  marginLeft="10"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(550,600)">
+  <panel styleClass="dialog" preferredSize="(580,600)">
     <column styleClass="innerDialog">
 
       <label ref="title" styleClass="title"/>
@@ -49,6 +49,7 @@
               <textField ref="itemLabel"/>
               <button ref="month"/>
               <component ref="amountEditor"/>
+              <component ref="itemGauge" styleClass="detailGauge"/>
               <button action="deleteItem" styleClass="icon" icon="button_delete.png"/>
             </repeat>
             <button action="addItem" styleClass="plus"/>

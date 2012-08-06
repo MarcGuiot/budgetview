@@ -3,11 +3,10 @@ package org.designup.picsou.gui.series;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.util.AmountMap;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 public class PeriodBudgetAreaTrigger implements ChangeSetListener {
@@ -35,15 +34,12 @@ public class PeriodBudgetAreaTrigger implements ChangeSetListener {
   }
 
   private void recomputeAll() {
-    Map<Integer, Double> maxValues = new HashMap<Integer, Double>();
+    AmountMap maxValues = new AmountMap();
 
     for (Glob stat : repository.getAll(PeriodSeriesStat.TYPE)) {
-      Double absValue = stat.get(PeriodSeriesStat.ABS_SUM_AMOUNT);
       Integer budgetAreaId = repository.findLinkTarget(stat, PeriodSeriesStat.SERIES).get(Series.BUDGET_AREA);
-      Double value = maxValues.get(budgetAreaId);
-      if ((value == null) || (value < absValue)) {
-        maxValues.put(budgetAreaId, absValue);
-      }
+      maxValues.setMax(budgetAreaId,
+                       stat.get(PeriodSeriesStat.ABS_SUM_AMOUNT));
     }
 
     repository.startChangeSet();

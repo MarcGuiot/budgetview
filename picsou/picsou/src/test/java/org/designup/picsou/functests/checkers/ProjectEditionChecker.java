@@ -3,11 +3,17 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.GaugeChecker;
 import org.designup.picsou.functests.checkers.components.TipChecker;
+import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.*;
+import org.uispec4j.Button;
+import org.uispec4j.Panel;
+import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
+
+import java.awt.*;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
@@ -106,6 +112,13 @@ public class ProjectEditionChecker extends GuiChecker {
     setItemAmount(index, amount);
     return this;
   }
+  
+  public ProjectEditionChecker checkItemGauge(int index, double actual, double target) {
+    GaugeChecker gauge = new GaugeChecker(getItemGauge(index));
+    gauge.checkActualValue(actual);
+    gauge.checkTargetValue(target);
+    return this;
+  }
 
   private <T extends UIComponent> T getItemComponent(int index, Class<T> uiClass, String uiName) {
     UIComponent[] components = dialog.getPanel("items").getUIComponents(uiClass, uiName);
@@ -117,6 +130,17 @@ public class ProjectEditionChecker extends GuiChecker {
     }
     return (T)components[index];
   }
+  
+  private Gauge getItemGauge(int index) {
+    Component[] gauges = dialog.getPanel("items").getSwingComponents(Gauge.class);
+    if (gauges.length == 0) {
+      UISpecAssert.fail("No item gauge shown");
+    }
+    if (index >= gauges.length) {
+      UISpecAssert.fail("Index " + index + " out of bounds. Actual content:\n" + getContent());
+    }
+    return (Gauge)gauges[index];
+  } 
 
   private String getContent() {
     StringBuilder builder = new StringBuilder();

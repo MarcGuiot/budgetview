@@ -4,7 +4,8 @@ import org.designup.picsou.functests.checkers.ProjectEditionChecker;
 import org.designup.picsou.functests.checkers.components.TipChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.model.Transaction;
+import org.globsframework.model.format.GlobPrinter;
 
 public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
@@ -65,6 +66,11 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     budgetView.extras.checkSeries("My project", 0, -600.00);
     budgetView.getSummary().checkEndPosition(1100.00);
 
+    views.selectCategorization();
+    categorization.selectTransaction("Resa Travel Plus");
+    categorization.selectExtras().checkSeriesContainsSubSeries("My project",
+                                                               "Reservation", "Travel", "Hotel");
+
     projects.edit("My project")
       .checkItems("Reservation | January 2011 | -200.00\n" +
                   "Travel | February 2011 | -100.00\n" +
@@ -73,8 +79,11 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkGauge(0.00, -700.00)
       .validate();
 
-    views.selectCategorization();
-    categorization.setExtra("Resa Travel Plus", "My project");
+    categorization.selectTransaction("Resa Travel Plus");
+    categorization.selectExtras().checkSeriesContainsSubSeries("My project", "Reservation", "Hotel");
+    categorization.selectExtras().checkSeriesDoesNotContainSubSeries("My project", "Travel");
+
+    categorization.setExtra("Resa Travel Plus", "My project", "Reservation");
 
     timeline.selectMonth("2011/02");
     projects.checkProject("My project", 201101, 201102, 700.00);
@@ -139,6 +148,10 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projects.checkNoProjectShown();
     budgetView.extras.checkNoSeriesShown();
     budgetView.getSummary().checkEndPosition(1000.00);
+
+    categorization.selectTransaction("Income");
+    categorization.selectExtras()
+      .checkDoesNotContainSeries("My project");
   }
 
   public void testProjectDeletionWithAssignedTransactions() throws Exception {
@@ -236,6 +249,31 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     dialog.cancel();
   }
 
+  public void testRenamingAnItemRenamesTheCorrespondingSubSeries() throws Exception {
+    operations.hideSignposts();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2011/01/01")
+      .addTransaction("2011/01/01", 1000.00, "Income")
+      .load();
+
+    projects.create()
+      .setName("My project")
+      .setItem(0, "Item 1", 201101, 100.00)
+      .addItem(1, "Item 2", 201101, 100.00)
+      .validate();
+
+    categorization.selectTransaction("Income");
+    categorization.selectExtras().checkSeriesContainsSubSeries("My project", "Item 1", "Item 2");
+
+    projects.edit("My project")
+      .setItemName(0, "NewItem1")
+      .validate();
+
+    categorization.selectExtras().checkSeriesContainsSubSeries("My project", "NewItem1", "Item 2");
+    categorization.selectExtras().checkSeriesDoesNotContainSubSeries("My project", "Item 1");
+  }
+
   public void testCannotHaveProjectWithNoItems() throws Exception {
 
     operations.hideSignposts();
@@ -262,7 +300,72 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .cancel();
   }
 
-  public void testProjectDialogIsAlwaysShownWhenEditingTheSeries() throws Exception {
+  public void testGaugesShownForProjectItems() throws Exception {
+    operations.hideSignposts();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2012/12/15")
+      .addTransaction("2012/12/01", -100.00, "SNCF")
+      .addTransaction("2012/12/10", -150.00, "Europcar")
+      .addTransaction("2012/12/15", -550.00, "Sheraton")
+      .load();
+
+    projects.create()
+      .setName("My project")
+      .setItem(0, "Travel", 201212, -300.00)
+      .addItem(1, "Accomodation", 201212, -500.00)
+      .checkItemGauge(0, 0.00, -300.00)
+      .checkItemGauge(1, 0.00, -500.00)
+      .checkGauge(0.00, -800.00)
+      .validate();
+
+    categorization.selectTransaction("SNCF");
+    categorization.selectExtras()
+      .checkSeriesContainsSubSeries("My project", "Travel", "Accomodation");
+    categorization.setExtra("SNCF", "My project", "Travel");
+    categorization.setExtra("EUROPCAR", "My project", "Travel");
+    categorization.setExtra("SHERATON", "My project", "Accomodation");
+
+    projects.edit("My project")
+      .checkItemGauge(0, -250.00, -300.00)
+      .checkItemGauge(1, -550.00, -500.00)
+      .addItem(2, "Other", 201301, -100.00)
+      .checkItemGauge(2, 0.00, -100.00)
+      .checkGauge(-800.00, -900.00)
+      .validate();
+  }
+
+  public void testTransactionsAreAssignedToTheProjectWhenItemsAreDeleted() throws Exception {
+    operations.hideSignposts();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2012/12/15")
+      .addTransaction("2012/12/01", -100.00, "SNCF")
+      .addTransaction("2012/12/10", -150.00, "Europcar")
+      .addTransaction("2012/12/15", -550.00, "Sheraton")
+      .load();
+
+    projects.create()
+      .setName("My project")
+      .setItem(0, "Travel", 201212, -300.00)
+      .addItem(1, "Accomodation", 201212, -500.00)
+      .validate();
+
+    categorization.selectTransaction("SNCF");
+    categorization.selectExtras().checkSeriesContainsSubSeries("My project", "Travel", "Accomodation");
+    categorization.setExtra("SNCF", "My project", "Travel");
+    categorization.setExtra("EUROPCAR", "My project", "Travel");
+    categorization.setExtra("SHERATON", "My project", "Accomodation");
+
+    projects.edit("My project")
+      .deleteItem(0)
+      .validate();
+
+    categorization.selectTransaction("EUROPCAR").getExtras().checkSeriesIsSelected("My project");
+    categorization.selectTransaction("SNCF").getExtras().checkSeriesIsSelected("My project");
+  }
+
+  public void testProjectDialogIsAlwaysShownWhenEditingAssociatedSeries() throws Exception {
 
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2010/01/10")

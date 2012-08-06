@@ -11,6 +11,7 @@ import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.startup.AppPaths;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.server.ServerDirectory;
+import org.designup.picsou.triggers.ProjectItemTrigger;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;

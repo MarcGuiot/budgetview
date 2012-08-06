@@ -6,16 +6,20 @@ import org.designup.picsou.gui.components.BorderlessTextField;
 import org.designup.picsou.gui.components.CancelAction;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.charts.Gauge;
+import org.designup.picsou.gui.components.charts.SimpleGaugeView;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.stringifiers.MonthFieldListStringifier;
+import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.gui.model.ProjectStat;
 import org.designup.picsou.gui.projects.utils.ProjectItemComparator;
+import org.designup.picsou.gui.projects.utils.ProjectItemStatUpdater;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
+import org.designup.picsou.triggers.ProjectItemTrigger;
 import org.designup.picsou.triggers.ProjectTrigger;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -30,9 +34,12 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
-import org.globsframework.model.utils.*;
+import org.globsframework.model.utils.GlobListFunctor;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -50,7 +57,8 @@ public class ProjectEditionDialog {
   private LocalGlobRepository localRepository;
   private GlobRepository parentRepository;
   private Directory directory;
-
+  private ProjectItemStatUpdater itemStatUpdater; 
+  
   private Key currentProjectKey;
   private Double actualAmount = 0.0;
 
@@ -72,9 +80,12 @@ public class ProjectEditionDialog {
     this.directory = directory;
     this.parentRepository = parentRepository;
     this.localRepository = LocalGlobRepositoryBuilder.init(parentRepository)
-      .copy(Project.TYPE, ProjectItem.TYPE, Month.TYPE, Series.TYPE, SeriesBudget.TYPE)
+      .copy(Project.TYPE, ProjectItem.TYPE, Month.TYPE, Series.TYPE, SubSeries.TYPE, SeriesBudget.TYPE)
       .get();
     this.localRepository.addTrigger(new ProjectTrigger());
+    this.localRepository.addTrigger(new ProjectItemTrigger());
+    
+    this.itemStatUpdater = new ProjectItemStatUpdater(localRepository, parentRepository);
 
     createDialog(owner);
     registerTotalUpdater();
@@ -154,6 +165,7 @@ public class ProjectEditionDialog {
   private void doShow() {
     projectNameEditor.forceSelection(currentProjectKey);
     repeat.setFilter(linkedTo(currentProjectKey, ProjectItem.PROJECT));
+    itemStatUpdater.reset(currentProjectKey);
     dialog.showCentered();
   }
 
@@ -211,13 +223,13 @@ public class ProjectEditionDialog {
         }
       });
 
-      cellBuilder.add("month",
-                      GlobButtonView.init(ProjectItem.TYPE,
-                                          localRepository, directory,
-                                          new MonthFieldListStringifier(ProjectItem.MONTH),
-                                          new EditMonthCallback())
-                        .forceSelection(itemKey)
-                        .getComponent());
+      GlobButtonView monthButton = GlobButtonView.init(ProjectItem.TYPE,
+                                                       localRepository, directory,
+                                                       new MonthFieldListStringifier(ProjectItem.MONTH),
+                                                       new EditMonthCallback())
+        .forceSelection(itemKey);
+      cellBuilder.add("month", monthButton.getComponent());
+      cellBuilder.addDisposeListener(monthButton);
 
       AmountEditor amountEditor =
         new AmountEditor(ProjectItem.AMOUNT, localRepository, directory, true, null)
@@ -226,6 +238,14 @@ public class ProjectEditionDialog {
       BorderlessTextField.install(amountEditor.getNumericEditor().getComponent());
       cellBuilder.add("amountEditor", amountEditor.getPanel());
 
+      
+      SimpleGaugeView itemGauge = 
+        SimpleGaugeView.init(Key.create(ProjectItemStat.TYPE, item.get(ProjectItem.ID)),
+                             ProjectItemStat.ACTUAL_AMOUNT, ProjectItemStat.PLANNED_AMOUNT, 
+                             localRepository, directory);
+      cellBuilder.add("itemGauge", itemGauge.getComponent());
+      cellBuilder.addDisposeListener(itemGauge);
+      
       cellBuilder.add("deleteItem", new DeleteItemAction(itemKey));
     }
   }
@@ -239,6 +259,7 @@ public class ProjectEditionDialog {
       if (!check()) {
         return;
       }
+      itemStatUpdater.clear();
       localRepository.commitChanges(false);
       dialog.setVisible(false);
     }

@@ -12,7 +12,7 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
 
   public void testStandardUsage() throws Exception {
 
-    reconciliation.checkMenuDisabled();
+    reconciliationAnnotations.checkMenuDisabled();
 
     OfxBuilder
       .init(this)
@@ -20,50 +20,50 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/06/20", 100.00, "Auchan")
       .load();
 
-    reconciliation.checkMenuEnabled();
-    reconciliation.checkColumnAndMenuHidden();
+    reconciliationAnnotations.checkMenuEnabled();
+    reconciliationAnnotations.checkColumnAndMenuHidden();
     categorization.showUncategorizedTransactionsOnly();
 
-    reconciliation.show();
+    reconciliationAnnotations.show();
     views.checkCategorizationSelected();
     categorization.checkShowsAllTransactions();
-    reconciliation.checkSignpostDisplayed("Click here to mark operations as reconciled");
-    reconciliation.checkColumnAndMenuShown();
+    reconciliationAnnotations.checkSignpostDisplayed("Click here to mark operations as reconciled");
+    reconciliationAnnotations.checkColumnAndMenuShown();
     categorization.checkTable(new Object[][]{
       {"-", "20/06/2010", "", "AUCHAN", 100.0},
       {"-", "20/06/2010", "", "WORLDCO", 1000.0}
     });
 
-    reconciliation.toggle("WORLDCO");
-    reconciliation.checkSignpostHidden();
+    reconciliationAnnotations.toggle("WORLDCO");
+    reconciliationAnnotations.checkSignpostHidden();
     categorization.checkTable(new Object[][]{
       {"-", "20/06/2010", "", "AUCHAN", 100.0},
       {"x", "20/06/2010", "", "WORLDCO", 1000.0}
     });
     transactionDetails.checkLabel("WORLDCO");
 
-    reconciliation.hide();
-    reconciliation.checkColumnAndMenuHidden();
+    reconciliationAnnotations.hide();
+    reconciliationAnnotations.checkColumnAndMenuHidden();
     categorization.checkTable(new Object[][]{
       {"20/06/2010", "", "AUCHAN", 100.0},
       {"20/06/2010", "", "WORLDCO", 1000.0}
     });
 
-    reconciliation.show();
-    reconciliation.checkColumnAndMenuShown();
+    reconciliationAnnotations.show();
+    reconciliationAnnotations.checkColumnAndMenuShown();
     categorization.checkTable(new Object[][]{
       {"-", "20/06/2010", "", "AUCHAN", 100.0},
       {"x", "20/06/2010", "", "WORLDCO", 1000.0}
     });
 
-    reconciliation.checkColumnAndMenuShown();
+    reconciliationAnnotations.checkColumnAndMenuShown();
     categorization.checkTable(new Object[][]{
       {"-", "20/06/2010", "", "AUCHAN", 100.0},
       {"x", "20/06/2010", "", "WORLDCO", 1000.0}
     });
 
     categorization.selectTableRows(0, 1);
-    reconciliation.toggle(0);
+    reconciliationAnnotations.toggle(0);
     categorization.checkTable(new Object[][]{
       {"x", "20/06/2010", "", "AUCHAN", 100.0},
       {"x", "20/06/2010", "", "WORLDCO", 1000.0}
@@ -79,35 +79,35 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/06/20", 200.00, "Fnac")
       .load();
 
-    reconciliation.checkPopupEntryHidden(0);
+    reconciliationAnnotations.checkPopupEntryHidden(0);
 
-    reconciliation.show();
+    reconciliationAnnotations.show();
     categorization.checkTable(new Object[][]{
       {"-", "15/06/2010", "", "AUCHAN", 150.0},
       {"-", "20/06/2010", "", "FNAC", 200.0},
       {"-", "20/06/2010", "", "WORLDCO", 1000.0}
     });
 
-    reconciliation.checkPopupEntryShown(0);
+    reconciliationAnnotations.checkPopupEntryShown(0);
 
     categorization.selectTableRows(0, 1);
     categorization.checkSelectedTableRows(0, 1);
-    reconciliation.reconcileWithPopup(0);
+    reconciliationAnnotations.reconcileWithPopup(0);
     categorization.checkTable(new Object[][]{
       {"x", "15/06/2010", "", "AUCHAN", 150.0},
       {"x", "20/06/2010", "", "FNAC", 200.0},
       {"-", "20/06/2010", "", "WORLDCO", 1000.0}
     });
     
-    reconciliation.unreconcileWithPopup(0);
+    reconciliationAnnotations.unreconcileWithPopup(0);
     categorization.checkTable(new Object[][]{
       {"-", "15/06/2010", "", "AUCHAN", 150.0},
       {"-", "20/06/2010", "", "FNAC", 200.0},
       {"-", "20/06/2010", "", "WORLDCO", 1000.0}
     });
 
-    reconciliation.hide();
-    reconciliation.checkPopupEntryHidden(0);
+    reconciliationAnnotations.hide();
+    reconciliationAnnotations.checkPopupEntryHidden(0);
   }
 
   public void testFiltering() throws Exception {
@@ -126,8 +126,8 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
                                        "Operations to reconcile");
     categorization.showUncategorizedTransactionsOnly();
 
-    reconciliation.show();
-    reconciliation.checkColumnAndMenuShown();
+    reconciliationAnnotations.show();
+    reconciliationAnnotations.checkColumnAndMenuShown();
     categorization.checkTable(new Object[][]{
       {"-", "15/06/2010", "", "AUCHAN", 150.0},
       {"-", "20/06/2010", "", "FNAC", 200.0},
@@ -140,7 +140,8 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
                                        "Last imported file",
                                        "Uncategorized operations",
                                        "Uncategorized operations for the selected months",
-                                       "Unreconciled operations");
+                                       "Operations to annotate",
+                                       "Operations to reconcile");
 
     categorization.showUnreconciledOnly();
     categorization.checkTable(new Object[][]{
@@ -149,26 +150,27 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
       {"-", "20/06/2010", "", "WORLDCO", 1000.0}
     });
 
-    reconciliation.toggle("WORLDCO");
+    reconciliationAnnotations.toggle("WORLDCO");
     categorization.checkTable(new Object[][]{
       {"-", "15/06/2010", "", "AUCHAN", 150.0},
       {"-", "20/06/2010", "", "FNAC", 200.0},
       {"x", "20/06/2010", "", "WORLDCO", 1000.0}
     });
 
-    reconciliation.toggle("FNAC");
+    reconciliationAnnotations.toggle("FNAC");
     categorization.checkTable(new Object[][]{
       {"-", "15/06/2010", "", "AUCHAN", 150.0},
       {"x", "20/06/2010", "", "FNAC", 200.0}
     });
 
-    reconciliation.hide();
+    reconciliationAnnotations.hide();
     categorization.checkShowsAllTransactions();
     categorization.checkFilteringModes("All operations",
                                        "Selected months",
                                        "Last imported file",
                                        "Uncategorized operations",
-                                       "Uncategorized operations for the selected months");
+                                       "Uncategorized operations for the selected months",
+                                       "Operations to reconcile");
     categorization.checkTable(new Object[][]{
       {"15/06/2010", "", "AUCHAN", 150.0},
       {"20/06/2010", "", "FNAC", 200.0},
@@ -176,7 +178,7 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
     });
     
     categorization.showUncategorizedTransactionsOnly();
-    reconciliation.show();
+    reconciliationAnnotations.show();
     categorization.checkTable(new Object[][]{
       {"-", "15/06/2010", "", "AUCHAN", 150.0},
       {"x", "20/06/2010", "", "FNAC", 200.0},
@@ -193,7 +195,7 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/06/20", -50.00, "McDo")
       .load();
 
-    reconciliation.show();
+    reconciliationAnnotations.show();
     categorization.checkTable(new Object[][]{
       {"-", "15/06/2010", "", "AUCHAN", -150.0},
       {"-", "20/06/2010", "", "FNAC", -200.0},
@@ -201,11 +203,11 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
       {"-", "20/06/2010", "", "WORLDCO", 1000.0},
     });
 
-    reconciliation.toggle(1);
+    reconciliationAnnotations.toggle(1);
     categorization.selectTableRows(1, 2);
     categorization.checkSelectedTableRows(1, 2);
     
-    reconciliation.reconcileWithPopup(1);
+    reconciliationAnnotations.reconcileWithPopup(1);
     categorization.checkTable(new Object[][]{
       {"-", "15/06/2010", "", "AUCHAN", -150.0},
       {"x", "20/06/2010", "", "FNAC", -200.0},
@@ -222,7 +224,7 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/06/20", -200.00, "Fnac")
       .load();
 
-    reconciliation.show();
+    reconciliationAnnotations.show();
 
     categorization.selectTableRow(0);
     transactionDetails.openSplitDialog()
@@ -239,14 +241,14 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
       {"-", "20/06/2010", "", "FNAC", -200.0},
     });
 
-    reconciliation.checkToggleDisabled(1);
+    reconciliationAnnotations.checkToggleDisabled(1);
     categorization.checkTable(new Object[][]{
       {"-", "15/06/2010", "", "AUCHAN", -100.0},
       {"/-/", "15/06/2010", "", "AUCHAN", -50.0},
       {"-", "20/06/2010", "", "FNAC", -200.0},
     });
-    reconciliation.checkToggleTooltip(0, "Click to set this operation as reconciled");
-    reconciliation.checkToggleTooltip(1, "You must reconcile the source operation");
+    reconciliationAnnotations.checkToggleTooltip(0, "Click to set this operation as reconciled");
+    reconciliationAnnotations.checkToggleTooltip(1, "You must reconcile the source operation");
 
     categorization.showUnreconciledOnly();
     categorization.setNewVariable(1, "Movies");
@@ -263,8 +265,8 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
       {"/x/", "15/06/2010", "Movies", "AUCHAN", -50.0},
       {"-", "20/06/2010", "", "FNAC", -200.0},
     });
-    reconciliation.checkToggleTooltip(0, "Click to set this operation as unreconciled");
-    reconciliation.checkToggleTooltip(1, "You must unreconcile the source operation");
+    reconciliationAnnotations.checkToggleTooltip(0, "Click to set this operation as unreconciled");
+    reconciliationAnnotations.checkToggleTooltip(1, "You must unreconcile the source operation");
 
     categorization.showUnreconciledOnly();
     categorization.checkTable(new Object[][]{
@@ -277,8 +279,8 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
       {"/x/", "15/06/2010", "Movies", "AUCHAN", -50.0},
       {"-", "20/06/2010", "", "FNAC", -200.0},
     });
-    reconciliation.checkToggleTooltip(0, "Click to set this operation as unreconciled");
-    reconciliation.checkToggleTooltip(1, "You must unreconcile the source operation");
+    reconciliationAnnotations.checkToggleTooltip(0, "Click to set this operation as unreconciled");
+    reconciliationAnnotations.checkToggleTooltip(1, "You must unreconcile the source operation");
 
     categorization.selectTableRow(2);
     transactionDetails.openSplitDialog()
@@ -301,7 +303,7 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
       {"/-/", "20/06/2010", "", "FNAC", -20.0},
     });
 
-    reconciliation.toggle(0);
+    reconciliationAnnotations.toggle(0);
     categorization.checkTable(new Object[][]{
       {"x", "20/06/2010", "", "FNAC", -180.0},
       {"/x/", "20/06/2010", "", "FNAC", -20.0},
@@ -319,7 +321,7 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/06/20", 200.00, "Fnac")
       .load();
 
-    reconciliation.show();
+    reconciliationAnnotations.show();
     categorization.checkTable(new Object[][]{
       {"-", "15/06/2010", "", "AUCHAN", 150.0},
       {"-", "20/06/2010", "", "FNAC", 200.0},
@@ -367,7 +369,7 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
     transactionCreation.show()
       .setLabel("FNAC").setAmount(-50.00).setDay(25)
       .create();
-    reconciliation.show();
+    reconciliationAnnotations.show();
     categorization.checkTable(new Object[][]{
       {"-", "25/06/2010", "", "FNAC", -50.0}
     });
@@ -387,7 +389,7 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
       {"-", "25/06/2010", "Leisures", "FNAC", -50.0}
     });
 
-    reconciliation.toggle("FNAC");
+    reconciliationAnnotations.toggle("FNAC");
     categorization.checkTable(new Object[][]{
       {"x", "25/06/2010", "Leisures", "FNAC", -50.0}
     });
