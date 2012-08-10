@@ -196,7 +196,7 @@ public class MainPanel {
       signpostView,
       licenseInfoView);
 
-    createMenuBar(parent, directory);
+    createMenuBar(parent, replicationGlobRepository, directory);
 
     builder.load();
   }
@@ -250,10 +250,10 @@ public class MainPanel {
     }
   }
 
-  public void createMenuBar(final PicsouFrame frame, Directory directory) {
+  public void createMenuBar(final PicsouFrame frame, ReplicationGlobRepository replicationGlobRepository, Directory directory) {
     menuBar = new JMenuBar();
 
-    menuBar.add(createFileMenu());
+    menuBar.add(createFileMenu(replicationGlobRepository));
     menuBar.add(createEditMenu(frame, directory));
     menuBar.add(createViewMenu(directory));
 
@@ -264,7 +264,7 @@ public class MainPanel {
     menuBar.add(createHelpMenu(directory));
   }
 
-  private JMenu createFileMenu() {
+  private JMenu createFileMenu(ReplicationGlobRepository replicationGlobRepository) {
     JMenu menu = new JMenu(Lang.get("menuBar.file"));
     menu.add(importFileAction);
     menu.add(exportFileAction);
@@ -286,7 +286,7 @@ public class MainPanel {
     menu.add(deleteUserAction);
 
     menu.addSeparator();
-    menu.add(new PrintAction(repository, directory));
+    menu.add(new PrintAction(replicationGlobRepository, directory));
 
     if (Gui.useMacOSMenu()) {
       if (exitActionWhitoutUserEvaluation != null) {

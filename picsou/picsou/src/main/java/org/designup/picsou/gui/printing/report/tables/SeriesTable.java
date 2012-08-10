@@ -1,7 +1,8 @@
-package org.designup.picsou.gui.printing.report;
+package org.designup.picsou.gui.printing.report.tables;
 
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.printing.report.utils.BudgetReportUtils;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
@@ -11,7 +12,6 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
 import org.globsframework.utils.Utils;
 
 import java.util.ArrayList;
@@ -24,16 +24,13 @@ public class SeriesTable {
 
   private static final int MAX_ROWS_PER_PAGE = 30;
 
-  private static BudgetArea[] BUDGET_AREA_TABLES =
-    {BudgetArea.INCOME, BudgetArea.RECURRING, BudgetArea.VARIABLE, BudgetArea.SAVINGS, BudgetArea.EXTRAS};
-
   public static List<SeriesTable> getAll(Integer currentMonth,
                                          ClosedMonthRange monthRange,
                                          GlobRepository repository) {
     List<SeriesTable> result = new ArrayList<SeriesTable>();
 
     List<Integer> months = monthRange.asList();
-    for (BudgetArea budgetArea : BUDGET_AREA_TABLES) {
+    for (BudgetArea budgetArea : BudgetReportUtils.BUDGET_AREAS) {
       List<SeriesRow> rows = new ArrayList<SeriesRow>();
       GlobList SeriesStatList =
         repository.getAll(SeriesStat.TYPE,

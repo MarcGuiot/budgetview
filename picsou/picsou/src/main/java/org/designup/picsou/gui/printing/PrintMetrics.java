@@ -4,19 +4,19 @@ import java.awt.*;
 import java.awt.print.PageFormat;
 
 public class PrintMetrics {
+
+  private static final int TITLE_ZONE_HEIGHT = 20;
+
   private int x0;
   private int y0;
   private int width;
   private int height;
-  private FontMetrics titleFontMetrics;
 
-  public PrintMetrics(PageFormat format, Graphics2D g2, PrintFonts fonts) {
+  public PrintMetrics(PageFormat format) {
     x0 = (int)format.getImageableX() - 20;
     y0 = (int)format.getImageableY() - 25;
     width = (int)format.getImageableWidth() - 46;
     height = (int)format.getImageableHeight() - 20;
-
-    titleFontMetrics = g2.getFontMetrics(fonts.getTitleFont());
   }
 
   public int titleX() {
@@ -24,7 +24,7 @@ public class PrintMetrics {
   }
 
   public int titleY() {
-    return y0 + titleFontMetrics.getHeight() + 2;
+    return y0 + TITLE_ZONE_HEIGHT;
   }
 
   public int titleLineX() {
@@ -40,7 +40,15 @@ public class PrintMetrics {
   }
 
   public Rectangle getContentArea() {
-    int top = titleLineY() + 10;
-    return new Rectangle(x0, top, width, height - top);
+    int top = getContentTop();
+    return new Rectangle(x0, top, width, getContentHeight());
+  }
+
+  private int getContentTop() {
+    return titleLineY() + 10;
+  }
+
+  public int getContentHeight() {
+    return height - getContentTop();
   }
 }

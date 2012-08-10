@@ -1,8 +1,8 @@
-package org.designup.picsou.gui.printing.report;
+package org.designup.picsou.gui.printing.report.overview;
 
-import org.designup.picsou.gui.printing.PrintColors;
-import org.designup.picsou.gui.printing.PrintFonts;
+import org.designup.picsou.gui.printing.PrintStyle;
 import org.designup.picsou.gui.printing.PrintMetrics;
+import org.designup.picsou.gui.printing.report.ReportPage;
 import org.designup.picsou.gui.series.analysis.SeriesChartsPanel;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.FixedHistoChartRange;
 import org.designup.picsou.model.util.ClosedMonthRange;
@@ -33,6 +33,10 @@ public class BudgetOverviewPage extends ReportPage {
     this.panel = createPanel();
   }
 
+  protected String getTitle() {
+    return Lang.get("print.overview");
+  }
+
   private JPanel createPanel() {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/print/budgetOverviewPage.splits",
                                                       repository, directory);
@@ -49,11 +53,7 @@ public class BudgetOverviewPage extends ReportPage {
     return builder.load();
   }
 
-  protected String getTitle() {
-    return Lang.get("print.overview");
-  }
-
-  protected int printContent(Graphics2D g2, PrintFonts fonts, PrintMetrics metrics, PrintColors colors) {
+  protected int printContent(Graphics2D g2, PrintMetrics metrics, PrintStyle style) {
     Rectangle contentArea = metrics.getContentArea();
     panel.setBounds(0, 0, contentArea.width, contentArea.height);
     panel.setSize(contentArea.width, contentArea.height);

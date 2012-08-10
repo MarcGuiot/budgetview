@@ -160,12 +160,12 @@ public class BudgetAreaSeriesView extends View {
     JLabel amountLabel = builder.add("totalObservedAmount", new JLabel()).getComponent();
     JLabel plannedLabel = builder.add("totalPlannedAmount", new JLabel()).getComponent();
 
-    Gauge gauge = BudgetAreaGaugeFactory.createGauge(budgetArea);
-    gauge.setActionListener(new ShowDetailsTipAction(gauge, directory));
-    builder.add("totalGauge", gauge);
+    Gauge totalGauge = BudgetAreaGaugeFactory.createGauge(budgetArea);
+    totalGauge.setActionListener(new ShowDetailsTipAction(totalGauge, directory));
+    builder.add("totalGauge", totalGauge);
 
     BudgetAreaHeaderUpdater headerUpdater =
-      new BudgetAreaHeaderUpdater(TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
+      new BudgetAreaHeaderUpdater(TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), totalGauge,
                                   repository, directory);
     headerUpdater.setColors("block.total",
                             "block.total.overrun.error",

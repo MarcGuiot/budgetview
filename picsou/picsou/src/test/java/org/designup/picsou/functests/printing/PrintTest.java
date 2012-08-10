@@ -69,18 +69,36 @@ public class PrintTest extends LoggedInFunctionalTestCase {
       .checkDiffColumn(1, "Apr", "2012", 1500.00, 700.00, true)
       .checkDiffColumn(2, "May", "2012", 1500.00, 800.00);
 
-    year2012Report.initTablePage(1)
+    year2012Report.initGaugesPage(1)
+      .checkTitle("Budget")
+      .checkBlockCount(14)
+      .checkBudget(0, "Income", 1500.00, 1000.00)
+      .checkSeries(1, "Salary", 1500.00, 1000.00)
+      .checkSeparator(2)
+      .checkBudget(3, "Recurring", 450.00, 450.00)
+      .checkSeries(4, "House", 400.00, 400.00)
+      .checkSeries(5, "Electricity", 50.00, 50.00)
+      .checkSeparator(6)
+      .checkBudget(7, "Variable", 250.00, 200.00)
+      .checkSeries(8, "Groceries", 200.00, 100.00)
+      .checkSeries(9, "Leisures", 50.00, 100.00)
+      .checkSeparator(10)
+      .checkBudget(11, "Savings", 0.00, 0.00)
+      .checkSeparator(12)
+      .checkBudget(13, "Extras", 0.00, 0.00);
+
+    year2012Report.initTablePage(2)
       .checkTitle("Income")
       .add("Series", "Total", "Mar 12", "Apr 12", "May 12")
       .add("Salary", "4000.00", "1000.00", "1500.00", "1500.00")
       .check();
-    year2012Report.initTablePage(2)
+    year2012Report.initTablePage(3)
       .checkTitle("Recurring")
       .add("Series", "Total", "Mar 12", "Apr 12", "May 12")
       .add("House", "1200.00", "400.00", "400.00", "400.00")
       .add("Electricity", "150.00", "50.00", "50.00", "50.00")
       .check();
-    year2012Report.initTablePage(3)
+    year2012Report.initTablePage(4)
       .checkTitle("Variable")
       .add("Series", "Total", "Mar 12", "Apr 12", "May 12")
       .add("Groceries", "650.00", "200.00", "200.00", "250.00")
@@ -115,7 +133,22 @@ public class PrintTest extends LoggedInFunctionalTestCase {
       .print();
 
     BudgetReportChecker monthReport = printer.getBudgetReport();
-    monthReport.initTablePage(1)
+
+    monthReport.initGaugesPage(1)
+      .checkBlockCount(11)
+      .checkBudget(0, "Income", 0.00, 0.00)
+      .checkSeparator(1)
+      .checkBudget(2, "Recurring", 0.00, 0.00)
+      .checkSeparator(3)
+      .checkBudget(4, "Variable", 250.00, 300.00)
+      .checkSeries(5, "Groceries", 250.00, 200.00)
+      .checkSeries(6, "Leisures", 0.00, 100.00)
+      .checkSeparator(7)
+      .checkBudget(8, "Savings", 0.00, 0.00)
+      .checkSeparator(9)
+      .checkBudget(10, "Extras", 0.00, 0.00);
+
+    monthReport.initTablePage(2)
       .checkTitle("Variable")
       .add("Series", "Total", "Nov 11", "Dec 11", "Jan 12", "Feb 12", "Mar 12", "Apr 12", "May 12", "June 12", "Jul 12")
       .add("Groceries", "1070.00", "", "250.00", "220.00", "", "", "", "200.00", "200.00", "200.00")
@@ -144,7 +177,21 @@ public class PrintTest extends LoggedInFunctionalTestCase {
 
     BudgetReportChecker year2011Report = printer.getBudgetReport();
 
-    year2011Report.initTablePage(1)
+    year2011Report.initGaugesPage(1)
+      .checkBlockCount(11)
+      .checkBudget(0, "Income", 0.00, 0.00)
+      .checkSeparator(1)
+      .checkBudget(2, "Recurring", 0.00, 0.00)
+      .checkSeparator(3)
+      .checkBudget(4, "Variable", 250.00, 300.00)
+      .checkSeries(5, "Groceries", 250.00, 200.00)
+      .checkSeries(6, "Leisures", 0.00, 100.00)
+      .checkSeparator(7)
+      .checkBudget(8, "Savings", 0.00, 0.00)
+      .checkSeparator(9)
+      .checkBudget(10, "Extras", 0.00, 0.00);
+
+    year2011Report.initTablePage(2)
       .checkTitle("Variable")
       .add("Series", "Total", "Apr 11", "May 11", "June 11", "Jul 11", "Aug 11", "Sep 11", "Oct 11", "Nov 11", "Dec 11")
       .add("Groceries", "700.00", "100.00", "", "150.00", "", "", "200.00", "", "", "250.00")
@@ -171,7 +218,21 @@ public class PrintTest extends LoggedInFunctionalTestCase {
       .print();
 
     BudgetReportChecker year2012Report = printer.getBudgetReport();
-    year2012Report.initTablePage(1)
+    year2012Report.initGaugesPage(1)
+      .checkBlockCount(11)
+      .checkBudget(0, "Income", 0.00, 0.00)
+      .checkSeparator(1)
+      .checkBudget(2, "Recurring", 0.00, 0.00)
+      .checkSeparator(3)
+      .checkBudget(4, "Variable", 0.00, 300.00)
+      .checkSeries(5, "Groceries", 0.00, 200.00)
+      .checkSeries(6, "Leisures", 0.00, 100.00)
+      .checkSeparator(7)
+      .checkBudget(8, "Savings", 0.00, 0.00)
+      .checkSeparator(9)
+      .checkBudget(10, "Extras", 0.00, 0.00);
+
+   year2012Report.initTablePage(2)
       .checkTitle("Variable")
       .add("Series", "Total", "Jan 12", "Feb 12", "Mar 12", "Apr 12", "May 12", "June 12", "Jul 12")
       .add("Groceries", "820.00", "220.00", "", "", "", "200.00", "200.00", "200.00")
@@ -209,14 +270,14 @@ public class PrintTest extends LoggedInFunctionalTestCase {
       .checkCurrentMonthSelected()
       .print();
 
-    printer.getBudgetReport().checkPageCount(3);
-    printer.getBudgetReport().initTablePage(1)
+    printer.getBudgetReport().checkPageCount(4);
+    printer.getBudgetReport().initTablePage(2)
       .checkTitle("Variable")
       .checkRowCount(31)
       .checkRow(0, "Series", "Total", "Mar 12", "Apr 12", "May 12")
       .checkRow(1, "Series40", "690.00", "240.00", "200.00", "250.00")
       .checkRow(30, "Series11", "661.00", "211.00", "200.00", "250.00");
-    printer.getBudgetReport().initTablePage(2)
+    printer.getBudgetReport().initTablePage(3)
       .checkTitle("Variable")
       .checkRowCount(11)
       .checkRow(0, "Series", "Total", "Mar 12", "Apr 12", "May 12")

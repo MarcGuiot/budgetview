@@ -5,6 +5,9 @@ import org.designup.picsou.gui.printing.PrintableReport;
 import org.designup.picsou.gui.printing.PrinterService;
 import org.globsframework.utils.exceptions.OperationFailed;
 
+import java.awt.print.PageFormat;
+import java.awt.print.Paper;
+
 public class DummyPrinterService implements PrinterService {
   private String jobName;
   private PrintableReport report;

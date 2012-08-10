@@ -11,7 +11,7 @@ public class DefaultPrinterService implements PrinterService {
   public void print(String jobName, PrintableReport report) throws OperationFailed {
     PrinterJob printJob = PrinterJob.getPrinterJob();
     printJob.setJobName(jobName);
-    report.initFormat(printJob.defaultPage());
+    report.init(printJob.defaultPage());
     printJob.setPageable(report);
     if (printJob.printDialog()) {
       try {

@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.printing.report;
+package org.designup.picsou.gui.printing.report.tables;
 
 import org.designup.picsou.gui.printing.PrintFonts;
 import org.designup.picsou.gui.printing.PrintMetrics;
@@ -29,7 +29,7 @@ public class SeriesTableMetrics {
     this.height = contentArea.height;
     this.columnCount = columnCount;
 
-    this.tableFontMetrics = g2.getFontMetrics(fonts.getTableTextFont(true));
+    this.tableFontMetrics = g2.getFontMetrics(fonts.getTextFont(true));
     int textHeight = tableFontMetrics.getHeight();
     this.rowHeight = textHeight + 4;
     this.textYOffset = (rowHeight - textHeight) / 2 + tableFontMetrics.getDescent();
