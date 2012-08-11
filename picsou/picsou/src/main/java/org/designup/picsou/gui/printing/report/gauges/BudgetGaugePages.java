@@ -1,6 +1,9 @@
 package org.designup.picsou.gui.printing.report.gauges;
 
+import org.designup.picsou.gui.budget.BudgetAreaSeriesFilter;
 import org.designup.picsou.gui.description.DefaultPeriodSeriesStatComparator;
+import org.designup.picsou.gui.description.stringifiers.MonthListStringifier;
+import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.printing.report.ReportPage;
 import org.designup.picsou.gui.printing.report.utils.BlockColumnPage;
@@ -8,6 +11,7 @@ import org.designup.picsou.gui.printing.report.utils.BudgetReportUtils;
 import org.designup.picsou.gui.printing.report.utils.PageBlock;
 import org.designup.picsou.gui.printing.report.utils.EmptyBlock;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
@@ -69,7 +73,11 @@ public class BudgetGaugePages {
       addBlockToCurrentPage(new BudgetAreaGaugeBlock(budgetArea, selectedMonths, budgetGaugeContext, repository, directory));
 
       int currentSectionIndex = 0;
-      for (Glob periodStat : map.get(budgetArea.getId())) {
+      BudgetAreaSeriesFilter filter = new BudgetAreaSeriesFilter(budgetArea);
+      filter.setSelectedMonthIds(selectedMonths);
+      GlobList list = new GlobList(map.get(budgetArea.getId()));
+      list.filterSelf(filter, repository);
+      for (Glob periodStat : list) {
         addBlockToCurrentPage(new SeriesGaugeBlock(periodStat, budgetGaugeContext, currentSectionIndex++, repository));
       }
     }
@@ -77,7 +85,9 @@ public class BudgetGaugePages {
 
   private void addBlockToCurrentPage(PageBlock block) {
     if ((currentPage == null) || !currentPage.hasSpaceLeftFor(block)) {
-      currentPage = new BlockColumnPage(format, Lang.get("print.budgetGauge"));
+      String title = Lang.get("print.budgetGauge",
+                              MonthListStringifier.toString(selectedMonths).toLowerCase());
+      currentPage = new BlockColumnPage(format, title);
       pages.add(currentPage);      
     }
     currentPage.append(block);

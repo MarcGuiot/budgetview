@@ -52,7 +52,7 @@ public class BudgetReport implements PrintableReport {
   }
 
   private void createPages() {
-    this.pages.add(new BudgetOverviewPage(currentMonth, monthRange, repository, directory));
+    this.pages.add(new BudgetOverviewPage(selectedMonths, monthRange, repository, directory));
     this.pages.addAll(BudgetGaugePages.getPages(selectedMonths, format, repository, directory));
     List<SeriesTable> tables = SeriesTable.getAll(currentMonth, monthRange, repository);
     for (SeriesTable table : tables) {

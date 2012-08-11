@@ -127,7 +127,7 @@ public class StackChecker extends GuiChecker {
       return "Actual dataset contents:\n" + dataset;
     }
 
-    public void dump() {
+    public void dumpCode() {
       if (dataset == null) {
         Assert.fail("Insert: \n  .checkEmpty();");
       }

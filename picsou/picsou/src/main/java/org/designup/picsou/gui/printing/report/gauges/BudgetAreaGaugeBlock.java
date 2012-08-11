@@ -95,7 +95,7 @@ public class BudgetAreaGaugeBlock implements PageBlock {
     g2.drawString(getPlannedAmount(), metrics.plannedAmountX(getPlannedAmount()), metrics.labelY);
 
     g2.setClip(0, 0, metrics.labelWidth, area.height);
-    g2.setFont(style.getTextFont(false));
+    g2.setFont(style.getSectionTitleFont());
     g2.drawString(getLabel(), metrics.labelX, metrics.labelY);
 
     g2.setClip(0, 0, area.width, area.height);

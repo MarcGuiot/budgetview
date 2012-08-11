@@ -109,7 +109,7 @@ public class HistoChartChecker extends AbstractHistoChecker<HistoChartChecker> {
     Assert.assertEquals("Invalid chart content", expected.toString(), actual.toString());
   }
 
-  public void dump() {
+  public void dumpCode() {
     StringBuilder builder = new StringBuilder();
     HistoChart chart = getChart();
     HistoDataset dataset = chart.getCurrentDataset();

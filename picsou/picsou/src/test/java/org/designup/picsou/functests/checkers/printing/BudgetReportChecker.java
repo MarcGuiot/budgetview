@@ -35,7 +35,7 @@ public class BudgetReportChecker {
     return this;
   }
 
-  public BudgetOverviewPageChecker getChartPage() {
+  public BudgetOverviewPageChecker getOverviewPage() {
     Printable printable = report.getPrintable(0);
     if (!(printable instanceof BudgetOverviewPage)) {
       Assert.fail("Unexpected type for page 0: " + printable.getClass());

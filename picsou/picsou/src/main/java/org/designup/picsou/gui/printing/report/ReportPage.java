@@ -1,7 +1,11 @@
 package org.designup.picsou.gui.printing.report;
 
+import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.printing.PrintStyle;
 import org.designup.picsou.gui.printing.PrintMetrics;
+import org.designup.picsou.gui.time.TimeService;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.utils.Lang;
 
 import java.awt.*;
 import java.awt.print.PageFormat;
@@ -23,6 +27,14 @@ public abstract class ReportPage implements Printable {
     g2.drawLine(metrics.titleLineX(), metrics.titleLineY(),
                 metrics.getTitleLineXEnd(), metrics.titleLineY());
 
+    g2.setColor(style.getFooterColor());
+    Font footerFont = style.getFooterFont();
+    g2.setFont(footerFont);
+    String footerText = getFooterText(page);
+    g2.drawString(footerText,
+                  metrics.getFooterX(footerText, g2.getFontMetrics(footerFont)),
+                  metrics.getFooterY());
+    
     try {
       return printContent(g2, metrics, style);
     }
@@ -30,6 +42,11 @@ public abstract class ReportPage implements Printable {
       e.printStackTrace();
       throw new RuntimeException(e);
     }
+  }
+
+  private String getFooterText(int page) {
+    
+    return Lang.get("print.footer", Formatting.toString(TimeService.getToday()), page);
   }
 
   protected abstract String getTitle();

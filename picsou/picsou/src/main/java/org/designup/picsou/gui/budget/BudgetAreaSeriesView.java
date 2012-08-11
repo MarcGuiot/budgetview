@@ -20,8 +20,6 @@ import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.signpost.guides.SavingsViewToggleSignpost;
 import org.designup.picsou.gui.signpost.guides.SeriesAmountSignpost;
-import org.designup.picsou.gui.utils.Matchers;
-import org.designup.picsou.gui.utils.MonthMatcher;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -41,7 +39,6 @@ import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobListFunctor;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.directory.Directory;
@@ -56,14 +53,12 @@ public class BudgetAreaSeriesView extends View {
   private String name;
   private BudgetArea budgetArea;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
-  private MonthMatcher seriesDateFilter;
-  private boolean monthFilteringEnabled = true;
   private List<Key> currentSeries = Collections.emptyList();
 
   private BudgetAreaSeriesFooter footerGenerator;
 
   private Repeat<Glob> seriesRepeat;
-  private GlobMatcher seriesFilter;
+  private BudgetAreaSeriesFilter seriesFilter;
   private SeriesEditionButtons seriesButtons;
   private JEditorPane footerArea = GuiUtils.createReadOnlyHtmlComponent();
 
@@ -96,7 +91,7 @@ public class BudgetAreaSeriesView extends View {
     this.selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         selectedMonthIds = selection.getAll(Month.TYPE).getValueSet(Month.ID);
-        seriesDateFilter.filterMonths(selectedMonthIds);
+        seriesFilter.setSelectedMonthIds(selectedMonthIds);
         updateRepeat();
       }
     }, Month.TYPE);
@@ -173,6 +168,8 @@ public class BudgetAreaSeriesView extends View {
 
     BudgetAreaHeader.init(budgetArea, headerUpdater, repository, directory);
 
+    seriesFilter = new BudgetAreaSeriesFilter(budgetArea);
+
     seriesRepeat =
       builder.addRepeat("seriesRepeat", new GlobList(), new SeriesRepeatComponentFactory(builder));
 
@@ -186,39 +183,6 @@ public class BudgetAreaSeriesView extends View {
     builder.add("seriesActions", new JPopupButton(Lang.get("budgetView.actions"), menu));
 
     parentBuilder.add(name, builder);
-    if (budgetArea == BudgetArea.SAVINGS) {
-      seriesDateFilter =
-        Matchers.seriesDateSavingsAndAccountFilter(Account.MAIN_SUMMARY_ACCOUNT_ID);
-    }
-    else {
-      seriesDateFilter = Matchers.seriesActiveInPeriod(budgetArea.getId(), false);
-    }
-
-    seriesFilter = new GlobMatcher() {
-      public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
-        Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
-        if (series == null) {
-          return false;
-        }
-
-        if (!monthFilteringEnabled) {
-          return budgetArea.getId().equals(series.get(Series.BUDGET_AREA));
-        }
-
-        ReadOnlyGlobRepository.MultiFieldIndexed seriesBudgetIndex =
-          repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID));
-        int notActive = 0;
-        for (Integer monthId : selectedMonthIds) {
-          GlobList seriesBudget =
-            seriesBudgetIndex.findByIndex(SeriesBudget.MONTH, monthId).getGlobs();
-          if (seriesBudget.size() == 0 || !seriesBudget.getFirst().isTrue(SeriesBudget.ACTIVE)) {
-            notActive++;
-          }
-        }
-        boolean activeMonthsInPeriod = !(selectedMonthIds.size() == notActive);
-        return activeMonthsInPeriod && seriesDateFilter.matches(series, repository);
-      }
-    };
 
     footerGenerator.init(footerArea);
     builder.add("footerArea", footerArea);
@@ -240,7 +204,7 @@ public class BudgetAreaSeriesView extends View {
     monthFilteringButton = new JMenuItem();
     monthFilteringButton.setAction(new AbstractAction() {
       public void actionPerformed(ActionEvent actionEvent) {
-        monthFilteringEnabled = !monthFilteringEnabled;
+        seriesFilter.toggleMonthFilteringEnabled();
         updateMonthFilteringButton();
         updateRepeat();
       }
@@ -251,7 +215,9 @@ public class BudgetAreaSeriesView extends View {
 
   private void updateMonthFilteringButton() {
     String key =
-      monthFilteringEnabled ? "budgetView.actions.disableMonthFiltering" : "budgetView.actions.enableMonthFiltering";
+      seriesFilter.isMonthFilteringEnabled()
+      ? "budgetView.actions.disableMonthFiltering"
+      : "budgetView.actions.enableMonthFiltering";
     monthFilteringButton.setText(Lang.get(key));
   }
 

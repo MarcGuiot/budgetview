@@ -106,7 +106,7 @@ public class Formatting {
     if (area.isIncome() || area == BudgetArea.UNCATEGORIZED) {
       return toString(value);
     }
-    else if (Amounts.isNearZero(value)) {
+    else if (Amounts.isNullOrZero(value)) {
       return "0.00";
     }
     else if (value < 0) {

@@ -6,17 +6,20 @@ import java.awt.print.PageFormat;
 public class PrintMetrics {
 
   private static final int TITLE_ZONE_HEIGHT = 20;
+  private static final int FOOTER_ZONE_HEIGHT = 20;
 
   private int x0;
   private int y0;
-  private int width;
-  private int height;
+  private int pageWidth;
+  private int contentHeight;
+  private int pageHeight;
 
   public PrintMetrics(PageFormat format) {
     x0 = (int)format.getImageableX() - 20;
     y0 = (int)format.getImageableY() - 25;
-    width = (int)format.getImageableWidth() - 46;
-    height = (int)format.getImageableHeight() - 20;
+    pageWidth = (int)format.getImageableWidth() - 15;
+    pageHeight = (int)format.getImageableHeight();
+    contentHeight = pageHeight - FOOTER_ZONE_HEIGHT;
   }
 
   public int titleX() {
@@ -32,7 +35,7 @@ public class PrintMetrics {
   }
 
   public int getTitleLineXEnd() {
-    return x0 + width;
+    return x0 + pageWidth;
   }
 
   public int titleLineY() {
@@ -41,7 +44,7 @@ public class PrintMetrics {
 
   public Rectangle getContentArea() {
     int top = getContentTop();
-    return new Rectangle(x0, top, width, getContentHeight());
+    return new Rectangle(x0, top, pageWidth, getContentHeight());
   }
 
   private int getContentTop() {
@@ -49,6 +52,14 @@ public class PrintMetrics {
   }
 
   public int getContentHeight() {
-    return height - getContentTop();
+    return contentHeight - getContentTop();
+  }
+  
+  public int getFooterX(String text, FontMetrics fontMetrics) {
+    return pageWidth - fontMetrics.stringWidth(text);
+  }
+  
+  public int getFooterY() {
+    return pageHeight - 4;
   }
 }

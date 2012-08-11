@@ -1,7 +1,6 @@
 package org.designup.picsou.functests.checkers.printing.pages;
 
 import junit.framework.Assert;
-import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.printing.report.gauges.BudgetAreaGaugeBlock;
 import org.designup.picsou.gui.printing.report.gauges.SeriesGaugeBlock;
 import org.designup.picsou.gui.printing.report.utils.BlockColumnPage;
@@ -25,7 +24,7 @@ public class BudgetGaugePageChecker {
     return this;
   }
 
-  public BudgetGaugePageChecker checkBudget(int index, String label, double actual, double planned) {
+  public BudgetGaugePageChecker checkBudget(int index, String label, String actualAmount, String plannedAmount) {
     PageBlock block = blocks.get(index);
     if (!(block instanceof BudgetAreaGaugeBlock)) {
       Assert.fail("Unexpected block type " + block.getClass().getSimpleName() + " at index " + index + " - actual content:\n" + getContent());
@@ -34,20 +33,18 @@ public class BudgetGaugePageChecker {
     if (!Utils.equal(label, budgetBlock.getLabel())) {
       Assert.fail("Unexpected label at index " + index + ": expected " + label + " but was " + budgetBlock.getLabel() + " - actual content:\n" + getContent());
     }
-    String actualString = Formatting.toString(actual);
-    if (!Utils.equal(actualString, budgetBlock.getActualAmount())) {
-      Assert.fail("Unexpected actual amount at index " + index + ": expected " + actualString + 
-                  " but was " + budgetBlock.getActualAmount() + " - actual content:\n" + getContent());   
+    if (!Utils.equal(actualAmount, budgetBlock.getActualAmount())) {
+      Assert.fail("Unexpected actual amount at index " + index + ": expected " + actualAmount +
+                  " but was " + budgetBlock.getActualAmount() + " - actual content:\n" + getContent());
     }
-    String plannedString = Formatting.toString(planned);
-    if (!Utils.equal(plannedString, budgetBlock.getPlannedAmount())) {
-      Assert.fail("Unexpected planned amount at index " + index + ": expected " + plannedString + 
+    if (!Utils.equal(plannedAmount, budgetBlock.getPlannedAmount())) {
+      Assert.fail("Unexpected planned amount at index " + index + ": expected " + plannedAmount +
                   " but was " + budgetBlock.getPlannedAmount() + " - actual content:\n" + getContent());
     }
     return this;
   }
 
-  public BudgetGaugePageChecker checkSeries(int index, String label, double actual, double planned) {
+  public BudgetGaugePageChecker checkSeries(int index, String label, String actualAmount, String plannedAmount) {
     PageBlock block = blocks.get(index);
     if (!(block instanceof SeriesGaugeBlock)) {
       Assert.fail("Unexpected block type " + block.getClass().getSimpleName() + " at index " + index + " - actual content:\n" + getContent());
@@ -56,14 +53,12 @@ public class BudgetGaugePageChecker {
     if (!Utils.equal(label, seriesBlock.getLabel())) {
       Assert.fail("Unexpected label at index " + index + ": expected " + label + " but was " + seriesBlock.getLabel() + " - actual content:\n" + getContent());
     }
-    String actualString = Formatting.toString(actual);
-    if (!Utils.equal(actualString, seriesBlock.getActualAmount())) {
-      Assert.fail("Unexpected actual amount at index " + index + ": expected " + actualString +
+    if (!Utils.equal(actualAmount, seriesBlock.getActualAmount())) {
+      Assert.fail("Unexpected actual amount at index " + index + ": expected " + actualAmount +
                   " but was " + seriesBlock.getActualAmount() + " - actual content:\n" + getContent());
     }
-    String plannedString = Formatting.toString(planned);
-    if (!Utils.equal(plannedString, seriesBlock.getPlannedAmount())) {
-      Assert.fail("Unexpected planned amount at index " + index + ": expected " + plannedString +
+    if (!Utils.equal(plannedAmount, seriesBlock.getPlannedAmount())) {
+      Assert.fail("Unexpected planned amount at index " + index + ": expected " + plannedAmount +
                   " but was " + seriesBlock.getPlannedAmount() + " - actual content:\n" + getContent());
     }
     return this;
@@ -88,6 +83,7 @@ public class BudgetGaugePageChecker {
 
     StringBuilder builder = new StringBuilder();
 
+    builder.append("  .checkTitle(\"").append(page.getTitle()).append("\")\n");
     builder.append("  .checkBlockCount(").append(blocks.size()).append(")\n");
 
     int index = 0;
@@ -99,11 +95,11 @@ public class BudgetGaugePageChecker {
           .append(Integer.toString(index++))
           .append(", \"")
           .append(budgetBlock.getLabel())
-          .append("\", ")
+          .append("\", \"")
           .append(budgetBlock.getActualAmount())
-          .append(", ")
+          .append("\", \"")
           .append(budgetBlock.getPlannedAmount())
-          .append(")\n");
+          .append("\")\n");
       }
       else if (block instanceof SeriesGaugeBlock) {
         SeriesGaugeBlock seriesBlock = (SeriesGaugeBlock)block;
@@ -112,11 +108,11 @@ public class BudgetGaugePageChecker {
           .append(Integer.toString(index++))
           .append(", \"")
           .append(seriesBlock.getLabel())
-          .append("\", ")
+          .append("\", \"")
           .append(seriesBlock.getActualAmount())
-          .append(", ")
+          .append("\", \"")
           .append(seriesBlock.getPlannedAmount())
-          .append(")\n");
+          .append("\")\n");
       }
       else if (block instanceof EmptyBlock) {
         builder

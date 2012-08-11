@@ -1,7 +1,9 @@
 package org.designup.picsou.gui.printing.report.overview;
 
-import org.designup.picsou.gui.printing.PrintStyle;
+import org.designup.picsou.gui.description.stringifiers.MonthListStringifier;
+import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.gui.printing.PrintMetrics;
+import org.designup.picsou.gui.printing.PrintStyle;
 import org.designup.picsou.gui.printing.report.ReportPage;
 import org.designup.picsou.gui.series.analysis.SeriesChartsPanel;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.FixedHistoChartRange;
@@ -15,26 +17,26 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 public class BudgetOverviewPage extends ReportPage {
 
-  private Integer currentMonth;
+  private SortedSet<Integer> selectedMonths;
   private ClosedMonthRange monthRange;
   private GlobRepository repository;
   private Directory directory;
   private JPanel panel;
 
-  public BudgetOverviewPage(Integer currentMonth, ClosedMonthRange monthRange, GlobRepository repository, Directory directory) {
-    this.currentMonth = currentMonth;
+  public BudgetOverviewPage(SortedSet<Integer> selectedMonths, ClosedMonthRange monthRange, GlobRepository repository, Directory directory) {
+    this.selectedMonths = selectedMonths;
     this.monthRange = monthRange;
     this.repository = repository;
     this.directory = directory;
     this.panel = createPanel();
   }
 
-  protected String getTitle() {
-    return Lang.get("print.overview");
+  public String getTitle() {
+    String range = MonthListStringifier.toString(selectedMonths, MonthRangeFormatter.STANDARD);
+    return Lang.get("print.overview", range.toLowerCase());
   }
 
   private JPanel createPanel() {
@@ -47,8 +49,7 @@ public class BudgetOverviewPage extends ReportPage {
     chartsPanel.registerCharts(builder);
     chartsPanel.reset();
 
-    SortedSet<Integer> monthIds = new TreeSet<Integer>(monthRange.asList());
-    chartsPanel.monthSelected(currentMonth, monthIds);
+    chartsPanel.monthSelected(selectedMonths.last(), selectedMonths);
 
     return builder.load();
   }
@@ -64,7 +65,7 @@ public class BudgetOverviewPage extends ReportPage {
 
     return PAGE_EXISTS;
   }
-  
+
   public JPanel getPanel() {
     return panel;
   }

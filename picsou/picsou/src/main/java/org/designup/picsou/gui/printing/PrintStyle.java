@@ -11,6 +11,7 @@ public class PrintStyle implements PrintFonts {
   private final Font textFont = new Font("Arial", Font.PLAIN, 9);
   private final Font selectedTextFont = new Font("Arial", Font.BOLD, 9);
   private final Font sectionTitleFont = new Font("Arial", Font.BOLD, 11);
+  private final Font footerFont = new Font("Arial", Font.PLAIN, 9);
 
   private final Color titleColor = Color.BLACK;
   private final Color textColor = Color.BLACK;
@@ -18,6 +19,10 @@ public class PrintStyle implements PrintFonts {
   private final Color tableLineColor = Colors.toColor("BBBBBB");
   private final Color sectionTextColor = Colors.toColor("FFFFFF");
   private final Color sectionBackgroundColor = Colors.toColor("999999");
+  private final Color footerColor = Colors.toColor("999999");
+
+  public PrintStyle() {
+  }
 
   public Font getTitleFont() {
     return titleFont;
@@ -65,5 +70,13 @@ public class PrintStyle implements PrintFonts {
     gauge.setOverrunColorBottom(Colors.toColor("FF3333"));
     gauge.setOverrunErrorColorTop(Colors.toColor("CC0000"));
     gauge.setOverrunErrorColorBottom(Colors.toColor("CC0000"));
+  }
+
+  public Color getFooterColor() {
+    return footerColor;
+  }
+
+  public Font getFooterFont() {
+    return footerFont;
   }
 }
