@@ -48,6 +48,7 @@ import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.time.actions.SelectCurrentMonthAction;
 import org.designup.picsou.gui.time.actions.SelectCurrentYearAction;
 import org.designup.picsou.gui.time.actions.SelectLast12MonthsAction;
+import org.designup.picsou.gui.time.actions.SelectSinceLastJanuaryAction;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.transactions.creation.CreateTransactionMenuAction;
@@ -348,6 +349,7 @@ public class MainPanel {
     showMenu.add(new SelectCurrentMonthAction(repository, directory));
     showMenu.add(new SelectCurrentYearAction(repository, directory));
     showMenu.add(new SelectLast12MonthsAction(repository, directory));
+    showMenu.add(new SelectSinceLastJanuaryAction(repository, directory));
     showMenu.addSeparator();
     showMenu.add(new ShowNotesAction(repository, directory));
     showMenu.addSeparator();

@@ -618,6 +618,10 @@ public class OperationChecker {
     getViewMenu().getSubMenu("select last 12 months").click();
   }
 
+  public void selectAllMonthsSinceJanuary() {
+    getViewMenu().getSubMenu("Select all months since january").click();
+  }
+
   public AccountEditionChecker createAccount() {
     return AccountEditionChecker.open(getEditMenu().getSubMenu(Lang.get("account.create.menu")).triggerClick());
   }
