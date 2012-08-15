@@ -13,7 +13,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class GlobButtonView extends AbstractGlobTextView<GlobButtonView> {
+public class GlobButtonView extends AbstractGlobTextAndIconView<GlobButtonView> {
   private JButton button;
 
   public static GlobButtonView init(GlobType type, GlobRepository repository,
@@ -64,6 +64,10 @@ public class GlobButtonView extends AbstractGlobTextView<GlobButtonView> {
 
   protected void doUpdate(String text) {
     button.setText(text);
+  }
+
+  protected void doUpdate(Icon icon) {
+    button.setIcon(icon);
   }
 
   protected String getText() {

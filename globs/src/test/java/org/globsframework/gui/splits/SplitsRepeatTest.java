@@ -834,7 +834,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
       "</repeat>");
 
     FlowLayout layout = (FlowLayout)panel.getLayout();
-    assertEquals(FlowLayout.LEFT, layout.getAlignment());
+    assertEquals(FlowLayout.CENTER, layout.getAlignment());
   }
 
   public void testWrappedColumnLayout() throws Exception {

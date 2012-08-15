@@ -11,7 +11,7 @@ import org.uispec4j.Button;
 
 import javax.swing.*;
 
-public class GlobButtonViewTest extends GlobTextViewTestCase {
+public class GlobButtonViewTest extends GlobTextAndIconViewTestCase {
 
   private DummyGlobListFunctor callback = new DummyGlobListFunctor();
 

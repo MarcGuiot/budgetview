@@ -13,6 +13,7 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.uispec4j.TextBox;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.interception.toolkit.Empty;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -300,6 +301,8 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
     Assertion isEditable();
 
     Assertion isEnable();
+
+    Assertion iconEquals(Icon icon);
   }
 
   protected class TextBoxComponent implements TextComponent {
@@ -333,6 +336,10 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
     public Assertion isEnable() {
       return textBox.isEnabled();
     }
+
+    public Assertion iconEquals(Icon icon) {
+      return textBox.iconEquals(icon);
+    }
   }
 
   protected class ButtonComponent implements TextComponent {
@@ -360,6 +367,10 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
 
     public Assertion isEnable() {
       return button.isEnabled();
+    }
+
+    public Assertion iconEquals(Icon icon) {
+      return button.iconEquals(icon);
     }
   }
 }

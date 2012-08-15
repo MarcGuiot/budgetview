@@ -11,7 +11,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
-public class GlobLabelView extends AbstractGlobTextView<GlobLabelView> {
+public class GlobLabelView extends AbstractGlobTextAndIconView<GlobLabelView> {
   private JLabel label;
 
   public static GlobLabelView init(GlobType type, GlobRepository repository,
@@ -63,6 +63,10 @@ public class GlobLabelView extends AbstractGlobTextView<GlobLabelView> {
 
   protected void doUpdate(String text) {
     label.setText(text);
+  }
+
+  protected void doUpdate(Icon icon) {
+    label.setIcon(icon);
   }
 
   protected String getText() {

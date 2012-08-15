@@ -120,6 +120,8 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
     }
 
     doUpdate(text);
+
+    postTextUpdate(filteredSelection, repository);
   }
 
   protected GlobList getFilteredSelection() {
@@ -132,6 +134,9 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
   }
 
   protected abstract void doUpdate(String text);
+
+  protected void postTextUpdate(GlobList filteredSelection, GlobRepository repository) {
+  }
 
   protected abstract String getText();
 
