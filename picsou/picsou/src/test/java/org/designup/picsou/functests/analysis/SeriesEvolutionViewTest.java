@@ -49,7 +49,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2008/07");
-    views.selectAnalysis();
     seriesAnalysis.checkColumnNames(
       "", "June 2008", "Jul 2008", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009"
     );
@@ -77,7 +76,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Christmas", "", "", "", "", "", "", "300.00", "")
       .add("Lottery", "", "", "", "", "", "+100.00", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
     seriesAnalysis.checkForeground("To categorize", "Jul 2008", "red");
@@ -135,7 +133,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Groceries", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Other", "", "", "", "", "", "", "", "")
       .check();
   }
 
@@ -172,7 +169,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Groceries", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Other", "", "", "", "", "", "", "", "")
       .check();
   }
 
@@ -184,7 +180,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     );
     seriesAnalysis.checkTableIsEmpty(
       "Main accounts", "Balance", "Savings accounts", "To categorize",
-      "Income", "Recurring", "Variable", "Extras", "Savings", "Other");
+      "Income", "Recurring", "Variable", "Extras", "Savings");
   }
 
   public void testColumnNamesAreUpdatedOnMonthSelection() throws Exception {
@@ -250,7 +246,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
     seriesAnalysis.editSeries("John's", "Jul 2008")
@@ -271,7 +266,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
     seriesAnalysis.editSeries("John's", "Sep 2008")
@@ -292,7 +286,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
     seriesAnalysis.editSeries("John's", "Sep 2008")
@@ -316,7 +309,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
     seriesAnalysis.editSeries("John's", "Sep 2008")
@@ -337,7 +329,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Other", "", "", "", "", "", "", "", "")
       .check();
   }
 
@@ -415,7 +406,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Other", "", "", "", "", "", "", "", "")
       .check();
 
     seriesAnalysis.editSeries("John's").deleteCurrentSeriesWithConfirmation();
@@ -431,7 +421,6 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "")
-      .add("Other", "", "", "", "", "", "", "", "")
       .check();
   }
 
@@ -475,10 +464,10 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                          "Income", "Salary", "Salary 2",
                          "Recurring", "Internet",
                          "Variable", "Groceries",
-                         "Extras", "Savings", "Other"};
+                         "Extras", "Savings"};
 
     String[] collapsed = {"Main accounts", "Balance", "Savings accounts", "To categorize",
-                          "Income", "Recurring", "Variable", "Extras", "Savings", "Other"};
+                          "Income", "Recurring", "Variable", "Extras", "Savings"};
 
     seriesAnalysis.checkRowLabels(expanded);
 
@@ -494,8 +483,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                                   "Recurring", "Internet",
                                   "Variable", "Groceries",
                                   "Extras",
-                                  "Savings",
-                                  "Other");
+                                  "Savings");
 
     seriesAnalysis.expandAll();
     seriesAnalysis.checkRowLabels(expanded);
@@ -540,7 +528,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     seriesAnalysis.toggleTable();
-    seriesAnalysis.checkSeriesNotShown("Taxes");
+    seriesAnalysis.checkNoTableRowWithLabel("Taxes");
 
     budgetView.recurring.editSeries("Taxes")
       .selectAllMonths()
@@ -556,7 +544,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2008/10");
-    seriesAnalysis.checkSeriesNotShown("Taxes");
+    seriesAnalysis.checkNoTableRowWithLabel("Taxes");
 
     timeline.selectMonth("2008/08");
     seriesAnalysis.checkRow(
@@ -684,7 +672,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.expandAll();
     seriesAnalysis.checkRowLabels(
       "Main accounts", "Balance", "Savings accounts", "To categorize", "Income", "Recurring", "Variable", "Extras",
-      "Savings", "To account Livret", "To account Livret", "Other"
+      "Savings", "To account Livret", "To account Livret"
     );
   }
 

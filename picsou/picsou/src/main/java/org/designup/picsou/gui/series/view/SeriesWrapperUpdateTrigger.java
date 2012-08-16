@@ -20,18 +20,24 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
     changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Integer seriesId = key.get(Series.ID);
-        if (seriesId.equals(Series.UNCATEGORIZED_SERIES_ID) || Series.isSavingToExternal(values)) {
+        if (seriesId.equals(Series.UNCATEGORIZED_SERIES_ID) ||
+            Series.isSavingToExternal(values)) {
+          return;
+        }
+
+        Integer budgetAreaId = values.get(Series.BUDGET_AREA);
+        if (BudgetArea.OTHER.getId().equals(budgetAreaId)) {
           return;
         }
 
         Glob budgetAreaWrapper =
           repository.findByIndex(SeriesWrapper.INDEX, SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId())
-            .findByIndex(SeriesWrapper.ITEM_ID, values.get(Series.BUDGET_AREA))
+            .findByIndex(SeriesWrapper.ITEM_ID, budgetAreaId)
             .findByIndex(SeriesWrapper.MASTER, null)
             .getGlobs().getFirst();
 
         if (budgetAreaWrapper == null) {
-          Log.write("Bug : missing parent : " + values.get(Series.BUDGET_AREA));
+          Log.write("Bug : missing parent : " + budgetAreaId);
         }
         else {
           repository.create(SeriesWrapper.TYPE,
@@ -46,13 +52,19 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
           Glob wrapper = SeriesWrapper.find(repository, SeriesWrapperType.SERIES, key.get(Series.ID));
           if (wrapper != null) {
             repository.delete(wrapper.getKey());
+            Integer budgetAreaId = values.get(Series.BUDGET_AREA);
+            if (BudgetArea.OTHER.getId().equals(budgetAreaId)) {
+              System.out.println("SeriesWrapperUpdateTrigger.visitUpdate: out");
+              return;
+            }
+
             Glob budgetAreaWrapper =
               repository.findByIndex(SeriesWrapper.INDEX, SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId())
-                .findByIndex(SeriesWrapper.ITEM_ID, values.get(Series.BUDGET_AREA))
+                .findByIndex(SeriesWrapper.ITEM_ID, budgetAreaId)
                 .findByIndex(SeriesWrapper.MASTER, null)
                 .getGlobs().getFirst();
             if (budgetAreaWrapper == null) {
-              Log.write("Bug : no seriesWrapper parent for " + values.get(Series.BUDGET_AREA));
+              Log.write("Bug : no seriesWrapper parent for " + budgetAreaId);
             }
             else {
               repository.create(SeriesWrapper.TYPE,
@@ -119,14 +131,14 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
 
       for (Glob budgetArea : repository.getAll(BudgetArea.TYPE)) {
         Integer budgetAreaId = budgetArea.get(BudgetArea.ID);
-        Integer wrapperId;
+        Integer wrapperId = null;
         if (budgetAreaId.equals(BudgetArea.ALL.getId())) {
           wrapperId = SeriesWrapper.ALL_ID;
         }
         else if (budgetAreaId.equals(BudgetArea.UNCATEGORIZED.getId())) {
           wrapperId = SeriesWrapper.UNCATEGORIZED_ID;
         }
-        else {
+        else if (!BudgetArea.OTHER.getId().equals(budgetAreaId)) {
           Glob wrapper = repository.create(SeriesWrapper.TYPE,
                                            value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId()),
                                            value(SeriesWrapper.ITEM_ID, budgetAreaId),
@@ -135,17 +147,22 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
         }
         budgetAreaIds.put(budgetAreaId, wrapperId);
       }
-
+      
       for (Glob series : repository.getAll(Series.TYPE)) {
         Integer budgetAreaId = series.get(Series.BUDGET_AREA);
-        if (BudgetArea.UNCATEGORIZED.getId().equals(budgetAreaId) || Series.isSavingToExternal(series)) {
+        if (BudgetArea.UNCATEGORIZED.getId().equals(budgetAreaId) ||
+            BudgetArea.OTHER.getId().equals(budgetAreaId) ||
+            Series.isSavingToExternal(series)) {
           continue;
         }
+
         Integer budgetAreaWrapperId = budgetAreaIds.get(budgetAreaId);
-        repository.create(SeriesWrapper.TYPE,
-                          value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
-                          value(SeriesWrapper.ITEM_ID, series.get(Series.ID)),
-                          value(SeriesWrapper.MASTER, budgetAreaWrapperId));
+        if (budgetAreaWrapperId != null) {
+          repository.create(SeriesWrapper.TYPE,
+                            value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
+                            value(SeriesWrapper.ITEM_ID, series.get(Series.ID)),
+                            value(SeriesWrapper.MASTER, budgetAreaWrapperId));
+        }
       }
 
       for (Glob subSeries : repository.getAll(SubSeries.TYPE)) {

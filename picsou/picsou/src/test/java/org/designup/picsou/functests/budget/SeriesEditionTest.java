@@ -1377,7 +1377,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .add("Internet", "", "29.00", "", "", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "", "", "", "", "")
       .add("Savings", "", "", "", "", "", "", "", "", "", "", "", "")
-      .add("Other", "", "", "", "", "", "", "", "", "", "", "", "")
       .check();
   }
 

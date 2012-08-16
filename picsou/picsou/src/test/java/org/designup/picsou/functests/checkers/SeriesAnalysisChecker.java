@@ -165,8 +165,8 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
     checker.check();
   }
 
-  public void checkSeriesNotShown(String seriesName) {
-    assertFalse(getTable().containsRow(getLabelColumnIndex(), seriesName));
+  public void checkNoTableRowWithLabel(String seriesName) {
+    assertFalse("'"+ seriesName + "' unexpectedly shown", getTable().containsRow(getLabelColumnIndex(), seriesName));
   }
 
   public SeriesAnalysisChecker checkForeground(String rowLabel, String columnLabel, String expectedColor) {
@@ -340,15 +340,15 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
 
     public void dumpCode() {
       StringBuilder builder = new StringBuilder();
-      Object[][] actual = rows.toArray(new Object[rows.size()][]);
-      for (int row = 0; row < actual.length; row++) {
+      Table table = getTable();
+      for (int row = 0; row < table.getRowCount(); row++) {
         builder.append("  .add(");
-        Object[] line = actual[row];
-        for (int col = 0; col < line.length; col++) {
-          if (col > 0) {
+        int columnCount = table.getColumnCount();
+        for (int col = 1; col < columnCount; col++) {
+          if (col > 1) {
             builder.append(", ");
           }
-          builder.append('"').append(line[col]).append('"');
+          builder.append('"').append(table.getContentAt(row, col)).append('"');
         }
         builder.append(")\n");
       }

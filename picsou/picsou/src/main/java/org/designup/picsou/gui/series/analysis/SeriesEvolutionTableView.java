@@ -8,6 +8,7 @@ import org.designup.picsou.gui.series.analysis.evolution.SeriesEvolutionLabelCol
 import org.designup.picsou.gui.series.analysis.evolution.SeriesEvolutionMonthColumn;
 import org.designup.picsou.gui.series.view.*;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.util.Amounts;
@@ -25,11 +26,9 @@ import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobStringifiers;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -42,8 +41,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.SortedSet;
 
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import static org.globsframework.model.utils.GlobMatchers.not;
 import static org.globsframework.utils.Utils.intRange;
 
 public class SeriesEvolutionTableView extends View {
@@ -160,18 +157,18 @@ public class SeriesEvolutionTableView extends View {
     });
 
     parentSelectionService.addListener(new GlobSelectionListener() {
-                                         public void selectionUpdated(GlobSelection selection) {
-                                           SortedSet<Integer> monthIds = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
-                                           if (!monthIds.isEmpty()) {
-                                             referenceMonthId = monthIds.iterator().next();
-                                             for (SeriesEvolutionMonthColumn column : monthColumns) {
-                                               column.setReferenceMonthId(referenceMonthId);
-                                             }
-                                             seriesEvolutionLabelColumn.setReferenceMonthId(referenceMonthId);
-                                             tableView.reset();
-                                           }
-                                         }
-                                       }, Month.TYPE);
+      public void selectionUpdated(GlobSelection selection) {
+        SortedSet<Integer> monthIds = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
+        if (!monthIds.isEmpty()) {
+          referenceMonthId = monthIds.iterator().next();
+          for (SeriesEvolutionMonthColumn column : monthColumns) {
+            column.setReferenceMonthId(referenceMonthId);
+          }
+          seriesEvolutionLabelColumn.setReferenceMonthId(referenceMonthId);
+          tableView.reset();
+        }
+      }
+    }, Month.TYPE);
 
     repository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -198,7 +195,7 @@ public class SeriesEvolutionTableView extends View {
       return;
     }
     lastWidth = scrollWidth;
-    
+
     int free = lastWidth - table.getColumnModel().getTotalColumnWidth();
     if (free < -lastColumnSize) {
       if (monthColumns.isEmpty()) {

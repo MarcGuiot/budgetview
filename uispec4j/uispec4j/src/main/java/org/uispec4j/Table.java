@@ -306,7 +306,7 @@ public class Table extends AbstractSwingUIComponent {
     return new Assertion() {
       public void check() {
         try {
-          AssertAdapter.assertTrue(lengthErrorMessage(fromRowIndex),
+          AssertAdapter.assertTrue(lengthErrorMessage(rowCount),
                                      fromColumnIndex + rowCount <= getRowCount());
           for (int i = fromColumnIndex; i < fromColumnIndex + rowCount; i++) {
             checkRow(i, fromRowIndex, columnCount, expected[i - fromColumnIndex]);

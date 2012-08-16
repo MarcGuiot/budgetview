@@ -547,7 +547,6 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("23/08/2011", "DIFFE 1", -12.00, "To categorize", -12.00, 88.00, "card 1111")
       .check();
 
-
     String m2 = QifBuilder.init(this)
       .addTransaction("2011/08/31", -12. * 4 - 100, "virement cdd")
       .save();
@@ -634,8 +633,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     resetWindow();
   }
 
-
-  public void testDefferedWithBankDateInTheFuture() throws Exception {
+  public void testDeferredWithBankDateInTheFuture() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2009/11/03", 1000, "salaire")
       .addTransaction("2009/11/05", -15, "edf")
@@ -681,4 +679,44 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("03/11/2009", "SALAIRE", 1000.00, "salaire", 35.00, 35.00, "Account n. 00001123")
       .check();
    }
+
+  public void testDeferredSpecificSeriesNotShownInAnalysisView() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    OfxBuilder.init(this)
+      .addCardAccount("1111", 100, "2008/06/30")
+      .addTransaction("2008/06/27", -50, "Auchan")
+      .addTransaction("2008/06/28", 1000, "WorldCo")
+      .addBankAccount("1234", 1000, "2008/06/30")
+      .addTransaction("2008/06/28", -550, "Prelevement")
+      .loadDeferredCard("Card n. 1111");
+
+    categorization.selectTransaction("Prelevement")
+      .selectOther()
+      .selectDeferred()
+      .selectSeries("Card n. 1111");
+
+    categorization.setNewIncome("WorldCo", "Income", 1000.00);
+    categorization.setNewVariable("Auchan", "Groceries", -100.00);
+
+    transactions.initContent()
+      .add("28/06/2008", TransactionType.PRELEVEMENT, "PRELEVEMENT", "", -550.00, "Card n. 1111")
+      .add("28/06/2008", TransactionType.CREDIT_CARD, "WORLDCO", "", 1000.00, "Income")
+      .add("27/06/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", -50.00, "Groceries")
+      .check();
+
+    seriesAnalysis.balanceChart
+      .getRightDataset()
+      .checkSize(1)
+      .checkValue("Variable", 100.00);
+
+    seriesAnalysis.seriesChart
+      .getSingleDataset()
+      .checkSize(1)
+      .checkValue("Groceries", 100.00);
+
+    seriesAnalysis.toggleTable();
+    timeline.selectMonth(200806);
+    seriesAnalysis.checkNoTableRowWithLabel("Card n. 1111");
+    seriesAnalysis.checkNoTableRowWithLabel("Other");
+  }
 }

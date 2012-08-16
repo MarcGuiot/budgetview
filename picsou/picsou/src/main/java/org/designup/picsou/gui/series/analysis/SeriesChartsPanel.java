@@ -61,8 +61,8 @@ public class SeriesChartsPanel implements GlobSelectionListener {
   private StackChartColors incomeStackColors;
   private StackChartColors expensesStackColors;
   private SelectionService selectionService;
-  
-  private static final GlobType[] USED_TYPES = 
+
+  private static final GlobType[] USED_TYPES =
     new GlobType[]{BudgetStat.TYPE, Series.TYPE, SubSeries.TYPE,
                    SavingsBudgetStat.TYPE, PeriodSeriesStat.TYPE, SeriesStat.TYPE, SubSeriesStat.TYPE};
   private StackToggleController stackToggle;
@@ -307,8 +307,10 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       Double amount = getTotalAmountForSelectedPeriod(seriesId);
       if (amount != null && amount < 0) {
         Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-        String name = series.get(Series.NAME);
-        dataset.add(name, -amount, series.getKey());
+        if (!BudgetArea.OTHER.getId().equals(series.get(Series.BUDGET_AREA))) {
+          String name = series.get(Series.NAME);
+          dataset.add(name, -amount, series.getKey());
+        }
       }
     }
 
