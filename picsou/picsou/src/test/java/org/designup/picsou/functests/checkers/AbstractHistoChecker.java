@@ -2,13 +2,15 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
+import org.designup.picsou.functests.checkers.components.PopupChecker;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
-import org.uispec4j.Mouse;
+import org.uispec4j.*;
+import org.uispec4j.MenuItem;
 import org.uispec4j.Panel;
+import org.uispec4j.interception.PopupMenuInterceptor;
 import org.uispec4j.interception.toolkit.Empty;
 
-import javax.swing.*;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -49,11 +51,16 @@ public abstract class AbstractHistoChecker<T extends AbstractHistoChecker> exten
   }
 
   public void clickColumn(int columnIndex) {
+    clickColumn(columnIndex, Key.Modifier.NONE, false);
+  }
+
+  private void clickColumn(int columnIndex, Key.Modifier modifier, boolean useRightClick) {
     HistoChart chart = getChart();
     chart.setSize(200,200);
     chart.paint(Empty.NULL_GRAPHICS_2D);
     int x = chart.getX(columnIndex);
-    doClick(chart, x);
+    int y = chart.getSize().height / 2;
+    click(chart, x, y, modifier, useRightClick);
   }
 
   public void clickColumnId(int month) {
@@ -65,12 +72,6 @@ public abstract class AbstractHistoChecker<T extends AbstractHistoChecker> exten
     }
 
     clickColumn(columnIndex);
-  }
-
-  private void doClick(HistoChart chart, int x) {
-    int y = chart.getSize().height / 2;
-
-    click(chart, x, y);
   }
 
   public void checkSelectedIds(Integer... ids) {
@@ -87,4 +88,28 @@ public abstract class AbstractHistoChecker<T extends AbstractHistoChecker> exten
     org.globsframework.utils.TestUtils.assertSetEquals(selection, ids);
   }
 
+  public void checkRightClickOptions(int columnIndex, String... options) {
+    openRightClickPopup(columnIndex).checkChoices(options);
+  }
+
+  public void rightClickAndSelect(int columnIndex, String option) {
+    openRightClickPopup(columnIndex).click(option);
+  }
+
+  public SeriesEditionDialogChecker rightClickAndEditSeries(final int columnIndex, final String option) {
+    PopupChecker popupChecker = openRightClickPopup(columnIndex);
+    return SeriesEditionDialogChecker.open(popupChecker.triggerClick(option));
+  }
+
+  private PopupChecker openRightClickPopup(final int columnIndex) {
+    return new PopupChecker() {
+      protected MenuItem openMenu() {
+        return PopupMenuInterceptor.run(new Trigger() {
+          public void run() throws Exception {
+            clickColumn(columnIndex, Key.Modifier.NONE, true);
+          }
+        });
+      }
+    };
+  }
 }

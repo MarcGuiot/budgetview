@@ -5,9 +5,12 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Key;
 
+import java.util.Set;
+
 public class HistoDiffDataset extends AbstractHistoDataset<HistoDiffElement> {
 
   private int multiplier = 1;
+  private Set<Key> keys;
 
   public HistoDiffDataset(String tooltipKey) {
     super(tooltipKey);
@@ -19,7 +22,7 @@ public class HistoDiffDataset extends AbstractHistoDataset<HistoDiffElement> {
     updateMax(actual);
   }
 
-  public String getTooltip(int index, Key objectKey) {
+  public String getTooltip(int index, Set<Key> objectKey) {
     if ((index < 0) || (index >= size())) {
       return "";
     }
@@ -73,5 +76,13 @@ public class HistoDiffDataset extends AbstractHistoDataset<HistoDiffElement> {
 
   public boolean isInverted() {
     return multiplier < 0;
+  }
+
+  public void setKeys(Set<Key> keys) {
+    this.keys = keys;
+  }
+
+  public Set<Key> getKeys() {
+    return keys;
   }
 }

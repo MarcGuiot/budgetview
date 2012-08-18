@@ -3,10 +3,9 @@ package org.designup.picsou.gui.components.charts.histo;
 import org.designup.picsou.gui.components.charts.histo.utils.DefaultHistoSelection;
 import org.globsframework.model.Key;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
-import java.util.ArrayList;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 public class HistoSelectionManager {
 
@@ -32,13 +31,13 @@ public class HistoSelectionManager {
   public void resetRollover(HistoDataset dataset) {
     this.dataset = dataset;
     this.rollover.columnIndex = null;
-    this.rollover.objectKey = null;
+    this.rollover.setObjectKeys(new HashSet<Key>());
     for (HistoChartListener listener : listeners) {
       listener.rolloverUpdated(getRollover());
     }
   }
 
-  public void updateRollover(Integer columnIndex, Key objectKey, boolean dragging) {
+  public void updateRollover(Integer columnIndex, Set<Key> objectKeys, boolean dragging, boolean rightClick) {
     boolean rolloverChanged = false;
     boolean expandSelection = false;
 
@@ -48,8 +47,8 @@ public class HistoSelectionManager {
       expandSelection = dragging;
     }
 
-    if (!Utils.equal(objectKey, rollover.objectKey)) {
-      this.rollover.objectKey = objectKey;
+    if (!Utils.equal(objectKeys, rollover.objectKeys)) {
+      this.rollover.setObjectKeys(objectKeys);
       rolloverChanged = true;
     }
 
@@ -59,23 +58,23 @@ public class HistoSelectionManager {
       }
     }
     if (expandSelection) {
-      addRolloverColumnToSelection();
+      addRolloverColumnToSelection(rightClick);
     }
   }
 
-  public void startClick() {
+  public void startClick(boolean rightClick) {
     columnSelectionMinIndex = null;
     columnSelectionMaxIndex = null;
 
-    if ((rollover.columnIndex >=0) && (rollover.columnIndex < dataset.size())) {
-      addRolloverColumnToSelection();
+    if ((rollover.columnIndex >= 0) && (rollover.columnIndex < dataset.size())) {
+      addRolloverColumnToSelection(rightClick);
     }
     else {
-      notifyClick();
+      notifyClick(rightClick);
     }
   }
 
-  private void notifyClick() {
+  private void notifyClick(boolean isRightClick) {
     if ((columnSelectionMinIndex == null) || (columnSelectionMaxIndex == null)) {
       return;
     }
@@ -89,9 +88,15 @@ public class HistoSelectionManager {
         }
       }
     }
+
     HistoSelection selection = new DefaultHistoSelection(columnIds);
     for (HistoChartListener listener : listeners) {
-      listener.processClick(selection, rollover.getObjectKey());
+      if (isRightClick) {
+        listener.processRightClick(selection, rollover.getObjectKeys());
+      }
+      else {
+        listener.processClick(selection, rollover.getObjectKeys());
+      }
     }
   }
 
@@ -101,11 +106,11 @@ public class HistoSelectionManager {
 
   public void notifyDoubleClick() {
     for (HistoChartListener listener : listeners) {
-      listener.processDoubleClick(rollover.columnIndex, rollover.objectKey);
+      listener.processDoubleClick(rollover.columnIndex, rollover.objectKeys);
     }
   }
 
-  public void addRolloverColumnToSelection() {
+  public void addRolloverColumnToSelection(boolean rightClick) {
     boolean selectionChanged = false;
     if ((columnSelectionMinIndex == null) || (rollover.columnIndex < columnSelectionMinIndex)) {
       columnSelectionMinIndex = rollover.columnIndex;
@@ -116,7 +121,7 @@ public class HistoSelectionManager {
       selectionChanged = true;
     }
     if (selectionChanged) {
-      notifyClick();
+      notifyClick(rightClick);
     }
   }
 
@@ -132,26 +137,33 @@ public class HistoSelectionManager {
 
   private class InnerHistoRollover implements HistoRollover {
     private Integer columnIndex;
-    private Key objectKey;
+    private Set<Key> objectKeys = new HashSet<Key>();
 
     public boolean isOnColumn(int columnIndex) {
       return Utils.equal(this.columnIndex, columnIndex);
     }
 
     public boolean isOnObject(Key key) {
-      return Utils.equal(this.objectKey, key);
+      return objectKeys.contains(key);
     }
 
     public Integer getColumnIndex() {
       return columnIndex;
     }
 
-    public Key getObjectKey() {
-      return objectKey;
+    public Set<Key> getObjectKeys() {
+      return objectKeys;
     }
 
     public boolean isActive() {
-      return (columnIndex != null) || (objectKey != null);
+      return (columnIndex != null) || !objectKeys.isEmpty();
+    }
+
+    public void setObjectKeys(Set<Key> objectKeys) {
+      if (objectKeys == null) {
+        throw new InvalidParameter("Use Collections.emptySet");
+      }
+      this.objectKeys = objectKeys;
     }
   }
 }

@@ -66,12 +66,13 @@ public class MainDailyPositionsChartView extends AccountsChartView {
     }
 
     public void rolloverUpdated(HistoRollover rollover) {
-      Key objectKey = rollover.getObjectKey();
-      if (objectKey == null) {
+      Set<Key> objectKeys = rollover.getObjectKeys();
+      if (objectKeys.size() != 1) {
         highlightingService.clear(Series.TYPE);
         return;
       }
 
+      Key objectKey = objectKeys.iterator().next();
       Integer monthId = objectKey.get(Day.MONTH);
       Integer day = objectKey.get(Day.DAY);
       GlobList transactions = getTransactions(monthId, day, repository);
@@ -79,16 +80,17 @@ public class MainDailyPositionsChartView extends AccountsChartView {
       highlightingService.select(series, Series.TYPE);
     }
 
-    public void processDoubleClick(Integer columnIndex, Key objectKey) {
-      selectTransactions(objectKey, chart, repository, directory, selectionService);
+    public void processDoubleClick(Integer columnIndex, Set<Key> objectKeys) {
+      selectTransactions(objectKeys, chart, repository, directory, selectionService);
     }
   }
 
-  public static void selectTransactions(Key objectKey, HistoChart chart, GlobRepository repository, Directory directory, SelectionService selectionService) {
-    if (objectKey == null) {
+  public static void selectTransactions(Set<Key> objectKeys, HistoChart chart, GlobRepository repository, Directory directory, SelectionService selectionService) {
+    if (objectKeys.size() != 1) {
       return;
     }
 
+    Key objectKey = objectKeys.iterator().next();
     Integer monthId = objectKey.get(Day.MONTH);
     Integer day = objectKey.get(Day.DAY);
     GlobList transactions = getTransactions(monthId, day, repository);

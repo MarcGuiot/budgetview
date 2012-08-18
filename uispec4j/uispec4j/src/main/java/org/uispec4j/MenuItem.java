@@ -12,8 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Wrapper for menu items (commands or sub-menus) such as JMenu, JMenuItem or JPopupMenu.<p/>
@@ -64,12 +64,17 @@ public class MenuItem extends AbstractUIComponent implements Clickable {
     }
     if (menuItem == null) {
       AssertAdapter.fail("There is no menu item matching '" + subMenuItem + "' - actual elements: " +
-                          ArrayUtils.toString(getSubElementNames()));
+                         ArrayUtils.toString(getSubElementNames()));
     }
     return menuItem;
   }
 
-  public Assertion contain(final String expectedName){
+  /** @deprecated Use #contains(String) */
+  public Assertion contain(final String expectedName) {
+    return contains(expectedName);
+  }
+
+  public Assertion contains(final String expectedName) {
     return new Assertion() {
       public void check() {
         AssertAdapter.assertTrue(Arrays.asList(getSubElementNames()).contains(expectedName));
@@ -173,7 +178,7 @@ public class MenuItem extends AbstractUIComponent implements Clickable {
 
     public void click() {
       AssertAdapter.assertTrue("The menu item is not enabled, it cannot be activated",
-                                menuItem.isEnabled());
+                               menuItem.isEnabled());
       if (SwingUtilities.isEventDispatchThread()) {
         AbstractButton.doClick(menuItem);
       }
@@ -226,7 +231,7 @@ public class MenuItem extends AbstractUIComponent implements Clickable {
 
     public void click() {
       AssertAdapter.fail("This operation is not supported. You must first select a sub menu among: "
-                          + ArrayUtils.toString(getSubElementNames()));
+                         + ArrayUtils.toString(getSubElementNames()));
     }
 
     public MenuWrapper[] getSubElements(boolean skipSeparators) {

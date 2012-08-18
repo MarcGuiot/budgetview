@@ -11,6 +11,9 @@ import org.uispec4j.Window;
 
 import javax.swing.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class BudgetSummaryViewChecker extends ViewChecker {
@@ -50,9 +53,9 @@ public class BudgetSummaryViewChecker extends ViewChecker {
     HistoDailyChecker chart = getChart();
     HistoSelectionManager selectionManager = chart.getChart().getSelectionManager();
     int columnIndex = chart.getDataset().getIndex(monthId);
-    selectionManager.updateRollover(columnIndex >= 0 ? columnIndex : null,
-                                    Key.create(Day.MONTH, monthId, Day.DAY, day),
-                                    false);
+    Set<Key> keys = new HashSet<Key>();
+    keys.add(Key.create(Day.MONTH, monthId, Day.DAY, day));
+    selectionManager.updateRollover(columnIndex >= 0 ? columnIndex : null, keys, false, false);
     return this;
   }
 

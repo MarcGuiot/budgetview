@@ -15,6 +15,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Set;
 
 public class HistoChartDemo {
   public static void main(String... args) {
@@ -49,7 +50,7 @@ public class HistoChartDemo {
     HistoChart chart = new HistoChart(new HistoChartConfig(true, true, false, true, true, true, true, false, false), directory);
 
     chart.addListener(new HistoChartListenerAdapter() {
-      public void processClick(HistoSelection monthIds, Key objectKey) {
+      public void processClick(HistoSelection monthIds, Set<Key> objectKeys) {
         System.out.println("HistoChartDemo.columnClicked: " + monthIds);
       }
     });

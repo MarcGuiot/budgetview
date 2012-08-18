@@ -17,6 +17,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Set;
 
 public class HistoButtonChartDemo {
   public static void main(String[] args) {
@@ -60,9 +61,9 @@ public class HistoButtonChartDemo {
     HistoChart chart = new HistoChart(new HistoChartConfig(true, true, false, false, true, true, true, false, false), directory);
 
     chart.addListener(new HistoChartListenerAdapter() {
-      public void processClick(HistoSelection selection, Key objectKey) {
-        if (objectKey != null) {
-          System.out.println("Click on object: " + objectKey + " with columns: " + selection);
+      public void processClick(HistoSelection selection, Set<Key> objectKeys) {
+        if (objectKeys != null) {
+          System.out.println("Click on object: " + objectKeys + " with columns: " + selection);
         }
         else {
           System.out.println("Click on columns: " + selection);

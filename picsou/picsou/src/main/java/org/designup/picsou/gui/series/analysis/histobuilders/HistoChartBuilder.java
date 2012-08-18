@@ -28,6 +28,7 @@ import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.GlobFunctor;
+import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -62,13 +63,18 @@ public class HistoChartBuilder {
     this.range = range;
     this.repository = repository;
     this.histoChart = new HistoChart(config, directory);
+    final HistoChartPopupFactory popupFactory = new HistoChartPopupFactory(histoChart, repository, directory, parentSelectionService);
     this.histoChart.addListener(new HistoChartListenerAdapter() {
-      public void processClick(HistoSelection selection, Key objectKey) {
+      public void processClick(HistoSelection selection, Set<Key> objectKeys) {
         GlobList months = new GlobList();
         for (Integer monthId : selection.getColumnIds()) {
           months.add(repository.get(Key.create(Month.TYPE, monthId)));
         }
         parentSelectionService.select(months, Month.TYPE);
+      }
+
+      public void processRightClick(HistoSelection selection, Set<Key> objectKeys) {
+        popupFactory.show(selection.getColumnIds(), objectKeys);
       }
 
       public void scroll(int count) {
@@ -328,7 +334,9 @@ public class HistoChartBuilder {
     if (resetPosition) {
       range.reset();
     }
+
     HistoDiffDatasetBuilder builder = createDiffDataset("mainBalance");
+    builder.setKey(BudgetArea.ALL.getKey());
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, monthId));
@@ -353,6 +361,7 @@ public class HistoChartBuilder {
     }
 
     HistoDiffDatasetBuilder builder = createDiffDataset("budgetArea");
+    builder.setKeys(BudgetArea.getKeys(budgetAreas));
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, monthId));
@@ -388,6 +397,7 @@ public class HistoChartBuilder {
       range.reset();
     }
     HistoLineDatasetBuilder builder = createLineDataset("uncategorized");
+    builder.setKey(Series.UNCATEGORIZED_SERIES);
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, monthId));
@@ -395,7 +405,7 @@ public class HistoChartBuilder {
       builder.add(monthId, value, monthId == selectedMonthId);
     }
 
-    builder.showLine(uncategorizedColors, "uncategorized");
+    builder.showBars(uncategorizedColors, "uncategorized");
   }
 
   public void showSeriesHisto(Set<Integer> seriesIds, int selectedMonthId, boolean resetPosition) {
@@ -404,6 +414,7 @@ public class HistoChartBuilder {
     }
 
     HistoDiffDatasetBuilder builder = createDiffDataset("series");
+    builder.setKeys(GlobUtils.createKeys(Series.TYPE, seriesIds));
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       double totalActual = 0.00;
@@ -442,6 +453,7 @@ public class HistoChartBuilder {
     }
 
     HistoLineDatasetBuilder builder = createLineDataset("subSeries");
+    builder.setKeys(GlobUtils.createKeys(SubSeries.TYPE, subSeriesIds));
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       double actual = 0.00;
@@ -468,7 +480,7 @@ public class HistoChartBuilder {
     }
 
     builder.invertIfNeeded();
-    builder.showLine(incomeAndExpensesLineColors, messageKey, messageArg);
+    builder.showBars(incomeAndExpensesLineColors, messageKey, messageArg);
   }
 
   public void showMainAccountsHisto(int selectedMonthId, boolean resetPosition) {
@@ -477,6 +489,7 @@ public class HistoChartBuilder {
     }
 
     HistoLineDatasetBuilder builder = createLineDataset("mainAccounts");
+    builder.setKey(Account.MAIN_SUMMARY_KEY);
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
@@ -484,14 +497,16 @@ public class HistoChartBuilder {
       builder.add(monthId, value, monthId == selectedMonthId);
     }
 
-    builder.showLine(accountColors, "mainAccounts");
+    builder.showBars(accountColors, "mainAccounts");
   }
 
   public void showSavingsAccountsHisto(int selectedMonthId, boolean resetPosition) {
     if (resetPosition) {
       range.reset();
     }
+
     HistoLineDatasetBuilder builder = createLineDataset("savingsAccounts");
+    builder.setKey(Account.SAVINGS_SUMMARY_KEY);
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       Glob stat = SavingsBudgetStat.findSummary(monthId, repository);
@@ -514,6 +529,7 @@ public class HistoChartBuilder {
     }
 
     HistoDiffDatasetBuilder builder = createDiffDataset("series");
+    builder.setKey(Key.create(Series.TYPE, seriesId));
 
     List<Integer> monthsToShow = getMonthIdsToShow(selectedMonthId);
 
@@ -572,7 +588,8 @@ public class HistoChartBuilder {
   }
 
   private static class LastGlobFunctor implements GlobFunctor {
-    Glob transaction;
+    private Glob transaction;
+
     public void run(Glob glob, GlobRepository repository) throws Exception {
       if (transaction == null){
         transaction = glob;
@@ -584,7 +601,8 @@ public class HistoChartBuilder {
   }
 
   private static class FirstGlobFunctor implements GlobFunctor {
-    Glob transaction;
+    private Glob transaction;
+
     public void run(Glob glob, GlobRepository repository) throws Exception {
       if (transaction == null){
         transaction = glob;

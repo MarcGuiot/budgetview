@@ -2,6 +2,7 @@ package org.designup.picsou.functests.analysis;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.TransactionType;
 
 public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
@@ -13,7 +14,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
   public void testStandardCase() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, "00000123", 1000.00, "2009/07/30")
       .addTransaction("2009/06/10", -250.00, "Auchan")
       .addTransaction("2009/06/15", -200.00, "Auchan")
       .addTransaction("2009/06/01", 300.00, "WorldCo")
@@ -112,7 +113,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
   public void testDisplaysUpToTwelveMonthsInThePast() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, "00000123", 1000.00, "2009/07/30")
       .addTransaction("2007/06/10", -250.00, "Auchan")
       .addTransaction("2008/06/10", -200.00, "Auchan")
       .addTransaction("2009/06/10", -150.00, "Auchan")
@@ -133,7 +134,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
   public void testDisplayingSeveralSeries() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, "00000123", 1000.00, "2009/07/30")
       .addTransaction("2009/06/10", +2000.00, "WorldCo")
       .addTransaction("2009/07/10", +2000.00, "WorldCo")
       .addTransaction("2009/06/10", -250.00, "Auchan")
@@ -166,7 +167,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
   public void testAccounts() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, "00000123", 1000.00, "2009/07/30")
       .addTransaction("2009/07/10", -200.00, "Virt")
       .load();
 
@@ -247,7 +248,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
   public void testClickingInColumnsNavigatesToCorrespondingMonth() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, "00000123", 1000.00, "2009/07/30")
       .addTransaction("2009/06/10", -200.00, "Auchan")
       .addTransaction("2009/06/01", 320.00, "WorldCo")
       .addTransaction("2009/07/10", -200.00, "Auchan")
@@ -279,5 +280,159 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
     seriesAnalysis.histoChart.clickColumn(2);
     timeline.checkSelection("2009/08");
+  }
+
+  public void testPopupMenus() throws Exception {
+
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00000123", 1000.00, "2009/07/30")
+      .addTransaction("2009/06/10", -250.00, "Auchan")
+      .addTransaction("2009/06/15", -200.00, "Auchan")
+      .addTransaction("2009/06/01", 300.00, "WorldCo")
+      .addTransaction("2009/07/15", -150.00, "Auchan")
+      .addTransaction("2009/07/15", -150.00, "Decathlon")
+      .addTransaction("2009/07/15", -100.00, "FNAC")
+      .addTransaction("2009/07/15", -150.00, "GoSport")
+      .load();
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00000234", 2000.00, "2009/07/30")
+      .addTransaction("2009/06/15", 350.00, "Big Inc.")
+      .addTransaction("2009/06/20", 50.00, "Unknown")
+      .load();
+
+    categorization.setNewVariable("Auchan", "Groceries", -500.00);
+    categorization.setNewIncome("WorldCo", "John's");
+    categorization.setNewIncome("Big Inc.", "Mary's");
+
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00000456", 5000.00, "2009/07/30")
+      .addTransaction("2009/06/10", -200.00, "Virt")
+      .load();
+    mainAccounts
+      .edit("Account n. 00000456")
+      .setAsSavings()
+      .setName("ING")
+      .selectBank("ING Direct")
+      .validate();
+    categorization.setNewSavings("Virt", "Epargne", "ING", "Main accounts");
+
+    // ---- Balance ----
+
+    views.selectAnalysis();
+    seriesAnalysis.histoChart.checkRightClickOptions(0,
+                                                     "Show transactions in Categorization view",
+                                                     "Show transactions in Accounts view");
+    seriesAnalysis.histoChart.rightClickAndSelect(0, "Show transactions in Categorization view");
+    views.checkCategorizationSelected();
+    categorization.initContent()
+      .add("10/06/2009", "Groceries", "AUCHAN", -250.00)
+      .add("15/06/2009", "Groceries", "AUCHAN", -200.00)
+      .add("15/06/2009", "Mary's", "BIG INC.", 350.00)
+      .add("20/06/2009", "", "UNKNOWN", 50.00)
+      .add("10/06/2009", "Epargne", "VIRT", -200.00)
+      .add("01/06/2009", "John's", "WORLDCO", 300.00)
+      .check();
+
+    // ---- Main accounts ----
+
+    views.selectAnalysis();
+    seriesAnalysis.toggleTable();
+    seriesAnalysis.select("Main accounts");
+    seriesAnalysis.histoChart.checkRightClickOptions(0,
+                                                     "Show transactions in Categorization view",
+                                                     "Show transactions in Accounts view");
+    seriesAnalysis.histoChart.rightClickAndSelect(0, "Show transactions in Accounts view");
+    mainAccounts.checkSelectedAccounts("Account n. 00000234", "Account n. 00000123");
+    savingsAccounts.checkNoAccountsSelected();
+    transactions.initContent()
+      .add("20/06/2009", TransactionType.VIREMENT, "UNKNOWN", "", 50.00)
+      .add("15/06/2009", TransactionType.VIREMENT, "BIG INC.", "", 350.00, "Mary's")
+      .add("15/06/2009", TransactionType.PRELEVEMENT, "AUCHAN", "", -200.00, "Groceries")
+      .add("10/06/2009", TransactionType.PRELEVEMENT, "VIRT", "", -200.00, "Epargne")
+      .add("10/06/2009", TransactionType.PRELEVEMENT, "AUCHAN", "", -250.00, "Groceries")
+      .add("01/06/2009", TransactionType.VIREMENT, "WORLDCO", "", 300.00, "John's")
+      .check();
+
+    // ---- Savings accounts ----
+
+    views.selectAnalysis();
+    seriesAnalysis.select("Savings accounts");
+    seriesAnalysis.histoChart.checkRightClickOptions(0,
+                                                     "Show transactions in Categorization view",
+                                                     "Show transactions in Accounts view");
+    seriesAnalysis.histoChart.rightClickAndSelect(0, "Show transactions in Accounts view");
+    savingsAccounts.checkSelectedAccounts("ING");
+    mainAccounts.checkNoAccountsSelected();
+    transactions.initContent()
+      .add("10/06/2009", TransactionType.PRELEVEMENT, "VIRT", "", -200.00, "Epargne")
+      .check();
+
+    // ---- Uncategorized ----
+
+    views.selectAnalysis();
+    seriesAnalysis.select("To categorize");
+    seriesAnalysis.histoChart.checkRightClickOptions(1,
+                                                     "Show transactions in Categorization view",
+                                                     "Show transactions in Accounts view");
+    seriesAnalysis.histoChart.rightClickAndSelect(1, "Show transactions in Categorization view");
+    timeline.checkSelection("2009/07");
+    categorization.checkShowsUncategorizedTransactionsForSelectedMonths();
+    categorization.initContent()
+      .add("15/07/2009", "", "DECATHLON", -150.00)
+      .add("15/07/2009", "", "FNAC", -100.00)
+      .add("15/07/2009", "", "GOSPORT", -150.00)
+      .check();
+
+    // ---- BudgetArea ----
+
+    views.selectAnalysis();
+    seriesAnalysis.select("Income");
+    seriesAnalysis.histoChart.checkRightClickOptions(0,
+                                                     "Show transactions in Categorization view",
+                                                     "Show transactions in Accounts view");
+    seriesAnalysis.histoChart.rightClickAndSelect(0, "Show transactions in Categorization view");
+    timeline.checkSelection("2009/06");
+    categorization.checkShowsSelectedMonthsOnly();
+    categorization.initContent()
+      .add("15/06/2009", "Mary's", "BIG INC.", 350.00)
+      .add("01/06/2009", "John's", "WORLDCO", 300.00)
+      .check();
+
+    views.selectAnalysis();
+    seriesAnalysis.select("Income", "Variable");
+    seriesAnalysis.histoChart.checkRightClickOptions(0,
+                                                     "Show transactions in Categorization view",
+                                                     "Show transactions in Accounts view");
+    seriesAnalysis.histoChart.rightClickAndSelect(0, "Show transactions in Categorization view");
+    categorization.checkShowsSelectedMonthsOnly();
+    categorization.initContent()
+      .add("10/06/2009", "Groceries", "AUCHAN", -250.00)
+      .add("15/06/2009", "Groceries", "AUCHAN", -200.00)
+      .add("15/06/2009", "Mary's", "BIG INC.", 350.00)
+      .add("01/06/2009", "John's", "WORLDCO", 300.00)
+      .check();
+
+    // ---- Series ----
+
+    views.selectAnalysis();
+    seriesAnalysis.select("Groceries");
+    seriesAnalysis.histoChart.checkRightClickOptions(0,
+                                                     "Show transactions in Categorization view",
+                                                     "Show transactions in Accounts view",
+                                                     "Edit");
+    seriesAnalysis.histoChart.rightClickAndSelect(0, "Show transactions in Accounts view");
+    timeline.checkSelection("2009/06");
+    categorization.checkShowsSelectedMonthsOnly();
+    transactions.initContent()
+      .add("15/06/2009", TransactionType.PRELEVEMENT, "AUCHAN", "", -200.00, "Groceries")
+      .add("10/06/2009", TransactionType.PRELEVEMENT, "AUCHAN", "", -250.00, "Groceries")
+      .check();
+
+    views.selectAnalysis();
+    seriesAnalysis.histoChart.rightClickAndEditSeries(1, "Edit")
+      .checkName("Groceries")
+      .checkMonthSelected(200907)
+      .checkAmount(500.00)
+      .validate();
   }
 }

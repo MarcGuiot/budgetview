@@ -2,10 +2,14 @@ package org.designup.picsou.gui.components.charts.histo;
 
 import org.globsframework.model.Key;
 
-public interface HistoChartListener {
-  void processClick(HistoSelection selection, Key objectKey);
+import java.util.Set;
 
-  void processDoubleClick(Integer columnIndex, Key objectKey);
+public interface HistoChartListener {
+  void processClick(HistoSelection selection, Set<Key> objectKeys);
+
+  void processDoubleClick(Integer columnIndex, Set<Key> objectKeys);
+
+  void processRightClick(HistoSelection selection, Set<Key> objectKeys);
 
   void scroll(int count);
 

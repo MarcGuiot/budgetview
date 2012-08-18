@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.utils;
 
 import org.designup.picsou.model.*;
+import org.globsframework.gui.utils.GlobSelectablePanel;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -15,10 +16,6 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class Matchers {
   private Matchers() {
-  }
-
-  public static GlobMatcher transactionsForAllAccounts(GlobRepository repository) {
-    return GlobMatchers.ALL;
   }
 
   public static GlobMatcher transactionsForMainAccounts(GlobRepository repository) {
@@ -57,6 +54,19 @@ public class Matchers {
     return GlobMatchers.contained(Transaction.BUDGET_MONTH, months);
   }
 
+  public static GlobMatcher transactionsForBudgetAreas(final Set<Integer> budgetAreaIds) {
+    return new GlobMatcher() {
+      public boolean matches(Glob transaction, GlobRepository repository) {
+        Glob series = repository.findLinkTarget(transaction, Transaction.SERIES);
+        return (series != null) && budgetAreaIds.contains(series.get(Series.BUDGET_AREA));
+      }
+
+      public String toString() {
+        return "transactions for BudgetAreas " + budgetAreaIds;
+      }
+    };
+  }
+  
   public static GlobMatcher transactionsForSeries(final Set<Integer> targetSeries) {
     return new GlobMatcher() {
       public boolean matches(Glob transaction, GlobRepository repository) {
@@ -268,6 +278,13 @@ public class Matchers {
     };
   }
 
+  public static GlobMatcher userCreatedMainAccounts() {
+    return new GlobMatcher() {
+      public boolean matches(Glob account, GlobRepository repository) {
+        return Account.isUserCreatedMainAccount(account);
+      }
+    };
+  }
   public static GlobMatcher userCreatedSavingsAccounts() {
     return new GlobMatcher() {
       public boolean matches(Glob account, GlobRepository repository) {
@@ -341,11 +358,8 @@ public class Matchers {
   public static GlobMatcher toReconcile() {
     return new GlobMatcher() {
       public boolean matches(Glob transaction, GlobRepository repository) {
-        if (transaction == null) {
-          return false;
-        }
-        return Utils.equal(ReconciliationStatus.TO_RECONCILE.getId(),
-                           transaction.get(Transaction.RECONCILIATION_STATUS));
+        return transaction != null &&
+               Utils.equal(ReconciliationStatus.TO_RECONCILE.getId(), transaction.get(Transaction.RECONCILIATION_STATUS));
       }
     };
   }

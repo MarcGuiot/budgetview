@@ -12,6 +12,8 @@ import org.globsframework.utils.Utils;
 import org.uispec4j.Mouse;
 import org.uispec4j.Panel;
 
+import java.util.Collections;
+
 public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
 
   private Panel chartPanel;
@@ -114,7 +116,8 @@ public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
     if (monthIndex < 0) {
       Assert.fail("Month " + monthId + " not found");
     }
-    return dataset.getTooltip(monthIndex, Key.create(Day.MONTH, monthId, Day.DAY, dayId - 1));
+    return dataset.getTooltip(monthIndex,
+                              Collections.singleton(Key.create(Day.MONTH, monthId, Day.DAY, dayId - 1)));
   }
 
   public HistoDailyDataset getDataset() {

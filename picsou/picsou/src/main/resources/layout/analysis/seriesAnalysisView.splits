@@ -10,14 +10,14 @@
            icon="arrow_down.png" rolloverIcon="arrow_down_roll.png"
            foreground="block.bottom.link" iconTextGap="2" marginTop="8"/>
 
-    <style selector="button.gotoLeft" ui="hyperlinkButtonWithoutUnderline"
+    <style selector="button.gotoBudget" ui="hyperlinkButtonWithoutUnderline"
            foreground="seriesAnalysis.stackToggle" icon="leftArrow(12,16,8,8,seriesAnalysis.stackToggle)"
-           font="-,plain,11" iconTextGap="3" marginLeft="5"
+           font="-,plain,12" iconTextGap="3" marginLeft="5"
            anchor="left"/>
 
-    <style selector="button.gotoRight" ui="hyperlinkButtonWithoutUnderline"
+    <style selector="button.gotoSubSeries" ui="hyperlinkButtonWithoutUnderline"
            foreground="seriesAnalysis.stackToggle" icon="rightArrow(12,16,8,8,seriesAnalysis.stackToggle)"
-           font="-,plain,11" iconTextGap="3" marginLeft="5"
+           font="-,plain,12" iconTextGap="3" marginLeft="5"
            anchor="right"/>
   </styles>
 
@@ -59,9 +59,9 @@
               <panel gridPos="(3,1,1,2)" ref="histoChart" weightX="10" styleClass="chart"
                      background="block.inner.bg.secondary"/>
               <row gridPos="(0,2,3,1)" weightY="0.01" weightX="1" marginBottom="3">
-                <button ref="gotoBudgetButton" styleClass="gotoLeft" weightX="1"/>
+                <button ref="gotoBudgetButton" styleClass="gotoBudget" weightX="1"/>
                 <filler fill="horizontal" weightX="10"/>
-                <button ref="gotoSubSeriesButton" styleClass="gotoRight" weightX="1"/>
+                <button ref="gotoSubSeriesButton" styleClass="gotoSubSeries" weightX="1"/>
               </row>
             </grid>
           </column>

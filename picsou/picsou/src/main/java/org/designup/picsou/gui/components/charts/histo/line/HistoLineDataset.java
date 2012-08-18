@@ -5,9 +5,13 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Key;
 
+import java.util.Collections;
+import java.util.Set;
+
 public class HistoLineDataset extends AbstractHistoDataset<HistoLineElement> {
 
   private int multiplier = 1;
+  private Set<Key> keys = Collections.emptySet();
 
   public HistoLineDataset(String tooltipKey) {
     super(tooltipKey);
@@ -17,6 +21,10 @@ public class HistoLineDataset extends AbstractHistoDataset<HistoLineElement> {
                   boolean current, boolean future, boolean selected) {
     add(new HistoLineElement(id, label, tooltip, section, value, current, future, selected));
     updateMax(value);
+  }
+
+  public void setKeys(Set<Key> keys) {
+    this.keys = keys;
   }
 
   public void setInverted() {
@@ -45,10 +53,14 @@ public class HistoLineDataset extends AbstractHistoDataset<HistoLineElement> {
     return super.getMaxPositiveValue();
   }
 
-  public String getTooltip(int index, Key objectKey) {
+  public String getTooltip(int index, Set<Key> objectKey) {
     if ((index < 0) || (index >= size())) {
       return "";
     }
     return Lang.get(getTooltipKey(), getElement(index).tooltip, Formatting.toString(getValue(index)));
+  }
+
+  public Set<Key> getKeys() {
+    return keys;
   }
 }

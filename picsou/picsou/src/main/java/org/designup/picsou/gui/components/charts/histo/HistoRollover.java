@@ -2,6 +2,8 @@ package org.designup.picsou.gui.components.charts.histo;
 
 import org.globsframework.model.Key;
 
+import java.util.Set;
+
 public interface HistoRollover {
   boolean isOnColumn(int columnIndex);
 
@@ -9,7 +11,7 @@ public interface HistoRollover {
 
   Integer getColumnIndex();
 
-  Key getObjectKey();
+  Set<Key> getObjectKeys();
 
   boolean isActive();
 }

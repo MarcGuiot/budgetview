@@ -3,7 +3,10 @@ package org.globsframework.model.utils;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
-import org.globsframework.metamodel.fields.*;
+import org.globsframework.metamodel.fields.BooleanField;
+import org.globsframework.metamodel.fields.DoubleField;
+import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.*;
 import org.globsframework.utils.Utils;
 
@@ -50,7 +53,23 @@ public class GlobUtils {
     }
     return result;
   }
-  
+
+  public static Set<Key> createKeys(GlobType type, Set<Integer> ids) {
+    Set<Key> keys = new HashSet<Key>();
+    for (Integer id : ids) {
+      keys.add(Key.create(type, id));
+    }
+    return keys;
+  }
+
+  public static Set<GlobType> getTypes(Collection<Key> keys) {
+    Set<GlobType> result = new HashSet<GlobType>();
+    for (Key key : keys) {
+      result.add(key.getGlobType());
+    }
+    return result;
+  }
+
   public static Set<Integer> getIntegerValues(Collection<Key> keys, IntegerField field) {
     Set<Integer> result = new HashSet<Integer>();
     for (Key key : keys) {
@@ -116,13 +135,21 @@ public class GlobUtils {
     }
   }
 
-  public static void copy(GlobRepository repository, Glob from, Glob to, Field...fields) {
+  public static void copy(GlobRepository repository, Glob from, Glob to, Field... fields) {
     FieldValue fieldValues[] = new FieldValue[fields.length];
     for (int i = 0; i < fields.length; i++) {
       Field field = fields[i];
       fieldValues[i] = new FieldValue(field, from.getValue(field));
     }
     repository.update(to.getKey(), fieldValues);
+  }
+
+  public static GlobList getAll(Set<Key> keys, GlobRepository repository) {
+    GlobList result = new GlobList();
+    for (Key key : keys) {
+      result.add(repository.get(key));
+    }
+    return result;
   }
 
   public interface DiffFunctor<T> {

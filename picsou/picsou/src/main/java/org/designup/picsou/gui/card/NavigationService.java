@@ -6,6 +6,7 @@ import org.designup.picsou.gui.categorization.components.CategorizationFiltering
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -13,9 +14,15 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.directory.Directory;
 
+import java.util.Collections;
+import java.util.Set;
 import java.util.Stack;
+
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 
 public class NavigationService implements GlobSelectionListener {
 
@@ -89,14 +96,22 @@ public class NavigationService implements GlobSelectionListener {
     gotoCard(Card.DATA);
   }
 
+  public void gotoData(GlobList transactions) {
+    transactionView.setFilter(fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
+    select(Card.DATA, false);
+  }
+
   public void gotoDataWithPlannedTransactions() {
     transactionView.setPlannedTransactionsShown();
     gotoData();
   }
 
   public void gotoDataForAccount(Key accountKey) {
-    selectionService.select(repository.get(accountKey));
-    transactionView.setAccountFilter(accountKey);
+    gotoDataForAccounts(Collections.singleton(accountKey));
+  }
+
+  public void gotoDataForAccounts(Set<Key> accountKeys) {
+    transactionView.setAccountFilter(accountKeys);
     select(Card.DATA, false);
   }
 

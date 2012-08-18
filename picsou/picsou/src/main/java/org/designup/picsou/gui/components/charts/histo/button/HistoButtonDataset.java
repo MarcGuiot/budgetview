@@ -21,9 +21,9 @@ public class HistoButtonDataset extends AbstractHistoDataset<HistoDatasetElement
     maxPositive = 1;
   }
 
-  public String getTooltip(int index, Key objectKey) {
-    if (objectKey != null) {
-      return keyMap.get(objectKey).tooltip;
+  public String getTooltip(int index, Set<Key> objectKey) {
+    if (objectKey.isEmpty()) {
+      return keyMap.get(objectKey.iterator().next()).tooltip;
     }
     return null;
   }

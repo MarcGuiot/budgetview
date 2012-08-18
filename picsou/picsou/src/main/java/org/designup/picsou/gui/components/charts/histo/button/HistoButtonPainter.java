@@ -5,6 +5,9 @@ import org.designup.picsou.gui.components.charts.histo.utils.BasicClickMap;
 import org.globsframework.model.Key;
 
 import java.awt.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class HistoButtonPainter implements HistoPainter {
   private HistoButtonDataset dataset;
@@ -58,7 +61,7 @@ public class HistoButtonPainter implements HistoPainter {
     return dataset;
   }
 
-  public Key getObjectKeyAt(int x, int y) {
-    return clickMap.getKey(x, y);
+  public Set<Key> getObjectKeysAt(int x, int y) {
+    return Collections.singleton(clickMap.getKey(x, y));
   }
 }

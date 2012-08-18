@@ -6,8 +6,11 @@ import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineDataset;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLinePainter;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 
 import javax.swing.*;
+import java.util.Collections;
+import java.util.Set;
 
 public class HistoLineDatasetBuilder extends HistoDatasetBuilder {
   private HistoLineDataset dataset;
@@ -31,15 +34,17 @@ public class HistoLineDatasetBuilder extends HistoDatasetBuilder {
     hasPositive |= value > 0;
   }
 
-  public void showLine(HistoLineColors colors, String messageKey, String... args) {
-    histoChart.update(new HistoLinePainter(dataset, colors));
-    updateLabel(label, "seriesAnalysis.chart.histo." + messageKey, args);
-    updateLegend();
-  }
-
   public void showBars(HistoLineColors colors, String messageKey, String... args) {
     histoChart.update(new HistoBarPainter(dataset, colors));
     updateLabel(label, "seriesAnalysis.chart.histo." + messageKey, args);
     updateLegend();
+  }
+
+  public void setKey(Key key) {
+    setKeys(Collections.singleton(key));
+  }
+
+  public void setKeys(Set<Key> keys) {
+    this.dataset.setKeys(keys);
   }
 }

@@ -4,6 +4,8 @@ import org.designup.picsou.gui.components.charts.histo.*;
 import org.globsframework.model.Key;
 
 import java.awt.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class HistoBarPainter implements HistoPainter {
 
@@ -21,8 +23,8 @@ public class HistoBarPainter implements HistoPainter {
     return dataset;
   }
 
-  public Key getObjectKeyAt(int x, int y) {
-    return null;
+  public Set<Key> getObjectKeysAt(int x, int y) {
+    return dataset.getKeys();
   }
 
   public void paint(Graphics2D g2, HistoChartMetrics metrics, HistoChartConfig config, HistoRollover rollover) {

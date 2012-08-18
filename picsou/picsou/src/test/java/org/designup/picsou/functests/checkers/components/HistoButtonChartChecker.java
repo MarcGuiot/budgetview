@@ -12,6 +12,7 @@ import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HistoButtonChartChecker extends HistoChartChecker {
@@ -75,12 +76,24 @@ public class HistoButtonChartChecker extends HistoChartChecker {
   public Trigger triggerClick(final String label) {
     return new Trigger() {
       public void run() throws Exception {
-        HistoSelectionManager selectionManager = getChart().getSelectionManager();
-        HistoButtonBlock block = getBlock(label);
-        selectionManager.updateRollover(block.minIndex, block.key, false);
-        selectionManager.startClick();
+        click(label, false);
       }
     };
+  }
+
+  public Trigger triggerRightClick(final String label) {
+    return new Trigger() {
+      public void run() throws Exception {
+        click(label, true);
+      }
+    };
+  }
+
+  private void click(String label, boolean rightClick) {
+    HistoSelectionManager selectionManager = getChart().getSelectionManager();
+    HistoButtonBlock block = getBlock(label);
+    selectionManager.updateRollover(block.minIndex, Collections.singleton(block.key), false, rightClick);
+    selectionManager.startClick(rightClick);
   }
 
   public void init() {

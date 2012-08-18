@@ -50,7 +50,6 @@ public class PopupMenuInterceptor {
                                  if (display.getCurrentPopup() == null) {
                                    AssertAdapter.fail("No popup shown");
                                  }
-                                 ;
                                }
                              },
                              UISpec4J.getWindowInterceptionTimeLimit());
@@ -69,8 +68,10 @@ public class PopupMenuInterceptor {
         this.menu = new MenuItem((JPopupMenu)window.findSwingComponent(JPopupMenu.class));
       }
       catch (ItemNotFoundException e) {
+        // Ignore
       }
       catch (ComponentAmbiguityException e) {
+        // Ignore
       }
     }
   }

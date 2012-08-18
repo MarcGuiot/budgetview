@@ -15,9 +15,7 @@ import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public enum BudgetArea implements GlobConstantContainer {
   ALL("ALL", -1, false, false, false),
@@ -140,5 +138,13 @@ public enum BudgetArea implements GlobConstantContainer {
 
   public double getMultiplier() {
     return isIncome() ? 1 : -1;
+  }
+
+  public static Set<org.globsframework.model.Key> getKeys(Set<BudgetArea> budgetAreas) {
+    Set<org.globsframework.model.Key> keys = new HashSet<org.globsframework.model.Key>();
+    for (BudgetArea budgetArea : budgetAreas) {
+      keys.add(budgetArea.getKey());
+    }
+    return keys;
   }
 }

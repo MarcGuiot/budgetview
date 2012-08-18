@@ -8,8 +8,11 @@ import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffLegendPanel
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 
 import javax.swing.*;
+import java.util.Collections;
+import java.util.Set;
 
 public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
 
@@ -23,6 +26,14 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
     this.legend = legend;
     this.dataset = new HistoDiffDataset("seriesAnalysis.chart.histo." + tooltipKey + ".tooltip");
     this.lastMonthWithTransactions = CurrentMonth.getLastTransactionMonth(repository);
+  }
+
+  public void setKey(Key key) {
+    this.dataset.setKeys(Collections.singleton(key));
+  }
+
+  public void setKeys(Set<Key> keys) {
+    this.dataset.setKeys(keys);
   }
 
   public void add(int monthId, Double reference, Double actual, boolean isSelectedMonth) {
@@ -58,5 +69,4 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
       dataset.setInverted();
     }
   }
-
 }

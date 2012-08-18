@@ -29,6 +29,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Set;
 
 public class ProjectChartView extends View {
   private static final float BUTTON_FONT_SIZE = 12.0f;
@@ -50,9 +51,9 @@ public class ProjectChartView extends View {
       }
     };
     this.histoChart.addListener(new HistoChartListenerAdapter() {
-      public void processClick(HistoSelection selection, Key objectKey) {
-        if (objectKey != null) {
-          getEditionDialog().show(objectKey);
+      public void processClick(HistoSelection selection, Set<Key> objectKeys) {
+        if (objectKeys.size() == 1) {
+          getEditionDialog().show(objectKeys.iterator().next());
           return;
         }
 

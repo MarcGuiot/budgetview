@@ -185,6 +185,13 @@ public class Account {
     return (account != null) && !SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID));
   }
 
+  public static boolean isUserCreatedMainAccount(Glob account) {
+    return (account != null) &&
+           Account.isMain(account) &&
+           !MAIN_SUMMARY_KEY.equals(account.getKey()) &&
+           !EXTERNAL_KEY.equals(account.getKey());
+  }
+
   public static boolean isUserCreatedSavingsAccount(Glob account) {
     return (account != null) &&
            Account.isSavings(account) &&

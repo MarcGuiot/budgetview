@@ -4,6 +4,7 @@ import org.globsframework.model.Key;
 import org.globsframework.xml.XmlTestLogger;
 
 import java.io.IOException;
+import java.util.Set;
 
 public class DummyHistoChartListener implements HistoChartListener {
 
@@ -13,7 +14,7 @@ public class DummyHistoChartListener implements HistoChartListener {
   public DummyHistoChartListener() throws IOException {
   }
 
-  public void processClick(HistoSelection selection, Key objectKey) {
+  public void processClick(HistoSelection selection, Set<Key> objectKeys) {
     try {
       logger.log("select").addAttribute("ids", selection.getColumnIds().toString()).end();
     }
@@ -22,7 +23,16 @@ public class DummyHistoChartListener implements HistoChartListener {
     }
   }
 
-  public void processDoubleClick(Integer columnIndex, Key objectKey) {
+  public void processDoubleClick(Integer columnIndex, Set<Key> objectKeys) {
+  }
+
+  public void processRightClick(HistoSelection selection, Set<Key> objectKeys) {
+    try {
+      logger.log("rightClick").addAttribute("ids", selection.getColumnIds().toString()).end();
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public void scroll(int count) {

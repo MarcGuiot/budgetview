@@ -11,10 +11,7 @@ import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -424,6 +421,11 @@ public class GuiUtils {
       return ((AbstractButton)component).getText();
     }
     return "";
+  }
+  
+  public static boolean isRightClick(MouseEvent event) {
+    int modifiers = event.getModifiers();
+    return (modifiers & MouseEvent.BUTTON3_MASK) != 0;
   }
 
   public static Icon scaleDown(Icon icon, int maxWidth, int maxHeight) {

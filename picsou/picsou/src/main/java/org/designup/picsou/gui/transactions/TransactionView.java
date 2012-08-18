@@ -39,6 +39,7 @@ import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
@@ -101,7 +102,7 @@ public class TransactionView extends View implements Filterable {
 
     search = new TransactionFilterPanel(filterManager, repository, directory);
     builder.add("transactionSearch", search.getPanel());
-    
+
     repository.addChangeListener(new TypeChangeSetListener(Series.TYPE, SubSeries.TYPE) {
       protected void update(GlobRepository repository) {
         search.reapplyFilterIfActive();
@@ -142,8 +143,8 @@ public class TransactionView extends View implements Filterable {
     }
   }
 
-  public void setAccountFilter(Key accountKey) {
-    selectionService.select(repository.get(accountKey));
+  public void setAccountFilter(Set<Key> accountKey) {
+    selectionService.select(GlobUtils.getAll(accountKey, repository), Account.TYPE);
   }
 
   public void setSeriesFilter(Glob series) {
@@ -252,13 +253,13 @@ public class TransactionView extends View implements Filterable {
                  descriptionService.getStringifier(Transaction.ACCOUNT));
 
     view.registerSaving(UserPreferences.KEY, new GlobTableView.FieldAccess() {
-                          public IntegerField getPosField(int modelIndex) {
-                            if (UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex > UserPreferences.TRANSACTION_POS9.getIndex()) {
-                              throw new RuntimeException("missing column in UserPreference");
-                            }
-                            return (IntegerField)UserPreferences.TYPE.getField(UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex);
-                          }
-                        }, repository);
+      public IntegerField getPosField(int modelIndex) {
+        if (UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex > UserPreferences.TRANSACTION_POS9.getIndex()) {
+          throw new RuntimeException("missing column in UserPreference");
+        }
+        return (IntegerField)UserPreferences.TYPE.getField(UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex);
+      }
+    }, repository);
     return view;
   }
 

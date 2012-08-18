@@ -3,6 +3,9 @@ package org.designup.picsou.gui.components.charts.histo;
 import org.globsframework.model.Key;
 
 import java.awt.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public interface HistoPainter {
 
@@ -18,10 +21,10 @@ public interface HistoPainter {
       return HistoDataset.NULL;
     }
 
-    public Key getObjectKeyAt(int x, int y) {
-      return null;
+    public Set<Key> getObjectKeysAt(int x, int y) {
+      return Collections.emptySet();
     }
   };
 
-  Key getObjectKeyAt(int x, int y);
+  Set<Key> getObjectKeysAt(int x, int y);
 }

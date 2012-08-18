@@ -6,6 +6,8 @@ import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.model.Key;
 
 import java.awt.*;
+import java.util.Collections;
+import java.util.Set;
 
 public class HistoDailyPainter implements HistoPainter {
 
@@ -22,8 +24,12 @@ public class HistoDailyPainter implements HistoPainter {
     return dataset;
   }
 
-  public Key getObjectKeyAt(int x, int y) {
-    return clickMap.getKey(x, y);
+  public Set<Key> getObjectKeysAt(int x, int y) {
+    Key key = clickMap.getKey(x, y);
+    if (key == null) {
+      return Collections.emptySet();
+    }
+    return Collections.singleton(key);
   }
 
   public void paint(Graphics2D g2, HistoChartMetrics chartMetrics, HistoChartConfig config, HistoRollover rollover) {

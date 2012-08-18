@@ -100,14 +100,14 @@ public abstract class GuiChecker {
   }
 
   protected void click(JComponent component, int x, int y) {
-    click(component, x, y, Key.Modifier.NONE);
+    click(component, x, y, Key.Modifier.NONE, false);
   }
 
-  protected void click(JComponent component, int x, int y, Key.Modifier modifier) {
+  protected void click(JComponent component, int x, int y, Key.Modifier modifier, boolean useRightClick) {
     Mouse.enter(component, x, y);
     Mouse.move(component, x, y);
-    Mouse.pressed(component, false, modifier, x, y);
-    Mouse.released(component, false, modifier, x, y);
+    Mouse.pressed(component, useRightClick, modifier, x, y);
+    Mouse.released(component, useRightClick, modifier, x, y);
     Mouse.exit(component, x, y);
   }
 
@@ -116,6 +116,6 @@ public abstract class GuiChecker {
   }
 
   protected void click(JComponent component, Rectangle rectangle, Key.Modifier modifier) {
-    click(component, rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2, modifier);
+    click(component, rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2, modifier, false);
   }
 }

@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.categorization.components;
 
+import org.designup.picsou.gui.categorization.actions.EditSeriesAction;
 import org.designup.picsou.gui.description.stringifiers.SeriesDescriptionStringifier;
-import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -105,7 +105,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
 
     final SplitsNode<JRadioButton> splitsNode = cellBuilder.add("seriesToggle", selector);
     seriesToComponent.put(series.getKey(), splitsNode);
-    JButton editSeriesButton = new JButton(new EditSeriesAction(seriesKey));
+    JButton editSeriesButton = new JButton(new EditSeriesAction(seriesKey, repository, directory));
     editSeriesButton.setName("editSeries:" + seriesName);
     cellBuilder.add("editSeries", editSeriesButton);
     if (budgetArea == BudgetArea.OTHER) {
@@ -182,19 +182,6 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
     });
     radio.setName(label);
     return radio;
-  }
-
-  protected class EditSeriesAction extends AbstractAction {
-    private Key seriesKey;
-
-    protected EditSeriesAction(Key seriesKey) {
-      this.seriesKey = seriesKey;
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      Glob series = repository.get(seriesKey);
-      SeriesEditor.get(directory).showSeries(series, selectionService.getSelection(Month.TYPE).getValueSet(Month.ID));
-    }
   }
 
   private void updateToggleSelection(JToggleButton selector, GlobList transactions, Key seriesKey) {

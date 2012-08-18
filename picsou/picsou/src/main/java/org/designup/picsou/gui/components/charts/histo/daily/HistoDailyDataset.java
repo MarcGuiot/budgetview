@@ -6,6 +6,8 @@ import org.designup.picsou.model.Day;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Key;
 
+import java.util.Set;
+
 public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
 
   private Integer currentMonthId;
@@ -89,11 +91,12 @@ public class HistoDailyDataset extends AbstractHistoDataset<HistoDailyElement> {
     return getElement(monthIndex).daySelections[dayIndex];
   }
 
-  public String getTooltip(int index, Key objectKey) {
-    if ((index < 0) || (index >= size()) || (objectKey == null)) {
+  public String getTooltip(int index, Set<Key> objectKeys) {
+    if ((index < 0) || (index >= size()) || (objectKeys.isEmpty())) {
       return "";
     }
 
+    Key objectKey = objectKeys.iterator().next();
     return Lang.get(getTooltipKey(),
                     Day.getFullLabel(objectKey),
                     Formatting.toStandardValueString(getValue(index, objectKey.get(Day.DAY) - 1)));

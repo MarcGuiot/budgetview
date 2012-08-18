@@ -32,8 +32,8 @@ public class TransactionAccountPositionsChartView extends AccountsChartView {
       }
     }, Account.TYPE, Transaction.TYPE);
     histoChartBuilder.getChart().addListener(new HistoChartListenerAdapter() {
-      public void processClick(HistoSelection selection, Key objectKey) {
-        MainDailyPositionsChartView.selectTransactions(objectKey, histoChartBuilder.getChart(),
+      public void processClick(HistoSelection selection, Set<Key> objectKeys) {
+        MainDailyPositionsChartView.selectTransactions(objectKeys, histoChartBuilder.getChart(),
                                                        repository, directory, selectionService);
       }
     });

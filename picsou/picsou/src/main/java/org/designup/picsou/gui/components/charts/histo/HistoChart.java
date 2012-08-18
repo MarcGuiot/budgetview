@@ -1,12 +1,14 @@
 package org.designup.picsou.gui.components.charts.histo;
 
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Set;
 
 public class HistoChart extends JPanel {
 
@@ -36,7 +38,7 @@ public class HistoChart extends JPanel {
     selectionManager.addListener(new HistoChartListenerAdapter() {
       public void rolloverUpdated(HistoRollover rollover) {
         if (rollover.getColumnIndex() != null) {
-          setToolTipText(painter.getDataset().getTooltip(rollover.getColumnIndex(), rollover.getObjectKey()));
+          setToolTipText(painter.getDataset().getTooltip(rollover.getColumnIndex(), rollover.getObjectKeys()));
         }
         setCursor(Cursor.getPredefinedCursor(rollover.isActive() ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
       }
@@ -229,14 +231,14 @@ public class HistoChart extends JPanel {
     }
   }
 
-  public void mouseMoved(int x, int y, boolean dragging) {
+  public void mouseMoved(int x, int y, boolean dragging, boolean rightClick) {
     if (metrics == null) {
       return;
     }
 
     Integer columnIndex = metrics.getColumnAt(x);
-    Key objectKey = painter.getObjectKeyAt(x, y);
-    selectionManager.updateRollover(columnIndex, objectKey, dragging);
+    Set<Key> objectKeys = painter.getObjectKeysAt(x, y);
+    selectionManager.updateRollover(columnIndex, objectKeys, dragging, rightClick);
 
     repaint();
   }
@@ -251,7 +253,7 @@ public class HistoChart extends JPanel {
 
       public void mousePressed(MouseEvent e) {
         if (clickable() && isEnabled() && e.getClickCount() == 1) {
-          selectionManager.startClick();
+          selectionManager.startClick(GuiUtils.isRightClick(e));
         }
       }
 
@@ -276,13 +278,13 @@ public class HistoChart extends JPanel {
     addMouseMotionListener(new MouseMotionListener() {
       public void mouseDragged(MouseEvent e) {
         if (isEnabled()) {
-          HistoChart.this.mouseMoved(e.getX(), e.getY(), true);
+          HistoChart.this.mouseMoved(e.getX(), e.getY(), true, GuiUtils.isRightClick(e));
         }
       }
 
       public void mouseMoved(MouseEvent e) {
         if (isEnabled()) {
-          HistoChart.this.mouseMoved(e.getX(), e.getY(), false);
+          HistoChart.this.mouseMoved(e.getX(), e.getY(), false, GuiUtils.isRightClick(e));
         }
       }
     });

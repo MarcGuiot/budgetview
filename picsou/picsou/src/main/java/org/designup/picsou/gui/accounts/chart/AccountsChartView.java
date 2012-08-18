@@ -15,6 +15,8 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
+import java.util.Set;
+
 public abstract class AccountsChartView extends View implements HistoChartRangeListener {
   protected HistoChartBuilder histoChartBuilder;
   protected String componentName;
@@ -42,7 +44,7 @@ public abstract class AccountsChartView extends View implements HistoChartRangeL
     };
     final NavigationService navigationService = directory.get(NavigationService.class);
     histoChartBuilder.addListener(new HistoChartListenerAdapter() {
-      public void processDoubleClick(Integer columnIndex, Key objectKey) {
+      public void processDoubleClick(Integer columnIndex, Set<Key> objectKeys) {
         AccountsChartView.this.processDoubleClick(navigationService);
       }
     });
