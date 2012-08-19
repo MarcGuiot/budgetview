@@ -6,6 +6,8 @@ import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.components.tips.ErrorTip;
+import org.designup.picsou.gui.components.tips.TipPosition;
 import org.designup.picsou.gui.description.stringifiers.MonthYearStringifier;
 import org.designup.picsou.gui.series.edition.MonthCheckBoxUpdater;
 import org.designup.picsou.gui.series.edition.SeriesForecastPanel;
@@ -696,6 +698,13 @@ public class SeriesEditionDialog {
       if (currentSeries != null) {
         createdSeries = currentSeries.getKey();
         lastSelectedSubSeriesId = SeriesEditionDialog.this.getCurrentSubSeriesId();
+        if (currentSeries.get(Series.NAME).isEmpty()) {
+          JTextField component = nameEditor.getComponent();
+          ErrorTip.showLeft(component,
+                            Lang.get("seriesEdition.emptyNameError"),
+                            directory);
+          return;
+        }
       }
       amountEditionPanel.completeBeforeCommit();
       localRepository.commitChanges(false);

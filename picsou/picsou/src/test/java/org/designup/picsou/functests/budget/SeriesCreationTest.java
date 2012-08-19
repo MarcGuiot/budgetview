@@ -116,4 +116,26 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       })
       .cancel();
   }
+
+  public void testCannotUseEmptySeriesNames() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/05/30", 1129.90, "WorldCo")
+      .addTransaction("2008/06/30", 1129.90, "WorldCo")
+      .load();
+
+    views.selectCategorization();
+    categorization.selectTableRows(0, 1);
+
+    categorization.selectIncome().createSeries()
+      .setName("")
+      .validateAndCheckNameError("You must enter a name")
+      .setName("Prime")
+      .checkNoTipShown()
+      .validate();
+
+    categorization.selectTransaction("WORLDCO");
+    categorization.selectIncome()
+      .checkContainsSeries("Prime");
+  }
 }

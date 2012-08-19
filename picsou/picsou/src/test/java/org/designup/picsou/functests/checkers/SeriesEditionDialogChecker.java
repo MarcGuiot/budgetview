@@ -247,6 +247,13 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     checkClosed();
   }
 
+  public SeriesEditionDialogChecker validateAndCheckNameError(String message) {
+    dialog.getButton(Lang.get("ok")).click();
+    checkTipVisible(dialog, getNameBox(), message);
+    checkVisible();
+    return this;
+  }
+
   public void cancel() {
     dialog.getButton(Lang.get("cancel")).click();
     checkClosed();
@@ -747,5 +754,10 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
 
   private HistoChartChecker getChart() {
     return new HistoChartChecker(dialog, "seriesAmountEditionPanel", "chart");
+  }
+
+  public SeriesEditionDialogChecker checkNoTipShown() {
+    checkNoTipVisible(dialog);
+    return this;
   }
 }
