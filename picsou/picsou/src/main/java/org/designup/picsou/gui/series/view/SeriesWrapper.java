@@ -23,10 +23,7 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.exceptions.ItemAmbiguity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class SeriesWrapper {
   public static GlobType TYPE;
@@ -111,6 +108,27 @@ public class SeriesWrapper {
       return budgetArea.getDescription();
     }
     return null;
+  }
+
+  public static GlobList getWrappedGlobs(Set<Glob> wrappers, GlobRepository repository) {
+    GlobList globs = new GlobList();
+    for (Glob wrapper : wrappers) {
+      globs.add(repository.get(getWrappedKey(wrapper)));
+    }
+    return globs;
+  }
+
+  private static org.globsframework.model.Key getWrappedKey(Glob wrapper) {
+    Integer itemId = wrapper.get(SeriesWrapper.ITEM_ID);
+    switch (SeriesWrapperType.get(wrapper)) {
+      case SERIES:
+        return org.globsframework.model.Key.create(Series.TYPE, itemId);
+      case SUB_SERIES:
+        return org.globsframework.model.Key.create(SubSeries.TYPE, itemId);
+      case BUDGET_AREA:
+        return org.globsframework.model.Key.create(BudgetArea.TYPE, itemId);
+    }
+    throw new InvalidParameter("Unexpected wrapper type for " + wrapper);
   }
 
   public static Glob getWrapperForBudgetArea(BudgetArea budgetArea, GlobRepository repository) {

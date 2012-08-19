@@ -19,16 +19,16 @@ public class StackSelectionManager {
     currentRollover = null;
   }
 
-  public void startClick(boolean expandSelection) {
+  public void startClick(boolean expandSelection, boolean rightClick) {
     if (currentRollover != null) {
-      addRolloverToSelection(expandSelection);
+      addRolloverToSelection(expandSelection, rightClick);
     }
     else {
-      notifyClick(expandSelection);
+      notifyClick(expandSelection, rightClick);
     }
   }
 
-  public void updateRollover(Key key, boolean expandSelection) {
+  public void updateRollover(Key key, boolean expandSelection, boolean rightClick) {
     boolean rolloverChanged = false;
     boolean doExpandSelection = false;
 
@@ -45,24 +45,29 @@ public class StackSelectionManager {
     }
 
     if (doExpandSelection) {
-      addRolloverToSelection(expandSelection);
+      addRolloverToSelection(expandSelection, rightClick);
     }
   }
 
-  private void addRolloverToSelection(boolean expandSelection) {
+  private void addRolloverToSelection(boolean expandSelection, boolean rightClick) {
     if (currentRollover == null) {
       return;
     }
-    notifyClick(expandSelection);
+    notifyClick(expandSelection, rightClick);
   }
 
   public boolean isRollover(Key key) {
     return key != null && key.equals(currentRollover);
   }
 
-  private void notifyClick(boolean expandSelection) {
+  private void notifyClick(boolean expandSelection, boolean rightClick) {
     for (StackChartListener listener : listeners) {
-      listener.processClick(currentRollover, expandSelection);
+      if (rightClick) {
+        listener.processRightClick(currentRollover, expandSelection);
+      }
+      else {
+        listener.processClick(currentRollover, expandSelection);
+      }
     }
   }
 }

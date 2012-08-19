@@ -3,6 +3,7 @@ package org.designup.picsou.gui.components.charts.stack;
 import org.designup.picsou.gui.components.charts.stack.utils.StackChartAdapter;
 import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Key;
 import org.globsframework.utils.Strings;
 
@@ -182,9 +183,9 @@ public class StackChart extends JPanel {
     return selectionManager.isRollover(block.key);
   }
 
-  public void mouseMoved(int x, int y, boolean expandSelection) {
+  public void mouseMoved(int x, int y, boolean expandSelection, boolean rightClick) {
     Key rollover = getSelection(x, y);
-    selectionManager.updateRollover(rollover, expandSelection);
+    selectionManager.updateRollover(rollover, expandSelection, rightClick);
   }
 
   private Key getSelection(int x, int y) {
@@ -194,7 +195,7 @@ public class StackChart extends JPanel {
   private void registerMouseActions() {
     addMouseListener(new MouseAdapter() {
       public void mousePressed(MouseEvent e) {
-        selectionManager.startClick(Gui.isAddModifier(e.getModifiers()));
+        selectionManager.startClick(Gui.isAddModifier(e.getModifiers()), GuiUtils.isRightClick(e));
       }
 
       public void mouseEntered(MouseEvent e) {
@@ -209,11 +210,11 @@ public class StackChart extends JPanel {
 
     addMouseMotionListener(new MouseMotionListener() {
       public void mouseDragged(MouseEvent e) {
-        StackChart.this.mouseMoved(e.getX(), e.getY(), true);
+        StackChart.this.mouseMoved(e.getX(), e.getY(), true, GuiUtils.isRightClick(e));
       }
 
       public void mouseMoved(MouseEvent e) {
-        StackChart.this.mouseMoved(e.getX(), e.getY(), false);
+        StackChart.this.mouseMoved(e.getX(), e.getY(), false, GuiUtils.isRightClick(e));
       }
     });
 

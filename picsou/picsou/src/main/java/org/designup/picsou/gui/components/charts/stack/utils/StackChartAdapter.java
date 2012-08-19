@@ -9,4 +9,7 @@ public class StackChartAdapter implements StackChartListener {
 
   public void rolloverUpdated(Key key) {
   }
+
+  public void processRightClick(Key currentRollover, boolean expandSelection) {
+  }
 }

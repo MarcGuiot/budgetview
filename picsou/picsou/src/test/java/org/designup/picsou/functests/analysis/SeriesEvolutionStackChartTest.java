@@ -654,4 +654,130 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.seriesChart.select("Groceries");
     seriesAnalysis.checkSelected("Groceries");
   }
+
+  public void testPopupMenus() throws Exception {
+
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/07/30")
+      .addTransaction("2009/06/10", -250.00, "Auchan")
+      .addTransaction("2009/06/15", -200.00, "Auchan")
+      .addTransaction("2009/06/18", -100.00, "Virt Epargne")
+      .addTransaction("2009/06/20", -30.00, "Free")
+      .addTransaction("2009/06/20", -50.00, "Orange")
+      .addTransaction("2009/06/01", 300.00, "WorldCo")
+      .addTransaction("2009/06/15", 350.00, "Big Inc.")
+      .addTransaction("2009/06/20", 50.00, "Unknown1")
+      .addTransaction("2009/06/20", -100.00, "Unknown2")
+      .addTransaction("2009/07/10", -200.00, "Auchan")
+      .addTransaction("2009/07/15", -140.00, "Auchan")
+      .addTransaction("2009/07/01", 320.00, "WorldCo")
+      .addTransaction("2009/07/15", 350.00, "Big Inc.")
+      .addTransaction("2009/07/20", -20.00, "Unknown3")
+      .addTransaction("2009/07/20", -30.00, "Free")
+      .addTransaction("2009/07/20", -60.00, "Orange")
+      .load();
+
+    views.selectHome();
+    savingsAccounts.createNewAccount()
+      .setName("Livret")
+      .selectBank("ING Direct")
+      .setPosition(0)
+      .validate();
+
+    views.selectCategorization();
+    categorization.setNewIncome("WorldCo", "John's");
+    categorization.setNewIncome("Big Inc.", "Mary's");
+    categorization.setNewRecurring("Free", "Internet");
+    categorization.setNewRecurring("Orange", "Mobile");
+    categorization.setNewVariable("Auchan", "Groceries", -450.00);
+    categorization.setNewSavings("Virt Epargne", "Virt Livret", "Main accounts", "Livret");
+    categorization.showUncategorizedTransactionsOnly();
+
+    timeline.selectMonth(200907);
+
+    // ---- BudgetArea ----
+
+    views.selectAnalysis();
+    seriesAnalysis.balanceChart.checkRightClickOptions("Income",
+                                                       "Show transactions in Categorization view",
+                                                       "Show transactions in Accounts view");
+    seriesAnalysis.balanceChart.rightClickAndSelect("Income", "Show transactions in Categorization view");
+    views.checkCategorizationSelected();
+    categorization.checkShowsSelectedMonthsOnly();
+    categorization.initContent()
+      .add("15/07/2009", "Mary's", "BIG INC.", 350.00)
+      .add("01/07/2009", "John's", "WORLDCO", 320.00)
+      .check();
+
+    // ---- Series ----
+
+    views.selectAnalysis();
+    seriesAnalysis.balanceChart.select("Variable");
+    seriesAnalysis.seriesChart.checkRightClickOptions("Groceries",
+                                                      "Show transactions in Categorization view",
+                                                      "Show transactions in Accounts view",
+                                                      "Edit");
+    seriesAnalysis.seriesChart.rightClickAndSelect("Groceries", "Show transactions in Categorization view");
+    views.checkCategorizationSelected();
+    categorization.checkShowsSelectedMonthsOnly();
+    categorization.initContent()
+      .add("10/07/2009", "Groceries", "AUCHAN", -200.00)
+      .add("15/07/2009", "Groceries", "AUCHAN", -140.00)
+      .check();
+
+    views.selectAnalysis();
+    seriesAnalysis.seriesChart.rightClickAndEditSeries("Groceries", "Edit")
+      .checkName("Groceries")
+      .checkAmount(450.00)
+      .validate();
+
+    // ---- Multi-series ----
+
+    views.selectAnalysis();
+    seriesAnalysis.balanceChart.select("Recurring");
+    String[] series = {"Mobile", "Internet"};
+    seriesAnalysis.seriesChart.checkRightClickOptions(series,
+                                                      "Show transactions in Categorization view",
+                                                      "Show transactions in Accounts view");
+    seriesAnalysis.seriesChart.rightClickAndSelect(series, "Show transactions in Categorization view");
+    views.checkCategorizationSelected();
+    categorization.checkShowsSelectedMonthsOnly();
+    categorization.initContent()
+      .add("20/07/2009", "Internet", "FREE", -30.00)
+      .add("20/07/2009", "Mobile", "ORANGE", -60.00)
+      .check();
+
+    // ---- Uncategorized budget area ----
+
+    timeline.selectMonths(200906, 200907);
+    views.selectAnalysis();
+    seriesAnalysis.select("To categorize");
+    seriesAnalysis.balanceChart.checkRightClickOptions("To categorize",
+                                                       "Show transactions in Categorization view",
+                                                       "Show transactions in Accounts view");
+    seriesAnalysis.balanceChart.rightClickAndSelect("To categorize", "Show transactions in Categorization view");
+    views.checkCategorizationSelected();
+    categorization.checkShowsUncategorizedTransactionsForSelectedMonths();
+    categorization.initContent()
+      .add("20/06/2009", "", "UNKNOWN1", 50.00)
+      .add("20/06/2009", "", "UNKNOWN2", -100.00)
+      .add("20/07/2009", "", "UNKNOWN3", -20.00)
+      .check();
+
+    // ---- Uncategorized transactions ----
+
+    views.selectAnalysis();
+    seriesAnalysis.select("To categorize");
+    seriesAnalysis.seriesChart.checkRightClickOptions("UNKNOWN2",
+                                                      "Show transactions in Categorization view",
+                                                      "Show transactions in Accounts view");
+    seriesAnalysis.seriesChart.rightClickAndSelect("UNKNOWN2", "Show transactions in Categorization view");
+    categorization.checkShowsUncategorizedTransactionsForSelectedMonths();
+    categorization.initContent()
+      .add("20/06/2009", "", "UNKNOWN1", 50.00)
+      .add("20/06/2009", "", "UNKNOWN2", -100.00)
+      .add("20/07/2009", "", "UNKNOWN3", -20.00)
+      .check();
+    categorization.checkSelectedTableRow("UNKNOWN2");
+  }
 }

@@ -3,14 +3,17 @@ package org.designup.picsou.functests.checkers.components;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import org.designup.picsou.functests.checkers.GuiChecker;
+import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.checkers.ViewSelectionChecker;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
 import org.uispec4j.Key;
 import org.uispec4j.Panel;
+import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.interception.PopupMenuInterceptor;
 import org.uispec4j.interception.toolkit.Empty;
 
 import java.awt.*;
@@ -71,7 +74,7 @@ public class StackChecker extends GuiChecker {
     chart.setSize(200, 200);
     boolean add = false;
     for (String item : items) {
-      doClick(chart, item, add ? Key.Modifier.CONTROL : Key.Modifier.NONE);
+      doClick(chart, item, add ? Key.Modifier.CONTROL : Key.Modifier.NONE, false);
       add = true;
     }
   }
@@ -79,16 +82,67 @@ public class StackChecker extends GuiChecker {
   public void addToSelection(String item) {
     StackChart chart = getChart();
     chart.setSize(200, 200);
-    doClick(chart, item, Key.Modifier.CONTROL);
+    doClick(chart, item, Key.Modifier.CONTROL, false);
   }
 
-  private void doClick(StackChart chart, String item, Key.Modifier modifier) {
+  private void doClick(StackChart chart, String item, Key.Modifier modifier, boolean useRightClick) {
     chart.paint(Empty.NULL_GRAPHICS_2D);
     Rectangle area = chart.getArea(item);
     if (area == null) {
       Assert.fail("Item " + item + " not found - actual labels: " + chart.getAreas());
     }
-    click(chart, area, modifier);
+    click(chart, area, modifier, useRightClick);
+  }
+
+  public void checkRightClickOptions(String item, String... options) {
+    openRightClickPopup(item).checkChoices(options);
+  }
+
+  public void checkRightClickOptions(String[] items, String... options) {
+    openRightClickPopup(items).checkChoices(options);
+  }
+
+  public void rightClickAndSelect(String item, String option) {
+    openRightClickPopup(item).click(option);
+  }
+
+  public void rightClickAndSelect(String[] items, String option) {
+    openRightClickPopup(items).click(option);
+  }
+
+  public SeriesEditionDialogChecker rightClickAndEditSeries(final String item, final String option) {
+    PopupChecker popupChecker = openRightClickPopup(item);
+    return SeriesEditionDialogChecker.open(popupChecker.triggerClick(option));
+  }
+
+  private PopupChecker openRightClickPopup(final String item) {
+    return new PopupChecker() {
+      protected org.uispec4j.MenuItem openMenu() {
+        return PopupMenuInterceptor.run(new Trigger() {
+          public void run() throws Exception {
+            doClick(getChart(), item, Key.Modifier.NONE, true);
+          }
+        });
+      }
+    };
+  }
+
+  private PopupChecker openRightClickPopup(final String[] items) {
+    return new PopupChecker() {
+      protected org.uispec4j.MenuItem openMenu() {
+        return PopupMenuInterceptor.run(new Trigger() {
+          public void run() throws Exception {
+            StackChart chart = getChart();
+            chart.setSize(200, 200);
+            for (int i = 0; i < items.length; i++) {
+              String item = items[i];
+              doClick(chart, item, i > 0 ? Key.Modifier.CONTROL : Key.Modifier.NONE, false);
+            }
+            doClick(chart, items[items.length - 1], Key.Modifier.NONE, true);
+          }
+        });
+      }
+    };
   }
 
   public class DatasetChecker {

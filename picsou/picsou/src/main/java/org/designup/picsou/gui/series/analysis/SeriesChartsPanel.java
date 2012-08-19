@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.series.analysis;
 
+import org.designup.picsou.gui.card.NavigationPopupFactory;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
@@ -102,10 +103,9 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       }
     });
 
-    StackSelectionListener listener = new StackSelectionListener();
-    balanceChart.addListener(listener);
-    seriesChart.addListener(listener);
-    subSeriesChart.addListener(listener);
+    new StackSelectionListener(balanceChart, parentSelectionService);
+    new StackSelectionListener(seriesChart, parentSelectionService);
+    new StackSelectionListener(subSeriesChart, parentSelectionService);
 
     stackToggle = new StackToggleController(balanceChart, subSeriesChart);
   }
@@ -356,7 +356,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     StackChartDataset dataset = new StackChartDataset();
     if (uncategorized > 0.01) {
       dataset.add(Lang.get("seriesAnalysis.chart.balance.uncategorized.tocategorize"),
-                  uncategorized, null, false);
+                  uncategorized, BudgetArea.UNCATEGORIZED.getKey(), false);
     }
 
     double categorized = 0.0;
@@ -570,6 +570,16 @@ public class SeriesChartsPanel implements GlobSelectionListener {
   }
 
   private class StackSelectionListener extends StackChartAdapter {
+
+    private StackChart chart;
+    private NavigationPopupFactory popupFactory;
+
+    private StackSelectionListener(StackChart chart, SelectionService parentSelectionService) {
+      this.chart = chart;
+      this.chart.addListener(this);
+      this.popupFactory = new NavigationPopupFactory(chart, repository, directory, parentSelectionService);
+    }
+
     public void processClick(Key selectedKey, boolean expandSelection) {
       if (selectedKey == null) {
         return;
@@ -581,11 +591,38 @@ public class SeriesChartsPanel implements GlobSelectionListener {
         return;
       }
 
+      updateSelection(glob, expandSelection);
+    }
+
+    public void processRightClick(Key selectedKey, boolean expandSelection) {
+      if (selectedKey == null) {
+        return;
+      }
+
+      Glob glob = repository.find(selectedKey);
+      if (Transaction.TYPE.equals(selectedKey.getGlobType())) {
+        popupFactory.show(selectedMonthIds, Collections.singleton(selectedKey));
+        return;
+      }
+
+      Set<Glob> wrappers = updateSelection(glob, expandSelection);
+
+      GlobList sameTypeWrappers = new GlobList();
+      for (Glob wrappedGlob : SeriesWrapper.getWrappedGlobs(wrappers, repository)) {
+        if (glob.getType().equals(wrappedGlob.getType())) {
+          sameTypeWrappers.add(wrappedGlob);
+        }
+      }
+
+      popupFactory.show(selectedMonthIds, sameTypeWrappers.getKeySet());
+    }
+
+    private Set<Glob> updateSelection(Glob selectedGlob, boolean expandSelection) {
       Set<Glob> wrappers = new HashSet<Glob>();
       if (expandSelection) {
         wrappers.addAll(selectionService.getSelection(SeriesWrapper.TYPE));
       }
-      wrappers.add(SeriesWrapper.getWrapper(glob, repository));
+      wrappers.add(SeriesWrapper.getWrapper(selectedGlob, repository));
       for (Glob wrapper : wrappers) {
         if (SeriesWrapper.isSubSeries(wrapper)) {
           Glob subSeries = SeriesWrapper.getSubSeries(wrapper, repository);
@@ -594,6 +631,8 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       }
 
       selectionService.select(wrappers, SeriesWrapper.TYPE);
+
+      return wrappers;
     }
 
     private void selectTransactions(Glob transaction) {

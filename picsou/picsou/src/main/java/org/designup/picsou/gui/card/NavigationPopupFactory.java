@@ -1,16 +1,15 @@
-package org.designup.picsou.gui.series.analysis.histobuilders;
+package org.designup.picsou.gui.card;
 
 import org.designup.picsou.gui.categorization.actions.EditSeriesAction;
 import org.designup.picsou.gui.categorization.actions.ShowTransactionsInCategorizationViewAction;
 import org.designup.picsou.gui.categorization.actions.ShowTransactionsToCategorizeAction;
-import org.designup.picsou.gui.components.charts.histo.HistoChart;
-import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.transactions.actions.ShowAccountTransactionsInAccountViewAction;
 import org.designup.picsou.gui.transactions.actions.ShowTransactionsInAccountViewAction;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.GlobRepository;
@@ -26,13 +25,13 @@ import java.awt.*;
 import java.util.Set;
 import java.util.SortedSet;
 
-public class HistoChartPopupFactory {
-  private HistoChart histoChart;
+public class NavigationPopupFactory {
+  private JComponent clickedComponent;
   private GlobRepository repository;
   private Directory localDirectory;
 
-  public HistoChartPopupFactory(HistoChart histoChart, GlobRepository repository, Directory directory, SelectionService parentSelectionService) {
-    this.histoChart = histoChart;
+  public NavigationPopupFactory(JComponent clickedComponent, GlobRepository repository, Directory directory, SelectionService parentSelectionService) {
+    this.clickedComponent = clickedComponent;
     this.repository = repository;
     this.localDirectory = new DefaultDirectory(directory);
     this.localDirectory.add(SelectionService.class, parentSelectionService);
@@ -46,10 +45,10 @@ public class HistoChartPopupFactory {
     JPopupMenu popup = new JPopupMenu();
     initPopup(popup, columnIds, objectKeys);
     if (popup.getSubElements().length != 0) {
-      Point position = histoChart.getMousePosition();
+      Point position = clickedComponent.getMousePosition();
       int x = position != null ? position.x : 0;
       int y = position != null ? position.y : 0;
-      popup.show(histoChart, x, y);
+      popup.show(clickedComponent, x, y);
     }
   }
 
@@ -68,7 +67,7 @@ public class HistoChartPopupFactory {
         initSavinsAccountsPopup(popup, monthIds);
         return;
       }
-      if (Series.UNCATEGORIZED_SERIES.equals(key)) {
+      if (BudgetArea.UNCATEGORIZED.getKey().equals(key) || Series.UNCATEGORIZED_SERIES.equals(key)) {
         initUncategorizedPopup(popup, monthIds);
         return;
       }
@@ -85,6 +84,9 @@ public class HistoChartPopupFactory {
     }
     else if (type.equals(Series.TYPE)) {
       initSeriesPopup(popup, monthIds, objectKeys);
+    }
+    else if (type.equals(Transaction.TYPE)) {
+      initTransactionsPopup(popup, monthIds, objectKeys);
     }
   }
 
@@ -117,12 +119,16 @@ public class HistoChartPopupFactory {
   private void initSeriesPopup(JPopupMenu popup, SortedSet<Integer> monthIds, Set<Key> objectKeys) {
     addShowTransactionActions(popup, monthIds,
                               Matchers.transactionsForSeries(GlobUtils.getIntegerValues(objectKeys, Series.ID)));
-    
+
     if (objectKeys.size() == 1) {
       popup.addSeparator();
       Key seriesKey = objectKeys.iterator().next();
       popup.add(new EditSeriesAction(seriesKey, monthIds, repository, localDirectory));
     }
+  }
+
+  private void initTransactionsPopup(JPopupMenu popup, SortedSet<Integer> monthIds, Set<Key> objectKeys) {
+    addShowTransactionActions(popup, monthIds, GlobMatchers.keyIn(objectKeys));
   }
 
   private void addShowTransactionActions(JPopupMenu popup, SortedSet<Integer> monthIds, GlobMatcher matcher) {

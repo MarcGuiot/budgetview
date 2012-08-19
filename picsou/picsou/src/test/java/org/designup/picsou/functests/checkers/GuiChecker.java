@@ -103,6 +103,18 @@ public abstract class GuiChecker {
     click(component, x, y, Key.Modifier.NONE, false);
   }
 
+  protected void click(JComponent component, Rectangle rectangle) {
+    click(component, rectangle, Key.Modifier.NONE);
+  }
+
+  protected void click(JComponent component, Rectangle rectangle, Key.Modifier modifier) {
+    click(component, rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2, modifier, false);
+  }
+
+  protected void click(JComponent component, Rectangle rectangle, Key.Modifier modifier, boolean useRightClick) {
+    click(component, rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2, modifier, useRightClick);
+  }
+
   protected void click(JComponent component, int x, int y, Key.Modifier modifier, boolean useRightClick) {
     Mouse.enter(component, x, y);
     Mouse.move(component, x, y);
@@ -111,11 +123,8 @@ public abstract class GuiChecker {
     Mouse.exit(component, x, y);
   }
 
-  protected void click(JComponent component, Rectangle rectangle) {
-    click(component, rectangle, Key.Modifier.NONE);
-  }
-
-  protected void click(JComponent component, Rectangle rectangle, Key.Modifier modifier) {
-    click(component, rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2, modifier, false);
+  protected void rightClick(JComponent component) {
+    Rectangle bounds = component.getBounds();
+    click(component, bounds.x, bounds.y, Key.Modifier.NONE, true);
   }
 }
