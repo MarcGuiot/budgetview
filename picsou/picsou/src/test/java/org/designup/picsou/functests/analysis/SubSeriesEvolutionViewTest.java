@@ -78,6 +78,9 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .checkValue("Food", 100.00)
       .checkValue("Restaurant", 60.00);
 
+    seriesAnalysis.checkExpansionEnabled("Salary", false);
+
+    seriesAnalysis.checkExpansionEnabled("Food", true);
     seriesAnalysis.checkExpanded("Food", true);
     seriesAnalysis.toggleExpansion("Food");
     seriesAnalysis.subSeriesChart.select("Restaurant");
@@ -199,10 +202,15 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .checkValue("Recurring", 50.00);
 
     seriesAnalysis.gotoSubSeriesStack();
+    seriesAnalysis.checkExpanded("Food", true);
+    seriesAnalysis.toggleExpansion("Food");
     budgetView.variable.editSeries("Food")
       .gotoSubSeriesTab()
       .addSubSeries("FastFood")
       .validate();
+
+    views.checkAnalysisSelected();
+    seriesAnalysis.checkExpanded("Food", true);
 
     categorization.setVariable("MacDo", "Food", "FastFood");
 

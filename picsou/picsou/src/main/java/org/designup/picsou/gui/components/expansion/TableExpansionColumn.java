@@ -101,18 +101,12 @@ public class TableExpansionColumn
   }
 
   private void setIcon(JButton button, Glob glob) {
-    if (expansionModel.isParent(glob)) {
-      if (expansionModel.isExpansionDisabled(glob)) {
-        button.setIcon(null);
-      }
-      else if (expansionModel.isExpanded(glob)) {
+    if (expansionModel.isExpandable(glob)) {
+      if (expansionModel.isExpanded(glob)) {
         button.setIcon(EXPANDED_ICON);
       }
-      else if (expansionModel.isExpandable(glob)) {
-        button.setIcon(COLLAPSED_ICON);
-      }
       else {
-        button.setIcon(DISABLED_ICON);
+        button.setIcon(COLLAPSED_ICON);
       }
     }
     else {

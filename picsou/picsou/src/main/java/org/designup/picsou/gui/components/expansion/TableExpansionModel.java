@@ -17,15 +17,12 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
   private GlobType type;
   private GlobMatcher baseMatcher = GlobMatchers.ALL;
 
-  public TableExpansionModel(GlobType type, GlobRepository repository, ExpandableTable table, final boolean isInitiallyExpanded) {
+  public TableExpansionModel(GlobType type, GlobRepository repository, ExpandableTable table) {
     this.repository = repository;
     this.table = table;
     repository.addChangeListener(this);
     this.type = type;
-    for (Glob master : repository.getAll(type, getMasterMatcher())) {
-      setState(master.getKey(), true, isInitiallyExpanded);
-    }
-    updateExpandabilities(false);
+    updateNodeStates();
   }
 
   public void setBaseMatcher(GlobMatcher baseMatcher) {
@@ -58,14 +55,15 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
 
   protected abstract Key getParentKey(Glob glob);
 
-  public abstract boolean isExpansionDisabled(Glob glob);
+  protected abstract boolean isExpansionAuthorized(Glob glob);
 
-  private void updateExpandabilities(boolean forceUpdateExpanded) {
+  private void updateNodeStates() {
     nodeStatesMap.clear();
     for (Glob master : repository.getAll(type, getMasterMatcher())) {
       Key key = master.getKey();
-      boolean expandable = hasChildren(key, repository);
-      setState(key, expandable, true);
+      setState(key,
+               isExpansionAuthorized(master) && hasChildren(key, repository),
+               true);
     }
   }
 
@@ -75,7 +73,7 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     }
     Key key = glob.getKey();
     NodeState state = getState(key);
-    setState(key, state.expandable, !state.expanded);
+    state.expanded = !state.expanded;
     table.setFilter(this);
   }
 
@@ -102,9 +100,6 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
   }
 
   public boolean isExpandable(Glob glob) {
-    if (glob == null) {
-      return false;
-    }
     return getState(glob.getKey()).expandable;
   }
 
@@ -119,13 +114,13 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     if (!changeSet.containsCreationsOrDeletions(type)) {
       return;
     }
-    updateExpandabilities(false);
+    updateNodeStates();
     Set<Key> createdList = changeSet.getCreated(type);
     for (Key key : createdList) {
       Glob created = repository.get(key);
       Key master = getParentKey(created);
       if (master != null) {
-        getState(master).expanded = true;
+        setState(master, isExpansionAuthorized(created), true);
       }
     }
     Set<Key> deletedList = changeSet.getDeleted(type);
@@ -136,7 +131,7 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(type)) {
-      updateExpandabilities(true);
+      updateNodeStates();
     }
   }
 

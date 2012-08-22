@@ -15,8 +15,8 @@ import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class SeriesExpansionModel extends TableExpansionModel {
 
-  public SeriesExpansionModel(final GlobRepository repository, ExpandableTable table, final boolean initiallyExpanded, Directory directory) {
-    super(SeriesWrapper.TYPE, repository, table, initiallyExpanded);
+  public SeriesExpansionModel(final GlobRepository repository, ExpandableTable table, Directory directory) {
+    super(SeriesWrapper.TYPE, repository, table);
 
     directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -55,9 +55,9 @@ public class SeriesExpansionModel extends TableExpansionModel {
     return Key.create(SeriesWrapper.TYPE, parentId);
   }
 
-  public boolean isExpansionDisabled(Glob glob) {
+  public boolean isExpansionAuthorized(Glob glob) {
     Integer id = glob.get(SeriesWrapper.ID);
-    return (SeriesWrapper.ALL_ID.equals(id)) || (SeriesWrapper.UNCATEGORIZED_ID.equals(id));
+    return !(SeriesWrapper.ALL_ID.equals(id)) && !(SeriesWrapper.UNCATEGORIZED_ID.equals(id));
   }
 
   public void setExpanded(Glob master) {

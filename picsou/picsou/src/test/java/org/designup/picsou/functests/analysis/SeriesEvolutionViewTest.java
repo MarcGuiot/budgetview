@@ -482,13 +482,25 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     seriesAnalysis.checkRowLabels(expanded);
 
+    seriesAnalysis.checkExpansionEnabled("Main accounts", false);
+    seriesAnalysis.checkExpansionEnabled("Balance", false);
+    seriesAnalysis.checkExpansionEnabled("Savings accounts", false);
+    seriesAnalysis.checkExpansionEnabled("To categorize", false);
+    seriesAnalysis.checkExpansionEnabled("Income", true);
+    seriesAnalysis.checkExpansionEnabled("Groceries", true);
+    seriesAnalysis.checkExpansionEnabled("Extras", false);
+
     seriesAnalysis.collapseAll();
     seriesAnalysis.checkRowLabels(collapsed);
+    seriesAnalysis.checkExpanded("Income", false);
 
     seriesAnalysis.expandAll();
     seriesAnalysis.checkRowLabels(expanded);
+    seriesAnalysis.checkExpanded("Income", true);
+    seriesAnalysis.checkExpanded("Groceries", true);
 
     seriesAnalysis.doubleClickOnRow("Income");
+    seriesAnalysis.checkExpanded("Income", false);
     seriesAnalysis.checkRowLabels("Main accounts", "Balance", "Savings accounts", "To categorize",
                                   "Income",
                                   "Recurring", "Internet",
@@ -497,6 +509,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                                   "Savings");
 
     seriesAnalysis.doubleClickOnRow("Groceries");
+    seriesAnalysis.checkExpanded("Groceries", false);
     seriesAnalysis.checkRowLabels("Main accounts", "Balance", "Savings accounts", "To categorize",
                                   "Income",
                                   "Recurring", "Internet",
