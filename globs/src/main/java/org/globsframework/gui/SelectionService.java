@@ -68,7 +68,7 @@ public class SelectionService {
     for (GlobType type : globTypes) {
       currentSelections.put(type, selection.getAll(type));
     }
-    HashSet called = new HashSet();
+    Set<GlobSelectionListener> called = new HashSet<GlobSelectionListener>();
     for (GlobType type : globTypes) {
       for (GlobSelectionListener listener : listenersByType.get(type)) {
         if (!called.contains(listener)) {

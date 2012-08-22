@@ -98,7 +98,7 @@ public abstract class ButtonTableColumn extends AbstractRolloverEditor implement
     return true;
   }
 
-  public boolean isReSizable() {
+  public boolean isResizable() {
     return true;
   }
 }

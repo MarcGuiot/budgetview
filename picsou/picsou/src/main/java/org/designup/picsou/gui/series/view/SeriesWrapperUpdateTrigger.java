@@ -33,7 +33,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
         Glob budgetAreaWrapper =
           repository.findByIndex(SeriesWrapper.INDEX, SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId())
             .findByIndex(SeriesWrapper.ITEM_ID, budgetAreaId)
-            .findByIndex(SeriesWrapper.MASTER, null)
+            .findByIndex(SeriesWrapper.PARENT, null)
             .getGlobs().getFirst();
 
         if (budgetAreaWrapper == null) {
@@ -43,7 +43,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
           repository.create(SeriesWrapper.TYPE,
                             value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
                             value(SeriesWrapper.ITEM_ID, seriesId),
-                            value(SeriesWrapper.MASTER, budgetAreaWrapper.get(SeriesWrapper.ID)));
+                            value(SeriesWrapper.PARENT, budgetAreaWrapper.get(SeriesWrapper.ID)));
         }
       }
 
@@ -61,7 +61,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
             Glob budgetAreaWrapper =
               repository.findByIndex(SeriesWrapper.INDEX, SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId())
                 .findByIndex(SeriesWrapper.ITEM_ID, budgetAreaId)
-                .findByIndex(SeriesWrapper.MASTER, null)
+                .findByIndex(SeriesWrapper.PARENT, null)
                 .getGlobs().getFirst();
             if (budgetAreaWrapper == null) {
               Log.write("Bug : no seriesWrapper parent for " + budgetAreaId);
@@ -70,7 +70,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
               repository.create(SeriesWrapper.TYPE,
                                 value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
                                 value(SeriesWrapper.ITEM_ID, key.get(Series.ID)),
-                                value(SeriesWrapper.MASTER, budgetAreaWrapper.get(SeriesWrapper.ID)));
+                                value(SeriesWrapper.PARENT, budgetAreaWrapper.get(SeriesWrapper.ID)));
             }
           }
         }
@@ -92,7 +92,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
           repository.create(SeriesWrapper.TYPE,
                             value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
                             value(SeriesWrapper.ITEM_ID, key.get(SubSeries.ID)),
-                            value(SeriesWrapper.MASTER, parentSeriesWrapper.get(SeriesWrapper.ID)));
+                            value(SeriesWrapper.PARENT, parentSeriesWrapper.get(SeriesWrapper.ID)));
         }
       }
 
@@ -142,7 +142,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
           Glob wrapper = repository.create(SeriesWrapper.TYPE,
                                            value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId()),
                                            value(SeriesWrapper.ITEM_ID, budgetAreaId),
-                                           value(SeriesWrapper.MASTER, null));
+                                           value(SeriesWrapper.PARENT, null));
           wrapperId = wrapper.get(SeriesWrapper.ID);
         }
         budgetAreaIds.put(budgetAreaId, wrapperId);
@@ -161,7 +161,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
           repository.create(SeriesWrapper.TYPE,
                             value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
                             value(SeriesWrapper.ITEM_ID, series.get(Series.ID)),
-                            value(SeriesWrapper.MASTER, budgetAreaWrapperId));
+                            value(SeriesWrapper.PARENT, budgetAreaWrapperId));
         }
       }
 
@@ -175,7 +175,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
           repository.create(SeriesWrapper.TYPE,
                             value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
                             value(SeriesWrapper.ITEM_ID, subSeries.get(SubSeries.ID)),
-                            value(SeriesWrapper.MASTER, seriesWrapper.get(SeriesWrapper.ID)));
+                            value(SeriesWrapper.PARENT, seriesWrapper.get(SeriesWrapper.ID)));
         }
 
       }

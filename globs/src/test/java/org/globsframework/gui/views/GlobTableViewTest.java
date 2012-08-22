@@ -896,7 +896,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
       return false;
     }
 
-    public boolean isReSizable() {
+    public boolean isResizable() {
       return false;
     }
   }

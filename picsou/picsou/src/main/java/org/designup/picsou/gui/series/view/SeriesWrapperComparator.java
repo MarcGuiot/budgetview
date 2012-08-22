@@ -2,7 +2,6 @@ package org.designup.picsou.gui.series.view;
 
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.utils.Utils;
 
@@ -23,9 +22,49 @@ public class SeriesWrapperComparator implements Comparator<Glob> {
   }
 
   public int compare(Glob wrapper1, Glob wrapper2) {
+
+    if (Utils.equal(wrapper1, wrapper2)) {
+      return 0;
+    }
+
     SeriesWrapperType type1 = SeriesWrapperType.get(wrapper1);
     SeriesWrapperType type2 = SeriesWrapperType.get(wrapper2);
 
+    int level1 = type1.getLevel();
+    int level2 = type2.getLevel();
+    if ((level1 == 0) && (level2 == 0)) {
+      return compareTopLevel(wrapper1, wrapper2);
+    }
+
+    if (level1 < level2) {
+      Glob parent2 = SeriesWrapper.getParent(wrapper2, localRepository);
+      if (Utils.equal(wrapper1, parent2)) {
+        return -1;
+      }
+      return compare(wrapper1, parent2);
+    }
+    else if (level1 > level2) {
+      Glob parent1 = SeriesWrapper.getParent(wrapper1, localRepository);
+      if (Utils.equal(wrapper2, parent1)) {
+        return 1;
+      }
+      return compare(parent1, wrapper2);
+    }
+    else  {
+      Glob parent1 = SeriesWrapper.getParent(wrapper1, localRepository);
+      Glob parent2 = SeriesWrapper.getParent(wrapper2, localRepository);
+      if (Utils.equal(parent1, parent2)) {
+        return Utils.compare(getName(wrapper1), getName(wrapper2));
+      }
+      else {
+        return compare(parent1, parent2);
+      }
+    }
+  }
+
+  private int compareTopLevel(Glob wrapper1, Glob wrapper2) {
+    SeriesWrapperType type1 = SeriesWrapperType.get(wrapper1);
+    SeriesWrapperType type2 = SeriesWrapperType.get(wrapper2);
     if ((type1 == SeriesWrapperType.SUMMARY) && (type2 != SeriesWrapperType.SUMMARY)) {
       return -1;
     }
@@ -49,50 +88,7 @@ public class SeriesWrapperComparator implements Comparator<Glob> {
       return 1;
     }
 
-    Glob master1 = getMaster(wrapper1);
-    Glob master2 = getMaster(wrapper2);
-
-    boolean wrapper1IsMaster = master1 == null;
-    boolean wrapper2IsMaster = master2 == null;
-
-    if (wrapper1IsMaster && wrapper2IsMaster) {
-      return compareMasters(wrapper1, wrapper2);
-    }
-
-    if (!wrapper1IsMaster && !wrapper2IsMaster && !master1.equals(master2)) {
-      return compareMasters(master1, master2);
-    }
-
-    if (wrapper1IsMaster && !wrapper2IsMaster) {
-      if (wrapper1.equals(master2)) {
-        return -1;
-      }
-      return compareMasters(wrapper1, master2);
-    }
-
-    if (!wrapper1IsMaster && wrapper2IsMaster) {
-      if (master1.equals(wrapper2)) {
-        return 1;
-      }
-      return compareMasters(master1, wrapper2);
-    }
-
-    String name1 = getName(wrapper1);
-    String name2 = getName(wrapper2);
-
-    return name1.compareTo(name2);
-  }
-
-  private int compareMasters(Glob master1, Glob master2) {
-    return Integer.signum(master1.get(SeriesWrapper.ITEM_ID) - master2.get(SeriesWrapper.ITEM_ID));
-  }
-
-  private Glob getMaster(Glob wrapper) {
-    Integer masterId = wrapper.get(SeriesWrapper.MASTER);
-    if (masterId != null) {
-      return localRepository.get(Key.create(SeriesWrapper.TYPE, masterId));
-    }
-    return null;
+    return Integer.signum(wrapper1.get(SeriesWrapper.ITEM_ID) - wrapper2.get(SeriesWrapper.ITEM_ID));
   }
 
   protected String getName(Glob category) {

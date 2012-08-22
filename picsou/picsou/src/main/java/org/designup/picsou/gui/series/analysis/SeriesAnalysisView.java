@@ -30,7 +30,7 @@ public class SeriesAnalysisView extends View {
   private SelectionService parentSelectionService;
   private SeriesChartsPanel chartPanel;
   private Integer referenceMonthId;
-  private SeriesChartsColors seriesChartsColors;
+  private ToggleVisibilityAction tableToggleAction;
 
   public SeriesAnalysisView(GlobRepository repository, Directory directory) {
     super(repository, createLocalDirectory(directory));
@@ -53,7 +53,7 @@ public class SeriesAnalysisView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/analysis/seriesAnalysisView.splits",
                                                       repository, directory);
 
-    seriesChartsColors = new SeriesChartsColors(repository, directory);
+    SeriesChartsColors seriesChartsColors = new SeriesChartsColors(repository, directory);
 
     parentSelectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -72,7 +72,6 @@ public class SeriesAnalysisView extends View {
           builder.add(SeriesWrapper.getWrapperForSeries(series.get(Series.ID), repository));
         }
         for (Glob subSeries : selection.getAll(SubSeries.TYPE)) {
-          System.out.println("- SeriesAnalysisView.selectionUpdated with subseries: " + subSeries);
           builder.add(SeriesWrapper.getWrapperForSubSeries(subSeries.get(SubSeries.ID), repository));
         }
         selectionService.select(builder.get());
@@ -87,11 +86,10 @@ public class SeriesAnalysisView extends View {
 
     JPanel tablePanel = new JPanel();
     builder.add("tablePanel", tablePanel);
-    tablePanel.setVisible(false);
-    builder.add("toggleTable",
-                new ToggleVisibilityAction(tablePanel,
-                                           Lang.get("seriesAnalysis.table.toggle.shown"),
-                                           Lang.get("seriesAnalysis.table.toggle.hidden")));
+    tableToggleAction = new ToggleVisibilityAction(tablePanel,
+                                                   Lang.get("seriesAnalysis.table.toggle.shown"),
+                                                   Lang.get("seriesAnalysis.table.toggle.hidden"));
+    builder.add("toggleTable", tableToggleAction);
 
     SeriesEvolutionTableView tableView = new SeriesEvolutionTableView(repository, seriesChartsColors,
                                                                       directory, parentDirectory);
@@ -108,6 +106,7 @@ public class SeriesAnalysisView extends View {
   public void reset() {
     chartPanel.reset();
     referenceMonthId = null;
+    tableToggleAction.setHidden();
   }
 
 }

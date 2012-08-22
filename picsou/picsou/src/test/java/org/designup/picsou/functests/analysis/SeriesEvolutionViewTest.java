@@ -448,22 +448,33 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")
+      .addTransaction("2008/07/12", -50.00, "Boucherie")
+      .addTransaction("2008/07/12", -95.00, "Auchan")
       .addTransaction("2008/07/05", -29.00, "Free Telecom")
       .addTransaction("2008/07/02", 200.00, "GlobalCorp")
       .addTransaction("2008/07/01", 3540.00, "WorldCo")
       .load();
 
-    categorization.setNewVariable("Auchan", "Groceries");
+    budgetView.variable.createSeries()
+      .setName("Groceries")
+      .gotoSubSeriesTab()
+      .addSubSeries("Meat")
+      .addSubSeries("Vegetables")
+      .validate();
+
+    categorization.setVariable("Auchan", "Groceries", "Vegetables");
+    categorization.setVariable("Boucherie", "Groceries", "Meat");
     categorization.setNewRecurring("Free Telecom", "Internet");
     categorization.setNewIncome("WorldCo", "Salary");
     categorization.setNewIncome("GlobalCorp", "Salary 2");
 
+    views.selectAnalysis();
     seriesAnalysis.toggleTable();
 
     String[] expanded = {"Main accounts", "Balance", "Savings accounts", "To categorize",
                          "Income", "Salary", "Salary 2",
                          "Recurring", "Internet",
-                         "Variable", "Groceries",
+                         "Variable", "Groceries", "Meat", "Vegetables",
                          "Extras", "Savings"};
 
     String[] collapsed = {"Main accounts", "Balance", "Savings accounts", "To categorize",
@@ -478,6 +489,14 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.checkRowLabels(expanded);
 
     seriesAnalysis.doubleClickOnRow("Income");
+    seriesAnalysis.checkRowLabels("Main accounts", "Balance", "Savings accounts", "To categorize",
+                                  "Income",
+                                  "Recurring", "Internet",
+                                  "Variable", "Groceries", "Meat", "Vegetables",
+                                  "Extras",
+                                  "Savings");
+
+    seriesAnalysis.doubleClickOnRow("Groceries");
     seriesAnalysis.checkRowLabels("Main accounts", "Balance", "Savings accounts", "To categorize",
                                   "Income",
                                   "Recurring", "Internet",

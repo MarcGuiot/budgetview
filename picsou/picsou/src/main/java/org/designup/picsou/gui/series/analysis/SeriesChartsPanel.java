@@ -162,7 +162,12 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       else {
         selectedWrapperKeys.clear();
         selectedWrapperKeys.addAll(wrappers.getKeyList());
-        stackToggle.setSubSeriesPresent(containsSubSeries(wrappers));
+        if (containsSubSeries(wrappers)) {
+          stackToggle.showSubSeriesStack();
+        }
+        else {
+          stackToggle.setSubSeriesPresent(containsSeriesWithSubSeries(wrappers));
+        }
       }
     }
 
@@ -170,6 +175,15 @@ public class SeriesChartsPanel implements GlobSelectionListener {
   }
 
   private boolean containsSubSeries(GlobList selectedWrappers) {
+    for (Glob wrapper : selectedWrappers) {
+      if (SeriesWrapper.isSubSeries(wrapper)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean containsSeriesWithSubSeries(GlobList selectedWrappers) {
     for (Glob wrapper : selectedWrappers) {
       if (SeriesWrapper.isSeries(wrapper)) {
         Glob series = SeriesWrapper.getSeries(wrapper, repository);
@@ -492,7 +506,13 @@ public class SeriesChartsPanel implements GlobSelectionListener {
 
     double totalIncomeForSubSeries = 0;
     double totalExpensesForSubSeries = 0;
-    for (Glob subSeries : repository.findByIndex(SubSeries.SERIES_INDEX, seriesId)) {
+    GlobList subSeriesList = repository.findByIndex(SubSeries.SERIES_INDEX, seriesId);
+    if (subSeriesList.isEmpty()) {
+      stackToggle.setSubSeriesPresent(false);
+      clearSubSeriesStacks();
+      return;
+    }
+    for (Glob subSeries : subSeriesList) {
       Integer subSeriesId = subSeries.get(SubSeries.ID);
       double amount = 0;
       for (Integer monthId : selectedMonthIds) {
@@ -623,12 +643,6 @@ public class SeriesChartsPanel implements GlobSelectionListener {
         wrappers.addAll(selectionService.getSelection(SeriesWrapper.TYPE));
       }
       wrappers.add(SeriesWrapper.getWrapper(selectedGlob, repository));
-      for (Glob wrapper : wrappers) {
-        if (SeriesWrapper.isSubSeries(wrapper)) {
-          Glob subSeries = SeriesWrapper.getSubSeries(wrapper, repository);
-          wrappers.add(SeriesWrapper.getWrapperForSeries(subSeries.get(SubSeries.SERIES), repository));
-        }
-      }
 
       selectionService.select(wrappers, SeriesWrapper.TYPE);
 

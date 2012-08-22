@@ -92,7 +92,7 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
   }
 
   private String getSubSeriesButtonText(Integer itemId) {
-    Glob subSeriesStat = repository.find(KeyBuilder.init(SeriesStat.TYPE)
+    Glob subSeriesStat = repository.find(KeyBuilder.init(SubSeriesStat.TYPE)
                                         .set(SubSeriesStat.MONTH, referenceMonthId)
                                         .set(SubSeriesStat.SUB_SERIES, itemId)
                                         .get());
@@ -103,7 +103,7 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
     Glob subSeries = repository.get(Key.create(SubSeries.TYPE, itemId));
     Glob series = repository.get(Key.create(Series.TYPE, subSeries.get(SubSeries.SERIES)));
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-    Double value = subSeriesStat.get(SeriesStat.SUMMARY_AMOUNT);
+    Double value = subSeriesStat.get(SubSeriesStat.AMOUNT);
     return format(value, budgetArea);
   }
 

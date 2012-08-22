@@ -21,5 +21,5 @@ public interface GlobTableColumn {
 
   boolean isEditable(int row, Glob glob);
 
-  boolean isReSizable();
+  boolean isResizable();
 }

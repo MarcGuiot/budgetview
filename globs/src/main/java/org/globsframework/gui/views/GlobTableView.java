@@ -354,7 +354,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       if (editor != null) {
         tableColumn.setCellEditor(editor);
       }
-      tableColumn.setResizable(column.isReSizable());
+      tableColumn.setResizable(column.isResizable());
       TableCellRenderer cellRenderer = column.getRenderer();
       if (cellRenderer != null) {
         tableColumn.setCellRenderer(cellRenderer);

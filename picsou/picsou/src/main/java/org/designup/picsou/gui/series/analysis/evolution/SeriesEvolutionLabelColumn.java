@@ -51,7 +51,7 @@ public class SeriesEvolutionLabelColumn implements GlobTableColumn {
     return SeriesWrapperType.SERIES.isOfType(seriesWrapper);
   }
 
-  public boolean isReSizable() {
+  public boolean isResizable() {
     return false;
   }
 }

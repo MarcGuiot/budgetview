@@ -19,6 +19,11 @@ public class ToggleVisibilityAction extends AbstractAction {
     this.hiddenLabel = hiddenLabel;
     updateLabel();
   }
+  
+  public void setHidden() {
+    component.setVisible(false);
+    updateLabel();
+  }
 
   private void updateLabel() {
     putValue(Action.NAME, component.isVisible() ? shownLabel : hiddenLabel);

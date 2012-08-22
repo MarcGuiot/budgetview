@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.components.expansion;
 
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
@@ -12,22 +11,19 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListener {
-  private Map<Integer, Boolean> expandedMap = new HashMap<Integer, Boolean>();
-  private Map<Integer, Boolean> expandableMap = new HashMap<Integer, Boolean>();
+  private Map<Key, NodeState> nodeStatesMap = new HashMap<Key, NodeState>();
   private GlobRepository repository;
   private ExpandableTable table;
-  private IntegerField idField;
   private GlobType type;
   private GlobMatcher baseMatcher = GlobMatchers.ALL;
 
-  public TableExpansionModel(GlobType type, IntegerField idField, GlobRepository repository, ExpandableTable table, final boolean isInitiallyExpanded) {
-    this.idField = idField;
+  public TableExpansionModel(GlobType type, GlobRepository repository, ExpandableTable table, final boolean isInitiallyExpanded) {
     this.repository = repository;
     this.table = table;
     repository.addChangeListener(this);
     this.type = type;
     for (Glob master : repository.getAll(type, getMasterMatcher())) {
-      expandedMap.put(master.get(idField), isInitiallyExpanded);
+      setState(master.getKey(), true, isInitiallyExpanded);
     }
     updateExpandabilities(false);
   }
@@ -46,28 +42,30 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     });
   }
 
-  protected abstract GlobMatcher getMasterMatcher();
+  private GlobMatcher getMasterMatcher() {
+    return new GlobMatcher() {
+      public boolean matches(Glob wrapper, GlobRepository repository) {
+        return isParent(wrapper);
+      }
+    };
+  }
 
-  protected abstract boolean hasChildren(Integer id, GlobRepository repository);
+  protected abstract boolean hasChildren(Key key, GlobRepository repository);
 
-  public abstract boolean isMaster(Glob glob);
+  public abstract boolean isRoot(Glob glob);
 
-  protected abstract Integer getMasterId(Glob glob);
+  public abstract boolean isParent(Glob glob);
+
+  protected abstract Key getParentKey(Glob glob);
 
   public abstract boolean isExpansionDisabled(Glob glob);
 
   private void updateExpandabilities(boolean forceUpdateExpanded) {
-    expandableMap.clear();
-    if (forceUpdateExpanded){
-      expandedMap.clear();
-    }
+    nodeStatesMap.clear();
     for (Glob master : repository.getAll(type, getMasterMatcher())) {
-      Integer id = master.get(idField);
-      boolean expandable = hasChildren(id, repository);
-      expandableMap.put(id, expandable);
-      if (!expandable || forceUpdateExpanded) {
-        expandedMap.put(id, expandable);
-      }
+      Key key = master.getKey();
+      boolean expandable = hasChildren(key, repository);
+      setState(key, expandable, true);
     }
   }
 
@@ -75,9 +73,9 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     if (!isExpandable(glob)) {
       return;
     }
-    Integer id = glob.get(idField);
-    Boolean existingValue = expandedMap.get(id);
-    expandedMap.put(id, !existingValue);
+    Key key = glob.getKey();
+    NodeState state = getState(key);
+    setState(key, state.expandable, !state.expanded);
     table.setFilter(this);
   }
 
@@ -90,41 +88,31 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
   }
 
   private void setExpanded(boolean expanded) {
-    for (Map.Entry<Integer, Boolean> entry : expandedMap.entrySet()) {
-      Boolean expandable = expandableMap.get(entry.getKey());
-      entry.setValue(expanded && (expandable != null && expandable));
+    for (NodeState state : nodeStatesMap.values()) {
+      state.expanded = expanded;
     }
     table.setFilter(this);
   }
 
   public boolean isExpanded(Glob glob) {
-    if (!isMaster(glob)) {
+    if (!isParent(glob)) {
       return false;
     }
-    Integer id = glob.get(idField);
-    return expandedMap.get(id);
+    return getState(glob.getKey()).expanded;
   }
 
   public boolean isExpandable(Glob glob) {
     if (glob == null) {
       return false;
     }
-    Boolean status = expandableMap.get(glob.get(idField));
-    return Boolean.TRUE.equals(status);
+    return getState(glob.getKey()).expandable;
   }
 
   public boolean matches(Glob glob, GlobRepository repository) {
     if (!baseMatcher.matches(glob, repository)) {
       return false;
     }
-    if (isMaster(glob)) {
-      return true;
-    }
-    Integer masterId = getMasterId(glob);
-    if (masterId == null) {
-      return true;
-    }
-    return expandedMap.get(masterId) == Boolean.TRUE;
+    return isRoot(glob) || getState(getParentKey(glob)).expanded;
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -135,20 +123,43 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     Set<Key> createdList = changeSet.getCreated(type);
     for (Key key : createdList) {
       Glob created = repository.get(key);
-      Integer master = getMasterId(created);
+      Key master = getParentKey(created);
       if (master != null) {
-        expandedMap.put(master, true);
+        getState(master).expanded = true;
       }
     }
     Set<Key> deletedList = changeSet.getDeleted(type);
     for (Key key : deletedList) {
-      expandedMap.remove(key.get(idField));
+      nodeStatesMap.remove(key);
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(type)) {
       updateExpandabilities(true);
+    }
+  }
+
+  private void setState(Key key, boolean expandable, boolean expanded) {
+    getState(key).set(expandable, expanded);
+  }
+
+  private NodeState getState(Key key) {
+    NodeState nodeState = nodeStatesMap.get(key);
+    if (nodeState == null) {
+      nodeState = new NodeState();
+      nodeStatesMap.put(key, nodeState);
+    }
+    return nodeState;
+  }
+
+  private static class NodeState {
+    boolean expandable;
+    boolean expanded;
+
+    public void set(boolean expandable, boolean expanded) {
+      this.expandable = expandable;
+      this.expanded = expanded;
     }
   }
 }

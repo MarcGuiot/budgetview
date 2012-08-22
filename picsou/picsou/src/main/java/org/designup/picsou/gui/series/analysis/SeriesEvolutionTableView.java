@@ -8,7 +8,6 @@ import org.designup.picsou.gui.series.analysis.evolution.SeriesEvolutionLabelCol
 import org.designup.picsou.gui.series.analysis.evolution.SeriesEvolutionMonthColumn;
 import org.designup.picsou.gui.series.view.*;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.util.Amounts;
@@ -152,7 +151,7 @@ public class SeriesEvolutionTableView extends View {
     builder.add("tableScrollPane", scrollPane);
     scrollPane.addComponentListener(new ComponentAdapter() {
       public void componentResized(ComponentEvent e) {
-        addOrRemoveColumn(scrollPane);
+        addOrRemoveColumns(scrollPane);
       }
     });
 
@@ -186,7 +185,7 @@ public class SeriesEvolutionTableView extends View {
     });
   }
 
-  private void addOrRemoveColumn(final JScrollPane scrollPane) {
+  private void addOrRemoveColumns(final JScrollPane scrollPane) {
     int[] size;
     size = getColumnSize();
     int lastColumnSize = size[size.length - 1];
@@ -225,7 +224,7 @@ public class SeriesEvolutionTableView extends View {
     }
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
-        addOrRemoveColumn(scrollPane);
+        addOrRemoveColumns(scrollPane);
       }
     });
   }

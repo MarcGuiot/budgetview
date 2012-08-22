@@ -44,6 +44,7 @@ public class SeriesChartsColors implements ColorChangeListener {
   private Painter seriesOddBg;
   private Painter seriesCurrentEvenBg;
   private Painter seriesCurrentOddBg;
+  private Color subSeriesText;
 
   private Color selectionText;
   private Painter selectionBackground;
@@ -83,6 +84,7 @@ public class SeriesChartsColors implements ColorChangeListener {
     budgetAreaText = colors.get("seriesEvolution.budgetArea.text");
     seriesText = colors.get("seriesEvolution.series.text.normal");
     seriesErrorText = colors.get("seriesEvolution.series.text.error");
+    subSeriesText = colors.get("seriesEvolution.subSeries.text");
     selectionText = colors.get(ApplicationColors.CATEGORIES_SELECTED_FG);
     uncategorizedText = colors.get("seriesEvolution.uncategorized");
   }
@@ -113,6 +115,10 @@ public class SeriesChartsColors implements ColorChangeListener {
 
       case SERIES:
         setSeriesColors(component, background, row, monthOffset, referenceMonthId, seriesWrapper.get(SeriesWrapper.ITEM_ID));
+        break;
+
+      case SUB_SERIES:
+        setSubSeriesColors(component, background, row, monthOffset);
         break;
 
       case SUMMARY:
@@ -172,6 +178,14 @@ public class SeriesChartsColors implements ColorChangeListener {
   private void setSeriesColors(JComponent component, Paintable panel,
                                Integer row, int monthOffset, int referenceMonthId, Integer itemId) {
     Color foreground = component != null ? getSeriesForeground(referenceMonthId, itemId) : null;
+    setSeriesColors(component, panel, row, monthOffset, foreground);
+  }
+
+  private void setSubSeriesColors(JComponent component, Paintable panel, Integer row, int monthOffset) {
+    setSeriesColors(component, panel, row, monthOffset, subSeriesText);
+  }
+
+  private void setSeriesColors(JComponent component, Paintable panel, Integer row, int monthOffset, Color foreground) {
     if (row % 2 == 0) {
       setColors(component, foreground, seriesEvenBg, seriesCurrentEvenBg, panel, monthOffset);
     }

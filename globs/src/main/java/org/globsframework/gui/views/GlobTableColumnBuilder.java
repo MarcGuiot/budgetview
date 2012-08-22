@@ -130,7 +130,7 @@ public class GlobTableColumnBuilder {
       return editor != null;
     }
 
-    public boolean isReSizable() {
+    public boolean isResizable() {
       return true;
     }
   }

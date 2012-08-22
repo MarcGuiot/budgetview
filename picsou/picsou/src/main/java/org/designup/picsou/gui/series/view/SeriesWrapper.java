@@ -37,7 +37,7 @@ public class SeriesWrapper {
   public static IntegerField ITEM_ID;
 
   @Target(SeriesWrapper.class)
-  public static LinkField MASTER;
+  public static LinkField PARENT;
   
   public static MultiFieldUniqueIndex INDEX;
 
@@ -54,7 +54,7 @@ public class SeriesWrapper {
 
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(SeriesWrapper.class);
-    loader.defineMultiFieldUniqueIndex(INDEX, ITEM_TYPE, ITEM_ID, MASTER);
+    loader.defineMultiFieldUniqueIndex(INDEX, ITEM_TYPE, ITEM_ID, PARENT);
 
   }
 
@@ -103,7 +103,7 @@ public class SeriesWrapper {
       Glob series = SeriesWrapper.getSeries(wrapper, repository);
       return series.get(Series.DESCRIPTION);
     }
-    else if (SeriesWrapper.isBudgetArea(wrapper)) {
+    if (SeriesWrapper.isBudgetArea(wrapper)) {
       BudgetArea budgetArea = SeriesWrapper.getBudgetArea(wrapper);
       return budgetArea.getDescription();
     }
@@ -165,6 +165,25 @@ public class SeriesWrapper {
     else {
       throw new InvalidParameter("Unexpected type: " + glob.getType());
     }
+  }
+  
+  public static Glob getWrapperForLevel(Glob wrapper, int level, GlobRepository repository) {
+    SeriesWrapperType type = SeriesWrapperType.get(wrapper);
+    if (level == type.getLevel()) {
+      return wrapper;
+    }
+    if (level < 0) {
+      throw new InvalidParameter("Level must be >= 0 but is " + level);
+    }
+    if (level > type.getLevel()) {
+      throw new InvalidParameter("Invalid level " + level + " requested for " + wrapper);
+    }
+    return getWrapperForLevel(getParent(wrapper, repository),
+                              level, repository);
+  }
+
+  public static Glob getParent(Glob wrapper, GlobRepository repository) {
+    return repository.findLinkTarget(wrapper, SeriesWrapper.PARENT);
   }
 
   public static String toString(Collection<Glob> wrappers, GlobRepository repository) {

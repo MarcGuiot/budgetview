@@ -67,10 +67,14 @@ public class StackToggleController {
 
   public void showSubSeriesStack() {
     this.currentMode = Mode.SUB_SERIES;
+    this.subSeriesPresent = true;
     update();
   }
 
   private void update() {
+    if (!subSeriesPresent) {
+      currentMode = Mode.BUDGET;
+    }
     budgetStack.setVisible(currentMode.budgetShown);
     subSeriesStack.setVisible(currentMode.subSeriesShown);
     gotoBudgetButton.setEnabled(currentMode.subSeriesShown);

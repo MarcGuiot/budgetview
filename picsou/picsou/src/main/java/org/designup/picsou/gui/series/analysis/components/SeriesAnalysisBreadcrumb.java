@@ -4,6 +4,7 @@ import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -15,6 +16,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -97,6 +99,13 @@ public class SeriesAnalysisBreadcrumb implements GlobSelectionListener {
         builder.addSeparator();
         builder.addSeriesName(wrapper);
         break;
+      case SUB_SERIES:
+        builder.addBudgetLink();
+        builder.addSeparator();
+        builder.addParentBudgetAreaLink(wrapper);
+        builder.addSeparator();
+        builder.addSeriesLink(wrapper);
+        break;
     }
     return builder.toString();
   }
@@ -112,18 +121,41 @@ public class SeriesAnalysisBreadcrumb implements GlobSelectionListener {
       builder.append(Lang.get("seriesAnalysisBreadcrumb.summary"));
     }
 
-    private void addSeriesName(Glob wrapper) {
-      Glob series = SeriesWrapper.getSeries(wrapper, repository);
+    private void addSeriesName(Glob seriesWrapper) {
+      Glob series = SeriesWrapper.getSeries(seriesWrapper, repository);
       addBold(series.get(Series.NAME));
+    }
+
+    private void addSeriesLink(Glob subSeriesWrapper) {
+      Glob subSeries = SeriesWrapper.getSubSeries(subSeriesWrapper, repository);
+      Glob series = repository.findLinkTarget(subSeries, SubSeries.SERIES);
+      addLink(subSeriesWrapper.get(SeriesWrapper.PARENT), series.get(Series.NAME));
     }
 
     private void addBudgetLink() {
       addLink(SeriesWrapper.BALANCE_SUMMARY_ID, Lang.get("seriesAnalysisBreadcrumb.top"));
     }
 
-    private void addParentBudgetAreaLink(Glob wrapperForSeries) {
-      Glob series = SeriesWrapper.getSeries(wrapperForSeries, repository);
-      BudgetArea budgetArea = Series.getBudgetArea(series);
+    private void addParentBudgetAreaLink(Glob wrapper) {
+      BudgetArea budgetArea;
+      
+      SeriesWrapperType wrapperType = SeriesWrapperType.get(wrapper);
+      switch (wrapperType) {
+        case SERIES: {
+          Glob series = SeriesWrapper.getSeries(wrapper, repository);
+          budgetArea = Series.getBudgetArea(series);
+          break;
+        }
+        case SUB_SERIES: {
+          Glob subSeries = SeriesWrapper.getSubSeries(wrapper, repository);
+          Glob series = repository.findLinkTarget(subSeries, SubSeries.SERIES);
+          budgetArea = Series.getBudgetArea(series);
+          break;
+        }
+        default:
+          throw new InvalidParameter("Unexpected type " + wrapperType + " for " + wrapper);
+      }
+
       Glob wrapperForBudgetArea = SeriesWrapper.getWrapperForBudgetArea(budgetArea, repository);
       addLink(wrapperForBudgetArea.get(SeriesWrapper.ID), budgetArea.getLabel());
     }

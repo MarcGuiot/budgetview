@@ -9,6 +9,7 @@ import org.designup.picsou.gui.series.analysis.SeriesEvolutionTableView;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.uispec4j.*;
+import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import org.uispec4j.interception.PopupMenuInterceptor;
@@ -33,7 +34,7 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
   private Table table;
 
   private static final String PANEL_NAME = "seriesAnalysisView";
-  private int COUNT_COLUMN = 10;
+  private int COLUMN_COUNT = 10;
   private Panel panel;
 
   public SeriesAnalysisChecker(Window mainWindow) {
@@ -53,7 +54,11 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
   }
 
   public SeriesTableChecker initContent() {
-    return new SeriesTableChecker();
+    return new SeriesTableChecker(-1);
+  }
+
+  public SeriesTableChecker initContent(int maxColumns) {
+    return new SeriesTableChecker(maxColumns);
   }
 
   public SeriesAnalysisChecker checkRowLabels(String... labels) {
@@ -62,13 +67,13 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
   }
 
   public void checkColumnNames(String... names) {
-    assertThat(getTable().getHeader().contentEquals(COUNT_COLUMN, Utils.join("", names)));
+    assertThat(getTable().getHeader().contentEquals(COLUMN_COUNT, Utils.join("", names)));
   }
 
   public void checkRow(String label, String... values) {
     Table table = getTable();
     int index = getRow(label, table);
-    assertThat(table.rowEquals(index, 0, COUNT_COLUMN, Utils.join(new String[]{"", label}, values)));
+    assertThat(table.rowEquals(index, 0, COLUMN_COUNT, Utils.join(new String[]{"", label}, values)));
   }
 
   public SeriesAnalysisChecker select(String... labels) {
@@ -157,7 +162,7 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
 
   public void checkTableIsEmpty(String... labels) {
     SeriesAnalysisChecker.SeriesTableChecker checker = initContent();
-    String[] values = new String[COUNT_COLUMN];
+    String[] values = new String[COLUMN_COUNT];
     Arrays.fill(values, "");
     for (String label : labels) {
       checker.add(label, values);
@@ -323,11 +328,20 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
   }
 
   public SeriesAnalysisChecker gotoSubSeriesStack() {
-    panel.getButton("gotoSubSeriesButton").click();
+    Button button = panel.getButton("gotoSubSeriesButton");
+    assertThat(button.isVisible());
+    assertThat(button.isEnabled());
+    button.click();
     return this;
   }
 
   public class SeriesTableChecker extends TableChecker {
+
+    private int maxColumns;
+
+    public SeriesTableChecker(int maxColumns) {
+      this.maxColumns = maxColumns;
+    }
 
     public SeriesTableChecker add(String label, String... monthValues) {
       super.add(Utils.join(new String[]{"", label}, monthValues));
@@ -343,7 +357,7 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
       Table table = getTable();
       for (int row = 0; row < table.getRowCount(); row++) {
         builder.append("  .add(");
-        int columnCount = table.getColumnCount();
+        int columnCount = getColumnCount();
         for (int col = 1; col < columnCount; col++) {
           if (col > 1) {
             builder.append(", ");
@@ -357,7 +371,11 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
 
     public void check() {
       Object[][] expectedContent = rows.toArray(new Object[rows.size()][]);
-      org.uispec4j.assertion.UISpecAssert.assertTrue(getTable().blockEquals(0, 0, COUNT_COLUMN, rows.size(), expectedContent));
+      org.uispec4j.assertion.UISpecAssert.assertTrue(getTable().blockEquals(0, 0, getColumnCount(), rows.size(), expectedContent));
+    }
+    
+    private int getColumnCount() {
+      return maxColumns >= 0 ? maxColumns : COLUMN_COUNT;
     }
   }
 
