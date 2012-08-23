@@ -1,6 +1,8 @@
 package org.designup.picsou.gui.components.expansion;
 
 import org.designup.picsou.gui.utils.Gui;
+import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.gui.splits.components.ArrowIcon;
 import org.globsframework.gui.splits.utils.TransparentIcon;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.model.Glob;
@@ -17,8 +19,11 @@ public class TableExpansionColumn
   extends AbstractCellEditor
   implements TableCellRenderer, TableCellEditor, ActionListener {
 
-  public static Icon EXPANDED_ICON = Gui.IMAGE_LOCATOR.get("arrow_down.png");
-  public static Icon COLLAPSED_ICON = Gui.IMAGE_LOCATOR.get("arrow_right.png");
+  private static Color DEFAULT_SELECTED_FOREGROUND = Colors.toColor("666666");
+  public static Icon EXPANDED_ICON = new ArrowIcon(8,7, ArrowIcon.Orientation.DOWN, DEFAULT_SELECTED_FOREGROUND);
+  public static Icon COLLAPSED_ICON = new ArrowIcon(8,7, ArrowIcon.Orientation.RIGHT, DEFAULT_SELECTED_FOREGROUND);
+  public static Icon EXPANDED_ICON_SELECTED = new ArrowIcon(8,7, ArrowIcon.Orientation.DOWN, Color.WHITE);
+  public static Icon COLLAPSED_ICON_SELECTED = new ArrowIcon(8,7, ArrowIcon.Orientation.RIGHT, Color.WHITE);
   public static Icon DISABLED_ICON = new TransparentIcon(EXPANDED_ICON.getIconHeight(), EXPANDED_ICON.getIconWidth());
 
   private TableExpansionModel expansionModel;
@@ -66,13 +71,13 @@ public class TableExpansionColumn
       renderButton.setForeground(table.getForeground());
       renderButton.setBackground(UIManager.getColor("Button.background"));
     }
-    setIcon(renderButton, glob);
+    setIcon(renderButton, glob, isSelected);
     setUI(renderButton, value, isSelected, hasFocus, row, column);
     return renderButton;
   }
 
   public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-    setIcon(editButton, (Glob)value);
+    setIcon(editButton, (Glob)value, isSelected);
     setUI(editButton, value, true, true, row, column);
     return editButton;
   }
@@ -92,7 +97,7 @@ public class TableExpansionColumn
       return;
     }
     Glob glob = tableView.getSelectedGlob();
-    expansionModel.toggleExpansion(glob);
+    expansionModel.toggleExpansion(glob, true);
     stopCellEditing();
   }
 
@@ -100,13 +105,13 @@ public class TableExpansionColumn
     return EXPANDED_ICON.getIconWidth() + 6;
   }
 
-  private void setIcon(JButton button, Glob glob) {
+  private void setIcon(JButton button, Glob glob, boolean selected) {
     if (expansionModel.isExpandable(glob)) {
       if (expansionModel.isExpanded(glob)) {
-        button.setIcon(EXPANDED_ICON);
+        button.setIcon(selected ? EXPANDED_ICON_SELECTED : EXPANDED_ICON);
       }
       else {
-        button.setIcon(COLLAPSED_ICON);
+        button.setIcon(selected ? COLLAPSED_ICON_SELECTED : COLLAPSED_ICON);
       }
     }
     else {

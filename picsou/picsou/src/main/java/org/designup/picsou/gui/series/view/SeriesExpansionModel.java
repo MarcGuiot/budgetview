@@ -17,7 +17,7 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 public class SeriesExpansionModel extends TableExpansionModel {
 
   public SeriesExpansionModel(final GlobRepository repository, ExpandableTable table, Directory directory) {
-    super(SeriesWrapper.TYPE, repository, table);
+    super(SeriesWrapper.TYPE, repository, directory, table);
 
     directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
@@ -66,6 +66,6 @@ public class SeriesExpansionModel extends TableExpansionModel {
     if (isExpanded(master)) {
       return;
     }
-    toggleExpansion(master);
+    toggleExpansion(master, false);
   }
 }

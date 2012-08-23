@@ -1,10 +1,12 @@
 package org.designup.picsou.gui.components.expansion;
 
+import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.directory.Directory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,12 +15,14 @@ import java.util.Set;
 public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListener {
   private Map<Key, NodeState> nodeStatesMap = new HashMap<Key, NodeState>();
   private GlobRepository repository;
+  private Directory directory;
   private ExpandableTable table;
   private GlobType type;
   private GlobMatcher baseMatcher = GlobMatchers.ALL;
 
-  public TableExpansionModel(GlobType type, GlobRepository repository, ExpandableTable table) {
+  public TableExpansionModel(GlobType type, GlobRepository repository, Directory directory, ExpandableTable table) {
     this.repository = repository;
+    this.directory = directory;
     this.table = table;
     repository.addChangeListener(this);
     this.type = type;
@@ -67,11 +71,20 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     }
   }
 
-  public void toggleExpansion(Glob glob) {
+  public void toggleExpansion(Glob glob, boolean selectIfNeeded) {
     if (!isExpandable(glob)) {
       return;
     }
     Key key = glob.getKey();
+
+    if (selectIfNeeded) {
+      SelectionService selectionService = directory.get(SelectionService.class);
+      GlobList selection = selectionService.getSelection(glob.getType());
+      if (!selection.contains(glob)) {
+        selectionService.select(glob);
+      }
+    }
+
     NodeState state = getState(key);
     state.expanded = !state.expanded;
     table.setFilter(this);

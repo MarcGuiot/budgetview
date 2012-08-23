@@ -4,9 +4,9 @@ import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.collections.CopyOnWriteMultiMap;
 import org.globsframework.utils.collections.MultiMap;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.util.*;
@@ -39,20 +39,6 @@ public class SelectionService {
     select(Collections.singletonList(glob), glob.getType());
   }
 
-  public GlobList getSelection(GlobType globType) {
-    GlobList globList = currentSelections.get(globType);
-    if (globList == null) {
-      return GlobList.EMPTY;
-    }
-    GlobList list = new GlobList(globList.size());
-    for (Glob glob : globList) {
-      if (glob.exists()) {
-        list.add(glob);
-      }
-    }
-    return list;
-  }
-
   public void select(Collection<Glob> globs, GlobType type) {
     GlobSelection selection = GlobSelectionBuilder.create(globs, type);
     currentSelections.put(type, selection.getAll(type));
@@ -79,11 +65,25 @@ public class SelectionService {
     }
   }
 
+  public GlobList getSelection(GlobType globType) {
+    GlobList globList = currentSelections.get(globType);
+    if (globList == null) {
+      return GlobList.EMPTY;
+    }
+    GlobList list = new GlobList(globList.size());
+    for (Glob glob : globList) {
+      if (glob.exists()) {
+        list.add(glob);
+      }
+    }
+    return list;
+  }
+
   public void clear(GlobType type) {
     select(Collections.<Glob>emptyList(), type);
   }
-  
-  public void clearAll(){
+
+  public void clearAll() {
     for (GlobType type : currentSelections.keySet()) {
       clear(type);
     }

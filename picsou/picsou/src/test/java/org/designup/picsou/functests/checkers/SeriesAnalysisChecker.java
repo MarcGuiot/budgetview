@@ -25,7 +25,7 @@ import java.util.TreeSet;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
-public class SeriesAnalysisChecker extends ExpandableTableChecker {
+public class SeriesAnalysisChecker extends ExpandableTableChecker<SeriesAnalysisChecker> {
 
   public final HistoChartChecker histoChart;
   public final StackChecker balanceChart;
@@ -96,10 +96,11 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
     getTable().clearSelection();
   }
 
-  public void checkSelected(String... labels) {
+  public SeriesAnalysisChecker checkSelected(String... labels) {
     Table table = getTable();
     int[] rowIndices = getRows(table, labels);
     assertThat(table.rowsAreSelected(rowIndices));
+    return this;
   }
 
   private int[] getRows(Table table, String[] labels) {

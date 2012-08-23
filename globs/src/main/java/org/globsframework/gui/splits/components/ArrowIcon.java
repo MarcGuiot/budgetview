@@ -24,7 +24,7 @@ public class ArrowIcon implements Icon {
       throw new InvalidParameter("Unexpected arrow orientation: can be one of " + Arrays.toString(values()));
     }
   }
-
+  
   private int iconWidth;
   private int iconHeight;
   private int arrowWidth;
@@ -33,21 +33,26 @@ public class ArrowIcon implements Icon {
   private Color color = Color.BLACK;
 
   public ArrowIcon(int iconWidth, int iconHeight, Orientation orientation) {
-    this.iconWidth = iconWidth;
-    this.arrowWidth = iconWidth;
-    this.iconHeight = iconHeight;
-    this.arrowHeight = iconHeight;
-    this.orientation = orientation;
+    this(iconWidth, iconHeight, iconWidth, iconHeight, orientation, Color.BLACK);
+  }
+
+  public ArrowIcon(int iconWidth, int iconHeight, Orientation orientation, Color foreground) {
+    this(iconWidth, iconHeight, iconWidth, iconHeight, orientation, foreground);
   }
 
   public ArrowIcon(int iconWidth, int iconHeight, int arrowWidth, int arrowHeight, Orientation orientation) {
+    this(iconWidth, iconHeight, arrowWidth, arrowHeight, orientation, Color.BLACK);
+  }
+
+  public ArrowIcon(int iconWidth, int iconHeight, int arrowWidth, int arrowHeight, Orientation orientation, Color foreground) {
     this.iconWidth = iconWidth;
     this.iconHeight = iconHeight;
     this.arrowWidth = arrowWidth;
     this.arrowHeight = arrowHeight;
     this.orientation = orientation;
+    this.color = foreground;
   }
-  
+
   public void setColor(Color color) {
     this.color = color;
   }

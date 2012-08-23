@@ -368,6 +368,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.income.gotoAnalysis("Mary's");
 
+    seriesAnalysis.checkSelected("Mary's");
     seriesAnalysis.checkBreadcrumb("Overall budget > Income > Mary's");
 
     seriesAnalysis.checkBudgetStackShown();
@@ -545,7 +546,48 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.editSeries("Salary 2").selectAllMonths().setAmount(0.00).validate();
     seriesAnalysis.checkExpansionEnabled("Income", false);
   }
-  
+
+  public void testClickingTheExpandCollapseButtonSelectsTheCorrespondingRow() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .addTransaction("2008/07/12", -50.00, "Boucherie")
+      .addTransaction("2008/07/12", -95.00, "Auchan")
+      .addTransaction("2008/07/05", -29.00, "Free Telecom")
+      .addTransaction("2008/07/02", 200.00, "GlobalCorp")
+      .addTransaction("2008/07/01", 3540.00, "WorldCo")
+      .load();
+
+    budgetView.variable.createSeries()
+      .setName("Groceries")
+      .gotoSubSeriesTab()
+      .addSubSeries("Meat")
+      .addSubSeries("Vegetables")
+      .validate();
+
+    categorization.setVariable("Auchan", "Groceries", "Vegetables");
+    categorization.setVariable("Boucherie", "Groceries", "Meat");
+    categorization.setNewIncome("WorldCo", "Salary");
+    categorization.setNewIncome("GlobalCorp", "Salary 2");
+
+    views.selectAnalysis();
+    seriesAnalysis.toggleTable();
+    seriesAnalysis
+      .toggleExpansion("Groceries")
+      .checkRowLabels("Main accounts", "Balance", "Savings accounts", "To categorize",
+                      "Income", "Salary", "Salary 2",
+                      "Recurring",
+                      "Variable", "Groceries",
+                      "Extras",
+                      "Savings")
+      .checkSelected("Groceries");
+    
+    seriesAnalysis
+      .select("Salary")
+      .checkSelected("Salary")
+      .toggleExpansion("Groceries")
+      .checkSelected("Groceries");
+  }
+
   public void testEditingASeries() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -100.00, "Auchan")

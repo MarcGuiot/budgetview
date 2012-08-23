@@ -3,12 +3,11 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.gui.components.expansion.TableExpansionColumn;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.Utils;
 import org.uispec4j.*;
 
 import javax.swing.*;
 
-public abstract class ExpandableTableChecker extends ViewChecker {
+public abstract class ExpandableTableChecker<T extends ExpandableTableChecker> extends ViewChecker {
   public ExpandableTableChecker(Window window) {
     super(window);
   }
@@ -27,7 +26,9 @@ public abstract class ExpandableTableChecker extends ViewChecker {
     if (enabled) {
       Assert.assertTrue(Strings.toString(icon),
                         (icon == TableExpansionColumn.EXPANDED_ICON) ||
-                        (icon == TableExpansionColumn.COLLAPSED_ICON));
+                        (icon == TableExpansionColumn.COLLAPSED_ICON) ||
+                        (icon == TableExpansionColumn.EXPANDED_ICON_SELECTED) ||
+                        (icon == TableExpansionColumn.COLLAPSED_ICON_SELECTED));
     }
     else {
       Assert.assertTrue(Strings.toString(icon),
@@ -43,28 +44,32 @@ public abstract class ExpandableTableChecker extends ViewChecker {
       Assert.fail(label + " not found in table. Actual content:\n" + table.toString());
     }
     JButton button = (JButton)table.getSwingRendererComponentAt(row, 0);
+    Icon icon = button.getIcon();
     if (expanded) {
-      Assert.assertSame(TableExpansionColumn.EXPANDED_ICON, button.getIcon());
+      Assert.assertTrue(Strings.toString(icon), icon == TableExpansionColumn.EXPANDED_ICON || icon == TableExpansionColumn.EXPANDED_ICON_SELECTED);
     }
     else {
-      Assert.assertSame(TableExpansionColumn.COLLAPSED_ICON, button.getIcon());
+      Assert.assertTrue(Strings.toString(icon), icon == TableExpansionColumn.COLLAPSED_ICON || icon == TableExpansionColumn.COLLAPSED_ICON_SELECTED);
     }
   }
 
-  public void toggleExpansion(String label) {
+  public T toggleExpansion(String label) {
     Table table = getTable();
     int row = table.getRowIndex(getLabelColumnIndex(), label);
     table.selectRow(row);
     JButton button = (JButton)getTable().getSwingEditorComponentAt(row, 0);
     new Button(button).click();
+    return (T)this;
   }
 
-  public void expandAll() {
+  public T expandAll() {
     getPanel().getButton("expand").click();
+    return (T)this;
   }
 
-  public void collapseAll() {
+  public T collapseAll() {
     getPanel().getButton("collapse").click();
+    return (T)this;
   }
 
   protected UIComponent getMainComponent() {

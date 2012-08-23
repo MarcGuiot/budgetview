@@ -27,7 +27,7 @@ public class TableExpansionInstaller {
           return;
         }
         Glob category = tableView.getSelectedGlob();
-        expansionModel.toggleExpansion(category);
+        expansionModel.toggleExpansion(category, true);
       }
     });
   }
