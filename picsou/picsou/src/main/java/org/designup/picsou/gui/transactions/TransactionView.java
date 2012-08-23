@@ -32,6 +32,7 @@ import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.DescriptionService;
@@ -125,6 +126,13 @@ public class TransactionView extends View implements Filterable {
     parentBuilder.add("transactionView", builder);
   }
 
+  public void clearFilters() {
+    selectionService.clear(Account.TYPE);
+    search.reset();
+    filterManager.clear();
+  }
+
+  /** Direct update - warning: does not update the transaction filter panel **/
   public void setFilter(GlobMatcher matcher) {
     this.filter = matcher;
     updateFilter();
@@ -147,9 +155,16 @@ public class TransactionView extends View implements Filterable {
     selectionService.select(GlobUtils.getAll(accountKey, repository), Account.TYPE);
   }
 
+  public void setTransactionsFilter(GlobList transactions) {
+    filterManager.set(TransactionSelection.SERIES_FILTER, fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
+  }
+
   public void setSeriesFilter(Glob series) {
-    Set<Integer> seriesSet = Collections.singleton(series.get(Series.ID));
-    filterManager.set(TransactionSelection.SERIES_FILTER, Matchers.transactionsForSeries(seriesSet));
+    setSeriesFilter(Collections.singleton(series.get(Series.ID)));
+  }
+
+  public void setSeriesFilter(Set<Integer> seriesIds) {
+    filterManager.set(TransactionSelection.SERIES_FILTER, Matchers.transactionsForSeries(seriesIds));
   }
 
   private void addShowPlannedTransactionsCheckbox(GlobsPanelBuilder builder) {
@@ -266,11 +281,9 @@ public class TransactionView extends View implements Filterable {
   public void reset() {
     view.resetSort();
     transactionSelection.init();
-    selectionService.clear(Account.TYPE);
+    clearFilters();
     showPlannedTransactionsCheckbox.setSelected(false);
-    search.reset();
     updateShowTransactionsMatcher();
-    setFilter(GlobMatchers.ALL);
   }
 
   private static class PlannedLabelCustomizer implements LabelCustomizer {

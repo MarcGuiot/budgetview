@@ -188,6 +188,7 @@ public class Account {
   public static boolean isUserCreatedMainAccount(Glob account) {
     return (account != null) &&
            Account.isMain(account) &&
+           !ALL_SUMMARY_KEY.equals(account.getKey()) &&
            !MAIN_SUMMARY_KEY.equals(account.getKey()) &&
            !EXTERNAL_KEY.equals(account.getKey());
   }
@@ -195,6 +196,7 @@ public class Account {
   public static boolean isUserCreatedSavingsAccount(Glob account) {
     return (account != null) &&
            Account.isSavings(account) &&
+           !ALL_SUMMARY_KEY.equals(account.getKey()) &&
            !SAVINGS_SUMMARY_KEY.equals(account.getKey()) &&
            !EXTERNAL_KEY.equals(account.getKey());
   }

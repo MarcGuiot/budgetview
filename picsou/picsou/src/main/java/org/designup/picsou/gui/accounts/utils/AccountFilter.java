@@ -16,8 +16,6 @@ import org.globsframework.utils.directory.Directory;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-
 public class AccountFilter {
   private GlobRepository repository;
 
@@ -35,10 +33,10 @@ public class AccountFilter {
 
     selectionService = directory.get(SelectionService.class);
     selectionService.addListener(new GlobSelectionListener() {
-                                   public void selectionUpdated(GlobSelection selection) {
-                                     filterManager.set(ACCOUNT_FILTER, getCurrentAccountFilter());
-                                   }
-                                 }, Account.TYPE);
+      public void selectionUpdated(GlobSelection selection) {
+        filterManager.set(ACCOUNT_FILTER, getCurrentAccountFilter());
+      }
+    }, Account.TYPE);
 
     filterManager.addClearer(new FilterClearer() {
       public List<String> getAssociatedFilters() {

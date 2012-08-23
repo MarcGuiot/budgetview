@@ -546,8 +546,13 @@ public class CategorizationView extends View implements TableView, Filterable, C
     transactionTable.select(transactions);
   }
 
+
   public void showUncategorizedForSelectedMonths() {
-    setFilteringMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
+    showWithMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
+  }
+
+  public void showWithMode(CategorizationFilteringMode filteringMode) {
+    setFilteringMode(filteringMode);
     filterManager.reset();
     updateTableFilter();
     transactionTable.clearSelection();

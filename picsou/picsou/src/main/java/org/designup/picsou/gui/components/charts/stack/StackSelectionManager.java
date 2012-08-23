@@ -19,23 +19,23 @@ public class StackSelectionManager {
     currentRollover = null;
   }
 
-  public void startClick(boolean expandSelection, boolean rightClick) {
+  public void startClick(boolean forceExpandSelection, boolean rightClick) {
     if (currentRollover != null) {
-      addRolloverToSelection(expandSelection, rightClick);
+      addRolloverToSelection(forceExpandSelection, rightClick);
     }
     else {
-      notifyClick(expandSelection, rightClick);
+      notifyClick(forceExpandSelection, rightClick);
     }
   }
 
-  public void updateRollover(Key key, boolean expandSelection, boolean rightClick) {
+  public void updateRollover(Key key, boolean forceExpandSelection, boolean rightClick) {
     boolean rolloverChanged = false;
     boolean doExpandSelection = false;
 
     if (!Utils.equal(key, currentRollover)) {
       this.currentRollover = key;
       rolloverChanged = true;
-      doExpandSelection = expandSelection;
+      doExpandSelection = forceExpandSelection;
     }
 
     if (rolloverChanged) {
@@ -45,28 +45,28 @@ public class StackSelectionManager {
     }
 
     if (doExpandSelection) {
-      addRolloverToSelection(expandSelection, rightClick);
+      addRolloverToSelection(forceExpandSelection, rightClick);
     }
   }
 
-  private void addRolloverToSelection(boolean expandSelection, boolean rightClick) {
+  private void addRolloverToSelection(boolean forceExpandSelection, boolean rightClick) {
     if (currentRollover == null) {
       return;
     }
-    notifyClick(expandSelection, rightClick);
+    notifyClick(forceExpandSelection, rightClick);
   }
 
   public boolean isRollover(Key key) {
     return key != null && key.equals(currentRollover);
   }
 
-  private void notifyClick(boolean expandSelection, boolean rightClick) {
+  private void notifyClick(boolean forceExpandSelection, boolean rightClick) {
     for (StackChartListener listener : listeners) {
       if (rightClick) {
-        listener.processRightClick(currentRollover, expandSelection);
+        listener.processRightClick(currentRollover, forceExpandSelection);
       }
       else {
-        listener.processClick(currentRollover, expandSelection);
+        listener.processClick(currentRollover, forceExpandSelection);
       }
     }
   }

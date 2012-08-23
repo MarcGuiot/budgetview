@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.series.view;
 
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SubSeries;
@@ -10,20 +11,18 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-
-import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.and;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.exceptions.ItemAmbiguity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 public class SeriesWrapper {
   public static GlobType TYPE;
@@ -38,7 +37,7 @@ public class SeriesWrapper {
 
   @Target(SeriesWrapper.class)
   public static LinkField PARENT;
-  
+
   public static MultiFieldUniqueIndex INDEX;
 
   public static final Integer ALL_ID = 0;
@@ -110,7 +109,7 @@ public class SeriesWrapper {
     return null;
   }
 
-  public static GlobList getWrappedGlobs(Set<Glob> wrappers, GlobRepository repository) {
+  public static GlobList getWrappedGlobs(Collection<Glob> wrappers, GlobRepository repository) {
     GlobList globs = new GlobList();
     for (Glob wrapper : wrappers) {
       globs.add(repository.get(getWrappedKey(wrapper)));
@@ -127,6 +126,16 @@ public class SeriesWrapper {
         return org.globsframework.model.Key.create(SubSeries.TYPE, itemId);
       case BUDGET_AREA:
         return org.globsframework.model.Key.create(BudgetArea.TYPE, itemId);
+      case SUMMARY:
+        if (BALANCE_SUMMARY_ID.equals(itemId)) {
+          return BudgetArea.ALL.getKey();
+        }
+        if (MAIN_POSITION_SUMMARY_ID.equals(itemId)) {
+          return Account.MAIN_SUMMARY_KEY;
+        }
+        if (SAVINGS_POSITION_SUMMARY_ID.equals(itemId)) {
+          return Account.SAVINGS_SUMMARY_KEY;
+        }
     }
     throw new InvalidParameter("Unexpected wrapper type for " + wrapper);
   }
@@ -142,7 +151,7 @@ public class SeriesWrapper {
   private static Glob findUnique(Integer itemId, GlobRepository repository, Integer id) {
     GlobList globs = repository.findByIndex(INDEX, SeriesWrapper.ITEM_TYPE, id)
       .findByIndex(SeriesWrapper.ITEM_ID, itemId).getGlobs();
-    if (globs.size() > 1){
+    if (globs.size() > 1) {
       throw new ItemAmbiguity("Several elements " + globs);
     }
     return globs.getFirst();
@@ -166,7 +175,7 @@ public class SeriesWrapper {
       throw new InvalidParameter("Unexpected type: " + glob.getType());
     }
   }
-  
+
   public static Glob getWrapperForLevel(Glob wrapper, int level, GlobRepository repository) {
     SeriesWrapperType type = SeriesWrapperType.get(wrapper);
     if (level == type.getLevel()) {
@@ -189,11 +198,11 @@ public class SeriesWrapper {
   public static String toString(Collection<Glob> wrappers, GlobRepository repository) {
     List<String> result = new ArrayList<String>();
     for (Glob wrapper : wrappers) {
-      result.add(toString(wrapper, repository)); 
+      result.add(toString(wrapper, repository));
     }
     return result.toString();
   }
-  
+
   public static String toString(Glob wrapper, GlobRepository repository) {
     switch (SeriesWrapperType.get(wrapper)) {
       case SERIES:

@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.series.analysis.histobuilders;
 
-import org.designup.picsou.gui.card.NavigationPopupFactory;
+import org.designup.picsou.gui.card.NavigationPopup;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
@@ -64,7 +64,7 @@ public class HistoChartBuilder {
     this.range = range;
     this.repository = repository;
     this.histoChart = new HistoChart(config, directory);
-    final NavigationPopupFactory popupFactory = new NavigationPopupFactory(histoChart, repository, directory, parentSelectionService);
+    final NavigationPopup popup = new NavigationPopup(histoChart, repository, directory, parentSelectionService);
     this.histoChart.addListener(new HistoChartListenerAdapter() {
       public void processClick(HistoSelection selection, Set<Key> objectKeys) {
         GlobList months = new GlobList();
@@ -75,7 +75,7 @@ public class HistoChartBuilder {
       }
 
       public void processRightClick(HistoSelection selection, Set<Key> objectKeys) {
-        popupFactory.show(selection.getColumnIds(), objectKeys);
+        popup.show(selection.getColumnIds(), objectKeys);
       }
 
       public void scroll(int count) {

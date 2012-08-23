@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.series.analysis;
 
-import org.designup.picsou.gui.card.NavigationPopupFactory;
+import org.designup.picsou.gui.card.NavigationPopup;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
@@ -592,15 +592,15 @@ public class SeriesChartsPanel implements GlobSelectionListener {
   private class StackSelectionListener extends StackChartAdapter {
 
     private StackChart chart;
-    private NavigationPopupFactory popupFactory;
+    private NavigationPopup popup;
 
     private StackSelectionListener(StackChart chart, SelectionService parentSelectionService) {
       this.chart = chart;
       this.chart.addListener(this);
-      this.popupFactory = new NavigationPopupFactory(chart, repository, directory, parentSelectionService);
+      this.popup = new NavigationPopup(chart, repository, directory, parentSelectionService);
     }
 
-    public void processClick(Key selectedKey, boolean expandSelection) {
+    public void processClick(Key selectedKey, boolean forceExpandSelection) {
       if (selectedKey == null) {
         return;
       }
@@ -611,21 +611,21 @@ public class SeriesChartsPanel implements GlobSelectionListener {
         return;
       }
 
-      updateSelection(glob, expandSelection);
+      updateSelection(glob, forceExpandSelection);
     }
 
-    public void processRightClick(Key selectedKey, boolean expandSelection) {
+    public void processRightClick(Key selectedKey, boolean forceExpandSelection) {
       if (selectedKey == null) {
         return;
       }
 
       Glob glob = repository.find(selectedKey);
       if (Transaction.TYPE.equals(selectedKey.getGlobType())) {
-        popupFactory.show(selectedMonthIds, Collections.singleton(selectedKey));
+        popup.show(selectedMonthIds, Collections.singleton(selectedKey));
         return;
       }
 
-      Set<Glob> wrappers = updateSelection(glob, expandSelection);
+      Set<Glob> wrappers = updateSelection(glob, forceExpandSelection);
 
       GlobList sameTypeWrappers = new GlobList();
       for (Glob wrappedGlob : SeriesWrapper.getWrappedGlobs(wrappers, repository)) {
@@ -633,16 +633,19 @@ public class SeriesChartsPanel implements GlobSelectionListener {
           sameTypeWrappers.add(wrappedGlob);
         }
       }
-
-      popupFactory.show(selectedMonthIds, sameTypeWrappers.getKeySet());
+      popup.show(selectedMonthIds, sameTypeWrappers.getKeySet());
     }
 
-    private Set<Glob> updateSelection(Glob selectedGlob, boolean expandSelection) {
+    private Set<Glob> updateSelection(Glob selectedGlob, boolean forceExpandSelection) {
+
+      Glob selectedWrapper = SeriesWrapper.getWrapper(selectedGlob, repository);
+        
       Set<Glob> wrappers = new HashSet<Glob>();
-      if (expandSelection) {
-        wrappers.addAll(selectionService.getSelection(SeriesWrapper.TYPE));
+      wrappers.add(selectedWrapper);
+      GlobList selection = selectionService.getSelection(SeriesWrapper.TYPE);
+      if (forceExpandSelection || selection.contains(selectedWrapper)) {
+        wrappers.addAll(selection);
       }
-      wrappers.add(SeriesWrapper.getWrapper(selectedGlob, repository));
 
       selectionService.select(wrappers, SeriesWrapper.TYPE);
 

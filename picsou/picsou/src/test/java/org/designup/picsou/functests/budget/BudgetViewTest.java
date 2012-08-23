@@ -512,7 +512,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00, "Groceries")
       .add("10/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00, "Groceries")
       .check();
-    transactions.clearFilters();
+    transactions.clearCurrentFilter();
     transactions.initContent()
       .add("12/07/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -95.00, "Groceries")
       .add("10/07/2008", TransactionType.PRELEVEMENT, "MONOPRIX", "", -50.00, "Groceries")
@@ -530,7 +530,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .add("12/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00, "Groceries")
       .add("10/07/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00, "Groceries")
       .check();
-    transactions.clearFilters();
+    transactions.clearCurrentFilter();
     transactions.initContent()
       .add("12/07/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -95.00, "Groceries")
       .add("10/07/2008", TransactionType.PRELEVEMENT, "MONOPRIX", "", -50.00, "Groceries")

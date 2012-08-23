@@ -69,7 +69,7 @@ public class StackChecker extends GuiChecker {
     return new DatasetChecker(chart.getLeftDataset());
   }
 
-  public void select(String... items) {
+  public StackChecker select(String... items) {
     StackChart chart = getChart();
     chart.setSize(200, 200);
     boolean add = false;
@@ -77,12 +77,14 @@ public class StackChecker extends GuiChecker {
       doClick(chart, item, add ? Key.Modifier.CONTROL : Key.Modifier.NONE, false);
       add = true;
     }
+    return this;
   }
 
-  public void addToSelection(String item) {
+  public StackChecker addToSelection(String item) {
     StackChart chart = getChart();
     chart.setSize(200, 200);
     doClick(chart, item, Key.Modifier.CONTROL, false);
+    return this;
   }
 
   private void doClick(StackChart chart, String item, Key.Modifier modifier, boolean useRightClick) {
@@ -98,16 +100,8 @@ public class StackChecker extends GuiChecker {
     openRightClickPopup(item).checkChoices(options);
   }
 
-  public void checkRightClickOptions(String[] items, String... options) {
-    openRightClickPopup(items).checkChoices(options);
-  }
-
   public void rightClickAndSelect(String item, String option) {
     openRightClickPopup(item).click(option);
-  }
-
-  public void rightClickAndSelect(String[] items, String option) {
-    openRightClickPopup(items).click(option);
   }
 
   public SeriesEditionDialogChecker rightClickAndEditSeries(final String item, final String option) {
@@ -121,24 +115,6 @@ public class StackChecker extends GuiChecker {
         return PopupMenuInterceptor.run(new Trigger() {
           public void run() throws Exception {
             doClick(getChart(), item, Key.Modifier.NONE, true);
-          }
-        });
-      }
-    };
-  }
-
-  private PopupChecker openRightClickPopup(final String[] items) {
-    return new PopupChecker() {
-      protected org.uispec4j.MenuItem openMenu() {
-        return PopupMenuInterceptor.run(new Trigger() {
-          public void run() throws Exception {
-            StackChart chart = getChart();
-            chart.setSize(200, 200);
-            for (int i = 0; i < items.length; i++) {
-              String item = items[i];
-              doClick(chart, item, i > 0 ? Key.Modifier.CONTROL : Key.Modifier.NONE, false);
-            }
-            doClick(chart, items[items.length - 1], Key.Modifier.NONE, true);
           }
         });
       }

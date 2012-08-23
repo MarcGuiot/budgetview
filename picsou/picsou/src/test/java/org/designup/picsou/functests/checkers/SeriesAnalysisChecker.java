@@ -3,13 +3,14 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import org.designup.picsou.functests.checkers.components.HistoChartChecker;
+import org.designup.picsou.functests.checkers.components.PopupChecker;
 import org.designup.picsou.functests.checkers.components.StackChecker;
 import org.designup.picsou.functests.checkers.components.TableChecker;
 import org.designup.picsou.gui.series.analysis.SeriesEvolutionTableView;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
-import org.uispec4j.*;
 import org.uispec4j.Button;
+import org.uispec4j.*;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import org.uispec4j.interception.PopupMenuInterceptor;
@@ -76,6 +77,11 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
     assertThat(table.rowEquals(index, 0, COLUMN_COUNT, Utils.join(new String[]{"", label}, values)));
   }
 
+  public SeriesAnalysisChecker unselectAll() {
+    getTable().clearSelection();
+    return this;
+  }
+
   public SeriesAnalysisChecker select(String... labels) {
     if (labels.length != 0) {
       getTable().selectRowsWithText(SeriesEvolutionTableView.LABEL_COLUMN_INDEX, labels);
@@ -92,13 +98,18 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
 
   public void checkSelected(String... labels) {
     Table table = getTable();
+    int[] rowIndices = getRows(table, labels);
+    assertThat(table.rowsAreSelected(rowIndices));
+  }
+
+  private int[] getRows(Table table, String[] labels) {
     SortedSet<Integer> indices = new TreeSet<Integer>();
     for (String label : labels) {
       for (int index : table.getRowIndices(SeriesEvolutionTableView.LABEL_COLUMN_INDEX, label)) {
         indices.add(index);
       }
     }
-    assertThat(table.rowsAreSelected(Utils.toArray(indices)));
+    return Utils.toArray(indices);
   }
 
   public void checkNoSelection() {
@@ -171,7 +182,7 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
   }
 
   public void checkNoTableRowWithLabel(String seriesName) {
-    assertFalse("'"+ seriesName + "' unexpectedly shown", getTable().containsRow(getLabelColumnIndex(), seriesName));
+    assertFalse("'" + seriesName + "' unexpectedly shown", getTable().containsRow(getLabelColumnIndex(), seriesName));
   }
 
   public SeriesAnalysisChecker checkForeground(String rowLabel, String columnLabel, String expectedColor) {
@@ -287,7 +298,7 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
     assertFalse(legendPanel.isVisible());
     return this;
   }
-  
+
   public SeriesAnalysisChecker checkBudgetStackShown() {
     balanceChart.checkVisible();
     seriesChart.checkVisible();
@@ -295,15 +306,15 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
     assertFalse(getPanel().getButton("gotoBudgetButton").isEnabled());
     return this;
   }
-  
+
   public SeriesAnalysisChecker checkSubSeriesStackShown() {
     balanceChart.checkHidden();
     seriesChart.checkVisible();
     subSeriesChart.checkVisible();
     assertTrue(panel.getButton("gotoBudgetButton").isEnabled());
-    return this;    
+    return this;
   }
-  
+
   public SeriesAnalysisChecker checkGotoBudgetShown() {
     assertTrue(panel.getButton("gotoBudgetButton").isVisible());
     assertFalse(panel.getButton("gotoSubSeriesButton").isVisible());
@@ -373,7 +384,7 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
       Object[][] expectedContent = rows.toArray(new Object[rows.size()][]);
       org.uispec4j.assertion.UISpecAssert.assertTrue(getTable().blockEquals(0, 0, getColumnCount(), rows.size(), expectedContent));
     }
-    
+
     private int getColumnCount() {
       return maxColumns >= 0 ? maxColumns : COLUMN_COUNT;
     }
@@ -400,5 +411,46 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker {
 
       return "Nothing found";
     }
+  }
+
+  public void checkRightClickOptions(String item, String... options) {
+    openRightClickPopup(item, 1).checkChoices(options);
+  }
+
+  public void checkRightClickOptions(String[] items, String... options) {
+    openRightClickPopup(items, 1).checkChoices(options);
+  }
+
+  public void rightClickAndSelect(String item, String option) {
+    openRightClickPopup(item, 1).click(option);
+  }
+
+  public void rightClickAndSelect(String[] items, String option) {
+    openRightClickPopup(items, 1).click(option);
+  }
+
+  public SeriesEditionDialogChecker rightClickAndEditSeries(final String item, final String option) {
+    PopupChecker popupChecker = openRightClickPopup(item, 1);
+    return SeriesEditionDialogChecker.open(popupChecker.triggerClick(option));
+  }
+
+  private PopupChecker openRightClickPopup(final String item, final int column) {
+    return new PopupChecker() {
+      protected org.uispec4j.MenuItem openMenu() {
+        Table table = getTable();
+        return PopupMenuInterceptor.run(table.triggerRightClick(getRow(item, table), column));
+      }
+    };
+  }
+
+  private PopupChecker openRightClickPopup(final String[] items, final int columnIndex) {
+    return new PopupChecker() {
+      protected org.uispec4j.MenuItem openMenu() {
+        Table table = getTable();
+        int[] rows = getRows(table, items);
+        table.selectRows(rows);
+        return PopupMenuInterceptor.run(table.triggerRightClick(rows[0], columnIndex));
+      }
+    };
   }
 }

@@ -1,9 +1,12 @@
 package org.designup.picsou.gui.card;
 
 import org.designup.picsou.gui.categorization.actions.EditSeriesAction;
+import org.designup.picsou.gui.categorization.actions.ShowMonthTransactionsInCategorizationViewAction;
 import org.designup.picsou.gui.categorization.actions.ShowTransactionsInCategorizationViewAction;
 import org.designup.picsou.gui.categorization.actions.ShowTransactionsToCategorizeAction;
 import org.designup.picsou.gui.transactions.actions.ShowAccountTransactionsInAccountViewAction;
+import org.designup.picsou.gui.transactions.actions.ShowAllTransactionsInAccountViewAction;
+import org.designup.picsou.gui.transactions.actions.ShowSeriesTransactionsInAccountViewAction;
 import org.designup.picsou.gui.transactions.actions.ShowTransactionsInAccountViewAction;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
@@ -25,12 +28,12 @@ import java.awt.*;
 import java.util.Set;
 import java.util.SortedSet;
 
-public class NavigationPopupFactory {
+public class NavigationPopup {
   private JComponent clickedComponent;
   private GlobRepository repository;
   private Directory localDirectory;
 
-  public NavigationPopupFactory(JComponent clickedComponent, GlobRepository repository, Directory directory, SelectionService parentSelectionService) {
+  public NavigationPopup(JComponent clickedComponent, GlobRepository repository, Directory directory, SelectionService parentSelectionService) {
     this.clickedComponent = clickedComponent;
     this.repository = repository;
     this.localDirectory = new DefaultDirectory(directory);
@@ -52,7 +55,7 @@ public class NavigationPopupFactory {
     }
   }
 
-  private void initPopup(JPopupMenu popup, SortedSet<Integer> monthIds, Set<Key> objectKeys) {
+  public void initPopup(JPopupMenu popup, SortedSet<Integer> monthIds, Set<Key> objectKeys) {
     if (objectKeys.size() == 1) {
       Key key = objectKeys.iterator().next();
       if (BudgetArea.ALL.getKey().equals(key)) {
@@ -91,7 +94,8 @@ public class NavigationPopupFactory {
   }
 
   private void initBalancePopup(JPopupMenu popup, SortedSet<Integer> monthIds) {
-    addShowTransactionActions(popup, monthIds, GlobMatchers.ALL);
+    popup.add(new ShowMonthTransactionsInCategorizationViewAction(monthIds, repository, localDirectory));
+    popup.add(new ShowAllTransactionsInAccountViewAction(localDirectory));
   }
 
   private void initMainAccountsPopup(JPopupMenu popup, SortedSet<Integer> monthIds) {
@@ -117,8 +121,10 @@ public class NavigationPopupFactory {
   }
 
   private void initSeriesPopup(JPopupMenu popup, SortedSet<Integer> monthIds, Set<Key> objectKeys) {
-    addShowTransactionActions(popup, monthIds,
-                              Matchers.transactionsForSeries(GlobUtils.getIntegerValues(objectKeys, Series.ID)));
+    Set<Integer> seriesIds = GlobUtils.getIntegerValues(objectKeys, Series.ID);
+    GlobMatcher matcher = Matchers.transactionsForSeries(seriesIds);
+    addShowInCategorization(popup, monthIds, matcher);
+    popup.add(new ShowSeriesTransactionsInAccountViewAction(seriesIds, localDirectory));
 
     if (objectKeys.size() == 1) {
       popup.addSeparator();

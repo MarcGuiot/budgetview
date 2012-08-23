@@ -15,6 +15,7 @@ import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -202,6 +203,23 @@ public class Gui {
            ((modifiers & InputEvent.SHIFT_MASK) == InputEvent.SHIFT_MASK) ||
            ((modifiers & InputEvent.ALT_MASK) == InputEvent.ALT_MASK) ||
            ((modifiers & InputEvent.META_MASK) == InputEvent.META_MASK);
+  }
+  
+  public static String printModifiers(int modifiers) {
+    StringBuffer buffer = new StringBuffer();
+    if ((modifiers & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {
+      buffer.append("ctrl");
+    }
+    if ((modifiers & InputEvent.SHIFT_MASK) == InputEvent.SHIFT_MASK) {
+      buffer.append("shift");
+    }
+    if ((modifiers & InputEvent.ALT_MASK) == InputEvent.ALT_MASK) {
+      buffer.append("alt");
+    }
+    if ((modifiers & InputEvent.META_MASK) == InputEvent.META_MASK) {
+      buffer.append("meta");
+    }
+    return buffer.toString();
   }
 
   public static class RolloverColorListener extends MouseAdapter {

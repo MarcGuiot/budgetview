@@ -140,7 +140,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .add("15/07/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")
       .check();
 
-    transactions.clearFilters();
+    transactions.clearCurrentFilter();
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "VINCI", "", -5.00, "Transports")
       .add("15/07/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")

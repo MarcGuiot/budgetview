@@ -165,7 +165,7 @@ public class TransactionChecker extends ViewChecker {
     return this;
   }
 
-  public TransactionChecker clearFilters() {
+  public TransactionChecker clearCurrentFilter() {
     Panel panel = this.mainWindow.getPanel("customFilterMessage");
     assertTrue(panel.isVisible());
     Button button = panel.getButton();

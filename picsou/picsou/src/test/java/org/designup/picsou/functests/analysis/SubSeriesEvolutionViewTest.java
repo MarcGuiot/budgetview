@@ -209,7 +209,7 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addSubSeries("FastFood")
       .validate();
 
-    views.checkAnalysisSelected();
+    views.selectAnalysis();
     seriesAnalysis.checkExpanded("Food", true);
 
     categorization.setVariable("MacDo", "Food", "FastFood");
@@ -365,5 +365,50 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .checkSize(2)
       .checkValue("Food", 200.00)
       .checkValue("Restaurant", 20.00);
+  }
+
+  public void testSubSeriesHiddenWhenSeriesNotShown() throws Exception {
+
+    budgetView.variable.createSeries()
+      .setName("MySeries")
+      .gotoSubSeriesTab()
+      .addSubSeries("Sub1")
+      .addSubSeries("Sub2")
+      .validate();
+
+    views.selectAnalysis();
+    seriesAnalysis.toggleTable();
+
+    String[] contentWithoutMySeries = {"Main accounts",
+                                       "Balance",
+                                       "Savings accounts",
+                                       "To categorize",
+                                       "Income", "Salary",
+                                       "Recurring", "Energy",
+                                       "Variable", "Food", "Fouquet's", "Groceries", "Restaurant",
+                                       "Extras",
+                                       "Savings"};
+    seriesAnalysis.checkRowLabels(contentWithoutMySeries);
+
+    budgetView.variable.editSeries("MySeries")
+      .setAmount(500.00)
+      .validate();
+
+    String[] contentWithMySeries = {"Main accounts",
+                                    "Balance",
+                                    "Savings accounts",
+                                    "To categorize",
+                                    "Income", "Salary",
+                                    "Recurring", "Energy",
+                                    "Variable", "Food", "Fouquet's", "Groceries", "Restaurant", "MySeries", "Sub1", "Sub2",
+                                    "Extras",
+                                    "Savings"};
+    seriesAnalysis.checkRowLabels(contentWithMySeries);
+
+    budgetView.variable.editSeries("MySeries")
+      .selectAllMonths()
+      .setAmount(0.00)
+      .validate();
+    seriesAnalysis.checkRowLabels(contentWithoutMySeries);
   }
 }

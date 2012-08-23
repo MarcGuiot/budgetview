@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.series.analysis;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.card.NavigationPopup;
 import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.expansion.*;
 import org.designup.picsou.gui.model.SeriesStat;
@@ -22,9 +23,7 @@ import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.format.GlobStringifiers;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
@@ -35,10 +34,8 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.*;
 import java.util.List;
-import java.util.SortedSet;
 
 import static org.globsframework.utils.Utils.intRange;
 
@@ -116,13 +113,7 @@ public class SeriesEvolutionTableView extends View {
       tableView.addColumn(monthColumn);
     }
 
-    tableView.setPopupFactory(new PopupMenuFactory() {
-      public JPopupMenu createPopup() {
-        JPopupMenu popup = new JPopupMenu();
-        popup.add(tableView.getCopyAction(Lang.get("copy")));
-        return popup;
-      }
-    });
+    tableView.setPopupFactory(new TablePopupFactory());
 
     PicsouTableHeaderPainter.install(tableView, directory);
 
@@ -276,6 +267,31 @@ public class SeriesEvolutionTableView extends View {
   private class SeriesWrapperMatcher implements GlobMatcher {
     public boolean matches(Glob wrapper, GlobRepository repository) {
       return !SeriesWrapper.isAll(wrapper);
+    }
+  }
+
+  private class TablePopupFactory implements PopupMenuFactory {
+
+    private NavigationPopup navigationPopup;
+
+    public JPopupMenu createPopup() {
+
+      JPopupMenu popup = new JPopupMenu();
+
+      if (navigationPopup == null) {
+        navigationPopup = new NavigationPopup(tableView.getComponent(), repository, directory, parentSelectionService);
+      }
+
+      SortedSet<Integer> monthIds = parentSelectionService.getSelection(Month.TYPE).getSortedSet(Month.ID);
+      GlobList wrappers = tableView.getCurrentSelection();
+      navigationPopup.initPopup(popup, monthIds, SeriesWrapper.getWrappedGlobs(wrappers, repository).getKeySet());
+
+      if (popup.getSubElements().length != 0) {
+        popup.addSeparator();
+      }
+
+      popup.add(tableView.getCopyAction(Lang.get("copy")));
+      return popup;
     }
   }
 }

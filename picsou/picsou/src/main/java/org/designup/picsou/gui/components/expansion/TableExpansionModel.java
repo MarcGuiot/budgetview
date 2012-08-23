@@ -47,7 +47,7 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     };
   }
 
-  protected abstract boolean hasChildren(Key key, GlobRepository repository);
+  protected abstract boolean hasChildren(Key key, GlobMatcher baseMatcher, GlobRepository repository);
 
   public abstract boolean isRoot(Glob glob);
 
@@ -62,7 +62,7 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     for (Glob master : repository.getAll(type, getMasterMatcher())) {
       Key key = master.getKey();
       setState(key,
-               isExpansionAuthorized(master) && hasChildren(key, repository),
+               isExpansionAuthorized(master) && hasChildren(key, baseMatcher, repository),
                true);
     }
   }
@@ -107,7 +107,12 @@ public abstract class TableExpansionModel implements GlobMatcher, ChangeSetListe
     if (!baseMatcher.matches(glob, repository)) {
       return false;
     }
-    return isRoot(glob) || getState(getParentKey(glob)).expanded;
+    if (isRoot(glob)) {
+      return true;
+    }
+    Key parentKey = getParentKey(glob);
+    Glob parent = repository.get(parentKey);
+    return matches(parent, repository) && getState(parentKey).expanded;
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {

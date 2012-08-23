@@ -6,7 +6,6 @@ import org.designup.picsou.gui.categorization.components.CategorizationFiltering
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Account;
-import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -14,15 +13,11 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.Collections;
 import java.util.Set;
 import java.util.Stack;
-
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 
 public class NavigationService implements GlobSelectionListener {
 
@@ -87,8 +82,13 @@ public class NavigationService implements GlobSelectionListener {
     gotoCategorization();
   }
 
+  public void gotoCategorizationForSelectedMonths() {
+    categorizationView.showWithMode(CategorizationFilteringMode.SELECTED_MONTHS);
+    gotoCategorization();
+  }
+
   public void gotoUncategorizedForSelectedMonths() {
-    categorizationView.showUncategorizedForSelectedMonths();
+    categorizationView.showWithMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
     gotoCategorization();
   }
 
@@ -97,7 +97,7 @@ public class NavigationService implements GlobSelectionListener {
   }
 
   public void gotoData(GlobList transactions) {
-    transactionView.setFilter(fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
+    transactionView.setTransactionsFilter(transactions);
     select(Card.DATA, false);
   }
 
@@ -121,6 +121,17 @@ public class NavigationService implements GlobSelectionListener {
     select(Card.DATA, false);
   }
 
+  public void gotoDataForSeries(Set<Integer> seriesIds) {
+    selectionService.clear(Account.TYPE);
+    transactionView.setSeriesFilter(seriesIds);
+    select(Card.DATA, false);
+  }
+
+  public void gotoDataForAll() {
+    transactionView.clearFilters();
+    select(Card.DATA, false);
+  }
+
   public void gotoAnalysisForSeries(Glob series) {
     selectionService.select(series);
     gotoCard(Card.ANALYSIS);
@@ -130,7 +141,7 @@ public class NavigationService implements GlobSelectionListener {
     select(Card.CATEGORIZATION, true);
     categorizationView.highlightTransactionCreation();
   }
-  
+
   public boolean backEnabled() {
     return !backStack.isEmpty();
   }

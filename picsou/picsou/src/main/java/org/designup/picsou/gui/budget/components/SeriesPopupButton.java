@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.budget.components;
 
-import org.designup.picsou.gui.budget.SeriesEditionButtons;
 import org.designup.picsou.gui.components.PopupMouseAdapter;
 import org.designup.picsou.gui.series.utils.SeriesPopupFactory;
 import org.designup.picsou.model.Series;

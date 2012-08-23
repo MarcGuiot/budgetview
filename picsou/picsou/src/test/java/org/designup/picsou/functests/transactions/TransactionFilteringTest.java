@@ -37,7 +37,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .checkValue(200605, 15, 500.00)
       .checkValue(200605, 6, 900.00)
       .checkValue(200605, 1, 1200.00);
-    transactions.clearFilters();
+    transactions.clearCurrentFilter();
 
     timeline.selectMonth(200604);
     transactions.initContent()
@@ -107,7 +107,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .checkValue(200605, 10, 600.00)
       .checkValue(200605, 5, 800.00);
 
-    transactions.clearFilters();
+    transactions.clearCurrentFilter();
     mainAccounts.checkNoAccountsSelected();
     transactions.checkGraph("Main accounts - may 2006")
       .checkRange(200605, 200605)
@@ -141,7 +141,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .checkValue(200605, 12, 10000.00)
       .checkValue(200605, 7, 11000.00);
 
-    transactions.clearFilters();
+    transactions.clearCurrentFilter();
     mainAccounts.checkNoAccountsSelected();
     transactions.checkClearFilterButtonHidden();
     transactions.initAmountContent()
@@ -247,7 +247,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .checkValue(200604, 15, 10000.00)
       .checkValue(200604, 5, 10000.00);
 
-    transactions.clearFilters();
+    transactions.clearCurrentFilter();
     mainAccounts.checkNoAccountsSelected();
     transactions.checkClearFilterButtonHidden();
     timeline.selectMonths(200604, 200605);

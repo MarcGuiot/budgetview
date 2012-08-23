@@ -3,6 +3,7 @@ package org.designup.picsou.functests.analysis;
 import org.designup.picsou.functests.checkers.SavingsSetup;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.TransactionType;
 
 public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
@@ -735,11 +736,12 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
     views.selectAnalysis();
     seriesAnalysis.balanceChart.select("Recurring");
-    String[] series = {"Mobile", "Internet"};
-    seriesAnalysis.seriesChart.checkRightClickOptions(series,
-                                                      "Show transactions in Categorization view",
-                                                      "Show transactions in Accounts view");
-    seriesAnalysis.seriesChart.rightClickAndSelect(series, "Show transactions in Categorization view");
+    seriesAnalysis.seriesChart
+      .select("Mobile", "Internet")
+      .checkRightClickOptions("Internet",
+                              "Show transactions in Categorization view",
+                              "Show transactions in Accounts view");
+    seriesAnalysis.seriesChart.rightClickAndSelect("Internet", "Show transactions in Categorization view");
     views.checkCategorizationSelected();
     categorization.checkShowsSelectedMonthsOnly();
     categorization.initContent()
@@ -779,5 +781,65 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .add("20/07/2009", "", "UNKNOWN3", -20.00)
       .check();
     categorization.checkSelectedTableRow("UNKNOWN2");
+  }
+
+  public void testRightClickChangesSelectionIfClickedOnNewItem() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.0, "2009/06/30")
+      .addTransaction("2009/06/10", -250.00, "Auchan")
+      .addTransaction("2009/06/15", -200.00, "Auchan")
+      .addTransaction("2009/06/18", -100.00, "Virt Epargne")
+      .addTransaction("2009/06/20", -30.00, "Free")
+      .addTransaction("2009/06/20", -50.00, "Orange")
+      .addTransaction("2009/06/01", 300.00, "WorldCo")
+      .addTransaction("2009/06/15", 350.00, "Big Inc.")
+      .addTransaction("2009/06/20", 50.00, "Unknown1")
+      .addTransaction("2009/06/20", -100.00, "Unknown2")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewIncome("WorldCo", "John's");
+    categorization.setNewIncome("Big Inc.", "Mary's");
+    categorization.setNewRecurring("Free", "Internet");
+    categorization.setNewRecurring("Orange", "Mobile");
+    categorization.setNewVariable("Auchan", "Groceries", -450.00);
+
+    timeline.selectMonth(200906);
+
+    // -- Click in existing selection ==> preserve
+
+    views.selectAnalysis();
+    seriesAnalysis.balanceChart
+      .select("Income");
+    seriesAnalysis.seriesChart
+      .select("John's")
+      .addToSelection("Mary's");
+    seriesAnalysis.seriesChart
+      .rightClickAndSelect("John's", "Show transactions in Accounts view");
+    views.checkDataSelected();
+    transactions.initContent()
+      .add("15/06/2009", TransactionType.VIREMENT, "BIG INC.", "", 350.00, "Mary's")
+      .add("01/06/2009", TransactionType.VIREMENT, "WORLDCO", "", 300.00, "John's")
+      .check();
+    views.selectAnalysis();
+    seriesAnalysis.checkSelected("John's", "Mary's");
+
+    // -- Click in existing selection ==> change
+
+    views.selectAnalysis();
+    seriesAnalysis.balanceChart
+      .select("Income");
+    seriesAnalysis.seriesChart
+      .select("John's");
+
+    seriesAnalysis.seriesChart
+      .rightClickAndSelect("Mary's", "Show transactions in Accounts view");
+    views.checkDataSelected();
+    transactions.initContent()
+      .add("15/06/2009", TransactionType.VIREMENT, "BIG INC.", "", 350.00, "Mary's")
+      .check();
+    views.selectAnalysis();
+    seriesAnalysis.checkSelected("Mary's");
+
   }
 }

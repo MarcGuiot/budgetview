@@ -31,10 +31,11 @@ public class Matchers {
   }
 
   public static GlobMatcher transactionsForAccounts(Set<Integer> accountIds, GlobRepository repository) {
-    accountIds = new HashSet<Integer>(accountIds);
     if (accountIds.contains(Account.ALL_SUMMARY_ACCOUNT_ID)) {
       return GlobMatchers.ALL;
     }
+
+    accountIds = new HashSet<Integer>(accountIds);
     if (accountIds.contains(Account.MAIN_SUMMARY_ACCOUNT_ID)) {
       accountIds.addAll(
         repository.getAll(Account.TYPE).filterSelf(

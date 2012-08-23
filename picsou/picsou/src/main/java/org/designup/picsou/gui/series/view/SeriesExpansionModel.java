@@ -9,9 +9,10 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
 
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesExpansionModel extends TableExpansionModel {
 
@@ -33,9 +34,10 @@ public class SeriesExpansionModel extends TableExpansionModel {
     }, SeriesWrapper.TYPE);
   }
 
-  protected boolean hasChildren(Key key, GlobRepository repository) {
+  protected boolean hasChildren(Key key, GlobMatcher baseMatcher, GlobRepository repository) {
     return repository.contains(SeriesWrapper.TYPE,
-                               fieldEquals(SeriesWrapper.PARENT, key.get(SeriesWrapper.ID)));
+                               and(fieldEquals(SeriesWrapper.PARENT, key.get(SeriesWrapper.ID)),
+                                   baseMatcher));
   }
 
   public boolean isRoot(Glob wrapper) {

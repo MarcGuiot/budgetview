@@ -348,7 +348,6 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .add("20/06/2009", TransactionType.VIREMENT, "UNKNOWN", "", 50.00)
       .add("15/06/2009", TransactionType.VIREMENT, "BIG INC.", "", 350.00, "Mary's")
       .add("15/06/2009", TransactionType.PRELEVEMENT, "AUCHAN", "", -200.00, "Groceries")
-      .add("10/06/2009", TransactionType.PRELEVEMENT, "VIRT", "", -200.00, "Epargne")
       .add("10/06/2009", TransactionType.PRELEVEMENT, "AUCHAN", "", -250.00, "Groceries")
       .add("01/06/2009", TransactionType.VIREMENT, "WORLDCO", "", 300.00, "John's")
       .check();
@@ -423,10 +422,13 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.histoChart.rightClickAndSelect(0, "Show transactions in Accounts view");
     timeline.checkSelection("2009/06");
     categorization.checkShowsSelectedMonthsOnly();
+    views.checkDataSelected();
     transactions.initContent()
       .add("15/06/2009", TransactionType.PRELEVEMENT, "AUCHAN", "", -200.00, "Groceries")
       .add("10/06/2009", TransactionType.PRELEVEMENT, "AUCHAN", "", -250.00, "Groceries")
       .check();
+    transactions.checkClearFilterButtonShown();
+    transactions.clearCurrentFilter();
 
     views.selectAnalysis();
     seriesAnalysis.histoChart.rightClickAndEditSeries(1, "Edit")
