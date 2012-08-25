@@ -371,6 +371,10 @@ public class TransactionChecker extends ViewChecker {
     this.table = null;
   }
 
+  public TransactionEditionChecker edit(String label) {
+    return edit(getIndexOf(label));
+  }
+
   public TransactionEditionChecker edit(int rowIndex) {
     return TransactionEditionChecker.open(PopupMenuInterceptor
                                             .run(getTable().triggerRightClick(rowIndex, 0))

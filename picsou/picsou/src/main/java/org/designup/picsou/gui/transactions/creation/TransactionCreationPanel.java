@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.transactions.creation;
 
+import com.jidesoft.swing.AutoCompletion;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.AccountEditionDialog;
 import org.designup.picsou.gui.components.AmountEditor;
@@ -12,6 +13,7 @@ import org.designup.picsou.gui.components.tips.DetailsTip;
 import org.designup.picsou.gui.description.stringifiers.MonthFieldListStringifier;
 import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
+import org.designup.picsou.gui.startup.components.AutoCategorizationFunctor;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -50,6 +52,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
   private AmountEditor amountEditor;
   private DetailsTip buttonTip;
   private boolean isShowing;
+  private AutoCategorizationFunctor autoCategorizationFunctor;
 
   public TransactionCreationPanel(GlobRepository repository, Directory directory, Directory parentDirectory) {
     super(createLocalRepository(repository), directory);
@@ -58,6 +61,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     this.selectionService.addListener(this, Month.TYPE);
     this.parentSelectionService = parentDirectory.get(SelectionService.class);
     this.parentRepository.addChangeListener(this);
+    this.autoCategorizationFunctor = new AutoCategorizationFunctor(parentRepository);
   }
 
   private static GlobRepository createLocalRepository(GlobRepository repository) {
@@ -113,7 +117,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     panel = builder.load();
 
     panel.setFocusCycleRoot(true);
-    panel.setFocusTraversalPolicy(new CustomFocusTraversalPolicy(amountField, dayField, labelField,
+    panel.setFocusTraversalPolicy(new CustomFocusTraversalPolicy(dayField, labelField, amountField,
                                                                  createButton, accountCombo));
 
     return panel;
@@ -296,6 +300,11 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
         }
 
         createdTransaction = parentRepository.create(Transaction.TYPE, values.toArray());
+
+        autoCategorizationFunctor.run(createdTransaction, parentRepository);
+      }
+      catch (Exception e1) {
+        throw new RuntimeException(e1);
       }
       finally {
         parentRepository.completeChangeSet();
@@ -313,7 +322,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
                         value(Transaction.BUDGET_DAY, null),
                         value(Transaction.LABEL, ""));
 
-      amountField.requestFocus();
+      dayField.requestFocus();
 
       Glob monthToSelect = repository.get(Key.create(Month.TYPE, month));
       if (!parentSelectionService.getSelection(Month.TYPE).contains(monthToSelect)) {
@@ -353,6 +362,10 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
       dialog.showExpiration();
       return;
     }
+
+    AutoCompletion autoCompletion =
+      new AutoCompletion(labelField, new AutoCompletionModel(labelField, parentRepository));
+    autoCompletion.setStrict(false);
 
     try {
       repository.startChangeSet();
@@ -399,7 +412,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     }
 
     setVisible(true, "transactionCreation.hide");
-    amountField.requestFocus();
+    dayField.requestFocus();
   }
 
   private void hide() {

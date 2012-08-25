@@ -1,12 +1,12 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 
 import javax.swing.*;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
-import org.designup.picsou.utils.Lang;
 
 public class TransactionCreationChecker extends ViewChecker {
   private Panel panel;
@@ -77,12 +77,12 @@ public class TransactionCreationChecker extends ViewChecker {
     editMonth().selectMonth(monthId);
     return this;
   }
-  
+
   public TransactionCreationChecker checkMonth(String text) {
     assertThat(getPanel().getButton("month").textEquals(text));
     return this;
   }
-  
+
   public MonthChooserChecker editMonth() {
     return MonthChooserChecker.open(getPanel().getButton("month").triggerClick());
   }
@@ -100,7 +100,21 @@ public class TransactionCreationChecker extends ViewChecker {
     textBox.setText(label, false);
     return this;
   }
-  
+
+  public TransactionCreationChecker checkLabelAutocompletion(String label, String completion) throws Exception {
+    TextBox textBox = getPanel().getInputTextBox("label");
+    JTextField textField = (JTextField)textBox.getAwtComponent();
+    textField.setText(label);
+
+    Assert.assertEquals(completion, textField.getText());
+    return this;
+  }
+
+  public TransactionCreationChecker clearLabel() {
+    getPanel().getInputTextBox("label").clear();
+    return this;
+  }
+
   public TransactionCreationChecker create(int day, String label, double amount) {
     setDay(day);
     setAmount(amount);

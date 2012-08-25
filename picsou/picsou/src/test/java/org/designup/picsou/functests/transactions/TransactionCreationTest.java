@@ -2,6 +2,7 @@ package org.designup.picsou.functests.transactions;
 
 import org.designup.picsou.functests.checkers.MonthChooserChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
+import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
 
 public class TransactionCreationTest extends LoggedInFunctionalTestCase {
@@ -40,8 +41,8 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     categorization
       .checkTable(new Object[][]{
-      {"15/08/2008", "", "TRANSACTION 1", -12.50},
-    });
+        {"15/08/2008", "", "TRANSACTION 1", -12.50},
+      });
 
     categorization.checkSelectedTableRow("TRANSACTION 1");
 
@@ -198,7 +199,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .create();
 
     mainAccounts.checkPosition("Cash", 100.00);
-    
+
     setCurrentDate("2008/09/02");
     restartApplication();
     timeline.selectMonth(200809);
@@ -417,5 +418,129 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
   public void testCreatingAManuallyCreatedTransactionInTheFuturePreservesCurrentMonth() throws Exception {
     fail("tbd - http://support.mybudgetview.fr/tickets/1070");
+  }
+
+  public void testCreatedTransactionsAreAutomaticallyCategorized() throws Exception {
+
+    OfxBuilder.init(this)
+      .addBankAccount("0001", 0.0, "2012/08/31")
+      .addTransaction("2012/08/15", -10.00, "Burger King")
+      .load();
+
+    categorization.setNewVariable("BURGER KING", "Gastronomie", -200.00);
+    
+    transactionCreation.show()
+      .setDay(16)
+      .setLabel("Burger king")
+      .setAmount(-15.00)
+      .create();
+    
+    categorization.initContent()
+      .add("15/08/2012", "Gastronomie", "BURGER KING", -10.00)
+      .add("16/08/2012", "Gastronomie", "[R] BURGER KING", -15.00)
+      .check();
+    
+    transactionCreation.create(17, "Auchan", -100.00);
+    categorization.initContent()
+      .add("17/08/2012", "", "[R] AUCHAN", -100.00)
+      .add("15/08/2012", "Gastronomie", "BURGER KING", -10.00)
+      .add("16/08/2012", "Gastronomie", "[R] BURGER KING", -15.00)
+      .check();
+
+    categorization.setNewVariable("[R] Auchan", "Groceries", -200.00);
+    transactionCreation.create(18, "Auchan", -150.00);
+    categorization.initContent()
+      .add("17/08/2012", "Groceries", "[R] AUCHAN", -100.00)
+      .add("18/08/2012", "Groceries", "[R] AUCHAN", -150.00)
+      .add("15/08/2012", "Gastronomie", "BURGER KING", -10.00)
+      .add("16/08/2012", "Gastronomie", "[R] BURGER KING", -15.00)
+      .check();
+  }
+
+  public void testAutoCompletion() throws Exception {
+    mainAccounts.createNewAccount()
+      .setName("Main")
+      .selectBank("CIC")
+      .setPosition(1000.00)
+      .validate();
+    
+    transactionCreation.show()
+      .checkSelectedAccount("Main")
+      .create(15, "Auchan", -50.00);
+
+    transactionCreation
+      .setDay(16)
+      .checkLabelAutocompletion("Au", "AUCHAN");
+  }
+
+  public void testModifiedLabelsWhichAreNotUsedAnymoreAreExcludedFromAutocompletion() throws Exception {
+    mainAccounts.createNewAccount()
+      .setName("Main")
+      .selectBank("CIC")
+      .setPosition(1000.00)
+      .validate();
+
+    transactionCreation.show()
+      .checkSelectedAccount("Main")
+      .create(15, "Auchan", -50.00);
+
+    transactions.edit("AUCHAN")
+      .setLabel("Carrefour")
+      .validate();
+
+    views.selectCategorization();
+    transactionCreation
+      .setDay(16)
+      .checkLabelAutocompletion("Au", "Au")
+      .clearLabel()
+      .checkLabelAutocompletion("Ca", "CARREFOUR")
+      .setDay(16)
+      .setAmount(-100.00)
+      .create();
+
+    categorization.initContent()
+      .add("15/08/2008", "", "CARREFOUR", -50.00)
+      .add("16/08/2008", "", "CARREFOUR", -100.00)
+      .check();
+
+    categorization.edit(0)
+      .setLabel("ED")
+      .validate();
+
+    transactionCreation
+      .setDay(17)
+      .checkLabelAutocompletion("Ca", "CARREFOUR")
+      .setLabel("Auchan")
+      .setAmount(-150.00)
+      .create();
+
+    categorization.initContent()
+      .add("17/08/2008", "", "AUCHAN", -150.00)
+      .add("16/08/2008", "", "CARREFOUR", -100.00)
+      .add("15/08/2008", "", "ED", -50.00)
+      .check();
+
+    categorization.edit(1)
+      .setLabel("Monoprix")
+      .validate();
+    categorization.initContent()
+      .add("17/08/2008", "", "AUCHAN", -150.00)
+      .add("15/08/2008", "", "ED", -50.00)
+      .add("16/08/2008", "", "MONOPRIX", -100.00)
+      .check();
+
+    transactionCreation
+      .setDay(18)
+      .checkLabelAutocompletion("Ca", "Ca");
+
+    categorization.delete("MONOPRIX").validate();
+    categorization.initContent()
+      .add("17/08/2008", "", "AUCHAN", -150.00)
+      .add("15/08/2008", "", "ED", -50.00)
+      .check();
+
+    transactionCreation
+      .setDay(18)
+      .checkLabelAutocompletion("Mo", "Mo");
   }
 }
