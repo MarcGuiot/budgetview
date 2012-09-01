@@ -1,7 +1,9 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.AssertionFailedError;
 import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.*;
+import org.uispec4j.assertion.Assertion;
 import org.uispec4j.utils.Utils;
 
 import javax.swing.*;
@@ -11,6 +13,7 @@ import java.util.List;
 import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class BudgetAreaCategorizationChecker extends GuiChecker {
+  public static final String DISABLED_SERIES_COLOR = "777777";
   protected CategorizationChecker categorizationChecker;
   private BudgetArea budgetArea;
   private Panel panel;
@@ -55,11 +58,21 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return Utils.equals(radio.getName(), radio.getLabel());
   }
 
-  public BudgetAreaCategorizationChecker checkDoesNotContainSeries(String... seriesNames) {
-    for (String seriesName : seriesNames) {
-      assertFalse("Series " + seriesName + " unexpectedly found",
-                  panel.containsUIComponent(RadioButton.class, seriesName));
-    }
+  public BudgetAreaCategorizationChecker checkDoesNotContainSeries(final String... seriesNames) {
+    assertThat(new Assertion() {
+      public void check() {
+        for (String seriesName : seriesNames) {
+          if (panel.containsUIComponent(RadioButton.class, seriesName).isTrue()) {
+            StringBuilder message = new StringBuilder("Series " + seriesName + " unexpectedly found");
+            RadioButton button = panel.getRadioButton(seriesName);
+            if (button.foregroundEquals(DISABLED_SERIES_COLOR).isTrue()) {
+              message.append(" (appears as disabled)");
+            }
+            throw new AssertionFailedError(message.toString());
+          }
+        }
+      }
+    });
     return this;
   }
 
@@ -108,7 +121,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   }
 
   public BudgetAreaCategorizationChecker checkNonActiveSeries(String seriesName) {
-    assertThat(panel.getRadioButton(seriesName).foregroundEquals("777777"));
+    assertThat(panel.getRadioButton(seriesName).foregroundEquals(DISABLED_SERIES_COLOR));
     return this;
   }
 

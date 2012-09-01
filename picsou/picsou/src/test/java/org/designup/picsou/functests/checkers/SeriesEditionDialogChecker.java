@@ -143,7 +143,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
       if (selected.contains(month)) {
         checkBox.select();
       }
-      else {
+      else if (checkBox.isEnabled().isTrue()) {
         checkBox.unselect();
       }
     }

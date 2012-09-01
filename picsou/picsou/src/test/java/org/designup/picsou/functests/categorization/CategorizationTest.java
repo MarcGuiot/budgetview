@@ -644,51 +644,95 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
   public void testFiltersSeries() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/07/30", -50.00, "Monoprix")
-      .addTransaction("2008/06/30", -95.00, "Auchan")
-      .addTransaction("2008/05/29", -29.00, "ED")
+      .addTransaction("2008/07/15", -50.00, "OP 200807")
+      .addTransaction("2008/06/15", -50.00, "OP 200806")
+      .addTransaction("2008/05/15", -50.00, "OP 200805")
+      .addTransaction("2008/04/15", -50.00, "OP 200804")
+      .addTransaction("2008/03/15", -50.00, "OP 200803")
+      .addTransaction("2008/02/15", -50.00, "OP 200802")
+      .addTransaction("2008/01/15", -50.00, "OP 200801")
       .load();
 
-    budgetView.variable.createSeries().setName("courantED")
-      .setEndDate(200805)
+    budgetView.variable.createSeries().setName("before200804")
+      .setEndDate(200804)
       .selectAllMonths()
       .setAmount("100")
-      .setEndDate(200805)
+      .setEndDate(200804)
       .validate();
-    budgetView.variable.createSeries().setName("courantAuchan")
-      .setStartDate(200806)
+    budgetView.variable.createSeries().setName("only200804")
+      .setStartDate(200804)
+      .setEndDate(200804)
+      .selectAllMonths()
+      .setAmount("100")
+      .setStartDate(200804)
+      .setEndDate(200804)
+      .validate();
+    budgetView.variable.createSeries().setName("after200804")
+      .setStartDate(200804)
+      .selectAllMonths()
+      .setAmount("100")
+      .setStartDate(200804)
+      .validate();
+
+    budgetView.variable.createSeries().setName("range")
+      .setStartDate(200802)
       .setEndDate(200806)
       .selectAllMonths()
       .setAmount("100")
-      .setStartDate(200806)
-      .setEndDate(200806)
-      .validate();
-    budgetView.variable.createSeries().setName("courantMonoprix")
-      .setStartDate(200806)
-      .selectAllMonths()
-      .setAmount("100")
-      .setStartDate(200806)
+      .setRepeatCustom()
+      .setPeriodMonths(2,6)
       .validate();
 
-    categorization.selectTransactions("ED");
-    categorization.selectVariable()
-      .checkContainsSeries("courantED")
-      .checkDoesNotContainSeries("courantAuchan", "courantMonoprix");
+    // -- Single selection --
 
-    categorization.selectTransactions("Auchan", "Monoprix");
+    categorization.selectTransaction("OP 200801");
     categorization.selectVariable()
-      .checkContainsSeries("courantMonoprix")
-      .checkDoesNotContainSeries("courantED", "courantAuchan");
+      .checkContainsSeries("before200804")
+      .checkDoesNotContainSeries("only200804", "after200804", "range");
 
-    categorization.selectTransactions("Auchan", "ED");
+    categorization.selectTransaction("OP 200802");
     categorization.selectVariable()
-      .checkDoesNotContainSeries("courantED", "courantAuchan", "courantMonoprix");
+      .checkContainsSeries("before200804", "range")
+      .checkDoesNotContainSeries("after200804", "only200804");
 
-    categorization.selectTransactions("Auchan");
+    categorization.selectTransaction("OP 200803");
     categorization.selectVariable()
-      .checkContainsSeries("courantAuchan")
-      .checkContainsSeries("courantMonoprix")
-      .checkDoesNotContainSeries("courantED");
+      .checkContainsSeries("before200804")
+      .checkNonActiveSeries("range")
+      .checkDoesNotContainSeries("after200804", "only200804");
+
+    categorization.selectTransaction("OP 200804");
+    categorization.selectVariable()
+      .checkContainsSeries("before200804", "after200804", "only200804")
+      .checkDoesNotContainSeries("range");
+
+    categorization.selectTransaction("OP 200805");
+    categorization.selectVariable()
+      .checkContainsSeries("after200804")
+      .checkNonActiveSeries("range")
+      .checkDoesNotContainSeries("before200804", "only200804");
+
+    categorization.selectTransaction("OP 200806");
+    categorization.selectVariable()
+      .checkContainsSeries("after200804", "range")
+      .checkDoesNotContainSeries("before200804", "only200804");
+
+    categorization.selectTransaction("OP 200807");
+    categorization.selectVariable()
+      .checkContainsSeries("after200804")
+      .checkDoesNotContainSeries("before200804", "only200804", "range");
+
+    // -- Multi selection --
+
+    categorization.selectTransactions("OP 200806", "OP 200807");
+    categorization.selectVariable()
+      .checkContainsSeries("after200804")
+      .checkDoesNotContainSeries("before200804", "only200804", "range");
+
+    categorization.selectTransactions("OP 200806", "OP 200805");
+    categorization.selectVariable()
+      .checkContainsSeries("after200804", "range")
+      .checkDoesNotContainSeries("before200804", "only200804");
   }
 
   public void testRemovingASeries() throws Exception {

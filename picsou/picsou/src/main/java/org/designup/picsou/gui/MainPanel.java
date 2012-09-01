@@ -340,6 +340,7 @@ public class MainPanel {
     devMenu.add(new OpenFeedbackDialogAction(repository, directory));
     devMenu.add(new ShowUserEvaluationDialogAction(repository, directory));
     devMenu.add(new LicenseExpirationAction(repository, directory));
+    devMenu.add(new DumpRepositoryAction(repository));
     devMenu.add(threadsAction);
     return devMenu;
   }

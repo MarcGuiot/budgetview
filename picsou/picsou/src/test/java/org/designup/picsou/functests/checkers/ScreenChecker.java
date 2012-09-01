@@ -54,8 +54,7 @@ public class ScreenChecker {
   }
 
   private void checkBackgroundTopColor(String color) {
-    JPanel panel = 
-      (JPanel)mainWindow.getPanel("backgroundPanel").getAwtComponent();
+    JPanel panel = (JPanel)mainWindow.getPanel("backgroundPanel").getAwtComponent();
     WavePanelUI ui = (WavePanelUI)panel.getUI();
     ColorUtils.assertEquals(Colors.toColor(color), ui.getTopColor());
   }

@@ -808,28 +808,6 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Salary", 0, 20.00);
   }
 
-  public void testInManualDoNotSelectHiddenSeriesBudget() throws Exception {
-    operations.openPreferences().setFutureMonthsCount(12).validate();
-
-    budgetView.variable.createSeries()
-      .setName("S1")
-      .setRepeatEverySixMonths()
-      .checkMonthSelectorsVisible(true)
-      .toggleMonth(3)
-      .checkMonthIsChecked(3, 9)
-      .validate();
-
-    timeline.selectMonth("2008/08");
-    budgetView.variable.checkSeriesNotPresent("S1");
-
-    timeline.selectAll();
-    budgetView.variable.editSeries("S1")
-      .toggleMonth(8)
-      .selectAllMonths()
-      .setAmount(-200.)
-      .cancel();
-  }
-
   public void testAutomaticAndManualModes() throws Exception {
     OfxBuilder
       .init(this)

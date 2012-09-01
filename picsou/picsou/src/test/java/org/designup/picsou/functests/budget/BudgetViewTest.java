@@ -332,26 +332,29 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     timeline.selectMonths("2008/04", "2008/05", "2008/06", "2008/07");
 
-    budgetView.variable.checkSeries("courantMonoprix", -50, -200).checkSeries("courantED", -79, -200);
+    budgetView.variable
+      .checkSeries("courantMonoprix", -50, -200)
+      .checkSeries("courantED", -79, -200);
 
     budgetView.extras.checkSeries("courantAuchan", -95, -100);
 
     timeline.selectMonth("2008/05");
-    budgetView.variable.checkSeries("courantED", -29, -100)
+    budgetView.variable
+      .checkSeries("courantED", -29, -100)
       .checkSeriesNotPresent("courantMonoprix");
-
     budgetView.extras
       .checkSeriesNotPresent("courantAuchan");
 
     timeline.selectMonth("2008/06");
-    budgetView.variable.checkSeries("courantMonoprix", -0, -100)
+    budgetView.variable
+      .checkSeries("courantMonoprix", -0, -100)
       .checkSeriesNotPresent("courantED");
-
-    budgetView.extras.checkSeries("courantAuchan", -95, -100);
+    budgetView.extras
+      .checkSeries("courantAuchan", -95, -100);
 
     timeline.selectMonth("2008/07");
-
-    budgetView.variable.checkSeries("courantMonoprix", -50, -100)
+    budgetView.variable
+      .checkSeries("courantMonoprix", -50, -100)
       .checkSeriesNotPresent("courantED");
 
     budgetView.extras

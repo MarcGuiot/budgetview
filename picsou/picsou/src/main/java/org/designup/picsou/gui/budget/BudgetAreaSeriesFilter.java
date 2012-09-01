@@ -26,16 +26,11 @@ public class BudgetAreaSeriesFilter implements GlobMatcher {
   public BudgetAreaSeriesFilter(BudgetArea budgetArea) {
     this.budgetArea = budgetArea;
     if (budgetArea == BudgetArea.SAVINGS) {
-      seriesDateFilter =
-        Matchers.seriesDateSavingsAndAccountFilter(Account.MAIN_SUMMARY_ACCOUNT_ID);
+      seriesDateFilter = Matchers.seriesDateSavingsAndAccountFilter(Account.MAIN_SUMMARY_ACCOUNT_ID);
     }
     else {
-      seriesDateFilter = Matchers.seriesActiveInPeriod(budgetArea.getId(), false);
+      seriesDateFilter = Matchers.seriesActiveInPeriod(budgetArea.getId(), true, false);
     }
-  }
-
-  public void setMonthFilteringEnabled(boolean enabled) {
-    this.monthFilteringEnabled = enabled;
   }
 
   public void toggleMonthFilteringEnabled() {

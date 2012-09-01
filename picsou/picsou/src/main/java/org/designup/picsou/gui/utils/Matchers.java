@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.utils;
 
 import org.designup.picsou.model.*;
-import org.globsframework.gui.utils.GlobSelectablePanel;
+import org.designup.picsou.model.util.Amounts;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -67,7 +67,7 @@ public class Matchers {
       }
     };
   }
-  
+
   public static GlobMatcher transactionsForSeries(final Set<Integer> targetSeries) {
     return new GlobMatcher() {
       public boolean matches(Glob transaction, GlobRepository repository) {
@@ -99,7 +99,7 @@ public class Matchers {
       not(isTrue(Transaction.MIRROR))
     );
   }
-  
+
   public static GlobMatcher transactionsToReconcile() {
     return new GlobMatcher() {
       public boolean matches(Glob transaction, GlobRepository repository) {
@@ -109,16 +109,8 @@ public class Matchers {
     };
   }
 
-  public static MonthMatcher userSeriesActiveInPeriod() {
-    return new SeriesFirstEndDateFilter(false) {
-      protected boolean isEligible(Glob series, GlobRepository repository) {
-        return !Utils.equal(series.get(Series.ID), Series.UNCATEGORIZED_SERIES_ID);
-      }
-    };
-  }
-
-  public static MonthMatcher seriesActiveInPeriod(final Integer budgetAreaId, boolean isExclusive) {
-    return new SeriesFirstEndDateFilter(isExclusive) {
+  public static MonthMatcher seriesActiveInPeriod(final Integer budgetAreaId, boolean showOnlyForActiveMonths, boolean showOnlyIfAvailableOnAllMonths) {
+    return new SeriesFirstEndDateFilter(showOnlyForActiveMonths, showOnlyIfAvailableOnAllMonths) {
       protected boolean isEligible(Glob series, GlobRepository repository) {
         return budgetAreaId.equals(series.get(Series.BUDGET_AREA));
       }
@@ -126,8 +118,7 @@ public class Matchers {
   }
 
   public static MonthMatcher seriesDateSavingsAndAccountFilter(final Integer accountId) {
-    return new SeriesFirstEndDateFilter(false) {
-
+    return new SeriesFirstEndDateFilter(true, false) {
       protected boolean isEligible(Glob series, GlobRepository repository) {
         if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
           return false;
@@ -154,7 +145,7 @@ public class Matchers {
     private MonthMatcher filter;
 
     public CategorizationFilter(final Integer budgetAreaId) {
-      filter = seriesActiveInPeriod(budgetAreaId, true);
+      filter = seriesActiveInPeriod(budgetAreaId, false, true);
     }
 
     public boolean matches(Glob series, GlobRepository repository) {
@@ -221,15 +212,25 @@ public class Matchers {
   }
 
   public static abstract class SeriesFirstEndDateFilter implements MonthMatcher {
-    private boolean exclusive;
-    private Set<Integer> monthIds = Collections.emptySet();
+    private boolean showOnlyForActiveMonths;
+    private boolean showOnlyIfAvailableOnAllMonths;
+    private Set<Integer> selectedMonthIds = Collections.emptySet();
+    private Set<Integer> expandedMonthIds = Collections.emptySet();
 
-    private SeriesFirstEndDateFilter(boolean isExclusive) {
-      this.exclusive = isExclusive;
+    private SeriesFirstEndDateFilter(boolean showOnlyForActiveMonths, boolean showOnlyIfAvailableOnAllMonths) {
+      this.showOnlyForActiveMonths = showOnlyForActiveMonths;
+      this.showOnlyIfAvailableOnAllMonths = showOnlyIfAvailableOnAllMonths;
     }
 
     public void filterMonths(Set<Integer> monthIds) {
-      this.monthIds = monthIds;
+      this.selectedMonthIds = monthIds;
+
+      this.expandedMonthIds = new HashSet<Integer>();
+      for (Integer monthId : monthIds) {
+        expandedMonthIds.add(Month.previous(monthId));
+        expandedMonthIds.add(Month.next(monthId));
+      }
+      expandedMonthIds.removeAll(selectedMonthIds);
     }
 
     public boolean matches(Glob series, GlobRepository repository) {
@@ -245,27 +246,58 @@ public class Matchers {
       if (lastMonth == null) {
         lastMonth = Integer.MAX_VALUE;
       }
-      for (Integer id : monthIds) {
-        if ((id < firstMonth || id > lastMonth) == exclusive) {
-          return !exclusive;
-        }
-        if (!exclusive) {
-          Glob seriesBudget =
-            repository
-              .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID))
-              .findByIndex(SeriesBudget.MONTH, id)
-              .getGlobs()
-              .getFirst();
-          if (seriesBudget != null && seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
+
+      boolean monthsInScope = isMonthSelectionInSeriesScope(firstMonth, lastMonth);
+
+      for (Integer monthId : selectedMonthIds) {
+        Glob seriesBudget = SeriesBudget.find(series.get(Series.ID), monthId, repository);
+        if ((seriesBudget != null)) {
+          if (Amounts.isNotZero(seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT))) {
+            return true;
+          }
+          if (monthsInScope && seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
             return true;
           }
         }
       }
-      return exclusive;
+
+      if (monthsInScope) {
+        for (Integer monthId : expandedMonthIds) {
+          Glob seriesBudget = SeriesBudget.find(series.get(Series.ID), monthId, repository);
+          if ((seriesBudget != null) && seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    }
+
+    private boolean isMonthSelectionInSeriesScope(Integer firstMonth, Integer lastMonth) {
+      boolean inScope;
+      if (showOnlyIfAvailableOnAllMonths) {
+        inScope = true;
+        for (Integer id : selectedMonthIds) {
+          if ((id < firstMonth) || (id > lastMonth)) {
+            inScope = false;
+            break;
+          }
+        }
+      }
+      else {
+        inScope = false;
+        for (Integer id : selectedMonthIds) {
+          if ((id >= firstMonth) && (id <= lastMonth)) {
+            inScope = true;
+            break;
+          }
+        }
+      }
+      return inScope;
     }
 
     public String toString() {
-      return "SeriesFirstEndDateFilter(" + monthIds + "," + exclusive + ")";
+      return "SeriesFirstEndDateFilter(" + selectedMonthIds + ", strict:" + showOnlyForActiveMonths + ")";
     }
 
     protected abstract boolean isEligible(Glob series, GlobRepository repository);
@@ -286,6 +318,7 @@ public class Matchers {
       }
     };
   }
+
   public static GlobMatcher userCreatedSavingsAccounts() {
     return new GlobMatcher() {
       public boolean matches(Glob account, GlobRepository repository) {
@@ -355,7 +388,7 @@ public class Matchers {
       }
     };
   }
-  
+
   public static GlobMatcher toReconcile() {
     return new GlobMatcher() {
       public boolean matches(Glob transaction, GlobRepository repository) {
