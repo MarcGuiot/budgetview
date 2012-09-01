@@ -104,7 +104,7 @@
 
         <card name="home">
           <column>
-            <horizontalSplit weightY="2">
+            <horizontalSplit weightY="2" styleClass="mainDivider">
               <column weightX="6">
                 <label text="$summaryView.title" styleClass="blockTitle"/>
                 <column styleClass="block">
@@ -152,7 +152,7 @@
         </card>
 
         <card name="data">
-          <horizontalSplit opaque="false">
+          <horizontalSplit styleClass="mainDivider">
             <column weightX="1" minimumSize="(300,200)" preferredSize="(300,700)">
               <panel ref="accountView"/>
             </column>

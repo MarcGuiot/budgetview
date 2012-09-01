@@ -337,6 +337,10 @@
     <!-- Split panes -->
     <style selector="horizontalSplit" showGripper="false" dividerSize="12" opaque="false"/>
     <style selector="verticalSplit" showGripper="false" dividerSize="8" opaque="false"/>
+    <style selector="horizontalSplit.mainDivider" showGripper="true" foreground="splitpane.main.handle"/>
+    <style selector="verticalSplit.mainDivider" showGripper="true" foreground="splitpane.main.handle"/>
+    <style selector="horizontalSplit.blockDivider" showGripper="true" foreground="splitpane.block.handle"/>
+    <style selector="verticalSplit.blockDivider" showGripper="true" foreground="splitpane.block.handle"/>
 
     <!-- Inner dialog blocks -->
     <ui name="dialogBlockUI" class="org.globsframework.gui.splits.components.StyledPanelUI"

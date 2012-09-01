@@ -10,7 +10,6 @@ C org.designup.picsou.gui.plaf.PicsouRootPaneUI
 C org.designup.picsou.gui.plaf.PicsouOptionPaneUI
 C org.designup.picsou.gui.plaf.PicsouMacFileChooserUI
 C org.designup.picsou.gui.plaf.PicsouWindowsFileChooserUI
-C org.designup.picsou.gui.plaf.PicsouSplitPaneUI
 C org.apache.commons.logging.impl.LogFactoryImpl
 C org.apache.commons.logging.impl.SimpleLog
 C org.apache.commons.httpclient.auth.CredentialsNotAvailableException

@@ -27,7 +27,7 @@
 
     <panel styleClass="block">
 
-      <verticalSplit styleClass="innerBlock">
+      <verticalSplit styleClass="blockDivider">
 
         <column weightY="5">
 
