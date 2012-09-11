@@ -364,7 +364,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     }
 
     AutoCompletion autoCompletion =
-      new AutoCompletion(labelField, new AutoCompletionModel(labelField, parentRepository));
+      new AutoCompletion(labelField, new AutoCompletionModel(parentRepository));
     autoCompletion.setStrict(false);
 
     try {

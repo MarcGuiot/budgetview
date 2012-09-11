@@ -711,6 +711,25 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     preferences2.validate();
 
     screen.checkBackgroundColorIsStandard();
-
   }
+
+  public void testAutoCompletionIsProperlyInitializedOnRestart() throws Exception {
+    mainAccounts.createNewAccount()
+      .setName("Main")
+      .selectBank("CIC")
+      .setPosition(1000.00)
+      .validate();
+
+    transactionCreation.show()
+      .checkSelectedAccount("Main")
+      .create(15, "Auchan", -50.00);
+
+    restartApplication();
+
+    transactionCreation.show()
+      .selectAccount("Main")
+      .setDay(16)
+      .checkLabelAutocompletion("Au", "AUCHAN");
+  }
+
 }

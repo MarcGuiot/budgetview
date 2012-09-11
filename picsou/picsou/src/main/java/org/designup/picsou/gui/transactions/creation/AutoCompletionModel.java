@@ -10,15 +10,15 @@ import org.globsframework.utils.Strings;
 import javax.swing.*;
 import java.util.*;
 
-import static org.globsframework.model.utils.GlobMatchers.isFalse;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class AutoCompletionModel extends Searchable {
 
   private List<String> labels = new ArrayList<String>();
   private SortedSet<Integer> selection = new TreeSet<Integer>();
 
-  public AutoCompletionModel(JComponent component, GlobRepository repository) {
-    super(component);
+  public AutoCompletionModel(GlobRepository repository) {
+    super(new JLabel());
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
         changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
@@ -40,16 +40,23 @@ public class AutoCompletionModel extends Searchable {
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        if (!changedTypes.contains(Transaction.TYPE)) {
-          return;
+        if (changedTypes.contains(Transaction.TYPE)) {
+          reloadLabels(repository);
         }
-
-        labels.clear();
-        labels.addAll(repository
-                        .getAll(Transaction.TYPE, isFalse(Transaction.PLANNED))
-                        .getValueSet(Transaction.LABEL));
       }
     });
+    reloadLabels(repository);
+  }
+
+  private void reloadLabels(GlobRepository repository) {
+    labels.clear();
+    SortedSet<String> transactionLabels = new TreeSet<String>();
+    for (String labels : repository
+      .getAll(Transaction.TYPE, not(isTrue(Transaction.PLANNED)))
+      .getValueSet(Transaction.LABEL)) {
+      transactionLabels.add(labels.toUpperCase());
+    }
+    labels.addAll(transactionLabels);
   }
 
   private void addLabel(String label) {
@@ -98,5 +105,13 @@ public class AutoCompletionModel extends Searchable {
 
   protected String convertElementToString(Object element) {
     return Strings.toString(element);
+  }
+
+  public void showPopup(String searchingText) {
+    System.out.println("AutoCompletionModel.showPopup: " + searchingText);
+  }
+
+  public void hidePopup() {
+    System.out.println("AutoCompletionModel.hidePopup: ");
   }
 }
