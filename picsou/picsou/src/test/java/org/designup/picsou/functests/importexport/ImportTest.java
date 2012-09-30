@@ -586,6 +586,38 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     importDialog.close();
   }
 
+  public void testLastImportCoversAllImportedAccounts() throws Exception {
+    
+    fail("[Regis] Cas du ticket #1141 - creer un TransactionImport pour tout le fichier, et pas pour chaque compte. A finaliser quand les autres 60 tests passeront.");
+    // REGIS: 
+    
+    OfxBuilder
+      .init(this)
+      .addBankAccount("0001", 100.00, "2006/01/30")
+      .addTransaction("2006/01/11", -10.00, "Menu K 1.1")
+      .addTransaction("2006/01/12", -10.00, "Menu K 1.2")
+      .load();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount("0002", 200.00, "2006/01/31")
+      .addTransaction("2006/01/20", -10.00, "Menu K 2.1")
+      .addTransaction("2006/01/21", -10.00, "Menu K 2.2")
+      .addBankAccount("0003", 300.00, "2006/01/31")
+      .addTransaction("2006/01/30", -10.00, "Menu K 3.1")
+      .addTransaction("2006/01/31", -10.00, "Menu K 3.2")
+      .load();
+
+    views.selectCategorization();
+    categorization.showLastImportedFileOnly();
+    categorization.initContent()
+      .add("20/01/2006", "", "MENU K 2.1", -10.00)
+      .add("21/01/2006", "", "MENU K 2.2", -10.00)
+      .add("30/01/2006", "", "MENU K 3.1", -10.00)
+      .add("31/01/2006", "", "MENU K 3.2", -10.00)
+      .check();
+  }
+
   public void testImportingTheSameFileTwice() throws Exception {
     OfxBuilder
       .init(this)
