@@ -17,10 +17,12 @@ EN:
 4. Executer : 
 
 FR:
+  codesign -f -s "BudgetView" -i "com.budgetview.codesign" ./BudgetView-fr/BudgetView.app
   rm -r /Volumes/BudgetView/BudgetView.app
   cp -r ./BudgetView-fr/BudgetView.app /Volumes/BudgetView/
 
 EN:
+  codesign -f -s "BudgetView" -i "com.budgetview.codesign" ./BudgetView-en/BudgetView.app
   rm -r /Volumes/BudgetView/BudgetView.app
   cp -r ./BudgetView-en/BudgetView.app /Volumes/BudgetView/
   
