@@ -1,26 +1,23 @@
 package org.designup.picsou.gui.description;
 
+import com.budgetview.shared.utils.AmountFormat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.NumericDateType;
 import org.designup.picsou.model.TextDateType;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Strings;
 
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 
-public class Formatting {
+public class Formatting extends AmountFormat {
   public static final DecimalFormat INTEGER_FORMAT = new DecimalFormat("0");
   public static final DecimalFormat TWO_DIGIT_INTEGER_FORMAT = new DecimalFormat("00");
-  public static final DecimalFormat DECIMAL_FORMAT =
-    new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.US));
 
   private static SimpleDateFormat dateFormat;
   private static SimpleDateFormat yearMonthFormat;
@@ -28,7 +25,6 @@ public class Formatting {
   private static MessageFormat dateMessageFormat;
   private static SimpleDateFormat dateAndTimeFormat;
   private static MessageFormat fullLabelFormat;
-
 
   public static String toAbsString(Double value) {
     return toString(Math.abs(value));

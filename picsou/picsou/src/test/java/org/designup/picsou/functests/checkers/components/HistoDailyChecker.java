@@ -6,7 +6,7 @@ import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyDataset;
 import org.designup.picsou.model.Day;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.globsframework.model.Key;
 import org.globsframework.utils.Utils;
 import org.uispec4j.Mouse;

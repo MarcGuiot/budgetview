@@ -1,5 +1,6 @@
 package org.designup.picsou.model.util;
 
+import com.budgetview.shared.utils.Amounts;
 import junit.framework.TestCase;
 
 public class AmountsTest extends TestCase {

@@ -13,7 +13,7 @@ import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;

@@ -52,7 +52,7 @@ public class CategorizationGaugePanel implements Updatable {
     }
     else {
       panel.setVisible(true);
-      gauge.setValues(percentage, 1.0);
+      gauge.getModel().setValues(percentage, 1.0);
     }
   }
 

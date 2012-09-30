@@ -163,7 +163,7 @@ public class GaugeTest extends TestCase {
   }
 
   private GaugeChecker init() {
-    Gauge gauge = new Gauge(false);
+    Gauge gauge = new Gauge();
     return new GaugeChecker(gauge);
   }
 }

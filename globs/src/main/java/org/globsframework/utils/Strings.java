@@ -1,6 +1,5 @@
 package org.globsframework.utils;
 
-import org.apache.commons.lang.StringUtils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.io.PrintWriter;
@@ -107,7 +106,6 @@ public class Strings {
     return buf.toString();
   }
 
-  
   public static String nullIfEmpty(String text) {
     if (isNullOrEmpty(text)) {
       return null;
@@ -147,7 +145,7 @@ public class Strings {
       return "";
     }
 
-    String[] words = StringUtils.split(text);
+    String[] words = text.replaceAll("[ \n\t]+", " ").split(" ");
     StringBuilder result = new StringBuilder();
     result.append("<html>");
 

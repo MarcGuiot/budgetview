@@ -12,7 +12,7 @@ import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SubSeries;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;

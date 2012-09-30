@@ -6,7 +6,7 @@ import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SignpostStatus;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;

@@ -17,6 +17,8 @@ import org.globsframework.metamodel.GlobType;
 import java.util.Set;
 import java.util.Collections;
 
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+
 public class BudgetAreaHeader {
 
   private BudgetArea budgetArea;
@@ -66,8 +68,7 @@ public class BudgetAreaHeader {
 
   private void updateHeader() {
     GlobList budgetStat = new GlobList();
-    budgetStat.addAll(repository.getAll(BudgetStat.TYPE,
-                                        GlobMatchers.fieldIn(BudgetStat.MONTH, selectedMonthIds)));
+    budgetStat.addAll(repository.getAll(BudgetStat.TYPE, fieldIn(BudgetStat.MONTH, selectedMonthIds)));
     headerUpdater.update(budgetStat, budgetArea);
   }
 

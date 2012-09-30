@@ -55,6 +55,7 @@ public class ImportSession {
   private ChangeSet changes;
   private Glob realAccount;
   private Boolean importSeries;
+  private Key importKey;
 
   public ImportSession(GlobRepository referenceRepository, Directory directory) {
     this.referenceRepository = referenceRepository;
@@ -83,6 +84,7 @@ public class ImportSession {
 
   public List<String> loadFile(File file, final Glob synchronizedAccount, PicsouDialog dialog)
     throws IOException, TruncatedFile, NoOperations, InvalidFormat, OperationCancelled {
+
     this.importSeries = null;
     this.realAccount = synchronizedAccount;
     importChangeSet = new DefaultChangeSet();
@@ -249,7 +251,8 @@ public class ImportSession {
 
     GlobList allNewTransactions = convertImportedTransaction(selectedDateFormat, currentlySelectedAccount.get(Account.ID));
 
-    Key importKey = createImport(typedStream, allNewTransactions, localRepository);
+    importKey = createCurrentImport(typedStream, localRepository);
+    setCurrentImport(allNewTransactions, localRepository);
     localRepository.deleteAll(ImportedTransaction.TYPE);
     importChangeSetAggregator.dispose();
     try {
@@ -415,7 +418,7 @@ public class ImportSession {
     importChangeSetAggregator.dispose();
   }
 
-  public Key createImport(TypedInputStream file, GlobList createdTransactions, GlobRepository targetRepository) {
+  private Key createCurrentImport(TypedInputStream file, GlobRepository targetRepository) {
     file.getRepetableStream();
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     ZipOutputStream stream = new ZipOutputStream(byteArrayOutputStream);
@@ -435,8 +438,10 @@ public class ImportSession {
                               value(TransactionImport.IS_WITH_SERIES, shouldImportSeries()),
                               value(TransactionImport.FILE_CONTENT, bytes));
 
-    Key importKey = transactionImport.getKey();
+    return transactionImport.getKey();
+  }
 
+  private void setCurrentImport(GlobList createdTransactions, GlobRepository targetRepository) {
     for (Glob createdTransaction : createdTransactions) {
       targetRepository.setTarget(createdTransaction.getKey(), Transaction.IMPORT, importKey);
     }
@@ -450,7 +455,6 @@ public class ImportSession {
     for (Glob glob : list) {
       targetRepository.update(glob.getKey(), TransactionImport.FILE_CONTENT, null);
     }
-    return importKey;
   }
 
   public Glob gotoNextContent(Ref<Integer> accountNum, Ref<Integer> accountCount) {

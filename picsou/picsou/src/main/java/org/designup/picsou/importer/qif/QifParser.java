@@ -4,7 +4,7 @@ import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.ImportedSeries;
 import org.designup.picsou.model.ImportedTransaction;
 import org.designup.picsou.model.RealAccount;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.model.utils.GlobMatchers;

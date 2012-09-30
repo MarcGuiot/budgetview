@@ -5,8 +5,8 @@ import org.designup.picsou.gui.budget.components.SeriesOrderManager;
 import org.designup.picsou.gui.budget.components.SeriesPopupButton;
 import org.designup.picsou.gui.budget.footers.BudgetAreaSeriesFooter;
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.gui.components.ComponentTextDisplay;
 import org.designup.picsou.gui.components.JPopupButton;
-import org.designup.picsou.gui.components.TextDisplay;
 import org.designup.picsou.gui.components.charts.*;
 import org.designup.picsou.gui.components.highlighting.HighlightUpdater;
 import org.designup.picsou.gui.components.tips.ShowDetailsTipAction;
@@ -160,7 +160,9 @@ public class BudgetAreaSeriesView extends View {
     builder.add("totalGauge", totalGauge);
 
     BudgetAreaHeaderUpdater headerUpdater =
-      new BudgetAreaHeaderUpdater(TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), totalGauge,
+      new BudgetAreaHeaderUpdater(ComponentTextDisplay.create(amountLabel),
+                                  ComponentTextDisplay.create(plannedLabel),
+                                  totalGauge,
                                   repository, directory);
     headerUpdater.setColors("block.total",
                             "block.total.overrun.error",

@@ -2,15 +2,14 @@ package org.designup.picsou.gui.budget.summary;
 
 import junit.framework.TestCase;
 import org.designup.picsou.gui.budget.BudgetAreaHeaderUpdater;
-import org.designup.picsou.gui.components.TextDisplay;
+import org.designup.picsou.gui.components.ComponentTextDisplay;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.CurrentMonth;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.ColorService;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -19,6 +18,8 @@ import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class BudgetAreaSummaryComputerTest extends TestCase {
 
@@ -217,7 +218,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
 
       this.computer =
         new BudgetAreaHeaderUpdater(
-          TextDisplay.create(amountLabel), TextDisplay.create(plannedLabel), gauge,
+          ComponentTextDisplay.create(amountLabel), ComponentTextDisplay.create(plannedLabel), gauge,
           repository, directory);
 
       this.computer.update(new GlobList(budgetStat), budgetArea);
@@ -287,7 +288,8 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
       assertFalse(gauge.isPositiveOverrunShown());
       return this;
     }
-    public Checker checkBegin(){
+
+    public Checker checkBegin() {
       assertTrue(Amounts.isNotZero(gauge.getBeginPercent()));
       return this;
     }

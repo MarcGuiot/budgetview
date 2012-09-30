@@ -26,20 +26,28 @@ public class SplitPaneDotsPainter implements Painter {
         g.drawLine(middleX, middleY - 1, middleX, middleY + 1);
         g.drawLine(middleX, middleY - 4, middleX, middleY - 6);
         g.drawLine(middleX, middleY + 4, middleX, middleY + 6);
+        g.drawLine(middleX, middleY - 10, middleX, middleY - 11);
+        g.drawLine(middleX, middleY + 10, middleX, middleY + 11);
         g.setColor(dark);
         g.drawLine(middleX + 1, middleY - 1, middleX + 1, middleY + 1);
         g.drawLine(middleX + 1, middleY - 4, middleX + 1, middleY - 6);
         g.drawLine(middleX + 1, middleY + 4, middleX + 1, middleY + 6);
+        g.drawLine(middleX + 1, middleY - 10, middleX + 1, middleY - 11);
+        g.drawLine(middleX + 1, middleY + 10, middleX + 1, middleY + 11);
         break;
       case SwingConstants.VERTICAL:
         g.setColor(bright);
         g.drawLine(middleX - 1, middleY, middleX + 1, middleY);
         g.drawLine(middleX - 4, middleY, middleX - 6, middleY);
         g.drawLine(middleX + 4, middleY, middleX + 6, middleY);
+        g.drawLine(middleX - 10, middleY, middleX - 11, middleY);
+        g.drawLine(middleX + 10, middleY, middleX + 11, middleY);
         g.setColor(dark);
         g.drawLine(middleX - 1, middleY + 1, middleX + 1, middleY + 1);
         g.drawLine(middleX - 4, middleY + 1, middleX - 6, middleY + 1);
         g.drawLine(middleX + 4, middleY + 1, middleX + 6, middleY + 1);
+        g.drawLine(middleX - 10, middleY + 1, middleX - 11, middleY + 1);
+        g.drawLine(middleX + 10, middleY + 1, middleX + 11, middleY + 1);
         break;
     }
   }

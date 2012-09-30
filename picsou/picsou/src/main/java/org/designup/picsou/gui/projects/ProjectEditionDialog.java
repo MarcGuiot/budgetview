@@ -34,7 +34,6 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobListFunctor;
@@ -113,7 +112,7 @@ public class ProjectEditionDialog {
 
     totalActualLabel.setText(Formatting.toString(actualAmount, BudgetArea.EXTRAS));
     totalPlannedLabel.setText(Formatting.toString(plannedAmount, BudgetArea.EXTRAS));
-    gauge.setValues(actualAmount, plannedAmount);
+    gauge.getModel().setValues(actualAmount, plannedAmount);
   }
 
   private void createDialog(Window owner) {

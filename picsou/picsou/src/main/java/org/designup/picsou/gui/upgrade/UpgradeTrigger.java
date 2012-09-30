@@ -6,7 +6,7 @@ import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.triggers.ProjectItemTrigger;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
 import org.globsframework.metamodel.Field;

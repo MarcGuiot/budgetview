@@ -3,7 +3,7 @@ package org.designup.picsou.gui.components.charts;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
 import org.globsframework.metamodel.GlobType;

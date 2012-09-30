@@ -99,7 +99,7 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView>
     }
     descriptionUpdater = new TextUpdater(key, field) {
       protected void setValue(Gauge gauge, String text) {
-        gauge.setDescription(text);
+        gauge.getModel().setDescription(text);
       }
     };
     return this;

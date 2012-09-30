@@ -12,7 +12,7 @@ import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.RealAccount;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsBuilder;

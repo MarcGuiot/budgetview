@@ -18,7 +18,7 @@ import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRan
 import org.designup.picsou.gui.utils.DaySelection;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.fields.DoubleField;

@@ -2,7 +2,7 @@ package org.designup.picsou.gui.components.charts;
 
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.Lang;
 
 public class GaugeUpdater {
@@ -15,9 +15,7 @@ public class GaugeUpdater {
                                       pastRemaining, pastOverrun,
                                       gaugeTarget, gauge.shouldInvertAll(),
                                       budgetArea);
-    gauge.setValues(gaugeActual, gaugeTarget, futureOverrun + pastOverrun,
-                    futureRemaining + pastRemaining,
-                    tooltips, isRemainingUnset);
+    gauge.getModel().setValues(gaugeActual, gaugeTarget, futureOverrun + pastOverrun, futureRemaining + pastRemaining, tooltips, isRemainingUnset);
     gauge.setActive(active);
   }
 

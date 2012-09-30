@@ -1,9 +1,8 @@
 package org.designup.picsou.gui.components.charts;
 
+import com.budgetview.shared.gui.GaugeModel;
+import com.budgetview.shared.gui.GaugeModelListener;
 import org.designup.picsou.gui.components.ActionablePanel;
-import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.model.util.Amounts;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 
@@ -24,16 +23,6 @@ public class Gauge extends ActionablePanel {
   private static final int HORIZONTAL_TEXT_MARGIN = 7;
   private static final int VERTICAL_TEXT_MARGIN = 1;
 
-  private double actualValue;
-  private double targetValue;
-
-  private boolean invertAll;
-  private double overrunPart = 0;
-  private double fillPercent = 0;
-  private double overrunPercent = 0;
-  private double emptyPercent = 1.0;
-  private double beginPercent = 0.;
-  private boolean overrunError = false;
   private boolean active = true;
 
   private Color borderColor = Color.gray;
@@ -53,35 +42,43 @@ public class Gauge extends ActionablePanel {
   private Color highlightedBackgroundColor = Color.YELLOW.brighter();
 
   private int barHeight = DEFAULT_BAR_HEIGHT;
-  private double remainder;
-
-  private String detailsTooltip;
-  private String description;
 
   private String label;
   private FontMetrics fontMetrics;
   private int fontHeight;
   private int descent;
   private Double maxValue;
-  private boolean highlighted;
+
+  private GaugeModel model = new GaugeModel();
 
   public Gauge() {
-    this(false);
+    this(new GaugeModel());
   }
+  
+  public Gauge(GaugeModel model) {
+    this.model = model;
+    model.addListener(new GaugeModelListener() {
+      public void modelUpdated() {
+        repaint();
+      }
 
-  public Gauge(boolean invertAll) {
-    this.invertAll = invertAll;
+      public void updateTooltip(String text) {
+        setToolTipText(text);
+      }
+    });
 
     setMinimumSize(new Dimension(20, 28));
     setPreferredSize(new Dimension(200, 28));
 
-    setDetailsTooltipKey("gauge.unset");
-
     initFontMetrics(getFont());
   }
 
+  public GaugeModel getModel() {
+    return model;
+  }
+
   public boolean shouldInvertAll() {
-    return invertAll;
+    return model.shouldInvertAll();
   }
 
   public void setFont(Font font) {
@@ -92,8 +89,8 @@ public class Gauge extends ActionablePanel {
   private void initFontMetrics(Font font) {
     this.fontMetrics = getFontMetrics(font);
     this.barHeight = fontMetrics.getHeight() + VERTICAL_TEXT_MARGIN * 2;
-    fontHeight = fontMetrics.getHeight();
-    descent = fontMetrics.getDescent();
+    this.fontHeight = fontMetrics.getHeight();
+    this.descent = fontMetrics.getDescent();
   }
 
   public void setLabel(String label) {
@@ -105,174 +102,6 @@ public class Gauge extends ActionablePanel {
     return label;
   }
 
-  public void setValues(double actualValue, double targetValue) {
-
-    this.actualValue = actualValue * (invertAll ? -1.0 : 1.0);
-    this.targetValue = targetValue * (invertAll ? -1.0 : 1.0);
-
-    boolean sameSign = Amounts.sameSign(this.actualValue, this.targetValue);
-    double absActual = Math.abs(this.actualValue);
-    double absTarget = Math.abs(this.targetValue);
-    remainder = this.targetValue - this.actualValue;
-
-    fillPercent = 0;
-    overrunPercent = 0;
-    emptyPercent = 1;
-    beginPercent = 0;
-    overrunError = false;
-
-    if (Amounts.isNearZero(this.targetValue) && Amounts.isNearZero(this.actualValue)) {
-      setDetailsTooltipKey("gauge.unset");
-    }
-    else if (Amounts.isNearZero(this.targetValue - this.actualValue)) { // passer par remaining et overrun
-      fillPercent = 1;
-      emptyPercent = 0;
-      setDetailsTooltipKey("gauge.complete");
-    }
-    else if (this.targetValue > 0) {
-      if (this.actualValue > this.targetValue) {
-        fillPercent = absTarget / absActual;  //==> differencie passé et futur
-        overrunPercent = 1 - fillPercent;
-        setDetailsTooltipKey("gauge.overrun.ok", Math.abs(remainder));
-        emptyPercent = 0;
-      }
-      else {
-        if (!sameSign && !Amounts.isNearZero(this.actualValue)) {
-          beginPercent = absActual / (absActual + absTarget);
-        }
-        else {
-          fillPercent = absActual / absTarget;
-        }
-        emptyPercent = 1 - fillPercent - beginPercent;
-        setDetailsTooltipKey("gauge.expected", Math.abs(remainder));
-      }
-    }
-    else if (this.targetValue < 0) {
-      if (this.actualValue < this.targetValue) {
-        fillPercent = absTarget / absActual;
-        overrunPercent = 1 - fillPercent;
-        overrunError = true;
-        emptyPercent = 0;
-        setDetailsTooltipKey("gauge.overrun.error", Math.abs(remainder));
-      }
-      else {
-        if (!sameSign && !Amounts.isNearZero(this.actualValue)) {
-          fillPercent = absActual / (absActual + absTarget);
-        }
-        else {
-          fillPercent = absActual / absTarget;
-        }
-        emptyPercent = 1 - fillPercent;
-        setDetailsTooltipKey("gauge.partial", Math.abs(remainder));
-      }
-    }
-    else {
-      if (this.actualValue != 0) {
-        fillPercent = 0;
-        overrunPercent = 1;
-        emptyPercent = 0;
-        if (this.actualValue > 0) {
-          setDetailsTooltipKey("gauge.overrun.ok", Math.abs(remainder));
-        }
-        else {
-          overrunError = true;
-          setDetailsTooltipKey("gauge.overrun.error", Math.abs(remainder));
-        }
-      }
-    }
-    repaint();
-  }
-
-  public void setValues(double actualValue, double targetValue, double partialOverrun, double remaining,
-                        String detailsTooltipText, boolean targetValueUnset) {
-    fillPercent = 0;
-    overrunPercent = 0;
-    emptyPercent = 1;
-    beginPercent = 0;
-    overrunError = false;
-
-    this.actualValue = actualValue;
-    this.targetValue = targetValue;
-    this.overrunPart = partialOverrun;
-    this.remainder = remaining;
-    boolean sameSign = Amounts.sameSign(this.actualValue, this.targetValue);
-
-    this.detailsTooltip = detailsTooltipText;
-    if (targetValueUnset) {
-      detailsTooltip = Lang.get("gauge.plannetUnset");
-    }
-    else if (Amounts.isNearZero(this.targetValue) && Amounts.isNearZero(this.actualValue)) {
-      detailsTooltip = Lang.get("gauge.unset");
-    }
-    else if (Amounts.isNearZero(this.targetValue - this.actualValue) && Amounts.isNearZero(partialOverrun)
-             && Amounts.isNearZero(remaining)) { // passer par remaining et overrun
-      fillPercent = 1;
-      emptyPercent = 0;
-      detailsTooltip = Lang.get("gauge.complete");
-    }
-    else if (Math.abs(actualValue) > Math.abs(targetValue) && sameSign) {
-      double total = Math.abs(remaining) + Math.abs(actualValue);
-      fillPercent = (Math.abs(actualValue) - Math.abs(partialOverrun)) / total;
-      overrunPercent = Math.abs(partialOverrun / total);
-    }
-    else if (!sameSign && !Amounts.isNearZero(this.actualValue)) {
-      double total = Math.abs(remaining) + Math.abs(actualValue) + Math.abs(targetValue);
-      beginPercent = (Math.abs(actualValue) - Math.abs(partialOverrun)) / total;
-      overrunPercent = Math.abs(partialOverrun / total);
-    }
-    else {
-      double total = Math.abs(targetValue);
-      fillPercent = (Math.abs(actualValue) - Math.abs(partialOverrun)) / total;
-      overrunPercent = Math.abs(partialOverrun / total);
-    }
-    emptyPercent = 1 - overrunPercent - fillPercent - beginPercent;
-
-    if (Amounts.isNearZero(targetValue)) {
-      if (actualValue > 0) {
-        overrunError = invertAll;
-      }
-      else {
-        overrunError = !invertAll;
-      }
-    }
-    else {
-      if (partialOverrun > 0) {
-        overrunError = invertAll;
-      }
-      else {
-        overrunError = !invertAll;
-      }
-    }
-
-    updateTooltip();
-    repaint();
-  }
-
-  private void setDetailsTooltipKey(String key, Double... values) {
-    String[] formattedValues = new String[values.length];
-    for (int i = 0; i < values.length; i++) {
-      formattedValues[i] = Formatting.DECIMAL_FORMAT.format(values[i]);
-
-    }
-    this.detailsTooltip = Strings.isNotEmpty(key) ? Lang.get(key, formattedValues) : "";
-    updateTooltip();
-  }
-
-  public void setDescription(String text) {
-    this.description = text;
-    updateTooltip();
-  }
-
-  private void updateTooltip() {
-    StringBuilder builder = new StringBuilder("<html>");
-    if (Strings.isNotEmpty(description)) {
-      builder.append(description).append("<br/>");
-    }
-    builder.append(detailsTooltip);
-    builder.append("</html>");
-    setToolTipText(builder.toString());
-  }
-
   public void paint(Graphics g) {
     Graphics2D g2 = (Graphics2D)g;
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -280,10 +109,6 @@ public class Gauge extends ActionablePanel {
     if (isOpaque()) {
       g2.setColor(getBackground());
       g2.fillRect(0, 0, getWidth(), getHeight());
-    }
-    if (highlighted) {
-      g2.setColor(highlightedBackgroundColor);
-      g2.fillRoundRect(0, 0, getWidth(), getHeight(), ARC_WIDTH, ARC_HEIGHT);
     }
 
     int totalWidth = getWidth() - 1 - 2 * HORIZONTAL_MARGIN;
@@ -296,25 +121,24 @@ public class Gauge extends ActionablePanel {
     int barTop = (height - barHeight) / 2 + VERTICAL_MARGIN;
     int barBottom = height - barTop;
 
-    int beginWidth = (int)(width * beginPercent);
-    int fillWidth = (int)(width * fillPercent);
-    int emptyWidth = (int)(width * emptyPercent);
+    int beginWidth = (int)(width * getBeginPercent());
+    int fillWidth = (int)(width * getFillPercent());
+    int emptyWidth = (int)(width * getEmptyPercent());
 
     int overrunWidth = width - fillWidth - emptyWidth - beginWidth;
     int overrunEnd = beginWidth + fillWidth + overrunWidth;
-
     int overrunStart = beginWidth + fillWidth;
 
-    if (emptyPercent > 0) {
+    if (getEmptyPercent() > 0) {
       fillBar(g2, emptyColorTop, emptyColorBottom, minX, overrunEnd + emptyWidth, barTop, barBottom);
     }
 
-    if (beginPercent > 0) {
+    if (getBeginPercent() > 0) {
       fillBar(g2, overrunErrorColorTop, overrunErrorColorBottom, minX, beginWidth, barTop, barBottom);
     }
 
-    if (overrunPercent > 0) {
-      if (overrunError) {
+    if (getOverrunPercent() > 0) {
+      if (model.hasOverrunError()) {
         fillBar(g2, overrunErrorColorTop, overrunErrorColorBottom, minX, overrunStart + overrunWidth, barTop, barBottom);
       }
       else {
@@ -322,7 +146,7 @@ public class Gauge extends ActionablePanel {
       }
     }
 
-    if (fillPercent > 0) {
+    if (getFillPercent() > 0) {
       fillBar(g2, filledColorTop, filledColorBottom, minX, fillWidth, barTop, barBottom);
     }
 
@@ -335,7 +159,7 @@ public class Gauge extends ActionablePanel {
     if (!USE_PROPORTIONAL_WIDTH) {
       return totalWidth;
     }
-    Double value = Utils.max(Math.abs(actualValue), Math.abs(targetValue));
+    Double value = Utils.max(Math.abs(getActualValue()), Math.abs(getTargetValue()));
     if (Math.abs(value) < 0.1) {
       return 0;
     }
@@ -347,7 +171,7 @@ public class Gauge extends ActionablePanel {
     if ((maxValue == null) || (maxValue == 0.0)) {
       return 1.0;
     }
-    Double value = Utils.max(Math.abs(actualValue), Math.abs(targetValue));
+    Double value = Utils.max(Math.abs(getActualValue()), Math.abs(getTargetValue()));
     return Math.abs(value / maxValue);
   }
 
@@ -385,9 +209,6 @@ public class Gauge extends ActionablePanel {
     if (isRolloverInProgress()) {
       return rolloverLabelColor;
     }
-    else if (highlighted) {
-      return highlightedLabelColor;
-    }
     else if (!active) {
       return inactiveLabelColor;
     }
@@ -397,43 +218,39 @@ public class Gauge extends ActionablePanel {
   }
 
   public double getActualValue() {
-    return actualValue;
+    return model.getActualValue();
   }
 
   public double getTargetValue() {
-    return targetValue;
+    return model.getTargetValue();
   }
 
   public double getOverrunPart() {
-    return overrunPart;
+    return model.getOverrunPart();
   }
 
   public double getFillPercent() {
-    return fillPercent;
+    return model.getFillPercent();
   }
 
   public double getOverrunPercent() {
-    return overrunPercent;
+    return model.getOverrunPercent();
   }
 
   public double getRemainder() {
-    return remainder;
+    return model.getRemainder();
   }
 
   public double getEmptyPercent() {
-    return emptyPercent;
+    return model.getEmptyPercent();
   }
 
   public boolean isErrorOverrunShown() {
-    return overrunError && overrunPercent > 0;
+    return model.hasOverrunError() && model.getOverrunPercent() > 0;
   }
 
   public boolean isPositiveOverrunShown() {
-    return !overrunError && overrunPercent > 0;
-  }
-
-  public String getTooltip() {
-    return detailsTooltip;
+    return !model.hasOverrunError() && model.getOverrunPercent() > 0;
   }
 
   public void setBorderColor(Color borderColor) {
@@ -497,7 +314,7 @@ public class Gauge extends ActionablePanel {
   }
 
   public double getBeginPercent() {
-    return beginPercent;
+    return model.getBeginPercent();
   }
 
   public void setMaxValue(Double maxValue) {
@@ -510,14 +327,5 @@ public class Gauge extends ActionablePanel {
 
   public boolean isActive() {
     return active;
-  }
-
-  public void setHighlighted(boolean highlighted) {
-    this.highlighted = highlighted;
-    repaint();
-  }
-
-  public boolean isHighlighted() {
-    return highlighted;
   }
 }

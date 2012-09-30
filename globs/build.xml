@@ -23,7 +23,7 @@
     <javac destdir="classes"
            classpathref="ref.classpath"
            debug="on">
-      <src path="src/java"/>
+      <src path="src/main"/>
     </javac>
     <copy todir="classes">
       <fileset dir="src/main/resources">

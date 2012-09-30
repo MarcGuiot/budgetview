@@ -4,7 +4,7 @@ import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.RealAccount;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import static org.globsframework.model.FieldValue.value;

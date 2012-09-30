@@ -6,7 +6,7 @@ import org.designup.picsou.gui.printing.report.utils.BudgetReportUtils;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.model.util.ClosedMonthRange;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;

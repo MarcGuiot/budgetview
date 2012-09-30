@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.transactions.columns;
 
-import org.designup.picsou.model.util.Amounts;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;

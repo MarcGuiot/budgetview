@@ -2,14 +2,13 @@ package org.designup.picsou.functests.checkers.components;
 
 import junit.framework.Assert;
 import org.designup.picsou.gui.components.charts.Gauge;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.globsframework.utils.Strings;
 import org.uispec4j.AbstractUIComponent;
 import org.uispec4j.Mouse;
 import org.uispec4j.Panel;
 import org.uispec4j.Trigger;
 import org.uispec4j.assertion.Assertion;
-import org.uispec4j.assertion.UISpecAssert;
 
 public class GaugeChecker extends AbstractUIComponent {
 
@@ -32,14 +31,14 @@ public class GaugeChecker extends AbstractUIComponent {
   }
 
   public GaugeChecker set(double actualValue, double targetValue) {
-    gauge.setValues(actualValue, targetValue);
+    gauge.getModel().setValues(actualValue, targetValue);
     Assert.assertEquals(1.0, gauge.getFillPercent() + gauge.getOverrunPercent() +
                              gauge.getEmptyPercent() + gauge.getBeginPercent(), 0.01);
     return this;
   }
 
   public GaugeChecker set(double actualValue, double targetValue, double overrunPart, final double remaining) {
-    gauge.setValues(actualValue, targetValue, overrunPart, remaining, "", false);
+    gauge.getModel().setValues(actualValue, targetValue, overrunPart, remaining, "", false);
     Assert.assertEquals(1.0, gauge.getFillPercent() + gauge.getOverrunPercent() +
                              gauge.getEmptyPercent() + gauge.getBeginPercent(), 0.01);
     return this;
@@ -62,7 +61,7 @@ public class GaugeChecker extends AbstractUIComponent {
   }
 
   public GaugeChecker checkTooltip(String text) {
-    Assert.assertEquals(text, cleanup(gauge.getTooltip()));
+    Assert.assertEquals(text, cleanup(gauge.getToolTipText()));
     Assert.assertEquals(text, cleanup(gauge.getToolTipText()));
     return this;
   }
@@ -72,7 +71,7 @@ public class GaugeChecker extends AbstractUIComponent {
   }
 
   public GaugeChecker checkDescriptionContains(String text) {
-    Assert.assertTrue(gauge.getTooltip(), gauge.getTooltip().contains(text));
+    Assert.assertTrue(gauge.getToolTipText(), gauge.getToolTipText().contains(text));
     return this;
   }
 
@@ -154,21 +153,5 @@ public class GaugeChecker extends AbstractUIComponent {
         Assert.assertEquals(widthRatio, gauge.getWidthRatio());
       }
     };
-  }
-
-  public void checkHighlighted() {
-    UISpecAssert.assertTrue(new Assertion() {
-      public void check() {
-        Assert.assertTrue(gauge.isHighlighted());
-      }
-    });
-  }
-
-  public void checkNotHighlighted() {
-    UISpecAssert.assertTrue(new Assertion() {
-      public void check() {
-        Assert.assertFalse(gauge.isHighlighted());
-      }
-    });
   }
 }

@@ -52,8 +52,7 @@ public class SeriesGaugeBlock implements PageBlock {
 
   public Gauge getGauge(PrintStyle style) {
     Gauge gauge = context.getGauge(style);
-    gauge.setValues(periodStat.get(PeriodSeriesStat.AMOUNT),
-                    periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT));
+    gauge.getModel().setValues(periodStat.get(PeriodSeriesStat.AMOUNT), periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT));
     return gauge;
   }
 

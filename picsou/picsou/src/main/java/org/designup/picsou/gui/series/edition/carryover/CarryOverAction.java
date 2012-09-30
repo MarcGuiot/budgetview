@@ -7,7 +7,7 @@ import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;

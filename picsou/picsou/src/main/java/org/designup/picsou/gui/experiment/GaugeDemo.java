@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.experiment;
 
+import com.budgetview.shared.gui.GaugeModel;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
@@ -65,22 +66,26 @@ public class GaugeDemo {
           addLabel(row, column++, invertedSignIsAnError);
 
           for (double[] pair : pairs) {
-            Gauge gauge = new Gauge(overrunIsAnError);
+            GaugeModel model = new GaugeModel();
+            model.setInvertAll(overrunIsAnError);
+            Gauge gauge = new Gauge(model);
             gauge.setLabel("Pair");
             gauge.setForeground(Color.WHITE);
             gauge.setPreferredSize(new Dimension(100, 28));
             gauge.setMaximumSize(new Dimension(100, 28));
-            gauge.setValues(pair[0], pair[1]);
+            gauge.getModel().setValues(pair[0], pair[1]);
             builder.add(gauge, column++, row, 1, 1, 1, 1, Fill.HORIZONTAL, Anchor.CENTER,
                         new Insets(5, 5, 5, 5));
           }
           for (double[] triple : triples) {
-            Gauge gauge = new Gauge(overrunIsAnError);
+            GaugeModel model = new GaugeModel();
+            model.setInvertAll(overrunIsAnError);
+            Gauge gauge = new Gauge(model);
             gauge.setLabel("Triple");
             gauge.setForeground(Color.WHITE);
             gauge.setPreferredSize(new Dimension(100, 28));
             gauge.setMaximumSize(new Dimension(100, 28));
-            gauge.setValues(triple[0], triple[1], triple[2], 0, "", false);
+            gauge.getModel().setValues(triple[0], triple[1], triple[2], (double)0, "", false);
             builder.add(gauge, column++, row, 1, 1, 1, 1, Fill.HORIZONTAL, Anchor.CENTER,
                         new Insets(5, 5, 5, 5));
 

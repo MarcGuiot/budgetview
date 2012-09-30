@@ -3,7 +3,7 @@ package org.designup.picsou.gui.series.edition;
 import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.SeriesBudget;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.globsframework.gui.editors.GlobSliderAdapter;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;

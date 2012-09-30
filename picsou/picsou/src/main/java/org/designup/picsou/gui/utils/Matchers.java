@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.utils;
 
 import org.designup.picsou.model.*;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;

@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.series.edition.carryover;
 
 import org.designup.picsou.model.Month;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 
 import java.util.ArrayList;
 import java.util.List;

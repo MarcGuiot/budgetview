@@ -1,7 +1,7 @@
 package org.designup.picsou.importer.csv;
 
 import org.designup.picsou.model.ImportedTransaction;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;

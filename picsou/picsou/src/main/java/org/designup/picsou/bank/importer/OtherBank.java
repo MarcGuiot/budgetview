@@ -4,7 +4,7 @@ import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.RealAccount;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.views.GlobTableView;

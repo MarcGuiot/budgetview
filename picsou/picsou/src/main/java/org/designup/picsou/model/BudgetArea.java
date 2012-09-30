@@ -7,7 +7,6 @@ import org.globsframework.metamodel.annotations.NamingField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.ReadOnlyGlobRepository;
 import org.globsframework.model.impl.ReadOnlyGlob;
@@ -15,7 +14,12 @@ import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.globsframework.model.FieldValue.value;
 
 public enum BudgetArea implements GlobConstantContainer {
   ALL("ALL", -1, false, false, false),
@@ -58,7 +62,6 @@ public enum BudgetArea implements GlobConstantContainer {
   public boolean isOverrunAllowed() {
     return overrunAllowed;
   }
-
 
   public boolean isAutomatic() {
     return automatic;

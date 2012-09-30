@@ -7,7 +7,7 @@ import org.designup.picsou.importer.AccountFileImporter;
 import org.designup.picsou.importer.utils.DateFormatAnalyzer;
 import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.*;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 

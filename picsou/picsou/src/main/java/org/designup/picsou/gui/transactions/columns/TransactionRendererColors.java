@@ -2,7 +2,7 @@ package org.designup.picsou.gui.transactions.columns;
 
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;

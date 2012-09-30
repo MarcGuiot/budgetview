@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.startup.components;
 
 import org.designup.picsou.model.*;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;

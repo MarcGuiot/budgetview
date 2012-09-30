@@ -1,4 +1,4 @@
-package org.designup.picsou.model.util;
+package com.budgetview.shared.utils;
 
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;

@@ -341,6 +341,7 @@ public class MainPanel {
     devMenu.add(new ShowUserEvaluationDialogAction(repository, directory));
     devMenu.add(new LicenseExpirationAction(repository, directory));
     devMenu.add(new DumpRepositoryAction(repository));
+    devMenu.add(new DumpMobileXmlAction(repository));
     devMenu.add(threadsAction);
     return devMenu;
   }

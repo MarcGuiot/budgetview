@@ -3,7 +3,7 @@ package org.designup.picsou.triggers;
 import org.designup.picsou.gui.model.SeriesShape;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.*;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;

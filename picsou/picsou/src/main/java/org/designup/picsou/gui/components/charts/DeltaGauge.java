@@ -1,8 +1,7 @@
 package org.designup.picsou.gui.components.charts;
 
 import org.designup.picsou.gui.components.ActionablePanel;
-import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

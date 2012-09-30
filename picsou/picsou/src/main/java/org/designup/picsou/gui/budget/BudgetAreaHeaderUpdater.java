@@ -25,7 +25,7 @@ public class BudgetAreaHeaderUpdater extends BudgetAreaSummaryComputer {
   protected void clearComponents() {
     amountLabel.setText(null);
     plannedLabel.setText(null);
-    gauge.setValues(0, 0);
+    gauge.getModel().setValues((double)0, (double)0);
   }
 
   protected void updateComponents(BudgetArea budgetArea) {
@@ -49,8 +49,8 @@ public class BudgetAreaHeaderUpdater extends BudgetAreaSummaryComputer {
                              totalAmounts.getFutureOverrun(),
                              totalAmounts.getPastRemaining(),
                              totalAmounts.getPastOverrun(),
-                             totalAmounts.getGaugeTarget(),
-                             totalAmounts.getGaugeActual(),
+                             totalAmounts.getInitiallyPlanned(),
+                             totalAmounts.getActual(),
                              true,
                              gauge, budgetArea, false);
 

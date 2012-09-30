@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 import org.designup.picsou.model.BudgetArea;
 
 public class GaugeUpdaterTest extends TestCase {
+
   public void testPast() throws Exception {
 
     assertEquals("<p>Vous avez dépensé <b>20.00</b> de plus que prévu</p>",

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BudgetView</string>
+  <string name="edit_message">Edit</string>
+  <string name="button_send">Click!</string>
+  <string name="text_message">Allo?</string>
+</resources>

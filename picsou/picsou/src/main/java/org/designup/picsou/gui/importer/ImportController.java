@@ -6,7 +6,7 @@ import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.importer.ImportSession;
 import org.designup.picsou.model.*;
-import org.designup.picsou.model.util.Amounts;
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.LocalGlobRepository;
@@ -45,7 +45,6 @@ public class ImportController {
   private GlobList realAccountWithImport = new GlobList();
   private GlobList realAccountWithoutImport = new GlobList();
   private boolean isSynchro = true;
-
 
   public ImportController(ImportDialog importDialog,
                           GlobRepository repository, LocalGlobRepository localRepository,

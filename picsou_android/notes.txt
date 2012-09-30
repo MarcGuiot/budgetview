@@ -1,0 +1,26 @@
+Doc : points de depart
+- http://developer.android.com/training/basics/firstapp/index.html
+
+Build
+- il faut commencer par installer le SDK Android sur sa machine
+- le code de l'application Android se trouve dans un nouveau module picsou_android
+- le script "picsou_android/update_libs.sh" copie les jars globs/BV nécessaires dans ./libs
+- pour le build en ligne de commande, il faut aller dans picsou_android et lancer "ant debug"
+
+Code
+- le main() de l'application est BudgetOverviewActivity.onStartup()
+
+Utilisation
+- dans le menu "dev" de BudgetView, il faut lancer le menu "Dump XML for android app"
+- cela génère un fichier "globsdata.xml" dans picsou_android/res/raw, qui sera lu par l'app
+- lancer BudgetOverviewActivity
+- sous IntelliJ, il faut lancer la vue du menu View/Tools Windows/Android pour voir les traces
+
+Doc : reference
+- http://developer.android.com/guide/components/index.html
+- http://developer.android.com/reference/packages.html
+
+Prochaines étapes
+- Utiliser un autre format que le XML
+- Parser les données dans un thread
+- Verifier que le build de BV fonctionne toujours avec la nouvelle dependance picsou_shared

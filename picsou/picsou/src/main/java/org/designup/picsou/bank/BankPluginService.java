@@ -4,16 +4,13 @@ import org.designup.picsou.bank.specific.AbstractBankPlugin;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.RealAccount;
-import org.designup.picsou.model.util.Amounts;
-import org.globsframework.metamodel.fields.StringField;
+import com.budgetview.shared.utils.Amounts;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class BankPluginService {
   private Map<Integer, BankPlugin> specific = new HashMap<Integer, BankPlugin>();

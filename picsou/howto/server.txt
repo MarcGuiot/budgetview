@@ -1,5 +1,12 @@
 base de données :
 
+  ssh root@91.121.123.100
+  mysql -p -u budgetview
+  use budgetview;
+  select * from LICENSE where MAIL='example@free.fr'; <== inserer l'adresse
+
+  ==> Utiliser ACTIVATION_CODE
+
 ajout manuel d'utilisateur:
 
 redemarage du serveur de licence:

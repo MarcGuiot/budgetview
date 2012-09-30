@@ -54,11 +54,10 @@ public class SimpleGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> 
     }
     Glob glob = repository.find(key);
     if (glob == null) {
-      gauge.setValues(0, 0);
+      gauge.getModel().setValues((double)0, (double)0);
     }
     else {
-      gauge.setValues(glob.get(actualValueField, 0.00),
-                      glob.get(targetValueField, 0.00));
+      gauge.getModel().setValues(glob.get(actualValueField, 0.00), glob.get(targetValueField, 0.00));
     }
   }
 }
