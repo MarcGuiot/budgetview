@@ -20,9 +20,9 @@
 
       <label ref="title" styleClass="title"/>
 
-      <tabs>
+      <tabs ref="tabs">
 
-        <tab title="$form.mandatory.legend">
+        <tab title="$account.tab.standard">
           <column margin="15">
             <grid defaultMarginBottom="5">
               <label text="$account.name" gridPos="(0,0)" styleClass="formLabel"/>
@@ -56,7 +56,7 @@
           </column>
         </tab>
 
-        <tab title="$form.optional.legend">
+        <tab title="$account.tab.advanced">
           <column margin="15">
             <grid defaultMarginBottom="5">
 

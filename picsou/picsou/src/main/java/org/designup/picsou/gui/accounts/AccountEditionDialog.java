@@ -10,7 +10,7 @@ import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.editors.GlobLinkComboEditor;
+import org.globsframework.gui.splits.layout.TabHandler;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
@@ -35,6 +35,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   private JLabel titleLabel;
   private GlobsPanelBuilder builder;
   private Glob accountInfo;
+  private TabHandler tabs;
 
   public AccountEditionDialog(final GlobRepository parentRepository, Directory directory) {
     this(directory.get(JFrame.class), parentRepository, directory);
@@ -50,6 +51,8 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
                                                       localRepository, localDirectory);
 
     titleLabel = builder.add("title", new JLabel("accountEditionDialog")).getComponent();
+
+    tabs = builder.addTabHandler("tabs");
 
     DatePicker startDatePicker = new DatePicker(Account.OPEN_DATE, localRepository, localDirectory);
     builder.add("startDatePicker", startDatePicker.getComponent());
@@ -182,6 +185,11 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
 
   public void setAccountInfo(Glob accountInfo) {
     this.accountInfo = accountInfo;
+  }
+
+  protected void accountDefinitionErrorShown() {
+    super.accountDefinitionErrorShown();
+    tabs.select(0);
   }
 
   private class OkAction extends AbstractAction {

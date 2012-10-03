@@ -82,7 +82,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setName("Main")
       .checkNoBankSelected()
+      .selectAdvancedTab()
       .checkBankValidationError("You must select a bank for this account")
+      .checkStandardTabSelected()
       .selectBank("Other")
       .checkNoErrorDisplayed()
       .validate();
@@ -104,7 +106,9 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.edit("Account n. 0000123")
       .checkAccountName("Account n. 0000123")
       .setName("")
+      .selectAdvancedTab()
       .checkNameValidationError("You must enter a name for this account")
+      .checkStandardTabSelected()
       .setName("a")
       .checkNoErrorDisplayed()
       .cancel();

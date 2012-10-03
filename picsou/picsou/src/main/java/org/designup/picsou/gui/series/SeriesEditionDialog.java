@@ -7,7 +7,6 @@ import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
-import org.designup.picsou.gui.components.tips.TipPosition;
 import org.designup.picsou.gui.description.stringifiers.MonthYearStringifier;
 import org.designup.picsou.gui.series.edition.MonthCheckBoxUpdater;
 import org.designup.picsou.gui.series.edition.SeriesForecastPanel;
@@ -26,6 +25,7 @@ import org.globsframework.gui.editors.GlobCheckBoxView;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.splits.layout.TabHandler;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -85,7 +85,7 @@ public class SeriesEditionDialog {
   private SeriesForecastPanel forecastPanel;
   private GlobMatcher accountFilter;
   private GlobLinkComboEditor budgetAreaCombo;
-  private JTabbedPane tabbedPane;
+  private TabHandler tabs;
   private GlobCheckBoxView reportCheckBox;
   private ReadOnlyGlobTextFieldView startTextFieldView;
   private ReadOnlyGlobTextFieldView endDateTextFieldView;
@@ -153,7 +153,7 @@ public class SeriesEditionDialog {
                                                       "/layout/series/seriesEditionDialog.splits",
                                                       localRepository, localDirectory);
 
-    tabbedPane = builder.add("tabs", new JTabbedPane()).getComponent();
+    tabs = builder.addTabHandler("tabs");
     titleLabel = builder.add("title", new JLabel("SeriesEditionDialog")).getComponent();
 
     nameEditor = builder.addEditor("nameField", Series.NAME).setNotifyOnKeyPressed(true);
@@ -629,7 +629,7 @@ public class SeriesEditionDialog {
     selectionService.select(currentSeries);
     updateMonthSelectionCard();
 
-    tabbedPane.setSelectedIndex(0);
+    tabs.select(0);
 
     titleLabel.setText(Lang.get("seriesEdition.title." + (creation ? "creation" : "edition")));
 

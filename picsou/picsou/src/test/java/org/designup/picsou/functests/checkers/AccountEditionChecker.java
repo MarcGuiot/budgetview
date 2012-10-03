@@ -377,10 +377,6 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public CardEditionPanelChecker getCardEditionPanelChecker() {
-    return cardEditionPanelChecker;
-  }
-
   public AccountEditionChecker setFromBeginningDay(int day) {
     cardEditionPanelChecker.setDayFromBegining(day);
     return this;
@@ -463,5 +459,15 @@ public class AccountEditionChecker extends GuiChecker {
   public boolean accountIsEditable() {
     ComponentIsVisibleAssertion assertion = new ComponentIsVisibleAssertion(dialog, JTextField.class, "name", true);
     return assertion.isTrue();
+  }
+
+  public AccountEditionChecker selectAdvancedTab() {
+    dialog.getTabGroup().selectTab(Lang.get("account.tab.advanced"));
+    return this;
+  }
+
+  public AccountEditionChecker checkStandardTabSelected() {
+    dialog.getTabGroup().selectedTabEquals(Lang.get("account.tab.standard"));
+    return this;
   }
 }

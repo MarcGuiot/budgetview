@@ -3,6 +3,7 @@ package org.designup.picsou.gui.accounts;
 import org.designup.picsou.gui.bank.BankChooserDialog;
 import org.designup.picsou.gui.components.MandatoryFieldFlag;
 import org.designup.picsou.gui.components.tips.ErrorTip;
+import org.designup.picsou.gui.components.tips.TipPosition;
 import org.designup.picsou.gui.help.actions.HelpAction;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountCardType;
@@ -18,7 +19,6 @@ import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -190,16 +190,22 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     if (panel.isVisible() && editable) {
       clearMessage();
       if (Strings.isNullOrEmpty(currentAccount.get(Account.NAME))) {
-        errorTip = ErrorTip.showLeft(nameField.getComponent(), Lang.get("account.error.missing.name"), localDirectory);
-        nameField.getComponent().requestFocus();
+        errorTip = ErrorTip.show(nameField.getComponent(),
+                                 Lang.get("account.error.missing.name"),
+                                 localDirectory, TipPosition.BOTTOM_LEFT);
+        accountDefinitionErrorShown();
         return false;
       }
       if (localRepository.getAll(Account.TYPE, fieldEquals(Account.NAME, currentAccount.get(Account.NAME))).size() != 1) {
-        errorTip = ErrorTip.showLeft(nameField.getComponent(), Lang.get("account.error.duplicate.name"), localDirectory);
+        errorTip = ErrorTip.show(nameField.getComponent(),
+                                 Lang.get("account.error.duplicate.name"),
+                                 localDirectory, TipPosition.BOTTOM_LEFT);
+        accountDefinitionErrorShown();
         return false;
       }
       if (currentAccount.get(Account.BANK) == null) {
         errorTip = ErrorTip.showLeft(bankSelectionButton, Lang.get("account.error.missing.bank"), localDirectory);
+        accountDefinitionErrorShown();
         return false;
       }
       if (currentAccount.get(Account.ACCOUNT_TYPE) == null) {
@@ -208,6 +214,10 @@ public class AbstractAccountPanel<T extends GlobRepository> {
       }
     }
     return true;
+  }
+
+  protected void accountDefinitionErrorShown() {
+    nameField.getComponent().requestFocus();
   }
 
   public Glob getAccount() {

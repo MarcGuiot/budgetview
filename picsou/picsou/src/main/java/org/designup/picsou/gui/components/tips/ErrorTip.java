@@ -30,9 +30,7 @@ public class ErrorTip implements Disposable, ColorChangeListener {
   }
 
   public static ErrorTip showLeft(JTextField component, String text, Directory directory) {
-    ErrorTip tip = showLeft((JComponent)component, text, directory);
-    AutoDispose.registerTextEdition(component, tip);
-    return tip;
+    return show(component, text, directory, TipPosition.TOP_LEFT);
   }
 
   public static ErrorTip showRight(JComponent component, String text, Directory directory) {
@@ -41,6 +39,12 @@ public class ErrorTip implements Disposable, ColorChangeListener {
 
   public static ErrorTip show(JComponent component, String text, Directory directory, TipPosition position) {
     return new ErrorTip(component, text, directory, position);
+  }
+
+  public static ErrorTip show(JTextField component, String text, Directory directory, TipPosition position) {
+    ErrorTip errorTip = new ErrorTip(component, text, directory, position);
+    AutoDispose.registerTextEdition(component, errorTip);
+    return errorTip;
   }
 
   private ErrorTip(final JComponent component, final String text, Directory directory, TipPosition position) {
