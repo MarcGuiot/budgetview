@@ -6,9 +6,11 @@ import org.globsframework.gui.splits.font.Fonts;
 import org.globsframework.gui.splits.font.FontsTest;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.SwingStretches;
+import org.globsframework.gui.splits.layout.TabHandler;
 import org.globsframework.gui.splits.utils.DummyAction;
 import org.globsframework.gui.splits.utils.DummyImageLocator;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.uispec4j.*;
 import org.uispec4j.finder.ComponentFinder;
@@ -512,6 +514,37 @@ public class SplitsComponentsTest extends SplitsTestCase {
     assertEquals(2, tabs.getTabCount());
     assertEquals("Tab 1", tabs.getTitleAt(0));
     assertEquals("Tab 2", tabs.getTitleAt(1));
+  }
+
+  public void testTabHandler() throws Exception {
+    TabHandler tabHandler = builder.addTabHandler("tabHandler");
+
+    JTabbedPane tabs = parse(
+      "<tabs ref='tabHandler'>" +
+      "  <tab title='Tab1'>" +
+      "    <label text='Blah'/>" +
+      "  </tab>" +
+      "  <tab title='Tab2'>" +
+      "    <button text='OK'/>" +
+      "  </tab>" +
+      "  <tab title='Tab3'>" +
+      "    <button text='OK'/>" +
+      "  </tab>" +
+      "</tabs>"
+    );
+
+    tabHandler.select(1);
+    assertEquals(1, tabs.getSelectedIndex());
+
+    tabHandler.select(0);
+    assertEquals(0, tabs.getSelectedIndex());
+
+    try {
+      tabHandler.select(3);
+    }
+    catch (InvalidParameter e) {
+      assertEquals("Invalid index 3 - should be between 0 and 2", e.getMessage());
+    }
   }
 
   public void testFiller() throws Exception {

@@ -7,6 +7,8 @@ import org.globsframework.gui.splits.impl.DefaultSplitsContext;
 import org.globsframework.gui.splits.impl.DefaultSplitsNode;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.DefaultCardHandler;
+import org.globsframework.gui.splits.layout.DefaultTabHandler;
+import org.globsframework.gui.splits.layout.TabHandler;
 import org.globsframework.gui.splits.repeat.DefaultRepeat;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -90,6 +92,13 @@ public class SplitsBuilder {
   public SplitsBuilder add(String name, SplitsBuilder builder) {
     children.put(name, builder);
     return this;
+  }
+
+  public TabHandler addTabHandler(String handlerName) {
+    JTabbedPane tabbedPane = new JTabbedPane();
+    add(handlerName, tabbedPane);
+    return DefaultTabHandler.init(tabbedPane);
+
   }
 
   public CardHandler addCardHandler(String handlerName) {
