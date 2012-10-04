@@ -15,6 +15,7 @@ public class SplitPaneDotsPainter implements Painter {
     Color color = splitPane.getForeground();
 
     Color bright = color.brighter();
+    Color brighter = bright.brighter();
     Color dark = color.darker();
 
     int middleX = rect.x + rect.width / 2;
@@ -23,6 +24,12 @@ public class SplitPaneDotsPainter implements Painter {
     switch (orientation) {
       case SwingConstants.HORIZONTAL:
         g.setColor(bright);
+        g.drawLine(middleX - 1, middleY - 1, middleX - 1, middleY + 1);
+        g.drawLine(middleX - 1, middleY - 4, middleX - 1, middleY - 6);
+        g.drawLine(middleX - 1, middleY + 4, middleX - 1, middleY + 6);
+        g.drawLine(middleX - 1, middleY - 10, middleX - 1, middleY - 11);
+        g.drawLine(middleX - 1, middleY + 10, middleX - 1, middleY + 11);
+        g.setColor(brighter);
         g.drawLine(middleX, middleY - 1, middleX, middleY + 1);
         g.drawLine(middleX, middleY - 4, middleX, middleY - 6);
         g.drawLine(middleX, middleY + 4, middleX, middleY + 6);
@@ -34,9 +41,20 @@ public class SplitPaneDotsPainter implements Painter {
         g.drawLine(middleX + 1, middleY + 4, middleX + 1, middleY + 6);
         g.drawLine(middleX + 1, middleY - 10, middleX + 1, middleY - 11);
         g.drawLine(middleX + 1, middleY + 10, middleX + 1, middleY + 11);
+        g.drawLine(middleX + 2, middleY - 1, middleX + 2, middleY + 1);
+        g.drawLine(middleX + 2, middleY - 4, middleX + 2, middleY - 6);
+        g.drawLine(middleX + 2, middleY + 4, middleX + 2, middleY + 6);
+        g.drawLine(middleX + 2, middleY - 10, middleX + 2, middleY - 11);
+        g.drawLine(middleX + 2, middleY + 10, middleX + 2, middleY + 11);
         break;
       case SwingConstants.VERTICAL:
         g.setColor(bright);
+        g.drawLine(middleX - 1, middleY - 1, middleX + 1, middleY - 1);
+        g.drawLine(middleX - 4, middleY - 1, middleX - 6, middleY - 1);
+        g.drawLine(middleX + 4, middleY - 1, middleX + 6, middleY - 1);
+        g.drawLine(middleX - 10, middleY - 1, middleX - 11, middleY - 1);
+        g.drawLine(middleX + 10, middleY - 1, middleX + 11, middleY - 1);
+        g.setColor(brighter);
         g.drawLine(middleX - 1, middleY, middleX + 1, middleY);
         g.drawLine(middleX - 4, middleY, middleX - 6, middleY);
         g.drawLine(middleX + 4, middleY, middleX + 6, middleY);
@@ -48,6 +66,12 @@ public class SplitPaneDotsPainter implements Painter {
         g.drawLine(middleX + 4, middleY + 1, middleX + 6, middleY + 1);
         g.drawLine(middleX - 10, middleY + 1, middleX - 11, middleY + 1);
         g.drawLine(middleX + 10, middleY + 1, middleX + 11, middleY + 1);
+        g.setColor(color);
+        g.drawLine(middleX - 1, middleY + 2, middleX + 1, middleY + 2);
+        g.drawLine(middleX - 4, middleY + 2, middleX - 6, middleY + 2);
+        g.drawLine(middleX + 4, middleY + 2, middleX + 6, middleY + 2);
+        g.drawLine(middleX - 10, middleY + 2, middleX - 11, middleY + 2);
+        g.drawLine(middleX + 10, middleY + 2, middleX + 11, middleY + 2);
         break;
     }
   }
