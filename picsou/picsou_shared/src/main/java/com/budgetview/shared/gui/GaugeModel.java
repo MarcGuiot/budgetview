@@ -2,7 +2,6 @@ package com.budgetview.shared.gui;
 
 import com.budgetview.shared.utils.AmountFormat;
 import com.budgetview.shared.utils.Amounts;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Strings;
 
 import java.util.ArrayList;
@@ -30,7 +29,8 @@ public class GaugeModel {
   public GaugeModel() {
     this(new GaugeTextSource() {
       public String getText(String key, String... args) {
-        return Lang.get(key, args);
+        return "";
+//        return Lang.get(key, args);
       }
     });
   }
