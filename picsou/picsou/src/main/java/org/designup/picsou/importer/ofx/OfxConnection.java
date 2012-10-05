@@ -94,7 +94,7 @@ public class OfxConnection {
       InputStream inputStream = sendBuffer(new URL(url), buffer);
       String tmp = Files.loadStreamToString(inputStream, "UTF-8");
       if (tmp.contains("<html>")) {
-        throw new RuntimeException(Lang.get("synchro.ofx.content.invalid"));
+        throw new RuntimeException(Lang.get("synchro.ofx.content.invalid")  + " : " +tmp);
       }
       return tmp;
     }

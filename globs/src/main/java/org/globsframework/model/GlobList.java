@@ -227,7 +227,13 @@ public class GlobList extends ArrayList<Glob> {
   public SortedSet<Integer> getSortedSet(IntegerField field) {
     SortedSet<Integer> result = new TreeSet<Integer>();
     for (FieldValues values : this) {
-      result.add(values.get(field));
+      Integer e = values.get(field);
+      if (e != null){
+        result.add(e);
+      }
+      else {
+//        throw new RuntimeException("Null value can not be sorted.");
+      }
     }
     return result;
   }
@@ -239,6 +245,9 @@ public class GlobList extends ArrayList<Glob> {
       if (value != null) {
         result.add(value);
       }
+      else {
+//        throw new RuntimeException("Null value can not be sorted.");
+      }
     }
     return result;
   }
@@ -246,7 +255,13 @@ public class GlobList extends ArrayList<Glob> {
   public SortedSet<String> getSortedSet(StringField field) {
     SortedSet<String> result = new TreeSet<String>();
     for (FieldValues values : this) {
-      result.add(values.get(field));
+      String e = values.get(field);
+      if (e != null){
+        result.add(e);
+      }
+      else {
+//        throw new RuntimeException("Null value can not be sorted.");
+      }
     }
     return result;
   }

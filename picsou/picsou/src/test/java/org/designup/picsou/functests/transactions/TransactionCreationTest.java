@@ -416,6 +416,36 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
   }
 
+  public void testCreateFutureOperation() throws Exception {
+    // create operation d+1
+    // n'impact pas le solde
+    // validé "l'operations" pour impacter le solde.
+    // mais le solde reste en date du jour.
+    // solde              budget      solde fin de mois:
+    // 100 euro a t ==>   -100         0
+    // 100 euro a t -10=> -90         0  => 100 - 10 - 90 => si on compte les operations non encore passées
+    // 90 euro a t + 1    -90         0   => on ne compte plus l'operation car elle est apres la date passée.
+    // ==> le solde est toujours le solde reel de la banque.
+    //    si pas de banque (manuel only) prendre J-1
+    //    Si mix
+    // on pourrait laissé le choix de la date de prise en compte des operations (j-1 ou j)
+    // Comment faire pour les cheques : leur date effective n'est pas toujours connue
+    // on voudrait valider pour dire qu'il faut le prendre en comptes.
+    //  ==> proposer un bouton 'impacter le solde' ?
+
+
+    // proposer d'ajouter un cheque dans une series.
+
+    // pour les periode non mensuelle (ex : toutes les 2 semaines)
+    // marquer la series comme tel et faire la regles
+    // un trigger creer les operations plannifié comme tel
+    // au borne (debut/fin de mois) si salaire divisé par rapport au nombre
+    // de jours entre
+    // cela revient a calculer le montant par jours et faire une operations planifié par jours
+    // ou on reverse pour calculer le montant pour le mois?
+    // cas du salaire :
+  }
+
   public void testCreatingAManuallyCreatedTransactionInTheFuturePreservesCurrentMonth() throws Exception {
     fail("tbd - http://support.mybudgetview.fr/tickets/1070");
   }
