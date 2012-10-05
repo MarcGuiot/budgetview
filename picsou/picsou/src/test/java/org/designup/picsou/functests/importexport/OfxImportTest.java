@@ -54,10 +54,10 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initAmountContent()
-      .add("14/01/2006", "TX 4", -4.40, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
-      .add("13/01/2006", "TX 3", -3.30, "To categorize", 4.40, 4.40, OfxBuilder.DEFAULT_ACCOUNT_NAME)
-      .add("12/01/2006", "TX 2", -2.20, "To categorize", 7.70, 7.70, OfxBuilder.DEFAULT_ACCOUNT_NAME)
-      .add("11/01/2006", "TX 1", -1.10, "To categorize", 9.90, 9.90, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("14/01/2006", "TX 4", -4.40, "To categorize", -7.70, -7.70, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("13/01/2006", "TX 3", -3.30, "To categorize", -3.30, -3.30, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("12/01/2006", "TX 2", -2.20, "To categorize", 0.0, 0.0, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("11/01/2006", "TX 1", -1.10, "To categorize", 2.20, 2.20, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
   }
 
@@ -99,9 +99,9 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initAmountContent()
-      .add("12/01/2006", "TX 3", -3.30, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
-      .add("11/01/2006", "TX 2", -2.20, "To categorize", 3.30, 3.30, OfxBuilder.DEFAULT_ACCOUNT_NAME)
-      .add("10/01/2006", "TX 1", -1.10, "To categorize", 5.50, 5.50, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("12/01/2006", "TX 3", -3.30, "To categorize", -3.3, -3.3, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("11/01/2006", "TX 2", -2.20, "To categorize", 0., 0., OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("10/01/2006", "TX 1", -1.10, "To categorize", 2.20, 2.20, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
   }
 
@@ -124,11 +124,11 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initAmountContent()
-      .add("16/01/2006", "TX 6", -6.60, "To categorize", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
-      .add("15/01/2006", "TX 5", -5.50, "To categorize", 6.60, 6.60, OfxBuilder.DEFAULT_ACCOUNT_NAME)
-      .add("14/01/2006", "TX 4", -4.40, "To categorize", 12.10, 12.10, OfxBuilder.DEFAULT_ACCOUNT_NAME)
-      .add("13/01/2006", "TX 3", -3.30, "To categorize", 16.50, 16.50, OfxBuilder.DEFAULT_ACCOUNT_NAME)
-      .add("12/01/2006", "TX 2", -2.20, "To categorize", 19.80, 19.80, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("16/01/2006", "TX 6", -6.60, "To categorize", -6.60, -6.60, "Account n. 00001123")
+      .add("15/01/2006", "TX 5", -5.50, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("14/01/2006", "TX 4", -4.40, "To categorize", 5.50, 5.50, "Account n. 00001123")
+      .add("13/01/2006", "TX 3", -3.30, "To categorize", 9.90, 9.90, "Account n. 00001123")
+      .add("12/01/2006", "TX 2", -2.20, "To categorize", 13.20, 13.20, "Account n. 00001123")
       .check();
   }
 
@@ -191,7 +191,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     categorization.selectVariable().selectNewSeries("Series 1");
 
     categorization.selectTableRow(categorization.getTable()
-                                    .getRowIndex(CategorizationChecker.AMOUNT_COLUMN_INDEX, -4.2 + 1.5));
+                                    .getRowIndex(CategorizationChecker.AMOUNT_COLUMN_INDEX, (-4.2 + 1.5) + "0"));
     transactionDetails.split("-1.5", "info2");
     categorization.selectVariable().selectNewSeries("Series 2");
 
@@ -209,6 +209,14 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .add("11/01/2006", TransactionType.PRELEVEMENT, "Tx 2", "info", -1.5, "Series 1")
       .add("10/01/2006", TransactionType.PRELEVEMENT, "Tx 1", "", -1.1)
       .check();
+    transactions.initAmountContent()
+      .add("11/01/2006", "TX 2", -1.20, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("11/01/2006", "TX 2", -1.50, "Series 2", 1.20, 1.20, "Account n. 00001123")
+      .add("11/01/2006", "TX 2", -1.50, "Series 1", 2.70, 2.70, "Account n. 00001123")
+      .add("10/01/2006", "TX 1", -1.10, "To categorize", 4.20, 4.20, "Account n. 00001123")
+      .check();
+
+
   }
 
   private static final String TEXT =
@@ -431,7 +439,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .completeImport();
 
     views.selectHome();
-    mainAccounts.checkAccount("Account n. 111", 950.00, "2008/08/10");
+    mainAccounts.checkAccount("Account n. 111", 1000.00, "2008/08/10");
     mainAccounts.edit("Account n. 111")
       .checkSelectedBank("Other")
       .validate();
@@ -462,7 +470,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    mainAccounts.checkAccount("Account n. 111", 950.00, "2008/08/10");
+    mainAccounts.checkAccount("Account n. 111", 1000.00, "2008/08/10");
   }
 
   public void testLettersInBankId() throws Exception {
@@ -473,7 +481,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .loadUnknown("Other");
 
     views.selectHome();
-    mainAccounts.checkAccount("Account n. 111", 950.00, "2008/08/10");
+    mainAccounts.checkAccount("Account n. 111", 1000.00, "2008/08/10");
     mainAccounts.edit("Account n. 111")
       .checkSelectedBank("Other")
       .checkIsMain()
@@ -535,7 +543,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(file)
       .acceptFile();
     importDialog
-      .setDeferredAccount()
+      .setDeferredAccount(25, 28, 0)
       .selectBank("Other")
       .doImport();
     importDialog
@@ -576,7 +584,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", TransactionType.CREDIT_CARD, "VIREMENT", "", -50.00)
       .check();
     views.selectBudget();
-    budgetView.getSummary().checkEndPosition(-40.00);
+    budgetView.getSummary().checkEndPosition(10.00);
   }
 
   public void testIfAnAccountAlreadyExistWeAskToAssociateToIt() throws Exception {

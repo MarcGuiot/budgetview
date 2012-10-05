@@ -280,7 +280,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
   private void setFixedDateToSeriesShape(GlobRepository repository, Glob series, Glob seriesShape) {
     Field[] fields = SeriesShape.TYPE.getFields();
     for (int i = 1; i < SeriesShape.TOTAL.getIndex(); i++) {
-      repository.update(seriesShape.getKey(), fields[i], 0.);
+      repository.update(seriesShape.getKey(), fields[i], 0);
     }
     repository.update(seriesShape.getKey(), SeriesShape.FIXED_DATE, series.get(Series.FORCE_SINGLE_OPERATION_DAY));
   }

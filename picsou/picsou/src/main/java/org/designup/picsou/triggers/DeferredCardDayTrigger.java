@@ -97,7 +97,7 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
         repository.create(DeferredCardDate.TYPE,
                           value(DeferredCardDate.ACCOUNT, accountId),
                           value(DeferredCardDate.MONTH, startMonth),
-                          value(DeferredCardDate.DAY, Month.getDay(31, startMonth, calendar)));
+                          value(DeferredCardDate.DAY, Month.getDay(account.get(Account.DEFERRED_PRELEVEMENT_DAY), startMonth, calendar)));
       }
       else {
         deferredCardDays.remove(globs.getFirst());
@@ -107,14 +107,14 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
 
     repository.delete(deferredCardDays);
 
-    deferredCardDays = indexOnDeferredCardDay.getGlobs();
+    GlobList newDeferredCardDays = indexOnDeferredCardDay.getGlobs();
 
     // on met a jour le jour de chaque mois
     ReadOnlyGlobRepository.MultiFieldIndexed seriesIndex = null;
     if (series != null) {
       seriesIndex = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID));
     }
-    for (Glob deferredCardDay : deferredCardDays) {
+    for (Glob deferredCardDay : newDeferredCardDays) {
       if (seriesIndex != null) {
         Glob transaction = seriesIndex.findByIndex(Transaction.POSITION_MONTH,
                                                    deferredCardDay.get(DeferredCardDate.MONTH)).getGlobs().getFirst();
@@ -123,12 +123,12 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
         }
         else {
           repository.update(deferredCardDay.getKey(), DeferredCardDate.DAY,
-                            Month.getDay(31, deferredCardDay.get(DeferredCardDate.MONTH), calendar));
+                            Month.getDay(account.get(Account.DEFERRED_PRELEVEMENT_DAY), deferredCardDay.get(DeferredCardDate.MONTH), calendar));
         }
       }
       else {
         repository.update(deferredCardDay.getKey(), DeferredCardDate.DAY,
-                          Month.getDay(31, deferredCardDay.get(DeferredCardDate.MONTH), calendar));
+                          Month.getDay(account.get(Account.DEFERRED_PRELEVEMENT_DAY), deferredCardDay.get(DeferredCardDate.MONTH), calendar));
       }
     }
   }

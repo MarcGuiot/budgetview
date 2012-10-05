@@ -39,16 +39,16 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/20", -6, "Bar")
       .load();
 
-    mainAccounts.checkSummary(10.0, "2006/01/15");
-    mainAccounts.checkAccount("Account n. 123123123", 10, "2006/01/15");
-    mainAccounts.checkAccount("Card n. 1000-2000-3000-4000", 10, "2006/01/31");
+    mainAccounts.checkAccount("Account n. 123123123", 0, "2006/01/15");
+    mainAccounts.checkAccount("Card n. 1000-2000-3000-4000", -9, "2006/01/25");
+    mainAccounts.checkSummary(-9, "2006/01/20");
 
     timeline.selectAll();
     transactions.initAmountContent()
-      .add("20/01/2006", "BAR", -6.00, "To categorize", 10.00, 1.00, "Card n. 1000-2000-3000-4000")
-      .add("17/01/2006", "FOO", -3.00, "To categorize", 16.00, 7.00, "Card n. 1000-2000-3000-4000")
-      .add("15/01/2006", "GDF", -10.00, "To categorize", 10.00, 10.00, "Account n. 123123123")
-      .add("10/01/2006", "EDF", -1.00, "To categorize", 20.00, 20.00, "Account n. 123123123")
+      .add("20/01/2006", "BAR", -6.00, "To categorize", -9.00, -9.00, "Card n. 1000-2000-3000-4000")
+      .add("17/01/2006", "FOO", -3.00, "To categorize", -3.00, -3.00, "Card n. 1000-2000-3000-4000")
+      .add("15/01/2006", "GDF", -10.00, "To categorize", 0.00, 0.00, "Account n. 123123123")
+      .add("10/01/2006", "EDF", -1.00, "To categorize", 10.00, 10.00, "Account n. 123123123")
       .check();
   }
 

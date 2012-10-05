@@ -7,8 +7,10 @@ import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.triggers.AccountInitialPositionTrigger;
 import org.designup.picsou.triggers.ProjectItemTrigger;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
+import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.LinkField;
@@ -22,6 +24,7 @@ import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -93,9 +96,6 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (currentJarVersion < 48) {
       SignpostStatus.setAllCompleted(repository);
     }
-    if (currentJarVersion < 49) {
-      repository.safeApply(Series.TYPE, ALL, new DisableSeriesReportGlobFunctor());
-    }
     if (currentJarVersion < 54) {
       repository.safeApply(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()), new GlobFunctor() {
         public void run(Glob glob, GlobRepository repository) throws Exception {
@@ -131,6 +131,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
     if (currentJarVersion < 93) {
       createMissingSubSeriesForProjectItems(repository);
+      updateOpenCloseAccount(repository);
     }
 
     deleteDeprecatedGlobs(repository);
@@ -147,6 +148,67 @@ public class UpgradeTrigger implements ChangeSetListener {
   private void createMissingSubSeriesForProjectItems(GlobRepository repository) {
     for (Glob projectItem : repository.getAll(ProjectItem.TYPE, isNull(ProjectItem.SUB_SERIES))) {
       ProjectItemTrigger.createSubSeries(projectItem.getKey(), projectItem, repository);
+    }
+  }
+
+  private void updateOpenCloseAccount(GlobRepository repository) {
+    repository.startChangeSet();
+    try {
+      repository.findOrCreate(Key.create(Series.TYPE, Series.ACCOUNT_SERIES_ID),
+                              value(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
+                              value(Series.PROFILE_TYPE, ProfileType.IRREGULAR.getId()),
+                              value(Series.IS_AUTOMATIC, false),
+                              value(Series.DAY, 1),
+                              value(Series.NAME, Series.getAccountSeriesName()));
+
+      GlobList accounts = repository.getAll(Account.TYPE,
+                                       GlobMatchers.not(GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId())));
+
+      for (Glob account : accounts) {
+        if (!Account.isUserCreatedAccount(account)){
+          continue;
+        }
+        GlobList transactions = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)))
+          .sort(TransactionComparator.ASCENDING_ACCOUNT);
+        Date openDate = account.get(Account.OPEN_DATE);
+        int open = Integer.MAX_VALUE;
+
+        if (openDate != null) {
+          open = Month.toFullDate(openDate);
+        }
+        double openAmount = 0;
+        if (!transactions.isEmpty()){
+          Glob firstTransaction = transactions.get(0);
+          open = Math.min(open, Month.toFullDate(firstTransaction.get(Transaction.POSITION_MONTH),
+                                                 firstTransaction.get(Transaction.POSITION_DAY)));
+          open = Math.min(open, Month.toFullDate(firstTransaction.get(Transaction.BANK_MONTH),
+                                                 firstTransaction.get(Transaction.BANK_DAY)));
+          openAmount = firstTransaction.get(Transaction.ACCOUNT_POSITION) + firstTransaction.get(Transaction.AMOUNT);
+        }
+        AccountInitialPositionTrigger.createOpenTransaction(Month.getMonthIdFromFullDate(open),
+                                                            Month.getDayFromFullDate(open), openAmount, repository,
+                                                            account.getKey());
+        Date closeDate = account.get(Account.CLOSED_DATE);
+        int close = Integer.MIN_VALUE;
+        if (closeDate != null){
+          close = Month.toFullDate(closeDate);
+        }
+        double closeAmount = 0;
+        if (!transactions.isEmpty()){
+          Glob lastTransaction = transactions.get(transactions.size() - 1);
+          close = Math.max(close, Month.toFullDate(lastTransaction.get(Transaction.POSITION_MONTH),
+                                                   lastTransaction.get(Transaction.POSITION_DAY)));
+          close = Math.max(close, Month.toFullDate(lastTransaction.get(Transaction.BANK_MONTH),
+                                                   lastTransaction.get(Transaction.BANK_DAY)));
+          closeAmount = lastTransaction.get(Transaction.ACCOUNT_POSITION);
+          AccountInitialPositionTrigger.createCloseTransaction(repository, account.getKey(), Month.getDayFromFullDate(close),
+                                                               Month.getMonthIdFromFullDate(close), closeAmount);
+
+        }
+      }
+    }
+    finally {
+      repository.completeChangeSet();
     }
   }
 
@@ -447,11 +509,6 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
   }
 
-  private static class DisableSeriesReportGlobFunctor implements GlobFunctor {
-    public void run(Glob glob, GlobRepository repository) throws Exception {
-      repository.update(glob.getKey(), Series.SHOULD_REPORT, false);
-    }
-  }
 
   public void postProcessing(GlobRepository repository) {
     for (Map.Entry<Integer, Key[]> entry : savingsSeriesToOp.entrySet()) {
@@ -505,12 +562,12 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   private void updateManualCreationFlag(GlobRepository repository) {
-    for (Glob transaction : repository.getAll(Transaction.TYPE)) {
-      Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-      boolean manuallyCreated = (account != null) && Account.isManualUpdateAccount(account);
-      if (manuallyCreated) {
-        repository.update(transaction.getKey(), Transaction.MANUAL_CREATION, true);
-      }
-    }
+//    for (Glob transaction : repository.getAll(Transaction.TYPE)) {
+//      Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
+//      boolean manuallyCreated = (account != null) && Account.isManualUpdateAccount(account);
+//      if (manuallyCreated) {
+//        repository.update(transaction.getKey(), Transaction.MANUAL_CREATION, true);
+//      }
+//    }
   }
 }

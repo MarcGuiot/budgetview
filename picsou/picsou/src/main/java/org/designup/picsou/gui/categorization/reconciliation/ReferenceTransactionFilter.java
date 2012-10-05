@@ -2,6 +2,7 @@ package org.designup.picsou.gui.categorization.reconciliation;
 
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.util.ClosedMonthRange;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -24,6 +25,8 @@ public class ReferenceTransactionFilter implements GlobMatcher {
            !transaction.isTrue(Transaction.MIRROR) && 
            !Transaction.isToReconcile(transaction) &&
            range.contains(transaction.get(Transaction.POSITION_MONTH)) &&
-           Utils.equal(accountId, transaction.get(Transaction.ACCOUNT));
+           Utils.equal(accountId, transaction.get(Transaction.ACCOUNT)) &&
+           (transaction.get(Transaction.TRANSACTION_TYPE) != TransactionType.OPEN_ACCOUNT_EVENT.getId()) &&
+           (transaction.get(Transaction.TRANSACTION_TYPE) != TransactionType.CLOSE_ACCOUNT_EVENT.getId());
   }
 }

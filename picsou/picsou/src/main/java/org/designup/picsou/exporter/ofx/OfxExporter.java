@@ -103,7 +103,8 @@ public class OfxExporter implements Exporter {
     Collections.sort(transactionsToWrite, TransactionComparator.ASCENDING_SPLIT_AFTER);
     Date lastDate = new Date(0);
     for (Glob transaction : transactionsToWrite) {
-      if (transaction.isTrue(Transaction.PLANNED)) {
+      if (transaction.isTrue(Transaction.PLANNED) || Transaction.isToReconcile(transaction)
+        || Transaction.isOpenCloseAccount(transaction)) {
         continue;
       }
       writeTransaction(transaction);

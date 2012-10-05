@@ -24,7 +24,7 @@ public class AccountEditionPanel extends AbstractAccountPanel<GlobRepository> {
   private GlobsPanelBuilder builder;
 
   public AccountEditionPanel(Window owner, GlobRepository repository, Directory parentDirectory) {
-    super(repository, parentDirectory);
+    super(repository, parentDirectory, false);
     createPanel(owner);
   }
 
@@ -63,7 +63,7 @@ public class AccountEditionPanel extends AbstractAccountPanel<GlobRepository> {
       }
     }
 
-    Double position = account.get(Account.POSITION);
+    Double position = account.get(Account.LAST_IMPORT_POSITION);
     Date date = account.get(Account.POSITION_DATE);
     if (position != null) {
       String positionLabel = Formatting.toString(position);

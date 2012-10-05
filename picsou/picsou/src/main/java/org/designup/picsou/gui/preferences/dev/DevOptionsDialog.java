@@ -1,18 +1,11 @@
 package org.designup.picsou.gui.preferences.dev;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.preferences.components.ColorThemeItemFactory;
 import org.designup.picsou.gui.series.SeriesEditionDialog;
-import org.designup.picsou.model.ColorTheme;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.repository.LocalGlobRepository;
-import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
-import org.globsframework.model.utils.GlobComparators;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -24,7 +17,7 @@ public class DevOptionsDialog {
   private GlobsPanelBuilder builder;
 
   public DevOptionsDialog(Window parent, final GlobRepository repository, Directory directory) {
-    builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
+    builder = new GlobsPanelBuilder(DevOptionsDialog.class,
                                     "/layout/general/devOptionsDialog.splits",
                                     repository, directory);
 

@@ -35,6 +35,12 @@ public class DefaultSeriesFactory {
                             value(Series.IS_AUTOMATIC, false),
                             value(Series.DAY, 1),
                             value(Series.NAME, Series.getUncategorizedName()));
+    repository.findOrCreate(Key.create(Series.TYPE, Series.ACCOUNT_SERIES_ID),
+                            value(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
+                            value(Series.PROFILE_TYPE, ProfileType.IRREGULAR.getId()),
+                            value(Series.IS_AUTOMATIC, false),
+                            value(Series.DAY, 1),
+                            value(Series.NAME, Series.getAccountSeriesName()));
   }
 
   private void createUserSeries() {

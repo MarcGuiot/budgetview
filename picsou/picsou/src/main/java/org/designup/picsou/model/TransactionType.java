@@ -24,7 +24,10 @@ public enum TransactionType implements GlobConstantContainer {
   BANK_FEES("BANK_FEES", 9),
   INTERNAL_TRANSFER("INTERNAL_TRANSFER", 10),
   PLANNED("PLANNED", 11),
-  MANUAL("MANUAL", 12);
+  MANUAL("MANUAL", 12),
+  OPEN_ACCOUNT_EVENT("OPEN_ACCOUNT_EVENT", 13),
+  CLOSE_ACCOUNT_EVENT("CLOSE_ACCOUNT_EVENT", 14);
+
 
   public static GlobType TYPE;
 

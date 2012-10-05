@@ -54,6 +54,13 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
+  public AccountEditionChecker setDeferred(int dayPeriod, int dayPrelement, int monthShift){
+    dialog.getTextBox("datePeriod").setText(Integer.toString(dayPeriod));
+    dialog.getTextBox("datePrelevement").setText(Integer.toString(dayPrelement));
+    dialog.getTextBox("shiftMonth").setText(Integer.toString(monthShift));
+    return this;
+  }
+
   public AccountEditionChecker modifyBank(String initialBank, String newBankName, String newURL) {
     BankChooserChecker bankChooser = openBankSelection().checkSelectedBank(initialBank);
 

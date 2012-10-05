@@ -1,94 +1,70 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.gui.time.TimeService;
-import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.model.utils.GlobFieldComparator;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.collections.MapOfMaps;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.SortedSet;
 
 public class PositionTrigger implements ChangeSetListener {
 
-  // donnée membre utilisé temporairement
-  private double positionBefore;
-  private double positionAfter;
-  private Integer lastUpdateTransactionId;
-  private int pivot;
+  public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
 
-  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+    if (changeSet.containsChanges(Transaction.TYPE) || changeSet.containsUpdates(Account.POSITION) || changeSet.containsChanges(Account.TYPE)) {
+      final Set<Integer> accountIds = new HashSet<Integer>();
+      final Set<Integer> deferredAccountIds = new HashSet<Integer>();
+      final Set<Integer> updatedOperations = new HashSet<Integer>();
+      changeSet.safeVisit(Account.TYPE, new AccountChangesetVisitor(accountIds, deferredAccountIds, repository));
+      TransactionChangeSetVisitor transactionChangeSetVisitor = new TransactionChangeSetVisitor(updatedOperations, accountIds, deferredAccountIds, repository);
+      changeSet.safeVisit(Transaction.TYPE, transactionChangeSetVisitor);
+      if (transactionChangeSetVisitor.isImport) {
 
-    if (changeSet.containsCreationsOrDeletions(Transaction.TYPE) ||
-        changeSet.containsUpdates(Transaction.AMOUNT) || changeSet.containsChanges(Account.TYPE)
-        || changeSet.containsUpdates(Transaction.DAY)) {
-      GlobList account = repository.getAll(Account.TYPE);
-      updateTransactionPosition(repository, account);
-    }
-    else if (changeSet.containsChanges(Transaction.TYPE)) {
-      Set<Key> seriesKey = changeSet.getUpdated(Transaction.SERIES);
-      for (Key transaction : seriesKey) {
-        Glob glob = repository.findLinkTarget(repository.get(transaction), Transaction.SERIES);
-        if (glob != null) {
-          if (glob.get(Series.BUDGET_AREA).equals(BudgetArea.OTHER.getId()) &&
-              glob.get(Series.FROM_ACCOUNT) != null) {
-            GlobList account = repository.getAll(Account.TYPE);
-            updateTransactionPosition(repository, account);
-            return;
-          }
-        }
       }
+//      Glob positionMode = repository.find(AccountPositionMode.TYPE);
+//      if (positionMode != null && positionMode.isTrue(AccountPositionMode.SHOULD_NOT_IMPACT_ACCOUNT_POSITION)) {
+//        updateTransactionButNotAccountPosition(repository, accountIds);
+//      }
+//      else {
+      updateTransactionImpactAccounts(repository, changeSet, updatedOperations, accountIds, false);
+      if (accountIds.isEmpty() && deferredAccountIds.isEmpty()) {
+        return;
+      }
+
+      updateDeferredAccount(repository, deferredAccountIds);
+
+      TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
+      SortedSet<Glob> trs = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
+
+      Glob[] transactions = trs.toArray(new Glob[trs.size()]);
+
+      computeTotalPosition(repository, transactions, deferredAccountIds);
+//      }
     }
   }
 
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-//    GlobList account = repository.getAll(Account.TYPE);
-//    if (account.isEmpty()){
-//      return;
-//    }
-//    updateTransactionPosition(repository, account);
+  private void updateDeferredAccount(GlobRepository repository, Set<Integer> deferredAccountIds) {
+    for (Integer id : deferredAccountIds) {
+      TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
+      SortedSet<Glob> trs = repository.getSorted(Transaction.TYPE, comparator,
+                                                 GlobMatchers.fieldEquals(Transaction.ACCOUNT, id));
+
+      Glob[] transactions = trs.toArray(new Glob[trs.size()]);
+
+      computeDeferredPosition(repository, transactions, repository.get(Key.create(Account.TYPE, id)));
+    }
   }
 
-  private void updateTransactionPosition(GlobRepository repository, GlobList updatedAccount) {
-
-    GlobList deferredSeries = repository.getAll(Series.TYPE,
-                                                GlobMatchers.and(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
-                                                                 GlobMatchers.isNotNull(Series.FROM_ACCOUNT)));
-    Set<Integer> deferredSeriesId =
-      deferredSeries
-        .getValueSet(Series.ID);
-
-    Map<Integer, Integer> deferredAccounts = new HashMap<Integer, Integer>();
-    for (Glob series : deferredSeries) {
-      deferredAccounts.put(series.get(Series.FROM_ACCOUNT), series.get(Series.ID));
-    }
-
-    TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
-    SortedSet<Glob> trs = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
-
-    Glob[] transactions = trs.toArray(new Glob[trs.size()]);
-    for (Integer accountId : Account.SUMMARY_ACCOUNT_IDS) {
-      updatedAccount.remove(repository.get(Key.create(Account.TYPE, accountId)));
-    }
-    for (Glob account : updatedAccount) {
-      if (AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
-        if (AccountCardType.DEFERRED.getId().equals(account.get(Account.CARD_TYPE))) {
-          computeDefferedPosition(repository, comparator, transactions, account);
-        }
-        else {
-          computeAccountPosition(repository, comparator, transactions, account, deferredSeriesId);
-        }
-      }
-      else {
-        computeAccountPosition(repository, comparator, transactions, account, deferredSeriesId);
-      }
-    }
-
-//    if (mainPositionComputed)
+  private void computeTotalPosition(GlobRepository repository, Glob[] transactions, Set<Integer> deferredAccountIds) {
+    Glob currentMonth = repository.get(CurrentMonth.KEY);
+    GlobMatcher futureOperations = getMatcherForFutureOperations(currentMonth.get(CurrentMonth.CURRENT_MONTH), currentMonth.get(CurrentMonth.CURRENT_DAY));
     {
       GlobList accounts = repository.getAll(Account.TYPE);
       GlobList tmp = new GlobList();
@@ -100,7 +76,7 @@ public class PositionTrigger implements ChangeSetListener {
         }
       }
       computeTotalPosition(repository, transactions,
-                           new SameAccountChecker(AccountType.MAIN.getId(), repository), tmp, deferredSeriesId, deferredAccounts);
+                           new SameAccountChecker(AccountType.MAIN.getId(), repository), futureOperations);
     }
 //    if (savingsPositionComputed)
     {
@@ -114,223 +90,394 @@ public class PositionTrigger implements ChangeSetListener {
         }
       }
       computeTotalPosition(repository, transactions,
-                           new SameAccountChecker(AccountType.SAVINGS.getId(), repository), tmp,
-                           new HashSet<Integer>(), deferredAccounts);
+                           new SameAccountChecker(AccountType.SAVINGS.getId(), repository), futureOperations);
     }
   }
 
-  private boolean computeDefferedPosition(GlobRepository repository, TransactionComparator comparator,
-                                          Glob[] transactions, Glob account) {
 
-    Integer transactionId = account.get(Account.TRANSACTION_ID);
-    lastUpdateTransactionId = transactionId;
-    positionBefore = 0;
-    if (initPivot(repository, comparator, transactions, account, transactionId)) {
-      return false;
-    }
-
-    Set<Integer> monthDone = new HashSet<Integer>();
-    if (pivot != -1) {
-      // on update que le mois en cours.
-      Glob currentTransaction = transactions[pivot];
-      int currentPositionMonthId = currentTransaction.get(Transaction.POSITION_MONTH);
-      monthDone.add(currentPositionMonthId);
-      for (int i = pivot - 1; i >= 0; i--) {
-        Glob transaction = transactions[i];
-        Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
-        if (checkSameAccount(account, transactionAccount)) {
-          if (transaction.get(Transaction.POSITION_MONTH) != currentPositionMonthId) {
-            break;
+  private void updateTransactionButNotAccountPosition(GlobRepository repository, Set<Integer> accountIds) {
+    Glob currentMonth = repository.get(CurrentMonth.KEY);
+    for (Integer id : accountIds) {
+      Glob account = repository.find(Key.create(Account.TYPE, id));
+      if (account != null) {
+        Double currentPos = account.get(Account.POSITION);
+        if (currentPos != null) {
+          {
+            double tmp = currentPos;
+            Glob[] positions = getEffectiveTransactionForAccount(id, repository, currentMonth.get(CurrentMonth.CURRENT_MONTH), currentMonth.get(CurrentMonth.CURRENT_DAY));
+            for (int i = positions.length - 1; i >= 0; i--) {
+              repository.update(positions[i].getKey(), Transaction.ACCOUNT_POSITION, tmp);
+              tmp -= positions[i].get(Transaction.AMOUNT);
+            }
           }
-          repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, positionBefore);
-          positionBefore = positionBefore - transaction.get(Transaction.AMOUNT);
-        }
-      }
-      int month = TimeService.getCurrentMonth();
-      int day = TimeService.getCurrentDay();
-      for (int i = pivot + 1; i < transactions.length; i++) {
-        Glob transaction = transactions[i];
-        Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
-        if (checkSameAccount(account, transactionAccount)) {
-          if (transaction.get(Transaction.POSITION_MONTH) != currentPositionMonthId) {
-            break;
-          }
-          positionAfter = positionAfter + transaction.get(Transaction.AMOUNT);
-          repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, positionAfter);
-          if (!transaction.isTrue(Transaction.PLANNED) &&
-              Transaction.isPositionTransactionBeforeOrEqual(transaction, month, day)) {
-            lastUpdateTransactionId = transaction.get(Transaction.ID);
+          {
+            Glob[] positions = getFutureTransactionForAccount(id, repository, currentMonth.get(CurrentMonth.CURRENT_MONTH), currentMonth.get(CurrentMonth.CURRENT_DAY));
+            double tmp = currentPos;
+            for (Glob position : positions) {
+              tmp += position.get(Transaction.AMOUNT);
+              repository.update(position.getKey(), Transaction.ACCOUNT_POSITION, tmp);
+            }
           }
         }
       }
     }
+  }
 
+  private void updateTransactionImpactAccounts(GlobRepository repository, ChangeSet changeSet,
+                                               Set<Integer> operations, Set<Integer> accountIds, boolean forceUseFromBeginning) {
+    Glob currentMonth = repository.get(CurrentMonth.KEY);
+    for (Integer accountId : accountIds) {
+      updateAccount(repository, changeSet, operations, forceUseFromBeginning, currentMonth, accountId);
+    }
+  }
 
-    Glob series = repository.getAll(Series.TYPE,
-                                    GlobMatchers.and(
-                                      GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
-                                      GlobMatchers.fieldEquals(Series.FROM_ACCOUNT, account.get(Account.ID))))
-      .getFirst();
-    ReadOnlyGlobRepository.MultiFieldIndexed debitTransaction =
-      repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID));
+  private void updateAccount(GlobRepository repository, ChangeSet changeSet, Set<Integer> operations, boolean forceUseFromBeginning, Glob currentMonth, Integer accountId) {
+    if (!Account.SUMMARY_ACCOUNT_IDS.contains(accountId)) {
+      ExtractDate extractDate = new ExtractDate(accountId);
+      changeSet.safeVisit(Transaction.TYPE, extractDate);
+      GlobMatcher futureMatcher = getMatcherForFutureOperations(accountId, currentMonth.get(CurrentMonth.CURRENT_MONTH), currentMonth.get(CurrentMonth.CURRENT_DAY));
+      GlobMatcher realMatcher = Transaction.getMatcherForRealOperations(accountId);
+      Glob[] transactions = getAllTransactionForAccount(accountId, repository);
 
-    Glob firstTransaction = null;
-    int i;
-    int transactionMonthId;
-    for (i = 0; i < transactions.length; i++) {
-      Glob transaction = transactions[i];
-      Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
-      if (!checkSameAccount(account, transactionAccount)) {
-        continue;
-      }
-      if (firstTransaction == null) {
-        firstTransaction = transaction;
-      }
-
-      if (monthDone.contains(transaction.get(Transaction.POSITION_MONTH))) {
-        continue;
-      }
-      transactionMonthId = transaction.get(Transaction.POSITION_MONTH);
-      Glob debit = debitTransaction.findByIndex(Transaction.POSITION_MONTH, transactionMonthId)
-        .getGlobs().getFirst();
-      if (debit != null) {
-        int j;
-        for (j = i; j < transactions.length; j++) {
-          Glob glob = transactions[j];
-          if (checkSameAccount(account, glob.get(Transaction.ACCOUNT))
-              && glob.get(Transaction.POSITION_MONTH) != transactionMonthId) {
-            break;
+      Key accountKey = Key.create(Account.TYPE, accountId);
+      Glob account = repository.get(accountKey);
+      if (changeSet.containsChanges(accountKey, Account.LAST_IMPORT_POSITION)) {
+        if (account.get(Account.LAST_IMPORT_POSITION) != null) {
+          // cas particulier du compte sans aucune operations.
+          if (transactions.length == 1 || (transactions.length == 2 &&
+                                           transactions[1].get(Transaction.TRANSACTION_TYPE).equals(TransactionType.CLOSE_ACCOUNT_EVENT.getId()))) {
+            repository.update(transactions[0].getKey(), Transaction.AMOUNT, account.get(Account.LAST_IMPORT_POSITION));
+          }
+          else {
+            for (int i = transactions.length - 1; i >= 0; i--) {
+              Glob transaction = transactions[i];
+              if (realMatcher.matches(transaction, repository)) {
+                repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, account.get(Account.LAST_IMPORT_POSITION));
+                updateFirstTransactionFromPivotPosition(transactions, i, repository, account);
+                break;
+              }
+            }
           }
         }
-        double amountAfter = debit.get(Transaction.AMOUNT);
-        for (int k = j - 1; k >= i; k--) {
-          if (checkSameAccount(account, transactions[k].get(Transaction.ACCOUNT))) {
-            repository.update(transactions[k].getKey(), Transaction.ACCOUNT_POSITION, amountAfter);
-            amountAfter -= transactions[k].get(Transaction.AMOUNT);
+      }
+      if (changeSet.containsChanges(accountKey, Account.POSITION) || changeSet.containsChanges(accountKey, Account.TRANSACTION_ID)) {
+        Integer trnId = account.get(Account.TRANSACTION_ID);
+        // si on modifie le solde du compte via une operation particulier
+        if (trnId != null) {
+          for (int i = 0; i < transactions.length; i++) {
+            Glob transaction = transactions[i];
+            if (transaction.get(Transaction.ID).equals(trnId)) {
+              repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, account.get(Account.POSITION));
+              updateFirstTransactionFromPivotPosition(transactions, i, repository, account);
+              break;
+            }
           }
         }
-        i = j - 1;
-        monthDone.add(transactionMonthId);
+      }
+      if (!forceUseFromBeginning) {
+        // on cherche la derniere operations non nouvelle et on part de la.
+        for (int i = transactions.length - 1; i > 0; i--) {
+          Glob transaction = transactions[i];
+          if (realMatcher.matches(transaction, repository)) {
+            if (!operations.contains(transaction.get(Transaction.ID))) {
+              updateFirstTransactionFromPivotPosition(transactions, i, repository, account);
+              break;
+            }
+          }
+        }
+      }
+
+      computeAccountPosition(transactions, futureMatcher, realMatcher, accountId, repository);
+    }
+  }
+
+  private void updateFirstTransactionFromPivotPosition(Glob[] transactions, int pivot, GlobRepository repository, Glob account) {
+    double beforePosition;
+    {
+      beforePosition = transactions[pivot].get(Transaction.ACCOUNT_POSITION) - transactions[pivot].get(Transaction.AMOUNT);
+      for (int i = pivot - 1; i > 0; i--) {
+        beforePosition -= transactions[i].get(Transaction.AMOUNT);
       }
     }
+    if (!transactions[0].get(Transaction.TRANSACTION_TYPE).equals(TransactionType.OPEN_ACCOUNT_EVENT.getId())) {
+      throw new RuntimeException("Bug : first transaction is not open account transaction.");
+    }
 
+    AccountInitialPositionTrigger.shiftTransactionTo(repository, transactions[0],
+                                                     transactions[0].get(Transaction.POSITION_MONTH),
+                                                     transactions[0].get(Transaction.POSITION_DAY),
+                                                     beforePosition, beforePosition);
+    repository.update(account.getKey(), Account.FIRST_POSITION, beforePosition);
+
+  }
+
+  /* private void updateFirstTransaction(Glob[] transactions, int pivot, GlobRepository repository, Glob account) {
+      double after = transactions[pivot].get(Transaction.ACCOUNT_POSITION) - transactions[pivot].get(Transaction.AMOUNT);
+      for (int i = pivot - 1; i >= 1; i--) {
+        after -= transactions[i].get(Transaction.AMOUNT);
+      }
+      repository.update(transactions[0].getKey(), Transaction.AMOUNT, after);
+      repository.update(account.getKey(), Account.FIRST_POSITION, after);
+    }
+  */
+  public Glob[] getAllTransactionForAccount(int accountId, GlobRepository repository) {
+    SortedSet<Glob> positions = repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_ACCOUNT,
+                                                     GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId)));
+    return positions.toArray(new Glob[positions.size()]);
+  }
+
+  public Glob[] getEffectiveTransactionForAccount(int accountId, GlobRepository repository, int monthId, int day) {
+    SortedSet<Glob> positions = repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_ACCOUNT,
+                                                     GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId),
+                                                                      GlobMatchers.isFalse(Transaction.PLANNED),
+                                                                      GlobMatchers.or(
+                                                                        GlobMatchers.fieldStrictlyLessThan(Transaction.POSITION_MONTH, monthId),
+                                                                        GlobMatchers.and(
+                                                                          GlobMatchers.fieldEquals(Transaction.POSITION_MONTH, monthId),
+                                                                          GlobMatchers.fieldLessOrEqual(Transaction.POSITION_DAY, day))
+                                                                      ))
+    );
+    return positions.toArray(new Glob[positions.size()]);
+  }
+
+  public Glob[] getFutureTransactionForAccount(int accountId, GlobRepository repository, int monthId, int day) {
+    SortedSet<Glob> positions = repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_ACCOUNT,
+                                                     getMatcherForFutureOperations(accountId, monthId, day)
+    );
+    return positions.toArray(new Glob[positions.size()]);
+  }
+
+  private GlobMatcher getMatcherForFutureOperations(int accountId, int monthId, int day) {
+    return GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId),
+                            GlobMatchers.or(
+                              GlobMatchers.isTrue(Transaction.PLANNED)
+//                              GlobMatchers.fieldStrictlyGreaterThan(Transaction.POSITION_MONTH, monthId),
+//                              GlobMatchers.and(
+//                                GlobMatchers.fieldEquals(Transaction.POSITION_MONTH, monthId),
+//                                GlobMatchers.fieldStrictlyGreaterThan(Transaction.POSITION_DAY, day))
+                            ));
+  }
+
+  private GlobMatcher getMatcherForFutureOperations(int monthId, int day) {
+    return GlobMatchers.or(GlobMatchers.isTrue(Transaction.PLANNED),
+                           GlobMatchers.fieldStrictlyGreaterThan(Transaction.POSITION_MONTH, monthId),
+                           GlobMatchers.and(
+                             GlobMatchers.fieldEquals(Transaction.POSITION_MONTH, monthId),
+                             GlobMatchers.fieldStrictlyGreaterThan(Transaction.POSITION_DAY, day))
+    );
+  }
+
+
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+//    GlobList account = repository.getAll(Account.TYPE);
+//    if (account.isEmpty()){
+//      return;
+//    }
+//    updateTransactionPosition(repository, account);
+  }
+
+//  private void updateTransactionPosition(GlobRepository repository, GlobList updatedAccount, Set<Key> updatedTransactions) {
+//
+//    GlobList deferredSeries = repository.getAll(Series.TYPE,
+//                                                GlobMatchers.and(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
+//                                                                 GlobMatchers.isNotNull(Series.FROM_ACCOUNT)));
+//    Set<Integer> deferredSeriesId =
+//      deferredSeries
+//        .getValueSet(Series.ID);
+//
+//    Map<Integer, Integer> deferredAccounts = new HashMap<Integer, Integer>();
+//    for (Glob series : deferredSeries) {
+//      deferredAccounts.put(series.get(Series.FROM_ACCOUNT), series.get(Series.ID));
+//    }
+//
+//    TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
+//    SortedSet<Glob> trs = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
+//
+//    Glob[] transactions = trs.toArray(new Glob[trs.size()]);
+//    for (Integer accountId : Account.SUMMARY_ACCOUNT_IDS) {
+//      updatedAccount.remove(repository.get(Key.create(Account.TYPE, accountId)));
+//    }
+//    for (Glob account : updatedAccount) {
+//      if (AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
+//        if (AccountCardType.DEFERRED.getId().equals(account.get(Account.CARD_TYPE))) {
+//          computeDeferedPosition(repository, comparator, transactions, account, updatedTransactions);
+//        }
+//        else {
+//          computeAccountPosition(repository, comparator, transactions, account, deferredSeriesId, updatedTransactions);
+//        }
+//      }
+//      else {
+//        computeAccountPosition(repository, comparator, transactions, account, deferredSeriesId, updatedTransactions);
+//      }
+//    }
+//
+////    if (mainPositionComputed)
+//    {
+//      GlobList accounts = repository.getAll(Account.TYPE);
+//      GlobList tmp = new GlobList();
+//      for (Glob account : accounts) {
+//        if (AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE))
+//            && (Account.MAIN_SUMMARY_ACCOUNT_ID != account.get(Account.ID))
+//            && (Account.ALL_SUMMARY_ACCOUNT_ID != account.get(Account.ID))) {
+//          tmp.add(account);
+//        }
+//      }
+//      computeTotalPosition(repository, transactions,
+//                           new SameAccountChecker(AccountType.MAIN.getId(), repository), tmp, deferredSeriesId, deferredAccounts);
+//    }
+////    if (savingsPositionComputed)
+//    {
+//      GlobList accounts = repository.getAll(Account.TYPE);
+//      GlobList tmp = new GlobList();
+//      for (Glob account : accounts) {
+//        if (AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE))
+//            && Account.SAVINGS_SUMMARY_ACCOUNT_ID != account.get(Account.ID)
+//            && Account.ALL_SUMMARY_ACCOUNT_ID != account.get(Account.ID)) {
+//          tmp.add(account);
+//        }
+//      }
+//      computeTotalPosition(repository, transactions,
+//                           new SameAccountChecker(AccountType.SAVINGS.getId(), repository), tmp,
+//                           new HashSet<Integer>(), deferredAccounts);
+//    }
+//  }
+
+  private boolean computeDeferredPosition(GlobRepository repository, Glob[] transactions, Glob account) {
+    int transactionMonthId = 0;
     double amount = 0;
-    transactionMonthId = -1;
+    Glob lastTransaction = null;
     for (Glob transaction : transactions) {
-      if (monthDone.contains(transaction.get(Transaction.POSITION_MONTH))) {
-        continue;
+      lastTransaction = transaction;
+      if (transaction.get(Transaction.POSITION_MONTH) != transactionMonthId) {
+        amount = 0;
+        transactionMonthId = transaction.get(Transaction.POSITION_MONTH);
       }
-      if (checkSameAccount(account, transaction.get(Transaction.ACCOUNT))) {
-        if (transaction.get(Transaction.POSITION_MONTH) != transactionMonthId) {
-          amount = 0;
-          transactionMonthId = transaction.get(Transaction.POSITION_MONTH);
-        }
-        amount += transaction.get(Transaction.AMOUNT);
-        repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, amount);
-      }
+      amount += transaction.get(Transaction.AMOUNT);
+      repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, amount);
     }
 
-    repository.update(account.getKey(), Account.TRANSACTION_ID, lastUpdateTransactionId);
-    if (lastUpdateTransactionId != null) {
-      Glob lastTransaction = repository.get(Key.create(Transaction.TYPE, lastUpdateTransactionId));
+//    repository.update(account.getKey(), Account.TRANSACTION_ID, lastUpdateTransactionId);
+//    if (lastUpdateTransactionId != null) {
+//      Glob lastTransaction = repository.get(Key.create(Transaction.TYPE, lastUpdateTransactionId));
+    if (lastTransaction != null) {
       repository.update(account.getKey(),
                         FieldValue.value(Account.POSITION_DATE,
                                          Month.toDate(lastTransaction.get(Transaction.POSITION_MONTH),
                                                       lastTransaction.get(Transaction.POSITION_DAY))),
-                        FieldValue.value(Account.POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION))
+                        FieldValue.value(Account.POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION)),
+                        FieldValue.value(Account.LAST_IMPORT_POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION))
       );
     }
 
-    if (firstTransaction != null) {
-      repository.update(account.getKey(),
-                        FieldValue.value(Account.FIRST_POSITION,
-                                         firstTransaction.get(Transaction.ACCOUNT_POSITION) - firstTransaction.get(Transaction.AMOUNT)));
-    }
-    else {
-      repository.update(account.getKey(),
-                        FieldValue.value(Account.FIRST_POSITION, account.get(Account.POSITION)));
-    }
     return true;
   }
 
-  private boolean computeAccountPosition(GlobRepository repository, TransactionComparator comparator,
-                                         Glob[] transactions, Glob account, Set<Integer> deferredSeries) {
-    Glob firstTransaction = null;
-    Integer transactionId = account.get(Account.TRANSACTION_ID);
-    lastUpdateTransactionId = transactionId;
-    positionBefore = 0;
-    if (initPivot(repository, comparator, transactions, account, transactionId)) {
-      repository.update(account.getKey(),
-                        FieldValue.value(Account.FIRST_POSITION, account.get(Account.POSITION)));
-      return false;
+  static class AccountUpdate {
+    final GlobMatcher futureMatcher;
+    final GlobMatcher realMatcher;
+    final GlobRepository repository;
+    Glob lastTransaction = null;
+    Glob lastRealTransaction = null;
+    Glob closeTransaction = null;
+
+    AccountUpdate(GlobMatcher futureMatcher, GlobMatcher realMatcher, GlobRepository repository) {
+      this.futureMatcher = futureMatcher;
+      this.realMatcher = realMatcher;
+      this.repository = repository;
     }
 
-    for (int i = pivot - 1; i >= 0; i--) {
-      Glob transaction = transactions[i];
-      Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
-      if (checkSameAccount(account, transactionAccount)) {
-        repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, positionBefore);
-        positionBefore = positionBefore - transaction.get(Transaction.AMOUNT);
-        firstTransaction = transaction;
+    void update(Glob transaction) {
+      if (!futureMatcher.matches(transaction, repository)) {
+        lastTransaction = transaction;
       }
-    }
-    int month = TimeService.getCurrentMonth();
-    int day = TimeService.getCurrentDay();
-    if (firstTransaction == null && pivot >= 0 && pivot < transactions.length) {
-      firstTransaction = transactions[pivot];
-    }
-    for (int i = pivot + 1; i < transactions.length; i++) {
-      Glob transaction = transactions[i];
-      Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
-      if (checkSameAccount(account, transactionAccount)) {
-        positionAfter = positionAfter + transaction.get(Transaction.AMOUNT);
-        repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, positionAfter);
-        if (!transaction.isTrue(Transaction.PLANNED)) {
-          lastUpdateTransactionId = transaction.get(Transaction.ID);
-        }
+      if (realMatcher.matches(transaction, repository)) {
+        lastRealTransaction = transaction;
       }
+      closeTransaction = transaction;
     }
 
-    if (Account.isManualUpdateAccount(account) || !account.isTrue(Account.IS_IMPORTED_ACCOUNT)) {
-      if (lastUpdateTransactionId != null) {
-        Glob lastTransaction = repository.get(Key.create(Transaction.TYPE, lastUpdateTransactionId));
-
-        Date posDate = Month.toDate(lastTransaction.get(Transaction.POSITION_MONTH), lastTransaction.get(Transaction.POSITION_DAY));
-        Date accountDate = account.get(Account.POSITION_DATE);
-        if (accountDate == null || accountDate.before(posDate)) {
-          repository.update(account.getKey(), Account.TRANSACTION_ID, lastUpdateTransactionId);
-          accountDate = posDate;
-        }
+    void updateAccount(Glob account) {
+      if (lastTransaction != null) {
+        Date accountDate = Month.toDate(lastTransaction.get(Transaction.POSITION_MONTH), lastTransaction.get(Transaction.POSITION_DAY));
         repository.update(account.getKey(),
                           FieldValue.value(Account.POSITION_DATE, accountDate),
-                          FieldValue.value(Account.POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION))
-        );
+                          FieldValue.value(Account.POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION)));
       }
-    }
-    else {
-      repository.update(account.getKey(), Account.TRANSACTION_ID, lastUpdateTransactionId);
-      if (lastUpdateTransactionId != null) {
-        Glob lastTransaction = repository.get(Key.create(Transaction.TYPE, lastUpdateTransactionId));
+      if (lastRealTransaction != null) {
         repository.update(account.getKey(),
-                          FieldValue.value(Account.POSITION_DATE,
-                                           Month.toDate(lastTransaction.get(Transaction.POSITION_MONTH),
-                                                        lastTransaction.get(Transaction.POSITION_DAY))),
-                          FieldValue.value(Account.POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION))
-        );
+                          FieldValue.value(Account.TRANSACTION_ID, lastRealTransaction.get(Transaction.ID)),
+                          FieldValue.value(Account.LAST_IMPORT_POSITION, lastRealTransaction.get(Transaction.ACCOUNT_POSITION)));
+
+      }
+      Integer tt = closeTransaction.get(Transaction.TRANSACTION_TYPE);
+      if (tt != null && tt == TransactionType.CLOSE_ACCOUNT_EVENT.getId()) {
+        repository.update(closeTransaction.getKey(), Transaction.AMOUNT, -(closeTransaction.get(Transaction.ACCOUNT_POSITION))
+                                                                         + closeTransaction.get(Transaction.AMOUNT));
+        repository.update(closeTransaction.getKey(), Transaction.ACCOUNT_POSITION, 0.);
+      }
+      else {
+        repository.update(account.getKey(), Account.CLOSE_POSITION, -(closeTransaction.get(Transaction.ACCOUNT_POSITION))
+                                                                    + closeTransaction.get(Transaction.AMOUNT));
+      }
+
+    }
+
+  }
+
+  private boolean computeAccountPosition(Glob[] transactions, GlobMatcher futureMatcher,
+                                         GlobMatcher realMatcher, Integer accountId, GlobRepository repository) {
+    if (transactions.length == 0) {
+      return false;
+    }
+    AccountUpdate update = new AccountUpdate(futureMatcher, realMatcher, repository);
+    double positionBefore = 0;
+    Glob closeTransaction = null;
+    Glob lastTransaction = null;
+    for (Glob transaction : transactions) {
+      Integer tt = transaction.get(Transaction.TRANSACTION_TYPE);
+      if (tt != null && tt.equals(TransactionType.CLOSE_ACCOUNT_EVENT.getId())) {
+        closeTransaction = transaction;
+      }
+      else {
+        positionBefore = positionBefore + transaction.get(Transaction.AMOUNT);
+        repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, positionBefore);
+        update.update(transaction);
+        lastTransaction = transaction;
       }
     }
-    if (firstTransaction != null) {
-      repository.update(account.getKey(),
-                        FieldValue.value(Account.FIRST_POSITION,
-                                         firstTransaction.get(Transaction.ACCOUNT_POSITION) - firstTransaction.get(Transaction.AMOUNT)));
+    int lastDate = 0;
+    if (closeTransaction != null) {
+      if (lastTransaction != null) {
+        lastDate = Month.toFullDate(lastTransaction.get(Transaction.POSITION_MONTH),
+                                    lastTransaction.get(Transaction.POSITION_DAY));
+      }
+      int date = Month.toFullDate(closeTransaction.get(Transaction.POSITION_MONTH),
+                                  closeTransaction.get(Transaction.POSITION_DAY));
+      if (date < lastDate) {
+        date = lastDate;
+      }
+      AccountInitialPositionTrigger.shiftTransactionTo(repository, closeTransaction,
+                                                       Month.getMonthIdFromFullDate(date),
+                                                       Month.getDayFromFullDate(date),
+                                                       -positionBefore, 0.);
     }
-    else {
-      repository.update(account.getKey(),
-                        FieldValue.value(Account.FIRST_POSITION, account.get(Account.POSITION)));
-    }
+    Glob account = repository.get(Key.create(Account.TYPE, accountId));
+    update.updateAccount(account);
     return true;
   }
 
+
+  static class PosInfo {
+    double positionAfter;
+    double positionBefore;
+    int pivotIndex;
+
+    PosInfo(double positionAfter, double positionBefore, int pivotIndex) {
+      this.positionAfter = positionAfter;
+      this.positionBefore = positionBefore;
+      this.pivotIndex = pivotIndex;
+    }
+  }
 
   // En qif on repart de la derniere operation
   // En ofx on part du nouveau solde recu donc de la derniere operations
@@ -340,245 +487,219 @@ public class PositionTrigger implements ChangeSetListener {
   // derniere date (bizarre : on est donc sur que la derniere operations n'a pas ete deja importé)
   // on utilise la date de bank et non de position :
   // pour un comptes a debit differe la date de position est dans le futur
-  private boolean initPivot(GlobRepository repository, TransactionComparator comparator, Glob[] transactions, Glob account, Integer transactionId) {
-    if (transactionId == null) {
-      pivot = transactions.length - 1;
-      Double position = account.get(Account.POSITION);
-      if (position == null) {
-        return true;
-      }
-      Date positionDate = account.get(Account.POSITION_DATE);
-      int positionMonthId = -1;
-      int positionDay = -1;
-      if (positionDate != null) {
-        positionMonthId = Month.getMonthId(positionDate);
-        positionDay = Month.getDay(positionDate);
-      }
-      positionAfter = position;
-      for (; pivot >= 0; pivot--) {
-        Glob transaction = transactions[pivot];
-        Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
-        if (checkSameAccount(account, transactionAccount) && !transaction.isTrue(Transaction.PLANNED)
-            && (positionDate == null || (transaction.get(Transaction.POSITION_MONTH) < positionMonthId ||
-                                         (transaction.get(Transaction.POSITION_MONTH) == positionMonthId &&
-                                          transaction.get(Transaction.BANK_DAY) <= positionDay)))) {
-          positionBefore = positionAfter - transaction.get(Transaction.AMOUNT);
-          repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, positionAfter);
-          lastUpdateTransactionId = transaction.get(Transaction.ID);
-          break;
-        }
-      }
-    }
-    else {
-      Glob current = repository.get(Key.create(Transaction.TYPE, transactionId));
-      pivot = Arrays.binarySearch(transactions, current, comparator);
-      if (pivot < 0) {
-        Log.write("Bug : transaction not found but is present do linear search");
-        for (pivot = 0; pivot < transactions.length; pivot++) {
-          Glob transaction = transactions[pivot];
-          if (transaction == current) {
-            Log.write("Transaction found continuing " + GlobPrinter.toString(current));
-            break;
+
+  private PosInfo getStartForFuture(Glob[] transactions, Glob account, Set<Integer> transactionsUpdateFuture, GlobRepository repository) {
+    double positionAfter;
+    double positionBefore;
+    int pivot = -1;
+
+    Glob lastTransaction = null;
+    for (int currentPos = 0, length = transactions.length; currentPos < length; currentPos++) {
+      Glob transaction = transactions[currentPos];
+      if (!transaction.isTrue(Transaction.PLANNED)) {
+        if (transactionsUpdateFuture.contains(transaction.get(Transaction.ID))) {
+          if (lastTransaction != null) {
+            positionAfter = lastTransaction.get(Transaction.ACCOUNT_POSITION);
+            positionBefore = positionAfter - lastTransaction.get(Transaction.AMOUNT);
+            return new PosInfo(positionAfter, positionBefore, pivot);
           }
         }
-        if (pivot == transactions.length) {
-          Log.write("transaction not found : " + transactionId + " : " + GlobPrinter.toString(current));
-          return true;
+        else {
+          lastTransaction = transaction;
+          pivot = currentPos;
         }
       }
-      positionAfter = current.get(Transaction.ACCOUNT_POSITION);
-      positionBefore = positionAfter - current.get(Transaction.AMOUNT);
     }
-    return false;
+    if (lastTransaction != null) {
+      positionAfter = lastTransaction.get(Transaction.ACCOUNT_POSITION);
+      positionBefore = positionAfter - lastTransaction.get(Transaction.AMOUNT);
+      return new PosInfo(positionAfter, positionBefore, pivot);
+    }
+    else {
+      //aucune operation : creation de comptes?
+      Double accountPosition = account.get(Account.POSITION);
+      if (accountPosition != null) {
+        pivot = transactions.length - 1;
+        lastTransaction = transactions[pivot];
+        repository.update(lastTransaction.getKey(), Transaction.ACCOUNT_POSITION, accountPosition);
+      }
+      else {
+        pivot = 0;
+        lastTransaction = transactions[pivot];
+        repository.update(lastTransaction.getKey(), Transaction.ACCOUNT_POSITION, 0.);
+      }
+      positionAfter = lastTransaction.get(Transaction.ACCOUNT_POSITION);
+      positionBefore = positionAfter - lastTransaction.get(Transaction.AMOUNT);
+      return new PosInfo(positionAfter, positionBefore, pivot);
+    }
   }
 
   private boolean checkSameAccount(Glob account, Integer transactionAccount) {
     return transactionAccount != null && transactionAccount.equals(account.get(Account.ID));
   }
 
-  private void computeTotalPosition(GlobRepository repository, Glob[] transactions,
-                                    SameAccountChecker sameCheckerAccount, final GlobList accounts,
-                                    Set<Integer> deferredSeriesId, Map<Integer, Integer> deferredAccounts) {
-
-    Map<Integer, Double> positions = new HashMap<Integer, Double>();
-
-    AccountManagement accountManagement = new AccountManagement(repository, accounts, sameCheckerAccount);
-    Glob firstMonth = repository.getSorted(Month.TYPE, new GlobFieldComparator(Month.ID), GlobMatchers.ALL).first();
-    if (firstMonth == null) {
-      return;
-    }
-
-//    Date lastRealTransactionDate = null;
-
-    Matchers.AccountDateMatcher matcher =
-      new Matchers.AccountDateMatcher(new GlobList(firstMonth));
-    for (Glob account : accounts) {
-      if (matcher.matches(account, repository) &&
-          sameCheckerAccount.isSame(account.get(Account.ID))
-          && !account.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId())) {
-        Double value = account.get(Account.FIRST_POSITION);
-        positions.put(account.get(Account.ID), value);
-//        if (account.get(Account.POSITION_DATE) != null) {
-//          if (lastRealTransactionDate == null) {
-//            lastRealTransactionDate = account.get(Account.POSITION_DATE);
-//          }
-//          else if (account.get(Account.POSITION_DATE).after(lastRealTransactionDate)) {
-//            lastRealTransactionDate = account.get(Account.POSITION_DATE);
-//          }
-//        }
-      }
-    }
-
-    Double realPosition = null;
-    Date positionDate = null;
-    Glob currentMonth = repository.get(CurrentMonth.KEY);
-    int month = currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH);
-    int currentDay = currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY);
-    int index = 0;
-    for (; index < transactions.length; index++) {
-      Glob transaction = transactions[index];
-      if (!sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
-        continue;
-      }
-      if (!transaction.isTrue(Transaction.PLANNED) &&
-          Transaction.isPositionTransactionBeforeOrEqual(transaction, month, currentDay)) {
-
-        accountManagement.updateOpenPosition(transaction, index, transactions, positions);
-        accountManagement.updateClosePosition(transaction, positions);
-
-        Integer accountId = transaction.get(Transaction.ACCOUNT);
-        if (accountId != null) {
-          if (!deferredAccounts.containsKey(accountId)) {
-            positions.put(accountId, transaction.get(Transaction.ACCOUNT_POSITION));
-          }
-        }
-
-        double position = 0.;
-        for (Double accountPosition : positions.values()) {
-          if (accountPosition != null) {
-            position += accountPosition;
-          }
-        }
-
-        realPosition = position;
-        positionDate = Month.toDate(transaction.get(Transaction.POSITION_MONTH),
-                                    transaction.get(Transaction.POSITION_DAY));
-        repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, position);
-      }
-      else {
-        break;
-      }
-    }
-    double position = 0.;
-    for (; index < transactions.length; index++) {
-      Glob transaction = transactions[index];
-      if (!sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
-        continue;
-      }
-      accountManagement.updateOpenPosition(transaction, index, transactions, positions);
-      accountManagement.updateClosePosition(transaction, positions);
-
-      position += transaction.get(Transaction.AMOUNT);
-      double totalPosition = 0;
-      for (Double accountPosition : positions.values()) {
-        if (accountPosition != null) {
-          totalPosition += accountPosition;
-        }
-      }
-      totalPosition += position;
-      repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, totalPosition);
-    }
-
-    if (realPosition == null) {
-      realPosition = 0.;
-      for (Double accountPosition : positions.values()) {
-        realPosition += (accountPosition != null ? accountPosition : 0.);
-      }
-      positionDate = TimeService.getToday();
-    }
-    repository.update(sameCheckerAccount.getSummary(),
-                      FieldValue.value(Account.POSITION, realPosition),
-                      FieldValue.value(Account.POSITION_DATE, positionDate));
+  private boolean checkSameAccount(int accountId, Integer transactionAccount) {
+    return transactionAccount != null && transactionAccount.equals(accountId);
   }
 
-  static class AccountManagement {
-    private int lastCloseIndex = 0;
-    private int lastOpenIndex = 0;
-    private int[] closeMonth;
-    private int[] closeDay;
-    private int[] closeId;
-    private int[] openMonth;
-    private int[] openDay;
-    private int[] openId;
-    private GlobRepository repository;
+  private void computeTotalPosition(GlobRepository repository, Glob[] transactions,
+                                    SameAccountChecker sameCheckerAccount, GlobMatcher futureMatcher) {
 
-    AccountManagement(GlobRepository repository, GlobList accounts, SameAccountChecker sameCheckerAccount) {
+    GlobList deferredSeries = repository.getAll(Series.TYPE, GlobMatchers.and(GlobMatchers.isNotNull(Series.FROM_ACCOUNT),
+                                                                              GlobMatchers.isNull(Series.TO_ACCOUNT)));
+    Set<Integer> deferredAccounts = repository.getAll(Account.TYPE,
+                                                      GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()))
+      .getSortedSet(Account.ID);
+    MapOfMaps<Integer, Integer, Boolean> isWithDrawBySeriesByMonth = new MapOfMaps<Integer, Integer, Boolean>();
+    for (Glob series : deferredSeries) {
+      GlobList deferredTransactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
+        .getGlobs();
+      for (Glob transaction : deferredTransactions) {
+        isWithDrawBySeriesByMonth.put(series.get(Series.FROM_ACCOUNT), transaction.get(Transaction.POSITION_MONTH), Boolean.TRUE);
+      }
+    }
+
+    double position = 0;
+    int index = 0;
+    Glob realPosition = null;
+    for (; index < transactions.length; index++) {
+      Glob transaction = transactions[index];
+      if (!sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
+        continue;
+      }
+      Integer accountId = transaction.get(Transaction.ACCOUNT);
+      if (deferredAccounts.contains(accountId) && isWithDrawBySeriesByMonth.get(accountId, transaction.get(Transaction.POSITION_MONTH)) != null) {
+        repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, position);
+        continue;
+      }
+      position += transaction.get(Transaction.AMOUNT);
+      repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, position);
+      if (!futureMatcher.matches(transaction, repository)) {
+        realPosition = transaction;
+      }
+    }
+
+    if (realPosition != null) {
+      repository.update(sameCheckerAccount.getSummary(),
+                        FieldValue.value(Account.POSITION, realPosition.get(Transaction.SUMMARY_POSITION)),
+                        FieldValue.value(Account.POSITION_DATE,
+                                         Month.toDate(realPosition.get(Transaction.BANK_MONTH),
+                                                      realPosition.get(Transaction.BANK_DAY))));
+    }
+  }
+
+  public static abstract class AbstractAccountChangeSetVisitor implements ChangeSetVisitor {
+    protected final Set<Integer> accountIds;
+    protected final Set<Integer> deferredAccountIds;
+    protected final GlobRepository repository;
+
+    public AbstractAccountChangeSetVisitor(Set<Integer> accountIds, Set<Integer> deferredAccountIds, GlobRepository repository) {
+      this.accountIds = accountIds;
+      this.deferredAccountIds = deferredAccountIds;
       this.repository = repository;
-      GlobList closedAccounts = new GlobList();
-      GlobList openAccounts = new GlobList();
-      for (Glob account : accounts) {
-        if (account.get(Account.CLOSED_DATE) != null && sameCheckerAccount.isSame(account.get(Account.ID))) {
-          closedAccounts.add(account);
-        }
-        if (account.get(Account.OPEN_DATE) != null && sameCheckerAccount.isSame(account.get(Account.ID))) {
-          openAccounts.add(account);
-        }
-      }
-      closedAccounts.sort(Account.CLOSED_DATE);
-      closeMonth = new int[closedAccounts.size()];
-      closeDay = new int[closedAccounts.size()];
-      closeId = new int[closedAccounts.size()];
-      int i = 0;
-      for (Glob account : closedAccounts) {
-        closeMonth[i] = Month.getMonthId(account.get(Account.CLOSED_DATE));
-        closeDay[i] = Month.getDay(account.get(Account.CLOSED_DATE));
-        closeId[i] = account.get(Account.ID);
-        i++;
-      }
-
-      openAccounts.sort(Account.OPEN_DATE);
-      openMonth = new int[openAccounts.size()];
-      openDay = new int[openAccounts.size()];
-      openId = new int[openAccounts.size()];
-      int j = 0;
-      for (Glob account : openAccounts) {
-        openMonth[j] = Month.getMonthId(account.get(Account.OPEN_DATE));
-        openDay[j] = Month.getDay(account.get(Account.OPEN_DATE));
-        openId[j] = account.get(Account.ID);
-        j++;
-      }
     }
 
-    private void updateClosePosition(Glob transaction, Map<Integer, Double> positions) {
-      while (lastCloseIndex < closeMonth.length &&
-             (closeMonth[lastCloseIndex] < transaction.get(Transaction.POSITION_MONTH) ||
-              (closeMonth[lastCloseIndex] == transaction.get(Transaction.POSITION_MONTH) &&
-               closeDay[lastCloseIndex] < transaction.get(Transaction.POSITION_DAY)))) {
-        positions.remove(closeId[lastCloseIndex]);
-        lastCloseIndex++;
-      }
-    }
-
-    private void updateOpenPosition(Glob transaction, int index, Glob[] transactions, Map<Integer, Double> positions) {
-      while (lastOpenIndex < openMonth.length &&
-             (openMonth[lastOpenIndex] < transaction.get(Transaction.POSITION_MONTH) ||
-              (openMonth[lastOpenIndex] == transaction.get(Transaction.POSITION_MONTH) &&
-               openDay[lastOpenIndex] <= transaction.get(Transaction.POSITION_DAY)))) {
-        int tmpAccountId = openId[lastOpenIndex];
-        Glob account = repository.find(Key.create(Account.TYPE, tmpAccountId));
-        Double value = account.get(Account.POSITION);
-        if (value != null) {
-          positions.put(tmpAccountId, value);
-          // on cherche si il y a une operation dans le futur pour ce comptes.
-          for (int k = index; k < transactions.length; k++) {
-            if (transactions[k].get(Transaction.ACCOUNT) == tmpAccountId) {
-              positions.put(tmpAccountId, transactions[k].get(Transaction.ACCOUNT_POSITION) - transactions[k].get(Transaction.AMOUNT));
-              break;
-            }
+    protected void update(Integer accountId) {
+      if (!accountIds.contains(accountId) && !deferredAccountIds.contains(accountId)) {
+        Glob account = repository.find(Key.create(Account.TYPE, accountId));
+        if (account != null) {
+          if (account.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId())) {
+            deferredAccountIds.add(accountId);
+          }
+          else {
+            accountIds.add(accountId);
           }
         }
-        lastOpenIndex++;
       }
+    }
+  }
+
+  private static class AccountChangesetVisitor extends AbstractAccountChangeSetVisitor {
+
+    public AccountChangesetVisitor(Set<Integer> accountIds, Set<Integer> deferredAccountIds, GlobRepository repository) {
+      super(accountIds, deferredAccountIds, repository);
+    }
+
+    public void visitCreation(Key key, FieldValues values) throws Exception {
+      update(values.get(Account.ID));
+    }
+
+    public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+      update(key.get(Account.ID));
+    }
+
+    public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+      update(key.get(Account.ID));
+    }
+  }
+
+  private static class TransactionChangeSetVisitor extends AbstractAccountChangeSetVisitor {
+    private final Set<Integer> updatedOperations;
+    private boolean isImport = false;
+
+    public TransactionChangeSetVisitor(Set<Integer> updatedOperations, Set<Integer> accountIds,
+                                       Set<Integer> deferredAccountIds, GlobRepository repository) {
+      super(accountIds, deferredAccountIds, repository);
+      this.updatedOperations = updatedOperations;
+    }
+
+    public void visitCreation(Key key, FieldValues values) throws Exception {
+      if (values.get(Transaction.IMPORT) != null) {
+        isImport = true;
+      }
+      update(values.get(Transaction.ACCOUNT));
+      updatedOperations.add(key.get(Transaction.ID));
+    }
+
+    public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+      if (values.contains(Transaction.AMOUNT) || values.contains(Transaction.POSITION_MONTH)
+          || values.contains(Transaction.POSITION_DAY) || (isDeferredSeries(key, values))) {
+        update(repository.find(key).get(Transaction.ACCOUNT));
+        updatedOperations.add(key.get(Transaction.ID));
+      }
+    }
+
+    private boolean isDeferredSeries(Key key, FieldValuesWithPrevious values) {
+      if (values.contains(Transaction.SERIES)) {
+        Glob series = repository.findLinkTarget(repository.get(key), Transaction.SERIES);
+        if (series.get(Series.FROM_ACCOUNT) != null && series.get(Series.TO_ACCOUNT) == null) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+      update(previousValues.get(Transaction.ACCOUNT));
+      updatedOperations.add(key.get(Transaction.ID));
+    }
+  }
+
+  private class ExtractDate implements ChangeSetVisitor {
+    private int accountId;
+    private int lastMonthId = 0;
+    private int day = 0;
+
+    public ExtractDate(Integer accountId) {
+      this.accountId = accountId;
+    }
+
+    public void visitCreation(Key key, FieldValues values) throws Exception {
+      if (values.get(Transaction.ACCOUNT) == accountId) {
+        if (values.get(Transaction.POSITION_MONTH) > lastMonthId) {
+          lastMonthId = values.get(Transaction.POSITION_MONTH);
+          day = values.get(Transaction.POSITION_DAY);
+        }
+        if (values.get(Transaction.POSITION_MONTH) == lastMonthId && values.get(Transaction.POSITION_DAY) < day) {
+          day = values.get(Transaction.POSITION_DAY);
+        }
+      }
+    }
+
+    public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+    }
+
+    public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
     }
   }
 }

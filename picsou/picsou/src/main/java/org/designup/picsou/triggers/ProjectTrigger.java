@@ -3,7 +3,6 @@ package org.designup.picsou.triggers;
 import org.designup.picsou.model.*;
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.model.util.ClosedMonthRange;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 
 import java.util.HashSet;
@@ -14,7 +13,7 @@ import java.util.TreeSet;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
-public class ProjectTrigger implements ChangeSetListener {
+public class ProjectTrigger extends AbstractChangeSetListener{
 
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
 
@@ -100,7 +99,7 @@ public class ProjectTrigger implements ChangeSetListener {
         seriesBudgetList.add(repository.create(SeriesBudget.TYPE,
                                                value(SeriesBudget.SERIES, seriesId),
                                                value(SeriesBudget.MONTH, monthId)));
-      }      
+      }
     }
 
     double totalAmount = 0.00;
@@ -119,8 +118,5 @@ public class ProjectTrigger implements ChangeSetListener {
 
     repository.update(seriesKey, Series.FIRST_MONTH, range.getMin());
     repository.update(seriesKey, Series.LAST_MONTH, range.getMax());
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

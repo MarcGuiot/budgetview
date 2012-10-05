@@ -11,6 +11,7 @@ import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.startup.components.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.time.TimeViewPanel;
+import org.designup.picsou.model.Month;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.globsframework.model.GlobRepository;
@@ -146,6 +147,11 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     TimeService.setCurrentDate(currentDate);
   }
 
+  protected void nextMonth() {
+    TimeService.setCurrentDate(Month.toDate(Month.getDay(this.currentDate), Month.next(Month.getMonthId(this.currentDate))));
+  }
+
+
   protected void initCheckers() {
     waitForApplicationToLoad();
     views = new ViewSelectionChecker(mainWindow);
@@ -232,7 +238,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     feedbackView = null;
     reconciliationAnnotations = null;
     printer = null;
-    application =null;
+    application = null;
     repository = null;
   }
 

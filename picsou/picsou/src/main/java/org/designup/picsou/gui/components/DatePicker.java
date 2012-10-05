@@ -44,7 +44,7 @@ public class DatePicker {
         }
       }
     }, dateField.getGlobType());
-    repository.addChangeListener(new ChangeSetListener() {
+    repository.addChangeListener(new AbstractChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.getDeleted(dateField.getGlobType()).contains(selectedKey)) {
           selectedKey = null;
@@ -57,9 +57,6 @@ public class DatePicker {
             }
           }
         }
-      }
-
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
       }
     });
   }

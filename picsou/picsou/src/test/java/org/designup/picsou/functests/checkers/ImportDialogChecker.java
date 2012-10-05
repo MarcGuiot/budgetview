@@ -413,7 +413,7 @@ public class ImportDialogChecker extends GuiChecker {
     setFilePath(fileName)
       .acceptFile();
     if (accountEditionChecker.getAccountName().equals(accountName)) {
-      setDeferredAccount();
+      setDeferredAccount(25, 28, 0);
     }
     else {
       setMainAccount();
@@ -421,7 +421,7 @@ public class ImportDialogChecker extends GuiChecker {
     if (withMainAccount) {
       doImport();
       if (accountEditionChecker.getAccountName().equals(accountName)) {
-        setDeferredAccount();
+        setDeferredAccount(25, 28, 0);
       }
       else {
         setMainAccount();
@@ -430,9 +430,10 @@ public class ImportDialogChecker extends GuiChecker {
     completeImport();
   }
 
-  public ImportDialogChecker setDeferredAccount() {
+  public ImportDialogChecker setDeferredAccount(int dayPeriod, int dayPrelevement, int monthShift) {
     accountEditionChecker.setAsDeferredCard();
     accountEditionChecker.checkDeferredWarning();
+    accountEditionChecker.setDeferred(dayPeriod, dayPeriod, monthShift);
     return this;
   }
 

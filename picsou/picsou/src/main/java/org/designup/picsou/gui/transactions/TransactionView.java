@@ -65,7 +65,11 @@ public class TransactionView extends View implements Filterable {
   public static final int ACCOUNT_NAME_INDEX = 8;
 
   private static final int[] COLUMN_SIZES = {10, 10, 20, 40, 9, 15, 10, 10, 25};
-  private static final GlobMatcher HIDE_PLANNED_MATCHER = not(isTrue(Transaction.PLANNED));
+  private static final GlobMatcher HIDE_PLANNED_MATCHER =
+//    isFalse(Transaction.PLANNED);
+    and(isFalse(Transaction.PLANNED),
+                                                              not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.OPEN_ACCOUNT_EVENT.getId())),
+                                                              not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId())));
 
   private GlobTableView view;
   private TransactionRendererColors rendererColors;
@@ -180,7 +184,8 @@ public class TransactionView extends View implements Filterable {
 
   private void updateShowTransactionsMatcher() {
     if (showPlannedTransactionsCheckbox.isSelected()) {
-      showPlannedTransactionsMatcher = GlobMatchers.ALL;
+      showPlannedTransactionsMatcher = and(not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.OPEN_ACCOUNT_EVENT.getId())),
+                                           not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId())));
     }
     else {
       showPlannedTransactionsMatcher = HIDE_PLANNED_MATCHER;
@@ -243,8 +248,8 @@ public class TransactionView extends View implements Filterable {
                  new TransactionDateStringifier(comparator), LabelCustomizers.font(dateFont))
       .addColumn(Lang.get("transactionView.date.bank"),
                  new TransactionDateStringifier(TransactionComparator.DESCENDING_BANK_SPLIT_AFTER,
-                                                Transaction.BANK_MONTH,
-                                                Transaction.BANK_DAY), LabelCustomizers.font(dateFont))
+                                                Transaction.POSITION_MONTH,
+                                                Transaction.POSITION_DAY), LabelCustomizers.font(dateFont))
       .addColumn(new TransactionSeriesColumn(view, rendererColors, descriptionService, repository, directory))
       .addColumn(Lang.get("label"),
                  descriptionService.getStringifier(Transaction.LABEL),

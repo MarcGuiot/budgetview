@@ -8,7 +8,7 @@ import org.globsframework.model.*;
 
 import java.util.Set;
 
-public class ReportTrigger implements ChangeSetListener {
+public class ReportTrigger extends AbstractChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
@@ -51,8 +51,5 @@ public class ReportTrigger implements ChangeSetListener {
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
       }
     });
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

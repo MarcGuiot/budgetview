@@ -9,6 +9,8 @@ import org.globsframework.metamodel.index.MultiFieldNotUniqueIndex;
 import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -113,23 +115,23 @@ public class Transaction {
   @DefaultBoolean(false)
   public static BooleanField PLANNED;
 
+
   @DefaultBoolean(false)
   public static BooleanField MIRROR;
 
   @DefaultBoolean(false)
   public static BooleanField CREATED_BY_SERIES;
 
-  @DefaultBoolean(false)
-  public static BooleanField MANUAL_CREATION;
+//  @DefaultBoolean(false)
+//  public static BooleanField MANUAL_CREATION;
 
   @Target(Transaction.class)
   public static LinkField NOT_IMPORTED_TRANSACTION;
 
-  @DefaultBoolean(false)
   public static BooleanField RECONCILIATION_ANNOTATION_SET;
 
-  @Target(ReconciliationStatus.class)
-  public static LinkField RECONCILIATION_STATUS;
+  //  @Target(ReconciliationStatus.class)
+  public static BooleanField RECONCILIATION_STATUS;
 
   public static NotUniqueIndex LABEL_FOR_CATEGORISATION_INDEX;
 
@@ -218,7 +220,7 @@ public class Transaction {
   }
 
   public static boolean isManuallyCreated(Glob transaction) {
-    return transaction != null && transaction.isTrue(Transaction.MANUAL_CREATION);
+    return transaction != null && transaction.get(Transaction.RECONCILIATION_STATUS) != null;
   }
 
   public static String getLabel(boolean planned, Glob series) {
@@ -250,8 +252,23 @@ public class Transaction {
   }
 
   public static boolean isToReconcile(Glob transaction) {
-    Integer status = transaction.get(RECONCILIATION_STATUS);
+    Boolean status = transaction.get(RECONCILIATION_STATUS);
     return Utils.equal(status, ReconciliationStatus.TO_RECONCILE.id);
+  }
+
+  public static boolean isOpenCloseAccount(Glob transaction) {
+    Integer tt = transaction.get(TRANSACTION_TYPE);
+    return tt != null && (tt.equals(TransactionType.OPEN_ACCOUNT_EVENT.getId()) ||
+                          tt.equals(TransactionType.CLOSE_ACCOUNT_EVENT.getId()));
+  }
+
+  public static GlobMatcher getMatcherForRealOperations(int accountId) {
+    return GlobMatchers.and(fieldEquals(ACCOUNT, accountId),
+                            GlobMatchers.not(fieldEquals(RECONCILIATION_STATUS,
+                                                         ReconciliationStatus.TO_RECONCILE.getId())),
+                            GlobMatchers.isFalse(PLANNED),
+                            GlobMatchers.not(fieldEquals(TRANSACTION_TYPE, TransactionType.OPEN_ACCOUNT_EVENT.getId())),
+                            GlobMatchers.not(fieldEquals(TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId())));
   }
 
   public static class Serializer implements PicsouGlobSerializer {
@@ -302,8 +319,8 @@ public class Transaction {
       output.writeBoolean(fieldValues.get(Transaction.IS_OFX));
       output.writeInteger(fieldValues.get(Transaction.IMPORT));
       output.writeBoolean(fieldValues.get(Transaction.RECONCILIATION_ANNOTATION_SET));
-      output.writeInteger(fieldValues.get(Transaction.RECONCILIATION_STATUS));
-      output.writeBoolean(fieldValues.get(Transaction.MANUAL_CREATION));
+      output.writeBoolean(fieldValues.get(Transaction.RECONCILIATION_STATUS));
+//      output.writeBoolean(fieldValues.get(Transaction.MANUAL_CREATION));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -377,8 +394,8 @@ public class Transaction {
       fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
       fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, input.readBoolean());
-      fieldSetter.set(Transaction.RECONCILIATION_STATUS, input.readInteger());
-      fieldSetter.set(Transaction.MANUAL_CREATION, input.readBoolean());
+      fieldSetter.set(Transaction.RECONCILIATION_STATUS, input.readBoolean());
+//      fieldSetter.set(Transaction.MANUAL_CREATION, input.readBoolean());
     }
 
     private void deserializeDataV9(FieldSetter fieldSetter, byte[] data) {

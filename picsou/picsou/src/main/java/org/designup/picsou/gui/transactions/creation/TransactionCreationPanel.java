@@ -89,6 +89,9 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
       .forceSelection(PROTOTYPE_TRANSACTION_KEY)
       .getComponent();
 
+    JCheckBox shouldBeReconciledCheckBox = builder.addCheckBox("shouldBeReconciled", Transaction.RECONCILIATION_STATUS)
+      .forceSelection(PROTOTYPE_TRANSACTION_KEY).getComponent();
+
     amountEditor = new AmountEditor(Transaction.AMOUNT, repository, directory, false, null)
       .forceSelection(PROTOTYPE_TRANSACTION_KEY)
       .update(false, false);
@@ -118,7 +121,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
     panel.setFocusCycleRoot(true);
     panel.setFocusTraversalPolicy(new CustomFocusTraversalPolicy(dayField, labelField, amountField,
-                                                                 createButton, accountCombo));
+                                                                 shouldBeReconciledCheckBox, createButton, accountCombo));
 
     return panel;
   }
@@ -132,7 +135,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
       }
 
       Integer currentMonth = months.getSortedSet(Month.ID).last();
-      repository.findOrCreate(PROTOTYPE_TRANSACTION_KEY);
+      repository.findOrCreate(PROTOTYPE_TRANSACTION_KEY, value(Transaction.RECONCILIATION_STATUS, ReconciliationStatus.RECONCILED.getId()));
       updateMonth(repository, currentMonth);
     }
     finally {
@@ -279,7 +282,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
         .set(Transaction.ORIGINAL_LABEL, upperCaseLabel)
         .set(Transaction.LABEL_FOR_CATEGORISATION, Transaction.anonymise(upperCaseLabel))
         .set(Transaction.TRANSACTION_TYPE, TransactionType.MANUAL.getId())
-        .set(Transaction.MANUAL_CREATION, true)
+//        .set(Transaction.MANUAL_CREATION, true)
         .get();
 
       Glob createdTransaction;
@@ -320,7 +323,8 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
                         value(Transaction.BANK_DAY, null),
                         value(Transaction.POSITION_DAY, null),
                         value(Transaction.BUDGET_DAY, null),
-                        value(Transaction.LABEL, ""));
+                        value(Transaction.LABEL, ""),
+                        value(Transaction.RECONCILIATION_STATUS, ReconciliationStatus.RECONCILED.getId()));
 
       dayField.requestFocus();
 
@@ -401,7 +405,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
         }
 
         protected void postValidate() {
-          AccountEditionDialog accountEdition = new AccountEditionDialog(frame, parentRepository, directory);
+          AccountEditionDialog accountEdition = new AccountEditionDialog(frame, parentRepository, directory, true);
           accountEdition.showWithNewAccount(AccountType.MAIN, true, AccountUpdateMode.MANUAL);
         }
       };

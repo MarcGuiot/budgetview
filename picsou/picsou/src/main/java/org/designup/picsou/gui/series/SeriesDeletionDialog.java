@@ -10,16 +10,13 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.actions.SingleSelectionAction;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobListView;
 import org.globsframework.gui.views.GlobListViewFilter;
-import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -48,7 +45,7 @@ public class SeriesDeletionDialog {
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(new SelectionService());
 
-    builder = new GlobsPanelBuilder(SeriesEditionDialog.class, "/layout/series/seriesDeletionDialog.splits",
+    builder = new GlobsPanelBuilder(SeriesDeletionDialog.class, "/layout/series/seriesDeletionDialog.splits",
                                     repository, localDirectory);
 
     JEditorPane introMessage = GuiUtils.createReadOnlyHtmlComponent(Lang.get("seriesDeletion.message", currentSeries.get(Series.NAME)));
@@ -180,7 +177,8 @@ public class SeriesDeletionDialog {
     public boolean matches(Glob series, GlobRepository repository) {
       return (series != null)
              && !series.getKey().equals(currentSeries.getKey())
-             && !BudgetArea.SAVINGS.getId().equals(series.get(Series.BUDGET_AREA));
+             && !BudgetArea.SAVINGS.getId().equals(series.get(Series.BUDGET_AREA))
+             && !series.getKey().get(Series.ID).equals(Series.ACCOUNT_SERIES_ID);
     }
   }
 }

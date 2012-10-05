@@ -11,7 +11,7 @@ import static org.globsframework.model.utils.GlobMatchers.isTrue;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SeriesRenameTrigger implements ChangeSetListener {
+public class SeriesRenameTrigger extends AbstractChangeSetListener {
 
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
 
@@ -32,8 +32,4 @@ public class SeriesRenameTrigger implements ChangeSetListener {
       });
     }
   }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-  }
-
 }

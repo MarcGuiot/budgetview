@@ -51,9 +51,9 @@ public class CreateAccountAction extends AbstractAction {
       directory.get(NavigationService.class).gotoData();
     }
 
-    AccountEditionDialog dialog = new AccountEditionDialog(owner, repository, directory);
+    AccountEditionDialog dialog = new AccountEditionDialog(owner, repository, directory, true);
     dialog.setAccountInfo(defaultAccountInfo);
-    dialog.showWithNewAccount(accountType, accountTypeEditable, AccountUpdateMode.MANUAL);
+    dialog.showWithNewAccount(accountType, accountTypeEditable, AccountUpdateMode.AUTOMATIC);
   }
 
   private void initTooltip() {

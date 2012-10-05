@@ -37,6 +37,7 @@
       <label gridPos="(0,3)" text="$amount" styleClass="formLabel"/>
       <row gridPos="(1,3)">
         <component ref="amountEditor"/>
+        <checkBox ref="shouldBeReconciled" text="$transactionCreation.reconciliation"/>
         <filler fill="horizontal" weightX="10"/>
       </row>
 

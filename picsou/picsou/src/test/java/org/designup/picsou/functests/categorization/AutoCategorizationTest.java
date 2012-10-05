@@ -119,7 +119,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .openImportDialog()
       .setFilePath(path)
       .acceptFile()
-      .setDeferredAccount()
+      .setDeferredAccount(25, 28, 0)
       .doImport()
       .setMainAccount()
       .completeImportWithNext();

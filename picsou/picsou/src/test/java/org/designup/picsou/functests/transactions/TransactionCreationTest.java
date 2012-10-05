@@ -198,7 +198,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .enterLabelWithoutValidating("Transaction 1")
       .create();
 
-    mainAccounts.checkPosition("Cash", 100.00);
+    mainAccounts.checkPosition("Cash", 90.00);
 
     setCurrentDate("2008/09/02");
     restartApplication();
@@ -212,7 +212,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .enterLabelWithoutValidating("Transaction 1")
       .create();
 
-    mainAccounts.checkPosition("Cash", 90.00);
+    mainAccounts.checkPosition("Cash", 80.00);
 
     views.selectCategorization();
     transactionCreation
@@ -221,7 +221,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .enterLabelWithoutValidating("Transaction 2")
       .create();
 
-    mainAccounts.checkPosition("Cash", 70.00);
+    mainAccounts.checkPosition("Cash", 60.00);
     resetWindow();
   }
 
@@ -254,8 +254,8 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .selectSavings()
       .selectSeries("virement manuel vers livret A");
 
-    mainAccounts.checkPosition("Cash", 100.00);
-    savingsAccounts.checkPosition("Livret A", 100.00);
+    mainAccounts.checkPosition("Cash", 90.00);
+    savingsAccounts.checkPosition("Livret A", 110.00);
 
     setCurrentDate("2008/09/05");
     restartApplicationFromBackup();
@@ -272,8 +272,8 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .selectSavings()
       .selectSeries("virement manuel vers livret A");
 
-    mainAccounts.checkPosition("Cash", 90.00);
-    savingsAccounts.checkPosition("Livret A", 110.00);
+    mainAccounts.checkPosition("Cash", 80.00);
+    savingsAccounts.checkPosition("Livret A", 120.00);
 
     views.selectCategorization();
     transactionCreation
@@ -286,8 +286,8 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .selectSavings()
       .selectSeries("virement manuel vers livret A");
 
-    mainAccounts.checkPosition("Cash", 70.00);
-    savingsAccounts.checkPosition("Livret A", 130.00);
+    mainAccounts.checkPosition("Cash", 60.00);
+    savingsAccounts.checkPosition("Livret A", 140.00);
   }
 
   public void testTransactionCreationMenuShowsTip() throws Exception {
@@ -450,6 +450,29 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     fail("tbd - http://support.mybudgetview.fr/tickets/1070");
   }
 
+  public void testOrderIsLost() throws Exception {
+    fail("On doit perdre l'ordre des operations apres un shift de date : l'ordre qui etait celui de la date devient (si elles " +
+         "sont a la meme date) l'odre de creation (Transaction.ID)");
+
+//    String currentDay = Dates.toString(TimeService.getToday());
+//    OfxBuilder.init(this)
+//      .addBankAccount("00123", 1000.00, currentDay)
+//      .addTransaction(currentDay, -10.00, "tr 0")
+//      .load();
+//
+//    Month.nextDay(TimeService.getCurrentDay());
+//    int id3 = Dates.
+//
+//    transactionCreation
+//      .show()
+//      .create(3, "tr 1", -20)
+//      .create(2, "tr 2", -30);
+//
+//    nextMonth();
+//    restartApplicationFromBackup();
+
+  }
+
   public void testCreatedTransactionsAreAutomaticallyCategorized() throws Exception {
 
     OfxBuilder.init(this)
@@ -463,14 +486,14 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .setDay(16)
       .setLabel("Burger king")
       .setAmount(-15.00)
-      .create();
+      .createToReconciled();
     
     categorization.initContent()
       .add("15/08/2012", "Gastronomie", "BURGER KING", -10.00)
       .add("16/08/2012", "Gastronomie", "[R] BURGER KING", -15.00)
       .check();
     
-    transactionCreation.create(17, "Auchan", -100.00);
+    transactionCreation.createToBeReconciled(17, "Auchan", -100.00);
     categorization.initContent()
       .add("17/08/2012", "", "[R] AUCHAN", -100.00)
       .add("15/08/2012", "Gastronomie", "BURGER KING", -10.00)
@@ -478,7 +501,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .check();
 
     categorization.setNewVariable("[R] Auchan", "Groceries", -200.00);
-    transactionCreation.create(18, "Auchan", -150.00);
+    transactionCreation.createToBeReconciled(18, "Auchan", -150.00);
     categorization.initContent()
       .add("17/08/2012", "Groceries", "[R] AUCHAN", -100.00)
       .add("18/08/2012", "Groceries", "[R] AUCHAN", -150.00)
@@ -496,7 +519,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     
     transactionCreation.show()
       .checkSelectedAccount("Main")
-      .create(15, "Auchan", -50.00);
+      .createToBeReconciled(15, "Auchan", -50.00);
 
     transactionCreation
       .setDay(16)

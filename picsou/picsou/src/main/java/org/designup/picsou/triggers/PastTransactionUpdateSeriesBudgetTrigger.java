@@ -12,7 +12,7 @@ import org.globsframework.utils.Utils;
 import java.util.Iterator;
 import java.util.Set;
 
-public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListener {
+public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
 
     changeSet.safeVisit(SeriesStat.TYPE, new ChangeSetVisitor() {
@@ -220,8 +220,5 @@ public class PastTransactionUpdateSeriesBudgetTrigger implements ChangeSetListen
         return;
       }
     }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

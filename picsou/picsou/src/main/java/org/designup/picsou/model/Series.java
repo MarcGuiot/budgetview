@@ -151,6 +151,7 @@ public class Series {
    */
   public static final Integer OCCASIONAL_SERIES_ID = 0;
   public static final Integer UNCATEGORIZED_SERIES_ID = 1;
+  public static final Integer ACCOUNT_SERIES_ID = -1;
 
   public static org.globsframework.model.Key UNCATEGORIZED_SERIES;
 
@@ -207,6 +208,10 @@ public class Series {
 
   public static String getUncategorizedName() {
     return Lang.get("series.uncategorized");
+  }
+
+  public static String getAccountSeriesName(){
+    return "account event";
   }
 
   public static boolean isValidMonth(int monthToCheck, Glob series) {
@@ -684,7 +689,8 @@ public class Series {
       fieldSetter.set(Series.FROM_ACCOUNT, input.readInteger());
       fieldSetter.set(Series.IS_MIRROR, input.readBoolean());
       fieldSetter.set(Series.MIRROR_SERIES, input.readInteger());
-      fieldSetter.set(Series.SHOULD_REPORT, input.readBoolean());
+      //fieldSetter.set(Series.SHOULD_REPORT,
+      input.readBoolean();
       fieldSetter.set(Series.FORCE_SINGLE_OPERATION, false);
       fieldSetter.set(Series.FORCE_SINGLE_OPERATION_DAY, null);
     }
@@ -715,7 +721,8 @@ public class Series {
       fieldSetter.set(Series.TO_ACCOUNT, input.readInteger());
       fieldSetter.set(Series.FROM_ACCOUNT, input.readInteger());
       fieldSetter.set(Series.MIRROR_SERIES, input.readInteger());
-      fieldSetter.set(Series.SHOULD_REPORT, input.readBoolean());
+//      fieldSetter.set(Series.SHOULD_REPORT,
+      input.readBoolean();
       fieldSetter.set(Series.TARGET_ACCOUNT, input.readInteger());
       fieldSetter.set(Series.FORCE_SINGLE_OPERATION, false);
       fieldSetter.set(Series.FORCE_SINGLE_OPERATION_DAY, null);
@@ -747,7 +754,8 @@ public class Series {
       fieldSetter.set(Series.TO_ACCOUNT, input.readInteger());
       fieldSetter.set(Series.FROM_ACCOUNT, input.readInteger());
       fieldSetter.set(Series.MIRROR_SERIES, input.readInteger());
-      fieldSetter.set(Series.SHOULD_REPORT, input.readBoolean());
+//      fieldSetter.set(Series.SHOULD_REPORT,
+      input.readBoolean();
       fieldSetter.set(Series.TARGET_ACCOUNT, input.readInteger());
       fieldSetter.set(Series.IS_INITIAL, input.readBoolean());
       fieldSetter.set(Series.FORCE_SINGLE_OPERATION, false);
@@ -780,7 +788,8 @@ public class Series {
       fieldSetter.set(Series.TO_ACCOUNT, input.readInteger());
       fieldSetter.set(Series.FROM_ACCOUNT, input.readInteger());
       fieldSetter.set(Series.MIRROR_SERIES, input.readInteger());
-      fieldSetter.set(Series.SHOULD_REPORT, input.readBoolean());
+//      fieldSetter.set(Series.SHOULD_REPORT,
+      input.readBoolean();
       fieldSetter.set(Series.TARGET_ACCOUNT, input.readInteger());
       fieldSetter.set(Series.IS_INITIAL, input.readBoolean());
       fieldSetter.set(Series.FORCE_SINGLE_OPERATION, input.readBoolean());

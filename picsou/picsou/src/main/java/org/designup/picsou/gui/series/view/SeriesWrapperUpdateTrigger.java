@@ -21,7 +21,8 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Integer seriesId = key.get(Series.ID);
         if (seriesId.equals(Series.UNCATEGORIZED_SERIES_ID) ||
-            Series.isSavingToExternal(values)) {
+            Series.isSavingToExternal(values) ||
+            seriesId.equals(Series.ACCOUNT_SERIES_ID)) {
           return;
         }
 
@@ -40,10 +41,14 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
           Log.write("Bug : missing parent : " + budgetAreaId);
         }
         else {
-          repository.create(SeriesWrapper.TYPE,
-                            value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
-                            value(SeriesWrapper.ITEM_ID, seriesId),
-                            value(SeriesWrapper.PARENT, budgetAreaWrapper.get(SeriesWrapper.ID)));
+          if (repository.findByIndex(SeriesWrapper.INDEX, SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId())
+            .findByIndex(SeriesWrapper.ITEM_ID, seriesId)
+            .findByIndex(SeriesWrapper.PARENT, null).getGlobs().isEmpty()) {
+            repository.create(SeriesWrapper.TYPE,
+                              value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
+                              value(SeriesWrapper.ITEM_ID, seriesId),
+                              value(SeriesWrapper.PARENT, budgetAreaWrapper.get(SeriesWrapper.ID)));
+          }
         }
       }
 
@@ -54,7 +59,6 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
             repository.delete(wrapper.getKey());
             Integer budgetAreaId = values.get(Series.BUDGET_AREA);
             if (BudgetArea.OTHER.getId().equals(budgetAreaId)) {
-              System.out.println("SeriesWrapperUpdateTrigger.visitUpdate: out");
               return;
             }
 
@@ -89,10 +93,14 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
           Log.write("Parent wrapper missing " + values.get(SubSeries.SERIES));
         }
         else {
-          repository.create(SeriesWrapper.TYPE,
-                            value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
-                            value(SeriesWrapper.ITEM_ID, key.get(SubSeries.ID)),
-                            value(SeriesWrapper.PARENT, parentSeriesWrapper.get(SeriesWrapper.ID)));
+          if (repository.findByIndex(SeriesWrapper.INDEX, SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId())
+            .findByIndex(SeriesWrapper.ITEM_ID, key.get(SubSeries.ID))
+            .findByIndex(SeriesWrapper.PARENT, parentSeriesWrapper.get(SeriesWrapper.ID)).getGlobs().isEmpty()){
+            repository.create(SeriesWrapper.TYPE,
+                              value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
+                              value(SeriesWrapper.ITEM_ID, key.get(SubSeries.ID)),
+                              value(SeriesWrapper.PARENT, parentSeriesWrapper.get(SeriesWrapper.ID)));
+          }
         }
       }
 
@@ -147,7 +155,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
         }
         budgetAreaIds.put(budgetAreaId, wrapperId);
       }
-      
+
       for (Glob series : repository.getAll(Series.TYPE)) {
         Integer budgetAreaId = series.get(Series.BUDGET_AREA);
         if (BudgetArea.UNCATEGORIZED.getId().equals(budgetAreaId) ||
@@ -177,7 +185,6 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
                             value(SeriesWrapper.ITEM_ID, subSeries.get(SubSeries.ID)),
                             value(SeriesWrapper.PARENT, seriesWrapper.get(SeriesWrapper.ID)));
         }
-
       }
     }
     finally {
@@ -189,5 +196,4 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
     GlobList wrappers = SeriesWrapper.findAll(repository, type, key.get(idField));
     repository.delete(wrappers);
   }
-
 }

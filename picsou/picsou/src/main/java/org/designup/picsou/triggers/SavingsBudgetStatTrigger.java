@@ -115,7 +115,7 @@ public class SavingsBudgetStatTrigger implements ChangeSetListener {
       }
       Integer accountId = account.get(Account.ID);
 
-      Integer monthId = transaction.get(Transaction.BANK_MONTH);
+      Integer monthId = transaction.get(Transaction.POSITION_MONTH);
       Glob firstTransactionInBankMonth = firstTransactionForMonth.get(accountId, monthId);
       if ((firstTransactionInBankMonth == null) ||
           (TransactionComparator.ASCENDING_BANK.compare(transaction, firstTransactionInBankMonth) < 0)) {
@@ -158,10 +158,10 @@ public class SavingsBudgetStatTrigger implements ChangeSetListener {
         }
       }
       if (!transaction.isTrue(Transaction.PLANNED)
-          && transaction.get(Transaction.BANK_MONTH).equals(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))
-          && transaction.get(Transaction.BANK_DAY) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY)
+          && transaction.get(Transaction.POSITION_MONTH).equals(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))
+          && transaction.get(Transaction.POSITION_DAY) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY)
           && (lastRealKnownTransaction.get(accountId) == null ||
-              TransactionComparator.ASCENDING_BANK.compare(transaction, lastRealKnownTransaction.get(accountId)) > 0)) {
+              TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, lastRealKnownTransaction.get(accountId)) > 0)) {
         lastRealKnownTransaction.put(accountId, transaction);
       }
     }
@@ -234,10 +234,10 @@ public class SavingsBudgetStatTrigger implements ChangeSetListener {
             if (beginOfMonthPosition == null || endOfMonthPosition == null) {
               continue;
             }
-            if (beginOfMonthTransaction.get(Transaction.BANK_MONTH) >= monthId) {
+            if (beginOfMonthTransaction.get(Transaction.POSITION_MONTH) >= monthId) {
               beginOfMonthPosition = beginOfMonthPosition - beginOfMonthTransaction.get(Transaction.AMOUNT);
             }
-            if (endOfMonthTransaction.get(Transaction.BANK_MONTH) > monthId) {
+            if (endOfMonthTransaction.get(Transaction.POSITION_MONTH) > monthId) {
               endOfMonthPosition = endOfMonthPosition - endOfMonthTransaction.get(Transaction.AMOUNT);
             }
             balance = endOfMonthPosition - beginOfMonthPosition;
@@ -264,13 +264,13 @@ public class SavingsBudgetStatTrigger implements ChangeSetListener {
                             value(SavingsBudgetStat.BEGIN_OF_MONTH_POSITION, beginOfMonthPosition),
                             value(SavingsBudgetStat.END_OF_MONTH_POSITION, endOfMonthPosition));
           if (lastRealKnownTransaction.get(accountId) != null) {
-            Integer currentMonthId = lastRealKnownTransaction.get(accountId).get(Transaction.BANK_MONTH);
+            Integer currentMonthId = lastRealKnownTransaction.get(accountId).get(Transaction.POSITION_MONTH);
             if (currentMonthId.equals(monthId)) {
               repository.update(key,
                                 value(SavingsBudgetStat.LAST_KNOWN_ACCOUNT_POSITION,
                                       lastRealKnownTransaction.get(accountId).get(Transaction.ACCOUNT_POSITION)),
                                 value(SavingsBudgetStat.LAST_KNOWN_POSITION_DAY,
-                                      lastRealKnownTransaction.get(accountId).get(Transaction.BANK_DAY)));
+                                      lastRealKnownTransaction.get(accountId).get(Transaction.POSITION_DAY)));
             }
           }
         }

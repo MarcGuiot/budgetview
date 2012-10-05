@@ -3,16 +3,11 @@ package org.designup.picsou.triggers;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.model.ProjectItem;
 import org.designup.picsou.model.SubSeries;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
-
-import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.isNull;
 
-public class ProjectItemTrigger implements ChangeSetListener {
+public class ProjectItemTrigger extends AbstractChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(ProjectItem.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
@@ -41,9 +36,6 @@ public class ProjectItemTrigger implements ChangeSetListener {
         }
       }
     });
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 
   public static void createSubSeries(Key projectItemKey, FieldValues projectItemValues, GlobRepository repository) {

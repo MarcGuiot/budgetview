@@ -201,7 +201,7 @@ public abstract class AccountViewPanel {
     return GlobButtonView.init(Account.NAME, repository, directory,
                                new GlobListFunctor() {
                                  public void run(GlobList accounts, GlobRepository repository) {
-                                   AccountEditionDialog dialog = new AccountEditionDialog(repository, directory);
+                                   AccountEditionDialog dialog = new AccountEditionDialog(repository, directory, false);
                                    dialog.show(accounts.get(0).getKey());
                                  }
                                });

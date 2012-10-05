@@ -19,12 +19,12 @@
     <label text="$accountPositionEdition.operation" styleClass="separatorTitle"/>
     <row styleClass="separator">
       <grid>
-        <label gridPos="(0,0)" text="$accountPositionEdition.transaction.date" styleClass="formLabel"/>
-        <label gridPos="(1,0)" ref="dateInfo" styleClass="formLabel" anchor="left"/>
-        <label gridPos="(0,1)" text="$accountPositionEdition.transaction.label" styleClass="formLabel"/>
-        <label gridPos="(1,1)" ref="labelInfo" styleClass="formLabel" anchor="left"/>
-        <label gridPos="(0,2)" text="$accountPositionEdition.transaction.amount" styleClass="formLabel"/>
-        <label gridPos="(1,2)" ref="amountInfo" styleClass="formLabel" anchor="left"/>
+        <label gridPos="(0,0)" text="$accountPositionEdition.transaction.date" styleClass="formLabel" autoHideSource="dateInfo"/>
+        <label gridPos="(1,0)" ref="dateInfo" styleClass="formLabel" anchor="left" autoHideIfDisabled="true"/>
+        <label gridPos="(0,1)" text="$accountPositionEdition.transaction.label" styleClass="formLabel" autoHideSource="labelInfo"/>
+        <label gridPos="(1,1)" ref="labelInfo" styleClass="formLabel" anchor="left" autoHideIfDisabled="true"/>
+        <label gridPos="(0,2)" text="$accountPositionEdition.transaction.amount" styleClass="formLabel" autoHideSource="amountInfo"/>
+        <label gridPos="(1,2)" ref="amountInfo" styleClass="formLabel" anchor="left" autoHideIfDisabled="true"/>
       </grid>
       <filler fill="horizontal"/>
     </row>

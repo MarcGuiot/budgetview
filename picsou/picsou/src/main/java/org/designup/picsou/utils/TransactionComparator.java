@@ -1,6 +1,7 @@
 package org.designup.picsou.utils;
 
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.TransactionType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Utils;
@@ -20,10 +21,35 @@ public class TransactionComparator implements Comparator<Glob> {
   public static final TransactionComparator ASCENDING_ACCOUNT =
     new TransactionComparator(true, Transaction.POSITION_MONTH, Transaction.POSITION_DAY, false) {
       int lastCompare(Glob transaction1, Glob transaction2) {
-        int monthCompate = comparisonMultiplier * transaction1.get(Transaction.BANK_MONTH)
-          .compareTo(transaction2.get(Transaction.BANK_MONTH));
-        if (monthCompate != 0) {
-          return monthCompate;
+        Integer month1 = transaction1.get(Transaction.BANK_MONTH);
+        Integer month2 = transaction2.get(Transaction.BANK_MONTH);
+        if (month1 == null) {
+          if (month2 == null) {
+            month1 = transaction1.get(Transaction.MONTH);
+            month2 = transaction2.get(Transaction.MONTH);
+            int monthCompare = comparisonMultiplier * month1.compareTo(month2);
+            if (monthCompare != 0){
+              return monthCompare;
+            }
+            else {
+              Integer day1 = transaction1.get(Transaction.DAY);
+              Integer day2 = transaction2.get(Transaction.DAY);
+              int dayCompare = comparisonMultiplier * day1.compareTo(day2);
+              if (dayCompare != 0){
+                return dayCompare;
+              }
+              else {
+                return super.lastCompare(transaction1, transaction2);
+              }
+            }
+          }
+          else {
+            return comparisonMultiplier;
+          }
+        }
+        int monthCompare = comparisonMultiplier * month1.compareTo(month2);
+        if (monthCompare != 0) {
+          return monthCompare;
         }
         int bankDateCompare = comparisonMultiplier * transaction1.get(Transaction.BANK_DAY)
           .compareTo(transaction2.get(Transaction.BANK_DAY));
@@ -70,6 +96,27 @@ public class TransactionComparator implements Comparator<Glob> {
     tmp = day1.compareTo(day2);
     if (tmp != 0) {
       return comparisonMultiplier * tmp;
+    }
+
+
+    Integer tt1 = transaction1.get(Transaction.TRANSACTION_TYPE);
+    Integer tt2 = transaction2.get(Transaction.TRANSACTION_TYPE);
+    if (tt1 != null && tt1 == TransactionType.OPEN_ACCOUNT_EVENT.getId()){
+      if (tt2 == null || tt2 != TransactionType.OPEN_ACCOUNT_EVENT.getId()){
+        return -comparisonMultiplier;
+      }
+    }
+    else if (tt2 != null && tt2 == TransactionType.OPEN_ACCOUNT_EVENT.getId()){
+      return comparisonMultiplier;
+    }
+
+    if (tt1 != null && tt1 == TransactionType.CLOSE_ACCOUNT_EVENT.getId()){
+      if (tt2 == null || tt2 != TransactionType.CLOSE_ACCOUNT_EVENT.getId()){
+        return comparisonMultiplier;
+      }
+    }
+    else if (tt2 != null && tt2 == TransactionType.CLOSE_ACCOUNT_EVENT.getId()){
+      return -comparisonMultiplier;
     }
 
     if (!transaction1.get(Transaction.PLANNED).equals(transaction2.get(Transaction.PLANNED))) {
@@ -119,7 +166,7 @@ public class TransactionComparator implements Comparator<Glob> {
       if (amountCompareOnSameDay != 0) {
         return amountCompareOnSameDay;
       }
-    }    
+    }
     return comparisonMultiplier * transaction1.get(Transaction.ID).compareTo(transaction2.get(Transaction.ID));
   }
 }

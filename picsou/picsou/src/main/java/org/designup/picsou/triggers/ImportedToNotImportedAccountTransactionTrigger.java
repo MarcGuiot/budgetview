@@ -9,7 +9,7 @@ import org.globsframework.model.*;
 
 import java.util.Set;
 
-public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSetListener {
+public class ImportedToNotImportedAccountTransactionTrigger extends AbstractChangeSetListener{
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
@@ -105,8 +105,5 @@ public class ImportedToNotImportedAccountTransactionTrigger implements ChangeSet
         }
       }
     });
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

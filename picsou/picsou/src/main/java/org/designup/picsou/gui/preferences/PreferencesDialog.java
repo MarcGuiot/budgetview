@@ -2,7 +2,6 @@ package org.designup.picsou.gui.preferences;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.preferences.components.ColorThemeItemFactory;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.ColorTheme;
 import org.designup.picsou.model.NumericDateType;
 import org.designup.picsou.model.TextDateType;
@@ -10,7 +9,6 @@ import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobComparators;
@@ -35,7 +33,7 @@ public class PreferencesDialog {
     this.parentRepository = parentRepository;
     this.repository = createLocalRepository(parentRepository);
 
-    builder = new GlobsPanelBuilder(SeriesEditionDialog.class,
+    builder = new GlobsPanelBuilder(PreferencesDialog.class,
                                     "/layout/general/preferencesDialog.splits",
                                     repository, directory);
     int[] items = new int[]{12, 18, 24, 36};

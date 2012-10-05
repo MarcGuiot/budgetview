@@ -15,7 +15,7 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 
 import java.util.Set;
 
-public class SavingsAccountUpdateSeriesTrigger implements ChangeSetListener {
+public class SavingsAccountUpdateSeriesTrigger extends AbstractChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Account.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
@@ -174,8 +174,5 @@ public class SavingsAccountUpdateSeriesTrigger implements ChangeSetListener {
       seriesName = Lang.get(key, values.get(Account.NAME));
     }
     return seriesName;
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

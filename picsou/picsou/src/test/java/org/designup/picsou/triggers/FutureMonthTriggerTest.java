@@ -1,6 +1,7 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.time.TimeService;
+import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.PicsouTestCase;
@@ -13,6 +14,7 @@ public class FutureMonthTriggerTest extends PicsouTestCase {
   protected void setUp() throws Exception {
     super.setUp();
     directory.add(new TimeService(Dates.parse("2008/07/09")));
+    repository.create(CurrentMonth.KEY);
   }
 
   public void testMoreMonthUserPreferences() throws Exception {

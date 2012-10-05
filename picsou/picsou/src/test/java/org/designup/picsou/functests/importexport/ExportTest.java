@@ -71,7 +71,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
       "          </STMTTRN>\n" +
       "        </BANKTRANLIST>\n" +
       "        <LEDGERBAL>\n" +
-      "          <BALAMT>-125.00\n" +
+      "          <BALAMT>-25.00\n" +
       "          <DTASOF>20080610000000\n" +
       "        </LEDGERBAL>\n" +
       "        <AVAILBAL>\n" +
@@ -117,7 +117,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
       "          </STMTTRN>\n" +
       "        </BANKTRANLIST>\n" +
       "        <LEDGERBAL>\n" +
-      "          <BALAMT>-243.00\n" +
+      "          <BALAMT>12.00\n" +
       "          <DTASOF>20080615000000\n" +
       "        </LEDGERBAL>\n" +
       "        <AVAILBAL>\n" +

@@ -199,15 +199,15 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.select("Savings accounts");
     seriesAnalysis.histoChart
       .checkColumnCount(13)
-      .checkLineColumn(0, "J", "2009", 200.00, true)
-      .checkLineColumn(1, "A", "2009", 400.00)
-      .checkLineColumn(2, "S", "2009", 600.00)
-      .checkLineColumn(3, "O", "2009", 800.00)
-      .checkLineColumn(6, "J", "2010", 1400.00);
+      .checkLineColumn(0, "J", "2009", 400.00, true)
+      .checkLineColumn(1, "A", "2009", 600.00)
+      .checkLineColumn(2, "S", "2009", 800.00)
+      .checkLineColumn(3, "O", "2009", 1000.00)
+      .checkLineColumn(6, "J", "2010", 1600.00);
     seriesAnalysis
       .checkHistoChartLabel("End of month position evolution")
       .checkLegendHidden();
-    seriesAnalysis.histoChart.checkTooltip(2, "End of September 2009 position: 600.00");
+    seriesAnalysis.histoChart.checkTooltip(2, "End of September 2009 position: 800.00");
 
     views.selectHome();
 
