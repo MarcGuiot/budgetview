@@ -57,7 +57,11 @@ public class MailServerChecker {
   public void stop() throws InterruptedException {
     if (mailServer != null) {
       if (started) {
-        mailServer.stop();
+        try {
+          mailServer.stop();
+        }
+        catch (Exception e) {
+        }
         started = false;
       }
     }
