@@ -13,10 +13,11 @@
 
       <card name="bankSelection">
         <column>
+          <htmlEditorPane text="$bankDownload.select" marginBottom="5" font="-,plain,11" styleClass="multiLineLabel"/>
+
           <row marginLeft="10">
 
             <column weightX="2" preferredSize="(200,200)">
-              <label text="$bankDownload.select" marginBottom="5" font="-,plain,11"/>
               <panel ref="bankChooserPanel"/>
             </column>
 
