@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<globs>
+  <bankFormat id='102'>
+
+    <bank name="ING Belgique" url="https://www.ing.be/fr" id="102100"/>
+    <bank name="KBC Banque" url="https://www.kbc.be" id="102101"/>
+
+  </bankFormat>
+</globs>

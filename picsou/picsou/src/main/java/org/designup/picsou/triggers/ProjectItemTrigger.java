@@ -46,6 +46,5 @@ public class ProjectItemTrigger extends AbstractChangeSetListener {
                         value(SubSeries.NAME, projectItemValues.get(ProjectItem.LABEL)));
     repository.update(projectItemKey,
                       value(ProjectItem.SUB_SERIES, subSeries.get(SubSeries.ID)));
-    System.out.println("- ProjectItemTrigger.createSubSeries ==> " + subSeries);
   }
 }

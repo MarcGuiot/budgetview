@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<globs>
+  <bankFormat id='101'>
+
+    <bank name="Credit Suisse" url="https://www.credit-suisse.com/" id="101000"/>
+    <bank name="UBS - Union Bank of Switzerland" url="http://www.ubs.com/" id="101001"/>
+    <bank name="Banque Cantonale" url="http://www.kantonalbank.ch/f/index.php" id="101002"/>
+    <bank name="BCV - Banque Cantonale Vaudoise" url="http://www.bcv.ch/fr/" id="101003"/>
+    <bank name="BCN - Banque Cantonale Neuchâteloise" url="http://www.bcn.ch/" id="101004"/>
+    <bank name="BCF - Banque Cantonale de Fribourg" url="http://www.bcf.ch/" id="101005"/>
+    <bank name="BCGE - Banque Cantonale de Genève" url="http://www.bcge.ch/" id="101006"/>
+    <bank name="BCVs - Banque Cantonale du Valais" url="http://www.bcvs.ch/fr/accueil.html" id="101007"/>
+    <bank name="BCJ - Banque Cantonale du Jura" url="http://www.bcj.ch/" id="101008"/>
+    <bank name="Banque Coop" url="http://www.bankcoop.ch/fr/index.htm" id="101009"/>
+    <bank name="Banque Migros" url="http://www.migrosbank.ch/fr/default.htm" id="101010"/>
+
+  </bankFormat>
+</globs>
