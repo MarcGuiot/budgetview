@@ -9,6 +9,7 @@ import org.globsframework.model.*;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.utils.Strings;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,10 +26,13 @@ public class BankPluginService {
       else {
         String amount = importedAccount.get(RealAccount.POSITION);
         if (Strings.isNotEmpty(amount)) {
-          localRepository.update(account.getKey(),
-                                 FieldValue.value(Account.POSITION, Amounts.extractAmount(amount)),
-                                 FieldValue.value(Account.POSITION_DATE, importedAccount.get(RealAccount.POSITION_DATE)),
-                                 FieldValue.value(Account.TRANSACTION_ID, null));
+          Date currentDate = account.get(Account.POSITION_DATE);
+          Date importDate = importedAccount.get(RealAccount.POSITION_DATE);
+          // ce doit etre la derniere date.
+          if (importDate != null && (currentDate == null || importDate.after(currentDate))) {
+            localRepository.update(account.getKey(),
+                                   FieldValue.value(Account.LAST_IMPORT_POSITION, Amounts.extractAmount(amount)));
+          }
         }
       }
 

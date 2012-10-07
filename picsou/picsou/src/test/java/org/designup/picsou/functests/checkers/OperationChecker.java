@@ -89,6 +89,11 @@ public class OperationChecker {
   }
 
   public void importQifFileWithDeferred(String fileName, String bank, Double position) {
+    importQifFileWithDeferred(fileName, bank, position, 25, 28, 0);
+  }
+
+  public void importQifFileWithDeferred(String fileName, String bank, Double position,
+                                           final int deferredDayPeriod, final int deferredDayPrelevement, final int deferredMonthShift) {
     ImportDialogChecker importDialog = openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
@@ -101,7 +106,7 @@ public class OperationChecker {
     accountEditionChecker
       .setAccountNumber("1111")
       .setAccountName("card 1111")
-      .setDeferredAccount();
+      .setDeferredAccount(deferredDayPeriod, deferredDayPrelevement, deferredMonthShift);
 
     if (position != null) {
       importDialog.setPosition(position);
@@ -119,7 +124,7 @@ public class OperationChecker {
       .setAccountNumber("1111")
       .setAccountName(accountName);
     importDialog
-      .setDeferredAccount()
+      .setDeferredAccount(25, 28, 0)
       .doImport();
     importDialog.completeLastStep();
   }

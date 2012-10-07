@@ -16,12 +16,12 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.*;
-import static org.globsframework.model.utils.GlobMatchers.linkedTo;
-import static org.globsframework.model.utils.GlobMatchers.or;
+
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -37,12 +37,12 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   private Glob accountInfo;
   private TabHandler tabs;
 
-  public AccountEditionDialog(final GlobRepository parentRepository, Directory directory) {
-    this(directory.get(JFrame.class), parentRepository, directory);
+  public AccountEditionDialog(final GlobRepository parentRepository, Directory directory, boolean createAccount) {
+    this(directory.get(JFrame.class), parentRepository, directory, createAccount);
   }
 
-  public AccountEditionDialog(Window owner, final GlobRepository parentRepository, Directory directory) {
-    super(createLocalRepository(parentRepository), directory);
+  public AccountEditionDialog(Window owner, final GlobRepository parentRepository, Directory directory, boolean createAccount) {
+    super(createLocalRepository(parentRepository), directory, createAccount);
     this.parentRepository = parentRepository;
 
     dialog = PicsouDialog.create(owner, localDirectory);
@@ -109,7 +109,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
       }
     });
 
-    localRepository.addTrigger(new ChangeSetListener() {
+    localRepository.addTrigger(new AbstractChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(Account.TYPE)) {
           Set<Key> keySet = changeSet.getUpdated(Account.UPDATE_MODE);
@@ -123,9 +123,6 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
             }
           }
         }
-      }
-
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
       }
     });
 
@@ -231,7 +228,10 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     }
 
     public void actionPerformed(ActionEvent e) {
-      transactionMatcher = linkedTo(currentAccount, Transaction.ACCOUNT);
+      transactionMatcher = and(linkedTo(currentAccount, Transaction.ACCOUNT), not(fieldEquals(Transaction.TRANSACTION_TYPE,
+                                                                                              TransactionType.OPEN_ACCOUNT_EVENT.getId())),
+                               not(fieldEquals(Transaction.TRANSACTION_TYPE,
+                                               TransactionType.CLOSE_ACCOUNT_EVENT.getId())));
       seriesMatcher = or(linkedTo(currentAccount, Series.FROM_ACCOUNT),
                          linkedTo(currentAccount, Series.TO_ACCOUNT));
 
@@ -268,10 +268,12 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   private void uncategorize(Key account, GlobRepository repository) {
     GlobList transactions = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.ACCOUNT,
                                                                                          account.get(Account.ID)));
+    repository.startChangeSet();
     for (Glob transaction : transactions) {
       repository.update(transaction.getKey(),
                         value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
                         value(Transaction.SUB_SERIES, null));
     }
+    repository.completeChangeSet();
   }
 }

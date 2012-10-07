@@ -36,7 +36,7 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
       .acceptFile()
       .addNewAccount()
       .setAccountName("Card n. 123123123")
-      .setDeferredAccount()
+      .setDeferredAccount(25, 28, 0)
       .completeImport();
     operations.importOfxFile(getFile("banque_pop_en_cours.ofx"));
 
@@ -79,11 +79,11 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
       .add("29/01/2009", "DROITS DE GARDE 2009 DU COMPTE 123123123123", -35.50, "To categorize", 1885.55, 1885.55, "Account n. 123123123")
       .add("26/01/2009", "ECHEANCE PRET DONT CAP 67,52 ASS. 0,00E INT. 14,36 COM. 0,00E", -81.88, "To categorize", 1921.05, 1921.05, "Account n. 123123123")
       .add("26/01/2009", "VIREMENT DE C.P.A.M LONS", 12.90, "To categorize", 2002.93, 2002.93, "Account n. 123123123")
-      .add("24/01/2009", "INSTITUT BEAUTE 39LONS LE SAUNI", -30.00, "To categorize", 1230.83, 1685.45, "Card n. 123123123")
-      .add("06/01/2009", "MAG SUPER U 39MONTMOROT", -29.25, "To categorize", 1260.83, 1685.45, "Card n. 123123123")
-      .add("31/12/2008", "MAG SUPER U 39MONTMOROT", -39.50, "To categorize", -115.30, 1990.03, "Card n. 123123123")
-      .add("31/12/2008", "SA CAFREDAU 39MONTMOROT", -50.50, "To categorize", -75.80, 1990.03, "Card n. 123123123")
-      .add("31/12/2008", "MAILLARD D 39LONS/SAUNIER", -25.30, "To categorize", -25.30, 1990.03, "Card n. 123123123")
+      .add("24/01/2009", "INSTITUT BEAUTE 39LONS LE SAUNI", -30.00, "To categorize", -174.55, 1685.45, "Card n. 123123123")
+      .add("06/01/2009", "MAG SUPER U 39MONTMOROT", -29.25, "To categorize", -144.55, 1685.45, "Card n. 123123123")
+      .add("31/12/2008", "MAG SUPER U 39MONTMOROT", -39.50, "To categorize", -115.30, 1685.45, "Card n. 123123123")
+      .add("31/12/2008", "SA CAFREDAU 39MONTMOROT", -50.50, "To categorize", -75.80, 1685.45, "Card n. 123123123")
+      .add("31/12/2008", "MAILLARD D 39LONS/SAUNIER", -25.30, "To categorize", -25.30, 1685.45, "Card n. 123123123")
       .check();
     operations.importOfxFile(getFile("banque_pop.ofx"));
     operations.importOfxFile(getFile("banque_pop_facturette.ofx"));

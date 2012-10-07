@@ -50,8 +50,8 @@ public class TsvExporter implements Exporter {
                                      Transaction.MONTH,
                                      Transaction.DAY),
       new TransactionDateStringifier(TransactionComparator.DESCENDING_SPLIT_AFTER,
-                                     Transaction.BANK_MONTH,
-                                     Transaction.BANK_DAY),
+                                     Transaction.POSITION_MONTH,
+                                     Transaction.POSITION_DAY),
       GlobStringifiers.get(Transaction.LABEL),
       new AmountStringifier(Transaction.AMOUNT),
       GlobStringifiers.target(Transaction.SERIES, descriptionService.getStringifier(Series.BUDGET_AREA)),
@@ -59,6 +59,9 @@ public class TsvExporter implements Exporter {
     );
 
     for (Glob transaction : transactions) {
+      if (Transaction.isOpenCloseAccount(transaction)) {
+        continue;
+      }
       boolean firstItem = true;
       for (GlobStringifier stringifier : stringifiers) {
         if (!firstItem) {

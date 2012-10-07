@@ -74,7 +74,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
         return;
       }
 
-      Integer monthId = transaction.get(Transaction.BANK_MONTH);
+      Integer monthId = transaction.get(Transaction.POSITION_MONTH);
 
       Double currentPosition = transaction.get(Transaction.SUMMARY_POSITION);
       Double min = minPosition.get(monthId);
@@ -84,26 +84,26 @@ public class BudgetStatTrigger implements ChangeSetListener {
 
       Glob firstTransactionInBankMonth = firstTransactionForMonth.get(monthId);
       if ((firstTransactionInBankMonth == null) ||
-          (TransactionComparator.ASCENDING_BANK.compare(transaction, firstTransactionInBankMonth) < 0)) {
+          (TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, firstTransactionInBankMonth) < 0)) {
         firstTransactionForMonth.put(monthId, transaction);
       }
 
       Glob lastTransactionInBankMonth = lastTransactionForMonth.get(monthId);
       if ((lastTransactionInBankMonth == null)
-          || (TransactionComparator.ASCENDING_BANK.compare(transaction, lastTransactionInBankMonth) > 0)) {
+          || (TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, lastTransactionInBankMonth) > 0)) {
         lastTransactionForMonth.put(monthId, transaction);
       }
 
       if (absoluteFirstTransaction == null ||
-          (TransactionComparator.ASCENDING_BANK.compare(transaction, absoluteFirstTransaction) < 0)) {
+          (TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, absoluteFirstTransaction) < 0)) {
         absoluteFirstTransaction = transaction;
       }
 
       if (!transaction.isTrue(Transaction.PLANNED) &&
           (lastRealKnownTransaction == null ||
-           TransactionComparator.ASCENDING_BANK.compare(transaction, lastRealKnownTransaction) > 0)
-          && transaction.get(Transaction.BANK_MONTH).equals(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))
-          && transaction.get(Transaction.BANK_DAY) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY)) {
+           TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, lastRealKnownTransaction) > 0)
+          && transaction.get(Transaction.POSITION_MONTH).equals(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))
+          && transaction.get(Transaction.POSITION_DAY) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY)) {
         lastRealKnownTransaction = transaction;
       }
     }
@@ -144,12 +144,12 @@ public class BudgetStatTrigger implements ChangeSetListener {
           endOfMonthPosition = endOfMonthTransaction.get(Transaction.SUMMARY_POSITION);
           beginOfMonthPosition = beginOfMonthTransaction.get(Transaction.SUMMARY_POSITION);
           if (beginOfMonthPosition != null) {
-            if (beginOfMonthTransaction.get(Transaction.BANK_MONTH) >= monthId) {
+            if (beginOfMonthTransaction.get(Transaction.POSITION_MONTH) >= monthId) {
               beginOfMonthPosition = beginOfMonthPosition -
                                      beginOfMonthTransaction.get(Transaction.AMOUNT);
             }
             if (endOfMonthPosition != null) {
-              if (endOfMonthTransaction.get(Transaction.BANK_MONTH) > monthId) {
+              if (endOfMonthTransaction.get(Transaction.POSITION_MONTH) > monthId) {
                 endOfMonthPosition = endOfMonthPosition -
                                      endOfMonthTransaction.get(Transaction.AMOUNT);
               }
@@ -174,13 +174,13 @@ public class BudgetStatTrigger implements ChangeSetListener {
         repository.create(BudgetStat.TYPE, values.toArray());
 
         if (lastRealKnownTransaction != null) {
-          Integer currentMonthId = lastRealKnownTransaction.get(Transaction.BANK_MONTH);
+          Integer currentMonthId = lastRealKnownTransaction.get(Transaction.POSITION_MONTH);
           if (currentMonthId.equals(monthId)) {
             repository.update(Key.create(BudgetStat.TYPE, currentMonthId),
                               value(BudgetStat.LAST_KNOWN_ACCOUNT_POSITION,
                                     lastRealKnownTransaction.get(Transaction.SUMMARY_POSITION)),
                               value(BudgetStat.LAST_KNOWN_ACCOUNT_POSITION_DAY,
-                                    lastRealKnownTransaction.get(Transaction.BANK_DAY)));
+                                    lastRealKnownTransaction.get(Transaction.POSITION_DAY)));
           }
         }
       }

@@ -60,6 +60,7 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
   protected void startServers() throws Exception {
     licenseServer.init();
     startServersWithoutLicence();
+    Thread.sleep(1000); // wait for jetty to listen on port
   }
 
   protected void startServersWithoutLicence() throws Exception {

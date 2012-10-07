@@ -45,11 +45,8 @@ public class MonthTrigger implements ChangeSetListener {
   public void updateMonth(GlobRepository repository, Integer monthCount) {
     try {
       repository.startChangeSet();
-      Glob firstMonth = repository.getAll(Month.TYPE).getFirst();
-      int startMonth = time.getCurrentMonthId();
-      if (firstMonth != null) {
-        startMonth = firstMonth.get(Month.ID);
-      }
+      int startMonth = Math.max(time.getCurrentMonthId(),
+                                repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH));
       int currentMonth = time.getCurrentMonthId();
       List<Integer> pastMonth = Month.createMonths(startMonth, currentMonth);
       for (Integer monthId : pastMonth) {

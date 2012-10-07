@@ -9,7 +9,7 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
+public class NotImportedTransactionAccountTrigger extends AbstractChangeSetListener{
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
 
     if (changeSet.containsChanges(Series.TYPE)
@@ -254,8 +254,5 @@ public class NotImportedTransactionAccountTrigger implements ChangeSetListener {
       seriesBudget, series, targetAccountId, currentMonth.get(CurrentMonth.CURRENT_MONTH),
       currentMonth.get(CurrentMonth.CURRENT_DAY),
       repository);
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

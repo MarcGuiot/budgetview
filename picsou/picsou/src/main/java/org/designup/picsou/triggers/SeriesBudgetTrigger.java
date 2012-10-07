@@ -10,7 +10,7 @@ import java.util.*;
 
 import static org.globsframework.model.FieldValue.value;
 
-public class SeriesBudgetTrigger implements ChangeSetListener {
+public class SeriesBudgetTrigger extends AbstractChangeSetListener {
   private GlobRepository parentRepository;
 
   public SeriesBudgetTrigger(GlobRepository parentRepository) {
@@ -48,9 +48,6 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
     });
   }
 
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-  }
-
   public void updateSeriesBudget(Glob series, GlobRepository repository) {
     Integer seriesId = series.get(Series.ID);
     Map<Integer, Glob> monthWithBudget =
@@ -62,7 +59,7 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
       return;
     }
 
-    Pair<Integer, Integer> startEndValideMonth = Account.getValidMonth(series, repository);
+    Pair<Integer, Integer> startEndValidMonth = Account.getValidMonth(series, repository);
     int fromIndex;
     Integer firstMonth = series.get(Series.FIRST_MONTH);
     Integer fromDate = firstMonth == null ? monthIds[0] : Math.max(firstMonth, monthIds[0]);
@@ -78,8 +75,8 @@ public class SeriesBudgetTrigger implements ChangeSetListener {
       Calendar calendar = Calendar.getInstance();
       for (int i = fromIndex; i <= toIndex; i++) {
         int monthId = monthIds[i];
-        boolean active = series.isTrue(Series.getMonthField(monthId)) && (monthId >= startEndValideMonth.getFirst()
-                                                                          && monthId <= startEndValideMonth.getSecond());
+        boolean active = series.isTrue(Series.getMonthField(monthId)) && (monthId >= startEndValidMonth.getFirst()
+                                                                          && monthId <= startEndValidMonth.getSecond());
         Glob seriesBudget = monthWithBudget.remove(monthId);
         if (seriesBudget == null) {
           Glob existingSeriesBudget =

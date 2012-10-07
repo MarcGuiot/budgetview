@@ -68,11 +68,11 @@
       <artifactId>globs</artifactId>
       <version>1.0</version>
     </dependency>
-    <dependency>
-      <groupId>org.globsframework</groupId>
-      <artifactId>picsou</artifactId>
-      <version>1.0</version>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>org.globsframework</groupId>-->
+      <!--<artifactId>picsou</artifactId>-->
+      <!--<version>1.0</version>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>servletapi</groupId>
       <artifactId>servlet-api</artifactId>
@@ -91,13 +91,13 @@
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.globsframework</groupId>
-      <artifactId>picsou</artifactId>
-      <version>1.0</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>org.globsframework</groupId>-->
+      <!--<artifactId>picsou</artifactId>-->
+      <!--<version>1.0</version>-->
+      <!--<type>test-jar</type>-->
+      <!--<scope>test</scope>-->
+    <!--</dependency>-->
   </dependencies>
 
   <scm>

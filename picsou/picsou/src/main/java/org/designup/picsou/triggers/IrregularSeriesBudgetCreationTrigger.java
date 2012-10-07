@@ -10,7 +10,7 @@ import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
 
-public class IrregularSeriesBudgetCreationTrigger implements ChangeSetListener {
+public class IrregularSeriesBudgetCreationTrigger extends AbstractChangeSetListener{
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
@@ -43,8 +43,5 @@ public class IrregularSeriesBudgetCreationTrigger implements ChangeSetListener {
                         value(SeriesBudget.ACTIVE, true),
                         value(SeriesBudget.SERIES, values.get(Series.ID)));
     }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

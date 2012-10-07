@@ -3,6 +3,7 @@ package org.designup.picsou.model;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -24,9 +25,11 @@ public class CurrentMonth {
   @Key
   public static IntegerField ID;
 
+  @DefaultInteger(0)
   @Target(Month.class)
   public static LinkField LAST_TRANSACTION_MONTH;
 
+  @DefaultInteger(1)
   public static IntegerField LAST_TRANSACTION_DAY;
 
   @Target(Month.class)

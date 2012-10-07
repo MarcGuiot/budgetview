@@ -12,7 +12,7 @@ import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
 
-public class ProjectItemStatUpdater implements ChangeSetListener {
+public class ProjectItemStatUpdater extends AbstractChangeSetListener {
   private GlobRepository localRepository;
   private GlobRepository parentRepository;
 
@@ -79,8 +79,5 @@ public class ProjectItemStatUpdater implements ChangeSetListener {
         repository.delete(Key.create(ProjectItemStat.TYPE, key.get(ProjectItem.ID)));
       }
     });
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

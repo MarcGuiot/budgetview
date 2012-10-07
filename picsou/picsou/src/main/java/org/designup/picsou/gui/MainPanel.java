@@ -76,6 +76,7 @@ import org.globsframework.model.repository.ReplicationGlobRepository;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -137,6 +138,8 @@ public class MainPanel {
 
     directory.addFactory(SeriesEditor.class, new Directory.Factory<SeriesEditor>() {
       public SeriesEditor create() {
+        Directory directorySelection = new DefaultDirectory(directory);
+        directorySelection.add(SelectionService.class, new SelectionService());
         return new SeriesEditor(repository, directory);
       }
     });

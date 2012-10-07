@@ -12,7 +12,7 @@ import java.util.Set;
 
 import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
-public class ReconciliationDetectionTrigger implements ChangeSetListener {
+public class ReconciliationDetectionTrigger extends AbstractChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
 
     changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
@@ -58,10 +58,6 @@ public class ReconciliationDetectionTrigger implements ChangeSetListener {
         setToReconcile(transaction.getKey(), repository);
       }
     }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-
   }
 
   private void setToReconcile(Key key, GlobRepository repository) {

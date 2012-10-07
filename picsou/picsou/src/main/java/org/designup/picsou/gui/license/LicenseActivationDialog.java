@@ -11,10 +11,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.Strings;
@@ -117,7 +114,7 @@ public class LicenseActivationDialog {
   }
 
   private void initRegisterChangeListener() {
-    changeSetListener = new ChangeSetListener() {
+    changeSetListener = new AbstractChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(User.KEY)) {
           boolean isConnected = updateConnectionState(repository);
@@ -153,21 +150,15 @@ public class LicenseActivationDialog {
           }
         }
       }
-
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-      }
     };
     repository.addChangeListener(changeSetListener);
 
-    localRepository.addChangeListener(new ChangeSetListener() {
+    localRepository.addChangeListener(new AbstractChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(User.KEY)){
           Glob user = repository.get(User.KEY);
           updateSendNewCodeMessage(user);
         }
-      }
-
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
       }
     });
   }

@@ -9,7 +9,7 @@ import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
-public class ConfigUpgradeTrigger implements ChangeSetListener {
+public class ConfigUpgradeTrigger extends AbstractChangeSetListener {
   private Directory directory;
 
   public ConfigUpgradeTrigger(Directory directory) {
@@ -42,8 +42,5 @@ public class ConfigUpgradeTrigger implements ChangeSetListener {
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
       }
     });
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

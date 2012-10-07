@@ -151,11 +151,6 @@
       <type>jar</type>
     </dependency>
     <dependency>
-      <groupId>org</groupId>
-      <artifactId>saxstack</artifactId>
-      <version>2.0</version>
-    </dependency>
-    <dependency>
       <groupId>org.globsframework</groupId>
       <artifactId>shrinker</artifactId>
       <version>1.0</version>

@@ -82,8 +82,9 @@ public class TransactionDetailsView extends View {
     detailsStringifier.add(new TransactionTypeStringifier());
     detailsStringifier.add(descriptionService.getListStringifier(Transaction.ACCOUNT,
                                                                  "", Lang.get("transaction.details.account.multi")));
-    detailsStringifier.add(new DateVisibilityMatcher(Transaction.BANK_DAY, Transaction.BANK_MONTH),
-                           new TransactionDateListStringifier("transaction.details.bankDate", Transaction.BANK_MONTH, Transaction.BANK_DAY));
+    detailsStringifier.add(new DateVisibilityMatcher(Transaction.POSITION_DAY, Transaction.POSITION_MONTH),
+                           new TransactionDateListStringifier("transaction.details.bankDate",
+                                                              Transaction.POSITION_MONTH, Transaction.POSITION_DAY));
     detailsStringifier.add(new DateVisibilityMatcher(Transaction.BUDGET_DAY, Transaction.BUDGET_MONTH),
                            new TransactionDateListStringifier("transaction.details.budgetDate", Transaction.BUDGET_MONTH, Transaction.BUDGET_DAY));
 

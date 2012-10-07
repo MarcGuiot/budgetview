@@ -484,7 +484,8 @@ public class TransactionChecker extends ViewChecker {
           .append("\")\n");
       }
       builder.append(".check();\n");
-      Assert.fail("Use this code:\n" + builder.toString());
+      System.out.println(builder.toString());
+//      Assert.fail("Use this code:\n" + builder.toString());
     }
   }
 

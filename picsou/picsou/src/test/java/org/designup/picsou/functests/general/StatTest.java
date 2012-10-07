@@ -150,7 +150,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/15", -90.00, "Auchan")
       .load();
 
-    mainAccounts.checkAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0., "2008/07/15");
+    mainAccounts.checkAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME, -290., "2008/07/15");
     timeline.selectMonth("2008/07");
     transactions
       .showPlannedTransactions()
@@ -159,9 +159,9 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, "courses")
       .add("01/07/2008", TransactionType.PRELEVEMENT, "Salaire", "", -200.00, "Salaire")
       .check();
-    mainAccounts.checkEstimatedPosition(400);
+    mainAccounts.checkEstimatedPosition(110);
 
-    budgetView.getSummary().checkEndPosition(400);
+    budgetView.getSummary().checkEndPosition(110);
 
     budgetView.income.editSeries("Salaire")
       .selectMonth(200807)
@@ -176,8 +176,8 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .add("01/07/2008", TransactionType.PRELEVEMENT, "Salaire", "", -200.00, "Salaire")
       .check();
 
-    mainAccounts.checkEstimatedPosition(0);
+    mainAccounts.checkEstimatedPosition(-290);
 
-    budgetView.getSummary().checkEndPosition(0);
+    budgetView.getSummary().checkEndPosition(-290);
   }
 }

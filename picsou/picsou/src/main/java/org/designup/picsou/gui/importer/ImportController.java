@@ -93,9 +93,7 @@ public class ImportController {
       Glob target = localRepository.findLinkTarget(glob, RealAccount.ACCOUNT);
       if (target != null) {
         localRepository.update(target.getKey(),
-                               value(Account.POSITION, Amounts.extractAmount(glob.get(RealAccount.POSITION))),
-                               value(Account.POSITION_DATE, glob.get(RealAccount.POSITION_DATE)),
-                               value(Account.TRANSACTION_ID, null));
+                               value(Account.LAST_IMPORT_POSITION, Amounts.extractAmount(glob.get(RealAccount.POSITION))));
       }
     }
     if (nextImport()) {
@@ -244,7 +242,7 @@ public class ImportController {
                                 GlobMatchers.fieldIn(Transaction.IMPORT, importKeys),
                                 new GlobFunctor() {
                                   public void run(Glob month, GlobRepository repository) throws Exception {
-                                    monthIds.add(month.get(Transaction.BANK_MONTH));
+                                    monthIds.add(month.get(Transaction.POSITION_MONTH));
                                     monthIds.add(month.get(Transaction.MONTH));
                                     monthIds.add(month.get(Transaction.BUDGET_MONTH));
                                   }

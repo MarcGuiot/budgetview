@@ -8,7 +8,7 @@ import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
-public class RegistrationTrigger implements ChangeSetListener {
+public class RegistrationTrigger extends AbstractChangeSetListener {
   private final Directory directory;
 
   public RegistrationTrigger(Directory directory) {
@@ -39,9 +39,6 @@ public class RegistrationTrigger implements ChangeSetListener {
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
       }
     });
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 
   private class RegistrationThread extends Thread {

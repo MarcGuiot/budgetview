@@ -177,7 +177,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .selectBank("Other")
       .validate();
     transactionCreation.show()
-      .create(12, "BLAH", -100.00);
+      .createToBeReconciled(12, "BLAH", -100.00);
 
     // Open QIF import
     String firstQif = QifBuilder.init(this)
@@ -345,7 +345,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
         {"2008/06/10", "Metro", "71.00"},
       })
       .setMainAccount()
-      .setDeferredAccount()
+      .setDeferredAccount(25, 28, 0)
       .doImport();
 
     importDialog.selectBank(SOCIETE_GENERALE)
@@ -873,7 +873,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .checkSelectedAccount("Account n. 113")
       .checkAccountNotEditable()
-      .checkAccountDescription("Account n.113 Other Position: 100.00 on 2011/10/01")
+      .checkAccountDescription("Account n.113 Other Position: 100.00 on 2008/08/01")
       .selectAccount("a new account")
       .checkAstericsErrorOnName()
       .checkAccountPosition(300.)
@@ -884,7 +884,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .completeImportWithNext();
 
     mainAccounts.checkAccount("Account n. 113", 300., "2011/10/03");
-    mainAccounts.checkAccount("Account n. 112", 200., "2011/10/03");
+    mainAccounts.checkAccount("Account n. 112", 200., "2008/08/01");
   }
 
   public void testEmptyAssociatedToOldFollowedByNew() throws Exception {
@@ -913,7 +913,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkAccountSelectionMessage("Update:")
       .selectAccount("Account n. 00001123")
       .checkAccountNotEditable()
-      .checkAccountDescription("Account n.00001123 CIC Position: 100.00 on 2011/10/01")
+      .checkAccountDescription("Account n.00001123 CIC Position: 100.00 on 2008/06/08")
       .selectAccount("a new account")
       .checkAccountMessage("Account 2/3 - No operations")
       .checkAccountSelectionMessage("Update:")
@@ -960,7 +960,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 //      .add("08/06/2008", TransactionType.VIREMENT, "V'LIB", "", 2.00)
 //      .check();
 
-    mainAccounts.checkSummary(0., "2008/09/02");
-
+    mainAccounts.checkSummary(0., "2008/06/08");
   }
 }

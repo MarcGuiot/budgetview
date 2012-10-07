@@ -338,6 +338,22 @@ public class Month {
     return range(firstMonth, lastMonth);
   }
 
+  public static int toFullDate(int monthId, int day) {
+    return monthId * 100 + day;
+  }
+
+  public static int getDayFromFullDate(int fullDate){
+    return fullDate % 100;
+  }
+
+  public static int getMonthIdFromFullDate(int fullDate){
+    return fullDate / 100;
+  }
+
+  public static int toFullDate(Date date) {
+    return toFullDate(getMonthId(date), getDay(date));
+  }
+
   private static class RangeIterator implements Iterator<Integer> {
     private int current;
     private int max;

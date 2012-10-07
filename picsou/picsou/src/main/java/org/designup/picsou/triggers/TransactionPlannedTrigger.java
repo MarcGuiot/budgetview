@@ -181,10 +181,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
                 Log.write("Missing series " + seriesBudget.get(SeriesBudget.SERIES));
               }
               else {
-                createPlannedTransaction(series, repository,
-                                         monthId,
-                                         seriesBudget.get(SeriesBudget.DAY),
-                                         diff);
+                createPlannedTransaction(series, repository, monthId, seriesBudget.get(SeriesBudget.DAY), diff);
               }
             }
             else {

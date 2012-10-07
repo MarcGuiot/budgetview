@@ -926,7 +926,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     timeline.selectMonth("2008/06");
     categorization.selectTableRows(categorization.getTable()
-                                     .getRowIndex(CategorizationChecker.AMOUNT_COLUMN_INDEX, -15.0));
+                                     .getRowIndex(CategorizationChecker.AMOUNT_COLUMN_INDEX, "-15.00"));
     transactionDetails.split("10", "CD");
     categorization.selectExtras().selectSeries("Leisures");
 

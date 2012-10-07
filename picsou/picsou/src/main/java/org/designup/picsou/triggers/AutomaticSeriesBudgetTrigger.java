@@ -12,7 +12,7 @@ import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
 
-public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
+public class AutomaticSeriesBudgetTrigger extends AbstractChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
 
     changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
@@ -72,8 +72,5 @@ public class AutomaticSeriesBudgetTrigger implements ChangeSetListener {
         }
       }
     }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

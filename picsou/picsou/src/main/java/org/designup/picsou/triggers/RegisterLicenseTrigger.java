@@ -9,7 +9,7 @@ import org.globsframework.model.*;
 
 import java.util.Set;
 
-public class RegisterLicenseTrigger implements ChangeSetListener {
+public class RegisterLicenseTrigger extends AbstractChangeSetListener {
   private ServerAccess serverAccess;
 
   public RegisterLicenseTrigger(ServerAccess serverAccess) {
@@ -73,8 +73,5 @@ public class RegisterLicenseTrigger implements ChangeSetListener {
         }
       });
     }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

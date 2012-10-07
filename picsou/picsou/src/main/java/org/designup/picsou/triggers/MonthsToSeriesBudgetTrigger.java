@@ -13,7 +13,7 @@ import java.util.*;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 
-public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
+public class MonthsToSeriesBudgetTrigger extends AbstractChangeSetListener {
   private Directory directory;
 
   public MonthsToSeriesBudgetTrigger(Directory directory) {
@@ -161,8 +161,5 @@ public class MonthsToSeriesBudgetTrigger implements ChangeSetListener {
       }
       repository.update(budget.getKey(), SeriesBudget.PLANNED_AMOUNT, seriesAmount);
     }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 }

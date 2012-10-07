@@ -204,7 +204,7 @@ public class OfxBuilder {
     operations.openImportDialog()
       .setFilePath(fileName)
       .acceptFile()
-      .setDeferredAccount()
+      .setDeferredAccount(25, 28, 0)
       .selectBank(bank)
       .completeImport();
   }

@@ -130,7 +130,6 @@
                 <column name="innerBlock" styleClass="dialogBlock" weightY="100">
                   <panel ref="seriesAmountEditionPanel"/>
                 </column>
-                <!--<checkBox ref="autoReport" text="$seriesEdition.autoReport" border="empty(5,0,0,0)"/>-->
               </column>
             </row>
           </tab>

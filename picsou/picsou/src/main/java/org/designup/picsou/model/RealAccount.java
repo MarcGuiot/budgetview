@@ -117,7 +117,7 @@ public class RealAccount {
                              value(Account.POSITION_DATE, importedAccount.get(POSITION_DATE)),
                              value(Account.NUMBER, importedAccount.get(NUMBER)),
                              value(Account.NAME, importedAccount.get(NAME)),
-                             value(Account.POSITION, position),
+                             value(Account.LAST_IMPORT_POSITION, position),
                              value(Account.IS_IMPORTED_ACCOUNT, isImported),
                              value(Account.DIRECT_SYNCHRO, true),
                              value(Account.BANK, importedAccount.get(BANK)));

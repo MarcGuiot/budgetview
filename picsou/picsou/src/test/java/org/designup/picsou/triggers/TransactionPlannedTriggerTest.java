@@ -16,11 +16,11 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     Integer[] plannedTransaction = getPlannedTransaction();
     listener.assertLastChangesEqual(
       Transaction.TYPE,
-      "<create account='-1' amount='-29.9' bankDay='18' bankMonth='200809' mirror='false' reconciliationAnnotationSet='false'" +
+      "<create account='-1' amount='-29.9' bankDay='18' bankMonth='200809' mirror='false'" +
       "        positionDay='18' positionMonth='200809' budgetDay='18' budgetMonth='200809' " +
       "        day='18' id='" + plannedTransaction[1] + "' label='free telecom' month='200809'" +
       "        planned='true' series='100' transactionType='5' type='transaction' createdBySeries='false'/>" +
-      "<create account='-1' amount='-29.9' bankDay='18' bankMonth='200808' mirror='false' reconciliationAnnotationSet='false'" +
+      "<create account='-1' amount='-29.9' bankDay='18' bankMonth='200808' mirror='false'" +
       "        positionDay='18' positionMonth='200808' budgetDay='18' budgetMonth='200808' " +
       "        day='18' id='" + plannedTransaction[0] + "' label='free telecom' month='200808'" +
       "        planned='true' series='100' transactionType='5' type='transaction'  createdBySeries='false'/>" +
@@ -57,10 +57,10 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <create account='3' amount='-40.0' bankMonth='200808' bankDay='1' day='1' id='10' mirror='false'" +
-      "          budgetDay='1' budgetMonth='200808'  reconciliationAnnotationSet='false'" +
+      "          budgetDay='1' budgetMonth='200808'" +
       "          label='free' month='200808' planned='false' series='100' type='transaction' createdBySeries='false'/>" +
       "  <delete _account='-1' _amount='-29.9' _bankDay='18' _bankMonth='200808' _mirror='false'" +
-      "          _day='18' _label='free telecom' _month='200808' _planned='true' _reconciliationAnnotationSet='false'" +
+      "          _day='18' _label='free telecom' _month='200808' _planned='true'" +
       "          _budgetDay='18' _budgetMonth='200808' _positionDay='18' _positionMonth='200808' " +
       "          _series='100' _transactionType='5' id='" + plannedTransaction[0] + "' type='transaction' _createdBySeries='false'/>" +
       "");
@@ -74,11 +74,11 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <delete _account='-1' _amount='-29.9' _bankDay='18' _bankMonth='200809' _mirror='false'\n" +
-      "          _day='18' _label='free telecom' _month='200809' _planned='true' _reconciliationAnnotationSet='false'" +
+      "          _day='18' _label='free telecom' _month='200809' _planned='true'" +
       "          _budgetDay='18' _budgetMonth='200809' _positionDay='18' _positionMonth='200809' " +
       "          _series='100' _transactionType='5' id='" + plannedTransaction[0] + "' type='transaction' _createdBySeries='false'/>\n" +
       "  <update _budgetMonth='200808' id='10' budgetMonth='200809' type='transaction'/>" +
-      "  <create account='-1' amount='-29.9' bankDay='18' bankMonth='200808' mirror='false' reconciliationAnnotationSet='false'" +
+      "  <create account='-1' amount='-29.9' bankDay='18' bankMonth='200808' mirror='false'" +
       "           budgetDay='18' budgetMonth='200808' positionDay='18' positionMonth='200808' " +
       "          day='18' id='" + newPlannedTransaction[0] + "' label='free telecom' month='200808'\n" +
       "          planned='true' series='100' transactionType='5' type='transaction' createdBySeries='false'/>" +
@@ -96,19 +96,19 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <create account='-1' amount='2000.0' bankDay='18' bankMonth='200808' mirror='false'\n" +
-      "          positionDay='18' positionMonth='200808' budgetDay='18' budgetMonth='200808' reconciliationAnnotationSet='false'" +
+      "          positionDay='18' positionMonth='200808' budgetDay='18' budgetMonth='200808'" +
       "          day='18' id='" + incomePlannedTransaction[0] + "' label='salaire' month='200808'\n" +
       "          planned='true' series='102' transactionType='1' type='transaction' createdBySeries='false'/>\n" +
       "  <create account='-1' amount='-1000.0' bankDay='18' bankMonth='200808' mirror='false'\n" +
-      "          positionDay='18' positionMonth='200808' budgetDay='18' budgetMonth='200808' reconciliationAnnotationSet='false'" +
+      "          positionDay='18' positionMonth='200808' budgetDay='18' budgetMonth='200808'" +
       "          day='18' id='" + enveloppePlannedTransaction[0] + "' label='courses' month='200808'\n" +
       "          planned='true' series='101' transactionType='5' type='transaction' createdBySeries='false'/>" +
       "  <create account='-1' amount='2000.0' bankDay='18' bankMonth='200809' mirror='false'\n" +
-      "          positionDay='18' positionMonth='200809' budgetDay='18' budgetMonth='200809' reconciliationAnnotationSet='false'" +
+      "          positionDay='18' positionMonth='200809' budgetDay='18' budgetMonth='200809'" +
       "          day='18' id='" + incomePlannedTransaction[1] + "' label='salaire' month='200809'\n" +
       "          planned='true' series='102' transactionType='1' type='transaction' createdBySeries='false'/>\n" +
       "  <create account='-1' amount='-1000.0' bankDay='18' bankMonth='200809' mirror='false'\n" +
-      "          positionDay='18' positionMonth='200809' budgetDay='18' budgetMonth='200809' reconciliationAnnotationSet='false'" +
+      "          positionDay='18' positionMonth='200809' budgetDay='18' budgetMonth='200809'" +
       "          day='18' id='" + enveloppePlannedTransaction[1] + "' label='courses' month='200809'\n" +
       "          planned='true' series='101' transactionType='5' type='transaction' createdBySeries='false'/>\n" +
       "");
@@ -161,10 +161,10 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       Transaction.TYPE,
       "<update _amount='2000.0' amount='100.0' id='" + incomePlannedTransaction[0] + "' type='transaction'/>" +
       "<create account='3' amount='-300.0' bankMonth='200808' bankDay='1' id='1' label='Auchan'" +
-      "        budgetDay='1' budgetMonth='200808' reconciliationAnnotationSet='false'" +
+      "        budgetDay='1' budgetMonth='200808'" +
       "        planned='false' series='101' type='transaction' mirror='false'  createdBySeries='false'/>" +
       "<create account='3' amount='1900.0' bankMonth='200808' bankDay='1' id='0' label='picsou'" +
-      "        budgetDay='1' budgetMonth='200808' reconciliationAnnotationSet='false'" +
+      "        budgetDay='1' budgetMonth='200808'" +
       "        planned='false' series='102' type='transaction' mirror='false'  createdBySeries='false'/>" +
       "<update _amount='-1000.0' amount='-700.0' id='" + enveloppePlannedTransaction[0] + "' type='transaction'/>");
     repository.startChangeSet();
@@ -190,7 +190,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "<update _amount='-700.0' amount='-800.0' id='" + enveloppePlannedTransaction[0] + "' type='transaction'/>\n" +
       "<create amount='-100.0' bankMonth='200808' bankDay='1' budgetDay='1'  id='2' budgetMonth='200808'\n" +
       "        planned='false' series='0' type='transaction' mirror='false' createdBySeries='false'" +
-      "        reconciliationAnnotationSet='false' account='3'/>");
+      "        account='3'/>");
   }
 
   public void testOverrunEnveloppe() throws Exception {
@@ -229,7 +229,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       Transaction.TYPE,
       "  <update _amount='-600.0' amount='-30.0' id='3' type='transaction'/>" +
       "  <create account='-1' amount='-70.0' bankDay='18' bankMonth='200808' budgetMonth='200808' budgetDay='18' mirror='false'" +
-      "          positionMonth='200808' positionDay='18' reconciliationAnnotationSet='false'" +
+      "          positionMonth='200808' positionDay='18'" +
       "          day='18' id='102' label='courses' month='200808'" +
       "          planned='true' series='101' transactionType='5' type='transaction' createdBySeries='false'/>");
     repository.update(Key.create(Transaction.TYPE, 3), Transaction.AMOUNT, -200.);
@@ -239,7 +239,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <delete _account='-1' _amount='-70.0' _bankDay='18' _bankMonth='200808' _mirror='false'\n" +
-      "          _day='18' _label='courses' _month='200808' _planned='true' _reconciliationAnnotationSet='false'" +
+      "          _day='18' _label='courses' _month='200808' _planned='true'" +
       "          _budgetDay='18' _budgetMonth='200808' _positionDay='18' _positionMonth='200808' " +
       "          _series='101' _transactionType='5' id='102' type='transaction' _createdBySeries='false'/>\n" +
       "  <update _amount='-30.0' amount='-200.0' id='3' type='transaction'/>");
@@ -273,7 +273,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "  <update _amount='2200.0' amount='1900.0' id='103' type='transaction'/>\n" +
       "  <create account='-1' amount='100.0' bankDay='18' bankMonth='200808'\n mirror='false'" +
       "          positionMonth='200808' positionDay='18' budgetMonth='200808' budgetDay='18' " +
-      "          day='18' id='" + transaction[0] + "' label='salaire' month='200808' reconciliationAnnotationSet='false'" +
+      "          day='18' id='" + transaction[0] + "' label='salaire' month='200808'" +
       "          planned='true' series='102' transactionType='1' type='transaction' createdBySeries='false'/>");
 
     transaction = getPlannedTransaction(INCOME_SERIES_ID);
@@ -286,7 +286,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "  <update _amount='1900.0' amount='2300.0' id='103' type='transaction'/>\n" +
       "  <delete _account='-1' _amount='100.0' _bankDay='18' _bankMonth='200808' _mirror='false'\n" +
       "          _positionMonth='200808' _positionDay='18' _budgetMonth='200808' _budgetDay='18' " +
-      "          _day='18' _label='salaire' _month='200808' _planned='true' _reconciliationAnnotationSet='false'" +
+      "          _day='18' _label='salaire' _month='200808' _planned='true'" +
       "          _series='102' _transactionType='1' id='" + transaction[0] + "' type='transaction' _createdBySeries='false'/>");
 
   }

@@ -6,6 +6,12 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
 
 public class AccountEditionTest extends LoggedInFunctionalTestCase {
+
+  protected void setUp() throws Exception {
+    setCurrentDate("2008/10/15");
+    super.setUp();
+  }
+
   public void testEditingAnExistingAccount() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "0000123", 100.00, "2008/10/15")
@@ -337,7 +343,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/10");
     mainAccounts.checkAccountNames("Main", "Account n. 0000100");
     mainAccounts.checkAccount("Account n. 0000100", 900, "2008/10/01");
-    mainAccounts.checkAccount("Main", 1000, "2008/08/31");
+    mainAccounts.checkAccount("Main", 1000, "2008/10/01");
     mainAccounts.checkEstimatedPosition(1900);
   }
 
@@ -371,11 +377,12 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkEndDate("2008/12/03")
       .validate();
     mainAccounts.checkAccountNames("Main", "Closed main");
-    mainAccounts.checkEstimatedPosition(1850);
+    mainAccounts.checkEstimatedPosition(1950);
+    mainAccounts.checkSummary(2000, "2008/10/01");
 
     timeline.selectMonth("2009/01");
     mainAccounts.checkAccountNames("Main");
-    mainAccounts.checkEstimatedPosition(700);
+    mainAccounts.checkEstimatedPosition(800);
   }
 
   public void testBeginEndInThePastWithTransactions() throws Exception {
@@ -510,6 +517,10 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setStartDate("2008/05/01")
       .setEndDate("2008/07/01")
       .validate();
+    transactions
+      .initAmountContent()
+      .add("01/06/2008", "SALAIRE/OCT", 1000.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .check();
 
     OfxBuilder.init(this)
       .addTransaction("2008/05/01", 1000.00, "Salaire/oct")
@@ -520,9 +531,38 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions
       .initAmountContent()
-      .add("01/08/2008", "SALAIRE/OCT", 1000.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
-      .add("01/06/2008", "SALAIRE/OCT", 1000.00, "To categorize", -1000.00, -1000.00, "Account n. 00001123")
-      .add("01/05/2008", "SALAIRE/OCT", 1000.00, "To categorize", -2000.00, -2000.00, "Account n. 00001123")
+      .add("01/08/2008", "SALAIRE/OCT", 1000.00, "To categorize", 1000.00, 1000.00, "Account n. 00001123")
+      .add("01/06/2008", "SALAIRE/OCT", 1000.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("01/05/2008", "SALAIRE/OCT", 1000.00, "To categorize", -1000.00, -1000.00, "Account n. 00001123")
+      .check();
+  }
+
+  public void testImportWithFirstTransactionRealyBeforeAndAfterOpenCloseAccount() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/01", 1000.00, "Salaire/oct")
+      .load();
+
+    mainAccounts.edit(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .setStartDate("2008/05/01")
+      .setEndDate("2008/07/01")
+      .validate();
+    transactions
+      .initAmountContent()
+      .add("01/06/2008", "SALAIRE/OCT", 1000.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .check();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/04/01", 1000.00, "Salaire/oct")
+      .addTransaction("2008/08/01", 1000.00, "Salaire/oct")
+      .load();
+
+    timeline.selectAll();
+    views.selectData();
+    transactions
+      .initAmountContent()
+      .add("01/08/2008", "SALAIRE/OCT", 1000.00, "To categorize", 1000.00, 1000.00, "Account n. 00001123")
+      .add("01/06/2008", "SALAIRE/OCT", 1000.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("01/04/2008", "SALAIRE/OCT", 1000.00, "To categorize", -1000.00, -1000.00, "Account n. 00001123")
       .check();
   }
 
@@ -558,8 +598,8 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     views.selectData();
     transactions.initContent()
       .add("28/06/2008", TransactionType.PRELEVEMENT, "PRELEVEMENT", "", -550.00, "Card n. 1111")
-      .add("27/06/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", -50.00)
       .add("01/06/2008", TransactionType.VIREMENT, "SALAIRE/OCT", "", 1000.00)
+      .add("29/05/2008", TransactionType.CREDIT_CARD, "AUCHAN", "", -50.00)
       .check();
   }
 

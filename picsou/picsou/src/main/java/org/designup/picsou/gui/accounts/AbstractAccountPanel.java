@@ -14,6 +14,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
@@ -34,6 +35,7 @@ import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 public class AbstractAccountPanel<T extends GlobRepository> {
   protected JPanel panel;
   protected T localRepository;
+  private boolean createAccount;
   protected Glob currentAccount;
   protected JTextField positionEditor;
   protected JTextArea warningMessage;
@@ -50,9 +52,13 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   private MandatoryFieldFlag accountTypeFlag;
   private boolean editable = true;
   private GlobTextEditor number;
+  private GlobNumericEditor datePrelevement;
+  private GlobNumericEditor datePeriod;
+  private GlobNumericEditor shiftMonth;
 
-  public AbstractAccountPanel(T repository, Directory parentDirectory) {
+  public AbstractAccountPanel(T repository, Directory parentDirectory, boolean createAccount) {
     this.localRepository = repository;
+    this.createAccount = createAccount;
 
     localDirectory = new DefaultDirectory(parentDirectory);
     selectionService = new SelectionService();
@@ -91,6 +97,9 @@ public class AbstractAccountPanel<T extends GlobRepository> {
           clearMessage();
           setWarning(currentAccount.get(Account.ACCOUNT_TYPE), currentAccount.get(Account.CARD_TYPE));
         }
+        if (changeSet.containsChanges(currentAccountKey, Account.CARD_TYPE)) {
+          updateDeferred(currentAccount.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId()));
+        }
       }
     });
 
@@ -104,7 +113,11 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     builder.add("messageWarning", warningMessage);
     warningMessage.setVisible(false);
 
-    positionEditor = builder.addEditor("position", Account.POSITION).setNotifyOnKeyPressed(true).getComponent();
+    datePeriod = builder.addEditor("datePeriod", Account.DEFERRED_DAY);
+    datePrelevement = builder.addEditor("datePrelevement", Account.DEFERRED_PRELEVEMENT_DAY);
+    shiftMonth = builder.addEditor("shiftMonth", Account.DEFERRED_MONTH_SHIFT);
+
+    positionEditor = builder.addEditor("position", createAccount ? Account.FIRST_POSITION : Account.LAST_IMPORT_POSITION).setNotifyOnKeyPressed(true).getComponent();
 
     builder.addLoader(new SplitsLoader() {
       public void load(Component component, SplitsNode node) {
@@ -112,6 +125,12 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         panel.setVisible(false);
       }
     });
+  }
+
+  private void updateDeferred(boolean isDeferred) {
+    datePeriod.getComponent().setVisible(isDeferred);
+    datePrelevement.getComponent().setVisible(isDeferred);
+    shiftMonth.getComponent().setVisible(isDeferred);
   }
 
   public void setBalanceEditorVisible(boolean visible) {
@@ -154,10 +173,11 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   public void setAccount(Glob account) {
     this.currentAccount = account;
     accountTypeCombo.update(currentAccount);
-    Integer accountType = account.get(Account.ACCOUNT_TYPE);
-    setWarning(accountType, account.get(Account.CARD_TYPE));
     if (account != null) {
       selectionService.select(account);
+      Integer accountType = account.get(Account.ACCOUNT_TYPE);
+      setWarning(accountType, account.get(Account.CARD_TYPE));
+      updateDeferred(AccountCardType.DEFERRED.getId().equals(account.get(Account.CARD_TYPE)));
     }
     else {
       selectionService.clear(Account.TYPE);

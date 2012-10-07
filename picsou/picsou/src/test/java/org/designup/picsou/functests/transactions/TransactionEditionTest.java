@@ -99,7 +99,7 @@ public class TransactionEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectAll();
     transactions.initAmountContent()
-      .add("10/08/2008", "VIREMENT", 100.00, "ToSavings", 1000.00, 1000.00, "Livret")
+      .add("10/08/2008", "VIREMENT", 100.00, "ToSavings", 1100.00, 1100.00, "Livret")
       .add("10/08/2008", "VIREMENT", -100.00, "ToSavings", 0.00, 0.00, "Account n. 00001123")
       .check();
 
@@ -108,7 +108,7 @@ public class TransactionEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     transactions.initAmountContent()
-      .add("10/08/2008", "VIRT EPARGNE", 100.00, "ToSavings", 1000.00, 1000.00, "Livret")
+      .add("10/08/2008", "VIRT EPARGNE", 100.00, "ToSavings", 1100.00, 1100.00, "Livret")
       .add("10/08/2008", "VIRT EPARGNE", -100.00, "ToSavings", 0.00, 0.00, "Account n. 00001123")
       .check();
 
@@ -117,7 +117,7 @@ public class TransactionEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     transactions.initAmountContent()
-      .add("10/08/2008", "EPARGNE", 100.00, "ToSavings", 1000.00, 1000.00, "Livret")
+      .add("10/08/2008", "EPARGNE", 100.00, "ToSavings", 1100.00, 1100.00, "Livret")
       .add("10/08/2008", "EPARGNE", -100.00, "ToSavings", 0.00, 0.00, "Account n. 00001123")
       .check();
   }

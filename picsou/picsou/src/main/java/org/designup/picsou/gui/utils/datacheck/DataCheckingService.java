@@ -286,7 +286,7 @@ public class DataCheckingService {
           report.addError("Current position date before last operation " + Dates.toString(positionDate) + " / " +
                           Dates.toString(lastTransactionDate));
         }
-        Date bankDate = Month.toDate(transaction.get(Transaction.BANK_MONTH), transaction.get(Transaction.BANK_DAY));
+        Date bankDate = Month.toDate(transaction.get(Transaction.POSITION_MONTH), transaction.get(Transaction.POSITION_DAY));
         if (bankDate.after(lastTransactionDate)){
           report.addError("Current bank date before last operation " + Dates.toString(positionDate) + " / " +
                           Dates.toString(lastTransactionDate));
@@ -368,8 +368,8 @@ public class DataCheckingService {
     Integer month = transaction.get(Transaction.MONTH);
     if (month < firstMonthForSeries || month > lastMonthForSeries) {
       buffer.append("Transaction is not in Series dates ")
-        .append(Month.toString(transaction.get(Transaction.BANK_MONTH),
-                               transaction.get(Transaction.BANK_DAY)))
+        .append(Month.toString(transaction.get(Transaction.POSITION_MONTH),
+                               transaction.get(Transaction.POSITION_DAY)))
         .append(" ").append(transaction.get(Transaction.LABEL));
     }
   }
@@ -384,7 +384,7 @@ public class DataCheckingService {
           buffer.append("savings transaction badly categorized ")
             .append(transaction.get(Transaction.LABEL))
             .append(" at : ")
-            .append(Month.toString(transaction.get(Transaction.BANK_MONTH), transaction.get(Transaction.DAY)))
+            .append(Month.toString(transaction.get(Transaction.POSITION_MONTH), transaction.get(Transaction.POSITION_DAY)))
             .append(". Uncategorized : you must recategorize it");
           try {
             repository.startChangeSet();
@@ -401,7 +401,7 @@ public class DataCheckingService {
         if (fromAccount != null && !transaction.get(Transaction.ACCOUNT).equals(fromAccount)) {
           buffer.append("savings transaction badly categorized ").append(transaction.get(Transaction.LABEL))
             .append(" at : ")
-            .append(Month.toString(transaction.get(Transaction.BANK_MONTH), transaction.get(Transaction.DAY)))
+            .append(Month.toString(transaction.get(Transaction.POSITION_MONTH), transaction.get(Transaction.POSITION_DAY)))
             .append(". Uncategorized : you must recategorize it");
           try {
             repository.startChangeSet();
@@ -449,7 +449,7 @@ public class DataCheckingService {
         }
         buffer.append(glob.get(Transaction.LABEL))
           .append(" bank date : ")
-          .append(Month.toString(glob.get(Transaction.BANK_MONTH), glob.get(Transaction.BANK_DAY)))
+          .append(Month.toString(glob.get(Transaction.POSITION_MONTH), glob.get(Transaction.POSITION_DAY)))
           .append(" user date : ")
           .append(Month.toString(glob.get(Transaction.MONTH), glob.get(Transaction.DAY)));
       }
@@ -470,11 +470,13 @@ public class DataCheckingService {
     }
 
     void addMonth(Integer month) {
-      if (month > lastMonthForTransaction) {
-        lastMonthForTransaction = month;
-      }
-      if (month < firstMonthForTransaction) {
-        firstMonthForTransaction = month;
+      if (month != null) {
+        if (month > lastMonthForTransaction) {
+          lastMonthForTransaction = month;
+        }
+        if (month < firstMonthForTransaction) {
+          firstMonthForTransaction = month;
+        }
       }
     }
 

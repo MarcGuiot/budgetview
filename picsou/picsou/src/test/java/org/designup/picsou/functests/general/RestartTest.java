@@ -512,11 +512,11 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2008/08");
-    savingsAccounts.checkEstimatedPosition("Epargne", 1000);
-    timeline.selectMonth("2008/09");
     savingsAccounts.checkEstimatedPosition("Epargne", 1300);
-    timeline.selectMonth("2008/10");
+    timeline.selectMonth("2008/09");
     savingsAccounts.checkEstimatedPosition("Epargne", 1600);
+    timeline.selectMonth("2008/10");
+    savingsAccounts.checkEstimatedPosition("Epargne", 1900);
 
     timeline.selectAll();
     transactions
@@ -539,11 +539,11 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     timeline.selectMonth("2008/08");
-    savingsAccounts.checkEstimatedPosition("Epargne", 1000);
-    timeline.selectMonth("2008/09");
     savingsAccounts.checkEstimatedPosition("Epargne", 1300);
-    timeline.selectMonth("2008/10");
+    timeline.selectMonth("2008/09");
     savingsAccounts.checkEstimatedPosition("Epargne", 1600);
+    timeline.selectMonth("2008/10");
+    savingsAccounts.checkEstimatedPosition("Epargne", 1900);
 
     views.selectData();
     timeline.selectAll();
@@ -722,7 +722,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     transactionCreation.show()
       .checkSelectedAccount("Main")
-      .create(15, "Auchan", -50.00);
+      .createToBeReconciled(15, "Auchan", -50.00);
 
     restartApplication();
 

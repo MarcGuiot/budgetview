@@ -102,10 +102,12 @@ public class PicsouInit {
   }
 
   public static void initTriggers(ServerAccess serverAccess, Directory directory, final GlobRepository repository) {
+    repository.addTrigger(new CurrentMonthTrigger());
+    repository.addTrigger(new MonthTrigger(directory));
+    repository.addTrigger(new AccountInitialPositionTrigger());
     repository.addTrigger(new DeleteInitialSeriesTrigger());
     repository.addTrigger(new SavingsAccountUpdateSeriesTrigger());
     repository.addTrigger(new SavingsUpdateSeriesMirrorTrigger());
-    repository.addTrigger(new CurrentMonthTrigger());
     repository.addTrigger(new SavingsDateActiveBudgetTrigger());
     repository.addTrigger(new UpdateActiveBudgetTrigger());
     repository.addTrigger(new ConfigUpgradeTrigger(directory));
@@ -115,7 +117,6 @@ public class PicsouInit {
     repository.addTrigger(new SubSeriesDeletionTrigger());
     repository.addTrigger(new RegistrationTrigger(directory));
     repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
-    repository.addTrigger(new MonthTrigger(directory));
     repository.addTrigger(new DayTrigger());
     repository.addTrigger(new DeferredAccountTrigger());
     repository.addTrigger(new DeferredCardDayTrigger());
@@ -137,7 +138,7 @@ public class PicsouInit {
     repository.addTrigger(new SavingsBudgetStatTrigger());
     repository.addTrigger(new SubSeriesStatTrigger());
     repository.addTrigger(new ProjectStatTrigger());
-    repository.addTrigger(new ReconciliationDetectionTrigger());
+//    repository.addTrigger(new ReconciliationDetectionTrigger());
     repository.addTrigger(new DateFormatTrigger(directory));
   }
 
@@ -292,8 +293,8 @@ public class PicsouInit {
       }
 
       repository.findOrCreate(CurrentMonth.KEY,
-                              value(CurrentMonth.LAST_TRANSACTION_MONTH, 0),
                               value(CurrentMonth.LAST_TRANSACTION_DAY, 0),
+                              value(CurrentMonth.LAST_TRANSACTION_MONTH, 0),
                               value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
                               value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
       repository.findOrCreate(Account.MAIN_SUMMARY_KEY,

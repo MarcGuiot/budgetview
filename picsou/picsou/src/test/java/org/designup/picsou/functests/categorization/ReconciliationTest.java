@@ -28,18 +28,18 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     transactionCreation.show();
     transactionCreation
       .selectAccount("Account 1")
-      .create(1, "FNAC", -100.00)
-      .create(12, "Auchan", -50.00);
+      .createToBeReconciled(1, "FNAC", -100.00)
+      .createToBeReconciled(12, "Auchan", -50.00);
     categorization.initContent()
-      .add("12/05/2012", "", "AUCHAN", -50.00)
-      .add("01/05/2012", "", "FNAC", -100.00)
+      .add("12/05/2012", "", "[R] AUCHAN", -50.00)
+      .add("01/05/2012", "", "[R] FNAC", -100.00)
       .check();
     budgetView.variable.createSeries()
       .setName("Groceries")
       .gotoSubSeriesTab()
       .addSubSeries("Misc")
       .validate();
-    categorization.setVariable("AUCHAN", "Groceries", "Misc");
+    categorization.setVariable("[R] AUCHAN", "Groceries", "Misc");
 
     OfxBuilder.init(this)
       .addBankAccount("00123", 1000.00, "2012/05/15")
@@ -129,10 +129,10 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     transactionCreation
       .show()
       .selectAccount("Account 1")
-      .create(7, "AUCHAN", -25.00)
-      .create(8, "AUCHAN", -50.00)
+      .createToBeReconciled(7, "AUCHAN", -25.00)
+      .createToBeReconciled(8, "AUCHAN", -50.00)
       .selectMonth(201204)
-      .create(9, "AUCHAN", -75.00);
+      .createToBeReconciled(9, "AUCHAN", -75.00);
 
     categorization.checkReconciliationWarningShown("3 transactions to reconcile");
 
@@ -183,8 +183,8 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     transactionCreation
       .show()
-      .create(20, "CHEQUE N° 12345", -100.00)
-      .create(20, "Auchan 1", -50.00);
+      .createToBeReconciled(20, "CHEQUE N° 12345", -100.00)
+      .createToBeReconciled(20, "Auchan 1", -50.00);
     categorization.initContent()
       .add("20/05/2012", "", "[R] AUCHAN 1", -50.00)
       .add("20/05/2012", "", "[R] CHEQUE N° 12345", -100.00)
@@ -235,11 +235,11 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     transactionCreation
       .show()
-      .create(10, "CHEQUE N° 12345", -100.00)
-      .create(10, "Auchan 1", -50.00);
+      .createToBeReconciled(10, "CHEQUE N° 12345", -100.00)
+      .createToBeReconciled(10, "Auchan 1", -50.00);
     categorization.initContent()
-      .add("10/05/2012", "", "AUCHAN 1", -50.00)
-      .add("10/05/2012", "", "CHEQUE N° 12345", -100.00)
+      .add("10/05/2012", "", "[R] AUCHAN 1", -50.00)
+      .add("10/05/2012", "", "[R] CHEQUE N° 12345", -100.00)
       .check();
 
     OfxBuilder.init(this)
@@ -283,11 +283,11 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     transactionCreation
       .show()
-      .create(10, "Manual 1", -100.00)
-      .create(10, "ToReconcile", -50.00);
+      .createToBeReconciled(10, "Manual 1", -100.00)
+      .createToBeReconciled(10, "ToReconcile", -50.00);
     categorization.initContent()
-      .add("10/05/2012", "", "MANUAL 1", -100.00)
-      .add("10/05/2012", "", "TORECONCILE", -50.00)
+      .add("10/05/2012", "", "[R] MANUAL 1", -100.00)
+      .add("10/05/2012", "", "[R] TORECONCILE", -50.00)
       .check();
 
     OfxBuilder.init(this)
@@ -349,4 +349,13 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
   public void testReconciledTransactionsAreAutomaticallyAnnotated() throws Exception {
     fail("tbd - les opérations réconciliées sont-elles automatiquement pointées ?");
   }
+
+  public void testAtImportManualOperationAreShift() throws Exception {
+    fail("tbd - les operations manuel non reconcilié sont shifté au jours de l'import");
+  }
+  
+  public void testManulOnly() throws Exception {
+    fail("En pure manuel, on ne doit pas shifter les operations.");
+  }
+  
 }

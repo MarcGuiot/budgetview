@@ -36,6 +36,7 @@ import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Ref;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -86,7 +87,6 @@ public class SeriesEditionDialog {
   private GlobMatcher accountFilter;
   private GlobLinkComboEditor budgetAreaCombo;
   private TabHandler tabs;
-  private GlobCheckBoxView reportCheckBox;
   private ReadOnlyGlobTextFieldView startTextFieldView;
   private ReadOnlyGlobTextFieldView endDateTextFieldView;
 
@@ -158,33 +158,6 @@ public class SeriesEditionDialog {
 
     nameEditor = builder.addEditor("nameField", Series.NAME).setNotifyOnKeyPressed(true);
     nameEditor.getComponent().addActionListener(okAction);
-
-    reportCheckBox = builder.addCheckBox("autoReport", Series.SHOULD_REPORT);
-    localRepository.addChangeListener(new ChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
-        changeSet.safeVisit(Series.TYPE, new DefaultChangeSetVisitor() {
-          public void visitCreation(Key key, FieldValues values) throws Exception {
-            reportCheckBox.getComponent().setVisible(false && !values.get(Series.IS_AUTOMATIC));
-          }
-
-          public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-            if (values.contains(Series.IS_AUTOMATIC)) {
-              if (values.get(Series.IS_AUTOMATIC)) {
-                repository.update(key, Series.SHOULD_REPORT, false);
-                reportCheckBox.getComponent().setVisible(false);
-              }
-              else {
-                reportCheckBox.getComponent().setVisible(false);
-              }
-            }
-          }
-        });
-      }
-
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-
-      }
-    });
 
     builder.addMultiLineEditor("descriptionField", Series.DESCRIPTION).setNotifyOnKeyPressed(true);
 
@@ -668,8 +641,8 @@ public class SeriesEditionDialog {
     this.forecastPanel.setCurrentSeries(currentSeries);
     endDateTextFieldView.getComponent().setEnabled(this.currentSeries != null);
     startTextFieldView.getComponent().setEnabled(this.currentSeries != null);
-    reportCheckBox.getComponent().setEnabled(this.currentSeries != null);
-    reportCheckBox.getComponent().setVisible(false); //this.currentSeries != null && !currentSeries.get(Series.IS_AUTOMATIC));
+//    reportCheckBox.getComponent().setEnabled(this.currentSeries != null);
+//    reportCheckBox.getComponent().setVisible(false); //this.currentSeries != null && !currentSeries.get(Series.IS_AUTOMATIC));
     if (currentSeries != null) {
       isAutomatic = currentSeries.get(Series.IS_AUTOMATIC);
     }
@@ -698,7 +671,7 @@ public class SeriesEditionDialog {
       if (currentSeries != null) {
         createdSeries = currentSeries.getKey();
         lastSelectedSubSeriesId = SeriesEditionDialog.this.getCurrentSubSeriesId();
-        if (currentSeries.get(Series.NAME).isEmpty()) {
+        if (Strings.isNullOrEmpty(currentSeries.get(Series.NAME))) {
           JTextField component = nameEditor.getComponent();
           ErrorTip.showLeft(component,
                             Lang.get("seriesEdition.emptyNameError"),
@@ -902,7 +875,7 @@ public class SeriesEditionDialog {
     }
   }
 
-  private class ResetAllBudgetIfInAutomaticAndNoneAccountAreImported implements ChangeSetListener {
+  private class ResetAllBudgetIfInAutomaticAndNoneAccountAreImported extends AbstractChangeSetListener {
     public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
       changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
         public void visitCreation(Key key, FieldValues values) throws Exception {
@@ -923,9 +896,6 @@ public class SeriesEditionDialog {
         public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
         }
       });
-    }
-
-    public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     }
   }
 }

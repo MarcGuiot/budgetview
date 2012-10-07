@@ -5,6 +5,7 @@ import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 
 import javax.swing.*;
+import javax.swing.text.Document;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
@@ -91,6 +92,9 @@ public class TransactionCreationChecker extends ViewChecker {
     checkShowing();
     TextBox textBox = getPanel().getInputTextBox("label");
     textBox.setText(label, false);
+    if (!textBox.getText().equals(label)){
+      textBox.typeKey(Key.DELETE);
+    }
     textBox.focusLost();
     return this;
   }
@@ -115,16 +119,61 @@ public class TransactionCreationChecker extends ViewChecker {
     return this;
   }
 
+  public TransactionCreationChecker createToBeReconciled(int day, String label, double amount) {
+    setDay(day);
+    setAmount(amount);
+    setLabel(label);
+    create(true);
+    return this;
+  }
+
   public TransactionCreationChecker create(int day, String label, double amount) {
     setDay(day);
     setAmount(amount);
     setLabel(label);
-    create();
+    create(false);
     return this;
   }
 
+  public TransactionCreationChecker setNotToBeReconcile(){
+    panel.getCheckBox("shouldBeReconciled").unselect();
+    assertFalse(panel.getCheckBox("shouldBeReconciled").isSelected());
+    return this;
+  }
+
+  public TransactionCreationChecker checkIsNotReconcile(){
+    assertFalse(panel.getCheckBox("shouldBeReconciled").isSelected());
+    return this;
+  }
+
+  public TransactionCreationChecker setToBeReconcile(){
+    panel.getCheckBox("shouldBeReconciled").select();
+    assertTrue(panel.getCheckBox("shouldBeReconciled").isSelected());
+    return this;
+  }
+
+  public TransactionCreationChecker checkIsToReconcile(){
+    assertTrue(panel.getCheckBox("shouldBeReconciled").isSelected());
+    return this;
+  }
+
+
   public TransactionCreationChecker create() {
+    return create(false);
+  }
+
+  public TransactionCreationChecker createToReconciled() {
+    return create(true);
+  }
+
+  private TransactionCreationChecker create(boolean toReconciled) {
     checkShowing();
+    if (toReconciled){
+      setToBeReconcile();
+    }
+    else {
+      setNotToBeReconcile();
+    }
     Panel panel = getPanel();
     panel.getButton("Create").click();
     TextBox errorMessage = panel.getTextBox("errorMessage");

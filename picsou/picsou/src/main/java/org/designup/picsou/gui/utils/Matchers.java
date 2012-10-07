@@ -129,7 +129,8 @@ public class Matchers {
   }
 
   public static GlobMatcher deferredCardSeries() {
-    return GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId());
+    return GlobMatchers.and(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
+                            GlobMatchers.not(GlobMatchers.fieldEquals(Series.ID, Series.ACCOUNT_SERIES_ID)));
   }
 
   public static CategorizationFilter deferredCardCategorizationFilter() {
@@ -150,6 +151,9 @@ public class Matchers {
 
     public boolean matches(Glob series, GlobRepository repository) {
       if (transactions.isEmpty()) {
+        return false;
+      }
+      if (series.get(Series.ID).equals(Series.ACCOUNT_SERIES_ID)){
         return false;
       }
       if (filter.matches(series, repository)) {
