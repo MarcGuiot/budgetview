@@ -14,7 +14,7 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="4dp"
     >
-    <TextView android:id="@+id/budgetAreaLabel"
+    <TextView android:id="@+id/overviewMonthLabel"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:gravity="center_vertical"

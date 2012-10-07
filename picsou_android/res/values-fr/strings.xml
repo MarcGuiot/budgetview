@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">BudgetView</string>
+  <string name="month_jan">Janvier</string>
+  <string name="month_feb">Fevrier</string>
+  <string name="month_mar">Mars</string>
+  <string name="month_apr">Avril</string>
+  <string name="month_may">Mai</string>
+  <string name="month_june">Juin</string>
+  <string name="month_july">Juillet</string>
+  <string name="month_aug">Août</string>
+  <string name="month_sep">Septembre</string>
+  <string name="month_oct">Octobre</string>
+  <string name="month_nov">Novembre</string>
+  <string name="month_dec">Décembre</string>
+</resources>

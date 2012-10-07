@@ -11,10 +11,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.budgetview.android.components.GaugeView;
 import com.budgetview.shared.model.BudgetAreaEntity;
+import com.budgetview.shared.model.BudgetAreaValues;
 import com.budgetview.shared.model.SeriesValues;
 import com.budgetview.shared.utils.AmountFormat;
+import com.budgetview.shared.utils.SeriesValuesComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.Key;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
 
@@ -22,17 +25,31 @@ public class SeriesListActivity extends Activity {
 
   public static String MONTH_PARAMETER = "seriesListActivity.parameters.month";
   public static String BUDGET_AREA_PARAMETER = "seriesListActivity.parameters.series";
+
   private Integer monthId;
-  private Integer seriesId;
+  private Integer budgetAreaId;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     Intent intent = getIntent();
     monthId = intent.getIntExtra(MONTH_PARAMETER, -1);
-    seriesId = intent.getIntExtra(BUDGET_AREA_PARAMETER, -1);
+    budgetAreaId = intent.getIntExtra(BUDGET_AREA_PARAMETER, -1);
 
     setContentView(R.layout.series_list);
+
+    TextView monthText = (TextView)findViewById(R.id.seriesMonthLabel);
+    monthText.setText(Text.monthToString(monthId, getResources()));
+
+    Glob budgetAreaValues =
+      App.getRepository().get(Key.create(BudgetAreaValues.MONTH, monthId,
+                                         BudgetAreaValues.BUDGET_AREA, budgetAreaId));
+    Glob budgetAreaEntity = App.getRepository().findLinkTarget(budgetAreaValues, BudgetAreaValues.BUDGET_AREA);
+    String budgetAreaLabel = budgetAreaEntity.get(BudgetAreaEntity.LABEL);
+    TextView budgetAreaText = (TextView)findViewById(R.id.seriesBudgetAreaLabel);
+    budgetAreaText.setText(budgetAreaLabel);
+
+    setTitle("BudgetView - " + budgetAreaLabel);
 
     ListView list = (ListView)findViewById(R.id.seriesList);
     list.setAdapter(new SeriesListAdapter());
@@ -44,11 +61,13 @@ public class SeriesListActivity extends Activity {
 
     private SeriesListAdapter() {
       seriesValuesList =
-        App.getRepository().getAll(SeriesValues.TYPE,
-                                   and(
-                                     fieldEquals(SeriesValues.MONTH, monthId),
-                                     fieldEquals(SeriesValues.BUDGET_AREA, seriesId)
-                                   ));
+        App.getRepository()
+          .getAll(SeriesValues.TYPE,
+                  and(
+                    fieldEquals(SeriesValues.MONTH, monthId),
+                    fieldEquals(SeriesValues.BUDGET_AREA, budgetAreaId)
+                  ))
+          .sort(new SeriesValuesComparator());
     }
 
     public int getCount() {

@@ -4,8 +4,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:orientation="horizontal"
+              android:orientation="vertical"
               android:background="#FFFFFF">
+
+  <TextView android:id="@+id/seriesMonthLabel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"/>
+
+  <TextView android:id="@+id/seriesBudgetAreaLabel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="bold"/>
 
   <ListView android:id="@+id/seriesList"
             android:layout_width="fill_parent"

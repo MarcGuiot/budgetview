@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">BudgetView</string>
-  <string name="edit_message">Edit</string>
-  <string name="button_send">Click!</string>
-  <string name="text_message">Allo?</string>
+  <string name="app_name">BudgetView</string>
+  <string name="month_jan">January</string>
+  <string name="month_feb">February</string>
+  <string name="month_mar">March</string>
+  <string name="month_apr">April</string>
+  <string name="month_may">May</string>
+  <string name="month_june">June</string>
+  <string name="month_july">July</string>
+  <string name="month_aug">August</string>
+  <string name="month_sep">September</string>
+  <string name="month_oct">October</string>
+  <string name="month_nov">November</string>
+  <string name="month_dec">Décember</string>
 </resources>

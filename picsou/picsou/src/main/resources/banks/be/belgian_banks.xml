@@ -4,6 +4,7 @@
 
     <bank name="ING Belgique" url="https://www.ing.be/fr" id="102100"/>
     <bank name="KBC Banque" url="https://www.kbc.be" id="102101"/>
+    <bank name="Banque Desjardins" url="http://www.desjardinsbank.com/fr/index.html" id="102102"/>
 
   </bankFormat>
 </globs>
