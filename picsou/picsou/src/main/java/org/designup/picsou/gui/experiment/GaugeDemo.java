@@ -2,6 +2,7 @@ package org.designup.picsou.gui.experiment;
 
 import com.budgetview.shared.gui.GaugeModel;
 import org.designup.picsou.gui.components.charts.Gauge;
+import org.designup.picsou.gui.components.charts.LangGaugeTextSource;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
@@ -66,7 +67,7 @@ public class GaugeDemo {
           addLabel(row, column++, invertedSignIsAnError);
 
           for (double[] pair : pairs) {
-            GaugeModel model = new GaugeModel();
+            GaugeModel model = new GaugeModel(new LangGaugeTextSource());
             model.setInvertAll(overrunIsAnError);
             Gauge gauge = new Gauge(model);
             gauge.setLabel("Pair");
@@ -78,7 +79,7 @@ public class GaugeDemo {
                         new Insets(5, 5, 5, 5));
           }
           for (double[] triple : triples) {
-            GaugeModel model = new GaugeModel();
+            GaugeModel model = new GaugeModel(new LangGaugeTextSource());
             model.setInvertAll(overrunIsAnError);
             Gauge gauge = new Gauge(model);
             gauge.setLabel("Triple");

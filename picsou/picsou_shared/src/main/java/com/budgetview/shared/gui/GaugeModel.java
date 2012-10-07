@@ -26,15 +26,6 @@ public class GaugeModel {
   private List<GaugeModelListener> listeners = new ArrayList<GaugeModelListener>();
   private GaugeTextSource textSource;
 
-  public GaugeModel() {
-    this(new GaugeTextSource() {
-      public String getText(String key, String... args) {
-        return "";
-//        return Lang.get(key, args);
-      }
-    });
-  }
-
   public GaugeModel(GaugeTextSource textSource) {
     this.textSource = textSource;
     setTooltipText("gauge.unset");

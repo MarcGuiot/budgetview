@@ -5,13 +5,11 @@ import org.designup.picsou.model.BudgetArea;
 
 public class BudgetAreaGaugeFactory {
   public static Gauge createGauge(BudgetArea area) {
-    GaugeModel model = new GaugeModel();
-    model.setInvertAll(area == BudgetArea.SAVINGS);
-    return new Gauge(model);
+    return createGauge(area == BudgetArea.SAVINGS);
   }
 
-  public static Gauge createSavingsGauge(boolean invert) {
-    GaugeModel model = new GaugeModel();
+  public static Gauge createGauge(boolean invert) {
+    GaugeModel model = new GaugeModel(new LangGaugeTextSource());
     model.setInvertAll(invert);
     return new Gauge(model);
   }

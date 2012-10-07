@@ -2,7 +2,9 @@ package org.designup.picsou.gui.components.charts;
 
 import com.budgetview.shared.gui.GaugeModel;
 import com.budgetview.shared.gui.GaugeModelListener;
+import com.budgetview.shared.gui.GaugeTextSource;
 import org.designup.picsou.gui.components.ActionablePanel;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 
@@ -49,10 +51,10 @@ public class Gauge extends ActionablePanel {
   private int descent;
   private Double maxValue;
 
-  private GaugeModel model = new GaugeModel();
+  private GaugeModel model;
 
   public Gauge() {
-    this(new GaugeModel());
+    this(new GaugeModel(new LangGaugeTextSource()));
   }
   
   public Gauge(GaugeModel model) {

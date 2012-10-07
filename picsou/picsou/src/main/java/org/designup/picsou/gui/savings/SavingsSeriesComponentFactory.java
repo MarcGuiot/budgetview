@@ -76,13 +76,13 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
     boolean mainAccount = account.get(Account.ID).equals(Account.MAIN_SUMMARY_ACCOUNT_ID);
     Gauge gauge;
     if (fromAccount != null && fromAccount.equals(account)) {
-      gauge = BudgetAreaGaugeFactory.createSavingsGauge(mainAccount);
+      gauge = BudgetAreaGaugeFactory.createGauge(mainAccount);
     }
     else {
       if (toAccount == null || !toAccount.equals(account)) {
         throw new UnexpectedApplicationState("No target account");
       }
-      gauge = BudgetAreaGaugeFactory.createSavingsGauge(mainAccount);
+      gauge = BudgetAreaGaugeFactory.createGauge(mainAccount);
     }
     final double multiplier = Account.getMultiplierForInOrOutputOfTheAccount(series);
 
