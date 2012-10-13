@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import com.budgetview.shared.gui.GaugeModel;
 import com.budgetview.shared.gui.GaugeModelListener;
@@ -60,7 +59,6 @@ public class GaugeView extends View {
     });
     model.addListener(new GaugeModelListener() {
       public void modelUpdated() {
-        Log.d("GaugeView", "model updated ==> invalidate");
         invalidate();
         postInvalidate();
       }

@@ -41,10 +41,11 @@ public class SeriesListActivity extends Activity {
     TextView monthText = (TextView)findViewById(R.id.seriesMonthLabel);
     monthText.setText(Text.monthToString(monthId, getResources()));
 
+    App app = (App)getApplication();
     Glob budgetAreaValues =
-      App.getRepository().get(Key.create(BudgetAreaValues.MONTH, monthId,
+      app.getRepository().get(Key.create(BudgetAreaValues.MONTH, monthId,
                                          BudgetAreaValues.BUDGET_AREA, budgetAreaId));
-    Glob budgetAreaEntity = App.getRepository().findLinkTarget(budgetAreaValues, BudgetAreaValues.BUDGET_AREA);
+    Glob budgetAreaEntity = app.getRepository().findLinkTarget(budgetAreaValues, BudgetAreaValues.BUDGET_AREA);
     String budgetAreaLabel = budgetAreaEntity.get(BudgetAreaEntity.LABEL);
     TextView budgetAreaText = (TextView)findViewById(R.id.seriesBudgetAreaLabel);
     budgetAreaText.setText(budgetAreaLabel);
@@ -60,8 +61,9 @@ public class SeriesListActivity extends Activity {
     private GlobList seriesValuesList;
 
     private SeriesListAdapter() {
+      App app = (App)getApplication();
       seriesValuesList =
-        App.getRepository()
+        app.getRepository()
           .getAll(SeriesValues.TYPE,
                   and(
                     fieldEquals(SeriesValues.MONTH, monthId),

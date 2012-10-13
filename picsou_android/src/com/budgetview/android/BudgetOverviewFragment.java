@@ -3,7 +3,6 @@ package com.budgetview.android;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +15,7 @@ import com.budgetview.shared.model.BudgetAreaValues;
 import com.budgetview.shared.utils.AmountFormat;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.utils.GlobComparators;
 import org.globsframework.model.utils.GlobFieldComparator;
-import org.globsframework.model.utils.GlobMatchers;
 
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
@@ -49,8 +46,9 @@ public class BudgetOverviewFragment extends Fragment {
 
     private BudgetAreaListAdapter(LayoutInflater inflater) {
       this.inflater = inflater;
+      App app = (App)getActivity().getApplication();
       this.budgetAreaValues =
-        App.getRepository()
+        app.getRepository()
           .getAll(BudgetAreaValues.TYPE, fieldEquals(BudgetAreaValues.MONTH, monthId))
           .sort(new GlobFieldComparator(BudgetAreaValues.BUDGET_AREA));
     }
@@ -75,7 +73,8 @@ public class BudgetOverviewFragment extends Fragment {
       }
 
       final Glob values = budgetAreaValues.get(i);
-      Glob entity = App.getRepository().findLinkTarget(values, BudgetAreaValues.BUDGET_AREA);
+      App app = (App)getActivity().getApplication();
+      Glob entity = app.getRepository().findLinkTarget(values, BudgetAreaValues.BUDGET_AREA);
 
       view.setOnClickListener(new View.OnClickListener() {
         public void onClick(View view) {

@@ -10,11 +10,13 @@
   <TextView android:id="@+id/seriesMonthLabel"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:textColor="#333333"
             android:gravity="center"/>
 
   <TextView android:id="@+id/seriesBudgetAreaLabel"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:textColor="#333333"
             android:gravity="center"
             android:textStyle="bold"/>
 

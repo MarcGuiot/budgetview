@@ -6,31 +6,38 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import com.budgetview.shared.model.MobileModel;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.xml.XmlGlobParser;
-
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import android.util.Log;
 
 public class BudgetOverviewActivity extends FragmentActivity {
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    App app = (App)getApplication();
+    if (app.isLoaded()) {
+      Log.d("budgetOverviewActivity", "loading");
+      showContent();
+    }
+    else {
+      Log.d("budgetOverviewActivity", "already loaded");
+      setContentView(R.layout.loading_page);
+      DataLoader loader = new DataLoader(this) {
+        protected void onLoadFinished() {
+          showContent();
+        }
+      };
+      loader.load();
+    }
+  }
 
-    loadRepository();
+  protected void onStart() {
+    super.onStart();
+  }
 
+  private void showContent() {
     setContentView(R.layout.budget_overview_pager);
-
     ViewPager view = (ViewPager)findViewById(R.id.budgetOverviewPager);
     view.setAdapter(new BudgetOverviewPagerAdapter(getSupportFragmentManager()));
     view.setCurrentItem(1);
-  }
-
-  private void loadRepository() {
-    GlobRepository repository = App.getRepository();
-    InputStream inputStream = getResources().openRawResource(R.raw.globsdata);
-    XmlGlobParser.parse(MobileModel.get(), repository, new InputStreamReader(inputStream), "globs");
   }
 
   private class BudgetOverviewPagerAdapter extends FragmentPagerAdapter {
@@ -56,11 +63,11 @@ public class BudgetOverviewActivity extends FragmentActivity {
     private int getMonthId(int i) {
       switch (i) {
         case 0:
-          return 201206;
+          return 201209;
         case 1:
-          return 201207;
+          return 201210;
         case 2:
-          return 201208;
+          return 201211;
       }
       throw new IndexOutOfBoundsException("Invalid index " + i + " - should be between 0 and 2");
     }

@@ -8,6 +8,7 @@
   <TextView android:id="@+id/overviewMonthLabel"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:textColor="#333333"
             android:gravity="center"/>
 
   <ListView android:id="@+id/budgetAreaList"

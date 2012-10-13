@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name">BudgetView</string>
+
   <string name="month_jan">January</string>
   <string name="month_feb">February</string>
   <string name="month_mar">March</string>
@@ -13,4 +14,6 @@
   <string name="month_oct">October</string>
   <string name="month_nov">November</string>
   <string name="month_dec">Décember</string>
+
+  <string name="loading">Loading...</string>
 </resources>
