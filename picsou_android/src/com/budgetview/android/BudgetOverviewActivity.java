@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 
 public class BudgetOverviewActivity extends FragmentActivity {
 
@@ -14,11 +13,9 @@ public class BudgetOverviewActivity extends FragmentActivity {
     super.onCreate(savedInstanceState);
     App app = (App)getApplication();
     if (app.isLoaded()) {
-      Log.d("budgetOverviewActivity", "loading");
       showContent();
     }
     else {
-      Log.d("budgetOverviewActivity", "already loaded");
       setContentView(R.layout.loading_page);
       DataLoader loader = new DataLoader(this) {
         protected void onLoadFinished() {
@@ -27,10 +24,6 @@ public class BudgetOverviewActivity extends FragmentActivity {
       };
       loader.load();
     }
-  }
-
-  protected void onStart() {
-    super.onStart();
   }
 
   private void showContent() {

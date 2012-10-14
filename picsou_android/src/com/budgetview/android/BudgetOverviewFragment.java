@@ -69,7 +69,7 @@ public class BudgetOverviewFragment extends Fragment {
 
       View view = previousView;
       if (view == null) {
-        view = inflater.inflate(R.layout.budget_area, parent, false);
+        view = inflater.inflate(R.layout.budget_area_block, parent, false);
       }
 
       final Glob values = budgetAreaValues.get(i);

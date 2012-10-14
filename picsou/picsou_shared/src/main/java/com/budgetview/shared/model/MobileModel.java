@@ -7,7 +7,8 @@ public class MobileModel {
   private static GlobModel MODEL =
     GlobModelBuilder.init(BudgetAreaEntity.TYPE,
                           BudgetAreaValues.TYPE,
-                          SeriesValues.TYPE)
+                          SeriesValues.TYPE,
+                          TransactionValues.TYPE)
       .get();
 
   public static GlobModel get() {

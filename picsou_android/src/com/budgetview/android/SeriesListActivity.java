@@ -89,7 +89,7 @@ public class SeriesListActivity extends Activity {
       View view = previousView;
       if (view == null) {
         LayoutInflater inflater = SeriesListActivity.this.getLayoutInflater();
-        view = inflater.inflate(R.layout.series, parent, false);
+        view = inflater.inflate(R.layout.series_block, parent, false);
       }
 
       final Glob values = seriesValuesList.get(i);
@@ -104,6 +104,16 @@ public class SeriesListActivity extends Activity {
                    values.get(SeriesValues.OVERRUN_AMOUNT, 0.00),
                    values.get(SeriesValues.REMAINING_AMOUNT, 0.00),
                    "", false);
+
+      view.setOnClickListener(new View.OnClickListener() {
+        public void onClick(View view) {
+          Intent intent = new Intent(SeriesListActivity.this, TransactionListActivity.class);
+          intent.putExtra(TransactionListActivity.MONTH_PARAMETER, values.get(SeriesValues.MONTH));
+          intent.putExtra(TransactionListActivity.SERIES_VALUES_PARAMETER, values.get(SeriesValues.ID));
+          startActivity(intent);
+        }
+      });
+
       return view;
     }
 

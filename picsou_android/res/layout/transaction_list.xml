@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:background="#FFFFFF">
+
+  <TextView android:id="@+id/transactionMonthLabel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#333333"
+            android:gravity="center"/>
+
+  <TextView android:id="@+id/transactionSeriesLabel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#333333"
+            android:gravity="center"
+            android:textStyle="bold"/>
+
+  <ListView android:id="@+id/transactionList"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"/>
+
+
+</LinearLayout>
