@@ -1,5 +1,5 @@
-echo "\nFabrication du package d'install..."
-ant debug
+echo "Fabrication du package d'install..."
+ant clean debug
 
-echo "\nInstallation sur le mobile..."
+echo "Installation sur le mobile..."
 adb install -r bin/picsou_android-debug.apk

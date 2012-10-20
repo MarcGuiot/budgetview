@@ -3,53 +3,85 @@ package com.budgetview.android;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.budgetview.shared.model.AccountEntity;
 import com.budgetview.shared.model.BudgetAreaEntity;
 import com.budgetview.shared.model.SeriesValues;
 import com.budgetview.shared.model.TransactionValues;
+import com.budgetview.shared.utils.AccountEntityMatchers;
 import com.budgetview.shared.utils.AmountFormat;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
-import static org.globsframework.model.utils.GlobMatchers.*;
+import java.io.StringWriter;
+
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class TransactionListActivity extends Activity {
 
   public static String MONTH_PARAMETER = "transactionListActivity.parameters.month";
   public static String SERIES_VALUES_PARAMETER = "transactionListActivity.parameters.series";
+  public static String ACCOUNT_PARAMETER = "transactionListActivity.parameters.account";
 
-  private Integer monthId;
-  private Integer seriesValuesId;
+  private int monthId;
+  private GlobMatcher matcher;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     Intent intent = getIntent();
     monthId = intent.getIntExtra(MONTH_PARAMETER, -1);
-    seriesValuesId = intent.getIntExtra(SERIES_VALUES_PARAMETER, -1);
 
     setContentView(R.layout.transaction_list);
 
     TextView monthText = (TextView)findViewById(R.id.transactionMonthLabel);
     monthText.setText(Text.monthToString(monthId, getResources()));
 
-    App app = (App)getApplication();
+    GlobRepository repository = ((App)getApplication()).getRepository();
+    String sectionLabel = "";
+    if (intent.hasExtra(SERIES_VALUES_PARAMETER)) {
+      int seriesValuesId = intent.getIntExtra(SERIES_VALUES_PARAMETER, -1);
+      Glob seriesValues =
+        repository.get(Key.create(SeriesValues.TYPE, seriesValuesId));
+      Glob budgetAreaEntity = repository.findLinkTarget(seriesValues, SeriesValues.BUDGET_AREA);
+      String budgetAreaLabel = budgetAreaEntity.get(BudgetAreaEntity.LABEL);
+      sectionLabel = budgetAreaLabel + " - " + seriesValues.get(SeriesValues.NAME);
 
-    Glob seriesValues =
-      app.getRepository().get(Key.create(SeriesValues.TYPE, seriesValuesId));
+      matcher = fieldEquals(TransactionValues.SERIES_VALUES, seriesValuesId);
+      Log.d("transactionList", "Series: " + seriesValuesId);
+    }
+    else if (intent.hasExtra(ACCOUNT_PARAMETER)) {
+      int accountId = intent.getIntExtra(ACCOUNT_PARAMETER, -1);
+      Glob accountEntity = repository.get(Key.create(AccountEntity.TYPE, accountId));
+      sectionLabel = accountEntity.get(AccountEntity.LABEL);
 
-    Glob budgetAreaEntity = app.getRepository().findLinkTarget(seriesValues, SeriesValues.BUDGET_AREA);
-    String budgetAreaLabel = budgetAreaEntity.get(BudgetAreaEntity.LABEL);
-    TextView budgetAreaText = (TextView)findViewById(R.id.transactionSeriesLabel);
-    budgetAreaText.setText(budgetAreaLabel + " - " + seriesValues.get(SeriesValues.NAME));
+      matcher = and(fieldEquals(TransactionValues.BANK_MONTH, monthId),
+                    fieldEquals(TransactionValues.ACCOUNT, accountId));
+      Log.d("transactionList", "Account: " + accountId);
+    }
+    else {
+      throw new InvalidParameter("Missing filtering parameter");
+    }
 
-    setTitle("BudgetView - " + budgetAreaLabel);
+    StringWriter writer = new StringWriter();
+    GlobPrinter.init(repository.getAll(TransactionValues.TYPE, matcher)).run(writer);
+    Log.d("transactionList", writer.toString());
+
+    TextView budgetAreaText = (TextView)findViewById(R.id.transactionSectionLabel);
+    budgetAreaText.setText(sectionLabel);
 
     ListView list = (ListView)findViewById(R.id.transactionList);
     list.setAdapter(new TransactionListAdapter());
@@ -63,7 +95,7 @@ public class TransactionListActivity extends Activity {
       App app = (App)getApplication();
       transactionValuesList =
         app.getRepository()
-          .getAll(TransactionValues.TYPE, fieldEquals(TransactionValues.SERIES_VALUES, seriesValuesId))
+          .getAll(TransactionValues.TYPE, matcher)
           .sort(TransactionValues.SEQUENCE_NUMBER);
     }
 

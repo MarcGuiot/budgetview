@@ -7,40 +7,43 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="1dp"
     >
-    <TextView android:id="@+id/transactionLabel"
+
+    <TextView android:id="@+id/accountLabel"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:gravity="center_vertical"
-              android:layout_weight="100"
               android:textStyle="bold"
-              android:textSize="16dp"
-              android:textColor="#444444"
+              android:textSize="18dp"
+              android:textColor="#222222"
               android:layout_marginRight="10dp"
               android:text="label"
       />
 
-    <TextView android:id="@+id/transactionAmount"
+    <View style="@style/HorizontalSpacer"/>
+
+    <TextView android:id="@+id/accountPosition"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:gravity="right"
-              android:textStyle="normal"
-              android:textSize="14dp"
-              android:textColor="#555555"
+              android:textStyle="bold"
+              android:textSize="12dp"
+              android:textColor="#222222"
               android:text="100.00"
       />
 
   </LinearLayout>
 
-  <TextView android:id="@+id/transactionDate"
+  <TextView android:id="@+id/accountPositionDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
             android:textStyle="normal"
             android:textSize="12dp"
             android:textColor="#444444"
-            android:text="14 oct"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:text="15/10/2012"
     />
 
   <View style="@style/ListItemBorder"/>

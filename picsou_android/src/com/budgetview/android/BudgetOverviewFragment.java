@@ -10,12 +10,18 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.budgetview.android.components.GaugeView;
+import com.budgetview.shared.model.AccountEntity;
 import com.budgetview.shared.model.BudgetAreaEntity;
 import com.budgetview.shared.model.BudgetAreaValues;
-import com.budgetview.shared.utils.AmountFormat;
+import com.budgetview.shared.utils.AccountEntityMatchers;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobFieldComparator;
+import org.globsframework.model.utils.GlobMatcher;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
@@ -30,8 +36,10 @@ public class BudgetOverviewFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.budget_overview, container, false);
 
-    TextView text = (TextView)view.findViewById(R.id.overviewMonthLabel);
-    text.setText(Text.monthToString(monthId, getResources()));
+    TextView text = (TextView)view.findViewById(R.id.overviewLabel);
+    if (text != null) {
+      text.setText(Text.monthToString(monthId, getResources()));
+    }
 
     ListView list = (ListView)view.findViewById(R.id.budgetAreaList);
     list.setAdapter(new BudgetAreaListAdapter(inflater));
@@ -41,24 +49,52 @@ public class BudgetOverviewFragment extends Fragment {
 
   private class BudgetAreaListAdapter extends BaseAdapter {
 
-    private GlobList budgetAreaValues;
     private LayoutInflater inflater;
+    private List<Block> blocks = new ArrayList<Block>();
 
     private BudgetAreaListAdapter(LayoutInflater inflater) {
       this.inflater = inflater;
-      App app = (App)getActivity().getApplication();
-      this.budgetAreaValues =
-        app.getRepository()
+
+      GlobRepository repository = ((App)getActivity().getApplication()).getRepository();
+
+      addBudgetAreaBlocks(repository);
+      addAccountBlocks(repository, AccountEntityMatchers.main(), R.string.main_accounts_section);
+      addAccountBlocks(repository, AccountEntityMatchers.savings(), R.string.savings_accounts_section);
+    }
+
+    private void addBudgetAreaBlocks(GlobRepository repository) {
+
+      blocks.add(new AccountSectionBlock(R.string.budget_section));
+
+      GlobList budgetAreaValuesList =
+        repository
           .getAll(BudgetAreaValues.TYPE, fieldEquals(BudgetAreaValues.MONTH, monthId))
           .sort(new GlobFieldComparator(BudgetAreaValues.BUDGET_AREA));
+      for (Glob budgetAreaValues : budgetAreaValuesList) {
+        blocks.add(new BudgetAreaBlock(budgetAreaValues));
+      }
+    }
+
+    private void addAccountBlocks(GlobRepository repository, GlobMatcher matcher, int sectionTitleId) {
+      GlobList accountList =
+        repository
+          .getAll(AccountEntity.TYPE, matcher).sort(AccountEntity.SEQUENCE_NUMBER);
+      if (accountList.isEmpty()) {
+        return;
+      }
+
+      blocks.add(new AccountSectionBlock(sectionTitleId));
+      for (Glob accountEntity : accountList) {
+        blocks.add(new AccountBlock(accountEntity));
+      }
     }
 
     public int getCount() {
-      return budgetAreaValues.size();
+      return blocks.size();
     }
 
     public Object getItem(int i) {
-      return budgetAreaValues.get(i);
+      return blocks.get(i);
     }
 
     public long getItemId(int i) {
@@ -66,47 +102,92 @@ public class BudgetOverviewFragment extends Fragment {
     }
 
     public View getView(int i, View previousView, ViewGroup parent) {
+      return blocks.get(i).getView(inflater, previousView, parent);
+    }
+  }
 
-      View view = previousView;
-      if (view == null) {
-        view = inflater.inflate(R.layout.budget_area_block, parent, false);
-      }
+  protected class BudgetAreaBlock extends Block {
+    private Glob budgetAreaValues;
 
-      final Glob values = budgetAreaValues.get(i);
+    public BudgetAreaBlock(Glob budgetAreaValues) {
+      super(R.layout.budget_area_block);
+      this.budgetAreaValues = budgetAreaValues;
+    }
+
+    protected boolean isProperViewType(View view) {
+      return view.findViewById(R.id.budgetAreaLabel) != null;
+    }
+
+    protected void populateView(View view) {
+
       App app = (App)getActivity().getApplication();
-      Glob entity = app.getRepository().findLinkTarget(values, BudgetAreaValues.BUDGET_AREA);
+      Glob entity = app.getRepository().findLinkTarget(budgetAreaValues, BudgetAreaValues.BUDGET_AREA);
 
       view.setOnClickListener(new View.OnClickListener() {
         public void onClick(View view) {
           Intent intent = new Intent(getActivity(), SeriesListActivity.class);
-          intent.putExtra(SeriesListActivity.MONTH_PARAMETER, values.get(BudgetAreaValues.MONTH));
-          intent.putExtra(SeriesListActivity.BUDGET_AREA_PARAMETER, values.get(BudgetAreaValues.BUDGET_AREA));
+          intent.putExtra(SeriesListActivity.MONTH_PARAMETER, budgetAreaValues.get(BudgetAreaValues.MONTH));
+          intent.putExtra(SeriesListActivity.BUDGET_AREA_PARAMETER, budgetAreaValues.get(BudgetAreaValues.BUDGET_AREA));
           startActivity(intent);
         }
       });
 
-      setText(view, R.id.overviewMonthLabel, entity.get(BudgetAreaEntity.LABEL));
-      setText(view, R.id.budgetAreaActual, values.get(BudgetAreaValues.ACTUAL));
-      setText(view, R.id.budgetAreaPlanned, values.get(BudgetAreaValues.INITIALLY_PLANNED));
+      setText(view, R.id.budgetAreaLabel, entity.get(BudgetAreaEntity.LABEL));
+      setText(view, R.id.budgetAreaActual, budgetAreaValues.get(BudgetAreaValues.ACTUAL));
+      setText(view, R.id.budgetAreaPlanned, budgetAreaValues.get(BudgetAreaValues.INITIALLY_PLANNED));
 
       GaugeView gaugeView = (GaugeView)view.findViewById(R.id.budgetAreaGauge);
       gaugeView.getModel()
-        .setValues(values.get(BudgetAreaValues.ACTUAL),
-                   values.get(BudgetAreaValues.INITIALLY_PLANNED),
-                   values.get(BudgetAreaValues.OVERRUN),
-                   values.get(BudgetAreaValues.REMAINDER),
+        .setValues(budgetAreaValues.get(BudgetAreaValues.ACTUAL),
+                   budgetAreaValues.get(BudgetAreaValues.INITIALLY_PLANNED),
+                   budgetAreaValues.get(BudgetAreaValues.OVERRUN),
+                   budgetAreaValues.get(BudgetAreaValues.REMAINDER),
                    "", false);
+    }
+  }
 
-      return view;
+  protected class AccountBlock extends Block {
+    private Glob accountEntity;
+
+    public AccountBlock(Glob accountEntity) {
+      super(R.layout.account_block);
+      this.accountEntity = accountEntity;
     }
 
-    private void setText(View view, int textId, Double value) {
-      setText(view, textId, AmountFormat.DECIMAL_FORMAT.format(value));
+    protected boolean isProperViewType(View view) {
+      return view.findViewById(R.id.accountLabel) != null;
     }
 
-    private void setText(View view, int textId, String text) {
-      TextView textView = (TextView)view.findViewById(textId);
-      textView.setText(text);
+    protected void populateView(View view) {
+      setText(view, R.id.accountLabel, accountEntity.get(AccountEntity.LABEL));
+      setText(view, R.id.accountPosition, accountEntity.get(AccountEntity.POSITION));
+      setText(view, R.id.accountPositionDate, "" + accountEntity.get(AccountEntity.POSITION_MONTH));
+
+      view.setOnClickListener(new View.OnClickListener() {
+        public void onClick(View view) {
+          Intent intent = new Intent(getActivity(), TransactionListActivity.class);
+          intent.putExtra(TransactionListActivity.MONTH_PARAMETER, monthId);
+          intent.putExtra(TransactionListActivity.ACCOUNT_PARAMETER, accountEntity.get(AccountEntity.ID));
+          startActivity(intent);
+        }
+      });
+    }
+  }
+
+  protected class AccountSectionBlock extends Block {
+    private int titleId;
+
+    public AccountSectionBlock(int titleId) {
+      super(R.layout.account_section_block);
+      this.titleId = titleId;
+    }
+
+    protected boolean isProperViewType(View view) {
+      return view.findViewById(R.id.accountSectionLabel) != null;
+    }
+
+    protected void populateView(View view) {
+      setText(view, R.id.accountSectionLabel, getResources().getText(titleId));
     }
   }
 }

@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:padding="5dp"
-              android:background="#EEEEEE"
-  >
+              style="@style/ListItem">
+
+  <TextView android:id="@+id/budgetAreaLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:textColor="#222222"
+            android:layout_marginRight="10dp"
+            android:text="label"
+    />
 
   <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
@@ -14,17 +20,15 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="4dp"
     >
-    <TextView android:id="@+id/overviewMonthLabel"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:layout_weight="100"
-              android:textStyle="bold"
-              android:textSize="18dp"
-              android:textColor="#222222"
-              android:layout_marginRight="10dp"
-              android:text="label"
+
+    <com.budgetview.android.components.GaugeView
+      android:id="@+id/budgetAreaGauge"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="left"
       />
+
+    <View style="@style/HorizontalSpacer"/>
 
     <TextView android:id="@+id/budgetAreaActual"
               android:layout_width="wrap_content"
@@ -45,7 +49,6 @@
               android:textColor="#444444"
               android:layout_marginLeft="10dip"
               android:layout_marginRight="10dip"
-              android:layout_weight="1"
               android:text="/"
       />
 
@@ -56,18 +59,11 @@
               android:textStyle="normal"
               android:textSize="12dp"
               android:textColor="#555555"
-              android:layout_weight="1"
               android:text="200.00"
       />
 
   </LinearLayout>
 
-  <com.budgetview.android.components.GaugeView
-    android:id="@+id/budgetAreaGauge"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerVertical="true"
-    android:layout_gravity="right"
-    />
+  <View style="@style/ListItemBorder"/>
 
 </LinearLayout>

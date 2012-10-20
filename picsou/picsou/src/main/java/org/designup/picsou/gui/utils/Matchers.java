@@ -335,7 +335,11 @@ public class Matchers {
     private Set<Integer> months = new HashSet<Integer>();
 
     public AccountDateMatcher(GlobList months) {
-      this.months.addAll(months.getValueSet(Month.ID));
+      this(months.getValueSet(Month.ID));
+    }
+
+    public AccountDateMatcher(Set<Integer> months) {
+      this.months = months;
     }
 
     public boolean matches(Glob item, GlobRepository repository) {

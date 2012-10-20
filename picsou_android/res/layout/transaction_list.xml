@@ -13,7 +13,7 @@
             android:textColor="#333333"
             android:gravity="center"/>
 
-  <TextView android:id="@+id/transactionSeriesLabel"
+  <TextView android:id="@+id/transactionSectionLabel"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textColor="#333333"

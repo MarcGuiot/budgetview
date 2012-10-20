@@ -179,6 +179,14 @@ public class Utils {
     return result;
   }
 
+  public static <T> Set<T> set(T[] array) {
+    Set<T> result = new HashSet<T>();
+    for (T value : array) {
+      result.add(value);
+    }
+    return result;
+  }
+
   public static <T> Set<T> set(T first, T... other) {
     Set<T> result = new HashSet<T>();
     result.add(first);

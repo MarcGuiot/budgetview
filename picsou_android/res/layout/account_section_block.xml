@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:padding="2dp"
+              android:background="#2084B3"
+  >
+
+  <TextView android:id="@+id/accountSectionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textStyle="bold"
+            android:textSize="12dp"
+            android:textColor="#FFFFFF"
+            android:layout_marginRight="10dp"
+            android:text="label"
+    />
+
+</LinearLayout>

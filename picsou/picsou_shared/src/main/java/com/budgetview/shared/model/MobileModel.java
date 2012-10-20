@@ -5,10 +5,12 @@ import org.globsframework.metamodel.utils.GlobModelBuilder;
 
 public class MobileModel {
   private static GlobModel MODEL =
-    GlobModelBuilder.init(BudgetAreaEntity.TYPE,
-                          BudgetAreaValues.TYPE,
-                          SeriesValues.TYPE,
-                          TransactionValues.TYPE)
+  GlobModelBuilder.init(AccountEntity.TYPE,
+                        MonthEntity.TYPE,
+                        BudgetAreaEntity.TYPE,
+                        BudgetAreaValues.TYPE,
+                        SeriesValues.TYPE,
+                        TransactionValues.TYPE)
       .get();
 
   public static GlobModel get() {

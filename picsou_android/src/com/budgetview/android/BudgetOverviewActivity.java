@@ -1,5 +1,7 @@
 package com.budgetview.android;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -29,6 +31,17 @@ public class BudgetOverviewActivity extends FragmentActivity {
   private void showContent() {
     setContentView(R.layout.budget_overview_pager);
     ViewPager view = (ViewPager)findViewById(R.id.budgetOverviewPager);
+    if (view == null) {
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setMessage("No view found")
+        .setCancelable(false)
+        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
+          }
+        });
+      AlertDialog alert = builder.create();
+      alert.show();
+    }
     view.setAdapter(new BudgetOverviewPagerAdapter(getSupportFragmentManager()));
     view.setCurrentItem(1);
   }

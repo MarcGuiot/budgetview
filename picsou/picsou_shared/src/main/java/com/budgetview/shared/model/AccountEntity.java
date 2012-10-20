@@ -9,29 +9,29 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
-public class TransactionValues {
+public class AccountEntity {
   public static GlobType TYPE;
 
   @Key
   public static IntegerField ID;
 
-  @Target(SeriesValues.class)
-  public static LinkField SERIES_VALUES;
-
-  @Target(AccountEntity.class)
-  public static LinkField ACCOUNT;
-
   public static StringField LABEL;
 
-  public static DoubleField AMOUNT;
-
   @Target(MonthEntity.class)
-  public static LinkField BANK_MONTH;
-  public static IntegerField BANK_DAY;
+  public static LinkField POSITION_MONTH;
+
+  public static IntegerField POSITION_DAY;
+
+  public static DoubleField POSITION;
+
+  public static IntegerField ACCOUNT_TYPE;
 
   public static IntegerField SEQUENCE_NUMBER;
 
+  public static Integer ACCOUNT_TYPE_MAIN = 1;
+  public static Integer ACCOUNT_TYPE_SAVINGS = 2;
+
   static {
-    GlobTypeLoader.init(TransactionValues.class, "transactionValues");
+    GlobTypeLoader.init(AccountEntity.class, "accountEntity");
   }
 }
