@@ -4,24 +4,22 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.util.Log;
 import com.budgetview.shared.model.MobileModel;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Files;
 import org.globsframework.xml.XmlGlobParser;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public abstract class DataLoader {
 
   private static final String FILE_URL = "http://www.mybudgetview.com/files/mobile/globsdata.xml";
+  private static final String TEMP_FILE_NAME = "temp.xml";
 
   private Activity activity;
 
@@ -34,11 +32,37 @@ public abstract class DataLoader {
       activity.getSystemService(Context.CONNECTIVITY_SERVICE);
     NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
     if (networkInfo == null || !networkInfo.isConnected()) {
-      showError("No internet connection available");
+      try {
+        loadTempFile();
+        onLoadFinished();
+      }
+      catch (Exception e) {
+        showError("No internet connection available");
+      }
       return;
     }
 
     new DownloadWebpage(activity).execute();
+  }
+
+  protected void loadTempFile() throws IOException {
+    FileInputStream tempFile = null;
+    try {
+      tempFile = activity.openFileInput(TEMP_FILE_NAME);
+      App app = (App)activity.getApplication();
+      GlobRepository repository = app.getRepository();
+      XmlGlobParser.parse(MobileModel.get(), repository, new InputStreamReader(tempFile), "globs");
+    }
+    finally {
+      if (tempFile != null) {
+        try {
+          tempFile.close();
+        }
+        catch (IOException e) {
+        }
+      }
+    }
+
   }
 
   protected abstract void onLoadFinished();
@@ -78,13 +102,20 @@ public abstract class DataLoader {
         connection.setRequestMethod("GET");
         connection.setDoInput(true);
         connection.connect();
-        int response = connection.getResponseCode();
-        Log.d("Debug", "The response is: " + response);
-        inputStream = connection.getInputStream();
 
-        App app = (App)activity.getApplication();
+        int response = connection.getResponseCode();
+
+        inputStream = connection.getInputStream();
+        String content = Files.loadStreamToString(inputStream, "UTF-8");
+
+        App app = (App)DataLoader.this.activity.getApplication();
         GlobRepository repository = app.getRepository();
-        XmlGlobParser.parse(MobileModel.get(), repository, new InputStreamReader(inputStream), "globs");
+        XmlGlobParser.parse(MobileModel.get(), repository, new StringReader(content), "globs");
+
+        PrintWriter writer = new PrintWriter(activity.openFileOutput(TEMP_FILE_NAME, Context.MODE_PRIVATE));
+        writer.write(content);
+        writer.close();
+
         return true;
       }
       finally {
