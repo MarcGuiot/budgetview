@@ -190,7 +190,7 @@ public class HistoChartBuilder {
         Double lastValue = getLastValue(accountMatcher, monthIdsToShow, Transaction.ACCOUNT_POSITION);
         if (lastValue == null) {
           Glob account = repository.get(Key.create(Account.TYPE, accountId));
-          lastValue = account.get(Account.POSITION);
+          lastValue = account.get(Account.POSITION_WITH_PENDING);
         }
         lastValueForAccounts.put(accountId, lastValue);
       }
@@ -295,7 +295,7 @@ public class HistoChartBuilder {
     if (lastValue == null) {
       Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
       if (stat != null) {
-        lastValue = stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
+        lastValue = stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION, 0.);
         for (int i = 0; i < minValues.length; i++) {
           minValues[i] = lastValue;
         }
@@ -494,7 +494,7 @@ public class HistoChartBuilder {
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
-      Double value = stat != null ? stat.get(BudgetStat.MIN_POSITION) : 0.0;
+      Double value = stat != null ? stat.get(BudgetStat.MIN_POSITION, 0.) : 0.0;
       builder.add(monthId, value, monthId == selectedMonthId);
     }
 

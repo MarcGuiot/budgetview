@@ -137,10 +137,7 @@ public class SeriesChartsColors implements ColorChangeListener {
     if (SeriesWrapper.MAIN_POSITION_SUMMARY_ID.equals(wrapperId)) {
       Glob budgetStat = parentRepository.find(Key.create(BudgetStat.TYPE, referenceMonthId));
       if (budgetStat != null) {
-        Double amount = budgetStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION);
-        if (amount == null) {
-          return amountColors.getTextColor(0.0, summaryText);
-        }
+        Double amount = budgetStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION, 0.);
         return amountColors.getTextColor(amount, summaryText);
       }
     }

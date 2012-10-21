@@ -154,7 +154,7 @@ public abstract class AccountViewPanel {
                                 if (list.isEmpty()) {
                                   return "";
                                 }
-                                Double position = list.get(0).get(Account.POSITION);
+                                Double position = list.get(0).get(Account.POSITION_WITH_PENDING);
                                 if (position == null) {
                                   return Lang.get("accountView.missing.position");
                                 }

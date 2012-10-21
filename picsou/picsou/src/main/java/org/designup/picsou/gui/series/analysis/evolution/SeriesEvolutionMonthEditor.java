@@ -131,7 +131,7 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
     if (glob == null) {
       return "";
     }
-    return format(glob.get(field), budgetArea);
+    return format(glob.get(field, 0.), budgetArea);
   }
 
   private String format(Double value, BudgetArea budgetArea) {

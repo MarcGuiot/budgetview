@@ -192,6 +192,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     transactionCreation
       .show()
+      .shouldUpdatePosition()
       .selectAccount("Cash")
       .enterAmountWithoutValidating(10.00)
       .enterDayWithoutValidating(1)
@@ -595,5 +596,59 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     transactionCreation
       .setDay(18)
       .checkLabelAutocompletion("Mo", "Mo");
+  }
+
+  public void testDoNotUpdateAccountPosition() throws Exception {
+    mainAccounts.createNewAccount()
+      .setName("Main")
+      .selectBank("CIC")
+      .setPosition(1000.00)
+      .validate();
+
+    transactionCreation.show()
+      .shouldNotUpdatePosition()
+      .create(15, "Auchan", -50.00);
+    views.selectData();
+    mainAccounts.checkPosition("Main", 1000);
+
+    views.selectCategorization();
+    transactionCreation
+      .shouldUpdatePosition()
+      .create(15, "Auchan", -50.00);
+    mainAccounts.checkPosition("Main", 950);
+  }
+
+  public void testInDeferredAccount() throws Exception {
+    OfxBuilder.init(this)
+      .addCardAccount("1111", 0, "2008/06/30")
+      .addTransaction("2008/06/27", -50, "Auchan 1")
+      .addBankAccount("1234", 1000, "2008/06/30")
+      .addTransaction("2008/06/28", -550, "Prelevement")
+      .loadDeferredCard("Card n. 1111");
+
+    mainAccounts.edit("Card n. 1111").setDeferred(27, 28, 0).validate();
+
+    transactionCreation.show()
+      .selectAccount("Card n. 1111")
+      .checkUpdatePositionNotVisible()
+      .createToBeReconciled(27, "Auchan 2", -40.00);
+    mainAccounts.checkPosition("Card n. 1111", -90);
+
+    OfxBuilder.init(this)
+      .addCardAccount("1111", 0, "2008/06/30")
+      .addTransaction("2008/06/27", -40, "Auchan imported")
+      .load();
+
+    mainAccounts.checkPosition("Card n. 1111", -130);
+
+    views.selectCategorization();
+    categorization
+      .selectTransaction("[R] Auchan 2")
+      .switchToReconciliation()
+      .select("AUCHAN IMPORTED")
+      .reconcile();
+
+    mainAccounts.checkPosition("Card n. 1111", -90);
+
   }
 }

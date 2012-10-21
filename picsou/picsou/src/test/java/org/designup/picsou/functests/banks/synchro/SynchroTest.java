@@ -100,18 +100,25 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .complete();
 
     savingsAccounts.checkAccountNames("secondary", "Livret A");
-    savingsAccounts.checkAccount("secondary", 100, null);
+    savingsAccounts.checkAccount("secondary", 10, null);
+    savingsAccounts.checkLastImportPosition("secondary",100.);
 
     views.selectCategorization();
+    transactionCreation.show().selectAccount("secondary").shouldUpdatePosition().setNotToBeReconcile().create(23, "new op", 90);
+
+    savingsAccounts.checkPosition("secondary", 100);
+
     categorization.selectTransaction("virement vers livret A")
       .selectSavings()
       .selectSeries("To account Livret A");
-    transactions.initAmountContent()
+    transactions
+      .initAmountContent()
       .add("23/01/2006", "VIREMENT VERS LIVRET A", -1.10, "To account Livret A", 100.00, 100.00, "princi")
-      .add("23/01/2006", "VIREMENT VERS LIVRET A", 1.10, "To account Livret A", 110.00, 210.00, "Livret A")
+      .add("23/01/2006", "VIREMENT VERS LIVRET A", 1.10, "To account Livret A", 111.10, 211.10, "Livret A")
+      .add("23/01/2006", "NEW OP", 90.00, "To categorize", 100.00, 210.00, "secondary")
       .check();
 
-    savingsAccounts.checkAccount("Livret A", 110, null);
+    savingsAccounts.checkAccount("Livret A", 111.10, null);
 
     String path2 = QifBuilder
       .init(this)
@@ -128,14 +135,15 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
 
     timeline.selectAll();
     transactions.initAmountContent()
-      .add("30/01/2006", "VIREMENT VERS LIVRET A", -2.20, "To account Livret A", 500.00, 500.00, "princi")
-      .add("30/01/2006", "VIREMENT VERS LIVRET A", 2.20, "To account Livret A", 110.00, 210.00, "Livret A")
-      .add("23/01/2006", "VIREMENT VERS LIVRET A", -1.10, "To account Livret A", 502.20, 502.20, "princi")
-      .add("23/01/2006", "VIREMENT VERS LIVRET A", 1.10, "To account Livret A", 107.80, 207.80, "Livret A")
+      .add("30/01/2006", "VIREMENT VERS LIVRET A", -2.20, "To account Livret A", 97.80, 97.80, "princi")
+      .add("30/01/2006", "VIREMENT VERS LIVRET A", 2.20, "To account Livret A", 113.30, 213.30, "Livret A")
+      .add("23/01/2006", "VIREMENT VERS LIVRET A", -1.10, "To account Livret A", 100.00, 100.00, "princi")
+      .add("23/01/2006", "VIREMENT VERS LIVRET A", 1.10, "To account Livret A", 111.10, 211.10, "Livret A")
+      .add("23/01/2006", "NEW OP", 90.00, "To categorize", 100.00, 210.00, "secondary")
       .check();
 
     mainAccounts.changePosition("princi", 500., "");
-    savingsAccounts.checkAccount("Livret A", 110, null);
+    savingsAccounts.checkAccount("Livret A", 113.30, null);
 
     setCurrentDate("2011/02/02");
     restartApplicationFromBackup();
@@ -158,6 +166,8 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .selectSavings()
       .selectSeries("To account Livret A");
 
+    savingsAccounts.changePosition("Livret A", 300., "");
+
     mainAccounts.changePosition("princi", 1000., "");
     savingsAccounts.checkAccount("Livret A", 300, null);
 
@@ -169,6 +179,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .add("30/01/2006", "VIREMENT VERS LIVRET A", 2.20, "To account Livret A", -700.00, -600.00, "Livret A")
       .add("23/01/2006", "VIREMENT VERS LIVRET A", -1.10, "To account Livret A", 2002.20, 2002.20, "princi")
       .add("23/01/2006", "VIREMENT VERS LIVRET A", 1.10, "To account Livret A", -702.20, -602.20, "Livret A")
+      .add("23/01/2006", "NEW OP", 90.00, "To categorize", 100.00, -603.30, "secondary")
       .check();
   }
 

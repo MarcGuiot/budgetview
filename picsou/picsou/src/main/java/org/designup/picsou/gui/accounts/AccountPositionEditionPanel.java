@@ -11,6 +11,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -36,13 +37,13 @@ public class AccountPositionEditionPanel {
 
   public AccountPositionEditionPanel(AbstractAction validateAction,
                                      GlobRepository repository,
-                                     Directory directory) {
+                                     Directory directory, final DoubleField positionField) {
     this.repository = repository;
 
     builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountPositionEditionPanel.splits",
                                     repository, directory);
 
-    editor = builder.addEditor("amountField", Account.POSITION)
+    editor = builder.addEditor("amountField", positionField)
       .setValidationAction(validateAction)
       .setNotifyOnKeyPressed(true);
 

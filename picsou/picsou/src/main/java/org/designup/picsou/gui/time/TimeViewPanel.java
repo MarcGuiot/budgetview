@@ -166,7 +166,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     if (balance == null) {
       return 0.0;
     }
-    return balance.get(BudgetStat.MIN_POSITION);
+    return balance.get(BudgetStat.MIN_POSITION, 0.);
   }
 
   public void mouseWheelMoved(MouseWheelEvent e) {

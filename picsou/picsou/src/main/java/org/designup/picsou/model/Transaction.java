@@ -115,15 +115,11 @@ public class Transaction {
   @DefaultBoolean(false)
   public static BooleanField PLANNED;
 
-
   @DefaultBoolean(false)
   public static BooleanField MIRROR;
 
   @DefaultBoolean(false)
   public static BooleanField CREATED_BY_SERIES;
-
-//  @DefaultBoolean(false)
-//  public static BooleanField MANUAL_CREATION;
 
   @Target(Transaction.class)
   public static LinkField NOT_IMPORTED_TRANSACTION;
@@ -256,7 +252,7 @@ public class Transaction {
     return Utils.equal(status, ReconciliationStatus.TO_RECONCILE.id);
   }
 
-  public static boolean isOpenCloseAccount(Glob transaction) {
+  public static boolean isOpenCloseAccount(FieldValues transaction) {
     Integer tt = transaction.get(TRANSACTION_TYPE);
     return tt != null && (tt.equals(TransactionType.OPEN_ACCOUNT_EVENT.getId()) ||
                           tt.equals(TransactionType.CLOSE_ACCOUNT_EVENT.getId()));

@@ -79,7 +79,7 @@ public class OfxBuilder {
                         value(Account.BANK_ENTITY_LABEL, bankEntity),
                         value(Account.BRANCH_ID, branchId),
                         value(Account.NUMBER, accountNumber),
-                        value(Account.POSITION, position),
+                        value(Account.POSITION_WITH_PENDING, position),
                         value(Account.POSITION_DATE, updateDate != null ? Dates.parse(updateDate) : null));
     return this;
   }
@@ -94,7 +94,7 @@ public class OfxBuilder {
                         value(Account.BANK, bankId),
                         value(Account.BANK_ENTITY, bankEntityId),
                         value(Account.BANK_ENTITY_LABEL, bankEntityLabel),
-                        value(Account.POSITION, position),
+                        value(Account.POSITION_WITH_PENDING, position),
                         value(Account.POSITION_DATE, updateDate != null ? Dates.parse(updateDate) : null),
                         value(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()));
     return this;

@@ -18,7 +18,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
   public void testCreatingAProject() throws Exception {
 
     OfxBuilder.init(this)
-      .addBankAccount("001111", 1000.00, "2010/12/01")
+      .addBankAccount("001111", 1900, "2011/01/01")
       .addTransaction("2011/01/01", 1000.00, "Income")
       .addTransaction("2011/01/01", -100.00, "Resa Travel Plus")
       .load();
@@ -206,7 +206,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     categorization.checkSelectedTableRows(0, 1);
 
     projects.checkNoProjectShown();
-    budgetView.getSummary().checkEndPosition(800.00);
+    budgetView.getSummary().checkEndPosition(290.00);
 
     projects.checkHintMessageDisplayed();
   }

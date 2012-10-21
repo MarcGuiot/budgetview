@@ -42,7 +42,7 @@ public abstract class AccountPositionLabels {
                                                      String titleLabelName,
                                                      String titleLabelKey) {
     Key summaryAccount = Key.create(Account.TYPE, accountId);
-    builder.addLabel(positionLabelName, Account.POSITION)
+    builder.addLabel(positionLabelName, Account.POSITION_WITH_PENDING)
       .setAutoHideIfEmpty(true)
       .forceSelection(summaryAccount);
     builder.addLabel(titleLabelName, Account.TYPE, new ReferenceAmountStringifier(titleLabelKey))

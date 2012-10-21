@@ -1,7 +1,6 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.model.*;
-import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
@@ -9,7 +8,6 @@ import org.globsframework.model.utils.GlobMatchers;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.SortedSet;
 
 public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
@@ -34,7 +32,11 @@ public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
           day = Month.getDay(openDate);
         }
 
-        Glob openTransaction = createOpenTransaction(id, day, values.get(Account.FIRST_POSITION), repository, key);
+        Double amount = values.get(Account.POSITION_WITH_PENDING);
+        if (amount == null){
+          amount = values.get(Account.LAST_IMPORT_POSITION, 0.);
+        }
+        createOpenTransaction(id, day, amount, repository, key);
         Date closeDate = values.get(Account.CLOSED_DATE);
         if (closeDate != null) {
           int closeMonthId = Month.getMonthId(closeDate);
@@ -262,26 +264,30 @@ public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
         int openDate = Month.toFullDate(openTransaction.get(Transaction.POSITION_MONTH), openTransaction.get(Transaction.POSITION_DAY));
         Integer fistDate = accountAndFirstDate.getValue();
         if (openDate > fistDate) {
-          SortedSet<Glob> sorted = repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_ACCOUNT,
-                                                        GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountAndFirstDate.getKey()),
-                                                                         GlobMatchers.fieldLessOrEqual(Transaction.POSITION_MONTH, openDate)));
-          double amount = 0;
-          for (Glob glob : sorted) {
-            if (glob.get(Transaction.ID).equals(account.get(Account.OPEN_TRANSACTION))) {
-              shiftTransactionTo(repository, glob, Month.getMonthIdFromFullDate(fistDate),
-                                 Month.getDayFromFullDate(fistDate),
-                                 amount + glob.get(Transaction.AMOUNT),
-                                 amount + glob.get(Transaction.AMOUNT));
-              break;
-            }
-            if (!glob.get(Transaction.ID).equals(account.get(Account.CLOSED_TRANSACTION))) {
-              amount += glob.get(Transaction.AMOUNT);
-            }
-          }
-          if (account.get(Account.OPEN_DATE) != null) {
-            repository.update(account.getKey(), Account.OPEN_DATE, Month.toDate(Month.getMonthIdFromFullDate(fistDate),
-                                                                                Month.getDayFromFullDate(fistDate)));
-          }
+          shiftTransactionTo(repository, openTransaction, Month.getMonthIdFromFullDate(fistDate),
+                             Month.getDayFromFullDate(fistDate),
+                             openTransaction.get(Transaction.AMOUNT),
+                             openTransaction.get(Transaction.ACCOUNT_POSITION));
+//          SortedSet<Glob> sorted = repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_ACCOUNT,
+//                                                        GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountAndFirstDate.getKey()),
+//                                                                         GlobMatchers.fieldLessOrEqual(Transaction.POSITION_MONTH, openDate)));
+//          double amount = 0;
+//          for (Glob glob : sorted) {
+//            if (glob.get(Transaction.ID).equals(account.get(Account.OPEN_TRANSACTION))) {
+//              shiftTransactionTo(repository, glob, Month.getMonthIdFromFullDate(fistDate),
+//                                 Month.getDayFromFullDate(fistDate),
+//                                 amount + glob.get(Transaction.AMOUNT),
+//                                 amount + glob.get(Transaction.AMOUNT));
+//              break;
+//            }
+//            if (!glob.get(Transaction.ID).equals(account.get(Account.CLOSED_TRANSACTION))) {
+//              amount += glob.get(Transaction.AMOUNT);
+//            }
+//          }
+//          if (account.get(Account.OPEN_DATE) != null) {
+//            repository.update(account.getKey(), Account.OPEN_DATE, Month.toDate(Month.getMonthIdFromFullDate(fistDate),
+//                                                                                Month.getDayFromFullDate(fistDate)));
+//          }
         }
         Integer lastDate = lastDates.get(accountAndFirstDate.getKey());
         if (account.get(Account.CLOSED_DATE) != null &&
@@ -292,7 +298,7 @@ public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
           if (closeTransaction != null) {
             shiftTransactionTo(repository, closeTransaction, monthId,
                                day, closeTransaction.get(Transaction.AMOUNT),
-                               closeTransaction.get(Transaction.ACCOUNT_POSITION));
+                               0.);
           }
           repository.update(account.getKey(), Account.CLOSED_DATE, Month.toDate(monthId, day));
         }

@@ -134,7 +134,7 @@ public class PicsouSampleGenerator {
                                   value(Account.NUMBER, accountNumber),
                                   value(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()),
                                   value(Account.POSITION_DATE, Dates.parse(updateDate)),
-                                  value(Account.POSITION, -1050.12))
+                                  value(Account.POSITION_WITH_PENDING, -1050.12))
       .get(Account.ID);
   }
 
