@@ -13,7 +13,10 @@
   <string name="month_sep">September</string>
   <string name="month_oct">October</string>
   <string name="month_nov">November</string>
-  <string name="month_dec">Décember</string>
+  <string name="month_dec">December</string>
+
+  <string name="on_date">on</string>
+  <string name="on_date_planned">planned on</string>
 
   <string name="budget_section">Budget</string>
   <string name="main_accounts_section">Main accounts</string>

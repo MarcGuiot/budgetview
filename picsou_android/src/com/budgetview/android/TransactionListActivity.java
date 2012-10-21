@@ -14,21 +14,15 @@ import com.budgetview.shared.model.AccountEntity;
 import com.budgetview.shared.model.BudgetAreaEntity;
 import com.budgetview.shared.model.SeriesValues;
 import com.budgetview.shared.model.TransactionValues;
-import com.budgetview.shared.utils.AccountEntityMatchers;
 import com.budgetview.shared.utils.AmountFormat;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
-import java.io.StringWriter;
-
-import static org.globsframework.model.utils.GlobMatchers.and;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class TransactionListActivity extends Activity {
 
@@ -76,10 +70,6 @@ public class TransactionListActivity extends Activity {
       throw new InvalidParameter("Missing filtering parameter");
     }
 
-    StringWriter writer = new StringWriter();
-    GlobPrinter.init(repository.getAll(TransactionValues.TYPE, matcher)).run(writer);
-    Log.d("transactionList", writer.toString());
-
     TextView budgetAreaText = (TextView)findViewById(R.id.transactionSectionLabel);
     budgetAreaText.setText(sectionLabel);
 
@@ -120,11 +110,31 @@ public class TransactionListActivity extends Activity {
       }
 
       final Glob values = transactionValuesList.get(i);
+      Double amount = values.get(TransactionValues.AMOUNT);
       setText(view, R.id.transactionLabel, values.get(TransactionValues.LABEL));
-      setText(view, R.id.transactionAmount, values.get(TransactionValues.AMOUNT));
-      setText(view, R.id.transactionDate, "15 oct");
+      setText(view, R.id.transactionAmount, amount);
+      setText(view, R.id.transactionDate, getDate(values));
+
+      if (values.isTrue(TransactionValues.PLANNED)) {
+        Views.setTextColor(view, R.id.transactionLabel, R.color.item_label_disabled);
+      }
+
+      Views.setColorAmount(view, R.id.transactionAmount, amount);
 
       return view;
+    }
+
+    private String getDate(Glob values) {
+      if (values.isTrue(TransactionValues.PLANNED)) {
+        return Text.toPlannedOnDayMonthString(values.get(TransactionValues.BANK_DAY),
+                                              values.get(TransactionValues.BANK_MONTH),
+                                              getResources());
+      }
+      else {
+        return Text.toOnDayMonthString(values.get(TransactionValues.BANK_DAY),
+                                       values.get(TransactionValues.BANK_MONTH),
+                                       getResources());
+      }
     }
 
     private void setText(View view, int textId, Double value) {
@@ -137,6 +147,4 @@ public class TransactionListActivity extends Activity {
       textView.setText(text);
     }
   }
-
-
 }

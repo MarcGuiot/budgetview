@@ -3,16 +3,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               style="@style/ListItem">
 
-  <TextView android:id="@+id/budgetAreaLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:textStyle="bold"
-            android:textSize="18dp"
-            android:textColor="#222222"
-            android:layout_marginRight="10dp"
-            android:text="label"
-    />
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp"
+    >
+
+    <TextView android:id="@+id/budgetAreaLabel"
+              style="@style/ListItemLabel"
+              android:text="label"
+      />
+
+    <View style="@style/HorizontalSpacer"/>
+
+    <ImageView style="@style/RightArrow"/>
+
+  </LinearLayout>
 
   <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
@@ -43,7 +50,6 @@
     <TextView android:id="@+id/budgetAreaSeparator"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:gravity="center_vertical"
               android:textStyle="bold"
               android:textSize="12dp"
               android:textColor="#444444"
@@ -55,7 +61,6 @@
     <TextView android:id="@+id/budgetAreaPlanned"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:gravity="center_vertical"
               android:textStyle="normal"
               android:textSize="12dp"
               android:textColor="#555555"

@@ -25,14 +25,14 @@ public class GaugeView extends View {
   private GaugeModel model;
 
   private int borderColor = Color.parseColor("#dedddd");
-  private int filledColorTop = Color.parseColor("#a6e1ff");
-  private int filledColorBottom = Color.parseColor("#0d79a6");
+  private int filledColorTop = Color.parseColor("#5583F3");
+  private int filledColorBottom = Color.parseColor("#1A4AD3");
   private int emptyColorTop = Color.parseColor("#d3d3d3");
   private int emptyColorBottom = Color.parseColor("#f4f4f4");
-  private int overrunColorTop = Color.parseColor("#6e9eb6");
-  private int overrunColorBottom = Color.parseColor("#045779");
-  private int overrunErrorColorTop = Color.parseColor("#fad8d8");
-  private int overrunErrorColorBottom = Color.parseColor("#e94949");
+  private int overrunColorTop = Color.parseColor("#154DD8");
+  private int overrunColorBottom = Color.parseColor("#091F56");
+  private int overrunErrorColorTop = Color.parseColor("#F95D5F");
+  private int overrunErrorColorBottom = Color.parseColor("#D41D19");
   private int barHeight;
 
   public GaugeView(Context context) {

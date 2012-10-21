@@ -27,14 +27,14 @@ import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class BudgetOverviewFragment extends Fragment {
 
+  public static String BUDGET_OVERVIEW_MONTH = "com.budgetview.budgetOverviewFragment";
   private int monthId;
 
-  public BudgetOverviewFragment(int monthId) {
-    this.monthId = monthId;
-  }
-
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
     View view = inflater.inflate(R.layout.budget_overview, container, false);
+
+    this.monthId = getArguments().getInt(BUDGET_OVERVIEW_MONTH);
 
     TextView text = (TextView)view.findViewById(R.id.overviewLabel);
     if (text != null) {
@@ -42,17 +42,18 @@ public class BudgetOverviewFragment extends Fragment {
     }
 
     ListView list = (ListView)view.findViewById(R.id.budgetAreaList);
-    list.setAdapter(new BudgetAreaListAdapter(inflater));
+    final BudgetListAdapter adapter = new BudgetListAdapter(inflater);
+    list.setAdapter(adapter);
 
     return view;
   }
 
-  private class BudgetAreaListAdapter extends BaseAdapter {
+  private class BudgetListAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
     private List<Block> blocks = new ArrayList<Block>();
 
-    private BudgetAreaListAdapter(LayoutInflater inflater) {
+    private BudgetListAdapter(LayoutInflater inflater) {
       this.inflater = inflater;
 
       GlobRepository repository = ((App)getActivity().getApplication()).getRepository();
@@ -160,8 +161,13 @@ public class BudgetOverviewFragment extends Fragment {
 
     protected void populateView(View view) {
       setText(view, R.id.accountLabel, accountEntity.get(AccountEntity.LABEL));
-      setText(view, R.id.accountPosition, accountEntity.get(AccountEntity.POSITION));
-      setText(view, R.id.accountPositionDate, "" + accountEntity.get(AccountEntity.POSITION_MONTH));
+      Double position = accountEntity.get(AccountEntity.POSITION);
+      setText(view, R.id.accountPosition, position);
+      setText(view, R.id.accountPositionDate, Text.toOnDayMonthString(accountEntity.get(AccountEntity.POSITION_DAY),
+                                                                      accountEntity.get(AccountEntity.POSITION_MONTH),
+                                                                      getResources()));
+
+      Views.setColorAmount(view, R.id.accountPosition, position);
 
       view.setOnClickListener(new View.OnClickListener() {
         public void onClick(View view) {

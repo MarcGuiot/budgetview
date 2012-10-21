@@ -10,15 +10,21 @@
     >
 
     <TextView android:id="@+id/accountLabel"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:textStyle="bold"
-              android:textSize="18dp"
-              android:textColor="#222222"
-              android:layout_marginRight="10dp"
+              style="@style/ListItemLabel"
               android:text="label"
       />
+
+    <View style="@style/HorizontalSpacer"/>
+
+    <ImageView style="@style/RightArrow"/>
+
+  </LinearLayout>
+
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+    >
 
     <View style="@style/HorizontalSpacer"/>
 
@@ -27,24 +33,22 @@
               android:layout_height="wrap_content"
               android:gravity="right"
               android:textStyle="bold"
-              android:textSize="12dp"
-              android:textColor="#222222"
+              android:textSize="16dp"
               android:text="100.00"
       />
 
-  </LinearLayout>
+    <TextView android:id="@+id/accountPositionDate"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="right"
+              android:textStyle="normal"
+              android:textSize="12dp"
+              android:textColor="#444444"
+              android:layout_marginLeft="10dip"
+              android:text="15/10/2012"
+      />
 
-  <TextView android:id="@+id/accountPositionDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:textStyle="normal"
-            android:textSize="12dp"
-            android:textColor="#444444"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="10dip"
-            android:text="15/10/2012"
-    />
+  </LinearLayout>
 
   <View style="@style/ListItemBorder"/>
 

@@ -49,9 +49,8 @@ public abstract class DataLoader {
     FileInputStream tempFile = null;
     try {
       tempFile = activity.openFileInput(TEMP_FILE_NAME);
-      App app = (App)activity.getApplication();
-      GlobRepository repository = app.getRepository();
-      XmlGlobParser.parse(MobileModel.get(), repository, new InputStreamReader(tempFile), "globs");
+      Reader reader = new InputStreamReader(tempFile);
+      doLoad(reader);
     }
     finally {
       if (tempFile != null) {
@@ -106,11 +105,10 @@ public abstract class DataLoader {
         int response = connection.getResponseCode();
 
         inputStream = connection.getInputStream();
-        String content = Files.loadStreamToString(inputStream, "UTF-8");
 
-        App app = (App)DataLoader.this.activity.getApplication();
-        GlobRepository repository = app.getRepository();
-        XmlGlobParser.parse(MobileModel.get(), repository, new StringReader(content), "globs");
+        String content = Files.loadStreamToString(inputStream, "UTF-8");
+        StringReader reader = new StringReader(content);
+        doLoad(reader);
 
         PrintWriter writer = new PrintWriter(activity.openFileOutput(TEMP_FILE_NAME, Context.MODE_PRIVATE));
         writer.write(content);
@@ -124,6 +122,13 @@ public abstract class DataLoader {
         }
       }
     }
+  }
+
+  private void doLoad(Reader reader) {
+    App app = (App)this.activity.getApplication();
+    GlobRepository repository = app.getRepository();
+    XmlGlobParser.parse(MobileModel.get(), repository, reader, "globs");
+    app.forceLocale("fr");
   }
 
   private void showError(String message) {

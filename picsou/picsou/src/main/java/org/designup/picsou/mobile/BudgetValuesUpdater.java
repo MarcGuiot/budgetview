@@ -182,6 +182,7 @@ public class BudgetValuesUpdater {
                               value(TransactionValues.LABEL, transaction.get(Transaction.LABEL)),
                               value(TransactionValues.BANK_DAY, transaction.get(Transaction.BANK_DAY)),
                               value(TransactionValues.BANK_MONTH, transaction.get(Transaction.BANK_MONTH)),
+                              value(TransactionValues.PLANNED, transaction.get(Transaction.PLANNED)),
                               value(TransactionValues.SERIES_VALUES, seriesValuesId),
                               value(TransactionValues.SEQUENCE_NUMBER, sequenceNumber++)
       );

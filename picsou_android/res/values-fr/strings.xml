@@ -15,6 +15,9 @@
   <string name="month_nov">Novembre</string>
   <string name="month_dec">Décembre</string>
 
+  <string name="on_date">le</string>
+  <string name="on_date_planned">prévu le</string>
+
   <string name="budget_section">Budget</string>
   <string name="main_accounts_section">Comptes courants</string>
   <string name="savings_accounts_section">Comptes d\'épargne</string>

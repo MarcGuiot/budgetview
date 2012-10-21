@@ -3,10 +3,7 @@ package com.budgetview.shared.model;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
-import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.LinkField;
-import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 public class TransactionValues {
@@ -28,6 +25,8 @@ public class TransactionValues {
   @Target(MonthEntity.class)
   public static LinkField BANK_MONTH;
   public static IntegerField BANK_DAY;
+
+  public static BooleanField PLANNED;
 
   public static IntegerField SEQUENCE_NUMBER;
 

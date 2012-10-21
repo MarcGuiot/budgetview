@@ -23,8 +23,8 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesListActivity extends Activity {
 
-  public static String MONTH_PARAMETER = "seriesListActivity.parameters.month";
-  public static String BUDGET_AREA_PARAMETER = "seriesListActivity.parameters.series";
+  public static String MONTH_PARAMETER = "com.budgetview.seriesListActivity.parameters.month";
+  public static String BUDGET_AREA_PARAMETER = "com.budgetview.seriesListActivity.parameters.series";
 
   private Integer monthId;
   private Integer budgetAreaId;

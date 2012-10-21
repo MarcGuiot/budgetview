@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              style="@style/ListItem">
+              style="@style/ListItem"
+  >
 
   <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
@@ -9,39 +10,46 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="1dp"
     >
+
     <TextView android:id="@+id/transactionLabel"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:layout_weight="100"
-              android:textStyle="bold"
-              android:textSize="16dp"
-              android:textColor="#444444"
-              android:layout_marginRight="10dp"
+              style="@style/ListItemLabel"
               android:text="label"
       />
+
+    <View style="@style/HorizontalSpacer"/>
 
     <TextView android:id="@+id/transactionAmount"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:gravity="right"
               android:textStyle="normal"
-              android:textSize="14dp"
-              android:textColor="#555555"
+              android:textSize="16dp"
               android:text="100.00"
       />
 
   </LinearLayout>
 
-  <TextView android:id="@+id/transactionDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:textStyle="normal"
-            android:textSize="12dp"
-            android:textColor="#444444"
-            android:text="14 oct"
-    />
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="1dp"
+    >
+
+    <View style="@style/HorizontalSpacer"/>
+
+    <TextView android:id="@+id/transactionDate"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="right"
+              android:textStyle="normal"
+              android:textSize="12dp"
+              android:textColor="#444444"
+              android:text="14 oct"
+      />
+
+  </LinearLayout>
 
   <View style="@style/ListItemBorder"/>
 

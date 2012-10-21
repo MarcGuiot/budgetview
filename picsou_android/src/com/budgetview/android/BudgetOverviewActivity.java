@@ -2,6 +2,7 @@ package com.budgetview.android;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -9,10 +10,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import java.util.Locale;
+
 public class BudgetOverviewActivity extends FragmentActivity {
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     App app = (App)getApplication();
     if (app.isLoaded()) {
       showContent();
@@ -42,7 +46,8 @@ public class BudgetOverviewActivity extends FragmentActivity {
       AlertDialog alert = builder.create();
       alert.show();
     }
-    view.setAdapter(new BudgetOverviewPagerAdapter(getSupportFragmentManager()));
+    FragmentManager supportFragmentManager = getSupportFragmentManager();
+    view.setAdapter(new BudgetOverviewPagerAdapter(supportFragmentManager));
     view.setCurrentItem(1);
   }
 
@@ -54,7 +59,10 @@ public class BudgetOverviewActivity extends FragmentActivity {
     public BudgetOverviewPagerAdapter(FragmentManager fm) {
       super(fm);
       for (int i = 0; i < VIEW_COUNT; i++) {
-        fragments[i] = new BudgetOverviewFragment(getMonthId(i));
+        fragments[i] = new BudgetOverviewFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(BudgetOverviewFragment.BUDGET_OVERVIEW_MONTH, getMonthId(i));
+        fragments[i].setArguments(bundle);
       }
     }
 
