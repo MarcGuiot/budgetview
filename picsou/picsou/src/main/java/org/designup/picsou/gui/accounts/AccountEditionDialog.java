@@ -131,9 +131,13 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
         builder.dispose();
       }
     });
+    DeleteAction deleteAction = new DeleteAction();
+    if (createAccount){
+      deleteAction.setEnabled(false);
+    }
     dialog.addPanelWithButtons(this.builder.<JPanel>load(),
                                new OkAction(), new CancelAction(dialog),
-                               new DeleteAction());
+                               deleteAction);
   }
 
   private static LocalGlobRepository createLocalRepository(GlobRepository parentRepository) {

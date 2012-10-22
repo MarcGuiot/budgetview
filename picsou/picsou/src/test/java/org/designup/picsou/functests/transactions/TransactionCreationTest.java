@@ -651,4 +651,30 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkPosition("Card n. 1111", -90);
 
   }
+
+  public void testUpdateAccountPositionInImportedAccountWithPlanned() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/16", -30., "Burger King")
+      .addTransaction("2008/07/18", -30., "Burger King")
+      .addTransaction("2008/08/15", -15, "McDo")
+      .load();
+
+    views.selectCategorization();
+    categorization
+      .setNewRecurring("Burger King", "course")
+      .setRecurring("McDo", "course");
+
+    transactionCreation.show()
+      .selectAccount("Account n. 00001123")
+      .createToBeReconciled(31, "Brico", -10);
+
+    views.selectData();
+    transactions.showPlannedTransactions().initAmountContent()
+      .add("31/08/2008", "BRICO", -10.00, "To categorize", -10.00, -25.00, "Account n. 00001123")
+      .add("19/08/2008", "Planned: course", -15.00, "course", -15.00, "Main accounts")
+      .add("15/08/2008", "MCDO", -15.00, "course", 0.00, 0.00, "Account n. 00001123")
+      .check();
+    mainAccounts.checkPosition("Account n. 00001123", 0);
+    mainAccounts.checkSummary(0, "2008/08/15");
+  }
 }

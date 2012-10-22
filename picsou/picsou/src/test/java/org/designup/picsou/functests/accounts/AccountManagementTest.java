@@ -41,7 +41,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkAccount("Account n. 123123123", 0, "2006/01/15");
     mainAccounts.checkAccount("Card n. 1000-2000-3000-4000", -9, "2006/01/28");
-    mainAccounts.checkSummary(-9, "2006/01/20");
+    mainAccounts.checkSummary(0, "2006/01/15");
 
     timeline.selectAll();
     transactions.initAmountContent()
