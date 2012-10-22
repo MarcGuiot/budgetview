@@ -6,6 +6,7 @@ import org.globsframework.model.*;
 import org.globsframework.model.repository.GlobRepositoryDecorator;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.exceptions.ExceptionHandler;
 import org.globsframework.utils.exceptions.*;
 
@@ -115,6 +116,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
       super.apply(changeSet);
     }
     catch (Throwable e) {
+      Log.write("in strict glob repository", e);
       exceptionHandler.onException(e);
       throw new RuntimeException(e);
     }

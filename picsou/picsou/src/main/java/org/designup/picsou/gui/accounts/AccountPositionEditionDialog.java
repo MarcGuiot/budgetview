@@ -35,8 +35,8 @@ public class AccountPositionEditionDialog {
 
     ValidateAction validateAction = new ValidateAction();
 
-    editionPanel = new AccountPositionEditionPanel(validateAction,
-                                                   localRepository, directory);
+    editionPanel = new AccountPositionEditionPanel(validateAction, localRepository, directory,
+                                                   accountInitialization ? Account.LAST_IMPORT_POSITION : Account.PAST_POSITION);
     builder.add("editionPanel", editionPanel.getPanel());
 
     editionPanel.setAccount(account, repository);

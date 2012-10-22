@@ -1759,6 +1759,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/06", -100.00, "Virement vers courant")
       .load("Account n. 111", "epargne");
 
+    savingsAccounts.changePosition("epargne", 3000., "");
+
     timeline.selectAll();
     transactions.initAmountContent()
       .add("04/08/2008", "Planned: From account epargne", -100.00, "From account epargne", 3000.00, 3000.00, "epargne")
@@ -1834,6 +1836,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/06", 100.00, "Alloc")
       .load("Account n. 111", "epargne");
 
+    savingsAccounts.changePosition("epargne", 3000., "");
     timeline.selectAll();
     transactions.initAmountContent()
       .add("11/10/2008", "Planned: CAF", 200.00, "CAF", 3600.00, 3600.00, "epargne")

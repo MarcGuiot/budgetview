@@ -18,6 +18,7 @@ import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
+import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.utils.DefaultChangeSetListener;
@@ -35,7 +36,6 @@ import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 public class AbstractAccountPanel<T extends GlobRepository> {
   protected JPanel panel;
   protected T localRepository;
-  private boolean createAccount;
   protected Glob currentAccount;
   protected JTextField positionEditor;
   protected JTextArea warningMessage;
@@ -56,9 +56,8 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   private GlobNumericEditor datePeriod;
   private GlobNumericEditor shiftMonth;
 
-  public AbstractAccountPanel(T repository, Directory parentDirectory, boolean createAccount) {
+  public AbstractAccountPanel(T repository, Directory parentDirectory) {
     this.localRepository = repository;
-    this.createAccount = createAccount;
 
     localDirectory = new DefaultDirectory(parentDirectory);
     selectionService = new SelectionService();
@@ -66,7 +65,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     accountTypeCombo = AccountTypeCombo.create(localRepository);
   }
 
-  protected void createComponents(GlobsPanelBuilder builder, Window dialog) {
+  protected void createComponents(GlobsPanelBuilder builder, Window dialog, final DoubleField positionField) {
 
     builder.add("accountTypeHelp", new HelpAction(Lang.get("account.panel.type.help"), "accountTypes",
                                                   Lang.get("help"), localDirectory, dialog));
@@ -117,7 +116,8 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     datePrelevement = builder.addEditor("datePrelevement", Account.DEFERRED_PRELEVEMENT_DAY);
     shiftMonth = builder.addEditor("shiftMonth", Account.DEFERRED_MONTH_SHIFT);
 
-    positionEditor = builder.addEditor("position", createAccount ? Account.FIRST_POSITION : Account.LAST_IMPORT_POSITION).setNotifyOnKeyPressed(true).getComponent();
+    positionEditor = builder.addEditor("position", positionField)
+      .setNotifyOnKeyPressed(true).getComponent();
 
     builder.addLoader(new SplitsLoader() {
       public void load(Component component, SplitsNode node) {

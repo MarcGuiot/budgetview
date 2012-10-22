@@ -883,8 +883,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .doNext()
       .completeImportWithNext();
 
-    mainAccounts.checkAccount("Account n. 113", 300., "2011/10/03");
-    mainAccounts.checkAccount("Account n. 112", 200., "2008/08/01");
+    mainAccounts.checkLastImportPosition("Account n. 113", 300.);
+    mainAccounts.checkAccount("Account n. 113", 200., "2011/10/03");
+    mainAccounts.checkLastImportPosition("Account n. 113", 200.);
+    mainAccounts.checkAccount("Account n. 112", 100., "2008/08/01");
   }
 
   public void testEmptyAssociatedToOldFollowedByNew() throws Exception {
@@ -913,7 +915,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkAccountSelectionMessage("Update:")
       .selectAccount("Account n. 00001123")
       .checkAccountNotEditable()
-      .checkAccountDescription("Account n.00001123 CIC Position: 100.00 on 2008/06/08")
+      .checkAccountDescription("Account n.00001123 CIC Position: 0.00 on 2008/06/08")
       .selectAccount("a new account")
       .checkAccountMessage("Account 2/3 - No operations")
       .checkAccountSelectionMessage("Update:")

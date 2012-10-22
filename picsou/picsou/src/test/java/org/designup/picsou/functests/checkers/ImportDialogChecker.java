@@ -433,7 +433,7 @@ public class ImportDialogChecker extends GuiChecker {
   public ImportDialogChecker setDeferredAccount(int dayPeriod, int dayPrelevement, int monthShift) {
     accountEditionChecker.setAsDeferredCard();
     accountEditionChecker.checkDeferredWarning();
-    accountEditionChecker.setDeferred(dayPeriod, dayPeriod, monthShift);
+    accountEditionChecker.setDeferred(dayPeriod, dayPrelevement, monthShift);
     return this;
   }
 

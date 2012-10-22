@@ -227,4 +227,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
     return accountsPanel;
   }
 
+  public void checkLastImportPosition(String accountName, double amount) {
+    //TODO
+  }
 }

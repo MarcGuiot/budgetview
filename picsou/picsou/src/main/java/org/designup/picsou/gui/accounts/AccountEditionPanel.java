@@ -24,14 +24,14 @@ public class AccountEditionPanel extends AbstractAccountPanel<GlobRepository> {
   private GlobsPanelBuilder builder;
 
   public AccountEditionPanel(Window owner, GlobRepository repository, Directory parentDirectory) {
-    super(repository, parentDirectory, false);
+    super(repository, parentDirectory);
     createPanel(owner);
   }
 
   private void createPanel(Window owner) {
     builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountEditionPanel.splits", localRepository,
                                     localDirectory);
-    createComponents(builder, owner);
+    createComponents(builder, owner, Account.LAST_IMPORT_POSITION);
     cards = builder.addCardHandler("cards");
     cards.show("editable");
     builder.addHtmlView("readOnlyDescription", Account.TYPE, new GlobListStringifier() {
@@ -63,7 +63,7 @@ public class AccountEditionPanel extends AbstractAccountPanel<GlobRepository> {
       }
     }
 
-    Double position = account.get(Account.LAST_IMPORT_POSITION);
+    Double position = account.get(Account.POSITION_WITH_PENDING);
     Date date = account.get(Account.POSITION_DATE);
     if (position != null) {
       String positionLabel = Formatting.toString(position);

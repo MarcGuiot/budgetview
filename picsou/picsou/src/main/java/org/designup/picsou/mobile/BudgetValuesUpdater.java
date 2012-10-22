@@ -145,7 +145,7 @@ public class BudgetValuesUpdater {
       targetRepository.create(AccountEntity.TYPE,
                               value(AccountEntity.ID, account.get(Account.ID)),
                               value(AccountEntity.LABEL, account.get(Account.NAME)),
-                              value(AccountEntity.POSITION, account.get(Account.POSITION)),
+                              value(AccountEntity.POSITION, account.get(Account.POSITION_WITH_PENDING)),
                               value(AccountEntity.POSITION_MONTH, Month.getMonthId(positionDate)),
                               value(AccountEntity.POSITION_DAY, Month.getDay(positionDate)),
                               value(AccountEntity.ACCOUNT_TYPE, convertAccountType(account.get(Account.ACCOUNT_TYPE))),

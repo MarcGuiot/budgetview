@@ -62,11 +62,11 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     summary.getSavingsChart()
       .checkColumnCount(13)
-      .checkDailyColumn(0, "J", "2009", 200.00, true)
-      .checkDailyColumn(1, "A", "2009", 400.00)
-      .checkDailyColumn(2, "S", "2009", 600.00)
-      .checkDailyColumn(3, "O", "2009", 800.00)
-      .checkDailyColumn(6, "J", "2010", 1400.00);
+      .checkDailyColumn(0, "J", "2009", 400.00, true)
+      .checkDailyColumn(1, "A", "2009", 600.00)
+      .checkDailyColumn(2, "S", "2009", 800.00)
+      .checkDailyColumn(3, "O", "2009", 1000.00)
+      .checkDailyColumn(6, "J", "2010", 1600.00);
 
     savingsAccounts.editPosition("ING").setAmount(300.00).validate();
 
@@ -222,24 +222,23 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     transactions.showPlannedTransactions()
       .initAmountContent()
-      .dumpCode();
-//      .add("11/10/2009", "Planned: Epargne", -200.00, "Epargne", 30.00, 30.00, "ING")
-//      .add("11/10/2009", "Planned: External", 210.00, "External", 230.00, 230.00, "ING")
-//      .add("11/10/2009", "Planned: Epargne", 200.00, "Epargne", 1600.00, "Main accounts")
-//      .add("11/09/2009", "Planned: Epargne", -200.00, "Epargne", 20.00, 20.00, "ING")
-//      .add("11/09/2009", "Planned: External", 210.00, "External", 220.00, 220.00, "ING")
-//      .add("11/09/2009", "Planned: Epargne", 200.00, "Epargne", 1400.00, "Main accounts")
-//      .add("11/08/2009", "Planned: Epargne", -200.00, "Epargne", 10.00, 10.00, "ING")
-//      .add("11/08/2009", "Planned: External", 210.00, "External", 210.00, 210.00, "ING")
-//      .add("11/08/2009", "Planned: Epargne", 200.00, "Epargne", 1200.00, "Main accounts")
-//      .add("15/07/2009", "EXTERNAL", 210.00, "External", 0.00, 0.00, "ING")
-//      .add("10/07/2009", "VIRT", -200.00, "Epargne", -210.00, -210.00, "ING")
-//      .add("10/07/2009", "VIRT", 200.00, "Epargne", 1000.00, 1000.00, "Account n. 00000123")
-//      .add("15/06/2009", "EXTERNAL", 210.00, "External", -10.00, -10.00, "ING")
-//      .add("04/06/2009", "MCDO", -10.00, "To categorize", 800.00, 800.00, "Account n. 00000123")
-//      .add("15/05/2009", "EXTERNAL", 210.00, "External", -220.00, -220.00, "ING")
-//      .add("04/05/2009", "MCDO", -10.00, "To categorize", 810.00, 810.00, "Account n. 00000123")
-//      .check();
+      .add("11/10/2009", "Planned: Epargne", -200.00, "Epargne", 40.00, 40.00, "ING")
+      .add("11/10/2009", "Planned: External", 210.00, "External", 240.00, 240.00, "ING")
+      .add("11/10/2009", "Planned: Epargne", 200.00, "Epargne", 1600.00, "Main accounts")
+      .add("11/09/2009", "Planned: Epargne", -200.00, "Epargne", 30.00, 30.00, "ING")
+      .add("11/09/2009", "Planned: External", 210.00, "External", 230.00, 230.00, "ING")
+      .add("11/09/2009", "Planned: Epargne", 200.00, "Epargne", 1400.00, "Main accounts")
+      .add("11/08/2009", "Planned: Epargne", -200.00, "Epargne", 20.00, 20.00, "ING")
+      .add("11/08/2009", "Planned: External", 210.00, "External", 220.00, 220.00, "ING")
+      .add("11/08/2009", "Planned: Epargne", 200.00, "Epargne", 1200.00, "Main accounts")
+      .add("15/07/2009", "EXTERNAL", 210.00, "External", 10.00, 10.00, "ING")
+      .add("10/07/2009", "VIRT", -200.00, "Epargne", -200.00, -200.00, "ING")
+      .add("10/07/2009", "VIRT", 200.00, "Epargne", 1000.00, 1000.00, "Account n. 00000123")
+      .add("15/06/2009", "EXTERNAL", 210.00, "External", 0.00, 0.00, "ING")
+      .add("04/06/2009", "MCDO", -10.00, "To categorize", 800.00, 800.00, "Account n. 00000123")
+      .add("15/05/2009", "EXTERNAL", 210.00, "External", -210.00, -210.00, "ING")
+      .add("04/05/2009", "MCDO", -10.00, "To categorize", 810.00, 810.00, "Account n. 00000123")
+      .check();
 
 
     OfxBuilder.init(this)
@@ -250,24 +249,23 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     transactions.showPlannedTransactions()
       .initAmountContent()
-      .dumpCode();
-//      .add("11/10/2009", "Planned: Epargne", -200.00, "Epargne", 30.00, 30.00, "ING")
-//      .add("11/10/2009", "Planned: External", 210.00, "External", 230.00, 230.00, "ING")
-//      .add("11/10/2009", "Planned: Epargne", 200.00, "Epargne", 1600.00, "Main accounts")
-//      .add("11/09/2009", "Planned: Epargne", -200.00, "Epargne", 20.00, 20.00, "ING")
-//      .add("11/09/2009", "Planned: External", 210.00, "External", 220.00, 220.00, "ING")
-//      .add("11/09/2009", "Planned: Epargne", 200.00, "Epargne", 1400.00, "Main accounts")
-//      .add("25/08/2009", "Planned: Epargne", -200.00, "Epargne", 10.00, 10.00, "ING")
-//      .add("25/08/2009", "Planned: Epargne", 200.00, "Epargne", 1200.00, "Main accounts")
-//      .add("25/08/2009", "EXTERNAL", 210.00, "External", 210.00, 210.00, "ING")
-//      .add("25/08/2009", "ED", -10.00, "To categorize", 1000.00, 1000.00, "Account n. 00000123")
-//      .add("15/07/2009", "EXTERNAL", 210.00, "External", 0.00, 0.00, "ING")
-//      .add("10/07/2009", "VIRT", -200.00, "Epargne", -210.00, -210.00, "ING")
-//      .add("10/07/2009", "VIRT", 200.00, "Epargne", 1010.00, 1010.00, "Account n. 00000123")
-//      .add("15/06/2009", "EXTERNAL", 210.00, "External", -10.00, -10.00, "ING")
-//      .add("04/06/2009", "MCDO", -10.00, "To categorize", 810.00, 810.00, "Account n. 00000123")
-//      .add("15/05/2009", "EXTERNAL", 210.00, "External", -220.00, -220.00, "ING")
-//      .add("04/05/2009", "MCDO", -10.00, "To categorize", 820.00, 820.00, "Account n. 00000123")
-//      .check();
+      .add("11/10/2009", "Planned: Epargne", -200.00, "Epargne", 40.00, 40.00, "ING")
+      .add("11/10/2009", "Planned: External", 210.00, "External", 240.00, 240.00, "ING")
+      .add("11/10/2009", "Planned: Epargne", 200.00, "Epargne", 1590.00, "Main accounts")
+      .add("11/09/2009", "Planned: Epargne", -200.00, "Epargne", 30.00, 30.00, "ING")
+      .add("11/09/2009", "Planned: External", 210.00, "External", 230.00, 230.00, "ING")
+      .add("11/09/2009", "Planned: Epargne", 200.00, "Epargne", 1390.00, "Main accounts")
+      .add("25/08/2009", "Planned: Epargne", -200.00, "Epargne", 20.00, 20.00, "ING")
+      .add("25/08/2009", "Planned: Epargne", 200.00, "Epargne", 1190.00, "Main accounts")
+      .add("25/08/2009", "EXTERNAL", 210.00, "External", 220.00, 220.00, "ING")
+      .add("25/08/2009", "ED", -10.00, "To categorize", 990.00, 990.00, "Account n. 00000123")
+      .add("15/07/2009", "EXTERNAL", 210.00, "External", 10.00, 10.00, "ING")
+      .add("10/07/2009", "VIRT", -200.00, "Epargne", -200.00, -200.00, "ING")
+      .add("10/07/2009", "VIRT", 200.00, "Epargne", 1000.00, 1000.00, "Account n. 00000123")
+      .add("15/06/2009", "EXTERNAL", 210.00, "External", 0.00, 0.00, "ING")
+      .add("04/06/2009", "MCDO", -10.00, "To categorize", 800.00, 800.00, "Account n. 00000123")
+      .add("15/05/2009", "EXTERNAL", 210.00, "External", -210.00, -210.00, "ING")
+      .add("04/05/2009", "MCDO", -10.00, "To categorize", 810.00, 810.00, "Account n. 00000123")
+      .check();
   }
 }

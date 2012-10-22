@@ -54,7 +54,10 @@ public class Account {
   public static StringField NAME;
 
   @DoublePrecision(4)
-  public static DoubleField POSITION;
+  public static DoubleField POSITION_WITH_PENDING;
+
+  @DoublePrecision(4)
+  public static DoubleField PAST_POSITION;
 
   @DoublePrecision(4)
   public static DoubleField LAST_IMPORT_POSITION;
@@ -296,7 +299,7 @@ public class Account {
       outputStream.writeInteger(values.get(BANK_ENTITY));
       outputStream.writeInteger(values.get(BRANCH_ID));
       outputStream.writeUtf8String(values.get(NAME));
-      outputStream.writeDouble(values.get(POSITION));
+      outputStream.writeDouble(values.get(POSITION_WITH_PENDING));
       outputStream.writeInteger(values.get(TRANSACTION_ID));
       outputStream.writeDate(values.get(POSITION_DATE));
       outputStream.writeInteger(values.get(ACCOUNT_TYPE));
@@ -316,6 +319,7 @@ public class Account {
       outputStream.writeInteger(values.get(DEFERRED_PRELEVEMENT_DAY));
       outputStream.writeInteger(values.get(DEFERRED_DAY));
       outputStream.writeInteger(values.get(DEFERRED_MONTH_SHIFT));
+      outputStream.writeDouble(values.get(PAST_POSITION));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -358,7 +362,7 @@ public class Account {
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
-      fieldSetter.set(POSITION, input.readDouble());
+      fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
@@ -378,6 +382,7 @@ public class Account {
       fieldSetter.set(DEFERRED_PRELEVEMENT_DAY, input.readInteger());
       fieldSetter.set(DEFERRED_DAY, input.readInteger());
       fieldSetter.set(DEFERRED_MONTH_SHIFT, input.readInteger());
+      fieldSetter.set(PAST_POSITION, input.readDouble());
     }
 
     private void deserializeDataV9(FieldSetter fieldSetter, byte[] data) {
@@ -386,7 +391,7 @@ public class Account {
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
-      fieldSetter.set(POSITION, input.readDouble());
+      fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
@@ -407,7 +412,7 @@ public class Account {
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
-      fieldSetter.set(POSITION, input.readDouble());
+      fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
@@ -427,7 +432,7 @@ public class Account {
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
-      fieldSetter.set(POSITION, input.readDouble());
+      fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       readAndUpdateCardType(fieldSetter, input);
@@ -455,7 +460,7 @@ public class Account {
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
-      fieldSetter.set(POSITION, input.readDouble());
+      fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       readAndUpdateCardType(fieldSetter, input);
@@ -474,7 +479,7 @@ public class Account {
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
-      fieldSetter.set(POSITION, input.readDouble());
+      fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       readAndUpdateCardType(fieldSetter, input);
@@ -490,7 +495,7 @@ public class Account {
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
-      fieldSetter.set(POSITION, input.readDouble());
+      fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       readAndUpdateCardType(fieldSetter, input);
@@ -506,7 +511,7 @@ public class Account {
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
-      fieldSetter.set(POSITION, input.readDouble());
+      fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       readAndUpdateCardType(fieldSetter, input);
@@ -521,7 +526,7 @@ public class Account {
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
-      fieldSetter.set(POSITION, input.readDouble());
+      fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       readAndUpdateCardType(fieldSetter, input);
@@ -536,7 +541,7 @@ public class Account {
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readJavaString());
-      fieldSetter.set(POSITION, input.readDouble());
+      fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       readAndUpdateCardType(fieldSetter, input);

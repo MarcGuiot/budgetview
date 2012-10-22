@@ -76,7 +76,7 @@ public class OfxExporter implements Exporter {
         if (balanceDate == null) {
           balanceDate = date;
         }
-        writer.writeBankMsgFooter(account.get(Account.POSITION), toString(balanceDate));
+        writer.writeBankMsgFooter(account.get(Account.POSITION_WITH_PENDING), toString(balanceDate));
       }
     }
 
@@ -91,7 +91,7 @@ public class OfxExporter implements Exporter {
         if (balanceDate == null) {
           balanceDate = date;
         }
-        writer.writeCardMsgFooter(account.get(Account.POSITION), toString(balanceDate));
+        writer.writeCardMsgFooter(account.get(Account.POSITION_WITH_PENDING), toString(balanceDate));
       }
     }
     writer.writeFooter();

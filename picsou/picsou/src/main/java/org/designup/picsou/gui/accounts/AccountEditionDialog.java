@@ -13,7 +13,6 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.layout.TabHandler;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -42,7 +41,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   }
 
   public AccountEditionDialog(Window owner, final GlobRepository parentRepository, Directory directory, boolean createAccount) {
-    super(createLocalRepository(parentRepository), directory, createAccount);
+    super(createLocalRepository(parentRepository), directory);
     this.parentRepository = parentRepository;
 
     dialog = PicsouDialog.create(owner, localDirectory);
@@ -77,7 +76,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
       }
     });
 
-    super.createComponents(builder, dialog);
+    super.createComponents(builder, dialog, Account.POSITION_WITH_PENDING);
 
     localRepository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -160,7 +159,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
                                              value(Account.ACCOUNT_TYPE, type.getId()),
                                              value(Account.UPDATE_MODE, updateMode.getId()),
                                              value(Account.BANK, accountInfo != null ? accountInfo.get(CurrentAccountInfo.BANK) : null),
-                                             value(Account.POSITION, accountInfo != null ? accountInfo.get(CurrentAccountInfo.POSITION) : null),
+                                             value(Account.POSITION_WITH_PENDING, accountInfo != null ? accountInfo.get(CurrentAccountInfo.POSITION) : null),
                                              value(Account.POSITION_DATE, accountInfo != null ? accountInfo.get(CurrentAccountInfo.POSITION_DATE) : null));
     doShow(newAccount, true);
     builder.dispose();

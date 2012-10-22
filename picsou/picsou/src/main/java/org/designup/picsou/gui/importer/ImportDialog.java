@@ -217,7 +217,7 @@ public class ImportDialog {
     }
     for (Integer accountId : accounts) {
       Glob account = localRepository.get(Key.create(Account.TYPE, accountId));
-      if (account.get(Account.POSITION) == null && !AccountCardType.DEFERRED.getId().equals(account.get(Account.CARD_TYPE))) {
+      if (account.get(Account.POSITION_WITH_PENDING) == null && !AccountCardType.DEFERRED.getId().equals(account.get(Account.CARD_TYPE))) {
         AccountPositionEditionDialog dialog =
           new AccountPositionEditionDialog(account, true, localRepository, localDirectory, this.dialog);
         dialog.show();

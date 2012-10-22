@@ -17,6 +17,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+
+/*
+ TODO: updater ce trigger en sachant qu'il y a une operation de debut et une de fin + verifier que
+ TODO: absoluteFirstTransaction a un sens (cf Account.FIRST_POSITION)
+ */
+
 public class BudgetStatTrigger implements ChangeSetListener {
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -126,18 +132,18 @@ public class BudgetStatTrigger implements ChangeSetListener {
         if (endOfMonthTransaction == null) {
           endOfMonthTransaction = absoluteFirstTransaction;
           beginOfMonthTransaction = absoluteFirstTransaction;
-          if (endOfMonthTransaction == null) {
-            GlobList globList = repository.getAll(Account.TYPE,
-                                                  GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()));
-            beginOfMonthPosition = 0.;
-            for (Glob glob : globList) {
-              Double value = glob.get(Account.FIRST_POSITION);
-              if (value != null) {
-                beginOfMonthPosition += value;
-              }
-            }
-            endOfMonthPosition = beginOfMonthPosition;
-          }
+//          if (endOfMonthTransaction == null) {
+//            GlobList globList = repository.getAll(Account.TYPE,
+//                                                  GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()));
+//            beginOfMonthPosition = 0.;
+//            for (Glob glob : globList) {
+//              Double value = glob.get(Account.FIRST_POSITION);
+//              if (value != null) {
+//                beginOfMonthPosition += value;
+//              }
+//            }
+//            endOfMonthPosition = beginOfMonthPosition;
+//          }
         }
 
         if (beginOfMonthTransaction != null && endOfMonthTransaction != null) {

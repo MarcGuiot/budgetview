@@ -93,7 +93,8 @@ public class ImportController {
       Glob target = localRepository.findLinkTarget(glob, RealAccount.ACCOUNT);
       if (target != null) {
         localRepository.update(target.getKey(),
-                               value(Account.LAST_IMPORT_POSITION, Amounts.extractAmount(glob.get(RealAccount.POSITION))));
+                               value(Account.LAST_IMPORT_POSITION,
+                                     Amounts.extractAmount(glob.get(RealAccount.POSITION))));
       }
     }
     if (nextImport()) {
