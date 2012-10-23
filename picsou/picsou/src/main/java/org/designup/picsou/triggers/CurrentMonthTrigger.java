@@ -1,20 +1,21 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.time.TimeService;
-import org.designup.picsou.model.*;
-import com.budgetview.shared.utils.Amounts;
-import org.globsframework.metamodel.GlobType;
+import org.designup.picsou.model.CurrentMonth;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Transaction;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobMatchers;
-import static org.globsframework.model.utils.GlobMatchers.*;
 
-import java.util.Set;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class CurrentMonthTrigger extends AbstractChangeSetListener {
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (!(changeSet.containsChanges(CurrentMonth.KEY) || changeSet.containsCreationsOrDeletions(Transaction.TYPE))) {
+    boolean hasTransactionChange = changeSet.containsCreationsOrDeletions(Transaction.TYPE)
+                                   || changeSet.containsUpdates(Transaction.BANK_MONTH)
+                                   || changeSet.containsUpdates(Transaction.BANK_DAY);
+    if (!changeSet.containsChanges(CurrentMonth.KEY) && !hasTransactionChange) {
       return;
     }
 
@@ -25,17 +26,14 @@ public class CurrentMonthTrigger extends AbstractChangeSetListener {
       int previousLastDay = currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY);
       int lastMonth = previousLastMonth;
       int lastDay = previousLastDay;
-      if (changeSet.containsCreationsOrDeletions(Transaction.TYPE)) {
-        MonthCallback monthCallback = new MonthCallback();
-        repository.safeApply(Transaction.TYPE, ALL, monthCallback);
-        lastMonth = monthCallback.getLastMonthId();
-        if (previousLastMonth != lastMonth) {
-          repository.update(CurrentMonth.KEY, CurrentMonth.LAST_TRANSACTION_MONTH, lastMonth);
-          previousLastDay = -1;
-        }
-        DayCallback dayCallback = new DayCallback(lastMonth, previousLastDay);
+      if (hasTransactionChange) {
+        DayCallback dayCallback = new DayCallback(TimeService.getCurrentFullDate());
         repository.safeApply(Transaction.TYPE, ALL, dayCallback);
         lastDay = dayCallback.getLastMonthDay();
+        lastMonth = dayCallback.getLastMonthId();
+        if (previousLastMonth != lastMonth) {
+          repository.update(CurrentMonth.KEY, CurrentMonth.LAST_TRANSACTION_MONTH, lastMonth);
+        }
         if (previousLastDay != lastDay) {
           repository.update(CurrentMonth.KEY, CurrentMonth.LAST_TRANSACTION_DAY, lastDay);
         }
@@ -56,62 +54,30 @@ public class CurrentMonthTrigger extends AbstractChangeSetListener {
     }
   }
 
-  private static class MonthCallback implements GlobFunctor {
-    private int lastMonthId = 0;
-    private final int currentMonth;
+  private static class DayCallback implements GlobFunctor {
+    private int lastDayId = 0;
+    private int currentDayId;
 
-    public MonthCallback() {
-      currentMonth = TimeService.getCurrentMonth();
+    public DayCallback(int currentDayId) {
+      this.currentDayId = currentDayId;
     }
 
-    public void run(Glob transaction, GlobRepository repository) {
-      Integer monthId = transaction.get(Transaction.BANK_MONTH);
-      if (monthId > currentMonth){
+    public void run(Glob glob, GlobRepository repository) {
+      if (glob.isTrue(Transaction.PLANNED) || Transaction.isToReconcile(glob) || Transaction.isOpenCloseAccount(glob)) {
         return;
       }
-      if (!transaction.isTrue(Transaction.PLANNED) && monthId > lastMonthId
-//          && !deferredAccountId.contains(transaction.get(Transaction.ACCOUNT))
-          && !Transaction.isToReconcile(transaction)) {
-        lastMonthId = monthId;
+      int dayId = Month.toFullDate(glob.get(Transaction.BANK_MONTH), glob.get(Transaction.BANK_DAY));
+      if (dayId > lastDayId && dayId <= currentDayId) {
+        lastDayId = dayId;
       }
     }
 
     public int getLastMonthId() {
-//      int currentMonthId = TimeService.getCurrentMonth();
-//      if (lastMonthId > currentMonthId) {
-//        return currentMonthId;
-//      }
-      return lastMonthId;
-    }
-  }
-
-  private static class DayCallback implements GlobFunctor {
-    private int lastMonthId;
-    private int lastMonthDay;
-
-    public DayCallback(int lastMonthId, int lastMonthDay) {
-      this.lastMonthId = lastMonthId;
-      this.lastMonthDay = lastMonthDay;
-    }
-
-    public void run(Glob glob, GlobRepository repository) {
-      if (!glob.isTrue(Transaction.PLANNED) && glob.get(Transaction.BANK_MONTH).equals(lastMonthId)
-          && glob.get(Transaction.BANK_DAY) > lastMonthDay
-          && (glob.get(Transaction.TRANSACTION_TYPE) == null
-              || glob.get(Transaction.TRANSACTION_TYPE) != TransactionType.CLOSE_ACCOUNT_EVENT.getId()
-              || glob.get(Transaction.TRANSACTION_TYPE) != TransactionType.OPEN_ACCOUNT_EVENT.getId())
-//         && !deferredAccountId.contains(glob.get(Transaction.ACCOUNT))
-        && !Transaction.isToReconcile(glob)) {
-        lastMonthDay = glob.get(Transaction.BANK_DAY);
-      }
+      return Month.getMonthIdFromFullDate(lastDayId);
     }
 
     public int getLastMonthDay() {
-//      if (lastMonthDay > TimeService.getCurrentDay() &&
-//          lastMonthId == TimeService.getCurrentMonth()) {
-//        return TimeService.getCurrentDay();
-//      }
-      return lastMonthDay;
+      return Month.getDayFromFullDate(lastDayId);
     }
   }
 

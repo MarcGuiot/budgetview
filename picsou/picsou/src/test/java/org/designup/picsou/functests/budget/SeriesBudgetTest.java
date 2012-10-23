@@ -6,7 +6,7 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 public class SeriesBudgetTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
-    setCurrentDate("2009/04/03");
+    setCurrentDate("2009/04/09");
     super.setUp();
   }
 

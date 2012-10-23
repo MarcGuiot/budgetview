@@ -33,6 +33,8 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2009/05");
     transactionCreation
       .show()
+      .setToBeReconcile()
+      .shouldUpdatePosition()
       .selectAccount("Manual")
       .setAmount(-10)
       .setLabel("prov")
@@ -47,20 +49,19 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
 
     categorization
       .setNewRecurring("prov", "Courses");
-
-    fail("Operations manuelles dans le futur ==> quelles règles de fonctionnement ? " +
-         "On met les tests correspondants dans TransactionCreationTest ?");
+    timeline.selectMonth("2009/05");
+    categorization.editSeries("Courses").setPropagationEnabled().setAmount(10).validate();
 
     timeline.selectAll();
     transactions
       .showPlannedTransactions()
       .initAmountContent()
       .add("19/08/2009", "Planned: Tel", -29.90, "Tel", -159.60, "Main accounts")
-      .add("19/08/2009", "Planned: Courses", -10.00, "Courses", -129.70, "Main accounts")
+      .add("11/08/2009", "Planned: Courses", -10.00, "Courses", -129.70, "Main accounts")
       .add("19/07/2009", "Planned: Tel", -29.90, "Tel", -119.70, "Main accounts")
       .add("05/07/2009", "PROV", -10.00, "Courses", -20.00, -89.80, "Manual")
       .add("19/06/2009", "Planned: Tel", -29.90, "Tel", -79.80, "Main accounts")
-      .add("19/06/2009", "Planned: Courses", -10.00, "Courses", -49.90, "Main accounts")
+      .add("11/06/2009", "Planned: Courses", -10.00, "Courses", -49.90, "Main accounts")
       .add("22/05/2009", "PROV", -10.00, "Courses", -10.00, -39.90, "Manual")
       .add("19/05/2009", "Planned: Tel", -29.90, "Tel", -29.90, "Main accounts")
       .add("20/04/2009", "FREE TELECOM", -29.90, "Tel", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
@@ -69,12 +70,12 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2009/05");
     mainAccounts
       .checkEstimatedPosition(-39.90)
-      .checkAccount("Manual", 0, "2009/05/15");
+      .checkAccount("Manual", 0, "2009/04/01");
 
     timeline.selectMonth("2009/06");
     mainAccounts
       .checkEstimatedPosition(-79.80)
-      .checkAccount("Manual", 0, "2009/05/15");
+      .checkAccount("Manual", 0, "2009/04/01");
   }
 
   public void testPositionWithNoOperationsForAMonth() throws Exception {
