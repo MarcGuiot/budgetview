@@ -180,7 +180,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testAutomaticalySelectAccount() throws Exception {
+  public void testAutomaticallySelectAccount() throws Exception {
     QifBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Tx 1")

@@ -215,8 +215,6 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .add("11/01/2006", "TX 2", -1.50, "Series 1", 2.70, 2.70, "Account n. 00001123")
       .add("10/01/2006", "TX 1", -1.10, "To categorize", 4.20, 4.20, "Account n. 00001123")
       .check();
-
-
   }
 
   private static final String TEXT =
@@ -641,6 +639,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     importDialog
       .completeLastStep();
 
+    mainAccounts.checkAccountNames("Account n. 222", "First account");
   }
 
   public void testCreateTwoAccountsEndSkipFirst() throws Exception {
@@ -663,5 +662,59 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .selectBank("Other")
       .completeImport();
     mainAccounts.checkAccountNames("Account n. 222");
+  }
+
+  public void testAutomaticallySelectsAccountWhenSeveralAccountsHaveTheSameNumber() throws Exception {
+
+    // Cf l'email support sur l'import de fichiers LCL où les comptes courant et carte
+    // ont le même numéro de compte
+    fail("[RM] Que faisons-nous ");
+
+    mainAccounts.createMainAccount("Account A", 100.00);
+    mainAccounts.createMainAccount("Account B", 100.00);
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/14")
+      .addTransaction("2006/01/11", -1.1, "Operation AAA 1")
+      .addTransaction("2006/01/12", -2.2, "Operation AAA 2")
+      .addTransaction("2006/01/13", -3.3, "Operation AAA 3")
+      .addTransaction("2006/01/14", -4.4, "Operation AAA 4")
+      .loadInAccount("Account A");
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 2000.00, "2008/08/14")
+      .addTransaction("2006/01/01", -1.1, "Operation BBB 1")
+      .addTransaction("2006/01/02", -2.2, "Operation BBB 2")
+      .addTransaction("2006/01/03", -3.3, "Operation BBB 3")
+      .addTransaction("2006/01/04", -4.4, "Operation BBB 4")
+      .loadInAccount("Account B");
+
+    String pathA = OfxBuilder
+      .init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 990.00, "2008/08/20")
+      .addTransaction("2006/01/15", -10.00, "Operation AAA 5")
+      .save();
+    operations.openImportDialog()
+      .selectFiles(pathA)
+      .acceptFile()
+      .checkSelectedAccount("Account A")
+      .completeImport();
+
+    String pathB = OfxBuilder
+      .init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1990.00, "2008/08/20")
+      .addTransaction("2006/01/20", -10.00, "Operation BBB 5")
+      .save();
+    operations.openImportDialog()
+      .selectFiles(pathB)
+      .acceptFile()
+      .checkSelectedAccount("Account B")
+      .completeImport();
+
+    views.selectData();
+    transactions.initContent()
+      .dumpCode();
   }
 }
