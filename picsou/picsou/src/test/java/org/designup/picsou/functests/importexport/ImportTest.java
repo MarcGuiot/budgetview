@@ -588,7 +588,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
   public void testLastImportCoversAllImportedAccounts() throws Exception {
     
-    fail("[Regis] Cas du ticket #1141 - creer un TransactionImport pour tout le fichier, et pas pour chaque compte. A finaliser quand les autres 60 tests passeront.");
+//    fail("[Regis] Cas du ticket #1141 - creer un TransactionImport pour tout le fichier, et pas pour chaque compte. A finaliser quand les autres 60 tests passeront.");
     // REGIS: 
     
     OfxBuilder
@@ -840,9 +840,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
   public void testMultipleEmptyAccounts() throws Exception {
     String path1 = OfxBuilder.init(this)
-      .addBankAccount("111", 100, "2011/10/01")
-      .addBankAccount("112", 100, "2011/10/01")
-      .addBankAccount("113", 100, "2011/10/01")
+      .addBankAccount("111", 100, "2008/08/01")
+      .addBankAccount("112", 100, "2008/08/01")
+      .addBankAccount("113", 100, "2008/08/01")
       .save();
     operations.openImportDialog()
       .selectFiles(path1)
@@ -860,13 +860,14 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkAccountSelectionMessage("Update:")
       .completeImportWithNext();
 
+    mainAccounts.checkPosition("Account n. 111", 100.);
     mainAccounts.checkAccountNames("Account n. 111", "Account n. 112", "Account n. 113");
 
     String path2 = OfxBuilder.init(this)
-      .addBankAccount("1114", 100, "2011/10/03")
-      .addBankAccount("112", 200, "2011/10/03")
-      .addBankAccount("113", 300, "2011/10/03")
-      .addTransaction("2011/10/03", 100, "Anniversaire")
+      .addBankAccount("1114", 100, "2008/08/03")
+      .addBankAccount("112", 200, "2008/08/03")
+      .addBankAccount("113", 300, "2008/08/03")
+      .addTransaction("2008/08/03", 100, "Anniversaire")
       .save();
     operations.openImportDialog()
       .selectFiles(path2)
@@ -884,7 +885,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .completeImportWithNext();
 
     mainAccounts.checkLastImportPosition("Account n. 113", 300.);
-    mainAccounts.checkAccount("Account n. 113", 200., "2011/10/03");
+    mainAccounts.checkAccount("Account n. 113", 200., "2008/08/03");
     mainAccounts.checkLastImportPosition("Account n. 113", 200.);
     mainAccounts.checkAccount("Account n. 112", 100., "2008/08/01");
   }
@@ -896,9 +897,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .load();
 
     String path = OfxBuilder.init(this)
-      .addBankAccount("111", 100, "2011/10/01")
-      .addBankAccount("112", 100, "2011/10/01")
-      .addBankAccount("113", 100, "2011/10/01")
+      .addBankAccount("111", 100, "2008/08/01")
+      .addBankAccount("112", 100, "2008/08/01")
+      .addBankAccount("113", 100, "2008/08/01")
       .save();
 
     ImportDialogChecker checker = operations.openImportDialog();

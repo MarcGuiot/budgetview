@@ -162,6 +162,9 @@ public class ImportSession {
       }
     }
     List<String> dateFormat = getImportedTransactionFormat(importRepository);
+
+    importKey = createCurrentImport(typedStream, referenceRepository);
+
     return dateFormat;
   }
 
@@ -251,7 +254,11 @@ public class ImportSession {
 
     GlobList allNewTransactions = convertImportedTransaction(selectedDateFormat, currentlySelectedAccount.get(Account.ID));
 
-    importKey = createCurrentImport(typedStream, localRepository);
+    boolean value = shouldImportSeries();
+    if (value){
+      referenceRepository.update(importKey, TransactionImport.IS_WITH_SERIES, value);
+    }
+//    importKey = createCurrentImport(typedStream, localRepository);
     setCurrentImport(allNewTransactions, localRepository);
     localRepository.deleteAll(ImportedTransaction.TYPE);
     importChangeSetAggregator.dispose();
@@ -398,7 +405,7 @@ public class ImportSession {
     return shouldImportSeries() && series != null && series.get(ImportedSeries.BUDGET_AREA) != null;
   }
 
-  private Boolean shouldImportSeries() {
+  private boolean shouldImportSeries() {
     return importSeries != null && importSeries;
   }
 

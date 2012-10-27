@@ -182,7 +182,8 @@ public class PositionTrigger implements ChangeSetListener {
     if (!Account.SUMMARY_ACCOUNT_IDS.contains(accountId)) {
       ExtractDate extractDate = new ExtractDate(accountId);
       changeSet.safeVisit(Transaction.TYPE, extractDate);
-      GlobMatcher futureMatcher = getMatcherForFutureOperations(accountId, currentMonth.get(CurrentMonth.CURRENT_MONTH), currentMonth.get(CurrentMonth.CURRENT_DAY));
+      GlobMatcher futureMatcher = getMatcherForFutureOperations(accountId, currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH),
+                                                                currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY));
       GlobMatcher realMatcher = Transaction.getMatcherForRealOperations(accountId);
       Glob[] transactions = getAllTransactionForAccount(accountId, repository);
 
@@ -204,7 +205,8 @@ public class PositionTrigger implements ChangeSetListener {
             }
           }
         }
-      } else if (!isCreation && (changeSet.containsChanges(accountKey, Account.PAST_POSITION) || changeSet.containsChanges(accountKey, Account.TRANSACTION_ID))) {
+      }
+      else if (!isCreation && (changeSet.containsChanges(accountKey, Account.PAST_POSITION) || changeSet.containsChanges(accountKey, Account.TRANSACTION_ID))) {
         Integer trnId = account.get(Account.TRANSACTION_ID);
         // si on modifie le solde du compte via une operation particulier
         if (trnId != null) {
@@ -293,11 +295,11 @@ public class PositionTrigger implements ChangeSetListener {
   private GlobMatcher getMatcherForFutureOperations(int accountId, int monthId, int day) {
     return GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId),
                             GlobMatchers.or(
-                              GlobMatchers.isTrue(Transaction.PLANNED)
-//                              GlobMatchers.fieldStrictlyGreaterThan(Transaction.POSITION_MONTH, monthId),
-//                              GlobMatchers.and(
-//                                GlobMatchers.fieldEquals(Transaction.POSITION_MONTH, monthId),
-//                                GlobMatchers.fieldStrictlyGreaterThan(Transaction.POSITION_DAY, day))
+                              GlobMatchers.isTrue(Transaction.PLANNED),
+                              GlobMatchers.fieldStrictlyGreaterThan(Transaction.POSITION_MONTH, monthId),
+                              GlobMatchers.and(
+                                GlobMatchers.fieldEquals(Transaction.POSITION_MONTH, monthId),
+                                GlobMatchers.fieldStrictlyGreaterThan(Transaction.POSITION_DAY, day))
                             ));
   }
 
@@ -355,6 +357,8 @@ public class PositionTrigger implements ChangeSetListener {
     Glob lastTransaction = null;
     Glob lastRealTransaction = null;
     Glob closeTransaction = null;
+    Glob openTransaction = null;
+    boolean isFirstReal = true;
 
     AccountUpdate(GlobMatcher futureMatcher, GlobMatcher realMatcher, GlobRepository repository) {
       this.futureMatcher = futureMatcher;
@@ -363,8 +367,14 @@ public class PositionTrigger implements ChangeSetListener {
     }
 
     void update(Glob transaction) {
+      if (openTransaction == null) {
+        openTransaction = transaction;
+      }
       if (!futureMatcher.matches(transaction, repository)) {
         lastTransaction = transaction;
+      }
+      else {
+        isFirstReal = false;
       }
       if (realMatcher.matches(transaction, repository)) {
         lastRealTransaction = transaction;
@@ -379,11 +389,28 @@ public class PositionTrigger implements ChangeSetListener {
                           FieldValue.value(Account.POSITION_DATE, accountDate),
                           FieldValue.value(Account.POSITION_WITH_PENDING, lastTransaction.get(Transaction.ACCOUNT_POSITION)));
       }
+      else if (openTransaction != null){
+        Date accountDate = Month.toDate(openTransaction.get(Transaction.POSITION_MONTH), openTransaction.get(Transaction.POSITION_DAY));
+        repository.update(account.getKey(),
+                          FieldValue.value(Account.POSITION_DATE, accountDate),
+                          FieldValue.value(Account.POSITION_WITH_PENDING, openTransaction.get(Transaction.ACCOUNT_POSITION)));
+      }
+
       if (lastRealTransaction != null) {
         repository.update(account.getKey(),
                           FieldValue.value(Account.TRANSACTION_ID, lastRealTransaction.get(Transaction.ID)),
                           FieldValue.value(Account.PAST_POSITION, lastRealTransaction.get(Transaction.ACCOUNT_POSITION)));
 
+      }
+      else if (lastTransaction != null) {
+        repository.update(account.getKey(),
+                          FieldValue.value(Account.TRANSACTION_ID, lastTransaction.get(Transaction.ID)),
+                          FieldValue.value(Account.PAST_POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION)));
+      }
+      else if (openTransaction != null){
+        repository.update(account.getKey(),
+                          FieldValue.value(Account.TRANSACTION_ID, openTransaction.get(Transaction.ID)),
+                          FieldValue.value(Account.PAST_POSITION, openTransaction.get(Transaction.ACCOUNT_POSITION)));
       }
       Integer tt = closeTransaction.get(Transaction.TRANSACTION_TYPE);
       if (tt != null && tt == TransactionType.CLOSE_ACCOUNT_EVENT.getId()) {
@@ -464,6 +491,7 @@ public class PositionTrigger implements ChangeSetListener {
     double position = 0;
     int index = 0;
     Glob realPosition = null;
+    boolean canUpdate = true;
     for (; index < transactions.length; index++) {
       Glob transaction = transactions[index];
       if (!sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
@@ -476,9 +504,11 @@ public class PositionTrigger implements ChangeSetListener {
       }
       position += transaction.get(Transaction.AMOUNT);
       repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, position);
-      if (!futureMatcher.matches(transaction, repository)) {
+      boolean isFutureOp = futureMatcher.matches(transaction, repository);
+      if (!deferredAccounts.contains(accountId) && !isFutureOp && canUpdate) {
         realPosition = transaction;
       }
+      canUpdate &= !isFutureOp;
     }
 
     if (realPosition != null) {

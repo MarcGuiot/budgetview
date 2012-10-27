@@ -17,6 +17,10 @@ public class TimeService {
     monthId = Month.getMonthId(day);
   }
 
+  public static int getCurrentFullDate() {
+    return Month.toFullDate(getCurrentMonth(), getCurrentDay());
+  }
+
   public int getCurrentMonthId() {
     return monthId;
   }

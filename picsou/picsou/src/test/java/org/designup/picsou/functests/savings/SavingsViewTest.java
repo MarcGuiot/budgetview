@@ -241,6 +241,9 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .check();
 
 
+    setCurrentDate("2009/08/25");
+    restartApplicationFromBackup();
+
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/08/25")
       .addTransaction("2009/08/25", -10.00, "ed")

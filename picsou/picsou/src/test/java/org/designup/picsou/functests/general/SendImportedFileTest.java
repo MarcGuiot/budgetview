@@ -68,18 +68,19 @@ public class SendImportedFileTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCleanAfter5() throws Exception {
-    for (int month = 4; month <= 9; month++) {
+    for (int month = 1; month <= 9; month++) {
       OfxBuilder.init(this)
         .addTransaction("2009/0" + month + "/06", -29.00, "Free Telecom")
         .load();
     }
 
     operations.openSendImportedFile()
-      .checkChoices("2008/08/31 - sendimportedfiletest_testcleanafter5_5.ofx",
+      .checkChoices("2008/08/31 - sendimportedfiletest_testcleanafter5_8.ofx",
+                    "2008/08/31 - sendimportedfiletest_testcleanafter5_7.ofx",
+                    "2008/08/31 - sendimportedfiletest_testcleanafter5_6.ofx",
+                    "2008/08/31 - sendimportedfiletest_testcleanafter5_5.ofx",
                     "2008/08/31 - sendimportedfiletest_testcleanafter5_4.ofx",
-                    "2008/08/31 - sendimportedfiletest_testcleanafter5_3.ofx",
-                    "2008/08/31 - sendimportedfiletest_testcleanafter5_2.ofx",
-                    "2008/08/31 - sendimportedfiletest_testcleanafter5_1.ofx")
+                    "2008/08/31 - sendimportedfiletest_testcleanafter5_3.ofx")
       .close();
   }
 }

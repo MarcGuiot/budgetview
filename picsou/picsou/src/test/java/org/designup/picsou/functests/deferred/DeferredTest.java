@@ -644,7 +644,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("23/08/2011", "DIFFE 1", -12.00, "courses", -12.00, 100.00, "card 1111")
       .check();
 
-    setCurrentDate("2011/09/01");
+    setCurrentDate("2011/09/03");
     restartApplication();
 
     String d3 = QifBuilder.init(this)

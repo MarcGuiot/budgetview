@@ -154,24 +154,24 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public TransactionCreationChecker setNotToBeReconcile(){
-    panel.getCheckBox("shouldBeReconciled").unselect();
-    assertFalse(panel.getCheckBox("shouldBeReconciled").isSelected());
+    getPanel().getCheckBox("shouldBeReconciled").unselect();
+    assertFalse(getPanel().getCheckBox("shouldBeReconciled").isSelected());
     return this;
   }
 
   public TransactionCreationChecker checkIsNotReconcile(){
-    assertFalse(panel.getCheckBox("shouldBeReconciled").isSelected());
+    assertFalse(getPanel().getCheckBox("shouldBeReconciled").isSelected());
     return this;
   }
 
   public TransactionCreationChecker setToBeReconcile(){
-    panel.getCheckBox("shouldBeReconciled").select();
-    assertTrue(panel.getCheckBox("shouldBeReconciled").isSelected());
+    getPanel().getCheckBox("shouldBeReconciled").select();
+    assertTrue(getPanel().getCheckBox("shouldBeReconciled").isSelected());
     return this;
   }
 
   public TransactionCreationChecker checkIsToReconcile(){
-    assertTrue(panel.getCheckBox("shouldBeReconciled").isSelected());
+    assertTrue(getPanel().getCheckBox("shouldBeReconciled").isSelected());
     return this;
   }
 
