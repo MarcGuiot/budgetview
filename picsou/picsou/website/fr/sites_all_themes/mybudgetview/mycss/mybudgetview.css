@@ -1181,6 +1181,10 @@ p#close-showroom A {
   font-size: 20pt;
 }
 
+.support h2 {
+  font-size: 16pt;
+}
+
 .support div.light-block {
   padding-top: 20px;
 }
