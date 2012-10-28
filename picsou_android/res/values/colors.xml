@@ -1,8 +1,9 @@
 <resources>
-  <color name="background">#FFFFFF</color>
+  <color name="background">#D9D1C5</color>
   <color name="item_background">#EEEEEE</color>
   <color name="item_border">#CCCCCC</color>
   <color name="section_header_background">#295EE0</color>
+  <color name="section_header_label">#222222</color>
   <color name="item_focused">#FEFCAC</color>
   <color name="item_pressed">#FEFCAC</color>
   <color name="amount_positive">#4D9A2C</color>

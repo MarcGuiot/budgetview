@@ -6,6 +6,14 @@
     <item name="android:background">@color/background</item>
   </style>
 
+  <style name="ListItemRow">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:paddingLeft">10dp</item>
+    <item name="android:paddingRight">10dp</item>
+    <item name="android:background">@color/background</item>
+  </style>
+
   <style name="ListItem">
     <item name="android:layout_width">fill_parent</item>
     <item name="android:layout_height">wrap_content</item>
@@ -39,7 +47,6 @@
     <item name="android:layout_height">wrap_content</item>
     <item name="android:orientation">horizontal</item>
     <item name="android:padding">2dp</item>
-    <item name="android:background">@color/section_header_background</item>
   </style>
 
   <style name="HorizontalSpacer">

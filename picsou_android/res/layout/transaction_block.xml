@@ -1,56 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              style="@style/ListItem"
-  >
-
+              style="@style/ListItemRow">
   <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
+                style="@style/ListItem">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_marginBottom="1dp"
+      >
+
+      <TextView android:id="@+id/transactionLabel"
+                android:layout_width="wrap_content"
+                style="@style/ListItemLabel"
+                android:text="label"
+        />
+
+      <View style="@style/HorizontalSpacer"/>
+
+      <TextView android:id="@+id/transactionAmount"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="1dp"
-    >
+                android:gravity="right"
+                android:textStyle="normal"
+                android:textSize="16dp"
+                android:text="100.00"
+        />
 
-    <TextView android:id="@+id/transactionLabel"
-              android:layout_width="wrap_content"
-              style="@style/ListItemLabel"
-              android:text="label"
-      />
+    </LinearLayout>
 
-    <View style="@style/HorizontalSpacer"/>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_marginBottom="1dp"
+      >
 
-    <TextView android:id="@+id/transactionAmount"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:gravity="right"
-              android:textStyle="normal"
-              android:textSize="16dp"
-              android:text="100.00"
-      />
+      <View style="@style/HorizontalSpacer"/>
+
+      <TextView android:id="@+id/transactionDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textStyle="normal"
+                android:textSize="12dp"
+                android:textColor="#444444"
+                android:text="14 oct"
+        />
+
+    </LinearLayout>
+
+    <View style="@style/ListItemBorder"/>
 
   </LinearLayout>
-
-  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="1dp"
-    >
-
-    <View style="@style/HorizontalSpacer"/>
-
-    <TextView android:id="@+id/transactionDate"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:gravity="right"
-              android:textStyle="normal"
-              android:textSize="12dp"
-              android:textColor="#444444"
-              android:text="14 oct"
-      />
-
-  </LinearLayout>
-
-  <View style="@style/ListItemBorder"/>
-
 </LinearLayout>

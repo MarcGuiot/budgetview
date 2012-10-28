@@ -1,55 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              style="@style/ListItem">
+              style="@style/ListItemRow">
 
   <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
+                style="@style/ListItem">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+
+      <TextView android:id="@+id/accountLabel"
+                style="@style/ListItemLabel"
+                android:text="label"/>
+
+      <View style="@style/HorizontalSpacer"/>
+
+      <ImageView style="@style/RightArrow"/>
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+      >
+
+      <View style="@style/HorizontalSpacer"/>
+
+      <TextView android:id="@+id/accountPosition"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-    >
+                android:gravity="right"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:text="100.00"
+        />
 
-    <TextView android:id="@+id/accountLabel"
-              style="@style/ListItemLabel"
-              android:text="label"
-      />
+      <TextView android:id="@+id/accountPositionDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textStyle="normal"
+                android:textSize="12dp"
+                android:textColor="#444444"
+                android:layout_marginLeft="10dip"
+                android:text="15/10/2012"
+        />
 
-    <View style="@style/HorizontalSpacer"/>
+    </LinearLayout>
 
-    <ImageView style="@style/RightArrow"/>
+    <View style="@style/ListItemBorder"/>
 
   </LinearLayout>
-
-  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-    >
-
-    <View style="@style/HorizontalSpacer"/>
-
-    <TextView android:id="@+id/accountPosition"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:gravity="right"
-              android:textStyle="bold"
-              android:textSize="16dp"
-              android:text="100.00"
-      />
-
-    <TextView android:id="@+id/accountPositionDate"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:gravity="right"
-              android:textStyle="normal"
-              android:textSize="12dp"
-              android:textColor="#444444"
-              android:layout_marginLeft="10dip"
-              android:text="15/10/2012"
-      />
-
-  </LinearLayout>
-
-  <View style="@style/ListItemBorder"/>
 
 </LinearLayout>

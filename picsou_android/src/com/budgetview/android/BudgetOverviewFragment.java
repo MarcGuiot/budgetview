@@ -36,11 +36,6 @@ public class BudgetOverviewFragment extends Fragment {
 
     this.monthId = getArguments().getInt(BUDGET_OVERVIEW_MONTH);
 
-    TextView text = (TextView)view.findViewById(R.id.overviewLabel);
-    if (text != null) {
-      text.setText(Text.monthToString(monthId, getResources()));
-    }
-
     ListView list = (ListView)view.findViewById(R.id.budgetAreaList);
     final BudgetListAdapter adapter = new BudgetListAdapter(inflater);
     list.setAdapter(adapter);
