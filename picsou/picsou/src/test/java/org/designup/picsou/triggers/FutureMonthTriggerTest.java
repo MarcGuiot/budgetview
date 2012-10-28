@@ -6,6 +6,8 @@ import org.designup.picsou.model.Month;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.PicsouTestCase;
 import static org.globsframework.model.FieldValue.value;
+
+import org.globsframework.model.FieldValue;
 import org.globsframework.model.Key;
 import org.globsframework.utils.Dates;
 
@@ -13,8 +15,10 @@ public class FutureMonthTriggerTest extends PicsouTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
-    directory.add(new TimeService(Dates.parse("2008/07/09")));
-    repository.create(CurrentMonth.KEY);
+    TimeService service = new TimeService(Dates.parse("2008/07/09"));
+    directory.add(service);
+    repository.create(CurrentMonth.KEY, FieldValue.value(CurrentMonth.CURRENT_MONTH, service.getCurrentMonthId()),
+                      FieldValue.value(CurrentMonth.CURRENT_DAY, service.getCurrentDay()));
   }
 
   public void testMoreMonthUserPreferences() throws Exception {

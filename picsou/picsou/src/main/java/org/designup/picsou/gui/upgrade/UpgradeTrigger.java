@@ -55,10 +55,6 @@ public class UpgradeTrigger implements ChangeSetListener {
                         LicenseService.getEndOfTrialPeriod());
     }
 
-    repository.update(CurrentMonth.KEY,
-                      value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
-                      value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
-
     final Long currentJarVersion = userVersion.get(UserVersionInformation.CURRENT_JAR_VERSION);
     if (currentJarVersion.equals(PicsouApplication.JAR_VERSION)) {
       return;

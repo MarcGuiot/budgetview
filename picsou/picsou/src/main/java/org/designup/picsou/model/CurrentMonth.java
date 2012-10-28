@@ -33,8 +33,10 @@ public class CurrentMonth {
   public static IntegerField LAST_TRANSACTION_DAY;
 
   @Target(Month.class)
+  @DefaultInteger(0)
   public static LinkField CURRENT_MONTH;
 
+  @DefaultInteger(0)
   public static IntegerField CURRENT_DAY;
 
   public static org.globsframework.model.Key KEY;

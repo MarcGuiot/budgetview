@@ -44,7 +44,7 @@ public class MonthsToSeriesBudgetTrigger extends AbstractChangeSetListener {
       }
     });
 
-    int currentMonth = directory.get(TimeService.class).getCurrentMonthId();
+    int currentMonth = repository.get(CurrentMonth.KEY).get(CurrentMonth.CURRENT_MONTH);
     for (Key key : createdMonth) {
       if (key.get(Month.ID) > currentMonth) {
         rightMonth.add(key);

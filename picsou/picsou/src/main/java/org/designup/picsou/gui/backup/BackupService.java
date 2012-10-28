@@ -7,7 +7,9 @@ import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
 import org.designup.picsou.gui.model.PicsouGuiModel;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
+import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.server.model.SerializableGlobType;
@@ -32,6 +34,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class BackupService {
   private ServerAccess serverAccess;
@@ -148,6 +152,9 @@ public class BackupService {
     finally {
       repository.completeChangeSet();
     }
+    repository.update(CurrentMonth.KEY,
+                      value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
+                      value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
     return Status.OK;
   }
 

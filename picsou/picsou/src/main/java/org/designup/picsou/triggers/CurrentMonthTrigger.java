@@ -42,9 +42,8 @@ public class CurrentMonthTrigger extends AbstractChangeSetListener {
       if (changeSet.containsChanges(CurrentMonth.KEY) ||
           (previousLastMonth != lastMonth) ||
           (previousLastDay != lastDay)) {
-        repository.delete(Transaction.TYPE,
-                          and(isTrue(Transaction.PLANNED),
-                              fieldStrictlyLessThan(Transaction.MONTH, lastMonth)));
+        repository.delete(Transaction.TYPE, and(isTrue(Transaction.PLANNED),
+                                                fieldStrictlyLessThan(Transaction.MONTH, lastMonth)));
         repository.safeApply(Transaction.TYPE, ALL,
                              new UpdateDayCallback(lastMonth, lastDay));
       }
@@ -97,6 +96,17 @@ public class CurrentMonthTrigger extends AbstractChangeSetListener {
                           FieldValue.value(Transaction.POSITION_DAY, lastDay),
                           FieldValue.value(Transaction.BANK_DAY, lastDay),
                           FieldValue.value(Transaction.DAY, lastDay));
+      }
+      if (transaction.get(Transaction.RECONCILIATION_STATUS, Boolean.FALSE) &&
+          (transaction.get(Transaction.POSITION_MONTH) < lastMonth ||
+          (transaction.get(Transaction.POSITION_MONTH) == lastMonth && transaction.get(Transaction.POSITION_DAY) < lastDay))){
+        repository.update(transaction.getKey(),
+                          FieldValue.value(Transaction.POSITION_MONTH, lastMonth),
+                          FieldValue.value(Transaction.BANK_MONTH, lastMonth),
+                          FieldValue.value(Transaction.BUDGET_MONTH, lastMonth),
+                          FieldValue.value(Transaction.POSITION_DAY, lastDay),
+                          FieldValue.value(Transaction.BANK_DAY, lastDay),
+                          FieldValue.value(Transaction.BUDGET_DAY, lastDay));
       }
     }
   }

@@ -127,6 +127,15 @@ public class TransactionComparator implements Comparator<Glob> {
         return -comparisonMultiplier;
       }
     }
+    if (!transaction1.get(Transaction.RECONCILIATION_STATUS, Boolean.FALSE).equals(transaction2.get(Transaction.RECONCILIATION_STATUS, Boolean.FALSE))) {
+      if (transaction1.get(Transaction.RECONCILIATION_STATUS, Boolean.FALSE)) {
+        return comparisonMultiplier;
+      }
+      else {
+        return -comparisonMultiplier;
+      }
+    }
+
 
     int accountCompare =
       Utils.compare(transaction1.get(Transaction.ACCOUNT), transaction2.get(Transaction.ACCOUNT));

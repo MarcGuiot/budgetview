@@ -241,6 +241,9 @@ public class PicsouInit {
           repository.completeChangeSet();
         }
       }
+      repository.update(CurrentMonth.KEY,
+                        value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
+                        value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
     }
   }
 

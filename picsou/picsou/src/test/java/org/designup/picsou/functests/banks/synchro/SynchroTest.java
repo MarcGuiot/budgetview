@@ -92,6 +92,8 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccountNames("princi");
     savingsAccounts.checkAccountNames("secondary", "Livret A");
 
+    savingsAccounts.checkAccount("secondary", 10, null);
+
     importPanel.openSynchro()
       .selectAccount("secondary")
       .setAmount("100")
@@ -104,7 +106,8 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkLastImportPosition("secondary",100.);
 
     views.selectCategorization();
-    transactionCreation.show().selectAccount("secondary").shouldUpdatePosition().setNotToBeReconcile().create(23, "new op", 90);
+    transactionCreation.show().selectAccount("secondary")
+      .shouldUpdatePosition().setNotToBeReconcile().create(23, "new op", 90);
 
     savingsAccounts.checkPosition("secondary", 100);
 

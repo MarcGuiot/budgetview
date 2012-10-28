@@ -9,8 +9,8 @@ import org.designup.picsou.model.TransactionType;
 
 public class DeferredTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
-    super.setUp();
     setCurrentDate("2009/12/09");
+    super.setUp();
     operations.openPreferences().setFutureMonthsCount(2).validate();
   }
 

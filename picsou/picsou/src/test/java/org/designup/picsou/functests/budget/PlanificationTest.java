@@ -68,6 +68,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
       .check();
 
     TimeService.setCurrentDate(Dates.parse("2008/08/10"));
+    operations.changeDate();
     OfxBuilder
       .init(this)
       .addTransaction("2008/08/4", -50., "ED")

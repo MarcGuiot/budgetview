@@ -674,7 +674,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .add("19/08/2008", "Planned: course", -15.00, "course", -15.00, "Main accounts")
       .add("15/08/2008", "MCDO", -15.00, "course", 0.00, 0.00, "Account n. 00001123")
       .check();
-    mainAccounts.checkPosition("Account n. 00001123", 0);
+    mainAccounts.checkPosition("Account n. 00001123", -10);
     mainAccounts.checkSummary(0, "2008/08/15");
   }
 }
