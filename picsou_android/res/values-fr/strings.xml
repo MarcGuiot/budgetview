@@ -15,6 +15,19 @@
   <string name="month_nov">Novembre</string>
   <string name="month_dec">Décembre</string>
 
+  <string name="short_month_jan">Jan</string>
+  <string name="short_month_feb">Fev</string>
+  <string name="short_month_mar">Mar</string>
+  <string name="short_month_apr">Avr</string>
+  <string name="short_month_may">Mai</string>
+  <string name="short_month_june">Juin</string>
+  <string name="short_month_july">Juil</string>
+  <string name="short_month_aug">Août</string>
+  <string name="short_month_sep">Sep</string>
+  <string name="short_month_oct">Oct</string>
+  <string name="short_month_nov">Nov</string>
+  <string name="short_month_dec">Déc</string>
+
   <string name="on_date">le</string>
   <string name="on_date_planned">prévu le</string>
 

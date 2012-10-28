@@ -1,132 +1,42 @@
 package com.budgetview.android;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-import com.budgetview.android.components.GaugeView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import com.budgetview.android.components.TabPage;
+import com.budgetview.android.components.TabPageHandler;
 import com.budgetview.shared.model.BudgetAreaEntity;
-import com.budgetview.shared.model.BudgetAreaValues;
-import com.budgetview.shared.model.SeriesValues;
-import com.budgetview.shared.utils.AmountFormat;
-import com.budgetview.shared.utils.SeriesValuesComparator;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.Key;
 
-import static org.globsframework.model.utils.GlobMatchers.*;
-
-public class SeriesListActivity extends Activity {
+public class SeriesListActivity extends FragmentActivity {
 
   public static String MONTH_PARAMETER = "com.budgetview.seriesListActivity.parameters.month";
   public static String BUDGET_AREA_PARAMETER = "com.budgetview.seriesListActivity.parameters.series";
 
-  private Integer monthId;
-  private Integer budgetAreaId;
-
-  public void onCreate(Bundle savedInstanceState) {
+  protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     Intent intent = getIntent();
-    monthId = intent.getIntExtra(MONTH_PARAMETER, -1);
-    budgetAreaId = intent.getIntExtra(BUDGET_AREA_PARAMETER, -1);
-
-    setContentView(R.layout.series_list);
-
-    TextView monthText = (TextView)findViewById(R.id.seriesMonthLabel);
-    monthText.setText(Text.monthToString(monthId, getResources()));
+    int monthId = intent.getIntExtra(MONTH_PARAMETER, -1);
+    final int budgetAreaId = intent.getIntExtra(BUDGET_AREA_PARAMETER, -1);
 
     App app = (App)getApplication();
-    Glob budgetAreaValues =
-      app.getRepository().get(Key.create(BudgetAreaValues.MONTH, monthId,
-                                         BudgetAreaValues.BUDGET_AREA, budgetAreaId));
-    Glob budgetAreaEntity = app.getRepository().findLinkTarget(budgetAreaValues, BudgetAreaValues.BUDGET_AREA);
+    Glob budgetAreaEntity = app.getRepository().get(Key.create(BudgetAreaEntity.TYPE, budgetAreaId));
     String budgetAreaLabel = budgetAreaEntity.get(BudgetAreaEntity.LABEL);
-    TextView budgetAreaText = (TextView)findViewById(R.id.seriesBudgetAreaLabel);
-    budgetAreaText.setText(budgetAreaLabel);
+    setTitle(budgetAreaLabel);
 
-    setTitle("BudgetView - " + budgetAreaLabel);
-
-    ListView list = (ListView)findViewById(R.id.seriesList);
-    list.setAdapter(new SeriesListAdapter());
-  }
-
-  private class SeriesListAdapter extends BaseAdapter {
-
-    private GlobList seriesValuesList;
-
-    private SeriesListAdapter() {
-      App app = (App)getApplication();
-      seriesValuesList =
-        app.getRepository()
-          .getAll(SeriesValues.TYPE,
-                  and(
-                    fieldEquals(SeriesValues.MONTH, monthId),
-                    fieldEquals(SeriesValues.BUDGET_AREA, budgetAreaId)
-                  ))
-          .sort(new SeriesValuesComparator());
-    }
-
-    public int getCount() {
-      return seriesValuesList.size();
-    }
-
-    public Object getItem(int i) {
-      return seriesValuesList.get(i);
-    }
-
-    public long getItemId(int i) {
-      return getItem(i).hashCode();
-    }
-
-    public View getView(int i, View previousView, ViewGroup parent) {
-
-      View view = previousView;
-      if (view == null) {
-        LayoutInflater inflater = SeriesListActivity.this.getLayoutInflater();
-        view = inflater.inflate(R.layout.series_block, parent, false);
+    TabPage page = new TabPage(this, monthId, new TabPageHandler() {
+      public Fragment createFragmentWithArgs(int monthId) {
+        SeriesListFragment fragment = new SeriesListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(SeriesListFragment.MONTH_PARAMETER, monthId);
+        bundle.putInt(SeriesListFragment.BUDGET_AREA_PARAMETER, budgetAreaId);
+        fragment.setArguments(bundle);
+        return fragment;
       }
-
-      final Glob values = seriesValuesList.get(i);
-      setText(view, R.id.seriesLabel, values.get(SeriesValues.NAME));
-      setText(view, R.id.seriesActual, values.get(SeriesValues.AMOUNT));
-      setText(view, R.id.seriesPlanned, values.get(SeriesValues.PLANNED_AMOUNT));
-
-      GaugeView gaugeView = (GaugeView)view.findViewById(R.id.seriesGauge);
-      gaugeView.getModel()
-        .setValues(values.get(SeriesValues.AMOUNT, 0.00),
-                   values.get(SeriesValues.PLANNED_AMOUNT, 0.00),
-                   values.get(SeriesValues.OVERRUN_AMOUNT, 0.00),
-                   values.get(SeriesValues.REMAINING_AMOUNT, 0.00),
-                   "", false);
-
-      view.setOnClickListener(new View.OnClickListener() {
-        public void onClick(View view) {
-          Intent intent = new Intent(SeriesListActivity.this, TransactionListActivity.class);
-          intent.putExtra(TransactionListActivity.MONTH_PARAMETER, values.get(SeriesValues.MONTH));
-          intent.putExtra(TransactionListActivity.SERIES_VALUES_PARAMETER, values.get(SeriesValues.ID));
-          startActivity(intent);
-        }
-      });
-
-      return view;
-    }
-
-    private void setText(View view, int textId, Double value) {
-      String text = (value == null) ? "-" : AmountFormat.DECIMAL_FORMAT.format(value);
-      setText(view, textId, text);
-    }
-
-    private void setText(View view, int textId, String text) {
-      TextView textView = (TextView)view.findViewById(textId);
-      textView.setText(text);
-    }
+    });
+    page.initView();
   }
-
-
 }

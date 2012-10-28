@@ -25,7 +25,7 @@ public class SeriesValuesComparator implements Comparator<Glob> {
       return valueDiff;
     }
 
-    return seriesValues1.get(SeriesValues.NAME).toLowerCase().compareTo(
-      seriesValues2.get(SeriesValues.NAME).toLowerCase()) * -1;
+    return seriesValues1.get(SeriesValues.SERIES_ENTITY).compareTo(
+      seriesValues2.get(SeriesValues.SERIES_ENTITY));
   }
 }

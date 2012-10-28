@@ -1,7 +1,6 @@
 package com.budgetview.shared.model;
 
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.DefaultDouble;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -10,24 +9,18 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
-public class SeriesValues {
+public class SeriesEntity {
   public static GlobType TYPE;
 
-  @Key @Target(SeriesEntity.class)
-  public static LinkField SERIES_ENTITY;
-
   @Key
-  public static IntegerField MONTH;
+  public static IntegerField ID;
 
   @Target(BudgetAreaEntity.class)
   public static LinkField BUDGET_AREA;
 
-  public static DoubleField AMOUNT;
-  public static DoubleField PLANNED_AMOUNT;
-  public static DoubleField REMAINING_AMOUNT;
-  public static DoubleField OVERRUN_AMOUNT;
+  public static StringField NAME;
 
   static {
-    GlobTypeLoader.init(SeriesValues.class, "seriesValues");
+    GlobTypeLoader.init(SeriesEntity.class, "seriesEntity");
   }
 }

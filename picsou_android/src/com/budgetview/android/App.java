@@ -2,12 +2,14 @@ package com.budgetview.android;
 
 import android.app.Application;
 import android.content.res.Configuration;
-import android.util.Log;
 import com.budgetview.shared.model.BudgetAreaValues;
+import com.budgetview.shared.model.MonthEntity;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.repository.DefaultGlobRepository;
 
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.SortedSet;
 
 public class App extends Application {
 
@@ -20,6 +22,23 @@ public class App extends Application {
 
   public GlobRepository getRepository() {
     return repository;
+  }
+
+  public SortedSet<Integer> getAllMonthIds() {
+    return getRepository().getAll(MonthEntity.TYPE).getSortedSet(MonthEntity.ID);
+  }
+
+  public int getCurrentMonthId() {
+    SortedSet<Integer> monthIds = getAllMonthIds();
+    if (monthIds.isEmpty()) {
+      throw new RuntimeException("No months found in repository");
+    }
+    if (monthIds.size() == 1) {
+      return monthIds.first();
+    }
+    Iterator<Integer> iterator = monthIds.iterator();
+    iterator.next();
+    return iterator.next();
   }
 
   public boolean isLoaded() {

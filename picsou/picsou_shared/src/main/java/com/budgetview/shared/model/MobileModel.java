@@ -9,6 +9,7 @@ public class MobileModel {
                         MonthEntity.TYPE,
                         BudgetAreaEntity.TYPE,
                         BudgetAreaValues.TYPE,
+                        SeriesEntity.TYPE,
                         SeriesValues.TYPE,
                         TransactionValues.TYPE)
       .get();

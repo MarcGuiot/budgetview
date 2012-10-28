@@ -11,15 +11,15 @@ import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
-import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
@@ -31,7 +31,6 @@ public class BudgetValuesUpdater {
   private GlobRepository targetRepository;
   private Integer[] selectedMonths;
   private int currentMonthId;
-  private Map<SeriesValueKey, Integer> seriesValuesMap;
 
   static {
     BUDGET_AREAS = new BudgetArea[BudgetArea.INCOME_AND_EXPENSES_AREAS.length + 1];
@@ -111,22 +110,29 @@ public class BudgetValuesUpdater {
   }
 
   private void createSeriesValues() {
-    seriesValuesMap = new HashMap<SeriesValueKey, Integer>();
+    Set<Integer> seriesIds = new HashSet<Integer>();
     for (Glob seriesStat : sourceRepository.getAll(SeriesStat.TYPE, fieldIn(SeriesStat.MONTH, selectedMonths))) {
       Glob series = sourceRepository.findLinkTarget(seriesStat, SeriesStat.SERIES);
 
       if (seriesStat.isTrue(SeriesStat.ACTIVE)) {
-        Glob seriesValues = targetRepository.create(SeriesValues.TYPE,
-                                                    value(SeriesValues.NAME, series.get(Series.NAME)),
-                                                    value(SeriesValues.MONTH, seriesStat.get(SeriesStat.MONTH)),
-                                                    value(SeriesValues.BUDGET_AREA, series.get(Series.BUDGET_AREA)),
-                                                    value(SeriesValues.AMOUNT, seriesStat.get(SeriesStat.AMOUNT)),
-                                                    value(SeriesValues.PLANNED_AMOUNT, seriesStat.get(SeriesStat.PLANNED_AMOUNT)),
-                                                    value(SeriesValues.OVERRUN_AMOUNT, seriesStat.get(SeriesStat.OVERRUN_AMOUNT)),
-                                                    value(SeriesValues.REMAINING_AMOUNT, seriesStat.get(SeriesStat.REMAINING_AMOUNT)));
-        seriesValuesMap.put(new SeriesValueKey(series.get(Series.ID), seriesStat.get(SeriesStat.MONTH)),
-                            seriesValues.get(SeriesValues.ID));
+        Integer seriesId = series.get(Series.ID);
+        seriesIds.add(seriesId);
+        targetRepository.create(SeriesValues.TYPE,
+                                value(SeriesValues.SERIES_ENTITY, seriesId),
+                                value(SeriesValues.MONTH, seriesStat.get(SeriesStat.MONTH)),
+                                value(SeriesValues.BUDGET_AREA, series.get(Series.BUDGET_AREA)),
+                                value(SeriesValues.AMOUNT, seriesStat.get(SeriesStat.AMOUNT)),
+                                value(SeriesValues.PLANNED_AMOUNT, seriesStat.get(SeriesStat.PLANNED_AMOUNT)),
+                                value(SeriesValues.OVERRUN_AMOUNT, seriesStat.get(SeriesStat.OVERRUN_AMOUNT)),
+                                value(SeriesValues.REMAINING_AMOUNT, seriesStat.get(SeriesStat.REMAINING_AMOUNT)));
       }
+    }
+    for (Integer seriesId : seriesIds) {
+      Glob series = sourceRepository.get(Key.create(Series.TYPE, seriesId));
+      targetRepository.create(SeriesEntity.TYPE,
+                              value(SeriesEntity.ID, seriesId),
+                              value(SeriesEntity.NAME, series.get(Series.NAME)),
+                              value(SeriesEntity.BUDGET_AREA, series.get(Series.BUDGET_AREA)));
     }
   }
 
@@ -170,12 +176,6 @@ public class BudgetValuesUpdater {
       .sort(TransactionComparator.DESCENDING_BANK_SPLIT_AFTER);
     int sequenceNumber = 0;
     for (Glob transaction : transactions) {
-      Integer seriesValuesId = seriesValuesMap.get(new SeriesValueKey(transaction.get(Transaction.SERIES),
-                                                                      transaction.get(Transaction.BUDGET_MONTH)));
-      if (seriesValuesId == null) {
-        throw new UnexpectedApplicationState("No series values found for " + transaction);
-      }
-
       targetRepository.create(TransactionValues.TYPE,
                               value(TransactionValues.AMOUNT, transaction.get(Transaction.AMOUNT)),
                               value(TransactionValues.ACCOUNT, transaction.get(Transaction.ACCOUNT)),
@@ -183,46 +183,9 @@ public class BudgetValuesUpdater {
                               value(TransactionValues.BANK_DAY, transaction.get(Transaction.BANK_DAY)),
                               value(TransactionValues.BANK_MONTH, transaction.get(Transaction.BANK_MONTH)),
                               value(TransactionValues.PLANNED, transaction.get(Transaction.PLANNED)),
-                              value(TransactionValues.SERIES_VALUES, seriesValuesId),
+                              value(TransactionValues.SERIES, transaction.get(Transaction.SERIES)),
                               value(TransactionValues.SEQUENCE_NUMBER, sequenceNumber++)
       );
     }
   }
-
-  private static class SeriesValueKey {
-    private Integer seriesId;
-    private Integer monthId;
-
-    private SeriesValueKey(Integer seriesId, Integer monthId) {
-      this.seriesId = seriesId;
-      this.monthId = monthId;
-    }
-
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (o == null || getClass() != o.getClass()) {
-        return false;
-      }
-
-      SeriesValueKey that = (SeriesValueKey)o;
-
-      if (monthId != null ? !monthId.equals(that.monthId) : that.monthId != null) {
-        return false;
-      }
-      if (seriesId != null ? !seriesId.equals(that.seriesId) : that.seriesId != null) {
-        return false;
-      }
-
-      return true;
-    }
-
-    public int hashCode() {
-      int result = seriesId != null ? seriesId.hashCode() : 0;
-      result = 31 * result + (monthId != null ? monthId.hashCode() : 0);
-      return result;
-    }
-  }
-
 }

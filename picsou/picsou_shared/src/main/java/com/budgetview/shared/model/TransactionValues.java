@@ -12,8 +12,8 @@ public class TransactionValues {
   @Key
   public static IntegerField ID;
 
-  @Target(SeriesValues.class)
-  public static LinkField SERIES_VALUES;
+  @Target(SeriesEntity.class)
+  public static LinkField SERIES;
 
   @Target(AccountEntity.class)
   public static LinkField ACCOUNT;
