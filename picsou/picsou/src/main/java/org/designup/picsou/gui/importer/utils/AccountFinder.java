@@ -36,7 +36,7 @@ public class AccountFinder implements GlobFunctor {
   private String getLabel(Glob glob) {
     String label1 = createLabel(glob, Transaction.QIF_M, Transaction.QIF_P);
     if (Strings.isNullOrEmpty(label1)){
-      label1 = createLabel(glob, Transaction.OFX_NAME, Transaction.OFX_NAME);
+      label1 = createLabel(glob, Transaction.OFX_NAME, Transaction.OFX_MEMO);
     }
     return Transaction.anonymise(label1);
   }
@@ -44,7 +44,7 @@ public class AccountFinder implements GlobFunctor {
   private String getImportedLabel(Glob glob) {
     String label1 = createLabel(glob, ImportedTransaction.QIF_M, ImportedTransaction.QIF_P);
     if (Strings.isNullOrEmpty(label1)){
-      label1 = createLabel(glob, ImportedTransaction.OFX_NAME, ImportedTransaction.OFX_NAME);
+      label1 = createLabel(glob, ImportedTransaction.OFX_NAME, ImportedTransaction.OFX_MEMO);
     }
     return Transaction.anonymise(label1);
   }

@@ -38,7 +38,7 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
       .setAccountName("Card n. 123123123")
       .setDeferredAccount(25, 28, 0)
       .completeImport();
-    operations.importOfxFile(getFile("banque_pop_en_cours.ofx"));
+    operations.importOfxOnAccount(getFile("banque_pop_en_cours.ofx"), "Card n. 123123123");
 
     mainAccounts.checkAccountNames("Card n. 123123123", "Account n. 123123123");
 
@@ -86,8 +86,8 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
       .add("31/12/2008", "MAILLARD D 39LONS/SAUNIER", -25.30, "To categorize", -25.30, 1685.45, "Card n. 123123123")
       .check();
     operations.importOfxFile(getFile("banque_pop.ofx"));
-    operations.importOfxFile(getFile("banque_pop_facturette.ofx"));
-    operations.importOfxFile(getFile("banque_pop_en_cours.ofx"));
+    operations.importOfxOnAccount(getFile("banque_pop_facturette.ofx"),"Card n. 123123123");
+    operations.importOfxOnAccount(getFile("banque_pop_en_cours.ofx"), "Card n. 123123123");
     mainAccounts.checkAccountNames("Card n. 123123123", "Account n. 123123123");
   }
 

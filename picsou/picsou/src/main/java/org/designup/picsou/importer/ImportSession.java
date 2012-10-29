@@ -219,15 +219,16 @@ public class ImportSession {
         }
       }
       if (matchingAccount.isEmpty()) {
-        return account;
+        return localRepository.get(account.getKey());
       }
     }
     if (matchingAccount.size() == 1) {
-      RealAccount.copy(localRepository, account, matchingAccount.getFirst());
-      localRepository.delete(account.getKey());
-      return matchingAccount.getFirst();
+      Glob first = matchingAccount.getFirst();
+      localRepository.update(account.getKey(), RealAccount.ACCOUNT, first.get(RealAccount.ACCOUNT));
+//      RealAccount.copy(localRepository, matchingAccount.getFirst(), account);
+//      localRepository.delete(account.getKey());
     }
-    return account;
+    return localRepository.get(account.getKey());
   }
 
   private List<String> getImportedTransactionFormat(final GlobRepository repository) {

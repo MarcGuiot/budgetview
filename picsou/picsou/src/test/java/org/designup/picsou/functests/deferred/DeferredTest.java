@@ -52,8 +52,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("27/06/2008", "AUCHAN", -50.00, "To categorize", -50.00, 1550.00, "Card n. 1111")
       .check();
 
-    transactions
-      .delete("PRELEVEMENT");
+    transactions.deleteWithImpact("PRELEVEMENT");
 
     transactions
       .initAmountContent()
@@ -170,6 +169,8 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .save();
     operations.importQifFileWithDeferred(deferredAccount, "Other", -100.00);
 
+    categorization.setNewVariable("Auchan", "Courses", -200.);
+
     timeline.selectAll();
 
     views.selectCategorization();
@@ -184,17 +185,23 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     views.selectData();
     categorization.setDeferred("Prelevement septembre", "card 1111");
 
-    transactions.initAmountContent()
-      .add("30/11/2009", "AUCHAN", -60.00, "To categorize", -100.00, 900.00, "card 1111")
-      .add("29/11/2009", "AUCHAN", -40.00, "To categorize", -40.00, 960.00, "card 1111")
+    transactions.showPlannedTransactions()
+      .initAmountContent()
+      .add("11/02/2010", "Planned: Courses", -200.00, "Courses", 230.00, "Main accounts")
+      .add("11/01/2010", "Planned: Courses", -200.00, "Courses", 430.00, "Main accounts")
+      .add("11/12/2009", "Planned: Courses", -100.00, "Courses", 730.00, "Main accounts")
+      .add("30/11/2009", "Planned: Courses", -170.00, "Courses", 830.00, "Main accounts")
+      .add("30/11/2009", "AUCHAN", -60.00, "Courses", -100.00, 630.00, "card 1111")
+      .add("29/11/2009", "AUCHAN", -40.00, "Courses", -40.00, 690.00, "card 1111")
       .add("28/11/2009", "PRELEVEMENT NOVEMBRE", -30.00, "card 1111", 1000.00, 1000.00, "Main account")
-      .add("25/11/2009", "AUCHAN", -10.00, "To categorize", -30.00, 1000.00, "card 1111")
-      .add("29/10/2009", "AUCHAN", -20.00, "To categorize", -20.00, 1000.00, "card 1111")
+      .add("25/11/2009", "AUCHAN", -10.00, "Courses", -30.00, 1000.00, "card 1111")
+      .add("29/10/2009", "AUCHAN", -20.00, "Courses", -20.00, 1000.00, "card 1111")
       .add("28/10/2009", "PRELEVEMENT OCTOBRE", -50.00, "card 1111", 1030.00, 1030.00, "Main account")
-      .add("29/09/2009", "AUCHAN", -35.00, "To categorize", -35.00, 1030.00, "card 1111")
+      .add("29/09/2009", "AUCHAN", -35.00, "Courses", -35.00, 1030.00, "card 1111")
       .add("28/09/2009", "PRELEVEMENT SEPTEMBRE", -35.00, "card 1111", 1080.00, 1080.00, "Main account")
-      .add("14/09/2009", "AUCHAN", -15.00, "To categorize", -15.00, 1080.00, "card 1111")
+      .add("14/09/2009", "AUCHAN", -15.00, "Courses", -15.00, 1080.00, "card 1111")
       .check();
+
   }
 
   public void testImportQifWithOperationMixInMonthWithoutTransfer() throws Exception {

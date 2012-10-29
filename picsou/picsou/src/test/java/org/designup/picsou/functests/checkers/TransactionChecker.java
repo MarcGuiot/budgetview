@@ -196,8 +196,16 @@ public class TransactionChecker extends ViewChecker {
     UISpecAssert.assertFalse(getTable().isEmpty());
   }
 
-  public void delete(String label) {
+  public void deleteWithImpact(String label) {
     openDeletionDialog(getIndexOf(label.toUpperCase()))
+      .selectUpdatePosition()
+      .checkTitle("Delete operations")
+      .validate();
+  }
+
+  public void deleteWithNoImpact(String label) {
+    openDeletionDialog(getIndexOf(label.toUpperCase()))
+      .selectNoUpdateOfPosition()
       .checkTitle("Delete operations")
       .validate();
   }
@@ -268,8 +276,8 @@ public class TransactionChecker extends ViewChecker {
       .close();
   }
 
-  private ConfirmationDialogChecker openDeletionDialog(int row) {
-    return new ConfirmationDialogChecker(getDeleteDialog(row));
+  private TransactionDeleteChecker openDeletionDialog(int row) {
+    return new TransactionDeleteChecker(getDeleteDialog(row));
   }
 
   private ConfirmationDialogChecker openDeletionDialog(int[] rows) {
