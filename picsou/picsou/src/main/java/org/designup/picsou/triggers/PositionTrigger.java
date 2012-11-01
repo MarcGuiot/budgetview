@@ -36,7 +36,8 @@ public class PositionTrigger implements ChangeSetListener {
         }
       }
       else {
-        updateTransactionImpactAccounts(repository, changeSet, updatedOperations, accountIds, createdAccount, true);
+        boolean isImport = changeSet.containsChanges(TransactionImport.TYPE);
+        updateTransactionImpactAccounts(repository, changeSet, updatedOperations, accountIds, createdAccount, isImport);
       }
       if (accountIds.isEmpty() && deferredAccountIds.isEmpty()) {
         return;
@@ -194,7 +195,8 @@ public class PositionTrigger implements ChangeSetListener {
                                                boolean computeFromLastValidPosition) {
     Glob currentMonth = repository.get(CurrentMonth.KEY);
     for (Integer accountId : accountIds) {
-      updateAccount(repository, changeSet, operations, computeFromLastValidPosition, currentMonth, accountId, createdAccounts.contains(accountId));
+      updateAccount(repository, changeSet, operations, computeFromLastValidPosition, currentMonth, accountId,
+                    createdAccounts.contains(accountId));
     }
   }
 

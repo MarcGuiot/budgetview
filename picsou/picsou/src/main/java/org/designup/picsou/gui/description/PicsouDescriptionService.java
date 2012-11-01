@@ -134,6 +134,9 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
         String label = stringifier.toString(transaction, repository);
         return planned + (label == null ? "" : label);
       }
+//      if (Strings.isNotEmpty(transaction.get(Transaction.NOTE))) {
+//        return transaction.get(Transaction.NOTE) + " : " + stringifier.toString(transaction, repository);
+//      }
       return stringifier.toString(transaction, repository);
     }
 

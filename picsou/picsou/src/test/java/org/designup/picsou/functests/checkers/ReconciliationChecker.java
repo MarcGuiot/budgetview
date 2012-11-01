@@ -29,6 +29,11 @@ public class ReconciliationChecker extends GuiChecker {
     return this;
   }
 
+ public ReconciliationChecker select(int index){
+   getTable().selectRow(index);
+   return this;
+ }
+
   public ReconciliationChecker checkReconcileDisabled() {
     assertFalse(panel.getButton("reconcile").isEnabled());
     return this;

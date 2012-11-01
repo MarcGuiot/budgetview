@@ -104,8 +104,10 @@ public class CurrentMonthTrigger extends AbstractChangeSetListener {
                           FieldValue.value(Transaction.POSITION_MONTH, lastMonth),
                           FieldValue.value(Transaction.BANK_MONTH, lastMonth),
                           FieldValue.value(Transaction.BUDGET_MONTH, lastMonth),
+                          FieldValue.value(Transaction.MONTH, lastMonth),
                           FieldValue.value(Transaction.POSITION_DAY, lastDay),
                           FieldValue.value(Transaction.BANK_DAY, lastDay),
+                          FieldValue.value(Transaction.DAY, lastDay),
                           FieldValue.value(Transaction.BUDGET_DAY, lastDay));
       }
     }
