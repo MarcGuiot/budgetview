@@ -40,6 +40,7 @@
     <item name="android:paddingLeft">5dp</item>
     <item name="android:paddingRight">5dp</item>
     <item name="android:paddingBottom">0dp</item>
+    <item name="android:opacity">opaque</item>
     <item name="android:background">@drawable/list_background</item>
   </style>
 
@@ -60,10 +61,16 @@
     <item name="android:layout_marginTop">2dp</item>
   </style>
 
-  <style name="HorizontalSpacer">
+  <style name="Spacer">
     <item name="android:layout_width">0dp</item>
     <item name="android:layout_height">0dp</item>
     <item name="android:layout_weight">100</item>
+  </style>
+
+  <style name="LightSpacer">
+    <item name="android:layout_width">0dp</item>
+    <item name="android:layout_height">0dp</item>
+    <item name="android:layout_weight">50</item>
   </style>
 
   <style name="RightArrow">

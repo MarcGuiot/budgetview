@@ -51,7 +51,7 @@ public class TabPage implements TabHost.OnTabChangeListener, ViewPager.OnPageCha
     }
     tabHost.setOnTabChangedListener(this);
 
-    viewPager = (ViewPager)activity.findViewById(R.id.budgetOverviewPager);
+    viewPager = (ViewPager)activity.findViewById(R.id.viewPager);
     viewPager.setOnPageChangeListener(this);
     viewPager.setAdapter(pagerAdapter);
 

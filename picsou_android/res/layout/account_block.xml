@@ -15,7 +15,7 @@
                 style="@style/ListItemLabel"
                 android:text="label"/>
 
-      <View style="@style/HorizontalSpacer"/>
+      <View style="@style/Spacer"/>
 
       <ImageView style="@style/RightArrow"/>
 
@@ -27,7 +27,7 @@
                   android:orientation="horizontal"
       >
 
-      <View style="@style/HorizontalSpacer"/>
+      <View style="@style/Spacer"/>
 
       <TextView android:id="@+id/accountPosition"
                 android:layout_width="wrap_content"

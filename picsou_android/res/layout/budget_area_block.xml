@@ -18,7 +18,7 @@
                 android:text="label"
         />
 
-      <View style="@style/HorizontalSpacer"/>
+      <View style="@style/Spacer"/>
 
       <ImageView style="@style/RightArrow"/>
 
@@ -38,7 +38,7 @@
         android:layout_gravity="left"
         />
 
-      <View style="@style/HorizontalSpacer"/>
+      <View style="@style/Spacer"/>
 
       <TextView android:id="@+id/budgetAreaActual"
                 android:layout_width="wrap_content"

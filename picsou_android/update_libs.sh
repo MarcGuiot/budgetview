@@ -4,7 +4,7 @@ echo "==> saxstack jar copied to libs"
 cd ../globs/
 mvn install -Dmaven.test.skip=true
 cd ../picsou_android/
-cp ~/.m2/repository/org/globsframework/globs/1.0/globs-1.0.jar ./libs 
+cp ../globs/target/globs-core-1.0.jar ./libs 
 echo "==> globs jar copied to libs"
 
 cd ../picsou/picsou_shared/

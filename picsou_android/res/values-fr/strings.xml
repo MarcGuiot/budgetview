@@ -35,5 +35,15 @@
   <string name="main_accounts_section">Comptes courants</string>
   <string name="savings_accounts_section">Comptes d\'épargne</string>
 
-  <string name="loading">Chargement...</string>
+  <string name="email">Adresse e-mail</string>
+  <string name="password">Mot de passe</string>
+  <string name="login">Connecter</string>
+
+  <string name="homeConnect">Connexion</string>
+  <string name="homeDemo">Démo</string>
+
+  <string name="syncWithNoConnection">Vous devez avoir un accès internet pour vous connecter</string>
+  <string name="syncWithInvalidId">Ce nom d\'utilisateur est inconnu ou ce mot de passe est incorrect</string>
+
 </resources>
+

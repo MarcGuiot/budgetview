@@ -35,5 +35,13 @@
   <string name="main_accounts_section">Main accounts</string>
   <string name="savings_accounts_section">Savings accounts</string>
 
-  <string name="loading">Loading...</string>
+  <string name="email">E-mail address</string>
+  <string name="password">Password</string>
+  <string name="login">Login</string>
+
+  <string name="homeConnect">Login</string>
+  <string name="homeDemo">Demo</string>
+
+  <string name="syncWithNoConnection">You need an internet access to login</string>
+  <string name="syncWithInvalidId">Unknown user or invalid password</string>
 </resources>

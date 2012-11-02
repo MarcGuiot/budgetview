@@ -10,22 +10,7 @@ public class BudgetOverviewActivity extends FragmentActivity {
 
   public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    App app = (App)getApplication();
-    if (app.isLoaded()) {
-      showContent(savedInstanceState);
-    }
-    else {
-      setContentView(R.layout.loading_page);
-      DataLoader loader = new DataLoader(this) {
-        protected void onLoadFinished() {
-          showContent(savedInstanceState);
-        }
-      };
-      loader.load();
-    }
-  }
 
-  private void showContent(Bundle savedInstanceState) {
     App app = (App)getApplication();
     TabPage page = new TabPage(this, app.getCurrentMonthId(), new TabPageHandler() {
       public Fragment createFragmentWithArgs(int monthId) {

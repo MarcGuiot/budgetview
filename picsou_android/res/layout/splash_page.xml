@@ -3,27 +3,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
+              android:orientation="vertical"
               android:background="@color/background">
+
+  <View style="@style/LightSpacer"/>
 
   <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_gravity="center"
     >
 
-  <ProgressBar
-      android:id="@+id/loadingProgressBar"
+    <ImageView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginRight="5dp"
-      android:gravity="center"
-    />
+      android:src="@drawable/budgetview_large"/>
 
-    <TextView
+    <ProgressBar
+      android:id="@+id/login_progress_bar"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="@string/loading"/>
+      android:layout_marginTop="10dp"
+      android:visibility="visible"
+      android:layout_gravity="center"
+      />
 
   </LinearLayout>
+
+  <View style="@style/Spacer"/>
 
 </LinearLayout>

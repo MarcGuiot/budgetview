@@ -16,7 +16,7 @@
                android:name=".App"
                android:icon="@drawable/budgetview">
 
-    <activity android:name=".BudgetOverviewActivity"
+    <activity android:name=".HomeActivity"
               android:label="@string/app_name">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -24,6 +24,8 @@
       </intent-filter>
     </activity>
 
+    <activity android:name=".LoginActivity" android:label="BudgetView"/>
+    <activity android:name=".BudgetOverviewActivity" android:label="BudgetView"/>
     <activity android:name=".SeriesListActivity" android:label="seriesList"/>
     <activity android:name=".TransactionListActivity" android:label="transactionList"/>
   </application>
