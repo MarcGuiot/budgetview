@@ -41,11 +41,13 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .validate();
     categorization.setVariable("[R] AUCHAN", "Groceries", "Misc");
 
+    setCurrentDate("2012/05/28");
+    operations.changeDate();
     OfxBuilder.init(this)
       .addBankAccount("00123", 1000.00, "2012/05/15")
       .addTransaction("2012/05/12", -50.00, "VELIZY AUCHAN")
       .addTransaction("2012/05/15", -100.00, "CARREFOUR")
-      .addTransaction("2012/07/12", -25.00, "VELIZY AUCHAN")
+      .addTransaction("2012/05/12", -25.00, "VELIZY AUCHAN")
       .loadInAccount("Account 1");
     OfxBuilder.init(this)
       .addBankAccount("00234", 2000.00, "2012/05/15")
@@ -53,12 +55,12 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .loadInAccount("Account 2");
     categorization.setNewVariable("VELIZY AUCHAN", "Food", 200.00);
     categorization.initContent()
-      .add("12/05/2012", "Groceries / Misc", "[R] AUCHAN", -50.00)
+      .add("15/05/2012", "Groceries / Misc", "[R] AUCHAN", -50.00)
       .add("15/05/2012", "", "CARREFOUR", -100.00)
-      .add("01/05/2012", "", "[R] FNAC", -100.00)
+      .add("15/05/2012", "", "[R] FNAC", -100.00)
       .add("12/04/2012", "", "FNAC PAIEMENTS", -75.00)
       .add("12/05/2012", "Food", "VELIZY AUCHAN", -50.00)
-      .add("12/07/2012", "Food", "VELIZY AUCHAN", -25.00)
+      .add("12/05/2012", "Food", "VELIZY AUCHAN", -25.00)
       .check();
 
     categorization.selectTableRow(0);
@@ -68,6 +70,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .getReconciliation()
       .initTable()
       .add("2012/05/12", "Food", "VELIZY AUCHAN", -50.00)
+      .add("2012/05/12", "Food", "VELIZY AUCHAN", -25.00)
       .add("2012/05/15", "", "CARREFOUR", -100.00)
       .check();
 
@@ -78,10 +81,10 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     categorization.initContent()
       .add("15/05/2012", "", "CARREFOUR", -100.00)
-      .add("01/05/2012", "", "[R] FNAC", -100.00)
+      .add("15/05/2012", "", "[R] FNAC", -100.00)
       .add("12/04/2012", "", "FNAC PAIEMENTS", -75.00)
       .add("12/05/2012", "Groceries / Misc", "VELIZY AUCHAN", -50.00)
-      .add("12/07/2012", "Food", "VELIZY AUCHAN", -25.00)
+      .add("12/05/2012", "Food", "VELIZY AUCHAN", -25.00)
       .check();
 
     categorization.selectTableRow(3);
@@ -96,11 +99,11 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .loadInAccount("Account 1");
     categorization.initContent()
       .add("15/05/2012", "", "CARREFOUR", -100.00)
-      .add("01/05/2012", "", "[R] FNAC", -100.00)
+      .add("20/05/2012", "", "[R] FNAC", -100.00)
       .add("12/04/2012", "", "FNAC PAIEMENTS", -75.00)
       .add("12/05/2012", "Groceries / Misc", "VELIZY AUCHAN", -50.00)
+      .add("12/05/2012", "Food", "VELIZY AUCHAN", -25.00)
       .add("20/05/2012", "", "VELIZY AUCHAN", -75.00)
-      .add("12/07/2012", "Food", "VELIZY AUCHAN", -25.00)
       .check();
   }
 
@@ -181,6 +184,8 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .add("01/05/2012", "", "VELIZY AUCHAN", -50.00)
       .check();
 
+    mainAccounts.checkSummary(1000.00, "2012/05/01");
+    mainAccounts.checkPosition("Account n. 00123", 1000);
     transactionCreation
       .show()
       .createToBeReconciled(20, "CHEQUE N° 12345", -100.00)
@@ -191,29 +196,33 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .add("01/05/2012", "", "VELIZY AUCHAN", -50.00)
       .check();
 
-    fail("tbd - comment doit évoluer le solde du compte ? on met à jour lors de la création d'opérations, sauf quand on arrive dans le futur ?");
+    mainAccounts.checkPosition("Account n. 00123", 1000);
     mainAccounts.checkSummary(1000.00, "2012/05/01");
 
-    setCurrentDate("2008/08/22");
+    setCurrentDate("2012/05/22");
+    restartApplicationFromBackup();
 
-    fail("tbd - solde du compte ci-dessous ??");
-    mainAccounts.checkSummary(1000.00, "2012/05/01");
+    mainAccounts.checkPosition("Account n. 00123", 850);
+    mainAccounts.checkSummary(850.00, "2012/05/20");
 
     OfxBuilder.init(this)
       .addBankAccount("00123", 1000.00, "2012/05/15")
       .addTransaction("2012/05/21", -100.00, "CHEQUE 00012345")
       .load();
 
+    mainAccounts.checkPosition("Account n. 00123", 750);
+    mainAccounts.checkSummary(750.00, "2012/05/21");
+
     categorization.initContent()
-      .add("20/05/2012", "", "[R] AUCHAN 1", -50.00)
-      .add("20/05/2012", "", "[R] CHEQUE N° 12345", -100.00)
+      .add("21/05/2012", "", "[R] AUCHAN 1", -50.00)
+      .add("21/05/2012", "", "[R] CHEQUE N° 12345", -100.00)
       .add("21/05/2012", "", "CHEQUE N°00012345", -100.00)
       .add("01/05/2012", "", "VELIZY AUCHAN", -50.00)
       .check();
 
     categorization
       .selectTransaction("[R] CHEQUE N° 12345")
-      .checkReconciliationShown();
+      .switchToReconciliation();
 
     categorization.getReconciliation().initTable()
       .add("2012/05/21", "", "CHEQUE N°00012345", -100.00)
@@ -222,10 +231,41 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     categorization.getReconciliation().select("CHEQUE N°00012345").reconcile();
 
+    mainAccounts.checkPosition("Account n. 00123", 850);
+    mainAccounts.checkSummary(850.00, "2012/05/21");
+
     categorization.initContent()
-      .add("20/05/2012", "", "[R] AUCHAN 1", -50.00)
+      .add("21/05/2012", "", "[R] AUCHAN 1", -50.00)
       .add("21/05/2012", "", "CHEQUE N°00012345", -100.00)
       .add("01/05/2012", "", "VELIZY AUCHAN", -50.00)
+      .check();
+  }
+
+  public void testManualOperationAreNotTakenInAccountWithImport() throws Exception {
+    mainAccounts.createMainAccount("Main", 1000.00);
+
+    transactionCreation
+      .show()
+      .createToBeReconciled(10, "CHEQUE 12345", -100.00)
+      .createToBeReconciled(10, "AUCHAN 1", -50.00);
+
+    OfxBuilder.init(this)
+      .addTransaction("2012/05/10", -100.00, "CHEQUE 12345")
+      .addTransaction("2012/05/10", -50.00, "AUCHAN 1")
+      .loadInAccount("Main");
+
+    categorization.initContent()
+      .add("10/05/2012", "", "AUCHAN 1", -50.00)
+      .add("10/05/2012", "", "[R] AUCHAN 1", -50.00)
+      .add("10/05/2012", "", "[R] CHEQUE 12345", -100.00)
+      .add("10/05/2012", "", "CHEQUE N°12345", -100.00)
+      .check();
+    views.selectData();
+    transactions.initAmountContent()
+      .add("10/05/2012", "AUCHAN 1", -50.00, "To categorize", 700.00, 700.00, "Main")
+      .add("10/05/2012", "CHEQUE 12345", -100.00, "To categorize", 750.00, 750.00, "Main")
+      .add("10/05/2012", "AUCHAN 1", -50.00, "To categorize", 850.00, 850.00, "Main")
+      .add("10/05/2012", "CHEQUE N°12345", -100.00, "To categorize", 900.00, 900.00, "Main")
       .check();
   }
 
@@ -242,34 +282,62 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .add("10/05/2012", "", "[R] CHEQUE N° 12345", -100.00)
       .check();
 
+    mainAccounts.checkPosition("Main", 850);
+    mainAccounts.checkSummary(850.00, "2012/05/10");
+
     OfxBuilder.init(this)
       .addTransaction("2012/05/10", -100.00, "CHEQUE 0012345")
+      .addTransaction("2012/05/10", -50.00, "AUCHAN 1")
       .loadInAccount("Main");
+
+    transactions.initAmountContent()
+      .add("10/05/2012", "AUCHAN 1", -50.00, "To categorize", 700.00, 700.00, "Main")
+      .add("10/05/2012", "CHEQUE N° 12345", -100.00, "To categorize", 750.00, 750.00, "Main")
+      .add("10/05/2012", "AUCHAN 1", -50.00, "To categorize", 850.00, 850.00, "Main")
+      .add("10/05/2012", "CHEQUE N°0012345", -100.00, "To categorize", 900.00, 900.00, "Main")
+      .check();
+
+
     categorization.initContent()
+      .add("10/05/2012", "", "AUCHAN 1", -50.00)
       .add("10/05/2012", "", "[R] AUCHAN 1", -50.00)
       .add("10/05/2012", "", "[R] CHEQUE N° 12345", -100.00)
       .add("10/05/2012", "", "CHEQUE N°0012345", -100.00)
       .check();
 
+    mainAccounts.checkPosition("Main", 700);
+    mainAccounts.checkSummary(700.00, "2012/05/10");
+    mainAccounts.checkLastImportPosition("main", 1000.);
+
     categorization.selectTransaction("[R] CHEQUE N° 12345");
 
     categorization.switchToReconciliation().keepManualTransaction();
+    categorization.selectTransaction("[R] AUCHAN 1")
+      .switchToReconciliation().select("AUCHAN 1").reconcile();
+
+    transactions.initAmountContent()
+      .add("10/05/2012", "AUCHAN 1", -50.00, "To categorize", 750.00, 750.00, "Main")
+      .add("10/05/2012", "CHEQUE N°0012345", -100.00, "To categorize", 800.00, 800.00, "Main")
+      .add("10/05/2012", "CHEQUE N° 12345", -100.00, "To categorize", 900.00, 900.00, "Main")
+      .check();
 
     categorization.initContent()
-      .add("10/05/2012", "", "[R] AUCHAN 1", -50.00)
+      .add("10/05/2012", "", "AUCHAN 1", -50.00)
       .add("10/05/2012", "", "CHEQUE N° 12345", -100.00)
       .add("10/05/2012", "", "CHEQUE N°0012345", -100.00)
       .check();
 
-    fail("tbd - effet sur le solde ?");
+    mainAccounts.checkPosition("Main", 750);
+    mainAccounts.checkSummary(750.00, "2012/05/10");
 
     // à l'import suivant la transaction n'est plus marquée toReconcile
     OfxBuilder.init(this)
       .addTransaction("2012/05/10", -100.00, "CHEQUE 0012345")
       .addTransaction("2012/05/15", -100.00, "FNAC")
       .loadInAccount("Main");
+
     categorization.initContent()
-      .add("10/05/2012", "", "[R] AUCHAN 1", -50.00)
+      .add("10/05/2012", "", "AUCHAN 1", -50.00)
       .add("10/05/2012", "", "CHEQUE N° 12345", -100.00)
       .add("10/05/2012", "", "CHEQUE N°0012345", -100.00)
       .add("15/05/2012", "", "FNAC", -100.00)
@@ -335,27 +403,171 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testReconciliationWithASplitTransaction() throws Exception {
-    fail("tbd - voir les impacts sur le split");
+    mainAccounts.createMainAccount("Main", 1000.00);
+
+    transactionCreation
+      .show()
+      .createToBeReconciled(10, "split 1", -50.00)
+      .createToBeReconciled(10, "split 2", -40.00);
+
+    OfxBuilder.init(this)
+      .addTransaction("2012/05/10", -100.00, "one splitted op")
+      .loadInAccount("Main");
+    views.selectCategorization();
+    categorization.selectTransaction("ONE SPLITTED OP");
+
+    transactionDetails.split("-50", "split 1");
+    transactionDetails.split("-40", "split 2");
+
+    categorization.reconcile("[R] SPLIT 1", "split 1 : ONE SPLITTED OP");
+    categorization.reconcile("[R] SPLIT 2", "split 2 : ONE SPLITTED OP");
+    transactions.initAmountContent()
+      .add("10/05/2012", "ONE SPLITTED OP", -10.00, "To categorize", 900.00, 900.00, "Main")
+      .add("10/05/2012", "split 2 : ONE SPLITTED OP", -40.00, "To categorize", 910.00, 910.00, "Main")
+      .add("10/05/2012", "split 1 : ONE SPLITTED OP", -50.00, "To categorize", 950.00, 950.00, "Main")
+      .check();
+  }
+
+  public void testAtImportManualOperationAreShift() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    mainAccounts.createMainAccount("Main", 1000.00);
+
+    transactionCreation
+      .show()
+      .createToBeReconciled(20, "op 1", -50.00)
+      .createToBeReconciled(12, "op 2", -40.00);
+
+    OfxBuilder.init(this)
+      .addTransaction("2012/05/14", -10.00, "import op 1")
+      .loadInAccount("Main");
+
+    transactions.initAmountContent()
+      .add("20/05/2012", "OP 1", -50.00, "To categorize", 900.00, 900.00, "Main")
+      .add("14/05/2012", "OP 2", -40.00, "To categorize", 950.00, 950.00, "Main")
+      .add("14/05/2012", "IMPORT OP 1", -10.00, "To categorize", 990.00, 990.00, "Main")
+      .check();
+
+    setCurrentDate("2012/05/22");
+    operations.changeDate();
+    OfxBuilder.init(this)
+      .addTransaction("2012/05/21", -10.00, "import op 3")
+      .loadInAccount("Main");
+
+    transactions.initAmountContent()
+      .add("21/05/2012", "OP 2", -40.00, "To categorize", 890.00, 890.00, "Main")
+      .add("21/05/2012", "OP 1", -50.00, "To categorize", 930.00, 930.00, "Main")
+      .add("21/05/2012", "IMPORT OP 3", -10.00, "To categorize", 980.00, 980.00, "Main")
+      .add("14/05/2012", "IMPORT OP 1", -10.00, "To categorize", 990.00, 990.00, "Main")
+      .check();
+
+    setCurrentDate("2012/06/03");
+    operations.changeDate();
+    OfxBuilder.init(this)
+      .addTransaction("2012/06/02", -10.00, "import op 4")
+      .loadInAccount("Main");
+
+    transactions.initAmountContent()
+      .add("02/06/2012", "OP 2", -40.00, "To categorize", 880.00, 880.00, "Main")
+      .add("02/06/2012", "OP 1", -50.00, "To categorize", 920.00, 920.00, "Main")
+      .add("02/06/2012", "IMPORT OP 4", -10.00, "To categorize", 970.00, 970.00, "Main")
+      .check();
+  }
+
+  public void testReconciliationWithSavingsAccounts() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    OfxBuilder.init(this)
+      .addTransaction("2012/03/10", -100.00, "Virement")
+      .addTransaction("2012/04/10", -100.00, "Virement")
+      .addTransaction("2012/05/10", -100.00, "Virement")
+      .load();
+
+    savingsAccounts.createSavingsAccount("Epargne LCL", 1000.);
+
+    categorization
+      .selectTransactions("Virement")
+      .selectSavings().createSeries()
+      .setName("Epargne")
+      .setFromAccount("Main accounts")
+      .setToAccount("Epargne LCL")
+      .validate();
+    views.selectBudget();
+    timeline.selectMonth("2012/04");
+    budgetView.savings.alignAndPropagate("Epargne");
+    views.selectCategorization();
+    transactionCreation
+      .show()
+      .selectAccount("Epargne LCL")
+      .createToBeReconciled(20, "op 1", 50.00)
+      .createToBeReconciled(12, "op 2", 40.00);
+    categorization.selectTransaction("[R] op 1").switchToReconciliation().keepManualTransaction();
+    categorization.selectTransaction("[R] op 2").switchToReconciliation().keepManualTransaction();
+    categorization.setSavings("op 1", "Epargne");
+
+    // est-ce vraiment ce qu'on attends (creation de l'operation miroir)
+    transactions.initAmountContent()
+      .add("20/04/2012", "OP 1", 50.00, "Epargne", 1290.00, 1290.00, "Epargne LCL")
+      .add("20/04/2012", "OP 1", -50.00, "Epargne", 50.00, "Main accounts")
+      .add("12/04/2012", "OP 2", 40.00, "To categorize", 1240.00, 1240.00, "Epargne LCL")
+      .add("10/04/2012", "VIREMENT", 100.00, "Epargne", 1200.00, 1200.00, "Epargne LCL")
+      .add("10/04/2012", "VIREMENT", -100.00, "Epargne", 100.00, 100.00, "Account n. 00001123")
+      .check();
   }
 
   public void testReconciliationWithAShiftedTransaction() throws Exception {
     fail("tbd - voir les impacts sur le shift");
   }
 
-  public void testReconciliationWithSavingsAccounts() throws Exception {
-    fail("tbd - on ne montre que les opérations qui sont 'dans le bon sens'");
-  }
-
   public void testReconciledTransactionsAreAutomaticallyAnnotated() throws Exception {
     fail("tbd - les opérations réconciliées sont-elles automatiquement pointées ?");
   }
 
-  public void testAtImportManualOperationAreShift() throws Exception {
-    fail("tbd - les operations manuel non reconcilié sont shifté au jours de l'import");
+  public void testShiftManualOpNotPossible() throws Exception {
   }
-  
-  public void testManulOnly() throws Exception {
-    fail("En pure manuel, on ne doit pas shifter les operations.");
+
+  public void testManualOnly() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+    mainAccounts.createMainAccount("Main", 1000.00);
+
+    transactionCreation
+      .show()
+      .create(10, "real op 1", -10)
+      .create(13, "real op 2", -20)
+      .createToBeReconciled(20, "op 1", -50.00)
+      .createToBeReconciled(12, "op 2", -40.00);
+
+    transactions.initAmountContent()
+      .add("20/05/2012", "OP 1", -50.00, "To categorize", 880.00, 880.00, "Main")
+      .add("13/05/2012", "REAL OP 2", -20.00, "To categorize", 930.00, 930.00, "Main")
+      .add("12/05/2012", "OP 2", -40.00, "To categorize", 950.00, 950.00, "Main")
+      .add("10/05/2012", "REAL OP 1", -10.00, "To categorize", 990.00, 990.00, "Main")
+      .check();
+
+    setCurrentDate("2012/05/22");
+    operations.changeDate();
+    transactions.initAmountContent()
+      .add("20/05/2012", "OP 1", -50.00, "To categorize", 880.00, 880.00, "Main")
+      .add("13/05/2012", "OP 2", -40.00, "To categorize", 930.00, 930.00, "Main")
+      .add("13/05/2012", "REAL OP 2", -20.00, "To categorize", 970.00, 970.00, "Main")
+      .add("10/05/2012", "REAL OP 1", -10.00, "To categorize", 990.00, 990.00, "Main")
+      .check();
+
+
+    views.selectCategorization();
+    transactionCreation
+      .create(21, "real op 3", -50);
+
+    categorization.selectTransaction("[R] OP 1")
+      .switchToReconciliation()
+      .select("REAL OP 3")
+      .reconcile();
+
+    transactions.initAmountContent()
+      .add("21/05/2012", "OP 2", -40.00, "To categorize", 880.00, 880.00, "Main")
+      .add("21/05/2012", "REAL OP 3", -50.00, "To categorize", 920.00, 920.00, "Main")
+      .add("13/05/2012", "REAL OP 2", -20.00, "To categorize", 970.00, 970.00, "Main")
+      .add("10/05/2012", "REAL OP 1", -10.00, "To categorize", 990.00, 990.00, "Main")
+      .check();
+
   }
   
 }

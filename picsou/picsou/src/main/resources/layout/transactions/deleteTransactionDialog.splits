@@ -1,0 +1,24 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="dialog" preferredSize="(500,180)">
+
+    <column styleClass="innerDialog">
+
+      <label text="$transaction.delete.title" name="title" styleClass="title"/>
+
+      <htmlEditorPane ref="message" marginBottom="10"/>
+
+      <row>
+            <filler fill="horizontal" weightX="10"/>
+            <label  text="$transactionCreation.impactAccount"/>
+            <comboBox ref="impactAccountPosition"/>
+            <filler fill="horizontal" weightX="5"/>
+      </row>
+
+    </column>
+
+  </panel>
+
+</splits>

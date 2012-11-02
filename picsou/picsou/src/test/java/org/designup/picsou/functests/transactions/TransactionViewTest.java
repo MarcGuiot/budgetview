@@ -311,7 +311,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .add("01/05/2006", TransactionType.PRELEVEMENT, "essence", "frais pro", -70.00)
       .check();
 
-    transactions.delete("nounou");
+    transactions.deleteWithImpact("nounou");
 
     categorization.selectTransaction("sg");
     transactionDetails.split("100", "sg2");

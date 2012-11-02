@@ -44,7 +44,8 @@ public class TransactionFilter {
     GlobList newTransactions = new GlobList(importedTransactions.size());
     for (Integer transactionAccountId : accountsByTransaction.keySet()) {
       GlobList actualTransactions = referenceRepository
-        .getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.ACCOUNT, transactionAccountId))
+        .getAll(Transaction.TYPE, GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, transactionAccountId),
+                                                   GlobMatchers.isNotNull(Transaction.IMPORT)))
         .sort(TransactionComparator.ASCENDING_BANK_SPLIT_AFTER);
       if (actualTransactions.isEmpty()) {
         return importedTransactions;

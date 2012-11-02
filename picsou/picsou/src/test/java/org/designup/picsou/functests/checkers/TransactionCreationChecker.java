@@ -228,6 +228,7 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public TransactionCreationChecker show() {
+    views.selectCategorization();
     getShowHideButton().click();
     checkShowing();
     return this;

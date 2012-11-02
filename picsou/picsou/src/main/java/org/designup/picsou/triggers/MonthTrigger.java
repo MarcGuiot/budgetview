@@ -45,23 +45,24 @@ public class MonthTrigger implements ChangeSetListener {
   public void updateMonth(GlobRepository repository, Integer monthCount) {
     try {
       repository.startChangeSet();
-      int startMonth = Math.max(time.getCurrentMonthId(),
-                                repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH));
-      int currentMonth = time.getCurrentMonthId();
-      List<Integer> pastMonth = Month.createMonths(startMonth, currentMonth);
+      Glob glob = repository.get(CurrentMonth.KEY);
+      int currentMonthId = glob.get(CurrentMonth.CURRENT_MONTH);
+      int startMonth = Math.max(currentMonthId,
+                                glob.get(CurrentMonth.LAST_TRANSACTION_MONTH));
+      List<Integer> pastMonth = Month.createMonths(startMonth, currentMonthId);
       for (Integer monthId : pastMonth) {
         repository.findOrCreate(Key.create(Month.TYPE, monthId));
       }
-      int[] futureMonth = Month.createCountMonthsWithFirst(currentMonth, monthCount);
+      int[] futureMonth = Month.createCountMonthsWithFirst(currentMonthId, monthCount);
       for (int month : futureMonth) {
         repository.findOrCreate(Key.create(Month.TYPE, month));
       }
       Integer[] months = repository.getAll(Month.TYPE).getSortedArray(Month.ID);
       for (int i = months.length - 1; i >= 0; i--) {
         Integer month = months[i];
-        if (Month.distance(currentMonth, month) > monthCount) {
+        if (Month.distance(currentMonthId, month) > monthCount) {
           GlobList all = repository.getAll(Transaction.TYPE,
-                                           and(fieldEquals(Transaction.MONTH, month),
+                                           and(fieldEquals(Transaction.BANK_MONTH, month),
                                                isFalse(Transaction.PLANNED)));
           if (!all.isEmpty()) {
             return;

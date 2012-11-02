@@ -668,7 +668,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     // Cf l'email support sur l'import de fichiers LCL où les comptes courant et carte
     // ont le même numéro de compte
-    fail("[RM] Que faisons-nous ");
+//    fail("[RM] Que faisons-nous ");
 
     mainAccounts.createMainAccount("Account A", 100.00);
     mainAccounts.createMainAccount("Account B", 100.00);
@@ -714,7 +714,18 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .completeImport();
 
     views.selectData();
-    transactions.initContent()
-      .dumpCode();
+    transactions.initAmountContent()
+      .add("20/01/2006", "OPERATION BBB 5", -10.00, "To categorize", 79.00, 158.00, "Account B")
+      .add("15/01/2006", "OPERATION AAA 5", -10.00, "To categorize", 79.00, 168.00, "Account A")
+      .add("14/01/2006", "OPERATION AAA 4", -4.40, "To categorize", 89.00, 178.00, "Account A")
+      .add("13/01/2006", "OPERATION AAA 3", -3.30, "To categorize", 93.40, 182.40, "Account A")
+      .add("12/01/2006", "OPERATION AAA 2", -2.20, "To categorize", 96.70, 185.70, "Account A")
+      .add("11/01/2006", "OPERATION AAA 1", -1.10, "To categorize", 98.90, 187.90, "Account A")
+      .add("04/01/2006", "OPERATION BBB 4", -4.40, "To categorize", 89.00, 189.00, "Account B")
+      .add("03/01/2006", "OPERATION BBB 3", -3.30, "To categorize", 93.40, 193.40, "Account B")
+      .add("02/01/2006", "OPERATION BBB 2", -2.20, "To categorize", 96.70, 196.70, "Account B")
+      .add("01/01/2006", "OPERATION BBB 1", -1.10, "To categorize", 98.90, 198.90, "Account B")
+      .check();
+
   }
 }

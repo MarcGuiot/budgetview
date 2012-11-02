@@ -55,6 +55,7 @@ public class LaPosteTest extends SpecificBankTestCase {
 
   public void testDeferred() throws Exception {
     setCurrentDate("2011/02/02");
+    operations.changeDate();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     operations.importFirstQifFileWithDeferred(getFile("laposteCBDiffere.ofx"), "9999999X000");
     timeline.selectAll();

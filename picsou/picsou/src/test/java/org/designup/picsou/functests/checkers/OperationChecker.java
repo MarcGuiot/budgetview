@@ -694,4 +694,8 @@ public class OperationChecker {
   public MessageAndDetailsDialogChecker openSendLogs() {
     return MessageAndDetailsDialogChecker.init(getHelpMenu().getSubMenu(Lang.get("sendLogs.action")).triggerClick());
   }
+
+  public void changeDate(){
+    getDevMenu().getSubMenu("[Change current date]").click();
+  }
 }

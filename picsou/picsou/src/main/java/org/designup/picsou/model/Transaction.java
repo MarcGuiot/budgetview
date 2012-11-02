@@ -94,6 +94,7 @@ public class Transaction {
   @Target(Account.class)
   public static LinkField ACCOUNT;
 
+  // si == null => pas une operation importée.
   @Target(TransactionImport.class)
   public static LinkField IMPORT;
 
