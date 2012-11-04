@@ -90,8 +90,45 @@
     <item name="android:background">@drawable/large_button_selector</item>
     <item name="android:layout_margin">5dp</item>
     <item name="android:textColor">#FFFFFF</item>
-    <item name="android:textSize">14dp</item>
+    <item name="android:textSize">16dp</item>
     <item name="android:paddingBottom">2dp</item>
+  </style>
+
+  <style name="TextMessage">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_gravity">center</item>
+    <item name="android:gravity">center</item>
+    <item name="android:layout_margin">5dp</item>
+    <item name="android:textColor">#222222</item>
+    <item name="android:textSize">18dp</item>
+  </style>
+
+  <style name="DownArrow">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_gravity">center</item>
+    <item name="android:gravity">center</item>
+    <item name="android:src">@drawable/down_arrow</item>
+  </style>
+
+  <style name="HorizontalSeparator">
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">1dp</item>
+    <item name="android:background">@color/horizontal_separator</item>
+    <item name="android:layout_marginTop">15dp</item>
+    <item name="android:layout_marginBottom">15dp</item>
+    <item name="android:layout_marginLeft">30dp</item>
+    <item name="android:layout_marginRight">30dp</item>
+  </style>
+
+  <style name="FormLabel">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginBottom">2dp</item>
+    <item name="android:gravity">left</item>
+    <item name="android:textSize">12dp</item>
+    <item name="android:textColor">@color/form_label</item>
   </style>
 
 </resources>

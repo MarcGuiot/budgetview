@@ -35,6 +35,9 @@
   <string name="main_accounts_section">Main accounts</string>
   <string name="savings_accounts_section">Savings accounts</string>
 
+  <string name="login_message">Activate data sharing from the "Preferences / Mobile"
+    menu of the BudgetView application installed on your computer, then enter your login details below.
+  </string>
   <string name="email">E-mail address</string>
   <string name="password">Password</string>
   <string name="login">Login</string>
@@ -44,4 +47,8 @@
 
   <string name="syncWithNoConnection">You need an internet access to login</string>
   <string name="syncWithInvalidId">Unknown user or invalid password</string>
+
+  <string name="homeLoginMessage">Already using BudgetView?</string>
+  <string name="homeDemoMessage">New to BudgetView?</string>
+
 </resources>

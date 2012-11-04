@@ -35,6 +35,9 @@
   <string name="main_accounts_section">Comptes courants</string>
   <string name="savings_accounts_section">Comptes d\'épargne</string>
 
+  <string name="login_message">Activez le partage dans le menu
+    "Préférences / Accès Mobile" du BudgetView installé sur votre ordinateur,
+    puis saisissez vos identifiants ci-dessous.</string>
   <string name="email">Adresse e-mail</string>
   <string name="password">Mot de passe</string>
   <string name="login">Connecter</string>
@@ -44,6 +47,9 @@
 
   <string name="syncWithNoConnection">Vous devez avoir un accès internet pour vous connecter</string>
   <string name="syncWithInvalidId">Ce nom d\'utilisateur est inconnu ou ce mot de passe est incorrect</string>
+
+  <string name="homeLoginMessage">Vous utilisez déjà BudgetView ?</string>
+  <string name="homeDemoMessage">Vous découvrez BudgetView ?</string>
 
 </resources>
 

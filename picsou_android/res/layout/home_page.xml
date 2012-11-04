@@ -6,14 +6,35 @@
               android:orientation="vertical"
               android:background="@color/background">
 
+  <View style="@style/LightSpacer"/>
+
+  <TextView
+    style="@style/TextMessage"
+    android:text="@string/homeLoginMessage"
+    />
+
+  <ImageView style="@style/DownArrow"/>
+
   <Button
     style="@style/LargeButton"
     android:text="@string/homeConnect"
     android:onClick="onLogin"/>
 
+  <View
+    style="@style/HorizontalSeparator"/>
+
+  <TextView
+    style="@style/TextMessage"
+    android:text="@string/homeDemoMessage"
+    />
+
+  <ImageView style="@style/DownArrow"/>
+
   <Button
     style="@style/LargeButton"
     android:text="@string/homeDemo"
     android:onClick="onDemo"/>
+
+  <View style="@style/Spacer"/>
 
 </LinearLayout>
