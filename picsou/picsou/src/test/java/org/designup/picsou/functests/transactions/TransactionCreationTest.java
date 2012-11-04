@@ -417,61 +417,71 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
   }
 
-  public void testCreateFutureOperation() throws Exception {
-    // create operation d+1
-    // n'impact pas le solde
-    // validé "l'operations" pour impacter le solde.
-    // mais le solde reste en date du jour.
-    // solde              budget      solde fin de mois:
-    // 100 euro a t ==>   -100         0
-    // 100 euro a t -10=> -90         0  => 100 - 10 - 90 => si on compte les operations non encore passées
-    // 90 euro a t + 1    -90         0   => on ne compte plus l'operation car elle est apres la date passée.
-    // ==> le solde est toujours le solde reel de la banque.
-    //    si pas de banque (manuel only) prendre J-1
-    //    Si mix
-    // on pourrait laissé le choix de la date de prise en compte des operations (j-1 ou j)
-    // Comment faire pour les cheques : leur date effective n'est pas toujours connue
-    // on voudrait valider pour dire qu'il faut le prendre en comptes.
-    //  ==> proposer un bouton 'impacter le solde' ?
-
-
-    // proposer d'ajouter un cheque dans une series.
-
-    // pour les periode non mensuelle (ex : toutes les 2 semaines)
-    // marquer la series comme tel et faire la regles
-    // un trigger creer les operations plannifié comme tel
-    // au borne (debut/fin de mois) si salaire divisé par rapport au nombre
-    // de jours entre
-    // cela revient a calculer le montant par jours et faire une operations planifié par jours
-    // ou on reverse pour calculer le montant pour le mois?
-    // cas du salaire :
-  }
-
   public void testCreatingAManuallyCreatedTransactionInTheFuturePreservesCurrentMonth() throws Exception {
-    fail("tbd - http://support.mybudgetview.fr/tickets/1070");
-  }
+    setCurrentDate("2012/11/03");
+    operations.changeDate();
+    operations.openPreferences().setFutureMonthsCount(4).validate();
 
-  public void testOrderIsLost() throws Exception {
-    fail("On doit perdre l'ordre des operations apres un shift de date : l'ordre qui etait celui de la date devient (si elles " +
-         "sont a la meme date) l'odre de creation (Transaction.ID)");
+    mainAccounts.createNewAccount()
+      .setName("Main account")
+      .setAccountNumber("012345")
+      .setPosition(1000.00)
+      .selectBank("CIC")
+      .validate();
 
-//    String currentDay = Dates.toString(TimeService.getToday());
-//    OfxBuilder.init(this)
-//      .addBankAccount("00123", 1000.00, currentDay)
-//      .addTransaction(currentDay, -10.00, "tr 0")
-//      .load();
-//
-//    Month.nextDay(TimeService.getCurrentDay());
-//    int id3 = Dates.
-//
-//    transactionCreation
-//      .show()
-//      .create(3, "tr 1", -20)
-//      .create(2, "tr 2", -30);
-//
-//    nextMonth();
-//    restartApplicationFromBackup();
+    mainAccounts.checkPosition("Main account", 1000.);
 
+    views.selectBudget();
+    budgetView.recurring.createSeries().setName("Courses").setAmount(30)
+      .setPropagationEnabled().validate();
+
+    timeline.selectMonth("2012/11");
+    transactionCreation
+      .show()
+      .create(2, "Transaction 1", -10);
+    categorization.setRecurring("Transaction 1", "Courses");
+
+    mainAccounts.checkPosition("Main account", 990.);
+
+    views.selectCategorization();
+    timeline.selectMonth("2012/12");
+    transactionCreation
+      .shouldNotUpdatePosition()
+      .create(10, "Transaction 2", -10);
+
+    mainAccounts.checkPosition("Main account", 990.);
+
+    views.selectCategorization();
+    timeline.selectMonth("2012/11");
+    transactionCreation
+      .shouldNotUpdatePosition()
+      .create(3, "Transaction 4", -20);
+
+    mainAccounts.checkPosition("Main account", 990.);
+
+    views.selectCategorization();
+    timeline.selectMonth("2013/01");
+    transactionCreation
+      .shouldUpdatePosition()
+      .create(10, "Transaction 3", -10);
+
+    mainAccounts.checkPosition("Main account", 990.);
+    mainAccounts.editPosition("Main account").checkOperationLabel("TRANSACTION 4")
+      .validate();
+
+    timeline.selectAll();
+
+    views.selectData();
+    transactions.showPlannedTransactions().initAmountContent()
+      .add("04/03/2013", "Planned: Courses", -30.00, "Courses", 870.00, "Main accounts")
+      .add("04/02/2013", "Planned: Courses", -30.00, "Courses", 900.00, "Main accounts")
+      .add("10/01/2013", "TRANSACTION 3", -10.00, "Courses", 970.00, 930.00, "Main account")
+      .add("04/01/2013", "Planned: Courses", -20.00, "Courses", 940.00, "Main accounts")
+      .add("10/12/2012", "TRANSACTION 2", -10.00, "Courses", 980.00, 960.00, "Main account")
+      .add("04/12/2012", "Planned: Courses", -20.00, "Courses", 970.00, "Main accounts")
+      .add("03/11/2012", "TRANSACTION 4", -20.00, "Courses", 990.00, 990.00, "Main account")
+      .add("02/11/2012", "TRANSACTION 1", -10.00, "Courses", 1010.00, 1010.00, "Main account")
+      .check();
   }
 
   public void testCreatedTransactionsAreAutomaticallyCategorized() throws Exception {

@@ -16,7 +16,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCreatingAProject() throws Exception {
-
+    setCurrentMonth("2011/12");
+    operations.changeDate();
     OfxBuilder.init(this)
       .addBankAccount("001111", 1900, "2011/01/01")
       .addTransaction("2011/01/01", 1000.00, "Income")

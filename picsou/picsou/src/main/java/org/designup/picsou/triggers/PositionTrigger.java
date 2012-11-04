@@ -124,6 +124,9 @@ public class PositionTrigger implements ChangeSetListener {
   private void updateTransactionButNotAccountPosition(GlobRepository repository, Set<Integer> accountIds) {
     Glob currentMonth = repository.get(CurrentMonth.KEY);
     for (Integer id : accountIds) {
+      if (Account.SUMMARY_ACCOUNT_IDS.contains(id)){
+        continue;
+      }
       Glob account = repository.find(Key.create(Account.TYPE, id));
       if (account != null) {
         Double currentPos = account.get(Account.POSITION_WITH_PENDING);
@@ -206,9 +209,10 @@ public class PositionTrigger implements ChangeSetListener {
     if (!Account.SUMMARY_ACCOUNT_IDS.contains(accountId)) {
       ExtractDate extractDate = new ExtractDate(accountId);
       changeSet.safeVisit(Transaction.TYPE, extractDate);
-      GlobMatcher futureMatcher = getMatcherForFutureOperations(accountId, currentMonth.get(CurrentMonth.CURRENT_MONTH),
-                                                                currentMonth.get(CurrentMonth.CURRENT_DAY));
-      GlobMatcher realMatcher = Transaction.getMatcherForRealOperations(accountId);
+      Integer monthId = currentMonth.get(CurrentMonth.CURRENT_MONTH);
+      Integer day = currentMonth.get(CurrentMonth.CURRENT_DAY);
+      GlobMatcher futureMatcher = getMatcherForFutureOperations(accountId, monthId, day);
+      GlobMatcher realMatcher = Transaction.getMatcherForRealOperations(accountId, monthId, day);
       Glob[] transactions = getAllTransactionForAccount(accountId, repository);
 
       Key accountKey = Key.create(Account.TYPE, accountId);

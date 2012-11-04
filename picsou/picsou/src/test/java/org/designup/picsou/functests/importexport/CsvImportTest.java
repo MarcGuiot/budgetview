@@ -299,6 +299,8 @@ public class CsvImportTest extends SpecificBankTestCase {
 
   public void testImportIngFileWithDoubleQuoteStrings() throws Exception {
 
+    setCurrentMonth("2010/09/20");
+    operations.changeDate();
     String fileName = saveFile(
       "\"Numéro de compte\";\"Nom du compte\";\"Numéro de mouvement\";\"Date comptable\";\"Date valeur\";\"Montant dans la devise du compte\";\"Devise du compte\";\"Montant dans la devise de contre-valeur\";\"Devise de contre-valeur\";\"Rubriques\";\"Libellé\";\"Détail du mouvement\";\"Remarque\";\"Date de comptabilisation en budget\"\n" +
       "\"363-0432535-52 CVV  EUR\";\"JANNEZ DRABIK\";145;19/03/2010;19/03/2010;-9,10;\"EUR\";-367;\"BEF\";\"\";\"Paiement achat Bancontact/Mister Cash IKEA ANDERLECHT ANDERLECHT, 19/03, 14h23\";\"\";\"\";19/03/2010\n" +
@@ -415,6 +417,9 @@ public class CsvImportTest extends SpecificBankTestCase {
   }
 
   public void testOther1() throws Exception {
+    setCurrentMonth("2012/04/20");
+    operations.changeDate();
+
     String fileName = saveFile(
       "Extrait de compte jusqu'au: 04.04.2012 ;;;\n" +
       ";;;\n" +
@@ -451,7 +456,6 @@ public class CsvImportTest extends SpecificBankTestCase {
     
     importDialog
       .setAccountName("imported")
-      .selectDateFormat("Day/Month/Year")
       .setMainAccount()
       .selectBank("Other")
       .setPosition(100)
