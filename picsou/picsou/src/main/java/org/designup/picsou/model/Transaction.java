@@ -268,6 +268,13 @@ public class Transaction {
                             GlobMatchers.not(fieldEquals(TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId())));
   }
 
+  public static GlobMatcher getMatcherForRealOperations(int accountId, int monthId, int day) {
+    return GlobMatchers.and(getMatcherForRealOperations(accountId),
+                            GlobMatchers.or(GlobMatchers.fieldStrictlyLessThan(Transaction.POSITION_MONTH, monthId),
+                            GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.POSITION_MONTH, monthId),
+                              GlobMatchers.fieldLessOrEqual(Transaction.POSITION_DAY, day))));
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
