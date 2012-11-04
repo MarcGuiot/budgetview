@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TabHost;
+import android.widget.TextView;
 import com.budgetview.android.App;
 import com.budgetview.android.R;
 import com.budgetview.android.Text;
@@ -25,12 +26,14 @@ public class TabPage implements TabHost.OnTabChangeListener, ViewPager.OnPageCha
   private TabHost tabHost;
   private ViewPager viewPager;
   private TabPagerAdapter pagerAdapter;
+  private String title;
 
-  public TabPage(FragmentActivity activity, int currentMonthId, TabPageHandler handler) {
+  public TabPage(FragmentActivity activity, CharSequence title, int currentMonthId, TabPageHandler handler) {
     this.activity = activity;
     this.currentMonthId = currentMonthId;
     this.handler = handler;
     this.monthIds = ((App)activity.getApplication()).getAllMonthIds();
+    this.title = String.valueOf(title);
   }
 
   public void initView() {
@@ -58,11 +61,15 @@ public class TabPage implements TabHost.OnTabChangeListener, ViewPager.OnPageCha
     if (selectedIndex >= 0) {
       viewPager.setCurrentItem(selectedIndex);
     }
+
+    Header header = (Header)activity.findViewById(R.id.header);
+    header.setTitle(title);
+    header.setActivity(activity);
   }
 
-  private void addTab(String sep) {
-    tabHost.addTab(tabHost.newTabSpec(sep)
-                     .setIndicator(sep)
+  private void addTab(String monthLabel) {
+    tabHost.addTab(tabHost.newTabSpec(monthLabel)
+                     .setIndicator(createTabView(monthLabel))
                      .setContent(new TabHost.TabContentFactory() {
                        public View createTabContent(String s) {
                          return new View(activity.getBaseContext());
@@ -104,5 +111,14 @@ public class TabPage implements TabHost.OnTabChangeListener, ViewPager.OnPageCha
     public Fragment getItem(int i) {
       return fragments.get(i);
     }
+  }
+
+  private View createTabView(String label) {
+    View view = activity.getLayoutInflater().inflate(R.layout.tab, null);
+
+    TextView textView = (TextView)view.findViewById(R.id.tab_label);
+    textView.setText(label);
+
+    return view;
   }
 }

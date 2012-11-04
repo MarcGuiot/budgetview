@@ -7,18 +7,13 @@
               android:background="@color/background">
 
   <Button
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
+    style="@style/LargeButton"
     android:text="@string/homeConnect"
     android:onClick="onLogin"/>
 
   <Button
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
+    style="@style/LargeButton"
     android:text="@string/homeDemo"
     android:onClick="onDemo"/>
-
 
 </LinearLayout>

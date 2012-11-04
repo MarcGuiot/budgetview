@@ -25,9 +25,9 @@ public class SeriesListActivity extends FragmentActivity {
     App app = (App)getApplication();
     Glob budgetAreaEntity = app.getRepository().get(Key.create(BudgetAreaEntity.TYPE, budgetAreaId));
     String budgetAreaLabel = budgetAreaEntity.get(BudgetAreaEntity.LABEL);
-    setTitle(budgetAreaLabel);
 
-    TabPage page = new TabPage(this, monthId, new TabPageHandler() {
+    TabPage page = new TabPage(this, budgetAreaLabel,
+                               monthId, new TabPageHandler() {
       public Fragment createFragmentWithArgs(int monthId) {
         SeriesListFragment fragment = new SeriesListFragment();
         Bundle bundle = new Bundle();

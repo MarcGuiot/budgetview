@@ -18,7 +18,8 @@
     <ImageView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:src="@drawable/budgetview_large"/>
+      android:src="@drawable/budgetview_large"
+      android:contentDescription="@string/app_name"/>
 
     <ProgressBar
       android:id="@+id/login_progress_bar"

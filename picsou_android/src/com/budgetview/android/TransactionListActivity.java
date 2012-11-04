@@ -34,9 +34,7 @@ public class TransactionListActivity extends FragmentActivity {
     if (intent.hasExtra(SERIES_ENTITY_PARAMETER)) {
       seriesEntityId = intent.getIntExtra(SERIES_ENTITY_PARAMETER, -1);
       Glob seriesEntity = repository.get(Key.create(SeriesEntity.TYPE, seriesEntityId));
-      Glob budgetAreaEntity = repository.findLinkTarget(seriesEntity, SeriesEntity.BUDGET_AREA);
-      String budgetAreaLabel = budgetAreaEntity.get(BudgetAreaEntity.LABEL);
-      sectionLabel = budgetAreaLabel + " - " + seriesEntity.get(SeriesEntity.NAME);
+      sectionLabel = seriesEntity.get(SeriesEntity.NAME);
     }
     else if (intent.hasExtra(ACCOUNT_PARAMETER)) {
       accountId = intent.getIntExtra(ACCOUNT_PARAMETER, -1);
@@ -46,9 +44,9 @@ public class TransactionListActivity extends FragmentActivity {
     else {
       throw new InvalidParameter("Missing filtering parameter");
     }
-    setTitle(sectionLabel);
 
-    TabPage page = new TabPage(this, monthId, new TabPageHandler() {
+    TabPage page = new TabPage(this, sectionLabel,
+                               monthId, new TabPageHandler() {
       public Fragment createFragmentWithArgs(int monthId) {
         TransactionListFragment fragment = new TransactionListFragment();
         Bundle bundle = new Bundle();

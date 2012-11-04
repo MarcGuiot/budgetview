@@ -3,3 +3,5 @@ ant clean debug
 
 echo "Installation sur le mobile..."
 adb install -r bin/picsou_android-debug.apk
+
+echo "Finished on $(date)"

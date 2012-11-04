@@ -6,17 +6,9 @@
               android:orientation="vertical"
               android:background="@color/background">
 
-  <TextView android:id="@+id/seriesBudgetAreaLabel"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#333333"
-            android:gravity="center"
-            android:textStyle="bold"/>
-
   <ListView android:id="@+id/seriesList"
             android:choiceMode="singleChoice"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"/>
-
 
 </LinearLayout>

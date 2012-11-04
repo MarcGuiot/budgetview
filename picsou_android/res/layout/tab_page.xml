@@ -4,6 +4,12 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
 
+  <com.budgetview.android.components.Header
+    android:id="@+id/header"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    />
+
   <TabHost android:id="@android:id/tabhost"
            android:layout_width="fill_parent"
            android:layout_height="fill_parent"
