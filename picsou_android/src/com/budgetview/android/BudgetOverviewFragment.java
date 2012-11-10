@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import com.budgetview.android.components.GaugeView;
+import com.budgetview.android.components.TabPage;
 import com.budgetview.shared.model.AccountEntity;
 import com.budgetview.shared.model.BudgetAreaEntity;
 import com.budgetview.shared.model.BudgetAreaValues;
@@ -124,6 +124,7 @@ public class BudgetOverviewFragment extends Fragment {
           Intent intent = new Intent(getActivity(), SeriesListActivity.class);
           intent.putExtra(SeriesListActivity.MONTH_PARAMETER, budgetAreaValues.get(BudgetAreaValues.MONTH));
           intent.putExtra(SeriesListActivity.BUDGET_AREA_PARAMETER, budgetAreaValues.get(BudgetAreaValues.BUDGET_AREA));
+          TabPage.copyDemoMode(getActivity(), intent);
           startActivity(intent);
         }
       });
@@ -169,6 +170,7 @@ public class BudgetOverviewFragment extends Fragment {
           Intent intent = new Intent(getActivity(), TransactionListActivity.class);
           intent.putExtra(TransactionListActivity.MONTH_PARAMETER, monthId);
           intent.putExtra(TransactionListActivity.ACCOUNT_PARAMETER, accountEntity.get(AccountEntity.ID));
+          TabPage.copyDemoMode(getActivity(), intent);
           startActivity(intent);
         }
       });

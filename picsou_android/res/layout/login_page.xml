@@ -6,12 +6,18 @@
               android:orientation="vertical"
               android:background="@color/background">
 
+  <com.budgetview.android.components.Header
+    android:id="@+id/header"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    />
+
   <View style="@style/LightSpacer"/>
 
   <TextView
     style="@style/TextMessage"
     android:text="@string/login_message"
-    android:textSize="12dp"
+    android:textSize="13dp"
     />
 
   <ImageView style="@style/DownArrow"/>

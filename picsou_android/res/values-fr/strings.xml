@@ -51,5 +51,19 @@
   <string name="homeLoginMessage">Vous utilisez déjà BudgetView ?</string>
   <string name="homeDemoMessage">Vous découvrez BudgetView ?</string>
 
+  <string name="demoFooter">Découvrez BudgetView !</string>
+  <string name="demoLink">http://www.mybudgetview.fr</string>
+  <string name="demoTitle">Découvrez BudgetView!</string>
+  <string name="demoPlatforms">Mac/Windows/Linux</string>
+  <string name="demoEmailMessage">
+    Pour recevoir un lien de téléchargement de BudgetView pour votre ordinateur, saisissez
+    votre adresse email ci-dessous et cliquez sur Envoyer :
+  </string>
+  <string name="demoEmailButton">Envoyer</string>
+  <string name="demoEmailEmpty">Vous devez saisir votre adresse email</string>
+  <string name="demoEmailSent">Un email vous a été envoyé</string>
+  <string name="demoEmailSendingFailure">L\'email n\'a pas pu vous être envoyé</string>
+  <string name="demoEmailConnectionUnavailable">Vous devez avoir une connexion Internet pour cela</string>
+
 </resources>
 

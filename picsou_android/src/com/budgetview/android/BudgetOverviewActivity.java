@@ -8,8 +8,8 @@ import com.budgetview.android.components.TabPageHandler;
 
 public class BudgetOverviewActivity extends FragmentActivity {
 
-  public void onCreate(final Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  public void onCreate(final Bundle state) {
+    super.onCreate(state);
 
     App app = (App)getApplication();
     TabPage page = new TabPage(this,
@@ -20,6 +20,7 @@ public class BudgetOverviewActivity extends FragmentActivity {
                                    BudgetOverviewFragment fragment = new BudgetOverviewFragment();
                                    Bundle bundle = new Bundle();
                                    bundle.putInt(BudgetOverviewFragment.BUDGET_OVERVIEW_MONTH, monthId);
+                                   TabPage.copyDemoMode(BudgetOverviewActivity.this, bundle);
                                    fragment.setArguments(bundle);
                                    return fragment;
                                  }

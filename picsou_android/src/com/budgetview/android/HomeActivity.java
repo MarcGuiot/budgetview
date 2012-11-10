@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import com.budgetview.android.components.TabPage;
 import com.budgetview.android.datasync.DataSync;
 import com.budgetview.android.datasync.LoginInfo;
 
@@ -16,7 +17,7 @@ public class HomeActivity extends Activity {
 
     App app = (App)getApplication();
     if (app.isLoaded()) {
-      gotoBudgetOverview(true);
+      gotoBudgetOverview(true, false);
       return;
     }
 
@@ -34,7 +35,7 @@ public class HomeActivity extends Activity {
 
       public void onConnectionUnavailable() {
         if (dataSync.loadTempFile()) {
-          gotoBudgetOverview(true);
+          gotoBudgetOverview(true, false);
         }
         else {
           showHomePage();
@@ -51,7 +52,7 @@ public class HomeActivity extends Activity {
     showSplashPage();
     dataSync.load(new DataSync.Callback() {
       public void onActionFinished() {
-        gotoBudgetOverview(true);
+        gotoBudgetOverview(true, false);
       }
 
       public void onConnectionUnavailable() {
@@ -80,11 +81,14 @@ public class HomeActivity extends Activity {
   public void onDemo(View view) throws IOException {
     DataSync dataSync = new DataSync(this);
     dataSync.loadDemoFile();
-    gotoBudgetOverview(false);
+    gotoBudgetOverview(false, true);
   }
 
-  private void gotoBudgetOverview(boolean clearBackHistory) {
+  private void gotoBudgetOverview(boolean clearBackHistory, boolean useDemoMode) {
     Intent intent = new Intent(this, BudgetOverviewActivity.class);
+    if (useDemoMode) {
+      intent.putExtra(TabPage.USE_DEMO, true);
+    }
     if (clearBackHistory) {
       intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
       finish();

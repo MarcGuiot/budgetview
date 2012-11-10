@@ -41,13 +41,17 @@ public class DataSync {
       return;
     }
 
-    // TODO: à remplacer par une connexion serveur
-    if (email != null && email.contains("user")) {
+    if (idAndPasswordCorrect(email, password)) {
       callback.onActionFinished();
     }
     else {
       callback.onActionFailed();
     }
+  }
+
+  private boolean idAndPasswordCorrect(String email, String password) {
+    // TODO: à remplacer par une connexion serveur
+    return !"fail".equals(email);
   }
 
   public void load(Callback callback) {
@@ -160,6 +164,16 @@ public class DataSync {
         }
       }
     }
+  }
+
+  public void sendDownloadEmail(String email, Callback callback) {
+    if (!canConnect()) {
+      callback.onConnectionUnavailable();
+      return;
+    }
+
+    // TODO: faire envoyer un email à l'utilisateur par le serveur avec le lien de téléchargement
+
   }
 
   private void parseAndLoadContent(Reader reader) {

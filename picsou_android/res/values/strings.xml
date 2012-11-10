@@ -51,4 +51,17 @@
   <string name="homeLoginMessage">Already using BudgetView?</string>
   <string name="homeDemoMessage">New to BudgetView?</string>
 
+  <string name="demoFooter">Discover BudgetView!</string>
+  <string name="demoLink">http://www.mybudgetview.com</string>
+  <string name="demoTitle">Discover BudgetView!</string>
+  <string name="demoPlatforms">Mac/Windows/Linux</string>
+  <string name="demoEmailMessage">
+    To receive a download link for your computer, just enter your email address below and click on the Send button:
+  </string>
+  <string name="demoEmailButton">Send email</string>
+  <string name="demoEmailEmpty">You must enter your email address</string>
+  <string name="demoEmailSent">An email as sent to your address</string>
+  <string name="demoEmailSendingFailure">Could not sent an email to this address</string>
+  <string name="demoEmailConnectionUnavailable">You need an internet connection to do this</string>
+
 </resources>

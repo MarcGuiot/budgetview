@@ -131,4 +131,14 @@
     <item name="android:textColor">@color/form_label</item>
   </style>
 
+  <style name="DemoFooter">
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:background">@drawable/demo_footer_bg</item>
+    <item name="android:textSize">18dp</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:paddingTop">15dp</item>
+    <item name="android:paddingBottom">15dp</item>
+  </style>
+
 </resources>

@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.budgetview.android.components.GaugeView;
+import com.budgetview.android.components.TabPage;
 import com.budgetview.shared.model.SeriesEntity;
 import com.budgetview.shared.model.SeriesValues;
 import com.budgetview.shared.utils.AmountFormat;
@@ -98,6 +99,7 @@ public class SeriesListFragment extends Fragment {
           Intent intent = new Intent(getActivity(), TransactionListActivity.class);
           intent.putExtra(TransactionListActivity.MONTH_PARAMETER, seriesValues.get(SeriesValues.MONTH));
           intent.putExtra(TransactionListActivity.SERIES_ENTITY_PARAMETER, seriesValues.get(SeriesValues.SERIES_ENTITY));
+          TabPage.copyDemoMode(getActivity(), intent);
           startActivity(intent);
         }
       });

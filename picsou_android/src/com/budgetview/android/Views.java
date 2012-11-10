@@ -19,15 +19,15 @@ public class Views {
     textView.setTextColor(color);
   }
 
-  public static void showError(Activity activity, int messageId) {
-    showError(activity, messageId, new DialogInterface.OnClickListener() {
+  public static void showAlert(Activity activity, int messageId) {
+    showAlert(activity, messageId, new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int which) {
         dialog.dismiss();
       }
     });
   }
 
-  public static void showError(final Activity activity, int messageId, DialogInterface.OnClickListener listener) {
+  public static void showAlert(final Activity activity, int messageId, DialogInterface.OnClickListener listener) {
     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
     builder.setMessage(activity.getResources().getText(messageId))
       .setCancelable(false)

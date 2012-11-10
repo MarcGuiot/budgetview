@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentActivity;
 import com.budgetview.android.components.TabPage;
 import com.budgetview.android.components.TabPageHandler;
 import com.budgetview.shared.model.AccountEntity;
-import com.budgetview.shared.model.BudgetAreaEntity;
 import com.budgetview.shared.model.SeriesEntity;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -23,8 +22,8 @@ public class TransactionListActivity extends FragmentActivity {
   private Integer accountId;
   private Integer seriesEntityId;
 
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  protected void onCreate(Bundle state) {
+    super.onCreate(state);
 
     Intent intent = getIntent();
     int monthId = intent.getIntExtra(MONTH_PARAMETER, -1);

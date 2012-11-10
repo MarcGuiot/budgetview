@@ -44,5 +44,9 @@
               android:label="BudgetView"
               android:theme="@android:style/Theme.NoTitleBar"
       />
+    <activity android:name=".DemoActivity"
+              android:label="BudgetView"
+              android:theme="@android:style/Theme.NoTitleBar"
+      />
   </application>
 </manifest>

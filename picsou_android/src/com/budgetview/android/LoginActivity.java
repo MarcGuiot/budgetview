@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import com.budgetview.android.components.Header;
 import com.budgetview.android.datasync.DataSync;
 import com.budgetview.android.datasync.LoginInfo;
 
@@ -22,6 +23,9 @@ public class LoginActivity extends Activity implements TextWatcher {
 
     EditText passwordView = (EditText)findViewById(R.id.login_password);
     passwordView.addTextChangedListener(this);
+
+    Header header = (Header)findViewById(R.id.header);
+    header.setActivity(this);
 
     showProgressBar(View.INVISIBLE);
   }
@@ -42,11 +46,11 @@ public class LoginActivity extends Activity implements TextWatcher {
       }
 
       public void onConnectionUnavailable() {
-        Views.showError(LoginActivity.this, R.string.syncWithNoConnection);
+        Views.showAlert(LoginActivity.this, R.string.syncWithNoConnection);
       }
 
       public void onActionFailed() {
-        Views.showError(LoginActivity.this, R.string.syncWithInvalidId);
+        Views.showAlert(LoginActivity.this, R.string.syncWithInvalidId);
       }
     });
   }
@@ -65,12 +69,12 @@ public class LoginActivity extends Activity implements TextWatcher {
 
       public void onConnectionUnavailable() {
         showProgressBar(View.INVISIBLE);
-        Views.showError(LoginActivity.this, R.string.syncWithNoConnection);
+        Views.showAlert(LoginActivity.this, R.string.syncWithNoConnection);
       }
 
       public void onActionFailed() {
         showProgressBar(View.INVISIBLE);
-        Views.showError(LoginActivity.this, R.string.syncWithInvalidId);
+        Views.showAlert(LoginActivity.this, R.string.syncWithInvalidId);
       }
     });
   }
