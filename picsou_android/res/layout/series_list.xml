@@ -7,7 +7,7 @@
               android:background="@color/background">
 
   <ListView android:id="@+id/seriesList"
-            android:choiceMode="singleChoice"
+            android:choiceMode="none"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"/>
 

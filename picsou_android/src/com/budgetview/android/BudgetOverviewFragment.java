@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import com.budgetview.android.components.GaugeView;
 import com.budgetview.android.components.TabPage;
+import com.budgetview.android.utils.TransactionSet;
 import com.budgetview.shared.model.AccountEntity;
 import com.budgetview.shared.model.BudgetAreaEntity;
 import com.budgetview.shared.model.BudgetAreaValues;
@@ -129,9 +130,9 @@ public class BudgetOverviewFragment extends Fragment {
         }
       });
 
-      setText(view, R.id.budgetAreaLabel, entity.get(BudgetAreaEntity.LABEL));
-      setText(view, R.id.budgetAreaActual, budgetAreaValues.get(BudgetAreaValues.ACTUAL));
-      setText(view, R.id.budgetAreaPlanned, budgetAreaValues.get(BudgetAreaValues.INITIALLY_PLANNED));
+      Views.setText(view, R.id.budgetAreaLabel, entity.get(BudgetAreaEntity.LABEL));
+      Views.setText(view, R.id.budgetAreaActual, budgetAreaValues.get(BudgetAreaValues.ACTUAL));
+      Views.setText(view, R.id.budgetAreaPlanned, budgetAreaValues.get(BudgetAreaValues.INITIALLY_PLANNED));
 
       GaugeView gaugeView = (GaugeView)view.findViewById(R.id.budgetAreaGauge);
       gaugeView.getModel()
@@ -156,20 +157,21 @@ public class BudgetOverviewFragment extends Fragment {
     }
 
     protected void populateView(View view) {
-      setText(view, R.id.accountLabel, accountEntity.get(AccountEntity.LABEL));
+      Views.setText(view, R.id.accountLabel, accountEntity.get(AccountEntity.LABEL));
       Double position = accountEntity.get(AccountEntity.POSITION);
-      setText(view, R.id.accountPosition, position);
-      setText(view, R.id.accountPositionDate, Text.toOnDayMonthString(accountEntity.get(AccountEntity.POSITION_DAY),
-                                                                      accountEntity.get(AccountEntity.POSITION_MONTH),
-                                                                      getResources()));
-
-      Views.setColorAmount(view, R.id.accountPosition, position);
+      Views.setColoredText(view, R.id.accountPosition, position);
+      Views.setText(view, R.id.accountPositionDate, Text.toOnDayMonthString(accountEntity.get(AccountEntity.POSITION_DAY),
+                                                                        accountEntity.get(AccountEntity.POSITION_MONTH),
+                                                                        getResources()));
 
       view.setOnClickListener(new View.OnClickListener() {
         public void onClick(View view) {
           Intent intent = new Intent(getActivity(), TransactionListActivity.class);
-          intent.putExtra(TransactionListActivity.MONTH_PARAMETER, monthId);
-          intent.putExtra(TransactionListActivity.ACCOUNT_PARAMETER, accountEntity.get(AccountEntity.ID));
+
+          TransactionSet transactionSet =
+            new TransactionSet(monthId, null, accountEntity.get(AccountEntity.ID),
+                               ((App)getActivity().getApplication()).getRepository());
+          transactionSet.save(intent);
           TabPage.copyDemoMode(getActivity(), intent);
           startActivity(intent);
         }
@@ -190,7 +192,7 @@ public class BudgetOverviewFragment extends Fragment {
     }
 
     protected void populateView(View view) {
-      setText(view, R.id.accountSectionLabel, getResources().getText(titleId));
+      Views.setText(view, R.id.accountSectionLabel, getResources().getText(titleId));
     }
   }
 }

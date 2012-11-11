@@ -27,16 +27,4 @@ public abstract class Block {
   protected abstract boolean isProperViewType(View view);
 
   protected abstract void populateView(View view);
-
-  protected void setText(View view, int textId, Double value) {
-    setText(view, textId, AmountFormat.DECIMAL_FORMAT.format(value));
-  }
-
-  protected void setText(View view, int textId, CharSequence text) {
-    TextView textView = (TextView)view.findViewById(textId);
-    if (textView == null) {
-      throw new InvalidParameter("Resource " + textId + " not found in view");
-    }
-    textView.setText(text);
-  }
 }

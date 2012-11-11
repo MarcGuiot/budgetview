@@ -23,8 +23,6 @@ import java.util.SortedSet;
 
 public class TabPage implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener {
 
-  public static final String USE_DEMO = "com.budgetview.useDemo";
-
   private FragmentActivity activity;
   private int currentMonthId;
   private TabPageHandler handler;
@@ -34,7 +32,6 @@ public class TabPage implements TabHost.OnTabChangeListener, ViewPager.OnPageCha
   private ViewPager viewPager;
   private TabPagerAdapter pagerAdapter;
   private String title;
-  private boolean demoModeEnabled;
 
   public TabPage(FragmentActivity activity,
                  CharSequence title,
@@ -45,7 +42,6 @@ public class TabPage implements TabHost.OnTabChangeListener, ViewPager.OnPageCha
     this.handler = handler;
     this.monthIds = ((App)activity.getApplication()).getAllMonthIds();
     this.title = String.valueOf(title);
-    this.demoModeEnabled = activity.getIntent().getBooleanExtra(USE_DEMO, false);
   }
 
   public void initView() {
@@ -79,17 +75,7 @@ public class TabPage implements TabHost.OnTabChangeListener, ViewPager.OnPageCha
     header.setActivity(activity);
 
     Button demoButton = (Button)activity.findViewById(R.id.demoFooter);
-    if (demoModeEnabled) {
-      demoButton.setOnClickListener(new View.OnClickListener() {
-        public void onClick(View v) {
-          Intent intent = new Intent(activity, DemoActivity.class);
-          activity.startActivity(intent);
-        }
-      });
-    }
-    else {
-      demoButton.setVisibility(View.GONE);
-    }
+    DemoActivity.install(demoButton, activity);
   }
 
   private void addTab(String monthLabel) {
@@ -118,11 +104,11 @@ public class TabPage implements TabHost.OnTabChangeListener, ViewPager.OnPageCha
   }
 
   public static void copyDemoMode(Activity activity, Bundle bundle) {
-    bundle.putBoolean(TabPage.USE_DEMO, activity.getIntent().getBooleanExtra(USE_DEMO, false));
+    bundle.putBoolean(DemoActivity.USE_DEMO, activity.getIntent().getBooleanExtra(DemoActivity.USE_DEMO, false));
   }
 
   public static void copyDemoMode(Activity activity, Intent intent) {
-    intent.putExtra(TabPage.USE_DEMO, activity.getIntent().getBooleanExtra(TabPage.USE_DEMO, false));
+    intent.putExtra(DemoActivity.USE_DEMO, activity.getIntent().getBooleanExtra(DemoActivity.USE_DEMO, false));
   }
 
   private class TabPagerAdapter extends FragmentPagerAdapter {

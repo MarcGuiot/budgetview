@@ -1,5 +1,6 @@
 package com.budgetview.android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,44 +8,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+import com.budgetview.android.components.TabPage;
+import com.budgetview.android.utils.TransactionSet;
 import com.budgetview.shared.model.TransactionValues;
-import com.budgetview.shared.utils.AmountFormat;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.utils.exceptions.InvalidParameter;
-
-import static org.globsframework.model.utils.GlobMatchers.*;
+import org.globsframework.model.GlobRepository;
 
 public class TransactionListFragment extends Fragment {
 
-  public static String MONTH_PARAMETER = "transactionListActivity.parameters.month";
-  public static String SERIES_VALUES_PARAMETER = "transactionListActivity.parameters.series";
-  public static String ACCOUNT_PARAMETER = "transactionListActivity.parameters.account";
-
-  private GlobMatcher matcher;
+  private TransactionSet transactionSet;
 
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-    Bundle args = getArguments();
-    int monthId = args.getInt(MONTH_PARAMETER, -1);
-
     View view = inflater.inflate(R.layout.transaction_list, container, false);
 
-    if (args.containsKey(SERIES_VALUES_PARAMETER)) {
-      int seriesValuesId = args.getInt(SERIES_VALUES_PARAMETER, -1);
-      matcher = and(fieldEquals(TransactionValues.BANK_MONTH, monthId),
-                    fieldEquals(TransactionValues.SERIES, seriesValuesId));
-    }
-    else if (args.containsKey(ACCOUNT_PARAMETER)) {
-      int accountId = args.getInt(ACCOUNT_PARAMETER, -1);
-      matcher = and(fieldEquals(TransactionValues.BANK_MONTH, monthId),
-                    fieldEquals(TransactionValues.ACCOUNT, accountId));
-    }
-    else {
-      throw new InvalidParameter("Missing filtering parameter");
-    }
+    Bundle args = getArguments();
+    GlobRepository repository = ((App)getActivity().getApplication()).getRepository();
+    this.transactionSet = new TransactionSet(args, repository);
 
     ListView list = (ListView)view.findViewById(R.id.transactionList);
     list.setAdapter(new TransactionListAdapter(inflater));
@@ -62,7 +43,7 @@ public class TransactionListFragment extends Fragment {
       App app = (App)getActivity().getApplication();
       transactionValuesList =
         app.getRepository()
-          .getAll(TransactionValues.TYPE, matcher)
+          .getAll(TransactionValues.TYPE, transactionSet.getMatcher())
           .sort(TransactionValues.SEQUENCE_NUMBER);
     }
 
@@ -87,15 +68,23 @@ public class TransactionListFragment extends Fragment {
 
       final Glob values = transactionValuesList.get(i);
       Double amount = values.get(TransactionValues.AMOUNT);
-      setText(view, R.id.transactionLabel, values.get(TransactionValues.LABEL));
-      setText(view, R.id.transactionAmount, amount);
-      setText(view, R.id.transactionDate, getDate(values));
+      Views.setText(view, R.id.transactionLabel, values.get(TransactionValues.LABEL));
+      Views.setColoredText(view, R.id.transactionAmount, amount);
+      Views.setText(view, R.id.transactionDate, getDate(values));
 
       if (values.isTrue(TransactionValues.PLANNED)) {
         Views.setTextColor(view, R.id.transactionLabel, R.color.item_label_disabled);
       }
 
-      Views.setColorAmount(view, R.id.transactionAmount, amount);
+      view.setOnClickListener(new View.OnClickListener() {
+        public void onClick(View view) {
+          Intent intent = new Intent(getActivity(), TransactionPageActivity.class);
+          intent.putExtra(TransactionPageActivity.TRANSACTION_ID_PARAMETER, values.get(TransactionValues.ID));
+          transactionSet.save(intent);
+          TabPage.copyDemoMode(getActivity(), intent);
+          startActivity(intent);
+        }
+      });
 
       return view;
     }
@@ -111,16 +100,6 @@ public class TransactionListFragment extends Fragment {
                                        values.get(TransactionValues.BANK_MONTH),
                                        getResources());
       }
-    }
-
-    private void setText(View view, int textId, Double value) {
-      String text = (value == null) ? "-" : AmountFormat.DECIMAL_FORMAT.format(value);
-      setText(view, textId, text);
-    }
-
-    private void setText(View view, int textId, String text) {
-      TextView textView = (TextView)view.findViewById(textId);
-      textView.setText(text);
     }
   }
 }

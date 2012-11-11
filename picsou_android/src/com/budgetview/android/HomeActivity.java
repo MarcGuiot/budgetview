@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import com.budgetview.android.components.TabPage;
 import com.budgetview.android.datasync.DataSync;
 import com.budgetview.android.datasync.LoginInfo;
 
@@ -87,7 +86,7 @@ public class HomeActivity extends Activity {
   private void gotoBudgetOverview(boolean clearBackHistory, boolean useDemoMode) {
     Intent intent = new Intent(this, BudgetOverviewActivity.class);
     if (useDemoMode) {
-      intent.putExtra(TabPage.USE_DEMO, true);
+      intent.putExtra(DemoActivity.USE_DEMO, true);
     }
     if (clearBackHistory) {
       intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

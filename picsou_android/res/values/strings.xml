@@ -45,6 +45,7 @@
   <string name="homeConnect">Login</string>
   <string name="homeDemo">Demo</string>
 
+  <string name="loginWithNoId">Vous devez saisir une adresse email et un mot de passe</string>
   <string name="syncWithNoConnection">You need an internet access to login</string>
   <string name="syncWithInvalidId">Unknown user or invalid password</string>
 
@@ -52,6 +53,7 @@
   <string name="homeDemoMessage">New to BudgetView?</string>
 
   <string name="demoFooter">Discover BudgetView!</string>
+  <string name="demoLinkMessage">Visit our website:</string>
   <string name="demoLink">http://www.mybudgetview.com</string>
   <string name="demoTitle">Discover BudgetView!</string>
   <string name="demoPlatforms">Mac/Windows/Linux</string>

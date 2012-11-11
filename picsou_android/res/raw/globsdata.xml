@@ -1,0 +1,234 @@
+<globs><transactionValues id='169' series='114' account='100' label='JOURNAUX 2000' amount='-12.5' bankMonth='201209' bankDay='24' planned='false' sequenceNumber='69'/>
+<transactionValues id='194' series='114' account='100' label='JOURNAUX 2000' amount='-5.3' bankMonth='201209' bankDay='8' planned='false' sequenceNumber='94'/>
+<transactionValues id='115' series='112' account='-1' label='Courses' amount='-24.0' bankMonth='201211' bankDay='12' planned='true' sequenceNumber='15'/>
+<transactionValues id='124' series='106' account='-1' label='Navigo' amount='-70.3' bankMonth='201211' bankDay='2' planned='true' sequenceNumber='24'/>
+<transactionValues id='133' series='112' account='-1' label='Courses' amount='-398.8' bankMonth='201210' bankDay='20' planned='true' sequenceNumber='33'/>
+<transactionValues id='159' series='113' account='100' label='RETRAIT GAB 0301' amount='-20.0' bankMonth='201209' bankDay='30' planned='false' sequenceNumber='59'/>
+<transactionValues id='150' series='115' account='100' label='PARIS MODE CENTRE' amount='-75.0' bankMonth='201210' bankDay='7' planned='false' sequenceNumber='50'/>
+<transactionValues id='151' series='124' account='101' label='BOULANGERIE' amount='-5.0' bankMonth='201210' bankDay='6' planned='false' sequenceNumber='51'/>
+<transactionValues id='177' series='1' account='100' label='RENOV.' amount='500.0' bankMonth='201209' bankDay='17' planned='false' sequenceNumber='77'/>
+<transactionValues id='186' series='112' account='100' label='BIO PLUS' amount='-41.15' bankMonth='201209' bankDay='11' planned='false' sequenceNumber='86'/>
+<transactionValues id='132' series='112' account='-1' label='Courses' amount='-216.0' bankMonth='201210' bankDay='22' planned='true' sequenceNumber='32'/>
+<transactionValues id='107' series='103' account='-1' label='Credit auto' amount='-195.75' bankMonth='201211' bankDay='19' planned='true' sequenceNumber='7'/>
+<transactionValues id='142' series='104' account='100' label='VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR' amount='-83.1' bankMonth='201210' bankDay='14' planned='false' sequenceNumber='42'/>
+<transactionValues id='114' series='108' account='-1' label='TV Sat' amount='-25.5' bankMonth='201211' bankDay='12' planned='true' sequenceNumber='14'/>
+<transactionValues id='195' series='113' account='100' label='RETRAIT GAB 4463' amount='-20.0' bankMonth='201209' bankDay='8' planned='false' sequenceNumber='95'/>
+<transactionValues id='134' series='103' account='-1' label='Credit auto' amount='-195.75' bankMonth='201210' bankDay='20' planned='true' sequenceNumber='34'/>
+<transactionValues id='168' series='115' account='100' label='AU PIED AGILE' amount='-69.9' bankMonth='201209' bankDay='26' planned='false' sequenceNumber='68'/>
+<transactionValues id='160' series='124' account='101' label='PRIMEUR' amount='-40.0' bankMonth='201209' bankDay='28' planned='false' sequenceNumber='60'/>
+<transactionValues id='203' series='106' account='100' label='RATP NAVIGO 10/08' amount='-70.3' bankMonth='201209' bankDay='2' planned='false' sequenceNumber='103'/>
+<transactionValues id='125' series='112' account='-1' label='Courses' amount='-48.0' bankMonth='201211' bankDay='2' planned='true' sequenceNumber='25'/>
+<transactionValues id='152' series='112' account='100' label='HYPER M' amount='-121.2' bankMonth='201210' bankDay='5' planned='false' sequenceNumber='52'/>
+<transactionValues id='149' series='102' account='100' label='PRET IMMO N.3325566' amount='-1010.0' bankMonth='201210' bankDay='9' planned='false' sequenceNumber='49'/>
+<transactionValues id='106' series='112' account='-1' label='Courses' amount='-216.0' bankMonth='201211' bankDay='22' planned='true' sequenceNumber='6'/>
+<transactionValues id='141' series='1' account='100' label='GROUPE SCOLAIRE R.L DEC. 2008' amount='-157.0' bankMonth='201210' bankDay='17' planned='false' sequenceNumber='41'/>
+<transactionValues id='187' series='108' account='100' label='TVSAT' amount='-25.5' bankMonth='201209' bankDay='11' planned='false' sequenceNumber='87'/>
+<transactionValues id='176' series='112' account='100' label='BIO PLUS' amount='-35.5' bankMonth='201209' bankDay='19' planned='false' sequenceNumber='76'/>
+<transactionValues id='192' series='113' account='101' label='RETRAIT' amount='20.0' bankMonth='201209' bankDay='8' planned='false' sequenceNumber='92'/>
+<transactionValues id='171' series='113' account='101' label='RETRAIT' amount='20.0' bankMonth='201209' bankDay='22' planned='false' sequenceNumber='71'/>
+<transactionValues id='122' series='109' account='-1' label='Tel. mobile' amount='-66.1' bankMonth='201211' bankDay='8' planned='true' sequenceNumber='22'/>
+<transactionValues id='148' series='113' account='100' label='RETRAIT GAB 9011' amount='-20.0' bankMonth='201210' bankDay='9' planned='false' sequenceNumber='48'/>
+<transactionValues id='202' series='110' account='100' label='OPTIBOX ABT INTERNET 2523Z233' amount='-29.9' bankMonth='201209' bankDay='2' planned='false' sequenceNumber='102'/>
+<transactionValues id='161' series='124' account='101' label='BOUCHERIE' amount='-40.0' bankMonth='201209' bankDay='28' planned='false' sequenceNumber='61'/>
+<transactionValues id='140' series='1' account='100' label='REMB. MUTUELLE SANTEPLUS' amount='25.8' bankMonth='201210' bankDay='19' planned='false' sequenceNumber='40'/>
+<transactionValues id='153' series='105' account='100' label='TRESOR PUBLIC I.R. 23225252323' amount='-130.7' bankMonth='201210' bankDay='5' planned='false' sequenceNumber='53'/>
+<transactionValues id='109' series='116' account='-1' label='Divers' amount='-10.0' bankMonth='201211' bankDay='19' planned='true' sequenceNumber='9'/>
+<transactionValues id='117' series='122' account='102' label='Virt. auto livret' amount='200.0' bankMonth='201211' bankDay='8' planned='true' sequenceNumber='17'/>
+<transactionValues id='184' series='113' account='100' label='RETRAIT GAB 5234' amount='-30.0' bankMonth='201209' bankDay='12' planned='false' sequenceNumber='84'/>
+<transactionValues id='179' series='114' account='100' label='JOURNAUX 2000' amount='-3.7' bankMonth='201209' bankDay='16' planned='false' sequenceNumber='79'/>
+<transactionValues id='130' series='101' account='-1' label='Salaire Eric' amount='1312.8' bankMonth='201210' bankDay='27' planned='true' sequenceNumber='30'/>
+<transactionValues id='116' series='115' account='-1' label='Habillement' amount='-15.0' bankMonth='201211' bankDay='12' planned='true' sequenceNumber='16'/>
+<transactionValues id='123' series='105' account='-1' label='Impots revenu' amount='-130.7' bankMonth='201211' bankDay='4' planned='true' sequenceNumber='23'/>
+<transactionValues id='170' series='112' account='100' label='HYPER M' amount='-200.3' bankMonth='201209' bankDay='23' planned='false' sequenceNumber='70'/>
+<transactionValues id='193' series='1' account='100' label='DR PHU' amount='-35.0' bankMonth='201209' bankDay='8' planned='false' sequenceNumber='93'/>
+<transactionValues id='201' series='123' account='100' label='VIRT MENS. LIVRET A' amount='-200.0' bankMonth='201209' bankDay='3' planned='false' sequenceNumber='101'/>
+<transactionValues id='162' series='124' account='101' label='BOULANGERIE' amount='-20.0' bankMonth='201209' bankDay='28' planned='false' sequenceNumber='62'/>
+<transactionValues id='147' series='1' account='100' label='DAILY MAGAZINES' amount='-6.5' bankMonth='201210' bankDay='9' planned='false' sequenceNumber='47'/>
+<transactionValues id='101' series='115' account='-1' label='Habillement' amount='-66.0' bankMonth='201211' bankDay='27' planned='true' sequenceNumber='1'/>
+<transactionValues id='154' series='114' account='100' label='GROUPE CINE SPECT.' amount='-18.3' bankMonth='201210' bankDay='2' planned='false' sequenceNumber='54'/>
+<transactionValues id='139' series='123' account='100' label='VIRT MENS. LIVRET A' amount='-200.0' bankMonth='201210' bankDay='20' planned='false' sequenceNumber='39'/>
+<transactionValues id='100' series='112' account='-1' label='Courses' amount='-64.0' bankMonth='201211' bankDay='29' planned='true' sequenceNumber='0'/>
+<transactionValues id='131' series='100' account='-1' label='Salaire Marie' amount='1760.5' bankMonth='201210' bankDay='27' planned='true' sequenceNumber='31'/>
+<transactionValues id='108' series='112' account='-1' label='Courses' amount='-16.0' bankMonth='201211' bankDay='19' planned='true' sequenceNumber='8'/>
+<transactionValues id='178' series='107' account='100' label='GROUPE SCOLAIRE R.L NOV. 2008' amount='-157.0' bankMonth='201209' bankDay='17' planned='false' sequenceNumber='78'/>
+<transactionValues id='185' series='115' account='100' label='CHAUSS MODE' amount='-55.65' bankMonth='201209' bankDay='11' planned='false' sequenceNumber='85'/>
+<transactionValues id='163' series='1' account='100' label='PLOMBERIE 24/7' amount='-680.5' bankMonth='201209' bankDay='28' planned='false' sequenceNumber='63'/>
+<transactionValues id='146' series='113' account='101' label='RETRAIT' amount='20.0' bankMonth='201210' bankDay='9' planned='false' sequenceNumber='46'/>
+<transactionValues id='173' series='113' account='100' label='RETRAIT GAB 5642' amount='-20.0' bankMonth='201209' bankDay='22' planned='false' sequenceNumber='73'/>
+<transactionValues id='181' series='112' account='100' label='HYPER M' amount='-130.0' bankMonth='201209' bankDay='15' planned='false' sequenceNumber='81'/>
+<transactionValues id='111' series='107' account='-1' label='Ecole' amount='-157.0' bankMonth='201211' bankDay='15' planned='true' sequenceNumber='11'/>
+<transactionValues id='120' series='123' account='-1' label='Virt. auto livret' amount='-200.0' bankMonth='201211' bankDay='8' planned='true' sequenceNumber='20'/>
+<transactionValues id='128' series='115' account='-1' label='Habillement' amount='-25.0' bankMonth='201210' bankDay='27' planned='true' sequenceNumber='28'/>
+<transactionValues id='103' series='101' account='-1' label='Salaire Eric' amount='1312.8' bankMonth='201211' bankDay='27' planned='true' sequenceNumber='3'/>
+<transactionValues id='199' series='105' account='100' label='TRESOR PUBLIC I.R. 23225252323' amount='-130.7' bankMonth='201209' bankDay='5' planned='false' sequenceNumber='99'/>
+<transactionValues id='190' series='102' account='100' label='PRET IMMO N.3325566' amount='-1010.0' bankMonth='201209' bankDay='9' planned='false' sequenceNumber='90'/>
+<transactionValues id='155' series='110' account='100' label='OPTIBOX ABT INTERNET 2523Z233' amount='-29.9' bankMonth='201210' bankDay='2' planned='false' sequenceNumber='55'/>
+<transactionValues id='138' series='122' account='102' label='VIRT MENS. LIVRET A' amount='200.0' bankMonth='201210' bankDay='20' planned='false' sequenceNumber='38'/>
+<transactionValues id='145' series='124' account='101' label='PRIMEUR' amount='-20.0' bankMonth='201210' bankDay='9' planned='false' sequenceNumber='45'/>
+<transactionValues id='164' series='101' account='100' label='BIGCORP PAIE 2012/09/28' amount='1312.8' bankMonth='201209' bankDay='28' planned='false' sequenceNumber='64'/>
+<transactionValues id='172' series='1' account='100' label='REMB. MUTUELLE SANTEPLUS' amount='12.5' bankMonth='201209' bankDay='22' planned='false' sequenceNumber='72'/>
+<transactionValues id='121' series='104' account='-1' label='Assurance auto' amount='-83.1' bankMonth='201211' bankDay='8' planned='true' sequenceNumber='21'/>
+<transactionValues id='110' series='112' account='-1' label='Courses' amount='-160.0' bankMonth='201211' bankDay='15' planned='true' sequenceNumber='10'/>
+<transactionValues id='180' series='1' account='100' label='REMB. MUTUELLE SANTEPLUS' amount='35.0' bankMonth='201209' bankDay='15' planned='false' sequenceNumber='80'/>
+<transactionValues id='129' series='124' account='-1' label='Tous les jours' amount='-5.0' bankMonth='201210' bankDay='27' planned='true' sequenceNumber='29'/>
+<transactionValues id='102' series='124' account='-1' label='Tous les jours' amount='-30.0' bankMonth='201211' bankDay='27' planned='true' sequenceNumber='2'/>
+<transactionValues id='200' series='122' account='102' label='VIRT MENS. LIVRET A' amount='200.0' bankMonth='201209' bankDay='3' planned='false' sequenceNumber='100'/>
+<transactionValues id='165' series='100' account='100' label='WORLDCO' amount='1760.5' bankMonth='201209' bankDay='28' planned='false' sequenceNumber='65'/>
+<transactionValues id='137' series='116' account='-1' label='Divers' amount='-10.0' bankMonth='201210' bankDay='20' planned='true' sequenceNumber='37'/>
+<transactionValues id='191' series='104' account='100' label='VROUMBOUM ASSUR. CONTRAT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR' amount='-83.1' bankMonth='201209' bankDay='9' planned='false' sequenceNumber='91'/>
+<transactionValues id='156' series='106' account='100' label='RATP NAVIGO 10/08' amount='-70.3' bankMonth='201210' bankDay='2' planned='false' sequenceNumber='56'/>
+<transactionValues id='175' series='116' account='100' label='ZINGMAN' amount='-11.5' bankMonth='201209' bankDay='19' planned='false' sequenceNumber='75'/>
+<transactionValues id='144' series='109' account='100' label='RED TELECOMS MOBILE' amount='-66.1' bankMonth='201210' bankDay='10' planned='false' sequenceNumber='44'/>
+<transactionValues id='118' series='102' account='-1' label='Credit immo' amount='-1010.0' bankMonth='201211' bankDay='8' planned='true' sequenceNumber='18'/>
+<transactionValues id='183' series='113' account='101' label='RETRAIT' amount='40.0' bankMonth='201209' bankDay='12' planned='false' sequenceNumber='83'/>
+<transactionValues id='113' series='111' account='-1' label='EDF' amount='-65.89' bankMonth='201211' bankDay='15' planned='true' sequenceNumber='13'/>
+<transactionValues id='196' series='109' account='100' label='RED TELECOMS MOBILE' amount='-45.3' bankMonth='201209' bankDay='8' planned='false' sequenceNumber='96'/>
+<transactionValues id='126' series='110' account='-1' label='Internet' amount='-29.9' bankMonth='201211' bankDay='2' planned='true' sequenceNumber='26'/>
+<transactionValues id='197' series='112' account='100' label='HYPER M' amount='-230.3' bankMonth='201209' bankDay='7' planned='false' sequenceNumber='97'/>
+<transactionValues id='157' series='113' account='101' label='RETRAIT' amount='20.0' bankMonth='201210' bankDay='1' planned='false' sequenceNumber='57'/>
+<transactionValues id='105' series='115' account='-1' label='Habillement' amount='-19.0' bankMonth='201211' bankDay='25' planned='true' sequenceNumber='5'/>
+<transactionValues id='188' series='114' account='100' label='RESA CONCERTS. N151435' amount='-35.3' bankMonth='201209' bankDay='10' planned='false' sequenceNumber='88'/>
+<transactionValues id='136' series='114' account='-1' label='Loisirs' amount='-131.7' bankMonth='201210' bankDay='20' planned='true' sequenceNumber='36'/>
+<transactionValues id='166' series='113' account='101' label='RETRAIT' amount='20.0' bankMonth='201209' bankDay='27' planned='false' sequenceNumber='66'/>
+<transactionValues id='174' series='103' account='100' label='PRET CONSO N.6784562 F657' amount='-195.75' bankMonth='201209' bankDay='20' planned='false' sequenceNumber='74'/>
+<transactionValues id='143' series='108' account='100' label='TVSAT' amount='-25.5' bankMonth='201210' bankDay='12' planned='false' sequenceNumber='43'/>
+<transactionValues id='112' series='114' account='-1' label='Loisirs' amount='-150.0' bankMonth='201211' bankDay='15' planned='true' sequenceNumber='12'/>
+<transactionValues id='119' series='112' account='-1' label='Courses' amount='-272.0' bankMonth='201211' bankDay='8' planned='true' sequenceNumber='19'/>
+<transactionValues id='182' series='111' account='100' label='EDF' amount='-65.89' bankMonth='201209' bankDay='15' planned='false' sequenceNumber='82'/>
+<transactionValues id='198' series='1' account='100' label='REMB. MUTUELLE SANTEPLUS' amount='7.8' bankMonth='201209' bankDay='5' planned='false' sequenceNumber='98'/>
+<transactionValues id='127' series='112' account='-1' label='Courses' amount='-64.0' bankMonth='201210' bankDay='29' planned='true' sequenceNumber='27'/>
+<transactionValues id='104' series='100' account='-1' label='Salaire Marie' amount='1760.5' bankMonth='201211' bankDay='27' planned='true' sequenceNumber='4'/>
+<transactionValues id='158' series='113' account='100' label='RETRAIT GAB 1867' amount='-20.0' bankMonth='201210' bankDay='1' planned='false' sequenceNumber='58'/>
+<transactionValues id='189' series='1' account='100' label='PHARMACIE DES 4 CHEMINS' amount='-16.8' bankMonth='201209' bankDay='9' planned='false' sequenceNumber='89'/>
+<transactionValues id='135' series='107' account='-1' label='Ecole' amount='-157.0' bankMonth='201210' bankDay='20' planned='true' sequenceNumber='35'/>
+<transactionValues id='167' series='115' account='100' label='PARIS MODE CENTRE' amount='-50.0' bankMonth='201209' bankDay='27' planned='false' sequenceNumber='67'/>
+<seriesEntity id='115' budgetArea='2' name='Habillement'/>
+<seriesEntity id='126' budgetArea='4' name='Travaux cuisine'/>
+<seriesEntity id='108' budgetArea='1' name='TV Sat'/>
+<seriesEntity id='106' budgetArea='1' name='Navigo'/>
+<seriesEntity id='104' budgetArea='1' name='Assurance auto'/>
+<seriesEntity id='113' budgetArea='2' name='Liquide'/>
+<seriesEntity id='111' budgetArea='1' name='EDF'/>
+<seriesEntity id='102' budgetArea='1' name='Credit immo'/>
+<seriesEntity id='123' budgetArea='5' name='Virt. auto livret'/>
+<seriesEntity id='110' budgetArea='1' name='Internet'/>
+<seriesEntity id='135' budgetArea='5' name='Règlement vacances'/>
+<seriesEntity id='100' budgetArea='0' name='Salaire Marie'/>
+<seriesEntity id='116' budgetArea='2' name='Divers'/>
+<seriesEntity id='107' budgetArea='1' name='Ecole'/>
+<seriesEntity id='125' budgetArea='4' name='Cadeaux'/>
+<seriesEntity id='103' budgetArea='1' name='Credit auto'/>
+<seriesEntity id='105' budgetArea='1' name='Impots revenu'/>
+<seriesEntity id='112' budgetArea='2' name='Courses'/>
+<seriesEntity id='114' budgetArea='2' name='Loisirs'/>
+<seriesEntity id='101' budgetArea='0' name='Salaire Eric'/>
+<seriesEntity id='122' budgetArea='5' name='Virt. auto livret'/>
+<seriesEntity id='1' budgetArea='6' name='To categorize'/>
+<seriesEntity id='124' budgetArea='2' name='Tous les jours'/>
+<seriesEntity id='134' budgetArea='5' name='Règlement vacances'/>
+<seriesEntity id='-1' budgetArea='7' name='account event'/>
+<seriesEntity id='109' budgetArea='1' name='Tel. mobile'/>
+<accountEntity id='102' label='Livret' positionMonth='201210' positionDay='20' position='1600.0' accountType='2' sequenceNumber='2'/>
+<accountEntity id='101' label='Liquide' positionMonth='201210' positionDay='9' position='15.0' accountType='1' sequenceNumber='1'/>
+<accountEntity id='103' label='Provisions' positionMonth='201208' positionDay='1' position='1000.0' accountType='2' sequenceNumber='3'/>
+<accountEntity id='100' label='Compte courant' positionMonth='201210' positionDay='20' position='1410.2' accountType='1' sequenceNumber='0'/>
+<seriesValues seriesEntity='101' month='201210' budgetArea='0' plannedAmount='1312.8' remainingAmount='1312.8' overrunAmount='0.0'/>
+<seriesValues seriesEntity='113' month='201210' budgetArea='2' amount='0.0' plannedAmount='0.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='103' month='201211' budgetArea='1' plannedAmount='-195.75' remainingAmount='-195.75' overrunAmount='0.0'/>
+<seriesValues seriesEntity='109' month='201209' budgetArea='1' amount='-45.3' plannedAmount='-45.3' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='106' month='201211' budgetArea='1' plannedAmount='-70.3' remainingAmount='-70.3' overrunAmount='0.0'/>
+<seriesValues seriesEntity='102' month='201210' budgetArea='1' amount='-1010.0' plannedAmount='-1010.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='126' month='201209' budgetArea='4' plannedAmount='-600.0' remainingAmount='-600.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='123' month='201210' budgetArea='5' amount='-200.0' plannedAmount='-200.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='114' month='201209' budgetArea='2' amount='-56.8' plannedAmount='-150.0' remainingAmount='-93.2' overrunAmount='0.0'/>
+<seriesValues seriesEntity='107' month='201210' budgetArea='1' plannedAmount='-157.0' remainingAmount='-157.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='1' month='201210' budgetArea='6' amount='-137.7' remainingAmount='0.0' overrunAmount='-137.7'/>
+<seriesValues seriesEntity='116' month='201211' budgetArea='2' plannedAmount='-10.0' remainingAmount='-10.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='125' month='201210' budgetArea='4' plannedAmount='0.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='101' month='201211' budgetArea='0' plannedAmount='1312.8' remainingAmount='1312.8' overrunAmount='0.0'/>
+<seriesValues seriesEntity='122' month='201210' budgetArea='5' amount='200.0' plannedAmount='200.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='108' month='201209' budgetArea='1' amount='-25.5' plannedAmount='-25.5' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='102' month='201209' budgetArea='1' amount='-1010.0' plannedAmount='-1010.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='115' month='201211' budgetArea='2' plannedAmount='-100.0' remainingAmount='-100.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='104' month='201210' budgetArea='1' amount='-83.1' plannedAmount='-83.1' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='-1' month='201210' budgetArea='7' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='135' month='201211' budgetArea='5' plannedAmount='0.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='113' month='201209' budgetArea='2' amount='10.0' plannedAmount='0.0' remainingAmount='0.0' overrunAmount='10.0'/>
+<seriesValues seriesEntity='101' month='201209' budgetArea='0' amount='1312.8' plannedAmount='1312.8' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='124' month='201209' budgetArea='2' amount='-100.0' plannedAmount='-30.0' remainingAmount='0.0' overrunAmount='-70.0'/>
+<seriesValues seriesEntity='106' month='201210' budgetArea='1' amount='-70.3' plannedAmount='-70.3' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='109' month='201210' budgetArea='1' amount='-66.1' plannedAmount='-45.3' remainingAmount='0.0' overrunAmount='-20.8'/>
+<seriesValues seriesEntity='100' month='201209' budgetArea='0' amount='1760.5' plannedAmount='1760.5' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='102' month='201211' budgetArea='1' plannedAmount='-1010.0' remainingAmount='-1010.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='123' month='201209' budgetArea='5' amount='-200.0' plannedAmount='-200.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='1' month='201209' budgetArea='6' amount='-177.0' remainingAmount='0.0' overrunAmount='-177.0'/>
+<seriesValues seriesEntity='107' month='201209' budgetArea='1' amount='-157.0' plannedAmount='-157.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='110' month='201209' budgetArea='1' amount='-29.9' plannedAmount='-29.9' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='111' month='201211' budgetArea='1' plannedAmount='-65.89' remainingAmount='-65.89' overrunAmount='0.0'/>
+<seriesValues seriesEntity='122' month='201211' budgetArea='5' plannedAmount='200.0' remainingAmount='200.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='116' month='201210' budgetArea='2' plannedAmount='-10.0' remainingAmount='-10.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='125' month='201209' budgetArea='4' plannedAmount='0.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='104' month='201211' budgetArea='1' plannedAmount='-83.1' remainingAmount='-83.1' overrunAmount='0.0'/>
+<seriesValues seriesEntity='105' month='201211' budgetArea='1' plannedAmount='-130.7' remainingAmount='-130.7' overrunAmount='0.0'/>
+<seriesValues seriesEntity='112' month='201209' budgetArea='2' amount='-637.25' plannedAmount='-800.0' remainingAmount='-162.75' overrunAmount='0.0'/>
+<seriesValues seriesEntity='-1' month='201209' budgetArea='7' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='124' month='201210' budgetArea='2' amount='-25.0' plannedAmount='-30.0' remainingAmount='-5.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='114' month='201211' budgetArea='2' plannedAmount='-150.0' remainingAmount='-150.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='103' month='201209' budgetArea='1' amount='-195.75' plannedAmount='-195.75' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='106' month='201209' budgetArea='1' amount='-70.3' plannedAmount='-70.3' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='100' month='201210' budgetArea='0' plannedAmount='1760.5' remainingAmount='1760.5' overrunAmount='0.0'/>
+<seriesValues seriesEntity='108' month='201211' budgetArea='1' plannedAmount='-25.5' remainingAmount='-25.5' overrunAmount='0.0'/>
+<seriesValues seriesEntity='134' month='201209' budgetArea='5' plannedAmount='0.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='110' month='201210' budgetArea='1' amount='-29.9' plannedAmount='-29.9' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='105' month='201210' budgetArea='1' amount='-130.7' plannedAmount='-130.7' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='134' month='201210' budgetArea='5' plannedAmount='0.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='116' month='201209' budgetArea='2' amount='-11.5' plannedAmount='-10.0' remainingAmount='0.0' overrunAmount='-1.5'/>
+<seriesValues seriesEntity='109' month='201211' budgetArea='1' plannedAmount='-66.1' remainingAmount='-66.1' overrunAmount='0.0'/>
+<seriesValues seriesEntity='135' month='201209' budgetArea='5' plannedAmount='0.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='112' month='201210' budgetArea='2' amount='-121.2' plannedAmount='-800.0' remainingAmount='-678.8' overrunAmount='0.0'/>
+<seriesValues seriesEntity='115' month='201209' budgetArea='2' amount='-175.55' plannedAmount='-100.0' remainingAmount='0.0' overrunAmount='-75.55'/>
+<seriesValues seriesEntity='1' month='201211' budgetArea='6' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='114' month='201210' budgetArea='2' amount='-18.3' plannedAmount='-150.0' remainingAmount='-131.7' overrunAmount='0.0'/>
+<seriesValues seriesEntity='103' month='201210' budgetArea='1' plannedAmount='-195.75' remainingAmount='-195.75' overrunAmount='0.0'/>
+<seriesValues seriesEntity='124' month='201211' budgetArea='2' plannedAmount='-30.0' remainingAmount='-30.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='107' month='201211' budgetArea='1' plannedAmount='-157.0' remainingAmount='-157.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='111' month='201209' budgetArea='1' amount='-65.89' plannedAmount='-65.89' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='125' month='201211' budgetArea='4' plannedAmount='0.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='113' month='201211' budgetArea='2' plannedAmount='0.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='100' month='201211' budgetArea='0' plannedAmount='1760.5' remainingAmount='1760.5' overrunAmount='0.0'/>
+<seriesValues seriesEntity='123' month='201211' budgetArea='5' plannedAmount='-200.0' remainingAmount='-200.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='105' month='201209' budgetArea='1' amount='-130.7' plannedAmount='-130.7' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='110' month='201211' budgetArea='1' plannedAmount='-29.9' remainingAmount='-29.9' overrunAmount='0.0'/>
+<seriesValues seriesEntity='134' month='201211' budgetArea='5' plannedAmount='0.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='108' month='201210' budgetArea='1' amount='-25.5' plannedAmount='-25.5' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='135' month='201210' budgetArea='5' plannedAmount='0.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='112' month='201211' budgetArea='2' plannedAmount='-800.0' remainingAmount='-800.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='-1' month='201211' budgetArea='7' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='122' month='201209' budgetArea='5' amount='200.0' plannedAmount='200.0' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='104' month='201209' budgetArea='1' amount='-83.1' plannedAmount='-83.1' remainingAmount='0.0' overrunAmount='0.0'/>
+<seriesValues seriesEntity='115' month='201210' budgetArea='2' amount='-75.0' plannedAmount='-100.0' remainingAmount='-25.0' overrunAmount='0.0'/>
+<monthEntity id='201210'/>
+<monthEntity id='201209'/>
+<monthEntity id='201211'/>
+<budgetAreaValues budgetArea='1' month='201209' initiallyPlanned='-1813.44' actual='-1813.44' remainder='0.0' overrun='0.0'/>
+<budgetAreaValues budgetArea='1' month='201210' initiallyPlanned='-1747.55' actual='-1415.6' remainder='-352.75' overrun='-20.8'/>
+<budgetAreaValues budgetArea='2' month='201211' initiallyPlanned='-1090.0' actual='0.0' remainder='-1090.0' overrun='0.0'/>
+<budgetAreaValues budgetArea='2' month='201210' initiallyPlanned='-1090.0' actual='-239.5' remainder='-850.5' overrun='0.0'/>
+<budgetAreaValues budgetArea='0' month='201210' initiallyPlanned='3073.3' actual='0.0' remainder='3073.3' overrun='0.0'/>
+<budgetAreaValues budgetArea='0' month='201211' initiallyPlanned='3073.3' actual='0.0' remainder='3073.3' overrun='0.0'/>
+<budgetAreaValues budgetArea='0' month='201209' initiallyPlanned='3073.3' actual='3073.3' remainder='0.0' overrun='0.0'/>
+<budgetAreaValues budgetArea='4' month='201209' initiallyPlanned='-600.0' actual='0.0' remainder='-600.0' overrun='0.0'/>
+<budgetAreaValues budgetArea='5' month='201211' initiallyPlanned='-200.0' actual='0.0' remainder='-200.0' overrun='0.0'/>
+<budgetAreaValues budgetArea='4' month='201211' initiallyPlanned='0.0' actual='0.0' remainder='0.0' overrun='0.0'/>
+<budgetAreaValues budgetArea='4' month='201210' initiallyPlanned='0.0' actual='0.0' remainder='0.0' overrun='0.0'/>
+<budgetAreaValues budgetArea='2' month='201209' initiallyPlanned='-1090.0' actual='-971.1' remainder='-255.95' overrun='-137.05'/>
+<budgetAreaValues budgetArea='5' month='201210' initiallyPlanned='-200.0' actual='-200.0' remainder='0.0' overrun='0.0'/>
+<budgetAreaValues budgetArea='5' month='201209' initiallyPlanned='-200.0' actual='-200.0' remainder='0.0' overrun='0.0'/>
+<budgetAreaValues budgetArea='1' month='201211' initiallyPlanned='-1834.24' actual='0.0' remainder='-1834.24' overrun='0.0'/>
+<budgetAreaEntity id='4' label='Extras'/>
+<budgetAreaEntity id='5' label='Epargne'/>
+<budgetAreaEntity id='6' label='À classer'/>
+<budgetAreaEntity id='0' label='Revenus'/>
+<budgetAreaEntity id='2' label='Variable'/>
+<budgetAreaEntity id='1' label='Fixe'/>
+</globs>

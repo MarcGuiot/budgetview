@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.budgetview.android.components.GaugeView;
 import com.budgetview.android.components.TabPage;
+import com.budgetview.android.utils.TransactionSet;
 import com.budgetview.shared.model.SeriesEntity;
 import com.budgetview.shared.model.SeriesValues;
 import com.budgetview.shared.utils.AmountFormat;
@@ -78,7 +79,7 @@ public class SeriesListFragment extends Fragment {
         view = inflater.inflate(R.layout.series_block, parent, false);
       }
 
-      App app = (App)getActivity().getApplication();
+      final App app = (App)getActivity().getApplication();
       final Glob seriesValues = seriesValuesList.get(i);
       Glob seriesEntity = app.getRepository().findLinkTarget(seriesValues, SeriesValues.SERIES_ENTITY);
 
@@ -97,8 +98,9 @@ public class SeriesListFragment extends Fragment {
       view.setOnClickListener(new View.OnClickListener() {
         public void onClick(View view) {
           Intent intent = new Intent(getActivity(), TransactionListActivity.class);
-          intent.putExtra(TransactionListActivity.MONTH_PARAMETER, seriesValues.get(SeriesValues.MONTH));
-          intent.putExtra(TransactionListActivity.SERIES_ENTITY_PARAMETER, seriesValues.get(SeriesValues.SERIES_ENTITY));
+          TransactionSet transactionSet =
+            new TransactionSet(monthId, seriesValues.get(SeriesValues.SERIES_ENTITY), null, app.getRepository());
+          transactionSet.save(intent);
           TabPage.copyDemoMode(getActivity(), intent);
           startActivity(intent);
         }

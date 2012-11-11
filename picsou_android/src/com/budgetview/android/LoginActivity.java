@@ -12,17 +12,11 @@ import com.budgetview.android.components.Header;
 import com.budgetview.android.datasync.DataSync;
 import com.budgetview.android.datasync.LoginInfo;
 
-public class LoginActivity extends Activity implements TextWatcher {
+public class LoginActivity extends Activity {
 
   public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.login_page);
-
-    EditText emailView = (EditText)findViewById(R.id.login_email);
-    emailView.addTextChangedListener(this);
-
-    EditText passwordView = (EditText)findViewById(R.id.login_password);
-    passwordView.addTextChangedListener(this);
 
     Header header = (Header)findViewById(R.id.header);
     header.setActivity(this);
@@ -30,15 +24,15 @@ public class LoginActivity extends Activity implements TextWatcher {
     showProgressBar(View.INVISIBLE);
   }
 
-  public void onTextChanged(CharSequence s, int start, int before, int count) {
-    Button loginButton = (Button)findViewById(R.id.login);
-    loginButton.setEnabled(getLoginInfo().isSet());
-  }
-
   public void onLogin(View view) {
 
-    DataSync sync = new DataSync(this);
     final LoginInfo loginInfo = getLoginInfo();
+    if (!loginInfo.isSet()) {
+      Views.showAlert(this, R.string.loginWithNoId);
+      return;
+    }
+
+    DataSync sync = new DataSync(this);
     sync.connect(loginInfo.email, loginInfo.password, new DataSync.Callback() {
       public void onActionFinished() {
         LoginInfo.save(loginInfo, LoginActivity.this);
@@ -87,11 +81,5 @@ public class LoginActivity extends Activity implements TextWatcher {
     EditText emailView = (EditText)findViewById(R.id.login_email);
     EditText passwordView = (EditText)findViewById(R.id.login_password);
     return new LoginInfo(emailView.getText().toString(), passwordView.getText().toString());
-  }
-
-  public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-  }
-
-  public void afterTextChanged(Editable s) {
   }
 }

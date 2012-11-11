@@ -1,14 +1,34 @@
 package com.budgetview.android;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import com.budgetview.android.components.Header;
 import com.budgetview.android.datasync.DataSync;
 import org.globsframework.utils.Strings;
 
 public class DemoActivity extends Activity {
+
+  public static final String USE_DEMO = "com.budgetview.DemoActivity.useDemo";
+
+  public static void install(Button demoButton, final Activity activity) {
+    boolean demoModeEnabled = activity.getIntent().getBooleanExtra(USE_DEMO, false);
+    if (demoModeEnabled) {
+      demoButton.setOnClickListener(new View.OnClickListener() {
+        public void onClick(View v) {
+          Intent intent = new Intent(activity, DemoActivity.class);
+          activity.startActivity(intent);
+        }
+      });
+    }
+    else {
+      demoButton.setVisibility(View.GONE);
+    }
+  }
+
   public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
