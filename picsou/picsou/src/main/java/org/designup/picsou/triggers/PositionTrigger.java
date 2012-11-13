@@ -1,5 +1,7 @@
 package org.designup.picsou.triggers;
 
+import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.gui.model.AccountPositionError;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
@@ -260,7 +262,7 @@ public class PositionTrigger implements ChangeSetListener {
           }
         }
       }
-      computeAccountPosition(transactions, futureMatcher, realMatcher, accountId, repository);
+      computeAccountPosition(transactions, futureMatcher, realMatcher, accountId, repository, changeSet);
     }
   }
 
@@ -382,15 +384,18 @@ public class PositionTrigger implements ChangeSetListener {
     final GlobMatcher futureMatcher;
     final GlobMatcher realMatcher;
     final GlobRepository repository;
+    private boolean checkAccountPosition;
     Glob lastTransaction = null;
     Glob lastRealTransaction = null;
     Glob closeTransaction = null;
     Glob openTransaction = null;
+    Glob lastOp = null;
 
-    AccountUpdate(GlobMatcher futureMatcher, GlobMatcher realMatcher, GlobRepository repository) {
+    AccountUpdate(GlobMatcher futureMatcher, GlobMatcher realMatcher, GlobRepository repository, boolean checkAccountPosition) {
       this.futureMatcher = futureMatcher;
       this.realMatcher = realMatcher;
       this.repository = repository;
+      this.checkAccountPosition = checkAccountPosition;
     }
 
     void update(Glob transaction) {
@@ -403,6 +408,14 @@ public class PositionTrigger implements ChangeSetListener {
       if (realMatcher.matches(transaction, repository)) {
         lastRealTransaction = transaction;
       }
+
+      if (transaction.get(Transaction.IMPORT) != null &&
+          closeTransaction != null &&
+          closeTransaction.get(Transaction.IMPORT) != null &&
+          !closeTransaction.get(Transaction.IMPORT).equals(transaction.get(Transaction.IMPORT))) {
+          lastOp = closeTransaction;
+      }
+
       closeTransaction = transaction;
     }
 
@@ -412,6 +425,20 @@ public class PositionTrigger implements ChangeSetListener {
         repository.update(account.getKey(),
                           FieldValue.value(Account.POSITION_DATE, accountDate),
                           FieldValue.value(Account.POSITION_WITH_PENDING, lastTransaction.get(Transaction.ACCOUNT_POSITION)));
+        if (checkAccountPosition && account.get(Account.LAST_IMPORT_POSITION) != null &&
+            !Amounts.equal(lastTransaction.get(Transaction.ACCOUNT_POSITION), account.get(Account.LAST_IMPORT_POSITION))) {
+          Glob accountError = repository.findOrCreate(Key.create(AccountPositionError.TYPE, account.get(Account.ID)));
+          repository.update(accountError.getKey(),
+                            FieldValue.value(AccountPositionError.UPDATE_DATE, new Date()),
+                            FieldValue.value(AccountPositionError.ACCOUNT_NAME, account.get(Account.NAME)),
+                            FieldValue.value(AccountPositionError.IMPORTED_POSITION, account.get(Account.LAST_IMPORT_POSITION)),
+                            FieldValue.value(AccountPositionError.LAST_REAL_OPERATION_POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION)),
+                            FieldValue.value(AccountPositionError.LAST_PREVIOUS_IMPORT_DATE,
+                                             lastOp != null ? Month.toFullDate(lastOp.get(Transaction.BANK_MONTH),
+                                                                               lastOp.get(Transaction.BANK_DAY))
+                                                            : null)
+          );
+        }
       }
       else if (openTransaction != null) {
         Date accountDate = Month.toDate(openTransaction.get(Transaction.POSITION_MONTH), openTransaction.get(Transaction.POSITION_DAY));
@@ -450,12 +477,15 @@ public class PositionTrigger implements ChangeSetListener {
   }
 
   private boolean computeAccountPosition(Glob[] transactions, GlobMatcher futureMatcher,
-                                         GlobMatcher realMatcher, Integer accountId, GlobRepository repository) {
+                                         GlobMatcher realMatcher, Integer accountId, GlobRepository repository,
+                                         ChangeSet changeSet) {
     if (transactions.length == 0) {
       return false;
     }
 
-    AccountUpdate update = new AccountUpdate(futureMatcher, realMatcher, repository);
+    Glob account = repository.get(Key.create(Account.TYPE, accountId));
+    AccountUpdate update = new AccountUpdate(futureMatcher, realMatcher, repository,
+                                             changeSet.containsChanges(account.getKey(), Account.LAST_IMPORT_POSITION));
     double positionBefore = 0;
     Glob closeTransaction = null;
     Glob lastTransaction = null;
@@ -490,7 +520,6 @@ public class PositionTrigger implements ChangeSetListener {
                                                        Month.getDayFromFullDate(date),
                                                        -positionBefore, 0.);
     }
-    Glob account = repository.get(Key.create(Account.TYPE, accountId));
     update.updateAccount(account);
     return true;
   }

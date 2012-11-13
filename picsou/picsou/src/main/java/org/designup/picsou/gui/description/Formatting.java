@@ -122,6 +122,11 @@ public class Formatting extends AmountFormat {
       });
   }
 
+  public static String toString(int fullDate) {
+    int monthId = Month.getMonthIdFromFullDate(fullDate);
+    return toString(Month.toYear(monthId), Month.toMonth(monthId), Month.getDayFromFullDate(fullDate));
+  }
+
   public static String getFullLabel(int month, int day) {
     return fullLabelFormat.format(
       new Object[]{Integer.toString(Month.toYear(month)), Month.getFullMonthLabel(month), day});

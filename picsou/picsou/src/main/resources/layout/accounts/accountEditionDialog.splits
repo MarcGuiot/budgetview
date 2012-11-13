@@ -52,13 +52,17 @@
 
             <textArea ref="messageWarning" styleClass="errorMessage"/>
 
-            <row>
-              <textField ref="datePeriod"/>
-              <textField ref="datePrelevement"/>
-              <textField ref="shiftMonth"/>
-            </row>
+            <grid marginRight="20">
+              <label gridPos="(0,0)" text="$account.deferred.start.day" autoHideSource="datePeriod" marginRight="10"/>
+              <textField gridPos="(1,0)" ref="datePeriod"/>
 
-            <filler fill="vertical"/>
+              <label gridPos="(0,1)" text="$account.deferred.start.withdrawal" autoHideSource="datePrelevement" marginRight="10"/>
+              <textField gridPos="(1,1)" ref="datePrelevement"/>
+
+              <label gridPos="(0,2)" text="$account.deferred.month" autoHideSource="shiftMonth" marginRight="10"/>
+              <textField gridPos="(1,2)" ref="shiftMonth"/>
+              </grid>
+              <filler fill="vertical"/>
           </column>
         </tab>
 

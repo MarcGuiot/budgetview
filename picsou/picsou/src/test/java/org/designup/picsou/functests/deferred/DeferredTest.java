@@ -882,4 +882,63 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("01/11/2009", "AUCHAN 1", -50.00, "course", -50.00, 70.00, "Compte differé")
       .check();
   }
+
+  public void testShiftOneMonth() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2009/10/09", -100, "any")
+      .addTransaction("2009/11/09", -100, "Virement septembre/octobre")
+      .load();
+
+    budgetView.recurring.createSeries().setName("course").setAmount(300).setPropagationEnabled().validate();
+
+    mainAccounts.createNewAccount()
+      .setName("Compte differé")
+      .selectBank("CIC")
+      .setAsDeferredCard()
+      .setDeferred(15, 19, 1)
+      .validate();
+
+    timeline.selectMonth(200910);
+    transactionCreation.show()
+      .selectAccount("Compte differé")
+      .create(1, "Auchan -1", -50.00)
+      .create(10, "Auchan 0", -50.00)
+      .selectMonth(200911)
+      .create(1, "Auchan 1", -50.00)
+      .create(10, "Auchan 2", -50.00)
+      .create(16, "Auchan 3", -10.00)
+      .create(19, "Auchan 4", -10.00)
+      .selectMonth(200912)
+      .create(1, "Auchan 5", -5.00)
+      .create(6, "Auchan 6", -10.00);
+
+    categorization.selectTransactions("Auchan -1", "Auchan 0", "Auchan 1", "Auchan 2", "Auchan 3", "Auchan 4", "Auchan 5", "Auchan 6")
+      .selectRecurring().selectSeries("course");
+
+    categorization.selectTransaction("VIREMENT SEPTEMBRE/OCTOBRE").selectOther().selectDeferred().selectSeries("Compte differé");
+
+    views.selectData();
+
+    mainAccounts.checkPosition("Compte differé", -35);
+    mainAccounts.checkPosition("Account n. 00001123", 0);
+    mainAccounts.checkSummary(0, "2009/11/09");
+
+    timeline.selectAll();
+    transactions.showPlannedTransactions().initAmountContent()
+      .add("19/02/2010", "Planned: course", -300.00, "course", -900.00, "Main accounts")
+      .add("19/01/2010", "Planned: course", -265.00, "course", -600.00, "Main accounts")
+      .add("19/12/2009", "Planned: course", -200.00, "course", -300.00, "Main accounts")
+      .add("06/12/2009", "AUCHAN 6", -10.00, "course", -35.00, -335.00, "Compte differé")
+      .add("01/12/2009", "AUCHAN 5", -5.00, "course", -25.00, -325.00, "Compte differé")
+      .add("19/11/2009", "AUCHAN 4", -10.00, "course", -20.00, -320.00, "Compte differé")
+      .add("16/11/2009", "AUCHAN 3", -10.00, "course", -10.00, -310.00, "Compte differé")
+      .add("10/11/2009", "AUCHAN 2", -50.00, "course", -100.00, -100.00, "Compte differé")
+      .add("09/11/2009", "VIREMENT SEPTEMBRE/OCTOBRE", -100.00, "Compte differé", 0.00, 0.00, "Account n. 00001123")
+      .add("01/11/2009", "AUCHAN 1", -50.00, "course", -50.00, -50.00, "Compte differé")
+      .add("10/10/2009", "AUCHAN 0", -50.00, "course", -100.00, 0.00, "Compte differé")
+      .add("09/10/2009", "ANY", -100.00, "To categorize", 100.00, 100.00, "Account n. 00001123")
+      .add("01/10/2009", "AUCHAN -1", -50.00, "course", -50.00, 0.00, "Compte differé")
+      .check();
+  }
+
 }

@@ -103,7 +103,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
 
     savingsAccounts.checkAccountNames("secondary", "Livret A");
     savingsAccounts.checkAccount("secondary", 10, null);
-    savingsAccounts.checkLastImportPosition("secondary",100.);
+    budgetViewMessageChecker.checkFirstImportMessage("secondary", 10., 100.);
 
     views.selectCategorization();
     transactionCreation.show().selectAccount("secondary")
@@ -155,9 +155,9 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .selectAccount("princi")
       .setFile(
         QifBuilder
-        .init(this)
-        .addTransaction("2011/02/01", -1000, "Autre vir. A") // pas d'auto categorization
-        .save())
+          .init(this)
+          .addTransaction("2011/02/01", -1000, "Autre vir. A") // pas d'auto categorization
+          .save())
       .setAmount("1000")
       .selectAccount("Livret A")
       .setAmount("300")

@@ -125,7 +125,12 @@
     <style selector="label.errorMessage" horizontalAlignment="center" foreground="#FF0000" font="-,bold,12"
            fill="horizontal" anchor="center"/>
 
-    <style selector="textArea.errorMessage"
+    <style selector="textArea.message"
+           opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"
+           font="-,plain,11"
+           fill="horizontal" anchor="center"/>
+
+      <style selector="textArea.errorMessage"
            opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"
            foreground="#FF0000" font="-,bold,12"
            fill="horizontal" anchor="center"/>

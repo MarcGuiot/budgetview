@@ -884,9 +884,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .doNext()
       .completeImportWithNext();
 
-    mainAccounts.checkLastImportPosition("Account n. 113", 300.);
+    budgetViewMessageChecker.checkFirstImportMessage("Account n. 113", 200, 300.);
     mainAccounts.checkAccount("Account n. 113", 200., "2008/08/03");
-    mainAccounts.checkLastImportPosition("Account n. 113", 200.);
+    budgetViewMessageChecker.checkSecondImportMessage("Account n. 112", 100, 200.);
     mainAccounts.checkAccount("Account n. 112", 100., "2008/08/01");
   }
 

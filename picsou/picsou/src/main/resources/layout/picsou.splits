@@ -74,6 +74,9 @@
               <filler fill="horizontal"/>
             </row>
           </column>
+          <row>
+              <panel ref="MessagesView" opaque="false"/>
+          </row>
           <row weightX="100" weightY="0.1" name="time" marginTop="0" marginLeft="40" marginRight="0">
             <column>
               <filler fill="vertical"/>

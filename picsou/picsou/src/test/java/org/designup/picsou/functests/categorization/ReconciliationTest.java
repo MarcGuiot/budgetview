@@ -287,27 +287,27 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     OfxBuilder.init(this)
       .addTransaction("2012/05/10", -100.00, "CHEQUE 0012345")
-      .addTransaction("2012/05/10", -50.00, "AUCHAN 1")
+      .addTransaction("2012/05/11", -50.00, "AUCHAN 1")
       .loadInAccount("Main");
 
     transactions.initAmountContent()
-      .add("10/05/2012", "AUCHAN 1", -50.00, "To categorize", 700.00, 700.00, "Main")
-      .add("10/05/2012", "CHEQUE N° 12345", -100.00, "To categorize", 750.00, 750.00, "Main")
-      .add("10/05/2012", "AUCHAN 1", -50.00, "To categorize", 850.00, 850.00, "Main")
+      .add("11/05/2012", "AUCHAN 1", -50.00, "To categorize", 700.00, 700.00, "Main")
+      .add("11/05/2012", "CHEQUE N° 12345", -100.00, "To categorize", 750.00, 750.00, "Main")
+      .add("11/05/2012", "AUCHAN 1", -50.00, "To categorize", 850.00, 850.00, "Main")
       .add("10/05/2012", "CHEQUE N°0012345", -100.00, "To categorize", 900.00, 900.00, "Main")
       .check();
 
 
     categorization.initContent()
-      .add("10/05/2012", "", "AUCHAN 1", -50.00)
-      .add("10/05/2012", "", "[R] AUCHAN 1", -50.00)
-      .add("10/05/2012", "", "[R] CHEQUE N° 12345", -100.00)
+      .add("11/05/2012", "", "AUCHAN 1", -50.00)
+      .add("11/05/2012", "", "[R] AUCHAN 1", -50.00)
+      .add("11/05/2012", "", "[R] CHEQUE N° 12345", -100.00)
       .add("10/05/2012", "", "CHEQUE N°0012345", -100.00)
       .check();
 
     mainAccounts.checkPosition("Main", 700);
-    mainAccounts.checkSummary(700.00, "2012/05/10");
-    mainAccounts.checkLastImportPosition("main", 1000.);
+    mainAccounts.checkSummary(700.00, "2012/05/11");
+    budgetViewMessageChecker.checkFirstImportMessage("Main", 700, 0);
 
     categorization.selectTransaction("[R] CHEQUE N° 12345");
 
@@ -316,19 +316,19 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .switchToReconciliation().select("AUCHAN 1").reconcile();
 
     transactions.initAmountContent()
-      .add("10/05/2012", "AUCHAN 1", -50.00, "To categorize", 750.00, 750.00, "Main")
-      .add("10/05/2012", "CHEQUE N°0012345", -100.00, "To categorize", 800.00, 800.00, "Main")
-      .add("10/05/2012", "CHEQUE N° 12345", -100.00, "To categorize", 900.00, 900.00, "Main")
+      .add("11/05/2012", "AUCHAN 1", -50.00, "To categorize", 750.00, 750.00, "Main")
+      .add("11/05/2012", "CHEQUE N° 12345", -100.00, "To categorize", 800.00, 800.00, "Main")
+      .add("10/05/2012", "CHEQUE N°0012345", -100.00, "To categorize", 900.00, 900.00, "Main")
       .check();
 
     categorization.initContent()
-      .add("10/05/2012", "", "AUCHAN 1", -50.00)
-      .add("10/05/2012", "", "CHEQUE N° 12345", -100.00)
+      .add("11/05/2012", "", "AUCHAN 1", -50.00)
+      .add("11/05/2012", "", "CHEQUE N° 12345", -100.00)
       .add("10/05/2012", "", "CHEQUE N°0012345", -100.00)
       .check();
 
     mainAccounts.checkPosition("Main", 750);
-    mainAccounts.checkSummary(750.00, "2012/05/10");
+    mainAccounts.checkSummary(750.00, "2012/05/11");
 
     // à l'import suivant la transaction n'est plus marquée toReconcile
     OfxBuilder.init(this)
@@ -337,8 +337,8 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .loadInAccount("Main");
 
     categorization.initContent()
-      .add("10/05/2012", "", "AUCHAN 1", -50.00)
-      .add("10/05/2012", "", "CHEQUE N° 12345", -100.00)
+      .add("11/05/2012", "", "AUCHAN 1", -50.00)
+      .add("11/05/2012", "", "CHEQUE N° 12345", -100.00)
       .add("10/05/2012", "", "CHEQUE N°0012345", -100.00)
       .add("15/05/2012", "", "FNAC", -100.00)
       .check();
