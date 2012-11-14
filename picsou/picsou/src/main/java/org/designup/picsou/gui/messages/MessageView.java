@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.messages;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.model.AccountPositionError;
+import org.designup.picsou.model.AccountPositionError;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.*;

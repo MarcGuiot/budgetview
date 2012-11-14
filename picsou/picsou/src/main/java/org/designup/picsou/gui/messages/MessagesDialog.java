@@ -2,7 +2,7 @@ package org.designup.picsou.gui.messages;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.model.AccountPositionError;
+import org.designup.picsou.model.AccountPositionError;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.model.Glob;
@@ -34,7 +34,7 @@ public class MessagesDialog {
 
     List<MessageDisplay> displays = new ArrayList<MessageDisplay>();
     GlobList all = localRepository.getAll(AccountPositionError.TYPE);
-    int i =0;
+    int i = 0;
     for (Glob glob : all) {
       Integer fullDate = glob.get(AccountPositionError.LAST_PREVIOUS_IMPORT_DATE);
       String date = fullDate != null ? Formatting.toString(fullDate) : null;

@@ -1,7 +1,7 @@
 package org.designup.picsou.triggers;
 
 import com.budgetview.shared.utils.Amounts;
-import org.designup.picsou.gui.model.AccountPositionError;
+import org.designup.picsou.model.AccountPositionError;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
@@ -11,6 +11,8 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.collections.MapOfMaps;
 
 import java.util.*;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class PositionTrigger implements ChangeSetListener {
 
@@ -160,14 +162,14 @@ public class PositionTrigger implements ChangeSetListener {
             }
           }
           if (openClose.closeOperation != null) {
-            repository.update(openClose.closeOperation.getKey(), FieldValue.value(Transaction.AMOUNT,
-                                                                                  -(positions[positions.length - 2].get(Transaction.ACCOUNT_POSITION))),
-                              FieldValue.value(Transaction.ACCOUNT_POSITION, 0.));
+            repository.update(openClose.closeOperation.getKey(), value(Transaction.AMOUNT,
+                                                                       -(positions[positions.length - 2].get(Transaction.ACCOUNT_POSITION))),
+                              value(Transaction.ACCOUNT_POSITION, 0.));
           }
           if (openClose.openOperation != null) {
             double value = (positions[1].get(Transaction.ACCOUNT_POSITION)) - positions[1].get(Transaction.AMOUNT);
-            repository.update(openClose.openOperation.getKey(), FieldValue.value(Transaction.AMOUNT, value),
-                              FieldValue.value(Transaction.ACCOUNT_POSITION, 0.));
+            repository.update(openClose.openOperation.getKey(), value(Transaction.AMOUNT, value),
+                              value(Transaction.ACCOUNT_POSITION, 0.));
           }
         }
       }
@@ -371,10 +373,10 @@ public class PositionTrigger implements ChangeSetListener {
 //      Glob lastTransaction = repository.get(Key.create(Transaction.TYPE, lastUpdateTransactionId));
     if (lastTransaction != null) {
       repository.update(account.getKey(),
-                        FieldValue.value(Account.POSITION_DATE,
-                                         Month.toDate(lastTransaction.get(Transaction.POSITION_MONTH),
-                                                      lastTransaction.get(Transaction.POSITION_DAY))),
-                        FieldValue.value(Account.POSITION_WITH_PENDING, lastTransaction.get(Transaction.ACCOUNT_POSITION)));
+                        value(Account.POSITION_DATE,
+                              Month.toDate(lastTransaction.get(Transaction.POSITION_MONTH),
+                                           lastTransaction.get(Transaction.POSITION_DAY))),
+                        value(Account.POSITION_WITH_PENDING, lastTransaction.get(Transaction.ACCOUNT_POSITION)));
     }
 
     return true;
@@ -423,45 +425,46 @@ public class PositionTrigger implements ChangeSetListener {
       if (lastTransaction != null) {
         Date accountDate = Month.toDate(lastTransaction.get(Transaction.POSITION_MONTH), lastTransaction.get(Transaction.POSITION_DAY));
         repository.update(account.getKey(),
-                          FieldValue.value(Account.POSITION_DATE, accountDate),
-                          FieldValue.value(Account.POSITION_WITH_PENDING, lastTransaction.get(Transaction.ACCOUNT_POSITION)));
+                          value(Account.POSITION_DATE, accountDate),
+                          value(Account.POSITION_WITH_PENDING, lastTransaction.get(Transaction.ACCOUNT_POSITION)));
         if (checkAccountPosition && account.get(Account.LAST_IMPORT_POSITION) != null &&
             !Amounts.equal(lastTransaction.get(Transaction.ACCOUNT_POSITION), account.get(Account.LAST_IMPORT_POSITION))) {
           Glob accountError = repository.findOrCreate(Key.create(AccountPositionError.TYPE, account.get(Account.ID)));
           repository.update(accountError.getKey(),
-                            FieldValue.value(AccountPositionError.UPDATE_DATE, new Date()),
-                            FieldValue.value(AccountPositionError.ACCOUNT_NAME, account.get(Account.NAME)),
-                            FieldValue.value(AccountPositionError.IMPORTED_POSITION, account.get(Account.LAST_IMPORT_POSITION)),
-                            FieldValue.value(AccountPositionError.LAST_REAL_OPERATION_POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION)),
-                            FieldValue.value(AccountPositionError.LAST_PREVIOUS_IMPORT_DATE,
-                                             lastOp != null ? Month.toFullDate(lastOp.get(Transaction.BANK_MONTH),
-                                                                               lastOp.get(Transaction.BANK_DAY))
-                                                            : null)
+                            value(AccountPositionError.UPDATE_DATE, new Date()),
+                            value(AccountPositionError.CLEARED, false),
+                            value(AccountPositionError.ACCOUNT_NAME, account.get(Account.NAME)),
+                            value(AccountPositionError.IMPORTED_POSITION, account.get(Account.LAST_IMPORT_POSITION)),
+                            value(AccountPositionError.LAST_REAL_OPERATION_POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION)),
+                            value(AccountPositionError.LAST_PREVIOUS_IMPORT_DATE,
+                                  lastOp != null ? Month.toFullDate(lastOp.get(Transaction.BANK_MONTH),
+                                                                    lastOp.get(Transaction.BANK_DAY))
+                                                 : null)
           );
         }
       }
       else if (openTransaction != null) {
         Date accountDate = Month.toDate(openTransaction.get(Transaction.POSITION_MONTH), openTransaction.get(Transaction.POSITION_DAY));
         repository.update(account.getKey(),
-                          FieldValue.value(Account.POSITION_DATE, accountDate),
-                          FieldValue.value(Account.POSITION_WITH_PENDING, openTransaction.get(Transaction.ACCOUNT_POSITION)));
+                          value(Account.POSITION_DATE, accountDate),
+                          value(Account.POSITION_WITH_PENDING, openTransaction.get(Transaction.ACCOUNT_POSITION)));
       }
 
       if (lastRealTransaction != null) {
         repository.update(account.getKey(),
-                          FieldValue.value(Account.TRANSACTION_ID, lastRealTransaction.get(Transaction.ID)),
-                          FieldValue.value(Account.PAST_POSITION, lastRealTransaction.get(Transaction.ACCOUNT_POSITION)));
+                          value(Account.TRANSACTION_ID, lastRealTransaction.get(Transaction.ID)),
+                          value(Account.PAST_POSITION, lastRealTransaction.get(Transaction.ACCOUNT_POSITION)));
 
       }
       else if (lastTransaction != null) {
         repository.update(account.getKey(),
-                          FieldValue.value(Account.TRANSACTION_ID, lastTransaction.get(Transaction.ID)),
-                          FieldValue.value(Account.PAST_POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION)));
+                          value(Account.TRANSACTION_ID, lastTransaction.get(Transaction.ID)),
+                          value(Account.PAST_POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION)));
       }
       else if (openTransaction != null) {
         repository.update(account.getKey(),
-                          FieldValue.value(Account.TRANSACTION_ID, openTransaction.get(Transaction.ID)),
-                          FieldValue.value(Account.PAST_POSITION, openTransaction.get(Transaction.ACCOUNT_POSITION)));
+                          value(Account.TRANSACTION_ID, openTransaction.get(Transaction.ID)),
+                          value(Account.PAST_POSITION, openTransaction.get(Transaction.ACCOUNT_POSITION)));
       }
       Integer tt = closeTransaction.get(Transaction.TRANSACTION_TYPE);
       if (tt != null && tt == TransactionType.CLOSE_ACCOUNT_EVENT.getId()) {
@@ -566,10 +569,10 @@ public class PositionTrigger implements ChangeSetListener {
 
     if (realPosition != null) {
       repository.update(sameCheckerAccount.getSummary(),
-                        FieldValue.value(Account.POSITION_WITH_PENDING, realPosition.get(Transaction.SUMMARY_POSITION)),
-                        FieldValue.value(Account.POSITION_DATE,
-                                         Month.toDate(realPosition.get(Transaction.BANK_MONTH),
-                                                      realPosition.get(Transaction.BANK_DAY))));
+                        value(Account.POSITION_WITH_PENDING, realPosition.get(Transaction.SUMMARY_POSITION)),
+                        value(Account.POSITION_DATE,
+                              Month.toDate(realPosition.get(Transaction.BANK_MONTH),
+                                           realPosition.get(Transaction.BANK_DAY))));
     }
   }
 

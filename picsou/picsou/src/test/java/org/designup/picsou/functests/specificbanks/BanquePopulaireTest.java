@@ -5,6 +5,9 @@ import org.designup.picsou.model.TransactionType;
 public class BanquePopulaireTest extends SpecificBankTestCase {
 
   public void test() throws Exception {
+    setCurrentDate("13/02/2009");
+    operations.changeDate();
+
     operations.importOfxFile(getFile("banque_pop.ofx"));
     timeline.selectAll();
 
@@ -30,7 +33,28 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
   }
 
   public void testWithDeferredAccount() throws Exception {
+    setCurrentDate("2009/02/13");
+    operations.changeDate();
+
     operations.importOfxFile(getFile("banque_pop.ofx"));
+    timeline.selectAll();
+    transactions.initAmountContent()
+      .add("13/02/2009", "PRELEVEMENT DE MR OU MME XYZ", -100.00, "To categorize", 2705.72, 2705.72, "Account n. 123123123")
+      .add("13/02/2009", "FT INTERNET ORANGE 432123 123456790WFE N.EMETTEUR: 422262", -46.33, "To categorize", 2805.72, 2805.72, "Account n. 123123123")
+      .add("11/02/2009", "CHEQUE N°0004228", -25.40, "To categorize", 2852.05, 2852.05, "Account n. 123123123")
+      .add("10/02/2009", "REMISE DE 1 CHEQUE", 60.00, "To categorize", 2877.45, 2877.45, "Account n. 123123123")
+      .add("10/02/2009", "VIREMENT DE MME AZE AZE", 1000.00, "To categorize", 2817.45, 2817.45, "Account n. 123123123")
+      .add("10/02/2009", "SOCRAM BANQUE *PRLV 37589392 N.EMETTEUR: 003476", -301.10, "To categorize", 1847.45, 1847.45, "Account n. 123123123")
+      .add("09/02/2009", "RETRAIT GAB LONS SULLY 2 *123123123 A 10:24", -30.00, "To categorize", 1817.45, 1817.45, "Account n. 123123123")
+      .add("09/02/2009", "VIREMENT DE RSI FRANCHE COMTE", 18.09, "To categorize", 2148.55, 2148.55, "Account n. 123123123")
+      .add("09/02/2009", "VIREMENT DE XXXX XXXX XXXX", 507.17, "To categorize", 2130.46, 2130.46, "Account n. 123123123")
+      .add("05/02/2009", "COTIS EQUIPAGE HT: 5,69/TVA19,60: 0,13 EQUIPAGE BPBFC N 123123", -5.82, "To categorize", 1623.29, 1623.29, "Account n. 123123123")
+      .add("05/02/2009", "CREDIPAR CITROEN *100G0473733 32 050209 N.EMETTEUR: 126896", -56.34, "To categorize", 1629.11, 1629.11, "Account n. 123123123")
+      .add("30/01/2009", "CARTE FACTURETTES CB VOTRE RELEVE ARRETE AU 30/01/09", -200.10, "To categorize", 1685.45, 1685.45, "Account n. 123123123")
+      .add("29/01/2009", "DROITS DE GARDE 2009 DU COMPTE 123123123123", -35.50, "To categorize", 1885.55, 1885.55, "Account n. 123123123")
+      .add("26/01/2009", "ECHEANCE PRET DONT CAP 67,52 ASS. 0,00E INT. 14,36 COM. 0,00E", -81.88, "To categorize", 1921.05, 1921.05, "Account n. 123123123")
+      .add("26/01/2009", "VIREMENT DE C.P.A.M LONS", 12.90, "To categorize", 2002.93, 2002.93, "Account n. 123123123")
+      .check();
     operations.openImportDialog()
       .setFilePath(getFile("banque_pop_facturette.ofx"))
       .acceptFile()
@@ -38,6 +62,31 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
       .setAccountName("Card n. 123123123")
       .setDeferredAccount(25, 28, 0)
       .completeImport();
+
+    timeline.selectAll();
+    transactions.initAmountContent()
+      .add("13/02/2009", "PRELEVEMENT DE MR OU MME XYZ", -100.00, "To categorize", 2705.72, 2531.17, "Account n. 123123123")
+      .add("13/02/2009", "FT INTERNET ORANGE 432123 123456790WFE N.EMETTEUR: 422262", -46.33, "To categorize", 2805.72, 2631.17, "Account n. 123123123")
+      .add("11/02/2009", "CHEQUE N°0004228", -25.40, "To categorize", 2852.05, 2677.50, "Account n. 123123123")
+      .add("10/02/2009", "REMISE DE 1 CHEQUE", 60.00, "To categorize", 2877.45, 2702.90, "Account n. 123123123")
+      .add("10/02/2009", "VIREMENT DE MME AZE AZE", 1000.00, "To categorize", 2817.45, 2642.90, "Account n. 123123123")
+      .add("10/02/2009", "SOCRAM BANQUE *PRLV 37589392 N.EMETTEUR: 003476", -301.10, "To categorize", 1847.45, 1672.90, "Account n. 123123123")
+      .add("09/02/2009", "RETRAIT GAB LONS SULLY 2 *123123123 A 10:24", -30.00, "To categorize", 1817.45, 1642.90, "Account n. 123123123")
+      .add("09/02/2009", "VIREMENT DE RSI FRANCHE COMTE", 18.09, "To categorize", 2148.55, 1974.00, "Account n. 123123123")
+      .add("09/02/2009", "VIREMENT DE XXXX XXXX XXXX", 507.17, "To categorize", 2130.46, 1955.91, "Account n. 123123123")
+      .add("05/02/2009", "COTIS EQUIPAGE HT: 5,69/TVA19,60: 0,13 EQUIPAGE BPBFC N 123123", -5.82, "To categorize", 1623.29, 1448.74, "Account n. 123123123")
+      .add("05/02/2009", "CREDIPAR CITROEN *100G0473733 32 050209 N.EMETTEUR: 126896", -56.34, "To categorize", 1629.11, 1454.56, "Account n. 123123123")
+      .add("30/01/2009", "CARTE FACTURETTES CB VOTRE RELEVE ARRETE AU 30/01/09", -200.10, "To categorize", 1685.45, 1510.90, "Account n. 123123123")
+      .add("29/01/2009", "DROITS DE GARDE 2009 DU COMPTE 123123123123", -35.50, "To categorize", 1885.55, 1711.00, "Account n. 123123123")
+      .add("26/01/2009", "ECHEANCE PRET DONT CAP 67,52 ASS. 0,00E INT. 14,36 COM. 0,00E", -81.88, "To categorize", 1921.05, 1921.05, "Account n. 123123123")
+      .add("26/01/2009", "VIREMENT DE C.P.A.M LONS", 12.90, "To categorize", 2002.93, 2002.93, "Account n. 123123123")
+      .add("24/01/2009", "INSTITUT BEAUTE 39LONS LE SAUNI", -30.00, "To categorize", -174.55, 1746.50, "Card n. 123123123")
+      .add("06/01/2009", "MAG SUPER U 39MONTMOROT", -29.25, "To categorize", -144.55, 1776.50, "Card n. 123123123")
+      .add("31/12/2008", "MAG SUPER U 39MONTMOROT", -39.50, "To categorize", -115.30, 1805.75, "Card n. 123123123")
+      .add("31/12/2008", "SA CAFREDAU 39MONTMOROT", -50.50, "To categorize", -75.80, 1845.25, "Card n. 123123123")
+      .add("31/12/2008", "MAILLARD D 39LONS/SAUNIER", -25.30, "To categorize", -25.30, 1895.75, "Card n. 123123123")
+      .check();
+
     operations.importOfxOnAccount(getFile("banque_pop_en_cours.ofx"), "Card n. 123123123");
 
     mainAccounts.checkAccountNames("Card n. 123123123", "Account n. 123123123");
