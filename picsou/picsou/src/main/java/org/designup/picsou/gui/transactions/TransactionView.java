@@ -52,6 +52,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import static org.designup.picsou.model.Transaction.TYPE;
+import static org.globsframework.gui.views.utils.LabelCustomizers.font;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class TransactionView extends View implements Filterable {
@@ -246,11 +247,11 @@ public class TransactionView extends View implements Filterable {
 
     view
       .addColumn(Lang.get("transactionView.date.user"),
-                 new TransactionDateStringifier(comparator), LabelCustomizers.font(dateFont))
+                 new TransactionDateStringifier(comparator), font(dateFont))
       .addColumn(Lang.get("transactionView.date.bank"),
                  new TransactionDateStringifier(new InvertedComparator(TransactionComparator.ASCENDING_ACCOUNT),
                                                 Transaction.POSITION_MONTH,
-                                                Transaction.POSITION_DAY), LabelCustomizers.font(dateFont))
+                                                Transaction.POSITION_DAY), font(dateFont))
       .addColumn(new TransactionSeriesColumn(view, rendererColors, descriptionService, repository, directory))
       .addColumn(Lang.get("label"),
                  descriptionService.getStringifier(Transaction.LABEL),

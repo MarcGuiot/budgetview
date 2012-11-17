@@ -5,10 +5,12 @@ import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.model.Glob;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 
 public class LabelTableCellRenderer extends DefaultTableCellRenderer {
+  public static final Border DEFAULT_BORDER = BorderFactory.createEmptyBorder(0, 2, 0, 2);
   private LabelCustomizer customizer;
   private CellPainter backgroundPainter;
   private boolean selected;
@@ -38,8 +40,8 @@ public class LabelTableCellRenderer extends DefaultTableCellRenderer {
 
     this.setOpaque(backgroundPainter == null || backgroundPainter == CellPainter.NULL);
     super.getTableCellRendererComponent(table, getText(), isSelected, hasFocus, row, column);
+    setBorder(DEFAULT_BORDER);
     customizer.process(this, glob, isSelected, hasFocus, row, column);
-    setBorder(null);
     return this;
   }
 

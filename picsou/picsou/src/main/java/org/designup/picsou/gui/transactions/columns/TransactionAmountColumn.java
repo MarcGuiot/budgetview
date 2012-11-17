@@ -29,6 +29,7 @@ public class TransactionAmountColumn implements TableCellRenderer {
     label.setName("amount");
     label.setOpaque(true);
     label.setHorizontalAlignment(SwingConstants.RIGHT);
+    label.setBorder(BorderFactory.createEmptyBorder(0,2,0,2));
     this.rendererColors = transactionRendererColors;
     label.setFont(view.getDefaultFont());
   }
