@@ -6,7 +6,6 @@ import org.designup.picsou.model.AccountPositionMode;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -15,12 +14,14 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class DeleteTransactionDialog {
   private PicsouDialog dialog;
   private GlobList transactions;
   private GlobRepository repository;
   private Directory directory;
-  private JComboBox shouldUpdateAccountCombo;
+  private JCheckBox updateAccountCheckBox;
 
   public DeleteTransactionDialog(GlobList transactions,
                                  GlobRepository repository,
@@ -39,15 +40,13 @@ public class DeleteTransactionDialog {
       new GlobsPanelBuilder(getClass(), "/layout/transactions/deleteTransactionDialog.splits",
                             repository, directory);
 
-
     JEditorPane editorPane = new JEditorPane("text/html", Lang.get(getContentKey(transactions)));
 
     builder.add("message", editorPane);
 
-    shouldUpdateAccountCombo = new JComboBox();
-    builder.add("impactAccountPosition", shouldUpdateAccountCombo);
-    shouldUpdateAccountCombo.addItem(Lang.get("transactionCreation.updateAccount.yes"));
-    shouldUpdateAccountCombo.addItem(Lang.get("transactionCreation.updateAccount.no"));
+    updateAccountCheckBox = new JCheckBox();
+    updateAccountCheckBox.setSelected(true);
+    builder.add("updateAccountPosition", updateAccountCheckBox);
 
     dialog.addPanelWithButtons(builder.<JPanel>load(), okAction, new CancelAction());
     dialog.pack();
@@ -108,8 +107,8 @@ public class DeleteTransactionDialog {
     try {
       repository.startChangeSet();
       repository.create(AccountPositionMode.TYPE,
-                        FieldValue.value(AccountPositionMode.UPDATE_ACCOUNT_POSITION,
-                                         shouldUpdateAccountCombo.getSelectedItem().equals(Lang.get("transactionCreation.updateAccount.yes"))));
+                        value(AccountPositionMode.UPDATE_ACCOUNT_POSITION,
+                              updateAccountCheckBox.isSelected()));
 
       while (!transactions.isEmpty()) {
         Glob toDelete = transactions.remove(0);

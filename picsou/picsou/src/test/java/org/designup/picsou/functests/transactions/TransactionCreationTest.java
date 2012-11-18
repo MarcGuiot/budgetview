@@ -230,7 +230,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     mainAccounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
-//      .setUpdateModeToManualInput()
       .setPosition(100.00)
       .selectBank("CIC")
       .validate();

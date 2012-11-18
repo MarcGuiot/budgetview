@@ -52,7 +52,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("27/06/2008", "AUCHAN", -50.00, "To categorize", -50.00, 1550.00, "Card n. 1111")
       .check();
 
-    transactions.deleteWithImpact("PRELEVEMENT");
+    transactions.deleteAndUpdatePosition("PRELEVEMENT");
 
     transactions
       .initAmountContent()

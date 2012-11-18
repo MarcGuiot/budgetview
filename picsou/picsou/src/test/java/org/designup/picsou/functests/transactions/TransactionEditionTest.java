@@ -141,4 +141,36 @@ public class TransactionEditionTest extends LoggedInFunctionalTestCase {
       .add("18/07/2008", "Food", "MAC DO", -30.00)
       .check();
   }
+
+  public void testDeletionWithAndWithoutUpdatingTheAccountPosition() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount("1234", 1000.00, "2008/06/30")
+      .addTransaction("2008/06/16", -30.00, "Burger King 1")
+      .addTransaction("2008/06/18", -50.00, "Burger King 2")
+      .addTransaction("2008/06/20", -60.00, "Burger King 3")
+      .addTransaction("2008/06/15", -20.00, "McDo")
+      .load();
+
+    transactions.initContent()
+      .add("20/06/2008", TransactionType.PRELEVEMENT, "BURGER KING 3", "", -60.00)
+      .add("18/06/2008", TransactionType.PRELEVEMENT, "BURGER KING 2", "", -50.00)
+      .add("16/06/2008", TransactionType.PRELEVEMENT, "BURGER KING 1", "", -30.00)
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "MCDO", "", -20.00)
+      .check();
+
+    transactions.deleteAndUpdatePosition("BURGER KING 2");
+    transactions.initContent()
+      .add("20/06/2008", TransactionType.PRELEVEMENT, "BURGER KING 3", "", -60.00)
+      .add("16/06/2008", TransactionType.PRELEVEMENT, "BURGER KING 1", "", -30.00)
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "MCDO", "", -20.00)
+      .check();
+    mainAccounts.checkAccount("Account n. 1234", 1050.00, "2008/06/20");
+
+    transactions.deleteWithoutUpdatingThePosition("BURGER KING 3");
+    transactions.initContent()
+      .add("16/06/2008", TransactionType.PRELEVEMENT, "BURGER KING 1", "", -30.00)
+      .add("15/06/2008", TransactionType.PRELEVEMENT, "MCDO", "", -20.00)
+      .check();
+    mainAccounts.checkAccount("Account n. 1234", 1050.00, "2008/06/20");
+  }
 }

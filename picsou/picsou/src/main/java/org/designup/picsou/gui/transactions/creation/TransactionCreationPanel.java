@@ -53,7 +53,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
   private DetailsTip buttonTip;
   private boolean isShowing;
   private AutoCategorizationFunctor autoCategorizationFunctor;
-  private JComboBox shouldUpdateAccountCombo;
+  private JCheckBox updateAccountCheckBox;
 
   public TransactionCreationPanel(GlobRepository repository, Directory directory, Directory parentDirectory) {
     super(createLocalRepository(repository), directory);
@@ -66,11 +66,11 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         GlobList all = selection.getAll(Account.TYPE);
-        if (all.isEmpty()){
+        if (all.isEmpty()) {
           return;
         }
         for (Glob glob : all) {
-          shouldUpdateAccountCombo.setVisible(glob.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId()));
+          updateAccountCheckBox.setVisible(glob.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId()));
           return;
         }
       }
@@ -105,10 +105,9 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     JCheckBox shouldBeReconciledCheckBox = builder.addCheckBox("shouldBeReconciled", Transaction.RECONCILIATION_STATUS)
       .forceSelection(PROTOTYPE_TRANSACTION_KEY).getComponent();
 
-    shouldUpdateAccountCombo = new JComboBox();
-    builder.add("impactAccountPosition", shouldUpdateAccountCombo);
-    shouldUpdateAccountCombo.addItem(Lang.get("transactionCreation.updateAccount.yes"));
-    shouldUpdateAccountCombo.addItem(Lang.get("transactionCreation.updateAccount.no"));
+    updateAccountCheckBox = new JCheckBox();
+    updateAccountCheckBox.setSelected(true);
+    builder.add("updateAccountPosition", updateAccountCheckBox);
 
     amountEditor = new AmountEditor(Transaction.AMOUNT, repository, directory, false, null)
       .forceSelection(PROTOTYPE_TRANSACTION_KEY)
@@ -321,8 +320,8 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
         }
 
         parentRepository.create(AccountPositionMode.TYPE,
-                                FieldValue.value(AccountPositionMode.UPDATE_ACCOUNT_POSITION,
-                                                 shouldUpdateAccountCombo.getSelectedItem().equals(Lang.get("transactionCreation.updateAccount.yes"))));
+                                value(AccountPositionMode.UPDATE_ACCOUNT_POSITION,
+                                      updateAccountCheckBox.isSelected()));
 
         createdTransaction = parentRepository.create(Transaction.TYPE, values.toArray());
 

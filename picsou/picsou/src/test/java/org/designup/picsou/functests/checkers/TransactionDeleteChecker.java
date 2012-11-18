@@ -14,12 +14,12 @@ public class TransactionDeleteChecker extends GuiChecker {
   }
 
   public TransactionDeleteChecker selectUpdatePosition() {
-    dialog.getComboBox("impactAccountPosition").select(Lang.get("transactionCreation.updateAccount.yes"));
+    dialog.getCheckBox("updateAccountPosition").select();
     return this;
   }
 
   public TransactionDeleteChecker selectNoUpdateOfPosition() {
-    dialog.getComboBox("impactAccountPosition").select(Lang.get("transactionCreation.updateAccount.no"));
+    dialog.getCheckBox("updateAccountPosition").unselect();
     return this;
   }
 

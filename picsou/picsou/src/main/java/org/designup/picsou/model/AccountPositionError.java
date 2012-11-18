@@ -33,7 +33,7 @@ public class AccountPositionError {
 
   public static DoubleField LAST_REAL_OPERATION_POSITION;
 
-  // Full date : seed Month.toFullDate
+  // Full date : see Month.toFullDate
   public static IntegerField LAST_PREVIOUS_IMPORT_DATE;
 
   static {

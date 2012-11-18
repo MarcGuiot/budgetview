@@ -3,6 +3,7 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
     <style selector="label.formLabel" foreground="block.outer.text" marginRight="5"/>
+    <style selector="checkBox.formElement" foreground="block.outer.text" />
     <style selector="radioButton" foreground="block.outer.text" opaque="false" font="-,plain,10"/>
 
     <style selector=".transactionCreation"
@@ -14,44 +15,43 @@
            pressedIcon="button_calendar_pressed.png"
            disabledIcon="button_calendar_disabled.png"
            rolloverIcon="button_calendar_rollover.png"
+           font="-,plain,12" foreground="import.form.label"
            horizontalTextPosition="left"
            horizontalAlignment="left" fill="none" anchor="east"/>
 
   </styles>
 
   <column styleClass="transactionCreation">
-    <grid marginLeft="10" marginRight="10" defaultMarginTop="5">
-      <label gridPos="(0,0)" text="$account" styleClass="formLabel"/>
-      <comboBox gridPos="(1,0)" ref="account"/>
 
-      <label gridPos="(0,1)" text="$day" styleClass="formLabel" marginLeft="30"/>
-      <row gridPos="(1,1)">
-        <textField ref="day" columns="3" weightX="10" marginRight="5"/>
-        <button ref="month" styleClass="formLabel"/>
-        <filler fill="horizontal" weightX="10"/>
-      </row>
-
-      <label gridPos="(0,2)" text="$label" styleClass="formLabel"/>
-      <textField gridPos="(1,2)" ref="label"/>
-
-      <label gridPos="(0,3)" text="$amount" styleClass="formLabel"/>
-      <row gridPos="(1,3)">
-          <component ref="amountEditor"/>
-          <checkBox ref="shouldBeReconciled" text="$transactionCreation.reconciliation"/>
-          <filler fill="horizontal" weightX="10"/>
-      </row>
-        <row gridPos="(1,4)">
-            <filler fill="horizontal" weightX="10"/>
-            <label  text="$transactionCreation.impactAccount"/>
-            <comboBox ref="impactAccountPosition"/>
-            <filler fill="horizontal" weightX="5"/>
-        </row>
-
-    </grid>
-    <label ref="errorMessage" styleClass="errorMessage" border="empty(5,0,5,0)"/>
-    <row>
+    <row marginLeft="10" marginRight="10" defaultMarginTop="5">
+      <label text="$transactionCreation.account" styleClass="formLabel"/>
+      <comboBox ref="account"/>
       <filler fill="horizontal"/>
-      <button ref="create"/>
+    </row>
+
+    <row marginLeft="10" marginRight="10" defaultMarginTop="5">
+      <label text="$transactionCreation.day" styleClass="formLabel"/>
+      <textField ref="day" columns="3" marginRight="5" weightX="0.01" fill="none"/>
+      <button ref="month" weightX="0.01"/>
+      <label text="$transactionCreation.label" styleClass="formLabel"/>
+      <textField ref="label" weightX="10"/>
+    </row>
+
+    <row marginLeft="10" marginRight="10" defaultMarginTop="5">
+      <filler fill="horizontal"/>
+      <label text="$transactionCreation.amount" styleClass="formLabel"/>
+      <component ref="amountEditor"/>
+    </row>
+
+    <label ref="errorMessage" styleClass="errorMessage" border="empty(5,0,5,0)"/>
+
+    <row margin="5" marginTop="10" border="matte(1,0,0,0,block.inner.separator)">
+      <column marginTop="5">
+        <checkBox ref="shouldBeReconciled" text="$transactionCreation.reconciliation" styleClass="formElement"/>
+        <checkBox ref="updateAccountPosition" text="$transactionCreation.updateAccount" styleClass="formElement"/>
+      </column>
+      <filler fill="horizontal"/>
+      <button ref="create" anchor="center"/>
     </row>
   </column>
 

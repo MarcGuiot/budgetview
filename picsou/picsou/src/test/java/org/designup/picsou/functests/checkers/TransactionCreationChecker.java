@@ -38,20 +38,17 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public TransactionCreationChecker shouldUpdatePosition(){
-    ComboBox position = getPanel().getComboBox("impactAccountPosition");
-    position.select(Lang.get("transactionCreation.updateAccount.yes"));
+    getPanel().getCheckBox("updateAccountPosition").select();
     return this;
   }
 
   public TransactionCreationChecker shouldNotUpdatePosition(){
-    ComboBox position = getPanel().getComboBox("impactAccountPosition");
-    position.select(Lang.get("transactionCreation.updateAccount.no"));
+    getPanel().getCheckBox("updateAccountPosition").unselect();
     return this;
   }
 
   public TransactionCreationChecker checkUpdatePositionNotVisible() {
-    ComboBox position = getPanel().getComboBox("impactAccountPosition");
-    assertThat(position.isVisible());
+    assertThat(getPanel().getCheckBox("updateAccountPosition").isVisible());
     return this;
   }
 

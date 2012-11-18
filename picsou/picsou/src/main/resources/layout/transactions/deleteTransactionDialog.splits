@@ -10,12 +10,9 @@
 
       <htmlEditorPane ref="message" marginBottom="10"/>
 
-      <row>
-            <filler fill="horizontal" weightX="10"/>
-            <label  text="$transactionCreation.impactAccount"/>
-            <comboBox ref="impactAccountPosition"/>
-            <filler fill="horizontal" weightX="5"/>
-      </row>
+      <checkBox ref="updateAccountPosition"
+                text="$transactionCreation.updateAccount"
+                marginTop="10"/>
 
     </column>
 

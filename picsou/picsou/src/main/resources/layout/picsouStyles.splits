@@ -62,6 +62,10 @@
            fill="none" anchor="east" horizontalAlignment="right"
            marginRight="5" weightX="0"/>
 
+    <style selector="checkBox.formElement"
+           font="-,plain,12" foreground="import.form.label"
+           anchor="east" marginRight="10" weightX="0"/>
+
     <style selector="textField" fill="horizontal" weightX="10.0"/>
 
     <style id="mandatoryFieldFlagHidden" selector="x" foreground="#FFFFFF"

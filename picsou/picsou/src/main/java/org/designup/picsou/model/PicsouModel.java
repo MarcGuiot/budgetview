@@ -44,7 +44,8 @@ public class PicsouModel {
                           CsvMapping.TYPE,
                           DayOfMonth.TYPE,
                           CsvType.CSV_TYPE,
-                          AccountPositionMode.TYPE
+                          AccountPositionMode.TYPE,
+                          AccountPositionError.TYPE
                           )
       .get();
 
