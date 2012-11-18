@@ -32,20 +32,11 @@
           <button action="accountTypeHelp" name="accountTypeHelp" styleClass="hyperlinkWithoutUnderline"/>
         </row>
 
-        <textArea ref="messageWarning" styleClass="errorMessage"/>
+        <panel ref="deferredPanel" marginLeft="20"/>
 
-          <grid marginRight="20">
-              <label gridPos="(0,0)" text="$account.deferred.start.day" autoHideSource="datePeriod" marginRight="10"/>
-              <textField gridPos="(1,0)" ref="datePeriod"/>
+        <textArea ref="messageWarning" styleClass="errorMessage" border="empty(10,0,0,0)"/>
 
-              <label gridPos="(0,1)" text="$account.deferred.start.withdrawal" autoHideSource="datePrelevement" marginRight="10"/>
-              <textField gridPos="(1,1)" ref="datePrelevement"/>
-
-              <label gridPos="(0,2)" text="$account.deferred.month" autoHideSource="shiftMonth" marginRight="10"/>
-              <textField gridPos="(1,2)" ref="shiftMonth"/>
-          </grid>
-
-          <filler fill="vertical"/>
+        <filler fill="vertical"/>
       </column>
 
     </card>

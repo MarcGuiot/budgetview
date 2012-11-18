@@ -26,8 +26,9 @@ public class GlobLinkComboEditor
   private boolean updateInProgress = false;
   private boolean forcedEnabled = true;
   private Key forcedSelectionKey = null;
+  private boolean completed = false;
 
-  public static GlobLinkComboEditor init(final Link link, final GlobRepository repository, Directory directory)  {
+  public static GlobLinkComboEditor init(final Link link, final GlobRepository repository, Directory directory) {
     return new GlobLinkComboEditor(link, repository, directory);
   }
 
@@ -56,10 +57,13 @@ public class GlobLinkComboEditor
         });
 
     repository.addChangeListener(this);
+
+    updateSelection();
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (forcedSelectionKey != null && currentKey == null &&
+    if (forcedSelectionKey != null &&
+        currentKey == null &&
         changeSet.containsChanges(link.getSourceType())) {
       Glob glob = repository.find(forcedSelectionKey);
       if (glob != null) {
@@ -83,6 +87,20 @@ public class GlobLinkComboEditor
     globComboView.setEnabled(forcedEnabled);
   }
 
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    if (!changedTypes.contains(link.getSourceType())) {
+      return;
+    }
+    if (forcedSelectionKey != null) {
+      Glob glob = repository.find(forcedSelectionKey);
+      if (glob != null) {
+        select(new GlobList(glob));
+        return;
+      }
+    }
+    select(GlobList.EMPTY);
+  }
+
   private void setTarget(Glob target) {
     try {
       updateInProgress = true;
@@ -93,22 +111,10 @@ public class GlobLinkComboEditor
     }
   }
 
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (!changedTypes.contains(link.getSourceType())) {
+  public void selectionUpdated(GlobSelection selection) {
+    if (forcedSelectionKey != null) {
       return;
     }
-    if (forcedSelectionKey != null) {
-      Glob glob = repository.find(forcedSelectionKey);
-      if (glob != null) {
-        select(new GlobList(glob));
-      }
-    }
-    else {
-      select(GlobList.EMPTY);
-    }
-  }
-
-  public void selectionUpdated(GlobSelection selection) {
     updateInProgress = true;
     try {
       GlobList globs = selection.getAll(link.getSourceType());
@@ -140,31 +146,46 @@ public class GlobLinkComboEditor
 
   public GlobLinkComboEditor setRenderer(GlobStringifier stringifier) {
     globComboView.setRenderer(stringifier);
+    if (completed) {
+      updateSelection();
+    }
     return this;
   }
 
   public GlobLinkComboEditor setRenderer(ListCellRenderer renderer, Comparator<Glob> comparator) {
     globComboView.setRenderer(renderer, comparator);
+    if (completed) {
+      updateSelection();
+    }
     return this;
   }
 
   public GlobLinkComboEditor setComparator(final Comparator<Glob> comparator) {
     globComboView.setComparator(comparator);
+    if (completed) {
+      updateSelection();
+    }
     return this;
   }
 
   public GlobLinkComboEditor setShowEmptyOption(boolean showEmpty) {
     globComboView.setShowEmptyOption(showEmpty);
+    if (completed) {
+      updateSelection();
+    }
     return this;
   }
 
   public GlobLinkComboEditor setEmptyOptionLabel(String label) {
     globComboView.setEmptyOptionLabel(label);
+    if (completed) {
+      updateSelection();
+    }
     return this;
   }
 
   private void setSelectedGlob(Glob glob) {
-    this.currentKey = glob == null ? null : glob.getKey();
+    this.currentKey = (glob == null) ? null : glob.getKey();
     globComboView.setEnabled(forcedEnabled && (currentKey != null));
     setTarget(glob == null ? null : repository.findLinkTarget(glob, link));
   }
@@ -185,12 +206,15 @@ public class GlobLinkComboEditor
   }
 
   public JComboBox getComponent() {
-    JComboBox jComboBox = globComboView.getComponent();
-    if (forcedSelectionKey == null) {
-      GlobList selection = selectionService.getSelection(type);
-      select(selection);
+    if (!completed) {
+      updateSelection();
     }
-    return jComboBox;
+    return globComboView.getComponent();
+  }
+
+  private void updateSelection() {
+    select(selectionService.getSelection(link.getSourceType()));
+    this.completed = true;
   }
 
   public void setEnabled(boolean enabled) {

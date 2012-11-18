@@ -54,10 +54,10 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public AccountEditionChecker setDeferred(int dayPeriod, int dayPrelement, int monthShift){
-    dialog.getTextBox("datePeriod").setText(Integer.toString(dayPeriod));
-    dialog.getTextBox("datePrelevement").setText(Integer.toString(dayPrelement));
-    dialog.getTextBox("shiftMonth").setText(Integer.toString(monthShift));
+  public AccountEditionChecker setDeferred(int periodDay, int debitDay, int monthShift){
+    dialog.getComboBox("deferredDay").select(Integer.toString(periodDay));
+    dialog.getComboBox("deferredDebitDay").select(Integer.toString(debitDay));
+    dialog.getComboBox("deferredMonthShift").select(Lang.get("account.deferred.monthShift." + monthShift));
     return this;
   }
 

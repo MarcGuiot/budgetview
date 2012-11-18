@@ -14,7 +14,6 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
@@ -40,7 +39,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   protected JTextField positionEditor;
   protected JTextArea warningMessage;
   protected Directory localDirectory;
-  protected SelectionService selectionService;
+  private SelectionService selectionService;
   protected AccountTypeCombo accountTypeCombo;
   protected GlobTextEditor nameField;
   private JLabel accountBank;
@@ -50,11 +49,10 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   private MandatoryFieldFlag nameFlag;
   private MandatoryFieldFlag bankFlag;
   private MandatoryFieldFlag accountTypeFlag;
+  private GlobTextEditor accountNumber;
   private boolean editable = true;
-  private GlobTextEditor number;
-  private GlobNumericEditor datePrelevement;
-  private GlobNumericEditor datePeriod;
-  private GlobNumericEditor shiftMonth;
+
+  private DeferredCardEditionPanel deferredPanel;
 
   public AbstractAccountPanel(T repository, Directory parentDirectory) {
     this.localRepository = repository;
@@ -97,14 +95,14 @@ public class AbstractAccountPanel<T extends GlobRepository> {
           setWarning(currentAccount.get(Account.ACCOUNT_TYPE), currentAccount.get(Account.CARD_TYPE));
         }
         if (changeSet.containsChanges(currentAccountKey, Account.CARD_TYPE)) {
-          updateDeferred(currentAccount.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId()));
+          deferredPanel.setVisible(currentAccount.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId()));
         }
       }
     });
 
     nameField = builder.addEditor("name", Account.NAME).setNotifyOnKeyPressed(true);
     nameFlag = new MandatoryFieldFlag("nameFlag", builder);
-    number = builder.addEditor("number", Account.NUMBER).setNotifyOnKeyPressed(true);
+    accountNumber = builder.addEditor("number", Account.NUMBER).setNotifyOnKeyPressed(true);
     builder.add("type", accountTypeCombo.createAccountTypeCombo());
     accountTypeFlag = new MandatoryFieldFlag("accountTypeFlag", builder);
 
@@ -112,9 +110,8 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     builder.add("messageWarning", warningMessage);
     warningMessage.setVisible(false);
 
-    datePeriod = builder.addEditor("datePeriod", Account.DEFERRED_DAY);
-    datePrelevement = builder.addEditor("datePrelevement", Account.DEFERRED_PRELEVEMENT_DAY);
-    shiftMonth = builder.addEditor("shiftMonth", Account.DEFERRED_MONTH_SHIFT);
+    deferredPanel = new DeferredCardEditionPanel(localRepository, localDirectory);
+    builder.add("deferredPanel", deferredPanel.getPanel());
 
     positionEditor = builder.addEditor("position", positionField)
       .setNotifyOnKeyPressed(true).getComponent();
@@ -125,12 +122,6 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         panel.setVisible(false);
       }
     });
-  }
-
-  private void updateDeferred(boolean isDeferred) {
-    datePeriod.getComponent().setVisible(isDeferred);
-    datePrelevement.getComponent().setVisible(isDeferred);
-    shiftMonth.getComponent().setVisible(isDeferred);
   }
 
   public void setBalanceEditorVisible(boolean visible) {
@@ -177,7 +168,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
       selectionService.select(account);
       Integer accountType = account.get(Account.ACCOUNT_TYPE);
       setWarning(accountType, account.get(Account.CARD_TYPE));
-      updateDeferred(AccountCardType.DEFERRED.getId().equals(account.get(Account.CARD_TYPE)));
+      deferredPanel.setVisible(AccountCardType.DEFERRED.getId().equals(account.get(Account.CARD_TYPE)));
     }
     else {
       selectionService.clear(Account.TYPE);
@@ -306,7 +297,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   public void setEditable(boolean editable) {
     this.editable = editable;
     this.nameField.getComponent().setEnabled(editable);
-    this.number.getComponent().setEnabled(editable);
+    this.accountNumber.getComponent().setEnabled(editable);
     this.accountTypeCombo.setEnabled(editable);
     this.bankSelectionButton.setEnabled(editable);
     this.positionEditor.setEnabled(editable);

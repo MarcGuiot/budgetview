@@ -1,85 +1,133 @@
 package org.globsframework.gui.editors;
 
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
-import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.*;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class GlobComboEditor
   extends AbstractGlobComponentHolder
-  implements ChangeSetListener {
+  implements ChangeSetListener, GlobSelectionListener {
 
-  private final Key key;
-  private final Field field;
-  private final List<Object> values;
+  private final IntegerField field;
+  private final List<Integer> values;
+  private Set<Key> selectedKeys = Collections.emptySet();
+  private Key forcedKey;
 
   private JComboBox combo;
 
-  public static GlobComboEditor init(Key key,
-                                     StringField field,
-                                     String[] values,
-                                     GlobRepository repository,
-                                     Directory directory) {
-    return new GlobComboEditor(key, field, values, repository, directory);
-  }
-
-  public static GlobComboEditor init(Key key,
-                                     IntegerField field,
+  public static GlobComboEditor init(IntegerField field,
                                      int[] values,
                                      GlobRepository repository,
                                      Directory directory) {
-    return new GlobComboEditor(key, field, Utils.toObjectIntegers(values), repository, directory);
+    return new GlobComboEditor(field, Utils.toObjectIntegers(values), repository, directory);
   }
 
-  private GlobComboEditor(Key key,
-                          Field field,
-                          Object[] values,
+  private GlobComboEditor(IntegerField field,
+                          Integer[] values,
                           GlobRepository repository,
                           Directory directory) {
     super(field.getGlobType(), repository, directory);
-    this.key = key;
     this.field = field;
     this.values = Arrays.asList(values);
     this.combo = new JComboBox(values);
     combo.setAction(new ComboSelectionAction());
+    combo.setEnabled(false);
     repository.addChangeListener(this);
-    update();
+    selectionService.addListener(this, field.getGlobType());
+    updateCombo();
+  }
+
+  public GlobComboEditor forceKey(Key key) {
+    this.forcedKey = key;
+    if (repository.contains(forcedKey)) {
+      selectedKeys = Collections.singleton(forcedKey);
+    }
+    else {
+      selectedKeys = Collections.emptySet();
+    }
+    updateCombo();
+    return this;
+  }
+
+  public void selectionUpdated(GlobSelection selection) {
+    if (forcedKey != null) {
+      return;
+    }
+
+    selectedKeys = selection.getAll(field.getGlobType()).getKeySet();
+    updateCombo();
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(key)) {
-      update();
+    if (forcedKey != null) {
+      updateSelectedWithForcedKey(repository);
+      updateCombo();
+      return;
+    }
+
+    for (Key key : selectedKeys) {
+      if (changeSet.containsChanges(key)) {
+        updateCombo();
+        return;
+      }
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(field.getGlobType())) {
-      update();
+    if (!changedTypes.contains(field.getGlobType())) {
+      return;
+    }
+
+    if (forcedKey != null) {
+      updateSelectedWithForcedKey(repository);
+    }
+
+    updateCombo();
+  }
+
+  private void updateSelectedWithForcedKey(GlobRepository repository) {
+    if (repository.contains(forcedKey)) {
+      selectedKeys = Collections.singleton(forcedKey);
+    }
+    else {
+      selectedKeys = Collections.emptySet();
     }
   }
 
-  private void update() {
-    Glob glob = repository.find(key);
-    if (glob == null) {
+  private void updateCombo() {
+    Set<Integer> globsValues = new HashSet<Integer>();
+    for (Key key : selectedKeys) {
+      Glob glob = repository.find(key);
+      if (glob != null) {
+        globsValues.add(glob.get(field));
+      }
+    }
+
+    if (globsValues.isEmpty()) {
       combo.setSelectedIndex(-1);
       combo.setEnabled(false);
       return;
     }
 
+    if (globsValues.size() > 1) {
+      combo.setSelectedIndex(-1);
+      combo.setEnabled(true);
+      return;
+    }
+
+    Integer selectedValue = globsValues.iterator().next();
     combo.setEnabled(true);
-    Object value = glob.getValue(field);
-    if (values.contains(value)) {
-      combo.setSelectedItem(value);
+    if (values.contains(selectedValue)) {
+      combo.setSelectedItem(selectedValue);
     }
     else {
       combo.setSelectedIndex(-1);
@@ -100,10 +148,25 @@ public class GlobComboEditor
     combo = null;
   }
 
+  public GlobComboEditor setRenderer(ListCellRenderer renderer) {
+    combo.setRenderer(renderer);
+    return this;
+  }
+
   private class ComboSelectionAction extends AbstractAction {
     public void actionPerformed(ActionEvent actionEvent) {
-      if (repository.contains(key)) {
-        repository.update(key, field, combo.getSelectedItem());
+      repository.startChangeSet();
+      try {
+        Object selectedValue = combo.getSelectedItem();
+        for (Key key : selectedKeys) {
+          if (repository.contains(key)) {
+            repository.update(key, field, selectedValue);
+          }
+        }
+
+      }
+      finally {
+        repository.completeChangeSet();
       }
     }
   }

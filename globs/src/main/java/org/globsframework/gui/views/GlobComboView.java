@@ -57,6 +57,7 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
 
   public GlobComboView setComparator(Comparator<Glob> comparator) {
     this.comparator = comparator;
+    this.model.updateSorting();
     return this;
   }
 
@@ -262,6 +263,10 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
 
     public Object getSelectedItem() {
       return selected;
+    }
+
+    public void updateSorting() {
+      model.sort(comparator);
     }
   }
 

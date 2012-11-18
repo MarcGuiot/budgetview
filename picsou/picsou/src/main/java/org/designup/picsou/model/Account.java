@@ -1,14 +1,17 @@
 package org.designup.picsou.model;
 
+import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.PicsouUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
-import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.*;
+import org.globsframework.model.FieldSetter;
+import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -79,14 +82,16 @@ public class Account {
 
   public static DateField CLOSED_DATE;
 
+  @Target(MonthDay.class)
   @DefaultInteger(31)
-  public static IntegerField DEFERRED_PRELEVEMENT_DAY;
+  public static LinkField DEFERRED_DAY;
+
+  @Target(MonthDay.class)
+  @DefaultInteger(31)
+  public static LinkField DEFERRED_DEBIT_DAY;
 
   @DefaultInteger(0)
   public static IntegerField DEFERRED_MONTH_SHIFT;
-
-  @DefaultInteger(31)
-  public static IntegerField DEFERRED_DAY;
 
   @Target(AccountCardType.class)
   @DefaultInteger(0)
@@ -316,7 +321,7 @@ public class Account {
       outputStream.writeDouble(values.get(CLOSE_POSITION));
       outputStream.writeInteger(values.get(OPEN_TRANSACTION));
       outputStream.writeInteger(values.get(CLOSED_TRANSACTION));
-      outputStream.writeInteger(values.get(DEFERRED_PRELEVEMENT_DAY));
+      outputStream.writeInteger(values.get(DEFERRED_DEBIT_DAY));
       outputStream.writeInteger(values.get(DEFERRED_DAY));
       outputStream.writeInteger(values.get(DEFERRED_MONTH_SHIFT));
       outputStream.writeDouble(values.get(PAST_POSITION));
@@ -379,7 +384,7 @@ public class Account {
       fieldSetter.set(CLOSE_POSITION, input.readDouble());
       fieldSetter.set(OPEN_TRANSACTION, input.readInteger());
       fieldSetter.set(CLOSED_TRANSACTION, input.readInteger());
-      fieldSetter.set(DEFERRED_PRELEVEMENT_DAY, input.readInteger());
+      fieldSetter.set(DEFERRED_DEBIT_DAY, input.readInteger());
       fieldSetter.set(DEFERRED_DAY, input.readInteger());
       fieldSetter.set(DEFERRED_MONTH_SHIFT, input.readInteger());
       fieldSetter.set(PAST_POSITION, input.readDouble());

@@ -55,7 +55,7 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
           Integer accountId = account.get(Account.ID);
           Glob deferredCard = repository.findByIndex(DeferredCardDate.ACCOUNT_AND_DATE, DeferredCardDate.ACCOUNT, accountId)
             .findByIndex(DeferredCardDate.MONTH, values.get(Transaction.BUDGET_MONTH)).getGlobs().getFirst();
-          int day = account.get(Account.DEFERRED_PRELEVEMENT_DAY);
+          int day = account.get(Account.DEFERRED_DEBIT_DAY);
           if (deferredCard != null) {
             day = deferredCard.get(DeferredCardDate.DAY);
           }
@@ -112,7 +112,7 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
         .findByIndex(DeferredCardDate.MONTH, deferredMonthId).getGlobs().getFirst();
     Integer deferredDay;
     if (deferredCardDate == null) {
-      deferredDay = account.get(Account.DEFERRED_PRELEVEMENT_DAY);
+      deferredDay = account.get(Account.DEFERRED_DEBIT_DAY);
     }
     else {
       deferredDay = deferredCardDate.get(DeferredCardDate.DAY);
@@ -139,7 +139,7 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
       if (!account.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId())) {
         return;
       }
-      Integer day = account.get(Account.DEFERRED_PRELEVEMENT_DAY);
+      Integer day = account.get(Account.DEFERRED_DEBIT_DAY);
       if (operation != null) {
         day = operation.get(Transaction.BANK_DAY);
       }

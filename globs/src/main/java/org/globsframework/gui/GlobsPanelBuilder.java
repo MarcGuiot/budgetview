@@ -61,8 +61,12 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return store(GlobLinkComboEditor.init(field, repository, directory).setName(name));
   }
 
+  public GlobComboEditor addComboEditor(String name, IntegerField field, int[] values) {
+    return store(GlobComboEditor.init(field, values, repository, directory).setName(name));
+  }
+
   public GlobComboEditor addComboEditor(String name, Key key, IntegerField field, int[] values) {
-    return store(GlobComboEditor.init(key, field, values, repository, directory).setName(name));
+    return store(GlobComboEditor.init(field, values, repository, directory).forceKey(key).setName(name));
   }
 
   public GlobCheckBoxView addCheckBox(String name, BooleanField field) {

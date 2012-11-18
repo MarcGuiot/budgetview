@@ -97,7 +97,7 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
         repository.create(DeferredCardDate.TYPE,
                           value(DeferredCardDate.ACCOUNT, accountId),
                           value(DeferredCardDate.MONTH, startMonth),
-                          value(DeferredCardDate.DAY, Month.getDay(account.get(Account.DEFERRED_PRELEVEMENT_DAY), startMonth, calendar)));
+                          value(DeferredCardDate.DAY, Month.getDay(account.get(Account.DEFERRED_DEBIT_DAY), startMonth, calendar)));
       }
       else {
         deferredCardDays.remove(globs.getFirst());
@@ -123,12 +123,12 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
         }
         else {
           repository.update(deferredCardDay.getKey(), DeferredCardDate.DAY,
-                            Month.getDay(account.get(Account.DEFERRED_PRELEVEMENT_DAY), deferredCardDay.get(DeferredCardDate.MONTH), calendar));
+                            Month.getDay(account.get(Account.DEFERRED_DEBIT_DAY), deferredCardDay.get(DeferredCardDate.MONTH), calendar));
         }
       }
       else {
         repository.update(deferredCardDay.getKey(), DeferredCardDate.DAY,
-                          Month.getDay(account.get(Account.DEFERRED_PRELEVEMENT_DAY), deferredCardDay.get(DeferredCardDate.MONTH), calendar));
+                          Month.getDay(account.get(Account.DEFERRED_DEBIT_DAY), deferredCardDay.get(DeferredCardDate.MONTH), calendar));
       }
     }
   }

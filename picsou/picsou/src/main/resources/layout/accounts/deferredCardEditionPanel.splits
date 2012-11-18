@@ -1,0 +1,22 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <column>
+    <row>
+      <label text="$account.deferred.period.day.begin" marginRight="5"/>
+      <comboBox ref="deferredDay" marginRight="5"/>
+      <label text="$account.deferred.period.day.end"/>
+      <filler fill="horizontal"/>
+    </row>
+
+    <row>
+      <label text="$account.deferred.debit.day" marginRight="5"/>
+      <comboBox ref="deferredDebitDay" marginRight="5"/>
+      <comboBox ref="deferredMonthShift"/>
+      <filler fill="horizontal"/>
+    </row>
+  </column>
+
+
+</splits>

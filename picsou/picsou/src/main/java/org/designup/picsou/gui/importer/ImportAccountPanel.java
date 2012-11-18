@@ -1,11 +1,9 @@
 package org.designup.picsou.gui.importer;
 
 import org.designup.picsou.gui.accounts.AccountEditionPanel;
+import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.Bank;
-import org.designup.picsou.model.BankEntity;
-import org.designup.picsou.model.RealAccount;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -34,7 +32,7 @@ public class ImportAccountPanel {
     this.localDirectory.add(new SelectionService());
     this.localGlobRepository =
       LocalGlobRepositoryBuilder.init(localGlobRepository)
-        .copy(Bank.TYPE, BankEntity.TYPE, RealAccount.TYPE)
+        .copy(Bank.TYPE, BankEntity.TYPE, MonthDay.TYPE, RealAccount.TYPE)
         .get();
   }
 
