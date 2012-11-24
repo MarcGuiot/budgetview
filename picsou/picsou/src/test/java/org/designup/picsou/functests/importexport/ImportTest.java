@@ -863,6 +863,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkPosition("Account n. 111", 100.);
     mainAccounts.checkAccountNames("Account n. 111", "Account n. 112", "Account n. 113");
 
+    notifications.checkHidden();
+
     String path2 = OfxBuilder.init(this)
       .addBankAccount("1114", 100, "2008/08/03")
       .addBankAccount("112", 200, "2008/08/03")
@@ -877,17 +879,36 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkAccountDescription("Account n.113 Other Position: 100.00 on 2008/08/01")
       .selectAccount("a new account")
       .checkAstericsErrorOnName()
-      .checkAccountPosition(300.)
+      .checkAccountPosition(300.00)
       .selectAccount("Account n. 113")
       .doImport()
       .setMainAccount()
       .doNext()
       .completeImportWithNext();
 
-    budgetViewMessageChecker.checkFirstImportMessage("Account n. 113", 200, 300.);
-    mainAccounts.checkAccount("Account n. 113", 200., "2008/08/03");
-    budgetViewMessageChecker.checkSecondImportMessage("Account n. 112", 100, 200.);
-    mainAccounts.checkAccount("Account n. 112", 100., "2008/08/01");
+    mainAccounts.checkAccount("Account n. 113", 200.00, "2008/08/03");
+    mainAccounts.checkAccount("Account n. 112", 100.00, "2008/08/01");
+    notifications.openDialog()
+      .checkMessageCount(2)
+      .checkMessage(0, "The last computed position for 'Account n. 112' (100.00) " +
+                       "is not the same as the imported one (200.00)")
+      .checkMessage(1, "The last computed position for 'Account n. 113' (200.00) is not the same as the " +
+                       "imported one (300.00)")
+      .validate();
+
+    notifications.checkVisible(2);
+    mainAccounts.edit("Account n. 112")
+      .delete();
+
+    notifications.checkVisible(1)
+      .openDialog()
+      .checkMessageCount(1)
+      .checkMessage(0, "The last computed position for 'Account n. 113' (200.00) is not the same as the " +
+                       "imported one (300.00)")
+      .clearMessage(0)
+      .validate();
+
+    notifications.checkHidden();
   }
 
   public void testEmptyAssociatedToOldFollowedByNew() throws Exception {
@@ -937,7 +958,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/8", 2.0, "V'lib")
       .load();
 
-    mainAccounts.edit("Account n. 00001123").delete().validate();
+    mainAccounts.edit("Account n. 00001123").openDelete().validate();
 
     OfxBuilder.init(this)
       .addTransaction("2008/06/8", 2.0, "V'lib")

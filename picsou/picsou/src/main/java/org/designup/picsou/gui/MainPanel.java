@@ -27,7 +27,7 @@ import org.designup.picsou.gui.help.actions.SendLogsAction;
 import org.designup.picsou.gui.license.LicenseExpirationAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
-import org.designup.picsou.gui.messages.MessageView;
+import org.designup.picsou.gui.notifications.NotificationsFlagView;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.notes.ShowNotesAction;
@@ -200,7 +200,7 @@ public class MainPanel {
       new FeedbackView(repository, directory),
       signpostView,
       licenseInfoView,
-      new MessageView(repository, directory));
+      new NotificationsFlagView(repository, directory));
 
     createMenuBar(parent, replicationGlobRepository, directory);
 

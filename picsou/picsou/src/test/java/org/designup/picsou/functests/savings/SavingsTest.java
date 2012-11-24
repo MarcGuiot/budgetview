@@ -1557,7 +1557,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("06/06/2008", TransactionType.VIREMENT, "VIREMENT EPARGNE", "", 100.00, "Epargne")
       .check();
 
-    savingsAccounts.edit("Account n. 111222").delete().validate();
+    savingsAccounts.edit("Account n. 111222").openDelete().validate();
     transactions.initContent()
       .add("06/06/2008", TransactionType.PRELEVEMENT, "VIREMENT VERS EPARGNE", "", -100.00)
       .check();

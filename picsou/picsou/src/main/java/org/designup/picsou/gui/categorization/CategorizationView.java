@@ -8,7 +8,7 @@ import org.designup.picsou.gui.categorization.reconciliation.ReconciliationWarni
 import org.designup.picsou.gui.categorization.special.*;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
-import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
+import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterClearer;
 import org.designup.picsou.gui.components.filtering.FilterListener;
 import org.designup.picsou.gui.components.filtering.FilterManager;

@@ -433,7 +433,6 @@ public class PositionTrigger implements ChangeSetListener {
           repository.update(accountError.getKey(),
                             value(AccountPositionError.UPDATE_DATE, new Date()),
                             value(AccountPositionError.CLEARED, false),
-                            value(AccountPositionError.ACCOUNT_NAME, account.get(Account.NAME)),
                             value(AccountPositionError.IMPORTED_POSITION, account.get(Account.LAST_IMPORT_POSITION)),
                             value(AccountPositionError.LAST_REAL_OPERATION_POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION)),
                             value(AccountPositionError.LAST_PREVIOUS_IMPORT_DATE,

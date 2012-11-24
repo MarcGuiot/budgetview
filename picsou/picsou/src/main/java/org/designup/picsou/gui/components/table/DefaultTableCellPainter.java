@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.components;
+package org.designup.picsou.gui.components.table;
 
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;

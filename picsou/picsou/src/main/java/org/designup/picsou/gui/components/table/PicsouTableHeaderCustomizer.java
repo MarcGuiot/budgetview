@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.components;
+package org.designup.picsou.gui.components.table;
 
 import org.globsframework.gui.splits.color.*;
 import org.globsframework.gui.splits.color.utils.ForegroundColorUpdater;

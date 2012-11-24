@@ -1,0 +1,34 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="#date"
+           font="-,plain,10" foreground="block.inner.subitem"
+           fill="none" anchor="left" marginTop="5" marginBottom="3"/>
+    <style selector="#message"
+           font="-,plain,13" foreground="block.inner.item"
+           anchor="left" marginBottom="5"/>
+  </styles>
+
+  <panel styleClass="dialog" preferredSize="(600, 300)">
+    <column styleClass="innerDialog">
+      <label text="$notifications.title" name="title" styleClass="title"/>
+
+      <scrollPane forceVerticalScroll="true">
+        <column margin="10">
+          <repeat ref="messages">
+            <grid name="notificationPanel" border="matte(0,0,1,0,block.inner.separator)">
+              <label ref="date" gridPos="(0,0,2,1)"/>
+              <textArea ref="message" gridPos="(0,1)" styleClass="message"/>
+              <button action="deleteItem" gridPos="(1,1)" styleClass="icon" icon="button_delete.png"
+                tooltipText="$messages.account.position.error.tooltip"/>
+            </grid>
+          </repeat>
+          <filler fill="vertical"/>
+        </column>
+      </scrollPane>
+
+    </column>
+  </panel>
+
+</splits>

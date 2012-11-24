@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.transactions.reconciliation.annotations;
 
-import org.designup.picsou.gui.components.ButtonTableColumn;
+import org.designup.picsou.gui.components.table.ButtonTableColumn;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;

@@ -4,7 +4,7 @@ import com.jidesoft.swing.AutoCompletion;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.AccountEditionDialog;
 import org.designup.picsou.gui.components.AmountEditor;
-import org.designup.picsou.gui.components.CustomFocusTraversalPolicy;
+import org.designup.picsou.gui.components.utils.CustomFocusTraversalPolicy;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;

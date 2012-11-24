@@ -1,24 +1,17 @@
-package org.designup.picsou.gui.components;
+package org.designup.picsou.gui.components.table;
 
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.views.CellPainter;
-import org.globsframework.gui.views.GlobTableColumn;
 import org.globsframework.gui.views.GlobTableView;
-import org.globsframework.gui.views.utils.CellPainterPanel;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public abstract class HyperlinkTableColumn extends ButtonTableColumn implements ColorChangeListener {
 

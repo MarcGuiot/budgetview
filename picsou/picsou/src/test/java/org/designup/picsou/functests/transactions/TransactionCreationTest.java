@@ -98,7 +98,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .checkHidden()
       .show();
 
-    mainAccounts.edit("Cash").doDelete();
+    mainAccounts.edit("Cash").delete();
 
     transactionCreation
       .checkHidden()

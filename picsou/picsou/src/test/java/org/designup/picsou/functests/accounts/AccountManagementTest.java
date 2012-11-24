@@ -118,7 +118,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     mainAccounts.edit("Account n. 000123")
-      .delete()
+      .openDelete()
       .validate();
 
     mainAccounts

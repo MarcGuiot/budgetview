@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.importer.csv;
 
-import org.designup.picsou.gui.components.CancelAction;
+import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.importer.csv.CsvReader;
 import org.designup.picsou.importer.csv.CsvType;

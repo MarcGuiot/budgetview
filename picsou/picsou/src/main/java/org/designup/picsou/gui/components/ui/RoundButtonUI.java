@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.components;
+package org.designup.picsou.gui.components.ui;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;

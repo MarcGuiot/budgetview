@@ -2,7 +2,7 @@ package org.designup.picsou.gui.actions;
 
 import org.designup.picsou.exporter.Exporter;
 import org.designup.picsou.exporter.Exporters;
-import org.designup.picsou.gui.components.CloseDialogAction;
+import org.designup.picsou.gui.components.dialogs.CloseDialogAction;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.utils.Lang;

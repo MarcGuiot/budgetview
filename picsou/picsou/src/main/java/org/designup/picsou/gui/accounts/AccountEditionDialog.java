@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.accounts.utils.MonthDay;
-import org.designup.picsou.gui.components.CancelAction;
+import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.DatePicker;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;

@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.transactions.columns;
 
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.components.HyperlinkTableColumn;
+import org.designup.picsou.gui.components.table.HyperlinkTableColumn;
 import org.designup.picsou.gui.description.stringifiers.TransactionSeriesStringifier;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.Series;

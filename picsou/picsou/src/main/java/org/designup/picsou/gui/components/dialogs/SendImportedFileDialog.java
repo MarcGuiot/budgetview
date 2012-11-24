@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.components.dialogs;
 
-import org.designup.picsou.gui.components.CloseDialogAction;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.importer.Obfuscator;
 import org.designup.picsou.importer.utils.TypedInputStream;

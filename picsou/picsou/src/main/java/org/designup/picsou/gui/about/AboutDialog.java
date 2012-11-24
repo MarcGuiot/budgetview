@@ -2,7 +2,7 @@ package org.designup.picsou.gui.about;
 
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.browsing.BrowsingService;
-import org.designup.picsou.gui.components.CloseDialogAction;
+import org.designup.picsou.gui.components.dialogs.CloseDialogAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.startup.AppPaths;

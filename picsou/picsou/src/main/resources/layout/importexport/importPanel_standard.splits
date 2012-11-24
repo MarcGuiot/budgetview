@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <ui name="roundButton" class="org.designup.picsou.gui.components.RoundButtonUI"
+    <ui name="roundButton" class="org.designup.picsou.gui.components.ui.RoundButtonUI"
         topColor="roundButton.normal.bg.top"
         bottomColor="roundButton.normal.bg.bottom"
         innerBorderTopColor="roundButton.normal.inner.border.top"

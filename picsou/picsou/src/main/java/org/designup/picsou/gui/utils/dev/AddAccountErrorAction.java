@@ -1,12 +1,15 @@
 package org.designup.picsou.gui.utils.dev;
 
+import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountPositionError;
-import org.globsframework.model.FieldValue;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Date;
+
+import static org.globsframework.model.FieldValue.*;
 
 public class AddAccountErrorAction extends AbstractAction {
 
@@ -18,9 +21,17 @@ public class AddAccountErrorAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent e) {
-    repository.create(AccountPositionError.TYPE,
-                      FieldValue.value(AccountPositionError.IMPORTED_POSITION, 10.),
-                      FieldValue.value(AccountPositionError.LAST_REAL_OPERATION_POSITION, 20.),
-                      FieldValue.value(AccountPositionError.UPDATE_DATE, new Date()));
+    GlobList accounts = repository.getAll(Account.TYPE, Matchers.userCreatedMainAccounts());
+    if (accounts.isEmpty()) {
+      return;
+    }
+    Glob account = accounts.getFirst();
+    Key key = Key.create(AccountPositionError.TYPE, account.get(Account.ID));
+    repository.findOrCreate(key);
+    repository.update(key,
+                      value(AccountPositionError.IMPORTED_POSITION, 10.00),
+                      value(AccountPositionError.LAST_REAL_OPERATION_POSITION, 20.00),
+                      value(AccountPositionError.UPDATE_DATE, new Date()),
+                      value(AccountPositionError.CLEARED, false));
   }
 }

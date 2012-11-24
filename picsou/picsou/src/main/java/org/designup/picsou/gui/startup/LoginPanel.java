@@ -2,7 +2,7 @@ package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.MainWindow;
-import org.designup.picsou.gui.components.CustomFocusTraversalPolicy;
+import org.designup.picsou.gui.components.utils.CustomFocusTraversalPolicy;
 import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.startup.components.Passwords;
 import org.designup.picsou.gui.startup.components.UserSelectionDialog;

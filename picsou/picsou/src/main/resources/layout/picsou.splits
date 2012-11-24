@@ -12,16 +12,16 @@
     <style selector="#time button" minimumSize="(15,20)" preferredSize="(15,20)" fill="none"/>
 
     <!-- Timeview buttons -->
-    <ui name="arrowLeft" class="org.designup.picsou.gui.components.ArrowButtonUI"
+    <ui name="arrowLeft" class="org.designup.picsou.gui.components.ui.ArrowButtonUI"
         rotation="180" doubleArrow="false"
         rolloverColor="timeview.period.arrow.rollover" pressedColor="timeview.period.arrow.pressed"/>
-    <ui name="doubleArrowLeft" class="org.designup.picsou.gui.components.ArrowButtonUI"
+    <ui name="doubleArrowLeft" class="org.designup.picsou.gui.components.ui.ArrowButtonUI"
         rotation="180" doubleArrow="true"
         rolloverColor="timeview.period.arrow.rollover" pressedColor="timeview.period.arrow.pressed"/>
-    <ui name="arrowRight" class="org.designup.picsou.gui.components.ArrowButtonUI"
+    <ui name="arrowRight" class="org.designup.picsou.gui.components.ui.ArrowButtonUI"
         rotation="0" doubleArrow="false"
         rolloverColor="timeview.period.arrow.rollover" pressedColor="timeview.period.arrow.pressed"/>
-    <ui name="doubleArrowRight" class="org.designup.picsou.gui.components.ArrowButtonUI"
+    <ui name="doubleArrowRight" class="org.designup.picsou.gui.components.ui.ArrowButtonUI"
         rotation="0" doubleArrow="true"
         rolloverColor="timeview.period.arrow.rollover" pressedColor="timeview.period.arrow.pressed"/>
 
@@ -35,11 +35,11 @@
            minimumSize="(20,10)" preferredSize="(20,10)"/>
 
     <!-- Back/forward buttons -->
-    <ui name="backArrow" class="org.designup.picsou.gui.components.ArrowButtonUI"
+    <ui name="backArrow" class="org.designup.picsou.gui.components.ui.ArrowButtonUI"
         rotation="180" doubleArrow="false"
         rolloverColor="views.backforward.rollover" pressedColor="views.backforward.pressed" disabledColor="views.backforward.disabled"
         size="(16,12)"/>
-    <ui name="forwardArrow" class="org.designup.picsou.gui.components.ArrowButtonUI"
+    <ui name="forwardArrow" class="org.designup.picsou.gui.components.ui.ArrowButtonUI"
         rotation="0" doubleArrow="false"
         rolloverColor="views.backforward.rollover" pressedColor="views.backforward.pressed" disabledColor="views.backforward.disabled"
         size="(16,12)"/>
@@ -48,6 +48,16 @@
            fill="none" margin="3" weightX="0"/>
     <style selector="button#backView" ui="backArrow"/>
     <style selector="button#forwardView" ui="forwardArrow" marginRight="10"/>
+
+    <!-- Notifications flag -->
+    <ui name="notificationsFlagUI" class="org.designup.picsou.gui.components.ui.NotificationFlagUI"
+        balloonColor="notifications.flag.balloon"
+        balloonShadowColor="notifications.flag.shadow"
+        balloonRolloverColor="notifications.flag.rollover"
+        balloonPressedColor="notifications.flag.pressed"/>
+    <style selector="button#notificationsFlag" ui="notificationsFlagUI" opaque="false"
+           foreground="notifications.flag.text" fill="none" anchor="center"
+           autoHideIfDisabled="true" marginLeft="10"/>
   </styles>
 
   <panel name="backgroundPanel" styleClass="main" ui="wave">
@@ -55,7 +65,7 @@
 
       <horizontalBoxes weightY="0.1" name="mainWindowHeader">
         <row>
-          <column weightX="0.001">
+          <column weightX="0.1" preferredSize="(280,26)">
             <row weightY="1" anchor="left" fill="horizontal" marginBottom="2">
               <button name="backView" action="backView" styleClass="backforward" tooltipText="$back"/>
               <button name="forwardView" action="forwardView" styleClass="backforward" tooltipText="$forward"/>
@@ -67,17 +77,15 @@
                      shadowColor="views.title.shadow" anchor="south" marginBottom="2"/>
               <filler fill="horizontal"/>
             </row>
-            <row weightY="1" preferredSize="(230,26)">
+            <row weightY="1" preferredSize="(280,26)">
               <repeat ref="viewToggles" layout="row">
                 <toggleButton ref="toggle" styleClass="masterViewSelector" marginBottom="2"/>
               </repeat>
               <filler fill="horizontal"/>
+              <button ref="notificationsFlag"/>
             </row>
           </column>
-          <row>
-              <panel ref="MessagesView" opaque="false"/>
-          </row>
-          <row weightX="100" weightY="0.1" name="time" marginTop="0" marginLeft="40" marginRight="0">
+          <row weightX="100" weightY="0.1" name="time" marginLeft="20" marginTop="0" marginRight="0">
             <column>
               <filler fill="vertical"/>
               <button ref="prevPeriod" gridPos="(0,1)"

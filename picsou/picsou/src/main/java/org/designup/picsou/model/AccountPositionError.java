@@ -18,16 +18,13 @@ import org.globsframework.utils.serialization.SerializedOutput;
 public class AccountPositionError {
   public static GlobType TYPE;
 
-  @Key
-  @Target(Account.class)
-  public static LinkField ID;
+  @Key @Target(Account.class)
+  public static LinkField ACCOUNT;
 
   @DefaultBoolean(false)
   public static BooleanField CLEARED;
 
   public static DateField UPDATE_DATE;
-
-  public static StringField ACCOUNT_NAME;
 
   public static DoubleField IMPORTED_POSITION;
 
@@ -55,7 +52,6 @@ public class AccountPositionError {
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeDate(values.get(UPDATE_DATE));
       outputStream.writeBoolean(values.get(CLEARED));
-      outputStream.writeUtf8String(values.get(ACCOUNT_NAME));
       outputStream.writeDouble(values.get(IMPORTED_POSITION));
       outputStream.writeDouble(values.get(LAST_REAL_OPERATION_POSITION));
       outputStream.writeInteger(values.get(LAST_PREVIOUS_IMPORT_DATE));
@@ -72,7 +68,6 @@ public class AccountPositionError {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(UPDATE_DATE, input.readDate());
       fieldSetter.set(CLEARED, input.readBoolean());
-      fieldSetter.set(ACCOUNT_NAME, input.readUtf8String());
       fieldSetter.set(IMPORTED_POSITION, input.readDouble());
       fieldSetter.set(LAST_REAL_OPERATION_POSITION, input.readDouble());
       fieldSetter.set(LAST_PREVIOUS_IMPORT_DATE, input.readInteger());

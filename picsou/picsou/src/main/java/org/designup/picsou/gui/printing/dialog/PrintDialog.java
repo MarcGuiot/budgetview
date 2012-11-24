@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.printing.dialog;
 
-import org.designup.picsou.gui.components.CancelAction;
+import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.printing.PrinterService;

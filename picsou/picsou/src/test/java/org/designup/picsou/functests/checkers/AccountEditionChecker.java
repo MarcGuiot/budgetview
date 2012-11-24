@@ -305,12 +305,12 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public ConfirmationDialogChecker delete() {
+  public ConfirmationDialogChecker openDelete() {
     return ConfirmationDialogChecker.open(dialog.getButton("Delete...").triggerClick());
   }
 
-  public void doDelete() {
-    delete().validate();
+  public void delete() {
+    openDelete().validate();
   }
 
   public void validate() {

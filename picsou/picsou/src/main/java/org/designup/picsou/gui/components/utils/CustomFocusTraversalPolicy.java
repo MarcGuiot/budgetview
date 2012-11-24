@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.components;
+package org.designup.picsou.gui.components.utils;
 
 import java.awt.*;
 import java.util.Arrays;

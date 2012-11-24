@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.transactions.split;
 
 import org.designup.picsou.gui.categorization.components.CompactSeriesStringifier;
-import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
+import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.description.Formatting;
@@ -20,7 +20,6 @@ import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.utils.TableUtils;

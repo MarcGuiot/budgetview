@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.components;
+package org.designup.picsou.gui.components.dialogs;
 
 import org.designup.picsou.utils.Lang;
 

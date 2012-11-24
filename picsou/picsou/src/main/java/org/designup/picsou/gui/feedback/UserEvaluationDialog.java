@@ -1,10 +1,9 @@
 package org.designup.picsou.gui.feedback;
 
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.components.CancelAction;
+import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsou.gui.utils.Html;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.HtmlBuilder;

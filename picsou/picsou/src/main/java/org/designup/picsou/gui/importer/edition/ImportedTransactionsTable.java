@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.importer.edition;
 
-import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
+import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.ImportedTransaction;

@@ -285,6 +285,8 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkPosition("Main", 850);
     mainAccounts.checkSummary(850.00, "2012/05/10");
 
+    notifications.checkHidden();
+
     OfxBuilder.init(this)
       .addTransaction("2012/05/10", -100.00, "CHEQUE 0012345")
       .addTransaction("2012/05/11", -50.00, "AUCHAN 1")
@@ -296,8 +298,6 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .add("11/05/2012", "AUCHAN 1", -50.00, "To categorize", 850.00, 850.00, "Main")
       .add("10/05/2012", "CHEQUE N°0012345", -100.00, "To categorize", 900.00, 900.00, "Main")
       .check();
-
-
     categorization.initContent()
       .add("11/05/2012", "", "AUCHAN 1", -50.00)
       .add("11/05/2012", "", "[R] AUCHAN 1", -50.00)
@@ -307,7 +307,12 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkPosition("Main", 700);
     mainAccounts.checkSummary(700.00, "2012/05/11");
-    budgetViewMessageChecker.checkFirstImportMessage("Main", 700, 0);
+    notifications.checkVisible(1)
+      .openDialog()
+      .checkMessageCount(1)
+      .checkMessage(0, "The last computed position for 'Main' (700.00) is not the same as the " +
+                       "imported one (0.00)")
+      .validate();
 
     categorization.selectTransaction("[R] CHEQUE N° 12345");
 

@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.components;
+package org.designup.picsou.gui.components.ui;
 
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.utils.Java2DUtils;

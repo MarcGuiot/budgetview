@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.notes;
 
-import org.designup.picsou.gui.components.CloseDialogAction;
+import org.designup.picsou.gui.components.dialogs.CloseDialogAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.Notes;
 import org.globsframework.gui.GlobsPanelBuilder;

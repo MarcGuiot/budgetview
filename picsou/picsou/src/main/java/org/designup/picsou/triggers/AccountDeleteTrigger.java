@@ -1,6 +1,7 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.AccountPositionError;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.model.ChangeSet;
@@ -17,15 +18,17 @@ public class AccountDeleteTrigger extends DefaultChangeSetListener {
     if (!changeSet.containsCreationsOrDeletions(Account.TYPE)) {
       return;
     }
-    Set<Key> keySet = changeSet.getDeleted(Account.TYPE);
-    for (Key key : keySet) {
-      repository.delete(Transaction.TYPE, GlobMatchers.linkedTo(key, Transaction.ACCOUNT));
-      repository.delete(Series.TYPE, or(linkedTo(key, Series.FROM_ACCOUNT),
-                                        linkedTo(key, Series.TO_ACCOUNT)));
+
+    Set<Key> deletedAccountKeys = changeSet.getDeleted(Account.TYPE);
+    for (Key accountKey : deletedAccountKeys) {
+      repository.delete(Transaction.TYPE, GlobMatchers.linkedTo(accountKey, Transaction.ACCOUNT));
+      repository.delete(Series.TYPE, or(linkedTo(accountKey, Series.FROM_ACCOUNT),
+                                        linkedTo(accountKey, Series.TO_ACCOUNT)));
+      repository.delete(AccountPositionError.TYPE, linkedTo(accountKey, AccountPositionError.ACCOUNT));
     }
-    Set<Key> created = changeSet.getCreated(Account.TYPE);
-    for (Key key : created) {
-      repository.update(key, Account.IS_VALIDATED, Boolean.TRUE);
+
+    for (Key accountKey : changeSet.getCreated(Account.TYPE)) {
+      repository.update(accountKey, Account.IS_VALIDATED, Boolean.TRUE);
     }
   }
 }

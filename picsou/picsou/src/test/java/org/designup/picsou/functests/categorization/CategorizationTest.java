@@ -1156,7 +1156,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .checkNoSeriesMessage("There are no savings series");
 
     views.selectHome();
-    savingsAccounts.edit("Epargne").delete().validate();
+    savingsAccounts.edit("Epargne").openDelete().validate();
 
     views.selectCategorization();
     categorization

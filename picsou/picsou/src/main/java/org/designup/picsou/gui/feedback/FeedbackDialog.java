@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.feedback;
 
 import org.designup.picsou.gui.PicsouApplication;
-import org.designup.picsou.gui.components.CancelAction;
+import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.server.DisconnectionTip;
 import org.designup.picsou.gui.config.ConfigService;

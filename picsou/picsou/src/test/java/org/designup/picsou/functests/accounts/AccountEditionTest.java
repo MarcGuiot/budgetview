@@ -183,7 +183,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .selectBank("CIC")
       .validate();
 
-    mainAccounts.edit("Main").delete()
+    mainAccounts.edit("Main").openDelete()
       .checkMessageContains("No operations are related to this account")
       .validate();
 
@@ -220,7 +220,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectHome();
-    mainAccounts.edit("Account n. 0000123").delete()
+    mainAccounts.edit("Account n. 0000123").openDelete()
       .checkMessageContains("All the operations associated to this account will be deleted")
       .validate();
     mainAccounts.checkNotPresent("Account n. 0000123");
@@ -284,7 +284,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     savingsAccounts.edit("Livret")
-      .delete()
+      .openDelete()
       .checkMessageContains("All the operations and series associated to this account will be deleted")
       .validate();
     savingsAccounts.checkNotPresent("Livret");
@@ -299,7 +299,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectHome();
-    savingsAccounts.edit("Codevi").delete()
+    savingsAccounts.edit("Codevi").openDelete()
       .checkMessageContains("All the series associated to this account will be deleted")
       .validate();
     savingsAccounts.checkNotPresent("Codevi");

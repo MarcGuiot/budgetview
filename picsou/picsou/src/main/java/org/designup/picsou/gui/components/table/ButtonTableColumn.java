@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.components;
+package org.designup.picsou.gui.components.table;
 
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableColumn;

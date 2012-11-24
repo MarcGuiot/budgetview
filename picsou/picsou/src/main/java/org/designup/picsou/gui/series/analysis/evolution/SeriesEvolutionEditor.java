@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.series.analysis.evolution;
 
-import org.designup.picsou.gui.components.AbstractRolloverEditor;
+import org.designup.picsou.gui.components.table.AbstractRolloverEditor;
 import org.designup.picsou.gui.series.analysis.SeriesChartsColors;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;

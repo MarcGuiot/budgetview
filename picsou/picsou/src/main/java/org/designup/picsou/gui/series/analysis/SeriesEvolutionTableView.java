@@ -2,7 +2,7 @@ package org.designup.picsou.gui.series.analysis;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.card.NavigationPopup;
-import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
+import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.expansion.*;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.analysis.evolution.SeriesEvolutionLabelColumn;

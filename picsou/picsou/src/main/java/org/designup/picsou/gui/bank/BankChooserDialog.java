@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.bank;
 
-import org.designup.picsou.gui.components.CancelAction;
+import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;

@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.series.edition.carryover;
 
-import org.designup.picsou.gui.components.CancelAction;
+import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.utils.Gui;

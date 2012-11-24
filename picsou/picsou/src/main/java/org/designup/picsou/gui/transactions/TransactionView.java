@@ -5,8 +5,8 @@ import org.designup.picsou.gui.accounts.chart.TransactionAccountPositionsChartVi
 import org.designup.picsou.gui.accounts.utils.AccountFilter;
 import org.designup.picsou.gui.card.ImportPanel;
 import org.designup.picsou.gui.card.utils.GotoCardAction;
-import org.designup.picsou.gui.components.DefaultTableCellPainter;
-import org.designup.picsou.gui.components.PicsouTableHeaderPainter;
+import org.designup.picsou.gui.components.table.DefaultTableCellPainter;
+import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;

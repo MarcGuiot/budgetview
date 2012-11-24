@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.transactions.columns;
 
-import org.designup.picsou.gui.components.AbstractRolloverEditor;
+import org.designup.picsou.gui.components.table.AbstractRolloverEditor;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;

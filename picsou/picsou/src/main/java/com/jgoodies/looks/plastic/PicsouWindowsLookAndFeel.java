@@ -1,7 +1,7 @@
 package com.jgoodies.looks.plastic;
 
 import com.jgoodies.looks.LookUtils;
-import org.designup.picsou.gui.components.RoundButtonUI;
+import org.designup.picsou.gui.components.ui.RoundButtonUI;
 import org.designup.picsou.gui.plaf.ApplicationLAF;
 import org.designup.picsou.gui.plaf.PicsouButtonUI;
 import org.designup.picsou.gui.plaf.PicsouWindowsLabelUI;

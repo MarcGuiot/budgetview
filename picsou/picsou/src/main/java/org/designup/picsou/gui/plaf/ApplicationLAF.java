@@ -1,15 +1,14 @@
 package org.designup.picsou.gui.plaf;
 
-import com.jidesoft.plaf.UIDefaultsLookup;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
 import org.globsframework.gui.splits.components.StyledToggleButtonUI;
 import org.globsframework.gui.splits.components.StyledPanelUI;
 import org.globsframework.gui.splits.components.ShadowedLabelUI;
-import org.designup.picsou.gui.components.SelectionToggleUI;
-import org.designup.picsou.gui.components.ArrowButtonUI;
-import org.designup.picsou.gui.components.RoundButtonUI;
-import org.designup.picsou.gui.components.ColorButtonUI;
+import org.designup.picsou.gui.components.ui.SelectionToggleUI;
+import org.designup.picsou.gui.components.ui.ArrowButtonUI;
+import org.designup.picsou.gui.components.ui.RoundButtonUI;
+import org.designup.picsou.gui.components.ui.ColorButtonUI;
 
 import javax.swing.*;
 

@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.browsing;
 
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.designup.picsou.gui.components.CloseDialogAction;
+import org.designup.picsou.gui.components.dialogs.CloseDialogAction;
 
 import javax.swing.*;
 

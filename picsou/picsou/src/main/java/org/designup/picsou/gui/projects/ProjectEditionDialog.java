@@ -3,7 +3,7 @@ package org.designup.picsou.gui.projects;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.BorderlessTextField;
-import org.designup.picsou.gui.components.CancelAction;
+import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;

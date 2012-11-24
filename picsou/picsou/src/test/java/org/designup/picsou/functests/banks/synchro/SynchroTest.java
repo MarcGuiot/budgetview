@@ -94,6 +94,8 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
 
     savingsAccounts.checkAccount("secondary", 10, null);
 
+    notifications.checkHidden();
+
     importPanel.openSynchro()
       .selectAccount("secondary")
       .setAmount("100")
@@ -103,7 +105,11 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
 
     savingsAccounts.checkAccountNames("secondary", "Livret A");
     savingsAccounts.checkAccount("secondary", 10, null);
-    budgetViewMessageChecker.checkFirstImportMessage("secondary", 10., 100.);
+    notifications.openDialog()
+      .checkMessageCount(1)
+      .checkMessage(0, "The last computed position for 'secondary' (10.00) is not the same as the " +
+                       "imported one (100.00)")
+      .validate();
 
     views.selectCategorization();
     transactionCreation.show().selectAccount("secondary")
