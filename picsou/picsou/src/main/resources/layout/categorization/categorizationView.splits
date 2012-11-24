@@ -51,9 +51,7 @@
             </row>
 
             <panel ref="reconciliationWarningPanel" border="empty(0,0,10,0)"/>
-
-            <panel ref="customFilterMessage" fill="none" anchor="center" marginBottom="2"/>
-
+            <panel ref="customFilterMessage" fill="none" anchor="center" border="empty(0,0,2,0)"/>
             <scrollPane viewportBackground="#FFFFFF" marginBottom="0" weightY="100">
               <table ref="transactionsToCategorize" rowHeight="20"/>
             </scrollPane>
@@ -88,6 +86,8 @@
             </column>
 
             <label ref="downArrow" anchor="center"/>
+
+            <panel ref="reconciliationNavigationPanel" weightY="0.1"/>
 
             <cards ref="categorizationCard" weightY="100">
 
@@ -166,7 +166,6 @@
               </card>
             </cards>
 
-            <panel ref="reconciliationNavigationPanel" weightY="0.1"/>
 
           </column>
         </panel>

@@ -2,11 +2,13 @@ package org.designup.picsou.gui.categorization.reconciliation;
 
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
+import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -15,7 +17,6 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 public class ReconciliationWarningPanel {
 
@@ -23,7 +24,7 @@ public class ReconciliationWarningPanel {
   private GlobRepository repository;
   private Directory directory;
   private JPanel panel;
-  private JLabel message;
+  private JEditorPane message;
 
   public ReconciliationWarningPanel(CategorizationView categorizationView, GlobRepository repository, Directory directory) {
     this.categorizationView = categorizationView;
@@ -41,9 +42,15 @@ public class ReconciliationWarningPanel {
       new GlobsPanelBuilder(getClass(), "/layout/categorization/reconciliationWarningPanel.splits",
                             repository, directory);
 
-    message = new JLabel();
+    HyperlinkHandler handler = new HyperlinkHandler(directory);
+    builder.add("handler", handler);
+    handler.registerLinkAction("filter", new Runnable() {
+      public void run() {
+        categorizationView.setFilteringMode(CategorizationFilteringMode.TO_RECONCILE);
+      }
+    });
+    message = GuiUtils.createReadOnlyHtmlComponent();
     builder.add("message", message);
-    builder.add("activateReconciliationFilter", new ActivateReconciliationFilterAction());
 
     panel = builder.load();
 
@@ -80,17 +87,6 @@ public class ReconciliationWarningPanel {
     }
     else {
       panel.setVisible(false);
-    }
-  }
-
-  private class ActivateReconciliationFilterAction extends AbstractAction {
-
-    private ActivateReconciliationFilterAction() {
-      super(Lang.get("reconciliation.warning.filter"));
-    }
-
-    public void actionPerformed(ActionEvent actionEvent) {
-      categorizationView.setFilteringMode(CategorizationFilteringMode.TO_RECONCILE);
     }
   }
 }

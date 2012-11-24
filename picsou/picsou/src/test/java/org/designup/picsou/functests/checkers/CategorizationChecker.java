@@ -915,12 +915,12 @@ public class CategorizationChecker extends ViewChecker {
   public CategorizationChecker checkReconciliationWarningShown(String text) {
     checkComponentVisible(getPanel(), JPanel.class, "reconciliationWarningPanel", true);
     assertTrue(getPanel().getPanel("reconciliationWarningPanel")
-                 .getTextBox("message").textContains(text));
+                 .getTextBox("message").textEquals(text));
     return this;
   }
 
-  public CategorizationChecker clickReconciliationWarningButton() {
-    getPanel().getPanel("reconciliationWarningPanel").getButton("activateReconciliationFilter").click();
+  public CategorizationChecker clickReconciliationWarningButton(String link) {
+    getPanel().getPanel("reconciliationWarningPanel").getTextBox().clickOnHyperlink(link);
     return this;
   }
 

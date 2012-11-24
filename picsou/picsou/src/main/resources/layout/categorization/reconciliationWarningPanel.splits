@@ -2,11 +2,9 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <column name="reconciliationWarningPanel">
-    <column styleClass="highlightedPanel">
-      <label ref="message" margin="10"/>
-      <button action="activateReconciliationFilter"/>
-    </column>
-  </column>
+  <row name="reconciliationWarningPanel">
+    <filler fill="horizontal"/>
+    <htmlEditorPane ref="message" hyperlinkListener="handler" fill="none" weightX="0.1"/>
+  </row>
 
 </splits>

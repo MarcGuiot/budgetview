@@ -2,10 +2,10 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector="button" foreground="categorization.reconciliationLink"/>
+    <style selector="button" foreground="categorization.reconciliationLink" weightX="0.01"/>
   </styles>
 
-  <row name="reconciliationNavigationPanel">
+  <row name="reconciliationNavigationPanel" border="empty(0,0,5,0)">
     <button ref="switchToCategorization" styleClass="leftArrowLink"/>
     <filler fill="horizontal"/>
     <button ref="switchToReconciliation" styleClass="rightArrowLink"/>

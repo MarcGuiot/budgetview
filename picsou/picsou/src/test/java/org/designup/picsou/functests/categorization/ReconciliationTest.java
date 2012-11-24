@@ -148,7 +148,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .add("12/05/2012", "", "VELIZY AUCHAN", -50.00)
       .check();
 
-    categorization.clickReconciliationWarningButton();
+    categorization.clickReconciliationWarningButton("3 transactions");
     categorization.checkShowsToReconcile();
     categorization.checkReconciliationWarningHidden();
     categorization.initContent()
@@ -166,7 +166,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .add("12/05/2012", "", "VELIZY AUCHAN", -50.00)
       .check();
 
-    categorization.clickReconciliationWarningButton();
+    categorization.clickReconciliationWarningButton("3 transactions");
     categorization.checkShowsToReconcile();
     categorization.initContent()
       .add("09/04/2012", "", "[R] AUCHAN", -75.00)
