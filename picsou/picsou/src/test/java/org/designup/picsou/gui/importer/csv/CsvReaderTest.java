@@ -17,6 +17,8 @@ public class CsvReaderTest extends TestCase {
   }
 
   public void testDate() throws Exception {
+    checkIsADate("30.24.1993");
+    checkIsADate("30-24-1993");
     checkIsADate("30/24/1993");
     checkIsADate("30/24/93");
     checkIsADate("1000/12/01");

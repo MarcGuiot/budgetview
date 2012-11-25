@@ -1,12 +1,11 @@
 package org.designup.picsou.gui.upgrade;
 
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
 import org.designup.picsou.gui.license.LicenseService;
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
-import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.triggers.AccountInitialPositionTrigger;
 import org.designup.picsou.triggers.ProjectItemTrigger;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
@@ -130,6 +129,10 @@ public class UpgradeTrigger implements ChangeSetListener {
       updateOpenCloseAccount(repository);
     }
 
+    if (currentJarVersion < 94) {
+      updateDeferredAccount(repository);
+    }
+
     deleteDeprecatedGlobs(repository);
 
     Glob appVersion = repository.get(AppVersionInformation.KEY);
@@ -139,6 +142,38 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
 
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
+  }
+
+  private void updateDeferredAccount(GlobRepository repository) {
+    GlobList all = repository.getAll(Account.TYPE,
+                                     GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()));
+    Glob currentMonth = repository.get(CurrentMonth.KEY);
+    for (Glob glob : all) {
+      GlobList globs = repository.findByIndex(DeferredCardDate.ACCOUNT_AND_DATE,
+                                              DeferredCardDate.ACCOUNT, glob.get(Account.ID))
+        .getGlobs().sort(DeferredCardDate.MONTH);
+
+      int day = -1;
+      for (Glob deferredCard : globs) {
+        Integer month = deferredCard.get(DeferredCardDate.MONTH);
+        if (month < currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
+          day = deferredCard.get(DeferredCardDate.DAY);
+          break;
+        }
+      }
+      if (day == -1) {
+        if (globs.getLast() != null) {
+          day = globs.getLast().get(DeferredCardDate.DAY);
+        }
+        else {
+          day = 31;
+        }
+      }
+      repository.update(glob.getKey(),
+                        FieldValue.value(Account.DEFERRED_DAY, day),
+                        FieldValue.value(Account.DEFERRED_DEBIT_DAY, day),
+                        FieldValue.value(Account.DEFERRED_MONTH_SHIFT, 0));
+    }
   }
 
   private void createMissingSubSeriesForProjectItems(GlobRepository repository) {
@@ -158,10 +193,10 @@ public class UpgradeTrigger implements ChangeSetListener {
                               value(Series.NAME, Series.getAccountSeriesName()));
 
       GlobList accounts = repository.getAll(Account.TYPE,
-                                       GlobMatchers.not(GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId())));
+                                            GlobMatchers.not(GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId())));
 
       for (Glob account : accounts) {
-        if (!Account.isUserCreatedAccount(account)){
+        if (!Account.isUserCreatedAccount(account)) {
           continue;
         }
         GlobList transactions = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)))
@@ -173,7 +208,7 @@ public class UpgradeTrigger implements ChangeSetListener {
           open = Month.toFullDate(openDate);
         }
         double openAmount = 0;
-        if (!transactions.isEmpty()){
+        if (!transactions.isEmpty()) {
           Glob firstTransaction = transactions.get(0);
           open = Math.min(open, Month.toFullDate(firstTransaction.get(Transaction.POSITION_MONTH),
                                                  firstTransaction.get(Transaction.POSITION_DAY)));
@@ -186,11 +221,11 @@ public class UpgradeTrigger implements ChangeSetListener {
                                                             account.getKey());
         Date closeDate = account.get(Account.CLOSED_DATE);
         int close = Integer.MIN_VALUE;
-        if (closeDate != null){
+        if (closeDate != null) {
           close = Month.toFullDate(closeDate);
         }
         double closeAmount = 0;
-        if (!transactions.isEmpty()){
+        if (!transactions.isEmpty()) {
           Glob lastTransaction = transactions.get(transactions.size() - 1);
           close = Math.max(close, Month.toFullDate(lastTransaction.get(Transaction.POSITION_MONTH),
                                                    lastTransaction.get(Transaction.POSITION_DAY)));

@@ -2,7 +2,6 @@ package org.crossbowlabs.rooms.web;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.html.*;
 import junit.framework.TestCase;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -19,7 +18,6 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Locale;
 
 public class RoomsPageTest extends TestCase {

@@ -75,6 +75,24 @@ public class UISpecToolkit extends ToolkitDelegate {
     return new UISpecDialogPeer((JDialog)target);
   }
 
+  // java 1.6
+
+//  protected DesktopPeer createDesktopPeer(Desktop target) throws HeadlessException {
+//    return null;
+//  }
+//
+//  public TrayIconPeer createTrayIcon(TrayIcon icon) throws HeadlessException, AWTException {
+//    return null;
+//  }
+//
+//  public SystemTrayPeer createSystemTray(SystemTray tray) {
+//    return null;
+//  }
+//
+//  public boolean isTraySupported() {
+//    return false;
+//  }
+
   public WindowPeer createWindow(Window target) throws HeadlessException {
     return new UISpecWindowPeer(target);
   }
@@ -105,6 +123,32 @@ public class UISpecToolkit extends ToolkitDelegate {
 
   protected MouseInfoPeer getMouseInfoPeer() {
     return Empty.NULL_MOUSE_INFO;
+  }
+
+  protected boolean syncNativeQueue() {
+    return false;
+  }
+
+  public void grab(Window window) {
+  }
+
+  public void ungrab(Window window) {
+  }
+
+  public boolean isDesktopSupported() {
+    return false;
+  }
+
+  public boolean isWindowOpacityControlSupported() {
+    return false;
+  }
+
+  public boolean isWindowShapingSupported() {
+    return false;
+  }
+
+  public boolean isWindowTranslucencySupported() {
+    return false;
   }
 
   protected boolean syncNativeQueue(long l) {

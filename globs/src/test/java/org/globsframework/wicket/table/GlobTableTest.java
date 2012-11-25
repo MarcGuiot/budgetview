@@ -201,7 +201,7 @@ public class GlobTableTest extends WebTestCase {
     TestUtils.assertEquals(rowAsText(table, 1), "bbb [...]");
 
     HtmlPage page = (HtmlPage)table.getPage();
-    HtmlElement anchor = page.getElementById("[...]");
+    HtmlElement anchor = (HtmlElement)page.getElementById("[...]");
     System.out.println("GlobTableTest.testMultiLineText " + anchor.asXml());
     HtmlPage newPage = (HtmlPage)anchor.click();
 

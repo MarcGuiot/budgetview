@@ -130,7 +130,7 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
     FormChecker patametersChecker = checker.getForm("parametresForm");
     patametersChecker.getInputWithValue("2").select();
     checker.getAnchorWithImg("telecharger.gif").click();
-    DomNodeList<HtmlElement> tables = page.getElementsByTagName(HtmlTable.TAG_NAME);
+    DomNodeList<DomElement> tables = (DomNodeList)page.getElementsByTagName(HtmlTable.TAG_NAME);
     HtmlTable table = (HtmlTable)tables.get(0);
     int count = table.getRowCount();
     for (int i = 1; i < count; i++) {
@@ -239,8 +239,8 @@ public class CreditMutuelArkea extends WebBankPage implements PageAccessor {
   public static HtmlAnchorChecker getAnchorWithImage(String str, HtmlElement htmlElement, PageAccessor pageAccessor1) {
     DomNodeList<HtmlElement> htmlElements = htmlElement.getElementsByTagName(HtmlAnchor.TAG_NAME);
     for (HtmlElement element : htmlElements) {
-      Iterable<HtmlElement> childElements = element.getChildElements();
-      for (HtmlElement childElement : childElements) {
+      Iterable<DomElement> childElements = (Iterable)element.getChildElements();
+      for (DomElement childElement : childElements) {
         if (childElement instanceof HtmlImage) {
           if (((HtmlImage)childElement).getSrcAttribute().contains(str)) {
             return new HtmlAnchorChecker(pageAccessor1, ((HtmlAnchor)element));

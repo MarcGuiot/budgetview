@@ -38,8 +38,8 @@ public class OfxConnectionTest extends TestCase {
                  "<ORG>0\n" +
                  "<FID>0\n" +
                  "</FI>\n" +
-                 "<APPID>Money\n" +
-                 "<APPVER>1600\n" +
+                 "<APPID>QWIN\n" +
+                 "<APPVER>1800\n" +
                  "</SONRQ>\n" +
                  "</SIGNONMSGSRQV1>\n" +
                  "<SIGNUPMSGSRQV1>\n" +

@@ -11,6 +11,7 @@ import org.apache.http.HttpResponse;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.stream.ReplacementInputStreamBuilder;
@@ -79,6 +80,7 @@ public abstract class WebBankPage extends BankPage {
   }
 
   protected File downloadFile(Glob realAccount, HtmlElement anchor) {
+    Log.write("download " + GlobPrinter.toString(realAccount));
     DownloadAttachmentHandler downloadAttachmentHandler = new DownloadAttachmentHandler();
     client.setAttachmentHandler(downloadAttachmentHandler);
     try {
@@ -102,11 +104,18 @@ public abstract class WebBankPage extends BankPage {
     }
     if (downloadAttachmentHandler.page != null) {
       WebResponse response = downloadAttachmentHandler.page.getWebResponse();
-      InputStream contentAsStream = response.getContentAsStream();
+      InputStream contentAsStream = null;
+      try {
+        contentAsStream = response.getContentAsStream();
+      }
+      catch (Exception e) {
+        Log.write("fail to load "  + GlobPrinter.toString(realAccount), e);
+        return null;
+      }
       return BankPage.createQifLocalFile(realAccount, contentAsStream, response.getContentCharset());
     }
     else {
-      Log.write("No download");
+      Log.write("No download " + GlobPrinter.toString(realAccount));
     }
     return null;
   }

@@ -233,7 +233,7 @@ public class TransactionCreationChecker extends ViewChecker {
 
   public TransactionCreationChecker checkShowing() {
     checkPanelVisible(true);
-    assertThat(getShowHideButton().textEquals(Lang.get("hide")));
+    assertThat(getShowHideButton().textEquals(Lang.get("transactionCreation.hide")));
     return this;
   }
 

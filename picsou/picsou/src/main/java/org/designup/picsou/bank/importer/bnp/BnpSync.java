@@ -122,6 +122,9 @@ public class BnpSync extends WebBankPage {
               builder.replace("document.write('<INPUT size=\"5\" ');".getBytes(), " ".getBytes());
               return builder.create(content.getInputStream());
             }
+
+            public void cleanUp() {
+            }
           };
         }
         else {
@@ -205,7 +208,7 @@ public class BnpSync extends WebBankPage {
     image.fireEvent(Event.TYPE_LOAD);
     clavier = getFirstImage(image);
     keyboardPanel.setSize(clavier.getWidth(), clavier.getHeight());
-    List<HtmlElement> name = page.getElementsByName("MapGril");
+    List<DomElement> name = (List)page.getElementsByName("MapGril");
     if (name.size() == 0) {
       throw new RuntimeException("Can not find MapGril" + " in " + page.asXml());
     }
@@ -213,7 +216,7 @@ public class BnpSync extends WebBankPage {
     if (password.size() == 0) {
       throw new RuntimeException("Can not find input name='ch2'" + " in " + page.asXml());
     }
-    keyboardPanel.setImage(clavier, name.get(0), (HtmlInput)password.get(0));
+    keyboardPanel.setImage(clavier, (HtmlElement)name.get(0), (HtmlInput)password.get(0));
     corriger.setEnabled(true);
     valider.setEnabled(true);
   }
@@ -270,7 +273,7 @@ public class BnpSync extends WebBankPage {
           if (page.getTitleText().contains("Erreur")) {
             return;
           }
-          HtmlElement content = null;
+          DomElement content = null;
           int count = 3;
           while (!hasError && content == null && count != 0) {
             content = page.getElementById("content");
@@ -287,7 +290,7 @@ public class BnpSync extends WebBankPage {
               hasError = false;
               return;
             }
-            List<HtmlTable> tables = content.getElementsByAttribute(HtmlTable.TAG_NAME, "class", "LGNTableA");
+            List<HtmlTable> tables = ((HtmlElement)content).getElementsByAttribute(HtmlTable.TAG_NAME, "class", "LGNTableA");
             if (tables.size() != 1) {
               throw new RuntimeException("Find " + tables.size() + " table(s) in " + page.asXml());
             }

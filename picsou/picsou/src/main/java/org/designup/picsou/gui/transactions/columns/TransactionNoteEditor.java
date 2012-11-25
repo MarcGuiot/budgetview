@@ -51,7 +51,9 @@ public class TransactionNoteEditor extends DefaultCellEditor {
   }
 
   public boolean stopCellEditing() {
-    globRepository.update(currentGlob.getKey(), Transaction.NOTE, textField.getText());
+    if (currentGlob.exists()){
+      globRepository.update(currentGlob.getKey(), Transaction.NOTE, textField.getText());
+    }
     finishEditing();
     return super.stopCellEditing();
   }
