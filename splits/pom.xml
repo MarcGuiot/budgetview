@@ -21,17 +21,19 @@
     <testResources>
       <testResource>
         <directory>src/test/resources</directory>
-        <excludes>
+        <includes>
           <include>**/*.*</include>
-        </excludes>
+        </includes>
       </testResource>
       <testResource>
         <directory>src/test/java</directory>
         <excludes>
-          <exclude>**/*.java</exclude>
-          <include>**/*.colors</include>
-          <include>**/*.splits</include>
+            <exclude>**/*.java</exclude>
         </excludes>
+          <includes>
+              <include>**/*.colors</include>
+              <include>**/*.splits</include>
+          </includes>
       </testResource>
     </testResources>
   </build>

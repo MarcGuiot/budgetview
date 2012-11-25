@@ -57,6 +57,7 @@ public class OfxConnection {
   public List<AccountInfo> getAccounts(String user, String password, String date, final String url,
                                        final String org, final String fid) {
     String accountInfo = getAccountInfo(user, password, date, url, org, fid);
+    System.out.println(accountInfo);
     OfxParser parser = new OfxParser();
     AccountInfoOfxFunctor accountInfoOfxFunctor = new AccountInfoOfxFunctor();
     try {
@@ -140,14 +141,25 @@ public class OfxConnection {
 
   public static void main(String[] args) throws IOException {
     Reader reader = new BufferedReader(new InputStreamReader(System.in));
-    char[] chars = new char[255];
-    int count = reader.read(chars);
-    String password = new String(chars, 0, count - 1);
+//    char[] chars = new char[255];
+//    int count = reader.read(chars);
+//    String password = new String(chars, 0, count - 1);
     String fromDate = previousDate(120);
     System.out.println("OfxConnection.main ");
+//    String account = "XXXX";
+//    String password = "XXXX";
+//    String url = "https://online.americanexpress.com/myca/ofxdl/desktop/desktopDownload.do?request_type=nl_ofxdownload";
+//    String org = "AMEX";
+//    String fid = "3101";
+    String account = "XXXX";
+    String password = "XXXX";
+    String url = "https://ofx.videoposte.com";
+    String org = "0";
+    String fid = "0";
+
     DefaultGlobRepository repository = new DefaultGlobRepository(new DefaultGlobIdGenerator());
-    List<AccountInfo> globList = OfxConnection.getInstance().getAccounts("0350763423L", password, previousDate(1),
-                                                                         "https://ofx.videoposte.com", "0", "0");
+    List<AccountInfo> globList = OfxConnection.getInstance().getAccounts(account, password, previousDate(1),
+                                                                         url, org, fid);
     System.out.println("OfxConnection.main " + globList);
     for (AccountInfo accountInfo : globList) {
       System.out.println("OfxConnection.main " + accountInfo.number + " " + accountInfo.accType);
@@ -157,8 +169,8 @@ public class OfxConnection {
                                     FieldValue.value(RealAccount.BANK_ID, accountInfo.bankId),
                                     FieldValue.value(RealAccount.NUMBER, accountInfo.number),
                                     FieldValue.value(RealAccount.FROM_SYNCHRO, true));
-      OfxConnection.getInstance().loadOperation(glob, fromDate, "0350763423L", password,
-                                                "https://ofx.videoposte.com", "0", "0", outputFile);
+      OfxConnection.getInstance().loadOperation(glob, fromDate, account, password,
+                                                url, org, fid, outputFile);
       OfxImporter importer = new OfxImporter();
       GlobList list = importer.loadTransactions(new FileReader(outputFile), repository, repository, null);
       System.out.println("OfxConnection.main " + list.size());

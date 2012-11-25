@@ -40,9 +40,9 @@ public class GlobPrinterTest extends TestCase {
     createObj(1, "n2", "2006/02/21", "2005/12/24 23:59:59");
 
     checkOutput("===== dummyObject ======" + LINE_SEPARATOR +
-                "| id | name | value | present | date       | timestamp           | password | link | link2 |" + LINE_SEPARATOR +
-                "| 0  | n1   |       |         | 2006/02/23 | 2006/01/21 12:34:05 |          |      |       |" + LINE_SEPARATOR +
-                "| 1  | n2   |       |         | 2006/02/21 | 2005/12/24 23:59:59 |          |      |       |" + LINE_SEPARATOR +
+                "| id | name | value | count | present | date       | timestamp           | password | link | link2 |" + LINE_SEPARATOR +
+                "| 0  | n1   |       |       |         | 2006/02/23 | 2006/01/21 12:34:05 |          |      |       |" + LINE_SEPARATOR +
+                "| 1  | n2   |       |       |         | 2006/02/21 | 2005/12/24 23:59:59 |          |      |       |" + LINE_SEPARATOR +
                 "" + LINE_SEPARATOR +
                 "===== dummyObject2 ======" + LINE_SEPARATOR +
                 "| id | label | value |" + LINE_SEPARATOR +
@@ -55,8 +55,8 @@ public class GlobPrinterTest extends TestCase {
     createObj(0, "n1", "2006/02/23", "2006/01/21 12:34:05");
 
     checkOutput("===== dummyObject ======" + LINE_SEPARATOR +
-                "| id | name | value | present | date       | timestamp           | password | link | link2 |" + LINE_SEPARATOR +
-                "| 0  | n1   |       |         | 2006/02/23 | 2006/01/21 12:34:05 |          |      |       |" + LINE_SEPARATOR +
+                "| id | name | value | count | present | date       | timestamp           | password | link | link2 |" + LINE_SEPARATOR +
+                "| 0  | n1   |       |       |         | 2006/02/23 | 2006/01/21 12:34:05 |          |      |       |" + LINE_SEPARATOR +
                 "" + LINE_SEPARATOR,
                 DummyObject.TYPE);
 
@@ -92,9 +92,9 @@ public class GlobPrinterTest extends TestCase {
                       value(DummyObject.NAME, "obj2"));
 
     checkRepositoryOutput("===== dummyObject ======" + LINE_SEPARATOR +
-                          "| id | name | value | present | date | timestamp | password | link     | link2 |" + LINE_SEPARATOR +
-                          "| 1  | obj1 |       |         |      |           |          | [2] obj2 |       |" + LINE_SEPARATOR +
-                          "| 2  | obj2 |       |         |      |           |          |          |       |" + LINE_SEPARATOR +
+                          "| id | name | value | count | present | date | timestamp | password | link     | link2 |" + LINE_SEPARATOR +
+                          "| 1  | obj1 |       |       |         |      |           |          | [2] obj2 |       |" + LINE_SEPARATOR +
+                          "| 2  | obj2 |       |       |         |      |           |          |          |       |" + LINE_SEPARATOR +
                           "" + LINE_SEPARATOR, DummyObject.TYPE);
   }
 
@@ -107,6 +107,7 @@ public class GlobPrinterTest extends TestCase {
     checkOutput(glob,
                 "===== dummyObject[id=1] ======\n" +
                 "| Field     | Value |\n" +
+                "| count     |       |\n" +
                 "| date      |       |\n" +
                 "| id        | 1     |\n" +
                 "| link      | 2     |\n" +

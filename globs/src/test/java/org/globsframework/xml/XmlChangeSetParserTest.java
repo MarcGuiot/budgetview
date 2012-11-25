@@ -43,7 +43,7 @@ public class XmlChangeSetParserTest extends TestCase {
 
       public void visitDeletion(Key key, FieldValues values) throws Exception {
         assertEquals(3, key.get(DummyObject.ID).intValue());
-        assertEquals(8, values.size());
+        assertEquals(9, values.size());
         assertEquals("name3", values.get(DummyObject.NAME));
         assertNull(values.get(DummyObject.VALUE));
         assertNull(values.get(DummyObject.PRESENT));

@@ -163,9 +163,9 @@ public class SG extends WebBankPage {
   private class ValiderActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
       try {
-        HtmlElement elementById = page.getElementById("codcli");
+        DomElement elementById = page.getElementById("codcli");
         ((HtmlInput)elementById).setValueAttribute(code.getText());
-        Page newPage = page.getElementById("button").click();
+        Page newPage = ((HtmlElement)page.getElementById("button")).click();
 //        System.out.println("SG$ValiderActionListener.actionPerformed " + newPage);
 //        page = (HtmlPage)newPage;
         if (hasError) {
@@ -173,7 +173,7 @@ public class SG extends WebBankPage {
           return;
         }
 
-        HtmlElement zoneClavier = page.getElementById("tc_cvcs");
+        HtmlElement zoneClavier = (HtmlElement)page.getElementById("tc_cvcs");
         HtmlInput password = (HtmlInput)zoneClavier.getElementById("tc_visu_saisie");
         HtmlImage htmlImageClavier = zoneClavier.getElementById("img_clavier");
         htmlImageClavier.fireEvent(Event.TYPE_LOAD);
@@ -238,7 +238,7 @@ public class SG extends WebBankPage {
           if (page.getTitleText().contains("Erreur")) {
             return;
           }
-          HtmlElement content = null;
+          DomElement content = null;
           int count = 3;
           while (!hasError && content == null && count != 0) {
             content = page.getElementById("content");
@@ -255,7 +255,7 @@ public class SG extends WebBankPage {
               hasError = false;
               return;
             }
-            List<HtmlTable> tables = content.getElementsByAttribute(HtmlTable.TAG_NAME, "class", "LGNTableA ListePrestation");
+            List<HtmlTable> tables = ((HtmlElement)content).getElementsByAttribute(HtmlTable.TAG_NAME, "class", "LGNTableA ListePrestation");
             if (tables.size() != 1) {
               throw new RuntimeException("Find " + tables.size() + " table(s) in " + page.asXml());
             }
@@ -316,13 +316,40 @@ public class SG extends WebBankPage {
   public void loadFile() {
     HtmlSelect compte = getElementById("compte");
     List<HtmlOption> accountList = compte.getOptions();
-    for (HtmlOption option : accountList) {
+    for (int i = 0, size = accountList.size(); i < size; i++) {
+      HtmlOption option = accountList.get(i);
       Glob realAccount = find(option, this.accounts);
       if (realAccount != null) {
-          page = (HtmlPage)compte.setSelectedAttribute(option, true);
-          File file = downloadFor(realAccount);
-          if (file != null) {
-            repository.update(realAccount.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+        page = (HtmlPage)compte.setSelectedAttribute(option, true);
+        File file = downloadFor(realAccount);
+        if (file != null) {
+          repository.update(realAccount.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+        }
+        else {
+          try {
+//            DomElement error = ((HtmlPage)client.getCurrentWindow().getEnclosedPage()).getElementById("div_NET2G");
+//            DomNodeList<HtmlElement> name = error.getElementsByTagName(HtmlAnchor.TAG_NAME);
+//            if (name.size() == 1 && name.get(0).hasAttribute()){
+//              page = name.get(0).click();
+//            }
+//            else {
+            page = client.getPage(URL_TELECHARGEMENT);
+            compte = getElementById("compte");
+            accountList = compte.getOptions();
+//            }
+          }
+          catch (Exception e) {
+            Log.write("Can not go back", e);
+            try {
+              page = client.getPage(URL_TELECHARGEMENT);
+              compte = getElementById("compte");
+              accountList = compte.getOptions();
+            }
+            catch (IOException e1) {
+              Log.write("Can not load page");
+              return;
+            }
+          }
         }
       }
     }

@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CsvReader {
-  private static final Pattern DATE_PATTERN = Pattern.compile("[0-9]{2,4}[\\.-/][0-9]{2,4}[\\.-/][0-9]{2,4}");
+  private static final Pattern DATE_PATTERN = Pattern.compile("[0-9]{2,4}[\\.\\-/][0-9]{2,4}[\\.\\-/][0-9]{2,4}");
   private static final Pattern PATTERN_NORMALIZE = Pattern.compile("^\"(.*)\"$");
 
   public static CsvSeparator findSeparator(String firstLine) throws InvalidCsvFileFormat {

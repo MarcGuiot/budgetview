@@ -28,27 +28,50 @@ public class OfxWriter {
     }
   }
 
-  public void writeLoadOp(String fromDate, String currentDate, String user, String password, final String org, final String fid, final String bankId,
+  public void writeLoadOp(String fromDate, String currentDate, String user, String password, final String org,
+                          final String fid, final String bankId,
                           final String accountNumber, final String accountType){
     writeHeader(user, password, org, fid, currentDate);
-    String str = "<BANKMSGSRQV1>\n" +
-                 "<STMTTRNRQ>\n" +
-                 "<TRNUID>20110829000000\n" +
-                 "<CLTCOOKIE>1\n" +
-                 "<STMTRQ>\n" +
-                 "<BANKACCTFROM>\n" +
-                 "<BANKID>" + bankId + "\n" +
-                 "<ACCTID>" + accountNumber + "\n" +
-                 "<ACCTTYPE>" + accountType + "\n" +
-                 "</BANKACCTFROM>\n" +
-                 "<INCTRAN>\n" +
-                 "<DTSTART>" + fromDate + "\n" +
-                 "<INCLUDE>Y\n" +
-                 "</INCTRAN>\n" +
-                 "</STMTRQ>\n" +
-                 "</STMTTRNRQ>\n" +
-                 "</BANKMSGSRQV1>\n" +
-                 "</OFX>";
+
+    String str;
+    if (bankId == null) {
+      str = "<CREDITCARDMSGSRQV1>\n" +
+            "<CCSTMTTRNRQ>\n" +
+            "<TRNUID>" + UUID.randomUUID().toString()+ "\n" +
+            "<CLTCOOKIE>1\n" +
+            "<CCSTMTRQ>\n" +
+            "<CCACCTFROM>\n" +
+            "<ACCTID>" + accountNumber + "\n" +
+            "</CCACCTFROM>\n" +
+            "<INCTRAN>\n" +
+            "<DTSTART>" + fromDate + "\n" +
+            "<INCLUDE>Y\n" +
+            "</INCTRAN>\n" +
+            "</CCSTMTRQ>\n" +
+            "</CCSTMTTRNRQ>\n" +
+            "</CREDITCARDMSGSRQV1>\n" +
+            "</OFX>";
+    }
+    else {
+      str = "<BANKMSGSRQV1>\n" +
+                   "<STMTTRNRQ>\n" +
+                   "<TRNUID>" + UUID.randomUUID().toString()+ "\n" +
+                   "<CLTCOOKIE>1\n" +
+                   "<STMTRQ>\n" +
+                   "<BANKACCTFROM>\n" +
+                   "<BANKID>" + bankId + "\n" +
+                   "<ACCTID>" + accountNumber + "\n" +
+                   "<ACCTTYPE>" + (accountType == null ? "" : accountType) + "\n" +
+                   "</BANKACCTFROM>\n" +
+                   "<INCTRAN>\n" +
+                   "<DTSTART>" + fromDate + "\n" +
+                   "<INCLUDE>Y\n" +
+                   "</INCTRAN>\n" +
+                   "</STMTRQ>\n" +
+                   "</STMTTRNRQ>\n" +
+                   "</BANKMSGSRQV1>\n" +
+                   "</OFX>";
+    }
     write(str);
   }
 
@@ -68,8 +91,10 @@ public class OfxWriter {
   }
 
   private void writeHeader(String user, String password, String org, String fid, String currentDate) {
-    String applicationId = "Money"; //many institutions just won't work with an unrecognized app id...
-    String applicationVersion = "1600"; //many institutions just won't work with an unrecognized app id...
+//    String applicationId = "Money"; //many institutions just won't work with an unrecognized app id...
+//    String applicationVersion = "1600"; //many institutions just won't work with an unrecognized app id...
+    String applicationId = "QWIN"; //many institutions just won't work with an unrecognized app id...
+    String applicationVersion = "1800"; //many institutions just won't work with an unrecognized app id...
     write("OFXHEADER:100\n" +
     "DATA:OFXSGML\n" +
     "VERSION:102\n" +

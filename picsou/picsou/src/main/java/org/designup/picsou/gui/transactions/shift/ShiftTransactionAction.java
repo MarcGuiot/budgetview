@@ -84,6 +84,22 @@ public class ShiftTransactionAction extends SingleSelectionAction implements Cha
       return;
     }
 
+    // tentative de shifter les operation defferees
+//    if (!account.get(Account.CARD_TYPE).equals(AccountCardType.NOT_A_CARD.getId())) {
+//      Integer month = transaction.get(Transaction.BUDGET_MONTH);
+//      Glob deferredCard = repository
+//        .findByIndex(DeferredCardDate.ACCOUNT_AND_DATE, DeferredCardDate.ACCOUNT, account.get(Account.ID))
+//        .findByIndex(DeferredCardDate.MONTH, month).getGlobs().getFirst();
+//
+//      if (deferredCard != null){
+//        Integer day = deferredCard.get(DeferredCardDate.DAY);
+//
+//      }
+//
+//
+//      return;
+//    }
+
     putValue(NAME, Lang.get("shift.transaction.button"));
     putValue(SHORT_DESCRIPTION, Lang.get("shift.transaction.tooltip"));
 

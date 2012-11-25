@@ -1014,6 +1014,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
                              "id=1\n" +
                              "name=obj1\n" +
                              "value=null\n" +
+                             "count=null\n" +
                              "present=null\n" +
                              "date=null\n" +
                              "timestamp=null\n" +
