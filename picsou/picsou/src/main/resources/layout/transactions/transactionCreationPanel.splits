@@ -18,7 +18,6 @@
            font="-,plain,12" foreground="import.form.label"
            horizontalTextPosition="left"
            horizontalAlignment="left" fill="none" anchor="east"/>
-
   </styles>
 
   <column styleClass="transactionCreation">
@@ -47,9 +46,10 @@
 
     <row margin="5" marginTop="10" border="matte(1,0,0,0,block.inner.separator)">
       <column marginTop="5">
-        <checkBox ref="shouldBeReconciled" text="$transactionCreation.reconciliation" styleClass="formElement"/>
         <checkBox ref="updateAccountPosition" text="$transactionCreation.updateAccount" styleClass="formElement"/>
+        <checkBox ref="shouldBeReconciled" text="$transactionCreation.reconciliation" styleClass="formElement"/>
       </column>
+      <button styleClass="helpIcon" action="help" marginLeft="5"/>
       <filler fill="horizontal"/>
       <button ref="create" anchor="center"/>
     </row>

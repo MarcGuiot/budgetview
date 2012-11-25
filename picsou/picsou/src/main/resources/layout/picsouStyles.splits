@@ -91,6 +91,10 @@
            icon="magnifier_small.png" rolloverIcon="magnifier_rollover.png" pressedIcon="magnifier_rollover.png"
            preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
 
+    <style selector="button.helpIcon" weightX="0" cursor="hand" fill="none" anchor="center"
+           icon="help_button_grey.png" rolloverIcon="help_button_blue.png" pressedIcon="help_button_pressed.png"
+           preferredSize="(22,22)" text="" opaque="false" borderPainted="false"/>
+
     <style selector="button.remove" weightX="0"
            text="" opaque="false" borderPainted="false" icon="button_delete.png"
            cursor="hand"/>

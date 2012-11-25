@@ -11,6 +11,7 @@ import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.tips.DetailsTip;
 import org.designup.picsou.gui.description.stringifiers.MonthFieldListStringifier;
+import org.designup.picsou.gui.help.actions.HelpAction;
 import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.startup.components.AutoCategorizationFunctor;
@@ -133,6 +134,8 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     labelField.addActionListener(createAction);
     JButton createButton = new JButton(createAction);
     builder.add("create", createButton);
+
+    builder.add("help", new HelpAction(Lang.get("help"), "manualInput", Lang.get("help"), directory));
 
     panel = builder.load();
 

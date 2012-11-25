@@ -311,6 +311,10 @@ public class TransactionCreationChecker extends ViewChecker {
     checkNoTipVisible(getPanel());
   }
 
+  public HelpChecker openHelp() {
+    return HelpChecker.open(getPanel().getButton("help").triggerClick());
+  }
+
   private Panel getPanel() {
     if (panel == null) {
       views.selectCategorization();

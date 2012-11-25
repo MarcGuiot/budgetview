@@ -1,17 +1,33 @@
 <html>
 <body>
 
-<p>Dans le cas où vous ne pouvez pas <a href="help:import">importer vos opérations</a> à partir du
-  site internet de votre banque, il vous est possible de saisir vous-mêmes vos opérations une à une
-  dans l'outil. Cette approche est également utile pour gérer un compte "argent liquide", pour lequel
-  - par définition - l'import est impossible.</p>
+<p>Pour mettre à jour vos comptes, nous vous recommandons d'<a href="help:import">importer vos opérations</a> à partir du
+  site internet de votre banque. Il vous est cependant tout à fait possible de saisir manuellement
+  vos opérations dans l'outil.</p>
 
 <p>Pour cela, vous devez vous rendre dans la vue <b>Catégorisation</b>
-  (<a href="card:categorization">sélectionner</a>). Au bas du bloc de gauche, vous trouverez un lien
+  (<a href="card:categorization">sélectionner</a>). Au bas du bloc de gauche, vous trouverez un bouton
   "Saisir des opérations manuellement".</p>
 
-<p>Pour saisir des opérations, vous devez disposer d'un compte dont le mode de mise à jour soit
-  "Saisie manuelle". Si ce n'est pas le cas, il vous sera proposé d'en créer un.</p>
+<p>Vous devez préciser deux options lors de la saisie&nbsp;:</p>
+
+<h2>Mettre à jour le solde du compte</h2>
+
+<p>Cette option est active par défaut, pour le cas où vous saisissez vos opérations au fil de l'eau.
+  Nous vous recommandons de la désactiver dans les cas suivants&nbsp;:</p>
+<ul>
+  <li>saisie d'opérations manquantes dans le passé</li>
+  <li>saisie d'opérations prévues dans le futur</li>
+</ul>
+
+<h2>A réconcilier lors d'un prochain import</h2>
+
+<p>Si vous saisissez des opérations pour un compte dans lequel vous faites des imports à partir du
+  site de votre banque, vous risquez de vous retrouver avec des doublons qui pourraient fausser votre budget.</p>
+
+<p>Si vous sélectionnez cette option, BudgetView vous rappellera que ces opérations doivent être réconciliées lors
+  des prochains imports. Vous pourrez alors sélectionner les opérations importées correspondantes,
+  et ainsi éliminer les doublons.</p>
 
 </body>
 </html>
