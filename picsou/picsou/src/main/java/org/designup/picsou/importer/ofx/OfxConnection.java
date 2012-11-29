@@ -146,16 +146,16 @@ public class OfxConnection {
 //    String password = new String(chars, 0, count - 1);
     String fromDate = previousDate(120);
     System.out.println("OfxConnection.main ");
+    String account = "";
+    String password = "";
+    String url = "https://online.americanexpress.com/myca/ofxdl/desktop/desktopDownload.do?request_type=nl_ofxdownload";
+    String org = "AMEX";
+    String fid = "3101";
 //    String account = "XXXX";
 //    String password = "XXXX";
-//    String url = "https://online.americanexpress.com/myca/ofxdl/desktop/desktopDownload.do?request_type=nl_ofxdownload";
-//    String org = "AMEX";
-//    String fid = "3101";
-    String account = "XXXX";
-    String password = "XXXX";
-    String url = "https://ofx.videoposte.com";
-    String org = "0";
-    String fid = "0";
+//    String url = "https://ofx.videoposte.com";
+//    String org = "0";
+//    String fid = "0";
 
     DefaultGlobRepository repository = new DefaultGlobRepository(new DefaultGlobIdGenerator());
     List<AccountInfo> globList = OfxConnection.getInstance().getAccounts(account, password, previousDate(1),

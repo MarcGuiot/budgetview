@@ -214,7 +214,8 @@ public class UpgradeTrigger implements ChangeSetListener {
                                                  firstTransaction.get(Transaction.POSITION_DAY)));
           open = Math.min(open, Month.toFullDate(firstTransaction.get(Transaction.BANK_MONTH),
                                                  firstTransaction.get(Transaction.BANK_DAY)));
-          openAmount = firstTransaction.get(Transaction.ACCOUNT_POSITION) + firstTransaction.get(Transaction.AMOUNT);
+          Double firstPos = firstTransaction.get(Transaction.ACCOUNT_POSITION, 0.);
+          openAmount = firstPos + firstTransaction.get(Transaction.AMOUNT);
         }
         AccountInitialPositionTrigger.createOpenTransaction(Month.getMonthIdFromFullDate(open),
                                                             Month.getDayFromFullDate(open), openAmount, repository,
@@ -224,14 +225,13 @@ public class UpgradeTrigger implements ChangeSetListener {
         if (closeDate != null) {
           close = Month.toFullDate(closeDate);
         }
-        double closeAmount = 0;
         if (!transactions.isEmpty()) {
           Glob lastTransaction = transactions.get(transactions.size() - 1);
           close = Math.max(close, Month.toFullDate(lastTransaction.get(Transaction.POSITION_MONTH),
                                                    lastTransaction.get(Transaction.POSITION_DAY)));
           close = Math.max(close, Month.toFullDate(lastTransaction.get(Transaction.BANK_MONTH),
                                                    lastTransaction.get(Transaction.BANK_DAY)));
-          closeAmount = lastTransaction.get(Transaction.ACCOUNT_POSITION);
+          double closeAmount = lastTransaction.get(Transaction.ACCOUNT_POSITION, 0.);
           AccountInitialPositionTrigger.createCloseTransaction(repository, account.getKey(), Month.getDayFromFullDate(close),
                                                                Month.getMonthIdFromFullDate(close), closeAmount);
 
