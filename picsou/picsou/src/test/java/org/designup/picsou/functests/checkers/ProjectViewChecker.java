@@ -22,6 +22,10 @@ public class ProjectViewChecker extends ViewChecker {
     return ProjectEditionChecker.open(getChart().triggerClick(projectName));
   }
 
+  public void selectMonth(int monthId) {
+    getChart().clickColumnId(monthId);
+  }
+
   public ProjectViewChecker checkNoProjectShown() {
     getChart().checkNoElementShown();
     return this;

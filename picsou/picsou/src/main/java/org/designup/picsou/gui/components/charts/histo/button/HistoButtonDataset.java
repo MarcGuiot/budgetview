@@ -23,9 +23,9 @@ public class HistoButtonDataset extends AbstractHistoDataset<HistoDatasetElement
 
   public String getTooltip(int index, Set<Key> objectKey) {
     if (objectKey.isEmpty()) {
-      return keyMap.get(objectKey.iterator().next()).tooltip;
+      return null;
     }
-    return null;
+    return keyMap.get(objectKey.iterator().next()).tooltip;
   }
 
   public void addColumn(int id, String label, String tooltip, String section, boolean current, boolean future, boolean selected) {

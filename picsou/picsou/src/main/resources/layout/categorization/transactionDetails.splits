@@ -83,7 +83,7 @@
                           ref="originalLabel" foreground="transaction.detail.formLabel" font="-,plain,10"/>
 
           <label gridPos="(0,2,3,1)"
-                 ref="details" styleClass="formLabel" horizontalAlignment="left"/>
+                 ref="details" styleClass="formLabel" horizontalAlignment="left" marginBottom="3"/>
 
           <label gridPos="(0,3,1,1)"
                  text="$transaction.details.note" styleClass="formLabel"/>

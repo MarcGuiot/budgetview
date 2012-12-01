@@ -4,8 +4,6 @@ import org.designup.picsou.functests.checkers.ProjectEditionChecker;
 import org.designup.picsou.functests.checkers.components.TipChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.Transaction;
-import org.globsframework.model.format.GlobPrinter;
 
 public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
@@ -536,5 +534,27 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     budgetView.extras
       .checkTotalAmounts(-100.00, 0.00)
       .checkSeries("Trip", -100.00, 0.00);
+  }
+
+  public void testClickingOnTheBackgroundSelectsTheGivenMonth() throws Exception {
+    operations.hideSignposts();
+
+    operations.openPreferences().setFutureMonthsCount(4).validate();
+    operations.hideSignposts();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/12/01")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .load();
+
+    projects.create()
+      .setName("My project")
+      .setItemName(0, "Reservation")
+      .setItemDate(0, 201012)
+      .setItemAmount(0, -200.00)
+      .validate();
+
+    projects.selectMonth(201101);
+    timeline.checkSelection("2011/01");
   }
 }

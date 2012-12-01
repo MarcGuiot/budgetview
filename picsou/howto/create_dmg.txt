@@ -30,7 +30,7 @@ EN:
 
 6. Fermer le dmg budgetview ouvert.
 
-7. Dans le Desktop, ouvrir budgetview_template.dmg avec Disk Utility, et lancer "Convert" avec comme nom de fichier le nom cible (par exemple BudgetView-2.0.dmg)
+7. Dans le Desktop, ouvrir budgetview_template.dmg avec Disk Utility, et lancer "Convert" avec comme nom de fichier le nom cible (par exemple BudgetView-2.0-fr.dmg)
   
 8. Executer : 
 

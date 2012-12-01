@@ -62,6 +62,10 @@ public class HistoButtonPainter implements HistoPainter {
   }
 
   public Set<Key> getObjectKeysAt(int x, int y) {
-    return Collections.singleton(clickMap.getKey(x, y));
+    Key key = clickMap.getKey(x, y);
+    if (key == null) {
+      return Collections.emptySet();
+    }
+    return Collections.singleton(key);
   }
 }
