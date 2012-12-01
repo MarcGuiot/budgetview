@@ -18,6 +18,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobStringifier;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -35,9 +36,10 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
      BudgetArea.INCOME, BudgetArea.RECURRING, BudgetArea.VARIABLE,
      BudgetArea.SAVINGS, BudgetArea.EXTRAS, BudgetArea.OTHER};
 
-  private TransactionRendererColors colors;
   private GlobRepository repository;
   private Directory directory;
+  private GlobMatcher toReconcileMatcher;
+  private TransactionRendererColors colors;
   private CategorizationCard categorizationCard;
   private CardHandler seriesCard;
   private JLabel title;
@@ -53,7 +55,10 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
   private ReconciliationNavigationPanel reconciliationNavigation;
   private SplitsNode<JLabel> downArrow;
 
-  public CategorizationSelector(TransactionRendererColors colors, GlobRepository repository, Directory directory) {
+  public CategorizationSelector(GlobMatcher toReconcileMatcher,
+                                TransactionRendererColors colors,
+                                GlobRepository repository, Directory directory) {
+    this.toReconcileMatcher = toReconcileMatcher;
     this.colors = colors;
     this.repository = repository;
     this.directory = directory;
@@ -82,7 +87,7 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
     reconciliationPanel = new ReconciliationPanel(colors, repository, directory);
     builder.add("reconciliationPanel", reconciliationPanel.getPanel());
 
-    reconciliationNavigation = new ReconciliationNavigationPanel(repository, directory) {
+    reconciliationNavigation = new ReconciliationNavigationPanel(toReconcileMatcher, repository, directory) {
       protected void showCategorization() {
         categorizationCard.showCategorization();
       }
@@ -206,7 +211,7 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
     if (selectedTransactions.size() == 1) {
       Glob first = selectedTransactions.getFirst();
       reconciliationPanel.update(first);
-      if (Transaction.isToReconcile(first) && Transaction.isCategorized(first)) {
+      if (toReconcileMatcher.matches(first, repository) && Transaction.isCategorized(first)) {
         categorizationCard.showReconciliation();
         return;
       }

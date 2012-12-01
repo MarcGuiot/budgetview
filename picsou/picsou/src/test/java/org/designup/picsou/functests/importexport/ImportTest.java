@@ -587,10 +587,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   }
 
   public void testLastImportCoversAllImportedAccounts() throws Exception {
-    
-//    fail("[Regis] Cas du ticket #1141 - creer un TransactionImport pour tout le fichier, et pas pour chaque compte. A finaliser quand les autres 60 tests passeront.");
-    // REGIS: 
-    
     OfxBuilder
       .init(this)
       .addBankAccount("0001", 100.00, "2006/01/30")

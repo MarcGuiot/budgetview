@@ -9,12 +9,14 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public abstract class ReconciliationNavigationPanel implements GlobSelectionListener {
+  private GlobMatcher toReconcileMatcher;
   private GlobRepository repository;
   private Directory directory;
 
@@ -22,7 +24,8 @@ public abstract class ReconciliationNavigationPanel implements GlobSelectionList
   private JButton switchToReconciliation;
   private JButton switchToCategorization;
 
-  public ReconciliationNavigationPanel(GlobRepository repository, Directory directory) {
+  public ReconciliationNavigationPanel(GlobMatcher toReconcileMatcher, GlobRepository repository, Directory directory) {
+    this.toReconcileMatcher = toReconcileMatcher;
     this.repository = repository;
     this.directory = directory;
     createPanel();
@@ -89,7 +92,7 @@ public abstract class ReconciliationNavigationPanel implements GlobSelectionList
       return false;
     }
     for (Glob transaction : transactions) {
-      if (Transaction.isToReconcile(transaction)) {
+      if (toReconcileMatcher.matches(transaction, repository)) {
         return true;
       }
     }

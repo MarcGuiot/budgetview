@@ -235,7 +235,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
     transactionCreation = new TransactionCreationPanel(repository, directory, parentDirectory);
     transactionCreation.registerComponents(builder);
 
-    CategorizationSelector selector = new CategorizationSelector(colors, repository, directory);
+    CategorizationSelector selector = new CategorizationSelector(new ToReconcileMatcher(), colors, repository, directory);
     selector.registerComponents(builder);
 
     addSeriesChooser("incomeSeriesChooser", BudgetArea.INCOME, builder);
@@ -743,6 +743,12 @@ public class CategorizationView extends View implements TableView, Filterable, C
       Gui.setColumnSizes(tableView.getComponent(), CategorizationView.COLUMN_SIZES);
       filteringModeCombo.setModel(new DefaultComboBoxModel(CategorizationFilteringMode.getValues(false)));
       setFilteringMode(CategorizationFilteringMode.ALL);
+    }
+  }
+
+  private class ToReconcileMatcher implements GlobMatcher {
+    public boolean matches(Glob transaction, GlobRepository repository) {
+      return Transaction.isToReconcile(transaction) && !categorizedTransactions.contains(transaction.getKey());
     }
   }
 }

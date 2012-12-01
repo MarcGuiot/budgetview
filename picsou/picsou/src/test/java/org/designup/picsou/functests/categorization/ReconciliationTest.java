@@ -40,6 +40,13 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .addSubSeries("Misc")
       .validate();
     categorization.setVariable("[R] AUCHAN", "Groceries", "Misc");
+    categorization.checkCategorizationShown();
+
+    categorization.selectTransaction("[R] FNAC");
+    categorization.checkCategorizationShown();
+
+    categorization.selectTransaction("[R] AUCHAN");
+    categorization.checkReconciliationShown();
 
     setCurrentDate("2012/05/28");
     operations.changeDate();
