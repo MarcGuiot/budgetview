@@ -98,7 +98,8 @@ public class StackChartMetrics {
                                      percentageText,
                                      labelTextY,
                                      barTextY,
-                                     dataset.isSelected(i)));
+                                     dataset.isSelected(i),
+                                     dataset.getTooltipText(i)));
 
       if (remainingPercentage == 0) {
         break;

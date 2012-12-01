@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.components.charts.stack;
 
+import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.model.Key;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -98,6 +99,10 @@ public class StackChartDataset {
 
   public Key getKey(int index) {
     return elements.get(index).key;
+  }
+
+  public String getTooltipText(int index) {
+    return Formatting.toString(elements.get(index).value);
   }
 
   private static class Element implements Comparable<Element> {

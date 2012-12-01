@@ -157,6 +157,10 @@ public class StackChart extends JPanel {
       g2.setColor(isRollover(block) ? Colors.brighten(blockColor, 0.1f) : blockColor);
       g2.fillRect(layout.barX(), block.blockY, metrics.barWidth(), block.blockHeight);
 
+      if (isRollover(block)) {
+        setToolTipText(block.tooltipText);
+      }
+
       if (block.selected) {
         g2.setColor(colors.getSelectionBorderColor());
         g2.setStroke(SELECTION_STROKE);

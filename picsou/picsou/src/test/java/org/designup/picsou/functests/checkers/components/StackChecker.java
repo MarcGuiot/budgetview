@@ -7,6 +7,7 @@ import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.checkers.ViewSelectionChecker;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
+import org.designup.picsou.gui.description.Formatting;
 import org.uispec4j.Key;
 import org.uispec4j.Panel;
 import org.uispec4j.Trigger;
@@ -137,6 +138,7 @@ public class StackChecker extends GuiChecker {
       int index = getIndex(label);
       Assert.assertEquals(getErrorMessage(), expected, dataset.getValue(index), 0.01);
       Assert.assertEquals(getErrorMessage(), selected, dataset.isSelected(index));
+      Assert.assertEquals(getErrorMessage(), Formatting.toString(expected), dataset.getTooltipText(index));
       return this;
     }
 
