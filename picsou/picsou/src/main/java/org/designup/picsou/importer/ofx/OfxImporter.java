@@ -1,5 +1,6 @@
 package org.designup.picsou.importer.ofx;
 
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.importer.utils.InvalidFileFormat;
 import org.designup.picsou.gui.time.TimeService;
@@ -7,13 +8,10 @@ import org.designup.picsou.importer.AccountFileImporter;
 import org.designup.picsou.importer.utils.DateFormatAnalyzer;
 import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.*;
-import com.budgetview.shared.utils.Amounts;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
-
 import org.globsframework.model.repository.GlobIdGenerator;
-import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.exceptions.TruncatedFile;
 
 import java.io.IOException;
@@ -21,6 +19,8 @@ import java.io.Reader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class OfxImporter implements AccountFileImporter {
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
@@ -308,7 +308,7 @@ public class OfxImporter implements AccountFileImporter {
         }
       }
       currentAccount = repository.create(RealAccount.TYPE,
-                                         value(RealAccount.NUMBER, accountNumber),
+                                         value(RealAccount.NUMBER, Strings.toString(accountNumber)),
                                          value(RealAccount.ID, generator.getNextId(RealAccount.ID, 1)),
                                          value(RealAccount.NAME, Account.getName(accountNumber, isCreditCard)),
                                          value(RealAccount.BANK, bankId),

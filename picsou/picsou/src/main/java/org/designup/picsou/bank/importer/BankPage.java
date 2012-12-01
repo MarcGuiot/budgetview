@@ -1,31 +1,34 @@
 package org.designup.picsou.bank.importer;
 
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.RealAccount;
-import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import static org.globsframework.model.utils.GlobMatchers.and;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
+import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
+
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public abstract class BankPage {
   private Window parent;
@@ -59,17 +62,17 @@ public abstract class BankPage {
   protected void createOrUpdateRealAccount(String name, String number, String position, Date date, final Integer bankId) {
     if (Strings.isNotEmpty(name) || Strings.isNotEmpty(number)) {
       Glob account = repository.getAll(RealAccount.TYPE,
-                                       and(fieldEquals(RealAccount.NAME, name.trim()),
-                                           fieldEquals(RealAccount.NUMBER, number.trim()),
+                                       and(fieldEquals(RealAccount.NAME, Strings.toString(name).trim()),
+                                           fieldEquals(RealAccount.NUMBER, Strings.toString(number).trim()),
                                            fieldEquals(RealAccount.BANK, bankId)))
         .getFirst();
       if (account == null) {
         account = repository.create(RealAccount.TYPE,
-                                    value(RealAccount.NAME, name.trim()),
-                                    value(RealAccount.NUMBER, number.trim()),
+                                    value(RealAccount.NAME, Strings.toString(name).trim()),
+                                    value(RealAccount.NUMBER, Strings.toString(number).trim()),
                                     value(RealAccount.BANK, bankId),
                                     value(RealAccount.POSITION_DATE, date),
-                                    value(RealAccount.POSITION, position.trim()),
+                                    value(RealAccount.POSITION, Strings.toString(position).trim()),
                                     value(RealAccount.FROM_SYNCHRO, true));
       }
       else {
@@ -93,8 +96,8 @@ public abstract class BankPage {
         .getFirst();
       if (account == null) {
         account = repository.create(RealAccount.TYPE,
-                                    value(RealAccount.ACC_TYPE, type.trim()),
-                                    value(RealAccount.NUMBER, number.trim()),
+                                    value(RealAccount.ACC_TYPE, Strings.toString(type).trim()),
+                                    value(RealAccount.NUMBER, Strings.toString(number).trim()),
                                     value(RealAccount.URL, url),
                                     value(RealAccount.ORG, org),
                                     value(RealAccount.BANK, bankId),

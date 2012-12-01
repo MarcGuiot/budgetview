@@ -246,6 +246,7 @@ public class GuiUtils {
     Point origin;
     Dimension parentSize;
 
+    Dimension maxSize = getMaxSize(window);
     Container parent = window.getParent();
     if ((parent != null) && parent.isShowing()) {
       origin = parent.getLocationOnScreen();
@@ -254,12 +255,19 @@ public class GuiUtils {
     else {
       Insets screenInsets = getScreenInsets(window);
       origin = new Point(screenInsets.left, screenInsets.top);
-      parentSize = getMaxSize(window);
+      parentSize = maxSize;
     }
 
     Dimension windowSize = window.getSize();
-    window.setLocation(origin.x + parentSize.width / 2 - windowSize.width / 2,
-                       origin.y + parentSize.height / 2 - windowSize.height / 2);
+    if (windowSize.width > maxSize.width){
+      windowSize.width = maxSize.width;
+    }
+    if (windowSize.height > maxSize.height){
+      windowSize.height = maxSize.height;
+    }
+    window.setBounds(origin.x + parentSize.width / 2 - windowSize.width / 2,
+                     origin.y + parentSize.height / 2 - windowSize.height / 2,
+                     windowSize.width, windowSize.height);
   }
 
   public static void showFullSize(Window window) {

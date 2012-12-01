@@ -1,14 +1,13 @@
 package org.designup.picsou.gui.plaf;
 
+import org.designup.picsou.gui.components.tabs.VerticalTabPanelUI;
+import org.designup.picsou.gui.components.tabs.VerticalTabToggleUI;
+import org.designup.picsou.gui.components.ui.*;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
 import org.globsframework.gui.splits.components.StyledToggleButtonUI;
 import org.globsframework.gui.splits.components.StyledPanelUI;
 import org.globsframework.gui.splits.components.ShadowedLabelUI;
-import org.designup.picsou.gui.components.ui.SelectionToggleUI;
-import org.designup.picsou.gui.components.ui.ArrowButtonUI;
-import org.designup.picsou.gui.components.ui.RoundButtonUI;
-import org.designup.picsou.gui.components.ui.ColorButtonUI;
 
 import javax.swing.*;
 
@@ -19,11 +18,14 @@ public class ApplicationLAF {
   private static final String STYLED_TOGGLE_BUTTON_UI = org() + "globsframework.gui.splits.components.StyledToggleButtonUI";
   private static final String STYLED_PANEL_UI = org() + "globsframework.gui.splits.components.StyledPanelUI";
   private static final String SHADOWED_LABEL_UI = org() + "globsframework.gui.splits.components.ShadowedLabelUI";
-  private static final String SERIES_TOGGLE_UI = org() + "designup.picsou.gui.components.SelectionToggleUI";
+  private static final String SERIES_TOGGLE_UI = org() + "designup.picsou.gui.components.ui.SelectionToggleUI";
   private static final String BUTTON_PANEL_UI = org() + "designup.picsou.gui.plaf.ButtonPanelItemUI";
-  private static final String ARROW_BUTTON_UI = org() + "designup.picsou.gui.components.ArrowButtonUI";
-  private static final String ROUND_BUTTON_UI = org() + "designup.picsou.gui.components.RoundButtonUI";
-  private static final String COLOR_BUTTON_UI = org() + "designup.picsou.gui.components.ColorButtonUI";
+  private static final String ARROW_BUTTON_UI = org() + "designup.picsou.gui.components.ui.ArrowButtonUI";
+  private static final String ROUND_BUTTON_UI = org() + "designup.picsou.gui.components.ui.RoundButtonUI";
+  private static final String COLOR_BUTTON_UI = org() + "designup.picsou.gui.components.ui.ColorButtonUI";
+  private static final String NOTIFICATION_FLAG_UI = org() + "designup.picsou.gui.components.ui.NotificationFlagUI";
+  private static final String VERTICAL_TAB_TOGGLE_UI = org() + "designup.picsou.gui.components.tabs.VerticalTabToggleUI";
+  private static final String VERTICAL_TAB_PANEL_UI = org() + "designup.picsou.gui.components.tabs.VerticalTabPanelUI";
 
   private ApplicationLAF() {
   }
@@ -47,6 +49,9 @@ public class ApplicationLAF {
     uiService.registerClass(BUTTON_PANEL_UI, ButtonPanelItemUI.class);
     uiService.registerClass(ARROW_BUTTON_UI, ArrowButtonUI.class);
     uiService.registerClass(COLOR_BUTTON_UI, ColorButtonUI.class);
+    uiService.registerClass(VERTICAL_TAB_TOGGLE_UI, VerticalTabToggleUI.class);
+    uiService.registerClass(VERTICAL_TAB_PANEL_UI, VerticalTabPanelUI.class);
+    uiService.registerClass(NOTIFICATION_FLAG_UI, NotificationFlagUI.class);
     return uiService;
   }
 
