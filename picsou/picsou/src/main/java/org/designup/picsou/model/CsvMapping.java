@@ -25,7 +25,7 @@ public class CsvMapping {
   public static StringField CSV_TYPE_NAME;
 
   static {
-    GlobTypeLoader.init(CsvMapping.class);
+    GlobTypeLoader.init(CsvMapping.class, "csvMapping");
   }
 
   public static class Serializer implements PicsouGlobSerializer {

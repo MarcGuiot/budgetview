@@ -359,6 +359,9 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       if (globTypeName.equals("currenMonth")) {
         globType = globModel.getType("currentMonth");
       }
+      else if (globTypeName.equals("bb") || globTypeName.equals("ab")) {  // version 88->91 : ab, 92 : bb  pour csvMapping
+        globType = globModel.getType("csvMapping");
+      }
       else {
         globType = globModel.getType(globTypeName);
       }

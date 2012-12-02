@@ -34,7 +34,7 @@ public class AccountPositionError {
   public static IntegerField LAST_PREVIOUS_IMPORT_DATE;
 
   static {
-    GlobTypeLoader.init(AccountPositionError.class);
+    GlobTypeLoader.init(AccountPositionError.class, "accountPositionError");
   }
 
   public static class Serializer implements PicsouGlobSerializer {
