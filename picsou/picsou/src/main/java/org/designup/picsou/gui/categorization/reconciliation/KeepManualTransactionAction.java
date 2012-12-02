@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.categorization.reconciliation;
 
-import org.designup.picsou.model.ReconciliationStatus;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
@@ -30,8 +29,6 @@ public class KeepManualTransactionAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent actionEvent) {
-    repository.update(transaction.getKey(),
-                      Transaction.RECONCILIATION_STATUS,
-                      ReconciliationStatus.RECONCILED.getId());
+    repository.update(transaction.getKey(), Transaction.TO_RECONCILE, false);
   }
 }

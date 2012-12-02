@@ -2,13 +2,8 @@ package org.designup.picsou.triggers;
 
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountUpdateMode;
-import org.designup.picsou.model.ReconciliationStatus;
 import org.designup.picsou.model.Transaction;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
-
-import java.util.Set;
 
 import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
@@ -54,14 +49,13 @@ public class ReconciliationDetectionTrigger extends AbstractChangeSetListener {
     }
     GlobList transactions = repository.getAll(Transaction.TYPE, linkedTo(accountKey, Transaction.ACCOUNT));
     for (Glob transaction : transactions) {
-      if (ReconciliationStatus.canBeSet(transaction) && Transaction.isManuallyCreated(transaction)) {
+      if (Transaction.canBeSetToReconcile(transaction) && Transaction.isManuallyCreated(transaction)) {
         setToReconcile(transaction.getKey(), repository);
       }
     }
   }
 
   private void setToReconcile(Key key, GlobRepository repository) {
-    repository.update(key, Transaction.RECONCILIATION_STATUS,
-                      ReconciliationStatus.TO_RECONCILE.getId());
+    repository.update(key, Transaction.TO_RECONCILE, true);
   }
 }

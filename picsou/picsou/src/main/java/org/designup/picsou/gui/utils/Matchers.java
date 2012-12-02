@@ -103,8 +103,7 @@ public class Matchers {
   public static GlobMatcher transactionsToReconcile() {
     return new GlobMatcher() {
       public boolean matches(Glob transaction, GlobRepository repository) {
-        return Utils.equal(ReconciliationStatus.TO_RECONCILE.getId(),
-                           transaction.get(Transaction.RECONCILIATION_STATUS));
+        return transaction.isTrue(Transaction.TO_RECONCILE);
       }
     };
   }
@@ -400,8 +399,7 @@ public class Matchers {
   public static GlobMatcher toReconcile() {
     return new GlobMatcher() {
       public boolean matches(Glob transaction, GlobRepository repository) {
-        return transaction != null &&
-               Utils.equal(ReconciliationStatus.TO_RECONCILE.getId(), transaction.get(Transaction.RECONCILIATION_STATUS));
+        return transaction != null && transaction.isTrue(Transaction.TO_RECONCILE);
       }
     };
   }

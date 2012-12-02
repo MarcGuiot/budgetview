@@ -3,7 +3,9 @@
   <styleImport file="/layout/picsouStyles.splits"/>
 
   <styles>
-    <style selector="label.title" anchor="center" fill="none" font="-,bold,14" marginBottom="15"/>
+    <style selector="label.title" anchor="center" fill="none"
+           font="-,bold,14" marginBottom="15"
+           icon="to_reconcile.png"/>
   </styles>
 
   <column name="reconciliationPanel">

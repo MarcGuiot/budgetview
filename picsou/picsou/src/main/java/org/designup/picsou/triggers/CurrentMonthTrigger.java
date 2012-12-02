@@ -97,7 +97,7 @@ public class CurrentMonthTrigger extends AbstractChangeSetListener {
                           FieldValue.value(Transaction.BANK_DAY, lastDay),
                           FieldValue.value(Transaction.DAY, lastDay));
       }
-      if (transaction.get(Transaction.RECONCILIATION_STATUS, Boolean.FALSE) &&
+      if (transaction.get(Transaction.TO_RECONCILE, Boolean.FALSE) &&
           (transaction.get(Transaction.POSITION_MONTH) < lastMonth ||
           (transaction.get(Transaction.POSITION_MONTH) == lastMonth && transaction.get(Transaction.POSITION_DAY) < lastDay))){
         repository.update(transaction.getKey(),

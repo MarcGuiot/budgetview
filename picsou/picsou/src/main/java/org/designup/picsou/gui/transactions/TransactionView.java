@@ -5,12 +5,12 @@ import org.designup.picsou.gui.accounts.chart.TransactionAccountPositionsChartVi
 import org.designup.picsou.gui.accounts.utils.AccountFilter;
 import org.designup.picsou.gui.card.ImportPanel;
 import org.designup.picsou.gui.card.utils.GotoCardAction;
-import org.designup.picsou.gui.components.table.DefaultTableCellPainter;
-import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;
 import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
+import org.designup.picsou.gui.components.table.DefaultTableCellPainter;
+import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
 import org.designup.picsou.gui.model.Card;
@@ -51,7 +51,6 @@ import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Set;
 
-import static org.designup.picsou.model.Transaction.TYPE;
 import static org.globsframework.gui.views.utils.LabelCustomizers.font;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
@@ -67,11 +66,11 @@ public class TransactionView extends View implements Filterable {
   public static final int ACCOUNT_NAME_INDEX = 8;
 
   private static final int[] COLUMN_SIZES = {10, 10, 20, 40, 9, 15, 10, 10, 25};
+
   private static final GlobMatcher HIDE_PLANNED_MATCHER =
-//    isFalse(Transaction.PLANNED);
     and(isFalse(Transaction.PLANNED),
-                                                              not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.OPEN_ACCOUNT_EVENT.getId())),
-                                                              not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId())));
+        not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.OPEN_ACCOUNT_EVENT.getId())),
+        not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId())));
 
   private GlobTableView view;
   private TransactionRendererColors rendererColors;
@@ -138,7 +137,9 @@ public class TransactionView extends View implements Filterable {
     filterManager.clear();
   }
 
-  /** Direct update - warning: does not update the transaction filter panel **/
+  /**
+   * Direct update - warning: does not update the transaction filter panel *
+   */
   public void setFilter(GlobMatcher matcher) {
     this.filter = matcher;
     updateFilter();
@@ -230,7 +231,7 @@ public class TransactionView extends View implements Filterable {
 
     GlobStringifier amountStringifier = descriptionService.getStringifier(Transaction.AMOUNT);
 
-    GlobTableView view = GlobTableView.init(TYPE, repository, comparator, directory)
+    GlobTableView view = GlobTableView.init(Transaction.TYPE, repository, comparator, directory)
       .setName("transactionsTable");
 
     view.setDefaultBackgroundPainter(new DefaultTableCellPainter(directory));
@@ -257,6 +258,7 @@ public class TransactionView extends View implements Filterable {
                  descriptionService.getStringifier(Transaction.LABEL),
                  LabelCustomizers.chain(LabelCustomizers.BOLD,
                                         new PlannedLabelCustomizer(rendererColors),
+                                        new ReconciliationCustomizer(directory),
                                         LabelCustomizers.autoTooltip()))
       .addColumn(Lang.get("amount"),
                  amountColumn,
@@ -301,17 +303,12 @@ public class TransactionView extends View implements Filterable {
     }
 
     public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
-      if (glob.isTrue(Transaction.PLANNED)) {
-        if (isSelected) {
-          label.setForeground(rendererColors.getTransactionSelectedTextColor());
-        }
-        else {
-          label.setForeground(rendererColors.getTransactionPlannedTextColor());
-        }
+      if (isSelected) {
+        label.setForeground(rendererColors.getTransactionSelectedTextColor());
       }
       else {
-        if (isSelected) {
-          label.setForeground(rendererColors.getTransactionSelectedTextColor());
+        if (glob.isTrue(Transaction.PLANNED)) {
+          label.setForeground(rendererColors.getTransactionPlannedTextColor());
         }
         else {
           label.setForeground(rendererColors.getTransactionTextColor());
@@ -319,5 +316,4 @@ public class TransactionView extends View implements Filterable {
       }
     }
   }
-
 }

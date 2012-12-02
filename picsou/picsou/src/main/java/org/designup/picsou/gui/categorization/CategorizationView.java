@@ -24,6 +24,7 @@ import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.signpost.guides.*;
 import org.designup.picsou.gui.signpost.sections.SkipCategorizationPanel;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
+import org.designup.picsou.gui.transactions.columns.ReconciliationCustomizer;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
@@ -296,7 +297,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
       .addColumn(Lang.get("series"), new CompactSeriesStringifier(directory),
                  chain(extraLabelCustomizer, tooltip(SeriesDescriptionStringifier.transactionSeries(), repository)))
       .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL),
-                 chain(BOLD, autoTooltip()))
+                 chain(BOLD, new ReconciliationCustomizer(directory), autoTooltip()))
       .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), 
                  LabelCustomizers.chain(ALIGN_RIGHT, new TransactionAmountCustomizer(colors)));
   }

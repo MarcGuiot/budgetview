@@ -920,7 +920,7 @@ public class CategorizationChecker extends ViewChecker {
   }
 
   public CategorizationChecker clickReconciliationWarningButton(String link) {
-    getPanel().getPanel("reconciliationWarningPanel").getTextBox().clickOnHyperlink(link);
+    getPanel().getPanel("reconciliationWarningPanel").getTextBox("message").clickOnHyperlink(link);
     return this;
   }
 

@@ -103,7 +103,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
       .forceSelection(PROTOTYPE_TRANSACTION_KEY)
       .getComponent();
 
-    JCheckBox shouldBeReconciledCheckBox = builder.addCheckBox("shouldBeReconciled", Transaction.RECONCILIATION_STATUS)
+    JCheckBox shouldBeReconciledCheckBox = builder.addCheckBox("shouldBeReconciled", Transaction.TO_RECONCILE)
       .forceSelection(PROTOTYPE_TRANSACTION_KEY).getComponent();
 
     updateAccountCheckBox = new JCheckBox();
@@ -155,7 +155,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
       }
 
       Integer currentMonth = months.getSortedSet(Month.ID).last();
-      repository.findOrCreate(PROTOTYPE_TRANSACTION_KEY, value(Transaction.RECONCILIATION_STATUS, ReconciliationStatus.RECONCILED.getId()));
+      repository.findOrCreate(PROTOTYPE_TRANSACTION_KEY, value(Transaction.TO_RECONCILE, false));
       updateMonth(repository, currentMonth);
     }
     finally {
@@ -302,7 +302,6 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
         .set(Transaction.ORIGINAL_LABEL, upperCaseLabel)
         .set(Transaction.LABEL_FOR_CATEGORISATION, Transaction.anonymise(upperCaseLabel))
         .set(Transaction.TRANSACTION_TYPE, TransactionType.MANUAL.getId())
-//        .set(Transaction.MANUAL_CREATION, true)
         .get();
 
       Glob createdTransaction;
@@ -348,7 +347,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
                         value(Transaction.POSITION_DAY, null),
                         value(Transaction.BUDGET_DAY, null),
                         value(Transaction.LABEL, ""),
-                        value(Transaction.RECONCILIATION_STATUS, ReconciliationStatus.RECONCILED.getId()));
+                        value(Transaction.TO_RECONCILE, false));
 
       dayField.requestFocus();
 

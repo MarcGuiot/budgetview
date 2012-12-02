@@ -4,6 +4,7 @@
 
   <row name="reconciliationWarningPanel">
     <filler fill="horizontal"/>
+    <label icon="to_reconcile.png" anchor="south" marginBottom="2" marginRight="3"/>
     <htmlEditorPane ref="message" hyperlinkListener="handler" fill="none" weightX="0.1"/>
   </row>
 

@@ -17,7 +17,7 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class Transaction {
   public static GlobType TYPE;
@@ -127,8 +127,7 @@ public class Transaction {
 
   public static BooleanField RECONCILIATION_ANNOTATION_SET;
 
-  //  @Target(ReconciliationStatus.class)
-  public static BooleanField RECONCILIATION_STATUS;
+  public static BooleanField TO_RECONCILE;
 
   public static NotUniqueIndex LABEL_FOR_CATEGORISATION_INDEX;
 
@@ -217,7 +216,7 @@ public class Transaction {
   }
 
   public static boolean isManuallyCreated(Glob transaction) {
-    return transaction != null && transaction.get(Transaction.RECONCILIATION_STATUS) != null;
+    return transaction != null && transaction.get(Transaction.TO_RECONCILE) != null;
   }
 
   public static String getLabel(boolean planned, Glob series) {
@@ -249,30 +248,33 @@ public class Transaction {
   }
 
   public static boolean isToReconcile(Glob transaction) {
-    Boolean status = transaction.get(RECONCILIATION_STATUS);
-    return Utils.equal(status, ReconciliationStatus.TO_RECONCILE.id);
+    return transaction.isTrue(TO_RECONCILE);
   }
 
   public static boolean isOpenCloseAccount(FieldValues transaction) {
-    Integer tt = transaction.get(TRANSACTION_TYPE);
-    return tt != null && (tt.equals(TransactionType.OPEN_ACCOUNT_EVENT.getId()) ||
-                          tt.equals(TransactionType.CLOSE_ACCOUNT_EVENT.getId()));
+    Integer type = transaction.get(TRANSACTION_TYPE);
+    return type != null && (type.equals(TransactionType.OPEN_ACCOUNT_EVENT.getId()) ||
+                            type.equals(TransactionType.CLOSE_ACCOUNT_EVENT.getId()));
   }
 
   public static GlobMatcher getMatcherForRealOperations(int accountId) {
-    return GlobMatchers.and(fieldEquals(ACCOUNT, accountId),
-                            GlobMatchers.not(fieldEquals(RECONCILIATION_STATUS,
-                                                         ReconciliationStatus.TO_RECONCILE.getId())),
-                            GlobMatchers.isFalse(PLANNED),
-                            GlobMatchers.not(fieldEquals(TRANSACTION_TYPE, TransactionType.OPEN_ACCOUNT_EVENT.getId())),
-                            GlobMatchers.not(fieldEquals(TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId())));
+    return and(fieldEquals(ACCOUNT, accountId),
+               not(isTrue(TO_RECONCILE)),
+               isFalse(PLANNED),
+               not(fieldEquals(TRANSACTION_TYPE, TransactionType.OPEN_ACCOUNT_EVENT.getId())),
+               not(fieldEquals(TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId())));
   }
 
   public static GlobMatcher getMatcherForRealOperations(int accountId, int monthId, int day) {
-    return GlobMatchers.and(getMatcherForRealOperations(accountId),
-                            GlobMatchers.or(GlobMatchers.fieldStrictlyLessThan(Transaction.POSITION_MONTH, monthId),
-                            GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.POSITION_MONTH, monthId),
-                              GlobMatchers.fieldLessOrEqual(Transaction.POSITION_DAY, day))));
+    return and(getMatcherForRealOperations(accountId),
+               or(GlobMatchers.fieldStrictlyLessThan(Transaction.POSITION_MONTH, monthId),
+                  and(fieldEquals(Transaction.POSITION_MONTH, monthId),
+                      fieldLessOrEqual(Transaction.POSITION_DAY, day))));
+  }
+
+  public static boolean canBeSetToReconcile(Glob transaction) {
+    Boolean status = transaction.get(TO_RECONCILE);
+    return (status == null) || (Boolean.TRUE.equals(status));
   }
 
   public static class Serializer implements PicsouGlobSerializer {
@@ -323,7 +325,7 @@ public class Transaction {
       output.writeBoolean(fieldValues.get(Transaction.IS_OFX));
       output.writeInteger(fieldValues.get(Transaction.IMPORT));
       output.writeBoolean(fieldValues.get(Transaction.RECONCILIATION_ANNOTATION_SET));
-      output.writeBoolean(fieldValues.get(Transaction.RECONCILIATION_STATUS));
+      output.writeBoolean(fieldValues.get(Transaction.TO_RECONCILE));
 //      output.writeBoolean(fieldValues.get(Transaction.MANUAL_CREATION));
       return serializedByteArrayOutput.toByteArray();
     }
@@ -398,7 +400,7 @@ public class Transaction {
       fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
       fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, input.readBoolean());
-      fieldSetter.set(Transaction.RECONCILIATION_STATUS, input.readBoolean());
+      fieldSetter.set(Transaction.TO_RECONCILE, input.readBoolean());
 //      fieldSetter.set(Transaction.MANUAL_CREATION, input.readBoolean());
     }
 
