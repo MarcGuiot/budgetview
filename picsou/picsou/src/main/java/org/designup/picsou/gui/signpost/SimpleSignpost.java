@@ -29,6 +29,11 @@ public class SimpleSignpost extends Signpost implements ChangeSetListener {
     update();
   }
 
+  public void delete() {
+    hide();
+    repository.removeChangeListener(this);
+  }
+
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsChanges(SignpostStatus.TYPE)) {
       update();

@@ -320,7 +320,7 @@ public class BudgetAreaSeriesView extends View {
       private SplitsNode<JButton> seriesName;
       private SplitsNode<JButton> observedAmountButton;
       private SplitsNode<JButton> plannedAmountButton;
-      private Signpost signpost;
+      private SeriesAmountSignpost signpost;
 
       public SeriesButtonsUpdater(Key key,
                                   SplitsNode<JButton> seriesName,
@@ -336,10 +336,7 @@ public class BudgetAreaSeriesView extends View {
 
       public void dispose() {
         repository.removeChangeListener(this);
-        if (signpost != null) {
-          signpost.hide();
-          signpost = null;
-        }
+        releaseSignPost();
       }
 
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -383,7 +380,7 @@ public class BudgetAreaSeriesView extends View {
 
       public void releaseSignPost() {
         if (signpost != null) {
-          signpost.hide();
+          signpost.delete();
           signpost = null;
         }
       }

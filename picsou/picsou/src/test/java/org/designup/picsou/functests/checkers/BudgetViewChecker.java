@@ -355,7 +355,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public BudgetAreaChecker checkAmountSignpostDisplayed(String seriesName, String text) {
-      BudgetViewChecker.this.checkSignpostVisible(mainWindow, getSeriesPanel(seriesName).getPlannedAmount(), text);
+      BudgetViewChecker.this.checkSingleSignpostVisible(mainWindow, getSeriesPanel(seriesName).getPlannedAmount(), text);
       return this;
     }
 

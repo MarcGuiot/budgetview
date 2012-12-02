@@ -6,9 +6,14 @@ import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.checkers.PreferencesChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.ColorTheme;
+import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.Dates;
 import org.uispec4j.assertion.UISpecAssert;
 
@@ -183,6 +188,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("WorldCo", "Salaire");
     gauge.checkLevel(0.5);
 
+    categorization.checkFirstCategorizationSignpostDisplayed("The operation is categorized, continue");
     categorization.showUncategorizedTransactionsOnly();
     categorization.checkTable(new Object[][]{
       {"10/07/2008", "", "FNAC", -1000.00}

@@ -250,10 +250,13 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/05/29", -100, "shoes")
       .load();
 
+
     // === Categorization selection ===
 
     views.checkDataSelected();
     views.checkCategorizationSignpostVisible("Categorization");
+    views.selectCategorization();
+    categorization.checkSkipMessageHidden();
     categorization.selectTableRow(0);
     categorization.checkAreaSelectionSignpostDisplayed("Select the budget area for this operation");
     categorization.selectVariable();

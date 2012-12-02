@@ -14,9 +14,8 @@ import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.utils.Utils;
 
-import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 import static org.uispec4j.finder.ComponentMatchers.*;
 
@@ -94,9 +93,7 @@ public class BalloonTipTesting {
   }
 
   public static void checkNoBalloonTipVisible(Container panel) {
-    ComponentFinder finder = new ComponentFinder(panel, new Panel(panel));
-    final Component[] actual = finder.getComponents(and(fromClass(BalloonTip.class),
-                                                        visible(true)));
+    final Component[] actual = getBalloonTipComponents(panel);
     if (actual.length > 0) {
       StringBuilder builder = new StringBuilder("Visible tips:\n");
       for (Component component : actual) {
@@ -109,6 +106,27 @@ public class BalloonTipTesting {
         builder.append("\n");
       }
       Assert.fail(builder.toString());
+    }
+  }
+
+  private static Component[] getBalloonTipComponents(Container panel) {
+    ComponentFinder finder = new ComponentFinder(panel, new Panel(panel));
+    return finder.getComponents(and(fromClass(BalloonTip.class),
+                                                        visible(true)));
+  }
+
+  public static void checkSingleBalloonVisible(Panel enclosingPanel) {
+    Component[] tips = getBalloonTipComponents(enclosingPanel.getAwtComponent());
+    if (tips.length == 0) {
+      Assert.fail("No tooltip shown");
+    }
+    else if (tips.length > 1) {
+      java.util.List<String> labels = new ArrayList<String>();
+      for (Component component : tips) {
+        BalloonTip tip = (BalloonTip)component;
+        labels.add(tip.getText());
+      }
+      Assert.fail(tips.length + " tips shown : " + labels);
     }
   }
 

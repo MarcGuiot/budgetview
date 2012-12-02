@@ -155,6 +155,10 @@ public abstract class Signpost implements Disposable {
 
   public void dispose() {
     hide();
+    complete();
+  }
+
+  protected void complete() {
     SignpostStatus.setCompleted(completionField, repository);
   }
 

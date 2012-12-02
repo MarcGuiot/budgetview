@@ -56,6 +56,13 @@ public abstract class GuiChecker {
     BalloonTipTesting.checkBalloonTipVisible(enclosingPanel, targetUIComponent, text);
   }
 
+  protected void checkSingleSignpostVisible(Panel enclosingPanel,
+                                      UIComponent targetUIComponent,
+                                      String text) {
+    BalloonTipTesting.checkBalloonTipVisible(enclosingPanel, targetUIComponent, text);
+    BalloonTipTesting.checkSingleBalloonVisible(enclosingPanel);
+  }
+
   protected void checkNoSignpostVisible(Panel enclosingPanel) {
     BalloonTipTesting.checkNoBalloonTipVisible(enclosingPanel);
   }

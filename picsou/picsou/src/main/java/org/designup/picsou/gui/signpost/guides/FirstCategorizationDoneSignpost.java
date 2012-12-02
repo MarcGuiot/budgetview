@@ -67,9 +67,12 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
   }
 
   protected void update() {
+    if (SignpostStatus.isCompleted(SignpostStatus.FIRST_CATEGORIZATION_DONE, repository)) {
+      return;
+    }
     if (SignpostStatus.isCompleted(SignpostStatus.CATEGORIZATION_AREA_SELECTION_DONE, repository)) {
       if (canShow()) {
-        if (allOperationsAreCategorized()) {
+        if (noRemainingOperationsToCategorize()) {
           SignpostStatus.setCompleted(SignpostStatus.FIRST_CATEGORIZATION_DONE, repository);
         }
         else {
@@ -94,7 +97,7 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
                                    getBalloonStyle(),
                                    BalloonTip.Orientation.RIGHT_ABOVE,
                                    BalloonTip.AttachLocation.CENTER,
-                                   20, 20, false){
+                                   20, 20, false) {
       public void closeBalloon() {
         super.closeBalloon();
         if (topLevelContainer != null) {
@@ -104,7 +107,7 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
             }
           }
         }
-        if (attachedComponent != null){
+        if (attachedComponent != null) {
           for (AncestorListener listener : attachedComponent.getAncestorListeners()) {
             if (listener.getClass().getName().startsWith("net.java.balloontip")) {
               attachedComponent.removeAncestorListener(listener);
@@ -116,18 +119,14 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    if (!isCompleted() && hasCategorizedOperations() && !selection.getAll(Transaction.TYPE).isEmpty()) {
+    if (!selection.getAll(Transaction.TYPE).isEmpty() && hasCategorizedOperations() && isShowing()) {
       SignpostStatus.setCompleted(SignpostStatus.FIRST_CATEGORIZATION_DONE, repository);
-      update();
     }
   }
 
-  private boolean allOperationsAreCategorized() {
-    return !repository.contains(Transaction.TYPE, Matchers.uncategorizedTransactions());
-  }
-
-  private boolean createdTransactionsManually() {
-    return SignpostStatus.isCompleted(SignpostStatus.CREATED_TRANSACTIONS_MANUALLY, repository);
+  private boolean noRemainingOperationsToCategorize() {
+    return repository.contains(Transaction.TYPE) &&
+           !repository.contains(Transaction.TYPE, Matchers.uncategorizedTransactions());
   }
 
   private boolean hasCategorizedOperations() {
