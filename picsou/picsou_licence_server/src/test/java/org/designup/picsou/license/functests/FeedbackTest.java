@@ -7,9 +7,11 @@ import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.startup.components.AppLogger;
 import org.designup.picsou.license.ConnectedTestCase;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Files;
 
 import java.io.File;
+import java.util.Locale;
 
 /* Fenetre de feedback branchee dans le menu "dev" pour le moment */
 public class FeedbackTest extends ConnectedTestCase {
@@ -50,13 +52,18 @@ public class FeedbackTest extends ConnectedTestCase {
     startServers();
     application.start();
 
+    Lang.setLocale(Locale.ENGLISH);
+
     openFeedback().send("my title", "me@gg.fr", "some content\n\n-----\nfooter");
 
     mailServer.checkReceivedMail("support@mybudgetview.fr")
       .checkContains("some content",
                      "footer",
                      "me@gg.fr",
-                     PicsouApplication.APPLICATION_VERSION);
+                     PicsouApplication.APPLICATION_VERSION,
+                     "lang:en");
+
+    Lang.setLocale(Lang.ROOT);
   }
 
   public void testSendFeedbackWithLogs() throws Exception {

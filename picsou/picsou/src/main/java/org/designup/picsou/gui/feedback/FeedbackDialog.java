@@ -67,9 +67,9 @@ public class FeedbackDialog {
 
     StringBuilder builder = new StringBuilder();
     builder
-      .append(contentEditor.getText())
-      .append("\n\n--------------\n\n")
-      .append("version: ").append(PicsouApplication.APPLICATION_VERSION).append("\n");
+      .append("[version:").append(PicsouApplication.APPLICATION_VERSION)
+      .append(", lang:").append(Lang.getLang()).append("] ")
+      .append(contentEditor.getText());
     if (addLogsCheckbox.isSelected()) {
       File logFile = AppLogger.getLogFile();
       if (logFile.exists()) {
