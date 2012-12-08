@@ -7,7 +7,7 @@ import org.globsframework.model.GlobRepository;
 
 import java.util.Date;
 
-public class GlobNotification implements Notification {
+public abstract class GlobNotification implements Notification {
   private GlobRepository repository;
   private int id;
   private Glob glob;

@@ -8,6 +8,8 @@
     <style selector="#message"
            font="-,plain,13" foreground="block.inner.item"
            anchor="left" marginBottom="5"/>
+    <style selector="button" font="-,plain,10"
+           ui="hyperlinkButtonWithoutUnderline" weightX="0.1" foreground="hyperlink"/>
   </styles>
 
   <panel styleClass="dialog" preferredSize="(600, 300)">
@@ -17,12 +19,16 @@
       <scrollPane forceVerticalScroll="true">
         <column margin="10">
           <repeat ref="messages">
-            <grid name="notificationPanel" border="matte(0,0,1,0,block.inner.separator)">
-              <label ref="date" gridPos="(0,0,2,1)"/>
-              <textArea ref="message" gridPos="(0,1)" styleClass="message"/>
-              <button action="deleteItem" gridPos="(1,1)" styleClass="icon" icon="button_delete.png"
-                tooltipText="$messages.account.position.error.tooltip"/>
-            </grid>
+            <column name="notificationPanel" border="matte(0,0,1,0,block.inner.separator)">
+              <label ref="date"/>
+              <textArea ref="message" styleClass="message"/>
+              <row>
+                <filler fill="horizontal"/>
+                <button action="action"/>
+                <label text="-" marginLeft="5" marginRight="5"/>
+                <button action="delete"/>
+              </row>
+            </column>
           </repeat>
           <filler fill="vertical"/>
         </column>
