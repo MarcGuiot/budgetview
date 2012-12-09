@@ -6,7 +6,6 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
-import org.designup.picsou.utils.HtmlBuilder;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.Disposable;
@@ -118,19 +117,11 @@ public class UserEvaluationDialog {
     else {
       value = "-  ";
     }
-    return "User evaluation: " + value;
+    return "User evaluation: " + value + " [" + PicsouApplication.APPLICATION_VERSION + "," + Lang.getLang() + "]";
   }
 
   private String getMessageText() {
-
-    HtmlBuilder builder = new HtmlBuilder();
-    builder
-      .appendField("version", PicsouApplication.APPLICATION_VERSION)
-      .appendField("lang", Lang.getLang())
-      .appendLine()
-      .appendParagraph(commentEditor.getText());
-
-    return builder.toString();
+    return commentEditor.getText();
   }
 
   private void show() {
@@ -148,19 +139,19 @@ public class UserEvaluationDialog {
     public void actionPerformed(ActionEvent e) {
       sendingState.setVisible(true);
       sendingState.setIndeterminate(true);
-      directory.get(ConfigService.class).sendMail(ConfigService.MAIL_CONTACT,
+      directory.get(ConfigService.class).sendMail(ConfigService.SUPPORT_EMAIL,
                                                   emailField.getText(),
                                                   getHeaderText(),
                                                   getMessageText(),
                                                   new ConfigService.Listener() {
                                                     public void sent(String mail, String title, String content) {
                                                       messageSent();
-                                                      Log.write("Mail sent from " + mail + " title : " + title + "\n" + content);
+                                                      Log.write("Mail sent from " + mail + " - title : " + title + "\n" + content);
                                                     }
 
                                                     public void sendFail(String mail, String title, String content) {
                                                       messageSent();
-                                                      Log.write("Fail to sent mail from " + mail + " title : " + title + "\n" + content);
+                                                      Log.write("Failed to send mail from " + mail + " - title : " + title + "\n" + content);
                                                     }
                                                   });
       schedule = new WaitClosedThread(dialog);

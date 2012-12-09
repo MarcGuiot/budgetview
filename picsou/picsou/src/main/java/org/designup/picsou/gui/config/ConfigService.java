@@ -64,6 +64,9 @@ public class ConfigService {
   public static final String SEND_USE_INFO = "/sendUseInfo";
   public static final String HEADER_BAD_ADRESS = "badAdress";
 
+  public static final String SUPPORT_EMAIL = "support";
+  public static final String ADMIN_EMAIL = "admin";
+
   private String URL = PicsouApplication.REGISTER_URL;
   private String FTP_URL = PicsouApplication.FTP_URL;
   private long localJarVersion = -1;
@@ -80,7 +83,6 @@ public class ConfigService {
   public static int RETRY_PERIOD = 10000;
   private Directory directory = null;
   private GlobRepository repository = null;
-  public static final String MAIL_CONTACT = "contact";
   private ServerAccess serverAccess;
 
   public ConfigService(String applicationVersion, Long jarVersion, Long localConfigVersion, File currentConfigFile) {

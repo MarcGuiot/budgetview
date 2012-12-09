@@ -4,8 +4,6 @@ import org.designup.picsou.functests.checkers.LicenseActivationChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.time.TimeService;
 import org.globsframework.utils.Dates;
-import org.uispec4j.TextBox;
-import org.uispec4j.assertion.UISpecAssert;
 
 public class LicenseTest extends LoggedInFunctionalTestCase {
 
@@ -71,9 +69,9 @@ public class LicenseTest extends LoggedInFunctionalTestCase {
   }
 
   public void testFeedbackUsesEmailWhenAvailable() throws Exception {
-    feedbackView.checkFeedbackLinksTo("http://support.mybudgetview.fr/anonymous_requests/new");
+    feedbackView.checkFeedbackLink();
 
     LicenseActivationChecker.enterLicense(mainWindow, "admin", "1234");
-    feedbackView.checkFeedbackLinksTo("http://support.mybudgetview.fr/anonymous_requests/new?email=admin");
+    feedbackView.checkFeedbackLink();
   }
 }

@@ -22,7 +22,6 @@ public class FeedbackDialogChecker extends GuiChecker{
   public FeedbackDialogChecker checkComponents() {
     checkComponentVisible(dialog, JButton.class, "send", true);
     checkComponentVisible(dialog, JButton.class, "cancel", true);
-    checkComponentVisible(dialog, JTextField.class, "mailSubject", true);
     checkComponentVisible(dialog, JTextField.class, "fromMail", true);
     return this;
   }
@@ -42,9 +41,8 @@ public class FeedbackDialogChecker extends GuiChecker{
     return this;
   }
 
-  public void send(String title, String mail, String content) {
-    dialog.getTextBox("mailSubject").setText(title);
-    dialog.getTextBox("fromMail").setText(mail);
+  public void send(String email, String content) {
+    dialog.getTextBox("fromMail").setText(email);
     dialog.getTextBox("mailContent").setText(content);
     dialog.getButton("Send").click();
     assertFalse(dialog.isVisible());

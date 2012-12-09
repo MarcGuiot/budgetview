@@ -33,7 +33,7 @@ public class HelpChecker extends GuiChecker {
 
   public void close() {
     dialog.getButton("Close").click();
-    UISpecAssert.assertFalse(dialog.isVisible());    
+    UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public void checkForwardEnabled(boolean enabled) {
@@ -67,6 +67,13 @@ public class HelpChecker extends GuiChecker {
 
   public HelpChecker checkBottomTextLink(String link, String expectedUrl) {
     BrowsingChecker.checkDisplay(dialog.getTextBox("bottomMessage").triggerClickOnHyperlink(link), expectedUrl);
+    return this;
+  }
+
+  public HelpChecker checkSendContactLink(String link) {
+    FeedbackDialogChecker.init(dialog.getTextBox("bottomMessage").triggerClickOnHyperlink(link))
+      .checkComponents()
+      .cancel();
     return this;
   }
 }

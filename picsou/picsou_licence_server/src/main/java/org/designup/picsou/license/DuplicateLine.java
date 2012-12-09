@@ -36,7 +36,7 @@ public class DuplicateLine {
       .selectAll().getQuery().executeAsGlobs();
     MultiMap<String, Glob> map = new MultiMap<String, Glob>();
     for (Glob licence : licences) {
-      map.put(licence.get(License.MAIL), licence);
+      map.put(licence.get(License.EMAIL), licence);
     }
     for (Map.Entry<String, List<Glob>> entry : map.entries()) {
       List<Glob> licencesByUser = entry.getValue();
@@ -47,7 +47,7 @@ public class DuplicateLine {
           .set(License.ACCESS_COUNT, 1L)
           .set(License.SIGNATURE, glob.get(License.SIGNATURE))
           .set(License.ACTIVATION_CODE, currentCode == null ? glob.get(License.LAST_ACTIVATION_CODE) : currentCode)
-          .set(License.MAIL, glob.get(License.MAIL))
+          .set(License.EMAIL, glob.get(License.EMAIL))
           .set(License.TRANSACTION_ID, glob.get(License.TRANSACTION_ID))
           .getRequest();
         for (int i = licencesByUser.size(); i < NewUserServlet.LICENCE_COUNT; i++){

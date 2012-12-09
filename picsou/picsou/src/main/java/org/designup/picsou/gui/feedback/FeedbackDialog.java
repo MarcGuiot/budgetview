@@ -22,12 +22,13 @@ import java.io.File;
 
 public class FeedbackDialog {
   private PicsouDialog dialog;
-  private JTextArea contentEditor;
-  private JTextField userMail;
-  private JTextField mailSubject;
-  private JCheckBox addLogsCheckbox;
   private GlobRepository repository;
   private Directory directory;
+
+  private JTextArea contentEditor;
+  private JTextField userMail;
+  private JCheckBox addLogsCheckbox;
+
   private DisconnectionTip disconnectionTip;
 
   public FeedbackDialog(Window parent, GlobRepository repository, final Directory directory) {
@@ -42,12 +43,8 @@ public class FeedbackDialog {
     builder.add("mailContent", contentEditor);
 
     String userMail = repository.get(User.KEY).get(User.EMAIL);
-
     this.userMail = new JTextField(userMail);
     builder.add("fromMail", this.userMail);
-
-    this.mailSubject = new JTextField();
-    builder.add("mailSubject", this.mailSubject);
 
     this.addLogsCheckbox = new JCheckBox(Lang.get("feedback.addLogs"));
     builder.add("addLogs", addLogsCheckbox);
@@ -58,7 +55,7 @@ public class FeedbackDialog {
       }
     });
     dialog.addPanelWithButtons(builder.<JPanel>load(),
-                               new ValidateAction(),
+                               new SendAction(),
                                new CancelAction(dialog));
     disconnectionTip = new DisconnectionTip(dialog.getOkButton(), repository, directory);
   }
@@ -91,16 +88,17 @@ public class FeedbackDialog {
     disconnectionTip.dispose();
   }
 
-  private class ValidateAction extends AbstractAction {
+  private class SendAction extends AbstractAction {
 
-    public ValidateAction() {
+    public SendAction() {
       super(Lang.get("feedback.send"));
     }
 
     public void actionPerformed(ActionEvent e) {
-      directory.get(ConfigService.class).sendMail(ConfigService.MAIL_CONTACT,
-                                                  userMail.getText(),
-                                                  mailSubject.getText(),
+      String email = userMail.getText();
+      directory.get(ConfigService.class).sendMail(ConfigService.ADMIN_EMAIL,
+                                                  email,
+                                                  getSubject(email),
                                                   getMessageText(),
                                                   new ConfigService.Listener() {
                                                     public void sent(String mail, String title, String content) {
@@ -112,6 +110,10 @@ public class FeedbackDialog {
                                                     }
                                                   });
       dialog.setVisible(false);
+    }
+
+    private String getSubject(String email) {
+      return "Message sent from: " + email;
     }
   }
 }

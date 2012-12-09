@@ -48,7 +48,7 @@ public class PaypalTest extends ConnectedTestCase {
     PayPalConfirm.STATUS = PayPalConfirm.VERIFIED;
     int status = client.executeMethod(postMethod);
     assertEquals(200, status);
-    GlobList glob = db.getConnection().getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, "toto@bv.fr"))
+    GlobList glob = db.getConnection().getQueryBuilder(License.TYPE, Constraints.equal(License.EMAIL, "toto@bv.fr"))
       .selectAll()
       .getQuery().executeAsGlobs();
     assertFalse(glob.isEmpty());
@@ -56,7 +56,7 @@ public class PaypalTest extends ConnectedTestCase {
     String code = glob.get(0).get(License.ACTIVATION_CODE);
     mailServer.checkReceivedMail("toto@bv.fr").checkContains(code);
     assertEquals(glob.get(0).get(License.TRANSACTION_ID), transactionId);
-    mailServer.checkReceivedMail("support@mybudgetview.fr").checkContains("toto@bv.fr");
+    mailServer.checkReceivedMail("admin@mybudgetview.fr").checkContains("toto@bv.fr");
   }
 
   public void testNoValidated() throws Exception {
@@ -72,7 +72,7 @@ public class PaypalTest extends ConnectedTestCase {
     int status = client.executeMethod(postMethod);
     assertEquals(412, status);
     GlobList glob =
-      db.getConnection().getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, "toto@bv.fr"))
+      db.getConnection().getQueryBuilder(License.TYPE, Constraints.equal(License.EMAIL, "toto@bv.fr"))
         .selectAll()
         .getQuery().executeAsGlobs();
     assertTrue(glob.isEmpty());
@@ -91,12 +91,12 @@ public class PaypalTest extends ConnectedTestCase {
     int status = client.executeMethod(postMethod);
     assertEquals(200, status);
     GlobList globs =
-      db.getConnection().getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, "toto@bv.fr"))
+      db.getConnection().getQueryBuilder(License.TYPE, Constraints.equal(License.EMAIL, "toto@bv.fr"))
         .selectAll()
         .getQuery().executeAsGlobs();
     assertEquals(3, globs.size());
     String code = globs.get(0).get(License.ACTIVATION_CODE);
-    mailServer.checkReceivedMail("support@mybudgetview.fr");
+    mailServer.checkReceivedMail("admin@mybudgetview.fr");
     mailServer.checkReceivedMail("toto@bv.fr").checkContains(code);
     assertEquals(globs.get(0).get(License.TRANSACTION_ID), "12345");
   }

@@ -61,16 +61,16 @@ public class Mailer {
     return false;
   }
 
-  public boolean sendToSupport(String fromMail, String title, String content){
-    SupportMailToSent supportMailToSent = new SupportMailToSent(fromMail, title, content);
-    if (supportMailToSent.sent()){
+  public boolean sendToSupport(Mailbox mailbox, String fromMail, String title, String content){
+    SupportEmailToSend supportEmailToSend = new SupportEmailToSend(mailbox, fromMail, title, content);
+    if (supportEmailToSend.sent()){
       return true;
     }
-    add(supportMailToSent);
+    add(supportEmailToSend);
     return false;
   }
 
-  private void sendMail(String to, String from, String subjet, String content) throws MessagingException {
+  private void sendMail(String to, String from, String subject, String content) throws MessagingException {
 
     Properties mailProperties = new Properties();
     mailProperties.setProperty("mail.smtp.host", host);
@@ -83,12 +83,12 @@ public class Mailer {
     BodyPart text = new MimeBodyPart();
     text.setText(content);
     message.setFrom(new InternetAddress(from));
-    message.setSubject(subjet);
+    message.setSubject(subject);
     message.setSentDate(new Date());
     message.setContent(content, "text/html");
     message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
     Transport.send(message);
-    logger.info("mail sent : " + to + "  " + subjet);
+    logger.info("mail sent : " + to + "  " + subject);
   }
 
   private void add(MailToSent sent) {
@@ -153,7 +153,6 @@ public class Mailer {
         inc();
         sendMail(mail, fromAdress, Lang.get("new.license.subject", lang),
                  Lang.get("new.license.message", lang, code, mail));
-                 //,Lang.get("new.license.message.text", lang, code, mail));
         return true;
       }
       catch (Exception e) {
@@ -243,15 +242,15 @@ public class Mailer {
     }
   }
 
-  private class SupportMailToSent extends MailToSent {
+  private class SupportEmailToSend extends MailToSent {
     private String fromMail;
     private String title;
     private String content;
 
-    public SupportMailToSent(String fromMail, String title, String content) {
-      super("support@mybudgetview.fr");
+    public SupportEmailToSend(Mailbox mailbox, String fromMail, String title, String content) {
+      super(mailbox.getEmail());
       this.title = title;
-      this.content = "declared mail :'" + fromMail + "'\ncontent:\n" + content;
+      this.content = "declared mail:'" + fromMail + "'\ncontent:\n" + content;
       this.fromMail = "feedback@mybudgetview.fr";
     }
 
@@ -272,8 +271,21 @@ public class Mailer {
     }
 
     public String toString() {
-      return "license server message : " + title + ", content : " + content + " ; " + retryCount + " for " + count;
+      return "license server message: " + title + ", content: " + content + " ; " + retryCount + " for " + count;
     }
   }
 
+  public enum Mailbox {
+    SUPPORT("support@mybudgetview.fr"),
+    ADMIN("admin@mybudgetview.fr");
+    private String email;
+
+    Mailbox(String email) {
+      this.email = email;
+    }
+
+    public String getEmail() {
+      return email;
+    }
+  }
 }

@@ -3,8 +3,6 @@ package org.designup.picsou.functests.checkers;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
 
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
-
 public class FeedbackViewChecker extends ViewChecker {
 
   private Panel feedbackPanel;
@@ -13,8 +11,10 @@ public class FeedbackViewChecker extends ViewChecker {
     super(mainWindow);
   }
 
-  public void checkFeedbackLinksTo(String urlPart) {
-    checkButtonOpensUrl("sendFeedback", urlPart);
+  public void checkFeedbackLink() {
+    FeedbackDialogChecker.init(getPanel().getButton("sendFeedback").triggerClick())
+      .checkComponents()
+      .cancel();
   }
 
   public HelpChecker openHelp() {

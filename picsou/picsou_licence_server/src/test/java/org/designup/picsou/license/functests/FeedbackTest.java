@@ -13,7 +13,6 @@ import org.globsframework.utils.Files;
 import java.io.File;
 import java.util.Locale;
 
-/* Fenetre de feedback branchee dans le menu "dev" pour le moment */
 public class FeedbackTest extends ConnectedTestCase {
   private ApplicationChecker application;
   private int previousRetry;
@@ -54,9 +53,9 @@ public class FeedbackTest extends ConnectedTestCase {
 
     Lang.setLocale(Locale.ENGLISH);
 
-    openFeedback().send("my title", "me@gg.fr", "some content\n\n-----\nfooter");
+    openFeedback().send("me@gg.fr", "some content\n\n-----\nfooter");
 
-    mailServer.checkReceivedMail("support@mybudgetview.fr")
+    mailServer.checkReceivedMail("admin@mybudgetview.fr")
       .checkContains("some content",
                      "footer",
                      "me@gg.fr",
@@ -74,9 +73,9 @@ public class FeedbackTest extends ConnectedTestCase {
 
     openFeedback()
       .setLogsAdded()
-      .send("my title", "me@gg.fr", "some content");
+      .send("me@gg.fr", "some content");
 
-    mailServer.checkReceivedMail("support@mybudgetview.fr")
+    mailServer.checkReceivedMail("admin@mybudgetview.fr")
       .checkContains("some content",
                      "me@gg.fr",
                      PicsouApplication.APPLICATION_VERSION,
@@ -94,9 +93,9 @@ public class FeedbackTest extends ConnectedTestCase {
 
     openFeedback()
       .setLogsAdded()
-      .send("my title", "me@gg.fr", "some content");
+      .send("me@gg.fr", "some content");
 
-    mailServer.checkReceivedMail("support@mybudgetview.fr")
+    mailServer.checkReceivedMail("admin@mybudgetview.fr")
       .checkContains("some content",
                      "me@gg.fr",
                      PicsouApplication.APPLICATION_VERSION,

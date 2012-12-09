@@ -14,7 +14,7 @@ public class License {
   @AutoIncrement
   public static IntegerField ID;
 
-  public static StringField MAIL;
+  public static StringField EMAIL;
 
   public static StringField ACTIVATION_CODE;
 
