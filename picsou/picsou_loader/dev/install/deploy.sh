@@ -6,10 +6,8 @@
 #  cd ../../
 #fi;
 
-if [ -a ../picsou/obfuscated/budgetview.jar ];  # je n'ai pas trouve comment faire un not (!)
+if ! [ -a ../picsou/obfuscated/budgetview.jar ];
 then
-  echo -n ""
-else
   echo ../picsou/obfuscated/budgetview.jar do not exist from `pwd`
   exit 1
 fi;

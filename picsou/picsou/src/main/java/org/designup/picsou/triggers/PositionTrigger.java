@@ -71,7 +71,7 @@ public class PositionTrigger implements ChangeSetListener {
     }
   }
 
-  private void computeTotal(GlobRepository repository) {
+  public static void computeTotal(GlobRepository repository) {
     TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
     SortedSet<Glob> trs = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
 
@@ -92,7 +92,7 @@ public class PositionTrigger implements ChangeSetListener {
     }
   }
 
-  private void computeTotalPosition(GlobRepository repository, Glob[] transactions) {
+  private static void computeTotalPosition(GlobRepository repository, Glob[] transactions) {
     Glob currentMonth = repository.get(CurrentMonth.KEY);
     GlobMatcher futureOperations = getMatcherForFutureOperations(currentMonth.get(CurrentMonth.CURRENT_MONTH), currentMonth.get(CurrentMonth.CURRENT_DAY));
     {
@@ -335,7 +335,7 @@ public class PositionTrigger implements ChangeSetListener {
                             ));
   }
 
-  private GlobMatcher getMatcherForFutureOperations(int monthId, int day) {
+  private static GlobMatcher getMatcherForFutureOperations(int monthId, int day) {
     return GlobMatchers.or(GlobMatchers.isTrue(Transaction.PLANNED),
                            GlobMatchers.fieldStrictlyGreaterThan(Transaction.POSITION_MONTH, monthId),
                            GlobMatchers.and(
@@ -526,7 +526,7 @@ public class PositionTrigger implements ChangeSetListener {
     return true;
   }
 
-  private void computeTotalPosition(GlobRepository repository, Glob[] transactions,
+  private static void computeTotalPosition(GlobRepository repository, Glob[] transactions,
                                     SameAccountChecker sameCheckerAccount, GlobMatcher futureMatcher) {
 
     GlobList deferredSeries = repository.getAll(Series.TYPE, GlobMatchers.and(GlobMatchers.isNotNull(Series.FROM_ACCOUNT),

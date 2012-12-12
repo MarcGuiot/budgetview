@@ -7,6 +7,7 @@ import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AccountInitialPositionTrigger;
+import org.designup.picsou.triggers.PositionTrigger;
 import org.designup.picsou.triggers.ProjectItemTrigger;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
 import org.designup.picsou.utils.TransactionComparator;
@@ -215,7 +216,7 @@ public class UpgradeTrigger implements ChangeSetListener {
           open = Math.min(open, Month.toFullDate(firstTransaction.get(Transaction.BANK_MONTH),
                                                  firstTransaction.get(Transaction.BANK_DAY)));
           Double firstPos = firstTransaction.get(Transaction.ACCOUNT_POSITION, 0.);
-          openAmount = firstPos + firstTransaction.get(Transaction.AMOUNT);
+          openAmount = firstPos - firstTransaction.get(Transaction.AMOUNT);
         }
         AccountInitialPositionTrigger.createOpenTransaction(Month.getMonthIdFromFullDate(open),
                                                             Month.getDayFromFullDate(open), openAmount, repository,
@@ -231,12 +232,13 @@ public class UpgradeTrigger implements ChangeSetListener {
                                                    lastTransaction.get(Transaction.POSITION_DAY)));
           close = Math.max(close, Month.toFullDate(lastTransaction.get(Transaction.BANK_MONTH),
                                                    lastTransaction.get(Transaction.BANK_DAY)));
-          double closeAmount = lastTransaction.get(Transaction.ACCOUNT_POSITION, 0.);
+          double closeAmount = -lastTransaction.get(Transaction.ACCOUNT_POSITION, 0.);
           AccountInitialPositionTrigger.createCloseTransaction(repository, account.getKey(), Month.getDayFromFullDate(close),
                                                                Month.getMonthIdFromFullDate(close), closeAmount);
 
         }
       }
+      PositionTrigger.computeTotal(repository);
     }
     finally {
       repository.completeChangeSet();

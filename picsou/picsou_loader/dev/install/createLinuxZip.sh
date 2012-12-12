@@ -3,7 +3,8 @@
 createTar() {
   tar cvf budgetview.tar budgetview/budgetview.sh budgetview/license.txt budgetview/budgetview${JAR_VERSION}.jar \
       budgetview/budgetviewloader-1.0.jar budgetview/budgetview_icon_16.png budgetview/budgetview_icon_32.png \
-      budgetview/budgetview_icon_48.png budgetview/budgetview_icon_128.png budgetview/version.txt
+      budgetview/budgetview_icon_48.png budgetview/budgetview_icon_128.png budgetview/version.txt \
+      budgetview/budgetview.desktop
   
   gzip budgetview.tar
 }
@@ -28,6 +29,8 @@ cp dev/images/budgetview_icon_32.png budgetview/
 cp dev/images/budgetview_icon_48.png budgetview/
 cp dev/images/budgetview_icon_128.png budgetview/
 cp dev/install/license.txt budgetview/
+cp dev/install/copyright budgetview/
+cp dev/install/budgetview.desktop budgetview/
 cp target/budgetviewloader-1.0.jar budgetview/
 cp ../picsou/obfuscated/budgetview${JAR_VERSION}.jar budgetview/
 
@@ -38,6 +41,10 @@ mv budgetview.tar.gz budgetview-${SOFT_VERSION}-en.tar.gz
 cp dev/install/budgetview.fr.sh budgetview/budgetview.sh
 createTar
 mv budgetview.tar.gz budgetview-${SOFT_VERSION}-fr.tar.gz
+
+if [ -a /usr/bin/dpkg ] ; then
+  dev/install/generateDeb.sh ${JAR_VERSION} ${SOFT_VERSION}
+fi
 
 rm -rf budgetview
 

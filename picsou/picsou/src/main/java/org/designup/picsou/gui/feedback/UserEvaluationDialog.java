@@ -148,7 +148,7 @@ public class UserEvaluationDialog {
     public void actionPerformed(ActionEvent e) {
       sendingState.setVisible(true);
       sendingState.setIndeterminate(true);
-      directory.get(ConfigService.class).sendMail(ConfigService.MAIL_CONTACT,
+      directory.get(ConfigService.class).sendMail(ConfigService.MAIL_ADMIN,
                                                   emailField.getText(),
                                                   getHeaderText(),
                                                   getMessageText(),

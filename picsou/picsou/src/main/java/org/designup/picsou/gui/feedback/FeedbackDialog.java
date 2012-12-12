@@ -98,7 +98,7 @@ public class FeedbackDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
-      directory.get(ConfigService.class).sendMail(ConfigService.MAIL_CONTACT,
+      directory.get(ConfigService.class).sendMail(ConfigService.MAIL_SUPPORT,
                                                   userMail.getText(),
                                                   mailSubject.getText(),
                                                   getMessageText(),

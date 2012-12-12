@@ -56,7 +56,7 @@ public class PaypalTest extends ConnectedTestCase {
     String code = glob.get(0).get(License.ACTIVATION_CODE);
     mailServer.checkReceivedMail("toto@bv.fr").checkContains(code);
     assertEquals(glob.get(0).get(License.TRANSACTION_ID), transactionId);
-    mailServer.checkReceivedMail("support@mybudgetview.fr").checkContains("toto@bv.fr");
+    mailServer.checkReceivedMail("admin@mybudgetview.fr").checkContains("toto@bv.fr");
   }
 
   public void testNoValidated() throws Exception {
@@ -96,7 +96,7 @@ public class PaypalTest extends ConnectedTestCase {
         .getQuery().executeAsGlobs();
     assertEquals(3, globs.size());
     String code = globs.get(0).get(License.ACTIVATION_CODE);
-    mailServer.checkReceivedMail("support@mybudgetview.fr");
+    mailServer.checkReceivedMail("admin@mybudgetview.fr");
     mailServer.checkReceivedMail("toto@bv.fr").checkContains(code);
     assertEquals(globs.get(0).get(License.TRANSACTION_ID), "12345");
   }

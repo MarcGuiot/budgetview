@@ -81,6 +81,8 @@ public class ConfigService {
   private Directory directory = null;
   private GlobRepository repository = null;
   public static final String MAIL_CONTACT = "contact";
+  public static final String MAIL_ADMIN = "admin";
+  public static final String MAIL_SUPPORT = "support";
   private ServerAccess serverAccess;
 
   public ConfigService(String applicationVersion, Long jarVersion, Long localConfigVersion, File currentConfigFile) {

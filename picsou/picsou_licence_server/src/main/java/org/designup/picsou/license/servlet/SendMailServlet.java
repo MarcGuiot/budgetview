@@ -1,17 +1,16 @@
 package org.designup.picsou.license.servlet;
 
-import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.Strings;
+import org.apache.log4j.Logger;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.mail.Mailer;
-import org.apache.log4j.Logger;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.directory.Directory;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 public class SendMailServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("sendMail");
@@ -35,7 +34,7 @@ public class SendMailServlet extends HttpServlet {
       String content = ConfigService.decodeContent(req.getHeader(ConfigService.HEADER_MAIL_CONTENT));
       String mailFrom = req.getHeader(ConfigService.HEADER_MAIL);
       String title = req.getHeader(ConfigService.HEADER_MAIL_TITLE);
-      logger.info("mail from " + mailFrom +  "\ntitle " + title +  "\n mail : " + content + "\n");
+      logger.info("mail from " + mailFrom + "\ntitle " + title + "\n mail : " + content + "\n");
       if (Strings.isNullOrEmpty(content)) {
         logger.info("sendMail : empty content" + mailTo + " from : " + mailFrom + " title : " + title);
         resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -46,7 +45,13 @@ public class SendMailServlet extends HttpServlet {
       mailTo = mailTo.trim();
       content = content.trim();
       mailFrom = mailFrom.trim();
-      if (mailTo.equals(ConfigService.MAIL_CONTACT)){
+      if (mailTo.equals(ConfigService.MAIL_CONTACT)) {
+        mailer.sendToAdmin(mailFrom, title, content);
+      }
+      else if (mailTo.equals(ConfigService.MAIL_ADMIN)) {
+        mailer.sendToAdmin(mailFrom, title, content);
+      }
+      else if (mailTo.equals(ConfigService.MAIL_SUPPORT)) {
         mailer.sendToSupport(mailFrom, title, content);
       }
       resp.setStatus(HttpServletResponse.SC_OK);

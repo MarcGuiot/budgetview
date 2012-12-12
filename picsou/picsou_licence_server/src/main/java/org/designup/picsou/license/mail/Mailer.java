@@ -61,12 +61,20 @@ public class Mailer {
     return false;
   }
 
+  public boolean sendToAdmin(String fromMail, String title, String content){
+    return send("admin@mybudgetview.fr", fromMail,  title, content);
+  }
+
   public boolean sendToSupport(String fromMail, String title, String content){
-    SupportMailToSent supportMailToSent = new SupportMailToSent(fromMail, title, content);
-    if (supportMailToSent.sent()){
+    return send("support@mybudgetview.fr", fromMail,  title, content);
+  }
+
+  public boolean send(String toMail, String fromMail, String title, String content){
+    BudgetViewMailToSent adminMailToSent = new BudgetViewMailToSent(toMail, fromMail, title, content);
+    if (adminMailToSent.sent()){
       return true;
     }
-    add(supportMailToSent);
+    add(adminMailToSent);
     return false;
   }
 
@@ -243,13 +251,13 @@ public class Mailer {
     }
   }
 
-  private class SupportMailToSent extends MailToSent {
+  private class BudgetViewMailToSent extends MailToSent {
     private String fromMail;
     private String title;
     private String content;
 
-    public SupportMailToSent(String fromMail, String title, String content) {
-      super("support@mybudgetview.fr");
+    public BudgetViewMailToSent(String toMail, String fromMail, String title, String content) {
+      super(toMail);
       this.title = title;
       this.content = "declared mail :'" + fromMail + "'\ncontent:\n" + content;
       this.fromMail = "feedback@mybudgetview.fr";

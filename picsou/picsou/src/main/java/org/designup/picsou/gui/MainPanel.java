@@ -467,7 +467,7 @@ public class MainPanel {
         }
         String content = buffer.toString();
         Log.write(content);
-        directory.get(ConfigService.class).sendMail(ConfigService.MAIL_CONTACT,
+        directory.get(ConfigService.class).sendMail(ConfigService.MAIL_ADMIN,
                                                     mail,
                                                     "Thread dump",
                                                     content,

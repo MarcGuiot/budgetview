@@ -14,6 +14,11 @@ public class SerializableGlobSerializer {
     output.write(globTypeCount);
     for (String globTypeName : dataByGlobTypeAndId.keys()) {
       Map<Integer, SerializableGlobType> dataById = dataByGlobTypeAndId.get(globTypeName);
+      if (globTypeName.equals("r")){
+        globTypeName = "accountPositionError";
+      }else if (globTypeName.equals("bb") || globTypeName.equals("ab")){
+        globTypeName = "csvMapping";
+      }
       output.writeJavaString(globTypeName);
       output.write(dataById.size());
       for (SerializableGlobType data : dataById.values()) {
