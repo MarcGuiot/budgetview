@@ -38,10 +38,11 @@ public class UserEvaluationTest extends ConnectedTestCase {
     Thread.sleep(1000);
     application.checkClosed();
 
-    mailServer.checkReceivedMail("admin@mybudgetview.fr")
-      .checkHeader("User evaluation: ")
-      .checkContains("Blah", "toto@example.com")
-      .checkContains("lang: " + Lang.getLang());
+    mailServer.checkReceivedMail("support@mybudgetview.fr")
+      .checkSubjectContains("User evaluation: ")
+      .checkSubjectContains(PicsouApplication.APPLICATION_VERSION)
+      .checkSubjectContains(Lang.getLang())
+      .checkContains("Blah", "toto@example.com");
 
     application.startWithoutSLA();
     application.getOperations().checkExitWithoutDialog();
@@ -61,8 +62,8 @@ public class UserEvaluationTest extends ConnectedTestCase {
     Thread.sleep(1000);
     application.checkClosed();
 
-    mailServer.checkReceivedMail("admin@mybudgetview.fr")
-      .checkHeader("User evaluation: ")
+    mailServer.checkReceivedMail("support@mybudgetview.fr")
+      .checkSubjectContains("User evaluation: ")
       .checkContains("Blah");
 
     application.startWithoutSLA();
@@ -102,8 +103,10 @@ public class UserEvaluationTest extends ConnectedTestCase {
     Thread.sleep(1000);
     application.checkClosed();
 
-    mailServer.checkReceivedMail("admin@mybudgetview.fr")
-      .checkHeader("User evaluation: ")
+    mailServer.checkReceivedMail("support@mybudgetview.fr")
+      .checkSubjectContains("User evaluation: ")
+      .checkSubjectContains(PicsouApplication.APPLICATION_VERSION)
+      .checkSubjectContains(Lang.getLang())
       .checkContains("Blah", "toto@example.com");
 
     application.startWithoutSLA();

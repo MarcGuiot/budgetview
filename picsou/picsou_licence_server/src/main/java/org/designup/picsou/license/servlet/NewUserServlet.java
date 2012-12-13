@@ -168,22 +168,22 @@ public class NewUserServlet extends HttpServlet {
     }
   }
 
-  private void register(HttpServletResponse resp, String mail, String transactionId, SqlConnection db, String lang)
+  private void register(HttpServletResponse resp, String email, String transactionId, SqlConnection db, String lang)
     throws NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException {
     SelectQuery query = db.getQueryBuilder(License.TYPE,
-                                           Constraints.equal(License.MAIL, mail))
+                                           Constraints.equal(License.EMAIL, email))
       .selectAll()
       .getQuery();
     GlobList globList = query.executeAsGlobs();
     db.commit();
     if (globList.isEmpty()) {
       String code = LicenseGenerator.generateActivationCode();
-      byte[] signature = LicenseGenerator.generateSignature(mail);
+      byte[] signature = LicenseGenerator.generateSignature(email);
       SqlRequest sqlRequest = db.getCreateBuilder(License.TYPE)
         .set(License.ACCESS_COUNT, 1L)
         .set(License.SIGNATURE, signature)
         .set(License.ACTIVATION_CODE, code)
-        .set(License.MAIL, mail)
+        .set(License.EMAIL, email)
         .set(License.TRANSACTION_ID, transactionId)
         .getRequest();
       for (int i = 0; i < LICENCE_COUNT; i++) {
@@ -192,9 +192,9 @@ public class NewUserServlet extends HttpServlet {
       sqlRequest.close();
 
       db.commit();
-      logger.info("NewUser : ok  for " + mail + " code is " + code + " in " + lang);
-      mailer.sendNewLicense(mail, code, lang);
-      mailer.sendToAdmin(mail, "New User", " Licence code : " + code + "\nLang: " + lang);
+      logger.info("NewUser : ok  for " + email + " code is " + code + " in " + lang);
+      mailer.sendNewLicense(email, code, lang);
+      mailer.sendToSupport(Mailer.Mailbox.ADMIN, email, "New User", " Licence code : " + code + "\nLang: " + lang);
       resp.setStatus(HttpServletResponse.SC_OK);
     }
     else {
@@ -202,7 +202,7 @@ public class NewUserServlet extends HttpServlet {
       String code = glob.get(License.ACTIVATION_CODE);
       if (code == null) {
         code = LicenseGenerator.generateActivationCode();
-        db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
+        db.getUpdateBuilder(License.TYPE, Constraints.equal(License.EMAIL, email))
           .update(License.ACTIVATION_CODE, code)
           .getRequest()
           .run();
@@ -213,11 +213,11 @@ public class NewUserServlet extends HttpServlet {
       }
       else {
         String message = "NewUser : Receive different TransactionId for the same mail txId='" + transactionId +
-                         "' previousTxId='" + previousTrId + "' for '" + mail + "' lang " + lang;
+                         "' previousTxId='" + previousTrId + "' for '" + email + "' lang " + lang;
         logger.error(message);
-        mailer.sendToAdmin(mail, "different TransactionId", message + "'. We should contact them to ask them for an other mail.");
+        mailer.sendToSupport(Mailer.Mailbox.ADMIN, email, "different TransactionId", message + "'. We should contact them to ask them for an other mail.");
       }
-      mailer.sendNewLicense(mail, code, lang);
+      mailer.sendNewLicense(email, code, lang);
       resp.setStatus(HttpServletResponse.SC_OK);
     }
   }

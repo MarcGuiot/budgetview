@@ -884,13 +884,20 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkAccount("Account n. 113", 200.00, "2008/08/03");
     mainAccounts.checkAccount("Account n. 112", 100.00, "2008/08/01");
+    views.selectHome();
+
     notifications.openDialog()
       .checkMessageCount(2)
       .checkMessage(0, "The last computed position for 'Account n. 112' (100.00) " +
                        "is not the same as the imported one (200.00)")
-      .checkMessage(1, "The last computed position for 'Account n. 113' (200.00) is not the same as the " +
-                       "imported one (300.00)")
+      .checkMessage(1, "The last computed position for 'Account n. 113' (200.00) " +
+                       "is not the same as the imported one (300.00)")
+      .runAction(0)
       .validate();
+
+    views.checkDataSelected();
+    mainAccounts.checkSelectedAccounts("Account n. 112");
+    transactions.checkTableIsEmpty();
 
     notifications.checkVisible(2);
     mainAccounts.edit("Account n. 112")
@@ -904,6 +911,44 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .clearMessage(0)
       .validate();
 
+    notifications.checkHidden();
+  }
+
+  public void testNavigatingFromTheAccountErrorNotificationDialog() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount("111", 100.00, "2008/08/01")
+      .addTransaction("2008/08/01", -10.00, "Transaction 1a")
+      .addBankAccount("112", 100.00, "2008/08/01")
+      .addTransaction("2008/08/01", -20.00, "Transaction 2a")
+      .load();
+
+    OfxBuilder.init(this)
+      .addBankAccount("111", 120.00, "2008/08/02")
+      .addTransaction("2008/08/02", -20.00, "Transaction 1b")
+      .load();
+
+    mainAccounts.checkPosition("Account n. 111", 80.00);
+
+    views.selectHome();
+    notifications.checkVisible(1);
+    notifications.openDialog()
+      .checkMessageCount(1)
+      .checkMessage(0, "The last computed position for 'Account n. 111' (80.00) " +
+                       "is not the same as the imported one (120.00)")
+      .runAction(0)
+      .validate();
+
+    views.checkDataSelected();
+    mainAccounts.checkSelectedAccounts("Account n. 111");
+    transactions.initContent()
+      .add("02/08/2008", TransactionType.PRELEVEMENT, "TRANSACTION 1B", "", -20.00)
+      .add("01/08/2008", TransactionType.PRELEVEMENT, "TRANSACTION 1A", "", -10.00)
+      .check();
+
+    notifications.openDialog()
+      .checkMessageCount(1)
+      .clearMessage(0)
+      .validate();
     notifications.checkHidden();
   }
 

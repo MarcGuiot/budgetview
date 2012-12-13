@@ -35,8 +35,8 @@ public class HelpTest extends LoggedInFunctionalTestCase {
 
   public void testDefaultLinks() throws Exception {
     operations.openHelp()
-      .checkBottomTextLink("support site", "http://support.mybudgetview.com")
-      .checkBottomTextLink("contact us", "http://support.mybudgetview.com/tickets/new")
+      .checkBottomTextLink("support site", "http://www.mybudgetview.com/support")
+      .checkSendContactLink("contact us")
       .close();
   }
 

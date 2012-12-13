@@ -37,8 +37,13 @@ public class NotificationsDialogChecker extends ViewChecker {
     return (Panel)panels[index];
   }
 
+  public NotificationsDialogChecker runAction(int index) {
+    getPanel(index).getButton("action").click();
+    return this;
+  }
+
   public NotificationsDialogChecker clearMessage(int index) {
-    getPanel(index).getButton("deleteItem").click();
+    getPanel(index).getButton("delete").click();
     return this;
   }
 

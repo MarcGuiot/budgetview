@@ -15,11 +15,9 @@ import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.SendImportedFileAction;
-import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.feedback.FeedbackService;
 import org.designup.picsou.gui.feedback.FeedbackView;
 import org.designup.picsou.gui.feedback.actions.OpenFeedbackDialogAction;
-import org.designup.picsou.gui.feedback.actions.SendFeedbackAction;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.help.actions.GotoSupportAction;
 import org.designup.picsou.gui.help.actions.GotoWebsiteAction;
@@ -27,10 +25,10 @@ import org.designup.picsou.gui.help.actions.SendLogsAction;
 import org.designup.picsou.gui.license.LicenseExpirationAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
-import org.designup.picsou.gui.notifications.NotificationsFlagView;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.notes.ShowNotesAction;
+import org.designup.picsou.gui.notifications.NotificationsFlagView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.preferences.dev.DevOptionsAction;
 import org.designup.picsou.gui.printing.actions.PrintAction;
@@ -69,13 +67,10 @@ import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.repository.ReplicationGlobRepository;
-import org.globsframework.utils.Dates;
-import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -84,8 +79,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.Date;
-import java.util.Map;
 
 import static org.globsframework.model.utils.GlobMatchers.isFalse;
 
@@ -93,7 +86,7 @@ public class MainPanel {
   private PicsouFrame parent;
   private ImportFileAction importFileAction;
   private ExportFileAction exportFileAction;
-  private SendFeedbackAction sendFeedbackAction;
+  private OpenFeedbackDialogAction openFeedbackAction;
   private SetPasswordAction setPasswordAction;
   private BackupAction backupAction;
   private RestoreFileAction restoreActionFileAction;
@@ -160,7 +153,7 @@ public class MainPanel {
 
     importFileAction = ImportFileAction.initForMenu(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
-    sendFeedbackAction = new SendFeedbackAction(repository, directory);
+    openFeedbackAction = new OpenFeedbackDialogAction(Lang.get("feedback"), repository, directory);
     backupAction = new BackupAction(repository, directory);
     restoreActionFileAction = new RestoreFileAction(repository, directory);
     restoreSnapshotMenuAction = new RestoreSnapshotMenuAction(directory, repository);
@@ -342,7 +335,6 @@ public class MainPanel {
     devMenu.add(new GotoNextMonthAction(repository));
     devMenu.add(new AddSixDayAction(repository));
     devMenu.add(new ClearAllSignpostsAction(repository));
-    devMenu.add(new OpenFeedbackDialogAction(repository, directory));
     devMenu.add(new ShowUserEvaluationDialogAction(repository, directory));
     devMenu.add(new LicenseExpirationAction(repository, directory));
     devMenu.add(new DumpRepositoryAction(repository));
@@ -380,7 +372,7 @@ public class MainPanel {
     menu.add(new GotoSupportAction(directory));
 
     menu.addSeparator();
-    menu.add(sendFeedbackAction);
+    menu.add(openFeedbackAction);
     menu.add(new SendLogsAction(directory));
     menu.add(sendImportedFileAction);
 
@@ -421,119 +413,6 @@ public class MainPanel {
       }
     }
     directory.get(OpenRequestManager.class).popCallback();
-  }
-
-  private static class SendStackTracesAction extends AbstractAction {
-    private GlobRepository repository;
-    private Directory directory;
-    private Thread thread;
-    private boolean stop;
-    private StringBuilder buffer = new StringBuilder();
-
-    public SendStackTracesAction(GlobRepository repository, Directory directory) {
-      super(Lang.get("dumpThread"));
-      this.repository = repository;
-      this.directory = directory;
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      if (thread == null) {
-        stop = false;
-        dump();
-        this.putValue(Action.NAME, Lang.get("sendThread"));
-      }
-      else {
-        this.putValue(Action.NAME, Lang.get("dumpThread"));
-        stop();
-      }
-    }
-
-    private void stop() {
-      try {
-        synchronized (this) {
-          stop = true;
-          notifyAll();
-        }
-        while (thread.isAlive()) {
-          thread.interrupt();
-          thread.join(200);
-        }
-        thread = null;
-
-        Glob glob = repository.find(User.KEY);
-        String mail = "???";
-        if (glob != null) {
-          mail = glob.get(User.EMAIL);
-        }
-        String content = buffer.toString();
-        Log.write(content);
-        directory.get(ConfigService.class).sendMail(ConfigService.MAIL_ADMIN,
-                                                    mail,
-                                                    "Thread dump",
-                                                    content,
-                                                    new ConfigService.Listener() {
-                                                      public void sent(String mail, String title, String content) {
-                                                        Log.write("Mail sent from " + mail + " title : " + title + "\n" + content);
-                                                      }
-
-                                                      public void sendFail(String mail, String title, String content) {
-                                                        Log.write("Fail to sent mail from " + mail + " title : " + title + "\n" + content);
-                                                        //                                                      MessageDialog.show("");
-                                                      }
-                                                    });
-      }
-      catch (InterruptedException e) {
-        Log.write("interupted thread in send ");
-      }
-    }
-
-    private void dump() {
-      thread = new Thread() {
-        public void run() {
-          try {
-            synchronized (this) {
-              wait(1000);
-              while (!stop) {
-                buffer.append("-------------------").append(Dates.toTimestampString(new Date())).append('\n');
-                Runtime runtime = Runtime.getRuntime();
-                buffer
-                  .append("free mem : ").append(runtime.freeMemory())
-                  .append(" max mem : ").append(runtime.maxMemory())
-                  .append(" total mem : ").append(runtime.totalMemory())
-                  .append('\n');
-                Map<Thread, StackTraceElement[]> map = Thread.getAllStackTraces();
-                for (Map.Entry<Thread, StackTraceElement[]> entry : map.entrySet()) {
-                  if (thread != entry.getKey()) {
-                    buffer.append("Thread : \n")
-                      .append(entry.getKey().getName())
-                      .append("\n");
-                    for (StackTraceElement element : entry.getValue()) {
-                      buffer
-                        .append("at ")
-                        .append(element.getClassName())
-                        .append(".")
-                        .append(element.getMethodName())
-                        .append("(")
-                        .append(element.getFileName())
-                        .append(":")
-                        .append(element.getLineNumber())
-                        .append(")")
-                        .append("\n");
-                    }
-                  }
-                }
-                wait(4000);
-              }
-            }
-          }
-          catch (InterruptedException e) {
-          }
-        }
-      };
-      thread.setDaemon(true);
-      thread.start();
-
-    }
   }
 
   private class MainPanelLogoutService implements LogoutService {

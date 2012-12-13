@@ -6,7 +6,7 @@ public class FeedbackViewTest extends LoggedInFunctionalTestCase {
 
   public void test() throws Exception {
 
-    feedbackView.checkFeedbackLinksTo("http://support.mybudgetview.fr/anonymous_requests/new");
+    feedbackView.checkFeedbackLink();
 
     feedbackView.openHelp()
       .checkTitle("Index")

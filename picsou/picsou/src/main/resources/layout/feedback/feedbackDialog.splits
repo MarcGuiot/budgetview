@@ -11,16 +11,18 @@
     <column styleClass="innerDialog">
       <label name="title" text="$feedback.title" styleClass="title"/>
 
-      <label text="$feedback.fromMail" styleClass="formLabelTop"/>
-      <textField ref="fromMail"/>
+      <htmlEditorPane text="$feedback.intro" styleClass="multiLineLabel" marginBottom="5"/>
 
-      <label text="$feedback.mailSubject" styleClass="formLabelTop"/>
-      <textField ref="mailSubject"/>
+      <row>
+        <label text="$feedback.fromMail" styleClass="formLabel"/>
+        <textField ref="fromMail"/>
+      </row>
 
       <label text="$feedback.content" styleClass="formLabelTop"/>
       <scrollPane forceVerticalScroll="true" weightY="100">
         <textArea ref="mailContent"/>
       </scrollPane>
+
       <checkBox ref="addLogs"/>
 
     </column>

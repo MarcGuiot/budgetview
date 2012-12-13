@@ -2,7 +2,7 @@ package org.designup.picsou.gui.feedback;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.feedback.actions.FacebookAction;
-import org.designup.picsou.gui.feedback.actions.SendFeedbackAction;
+import org.designup.picsou.gui.feedback.actions.OpenFeedbackDialogAction;
 import org.designup.picsou.gui.feedback.actions.TwitterAction;
 import org.designup.picsou.gui.help.actions.GotoWebsiteAction;
 import org.designup.picsou.gui.help.actions.HelpAction;
@@ -22,7 +22,7 @@ public class FeedbackView extends View {
                                                       repository, directory);
 
     builder.add("help", new HelpAction(Lang.get("feedback.help.text"), "index", Lang.get("feedback.help.tooltip"), directory));
-    builder.add("sendFeedback", new SendFeedbackAction(Lang.get("feedback.send.text"), repository, directory));
+    builder.add("sendFeedback", new OpenFeedbackDialogAction(Lang.get("feedback.send.text"), repository, directory));
     builder.add("visitWebsite", new GotoWebsiteAction(Lang.get("feedback.goto.website"), directory));
     builder.add("twitter", new TwitterAction(directory));
     builder.add("facebook", new FacebookAction(directory));

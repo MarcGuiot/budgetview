@@ -56,7 +56,7 @@ public class AddUser {
     for (String arg : arguments) {
       String code = LicenseGenerator.generateActivationCode();
       db.getCreateBuilder(License.TYPE)
-        .set(License.MAIL, arg)
+        .set(License.EMAIL, arg)
         .set(License.ACTIVATION_CODE, code)
         .getRequest()
         .run();

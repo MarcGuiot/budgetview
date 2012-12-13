@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.notifications;
 
+import org.designup.picsou.gui.accounts.utils.AccountPositionNotification;
 import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.description.Formatting;
@@ -16,6 +17,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobComparators;
+import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -53,7 +55,8 @@ public class NotificationsDialog {
           JTextArea messageText = new JTextArea(notification.getMessage());
           cellBuilder.add("message", messageText);
 
-          cellBuilder.add("deleteItem", new DeleteNotificationAction(notification));
+          cellBuilder.add("action", notification.getAction());
+          cellBuilder.add("delete", new DeleteNotificationAction(notification));
         }
       });
 
@@ -71,20 +74,20 @@ public class NotificationsDialog {
     GlobList errors =
       repository
         .getAll(AccountPositionError.TYPE, isFalse(AccountPositionError.CLEARED))
-        .sort(GlobComparators.descending(AccountPositionError.UPDATE_DATE));
+        .sort(new GlobFieldsComparator(AccountPositionError.UPDATE_DATE, false,
+                                       AccountPositionError.ACCOUNT, true));
     for (Glob error : errors) {
       Integer fullDate = error.get(AccountPositionError.LAST_PREVIOUS_IMPORT_DATE);
       String date = fullDate != null ? Formatting.toString(fullDate) : null;
       Glob account = repository.findLinkTarget(error, AccountPositionError.ACCOUNT);
-      notifications.add(new GlobNotification(localRepository, ++i, error,
-                                             AccountPositionError.UPDATE_DATE, AccountPositionError.CLEARED,
-                                             Lang.get("messages.account.position.error.msg" + (date != null ? ".date" : ""),
-                                                      account.get(Account.NAME),
-                                                      Formatting.toString(error.get(AccountPositionError.LAST_REAL_OPERATION_POSITION)),
-                                                      Formatting.toString(error.get(AccountPositionError.IMPORTED_POSITION)),
-                                                      date)));
+      int id = ++i;
+      notifications.add(createNotification(localRepository, error, date, account, id));
     }
     return notifications;
+  }
+
+  private GlobNotification createNotification(GlobRepository localRepository, final Glob error, final String date, final Glob account, final int id) {
+    return new AccountPositionNotification(localRepository, directory, error, date, account, id);
   }
 
   private class ValidateAction extends AbstractAction {
@@ -105,6 +108,7 @@ public class NotificationsDialog {
     private Notification notification;
 
     public DeleteNotificationAction(Notification notification) {
+      super(Lang.get("notifications.delete"));
       this.notification = notification;
     }
 

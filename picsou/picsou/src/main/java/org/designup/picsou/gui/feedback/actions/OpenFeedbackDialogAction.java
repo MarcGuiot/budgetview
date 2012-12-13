@@ -12,8 +12,8 @@ public class OpenFeedbackDialogAction extends AbstractAction {
   private GlobRepository repository;
   private Directory directory;
 
-  public OpenFeedbackDialogAction(GlobRepository repository, Directory directory) {
-    super("[OpenFeedback]");
+  public OpenFeedbackDialogAction(String text, GlobRepository repository, Directory directory) {
+    super(text);
     this.repository = repository;
     this.directory = directory;
   }

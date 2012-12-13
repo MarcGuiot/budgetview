@@ -4,37 +4,56 @@
 
   <div class="light-block full-separators">
 
-  <h2>version 2.32 <span class="date">2 décembre 2012</span></h2>
+  <h2>version 2.32 <span class="date">3 décembre 2012</span></h2>
+  <p>Saisie manuelle d'opérations :</p>
   <ul>
     <li>Vous pouvez maintenant saisir des opérations dans tous les comptes,
-      y compris ceux pour lesquels des imports de fichiers sont réalisés,
-      puis réconcilier ces opérations lors d'imports ultérieurs.</li>
+      y compris ceux pour lesquels des imports de fichiers sont réalisés. Vous
+      pouvez ensuite réconcilier ces opérations lors d'imports ultérieurs.</li>
 
-    <li>Création manuelle d'opérations : l'application auto-complète les libellés,
-      et catégorise automatiquement les opérations.</li>
+    <li>L'application complète automatiquement les libellés lors de la saisie,
+      et classe automatiquement les opérations sur la base des opérations existantes.</li>
+  </ul>
 
-    <li>L'application détecte maintenant les incohérences entre le solde d'un compte et la
-      séquence des opérations, ce qui permet d'identifier par exemple des opérations absentes ou  en doublon.</li>
+  <p>Gestion des comptes :</p>
+  <ul>
+    <li>BudgetView détecte maintenant les incohérences entre le solde d'un compte et la
+      séquence des opérations, ce qui permet de détecter des opérations absentes
+      ou en doublon.</li>
 
-    <li>Vous pouvez dorénavant configurer plus finement les cartes à débit différé (par exemple pour des opérations réalisées
-      du 20 au 20, et prélevées le 15 deux mois après).</li>
+    <li>Vous pouvez dorénavant configurer les cartes à débit différé avec plus de souplesse&nbsp;-
+      par exemple pour des opérations réalisées du 20 au 20, et prélevées le 15 deux mois après.</li>
+  </ul>
 
+  <p>Vue Analyse :</p>
+  <ul>
     <li>Un clic droit sur les graphiques de la vue Analyse fait apparaître un menu
       pour naviguer vers les opérations correspondantes.</li>
 
     <li>La table affichée au bas de la vue Analyse intègre les sous-enveloppes.</li>
+  </ul>
 
-    <li>Nouveaux menus pour selectionner le mois en cours, l'année en cours, etc.</li>
-
+  <p>Gestion des projets :</p>
+  <ul>
     <li>Des sous-enveloppes sont maintenant créées automatiquement pour chaque composante
-       d'un projet. Vous pouvez alors voir dans la fenêtre d'édition du projet comment vos
-       dépenses </li>
+      d'un projet. Vous pouvez alors voir dans la fenêtre d'édition du projet comment vos
+      dépenses évoluent dans le détail.</li>
+  </ul>
 
-    <li>Impression : ajout d'une page représentant la vue "Budget".</li>
+  <p>Impression :</p>
+  <ul>
+  <li>Une nouvelle page présente maintenant la vue "Budget",
+      avec l'ensemble des enveloppes et pour chacune
+      le niveau de revenus/dépenses prévu et réel.</li>
+  </ul>
 
+  <p>Autres améliorations :</p>
+  <ul>
+    <li>De nouvelles fonctions du menu "Affichage" permettent de selectionner le mois en cours,
+      l'année en cours, etc.</li>
     <li>Ajout des principales banques Suisses et Belges.</li>
-
-    <li>Les opérations sont affichées en vert ou rouge, selon leur signe, dans les tableaux des vues Budget et Catégorisation.</li>
+    <li>Les opérations sont affichées en vert ou rouge, selon leur signe, dans les tableaux des vues Budget et
+      Catégorisation.</li>
     <li>Compatible avec les nouvelles règles de sécurité de Mac OS X Mountain Lion.</li>
   </ul>
   <p><b>Pour profiter de ces évolutions</b>, il vous suffit de relancer BudgetView, attendre
@@ -44,8 +63,10 @@
     dès maintenant&nbsp;!
   </p>
   <p>Et comme d'habitude, n'hésitez pas à
-    <a href="http://support.mybudgetview.fr/anonymous_requests/new" class="highlighted">nous contacter</a>
+    <a href="mailto:support@mybudgetview.fr" class="highlighted">nous contacter</a>
     pour nous faire part de vos commentaires sur cette nouvelle version&nbsp;!</p>
+
+  <!------------------------------>
 
   <h2>version 2.31 <span class="date">18 juin 2012</span></h2>
   <ul>
@@ -56,6 +77,8 @@
     </li>
   </ul>
 
+  <!------------------------------>
+
   <h2>version 2.29 <span class="date">18 mai 2012</span></h2>
   <ul>
     <li>Dans la vue Analyse, vous pouvez maintenant voir le détail des sous-enveloppes d'une enveloppe donnée.
@@ -65,6 +88,8 @@
       la connexion OFX directe aux banques, et l'affichage des enveloppes des projets dans la vue Budget.
     </li>
   </ul>
+
+  <!------------------------------>
 
   <h2>version 2.28 <span class="date">2 mai 2012</span></h2>
   <ul>
@@ -81,6 +106,8 @@
       et une erreur qui survenait parfois lors de l'édition d'une enveloppe a également été corrigée.
     </li>
   </ul>
+
+  <!------------------------------>
 
   <h2>version 2.27 <span class="date">16 avril 2012</span></h2>
   <ul>
@@ -109,7 +136,7 @@
       <li>Deux nouvelles options sont disponibles dans le menu des préférences&nbsp;:</li>
       <ul>
         <li>Modifier le format utilisé pour l'affichage des dates</li>
-        <li>Modifier le thème de couleurs de l'application</li>        
+        <li>Modifier le thème de couleurs de l'application</li>
       </ul>
       <li>Lors de la première utilisation de l'application, il vous est proposé de voir BudgetView à l'oeuvre
         à l'aide d'un compte de démonstration.</li>
@@ -124,7 +151,7 @@
       <li>Vous pouvez maintenant <b>imprimer un rapport</b> de votre budget.
         Choisissez pour cela l'option "Imprimer..." dans le menu Fichier. Notez bien qu'il
         s'agit d'une toute première version de cette fonctionnalité, aussi n'hésitez pas à
-        <a href="http://support.mybudgetview.fr/anonymous_requests/new">nous faire part</a>
+        <a href="mailto:support@mybudgetview.fr">nous faire part</a>
         de vos commentaires sur ces rapports.
       </li>
       <li>Un même utilisateur peut dorénavant utiliser sa clef d'activation BudgetView

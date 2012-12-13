@@ -26,7 +26,7 @@ public class SendMailServlet extends HttpServlet {
       resp.setCharacterEncoding("UTF-8");
       String mailTo = req.getHeader(ConfigService.HEADER_TO_MAIL);
       if (Strings.isNullOrEmpty(mailTo)) {
-        logger.info("sendMail : missing mail address " + (mailTo == null ? "<no email>" : mailTo));
+        logger.info("sendMail: missing mail address " + (mailTo == null ? "<no email>" : mailTo));
         resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         return;
       }
@@ -45,19 +45,16 @@ public class SendMailServlet extends HttpServlet {
       mailTo = mailTo.trim();
       content = content.trim();
       mailFrom = mailFrom.trim();
-      if (mailTo.equals(ConfigService.MAIL_CONTACT)) {
-        mailer.sendToAdmin(mailFrom, title, content);
+      if (mailTo.equals(ConfigService.SUPPORT_EMAIL)) {
+        mailer.sendToSupport(Mailer.Mailbox.SUPPORT, mailFrom, title, content);
       }
-      else if (mailTo.equals(ConfigService.MAIL_ADMIN)) {
-        mailer.sendToAdmin(mailFrom, title, content);
-      }
-      else if (mailTo.equals(ConfigService.MAIL_SUPPORT)) {
-        mailer.sendToSupport(mailFrom, title, content);
+      else if (mailTo.equals(ConfigService.ADMIN_EMAIL)) {
+        mailer.sendToSupport(Mailer.Mailbox.ADMIN, mailFrom, title, content);
       }
       resp.setStatus(HttpServletResponse.SC_OK);
     }
     catch (Exception e) {
-      logger.error("sendMail fail : ", e);
+      logger.error("sendMail failed: ", e);
     }
   }
 }

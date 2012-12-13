@@ -47,7 +47,7 @@ public class DbChecker {
   public void registerMail(String email, String code) {
     SqlConnection connection = getConnection();
     connection.getCreateBuilder(License.TYPE)
-      .set(License.MAIL, email)
+      .set(License.EMAIL, email)
       .set(License.ACTIVATION_CODE, code)
       .getRequest()
       .run();
@@ -77,7 +77,7 @@ public class DbChecker {
   }
 
   public Glob getLicense(String email, Field field, Object expected) throws InterruptedException {
-    return getGlob(field, expected, Constraints.equal(License.MAIL, email));
+    return getGlob(field, expected, Constraints.equal(License.EMAIL, email));
   }
 
   public String checkRepoIdIsUpdated(long repoCount, Constraint constraint) throws InterruptedException {

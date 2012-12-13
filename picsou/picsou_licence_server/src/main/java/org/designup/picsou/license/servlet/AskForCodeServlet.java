@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,7 +62,7 @@ public class AskForCodeServlet extends HttpServlet {
           else {
             SqlConnection db = sqlService.getDb();
             try {
-              db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mailTo))
+              db.getUpdateBuilder(License.TYPE, Constraints.equal(License.EMAIL, mailTo))
                 .update(License.ACTIVATION_CODE, activationCode)
                 .getRequest().run();
             }
@@ -71,7 +70,7 @@ public class AskForCodeServlet extends HttpServlet {
               db.commitAndClose();
             }
           }
-          if (mailer.sendRequestLicence(lang, activationCode, registeredMail.get(0).get(License.MAIL))) {
+          if (mailer.sendRequestLicence(lang, activationCode, registeredMail.get(0).get(License.EMAIL))) {
             logger.info("Send new activation code " + activationCode + " t  o " + mailTo);
             resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT);
           }
@@ -117,8 +116,8 @@ public class AskForCodeServlet extends HttpServlet {
     SqlConnection db = sqlService.getDb();
     try {
       return db.getQueryBuilder(License.TYPE,
-                                Constraints.equal(License.MAIL, mailTo))
-        .select(License.MAIL)
+                                Constraints.equal(License.EMAIL, mailTo))
+        .select(License.EMAIL)
         .getQuery().executeAsGlobs();
     }
     finally {

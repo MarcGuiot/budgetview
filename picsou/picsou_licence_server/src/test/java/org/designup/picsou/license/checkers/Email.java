@@ -12,7 +12,11 @@ public class Email {
     this.content = message.getBody();
   }
 
-  public Email checkHeader(String text) {
+  public Email checkSubjectContains(String text) {
+    String subject = message.getHeaderValue("Subject");
+    if (!subject.contains(text)) {
+      Assert.fail("Unexpected subject: " + subject);
+    }
     return this;
   }
 

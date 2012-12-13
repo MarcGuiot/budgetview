@@ -471,7 +471,7 @@ public class OperationChecker {
   }
 
   public FeedbackDialogChecker openFeedback() {
-    MenuItem feedbackMenu = getDevMenu().getSubMenu("[OpenFeedback]");
+    MenuItem feedbackMenu = getHelpMenu().getSubMenu(Lang.get("feedback"));
     return FeedbackDialogChecker.init(feedbackMenu.triggerClick());
   }
 
