@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "2.33.pre";
+  public static final String APPLICATION_VERSION = "2.33";
   public static final Long JAR_VERSION = 96L;
   public static final Long BANK_CONFIG_VERSION = 7L;
 
