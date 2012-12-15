@@ -96,7 +96,7 @@ public class FeedbackDialog {
 
     public void actionPerformed(ActionEvent e) {
       String email = userMail.getText();
-      directory.get(ConfigService.class).sendMail(ConfigService.ADMIN_EMAIL,
+      directory.get(ConfigService.class).sendMail(ConfigService.SUPPORT_EMAIL,
                                                   email,
                                                   getSubject(email),
                                                   getMessageText(),
