@@ -62,7 +62,7 @@ public class AskForCodeServlet extends HttpServlet {
           else {
             SqlConnection db = sqlService.getDb();
             try {
-              db.getUpdateBuilder(License.TYPE, Constraints.equal(License.EMAIL, mailTo))
+              db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mailTo))
                 .update(License.ACTIVATION_CODE, activationCode)
                 .getRequest().run();
             }
@@ -70,7 +70,7 @@ public class AskForCodeServlet extends HttpServlet {
               db.commitAndClose();
             }
           }
-          if (mailer.sendRequestLicence(lang, activationCode, registeredMail.get(0).get(License.EMAIL))) {
+          if (mailer.sendRequestLicence(lang, activationCode, registeredMail.get(0).get(License.MAIL))) {
             logger.info("Send new activation code " + activationCode + " t  o " + mailTo);
             resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT);
           }
@@ -116,8 +116,8 @@ public class AskForCodeServlet extends HttpServlet {
     SqlConnection db = sqlService.getDb();
     try {
       return db.getQueryBuilder(License.TYPE,
-                                Constraints.equal(License.EMAIL, mailTo))
-        .select(License.EMAIL)
+                                Constraints.equal(License.MAIL, mailTo))
+        .select(License.MAIL)
         .getQuery().executeAsGlobs();
     }
     finally {

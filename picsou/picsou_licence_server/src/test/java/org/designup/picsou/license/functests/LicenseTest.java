@@ -402,7 +402,7 @@ public class LicenseTest extends ConnectedTestCase {
     String newEmail = mailServer.checkReceivedMail(MAIL).getContent();
     exit();
     SqlConnection connection = db.getConnection();
-    Glob glob = connection.getQueryBuilder(License.TYPE, Constraints.equal(License.EMAIL, MAIL))
+    Glob glob = connection.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, MAIL))
       .selectAll()
       .getQuery().executeUnique();
     String activationCode = glob.get(License.ACTIVATION_CODE);
@@ -505,7 +505,7 @@ public class LicenseTest extends ConnectedTestCase {
 
     SqlConnection connection = db.getConnection();
     connection.getCreateBuilder(License.TYPE)
-      .set(License.EMAIL, OTHERMAIL_FREE_FR)
+      .set(License.MAIL, OTHERMAIL_FREE_FR)
       .set(License.ACTIVATION_CODE, "1111")
       .getRequest()
       .run();
@@ -518,7 +518,7 @@ public class LicenseTest extends ConnectedTestCase {
 
     assertEquals(6, list.size());
 
-    list = connection.getQueryBuilder(License.TYPE, Constraints.equal(License.EMAIL, MAIL))
+    list = connection.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, MAIL))
       .selectAll()
       .getQuery().executeAsGlobs().sort(RegisterServlet.COMPARATOR);
     assertEquals(3, list.size());
@@ -532,7 +532,7 @@ public class LicenseTest extends ConnectedTestCase {
     assertNull(l13.get(License.ACTIVATION_CODE));
     assertNotNull(l13.get(License.REPO_ID));
 
-    list = connection.getQueryBuilder(License.TYPE, Constraints.equal(License.EMAIL, OTHERMAIL_FREE_FR))
+    list = connection.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, OTHERMAIL_FREE_FR))
       .selectAll()
       .getQuery().executeAsGlobs().sort(RegisterServlet.COMPARATOR);
     assertEquals(3, list.size());
