@@ -60,28 +60,30 @@ public abstract class BankPage {
   public abstract JPanel getPanel();
 
   protected void createOrUpdateRealAccount(String name, String number, String position, Date date, final Integer bankId) {
-    if (Strings.isNotEmpty(name) || Strings.isNotEmpty(number)) {
-      Glob account = repository.getAll(RealAccount.TYPE,
-                                       and(fieldEquals(RealAccount.NAME, Strings.toString(name).trim()),
-                                           fieldEquals(RealAccount.NUMBER, Strings.toString(number).trim()),
-                                           fieldEquals(RealAccount.BANK, bankId)))
-        .getFirst();
-      if (account == null) {
-        account = repository.create(RealAccount.TYPE,
-                                    value(RealAccount.NAME, Strings.toString(name).trim()),
-                                    value(RealAccount.NUMBER, Strings.toString(number).trim()),
-                                    value(RealAccount.BANK, bankId),
-                                    value(RealAccount.POSITION_DATE, date),
-                                    value(RealAccount.POSITION, Strings.toString(position).trim()),
-                                    value(RealAccount.FROM_SYNCHRO, true));
-      }
-      else {
-        repository.update(account.getKey(),
-                          value(RealAccount.POSITION_DATE, date),
-                          value(RealAccount.POSITION, position.trim()));
-      }
-      accounts.add(account);
+    if (Strings.isNullOrEmpty(name) && Strings.isNullOrEmpty(number)) {
+      return;
     }
+
+    Glob account = repository.getAll(RealAccount.TYPE,
+                                     and(fieldEquals(RealAccount.NAME, Strings.toString(name).trim()),
+                                         fieldEquals(RealAccount.NUMBER, Strings.toString(number).trim()),
+                                         fieldEquals(RealAccount.BANK, bankId)))
+      .getFirst();
+    if (account == null) {
+      account = repository.create(RealAccount.TYPE,
+                                  value(RealAccount.NAME, Strings.toString(name).trim()),
+                                  value(RealAccount.NUMBER, Strings.toString(number).trim()),
+                                  value(RealAccount.BANK, bankId),
+                                  value(RealAccount.POSITION_DATE, date),
+                                  value(RealAccount.POSITION, Strings.toString(position).trim()),
+                                  value(RealAccount.FROM_SYNCHRO, true));
+    }
+    else {
+      repository.update(account.getKey(),
+                        value(RealAccount.POSITION_DATE, date),
+                        value(RealAccount.POSITION, Strings.toString(position).trim()));
+    }
+    accounts.add(account);
   }
 
   protected void createOrUpdateRealAccount(String type, String number,

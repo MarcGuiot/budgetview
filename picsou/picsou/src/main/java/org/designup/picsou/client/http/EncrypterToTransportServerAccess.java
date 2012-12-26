@@ -362,6 +362,9 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       else if (globTypeName.equals("bb") || globTypeName.equals("ab")) {  // version 88->91 : ab, 92 : bb  pour csvMapping
         globType = globModel.getType("csvMapping");
       }
+      else if (globTypeName.equals("r")){
+        globType = globModel.getType("accountPositionError");
+      }
       else {
         globType = globModel.getType(globTypeName);
       }

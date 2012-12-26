@@ -33,7 +33,7 @@ public class OfxImporter implements AccountFileImporter {
                                    GlobRepository targetRepository, PicsouDialog current) throws TruncatedFile {
     OfxParser parser = new OfxParser();
     try {
-      Functor functor = new Functor(targetRepository, initialRepository);
+      Functor functor = new Functor(targetRepository);
       parser.parse(reader, functor);
       if (!functor.fileCompleted) {
         throw new TruncatedFile();
@@ -47,7 +47,6 @@ public class OfxImporter implements AccountFileImporter {
 
   private static class Functor implements OfxFunctor {
     private GlobRepository repository;
-    private ReadOnlyGlobRepository initialRepository;
     private GlobList createdTransactions = new GlobList();
     private GlobList transactionsForAccount = new GlobList();
     private Map<String, Key> fIdToTransaction = new HashMap<String, Key>();
@@ -70,9 +69,8 @@ public class OfxImporter implements AccountFileImporter {
     private boolean forceAccount = false;
     private Integer lastTransactionId;
 
-    public Functor(GlobRepository targetRepository, ReadOnlyGlobRepository initialRepository) {
+    public Functor(GlobRepository targetRepository) {
       this.repository = targetRepository;
-      this.initialRepository = initialRepository;
       generator = new ImportedTransactionIdGenerator(targetRepository.getIdGenerator());
     }
 

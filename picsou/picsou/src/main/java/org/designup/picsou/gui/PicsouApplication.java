@@ -52,8 +52,8 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "2.32";
-  public static final Long JAR_VERSION = 95L;
+  public static final String APPLICATION_VERSION = "2.33";
+  public static final Long JAR_VERSION = 96L;
   public static final Long BANK_CONFIG_VERSION = 7L;
 
   public static final String APPNAME = "budgetview";
@@ -221,11 +221,11 @@ public class PicsouApplication {
         }
         String lang = iterator.next();
         iterator.remove();
-        if (lang.equals("fr")) {
+        if (lang.toLowerCase().contains("fr")) {
           Locale.setDefault(Locale.FRANCE);
           Lang.setLocale(Locale.FRANCE);
         }
-        else if (lang.equals("en")) {
+        else if (lang.toLowerCase().contains("en")) {
           Locale.setDefault(Locale.ENGLISH);
           Lang.setLocale(Locale.ENGLISH);
         }

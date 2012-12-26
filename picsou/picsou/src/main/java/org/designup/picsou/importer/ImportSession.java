@@ -16,13 +16,18 @@ import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
-import org.globsframework.model.utils.*;
-import org.globsframework.utils.*;
+import org.globsframework.model.utils.ChangeSetAggregator;
+import org.globsframework.model.utils.DefaultChangeSetVisitor;
+import org.globsframework.model.utils.GlobFunctor;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Files;
+import org.globsframework.utils.Log;
+import org.globsframework.utils.Ref;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
@@ -36,8 +41,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.zip.ZipOutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class ImportSession {
   private GlobRepository referenceRepository;
@@ -46,7 +53,6 @@ public class ImportSession {
   private MutableChangeSet importChangeSet;
   private GlobRepository localRepository;
   private ChangeSetAggregator importChangeSetAggregator;
-  private TypedInputStream typedStream;
   private boolean load = false;
   private int lastLoadOperationsCount = 0;
   private int importedOperationsCount = 0;
@@ -104,7 +110,7 @@ public class ImportSession {
 
     importRepository.startChangeSet();
     final Set<Integer> tmpAccountIds = new HashSet<Integer>();
-    typedStream = new TypedInputStream(file);
+    TypedInputStream typedStream = new TypedInputStream(file);
     importService.run(typedStream, referenceRepository, importRepository, directory, dialog);
     importRepository.completeChangeSet();
     changes = importRepository.getCurrentChanges();
@@ -132,7 +138,7 @@ public class ImportSession {
     // potentiellement vide
 
     List<Glob> newList = new ArrayList<Glob>();
-    for (Iterator it = accountIds.iterator(); it.hasNext();) {
+    for (Iterator it = accountIds.iterator(); it.hasNext(); ) {
       Glob acc = (Glob)it.next();
       if (!importRepository.contains(ImportedTransaction.TYPE,
                                      GlobMatchers.fieldEquals(ImportedTransaction.ACCOUNT, acc.get(RealAccount.ID)))) {
@@ -184,7 +190,7 @@ public class ImportSession {
     Glob currentImportedAccount;
     try {
       currentImportedAccount = accountIds.remove(0);
-      changes.safeVisit(new forwardChanges(currentImportedAccount.get(RealAccount.ID)));
+      changes.safeVisit(new ForwardChanges(currentImportedAccount.get(RealAccount.ID)));
     }
     finally {
       localRepository.completeChangeSet();
@@ -193,7 +199,7 @@ public class ImportSession {
     GlobList importedOperations = localRepository.getAll(ImportedTransaction.TYPE);
 
     if (realAccount == null) {
-      currentImportedAccount = findOnExistingRealAccount(currentImportedAccount);
+      currentImportedAccount = findExistingRealAccount(currentImportedAccount);
       Integer realAccountId = currentImportedAccount.get(RealAccount.ID);
       for (Glob operation : importedOperations) {
         localRepository.update(operation.getKey(), ImportedTransaction.ACCOUNT, realAccountId);
@@ -204,7 +210,7 @@ public class ImportSession {
     return currentImportedAccount;
   }
 
-  private Glob findOnExistingRealAccount(Glob account) {
+  private Glob findExistingRealAccount(Glob account) {
     GlobList matchingAccount = new GlobList();
     GlobList globList = localRepository.getAll(RealAccount.TYPE);
     for (Glob glob : globList) {
@@ -252,11 +258,10 @@ public class ImportSession {
     bankPluginService.apply(currentlySelectedAccount, importedAccount, transactions, referenceRepository,
                             localRepository, importChangeSet);
 
-
     GlobList allNewTransactions = convertImportedTransaction(selectedDateFormat, currentlySelectedAccount.get(Account.ID));
 
     boolean value = shouldImportSeries();
-    if (value){
+    if (value) {
       referenceRepository.update(importKey, TransactionImport.IS_WITH_SERIES, value);
     }
 //    importKey = createCurrentImport(typedStream, localRepository);
@@ -339,7 +344,7 @@ public class ImportSession {
     int nextId = localRepository.getIdGenerator().getNextId(Transaction.ID, importedTransactions.size() + 10);
 
     Map<Integer, Integer> linkImportedTransactionToTransaction = new HashMap<Integer, Integer>();
-    for (; iterator.hasNext();) {
+    for (; iterator.hasNext(); ) {
       Glob importedTransaction = iterator.next();
       Date bankDate = parseDate(dateFormat, importedTransaction, ImportedTransaction.BANK_DATE);
       Date userDate = parseDate(dateFormat, importedTransaction, ImportedTransaction.DATE);
@@ -456,7 +461,7 @@ public class ImportSession {
     GlobList list = targetRepository.getAll(TransactionImport.TYPE, GlobMatchers.isNotNull(TransactionImport.FILE_CONTENT))
       .sort(TransactionImport.ID);
     int count = 5;
-    while (!list.isEmpty() && count != 0){
+    while (!list.isEmpty() && count != 0) {
       list.remove(list.size() - 1);
       count--;
     }
@@ -479,10 +484,10 @@ public class ImportSession {
     }
   }
 
-  private class forwardChanges implements ChangeSetVisitor {
+  private class ForwardChanges implements ChangeSetVisitor {
     private final Integer currentAccoutId;
 
-    public forwardChanges(Integer currentAccoutId) {
+    public ForwardChanges(Integer currentAccoutId) {
       this.currentAccoutId = currentAccoutId;
     }
 
@@ -516,20 +521,6 @@ public class ImportSession {
 
     public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
       localRepository.create(key, previousValues.toArray());
-    }
-  }
-
-  private static class HasSeriesChangeSetVisitor implements ChangeSetVisitor {
-    private boolean hasSeriesChanges;
-
-    public void visitCreation(Key key, FieldValues values) throws Exception {
-    }
-
-    public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-      hasSeriesChanges = values.get(ImportedTransaction.SERIES) != null;
-    }
-
-    public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
     }
   }
 }

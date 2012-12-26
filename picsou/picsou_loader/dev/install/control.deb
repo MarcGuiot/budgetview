@@ -1,0 +1,12 @@
+Package: budgetview
+Version: SOFT_VERSION
+Section: applications
+Priority: optional
+Architecture: all
+Standards-Version: 3.7.3
+Installed-Size: 12000
+Depends: default-jre
+Homepage: http://www.mybudgetview.fr
+Maintainer: support budgetview <support@mybudgetview.fr>
+Description: An application to create a personnal budget.
+

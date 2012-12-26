@@ -15,10 +15,10 @@ import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.*;
 
 public class UserEvaluationDialog {
   private PicsouDialog dialog;
@@ -139,7 +139,7 @@ public class UserEvaluationDialog {
     public void actionPerformed(ActionEvent e) {
       sendingState.setVisible(true);
       sendingState.setIndeterminate(true);
-      directory.get(ConfigService.class).sendMail(ConfigService.SUPPORT_EMAIL,
+      directory.get(ConfigService.class).sendMail(ConfigService.ADMIN_EMAIL,
                                                   emailField.getText(),
                                                   getHeaderText(),
                                                   getMessageText(),

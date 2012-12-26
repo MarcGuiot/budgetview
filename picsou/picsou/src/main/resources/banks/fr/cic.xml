@@ -3,7 +3,7 @@
 
   <bankFormat id='2'>
 
-    <bank name="CIC" url="http://www.cic.fr" id='2'>
+    <bank name="CIC" url="http://www.cic.fr" id='2' synchroEnabled="true">
       <bankEntity id="30066"/>
       <bankEntity id="10037"/>
       <bankEntity id="10057"/>

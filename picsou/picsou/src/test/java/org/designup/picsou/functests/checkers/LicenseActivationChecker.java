@@ -1,12 +1,13 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
-import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
-import org.designup.picsou.utils.Lang;
+
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 
 public class LicenseActivationChecker {
   private Window dialog;

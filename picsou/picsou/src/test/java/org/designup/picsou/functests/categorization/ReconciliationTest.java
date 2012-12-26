@@ -2,7 +2,6 @@ package org.designup.picsou.functests.categorization;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.TransactionType;
 
 public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
