@@ -573,6 +573,7 @@ public class ImportDialogChecker extends GuiChecker {
     }
 
     public Trigger checkAndGetTrigger(Panel dialog) {
+      assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.end.info.title")));
       TextBox contentBox = dialog.getTextBox("message");
       if (importedTransactionCount != -1) {
         String expectedMessage =

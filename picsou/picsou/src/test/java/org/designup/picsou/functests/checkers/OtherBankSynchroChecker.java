@@ -9,11 +9,11 @@ public class OtherBankSynchroChecker extends SynchroChecker {
     super(importDialogChecker, window, "update");
   }
 
-  public OtherBankSynchroChecker createNew(String type, String name, String position) {
+  public OtherBankSynchroChecker createNew(String number, String name, String position) {
     window.getButton("add").click();
     Table table = window.getTable("table");
     table.selectRow(table.getRowCount() - 1);
-    window.getInputTextBox("type").setText(type);
+    window.getInputTextBox("number").setText(number);
     window.getInputTextBox("name").setText(name);
     window.getInputTextBox("position").setText(position);
     return this;

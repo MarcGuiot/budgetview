@@ -19,6 +19,7 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.OperationCancelled;
 
@@ -45,7 +46,7 @@ public class ImportController {
 
   private final List<File> selectedFiles = new ArrayList<File>();
   private Set<Integer> importKeys = new HashSet<Integer>();
-  private GlobList realAccountWithImport = new GlobList();
+  private List<AccountWithFile> realAccountWithImport = new ArrayList<AccountWithFile>();
   private GlobList realAccountWithoutImport = new GlobList();
   private boolean isSynchro = true;
 
@@ -142,9 +143,9 @@ public class ImportController {
     File file;
     Glob realAccount = null;
     if (!realAccountWithImport.isEmpty()) {
-      realAccount = realAccountWithImport.remove(0);
-      String fileName = realAccount.get(RealAccount.FILE_NAME);
-      file = new File(fileName);
+      AccountWithFile accountWithFile = realAccountWithImport.remove(0);
+      realAccount = accountWithFile.realAccount;
+      file = new File(accountWithFile.fileName);
     }
     else {
       synchronized (selectedFiles) {
@@ -294,7 +295,14 @@ public class ImportController {
   }
 
   public void addRealAccountWithImport(Glob realAccount) {
-    realAccountWithImport.add(realAccount);
+    String fileName = realAccount.get(RealAccount.FILE_NAME);
+    for (AccountWithFile accountWithFile : realAccountWithImport) {
+      if (Utils.equal(fileName, accountWithFile.fileName)) {
+        accountWithFile.realAccount = null;
+        return;
+      }
+    }
+    realAccountWithImport.add(new AccountWithFile(realAccount, fileName));
   }
 
   private static class HasOperationFunctor implements GlobFunctor {
@@ -369,6 +377,16 @@ public class ImportController {
           }
         }
       });
+    }
+  }
+
+  private class AccountWithFile {
+    private String fileName;
+    private Glob realAccount;
+
+    private AccountWithFile(Glob realAccount, String fileName) {
+      this.realAccount = realAccount;
+      this.fileName = fileName;
     }
   }
 }

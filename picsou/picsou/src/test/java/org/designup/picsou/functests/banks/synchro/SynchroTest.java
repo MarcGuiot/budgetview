@@ -192,7 +192,41 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testOfx() throws Exception {
+  public void testImportTwoAccountsInSameOfxFile() throws Exception {
+
+    String path =OfxBuilder
+      .init(this)
+      .addBankAccount(30004, 12345, "000123", 100.00, "2006/01/23")
+      .addTransaction("2006/01/23", -10.00, "Menu K")
+      .addBankAccount(30004, 12345, "000246", 200.00, "2006/01/23")
+      .addTransaction("2006/01/23", -20.00, "FNAC")
+      .save();
+
+    importPanel.checkImportMessage("Import your operations");
+
+    OtherBankSynchroChecker synchro = operations.openImportDialog().openSynchro("Other");
+    synchro.createNew("000123", "principal", "100.00", path);
+    synchro.createNew("000246", "secondaire", "200.00", path);
+    synchro.doImport()
+      .checkAccount("Account n. 000123")
+      .checkAccountPosition(100.00)
+      .setMainAccount()
+      .doImport()
+      .checkAccount("Account n. 000246")
+      .checkAccountPosition(200.00)
+      .setMainAccount()
+      .completeImport();
+
+    importPanel.checkImportMessage("Import other operations");
+    importPanel.checkSynchroMessage("Download your accounts");
+
+    transactions.initContent()
+      .add("23/01/2006", TransactionType.PRELEVEMENT, "FNAC", "", -20.00)
+      .add("23/01/2006", TransactionType.PRELEVEMENT, "MENU K", "", -10.00)
+      .check();
+  }
+
+  public void testOfxDirectConnect() throws Exception {
     final String fileName = OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "TX 1")
@@ -242,7 +276,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     importPanel.checkSynchroMessage("Download your accounts from La Banque Postale");
   }
 
-  public void testImportFileDoesNotEnableSynchroButton() throws Exception {
+  public void testManuallyImportingFilesDoesNotEnableSynchroButton() throws Exception {
     final String fileName = QifBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "TX 1")
@@ -259,5 +293,4 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .completeImport();
     importPanel.checkSynchroVisible();
   }
-
 }

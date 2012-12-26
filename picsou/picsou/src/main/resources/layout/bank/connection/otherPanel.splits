@@ -5,8 +5,8 @@
   <panel styleClass="innerDialog">
     <column>
       <row>
-        <label text="type : " marginRight="10"/>
-        <textField ref="type"/>
+        <label text="number : " marginRight="10"/>
+        <textField ref="number"/>
         <label text="name : " marginRight="10"/>
         <textField ref="name"/>
         <label text="position : " marginRight="10"/>

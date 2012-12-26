@@ -94,33 +94,33 @@ public class ImportFileAction extends AbstractAction {
   }
 
   private static class OpenRunnable implements Runnable {
-    private ImportDialog dialog = null;
+    private ImportDialog importDialog = null;
     private Directory directory;
     private GlobRepository repository;
 
     public OpenRunnable(List<File> files,
                         Directory directory, GlobRepository repository,
-                        Glob defaultAccount, boolean usePreferedPath, GlobList importedAccount, boolean isSynchro) {
+                        Glob defaultAccount, boolean usePreferedPath, GlobList importedAccounts, boolean isSynchro) {
       this.directory = directory;
       this.repository = repository;
       if (!LicenseService.trialExpired(repository) && !User.isDemoUser(repository.get(User.KEY))) {
-        dialog = new ImportDialog(Lang.get("import.fileSelection.close"), files, defaultAccount,
+        importDialog = new ImportDialog(Lang.get("import.fileSelection.close"), files, defaultAccount,
                                   directory.get(JFrame.class),
                                   repository, directory,
                                   usePreferedPath, isSynchro);
         if (!files.isEmpty()) {
-          dialog.acceptFiles();
+          importDialog.acceptFiles();
         }
-        if (importedAccount != null && !importedAccount.isEmpty()){
-          dialog.synchronize(importedAccount);
+        if (importedAccounts != null && !importedAccounts.isEmpty()){
+          importDialog.synchronize(importedAccounts);
         }
       }
     }
 
     public void run() {
-      if (dialog != null) {
+      if (importDialog != null) {
         SignpostStatus.setCompleted(SignpostStatus.IMPORT_STARTED, repository);
-        dialog.show();
+        importDialog.show();
       }
       else {
         if (User.isDemoUser(repository.get(User.KEY))) {
