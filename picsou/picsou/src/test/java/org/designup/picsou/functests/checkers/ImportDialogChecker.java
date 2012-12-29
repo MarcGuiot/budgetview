@@ -129,14 +129,12 @@ public class ImportDialogChecker extends GuiChecker {
     TextBox box = dialog.getTextBox("importMessage");
     assertTrue(box.textIsEmpty());
     validateAndComplete(-1, -1, -1, dialog, "import.preview.ok");
-    UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public void completeImportWithNext() {
     TextBox box = dialog.getTextBox("importMessage");
     assertTrue(box.textIsEmpty());
     validateAndComplete(-1, -1, -1, dialog, "import.preview.noOperation.ok");
-    UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public void completeImport(double amount) {
@@ -147,17 +145,14 @@ public class ImportDialogChecker extends GuiChecker {
 
   public void completeImport(final int importedTransactionCount, final int autocategorizedTransactionCount) {
     validateAndComplete(-1, importedTransactionCount, autocategorizedTransactionCount, dialog, "import.preview.ok");
-    UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public void completeImportNone(int loadTransaction) {
     validateAndComplete(loadTransaction, 0, 0, dialog, "import.preview.ok");
-    UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public void skipAndComplete() {
     validateAndComplete(-1, -1, -1, dialog, "import.skip.file");
-    UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public void completeImportAndGotoCategorize(int importedTransactionCount, int autocategorizedTransactionCount) {
@@ -179,6 +174,7 @@ public class ImportDialogChecker extends GuiChecker {
                                          final Panel dialog, final String key) {
     dialog.getButton(Lang.get(key)).click();
     complete(loadedTransaction, importedTransactionCount, autocategorizedTransactionCount, dialog);
+    UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public static void complete(int loadedTransaction, int importedTransactionCount, int autocategorizedTransactionCount, Panel dialog) {

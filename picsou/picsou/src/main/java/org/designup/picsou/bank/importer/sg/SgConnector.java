@@ -1,35 +1,22 @@
-package org.designup.picsou.bank.importer.bnp;
+package org.designup.picsou.bank.importer.sg;
 
-import com.gargoylesoftware.htmlunit.DownloadedContent;
-import com.gargoylesoftware.htmlunit.HttpWebConnection;
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.javascript.host.Event;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.designup.picsou.bank.BankSynchroService;
+import org.designup.picsou.bank.BankConnectorDisplay;
 import org.designup.picsou.bank.importer.WebBankPage;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
-import org.designup.picsou.gui.startup.components.OpenRequestManager;
-import org.designup.picsou.gui.utils.ApplicationColors;
+import org.designup.picsou.bank.importer.webcomponents.utils.WebConnectorLauncher;
 import org.designup.picsou.model.RealAccount;
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsBuilder;
-import org.globsframework.gui.splits.TextLocator;
-import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.DescriptionService;
-import org.globsframework.model.repository.DefaultGlobIdGenerator;
-import org.globsframework.model.repository.DefaultGlobRepository;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.stream.ReplacementInputStreamBuilder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,117 +25,57 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class BnpSync extends WebBankPage {
-  private static final int BANK_ID = 5;
-
-  private static final String INDEX = "https://www.secure.bnpparibas.net/banque/portail/particulier/HomeConnexion?type=homeconnex";
-  private static final String URL_TELECHARGEMENT
-    = "https://particuliers.secure.societegenerale.fr/restitution/tel_telechargement.html";
+public class SgConnector extends WebBankPage {
+  private static final String INDEX = "https://particuliers.secure.societegenerale.fr/index.html";
+  private static final String URL_TELECHARGEMENT = "https://particuliers.secure.societegenerale.fr/restitution/tel_telechargement.html";
   //  private static final String INDEX = "file:index.html";
   //  private static final String URL_TELECHARGEMENT = "file:tel_telechargement.html";
+  public static final Integer BANK_ID = 4;
   private JButton corriger;
-  private BnpKeyboardPanel keyboardPanel;
+  private SgKeyboardPanel keyboardPanel;
   private JButton valider;
+  private JButton validerCode;
   private JTextField code;
   private JTextField passwordField;
-  private HtmlElement input;
-  private BufferedImage clavier;
 
   public static void main(String[] args) throws IOException {
-    DefaultDirectory defaultDirectory = new DefaultDirectory();
-    defaultDirectory.add(SelectionService.class, new SelectionService());
-    defaultDirectory.add(TextLocator.class, Lang.TEXT_LOCATOR);
-    defaultDirectory.add(DescriptionService.class, new PicsouDescriptionService());
-    OpenRequestManager openRequestManager = new OpenRequestManager();
-    defaultDirectory.add(OpenRequestManager.class, openRequestManager);
-    defaultDirectory.add(new UIService());
-    ApplicationColors.registerColorService(defaultDirectory);
-    openRequestManager.pushCallback(new OpenRequestManager.Callback() {
-      public boolean accept() {
-        return true;
-      }
-
-      public void openFiles(List<File> files) {
-        System.out.println("read " + files.size());
-      }
-    });
-
-    JFrame frame = new JFrame("test BNP");
-    defaultDirectory.add(JFrame.class, frame);
-    frame.setSize(100, 100);
-    frame.setVisible(true);
-    BnpSync sg = new BnpSync(frame, defaultDirectory, new DefaultGlobRepository(new DefaultGlobIdGenerator()));
-    sg.init();
-    sg.show();
+    WebConnectorLauncher.show(new Factory());
   }
 
-  public static class Init implements BankSynchroService.BankSynchro {
-
+  public static class Factory implements BankConnectorDisplay {
     public GlobList show(Window parent, Directory directory, GlobRepository repository) {
-      BnpSync sg = BnpSync.init(parent, directory, repository);
+      SgConnector sg = SgConnector.init(parent, directory, repository);
       sg.init();
       return sg.show();
     }
   }
 
-  public BnpSync(Window parent, Directory directory, GlobRepository repository) {
+  public SgConnector(Window parent, final Directory directory, GlobRepository repository) {
     super(parent, directory, repository, BANK_ID);
   }
 
-  public static BnpSync init(Window parent, final Directory directory, GlobRepository repository) {
-    return new BnpSync(parent, directory, repository);
-  }
-
-  protected HttpWebConnection getHttpConnection() {
-    return new HttpWebConnection(client) {
-      protected DownloadedContent downloadResponseBody(final HttpResponse httpResponse) throws IOException {
-        final DownloadedContent content = super.downloadResponseBody(httpResponse);
-        Header type = httpResponse.getEntity().getContentType();
-        if (type.getValue() != null && type.getValue().contains("text/html")) {
-          return new DownloadedContent() {
-            public InputStream getInputStream() throws IOException {
-              ReplacementInputStreamBuilder builder = new ReplacementInputStreamBuilder();
-              builder.replace("maxlength=\"10\" value=\"\" name=\"ch1\" type=\"text\"&gt;".getBytes(),
-                              "<INPUT size=\"10\" maxlength=\"6\" name=\"ch1\" value=\"\" type=\"text\" > ".getBytes());
-              builder.replace("maxlength=\"6\" name=\"ch2\" value=\"\" type=\"password\" disabled &gt;>".getBytes(),
-                              "<INPUT size=\"10\" maxlength=\"6\" name=\"ch2\" value=\"\" type=\"password\" disabled > ".getBytes());
-              builder.replace("document.write('<INPUT size=\"10\" ');".getBytes(), " ".getBytes());
-              builder.replace("document.write('<INPUT size=\"5\" ');".getBytes(), " ".getBytes());
-              return builder.create(content.getInputStream());
-            }
-
-            public void cleanUp() {
-            }
-          };
-        }
-        else {
-          return content;
-        }
-      }
-    };
+  public static SgConnector init(Window parent, final Directory directory, GlobRepository repository) {
+    return new SgConnector(parent, directory, repository);
   }
 
   public JPanel getPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
-    builder.setSource(getClass(), "/layout/bank/connection/bnpPanel.splits");
+    builder.setSource(getClass(), "/layout/bank/connection/sgPanel.splits");
     initCardCode(builder);
     startProgress();
     Thread thread = new Thread() {
       public void run() {
         try {
           loadPage(INDEX);
-          String s = page.asXml();
-          System.out.println("BnpSync.run " + s);
           endProgress();
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-              initImg();
+              validerCode.setEnabled(true);
             }
           });
         }
@@ -157,7 +84,6 @@ public class BnpSync extends WebBankPage {
           e.printStackTrace();
         }
       }
-
     };
     thread.start();
     return builder.load();
@@ -168,11 +94,16 @@ public class BnpSync extends WebBankPage {
     code.setName("code");
     builder.add(code);
 
+    validerCode = new JButton(Lang.get("bank.sg.code.valider"));
+    validerCode.setName("validerCode");
+    builder.add(validerCode);
+    validerCode.addActionListener(new ValiderActionListener());
+
     passwordField = new JTextField();
     passwordField.setEditable(false);
     builder.add("password", passwordField);
 
-    keyboardPanel = new BnpKeyboardPanel(passwordField);
+    keyboardPanel = new SgKeyboardPanel(passwordField);
     keyboardPanel.setName("imageClavier");
     builder.add(keyboardPanel);
 
@@ -183,44 +114,13 @@ public class BnpSync extends WebBankPage {
     valider = new JButton(Lang.get("bank.sg.valider"));
     valider.setName("valider");
     builder.add(valider);
-    valider.addActionListener(new ValiderActionListener());
 
     builder.add("progressPanel", progressPanel);
 
+    validerCode.setEnabled(false);
     corriger.setEnabled(false);
     valider.setEnabled(false);
   }
-
-  private void initImg() {
-    HtmlElement body = page.getBody();
-    client.waitForBackgroundJavaScript(10000);
-    List<HtmlElement> attribute = body.getElementsByAttribute(HtmlInput.TAG_NAME, "name", "ch1");
-    if (attribute.size() != 1) {
-      throw new RuntimeException("Fail to find input name='ch1' (" + attribute.size() + " element ) in " + page.asXml());
-    }
-    input = attribute.get(0);
-
-    List<HtmlElement> usemap = body.getElementsByAttribute(HtmlImage.TAG_NAME, "usemap", "#MapGril");
-    if (usemap.size() != 1) {
-      throw new RuntimeException("Can not find image " + usemap.size() + " in " + page.asXml());
-    }
-    HtmlImage image = (HtmlImage)usemap.get(0);
-    image.fireEvent(Event.TYPE_LOAD);
-    clavier = getFirstImage(image);
-    keyboardPanel.setSize(clavier.getWidth(), clavier.getHeight());
-    List<DomElement> name = (List)page.getElementsByName("MapGril");
-    if (name.size() == 0) {
-      throw new RuntimeException("Can not find MapGril" + " in " + page.asXml());
-    }
-    List<HtmlElement> password = body.getElementsByAttribute(HtmlInput.TAG_NAME, "name", "ch2");
-    if (password.size() == 0) {
-      throw new RuntimeException("Can not find input name='ch2'" + " in " + page.asXml());
-    }
-    keyboardPanel.setImage(clavier, (HtmlElement)name.get(0), (HtmlInput)password.get(0));
-    corriger.setEnabled(true);
-    valider.setEnabled(true);
-  }
-
 
   protected Double extractAmount(String position) {
     return Amounts.extractAmount(position.replace("EUR", ""));
@@ -228,11 +128,42 @@ public class BnpSync extends WebBankPage {
 
   private class ValiderActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
-      String text = code.getText();
-      System.out.println(text);
-      input.setTextContent(text);
-      String s = page.asXml();
-      System.out.println("BnpSync$ValiderActionListener.actionPerformed " + s);
+      try {
+        DomElement elementById = page.getElementById("codcli");
+        ((HtmlInput)elementById).setValueAttribute(code.getText());
+        Page newPage = ((HtmlElement)page.getElementById("button")).click();
+//        System.out.println("SG$ValiderActionListener.actionPerformed " + newPage);
+//        page = (HtmlPage)newPage;
+        if (hasError) {
+          hasError = false;
+          return;
+        }
+
+        HtmlElement zoneClavier = (HtmlElement)page.getElementById("tc_cvcs");
+        HtmlInput password = (HtmlInput)zoneClavier.getElementById("tc_visu_saisie");
+        HtmlImage htmlImageClavier = zoneClavier.getElementById("img_clavier");
+        htmlImageClavier.fireEvent(Event.TYPE_LOAD);
+        final BufferedImage imageClavier = getFirstImage(htmlImageClavier);
+        keyboardPanel.setSize(imageClavier.getWidth(), imageClavier.getHeight());
+        List<HtmlElement> attribute = zoneClavier.getElementsByAttribute(HtmlMap.TAG_NAME, "name", "tc_tclavier");
+        if (attribute.size() != 1){
+          throw new RuntimeException("Can not find tc_tclavier in" + zoneClavier.asXml());
+        }
+        HtmlElement map = (HtmlElement)attribute.get(0);
+        keyboardPanel.setImage(imageClavier, map, password);
+
+        HtmlImage corrigerImg = zoneClavier.getElementById("tc_corriger");
+        corriger.setAction(new CorrigerActionListener(corrigerImg, password));
+        corriger.setEnabled(true);
+
+        HtmlImage validerImg = zoneClavier.getElementById("tc_valider");
+        valider.setAction(new ValiderPwdActionListener(validerImg));
+        valider.setEnabled(true);
+      }
+      catch (Exception e1) {
+        Log.write(page.asXml());
+        throw new RuntimeException(e1);
+      }
     }
 
     private class CorrigerActionListener extends AbstractAction {
@@ -290,7 +221,7 @@ public class BnpSync extends WebBankPage {
               hasError = false;
               return;
             }
-            List<HtmlTable> tables = ((HtmlElement)content).getElementsByAttribute(HtmlTable.TAG_NAME, "class", "LGNTableA");
+            List<HtmlTable> tables = ((HtmlElement)content).getElementsByAttribute(HtmlTable.TAG_NAME, "class", "LGNTableA ListePrestation");
             if (tables.size() != 1) {
               throw new RuntimeException("Find " + tables.size() + " table(s) in " + page.asXml());
             }
@@ -320,10 +251,10 @@ public class BnpSync extends WebBankPage {
                 }
                 else if (columnName.equalsIgnoreCase("solde")) {
                   List<HtmlElement> htmlElements = cell.getElementsByAttribute(HtmlDivision.TAG_NAME, "class", "Solde");
-                  if (htmlElements.size() > 0) {
+                  if (htmlElements.size() > 0){
                     HtmlDivision element = (HtmlDivision)htmlElements.get(0);
                     String title = element.getAttribute("title");
-                    if (Strings.isNotEmpty(title)) {
+                    if (Strings.isNotEmpty(title)){
                       date = Dates.extractDateDDMMYYYY(title);
                     }
                     position = element.getTextContent();
@@ -341,8 +272,7 @@ public class BnpSync extends WebBankPage {
         }
         catch (IOException e1) {
           e1.printStackTrace();
-        }
-        finally {
+        }finally {
           endProgress();
         }
       }
@@ -352,13 +282,40 @@ public class BnpSync extends WebBankPage {
   public void loadFile() {
     HtmlSelect compte = getElementById("compte");
     List<HtmlOption> accountList = compte.getOptions();
-    for (HtmlOption option : accountList) {
+    for (int i = 0, size = accountList.size(); i < size; i++) {
+      HtmlOption option = accountList.get(i);
       Glob realAccount = find(option, this.accounts);
       if (realAccount != null) {
         page = (HtmlPage)compte.setSelectedAttribute(option, true);
         File file = downloadFor(realAccount);
         if (file != null) {
           repository.update(realAccount.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+        }
+        else {
+          try {
+//            DomElement error = ((HtmlPage)client.getCurrentWindow().getEnclosedPage()).getElementById("div_NET2G");
+//            DomNodeList<HtmlElement> name = error.getElementsByTagName(HtmlAnchor.TAG_NAME);
+//            if (name.size() == 1 && name.get(0).hasAttribute()){
+//              page = name.get(0).click();
+//            }
+//            else {
+            page = client.getPage(URL_TELECHARGEMENT);
+            compte = getElementById("compte");
+            accountList = compte.getOptions();
+//            }
+          }
+          catch (Exception e) {
+            Log.write("Can not go back", e);
+            try {
+              page = client.getPage(URL_TELECHARGEMENT);
+              compte = getElementById("compte");
+              accountList = compte.getOptions();
+            }
+            catch (IOException e1) {
+              Log.write("Can not load page");
+              return;
+            }
+          }
         }
       }
     }
@@ -447,10 +404,6 @@ public class BnpSync extends WebBankPage {
     HtmlAnchor anchor = findLink(page.getAnchors(), "telecharger");
 
     return downloadFile(realAccount, anchor);
-  }
-
-  public static BufferedImage getFirstImage(HtmlImage img) {
-    return WebBankPage.getFirstImage(img);
   }
 
 }

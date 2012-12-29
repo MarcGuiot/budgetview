@@ -14,7 +14,7 @@ public class BankStringifier implements GlobStringifier {
     if (bank == null) {
       return "";
     }
-    if (bank.get(Bank.ID) == OtherBank.ID){
+    if (bank.get(Bank.ID) == OtherBank.BANK_ID){
       return Lang.get("bank.other.name");
     }
     return bank.get(Bank.NAME);

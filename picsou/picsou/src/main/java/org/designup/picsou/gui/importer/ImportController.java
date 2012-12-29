@@ -1,21 +1,24 @@
 package org.designup.picsou.gui.importer;
 
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.importer.utils.InvalidFileFormat;
 import org.designup.picsou.gui.startup.components.AutoCategorizationFunctor;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.importer.ImportSession;
 import org.designup.picsou.model.*;
-import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.model.*;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.utils.GlobFieldMatcher;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.Ref;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.OperationCancelled;
 
@@ -203,7 +206,7 @@ public class ImportController {
 
   public void completeImport(Glob importedAccount, Glob currentAccount, String dateFormat) {
     Set<Key> newSeries = importSession.getNewSeries();
-    if (!newSeries.isEmpty()){
+    if (!newSeries.isEmpty()) {
       importSession.importSeries(importDialog.askForSeriesImport(newSeries));
     }
     Key importKey = importSession.importTransactions(importedAccount, currentAccount, dateFormat);

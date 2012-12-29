@@ -252,17 +252,17 @@ public class ImportPreviewPanel implements MessageHandler {
   }
 
   private void updateNoOperationMessage() {
-    String accName = newAccount.get(Account.NAME);
-    String accNumber = newAccount.get(Account.NUMBER);
+    String accountName = newAccount.get(Account.NAME);
+    String accountNumber = newAccount.get(Account.NUMBER);
     String name = null;
-    if (Strings.isNotEmpty(accName) && Strings.isNotEmpty(accNumber)) {
-      name = accName + " (" + accNumber + ")";
+    if (Strings.isNotEmpty(accountName) && Strings.isNotEmpty(accountNumber)) {
+      name = accountName + " (" + accountNumber + ")";
     }
-    else if (Strings.isNotEmpty(accName)) {
-      name = accName;
+    else if (Strings.isNotEmpty(accountName)) {
+      name = accountName;
     }
-    else if (Strings.isNotEmpty(accNumber)) {
-      name = accNumber;
+    else if (Strings.isNotEmpty(accountNumber)) {
+      name = accountNumber;
     }
     if (Strings.isNullOrEmpty(name)) {
       noOperationLabel.setText(Lang.get("import.preview.noOperations.noName", name));

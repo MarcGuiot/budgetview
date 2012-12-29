@@ -1,6 +1,6 @@
 package org.designup.picsou.bank.importer;
 
-import org.designup.picsou.bank.BankSynchroService;
+import org.designup.picsou.bank.BankConnectorDisplay;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.RealAccount;
@@ -22,10 +22,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class OtherBank extends WebBankPage {
-  public static int ID = Bank.GENERIC_BANK_ID;
+  public static int BANK_ID = Bank.GENERIC_BANK_ID;
   private Map<Key, String> files = new HashMap<Key, String>();
 
-  public static class Init implements BankSynchroService.BankSynchro {
+  public static class Factory implements BankConnectorDisplay {
 
     public GlobList show(Window parent, Directory directory, GlobRepository repository) {
       OtherBank bank = new OtherBank(parent, directory, repository);
@@ -37,7 +37,6 @@ public class OtherBank extends WebBankPage {
   public JPanel getPanel() {
     final SelectionService selectionService = directory.get(SelectionService.class);
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/bank/connection/otherPanel.splits", repository, directory);
-//    builder.add("occupedPanel", occupedPanel);
     builder.addEditor("type", RealAccount.NUMBER);
     builder.addEditor("name", RealAccount.NAME);
     builder.addEditor("position", RealAccount.POSITION);
@@ -48,13 +47,13 @@ public class OtherBank extends WebBankPage {
     builder.add("add", addRealAccount);
     addRealAccount.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        Glob glob = repository.create(RealAccount.TYPE, FieldValue.value(RealAccount.BANK, ID),
+        Glob glob = repository.create(RealAccount.TYPE, FieldValue.value(RealAccount.BANK, BANK_ID),
                                       FieldValue.value(RealAccount.FROM_SYNCHRO, true));
         selectionService.select(glob);
       }
     });
     final GlobTableView table = builder.addTable("table", RealAccount.TYPE, new GlobFieldComparator(RealAccount.ID))
-      .setFilter(GlobMatchers.fieldEquals(RealAccount.BANK, ID))
+      .setFilter(GlobMatchers.fieldEquals(RealAccount.BANK, BANK_ID))
       .addColumn(RealAccount.NUMBER)
       .addColumn(RealAccount.NAME)
       .addColumn(RealAccount.POSITION)
@@ -80,7 +79,7 @@ public class OtherBank extends WebBankPage {
       }
     });
     repository.getAll(RealAccount.TYPE, GlobMatchers.fieldEquals(RealAccount.BANK,
-                                                                 OtherBank.ID))
+                                                                 OtherBank.BANK_ID))
       .safeApply(new GlobFunctor() {
         public void run(Glob glob, GlobRepository repository) throws Exception {
           repository.update(glob.getKey(), RealAccount.FILE_NAME, null);
@@ -90,7 +89,7 @@ public class OtherBank extends WebBankPage {
   }
 
   public OtherBank(Window parent, Directory directory, GlobRepository repository) {
-    super(parent, directory, repository, ID);
+    super(parent, directory, repository, BANK_ID);
   }
 
   public void loadFile() {

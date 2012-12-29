@@ -92,8 +92,7 @@ public class RealAccount {
   }
 
   static public boolean areEquivalent(Glob account, Glob glob) {
-    return (Strings.isNotEmpty(account.get(NAME)) || Strings.isNotEmpty(account.get(NUMBER)))
-           &&
+    return (Strings.isNotEmpty(account.get(NAME)) || Strings.isNotEmpty(account.get(NUMBER))) &&
            Utils.equalIgnoreCase(account.get(NAME), glob.get(NAME)) &&
            Utils.equalIgnoreCase(account.get(NUMBER), glob.get(NUMBER)) &&
            Utils.equal(account.get(SAVINGS), glob.get(SAVINGS)) &&

@@ -78,13 +78,4 @@ public class AccountPositionEditionChecker extends GuiChecker {
     window.getButton("ok").click();
     UISpecAssert.assertFalse(window.isVisible());
   }
-
-  public void validateFromImport() {
-    window.getButton("ok").click();
-    UISpecAssert.assertFalse(window.isVisible());
-    if (parentWindow == null){
-      Assert.fail("This dialog was not opened from the import dialog");
-    }
-    ImportDialogChecker.validateAndComplete(-1, -1, -1, parentWindow, "ok");
-  }
 }

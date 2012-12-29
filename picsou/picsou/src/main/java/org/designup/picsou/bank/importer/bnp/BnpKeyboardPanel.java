@@ -5,7 +5,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import org.apache.wicket.markup.html.WebPage;
-import org.designup.picsou.bank.importer.sg.SG;
+import org.designup.picsou.bank.importer.sg.SgConnector;
 
 import javax.swing.*;
 import java.awt.*;

@@ -141,13 +141,13 @@ public class BankDownloadPanel implements GlobSelectionListener {
     bankId = bank != null ? bank.get(Bank.ID) : null;
     selectionCards.show(bank == null ? "noSelection" : "gotoSite");
 
-    boolean synchro = bank != null && (bank.get(Bank.SYNCHRO_ENABLED, false) && BankSynchroService.SHOW_SYNCHRO);
+    boolean showSynchro = (bank != null) && bank.isTrue(Bank.SYNCHRO_ENABLED) && BankSynchroService.SHOW_SYNCHRO;
     Utils.beginRemove();
     if (bank != null && bank.get(Bank.ID).equals(Bank.GENERIC_BANK_ID)) {
-      synchro = true;
+      showSynchro = true;
     }
     Utils.endRemove();
-    synchroPanel.setVisible(bank != null && (synchro || bank.get(Bank.OFX_DOWNLOAD, false)));
+    synchroPanel.setVisible(bank != null && (showSynchro || bank.get(Bank.OFX_DOWNLOAD, false)));
 
     if (bank != null) {
       String manualDownloadText = getManualDownloadText(bank);
@@ -176,14 +176,14 @@ public class BankDownloadPanel implements GlobSelectionListener {
     bankChooser.requestFocus();
   }
 
-  public void synchronize(GlobList realAccount) {
-    for (Glob glob : realAccount) {
-      String file = glob.get(RealAccount.FILE_NAME);
+  public void synchronize(GlobList realAccounts) {
+    for (Glob realAccount : realAccounts) {
+      String file = realAccount.get(RealAccount.FILE_NAME);
       if (Strings.isNullOrEmpty(file)) {
-        controller.addRealAccountWithoutImport(glob);
+        controller.addRealAccountWithoutImport(realAccount);
       }
       else {
-        controller.addRealAccountWithImport(glob);
+        controller.addRealAccountWithImport(realAccount);
       }
     }
     controller.doImport();
