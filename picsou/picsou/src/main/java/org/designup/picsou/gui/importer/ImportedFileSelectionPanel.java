@@ -126,10 +126,6 @@ public class ImportedFileSelectionPanel implements MessageHandler {
     bankDownload.requestFocus();
   }
 
-  public void synchronize(GlobList accounts) {
-    bankDownload.synchronize(accounts);
-  }
-
   private class ImportAction extends AbstractAction {
     public ImportAction() {
       super(Lang.get("import.fileSelection.ok"));

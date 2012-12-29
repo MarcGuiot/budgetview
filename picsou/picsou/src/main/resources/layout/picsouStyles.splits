@@ -115,6 +115,9 @@
     <style selector=".innerDialog" opaque="false" margin="15" marginBottom="10"/>
     <style selector=".innerDialogContent" opaque="false" margin="15"/>
 
+    <style selector=".innerDialogBlock" opaque="true" border="line(#BBBBBB)" background="dialog.block"/>
+    <style selector=".innerDialogBlockPanel" opaque="true" background="dialog.block"/>
+
     <style selector=".dialog label" foreground="dialog.text" opaque="false"/>
     <style selector=".dialog textArea" foreground="dialog.text"/>
     <style selector=".dialog htmlEditorPane" foreground="dialog.text" opaque="false"/>

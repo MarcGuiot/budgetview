@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.importer;
 
 import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.gui.importer.components.RealAccountImporter;
 import org.designup.picsou.gui.importer.utils.InvalidFileFormat;
 import org.designup.picsou.gui.startup.components.AutoCategorizationFunctor;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
@@ -29,7 +30,7 @@ import java.util.*;
 
 import static org.globsframework.model.FieldValue.value;
 
-public class ImportController {
+public class ImportController implements RealAccountImporter {
 
   private GlobRepository repository;
   private LocalGlobRepository localRepository;
@@ -290,11 +291,28 @@ public class ImportController {
     return fileField;
   }
 
-  public void addRealAccountWithoutImport(Glob realAccount) {
+  public void showSynchro(Integer bankId) {
+    importDialog.showSynchro(bankId);
+  }
+
+  public void importAccounts(GlobList realAccounts) {
+    for (Glob realAccount : realAccounts) {
+      String file = realAccount.get(RealAccount.FILE_NAME);
+      if (Strings.isNullOrEmpty(file)) {
+        addRealAccountWithoutImport(realAccount);
+      }
+      else {
+        addRealAccountWithImport(realAccount);
+      }
+    }
+    doImport();
+  }
+
+  private void addRealAccountWithoutImport(Glob realAccount) {
     realAccountWithoutImport.add(realAccount);
   }
 
-  public void addRealAccountWithImport(Glob realAccount) {
+  private void addRealAccountWithImport(Glob realAccount) {
     String fileName = realAccount.get(RealAccount.FILE_NAME);
     for (AccountWithFile accountWithFile : realAccountWithImport) {
       if (Utils.equal(fileName, accountWithFile.fileName)) {

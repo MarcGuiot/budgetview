@@ -1,10 +1,10 @@
 package org.designup.picsou.bank;
 
-import org.designup.picsou.bank.importer.OtherBank;
-import org.designup.picsou.bank.importer.cic.CicConnector;
-import org.designup.picsou.bank.importer.creditmutuel.CreditMutuelArkea;
-import org.designup.picsou.bank.importer.ofx.OfxDownloadPage;
-import org.designup.picsou.bank.importer.sg.SgConnector;
+import org.designup.picsou.bank.connectors.OtherBankConnector;
+import org.designup.picsou.bank.connectors.cic.CicConnector;
+import org.designup.picsou.bank.connectors.creditmutuel.CreditMutuelArkea;
+import org.designup.picsou.bank.connectors.ofx.OfxDownloadPage;
+import org.designup.picsou.bank.connectors.sg.SgConnector;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.RealAccount;
 import org.globsframework.model.Glob;
@@ -14,12 +14,11 @@ import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 public class BankSynchroService {
-  private Map<Integer, BankConnectorDisplay> banks = new HashMap<Integer, BankConnectorDisplay>();
+  private Map<Integer, BankConnectorFactory> banks = new HashMap<Integer, BankConnectorFactory>();
   static public boolean SHOW_SYNCHRO =
     System.getProperty("budgetview.synchro", "false").equalsIgnoreCase("true");
 
@@ -27,14 +26,14 @@ public class BankSynchroService {
     register(SgConnector.BANK_ID, new SgConnector.Factory());
     register(CreditMutuelArkea.BANK_ID, new CreditMutuelArkea.Factory());
     register(CicConnector.BANK_ID, new CicConnector.Factory());
-    register(OtherBank.BANK_ID, new OtherBank.Factory());
+    register(OtherBankConnector.BANK_ID, new OtherBankConnector.Factory());
   }
 
-  public void register(Integer bankId, BankConnectorDisplay connectorDisplay) {
+  public void register(Integer bankId, BankConnectorFactory connectorDisplay) {
     banks.put(bankId, connectorDisplay);
   }
 
-  public GlobList show(Window parent, GlobList realAccounts, Directory directory, GlobRepository repository) {
+  public List<BankConnector> getConnectors(GlobList realAccounts, Window parent, GlobRepository repository, Directory directory) {
     Map<String, Glob> realAccountByUrl = new HashMap<String, Glob>();
     Map<Integer, Glob> bankToRealAccount = new HashMap<Integer, Glob>();
     for (Glob account : realAccounts) {
@@ -48,57 +47,32 @@ public class BankSynchroService {
         }
       }
     }
-    GlobList importedAccount = new GlobList();
+
+    List<BankConnector> connectors = new ArrayList<BankConnector>();
     for (Glob glob : realAccountByUrl.values()) {
-      OfxDownloadPage download =
-        new OfxDownloadPage(parent, repository, directory, glob.get(RealAccount.BANK), glob.get(RealAccount.URL),
-                            glob.get(RealAccount.ORG), glob.get(RealAccount.FID));
-      download.init();
-      importedAccount.addAll(download.show());
+      connectors.add(new OfxDownloadPage(repository, directory, glob.get(RealAccount.BANK), glob.get(RealAccount.URL),
+                                         glob.get(RealAccount.ORG), glob.get(RealAccount.FID)));
     }
     for (Integer bankId : bankToRealAccount.keySet()) {
-      BankConnectorDisplay connectorDisplay = banks.get(bankId);
-      if (connectorDisplay != null) {
-        importedAccount.addAll(connectorDisplay.show(parent, directory, repository));
+      BankConnectorFactory factory = banks.get(bankId);
+      if (factory != null) {
+        connectors.add(factory.create(repository, directory));
       }
     }
-    for (Iterator<Glob> iterator = importedAccount.iterator(); iterator.hasNext(); ) {
-      Glob glob = iterator.next();
-      if (glob.get(RealAccount.ACCOUNT) == null) {
-        iterator.remove();
-      }
-    }
-    return importedAccount;
+    return connectors;
   }
 
-  public GlobList show(Window parent, Integer bankId, Directory directory, GlobRepository repository) {
-    BankConnectorDisplay connectorDisplay = banks.get(bankId);
-    if (connectorDisplay != null) {
-      GlobList importedAccount = connectorDisplay.show(parent, directory, repository);
-      filterRemoveAccountWithNoImport(importedAccount);
-      return importedAccount;
+  public BankConnector getConnector(Integer bankId, Window parent, GlobRepository repository, Directory directory) {
+    BankConnectorFactory factory = banks.get(bankId);
+    if (factory != null) {
+      return factory.create(repository, directory);
     }
 
     Glob bank = repository.find(Key.create(Bank.TYPE, bankId));
     if ((bank != null) && bank.isTrue(Bank.OFX_DOWNLOAD)) {
-      OfxDownloadPage download =
-        new OfxDownloadPage(parent, repository, directory, bankId, bank.get(Bank.DOWNLOAD_URL),
+      return new OfxDownloadPage(repository, directory, bankId, bank.get(Bank.DOWNLOAD_URL),
                             bank.get(Bank.ORG), bank.get(Bank.FID));
-      download.init();
-      GlobList importedAccount = download.show();
-      filterRemoveAccountWithNoImport(importedAccount);
-      return importedAccount;
     }
-
-    return GlobList.EMPTY;
-  }
-
-  private void filterRemoveAccountWithNoImport(GlobList importedAccount) {
-    for (Iterator<Glob> iterator = importedAccount.iterator(); iterator.hasNext(); ) {
-      Glob glob = iterator.next();
-      if (glob.get(RealAccount.ACCOUNT) != null && glob.get(RealAccount.FILE_NAME) == null) {
-        iterator.remove();
-      }
-    }
+    return null;
   }
 }

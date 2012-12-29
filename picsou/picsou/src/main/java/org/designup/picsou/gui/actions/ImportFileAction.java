@@ -9,8 +9,8 @@ import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -22,7 +22,7 @@ import java.util.List;
 public class ImportFileAction extends AbstractAction {
 
   private Directory directory;
-  private GlobList importedAccount;
+  private GlobList importedAccounts;
   private Glob defaulAccount;
   private boolean usePreference;
   private boolean isSynchro;
@@ -40,7 +40,7 @@ public class ImportFileAction extends AbstractAction {
     return new ImportFileAction(text, repository, directory, defaulAccount, true, false);
   }
 
-  static public ImportFileAction sync(final GlobRepository repository, final Directory directory, GlobList importedAccounts){
+  static public ImportFileAction sync(final GlobRepository repository, final Directory directory, GlobList importedAccounts) {
     return new ImportFileAction(Lang.get("import"), repository, directory, importedAccounts, false, true);
   }
 
@@ -65,16 +65,15 @@ public class ImportFileAction extends AbstractAction {
     });
   }
 
-  private ImportFileAction(String text, final GlobRepository repository, final Directory directory, GlobList importedAccount,
+  private ImportFileAction(String text, final GlobRepository repository, final Directory directory, GlobList importedAccounts,
                            boolean usePreference, boolean isSynchro) {
     super(text);
     this.repository = repository;
     this.directory = directory;
-    this.importedAccount = importedAccount;
+    this.importedAccounts = importedAccounts;
     this.usePreference = usePreference;
     this.isSynchro = isSynchro;
   }
-
 
   private ImportFileAction(String text, final GlobRepository repository, final Directory directory, Glob defaulAccount,
                            boolean usePreference, boolean isSynchro) {
@@ -88,7 +87,7 @@ public class ImportFileAction extends AbstractAction {
 
   public void actionPerformed(ActionEvent event) {
     OpenRunnable runnable = new OpenRunnable(Collections.<File>emptyList(), directory, repository,
-                                             defaulAccount, usePreference, importedAccount, isSynchro);
+                                             defaulAccount, usePreference, importedAccounts, isSynchro);
     runnable.run();
     defaulAccount = null;
   }
@@ -105,14 +104,14 @@ public class ImportFileAction extends AbstractAction {
       this.repository = repository;
       if (!LicenseService.trialExpired(repository) && !User.isDemoUser(repository.get(User.KEY))) {
         importDialog = new ImportDialog(Lang.get("import.fileSelection.close"), files, defaultAccount,
-                                  directory.get(JFrame.class),
-                                  repository, directory,
-                                  usePreferedPath, isSynchro);
+                                        directory.get(JFrame.class),
+                                        repository, directory,
+                                        usePreferedPath, isSynchro);
         if (!files.isEmpty()) {
           importDialog.acceptFiles();
         }
-        if (importedAccounts != null && !importedAccounts.isEmpty()){
-          importDialog.synchronize(importedAccounts);
+        if (importedAccounts != null && !importedAccounts.isEmpty()) {
+          importDialog.showSynchro(importedAccounts);
         }
       }
     }

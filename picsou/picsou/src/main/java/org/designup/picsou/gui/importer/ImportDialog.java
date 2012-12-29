@@ -6,6 +6,7 @@ import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.importer.components.ImportSeriesDialog;
+import org.designup.picsou.gui.importer.components.RealAccountImporter;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AutomaticSeriesBudgetTrigger;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
@@ -34,7 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ImportDialog {
+public class ImportDialog implements RealAccountImporter {
   private GlobRepository parentRepository;
   private Directory parentDirectory;
   private LocalGlobRepository localRepository;
@@ -46,6 +47,7 @@ public class ImportDialog {
   private PicsouDialog dialog;
 
   private ImportedFileSelectionPanel fileSelectionPanel;
+  private ImportSynchroPanel importSynchroPanel;
   private ImportPreviewPanel previewPanel;
   private ImportCompletionPanel completionPanel;
   private ImportAccountPanel importAccountsPanel;
@@ -66,6 +68,7 @@ public class ImportDialog {
     controller = new ImportController(this, repository, localRepository, directory, isSynchro);
     fileSelectionPanel = new ImportedFileSelectionPanel(controller, usePreferredPath, localRepository, localDirectory);
     importAccountsPanel = new ImportAccountPanel(controller, localRepository, localDirectory);
+    importSynchroPanel = new ImportSynchroPanel(owner, localRepository, localDirectory);
     previewPanel = new ImportPreviewPanel(controller, defaultAccount, repository, localRepository, localDirectory);
     completionPanel = new ImportCompletionPanel(controller, localRepository, localDirectory);
 
@@ -122,8 +125,8 @@ public class ImportDialog {
     return dialog;
   }
 
-  public void synchronize(GlobList importedAccount) {
-    this.fileSelectionPanel.synchronize(importedAccount);
+  public void importAccounts(GlobList realAccounts) {
+    controller.importAccounts(realAccounts);
   }
 
   public void preselectFiles(List<File> files) {
@@ -136,6 +139,16 @@ public class ImportDialog {
       previewPanel.setFileName(absolutePath);
     }
     previewPanel.updateForNextImport(dateFormats, importedAccount, accountNumber, accountCount);
+  }
+
+  public void showSynchro(Integer bankId) {
+    importSynchroPanel.update(bankId, this);
+    setCurrentPanel(importSynchroPanel.getPanel());
+  }
+
+  public void showSynchro(GlobList realAccounts) {
+    importSynchroPanel.update(realAccounts, this);
+    setCurrentPanel(importSynchroPanel.getPanel());
   }
 
   public void showPreview() {

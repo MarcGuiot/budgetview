@@ -7,7 +7,6 @@
       <row>
         <label text="Entrez votre code" styleClass="formLabel"/>
         <textField ref="code"/>
-        <!--<component ref="progressPanel" opaque="false" visible="true"/>-->
       </row>
       <row>
         <panel ref="imageClavier" minimumSize="(136,136)" size="(136,136)" maximumSize="(136,136)"/>
@@ -17,10 +16,8 @@
         <filler fill="horizontal" weightX="0.1"/>
         <button ref="corriger" fill="none"/>
         <button ref="valider" fill="none"/>
-        <component ref="occupedPanel" opaque="false" visible="true"/>
         <filler fill="horizontal" weightX="0.1"/>
       </row>
-      <filler fill="vertical" weightY="0.1"/>
     </column>
   </panel>
 </splits>

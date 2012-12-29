@@ -5,24 +5,22 @@
   <panel styleClass="innerDialog">
     <column>
       <row>
-        <label text="number : " marginRight="10"/>
+        <label text="Number" marginRight="5"/>
         <textField ref="number"/>
-        <label text="name : " marginRight="10"/>
+        <label text="Name" marginRight="5"/>
         <textField ref="name"/>
-        <label text="position : " marginRight="10"/>
+        <label text="Position" marginRight="5"/>
         <textField ref="position"/>
-        <label text="epargne : " marginRight="10"/>
-        <checkBox ref="isSavings"/>
+        <checkBox ref="isSavings" text="Savings"/>
       </row>
       <row>
-        <label text="file : " marginRight="10"/>
+        <label text="File path" marginRight="5"/>
         <textField ref="file"/>
       </row>
       <button ref="add"/>
       <scrollPane>
         <table ref="table"/>
       </scrollPane>
-      <!--<component ref="occupedPanel" opaque="false" visible="true"/>-->
       <button ref="update"/>
     </column>
   </panel>

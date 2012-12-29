@@ -18,17 +18,17 @@ public class BankChooserChecker extends BankChooserPanelChecker<BankChooserCheck
   }
 
   public void cancel() {
-    panel.getButton("cancel").click();
-    assertFalse(panel.isVisible());
+    window.getButton("cancel").click();
+    assertFalse(window.isVisible());
   }
 
   public BankChooserChecker checkValidateDisabled() {
-    assertFalse(panel.getButton("Ok").isEnabled());
+    assertFalse(window.getButton("Ok").isEnabled());
     return this;
   }
   
   public void validate() {
-    panel.getButton("Ok").click();
-    assertFalse(panel.isVisible());
+    window.getButton("Ok").click();
+    assertFalse(window.isVisible());
   }
 }

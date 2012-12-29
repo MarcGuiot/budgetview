@@ -503,7 +503,6 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .checkAstericsErrorOnBank()
       .selectBank("Other")
-//      .checkAccountTypeSelectionDisplayedFor("Account n. 111")
       .checkNoAccountTypeMessageDisplayed()
       .checkAstericsErrorOnType()
       .doImport()

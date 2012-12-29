@@ -9,7 +9,7 @@ public class OtherBankSynchroChecker extends SynchroChecker {
     super(importDialogChecker, window, "update");
   }
 
-  public OtherBankSynchroChecker createNew(String number, String name, String position) {
+  public OtherBankSynchroChecker createAccount(String number, String name, String position) {
     window.getButton("add").click();
     Table table = window.getTable("table");
     table.selectRow(table.getRowCount() - 1);
@@ -19,17 +19,17 @@ public class OtherBankSynchroChecker extends SynchroChecker {
     return this;
   }
 
-  public OtherBankSynchroChecker select(int row) {
-    Table table = window.getTable("table");
-    table.selectRow(row);
-    return this;
-  }
-
-  public OtherBankSynchroChecker createNew(String type, String name, String position, String file) {
-    createNew(type, name, position);
+  public OtherBankSynchroChecker createAccount(String number, String name, String position, String file) {
+    createAccount(number, name, position);
     if (file != null) {
       setFile(file);
     }
+    return this;
+  }
+
+  public OtherBankSynchroChecker selectAccount(int row) {
+    Table table = window.getTable("table");
+    table.selectRow(row);
     return this;
   }
 
