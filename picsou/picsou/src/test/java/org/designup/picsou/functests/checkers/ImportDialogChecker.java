@@ -2,7 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
-import org.designup.picsou.gui.importer.ImportCompletionPanel;
+import org.designup.picsou.gui.importer.steps.ImportCompletionPanel;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;

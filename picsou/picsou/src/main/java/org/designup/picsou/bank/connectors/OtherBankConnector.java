@@ -81,6 +81,9 @@ public class OtherBankConnector extends WebBankConnector {
     return builder.load();
   }
 
+  public void panelShown() {
+  }
+
   public OtherBankConnector(GlobRepository repository, Directory directory) {
     super(BANK_ID, repository, directory);
   }

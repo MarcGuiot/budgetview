@@ -148,6 +148,10 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
     valider.setEnabled(false);
   }
 
+  public void panelShown() {
+    code.requestFocus();
+  }
+
   private void initImg() {
     HtmlElement body = page.getBody();
     getClient().waitForBackgroundJavaScript(10000);

@@ -77,4 +77,8 @@ public class UserAndPasswordPanel {
   public String getPassword() {
     return new String(passwordField.getPassword())  ;
   }
+
+  public void requestFocus() {
+    userCodeField.requestFocus();
+  }
 }

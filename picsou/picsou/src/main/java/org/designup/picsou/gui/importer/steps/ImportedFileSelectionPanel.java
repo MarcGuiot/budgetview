@@ -1,14 +1,16 @@
-package org.designup.picsou.gui.importer;
+package org.designup.picsou.gui.importer.steps;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.importer.ImportController;
+import org.designup.picsou.gui.importer.ImportDialog;
+import org.designup.picsou.gui.importer.MessageHandler;
 import org.designup.picsou.gui.importer.components.BankDownloadPanel;
 import org.designup.picsou.gui.importer.edition.BrowseFilesAction;
 import org.designup.picsou.importer.utils.TypedInputStream;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.utils.AbstractDocumentListener;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -20,11 +22,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class ImportedFileSelectionPanel implements MessageHandler {
+public class ImportedFileSelectionPanel extends AbstractImportStepPanel implements MessageHandler {
 
-  private ImportController controller;
   private LocalGlobRepository localRepository;
-  private Directory directory;
 
   private JPanel panel;
   private JPanel filePanel = new JPanel();
@@ -36,23 +36,27 @@ public class ImportedFileSelectionPanel implements MessageHandler {
   private String lastExceptionDetails;
   private BankDownloadPanel bankDownload;
 
-  public ImportedFileSelectionPanel(ImportController controller,
+  public ImportedFileSelectionPanel(PicsouDialog dialog,
+                                    String textForCloseButton,
+                                    ImportController controller,
                                     boolean usePreferredPath,
                                     LocalGlobRepository localRepository,
                                     Directory directory) {
-    this.controller = controller;
+    super(dialog, textForCloseButton, controller, directory);
     this.usePreferredPath = usePreferredPath;
     this.localRepository = localRepository;
-    this.directory = directory;
     this.fileField = controller.getFileField();
   }
 
-  public void init(final PicsouDialog dialog, String textForCloseButton) {
-
-    initFileField();
+  public void createPanelIfNeeded() {
+    if (builder != null) {
+      return;
+    }
 
     builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importFileSelectionPanel.splits",
-                                    localRepository, directory);
+                                    localRepository, localDirectory);
+
+    initFileField();
     builder.add("importMessage", importMessage);
     builder.add("filePanel", filePanel);
     builder.add("fileField", fileField);
@@ -65,15 +69,15 @@ public class ImportedFileSelectionPanel implements MessageHandler {
       }
     });
 
-    bankDownload = new BankDownloadPanel(dialog, controller, localRepository, directory);
+    bankDownload = new BankDownloadPanel(dialog, controller, localRepository, localDirectory);
     builder.add("bankDownload", bankDownload.getPanel());
 
-    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(directory, dialog);
+    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(localDirectory, dialog);
 
     hyperlinkHandler.registerLinkAction("openErrorDetails", new Runnable() {
       public void run() {
         ImportDialog.showLastException(ImportedFileSelectionPanel.this.lastExceptionDetails,
-                                       ImportedFileSelectionPanel.this.directory);
+                                       ImportedFileSelectionPanel.this.localDirectory);
       }
     });
     builder.add("hyperlinkHandler", hyperlinkHandler);
@@ -98,17 +102,23 @@ public class ImportedFileSelectionPanel implements MessageHandler {
   }
 
   public void showFileErrorMessage(String message, String details) {
+    createPanelIfNeeded();
     lastExceptionDetails = details;
     this.importMessage.setText(message);
   }
 
   public JPanel getPanel() {
+    createPanelIfNeeded();
     return panel;
   }
 
   public void dispose() {
-    builder.dispose();
-    bankDownload.dispose();
+    if (builder != null) {
+      builder.dispose();
+      builder = null;
+      bankDownload.dispose();
+      bankDownload = null;
+    }
   }
 
   public void preselectFiles(List<File> files) {
@@ -123,6 +133,7 @@ public class ImportedFileSelectionPanel implements MessageHandler {
   }
 
   public void requestFocus() {
+    createPanelIfNeeded();
     bankDownload.requestFocus();
   }
 
@@ -137,6 +148,7 @@ public class ImportedFileSelectionPanel implements MessageHandler {
   }
 
   public void acceptFiles() {
+    createPanelIfNeeded();
     if (!initialFileAccepted()) {
       return;
     }

@@ -66,6 +66,10 @@ public class CicConnector extends WebBankConnector {
     return userAndPasswordPanel.getPanel();
   }
 
+  public void panelShown() {
+    userAndPasswordPanel.requestFocus();
+  }
+
   private class ConnectAction implements ActionListener {
 
     public void actionPerformed(ActionEvent event) {

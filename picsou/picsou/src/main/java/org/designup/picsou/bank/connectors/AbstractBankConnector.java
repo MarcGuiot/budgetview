@@ -153,8 +153,4 @@ public abstract class AbstractBankConnector implements BankConnector {
   protected void notifyErrorFound(String message) {
     monitor.errorFound(message);
   }
-
-  public void startProgress() {
-    monitor.downloadInProgress();
-  }
 }

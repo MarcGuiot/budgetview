@@ -73,6 +73,10 @@ public class OfxDownloadPage extends AbstractBankConnector {
     return builder.load();
   }
 
+  public void panelShown() {
+    codeField.requestFocus();
+  }
+
   public void downloadFile() {
     for (Glob account : this.accounts) {
       try {

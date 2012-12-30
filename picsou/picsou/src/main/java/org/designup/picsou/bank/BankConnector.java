@@ -9,5 +9,7 @@ public interface BankConnector {
 
   void init(SynchroMonitor monitor);
 
+  void panelShown();
+
   void stop();
 }

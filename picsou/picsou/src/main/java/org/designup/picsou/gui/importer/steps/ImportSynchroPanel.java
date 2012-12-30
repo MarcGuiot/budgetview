@@ -1,28 +1,27 @@
-package org.designup.picsou.gui.importer;
+package org.designup.picsou.gui.importer.steps;
 
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.bank.connectors.SynchroMonitor;
 import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.importer.ImportController;
 import org.designup.picsou.gui.importer.components.RealAccountImporter;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
+import java.util.Collections;
+import java.util.Stack;
 
-public class ImportSynchroPanel {
+public class ImportSynchroPanel extends AbstractImportStepPanel {
 
   private final GlobRepository repository;
-  private final Directory directory;
-  private Window parent;
   private JPanel panel;
   private BankSynchroService bankSynchroService;
   private JPanel connectorPanel = new JPanel();
@@ -36,18 +35,24 @@ public class ImportSynchroPanel {
   private ImportSynchroPanel.CloseDialogAction closeAction;
   private boolean closed = false;
   private BankConnector currentConnector;
+  private GlobsPanelBuilder builder;
 
-  public ImportSynchroPanel(Window parent, GlobRepository repository, Directory directory) {
-    this.parent = parent;
+  public ImportSynchroPanel(PicsouDialog dialog,
+                            ImportController controller,
+                            GlobRepository repository,
+                            Directory directory) {
+    super(dialog, Lang.get("close"), controller, directory);
     this.repository = repository;
-    this.directory = directory;
     this.bankSynchroService = directory.get(BankSynchroService.class);
     this.monitor = new Monitor();
   }
 
-  private void createPanelIfNeeded() {
-    GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/importexport/importSynchroPanel.splits", repository, directory);
+  protected void createPanelIfNeeded() {
+    if (builder != null) {
+      return;
+    }
+
+    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importSynchroPanel.splits", repository, localDirectory);
 
     builder.add("connectorPanel", connectorPanel);
 
@@ -65,15 +70,22 @@ public class ImportSynchroPanel {
     return panel;
   }
 
+  public void requestFocus() {
+    createPanelIfNeeded();
+    if (currentConnector != null) {
+      currentConnector.panelShown();
+    }
+  }
+
   public void update(Integer bankId, RealAccountImporter importer) {
     closed = false;
-    BankConnector connector = bankSynchroService.getConnector(bankId, parent, repository, directory);
+    BankConnector connector = bankSynchroService.getConnector(bankId, dialog, repository, localDirectory);
     doUpdate(Collections.singletonList(connector), importer);
   }
 
   public void update(GlobList realAccounts, RealAccountImporter importer) {
     closed = false;
-    doUpdate(bankSynchroService.getConnectors(realAccounts, parent, repository, directory), importer);
+    doUpdate(bankSynchroService.getConnectors(realAccounts, dialog, repository, localDirectory), importer);
   }
 
   private void doUpdate(java.util.List<BankConnector> connectors, RealAccountImporter importer) {
@@ -135,7 +147,7 @@ public class ImportSynchroPanel {
       if (closed) {
         return;
       }
-      MessageDialog.show("bank.error", parent, directory, "bank.error.msg", errorMessage);
+      MessageDialog.show("bank.error", dialog, localDirectory, "bank.error.msg", errorMessage);
     }
 
     public void importCompleted(GlobList realAccounts) {
@@ -149,7 +161,7 @@ public class ImportSynchroPanel {
 
   private class CloseDialogAction extends AbstractAction {
     public CloseDialogAction() {
-      super(Lang.get("close"));
+      super(textForCloseButton);
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
@@ -158,7 +170,7 @@ public class ImportSynchroPanel {
         currentConnector.stop();
         currentConnector = null;
       }
-      GuiUtils.getEnclosingDialog(panel).setVisible(false);
+      dialog.setVisible(false);
     }
   }
 }

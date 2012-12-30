@@ -84,6 +84,10 @@ public class SgConnector extends WebBankConnector {
     return builder.load();
   }
 
+  public void panelShown() {
+    userIdField.requestFocus();
+  }
+
   private void initCardCode(SplitsBuilder builder) {
 
     validateUserIdAction = new ValidateUserIdAction();

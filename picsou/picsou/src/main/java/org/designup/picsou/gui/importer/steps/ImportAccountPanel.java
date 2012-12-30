@@ -1,9 +1,13 @@
-package org.designup.picsou.gui.importer;
+package org.designup.picsou.gui.importer.steps;
 
 import org.designup.picsou.gui.accounts.AccountEditionPanel;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.model.*;
+import org.designup.picsou.gui.importer.ImportController;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.Bank;
+import org.designup.picsou.model.BankEntity;
+import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -17,18 +21,17 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class ImportAccountPanel {
+public class ImportAccountPanel extends AbstractImportStepPanel {
   private JPanel panel;
-  private ImportController controller;
   private LocalGlobRepository localGlobRepository;
   private AccountEditionPanel accountPanel;
   private GlobsPanelBuilder builder;
-  private Directory localDirectory;
   private Glob importedAccount;
 
-  public ImportAccountPanel(ImportController controller, LocalGlobRepository localGlobRepository, Directory directory) {
-    this.controller = controller;
-    this.localDirectory = new DefaultDirectory(directory);
+  public ImportAccountPanel(PicsouDialog dialog,
+                            String textForCloseButton,
+                            ImportController controller, LocalGlobRepository localGlobRepository, Directory directory) {
+    super(dialog, textForCloseButton, controller, new DefaultDirectory(directory));
     this.localDirectory.add(new SelectionService());
     this.localGlobRepository =
       LocalGlobRepositoryBuilder.init(localGlobRepository)
@@ -36,11 +39,11 @@ public class ImportAccountPanel {
         .get();
   }
 
-  public JPanel getPanel() {
-    return panel;
-  }
+  public void createPanelIfNeeded() {
+    if (builder != null) {
+      return;
+    }
 
-  public void init(PicsouDialog dialog, String closeButton) {
     builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importAccountPanel.splits", localGlobRepository, localDirectory);
 
     accountPanel = new AccountEditionPanel(dialog, localGlobRepository, localDirectory);
@@ -63,7 +66,7 @@ public class ImportAccountPanel {
         controller.next();
       }
     });
-    builder.add("close", new AbstractAction(closeButton) {
+    builder.add("close", new AbstractAction(textForCloseButton) {
 
       public void actionPerformed(ActionEvent e) {
         localGlobRepository.rollback();
@@ -74,7 +77,18 @@ public class ImportAccountPanel {
     panel = builder.load();
   }
 
+  public JPanel getPanel() {
+    createPanelIfNeeded();
+    return panel;
+  }
+
+  public void requestFocus() {
+    createPanelIfNeeded();
+    accountPanel.requestFocus();
+  }
+
   public void setImportedAccountToImport(Glob importedAccount) {
+    createPanelIfNeeded();
     localGlobRepository.rollback();
     this.importedAccount = importedAccount;
     Glob account = RealAccount.createAccountFromImported(importedAccount, localGlobRepository, false);
@@ -83,7 +97,10 @@ public class ImportAccountPanel {
   }
 
   public void dispose() {
-    builder.dispose();
-    accountPanel.dispose();
+    if (builder != null) {
+      builder.dispose();
+      accountPanel.dispose();
+      builder = null;
+    }
   }
 }

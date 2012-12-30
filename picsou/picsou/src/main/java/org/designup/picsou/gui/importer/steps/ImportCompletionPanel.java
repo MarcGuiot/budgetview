@@ -1,7 +1,8 @@
-package org.designup.picsou.gui.importer;
+package org.designup.picsou.gui.importer.steps;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.importer.ImportController;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -12,27 +13,29 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
-public class ImportCompletionPanel {
-  private ImportController controller;
+public class ImportCompletionPanel extends AbstractImportStepPanel {
   private LocalGlobRepository localRepository;
-  private Directory directory;
 
   private GlobsPanelBuilder builder;
   private JPanel panel;
   private JEditorPane message;
   private Set<Integer> months;
 
-  public ImportCompletionPanel(ImportController controller,
+  public ImportCompletionPanel(PicsouDialog dialog,
+                               String textForCloseButton,
+                               ImportController controller,
                                LocalGlobRepository localRepository,
                                Directory directory) {
-    this.controller = controller;
+    super(dialog, textForCloseButton, controller, directory);
     this.localRepository = localRepository;
-    this.directory = directory;
   }
 
-  public void init(final PicsouDialog dialog, String textForCloseButton) {
+  public void createPanelIfNeeded() {
+    if (builder != null) {
+      return;
+    }
 
-    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importCompletionPanel.splits", localRepository, directory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importCompletionPanel.splits", localRepository, localDirectory);
 
     message = GuiUtils.createReadOnlyHtmlComponent();
 
@@ -45,17 +48,28 @@ public class ImportCompletionPanel {
       }
     });
 
-    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(directory, dialog);
+    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(localDirectory, dialog);
     builder.add("hyperlinkHandler", hyperlinkHandler);
 
     panel = builder.load();
   }
 
+  public JPanel getPanel() {
+    createPanelIfNeeded();
+    return panel;
+  }
+
+  public void requestFocus() {
+  }
+
   public void dispose() {
-    builder.dispose();
+    if (builder != null) {
+      builder.dispose();
+    }
   }
 
   public void update(Set<Integer> months, int importedTransactionCount, int autocategorizedTransaction, int transactionCount) {
+    createPanelIfNeeded();
     this.months = months;
     String content =
       Lang.get(getEndOfImportMessageKey(importedTransactionCount, transactionCount, autocategorizedTransaction),
@@ -68,7 +82,7 @@ public class ImportCompletionPanel {
 
   public static String getEndOfImportMessageKey(int importedTransactionCount, int loadedTransactionCount, int autocategorizedTransactions) {
     if (loadedTransactionCount == 0) {
-      if (autocategorizedTransactions > 0){
+      if (autocategorizedTransactions > 0) {
         return "import.end.info.operations.none.none." + normalize(importedTransactionCount);
       }
       else {
@@ -91,10 +105,6 @@ public class ImportCompletionPanel {
       return "one";
     }
     return "many";
-  }
-
-  public JPanel getPanel() {
-    return panel;
   }
 
   private class CommitAction extends AbstractAction {

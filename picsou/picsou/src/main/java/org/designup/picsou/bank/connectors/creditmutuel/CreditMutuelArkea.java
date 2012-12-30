@@ -79,6 +79,10 @@ public class CreditMutuelArkea extends WebBankConnector {
     return builder.load();
   }
 
+  public void panelShown() {
+    codeField.requestFocus();
+  }
+
   public void downloadFile() {
     WebPage web = new WebPage(browser, browser.getCurrentHtmlPage());
     WebForm webForm = web.getFormByName("choixCompte");

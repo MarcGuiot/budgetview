@@ -1,13 +1,19 @@
-package org.designup.picsou.gui.importer;
+package org.designup.picsou.gui.importer.steps;
 
 import org.designup.picsou.gui.accounts.AccountEditionPanel;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.importer.ImportController;
+import org.designup.picsou.gui.importer.ImportDialog;
+import org.designup.picsou.gui.importer.MessageHandler;
 import org.designup.picsou.gui.importer.edition.DateFormatSelectionPanel;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionDateRenderer;
 import org.designup.picsou.gui.importer.edition.ImportedTransactionsTable;
 import org.designup.picsou.gui.importer.utils.AccountFinder;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.AccountUpdateMode;
+import org.designup.picsou.model.ImportedTransaction;
+import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -18,7 +24,9 @@ import org.globsframework.gui.views.GlobComboView;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
-import org.globsframework.model.utils.*;
+import org.globsframework.model.utils.DefaultChangeSetListener;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
@@ -30,11 +38,9 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Set;
 
-public class ImportPreviewPanel implements MessageHandler {
-  private ImportController controller;
+public class ImportPreviewPanel extends AbstractImportStepPanel implements MessageHandler {
   private GlobRepository repository;
   private LocalGlobRepository localRepository;
-  private Directory localDirectory;
 
   private GlobRepository sessionRepository;
   private DefaultDirectory sessionDirectory;
@@ -63,18 +69,24 @@ public class ImportPreviewPanel implements MessageHandler {
   private CardHandler cardHandler;
   private JEditorPane noOperationLabel;
 
-  public ImportPreviewPanel(ImportController controller,
+  public ImportPreviewPanel(PicsouDialog dialog,
+                            String textForCloseButton,
+                            ImportController controller,
                             Glob defaultAccount,
                             GlobRepository repository,
                             LocalGlobRepository localRepository,
                             Directory localDirectory) {
-    this.controller = controller;
+    super(dialog, textForCloseButton, controller, localDirectory);
+
     this.repository = repository;
     this.localRepository = localRepository;
-    this.localDirectory = localDirectory;
   }
 
-  public void init(PicsouDialog dialog, final String textForCloseButton) {
+  public void createPanelIfNeeded() {
+    if (builder != null) {
+      return;
+    }
+
     builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importPreviewPanel.splits", localRepository, localDirectory);
     cardHandler = builder.addCardHandler("mainCardOperations");
     noOperationLabel = new JEditorPane();
@@ -90,21 +102,21 @@ public class ImportPreviewPanel implements MessageHandler {
     sessionDirectory = new DefaultDirectory(localDirectory);
     sessionDirectory.add(new SelectionService());
     sessionDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
-                                                               public void selectionUpdated(GlobSelection selection) {
-                                                                 showStep2Message("");
-                                                                 currentlySelectedAccount = selection.getAll(Account.TYPE).isEmpty() ? null :
-                                                                                            selection.getAll(Account.TYPE).get(0);
-                                                                 if (currentlySelectedAccount != null) {
-                                                                   accountEditionPanel.clearAllMessages();
-                                                                   accountEditionPanel.setAccount(currentlySelectedAccount);
-                                                                   accountEditionPanel.setEditable(false);
-                                                                 }
-                                                                 else if (newAccount != null) {
-                                                                   accountEditionPanel.setAccount(newAccount);
-                                                                   accountEditionPanel.setEditable(true);
-                                                                 }
-                                                               }
-                                                             }, Account.TYPE);
+      public void selectionUpdated(GlobSelection selection) {
+        showStep2Message("");
+        currentlySelectedAccount = selection.getAll(Account.TYPE).isEmpty() ? null :
+                                   selection.getAll(Account.TYPE).get(0);
+        if (currentlySelectedAccount != null) {
+          accountEditionPanel.clearAllMessages();
+          accountEditionPanel.setAccount(currentlySelectedAccount);
+          accountEditionPanel.setEditable(false);
+        }
+        else if (newAccount != null) {
+          accountEditionPanel.setAccount(newAccount);
+          accountEditionPanel.setEditable(true);
+        }
+      }
+    }, Account.TYPE);
 
     sessionRepository = controller.getSessionRepository();
 
@@ -165,23 +177,32 @@ public class ImportPreviewPanel implements MessageHandler {
     });
   }
 
-  public void dispose() {
-    builder.dispose();
-    importedTransactionTable.dispose();
-    accountEditionPanel.dispose();
-    dateFormatSelectionPanel.dispose();
-  }
-
   public JPanel getPanel() {
+    createPanelIfNeeded();
     return panel;
   }
 
+  public void requestFocus() {
+  }
+
+  public void dispose() {
+    if (builder != null) {
+      builder.dispose();
+      importedTransactionTable.dispose();
+      accountEditionPanel.dispose();
+      dateFormatSelectionPanel.dispose();
+      builder = null;
+    }
+  }
+
   public void showStep2Message(String message) {
+    createPanelIfNeeded();
     this.message.setText(message);
   }
 
   public void updateForNextImport(List<String> dateFormats, Glob importedAccount,
                                   Integer accountNumber, Integer accountCount) {
+    createPanelIfNeeded();
     this.importedAccount = importedAccount;
     accountEditionRepository.rollback();
     newAccount = RealAccount.createAccountFromImported(importedAccount, accountEditionRepository, true);
@@ -273,10 +294,12 @@ public class ImportPreviewPanel implements MessageHandler {
   }
 
   public void setFileName(String absolutePath) {
+    createPanelIfNeeded();
     fileNameLabel.setText(absolutePath);
   }
 
   public void showFileErrorMessage(String message) {
+    createPanelIfNeeded();
     this.setFileName("");
     this.accountCountInfo.setText("");
     this.message.setText(message);
@@ -284,6 +307,7 @@ public class ImportPreviewPanel implements MessageHandler {
   }
 
   public void showFileErrorMessage(String message, String details) {
+    createPanelIfNeeded();
     showFileErrorMessage(message);
     this.lastExceptionDetails = details;
   }
@@ -300,7 +324,7 @@ public class ImportPreviewPanel implements MessageHandler {
           Log.write("Import: finish account check failed");
           return;
         }
-        if (currentlySelectedAccount != null && Account.SUMMARY_ACCOUNT_IDS.contains(currentlySelectedAccount.get(Account.ID))){
+        if (currentlySelectedAccount != null && Account.SUMMARY_ACCOUNT_IDS.contains(currentlySelectedAccount.get(Account.ID))) {
           Log.write("Import bug: Using summary account");
           return;
         }
