@@ -26,10 +26,17 @@ class SgKeyboardPanel extends JPanel {
   }
 
   public void paint(Graphics g) {
+    g.clearRect(0, 0, getWidth(), getHeight());
     if (image == null) {
+      g.setColor(getForeground());
+      g.fillRect(0,0,getWidth(), getHeight());
+      g.setColor(getForeground().darker());
+      g.drawRect(0,0,getWidth(), getHeight());
       return;
     }
-    g.clearRect(0, 0, getWidth(), getHeight());
+
+    g.setColor(getBackground());
+    g.fillRect(0,0,getWidth(), getHeight());
     g.drawImage(image, 0, 0, new NullImageObserver());
     if (motionListener.drawKeyBorder) {
       g.drawImage(motionListener.imageSurlignage,

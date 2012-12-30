@@ -16,7 +16,7 @@
 
       <htmlEditorPane styleClass="multiLineLabel" text="$import.synchro.message" margin="10" marginBottom="0" weightY="1"/>
 
-      <column name="synchroConnectionPanel" styleClass="innerDialogBlock" margin="10" weightY="100">
+      <column name="synchroConnectionPanel" styleClass="innerDialogBlock" margin="10" marginTop="5" weightY="100">
         <filler fill="vertical" weightY="10"/>
         <panel ref="connectorPanel" margin="10" styleClass="innerDialogBlockPanel" weightY="1"/>
         <row preferredSize="(100,30)" weightY="1">

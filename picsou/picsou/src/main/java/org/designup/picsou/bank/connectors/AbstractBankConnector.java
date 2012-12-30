@@ -139,7 +139,7 @@ public abstract class AbstractBankConnector implements BankConnector {
   }
 
   protected void notifyIdentification() {
-    monitor.identification();
+    monitor.identificationInProgress();
   }
 
   protected void notifyDownloadInProgress() {
@@ -156,9 +156,5 @@ public abstract class AbstractBankConnector implements BankConnector {
 
   public void startProgress() {
     monitor.downloadInProgress();
-  }
-
-  public void endProgress() {
-    monitor.waitingForUser();
   }
 }

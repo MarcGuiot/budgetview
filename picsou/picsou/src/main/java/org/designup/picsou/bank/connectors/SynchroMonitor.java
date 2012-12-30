@@ -6,7 +6,7 @@ public interface SynchroMonitor {
 
   void initialConnection();
 
-  void identification();
+  void identificationInProgress();
 
   void downloadInProgress();
 
@@ -20,7 +20,7 @@ public interface SynchroMonitor {
     public void initialConnection() {
     }
 
-    public void identification() {
+    public void identificationInProgress() {
     }
 
     public void downloadInProgress() {

@@ -91,13 +91,13 @@ public class OfxDownloadPage extends AbstractBankConnector {
   public void stop() {
   }
 
-  public void startProgress() {
-    super.startProgress();
+  protected void notifyDownloadInProgress() {
+    super.notifyDownloadInProgress();
     validateAction.setEnabled(false);
   }
 
-  public void endProgress() {
-    super.endProgress();
+  protected void notifyWaitingForUser() {
+    super.notifyWaitingForUser();
     validateAction.setEnabled(true);
   }
 
@@ -107,7 +107,7 @@ public class OfxDownloadPage extends AbstractBankConnector {
     }
 
     public void actionPerformed(ActionEvent e) {
-      startProgress();
+      notifyDownloadInProgress();
       Thread thread = new Thread(new Runnable() {
         public void run() {
           try {
@@ -121,10 +121,7 @@ public class OfxDownloadPage extends AbstractBankConnector {
             doImport();
           }
           catch (RuntimeException exception) {
-            MessageDialog.show("synchro.ofx.error.title", directory, "synchro.ofx.error.content", exception.getMessage());
-          }
-          finally {
-            endProgress();
+            notifyErrorFound(exception.getMessage());
           }
         }
       });

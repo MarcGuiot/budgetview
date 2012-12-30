@@ -139,7 +139,7 @@ public class CreditMutuelArkea extends WebBankConnector {
 
     public void actionPerformed(ActionEvent e) {
       try {
-        startProgress();
+        notifyIdentification();
         HtmlForm form = page.getFormByName("formIdentification");
         HtmlInput personne = form.getInputByName("noPersonne");
         HtmlInput password = form.getInputByName("motDePasse");
@@ -167,7 +167,7 @@ public class CreditMutuelArkea extends WebBankConnector {
         throw new RuntimeException(page.asXml(), e1);
       }
       finally {
-        endProgress();
+        notifyWaitingForUser();
       }
     }
 

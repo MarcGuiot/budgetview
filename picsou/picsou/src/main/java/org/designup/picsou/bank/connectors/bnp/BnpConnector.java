@@ -96,15 +96,15 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
 
   public JPanel getPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
-    builder.setSource(getClass(), "/layout/bank/connection/bnpPanel.splits");
+    builder.setSource(getClass(), "/layout/bank/connection/bnpConnectorPanel.splits");
     initCardCode(builder);
-    startProgress();
     Thread thread = new Thread() {
       public void run() {
         try {
+          notifyInitialConnection();
           loadPage(INDEX);
           System.out.println("BnpSync.run " + browser.dumpCurrentPage());
-          endProgress();
+          notifyWaitingForUser();
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
               initImg();
@@ -112,7 +112,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
           });
         }
         catch (Exception e) {
-          endProgress();
+          notifyWaitingForUser();
           e.printStackTrace();
         }
       }
@@ -222,7 +222,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
 
       public void actionPerformed(ActionEvent e) {
         try {
-          startProgress();
+          notifyIdentification();
           page = (HtmlPage)img.click();
           getClient().waitForBackgroundJavaScript(10000);
 
@@ -240,15 +240,17 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
             count--;
           }
 
+          notifyDownloadInProgress();
           if (!hasError) {
             content = page.getElementById("content");
             if (content == null) {
               hasError = false;
               return;
             }
+
             List<HtmlTable> tables = ((HtmlElement)content).getElementsByAttribute(HtmlTable.TAG_NAME, "class", "LGNTableA");
             if (tables.size() != 1) {
-              throw new RuntimeException("Find " + tables.size() + " table(s) in " + page.asXml());
+              throw new RuntimeException("Found " + tables.size() + " table(s) in " + page.asXml());
             }
             HtmlTable table = tables.get(0);
 
@@ -299,7 +301,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
           e1.printStackTrace();
         }
         finally {
-          endProgress();
+          notifyWaitingForUser();
         }
       }
     }

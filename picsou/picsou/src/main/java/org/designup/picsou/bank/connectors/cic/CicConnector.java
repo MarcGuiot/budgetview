@@ -69,37 +69,37 @@ public class CicConnector extends WebBankConnector {
   private class ConnectAction implements ActionListener {
 
     public void actionPerformed(ActionEvent event) {
-        notifyIdentification();
-        userAndPasswordPanel.setEnabled(false);
-        userAndPasswordPanel.setFieldsEnabled(false);
-        Thread thread = new Thread(new Runnable() {
-          public void run() {
-            try {
-              WebPage homePage = browser.getCurrentPage();
-              WebForm idForm = homePage.getFormByName("ident");
-              idForm.getTextFieldById("e_identifiant").setText(userAndPasswordPanel.getUser());
-              idForm.getTextFieldById("e_mdp").setText(userAndPasswordPanel.getPassword());
-              idForm.submit();
+      notifyIdentification();
+      userAndPasswordPanel.setEnabled(false);
+      userAndPasswordPanel.setFieldsEnabled(false);
+      Thread thread = new Thread(new Runnable() {
+        public void run() {
+          try {
+            WebPage homePage = browser.getCurrentPage();
+            WebForm idForm = homePage.getFormByName("ident");
+            idForm.getTextFieldById("e_identifiant").setText(userAndPasswordPanel.getUser());
+            idForm.getTextFieldById("e_mdp").setText(userAndPasswordPanel.getPassword());
+            idForm.submit();
 
-              WebPage downloadPage = browser.load(DOWNLOAD_PAGE_ADDRESS);
-              WebForm downloadForm = downloadPage.getFormByName("CMFormTelechargement");
-              WebTable accountTable = downloadForm.getTableWithNamedInput("compte");
-              WebTableColumn column = accountTable.getColumn(1);
-              for (WebTableCell cell : column) {
-                createOrUpdateRealAccount(cell.asText(), "", null, null, BANK_ID);
-              }
-              doImport();
+            WebPage downloadPage = browser.load(DOWNLOAD_PAGE_ADDRESS);
+            WebForm downloadForm = downloadPage.getFormByName("CMFormTelechargement");
+            WebTable accountTable = downloadForm.getTableWithNamedInput("compte");
+            WebTableColumn column = accountTable.getColumn(1);
+            for (WebTableCell cell : column) {
+              createOrUpdateRealAccount(cell.asText(), "", null, null, BANK_ID);
             }
-            catch (final Exception e) {
-              SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                  notifyErrorFound(e.getMessage());
-                }
-              });
-            }
+            doImport();
           }
-        });
-        thread.start();
+          catch (final Exception e) {
+            SwingUtilities.invokeLater(new Runnable() {
+              public void run() {
+                notifyErrorFound(e.getMessage());
+              }
+            });
+          }
+        }
+      });
+      thread.start();
     }
   }
 

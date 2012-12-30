@@ -1,0 +1,39 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.formLabel" font="-,bold,12" anchor="left" marginBottom="10" foreground="#222222"/>
+  </styles>
+
+  <panel styleClass="innerDialogBlockPanel">
+    <column>
+
+      <label text="1. Saisissez votre code client" styleClass="formLabel"/>
+      <grid>
+        <textField ref="userIdField" gridPos="(0,0)" columns="10"/>
+        <button action="validateUserId" gridPos="(1,0)" />
+        <button action="userIdHelp" gridPos="(0,1)" styleClass="hyperlink" font="-,plain,10" anchor="right"/>
+      </grid>
+
+      <label text="2. Composez votre code secret à 6 chiffres" styleClass="formLabel" marginTop="20"/>
+      <row>
+        <filler fill="horizontal" weightX="0.1"/>
+        <grid>
+          <panel ref="imageClavier" gridPos="(0,0)"
+                 minimumSize="(96,92)" maximumSize="(96,92)"
+                 preferredSize="(96,92)" size="(96,92)"
+                 foreground="#F0F0F0" background="dialog.block"
+                 marginBottom="5"/>
+          <textField ref="password" gridPos="(0,1)"
+                     marginTop="10" marginBottom="5"/>
+          <button ref="corriger" gridPos="(0,2)" styleClass="hyperlink"  font="-,plain,10"
+                  fill="none" anchor="right" weightY="100"/>
+          <button ref="validateCode" gridPos="(1,1)"
+                  fill="none" anchor="bottom" marginLeft="10"/>
+        </grid>
+        <filler fill="horizontal" weightX="0.1"/>
+      </row>
+
+    </column>
+  </panel>
+</splits>

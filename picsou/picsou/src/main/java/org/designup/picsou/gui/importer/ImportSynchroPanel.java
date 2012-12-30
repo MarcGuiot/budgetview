@@ -107,7 +107,7 @@ public class ImportSynchroPanel {
       progressLabel.setText(Lang.get("import.synchro.progress.initialConnection"));
     }
 
-    public void identification() {
+    public void identificationInProgress() {
       if (closed) {
         return;
       }

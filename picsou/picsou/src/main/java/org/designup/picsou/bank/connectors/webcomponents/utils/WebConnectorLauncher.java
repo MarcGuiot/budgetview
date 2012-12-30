@@ -1,6 +1,8 @@
 package org.designup.picsou.bank.connectors.webcomponents.utils;
 
+import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
+import org.designup.picsou.bank.connectors.SynchroMonitor;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.utils.ApplicationColors;
@@ -8,6 +10,8 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.ui.UIService;
+import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.repository.DefaultGlobIdGenerator;
@@ -35,16 +39,50 @@ public class WebConnectorLauncher {
       }
 
       public void openFiles(List<File> files) {
-        System.out.println("read " + files.size());
+        System.out.println("read: " + files.size());
       }
     });
 
-    JFrame frame = new JFrame("test SG");
-    directory.add(JFrame.class, frame);
-    frame.setSize(100, 100);
-    frame.setVisible(true);
 
     GlobRepository repository = new DefaultGlobRepository(new DefaultGlobIdGenerator());
-    factory.create(repository, directory);
+    BankConnector connector = factory.create(repository, directory);
+
+    JFrame frame = new JFrame("Test: " + connector.getClass().getSimpleName());
+    directory.add(JFrame.class, frame);
+
+    JPanel connectorPanel = connector.getPanel();
+    connectorPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    frame.setContentPane(connectorPanel);
+
+    connector.init(new TextMonitor());
+
+    frame.setSize(350, 300);
+    GuiUtils.showCentered(frame);
+  }
+
+  private static class TextMonitor implements SynchroMonitor {
+    public void initialConnection() {
+      System.out.println("Initial connection...");
+    }
+
+    public void downloadInProgress() {
+      System.out.println("Download in progress...");
+    }
+
+    public void identificationInProgress() {
+      System.out.println("Identification in progress...");
+    }
+
+    public void waitingForUser() {
+      System.out.println("Waiting for user...");
+    }
+
+    public void errorFound(String errorMessage) {
+      System.out.println("Error: " + errorMessage);
+    }
+
+    public void importCompleted(GlobList realAccounts) {
+      System.out.println("Import completed: " + realAccounts);
+    }
   }
 }

@@ -1,5 +1,6 @@
 package org.designup.picsou.bank.connectors.sg;
 
+import com.budgetview.shared.utils.Amounts;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.javascript.host.Event;
@@ -7,8 +8,8 @@ import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
+import org.designup.picsou.gui.browsing.BrowsingAction;
 import org.designup.picsou.model.RealAccount;
-import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.model.Glob;
@@ -21,7 +22,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -38,9 +38,9 @@ public class SgConnector extends WebBankConnector {
   public static final Integer BANK_ID = 4;
   private JButton corriger;
   private SgKeyboardPanel keyboardPanel;
-  private JButton valider;
-  private JButton validerCode;
-  private JTextField code;
+  private ValidateUserIdAction validateUserIdAction;
+  private JButton validateCode;
+  private JTextField userIdField;
   private JTextField passwordField;
 
   public static void main(String[] args) throws IOException {
@@ -59,23 +59,24 @@ public class SgConnector extends WebBankConnector {
 
   public JPanel getPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
-    builder.setSource(getClass(), "/layout/bank/connection/sgPanel.splits");
+    builder.setSource(getClass(), "/layout/bank/connection/sgConnectorPanel.splits");
     initCardCode(builder);
-    startProgress();
     Thread thread = new Thread() {
       public void run() {
         try {
+          notifyInitialConnection();
           loadPage(INDEX);
-          endProgress();
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-              validerCode.setEnabled(true);
+              validateUserIdAction.setEnabled(true);
             }
           });
         }
         catch (Exception e) {
-          endProgress();
-          e.printStackTrace();
+          notifyErrorFound(e.getMessage());
+        }
+        finally {
+          notifyWaitingForUser();
         }
       }
     };
@@ -84,46 +85,55 @@ public class SgConnector extends WebBankConnector {
   }
 
   private void initCardCode(SplitsBuilder builder) {
-    code = new JTextField();
-    code.setName("code");
-    builder.add(code);
 
-    validerCode = new JButton(Lang.get("bank.sg.code.valider"));
-    validerCode.setName("validerCode");
-    builder.add(validerCode);
-    validerCode.addActionListener(new ValiderActionListener());
+    validateUserIdAction = new ValidateUserIdAction();
+    builder.add("validateUserId", validateUserIdAction);
+
+    userIdField = new JTextField();
+    userIdField.addActionListener(validateUserIdAction);
+    builder.add("userIdField", userIdField);
+
+    builder.add("userIdHelp", new BrowsingAction("Aide Société Générale", directory) {
+      protected String getUrl() {
+        return "https://particuliers.societegenerale.fr/faq.html";
+      }
+    });
 
     passwordField = new JTextField();
     passwordField.setEditable(false);
     builder.add("password", passwordField);
 
     keyboardPanel = new SgKeyboardPanel(passwordField);
-    keyboardPanel.setName("imageClavier");
-    builder.add(keyboardPanel);
+    builder.add("imageClavier", keyboardPanel);
 
     corriger = new JButton(Lang.get("bank.sg.corriger"));
-    corriger.setName("corriger");
-    builder.add(corriger);
+    builder.add("corriger", corriger);
 
-    valider = new JButton(Lang.get("bank.sg.valider"));
-    valider.setName("valider");
-    builder.add(valider);
+    validateCode = new JButton(Lang.get("bank.sg.valider"));
+    builder.add("validateCode", validateCode);
 
-    validerCode.setEnabled(false);
+    validateUserIdAction.setEnabled(false);
     corriger.setEnabled(false);
-    valider.setEnabled(false);
+    validateCode.setEnabled(false);
   }
 
   protected Double extractAmount(String position) {
     return Amounts.extractAmount(position.replace("EUR", ""));
   }
 
-  private class ValiderActionListener implements ActionListener {
-    public void actionPerformed(ActionEvent e) {
+  private class ValidateUserIdAction extends AbstractAction {
+
+    private ValidateUserIdAction() {
+      super(Lang.get("bank.sg.code.valider"));
+    }
+
+    public void actionPerformed(ActionEvent event) {
       try {
         DomElement elementById = page.getElementById("codcli");
-        ((HtmlInput)elementById).setValueAttribute(code.getText());
+        ((HtmlInput)elementById).setValueAttribute(userIdField.getText());
+        notifyIdentification();
         Page newPage = ((HtmlElement)page.getElementById("button")).click();
+        notifyWaitingForUser();
 //        System.out.println("SG$ValiderActionListener.actionPerformed " + newPage);
 //        page = (HtmlPage)newPage;
         if (hasError) {
@@ -138,7 +148,7 @@ public class SgConnector extends WebBankConnector {
         final BufferedImage imageClavier = getFirstImage(htmlImageClavier);
         keyboardPanel.setSize(imageClavier.getWidth(), imageClavier.getHeight());
         List<HtmlElement> attribute = zoneClavier.getElementsByAttribute(HtmlMap.TAG_NAME, "name", "tc_tclavier");
-        if (attribute.size() != 1){
+        if (attribute.size() != 1) {
           throw new RuntimeException("Can not find tc_tclavier in" + zoneClavier.asXml());
         }
         HtmlElement map = (HtmlElement)attribute.get(0);
@@ -149,32 +159,32 @@ public class SgConnector extends WebBankConnector {
         corriger.setEnabled(true);
 
         HtmlImage validerImg = zoneClavier.getElementById("tc_valider");
-        valider.setAction(new ValiderPwdActionListener(validerImg));
-        valider.setEnabled(true);
+        validateCode.setAction(new ValiderPwdActionListener(validerImg));
+        validateCode.setEnabled(true);
       }
-      catch (Exception e1) {
+      catch (Exception e) {
         Log.write(page.asXml());
-        throw new RuntimeException(e1);
+        notifyErrorFound(e.getMessage());
       }
     }
 
     private class CorrigerActionListener extends AbstractAction {
       private HtmlImage img;
-      private HtmlInput password;
+      private HtmlInput passwordInput;
 
-      private CorrigerActionListener(HtmlImage img, HtmlInput password) {
+      private CorrigerActionListener(HtmlImage img, HtmlInput passwordInput) {
         super(Lang.get("bank.sg.corriger"));
         this.img = img;
-        this.password = password;
+        this.passwordInput = passwordInput;
       }
 
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(ActionEvent event) {
         try {
           page = (HtmlPage)img.click();
-          passwordField.setText(password.getValueAttribute());
+          passwordField.setText(passwordInput.getValueAttribute());
         }
-        catch (IOException e1) {
-          e1.printStackTrace();
+        catch (IOException e) {
+          notifyErrorFound(e.getMessage());
         }
       }
     }
@@ -189,13 +199,15 @@ public class SgConnector extends WebBankConnector {
 
       public void actionPerformed(ActionEvent e) {
         try {
-          startProgress();
+          notifyDownloadInProgress();
           page = (HtmlPage)img.click();
           getClient().waitForBackgroundJavaScript(10000);
 
           if (page.getTitleText().contains("Erreur")) {
+            notifyWaitingForUser();
             return;
           }
+
           DomElement content = null;
           int count = 3;
           while (!hasError && content == null && count != 0) {
@@ -210,15 +222,17 @@ public class SgConnector extends WebBankConnector {
           if (!hasError) {
             content = page.getElementById("content");
             if (content == null) {
+              notifyWaitingForUser();
               hasError = false;
               return;
             }
+
+            notifyDownloadInProgress();
             List<HtmlTable> tables = ((HtmlElement)content).getElementsByAttribute(HtmlTable.TAG_NAME, "class", "LGNTableA ListePrestation");
             if (tables.size() != 1) {
               throw new RuntimeException("Find " + tables.size() + " table(s) in " + page.asXml());
             }
             HtmlTable table = tables.get(0);
-
             for (HtmlTableRow row : table.getRows()) {
 
               String type = null;
@@ -243,10 +257,10 @@ public class SgConnector extends WebBankConnector {
                 }
                 else if (columnName.equalsIgnoreCase("solde")) {
                   List<HtmlElement> htmlElements = cell.getElementsByAttribute(HtmlDivision.TAG_NAME, "class", "Solde");
-                  if (htmlElements.size() > 0){
+                  if (htmlElements.size() > 0) {
                     HtmlDivision element = (HtmlDivision)htmlElements.get(0);
                     String title = element.getAttribute("title");
-                    if (Strings.isNotEmpty(title)){
+                    if (Strings.isNotEmpty(title)) {
                       date = Dates.extractDateDDMMYYYY(title);
                     }
                     position = element.getTextContent();
@@ -264,8 +278,9 @@ public class SgConnector extends WebBankConnector {
         }
         catch (IOException e1) {
           e1.printStackTrace();
-        }finally {
-          endProgress();
+        }
+        finally {
+          notifyWaitingForUser();
         }
       }
     }
@@ -341,7 +356,6 @@ public class SgConnector extends WebBankConnector {
     return htmlElements.get(0);
   }
 
-
   private File downloadFor(Glob realAccount) {
     HtmlElement div = getElementById("logicielFull");
     String style = div.getAttribute("style");
@@ -397,5 +411,4 @@ public class SgConnector extends WebBankConnector {
 
     return downloadFile(realAccount, anchor);
   }
-
 }
