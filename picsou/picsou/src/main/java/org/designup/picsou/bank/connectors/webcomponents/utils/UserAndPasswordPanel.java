@@ -81,4 +81,9 @@ public class UserAndPasswordPanel {
   public void requestFocus() {
     userCodeField.requestFocus();
   }
+
+  public void reset() {
+    userCodeField.setText("");
+    passwordField.setText("");
+  }
 }

@@ -11,5 +11,11 @@ public interface BankConnector {
 
   void panelShown();
 
+  String getBank();
+
+  String getCurrentLocation();
+
   void stop();
+
+  void reset();
 }

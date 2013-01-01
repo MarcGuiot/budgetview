@@ -5,6 +5,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
+import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 
 import java.io.IOException;
 
@@ -45,9 +46,9 @@ public class WebBrowser {
     webClient.setAlertHandler(errorAlertHandler);
   }
 
-  public WebPage load(String url) {
+  public WebPage load(String url) throws WebCommandFailed {
     try {
-      currentPage = getClient().getPage(url);
+      currentPage   = getClient().getPage(url);
       return new WebPage(this, currentPage);
     }
     catch (IOException e) {
@@ -72,6 +73,9 @@ public class WebBrowser {
   }
 
   public String getUrl() {
+    if (currentPage == null) {
+      return "[none]";
+    }
     return currentPage.getUrl().toString();
   }
 
@@ -85,10 +89,10 @@ public class WebBrowser {
     return webClient;
   }
 
-  public <T extends HtmlElement> T getElementById(final String id) {
+  public <T extends HtmlElement> T getElementById(final String id) throws WebParsingError {
     T select = (T)currentPage.getElementById(id);
     if (select == null) {
-      throw new RuntimeException("Can not find tag '" + id + "' in :\n" + currentPage.asXml());
+      throw new WebParsingError(getUrl(), "Can not find tag '" + id + "' in :\n" + currentPage.asXml());
     }
     return select;
   }

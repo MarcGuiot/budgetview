@@ -1,8 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
-import org.designup.picsou.utils.Lang;
 import org.uispec4j.Window;
-import org.uispec4j.assertion.UISpecAssert;
 
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 
@@ -25,7 +23,7 @@ public class SynchroChecker extends GuiChecker {
 
   public ImportDialogChecker doImportAndWaitForPreview() {
     doImport();
-    importDialogChecker.waitAcceptFiles();
+    importDialogChecker.waitForPreview();
     return importDialogChecker;
   }
 

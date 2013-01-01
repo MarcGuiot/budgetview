@@ -14,7 +14,7 @@ public class HtmlUnit {
 
   private static final String SEPARATOR = "------------------------------------------------------------------------\n";
 
-  public static HtmlElement getElementById(HtmlElement container, String id, Class expectedClass) {
+  public static HtmlElement getElementById(HtmlElement container, String id, Class expectedClass) throws WebParsingError {
     HtmlElement result = null;
     try {
       result = container.getElementById(id);
@@ -27,11 +27,11 @@ public class HtmlUnit {
     return result;
   }
 
-  public static HtmlElement getElementById(HtmlPage currentPage, String id, Class expectedClass) {
+  public static HtmlElement getElementById(HtmlPage currentPage, String id, Class expectedClass) throws WebParsingError {
     return getElementById(currentPage.getDocumentElement(), id, expectedClass);
   }
 
-  public static HtmlElement getSingleElementByTag(HtmlElement container, String tagName, Class expectedClass) {
+  public static HtmlElement getSingleElementByTag(HtmlElement container, String tagName, Class expectedClass) throws WebParsingError {
     List list = container.getHtmlElementsByTagName(tagName);
     if (list.isEmpty()) {
       fail(container, "No <" + tagName + "> found - actual content:\n" + dump(container));
@@ -45,7 +45,10 @@ public class HtmlUnit {
     return result;
   }
 
-  public static HtmlElement getElementWithAttribute(HtmlElement container, String tagName, String attributeName, String attributeValue) {
+  public static HtmlElement getElementWithAttribute(HtmlElement container,
+                                                    String tagName,
+                                                    String attributeName,
+                                                    String attributeValue) throws WebParsingError {
     List list = getVisibleElementsWithAttribute(container, tagName, attributeName, attributeValue);
     if (list.isEmpty()) {
       fail(container, "No <" + tagName + "> found with "+ attributeName + "=" + attributeValue);
@@ -56,7 +59,10 @@ public class HtmlUnit {
     return (HtmlElement)list.get(0);
   }
 
-  public static HtmlElement getFirstElementWithAttribute(HtmlElement container, String tagName, String attributeName, String attributeValue) {
+  public static HtmlElement getFirstElementWithAttribute(HtmlElement container,
+                                                         String tagName,
+                                                         String attributeName,
+                                                         String attributeValue) throws WebParsingError {
     List list = getVisibleElementsWithAttribute(container, tagName, attributeName, attributeValue);
     if (list.isEmpty()) {
       fail(container, "No <" + tagName + "> found with "+ attributeName + "=" + attributeValue);
@@ -64,19 +70,23 @@ public class HtmlUnit {
     return (HtmlElement)list.get(0);
   }
 
-  public static HtmlElement getElementWithAttribute(HtmlElement container, Class expectedClass, String tagName, String attributeName, String attributeValue) {
+  public static HtmlElement getElementWithAttribute(HtmlElement container,
+                                                    Class expectedClass,
+                                                    String tagName,
+                                                    String attributeName,
+                                                    String attributeValue) throws WebParsingError {
     HtmlElement result = getElementWithAttribute(container, tagName, attributeName, attributeValue);
     checkClass(container, expectedClass, result, "<" + tagName + "> with " + attributeName + "=" + attributeValue);
     return result;
   }
 
-  public static HtmlElement getFirstElementWithAttribute(HtmlElement container, Class expectedClass, String tagName, String attributeName, String attributeValue) {
+  public static HtmlElement getFirstElementWithAttribute(HtmlElement container, Class expectedClass, String tagName, String attributeName, String attributeValue) throws WebParsingError {
     HtmlElement result = getFirstElementWithAttribute(container, tagName, attributeName, attributeValue);
     checkClass(container, expectedClass, result, "<" + tagName + "> with " + attributeName + "=" + attributeValue);
     return result;
   }
 
-  public static HtmlElement getFirstParent(HtmlElement element, String tag) {
+  public static HtmlElement getFirstParent(HtmlElement element, String tag) throws WebParsingError {
     for (DomNode parent = element.getParentNode(); parent != null; parent = parent.getParentNode()) {
       String tagName = parent.getNodeName();
       if (tag.equalsIgnoreCase(tagName)) {
@@ -86,7 +96,10 @@ public class HtmlUnit {
     throw new WebParsingError(element, "No parent found with tag <" + tag + ">");
   }
 
-  private static void checkClass(HtmlElement container, Class expectedClass, HtmlElement result, String elementName) {
+  private static void checkClass(HtmlElement container,
+                                 Class expectedClass,
+                                 HtmlElement result,
+                                 String elementName) throws WebParsingError {
     if (!expectedClass.isAssignableFrom(result.getClass())) {
       fail(container, "Actual HtmlElement for "+ elementName + " is " +
                       result.getClass().getName() + " instead of " + expectedClass.getName() +
@@ -176,7 +189,7 @@ public class HtmlUnit {
     return label.getAttribute("for");
   }
 
-  private static void fail(HtmlElement container, String message) {
+  private static void fail(HtmlElement container, String message) throws WebParsingError {
     throw new WebParsingError(container, message);
   }
 }

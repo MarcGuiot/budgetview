@@ -45,7 +45,7 @@ public class CreditMutuelArkea extends WebBankConnector {
     super(BANK_ID, repository, directory);
   }
 
-  public JPanel getPanel() {
+  protected JPanel createPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/userAndPasswordPanel.splits");
 
@@ -69,8 +69,8 @@ public class CreditMutuelArkea extends WebBankConnector {
             }
           });
         }
-        catch (IOException e) {
-          e.printStackTrace();
+        catch (Exception e) {
+          notifyErrorFound(e);
         }
       }
     };
@@ -83,7 +83,11 @@ public class CreditMutuelArkea extends WebBankConnector {
     codeField.requestFocus();
   }
 
-  public void downloadFile() {
+  public void reset() {
+    // TODO: remettre en etat apres exception
+  }
+
+  public void downloadFile() throws Exception {
     WebPage web = new WebPage(browser, browser.getCurrentHtmlPage());
     WebForm webForm = web.getFormByName("choixCompte");
     for (Glob glob : this.accounts) {
@@ -116,7 +120,7 @@ public class CreditMutuelArkea extends WebBankConnector {
         for (Glob glob : accounts) {
           HtmlElement link = htmlElements.get(0);
           if (link.getTextContent().contains(glob.get(RealAccount.NAME))) {
-            File file = downloadFile(glob, link);
+            File file = downloadQifFile(glob, link);
             repository.update(glob.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
             break;
           }
@@ -125,7 +129,7 @@ public class CreditMutuelArkea extends WebBankConnector {
     }
   }
 
-  protected File downloadFile(Glob realAccount, HtmlElement anchor) {
+  protected File downloadQifFile(Glob realAccount, HtmlElement anchor) {
     try {
       Page page1 = anchor.click();
       TextPage page = (TextPage)page1;
@@ -141,9 +145,9 @@ public class CreditMutuelArkea extends WebBankConnector {
 
   private class ValiderActionListener implements ActionListener {
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent event) {
       try {
-        notifyIdentification();
+        notifyIdentificationInProgress();
         HtmlForm form = page.getFormByName("formIdentification");
         HtmlInput personne = form.getInputByName("noPersonne");
         HtmlInput password = form.getInputByName("motDePasse");
@@ -167,8 +171,8 @@ public class CreditMutuelArkea extends WebBankConnector {
         }
         doImport();
       }
-      catch (IOException e1) {
-        throw new RuntimeException(page.asXml(), e1);
+      catch (Exception e) {
+        throw new RuntimeException(page.asXml(), e);
       }
       finally {
         notifyWaitingForUser();

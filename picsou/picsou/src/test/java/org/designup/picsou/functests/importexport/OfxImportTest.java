@@ -665,9 +665,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
   public void testAutomaticallySelectsAccountWhenSeveralAccountsHaveTheSameNumber() throws Exception {
 
-    // Cf l'email support sur l'import de fichiers LCL où les comptes courant et carte
-    // ont le même numéro de compte
-//    fail("[RM] Que faisons-nous ");
+    // Cas de l'import de fichiers LCL où les comptes courant et carte ont le même numéro de compte
 
     mainAccounts.createMainAccount("Account A", 100.00);
     mainAccounts.createMainAccount("Account B", 100.00);

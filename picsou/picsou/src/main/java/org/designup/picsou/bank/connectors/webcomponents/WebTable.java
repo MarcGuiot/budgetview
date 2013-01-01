@@ -15,7 +15,25 @@ public class WebTable extends WebComponent<HtmlTable> {
     super(browser, table);
   }
 
-  public WebPanel getRowPanelWithText(String label) {
+  public List<WebTableRow> getRows(int count) {
+    return convertRows(node.getRows());
+  }
+
+  public List<WebTableRow> getRowsExceptLast(int count) {
+    List<HtmlTableRow> rows = node.getRows();
+    rows= rows.subList(0, rows.size() - count - 1);
+    return convertRows(rows);
+  }
+
+  private List<WebTableRow> convertRows(List<HtmlTableRow> rows) {
+    List<WebTableRow> result = new ArrayList<WebTableRow>();
+    for (HtmlTableRow row : rows) {
+      result.add(new WebTableRow(browser, row));
+    }
+    return result;
+  }
+
+  public WebTableRow getRowWithText(String label) throws WebParsingError {
     HtmlTableRow result = null;
     for (Iterator iter = node.getRows().iterator(); iter.hasNext(); ) {
       HtmlTableRow row = (HtmlTableRow)iter.next();
@@ -30,7 +48,7 @@ public class WebTable extends WebComponent<HtmlTable> {
     if (result == null) {
       throw new WebParsingError(this, "No row was found with text '" + label + "' - actual table content:\n" + dump(node));
     }
-    return new WebPanel(browser, result);
+    return new WebTableRow(browser, result);
   }
 
   public WebTableColumn getColumn(int columnIndex) {
@@ -44,7 +62,7 @@ public class WebTable extends WebComponent<HtmlTable> {
     return new WebTableColumn(cells);
   }
 
-  public String[][] getContent() {
+  public String[][] getContentAsText() {
     List list = new ArrayList();
     for (Iterator iterator = node.getRows().iterator(); iterator.hasNext(); ) {
       HtmlTableRow row = (HtmlTableRow)iterator.next();

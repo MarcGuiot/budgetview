@@ -1,12 +1,22 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.utils.Lang;
 import org.uispec4j.Table;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.UISpecAssert;
+
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class OtherBankSynchroChecker extends SynchroChecker {
 
   public OtherBankSynchroChecker(ImportDialogChecker importDialogChecker, Window window) {
     super(importDialogChecker, window, "update");
+  }
+
+  public SynchroChecker checkPanelShown() {
+    assertThat(window.getTextBox("title").textEquals(Lang.get("import.synchro.title")));
+    assertThat(window.getTable("table").isVisible());
+    return this;
   }
 
   public OtherBankSynchroChecker createAccount(String number, String name, String position) {
@@ -49,4 +59,23 @@ public class OtherBankSynchroChecker extends SynchroChecker {
     return this;
   }
 
+  public OtherBankSynchroChecker checkNoAccountDisplayed() {
+    assertThat(window.getTable("table").isEmpty());
+    return this;
+  }
+
+  public MessageDialogChecker checkIdentificationFailedError() {
+    window.getComboBox().select("Identification failed");
+    return MessageDialogChecker.open(window.getButton("update").triggerClick());
+  }
+
+  public MessageAndDetailsDialogChecker checkConnectionException() {
+    window.getComboBox().select("Connection error");
+    return MessageAndDetailsDialogChecker.init(window.getButton("update").triggerClick());
+  }
+
+  public OtherBankSynchroChecker clearErrors() {
+    window.getComboBox().select("No error");
+    return this;
+  }
 }

@@ -40,10 +40,8 @@ public class CicConnector extends WebBankConnector {
     browser.setJavascriptEnabled(false);
   }
 
-  public JPanel getPanel() {
-
+  protected JPanel createPanel() {
     userAndPasswordPanel = new UserAndPasswordPanel(new ConnectAction(), directory);
-
     Thread thread = new Thread() {
       public void run() {
         try {
@@ -56,13 +54,12 @@ public class CicConnector extends WebBankConnector {
             }
           });
         }
-        catch (IOException e) {
-          e.printStackTrace();
+        catch (Exception e) {
+          notifyErrorFound(e);
         }
       }
     };
     thread.start();
-
     return userAndPasswordPanel.getPanel();
   }
 
@@ -70,10 +67,13 @@ public class CicConnector extends WebBankConnector {
     userAndPasswordPanel.requestFocus();
   }
 
+  public void reset() {
+  }
+
   private class ConnectAction implements ActionListener {
 
     public void actionPerformed(ActionEvent event) {
-      notifyIdentification();
+      notifyIdentificationInProgress();
       userAndPasswordPanel.setEnabled(false);
       userAndPasswordPanel.setFieldsEnabled(false);
       Thread thread = new Thread(new Runnable() {
@@ -83,21 +83,27 @@ public class CicConnector extends WebBankConnector {
             WebForm idForm = homePage.getFormByName("ident");
             idForm.getTextFieldById("e_identifiant").setText(userAndPasswordPanel.getUser());
             idForm.getTextFieldById("e_mdp").setText(userAndPasswordPanel.getPassword());
-            idForm.submit();
+            WebPage loggedInPage = idForm.submit();
+            if (loggedInPage.getUrl().contains("www.cic.fr/cic/fr/banque/espace_personnel")) {
+              userAndPasswordPanel.requestFocus();
+              notifyErrorFound("synchro.invalid.id");
+              return;
+            }
 
             WebPage downloadPage = browser.load(DOWNLOAD_PAGE_ADDRESS);
             WebForm downloadForm = downloadPage.getFormByName("CMFormTelechargement");
             WebTable accountTable = downloadForm.getTableWithNamedInput("compte");
             WebTableColumn column = accountTable.getColumn(1);
             for (WebTableCell cell : column) {
-              createOrUpdateRealAccount(cell.asText(), "", null, null, BANK_ID);
+              AccountLabels accountLabels = new AccountLabels(cell.asText());
+              createOrUpdateRealAccount(accountLabels.accountName, accountLabels.accountNumber, null, null, BANK_ID);
             }
             doImport();
           }
           catch (final Exception e) {
             SwingUtilities.invokeLater(new Runnable() {
               public void run() {
-                notifyErrorFound(e.getMessage());
+                notifyErrorFound(e);
               }
             });
           }
@@ -107,7 +113,7 @@ public class CicConnector extends WebBankConnector {
     }
   }
 
-  public void downloadFile() {
+  public void downloadFile() throws Exception {
     WebPage downloadPage = browser.getCurrentPage();
     WebForm downloadForm = downloadPage.getFormByName("CMFormTelechargement");
 
@@ -119,32 +125,39 @@ public class CicConnector extends WebBankConnector {
       cell.getCheckBox().setChecked(true);
     }
 
-//    for (Glob glob : this.accounts) {
-//      int count = accountsTable.getRowCount();
-//      for (int i = 1; i < count; i++) {
-//        if (accountsTable.getCellAt(i, 1).getTextContent().contains(glob.get(RealAccount.NAME))) {
-//          try {
-//            java.util.List<HtmlElement> elementList = accountsTable.getCellAt(i, 0).getHtmlElementsByTagName(HtmlInput.TAG_NAME);
-//            if (elementList.size() == 1) {
-//              elementList.get(0).click();
-//            }
-//          }
-//          catch (IOException e) {
-//            throw new RuntimeException(e);
-//          }
-//        }
-//      }
-//    }
-
     notifyDownloadInProgress();
     Download download = downloadForm.submitByNameAndDownload("submit");
     File file = download.saveAsOfx();
     for (WebTableCell cell : accountTable.getColumn(1)) {
-      for (Glob glob : accounts) {
-        if (cell.asText().trim().contains(glob.get(RealAccount.NAME))) {
-          repository.update(glob.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+      for (Glob realAccount : accounts) {
+        if (cell.asText().trim().contains(realAccount.get(RealAccount.NAME))) {
+          repository.update(realAccount.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
         }
       }
+    }
+  }
+
+  private class AccountLabels {
+
+    public String accountNumber;
+    public String accountName;
+
+    private AccountLabels(String label) {
+      StringBuilder numberBuilder = new StringBuilder();
+      for (int i = 0; i < label.length(); i++) {
+        if (Character.isDigit(label.charAt(i))) {
+          numberBuilder.append(label.charAt(i));
+        }
+        else if (!Character.isSpaceChar(label.charAt(i))) {
+          accountName = label.substring(i, label.length());
+          break;
+        }
+      }
+      accountNumber = numberBuilder.toString();
+    }
+
+    public String toString() {
+      return accountNumber + " / " + accountName;
     }
   }
 }

@@ -53,7 +53,7 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
       return;
     }
 
-    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importFileSelectionPanel.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importFileSelectionPanel.splits",
                                     localRepository, localDirectory);
 
     initFileField();

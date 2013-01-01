@@ -73,12 +73,20 @@ public class WebConnectorLauncher {
       System.out.println("Identification in progress...");
     }
 
+    public void identificationFailed() {
+      System.out.println("Identification failed...");
+    }
+
     public void waitingForUser() {
       System.out.println("Waiting for user...");
     }
 
     public void errorFound(String errorMessage) {
       System.out.println("Error: " + errorMessage);
+    }
+
+    public void errorFound(Exception exception) {
+      System.out.println("Exception: " + exception.getMessage());
     }
 
     public void importCompleted(GlobList realAccounts) {

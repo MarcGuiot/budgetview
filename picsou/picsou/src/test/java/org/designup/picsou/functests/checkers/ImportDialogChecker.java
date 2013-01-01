@@ -5,6 +5,7 @@ import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.importer.steps.ImportCompletionPanel;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
+import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.FileChooserHandler;
@@ -120,14 +121,12 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public void completeImport() {
-    TextBox box = dialog.getTextBox("importMessage");
-    assertTrue(box.textIsEmpty());
+    assertTrue(dialog.getTextBox("importMessage").textIsEmpty());
     validateAndComplete(-1, -1, -1, dialog, "import.preview.ok");
   }
 
   public void completeImportWithNext() {
-    TextBox box = dialog.getTextBox("importMessage");
-    assertTrue(box.textIsEmpty());
+    assertTrue(dialog.getTextBox("importMessage").textIsEmpty());
     validateAndComplete(-1, -1, -1, dialog, "import.preview.noOperation.ok");
   }
 
@@ -452,8 +451,16 @@ public class ImportDialogChecker extends GuiChecker {
     return ((JComboBox)component.getAwtComponent()).getSelectedItem() == null;
   }
 
-  public void waitAcceptFiles() {
-    UISpecAssert.waitUntil(dialog.containsLabel(Lang.get("import.preview.title")), 10000);
+  public void waitForPreview() {
+    UISpecAssert.waitUntil(new Assertion() {
+      private String expectedTitle = Lang.get("import.preview.title");
+      public void check() {
+        if (!dialog.containsLabel(expectedTitle).isTrue()) {
+          UISpecAssert.fail("Current title is '" + dialog.getTextBox("title").getText()
+                            + "' instead of '" + expectedTitle + "'");
+        }
+      }
+    }, 10000);
   }
 
   public ImportDialogChecker setAsCreditCard() {

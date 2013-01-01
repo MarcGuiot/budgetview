@@ -87,7 +87,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
       return;
     }
 
-    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importPreviewPanel.splits", localRepository, localDirectory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importPreviewPanel.splits", localRepository, localDirectory);
     cardHandler = builder.addCardHandler("mainCardOperations");
     noOperationLabel = new JEditorPane();
     builder.add("noOperationLabel", noOperationLabel);

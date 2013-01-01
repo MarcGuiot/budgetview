@@ -107,6 +107,7 @@ public class ImportDialog implements RealAccountImporter {
     this.mainPanel.add(stepPanel.getPanel());
     this.dialog.pack();
     GuiUtils.center(dialog);
+    stepPanel.requestFocus();
   }
 
   private void loadLocalRepository(GlobRepository repository) {

@@ -35,7 +35,7 @@ public class ImportCompletionPanel extends AbstractImportStepPanel {
       return;
     }
 
-    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importCompletionPanel.splits", localRepository, localDirectory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importCompletionPanel.splits", localRepository, localDirectory);
 
     message = GuiUtils.createReadOnlyHtmlComponent();
 

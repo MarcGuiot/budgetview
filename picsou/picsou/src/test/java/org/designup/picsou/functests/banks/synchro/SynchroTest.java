@@ -31,8 +31,9 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     importPanel.checkSynchroButtonHidden();
 
     OtherBankSynchroChecker synchro = operations.openImportDialog().openSynchro("Other");
-    synchro.createAccount("principal", "principal", "100.", path);
+    synchro.createAccount("000123", "principal", "100.", path);
     synchro.doImportAndWaitForPreview()
+      .checkAccount("principal")
       .setMainAccount()
       .completeImport();
 
@@ -192,7 +193,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
 
   public void testImportTwoAccountsInSameOfxFile() throws Exception {
 
-    String path =OfxBuilder
+    String path = OfxBuilder
       .init(this)
       .addBankAccount(30004, 12345, "000123", 100.00, "2006/01/23")
       .addTransaction("2006/01/23", -10.00, "Menu K")
@@ -288,5 +289,46 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .selectAccount("Main account")
       .completeImport();
     importPanel.checkSynchroVisible();
+  }
+
+  public void testManagingConnectionErrors() throws Exception {
+    String path = QifBuilder
+      .init(this)
+      .addTransaction("2006/01/23", -1.1, "Menu K")
+      .save();
+
+    OtherBankSynchroChecker synchro = operations.openImportDialog().openSynchro("Other");
+    synchro
+      .checkNoAccountDisplayed()
+      .createAccount("000123", "principal", "100.", path);
+    synchro.checkIdentificationFailedError()
+      .checkTitle("Login failed")
+      .checkMessageContains("The identifier and password you provided have been rejected")
+      .close();
+    synchro.checkPanelShown();
+    synchro.checkConnectionException()
+      .checkTitle("Download error")
+      .checkMessageContains("A problem was found")
+      .checkMessageContains("support@mybudgetview.com")
+      .checkDetailsContain("bank: [other]")
+      .checkDetailsContain("location: [current]")
+      .checkDetailsContain("java.lang.RuntimeException: boom")
+      .close();
+    synchro
+      .clearErrors()
+      .selectAccount(0)
+      .setFile(path)
+      .doImportAndWaitForPreview()
+      .checkAccount("principal")
+      .setMainAccount()
+      .completeImport();
+
+    importPanel.checkImportMessage("Import other operations");
+    importPanel.checkSynchroMessage("Download your accounts from Other");
+
+    transactions.initContent()
+      .add("23/01/2006", TransactionType.PRELEVEMENT, "MENU K", "", -1.10)
+      .check();
+
   }
 }

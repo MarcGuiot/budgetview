@@ -15,7 +15,7 @@ public class WebComboBox extends WebComponent<HtmlSelect> {
     super(browser, select);
   }
 
-  public void select(String entry) {
+  public void select(String entry) throws WebParsingError {
     boolean found = false;
     for (Iterator iterator = node.getOptions().iterator(); iterator.hasNext(); ) {
       HtmlOption option = (HtmlOption)iterator.next();
@@ -33,7 +33,7 @@ public class WebComboBox extends WebComponent<HtmlSelect> {
     }
   }
 
-  public void checkSelectionEquals(String value) {
+  public void checkSelectionEquals(String value) throws WebParsingError {
     List selection = node.getSelectedOptions();
     if (selection.isEmpty()) {
       throw new WebParsingError(this, "No selection - actual content:\n" + node);

@@ -57,7 +57,7 @@ public class SgConnector extends WebBankConnector {
     super(BANK_ID, repository, directory);
   }
 
-  public JPanel getPanel() {
+  protected JPanel createPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/sgConnectorPanel.splits");
     initCardCode(builder);
@@ -73,7 +73,7 @@ public class SgConnector extends WebBankConnector {
           });
         }
         catch (Exception e) {
-          notifyErrorFound(e.getMessage());
+          notifyErrorFound(e);
         }
         finally {
           notifyWaitingForUser();
@@ -86,6 +86,10 @@ public class SgConnector extends WebBankConnector {
 
   public void panelShown() {
     userIdField.requestFocus();
+  }
+
+  public void reset() {
+    // TODO
   }
 
   private void initCardCode(SplitsBuilder builder) {
@@ -135,7 +139,7 @@ public class SgConnector extends WebBankConnector {
       try {
         DomElement elementById = page.getElementById("codcli");
         ((HtmlInput)elementById).setValueAttribute(userIdField.getText());
-        notifyIdentification();
+        notifyIdentificationInProgress();
         Page newPage = ((HtmlElement)page.getElementById("button")).click();
         notifyWaitingForUser();
 //        System.out.println("SG$ValiderActionListener.actionPerformed " + newPage);
@@ -168,7 +172,7 @@ public class SgConnector extends WebBankConnector {
       }
       catch (Exception e) {
         Log.write(page.asXml());
-        notifyErrorFound(e.getMessage());
+        notifyErrorFound(e);
       }
     }
 
@@ -188,7 +192,7 @@ public class SgConnector extends WebBankConnector {
           passwordField.setText(passwordInput.getValueAttribute());
         }
         catch (IOException e) {
-          notifyErrorFound(e.getMessage());
+          notifyErrorFound(e);
         }
       }
     }
@@ -280,8 +284,8 @@ public class SgConnector extends WebBankConnector {
             doImport();
           }
         }
-        catch (IOException e1) {
-          e1.printStackTrace();
+        catch (Exception e1) {
+          notifyErrorFound(e1);
         }
         finally {
           notifyWaitingForUser();
@@ -290,7 +294,7 @@ public class SgConnector extends WebBankConnector {
     }
   }
 
-  public void downloadFile() {
+  public void downloadFile() throws Exception {
     HtmlSelect compte = getElementById("compte");
     List<HtmlOption> accountList = compte.getOptions();
     for (int i = 0, size = accountList.size(); i < size; i++) {
@@ -323,7 +327,7 @@ public class SgConnector extends WebBankConnector {
               accountList = compte.getOptions();
             }
             catch (IOException e1) {
-              Log.write("Can not load page");
+              notifyErrorFound(e1);
               return;
             }
           }
@@ -360,7 +364,7 @@ public class SgConnector extends WebBankConnector {
     return htmlElements.get(0);
   }
 
-  private File downloadFor(Glob realAccount) {
+  private File downloadFor(Glob realAccount) throws Exception {
     HtmlElement div = getElementById("logicielFull");
     String style = div.getAttribute("style");
     if (Strings.isNotEmpty(style)) {
@@ -413,6 +417,6 @@ public class SgConnector extends WebBankConnector {
     }
     HtmlAnchor anchor = findLink(page.getAnchors(), "telecharger");
 
-    return downloadFile(realAccount, anchor);
+    return downloadQifFile(realAccount, anchor);
   }
 }

@@ -11,7 +11,7 @@ public class WebLink extends WebComponent<HtmlAnchor> {
     super(browser, anchor);
   }
 
-  public WebPage click() {
+  public WebPage click() throws WebCommandFailed {
     try {
       return browser.setCurrentPage(node.click());
     }

@@ -211,25 +211,25 @@ public class ImportSession {
   }
 
   private Glob findExistingRealAccount(Glob account) {
-    GlobList matchingAccount = new GlobList();
+    GlobList matchingAccounts = new GlobList();
     GlobList globList = localRepository.getAll(RealAccount.TYPE);
     for (Glob glob : globList) {
       if (RealAccount.areStrictlyEquivalent(account, glob)) {
-        matchingAccount.add(glob);
+        matchingAccounts.add(glob);
       }
     }
-    if (matchingAccount.isEmpty()) {
+    if (matchingAccounts.isEmpty()) {
       for (Glob glob : globList) {
         if (RealAccount.areEquivalent(account, glob)) {
-          matchingAccount.add(glob);
+          matchingAccounts.add(glob);
         }
       }
-      if (matchingAccount.isEmpty()) {
+      if (matchingAccounts.isEmpty()) {
         return localRepository.get(account.getKey());
       }
     }
-    if (matchingAccount.size() == 1) {
-      Glob first = matchingAccount.getFirst();
+    if (matchingAccounts.size() == 1) {
+      Glob first = matchingAccounts.getFirst();
       localRepository.update(account.getKey(), RealAccount.ACCOUNT, first.get(RealAccount.ACCOUNT));
 //      RealAccount.copy(localRepository, matchingAccount.getFirst(), account);
 //      localRepository.delete(account.getKey());

@@ -9,6 +9,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.designup.picsou.bank.connectors.webcomponents.WebBrowser;
 import org.designup.picsou.bank.connectors.webcomponents.utils.Download;
+import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
+import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -29,9 +31,17 @@ public abstract class WebBankConnector extends AbstractBankConnector {
   protected HtmlPage page;
 
   public WebBankConnector(Integer bankId, GlobRepository repository, Directory directory) {
-    super(directory, repository, bankId);
+    super(bankId, repository, directory);
     this.bankId = bankId;
     this.browser = new WebBrowser(new ErrorAlertHandler());
+  }
+
+  public String getBank() {
+    return "[" + bankId + "]";
+  }
+
+  public String getCurrentLocation() {
+    return browser.getUrl();
   }
 
   /**
@@ -51,12 +61,12 @@ public abstract class WebBankConnector extends AbstractBankConnector {
     }
   }
 
-  protected void loadPage(final String url) throws IOException {
+  protected void loadPage(final String url) throws WebCommandFailed {
     browser.load(url);
     page = browser.getCurrentHtmlPage();
   }
 
-  protected <T extends HtmlElement> T getElementById(final String id) {
+  protected <T extends HtmlElement> T getElementById(final String id) throws WebParsingError {
     return browser.getElementById(id);
   }
 
@@ -69,7 +79,8 @@ public abstract class WebBankConnector extends AbstractBankConnector {
     throw new RuntimeException("Can not find ref '" + ref + "' in :\n" + page.asXml());
   }
 
-  protected File downloadFile(Glob realAccount, HtmlElement anchor) {
+  /** @deprecated use webcomponents */
+  protected File downloadQifFile(Glob realAccount, HtmlElement anchor) throws WebCommandFailed {
     Download download = new Download(browser, anchor);
     return download.saveAsQif(realAccount);
   }

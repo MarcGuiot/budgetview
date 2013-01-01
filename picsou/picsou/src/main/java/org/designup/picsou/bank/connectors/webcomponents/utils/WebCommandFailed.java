@@ -1,8 +1,6 @@
 package org.designup.picsou.bank.connectors.webcomponents.utils;
 
-import org.globsframework.utils.exceptions.GlobsException;
-
-public class WebCommandFailed extends GlobsException {
+public class WebCommandFailed extends Exception {
   public WebCommandFailed(String message) {
     super(message);
   }

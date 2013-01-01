@@ -18,10 +18,14 @@
         <textField ref="file"/>
       </row>
       <button ref="add"/>
+
       <scrollPane>
         <table ref="table"/>
       </scrollPane>
-      <button ref="update"/>
+
+      <comboBox ref="errorModeCombo"/>
+
+      <button action="update"/>
     </column>
   </panel>
 </splits>

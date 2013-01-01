@@ -94,7 +94,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
     };
   }
 
-  public JPanel getPanel() {
+  protected JPanel createPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/bnpConnectorPanel.splits");
     initCardCode(builder);
@@ -150,6 +150,10 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
 
   public void panelShown() {
     code.requestFocus();
+  }
+
+  public void reset() {
+    // TODO: remettre en etat apres exception
   }
 
   private void initImg() {
@@ -226,7 +230,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
 
       public void actionPerformed(ActionEvent e) {
         try {
-          notifyIdentification();
+          notifyIdentificationInProgress();
           page = (HtmlPage)img.click();
           getClient().waitForBackgroundJavaScript(10000);
 
@@ -311,7 +315,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
     }
   }
 
-  public void downloadFile() {
+  public void downloadFile() throws Exception {
     HtmlSelect compte = getElementById("compte");
     List<HtmlOption> accountList = compte.getOptions();
     for (HtmlOption option : accountList) {
@@ -354,7 +358,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
     return htmlElements.get(0);
   }
 
-  private File downloadFor(Glob realAccount) {
+  private File downloadFor(Glob realAccount) throws Exception {
     HtmlElement div = getElementById("logicielFull");
     String style = div.getAttribute("style");
     if (Strings.isNotEmpty(style)) {
@@ -407,7 +411,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
     }
     HtmlAnchor anchor = findLink(page.getAnchors(), "telecharger");
 
-    return downloadFile(realAccount, anchor);
+    return downloadQifFile(realAccount, anchor);
   }
 
   public static BufferedImage getFirstImage(HtmlImage img) {

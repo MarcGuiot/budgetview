@@ -8,11 +8,15 @@ public interface SynchroMonitor {
 
   void identificationInProgress();
 
+  void identificationFailed();
+
   void downloadInProgress();
 
   void waitingForUser();
 
   void errorFound(String errorMessage);
+
+  void errorFound(Exception exception);
 
   void importCompleted(GlobList realAccounts);
 
@@ -23,6 +27,9 @@ public interface SynchroMonitor {
     public void identificationInProgress() {
     }
 
+    public void identificationFailed() {
+    }
+
     public void downloadInProgress() {
     }
 
@@ -30,6 +37,9 @@ public interface SynchroMonitor {
     }
 
     public void errorFound(String errorMessage) {
+    }
+
+    public void errorFound(Exception exception) {
     }
 
     public void importCompleted(GlobList realAccounts) {

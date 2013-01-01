@@ -4,6 +4,7 @@ import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.bank.connectors.SynchroMonitor;
 import org.designup.picsou.gui.components.ProgressPanel;
+import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.importer.ImportController;
@@ -16,6 +17,8 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Collections;
 import java.util.Stack;
 
@@ -52,7 +55,7 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       return;
     }
 
-    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importSynchroPanel.splits", repository, localDirectory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importSynchroPanel.splits", repository, localDirectory);
 
     builder.add("connectorPanel", connectorPanel);
 
@@ -101,6 +104,7 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       return;
     }
     if (currentConnectors.isEmpty()) {
+      currentConnector = null;
       importer.importAccounts(importedRealAccounts);
       return;
     }
@@ -127,6 +131,15 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       progressLabel.setText(Lang.get("import.synchro.progress.identificationInProgress"));
     }
 
+    public void identificationFailed() {
+      if (closed) {
+        return;
+      }
+      progressPanel.stop();
+      progressLabel.setText("");
+      MessageDialog.show("synchro.login.failed.title", dialog, localDirectory, "synchro.login.failed.message");
+    }
+
     public void downloadInProgress() {
       if (closed) {
         return;
@@ -148,6 +161,27 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
         return;
       }
       MessageDialog.show("bank.error", dialog, localDirectory, "bank.error.msg", errorMessage);
+    }
+
+    public void errorFound(Exception exception) {
+      if (closed) {
+        return;
+      }
+      StringWriter builder = new StringWriter();
+      if (currentConnector != null) {
+        builder.append("bank: ").append(currentConnector.getBank()).append("\n");
+        builder.append("location: ").append(currentConnector.getCurrentLocation()).append("\n");
+      }
+      else {
+        builder.append("no current connector\n");
+      }
+      builder.append("exception:\n");
+      exception.printStackTrace(new PrintWriter(builder));
+      String details = builder.toString();
+      MessageAndDetailsDialog messageDialog =
+        new MessageAndDetailsDialog("synchro.exception.title", "synchro.exception.message", details,
+                                    dialog, localDirectory);
+      messageDialog.show();
     }
 
     public void importCompleted(GlobList realAccounts) {

@@ -25,17 +25,17 @@ public class Download {
     this.element = element;
   }
 
-  public File saveAsOfx() {
+  public File saveAsOfx() throws WebCommandFailed {
     return doSave(".ofx", null, "all accounts");
   }
 
-  public File saveAsQif(final Glob realAccount) {
+  public File saveAsQif(final Glob realAccount) throws WebCommandFailed {
     return doSave(".qif",
                   ("! accountId=" + realAccount.get(RealAccount.ID) + "\n").getBytes(),
                   GlobPrinter.toString(realAccount));
   }
 
-  private File doSave(String extension, byte[] prefix, String message) {
+  private File doSave(String extension, byte[] prefix, String message) throws WebCommandFailed {
     WebResponse response = getWebResponse(message);
     InputStream contentAsStream = getStream(response, message);
 
@@ -50,13 +50,13 @@ public class Download {
       file.deleteOnExit();
     }
     catch (IOException e) {
-      throw new WebCommandFailed(e, "Can not create temporary file: " +
+      throw new WebCommandFailed(e, "Cannot create temporary file: " +
                                     (file != null ? file.getAbsolutePath() : "?"));
     }
     return file;
   }
 
-  private InputStream getStream(WebResponse response, String message) {
+  private InputStream getStream(WebResponse response, String message) throws WebCommandFailed {
     InputStream contentAsStream = null;
     try {
       contentAsStream = response.getContentAsStream();
@@ -67,7 +67,7 @@ public class Download {
     return contentAsStream;
   }
 
-  private WebResponse getWebResponse(String message) {
+  private WebResponse getWebResponse(String message) throws WebCommandFailed {
     Log.write("download " + message);
     DownloadAttachmentHandler downloadAttachmentHandler = new DownloadAttachmentHandler();
     browser.getClient().setAttachmentHandler(downloadAttachmentHandler);

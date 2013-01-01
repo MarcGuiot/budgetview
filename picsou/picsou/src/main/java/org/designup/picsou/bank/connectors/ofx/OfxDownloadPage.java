@@ -1,7 +1,6 @@
 package org.designup.picsou.bank.connectors.ofx;
 
 import org.designup.picsou.bank.connectors.AbstractBankConnector;
-import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.importer.components.OfxSecurityInfoButton;
 import org.designup.picsou.importer.ofx.OfxConnection;
 import org.designup.picsou.model.RealAccount;
@@ -30,13 +29,21 @@ public class OfxDownloadPage extends AbstractBankConnector {
   private OfxDownloadPage.ValidateAction validateAction;
 
   public OfxDownloadPage(GlobRepository repository, Directory directory, Integer bankId, String url, String org, String fid) {
-    super(directory, repository, bankId);
+    super(bankId, repository, directory);
     this.url = url;
     this.org = org;
     this.fid = fid;
   }
 
-  public JPanel getPanel() {
+  public String getBank() {
+    return "[" + Integer.toString(bankId) + "] ";
+  }
+
+  public String getCurrentLocation() {
+    return url;
+  }
+
+  protected JPanel createPanel() {
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/ofxDownloadPage.splits");
 
@@ -77,7 +84,11 @@ public class OfxDownloadPage extends AbstractBankConnector {
     codeField.requestFocus();
   }
 
-  public void downloadFile() {
+  public void reset() {
+    // TODO: remettre en etat apres exception
+  }
+
+  public void downloadFile() throws Exception {
     for (Glob account : this.accounts) {
       try {
         File file = File.createTempFile("download", ".ofx");
@@ -87,7 +98,7 @@ public class OfxDownloadPage extends AbstractBankConnector {
         repository.update(account.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
       }
       catch (IOException e) {
-        throw new RuntimeException(e);
+        notifyErrorFound(e);
       }
     }
   }
@@ -125,7 +136,7 @@ public class OfxDownloadPage extends AbstractBankConnector {
             doImport();
           }
           catch (RuntimeException exception) {
-            notifyErrorFound(exception.getMessage());
+            notifyErrorFound(exception);
           }
         }
       });

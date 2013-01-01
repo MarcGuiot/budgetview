@@ -44,7 +44,7 @@ public class ImportAccountPanel extends AbstractImportStepPanel {
       return;
     }
 
-    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importAccountPanel.splits", localGlobRepository, localDirectory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importAccountPanel.splits", localGlobRepository, localDirectory);
 
     accountPanel = new AccountEditionPanel(dialog, localGlobRepository, localDirectory);
     builder.add("accountPanel", accountPanel.getPanel());

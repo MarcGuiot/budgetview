@@ -14,6 +14,7 @@ import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,8 +31,9 @@ public abstract class AbstractBankConnector implements BankConnector {
   protected LocalGlobRepository repository;
   protected GlobList accounts = new GlobList();
   private SynchroMonitor monitor = SynchroMonitor.SILENT;
+  private JPanel panel;
 
-  public AbstractBankConnector(Directory directory, GlobRepository repository, Integer bankId) {
+  public AbstractBankConnector(Integer bankId, GlobRepository repository, Directory directory) {
     this.directory = directory;
     this.bankId = bankId;
     this.repository = LocalGlobRepositoryBuilder.init(repository)
@@ -42,6 +44,15 @@ public abstract class AbstractBankConnector implements BankConnector {
   public void init(SynchroMonitor monitor) {
     this.monitor = monitor;
   }
+
+  public final JPanel getPanel() {
+    if (panel == null) {
+      panel = createPanel();
+    }
+    return panel;
+  }
+
+  protected abstract JPanel createPanel();
 
   protected void createOrUpdateRealAccount(String name, String number, String position, Date date, final Integer bankId) {
     if (Strings.isNullOrEmpty(name) && Strings.isNullOrEmpty(number)) {
@@ -114,7 +125,7 @@ public abstract class AbstractBankConnector implements BankConnector {
     return file;
   }
 
-  public abstract void downloadFile();
+  public abstract void downloadFile() throws Exception;
 
   protected Double extractAmount(String position) {
     return Amounts.extractAmount(position);
@@ -128,7 +139,8 @@ public abstract class AbstractBankConnector implements BankConnector {
       downloadFile();
     }
     catch (Exception e) {
-      monitor.errorFound(e.getMessage());
+      monitor.errorFound(e);
+      return;
     }
     repository.commitChanges(true);
     monitor.importCompleted(accounts);
@@ -138,8 +150,12 @@ public abstract class AbstractBankConnector implements BankConnector {
     monitor.initialConnection();
   }
 
-  protected void notifyIdentification() {
+  protected void notifyIdentificationInProgress() {
     monitor.identificationInProgress();
+  }
+
+  protected void notifyIdentificationFailed() {
+    monitor.identificationFailed();
   }
 
   protected void notifyDownloadInProgress() {
@@ -152,5 +168,9 @@ public abstract class AbstractBankConnector implements BankConnector {
 
   protected void notifyErrorFound(String message) {
     monitor.errorFound(message);
+  }
+
+  protected void notifyErrorFound(Exception exception) {
+    monitor.errorFound(exception);
   }
 }

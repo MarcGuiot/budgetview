@@ -19,9 +19,14 @@
 
       <label text="$import.preview.title" name="title" styleClass="title"/>
 
-      <htmlEditorPane text="$import.account.message"/>
+      <htmlEditorPane text="$import.account.message" weightY="0.1"/>
 
-      <panel ref="accountPanel"/>
+      <column styleClass="innerDialogBlock" margin="10" marginTop="5" weightY="100">
+        <panel ref="accountPanel" background="dialog.block" margin="10"/>
+        <filler fill="vertical"/>
+      </column>
+
+      <filler fill="vertical" weightY="50"/>
 
       <row>
         <filler fill="horizontal"/>

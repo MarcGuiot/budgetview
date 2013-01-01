@@ -40,8 +40,7 @@ public class AccountEditionChecker extends GuiChecker {
     BankChooserChecker.open(getBankButton().triggerClick())
       .selectBank(bankName)
       .validate();
-    assertThat(dialog.getTextBox("bankLabel")
-                 .textEquals(bankName));
+    assertThat(dialog.getTextBox("bankLabel").textEquals(bankName));
     return this;
   }
 
@@ -49,8 +48,7 @@ public class AccountEditionChecker extends GuiChecker {
     BankChooserChecker.open(getBankButton().triggerClick())
       .addNewBank(bankName, url)
       .validate();
-    assertThat(dialog.getTextBox("bankLabel")
-                 .textEquals(bankName));
+    assertThat(dialog.getTextBox("bankLabel").textEquals(bankName));
     return this;
   }
 

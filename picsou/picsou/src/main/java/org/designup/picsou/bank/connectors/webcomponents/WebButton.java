@@ -13,7 +13,7 @@ public class WebButton extends WebComponent {
     this.button = button;
   }
 
-  public WebPage click() {
+  public WebPage click() throws WebCommandFailed {
     try {
       return browser.setCurrentPage(button.click());
     }
