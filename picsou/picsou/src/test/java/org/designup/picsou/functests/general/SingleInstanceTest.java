@@ -63,7 +63,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     assertEquals(0, errorCount);
 
 
-    ImportDialogChecker importer = new ImportDialogChecker(importDialog, false);
+    ImportDialogChecker importer = new ImportDialogChecker(importDialog);
 
     String step2File = OfxBuilder.init(this)
       .addTransaction("2000/01/04", 1.2, "menu K")
@@ -120,7 +120,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       }
     });
 
-    ImportDialogChecker importer = ImportDialogChecker.openInStep2(trigger);
+    ImportDialogChecker importer = ImportDialogChecker.open(trigger);
 //    importer.checkSelectedFiles(initialFile);
 
     String step1File = OfxBuilder.init(this)
@@ -174,7 +174,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     });
     Window importDialog = WindowInterceptor.getModalDialog(trigger1);
     trigger1.waitEnd();
-    ImportDialogChecker firstImporter = new ImportDialogChecker(importDialog, false);
+    ImportDialogChecker firstImporter = new ImportDialogChecker(importDialog);
 //    firstImporter.checkSelectedFiles(initialFile);
     firstImporter.skipAndComplete();
     assertFalse(importDialog.isVisible());
@@ -186,7 +186,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     });
     importDialog = WindowInterceptor.getModalDialog(trigger2);
     trigger2.waitEnd();
-    ImportDialogChecker importer = new ImportDialogChecker(importDialog, false);
+    ImportDialogChecker importer = new ImportDialogChecker(importDialog);
 //    importer.checkSelectedFiles(initialFile);
 //    importer.acceptFile();
     importer
@@ -252,7 +252,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     Window newImportDialog = newApplication.getImportDialog();
     assertNotNull(newImportDialog);
 
-    new ImportDialogChecker(newImportDialog, false)
+    new ImportDialogChecker(newImportDialog)
       .skipAndComplete();
     picsouApplication.shutdown();
     newApplication.clear();
@@ -308,7 +308,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     Window sameImportFileDialog = sameFileApplication.getImportDialog();
     assertNotNull(sameImportFileDialog);
 
-    new ImportDialogChecker(sameImportFileDialog, false)
+    new ImportDialogChecker(sameImportFileDialog)
       .skipAndComplete();
     picsouApplication.shutdown();
   }

@@ -240,6 +240,10 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     clearMandatoryFlags();
   }
 
+  public void requestFocus() {
+    nameField.getComponent().requestFocus();
+  }
+
   private class AccountBankAction extends AbstractAction implements GlobSelectionListener {
     private Window dialog;
 

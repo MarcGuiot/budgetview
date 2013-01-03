@@ -271,7 +271,7 @@ public class TransactionCreationChecker extends ViewChecker {
     ConfirmationDialogChecker dialog = ConfirmationDialogChecker.open(getShowHideButton().triggerClick());
     dialog.checkTitle("No account");
     dialog.checkMessageContains("you must first create a bank account");
-    return AccountEditionChecker.open(dialog.getOkTrigger("Create a manual account"));
+    return AccountEditionChecker.open(dialog.getOkTrigger("Create an account"));
   }
 
   public TransactionCreationChecker createAndCheckErrorMessage(String message) {

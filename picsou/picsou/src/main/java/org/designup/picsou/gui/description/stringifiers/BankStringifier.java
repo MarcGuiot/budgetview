@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.description.stringifiers;
 
-import org.designup.picsou.bank.importer.OtherBank;
+import org.designup.picsou.bank.connectors.OtherBankConnector;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
@@ -14,7 +14,7 @@ public class BankStringifier implements GlobStringifier {
     if (bank == null) {
       return "";
     }
-    if (bank.get(Bank.ID) == OtherBank.BANK_ID){
+    if (bank.get(Bank.ID) == OtherBankConnector.BANK_ID){
       return Lang.get("bank.other.name");
     }
     return bank.get(Bank.NAME);

@@ -1,0 +1,23 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="innerDialog">
+    <column>
+      <row>
+        <label text="Entrez votre code" styleClass="formLabel"/>
+        <textField ref="code"/>
+      </row>
+      <row>
+        <panel ref="imageClavier" minimumSize="(136,136)" size="(136,136)" maximumSize="(136,136)"/>
+      </row>
+      <textField ref="password" marginTop="10" marginBottom="10"/>
+      <row>
+        <filler fill="horizontal" weightX="0.1"/>
+        <button ref="corriger" fill="none"/>
+        <button ref="valider" fill="none"/>
+        <filler fill="horizontal" weightX="0.1"/>
+      </row>
+    </column>
+  </panel>
+</splits>

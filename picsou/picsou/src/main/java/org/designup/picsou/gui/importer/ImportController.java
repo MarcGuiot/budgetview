@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.importer;
 
 import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.gui.importer.components.RealAccountImporter;
 import org.designup.picsou.gui.importer.utils.InvalidFileFormat;
 import org.designup.picsou.gui.startup.components.AutoCategorizationFunctor;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
@@ -19,6 +20,7 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.OperationCancelled;
 
@@ -28,7 +30,7 @@ import java.util.*;
 
 import static org.globsframework.model.FieldValue.value;
 
-public class ImportController {
+public class ImportController implements RealAccountImporter {
 
   private GlobRepository repository;
   private LocalGlobRepository localRepository;
@@ -45,7 +47,7 @@ public class ImportController {
 
   private final List<File> selectedFiles = new ArrayList<File>();
   private Set<Integer> importKeys = new HashSet<Integer>();
-  private GlobList realAccountWithImport = new GlobList();
+  private List<AccountWithFile> realAccountWithImport = new ArrayList<AccountWithFile>();
   private GlobList realAccountWithoutImport = new GlobList();
   private boolean isSynchro = true;
 
@@ -142,9 +144,9 @@ public class ImportController {
     File file;
     Glob realAccount = null;
     if (!realAccountWithImport.isEmpty()) {
-      realAccount = realAccountWithImport.remove(0);
-      String fileName = realAccount.get(RealAccount.FILE_NAME);
-      file = new File(fileName);
+      AccountWithFile accountWithFile = realAccountWithImport.remove(0);
+      realAccount = accountWithFile.realAccount;
+      file = new File(accountWithFile.fileName);
     }
     else {
       synchronized (selectedFiles) {
@@ -289,12 +291,36 @@ public class ImportController {
     return fileField;
   }
 
-  public void addRealAccountWithoutImport(Glob realAccount) {
+  public void showSynchro(Integer bankId) {
+    importDialog.showSynchro(bankId);
+  }
+
+  public void importAccounts(GlobList realAccounts) {
+    for (Glob realAccount : realAccounts) {
+      String file = realAccount.get(RealAccount.FILE_NAME);
+      if (Strings.isNullOrEmpty(file)) {
+        addRealAccountWithoutImport(realAccount);
+      }
+      else {
+        addRealAccountWithImport(realAccount);
+      }
+    }
+    doImport();
+  }
+
+  private void addRealAccountWithoutImport(Glob realAccount) {
     realAccountWithoutImport.add(realAccount);
   }
 
-  public void addRealAccountWithImport(Glob realAccount) {
-    realAccountWithImport.add(realAccount);
+  private void addRealAccountWithImport(Glob realAccount) {
+    String fileName = realAccount.get(RealAccount.FILE_NAME);
+    for (AccountWithFile accountWithFile : realAccountWithImport) {
+      if (Utils.equal(fileName, accountWithFile.fileName)) {
+        accountWithFile.realAccount = null;
+        return;
+      }
+    }
+    realAccountWithImport.add(new AccountWithFile(realAccount, fileName));
   }
 
   private static class HasOperationFunctor implements GlobFunctor {
@@ -369,6 +395,16 @@ public class ImportController {
           }
         }
       });
+    }
+  }
+
+  private class AccountWithFile {
+    private String fileName;
+    private Glob realAccount;
+
+    private AccountWithFile(Glob realAccount, String fileName) {
+      this.realAccount = realAccount;
+      this.fileName = fileName;
     }
   }
 }

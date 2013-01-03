@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.card;
 
-import org.designup.picsou.bank.importer.SynchronizeAction;
+import org.designup.picsou.gui.actions.SynchronizeAction;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.signpost.guides.ImportSignpost;

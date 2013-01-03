@@ -342,6 +342,11 @@ public class MainPanel {
     devMenu.add(new ChangeDateAction(repository));
     devMenu.add(new AddAccountErrorAction(repository));
     devMenu.add(threadsAction);
+    devMenu.add(new AbstractAction("TOTO") {
+      public void actionPerformed(ActionEvent event) {
+        repository.deleteAll(RealAccount.TYPE);
+      }
+    });
     return devMenu;
   }
 

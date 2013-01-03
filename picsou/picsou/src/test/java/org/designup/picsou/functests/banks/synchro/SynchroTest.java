@@ -31,8 +31,9 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     importPanel.checkSynchroButtonHidden();
 
     OtherBankSynchroChecker synchro = operations.openImportDialog().openSynchro("Other");
-    synchro.createNew("principal", "principal", "100.", path);
-    synchro.doImport()
+    synchro.createAccount("000123", "principal", "100.", path);
+    synchro.doImportAndWaitForPreview()
+      .checkAccount("principal")
       .setMainAccount()
       .completeImport();
 
@@ -54,10 +55,9 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .save();
 
     OtherBankSynchroChecker synchro = importPanel.openSynchro();
-    synchro.select(0)
-      .setFile(path);
-
-    synchro.doImport()
+    synchro.selectAccount(0)
+      .setFile(path)
+      .doImportAndWaitForPreview()
       .completeImport();
 
     transactions.initContent()
@@ -74,11 +74,11 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     ImportDialogChecker dialogChecker = operations.openImportDialog();
 
     OtherBankSynchroChecker synchro = dialogChecker.openSynchro("Other");
-    synchro.createNew("principal", "principal", "100.", path);
-    synchro.createNew("secondary", "secondary", "10.", null);
-    synchro.createNew("Livret A", "Livret A", "110.", null);
+    synchro.createAccount("principal", "principal", "100.", path);
+    synchro.createAccount("secondary", "secondary", "10.");
+    synchro.createAccount("Livret A", "Livret A", "110.");
 
-    synchro.doImport()
+    synchro.doImportAndWaitForPreview()
       .checkAccount("secondary")
       .setSavingsAccount()
       .importThisAccount()
@@ -91,7 +91,6 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkAccountNames("principal");
     savingsAccounts.checkAccountNames("secondary", "Livret A");
-
     savingsAccounts.checkAccount("secondary", 10, null);
 
     notifications.checkHidden();
@@ -99,8 +98,8 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     importPanel.openSynchro()
       .selectAccount("secondary")
       .setAmount("100")
-      .createNew("Livret B", "Livret B", "110.", null)
-      .doImport()
+      .createAccount("Livret B", "Livret B", "110.")
+      .doImportAndWaitForCompletion()
       .complete();
 
     savingsAccounts.checkAccountNames("secondary", "Livret A");
@@ -138,7 +137,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .selectAccount("principal")
       .setFile(path2)
       .setAmount("500")
-      .doImport()
+      .doImportAndWaitForPreview()
       .doImport()
       .complete();
 
@@ -167,7 +166,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .setAmount("1000")
       .selectAccount("Livret A")
       .setAmount("300")
-      .doImport()
+      .doImportAndWaitForPreview()
       .doImport()
       .complete();
 
@@ -192,7 +191,41 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testOfx() throws Exception {
+  public void testImportTwoAccountsInSameOfxFile() throws Exception {
+
+    String path = OfxBuilder
+      .init(this)
+      .addBankAccount(30004, 12345, "000123", 100.00, "2006/01/23")
+      .addTransaction("2006/01/23", -10.00, "Menu K")
+      .addBankAccount(30004, 12345, "000246", 200.00, "2006/01/23")
+      .addTransaction("2006/01/23", -20.00, "FNAC")
+      .save();
+
+    importPanel.checkImportMessage("Import your operations");
+
+    OtherBankSynchroChecker synchro = operations.openImportDialog().openSynchro("Other");
+    synchro.createAccount("000123", "principal", "100.00", path);
+    synchro.createAccount("000246", "secondaire", "200.00", path);
+    synchro.doImportAndWaitForPreview()
+      .checkAccount("Account n. 000123")
+      .checkAccountPosition(100.00)
+      .setMainAccount()
+      .doImport()
+      .checkAccount("Account n. 000246")
+      .checkAccountPosition(200.00)
+      .setMainAccount()
+      .completeImport();
+
+    importPanel.checkImportMessage("Import other operations");
+    importPanel.checkSynchroMessage("Download your accounts");
+
+    transactions.initContent()
+      .add("23/01/2006", TransactionType.PRELEVEMENT, "FNAC", "", -20.00)
+      .add("23/01/2006", TransactionType.PRELEVEMENT, "MENU K", "", -10.00)
+      .check();
+  }
+
+  public void testOfxDirectConnect() throws Exception {
     final String fileName = OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "TX 1")
@@ -222,8 +255,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .openOfxSynchro();
     synchro.checkPasswordEmpty();
     synchro.enter("a", "b");
-
-    synchro.doImport()
+    synchro.doImportAndWaitForPreview()
       .setMainAccount()
       .setAccountName("compte principale")
       .doImport()
@@ -242,7 +274,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     importPanel.checkSynchroMessage("Download your accounts from La Banque Postale");
   }
 
-  public void testImportFileDoesNotEnableSynchroButton() throws Exception {
+  public void testManuallyImportingFilesDoesNotEnableSynchroButton() throws Exception {
     final String fileName = QifBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "TX 1")
@@ -252,12 +284,51 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     importPanel.checkSynchroNotVisible();
     ImportDialogChecker dialogChecker = operations.openImportDialog();
     OtherBankSynchroChecker checker = dialogChecker.openSynchro("Other");
-    checker.createNew("principal", "principal", "100.", fileName);
-    ImportDialogChecker importDialogChecker = checker.doImport();
-    importDialogChecker
+    checker.createAccount("principal", "principal", "100.", fileName);
+    checker.doImportAndWaitForPreview()
       .selectAccount("Main account")
       .completeImport();
     importPanel.checkSynchroVisible();
   }
 
+  public void testManagingConnectionErrors() throws Exception {
+    String path = QifBuilder
+      .init(this)
+      .addTransaction("2006/01/23", -1.1, "Menu K")
+      .save();
+
+    OtherBankSynchroChecker synchro = operations.openImportDialog().openSynchro("Other");
+    synchro
+      .checkNoAccountDisplayed()
+      .createAccount("000123", "principal", "100.", path);
+    synchro.checkIdentificationFailedError()
+      .checkTitle("Login failed")
+      .checkMessageContains("The identifier and password you provided have been rejected")
+      .close();
+    synchro.checkPanelShown();
+    synchro.checkConnectionException()
+      .checkTitle("Download error")
+      .checkMessageContains("A problem was found")
+      .checkMessageContains("support@mybudgetview.com")
+      .checkDetailsContain("bank: [other]")
+      .checkDetailsContain("location: [current]")
+      .checkDetailsContain("java.lang.RuntimeException: boom")
+      .close();
+    synchro
+      .clearErrors()
+      .selectAccount(0)
+      .setFile(path)
+      .doImportAndWaitForPreview()
+      .checkAccount("principal")
+      .setMainAccount()
+      .completeImport();
+
+    importPanel.checkImportMessage("Import other operations");
+    importPanel.checkSynchroMessage("Download your accounts from Other");
+
+    transactions.initContent()
+      .add("23/01/2006", TransactionType.PRELEVEMENT, "MENU K", "", -1.10)
+      .check();
+
+  }
 }

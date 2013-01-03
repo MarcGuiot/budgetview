@@ -105,6 +105,11 @@ public class RealAccount {
            !Utils.equal(account.get(ID), glob.get(ID));
   }
 
+  public static boolean haveSameNumber(Glob account, Glob glob) {
+    return Utils.equalIgnoreCase(account.get(NUMBER), glob.get(NUMBER)) &&
+           !Utils.equal(account.get(ID), glob.get(ID));
+  }
+
   public static Glob createAccountFromImported(Glob importedAccount, GlobRepository repository, boolean isImported) {
     String amount = importedAccount.get(POSITION);
     Double position = amount != null ? Amounts.extractAmount(amount) : null;

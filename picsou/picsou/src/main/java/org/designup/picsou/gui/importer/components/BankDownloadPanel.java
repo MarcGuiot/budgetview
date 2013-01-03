@@ -8,7 +8,6 @@ import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.importer.ImportController;
 import org.designup.picsou.model.Bank;
-import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -64,8 +63,8 @@ public class BankDownloadPanel implements GlobSelectionListener {
   private void createPanel() {
 
     builder = new GlobsPanelBuilder(getClass(),
-                          "/layout/importexport/components/bankDownloadPanel.splits",
-                          repository, directory);
+                                    "/layout/importexport/components/bankDownloadPanel.splits",
+                                    repository, directory);
 
     mainCards = builder.addCardHandler("mainCards");
 
@@ -73,14 +72,9 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
     synchroPanel = new JPanel();
     builder.add("synchroPanel", synchroPanel);
-
     builder.add("synchronize", new AbstractAction(Lang.get("synchro.open")) {
       public void actionPerformed(ActionEvent actionEvent) {
-        BankSynchroService bankSynchroService = directory.get(BankSynchroService.class);
-        GlobList realAccount = bankSynchroService.show(parent, bankId, directory, repository);
-        if (!realAccount.isEmpty()) {
-          synchronize(realAccount);
-        }
+        controller.showSynchro(bankId);
       }
     });
 
@@ -174,19 +168,6 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
   public void requestFocus() {
     bankChooser.requestFocus();
-  }
-
-  public void synchronize(GlobList realAccounts) {
-    for (Glob realAccount : realAccounts) {
-      String file = realAccount.get(RealAccount.FILE_NAME);
-      if (Strings.isNullOrEmpty(file)) {
-        controller.addRealAccountWithoutImport(realAccount);
-      }
-      else {
-        controller.addRealAccountWithImport(realAccount);
-      }
-    }
-    controller.doImport();
   }
 
   public void dispose() {

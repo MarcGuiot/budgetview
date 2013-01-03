@@ -1,6 +1,6 @@
 package org.designup.picsou.bank;
 
-import org.designup.picsou.bank.specific.AbstractBankPlugin;
+import org.designup.picsou.bank.plugins.AbstractBankPlugin;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.RealAccount;

@@ -18,29 +18,29 @@ public class BankDownloadChecker extends BankChooserPanelChecker<BankDownloadChe
   }
 
   public BankDownloadChecker checkManualDownloadHidden() {
-    checkComponentVisible(panel, JButton.class, "gotoManualDownload", false);
+    checkComponentVisible(window, JButton.class, "gotoManualDownload", false);
     return this;
   }
 
   public BankDownloadChecker checkManualDownloadAvailable() {
-    Button button = panel.getButton("gotoManualDownload");
+    Button button = window.getButton("gotoManualDownload");
     UISpecAssert.assertThat(button.isEnabled());
     UISpecAssert.assertThat(button.textEquals("Download"));
     return this;
   }
 
   public BankDownloadChecker selectManualDownload() {
-    panel.getButton("gotoManualDownload").click();
+    window.getButton("gotoManualDownload").click();
     return this;
   }
 
   public BankDownloadChecker goBackToBankSelection() {
-    panel.getButton("gotoBankSelection").click();
+    window.getButton("gotoBankSelection").click();
     return this;
   }
 
   public BankDownloadChecker checkManualDownloadHelp(String... chunks) {
-    TextBox manualDownloadMessage = panel.getTextBox("manualDownloadMessage");
+    TextBox manualDownloadMessage = window.getTextBox("manualDownloadMessage");
     for (String chunk : chunks) {
       assertThat(manualDownloadMessage.textContains(chunk));
     }
@@ -48,23 +48,23 @@ public class BankDownloadChecker extends BankChooserPanelChecker<BankDownloadChe
   }
 
   public OtherBankSynchroChecker openSynchro(ImportDialogChecker checker) {
-    Window window = WindowInterceptor.getModalDialog(panel.getButton("synchronize").triggerClick());
+    window.getButton("synchronize").click();
     return new OtherBankSynchroChecker(checker, window);
   }
 
   public OfxSynchoChecker openOfxSynchro(ImportDialogChecker checker) {
-    Window window = WindowInterceptor.getModalDialog(panel.getButton("synchronize").triggerClick());
-    return new OfxSynchoChecker(checker, window);
+    this.window.getButton("synchronize").click();
+    return new OfxSynchoChecker(checker, checker.getDialog());
   }
 
   public BankDownloadChecker checkSecurityMessage(String content) {
-    Button button = panel.getButton("securityInfo");
+    Button button = window.getButton("securityInfo");
     UISpecAssert.assertThat(button.tooltipContains(content));
     return this;
   }
 
   public void enterTransactionsManually() {
-    panel.getTextBox("manualInput").clickOnHyperlink("enter transactions manually");
-    assertFalse(panel.isVisible());
+    window.getTextBox("manualInput").clickOnHyperlink("enter transactions manually");
+    assertFalse(window.isVisible());
   }
 }

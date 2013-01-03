@@ -2,9 +2,10 @@ package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
-import org.designup.picsou.gui.importer.ImportCompletionPanel;
+import org.designup.picsou.gui.importer.steps.ImportCompletionPanel;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
+import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.FileChooserHandler;
@@ -24,21 +25,15 @@ public class ImportDialogChecker extends GuiChecker {
 
   public static ImportDialogChecker open(Trigger trigger) {
     Window window = WindowInterceptor.getModalDialog(trigger);
-    return new ImportDialogChecker(window, true);
+    return new ImportDialogChecker(window);
   }
 
-  public static ImportDialogChecker openInStep2(Trigger trigger) {
-    Window window = WindowInterceptor.getModalDialog(trigger);
-    return new ImportDialogChecker(window, false);
-  }
-
-  public ImportDialogChecker(Window dialog, final boolean step1) {
+  public ImportDialogChecker(Window dialog) {
     this.dialog = dialog;
-    if (step1) {
-      fileField = dialog.getInputTextBox("fileField");
-      importButton = dialog.getButton("Import");
-    }
-    accountEditionChecker = new AccountEditionChecker(dialog);
+  }
+
+  Window getDialog() {
+    return dialog;
   }
 
   private ImportDialogChecker() {
@@ -51,7 +46,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker setFilePath(String text) {
-    fileField.setText(text);
+    getFileField().setText(text);
     return this;
   }
 
@@ -63,12 +58,12 @@ public class ImportDialogChecker extends GuiChecker {
       }
       builder.append(file);
     }
-    fileField.setText(builder.toString());
+    getFileField().setText(builder.toString());
     return this;
   }
 
   public ImportDialogChecker acceptFile() {
-    importButton.click();
+    getImportButton().click();
     return this;
   }
 
@@ -126,14 +121,12 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public void completeImport() {
-    TextBox box = dialog.getTextBox("importMessage");
-    assertTrue(box.textIsEmpty());
+    assertTrue(dialog.getTextBox("importMessage").textIsEmpty());
     validateAndComplete(-1, -1, -1, dialog, "import.preview.ok");
   }
 
   public void completeImportWithNext() {
-    TextBox box = dialog.getTextBox("importMessage");
-    assertTrue(box.textIsEmpty());
+    assertTrue(dialog.getTextBox("importMessage").textIsEmpty());
     validateAndComplete(-1, -1, -1, dialog, "import.preview.noOperation.ok");
   }
 
@@ -251,12 +244,12 @@ public class ImportDialogChecker extends GuiChecker {
     if (message != null) {
       assertTrue(message.textIsEmpty());
     }
-    accountEditionChecker.checkNoErrorDisplayed();
+    getAccountEditionChecker().checkNoErrorDisplayed();
     return this;
   }
 
   public ImportDialogChecker checkFilePath(String path) {
-    assertTrue(fileField.textEquals(path));
+    assertTrue(getFileField().textEquals(path));
     return this;
   }
 
@@ -308,18 +301,18 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker defineAccount(String bank, String accountName, String number) {
-    accountEditionChecker.setName(accountName)
+    getAccountEditionChecker().setName(accountName)
       .setAccountNumber(number)
       .setAsMain();
     if (bank != null) {
-      accountEditionChecker.selectBank(bank);
+      getAccountEditionChecker().selectBank(bank);
     }
     return this;
   }
 
   public ImportDialogChecker createNewAccount(String bank, String accountName, String number, double initialBalance) {
     addNewAccount();
-    accountEditionChecker
+    getAccountEditionChecker()
       .selectBank(bank)
       .setAsMain()
       .setName(accountName)
@@ -336,12 +329,12 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker selectBank(String bank) {
-    accountEditionChecker.selectBank(bank);
+    getAccountEditionChecker().selectBank(bank);
     return this;
   }
 
   public ImportDialogChecker addNewAccountBank(String bankName, String url) {
-    accountEditionChecker.selectNewBank(bankName, url);
+    getAccountEditionChecker().selectNewBank(bankName, url);
     return this;
   }
 
@@ -367,7 +360,7 @@ public class ImportDialogChecker extends GuiChecker {
 
   public ImportDialogChecker checkAccountTypeWarningDisplayed(String accountName) {
     BalloonTipTesting.checkBalloonTipVisible(dialog,
-                                             accountEditionChecker.getTypeCombo(),
+                                             getAccountEditionChecker().getTypeCombo(),
                                              Lang.get("account.error.missing.account.type"));
     return this;
   }
@@ -390,12 +383,12 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker setMainAccount() {
-    accountEditionChecker.setAsMain();
+    getAccountEditionChecker().setAsMain();
     return this;
   }
 
   public ImportDialogChecker setSavingsAccount() {
-    accountEditionChecker.setAsSavings();
+    getAccountEditionChecker().setAsSavings();
     return this;
   }
 
@@ -408,7 +401,7 @@ public class ImportDialogChecker extends GuiChecker {
   public void importDeferred(String accountName, String fileName, boolean withMainAccount) {
     setFilePath(fileName)
       .acceptFile();
-    if (accountEditionChecker.getAccountName().equals(accountName)) {
+    if (getAccountEditionChecker().getAccountName().equals(accountName)) {
       setDeferredAccount(25, 28, 0);
     }
     else {
@@ -416,7 +409,7 @@ public class ImportDialogChecker extends GuiChecker {
     }
     if (withMainAccount) {
       doImport();
-      if (accountEditionChecker.getAccountName().equals(accountName)) {
+      if (getAccountEditionChecker().getAccountName().equals(accountName)) {
         setDeferredAccount(25, 28, 0);
       }
       else {
@@ -427,29 +420,29 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker setDeferredAccount(int dayPeriod, int dayPrelevement, int monthShift) {
-    accountEditionChecker.setAsDeferredCard();
-    accountEditionChecker.checkDeferredWarning();
-    accountEditionChecker.setDeferred(dayPeriod, dayPrelevement, monthShift);
+    getAccountEditionChecker().setAsDeferredCard();
+    getAccountEditionChecker().checkDeferredWarning();
+    getAccountEditionChecker().setDeferred(dayPeriod, dayPrelevement, monthShift);
     return this;
   }
 
   public ImportDialogChecker checkErrorAccount() {
-    accountEditionChecker.checkNameMissing();
+    getAccountEditionChecker().checkNameMissing();
     return this;
   }
 
   public ImportDialogChecker setAccountNumber(String number) {
-    accountEditionChecker.setAccountNumber(number);
+    getAccountEditionChecker().setAccountNumber(number);
     return this;
   }
 
   public ImportDialogChecker setAccountName(String name) {
-    accountEditionChecker.setName(name);
+    getAccountEditionChecker().setName(name);
     return this;
   }
 
   public ImportDialogChecker setPosition(double amount) {
-    accountEditionChecker.setPosition(amount);
+    getAccountEditionChecker().setPosition(amount);
     return this;
   }
 
@@ -458,26 +451,34 @@ public class ImportDialogChecker extends GuiChecker {
     return ((JComboBox)component.getAwtComponent()).getSelectedItem() == null;
   }
 
-  public void waitAcceptFiles() {
-    UISpecAssert.waitUntil(dialog.containsLabel(Lang.get("import.preview.title")), 10000);
+  public void waitForPreview() {
+    UISpecAssert.waitUntil(new Assertion() {
+      private String expectedTitle = Lang.get("import.preview.title");
+      public void check() {
+        if (!dialog.containsLabel(expectedTitle).isTrue()) {
+          UISpecAssert.fail("Current title is '" + dialog.getTextBox("title").getText()
+                            + "' instead of '" + expectedTitle + "'");
+        }
+      }
+    }, 10000);
   }
 
   public ImportDialogChecker setAsCreditCard() {
-    accountEditionChecker.setAsCreditCard();
+    getAccountEditionChecker().setAsCreditCard();
     return this;
   }
 
   public ImportDialogChecker checkAccount(String accountName) {
-    accountEditionChecker.checkAccountName(accountName);
+    getAccountEditionChecker().checkAccountName(accountName);
     return this;
   }
 
   public boolean accountIsEditable() {
-    return accountEditionChecker.accountIsEditable();
+    return getAccountEditionChecker().accountIsEditable();
   }
 
   public ImportDialogChecker checkAccountNotEditable() {
-    accountEditionChecker.checkAccountDisabled();
+    getAccountEditionChecker().checkAccountDisabled();
     return this;
   }
 
@@ -489,7 +490,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker checkAccountEditable() {
-    accountEditionChecker.checkAccountEditable();
+    getAccountEditionChecker().checkAccountEditable();
     return this;
   }
 
@@ -508,37 +509,37 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker checkAstericsErrorOnName() {
-    accountEditionChecker.checkAstericsErrorOnName();
+    getAccountEditionChecker().checkAstericsErrorOnName();
     return this;
   }
 
   public ImportDialogChecker checkAccountPosition(double position) {
-    accountEditionChecker.checkPosition(position);
+    getAccountEditionChecker().checkPosition(position);
     return this;
   }
 
   public ImportDialogChecker checkAstericsClearOnName() {
-    accountEditionChecker.checkAstericsClearOnName();
+    getAccountEditionChecker().checkAstericsClearOnName();
     return this;
   }
 
   public ImportDialogChecker checkAstericsErrorOnBank() {
-    accountEditionChecker.checkAstericsErrorOnBank();
+    getAccountEditionChecker().checkAstericsErrorOnBank();
     return this;
   }
 
   public ImportDialogChecker checkAstericsClearOnBank() {
-    accountEditionChecker.checkAstericsClearOnBank();
+    getAccountEditionChecker().checkAstericsClearOnBank();
     return this;
   }
 
   public ImportDialogChecker checkAstericsClearOnType() {
-    accountEditionChecker.checkAstericsClearOnType();
+    getAccountEditionChecker().checkAstericsClearOnType();
     return this;
   }
 
   public ImportDialogChecker checkAstericsErrorOnType() {
-    accountEditionChecker.checkAstericsErrorOnType();
+    getAccountEditionChecker().checkAstericsErrorOnType();
     return this;
   }
 
@@ -548,13 +549,34 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public CsvImporterChecker acceptCsvFile() {
-    return new CsvImporterChecker(this, WindowInterceptor.getModalDialog(importButton.triggerClick()));
+    return new CsvImporterChecker(this, WindowInterceptor.getModalDialog(getImportButton().triggerClick()));
   }
 
   public BankEditionDialogChecker addNewBank() {
     return getBankDownload().addNewBank();
   }
-  
+
+  private TextBox getFileField() {
+    if (fileField == null) {
+      fileField = dialog.getInputTextBox("fileField");
+    }
+    return fileField;
+  }
+
+  private Button getImportButton() {
+    if (importButton == null) {
+      importButton = dialog.getButton("Import");
+    }
+    return importButton;
+  }
+
+  private AccountEditionChecker getAccountEditionChecker() {
+    if (accountEditionChecker == null) {
+      accountEditionChecker = new AccountEditionChecker(dialog);
+    }
+    return accountEditionChecker;
+  }
+
   public static class CompletionChecker {
     private int loadedTransactionCount;
     private final int importedTransactionCount;
@@ -573,6 +595,7 @@ public class ImportDialogChecker extends GuiChecker {
     }
 
     public Trigger checkAndGetTrigger(Panel dialog) {
+      assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.end.info.title")));
       TextBox contentBox = dialog.getTextBox("message");
       if (importedTransactionCount != -1) {
         String expectedMessage =

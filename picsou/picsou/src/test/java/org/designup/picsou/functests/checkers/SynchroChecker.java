@@ -1,30 +1,34 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.Window;
 
-public class SynchroChecker extends GuiChecker{
-  protected ImportDialogChecker importDialogChecker;
-  protected Window window;
-  private String importName;
+import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 
-  public SynchroChecker(ImportDialogChecker importDialogChecker, Window window, String importName) {
+public class SynchroChecker extends GuiChecker {
+  protected ImportDialogChecker importDialogChecker;
+  protected final Window window;
+  private final String importButtonName;
+
+  public SynchroChecker(ImportDialogChecker importDialogChecker, Window window, String importButtonName) {
     this.importDialogChecker = importDialogChecker;
     this.window = window;
-    this.importName = importName;
+    this.importButtonName = importButtonName;
   }
 
-  public ImportDialogChecker doImport() {
-    if (importDialogChecker != null) {
-      window.getButton(importName).click();
-      UISpecAssert.assertFalse(window.isVisible());
-      importDialogChecker.waitAcceptFiles();
-    }
-    else {
-      importDialogChecker =
-        ImportDialogChecker.openInStep2(window.getButton("update").triggerClick());
-      UISpecAssert.assertFalse(window.isVisible());
-    }
+  public ImportDialogChecker doImportAndWaitForCompletion() {
+    doImport();
+    importDialogChecker.checkLastStep();
     return importDialogChecker;
+  }
+
+  public ImportDialogChecker doImportAndWaitForPreview() {
+    doImport();
+    importDialogChecker.waitForPreview();
+    return importDialogChecker;
+  }
+
+  private void doImport() {
+    window.getButton(importButtonName).click();
+    assertTrue(window.isVisible());
   }
 }

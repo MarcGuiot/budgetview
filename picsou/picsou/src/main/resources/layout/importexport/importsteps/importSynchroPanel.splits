@@ -1,0 +1,52 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <styles>
+    <style selector="label#fileName"
+           fill="none" anchor="left" font="-,bold,12" marginBottom="5"/>
+    <style selector="scrollPane" marginBottom="10"/>
+  </styles>
+
+  <panel styleClass="dialog" preferredSize="(600,690)">
+
+    <column styleClass="innerDialog">
+
+      <label text="$import.synchro.title" name="title" styleClass="title"/>
+
+      <htmlEditorPane styleClass="multiLineLabel" text="$import.synchro.message" margin="10" marginBottom="0" weightY="1"/>
+
+      <column name="synchroConnectionPanel" styleClass="innerDialogBlock" margin="10" marginTop="5" weightY="100">
+        <filler fill="vertical" weightY="10"/>
+        <panel ref="connectorPanel" margin="10" styleClass="innerDialogBlockPanel" weightY="1"/>
+        <row preferredSize="(100,30)" weightY="1">
+          <filler fill="horizontal"/>
+          <component ref="progressPanel"
+                     preferredSize="(30,30)" minimumSize="(30,30)" weightX="0.1"
+                     marginRight="10"/>
+          <label ref="progressLabel" weightX="0.1"/>
+          <filler fill="horizontal"/>
+        </row>
+        <filler fill="vertical" weightY="20"/>
+      </column>
+
+      <row  weightY="1" marginLeft="10" marginRight="10">
+        <label icon="security_lock.png" anchor="center" marginRight="10" weightX="0.1"/>
+        <row border="matte(0,1,0,0,#BBBBBB)" weightX="100">
+          <htmlEditorPane styleClass="multiLineLabel" text="$import.synchro.security" foreground="dialog.text.footer"
+                          anchor="top" marginLeft="10"/>
+        </row>
+      </row>
+
+      <filler fill="vertical" weightY="100"/>
+
+      <row weightY="1">
+        <filler fill="horizontal"/>
+        <button action="close" margin="10" fill="none"/>
+      </row>
+
+    </column>
+
+  </panel>
+
+</splits>

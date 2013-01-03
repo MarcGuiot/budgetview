@@ -506,7 +506,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     WindowInterceptor.init(trigger)
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
-          ImportDialogChecker importDialog = new ImportDialogChecker(window, true);
+          ImportDialogChecker importDialog = new ImportDialogChecker(window);
 
           importDialog.setFilePath(path)
             .acceptFile();

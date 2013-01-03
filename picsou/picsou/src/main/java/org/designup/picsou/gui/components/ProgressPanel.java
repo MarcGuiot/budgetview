@@ -12,7 +12,7 @@ import java.awt.geom.Rectangle2D;
 public class ProgressPanel extends JComponent implements ActionListener {
 
   private static final int DEFAULT_NUMBER_OF_BARS = 12;
-  private static final Dimension DIMENSION = new Dimension(30,30);
+  private static final Dimension DIMENSION = new Dimension(30, 30);
   private final static double SCALE = 1.2d;
 
   private int numBars;
@@ -49,10 +49,12 @@ public class ProgressPanel extends JComponent implements ActionListener {
     setMinimumSize(DIMENSION);
     setPreferredSize(DIMENSION);
   }
-  
+
   public void start() {
     show = true;
-    timer.start();
+    if (!timer.isRunning()) {
+      timer.start();
+    }
   }
 
   public void stop() {
@@ -82,7 +84,7 @@ public class ProgressPanel extends JComponent implements ActionListener {
     super.setBounds(x, y, width, height);
     // update centering transform
     centerAndScaleTransform = new AffineTransform();
-    centerAndScaleTransform.translate((double) getWidth() / 2d, (double) getHeight() / 2d);
+    centerAndScaleTransform.translate((double)getWidth() / 2d, (double)getHeight() / 2d);
     centerAndScaleTransform.scale(SCALE, SCALE);
     // calc new bars bounds
     if (barsBounds != null) {
@@ -98,7 +100,7 @@ public class ProgressPanel extends JComponent implements ActionListener {
     }
 
     // move to center
-    Graphics2D g2 = (Graphics2D) g.create();
+    Graphics2D g2 = (Graphics2D)g.create();
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     g2.transform(centerAndScaleTransform);
 
@@ -128,7 +130,7 @@ public class ProgressPanel extends JComponent implements ActionListener {
       primitive.transform(toWheel);
       primitive.transform(toCircle);
 
-      ticker[(int) i] = primitive;
+      ticker[(int)i] = primitive;
     }
 
     return ticker;

@@ -559,7 +559,7 @@ public class LicenseTest extends ConnectedTestCase {
   private void checkValidLicense(final boolean anonymous) {
     OperationChecker operation = new OperationChecker(window);
     Window dialog = WindowInterceptor.getModalDialog(operation.getImportTrigger());
-    ImportDialogChecker importDialog = new ImportDialogChecker(dialog, true);
+    ImportDialogChecker importDialog = new ImportDialogChecker(dialog);
     importDialog.close();
     TextBox messageBox = window.getTextBox("licenseInfoMessage");
     if (!anonymous) {

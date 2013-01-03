@@ -261,11 +261,6 @@
           <artifactId>google-api-services-drive</artifactId>
           <version>v1-rev1-1.5.1-beta</version>
       </dependency>
-    <dependency>
-      <groupId>org.globsframework</groupId>
-      <artifactId>globs</artifactId>
-      <version>1.0</version>
-    </dependency>
 
   </dependencies>
 

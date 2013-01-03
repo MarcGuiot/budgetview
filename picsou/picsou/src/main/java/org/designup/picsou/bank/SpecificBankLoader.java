@@ -1,7 +1,7 @@
 package org.designup.picsou.bank;
 
-import org.designup.picsou.bank.specific.BanquePopulaire;
-import org.designup.picsou.bank.specific.LaPoste;
+import org.designup.picsou.bank.plugins.BanquePopulaire;
+import org.designup.picsou.bank.plugins.LaPoste;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 

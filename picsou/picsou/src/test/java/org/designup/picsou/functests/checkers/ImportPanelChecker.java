@@ -22,8 +22,9 @@ public class ImportPanelChecker extends ViewChecker {
   }
 
   public OtherBankSynchroChecker openSynchro() {
-    Window window = WindowInterceptor.getModalDialog(getPanel().getButton("synchroButton").triggerClick());
-    return new OtherBankSynchroChecker(null, window);
+    ImportDialogChecker importDialogChecker =
+      ImportDialogChecker.open(getPanel().getButton("synchroButton").triggerClick());
+    return new OtherBankSynchroChecker(importDialogChecker, importDialogChecker.getDialog());
   }
 
   public ImportPanelChecker checkImportMessage(String message) {

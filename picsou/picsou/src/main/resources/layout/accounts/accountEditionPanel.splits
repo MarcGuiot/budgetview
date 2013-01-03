@@ -7,11 +7,11 @@
       <column>
         <grid defaultMarginBottom="5">
           <label text="$account.name" gridPos="(0,0)" styleClass="formLabel"/>
-          <textField ref="name" gridPos="(1,0)" marginBottom="10"/>
+          <textField ref="name" gridPos="(1,0)" marginBottom="10" columns="12"/>
           <label ref="nameFlag" gridPos="(2,0)" styleClass="mandatoryFieldFlag"/>
 
           <label text="$account.number" gridPos="(3,0)" styleClass="formLabel" marginLeft="15"/>
-          <textField ref="number" gridPos="(4,0)" marginBottom="10"/>
+          <textField ref="number" gridPos="(4,0)" marginBottom="10" columns="15" fill="none"/>
 
           <label text="$account.bank" gridPos="(0,1)" styleClass="formLabel"/>
           <row gridPos="(1,1,4,1)" marginBottom="10">
@@ -22,7 +22,7 @@
           </row>
 
           <label text="$account.position" gridPos="(0,2)" styleClass="formLabel" autoHideSource="position"/>
-          <textField ref="position" gridPos="(1,2)"/>
+          <textField ref="position" gridPos="(1,2)" columns="12"/>
         </grid>
 
         <row>

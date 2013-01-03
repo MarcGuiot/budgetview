@@ -1,0 +1,31 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="innerDialog">
+    <column>
+      <row>
+        <label text="Number" marginRight="5"/>
+        <textField ref="number"/>
+        <label text="Name" marginRight="5"/>
+        <textField ref="name"/>
+        <label text="Position" marginRight="5"/>
+        <textField ref="position"/>
+        <checkBox ref="isSavings" text="Savings"/>
+      </row>
+      <row>
+        <label text="File path" marginRight="5"/>
+        <textField ref="file"/>
+      </row>
+      <button ref="add"/>
+
+      <scrollPane>
+        <table ref="table"/>
+      </scrollPane>
+
+      <comboBox ref="errorModeCombo"/>
+
+      <button action="update"/>
+    </column>
+  </panel>
+</splits>

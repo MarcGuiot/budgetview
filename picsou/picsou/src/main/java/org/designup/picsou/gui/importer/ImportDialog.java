@@ -6,6 +6,8 @@ import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.importer.components.ImportSeriesDialog;
+import org.designup.picsou.gui.importer.components.RealAccountImporter;
+import org.designup.picsou.gui.importer.steps.*;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AutomaticSeriesBudgetTrigger;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
@@ -34,7 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ImportDialog {
+public class ImportDialog implements RealAccountImporter {
   private GlobRepository parentRepository;
   private Directory parentDirectory;
   private LocalGlobRepository localRepository;
@@ -46,10 +48,11 @@ public class ImportDialog {
   private PicsouDialog dialog;
 
   private ImportedFileSelectionPanel fileSelectionPanel;
+  private ImportSynchroPanel importSynchroPanel;
   private ImportPreviewPanel previewPanel;
   private ImportCompletionPanel completionPanel;
   private ImportAccountPanel importAccountsPanel;
-  private MessageHandler messageLabel;
+  private ImportStepPanel currentPanel;
 
   public ImportDialog(String textForCloseButton, List<File> files, Glob defaultAccount,
                       final Window owner, final GlobRepository repository, Directory directory,
@@ -63,20 +66,18 @@ public class ImportDialog {
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(new SelectionService());
 
-    controller = new ImportController(this, repository, localRepository, directory, isSynchro);
-    fileSelectionPanel = new ImportedFileSelectionPanel(controller, usePreferredPath, localRepository, localDirectory);
-    importAccountsPanel = new ImportAccountPanel(controller, localRepository, localDirectory);
-    previewPanel = new ImportPreviewPanel(controller, defaultAccount, repository, localRepository, localDirectory);
-    completionPanel = new ImportCompletionPanel(controller, localRepository, localDirectory);
-
     dialog = PicsouDialog.create(owner, directory);
     dialog.setOpenRequestIsManaged(true);
 
-    importAccountsPanel.init(dialog, textForCloseButton);
-    fileSelectionPanel.init(dialog, textForCloseButton);
-    previewPanel.init(dialog, textForCloseButton);
-    completionPanel.init(dialog, textForCloseButton);
-    initMainPanel();
+    controller = new ImportController(this, repository, localRepository, directory, isSynchro);
+    fileSelectionPanel = new ImportedFileSelectionPanel(dialog, textForCloseButton, controller, usePreferredPath, localRepository, localDirectory);
+    importAccountsPanel = new ImportAccountPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
+    importSynchroPanel = new ImportSynchroPanel(dialog, controller, localRepository, localDirectory);
+    previewPanel = new ImportPreviewPanel(dialog, textForCloseButton, controller, defaultAccount, repository, localRepository, localDirectory);
+    completionPanel = new ImportCompletionPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
+
+    currentPanel = isSynchro ? importSynchroPanel : fileSelectionPanel;
+    initMainPanel(currentPanel);
 
     preselectFiles(files);
 
@@ -86,19 +87,27 @@ public class ImportDialog {
       Glob bank = Account.getBank(defaultAccount, localRepository);
       localDirectory.get(SelectionService.class).select(bank);
     }
-    messageLabel = fileSelectionPanel;
   }
 
-  private void initMainPanel() {
+  private void initMainPanel(ImportStepPanel stepPanel) {
     mainPanel = new JPanel();
     mainPanel.setLayout(new SingleComponentLayout(null));
-    mainPanel.add(fileSelectionPanel.getPanel());
+    mainPanel.add(stepPanel.getPanel());
     dialog.setCloseAction(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         dialog.setVisible(false);
         controller.complete();
       }
     });
+  }
+
+  private void setCurrentPanel(ImportStepPanel stepPanel) {
+    this.currentPanel = stepPanel;
+    this.mainPanel.removeAll();
+    this.mainPanel.add(stepPanel.getPanel());
+    this.dialog.pack();
+    GuiUtils.center(dialog);
+    stepPanel.requestFocus();
   }
 
   private void loadLocalRepository(GlobRepository repository) {
@@ -122,8 +131,8 @@ public class ImportDialog {
     return dialog;
   }
 
-  public void synchronize(GlobList importedAccount) {
-    this.fileSelectionPanel.synchronize(importedAccount);
+  public void importAccounts(GlobList realAccounts) {
+    controller.importAccounts(realAccounts);
   }
 
   public void preselectFiles(List<File> files) {
@@ -138,21 +147,23 @@ public class ImportDialog {
     previewPanel.updateForNextImport(dateFormats, importedAccount, accountNumber, accountCount);
   }
 
+  public void showSynchro(Integer bankId) {
+    importSynchroPanel.update(bankId, this);
+    setCurrentPanel(importSynchroPanel);
+  }
+
+  public void showSynchro(GlobList realAccounts) {
+    importSynchroPanel.update(realAccounts, this);
+    setCurrentPanel(importSynchroPanel);
+  }
+
   public void showPreview() {
-    messageLabel = previewPanel;
-    setCurrentPanel(previewPanel.getPanel());
+    setCurrentPanel(previewPanel);
   }
 
   public void showCompleteMessage(Set<Integer> months, int importedTransactionCount, int autocategorizedTransaction, int transactionCount) {
     completionPanel.update(months, importedTransactionCount, autocategorizedTransaction, transactionCount);
-    setCurrentPanel(completionPanel.getPanel());
-  }
-
-  private void setCurrentPanel(JPanel panel) {
-    mainPanel.removeAll();
-    mainPanel.add(panel);
-    dialog.pack();
-    GuiUtils.center(dialog);
+    setCurrentPanel(completionPanel);
   }
 
   public void show() {
@@ -175,13 +186,13 @@ public class ImportDialog {
           dialog.setVisible(false);
         }
       });
-      fileSelectionPanel.requestFocus();
+      currentPanel.requestFocus();
       dialog.setModal(true);
       dialog.setVisible(true);
     }
     else {
       dialog.pack();
-      fileSelectionPanel.requestFocus();
+      currentPanel.requestFocus();
       dialog.showCentered();
       dispose();
     }
@@ -230,16 +241,16 @@ public class ImportDialog {
   }
 
   public void showMessage(String message) {
-    messageLabel.showFileErrorMessage(message);
+    currentPanel.showFileErrorMessage(message);
   }
 
   public void showMessage(String message, String details) {
-    messageLabel.showFileErrorMessage(message, details);
+    currentPanel.showFileErrorMessage(message, details);
   }
 
   public void showNoImport(Glob glob, boolean first) {
     if (first) {
-      setCurrentPanel(importAccountsPanel.getPanel());
+      setCurrentPanel(importAccountsPanel);
     }
     importAccountsPanel.setImportedAccountToImport(glob);
   }

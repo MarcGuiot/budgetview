@@ -10,7 +10,9 @@ import org.designup.picsou.importer.utils.ImportedTransactionIdGenerator;
 import org.designup.picsou.model.*;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.GlobIdGenerator;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.exceptions.TruncatedFile;
 
@@ -288,7 +290,7 @@ public class OfxImporter implements AccountFileImporter {
       repository.update(currentTransactionKey, ImportedTransaction.AMOUNT, Amounts.extractAmount(content));
     }
 
-    private void updateAccount(String accountNumber) {
+    private void updateAccount(final String accountNumber) {
       if (forceAccount) {
         return;
       }
@@ -305,16 +307,23 @@ public class OfxImporter implements AccountFileImporter {
           }
         }
       }
+
+      String accountName = Account.getName(accountNumber, isCreditCard);
+      GlobList similarAccounts = repository.getAll(RealAccount.TYPE, new RealAccountMatcher(accountNumber, bankId));
+      if (similarAccounts.size() == 1) {
+        accountName = similarAccounts.get(0).get(RealAccount.NAME);
+      }
+
       currentAccount = repository.create(RealAccount.TYPE,
                                          value(RealAccount.NUMBER, Strings.toString(accountNumber)),
                                          value(RealAccount.ID, generator.getNextId(RealAccount.ID, 1)),
-                                         value(RealAccount.NAME, Account.getName(accountNumber, isCreditCard)),
+                                         value(RealAccount.NAME, accountName),
                                          value(RealAccount.BANK, bankId),
                                          value(RealAccount.BANK_ENTITY_LABEL, bankEntityLabel),
                                          value(RealAccount.BANK_ENTITY, bankEntityId),
                                          value(RealAccount.ACCOUNT_TYPE, isCreditCard ? AccountType.MAIN.getId() : null),
                                          value(RealAccount.CARD_TYPE, isCreditCard ? AccountCardType.UNDEFINED.getId()
-                                                                      : AccountCardType.NOT_A_CARD.getId()));
+                                                                                   : AccountCardType.NOT_A_CARD.getId()));
     }
 
     private void updateAccountBalance() {
@@ -334,6 +343,26 @@ public class OfxImporter implements AccountFileImporter {
     private void updateNote(String content) {
       if (!Strings.isNullOrEmpty(content)) {
         repository.update(currentTransactionKey, ImportedTransaction.NOTE, content);
+      }
+    }
+
+    private class RealAccountMatcher implements GlobMatcher {
+      private final String accountNumber;
+      private final Integer bankId;
+
+      public RealAccountMatcher(String accountNumber, Integer bankId) {
+        this.accountNumber = accountNumber;
+        this.bankId = bankId;
+      }
+
+      public boolean matches(Glob account, GlobRepository repository) {
+        if (!Utils.equal(bankId, account.get(RealAccount.BANK))) {
+          return false;
+        }
+        if (!Strings.isNotEmpty(accountNumber) || !accountNumber.equalsIgnoreCase(account.get(RealAccount.NUMBER))) {
+          return false;
+        }
+        return true;
       }
     }
   }
