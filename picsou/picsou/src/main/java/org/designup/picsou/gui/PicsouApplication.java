@@ -2,6 +2,10 @@ package org.designup.picsou.gui;
 
 import net.roydesign.event.ApplicationEvent;
 import net.roydesign.mac.MRJAdapter;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.varia.NullAppender;
 import org.designup.picsou.bank.BankPluginService;
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.client.http.MD5PasswordBasedEncryptor;
@@ -80,6 +84,8 @@ public class PicsouApplication {
   private DefaultDirectory directory = new DefaultDirectory();
 
   static {
+    BasicConfigurator.configure(new NullAppender());
+    Logger.getRootLogger().setLevel(Level.FATAL);
     AwtExceptionHandler.registerHandler();
     PicsouMacLookAndFeel.initApplicationName();
     Gui.init();

@@ -5,17 +5,15 @@ import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 
 import java.io.IOException;
 
-public class WebButton extends WebComponent {
-  private HtmlButton button;
+public class WebButton extends WebComponent<HtmlButton> {
 
   public WebButton(WebBrowser browser, HtmlButton button) {
     super(browser, button);
-    this.button = button;
   }
 
   public WebPage click() throws WebCommandFailed {
     try {
-      return browser.setCurrentPage(button.click());
+      return browser.setCurrentPage(node.click());
     }
     catch (IOException e) {
       throw new WebCommandFailed(e);

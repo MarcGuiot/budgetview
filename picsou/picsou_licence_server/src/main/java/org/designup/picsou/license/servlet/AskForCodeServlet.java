@@ -71,7 +71,7 @@ public class AskForCodeServlet extends HttpServlet {
             }
           }
           if (mailer.sendRequestLicence(lang, activationCode, registeredMail.get(0).get(License.MAIL))) {
-            logger.info("Send new activation code " + activationCode + " t  o " + mailTo);
+            logger.info("Send new activation code " + activationCode + " to " + mailTo);
             resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT);
           }
           else {

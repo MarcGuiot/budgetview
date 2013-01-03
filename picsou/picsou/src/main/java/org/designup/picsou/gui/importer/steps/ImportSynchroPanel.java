@@ -191,6 +191,10 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       importedRealAccounts.addAll(realAccounts);
       installNextConnector();
     }
+
+    public void notifyDownload(String description) {
+      progressLabel.setText(description);
+    }
   }
 
   private class CloseDialogAction extends AbstractAction {

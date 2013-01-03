@@ -17,8 +17,7 @@ public class WebComboBox extends WebComponent<HtmlSelect> {
 
   public void select(String entry) throws WebParsingError {
     boolean found = false;
-    for (Iterator iterator = node.getOptions().iterator(); iterator.hasNext(); ) {
-      HtmlOption option = (HtmlOption)iterator.next();
+    for (HtmlOption option : node.getOptions()) {
       boolean selected = option.asText().trim().equalsIgnoreCase(entry);
       option.setSelected(selected);
       if (selected) {
@@ -49,9 +48,8 @@ public class WebComboBox extends WebComponent<HtmlSelect> {
   }
 
   public List<String> getEntryNames() {
-    List actualEntries = new ArrayList();
-    for (Iterator iterator = node.getOptions().iterator(); iterator.hasNext(); ) {
-      HtmlOption option = (HtmlOption)iterator.next();
+    List<String> actualEntries = new ArrayList<String>();
+    for (HtmlOption option : node.getOptions()) {
       actualEntries.add(option.asText());
     }
     return actualEntries;

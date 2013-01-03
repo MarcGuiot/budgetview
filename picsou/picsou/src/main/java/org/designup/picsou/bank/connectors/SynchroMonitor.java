@@ -20,6 +20,8 @@ public interface SynchroMonitor {
 
   void importCompleted(GlobList realAccounts);
 
+  void notifyDownload(String description);
+
   public static SynchroMonitor SILENT = new SynchroMonitor() {
     public void initialConnection() {
     }
@@ -44,5 +46,9 @@ public interface SynchroMonitor {
 
     public void importCompleted(GlobList realAccounts) {
     }
+
+    public void notifyDownload(String description) {
+    }
   };
+
 }

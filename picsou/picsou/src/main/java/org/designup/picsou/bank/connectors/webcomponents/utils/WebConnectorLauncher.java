@@ -3,6 +3,8 @@ package org.designup.picsou.bank.connectors.webcomponents.utils;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.SynchroMonitor;
+import org.designup.picsou.gui.browsing.BrowsingService;
+import org.designup.picsou.gui.browsing.DummyBrowsingService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.utils.ApplicationColors;
@@ -22,15 +24,20 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class WebConnectorLauncher {
   public static void show(BankConnectorFactory factory) throws IOException {
     DefaultDirectory directory = new DefaultDirectory();
     directory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     directory.add(SelectionService.class, new SelectionService());
+    directory.add(BrowsingService.class, new DummyBrowsingService());
     directory.add(DescriptionService.class, new PicsouDescriptionService());
     OpenRequestManager openRequestManager = new OpenRequestManager();
     directory.add(OpenRequestManager.class, openRequestManager);
+    ExecutorService executorService = Executors.newCachedThreadPool();
+    directory.add(ExecutorService.class, executorService);
     directory.add(new UIService());
     ApplicationColors.registerColorService(directory);
     openRequestManager.pushCallback(new OpenRequestManager.Callback() {
@@ -91,6 +98,10 @@ public class WebConnectorLauncher {
 
     public void importCompleted(GlobList realAccounts) {
       System.out.println("Import completed: " + realAccounts);
+    }
+
+    public void notifyDownload(String description) {
+      System.out.println("downloading " + description);
     }
   }
 }

@@ -11,4 +11,8 @@ public class WebTextField extends WebComponent<HtmlInput> {
   public void setText(String content) {
     node.setAttribute("value", content);
   }
+
+  public String getValue(){
+    return node.getAttribute("value");
+  }
 }

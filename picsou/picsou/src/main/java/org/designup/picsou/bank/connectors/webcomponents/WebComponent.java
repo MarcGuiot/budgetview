@@ -27,4 +27,32 @@ public abstract class WebComponent<T extends HtmlElement> {
   public String toString() {
     return HtmlUnit.dump(node);
   }
+
+  public void fireEvent(String event) {
+    node.fireEvent(event);
+  }
+
+  public String getClassName(){
+    return node.getAttribute("className");
+  }
+
+  public void mouseDown() {
+    browser.setCurrentPage(node.mouseDown());
+  }
+
+  public void mouseUp() {
+    browser.setCurrentPage(node.mouseUp());
+  }
+
+  public void mouseOut() {
+    browser.setCurrentPage(node.mouseOut());
+  }
+
+  public void mouseOver() {
+    browser.setCurrentPage(node.mouseOver());
+  }
+
+  public T getNode() {
+    return node;
+  }
 }

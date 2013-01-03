@@ -91,4 +91,8 @@ public class WebTable extends WebComponent<HtmlTable> {
   private String getTextInCell(int columnIndex, HtmlTableCell cell) {
     return cell.getTextContent();
   }
+
+  public HtmlTable getTable() {
+    return node;
+  }
 }

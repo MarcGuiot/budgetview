@@ -1,10 +1,9 @@
 package org.designup.picsou.bank.connectors.webcomponents.utils;
 
-import com.gargoylesoftware.htmlunit.html.DomNode;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlLabel;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.*;
+import org.designup.picsou.bank.connectors.webcomponents.WebBrowser;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -14,8 +13,8 @@ public class HtmlUnit {
 
   private static final String SEPARATOR = "------------------------------------------------------------------------\n";
 
-  public static HtmlElement getElementById(HtmlElement container, String id, Class expectedClass) throws WebParsingError {
-    HtmlElement result = null;
+  public static <T extends HtmlElement> T getElementById(HtmlElement container, String id, Class<T> expectedClass) throws WebParsingError {
+    T result = null;
     try {
       result = container.getElementById(id);
     }
@@ -27,7 +26,7 @@ public class HtmlUnit {
     return result;
   }
 
-  public static HtmlElement getElementById(HtmlPage currentPage, String id, Class expectedClass) throws WebParsingError {
+  public static <T extends HtmlElement> T getElementById(HtmlPage currentPage, String id, Class<T> expectedClass) throws WebParsingError {
     return getElementById(currentPage.getDocumentElement(), id, expectedClass);
   }
 
@@ -80,10 +79,10 @@ public class HtmlUnit {
     return result;
   }
 
-  public static HtmlElement getFirstElementWithAttribute(HtmlElement container, Class expectedClass, String tagName, String attributeName, String attributeValue) throws WebParsingError {
+  public static <T extends  HtmlElement> T getFirstElementWithAttribute(HtmlElement container, Class<T> expectedClass, String tagName, String attributeName, String attributeValue) throws WebParsingError {
     HtmlElement result = getFirstElementWithAttribute(container, tagName, attributeName, attributeValue);
     checkClass(container, expectedClass, result, "<" + tagName + "> with " + attributeName + "=" + attributeValue);
-    return result;
+    return (T)result;
   }
 
   public static HtmlElement getFirstParent(HtmlElement element, String tag) throws WebParsingError {
@@ -174,9 +173,9 @@ public class HtmlUnit {
     return getElementByLabel(text, container, HtmlElement.class);
   }
 
-  public static HtmlElement getElementByLabel(String text, HtmlElement container, Class expectedClass) throws WebParsingError{
+  public static <T extends HtmlElement> T getElementByLabel(String text, HtmlElement container, Class<T> expectedClass) throws WebParsingError{
     String targetElementId = getTargetIdFromLabel(container, text);
-    HtmlElement element = container.getElementById(targetElementId);
+    T element = container.getElementById(targetElementId);
     if (!expectedClass.isAssignableFrom(element.getClass())) {
       fail(container, "Unexpected class '" + element.getClass().getName() + "' for component with label: " + text +
                       " - actual content: " + dump(container));
@@ -191,5 +190,14 @@ public class HtmlUnit {
 
   private static void fail(HtmlElement container, String message) throws WebParsingError {
     throw new WebParsingError(container, message);
+  }
+
+  public static void click(WebBrowser browser, HtmlElement element) throws WebParsingError {
+    try {
+      browser.setCurrentPage(element.click());
+    }
+    catch (IOException e) {
+      fail(element, "while clicking");
+    }
   }
 }

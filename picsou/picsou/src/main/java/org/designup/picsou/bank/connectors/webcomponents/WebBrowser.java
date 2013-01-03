@@ -10,13 +10,12 @@ import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 import java.io.IOException;
 
 public class WebBrowser {
-
   public WebClient webClient;
-
   private HtmlPage currentPage;
   private AlertHandler errorAlertHandler;
   private HttpConnectionProvider httpConnectionProvider;
   private boolean javascriptEnabled = true;
+  private BrowserVersion browserVersion = BrowserVersion.FIREFOX_10;
 
   public WebBrowser(AlertHandler errorAlertHandler) {
     this.errorAlertHandler = errorAlertHandler;
@@ -25,6 +24,10 @@ public class WebBrowser {
         return new HttpWebConnection(client);
       }
     };
+  }
+
+  public void setBrowserVersion(BrowserVersion browserVersion) {
+    this.browserVersion = browserVersion;
   }
 
   public void setJavascriptEnabled(boolean enabled) {
@@ -36,7 +39,7 @@ public class WebBrowser {
   }
 
   private void createWebClient() {
-    webClient = new WebClient(BrowserVersion.FIREFOX_10);
+    webClient = new WebClient(browserVersion);
     webClient.setThrowExceptionOnScriptError(false);
     webClient.setCssEnabled(false);
     webClient.setJavaScriptEnabled(javascriptEnabled);
@@ -57,6 +60,9 @@ public class WebBrowser {
   }
 
   public WebPage setCurrentPage(Page page) {
+    if (page instanceof UnexpectedPage){
+      return getCurrentPage();
+    }
     this.currentPage = (HtmlPage)page;
     return getCurrentPage();
   }
@@ -103,5 +109,9 @@ public class WebBrowser {
 
   public void stop() {
     webClient.closeAllWindows();
+  }
+
+  public void waitForBackgroundJavaScript(int timeout) {
+    webClient.waitForBackgroundJavaScript(timeout);
   }
 }
