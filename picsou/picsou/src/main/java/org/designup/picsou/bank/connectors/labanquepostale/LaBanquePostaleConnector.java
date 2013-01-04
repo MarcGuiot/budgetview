@@ -88,6 +88,25 @@ public class LaBanquePostaleConnector extends WebBankConnector {
     loginAction.setEnabled(false);
     builder.add("login", loginAction);
 
+    for (int i = 0; i < keyboardLabels.length; i++) {
+      final int index = i;
+      keyboardLabels[i].addMouseListener(new MouseAdapter() {
+        public void mouseClicked(MouseEvent mouseEvent) {
+          if (keyboardLabels[index].getIcon() != null) {
+            processKeyboardClick(index);
+          }
+        }
+      });
+    }
+
+    initLogin();
+
+    return builder.load();
+  }
+
+  private void initLogin() {
+    loginAction.setEnabled(false);
+
     Thread thread = new Thread() {
       public void run() {
         try {
@@ -100,12 +119,6 @@ public class LaBanquePostaleConnector extends WebBankConnector {
           for (int i = 0; i < keyboardLabels.length; i++) {
             WebPanel cell = loginForm.getPanelById("val_cel_" + i);
             keyboardLabels[i].setIcon(cell.getSingleImage().asIcon());
-            final int index = i;
-            keyboardLabels[i].addMouseListener(new MouseAdapter() {
-              public void mouseClicked(MouseEvent mouseEvent) {
-                processKeyboardClick(index);
-              }
-            });
           }
 
           SwingUtilities.invokeLater(new Runnable() {
@@ -120,7 +133,6 @@ public class LaBanquePostaleConnector extends WebBankConnector {
       }
     };
     thread.start();
-    return builder.load();
   }
 
   public void panelShown() {
@@ -128,6 +140,12 @@ public class LaBanquePostaleConnector extends WebBankConnector {
   }
 
   public void reset() {
+    currentCode = "";
+    updateCodeLabels();
+    for (int i = 0; i < keyboardLabels.length; i++) {
+      keyboardLabels[i].setIcon(null);
+    }
+    initLogin();
   }
 
   private void processKeyboardClick(int index) {
@@ -168,7 +186,7 @@ public class LaBanquePostaleConnector extends WebBankConnector {
             if (!accountsPage.getUrl().contains("voscomptesenligne.labanquepostale.fr/voscomptes/") ||
                 !accountsPage.containsTagWithId("table", "comptes")) {
               notifyIdentificationFailed();
-              loginAction.setEnabled(true);
+              reset();
               return;
             }
 

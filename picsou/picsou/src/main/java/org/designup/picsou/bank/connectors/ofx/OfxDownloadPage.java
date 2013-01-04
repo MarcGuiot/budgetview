@@ -35,10 +35,6 @@ public class OfxDownloadPage extends AbstractBankConnector {
     this.fid = fid;
   }
 
-  public String getBank() {
-    return "[" + Integer.toString(bankId) + "] ";
-  }
-
   public String getCurrentLocation() {
     return url;
   }

@@ -31,6 +31,7 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
   private SynchroMonitor monitor;
   private ProgressPanel progressPanel = new ProgressPanel();
   private JLabel progressLabel = new JLabel();
+  private JLabel bankLabel = new JLabel();
 
   private Stack<BankConnector> currentConnectors = new Stack<BankConnector>();
   private GlobList importedRealAccounts = new GlobList();
@@ -56,6 +57,8 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
     }
 
     builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importSynchroPanel.splits", repository, localDirectory);
+
+    builder.add("bankLabel", bankLabel);
 
     builder.add("connectorPanel", connectorPanel);
 
@@ -112,6 +115,8 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
     currentConnector.init(monitor);
     connectorPanel.removeAll();
     connectorPanel.add(currentConnector.getPanel());
+    bankLabel.setText(currentConnector.getLabel());
+    bankLabel.setIcon(currentConnector.getIcon());
   }
 
   private class Monitor implements SynchroMonitor {
@@ -169,7 +174,7 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       }
       StringWriter builder = new StringWriter();
       if (currentConnector != null) {
-        builder.append("bank: ").append(currentConnector.getBank()).append("\n");
+        builder.append("bank: ").append(currentConnector.getLabel()).append("\n");
         builder.append("location: ").append(currentConnector.getCurrentLocation()).append("\n");
       }
       else {

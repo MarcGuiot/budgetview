@@ -8,6 +8,7 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.importer.ofx.OfxConnection;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Files;
 
@@ -310,7 +311,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .checkTitle("Download error")
       .checkMessageContains("A problem was found")
       .checkMessageContains("support@mybudgetview.com")
-      .checkDetailsContain("bank: [other]")
+      .checkDetailsContain("bank: Autre")
       .checkDetailsContain("location: [current]")
       .checkDetailsContain("java.lang.RuntimeException: boom")
       .close();

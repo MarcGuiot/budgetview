@@ -36,10 +36,6 @@ public class OtherBankConnector extends AbstractBankConnector {
     super(BANK_ID, repository, directory);
   }
 
-  public String getBank() {
-    return "[other]";
-  }
-
   public String getCurrentLocation() {
     return "[current]";
   }

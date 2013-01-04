@@ -46,10 +46,6 @@ public abstract class WebBankConnector extends AbstractBankConnector {
     browser.setBrowserVersion(browserVersion);
   }
 
-  public String getBank() {
-    return "[" + bankId + "]";
-  }
-
   public String getCurrentLocation() {
     return browser.getUrl();
   }

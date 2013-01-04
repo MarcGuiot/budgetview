@@ -4,11 +4,13 @@ import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.RealAccount;
-import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.Files;
@@ -24,10 +26,10 @@ import java.io.InputStream;
 import java.util.Date;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.and;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public abstract class AbstractBankConnector implements BankConnector {
+  private GlobRepository parentRepository;
   protected Directory directory;
   protected Integer bankId;
   protected LocalGlobRepository repository;
@@ -35,12 +37,29 @@ public abstract class AbstractBankConnector implements BankConnector {
   private SynchroMonitor monitor = SynchroMonitor.SILENT;
   private JPanel panel;
 
-  public AbstractBankConnector(Integer bankId, GlobRepository repository, Directory directory) {
+  public AbstractBankConnector(Integer bankId, GlobRepository parentRepository, Directory directory) {
+    this.parentRepository = parentRepository;
     this.directory = directory;
     this.bankId = bankId;
-    this.repository = LocalGlobRepositoryBuilder.init(repository)
+    this.repository = LocalGlobRepositoryBuilder.init(parentRepository)
       .copy(Account.TYPE, RealAccount.TYPE)
       .get();
+  }
+
+  public String getLabel() {
+    return getBank().get(Bank.NAME);
+  }
+
+  public Icon getIcon() {
+    String iconPath = getBank().get(Bank.ICON);
+    if (Strings.isNullOrEmpty(iconPath)) {
+      return null;
+    }
+    return directory.get(ImageLocator.class).get(iconPath);
+  }
+
+  private Glob getBank() {
+    return parentRepository.get(Key.create(Bank.TYPE, bankId));
   }
 
   public void init(SynchroMonitor monitor) {
