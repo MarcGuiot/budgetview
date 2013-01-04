@@ -112,6 +112,15 @@ public class DefaultSerializationInput implements SerializedInput {
     return array;
   }
 
+  public void close() {
+    try {
+      inputStream.close();
+    }
+    catch (IOException e) {
+      throw new RuntimeException("fail to close", e);
+    }
+  }
+
   static class FieldReader implements FieldVisitor {
     private DefaultSerializationInput input;
     private FieldValuesBuilder builder;

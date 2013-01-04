@@ -1,5 +1,6 @@
 package org.designup.picsou.server.serialization;
 
+import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.DeferredCardPeriod;
 import org.globsframework.metamodel.GlobModel;

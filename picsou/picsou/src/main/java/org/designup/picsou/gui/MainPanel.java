@@ -25,6 +25,7 @@ import org.designup.picsou.gui.help.actions.SendLogsAction;
 import org.designup.picsou.gui.license.LicenseExpirationAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
+import org.designup.picsou.gui.mobile.CreateMobileAction;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.notes.ShowNotesAction;
@@ -111,6 +112,7 @@ public class MainPanel {
   private CategorizationView categorizationView;
   private SignpostView signpostView;
   private Action threadsAction;
+  private CreateMobileAction createMobileAction;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -164,6 +166,7 @@ public class MainPanel {
     logoutAction = new LogoutAction(logoutService);
     setPasswordAction = new SetPasswordAction(repository, directory);
     deleteUserAction = new DeleteUserAction(this, repository, directory);
+    createMobileAction = new CreateMobileAction(directory, repository);
     threadsAction = new SendStackTracesAction(repository, directory);
 
     LicenseInfoView licenseInfoView = new LicenseInfoView(repository, directory);
@@ -277,6 +280,7 @@ public class MainPanel {
 
     menu.addSeparator();
     menu.add(preferencesAction);
+    menu.add(createMobileAction);
 
     menu.addSeparator();
     menu.add(registerAction);
@@ -338,7 +342,7 @@ public class MainPanel {
     devMenu.add(new ShowUserEvaluationDialogAction(repository, directory));
     devMenu.add(new LicenseExpirationAction(repository, directory));
     devMenu.add(new DumpRepositoryAction(repository));
-    devMenu.add(new DumpMobileXmlAction(repository));
+    devMenu.add(new DumpMobileXmlAction(repository, directory));
     devMenu.add(new ChangeDateAction(repository));
     devMenu.add(new AddAccountErrorAction(repository));
     devMenu.add(threadsAction);

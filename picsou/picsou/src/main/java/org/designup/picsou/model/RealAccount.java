@@ -1,7 +1,7 @@
 package org.designup.picsou.model;
 
 import com.budgetview.shared.utils.Amounts;
-import org.designup.picsou.server.serialization.PicsouGlobSerializer;
+import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.DefaultInteger;

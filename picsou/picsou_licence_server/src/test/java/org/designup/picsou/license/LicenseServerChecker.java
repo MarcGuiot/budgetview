@@ -9,10 +9,10 @@ public class LicenseServerChecker {
   private LicenseServer server;
   private boolean started;
 
-  public LicenseServerChecker(String databaseUrl) throws IOException {
+  public LicenseServerChecker(String databaseUrl, int port) throws IOException {
     server = new LicenseServer();
     server.useSsl(false);
-    server.usePort(5000);
+    server.usePort(port);
     server.setMailPort(2500);
     server.setDatabaseUrl(databaseUrl);
   }

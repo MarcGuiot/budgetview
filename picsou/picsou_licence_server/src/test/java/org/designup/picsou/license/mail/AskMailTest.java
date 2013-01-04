@@ -1,8 +1,11 @@
 package org.designup.picsou.license.mail;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreProtocolPNames;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.ConnectedTestCase;
 import org.designup.picsou.license.checkers.Email;
@@ -20,7 +23,7 @@ public class AskMailTest extends ConnectedTestCase {
   protected void setUp() throws Exception {
     super.setUp();
     startServers();
-    client = new HttpClient();
+    client = new DefaultHttpClient();
   }
 
   protected void tearDown() throws Exception {
@@ -38,8 +41,8 @@ public class AskMailTest extends ConnectedTestCase {
 
   private void checkMail(String lang, final String expected, String... nextExpected) throws IOException, InterruptedException {
     addUser("monPremierClient@pirate.du");
-    PostMethod postMethod = sendRequest(lang);
-    Header header = postMethod.getResponseHeader(ConfigService.HEADER_STATUS);
+    HttpResponse response = sendRequest(lang);
+    Header header = response.getFirstHeader(ConfigService.HEADER_STATUS);
     assertEquals(ConfigService.HEADER_MAIL_SENT, header.getValue());
     Email email = mailServer.checkReceivedMail("monPremierClient@pirate.du");
     for (String content : Utils.join(expected, nextExpected)) {
@@ -47,23 +50,24 @@ public class AskMailTest extends ConnectedTestCase {
     }
   }
 
-  private PostMethod sendRequest(String lang) throws IOException {
-    PostMethod postMethod = new PostMethod("http://localhost/mailTo");
-    postMethod.getParams().setContentCharset("UTF-8");
-    postMethod.setRequestHeader(ConfigService.HEADER_MAIL, "monPremierClient@pirate.du");
-    postMethod.setRequestHeader(ConfigService.HEADER_LANG, lang);
-    client.executeMethod(postMethod);
-    return postMethod;
+  private HttpResponse sendRequest(String lang) throws IOException {
+    HttpPost postMethod = new HttpPost("http://localhost:" + httpPort + "/mailTo");
+    postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, "UTF-8");
+    postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_ELEMENT_CHARSET, "UTF-8");
+    postMethod.setHeader(ConfigService.HEADER_MAIL, "monPremierClient@pirate.du");
+    postMethod.setHeader(ConfigService.HEADER_LANG, lang);
+    return client.execute(postMethod);
   }
 
   public void testAddInDbIfBadAdress() throws Exception {
-    PostMethod postMethod = new PostMethod("http://localhost/mailTo");
+    HttpPost postMethod = new HttpPost("http://localhost:" + httpPort + "/mailTo");
     String badMail = "monPremierClient@pirate";
-    postMethod.getParams().setContentCharset("UTF-8");
-    postMethod.setRequestHeader(ConfigService.HEADER_MAIL, badMail);
-    postMethod.setRequestHeader(ConfigService.HEADER_LANG, "en");
-    client.executeMethod(postMethod);
-    Header header = postMethod.getResponseHeader(ConfigService.HEADER_STATUS);
+    postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, "UTF-8");
+    postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_ELEMENT_CHARSET, "UTF-8");
+    postMethod.setHeader(ConfigService.HEADER_MAIL, badMail);
+    postMethod.setHeader(ConfigService.HEADER_LANG, "en");
+    HttpResponse response = client.execute(postMethod);
+    Header header = response.getFirstHeader(ConfigService.HEADER_STATUS);
     assertEquals(ConfigService.HEADER_MAIL_UNKNOWN, header.getValue());
     SqlConnection connection = db.getConnection();
     connection.getQueryBuilder(MailError.TYPE, Constraints.equal(MailError.MAIL, badMail))

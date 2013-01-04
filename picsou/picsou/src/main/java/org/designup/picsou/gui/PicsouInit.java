@@ -1,5 +1,6 @@
 package org.designup.picsou.gui;
 
+import com.budgetview.shared.utils.MobileSerialization;
 import org.designup.picsou.bank.SpecificBankLoader;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
@@ -263,6 +264,8 @@ public class PicsouInit {
 
   private void initDirectory(GlobRepository repository) {
     directory.add(ExecutorService.class, Executors.newCachedThreadPool());
+    directory.add(MobileSerialization.class, new MobileSerialization(PicsouApplication.MAJOR_VERSION,
+                                                                     PicsouApplication.MINOR_VERSION));
     directory.add(BrowsingService.class, BrowsingService.createService());
     directory.add(TransactionAnalyzerFactory.class, new TransactionAnalyzerFactory(PicsouGuiModel.get()));
     directory.add(ImportService.class, new ImportService());

@@ -1,7 +1,5 @@
 package org.designup.picsou.license;
 
-import org.apache.commons.httpclient.protocol.DefaultProtocolSocketFactory;
-import org.apache.commons.httpclient.protocol.Protocol;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.browsing.BrowsingService;
@@ -16,10 +14,10 @@ import org.uispec4j.UISpecTestCase;
 import java.util.Locale;
 
 public abstract class ConnectedTestCase extends UISpecTestCase {
-
   protected MailServerChecker mailServer;
   protected FtpServerChecker ftpServer;
   protected DbChecker db;
+  protected int httpPort = 5000;
 
   protected static final String PATH_TO_DATA = "tmp/localprevayler";
   protected LicenseServerChecker licenseServer;
@@ -39,10 +37,10 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
     mailServer = new MailServerChecker();
 
     db =  new DbChecker();
-    licenseServer = new LicenseServerChecker(db.getUrl());
+    licenseServer = new LicenseServerChecker(db.getUrl(), httpPort);
 
-    Protocol http = new Protocol("http", new DefaultProtocolSocketFactory(), 5000);
-    Protocol.registerProtocol("http", http);
+//    Protocol http = new Protocol("http", new DefaultProtocolSocketFactory(), httpPort);
+//    Protocol.registerProtocol("http", http);
 
     ftpServer = new FtpServerChecker(12000);
   }

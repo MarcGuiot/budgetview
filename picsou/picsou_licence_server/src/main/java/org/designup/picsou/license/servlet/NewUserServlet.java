@@ -1,8 +1,13 @@
 package org.designup.picsou.license.servlet;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.cookie.CookiePolicy;
-import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
+import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.params.HttpParams;
 import org.apache.log4j.Logger;
 import org.designup.picsou.license.generator.LicenseGenerator;
 import org.designup.picsou.license.mail.Mailer;
@@ -11,8 +16,8 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SelectQuery;
 import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.SqlRequest;
+import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.utils.directory.Directory;
 
@@ -53,12 +58,14 @@ public class NewUserServlet extends HttpServlet {
     }
     sqlService = directory.get(SqlService.class);
     mailer = directory.get(Mailer.class);
-    client = new HttpClient();
-    client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+    client = new DefaultHttpClient(new PoolingClientConnectionManager());
+//    client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String mail = "???";
+    HttpPost postMethod = null;
+
     try {
       req.setCharacterEncoding("UTF-8");
       resp.setCharacterEncoding("UTF-8");
@@ -70,15 +77,14 @@ public class NewUserServlet extends HttpServlet {
       String paymentStatus = "";
       String receiverEmail = "";
       String lang = null;
-      PostMethod postMethod = new PostMethod(PAYPAL_CONFIRM_URL);
-      postMethod.getParams().setContentCharset("UTF-8");
-      postMethod.setParameter("cmd", "_notify-validate");
+      URIBuilder builder = new URIBuilder(PAYPAL_CONFIRM_URL);
+      builder.addParameter("cmd", "_notify-validate");
       Map<String, String[]> map = (Map<String, String[]>)req.getParameterMap();
       StringBuffer paramaters = new StringBuffer();
       for (Map.Entry<String, String[]> entry : map.entrySet()) {
         String key = entry.getKey();
         for (String name : entry.getValue()) {
-          postMethod.setParameter(key, name);
+          builder.setParameter(key, name);
           paramaters.append(key).append("='").append(req.getParameter(key))
             .append("'; ");
         }
@@ -118,9 +124,15 @@ public class NewUserServlet extends HttpServlet {
         logger.info("NewUser : status " + paymentStatus);
         return;
       }
-      int result = client.executeMethod(postMethod);
-      if (result == 200) {
-        InputStream responseBodyAsStream = postMethod.getResponseBodyAsStream();
+
+      postMethod = new HttpPost(builder.build());
+      HttpParams params = postMethod.getParams();
+      params.setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, "UTF-8");
+      params.setParameter(CoreProtocolPNames.HTTP_ELEMENT_CHARSET, "UTF-8");
+
+      HttpResponse response = client.execute(postMethod);
+      if (response.getStatusLine().getStatusCode() == 200) {
+        InputStream responseBodyAsStream = response.getEntity().getContent();
         byte[] buffer = new byte[500];
         int readed = responseBodyAsStream.read(buffer);
         if (readed == -1) {
@@ -159,12 +171,17 @@ public class NewUserServlet extends HttpServlet {
         }
       }
       else {
-        logger.error("NewUser : Paypal refuse connection " + result);
+        logger.error("NewUser : Paypal refuse connection " + response.getStatusLine());
         resp.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
       }
     }
     catch (Exception e) {
       logger.error("For newUser :  " + mail, e);
+    }
+    finally {
+      if (postMethod != null) {
+        postMethod.releaseConnection();
+      }
     }
   }
 

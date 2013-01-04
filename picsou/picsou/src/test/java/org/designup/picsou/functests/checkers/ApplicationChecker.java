@@ -8,8 +8,9 @@ import org.designup.picsou.gui.printing.PrinterService;
 import org.globsframework.utils.directory.Directory;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import org.uispec4j.interception.WindowInterceptor;
+
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 
 public class ApplicationChecker extends GuiChecker {
   private PicsouApplication application;
@@ -138,6 +139,10 @@ public class ApplicationChecker extends GuiChecker {
 
   public PrinterChecker getPrinter() {
     return new PrinterChecker(printService);
+  }
+
+  public MobileChecker getMobileAccountChecker() {
+    return getOperations().openCreateMobileUser();
   }
 
   private class DummyPicsouApplication extends PicsouApplication {

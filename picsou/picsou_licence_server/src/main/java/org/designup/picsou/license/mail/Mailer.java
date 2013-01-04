@@ -35,7 +35,10 @@ public class Mailer {
   }
 
   public boolean sendRequestLicence(String lang, String activationCode, final String mail) {
-    MailToSent mailToSent = new ExistingLicenseMailToSent("resend", mail, lang, activationCode);
+    final String mail1 = mail;
+    final String subject1 = Lang.get("resend" + ".license.subject", lang);
+    final String content1 = Lang.get("resend" + ".license.message", lang, activationCode, mail);
+    MailToSent mailToSent = new SendEmail(subject1, content1, fromAdress, mail1);
     if (mailToSent.sent()) {
       return true;
     }
@@ -44,7 +47,9 @@ public class Mailer {
   }
 
   public boolean reSendExistingLicenseOnError(String lang, String activationCode, final String mail) {
-    MailToSent mailToSent = new ExistingLicenseMailToSent("resend.error", mail, lang, activationCode);
+    MailToSent mailToSent = new SendEmail(Lang.get("resend.error" + ".license.subject", lang),
+                                          Lang.get("resend.error" + ".license.message", lang, activationCode, mail),
+                                          fromAdress, mail);
     if (mailToSent.sent()) {
       return true;
     }
@@ -53,7 +58,8 @@ public class Mailer {
   }
 
   public boolean sendNewLicense(String mail, String code, String lang) {
-    NewLicenseMailToSent newLicenseMailToSent = new NewLicenseMailToSent(mail, lang, code);
+    SendEmail newLicenseMailToSent =
+      new SendEmail(Lang.get("new.license.subject", lang), Lang.get("new.license.message", lang, code, mail), fromAdress, mail);
     if (newLicenseMailToSent.sent()) {
       return true;
     }
@@ -62,11 +68,23 @@ public class Mailer {
   }
 
   public boolean sendToSupport(Mailbox mailbox, String fromMail, String title, String content){
-    SupportEmailToSend supportEmailToSend = new SupportEmailToSend(mailbox, fromMail, title, content);
+    SendEmail supportEmailToSend =
+      new SendEmail(title, "declared mail:'" + fromMail + "'\ncontent:\n" + content,
+                             "feedback@mybudgetview.fr", mailbox.getEmail());
     if (supportEmailToSend.sent()){
       return true;
     }
     add(supportEmailToSend);
+    return false;
+  }
+
+  public boolean sendNewMobileAccount(String mail, String lang, String url){
+    SendEmail sent  = new SendEmail(Lang.get("mobile.new.subject", lang), Lang.get("mobile.new.message", lang, url, mail),
+                                    fromAdress, mail);
+    if (sent.sent()){
+      return true;
+    }
+    add(sent);
     return false;
   }
 
@@ -79,15 +97,14 @@ public class Mailer {
     Session session = Session.getDefaultInstance(mailProperties);
 
     MimeMessage message = new MimeMessage(session);
-    Multipart multipart = new MimeMultipart();
-    BodyPart text = new MimeBodyPart();
-    text.setText(content);
     message.setFrom(new InternetAddress(from));
     message.setSubject(subject);
     message.setSentDate(new Date());
-    message.setContent(content, "text/html");
+    message.setText(content, "UTF-8", "html");
     message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
-    Transport.send(message);
+    synchronized (session){
+      Transport.send(message);
+    }
     logger.info("mail sent : " + to + "  " + subject);
   }
 
@@ -138,66 +155,6 @@ public class Mailer {
     }
   }
 
-  private class NewLicenseMailToSent extends MailToSent {
-    private final String lang;
-    private final String code;
-
-    public NewLicenseMailToSent(String mail, String lang, String code) {
-      super(mail);
-      this.lang = lang;
-      this.code = code;
-    }
-
-    public boolean sent() {
-      try {
-        inc();
-        sendMail(mail, fromAdress, Lang.get("new.license.subject", lang),
-                 Lang.get("new.license.message", lang, code, mail));
-        return true;
-      }
-      catch (Exception e) {
-        logger.warn(toString(), e);
-        return false;
-      }
-    }
-
-    public String toString() {
-      return "new license for '" + mail + "' code : '" + code + "' retry count : " + retryCount + " for " + count;
-    }
-  }
-
-  private class ExistingLicenseMailToSent extends MailToSent {
-    private final String prefix;
-    private final String lang;
-    private final String activationCode;
-
-    public ExistingLicenseMailToSent(final String prefix, final String mail, String lang, String activationCode) {
-      super(mail);
-      this.prefix = prefix;
-      this.lang = lang;
-      this.activationCode = activationCode;
-    }
-
-    boolean sent() {
-      try {
-        inc();
-        sendMail(mail, fromAdress, Lang.get(prefix + ".license.subject", lang),
-                 Lang.get(prefix + ".license.message", lang, activationCode, mail));
-                 //, Lang.get(prefix + ".license.message.text", lang, activationCode, mail));
-        return true;
-      }
-      catch (Exception e) {
-        logger.warn("Mail not sent : " + toString(), e);
-        return false;
-      }
-    }
-
-    public String toString() {
-      return "Existing license for '" + mail + "' code : '" + activationCode + "' retry count : " + retryCount + " for " + count;
-    }
-  }
-
-
   private class ReSendMailThread extends Thread {
     private BlockingQueue<MailToSent> mail;
 
@@ -242,16 +199,16 @@ public class Mailer {
     }
   }
 
-  private class SupportEmailToSend extends MailToSent {
+  private class SendEmail extends MailToSent {
     private String fromMail;
     private String title;
     private String content;
 
-    public SupportEmailToSend(Mailbox mailbox, String fromMail, String title, String content) {
-      super(mailbox.getEmail());
+    public SendEmail(String title, final String realContent, final String fromMail, final String toMail) {
+      super(toMail);
       this.title = title;
-      this.content = "declared mail:'" + fromMail + "'\ncontent:\n" + content;
-      this.fromMail = "feedback@mybudgetview.fr";
+      this.content = realContent;
+      this.fromMail = fromMail;
     }
 
     public boolean sent() {
