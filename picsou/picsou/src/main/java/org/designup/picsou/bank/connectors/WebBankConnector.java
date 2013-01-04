@@ -8,6 +8,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.designup.picsou.bank.connectors.webcomponents.WebBrowser;
+import org.designup.picsou.bank.connectors.webcomponents.WebPage;
 import org.designup.picsou.bank.connectors.webcomponents.utils.Download;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
@@ -51,19 +52,10 @@ public abstract class WebBankConnector extends AbstractBankConnector {
     return browser.getClient();
   }
 
-  public static BufferedImage getFirstImage(HtmlImage img) {
-    try {
-      final ImageReader imageReader = img.getImageReader();
-      return imageReader.read(0);
-    }
-    catch (IOException e) {
-      throw new RuntimeException("Can not load image " + img.getId());
-    }
-  }
-
-  protected void loadPage(final String url) throws WebCommandFailed {
-    browser.load(url);
+  protected WebPage loadPage(final String url) throws WebCommandFailed {
+    WebPage webPage = browser.load(url);
     page = browser.getCurrentHtmlPage();
+    return webPage;
   }
 
   protected <T extends HtmlElement> T getElementById(final String id) throws WebParsingError {

@@ -1,8 +1,7 @@
 package org.designup.picsou.bank.connectors.webcomponents;
 
-import com.gargoylesoftware.htmlunit.html.HtmlTable;
-import com.gargoylesoftware.htmlunit.html.HtmlTableCell;
-import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
+import com.gargoylesoftware.htmlunit.html.*;
+import org.designup.picsou.bank.connectors.webcomponents.utils.HtmlUnit;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 
 import java.util.ArrayList;
@@ -15,8 +14,20 @@ public class WebTable extends WebComponent<HtmlTable> {
     super(browser, table);
   }
 
-  public List<WebTableRow> getRows(int count) {
+  public List<WebTableRow> getAllRows() {
     return convertRows(node.getRows());
+  }
+
+  public List<WebTableRow> getRowsWithoutHeaderAndFooters() {
+    List<WebTableRow> result = new ArrayList<WebTableRow>();
+    for (HtmlElement row : node.getElementsByTagName("tr")) {
+      if (row.getParentNode().getNodeName().equals("thead") ||
+          row.getParentNode().getNodeName().equals("tfoot")) {
+        continue;
+      }
+      result.add(new WebTableRow(browser, (HtmlTableRow)row));
+    }
+    return result;
   }
 
   public List<WebTableRow> getRowsExceptLast(int count) {

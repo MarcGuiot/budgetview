@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class CreditMutuelArkea extends WebBankConnector {
+public class CreditMutuelArkeaConnector extends WebBankConnector {
 
   public static final int BANK_ID = 15;
 
@@ -37,11 +37,11 @@ public class CreditMutuelArkea extends WebBankConnector {
 
   public static class Factory implements BankConnectorFactory {
     public BankConnector create(GlobRepository repository, Directory directory) {
-      return new CreditMutuelArkea(directory, repository);
+      return new CreditMutuelArkeaConnector(directory, repository);
     }
   }
 
-  private CreditMutuelArkea(Directory directory, GlobRepository repository) {
+  private CreditMutuelArkeaConnector(Directory directory, GlobRepository repository) {
     super(BANK_ID, repository, directory);
   }
 
@@ -106,10 +106,10 @@ public class CreditMutuelArkea extends WebBankConnector {
         }
       }
     }
-    webForm.getAnchorWithImage("valider.gif").click();
+    webForm.getLinkWithImage("valider.gif").click();
     WebForm patametersWeb = web.getFormByName("parametresForm");
     patametersWeb.getInputByValue("2").select();
-    web.getAnchorWithImage("telecharger.gif").click();
+    web.getLinkWithImage("telecharger.gif").click();
     DomNodeList<DomElement> tables = (DomNodeList)page.getElementsByTagName(HtmlTable.TAG_NAME);
     HtmlTable table = (HtmlTable)tables.get(0);
     int count = table.getRowCount();

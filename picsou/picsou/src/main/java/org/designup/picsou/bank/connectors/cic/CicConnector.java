@@ -81,12 +81,14 @@ public class CicConnector extends WebBankConnector {
           try {
             WebPage homePage = browser.getCurrentPage();
             WebForm idForm = homePage.getFormByName("ident");
-            idForm.getTextFieldById("e_identifiant").setText(userAndPasswordPanel.getUser());
-            idForm.getTextFieldById("e_mdp").setText(userAndPasswordPanel.getPassword());
+            idForm.getTextInputById("e_identifiant").setText(userAndPasswordPanel.getUser());
+            idForm.getTextInputById("e_mdp").setText(userAndPasswordPanel.getPassword());
             WebPage loggedInPage = idForm.submit();
-            if (loggedInPage.getUrl().contains("www.cic.fr/cic/fr/banque/espace_personnel")) {
+            if (!loggedInPage.getUrl().contains("www.cic.fr/cic/fr/banque/espace_personnel")) {
               userAndPasswordPanel.requestFocus();
-              notifyErrorFound("synchro.invalid.id");
+              userAndPasswordPanel.setFieldsEnabled(true);
+              userAndPasswordPanel.setEnabled(true);
+              notifyIdentificationFailed();
               return;
             }
 
@@ -122,7 +124,9 @@ public class CicConnector extends WebBankConnector {
     WebTable accountTable = downloadForm.getTableWithNamedInput("compte");
     WebTableColumn column = accountTable.getColumn(0).removeLastCells(1);
     for (WebTableCell cell : column) {
-      cell.getCheckBox().setChecked(true);
+      String siteAccountName = cell.getEnclosingRow().getCell(1).asText();
+      boolean toImport = isToImport(siteAccountName);
+      cell.getCheckBox().setChecked(toImport);
     }
 
     notifyDownloadInProgress();
@@ -135,6 +139,16 @@ public class CicConnector extends WebBankConnector {
         }
       }
     }
+  }
+
+  private boolean isToImport(String siteAccountName) {
+    boolean toImport = false;
+    for (Glob account : accounts) {
+      if (siteAccountName.contains(account.get(RealAccount.NAME))) {
+       toImport = true;
+      }
+    }
+    return toImport;
   }
 
   private class AccountLabels {

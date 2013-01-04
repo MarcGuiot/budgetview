@@ -24,7 +24,15 @@ public abstract class WebComponent<T extends HtmlElement> {
     return node.asText();
   }
 
+  public String asXml() {
+    return node.asXml();
+  }
+
   public String toString() {
     return HtmlUnit.dump(node);
+  }
+
+  public void removeAttribute(String attributeName) {
+    node.removeAttribute(attributeName);
   }
 }

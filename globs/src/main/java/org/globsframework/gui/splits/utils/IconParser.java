@@ -8,6 +8,7 @@ import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.components.ArrowIcon;
 import org.globsframework.gui.splits.components.CircledArrowIcon;
 import org.globsframework.gui.splits.components.EmptyIcon;
+import org.globsframework.gui.splits.components.RoundedRectIcon;
 import org.globsframework.utils.Strings;
 
 import javax.swing.*;
@@ -34,6 +35,15 @@ public class IconParser {
                                                         "[ ]*([A-z\\.#0-9]+)[ ]*" +
                                                         "\\)");
 
+  private static Pattern ROUNDED_RECT_FORMAT = Pattern.compile("roundedRect\\(" +
+                                                        "[ ]*([0-9]+)[ ]*," +
+                                                        "[ ]*([0-9]+)[ ]*," +
+                                                        "[ ]*([0-9]+)[ ]*," +
+                                                        "[ ]*([0-9]+)[ ]*," +
+                                                        "[ ]*([A-z\\.#0-9]+)[ ]*," +
+                                                        "[ ]*([A-z\\.#0-9]+)[ ]*" +
+                                                        "\\)");
+
   public static Icon parse(String text, ColorService colorService, ImageLocator imageLocator, SplitsContext context) {
     if (Strings.isNullOrEmpty(text)) {
       return null;
@@ -52,6 +62,11 @@ public class IconParser {
     CircledArrowIcon circledArrow = parseCircledArrow(text, colorService, context);
     if (circledArrow != null) {
       return circledArrow;
+    }
+
+    RoundedRectIcon roundedRect = parseRoundedRect(text, colorService, context);
+    if (roundedRect != null) {
+      return roundedRect;
     }
 
     return imageLocator.get(text);
@@ -126,4 +141,48 @@ public class IconParser {
     return null;
   }
 
+  private static RoundedRectIcon parseRoundedRect(String text, ColorService colorService, SplitsContext context) {
+    Matcher matcher = ROUNDED_RECT_FORMAT.matcher(text.trim());
+    if (matcher.matches()) {
+      int iconWidth = Integer.parseInt(matcher.group(1));
+      int iconHeight = Integer.parseInt(matcher.group(2));
+      int arcX= Integer.parseInt(matcher.group(3));
+      int arcY = Integer.parseInt(matcher.group(4));
+
+      final RoundedRectIcon icon = new RoundedRectIcon(iconWidth, iconHeight, arcX, arcY);
+
+      String background = matcher.group(5);
+      if (Colors.isHexaString(background)) {
+        Color color = Colors.toColor(background);
+        icon.setBackgroundColor(color);
+      }
+      else {
+        ColorUpdater updater = new ColorUpdater(background) {
+          public void updateColor(Color color) {
+            icon.setBackgroundColor(color);
+          }
+        };
+        updater.install(colorService);
+        context.addDisposable(updater);
+      }
+
+      String border = matcher.group(6);
+      if (Colors.isHexaString(border)) {
+        Color color = Colors.toColor(border);
+        icon.setBorderColor(color);
+      }
+      else {
+        ColorUpdater updater = new ColorUpdater(border) {
+          public void updateColor(Color color) {
+            icon.setBorderColor(color);
+          }
+        };
+        updater.install(colorService);
+        context.addDisposable(updater);
+      }
+
+      return icon;
+    }
+    return null;
+  }
 }

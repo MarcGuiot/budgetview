@@ -7,6 +7,7 @@ import com.gargoylesoftware.htmlunit.javascript.host.Event;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
+import org.designup.picsou.bank.connectors.webcomponents.WebImage;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
 import org.designup.picsou.gui.browsing.BrowsingAction;
 import org.designup.picsou.model.RealAccount;
@@ -153,7 +154,7 @@ public class SgConnector extends WebBankConnector {
         HtmlInput password = (HtmlInput)zoneClavier.getElementById("tc_visu_saisie");
         HtmlImage htmlImageClavier = zoneClavier.getElementById("img_clavier");
         htmlImageClavier.fireEvent(Event.TYPE_LOAD);
-        final BufferedImage imageClavier = getFirstImage(htmlImageClavier);
+        final BufferedImage imageClavier = WebImage.extractFirstImage(htmlImageClavier);
         keyboardPanel.setSize(imageClavier.getWidth(), imageClavier.getHeight());
         List<HtmlElement> attribute = zoneClavier.getElementsByAttribute(HtmlMap.TAG_NAME, "name", "tc_tclavier");
         if (attribute.size() != 1) {

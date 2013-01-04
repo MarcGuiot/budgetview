@@ -2,6 +2,7 @@ package org.designup.picsou.bank.connectors;
 
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.bank.BankConnector;
+import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.RealAccount;
 import org.globsframework.model.Glob;
@@ -54,9 +55,9 @@ public abstract class AbstractBankConnector implements BankConnector {
 
   protected abstract JPanel createPanel();
 
-  protected void createOrUpdateRealAccount(String name, String number, String position, Date date, final Integer bankId) {
+  protected Glob createOrUpdateRealAccount(String name, String number, String position, Date date, final Integer bankId) {
     if (Strings.isNullOrEmpty(name) && Strings.isNullOrEmpty(number)) {
-      return;
+      return null;
     }
 
     Glob account = repository.getAll(RealAccount.TYPE,
@@ -79,34 +80,37 @@ public abstract class AbstractBankConnector implements BankConnector {
                         value(RealAccount.POSITION, Strings.toString(position).trim()));
     }
     accounts.add(account);
+    return account;
   }
 
   protected void createOrUpdateRealAccount(String type, String number,
                                            final String url, String org, String fid) {
-    if (Strings.isNotEmpty(number)) {
-      Glob account = repository.getAll(RealAccount.TYPE,
-                                       and(fieldEquals(RealAccount.NUMBER, number),
-                                           fieldEquals(RealAccount.ACC_TYPE, type),
-                                           fieldEquals(RealAccount.URL, url),
-                                           fieldEquals(RealAccount.ORG, org),
-                                           fieldEquals(RealAccount.FID, fid)))
-        .getFirst();
-      if (account == null) {
-        account = repository.create(RealAccount.TYPE,
-                                    value(RealAccount.ACC_TYPE, Strings.toString(type).trim()),
-                                    value(RealAccount.NUMBER, Strings.toString(number).trim()),
-                                    value(RealAccount.URL, url),
-                                    value(RealAccount.ORG, org),
-                                    value(RealAccount.BANK, bankId),
-                                    value(RealAccount.FID, fid),
-                                    value(RealAccount.FROM_SYNCHRO, true));
-      }
-      else {
-        repository.update(account.getKey(), RealAccount.FROM_SYNCHRO, Boolean.TRUE);
-      }
-
-      accounts.add(account);
+    if (!Strings.isNotEmpty(number)) {
+      return;
     }
+
+    Glob account = repository.getAll(RealAccount.TYPE,
+                                     and(fieldEquals(RealAccount.NUMBER, number),
+                                         fieldEquals(RealAccount.ACC_TYPE, type),
+                                         fieldEquals(RealAccount.URL, url),
+                                         fieldEquals(RealAccount.ORG, org),
+                                         fieldEquals(RealAccount.FID, fid)))
+      .getFirst();
+    if (account == null) {
+      account = repository.create(RealAccount.TYPE,
+                                  value(RealAccount.ACC_TYPE, Strings.toString(type).trim()),
+                                  value(RealAccount.NUMBER, Strings.toString(number).trim()),
+                                  value(RealAccount.URL, url),
+                                  value(RealAccount.ORG, org),
+                                  value(RealAccount.BANK, bankId),
+                                  value(RealAccount.FID, fid),
+                                  value(RealAccount.FROM_SYNCHRO, true));
+    }
+    else {
+      repository.update(account.getKey(), RealAccount.FROM_SYNCHRO, Boolean.TRUE);
+    }
+
+    accounts.add(account);
   }
 
   public static File createQifLocalFile(Glob realAccount, InputStream contentAsStream, String charset) {
@@ -127,7 +131,7 @@ public abstract class AbstractBankConnector implements BankConnector {
 
   public abstract void downloadFile() throws Exception;
 
-  protected Double extractAmount(String position) {
+  protected Double extractAmount(String position) throws WebParsingError {
     return Amounts.extractAmount(position);
   }
 
@@ -142,6 +146,10 @@ public abstract class AbstractBankConnector implements BankConnector {
       monitor.errorFound(e);
       return;
     }
+    importCompleted();
+  }
+
+  protected void importCompleted() {
     repository.commitChanges(true);
     monitor.importCompleted(accounts);
   }

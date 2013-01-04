@@ -4,6 +4,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import org.designup.picsou.bank.connectors.webcomponents.WebComponent;
 import org.globsframework.utils.exceptions.GlobsException;
 
+import java.net.MalformedURLException;
+
 public class WebParsingError extends Exception {
   public final String url;
 
@@ -19,6 +21,11 @@ public class WebParsingError extends Exception {
 
   public WebParsingError(String url, String message) {
     super(message);
+    this.url = url;
+  }
+
+  public WebParsingError(String url, Exception e) {
+    super(e);
     this.url = url;
   }
 }

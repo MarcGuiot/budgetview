@@ -9,7 +9,7 @@ public class WebCommandFailed extends Exception {
     super(e);
   }
 
-  public WebCommandFailed(Exception e, String message) {
+  public WebCommandFailed(Throwable e, String message) {
     super(message, e);
   }
 }

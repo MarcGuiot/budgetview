@@ -1,10 +1,10 @@
 package org.designup.picsou.bank.connectors.webcomponents;
 
-import com.gargoylesoftware.htmlunit.html.HtmlInput;
+import com.gargoylesoftware.htmlunit.html.HtmlRadioButtonInput;
 
-public class WebRadioButton extends WebComponent<HtmlInput> {
+public class WebRadioButton extends WebComponent<HtmlRadioButtonInput> {
 
-  protected WebRadioButton(WebBrowser browser, HtmlInput input) {
+  protected WebRadioButton(WebBrowser browser, HtmlRadioButtonInput input) {
     super(browser, input);
   }
 

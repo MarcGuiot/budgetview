@@ -15,11 +15,11 @@ public class WebComboBox extends WebComponent<HtmlSelect> {
     super(browser, select);
   }
 
-  public void select(String entry) throws WebParsingError {
+  public void select(String text) throws WebParsingError {
     boolean found = false;
     for (Iterator iterator = node.getOptions().iterator(); iterator.hasNext(); ) {
       HtmlOption option = (HtmlOption)iterator.next();
-      boolean selected = option.asText().trim().equalsIgnoreCase(entry);
+      boolean selected = option.asText().trim().equalsIgnoreCase(text);
       option.setSelected(selected);
       if (selected) {
         found = true;
@@ -27,7 +27,25 @@ public class WebComboBox extends WebComponent<HtmlSelect> {
     }
     if (!found) {
       throw new WebParsingError(this,
-                                "No option with value '" + entry + "' " +
+                                "No option with text '" + text + "' " +
+                                "for combo: " + node.getAttribute("id") +
+                                " - actual content: " + getEntryNames());
+    }
+  }
+
+  public void selectByValue(String value) throws WebParsingError {
+    boolean found = false;
+    for (Iterator iterator = node.getOptions().iterator(); iterator.hasNext(); ) {
+      HtmlOption option = (HtmlOption)iterator.next();
+      boolean selected = option.getValueAttribute().trim().equalsIgnoreCase(value);
+      option.setSelected(selected);
+      if (selected) {
+        found = true;
+      }
+    }
+    if (!found) {
+      throw new WebParsingError(this,
+                                "No option with value '" + value + "' " +
                                 "for combo: " + node.getAttribute("id") +
                                 " - actual content: " + getEntryNames());
     }

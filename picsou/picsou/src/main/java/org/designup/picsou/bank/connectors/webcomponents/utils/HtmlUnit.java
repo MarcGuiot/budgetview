@@ -139,7 +139,7 @@ public class HtmlUnit {
   }
 
   public static List getElementsWithText(HtmlElement container, String tagName, String text) throws WebParsingError{
-    return container.getByXPath("//" + tagName + "[.=" + generateConcatForXPath(text) + "]");
+    return container.getByXPath("//" + tagName + "//[.=" + generateConcatForXPath(text) + "]");
   }
 
   private static String generateConcatForXPath(String searchString) {

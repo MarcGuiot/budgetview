@@ -11,6 +11,7 @@ import org.apache.http.HttpResponse;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
+import org.designup.picsou.bank.connectors.webcomponents.WebImage;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
 import org.designup.picsou.model.RealAccount;
@@ -415,6 +416,6 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
   }
 
   public static BufferedImage getFirstImage(HtmlImage img) {
-    return WebBankConnector.getFirstImage(img);
+    return WebImage.extractFirstImage(img);
   }
 }

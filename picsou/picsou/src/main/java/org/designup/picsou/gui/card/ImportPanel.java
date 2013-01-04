@@ -19,6 +19,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.isTrue;
 
 public class ImportPanel extends View {
 
@@ -80,7 +81,7 @@ public class ImportPanel extends View {
   }
 
   private void updateLabels() {
-    GlobList accounts = repository.getAll(RealAccount.TYPE, fieldEquals(RealAccount.FROM_SYNCHRO, Boolean.TRUE));
+    GlobList accounts = repository.getAll(RealAccount.TYPE, isTrue(RealAccount.FROM_SYNCHRO));
     if (accounts.isEmpty()) {
       importLabel.setText(Lang.get("importPanel.import.label"));
       syncLabel.setText("");

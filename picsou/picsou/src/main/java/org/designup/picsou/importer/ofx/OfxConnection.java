@@ -21,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class OfxConnection {
   static OfxConnection connection = new OfxConnection();
 
@@ -165,10 +167,10 @@ public class OfxConnection {
       System.out.println("OfxConnection.main " + accountInfo.number + " " + accountInfo.accType);
       File outputFile = new File("/tmp/operation.ofx");
       Glob glob = repository.create(RealAccount.TYPE,
-                                    FieldValue.value(RealAccount.ACC_TYPE, accountInfo.accType),
-                                    FieldValue.value(RealAccount.BANK_ID, accountInfo.bankId),
-                                    FieldValue.value(RealAccount.NUMBER, accountInfo.number),
-                                    FieldValue.value(RealAccount.FROM_SYNCHRO, true));
+                                    value(RealAccount.ACC_TYPE, accountInfo.accType),
+                                    value(RealAccount.BANK_ID, accountInfo.bankId),
+                                    value(RealAccount.NUMBER, accountInfo.number),
+                                    value(RealAccount.FROM_SYNCHRO, true));
       OfxConnection.getInstance().loadOperation(glob, fromDate, account, password,
                                                 url, org, fid, outputFile);
       OfxImporter importer = new OfxImporter();

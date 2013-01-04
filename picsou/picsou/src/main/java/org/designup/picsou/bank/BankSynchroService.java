@@ -2,7 +2,8 @@ package org.designup.picsou.bank;
 
 import org.designup.picsou.bank.connectors.OtherBankConnector;
 import org.designup.picsou.bank.connectors.cic.CicConnector;
-import org.designup.picsou.bank.connectors.creditmutuel.CreditMutuelArkea;
+import org.designup.picsou.bank.connectors.creditmutuel.CreditMutuelArkeaConnector;
+import org.designup.picsou.bank.connectors.labanquepostale.LaBanquePostaleConnector;
 import org.designup.picsou.bank.connectors.ofx.OfxDownloadPage;
 import org.designup.picsou.bank.connectors.sg.SgConnector;
 import org.designup.picsou.model.Bank;
@@ -24,8 +25,9 @@ public class BankSynchroService {
 
   public BankSynchroService() {
     register(SgConnector.BANK_ID, new SgConnector.Factory());
-    register(CreditMutuelArkea.BANK_ID, new CreditMutuelArkea.Factory());
+    register(CreditMutuelArkeaConnector.BANK_ID, new CreditMutuelArkeaConnector.Factory());
     register(CicConnector.BANK_ID, new CicConnector.Factory());
+    register(LaBanquePostaleConnector.BANK_ID, new LaBanquePostaleConnector.Factory());
     register(OtherBankConnector.BANK_ID, new OtherBankConnector.Factory());
   }
 

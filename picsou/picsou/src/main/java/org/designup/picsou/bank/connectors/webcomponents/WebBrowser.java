@@ -8,6 +8,7 @@ import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 public class WebBrowser {
 
@@ -48,11 +49,20 @@ public class WebBrowser {
 
   public WebPage load(String url) throws WebCommandFailed {
     try {
-      currentPage   = getClient().getPage(url);
+      currentPage = getClient().getPage(url);
       return new WebPage(this, currentPage);
     }
     catch (IOException e) {
       throw new WebCommandFailed(e);
+    }
+  }
+
+  public WebPage loadPageInSameSite(String path) throws WebParsingError, WebCommandFailed {
+    try {
+      return load(currentPage.getFullyQualifiedUrl(path).toString());
+    }
+    catch (MalformedURLException e) {
+      throw new WebParsingError(getUrl(), e);
     }
   }
 

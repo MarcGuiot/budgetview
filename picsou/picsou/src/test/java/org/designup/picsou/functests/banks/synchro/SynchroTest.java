@@ -250,7 +250,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     );
     ImportDialogChecker dialogChecker = operations.openImportDialog();
     OfxSynchoChecker synchro = dialogChecker
-      .selectBankForDownload("la banque postale")
+      .selectBankForDownload("Bank One")
       .checkSecurityInfo("Secure connection")
       .openOfxSynchro();
     synchro.checkPasswordEmpty();
@@ -271,7 +271,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     accountInfoArrayList.add(new OfxConnection.AccountInfo(null, "12345", "others"));
 
     importPanel.checkImportMessage("Import other operations");
-    importPanel.checkSynchroMessage("Download your accounts from La Banque Postale");
+    importPanel.checkSynchroMessage("Download your accounts from Bank One");
   }
 
   public void testManuallyImportingFilesDoesNotEnableSynchroButton() throws Exception {

@@ -3,6 +3,8 @@ package org.designup.picsou.bank.connectors.webcomponents.utils;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.SynchroMonitor;
+import org.designup.picsou.gui.browsing.BrowsingService;
+import org.designup.picsou.gui.browsing.DummyBrowsingService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.utils.ApplicationColors;
@@ -29,6 +31,7 @@ public class WebConnectorLauncher {
     directory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     directory.add(SelectionService.class, new SelectionService());
     directory.add(DescriptionService.class, new PicsouDescriptionService());
+    directory.add(BrowsingService.class, new DummyBrowsingService());
     OpenRequestManager openRequestManager = new OpenRequestManager();
     directory.add(OpenRequestManager.class, openRequestManager);
     directory.add(new UIService());
@@ -87,6 +90,7 @@ public class WebConnectorLauncher {
 
     public void errorFound(Exception exception) {
       System.out.println("Exception: " + exception.getMessage());
+      exception.printStackTrace();
     }
 
     public void importCompleted(GlobList realAccounts) {

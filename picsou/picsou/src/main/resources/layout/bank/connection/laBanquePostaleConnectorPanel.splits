@@ -1,0 +1,61 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.formLabel" font="-,bold,12" anchor="left" marginBottom="10" foreground="#222222"/>
+    <style selector="label.keyboardLabel"
+           icon="roundedRect(32,31,4,4,#F0F0F0,#E0E0E0)" preferredSize="(32,31)"
+           marginBottom="2" marginRight="2"/>
+    <style selector="label.codeLabel" font="-,bold,12" foreground="#222222" preferredSize="(10,10)" margin="2"/>
+
+  </styles>
+
+  <panel styleClass="innerDialogBlockPanel">
+    <column>
+
+      <label text="1. Saisissez votre identifiant" styleClass="formLabel"/>
+      <grid>
+        <textField ref="userIdField" gridPos="(0,0)" columns="10"/>
+        <button action="userIdHelp" gridPos="(0,1)" styleClass="hyperlink" font="-,plain,10" anchor="right"/>
+      </grid>
+
+      <label text="2. Composez votre code secret à 6 chiffres" styleClass="formLabel" marginTop="20"/>
+      <row>
+        <filler fill="horizontal"/>
+        <column>
+          <grid>
+            <label ref="label0" gridPos="(0,0)" styleClass="keyboardLabel"/>
+            <label ref="label1" gridPos="(1,0)" styleClass="keyboardLabel"/>
+            <label ref="label2" gridPos="(2,0)" styleClass="keyboardLabel"/>
+            <label ref="label3" gridPos="(3,0)" styleClass="keyboardLabel"/>
+            <label ref="label4" gridPos="(4,0)" styleClass="keyboardLabel"/>
+
+            <label ref="label5" gridPos="(0,1)" styleClass="keyboardLabel"/>
+            <label ref="label6" gridPos="(1,1)" styleClass="keyboardLabel"/>
+            <label ref="label7" gridPos="(2,1)" styleClass="keyboardLabel"/>
+            <label ref="label8" gridPos="(3,1)" styleClass="keyboardLabel"/>
+            <label ref="label9" gridPos="(4,1)" styleClass="keyboardLabel"/>
+          </grid>
+          <row marginTop="5" marginBottom="15">
+            <row border="matte(1,1,1,1,#E0E0E0)">
+              <label ref="codeLabel0" styleClass="codeLabel"/>
+              <label ref="codeLabel1" styleClass="codeLabel"/>
+              <label ref="codeLabel2" styleClass="codeLabel"/>
+              <label ref="codeLabel3" styleClass="codeLabel"/>
+              <label ref="codeLabel4" styleClass="codeLabel"/>
+              <label ref="codeLabel5" styleClass="codeLabel"/>
+            </row>
+            <button action="clearCode" text="Effacer" styleClass="hyperlink" font="-,plain,10"/>
+            <filler fill="horizontal"/>
+          </row>
+        </column>
+        <filler fill="horizontal"/>
+      </row>
+
+      <button action="login" text="Valider"/>
+
+      <filler fill="vertical"/>
+
+    </column>
+  </panel>
+</splits>

@@ -20,13 +20,13 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new WebPanel(browser, node.getElementById(id));
   }
 
-  public WebTextField getTextField() throws WebParsingError {
-    return new WebTextField(browser,
-                            (HtmlInput)HtmlUnit.getElementWithAttribute(node, "input", "type", "text"));
+  public WebTextInput getTextField() throws WebParsingError {
+    return new WebTextInput(browser,
+                            (HtmlTextInput)HtmlUnit.getElementWithAttribute(node, "input", "type", "text"));
   }
 
-  public WebTextField getTextFieldById(String id) throws WebParsingError {
-    return new WebTextField(browser, (HtmlInput)getElementById(id, HtmlInput.class));
+  public WebTextInput getTextInputById(String id) throws WebParsingError {
+    return new WebTextInput(browser, (HtmlTextInput)getElementById(id, HtmlTextInput.class));
   }
 
   public WebLink getLinkById(String id) throws WebParsingError {
@@ -38,17 +38,32 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new WebLink(browser, (HtmlAnchor)anchors.get(0));
   }
 
+  public WebLink getSingleLink() throws WebParsingError {
+    HtmlAnchor anchor = (HtmlAnchor)HtmlUnit.getSingleElementByTag(node, "a", HtmlAnchor.class);
+    return new WebLink(browser, anchor);
+  }
+
+  public WebLink getLinkWithImage(String src) throws WebParsingError {
+    HtmlElement img = HtmlUnit.getElementWithAttribute(node, "img", "src", src);
+    return new WebLink(browser, (HtmlAnchor)HtmlUnit.getFirstParent(img, "a"));
+  }
+
+  public WebImage getSingleImage() throws WebParsingError {
+    HtmlImage image = (HtmlImage)HtmlUnit.getSingleElementByTag(node, "img", HtmlImage.class);
+    return new WebImage(browser, image);
+  }
+
   public WebForm getFormByName(String name) throws WebParsingError {
     return new WebForm(browser, (HtmlForm)getElementByName("form", name, HtmlForm.class));
   }
 
+  public WebRadioButton getRadioButtonById(String id) throws WebParsingError {
+    return new WebRadioButton(browser, (HtmlRadioButtonInput)getElementById(id, HtmlRadioButtonInput.class));
+  }
+
   public WebRadioButton getRadioButtonByValue(String value) throws WebParsingError {
-    HtmlInput input =
-      (HtmlInput)HtmlUnit.getElementWithAttribute(node, "input", "value", value);
-    String actualType = input.getTypeAttribute();
-    if (!"radio".equalsIgnoreCase(actualType)) {
-      throw new WebParsingError(this, "Unexpected input type '" + actualType + "'");
-    }
+    HtmlRadioButtonInput input =
+      (HtmlRadioButtonInput)HtmlUnit.getElementWithAttribute(node, HtmlRadioButtonInput.class, "input", "value", value);
     return new WebRadioButton(browser, input);
   }
 
@@ -64,6 +79,14 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
 
   public WebButton getButtonById(String id) throws WebParsingError {
     return new WebButton(browser, (HtmlButton)getElementById(id, HtmlButton.class));
+  }
+
+  public WebButton getButtonByName(String name) throws WebParsingError {
+    return new WebButton(browser, (HtmlButton)getElementByName("input", name, HtmlButton.class));
+  }
+
+  public WebButton getButtonByValue(String value) throws WebParsingError {
+    return new WebButton(browser, (HtmlButton)HtmlUnit.getElementWithAttribute(node, HtmlButton.class, "input", "value", value));
   }
 
   public WebCheckBox getCheckBox() throws WebParsingError {
@@ -115,6 +138,10 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new WebTextArea(browser, (HtmlTextArea)getElementByLabel(label, HtmlTextArea.class));
   }
 
+  public WebSpan getSingleSpan() throws WebParsingError {
+    return new WebSpan(browser, (HtmlSpan)getSingleElement("span", HtmlSpan.class));
+  }
+
   private HtmlElement getSingleElement(String tagName, Class expectedClass) throws WebParsingError {
     return HtmlUnit.getSingleElementByTag(node, tagName, expectedClass);
   }
@@ -144,11 +171,6 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return element;
   }
 
-  public WebLink getAnchorWithImage(String src) throws WebParsingError {
-    HtmlElement img = HtmlUnit.getElementWithAttribute(node, "img", "src", src);
-    return new WebLink(browser, (HtmlAnchor)HtmlUnit.getFirstParent(img, "a"));
-  }
-
   public DomNode findElement(DomNode parent, DomNodeFilter filter, String failureMessage) throws WebParsingError {
     DomNode element = getElement(this.node, filter);
     if (element == null) {
@@ -166,5 +188,14 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
       }
     }
     return null;
+  }
+
+  public boolean containsTagWithId(String tag, String id) {
+    List list = HtmlUnit.getVisibleElementsWithAttribute(node, tag, "id", id);
+    return !list.isEmpty();
+  }
+
+  public boolean containsText(String text) {
+    return node.asXml().contains(text);
   }
 }

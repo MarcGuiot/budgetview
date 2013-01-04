@@ -1,6 +1,7 @@
 package org.designup.picsou.bank.connectors.webcomponents;
 
 import com.gargoylesoftware.htmlunit.html.HtmlButton;
+import org.designup.picsou.bank.connectors.webcomponents.utils.Download;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 
 import java.io.IOException;
