@@ -171,7 +171,7 @@ public class NewUserServlet extends HttpServlet {
   private void register(HttpServletResponse resp, String email, String transactionId, SqlConnection db, String lang)
     throws NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException {
     SelectQuery query = db.getQueryBuilder(License.TYPE,
-                                           Constraints.equal(License.EMAIL, email))
+                                           Constraints.equal(License.MAIL, email))
       .selectAll()
       .getQuery();
     GlobList globList = query.executeAsGlobs();
@@ -183,7 +183,7 @@ public class NewUserServlet extends HttpServlet {
         .set(License.ACCESS_COUNT, 1L)
         .set(License.SIGNATURE, signature)
         .set(License.ACTIVATION_CODE, code)
-        .set(License.EMAIL, email)
+        .set(License.MAIL, email)
         .set(License.TRANSACTION_ID, transactionId)
         .getRequest();
       for (int i = 0; i < LICENCE_COUNT; i++) {
@@ -202,7 +202,7 @@ public class NewUserServlet extends HttpServlet {
       String code = glob.get(License.ACTIVATION_CODE);
       if (code == null) {
         code = LicenseGenerator.generateActivationCode();
-        db.getUpdateBuilder(License.TYPE, Constraints.equal(License.EMAIL, email))
+        db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, email))
           .update(License.ACTIVATION_CODE, code)
           .getRequest()
           .run();

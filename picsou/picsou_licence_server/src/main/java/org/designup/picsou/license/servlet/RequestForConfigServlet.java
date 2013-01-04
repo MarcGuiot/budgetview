@@ -316,7 +316,7 @@ public class RequestForConfigServlet extends HttpServlet {
 
     LicenseRequest(SqlConnection db) {
       mail = new ValueStringAccessor();
-      query = db.getQueryBuilder(License.TYPE, Constraints.equal(License.EMAIL, mail))
+      query = db.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
         .select(License.ACCESS_COUNT)
         .select(License.ACTIVATION_CODE)
         .select(License.REPO_ID)
@@ -348,7 +348,7 @@ public class RequestForConfigServlet extends HttpServlet {
     UpdateNewActivationCodeRequest(SqlConnection db) {
       mail = new ValueStringAccessor();
       activationCode = new ValueStringAccessor();
-      request = db.getUpdateBuilder(License.TYPE, Constraints.equal(License.EMAIL, mail))
+      request = db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
         .update(License.ACTIVATION_CODE, activationCode)
         .getRequest();
     }

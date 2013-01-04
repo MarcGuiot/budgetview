@@ -1,5 +1,6 @@
 package org.designup.picsou.bank.connectors.webcomponents;
 
+import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.gargoylesoftware.htmlunit.html.*;
 import org.designup.picsou.bank.connectors.webcomponents.utils.DomNodeFilter;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HtmlUnit;
@@ -17,16 +18,25 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   }
 
   public WebPanel findPanelById(String id) throws WebParsingError {
+    try {
     return new WebPanel(browser, node.getElementById(id));
   }
+    catch (ElementNotFoundException e) {
+      return null;
+    }
+  }
 
-  public WebTextInput getTextField() throws WebParsingError {
+  public WebTextInput getTextInput() throws WebParsingError {
     return new WebTextInput(browser,
                             (HtmlTextInput)HtmlUnit.getElementWithAttribute(node, "input", "type", "text"));
   }
 
   public WebTextInput getTextInputById(String id) throws WebParsingError {
     return new WebTextInput(browser, (HtmlTextInput)getElementById(id, HtmlTextInput.class));
+  }
+
+  public WebPasswordInput getPasswordInputById(String id) throws WebParsingError {
+    return new WebPasswordInput(browser, (HtmlPasswordInput)getElementById(id, HtmlPasswordInput.class));
   }
 
   public WebLink getLinkById(String id) throws WebParsingError {
@@ -43,6 +53,10 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new WebLink(browser, anchor);
   }
 
+  public WebLink getAnchorWithRef(String src) throws WebParsingError {
+    return new WebLink(browser, HtmlUnit.getFirstElementWithAttribute(node, HtmlAnchor.class, HtmlAnchor.TAG_NAME, "href", src));
+  }
+
   public WebLink getLinkWithImage(String src) throws WebParsingError {
     HtmlElement img = HtmlUnit.getElementWithAttribute(node, "img", "src", src);
     return new WebLink(browser, (HtmlAnchor)HtmlUnit.getFirstParent(img, "a"));
@@ -51,6 +65,14 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   public WebImage getSingleImage() throws WebParsingError {
     HtmlImage image = (HtmlImage)HtmlUnit.getSingleElementByTag(node, "img", HtmlImage.class);
     return new WebImage(browser, image);
+  }
+
+  public WebImage getImageById(String id) throws WebParsingError {
+    return new WebImage(browser, getElementById(id, HtmlImage.class));
+  }
+
+  public WebMap getMapByName(String name) throws WebParsingError {
+    return new WebMap(browser, (HtmlMap)HtmlUnit.getFirstElementWithAttribute(node, HtmlMap.TAG_NAME, "name", name));
   }
 
   public WebForm getFormByName(String name) throws WebParsingError {
@@ -65,6 +87,11 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     HtmlRadioButtonInput input =
       (HtmlRadioButtonInput)HtmlUnit.getElementWithAttribute(node, HtmlRadioButtonInput.class, "input", "value", value);
     return new WebRadioButton(browser, input);
+  }
+
+  public WebInput getInputById(String id) throws WebParsingError {
+    HtmlInput input = HtmlUnit.getElementById(node, id, HtmlInput.class);
+    return new WebInput(browser, input);
   }
 
   public WebInput getInputByValue(String value) throws WebParsingError {
@@ -121,6 +148,11 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new WebTable(browser, (HtmlTable)getElementById(id, HtmlTable.class));
   }
 
+  public WebTable getTableWithClass(String name) throws WebParsingError {
+    return new WebTable(browser,
+                        (HtmlTable)HtmlUnit.getFirstElementWithAttribute(node, HtmlTable.TAG_NAME, "class", name));
+  }
+
   public WebTable getTableWithNamedInput(String name) throws WebParsingError {
     HtmlInput input = (HtmlInput)HtmlUnit.getFirstElementWithAttribute(node, "input", "name", name);
     return new WebTable(browser, (HtmlTable)HtmlUnit.getFirstParent(input, "table"));
@@ -146,7 +178,7 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return HtmlUnit.getSingleElementByTag(node, tagName, expectedClass);
   }
 
-  protected HtmlElement getElementById(String id, Class expectedClass) throws WebParsingError {
+  protected <T extends HtmlElement> T getElementById(String id, Class<T> expectedClass) throws WebParsingError {
     return HtmlUnit.getElementById(node, id, expectedClass);
   }
 

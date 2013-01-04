@@ -71,27 +71,33 @@ public class Download {
     Log.write("download " + message);
     DownloadAttachmentHandler downloadAttachmentHandler = new DownloadAttachmentHandler();
     browser.getClient().setAttachmentHandler(downloadAttachmentHandler);
-    try {
-      element.click();
-    }
-    catch (IOException e) {
-      throw new WebCommandFailed(e, "In anchor click");
-    }
 
-    synchronized (downloadAttachmentHandler) {
-      if (downloadAttachmentHandler.page == null) {
-        try {
-          downloadAttachmentHandler.wait(3000);
-        }
-        catch (InterruptedException e1) {
+    try {
+      try {
+        element.click();
+      }
+      catch (IOException e) {
+        throw new WebCommandFailed(e, "In anchor click");
+      }
+
+      synchronized (downloadAttachmentHandler) {
+        if (downloadAttachmentHandler.page == null) {
+          try {
+            downloadAttachmentHandler.wait(3000);
+          }
+          catch (InterruptedException e1) {
+          }
         }
       }
-    }
-    if (downloadAttachmentHandler.page == null) {
-      throw new WebCommandFailed("No download for " + message);
-    }
+      if (downloadAttachmentHandler.page == null) {
+        throw new WebCommandFailed("No download for " + message);
+      }
 
-    return downloadAttachmentHandler.page.getWebResponse();
+      return downloadAttachmentHandler.page.getWebResponse();
+    }
+    finally {
+      browser.getClient().setAttachmentHandler(null);
+    }
   }
 
   private class DownloadAttachmentHandler implements AttachmentHandler {

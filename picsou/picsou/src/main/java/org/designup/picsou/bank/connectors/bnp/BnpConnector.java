@@ -66,7 +66,6 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
 
   private BnpConnector(GlobRepository repository, Directory directory) {
     super(BANK_ID, repository, directory);
-    browser.setHttpConnectionProvider(this);
   }
 
   public HttpWebConnection getHttpConnection(WebClient client) {

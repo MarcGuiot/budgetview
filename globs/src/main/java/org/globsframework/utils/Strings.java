@@ -202,4 +202,21 @@ public class Strings {
   public static String toYesNo(boolean value) {
     return value ? "yes" : "no";
   }
+
+  public static String replaceSpace(String text) {
+    if (text == null) {
+      return null;
+    }
+    StringBuilder builder = new StringBuilder(text.length());
+    for (int i = 0; i < text.length(); i++) {
+      char ch = text.charAt(i);
+      if (Character.isSpaceChar(ch)) {
+        builder.append(" ");
+      }
+      else {
+        builder.append(ch);
+      }
+    }
+    return builder.toString();
+  }
 }

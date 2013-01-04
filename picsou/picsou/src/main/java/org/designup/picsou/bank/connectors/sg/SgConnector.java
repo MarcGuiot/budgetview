@@ -1,14 +1,21 @@
 package org.designup.picsou.bank.connectors.sg;
 
 import com.budgetview.shared.utils.Amounts;
-import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.javascript.host.Event;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.varia.NullAppender;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
-import org.designup.picsou.bank.connectors.webcomponents.WebImage;
+import org.designup.picsou.bank.connectors.webcomponents.*;
+import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
+import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
+import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 import org.designup.picsou.gui.browsing.BrowsingAction;
 import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.utils.Lang;
@@ -30,8 +37,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 
-public class SgConnector extends WebBankConnector {
+public class SgConnector extends WebBankConnector implements HttpConnectionProvider {
   private static final String INDEX = "https://particuliers.secure.societegenerale.fr/index.html";
   private static final String URL_TELECHARGEMENT = "https://particuliers.secure.societegenerale.fr/restitution/tel_telechargement.html";
   //  private static final String INDEX = "file:index.html";
@@ -45,7 +54,25 @@ public class SgConnector extends WebBankConnector {
   private JTextField passwordField;
 
   public static void main(String[] args) throws IOException {
+    BasicConfigurator.configure(new NullAppender());
+    Logger.getRootLogger().setLevel(Level.ERROR);
     WebConnectorLauncher.show(new Factory());
+  }
+
+  public HttpWebConnection getHttpConnection(WebClient client) {
+    return new HttpWebConnection(client) {
+      public WebResponse getResponse(WebRequest request) throws IOException {
+        String s = request.getUrl().toString();
+        System.out.println("SgConnector.getResponse " + s);
+        if (s.startsWith("https://logs128.xiti.com") || s.startsWith("https://societegenerale.solution.weborama.fr")
+            || s.startsWith("https://ssl.weborama.fr")) {
+          throw new IOException("not available");
+        }
+        WebResponse response = super.getResponse(request);
+        System.out.println("SgConnector.getResponse " + response.getLoadTime() + " ms.");
+        return response;
+      }
+    };
   }
 
   public static class Factory implements BankConnectorFactory {
@@ -56,6 +83,7 @@ public class SgConnector extends WebBankConnector {
 
   private SgConnector(GlobRepository repository, Directory directory) {
     super(BANK_ID, repository, directory);
+    this.setBrowserVersion(BrowserVersion.INTERNET_EXPLORER_7);
   }
 
   protected JPanel createPanel() {
@@ -94,7 +122,6 @@ public class SgConnector extends WebBankConnector {
   }
 
   private void initCardCode(SplitsBuilder builder) {
-
     validateUserIdAction = new ValidateUserIdAction();
     builder.add("validateUserId", validateUserIdAction);
 
@@ -138,36 +165,30 @@ public class SgConnector extends WebBankConnector {
 
     public void actionPerformed(ActionEvent event) {
       try {
-        DomElement elementById = page.getElementById("codcli");
-        ((HtmlInput)elementById).setValueAttribute(userIdField.getText());
+        WebTextInput codcli = browser.getCurrentPage().getTextInputById("codcli");
+        codcli.setText(userIdField.getText());
         notifyIdentificationInProgress();
-        Page newPage = ((HtmlElement)page.getElementById("button")).click();
+        browser.getCurrentPage().getInputById("button").click();
         notifyWaitingForUser();
-//        System.out.println("SG$ValiderActionListener.actionPerformed " + newPage);
-//        page = (HtmlPage)newPage;
         if (hasError) {
           hasError = false;
           return;
         }
 
-        HtmlElement zoneClavier = (HtmlElement)page.getElementById("tc_cvcs");
-        HtmlInput password = (HtmlInput)zoneClavier.getElementById("tc_visu_saisie");
-        HtmlImage htmlImageClavier = zoneClavier.getElementById("img_clavier");
+        WebPanel zoneClavier = browser.getCurrentPage().getPanelById("tc_cvcs");
+        WebTextInput password = zoneClavier.getTextInputById("tc_visu_saisie");
+        WebImage htmlImageClavier = zoneClavier.getImageById("img_clavier");
         htmlImageClavier.fireEvent(Event.TYPE_LOAD);
-        final BufferedImage imageClavier = WebImage.extractFirstImage(htmlImageClavier);
+        final BufferedImage imageClavier = htmlImageClavier.getFirstImage();
         keyboardPanel.setSize(imageClavier.getWidth(), imageClavier.getHeight());
-        List<HtmlElement> attribute = zoneClavier.getElementsByAttribute(HtmlMap.TAG_NAME, "name", "tc_tclavier");
-        if (attribute.size() != 1) {
-          throw new RuntimeException("Can not find tc_tclavier in" + zoneClavier.asXml());
-        }
-        HtmlElement map = (HtmlElement)attribute.get(0);
-        keyboardPanel.setImage(imageClavier, map, password);
+        WebMap map = zoneClavier.getMapByName("tc_tclavier");
+        keyboardPanel.setImage(imageClavier, map, password, zoneClavier);
 
-        HtmlImage corrigerImg = zoneClavier.getElementById("tc_corriger");
+        WebImage corrigerImg = zoneClavier.getImageById("tc_corriger");
         corriger.setAction(new CorrigerActionListener(corrigerImg, password));
         corriger.setEnabled(true);
 
-        HtmlImage validerImg = zoneClavier.getElementById("tc_valider");
+        WebImage validerImg = zoneClavier.getImageById("tc_valider");
         validateCode.setAction(new ValiderPwdActionListener(validerImg));
         validateCode.setEnabled(true);
       }
@@ -178,170 +199,179 @@ public class SgConnector extends WebBankConnector {
     }
 
     private class CorrigerActionListener extends AbstractAction {
-      private HtmlImage img;
+      private WebImage img;
+      private WebTextInput password;
       private HtmlInput passwordInput;
 
-      private CorrigerActionListener(HtmlImage img, HtmlInput passwordInput) {
+      private CorrigerActionListener(WebImage img, WebTextInput password) {
         super(Lang.get("bank.sg.corriger"));
         this.img = img;
-        this.passwordInput = passwordInput;
+        this.password = password;
       }
 
       public void actionPerformed(ActionEvent event) {
         try {
-          page = (HtmlPage)img.click();
+          img.click();
+          passwordField.setText(password.getValue());
           passwordField.setText(passwordInput.getValueAttribute());
         }
-        catch (IOException e) {
-          notifyErrorFound(e);
-        }
-      }
-    }
-
-    private class ValiderPwdActionListener extends AbstractAction {
-      private HtmlImage img;
-
-      public ValiderPwdActionListener(HtmlImage img) {
-        super(Lang.get("bank.sg.valider"));
-        this.img = img;
-      }
-
-      public void actionPerformed(ActionEvent e) {
-        try {
-          notifyDownloadInProgress();
-          page = (HtmlPage)img.click();
-          getClient().waitForBackgroundJavaScript(10000);
-
-          if (page.getTitleText().contains("Erreur")) {
-            notifyWaitingForUser();
-            return;
-          }
-
-          DomElement content = null;
-          int count = 3;
-          while (!hasError && content == null && count != 0) {
-            content = page.getElementById("content");
-            if (content == null) {
-              page = (HtmlPage)img.click();
-              getClient().waitForBackgroundJavaScript(10000);
-            }
-            count--;
-          }
-
-          if (!hasError) {
-            content = page.getElementById("content");
-            if (content == null) {
-              notifyWaitingForUser();
-              hasError = false;
-              return;
-            }
-
-            notifyDownloadInProgress();
-            List<HtmlTable> tables = ((HtmlElement)content).getElementsByAttribute(HtmlTable.TAG_NAME, "class", "LGNTableA ListePrestation");
-            if (tables.size() != 1) {
-              throw new RuntimeException("Find " + tables.size() + " table(s) in " + page.asXml());
-            }
-            HtmlTable table = tables.get(0);
-            for (HtmlTableRow row : table.getRows()) {
-
-              String type = null;
-              String name = null;
-              String position = null;
-              Date date = null;
-              for (HtmlTableCell cell : row.getCells()) {
-                if (cell.getTagName().equals(HtmlTableHeaderCell.TAG_NAME)) {
-                  continue;
-                }
-                String columnName = cell.getAttribute("headers");
-                if (columnName.equalsIgnoreCase("TypeCompte")) {
-                  DomNodeList<HtmlElement> htmlElements = cell.getElementsByTagName(HtmlAnchor.TAG_NAME);
-                  if (htmlElements.isEmpty()) {
-                    continue;
-                  }
-                  HtmlElement element = htmlElements.get(0);
-                  type = element.getTextContent();
-                }
-                else if (columnName.equalsIgnoreCase("NumeroCompte")) {
-                  name = cell.getTextContent();
-                }
-                else if (columnName.equalsIgnoreCase("solde")) {
-                  List<HtmlElement> htmlElements = cell.getElementsByAttribute(HtmlDivision.TAG_NAME, "class", "Solde");
-                  if (htmlElements.size() > 0) {
-                    HtmlDivision element = (HtmlDivision)htmlElements.get(0);
-                    String title = element.getAttribute("title");
-                    if (Strings.isNotEmpty(title)) {
-                      date = Dates.extractDateDDMMYYYY(title);
-                    }
-                    position = element.getTextContent();
-                  }
-                  else {
-                    position = cell.getTextContent();
-                  }
-                }
-              }
-              createOrUpdateRealAccount(type, name, position, date, BANK_ID);
-            }
-            page = getClient().getPage(URL_TELECHARGEMENT);
-            doImport();
-          }
-        }
-        catch (Exception e1) {
-          notifyErrorFound(e1);
-        }
-        finally {
-          notifyWaitingForUser();
+        catch (WebParsingError error) {
+          notifyErrorFound(error);
         }
       }
     }
   }
 
+  private class ValiderPwdActionListener extends AbstractAction {
+    private WebImage img;
+
+    public ValiderPwdActionListener(WebImage img) {
+      super(Lang.get("bank.sg.valider"));
+      this.img = img;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      ExecutorService executorService = directory.get(ExecutorService.class);
+      executorService.submit(new Callable<Object>() {
+        public Object call() throws Exception {
+          try {
+            notifyDownloadInProgress();
+            img.click();
+            browser.waitForBackgroundJavaScript(10000);
+
+            if (browser.getCurrentPage().getTitle().contains("Erreur")) {
+              notifyErrorFound(browser.getCurrentPage().asText());
+              return null;
+            }
+
+            WebPanel content = null;
+            int count = 3;
+            while (!hasError && content == null && count != 0) {
+              content = browser.getCurrentPage().findPanelById("content");
+              if (content == null) {
+                img.click();
+                browser.waitForBackgroundJavaScript(10000);
+              }
+              count--;
+            }
+
+            if (!hasError) {
+              content = browser.getCurrentPage().findPanelById("content");
+              if (content == null) {
+                notifyWaitingForUser();
+                hasError = false;
+                return null;
+              }
+
+              notifyDownloadInProgress();
+              WebTable tables = content.getTableWithClass("LGNTableA ListePrestation");
+              HtmlTable table = tables.getTable();
+              for (HtmlTableRow row : table.getRows()) {
+
+                String type = null;
+                String name = null;
+                String position = null;
+                Date date = null;
+                for (HtmlTableCell cell : row.getCells()) {
+                  if (cell.getTagName().equals(HtmlTableHeaderCell.TAG_NAME)) {
+                    continue;
+                  }
+                  String columnName = cell.getAttribute("headers");
+                  if (columnName.equalsIgnoreCase("TypeCompte")) {
+                    DomNodeList<HtmlElement> htmlElements = cell.getElementsByTagName(HtmlAnchor.TAG_NAME);
+                    if (htmlElements.isEmpty()) {
+                      continue;
+                    }
+                    HtmlElement element = htmlElements.get(0);
+                    type = element.getTextContent();
+                  }
+                  else if (columnName.equalsIgnoreCase("NumeroCompte")) {
+                    name = Strings.replaceSpace(cell.getTextContent());
+                  }
+                  else if (columnName.equalsIgnoreCase("solde")) {
+                    List<HtmlElement> htmlElements = cell.getElementsByAttribute(HtmlDivision.TAG_NAME, "class", "Solde");
+                    if (htmlElements.size() > 0) {
+                      HtmlDivision element = (HtmlDivision)htmlElements.get(0);
+                      String title = element.getAttribute("title");
+                      if (Strings.isNotEmpty(title)) {
+                        date = Dates.extractDateDDMMYYYY(title);
+                      }
+                      position = element.getTextContent();
+                    }
+                    else {
+                      position = cell.getTextContent();
+                    }
+                  }
+                }
+                createOrUpdateRealAccount(type, name, position, date, BANK_ID);
+              }
+              browser.load(URL_TELECHARGEMENT);
+              doImport();
+            }
+          }
+          catch (WebCommandFailed failed) {
+            notifyErrorFound(failed);
+          }
+          catch (Exception e1) {
+            notifyErrorFound(e1);
+          }
+          finally {
+            notifyWaitingForUser();
+          }
+          return null;
+        }
+      });
+    }
+  }
+
   public void downloadFile() throws Exception {
-    HtmlSelect compte = getElementById("compte");
-    List<HtmlOption> accountList = compte.getOptions();
+    notifyInitialConnection();
+//    HtmlSelect compte = getElementById("compte");
+    WebComboBox compte = browser.getCurrentPage().getComboBoxById("compte");
+    List<String> accountList = compte.getEntryNames();
     for (int i = 0, size = accountList.size(); i < size; i++) {
-      HtmlOption option = accountList.get(i);
+      String option = accountList.get(i);
       Glob realAccount = find(option, this.accounts);
       if (realAccount != null) {
-        page = (HtmlPage)compte.setSelectedAttribute(option, true);
-        File file = downloadFor(realAccount);
+        compte.select(option);
+        File file = null;
+        try {
+          notifyDownload(getAccountDescription(realAccount));
+          file = downloadFor(realAccount);
+        }
+        catch (WebCommandFailed failed) {
+        }
         if (file != null) {
           repository.update(realAccount.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
         }
-        else {
-          try {
+
+        try {
 //            DomElement error = ((HtmlPage)client.getCurrentWindow().getEnclosedPage()).getElementById("div_NET2G");
 //            DomNodeList<HtmlElement> name = error.getElementsByTagName(HtmlAnchor.TAG_NAME);
 //            if (name.size() == 1 && name.get(0).hasAttribute()){
 //              page = name.get(0).click();
 //            }
 //            else {
-            page = getClient().getPage(URL_TELECHARGEMENT);
-            compte = getElementById("compte");
-            accountList = compte.getOptions();
+          browser.load(URL_TELECHARGEMENT);
+          compte = browser.getCurrentPage().getComboBoxById("compte");
+          accountList = compte.getEntryNames();
 //            }
-          }
-          catch (Exception e) {
-            Log.write("Can not go back", e);
-            try {
-              page = getClient().getPage(URL_TELECHARGEMENT);
-              compte = getElementById("compte");
-              accountList = compte.getOptions();
-            }
-            catch (IOException e1) {
-              notifyErrorFound(e1);
-              return;
-            }
-          }
+        }
+        catch (Exception e) {
+          Log.write("Can not go back", e);
+          browser.load(URL_TELECHARGEMENT);
+          compte = browser.getCurrentPage().getComboBoxById("compte");
+          accountList = compte.getEntryNames();
         }
       }
     }
     getClient().closeAllWindows();
   }
 
-  private Glob find(HtmlOption option, GlobList accounts) {
+  private Glob find(String option, GlobList accounts) {
     for (Glob account : accounts) {
       String number = account.get(RealAccount.NUMBER);
-      if (option.getTextContent().contains(number)) {
+      if (Strings.replaceSpace(option).contains(number)) {
         return account;
       }
     }
@@ -369,7 +399,11 @@ public class SgConnector extends WebBankConnector {
     HtmlElement div = getElementById("logicielFull");
     String style = div.getAttribute("style");
     if (Strings.isNotEmpty(style)) {
-      return null;
+      browser.waitForBackgroundJavaScript(1000);
+      style = div.getAttribute("style");
+      if (Strings.isNotEmpty(style)) {
+        return null;
+      }
     }
     List<HtmlSelect> htmlSelectLogicielFull =
       div.getElementsByAttribute(HtmlSelect.TAG_NAME, "id", "logicielFull");
@@ -416,8 +450,8 @@ public class SgConnector extends WebBankConnector {
         Log.write("SG : can not find periode");
       }
     }
-    HtmlAnchor anchor = findLink(page.getAnchors(), "telecharger");
+    WebLink link = browser.getCurrentPage().getAnchorWithRef("javascript:telecharger(this)");
 
-    return downloadQifFile(realAccount, anchor);
+    return downloadQifFile(realAccount, link.getNode());
   }
 }

@@ -39,6 +39,8 @@ import picsou.AwtExceptionHandler;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.globsframework.model.FieldValue.value;
 
@@ -260,6 +262,7 @@ public class PicsouInit {
   }
 
   private void initDirectory(GlobRepository repository) {
+    directory.add(ExecutorService.class, Executors.newCachedThreadPool());
     directory.add(BrowsingService.class, BrowsingService.createService());
     directory.add(TransactionAnalyzerFactory.class, new TransactionAnalyzerFactory(PicsouGuiModel.get()));
     directory.add(ImportService.class, new ImportService());

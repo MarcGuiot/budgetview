@@ -73,7 +73,7 @@ public class AskMailTest extends ConnectedTestCase {
 
   private void checkInBase(String mailTo) {
     SqlConnection connection = db.getConnection();
-    connection.getQueryBuilder(License.TYPE, Constraints.equal(License.EMAIL, mailTo))
+    connection.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, mailTo))
       .getQuery().executeUnique();
     connection.commitAndClose();
   }
@@ -82,7 +82,7 @@ public class AskMailTest extends ConnectedTestCase {
     SqlConnection connection = db.getConnection();
     try {
       connection.getCreateBuilder(License.TYPE)
-        .set(License.EMAIL, mail)
+        .set(License.MAIL, mail)
         .getRequest().run();
     }
     finally {

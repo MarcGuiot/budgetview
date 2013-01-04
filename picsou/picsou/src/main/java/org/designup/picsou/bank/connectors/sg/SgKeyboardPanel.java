@@ -4,18 +4,22 @@ import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import org.designup.picsou.bank.connectors.webcomponents.WebImage;
+import org.designup.picsou.bank.connectors.webcomponents.WebMap;
+import org.designup.picsou.bank.connectors.webcomponents.WebPanel;
+import org.designup.picsou.bank.connectors.webcomponents.WebTextInput;
+import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 
 import javax.swing.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 
 class SgKeyboardPanel extends JPanel {
   private InOutMouseMotionListener motionListener = new InOutMouseMotionListener();
-  private HtmlInput password;
+  private WebTextInput password;
   private BufferedImage image;
   private JTextField passwordTextField;
 
@@ -46,10 +50,10 @@ class SgKeyboardPanel extends JPanel {
     }
   }
 
-  public void setImage(BufferedImage clavier, HtmlElement map, HtmlInput password) {
+  public void setImage(BufferedImage clavier, WebMap map, WebTextInput password, WebPanel zoneClavier) throws WebParsingError {
     this.image = clavier;
     this.password = password;
-    motionListener.init(map);
+    motionListener.init(zoneClavier, map);
   }
 
   private static class NullImageObserver implements ImageObserver {
@@ -59,24 +63,23 @@ class SgKeyboardPanel extends JPanel {
   }
 
   private class InOutMouseMotionListener extends MouseAdapter implements MouseMotionListener {
-    private HtmlElement[][] scare;
+    private WebMap.WebMapArea[][] scare;
     private int lastX = -1;
     private int lastY = -1;
-    private HtmlImage surlignage;
+    private WebImage surlignage;
     private boolean drawKeyBorder = false;
     private BufferedImage imageSurlignage;
     private int drawBoxX;
     private int drawBoxY;
 
-    public void init(HtmlElement map) {
-      this.surlignage = map.getElementById("surlignage");
-      imageSurlignage = WebImage.extractFirstImage(surlignage);
-
-      scare = new HtmlElement[4][4];
+    public void init(WebPanel zoneClavier, WebMap map) throws WebParsingError {
+      this.surlignage = zoneClavier.getImageById("surlignage");
+      imageSurlignage = surlignage.getFirstImage();
+      scare = new WebMap.WebMapArea[4][4];
       for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-          HtmlElement id = map.getElementById("touche" + (j + 1) + "" + (i + 1));
-          String className = id.getAttribute("className");
+          WebMap.WebMapArea id = map.getAreaById("touche" + (j + 1) + "" + (i + 1));
+          String className = id.getClassName();
           if (className != null && !className.equals("toucheVide")) {
             scare[i][j] = id;
           }
@@ -96,7 +99,7 @@ class SgKeyboardPanel extends JPanel {
         return;
       }
       surlignage.mouseUp();
-      passwordTextField.setText(password.getValueAttribute());
+      passwordTextField.setText(password.getValue());
     }
 
     public void mouseDragged(MouseEvent e) {
@@ -110,7 +113,7 @@ class SgKeyboardPanel extends JPanel {
       int y = (4 * e.getY()) / (image.getHeight() + 1);
       if ((x != lastX || y != lastY)) {
         if (lastX != -1 && lastY != -1) {
-          HtmlElement previous = scare[lastX][lastY];
+          WebMap.WebMapArea previous = scare[lastX][lastY];
           if (previous != null && drawKeyBorder) {
             previous.mouseOut();
             drawKeyBorder = false;
@@ -122,7 +125,7 @@ class SgKeyboardPanel extends JPanel {
           repaint();
           return;
         }
-        HtmlElement newElement = scare[x][y];
+        WebMap.WebMapArea newElement = scare[x][y];
         if (newElement != null) {
           newElement.mouseOver();
           lastX = x;

@@ -1,6 +1,7 @@
 package org.designup.picsou.bank.connectors;
 
 import com.gargoylesoftware.htmlunit.AlertHandler;
+import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
@@ -10,6 +11,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.designup.picsou.bank.connectors.webcomponents.WebBrowser;
 import org.designup.picsou.bank.connectors.webcomponents.WebPage;
 import org.designup.picsou.bank.connectors.webcomponents.utils.Download;
+import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 import org.globsframework.model.Glob;
@@ -35,6 +37,13 @@ public abstract class WebBankConnector extends AbstractBankConnector {
     super(bankId, repository, directory);
     this.bankId = bankId;
     this.browser = new WebBrowser(new ErrorAlertHandler());
+    if (this instanceof HttpConnectionProvider){
+      browser.setHttpConnectionProvider((HttpConnectionProvider)this);
+    }
+  }
+
+  public void setBrowserVersion(BrowserVersion browserVersion){
+    browser.setBrowserVersion(browserVersion);
   }
 
   public String getBank() {

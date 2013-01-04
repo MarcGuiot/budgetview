@@ -5,6 +5,7 @@ import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.RealAccount;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -154,8 +155,16 @@ public abstract class AbstractBankConnector implements BankConnector {
     monitor.importCompleted(accounts);
   }
 
+  protected String getAccountDescription(Glob account) {
+    return Strings.join(account.get(RealAccount.NAME), account.get(RealAccount.NUMBER), account.get(RealAccount.POSITION));
+  }
+
   protected void notifyInitialConnection() {
     monitor.initialConnection();
+  }
+
+  protected void notifyDownload(String description) {
+    monitor.notifyDownload(description);
   }
 
   protected void notifyIdentificationInProgress() {

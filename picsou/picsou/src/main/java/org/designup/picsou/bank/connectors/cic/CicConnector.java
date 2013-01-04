@@ -82,7 +82,7 @@ public class CicConnector extends WebBankConnector {
             WebPage homePage = browser.getCurrentPage();
             WebForm idForm = homePage.getFormByName("ident");
             idForm.getTextInputById("e_identifiant").setText(userAndPasswordPanel.getUser());
-            idForm.getTextInputById("e_mdp").setText(userAndPasswordPanel.getPassword());
+            idForm.getPasswordInputById("e_mdp").setText(userAndPasswordPanel.getPassword());
             WebPage loggedInPage = idForm.submit();
             if (!loggedInPage.getUrl().contains("www.cic.fr/cic/fr/banque/espace_personnel")) {
               userAndPasswordPanel.requestFocus();
