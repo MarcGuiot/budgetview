@@ -51,10 +51,12 @@ public class AutoCompletionModel extends Searchable {
   private void reloadLabels(GlobRepository repository) {
     labels.clear();
     SortedSet<String> transactionLabels = new TreeSet<String>();
-    for (String labels : repository
+    for (String label : repository
       .getAll(Transaction.TYPE, not(isTrue(Transaction.PLANNED)))
       .getValueSet(Transaction.LABEL)) {
-      transactionLabels.add(labels.toUpperCase());
+      if (Strings.isNotEmpty(label)) {
+        transactionLabels.add(label.toUpperCase());
+      }
     }
     labels.addAll(transactionLabels);
   }
@@ -108,10 +110,8 @@ public class AutoCompletionModel extends Searchable {
   }
 
   public void showPopup(String searchingText) {
-    System.out.println("AutoCompletionModel.showPopup: " + searchingText);
   }
 
   public void hidePopup() {
-    System.out.println("AutoCompletionModel.hidePopup: ");
   }
 }
