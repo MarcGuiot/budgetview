@@ -1,7 +1,7 @@
 package org.designup.picsou.model;
 
+import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
-import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.PicsouUtils;
 import org.globsframework.metamodel.GlobType;

@@ -38,4 +38,6 @@ public interface SerializedInput {
   int[] readIntArray();
 
   long[] readLongArray();
+
+  void close();
 }

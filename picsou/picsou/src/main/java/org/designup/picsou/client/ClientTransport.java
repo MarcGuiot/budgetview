@@ -3,8 +3,6 @@ package org.designup.picsou.client;
 import org.designup.picsou.client.exceptions.*;
 import org.globsframework.utils.serialization.SerializedInput;
 
-import java.util.List;
-
 public interface ClientTransport {
 
   SerializedInput connect() throws BadConnection;

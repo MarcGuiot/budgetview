@@ -70,7 +70,7 @@
 
         <grid name="total" weightY="0" marginLeft="15" marginRight="15">
           <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(1,0)"
-                 tooltipText="$budgetview.tooltip.total.observed"/>x
+                 tooltipText="$budgetview.tooltip.total.observed"/>
           <component ref="totalGauge" styleClass="totalGauge" gridPos="(2,0,1,1)"
                      fill="horizontal" anchor="center" marginBottom="0"/>
           <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(3,0)" foreground=""

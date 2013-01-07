@@ -26,6 +26,7 @@ sudo chown -R root:root usr DEBIAN
 cd ..
 dpkg -b budgetview
 cp budgetview.deb ../
+mv budgetview.deb budgetview-${SOFT_VERSION}.deb
 cd ..
 sudo rm -rf deb
 

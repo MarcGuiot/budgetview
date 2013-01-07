@@ -1,5 +1,6 @@
 package org.designup.picsou.model;
 
+import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
@@ -16,7 +17,6 @@ import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
-import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 
 public class SubSeries {
   public static GlobType TYPE;

@@ -1,4 +1,4 @@
-package org.designup.picsou.server.serialization;
+package com.budgetview.shared.utils;
 
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;

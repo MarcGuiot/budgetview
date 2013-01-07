@@ -141,6 +141,11 @@ public class LicenseServer {
     context.addServlet(new ServletHolder(new NewUserServlet(directory)), NEW_USER);
     context.addServlet(new ServletHolder(new SendMailServlet(directory)), ConfigService.REQUEST_SEND_MAIL);
     context.addServlet(new ServletHolder(new SendUseInfo()), ConfigService.SEND_USE_INFO);
+
+    context.addServlet(new ServletHolder(new ReceiveDataServlet("/tmp/data", directory)), ConfigService.REQUEST_REGISTER_DATA);
+    context.addServlet(new ServletHolder(new RetrieveDataServlet("/tmp/data", directory)), ConfigService.REQUEST_RETRIEVE_DATA);
+    context.addServlet(new ServletHolder(new SendMailCreateMobileUserServlet("/tmp/data", directory)), "/sendMailToCreateMobileUser");
+    context.addServlet(new ServletHolder(new CreateMobileUserServlet("/tmp/data", directory)), "/createMobileUser");
   }
 
   public void addServlet(ServletHolder holder, String name) {

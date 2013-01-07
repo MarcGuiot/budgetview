@@ -45,6 +45,8 @@ public interface ServerAccess {
 
   MapOfMaps<String, Integer, SerializableGlobType> getSnapshotData(SnapshotInfo info, IdUpdater idUpdater);
 
+//  void publishDataForMobile(String mail, byte[] data);
+
   class UserInfo{
     public final String name;
     public final boolean autologin;

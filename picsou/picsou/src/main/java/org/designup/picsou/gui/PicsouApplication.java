@@ -76,6 +76,8 @@ public class PicsouApplication {
   public static final String FTP_URL = "ftp://ftpjar.mybudgetview.fr";
 
   public static boolean EXIT_ON_DATA_ERROR = true;
+  public static final int MAJOR_VERSION = 1;
+  public static final int MINOR_VERSION = 0;
 
   private OpenRequestManager openRequestManager = new OpenRequestManager();
   private SingleApplicationInstanceListener singleInstanceListener;

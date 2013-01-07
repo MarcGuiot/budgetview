@@ -14,7 +14,7 @@ import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
-import org.designup.picsou.server.serialization.PicsouGlobSerializer;
+import com.budgetview.shared.utils.PicsouGlobSerializer;
 
 /** @deprecated */
 public class SeriesToCategory {

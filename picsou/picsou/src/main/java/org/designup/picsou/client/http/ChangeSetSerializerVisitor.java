@@ -1,8 +1,8 @@
 package org.designup.picsou.client.http;
 
+import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.designup.picsou.server.model.ServerDelta;
 import org.designup.picsou.server.model.ServerState;
-import org.designup.picsou.server.serialization.PicsouGlobSerializer;
 import org.designup.picsou.server.serialization.SerializationManager;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;

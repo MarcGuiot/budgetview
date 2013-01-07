@@ -1,7 +1,7 @@
 package org.designup.picsou.model;
 
 import org.designup.picsou.gui.license.LicenseService;
-import org.designup.picsou.server.serialization.PicsouGlobSerializer;
+import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.DefaultInteger;
@@ -101,6 +101,10 @@ public class UserPreferences {
 
   @Target(TextDateType.class)
   public static LinkField TEXT_DATE_TYPE;
+
+  public static StringField MAIL_FOR_MOBILE;
+
+  public static StringField PASSWORD_FOR_MOBILE;
 
   static {
     GlobTypeLoader.init(UserPreferences.class, "userPreferences");

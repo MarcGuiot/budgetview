@@ -1,13 +1,10 @@
 package org.designup.picsou.client.http;
 
-import org.apache.commons.httpclient.ConnectTimeoutException;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpClientError;
-import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.params.HttpConnectionParams;
-import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
-import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.designup.picsou.client.ClientTransport;
 import org.designup.picsou.client.exceptions.*;
 import org.globsframework.utils.Log;
@@ -16,21 +13,10 @@ import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 
-import javax.net.SocketFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.net.*;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 
 public class HttpsClientTransport implements ClientTransport {
   public static final String SESSION_ID = "sessionId";
@@ -39,7 +25,7 @@ public class HttpsClientTransport implements ClientTransport {
 
   public HttpsClientTransport(String serverUrl) {
     this.serverUrl = serverUrl;
-    this.httpClient = new HttpClient();
+    this.httpClient = new DefaultHttpClient();
   }
 
   public SerializedInput connect() throws BadConnection {
@@ -56,7 +42,7 @@ public class HttpsClientTransport implements ClientTransport {
   }
 
   public SerializedInput deleteUser(Long sessionId, byte[] bytes) {
-    return null;
+    return SerializedInputOutputFactory.init(new byte[0]);
   }
 
   public SerializedInput rename(Long sessionId, byte[] data) {
@@ -91,7 +77,7 @@ public class HttpsClientTransport implements ClientTransport {
   }
 
   public void disconnect(Long sessionId, byte[] bytes) {
-    sendRequest(sessionId, "/disconnect", bytes);
+    sendRequest(sessionId, "/disconnect", bytes).close();
   }
 
   public void takeSnapshot(Long sessionId, byte[] data) {
@@ -106,36 +92,49 @@ public class HttpsClientTransport implements ClientTransport {
   }
 
   public void confirmUser(Long sessionId, byte[] data) {
-    sendRequest(sessionId, "/confirmUser", data);
+    sendRequest(sessionId, "/confirmUser", data).close();
   }
 
   private SerializedInput sendRequest(Long sessionId, String url, byte[] data) {
     boolean hasError = true;
+    final HttpPost postMethod = new HttpPost(serverUrl + url);
     try {
-      PostMethod postMethod = new PostMethod(serverUrl + url);
-      postMethod.getParams().setContentCharset("UTF-8");
       if (sessionId != null) {
-        postMethod.setRequestHeader(SESSION_ID, sessionId.toString());
+        postMethod.setHeader(SESSION_ID, sessionId.toString());
       }
-      postMethod.setRequestEntity(new ByteArrayRequestEntity(data));
-      SerializedInput serializedInput =
-        SerializedInputOutputFactory.init(sendRequest(postMethod).getResponseBodyAsStream());
-      hasError = false;
-      return serializedInput;
+      postMethod.setEntity(new ByteArrayEntity(data));
+      HttpResponse method = sendRequest(postMethod);
+      final InputStream inputStream = method.getEntity().getContent();
+      return SerializedInputOutputFactory.init(new InputStream() {
+        public int read() throws IOException {
+          return inputStream.read();
+        }
+
+        public void close() throws IOException {
+          super.close();
+          postMethod.releaseConnection();
+        }
+      });
+    }
+    catch (RuntimeException e){
+      postMethod.releaseConnection();
+      throw e;
     }
     catch (IOException e) {
+      postMethod.releaseConnection();
       Log.write("ex : ", e);
       throw new BadConnection(e);
     }
   }
 
-  private PostMethod sendRequest(PostMethod postMethod) throws IOException, InvalidActionForState, UnknownId {
-    httpClient.executeMethod(postMethod);
-    int code = postMethod.getStatusCode();
+  private HttpResponse sendRequest(HttpPost postMethod) throws IOException, InvalidActionForState, UnknownId {
+    HttpResponse httpResponse = httpClient.execute(postMethod);
+    int code = httpResponse.getStatusLine().getStatusCode();
     if (code == 400) {
-      InputStream inputStream = postMethod.getResponseBodyAsStream();
+      InputStream inputStream = httpResponse.getEntity().getContent();
       final byte result[] = new byte[256];
       int length = inputStream.read(result);
+      postMethod.releaseConnection();
       //On passe par un buffer intermediaire pour eviter une attaque type buffer overflow
       ObjectInputStream objectInputStream =
         new ObjectInputStream(new ByteArrayInputStream(result, 0, length));
@@ -178,135 +177,13 @@ public class HttpsClientTransport implements ClientTransport {
       });
     }
     else if (code != 200) {
-      InputStream inputStream = postMethod.getResponseBodyAsStream();
+      InputStream inputStream = httpResponse.getEntity().getContent();
       byte result[] = new byte[256];
       inputStream.read(result);
+      postMethod.releaseConnection();
       throw new InvalidState(new String(result));
     }
-    return postMethod;
-  }
-
-  static public class EasySSLProtocolSocketFactory implements ProtocolSocketFactory {
-
-    private SSLContext sslcontext = null;
-
-    private static SSLContext createEasySSLContext() {
-      try {
-        SSLContext context = SSLContext.getInstance("SSL");
-        context.init(null, new TrustManager[]{new EasyX509TrustManager(null)}, null);
-        return context;
-      }
-      catch (Exception e) {
-        throw new HttpClientError(e.toString());
-      }
-    }
-
-    private SSLContext getSSLContext() {
-      if (this.sslcontext == null) {
-        this.sslcontext = createEasySSLContext();
-      }
-      return this.sslcontext;
-    }
-
-    /**
-     * @see SecureProtocolSocketFactory#createSocket(String,int,InetAddress,int)
-     */
-    public Socket createSocket(String host, int port, InetAddress clientHost, int clientPort)
-      throws IOException, UnknownHostException {
-      return getSSLContext().getSocketFactory().createSocket(host, port, clientHost, clientPort);
-    }
-
-    /**
-     * Attempts to get a new socket connection to the given host within the given time limit.
-     * <p/>
-     * To circumvent the limitations of older JREs that do not support connect timeout a
-     * controller thread is executed. The controller thread attempts to create a new socket
-     * within the given limit of time. If socket constructor does not return until the
-     * timeout expires, the controller terminates and throws an {@link ConnectTimeoutException}
-     * </p>
-     *
-     * @param host   the host name/IP
-     * @param port   the port on the host
-     * @param params {@link HttpConnectionParams Http connection parameters}
-     * @return Socket a new socket
-     * @throws IOException          if an I/O error occurs while creating the socket
-     * @throws UnknownHostException if the IP address of the host cannot be
-     *                              determined
-     */
-    public Socket createSocket(String host, int port, InetAddress localAddress, int localPort,
-                               HttpConnectionParams params)
-      throws IOException, UnknownHostException, ConnectTimeoutException {
-      if (params == null) {
-        throw new IllegalArgumentException("Parameters may not be null");
-      }
-      int timeout = params.getConnectionTimeout();
-      if (timeout == 0) {
-        timeout = 2 * 1000;
-      }
-      SocketFactory socketfactory = getSSLContext().getSocketFactory();
-      Socket socket = socketfactory.createSocket();
-      SocketAddress localaddr = new InetSocketAddress(localAddress, localPort);
-      SocketAddress remoteaddr = new InetSocketAddress(host, port);
-      socket.bind(localaddr);
-      socket.connect(remoteaddr, timeout);
-      return socket;
-    }
-
-    public Socket createSocket(String host, int port)
-      throws IOException {
-      return getSSLContext().getSocketFactory().createSocket(host, port);
-    }
-
-    public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException, UnknownHostException {
-      Log.write("createSocket3 to " + host);
-      return getSSLContext().getSocketFactory().createSocket(socket, host, port, autoClose);
-    }
-
-    public boolean equals(Object obj) {
-      return ((obj != null) && obj.getClass().equals(EasySSLProtocolSocketFactory.class));
-    }
-
-    public int hashCode() {
-      return EasySSLProtocolSocketFactory.class.hashCode();
-    }
-
-  }
-
-  static public class EasyX509TrustManager implements X509TrustManager {
-    private X509TrustManager standardTrustManager = null;
-
-    public EasyX509TrustManager(KeyStore keystore) throws NoSuchAlgorithmException, KeyStoreException {
-      TrustManagerFactory factory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-      factory.init(keystore);
-      TrustManager[] trustmanagers = factory.getTrustManagers();
-      if (trustmanagers.length == 0) {
-        throw new NoSuchAlgorithmException("no trust manager found");
-      }
-      this.standardTrustManager = (X509TrustManager)trustmanagers[0];
-    }
-
-    public void checkClientTrusted(X509Certificate[] certificates, String authType) throws CertificateException {
-      standardTrustManager.checkClientTrusted(certificates, authType);
-    }
-
-    public void checkServerTrusted(X509Certificate[] certificates, String authType) throws CertificateException {
-//      if ((certificates != null)) {
-//        System.out.println("server certificate chain:");
-//        for (int i = 0; i < certificates.length; i++) {
-//          System.out.println("X509Certificate[" + i + "]=" + certificates[i]);
-//        }
-//      }
-//      if ((certificates != null) && (certificates.length == 1)) {
-//        certificates[0].checkValidity();
-//      }
-//      else {
-//        standardTrustManager.checkServerTrusted(certificates, authType);
-//      }
-    }
-
-    public X509Certificate[] getAcceptedIssuers() {
-      return this.standardTrustManager.getAcceptedIssuers();
-    }
+    return httpResponse;
   }
 
 }

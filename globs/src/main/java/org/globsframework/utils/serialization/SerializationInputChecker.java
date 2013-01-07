@@ -55,6 +55,10 @@ public class SerializationInputChecker implements SerializedInput {
 
   }
 
+  public void close() {
+    serializedInput.close();
+  }
+
   public Date readDate() {
     String value = serializedInput.readJavaString();
     if ("Date".equals(value)) {

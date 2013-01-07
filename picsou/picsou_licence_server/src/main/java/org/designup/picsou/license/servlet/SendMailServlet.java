@@ -3,6 +3,7 @@ package org.designup.picsou.license.servlet;
 import org.apache.log4j.Logger;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.mail.Mailer;
+import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -31,9 +32,17 @@ public class SendMailServlet extends HttpServlet {
         return;
       }
 
-      String content = ConfigService.decodeContent(req.getHeader(ConfigService.HEADER_MAIL_CONTENT));
       String mailFrom = req.getHeader(ConfigService.HEADER_MAIL);
       String title = req.getHeader(ConfigService.HEADER_MAIL_TITLE);
+      String lang = req.getHeader(ConfigService.HEADER_LANG);
+      String header = req.getHeader(ConfigService.HEADER_MAIL_CONTENT);
+      String content;
+      if (header != null) {
+        content = ConfigService.decodeContent(header);
+      }
+      else {
+        content = Files.loadStreamToString(req.getInputStream(), "UTF-8");
+      }
       logger.info("mail from " + mailFrom + "\ntitle " + title + "\n mail : " + content + "\n");
       if (Strings.isNullOrEmpty(content)) {
         logger.info("sendMail : empty content" + mailTo + " from : " + mailFrom + " title : " + title);
@@ -41,7 +50,6 @@ public class SendMailServlet extends HttpServlet {
         return;
       }
 
-      String lang = req.getHeader(ConfigService.HEADER_LANG);
       mailTo = mailTo.trim();
       content = content.trim();
       mailFrom = mailFrom.trim();
