@@ -168,7 +168,7 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       MessageDialog.show("bank.error", dialog, localDirectory, "bank.error.msg", errorMessage);
     }
 
-    public void errorFound(Exception exception) {
+    public void errorFound(Throwable exception) {
       if (closed) {
         return;
       }

@@ -206,7 +206,7 @@ public abstract class AbstractBankConnector implements BankConnector {
     monitor.errorFound(message);
   }
 
-  protected void notifyErrorFound(Exception exception) {
+  protected void notifyErrorFound(Throwable exception) {
     monitor.errorFound(exception);
   }
 }

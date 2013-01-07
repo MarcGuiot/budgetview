@@ -4,7 +4,7 @@ import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.*;
-import org.designup.picsou.bank.connectors.webcomponents.utils.Download;
+import org.designup.picsou.bank.connectors.webcomponents.Download;
 import org.designup.picsou.bank.connectors.webcomponents.utils.UserAndPasswordPanel;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
 import org.designup.picsou.model.RealAccount;
@@ -97,7 +97,7 @@ public class CicConnector extends WebBankConnector {
             WebTable accountTable = downloadForm.getTableWithNamedInput("compte");
             WebTableColumn column = accountTable.getColumn(1);
             for (WebTableCell cell : column) {
-              AccountLabels accountLabels = new AccountLabels(cell.asText());
+              AccountLabel accountLabels = new AccountLabel(cell.asText());
               createOrUpdateRealAccount(accountLabels.accountName, accountLabels.accountNumber, null, null, BANK_ID);
             }
             doImport();
@@ -151,12 +151,12 @@ public class CicConnector extends WebBankConnector {
     return toImport;
   }
 
-  private class AccountLabels {
+  private class AccountLabel {
 
     public String accountNumber;
     public String accountName;
 
-    private AccountLabels(String label) {
+    private AccountLabel(String label) {
       StringBuilder numberBuilder = new StringBuilder();
       for (int i = 0; i < label.length(); i++) {
         if (Character.isDigit(label.charAt(i))) {

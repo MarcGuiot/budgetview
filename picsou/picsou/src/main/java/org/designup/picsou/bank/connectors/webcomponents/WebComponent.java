@@ -2,6 +2,9 @@ package org.designup.picsou.bank.connectors.webcomponents;
 
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HtmlUnit;
+import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
+
+import java.io.IOException;
 
 public abstract class WebComponent<T extends HtmlElement> {
   protected final WebBrowser browser;
@@ -58,6 +61,10 @@ public abstract class WebComponent<T extends HtmlElement> {
 
   public void mouseOver() {
     browser.setCurrentPage(node.mouseOver());
+  }
+
+  public String getOnclick() {
+    return node.getOnClickAttribute();
   }
 
   public T getNode() {

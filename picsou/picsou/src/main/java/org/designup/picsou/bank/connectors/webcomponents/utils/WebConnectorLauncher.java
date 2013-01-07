@@ -15,6 +15,7 @@ import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.repository.DefaultGlobIdGenerator;
 import org.globsframework.model.repository.DefaultGlobRepository;
@@ -29,12 +30,31 @@ import java.util.concurrent.Executors;
 
 public class WebConnectorLauncher {
   public static void show(BankConnectorFactory factory) throws IOException {
+
+    DefaultDirectory directory = createDirectoryWithDefaultServices();
+    GlobRepository repository = GlobRepositoryBuilder.createEmpty();
+
+    BankConnector connector = factory.create(repository, directory);
+
+    JFrame frame = new JFrame("Test: " + connector.getClass().getSimpleName());
+    directory.add(JFrame.class, frame);
+
+    JPanel connectorPanel = connector.getPanel();
+    connectorPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    frame.setContentPane(connectorPanel);
+
+    connector.init(new TextMonitor());
+
+    frame.setSize(350, 300);
+    GuiUtils.showCentered(frame);
+  }
+
+  private static DefaultDirectory createDirectoryWithDefaultServices() throws IOException {
     DefaultDirectory directory = new DefaultDirectory();
     directory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     directory.add(SelectionService.class, new SelectionService());
     directory.add(BrowsingService.class, new DummyBrowsingService());
     directory.add(DescriptionService.class, new PicsouDescriptionService());
-    directory.add(BrowsingService.class, new DummyBrowsingService());
     OpenRequestManager openRequestManager = new OpenRequestManager();
     directory.add(OpenRequestManager.class, openRequestManager);
     ExecutorService executorService = Executors.newCachedThreadPool();
@@ -50,22 +70,7 @@ public class WebConnectorLauncher {
         System.out.println("read: " + files.size());
       }
     });
-
-
-    GlobRepository repository = new DefaultGlobRepository(new DefaultGlobIdGenerator());
-    BankConnector connector = factory.create(repository, directory);
-
-    JFrame frame = new JFrame("Test: " + connector.getClass().getSimpleName());
-    directory.add(JFrame.class, frame);
-
-    JPanel connectorPanel = connector.getPanel();
-    connectorPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-    frame.setContentPane(connectorPanel);
-
-    connector.init(new TextMonitor());
-
-    frame.setSize(350, 300);
-    GuiUtils.showCentered(frame);
+    return directory;
   }
 
   private static class TextMonitor implements SynchroMonitor {
@@ -93,9 +98,11 @@ public class WebConnectorLauncher {
       System.out.println("Error: " + errorMessage);
     }
 
-    public void errorFound(Exception exception) {
+    public void errorFound(Throwable exception) {
       System.out.println("Exception: " + exception.getMessage());
+      System.out.flush();
       exception.printStackTrace();
+      System.err.flush();
     }
 
     public void importCompleted(GlobList realAccounts) {

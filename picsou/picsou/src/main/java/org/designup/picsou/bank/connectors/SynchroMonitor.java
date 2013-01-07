@@ -16,7 +16,7 @@ public interface SynchroMonitor {
 
   void errorFound(String errorMessage);
 
-  void errorFound(Exception exception);
+  void errorFound(Throwable exception);
 
   void importCompleted(GlobList realAccounts);
 
@@ -41,7 +41,7 @@ public interface SynchroMonitor {
     public void errorFound(String errorMessage) {
     }
 
-    public void errorFound(Exception exception) {
+    public void errorFound(Throwable exception) {
     }
 
     public void importCompleted(GlobList realAccounts) {

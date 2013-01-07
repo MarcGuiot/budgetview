@@ -1,6 +1,7 @@
 package org.designup.picsou.bank;
 
 import org.designup.picsou.bank.connectors.OtherBankConnector;
+import org.designup.picsou.bank.connectors.bnp.BnpConnector;
 import org.designup.picsou.bank.connectors.cic.CicConnector;
 import org.designup.picsou.bank.connectors.creditmutuel.CreditMutuelArkeaConnector;
 import org.designup.picsou.bank.connectors.labanquepostale.LaBanquePostaleConnector;
@@ -28,6 +29,7 @@ public class BankSynchroService {
     register(CreditMutuelArkeaConnector.BANK_ID, new CreditMutuelArkeaConnector.Factory());
     register(CicConnector.BANK_ID, new CicConnector.Factory());
     register(LaBanquePostaleConnector.BANK_ID, new LaBanquePostaleConnector.Factory());
+    register(BnpConnector.BANK_ID, new BnpConnector.Factory());
     register(OtherBankConnector.BANK_ID, new OtherBankConnector.Factory());
   }
 

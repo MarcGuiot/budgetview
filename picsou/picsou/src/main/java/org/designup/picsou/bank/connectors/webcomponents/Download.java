@@ -1,10 +1,10 @@
-package org.designup.picsou.bank.connectors.webcomponents.utils;
+package org.designup.picsou.bank.connectors.webcomponents;
 
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.attachment.AttachmentHandler;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import org.designup.picsou.bank.connectors.webcomponents.WebBrowser;
+import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.model.RealAccount;
 import org.globsframework.model.Glob;
 import org.globsframework.model.format.GlobPrinter;
@@ -20,7 +20,7 @@ public class Download {
   private WebBrowser browser;
   private HtmlElement element;
 
-  public Download(WebBrowser browser, HtmlElement element) {
+  Download(WebBrowser browser, HtmlElement element) {
     this.browser = browser;
     this.element = element;
   }
@@ -35,10 +35,13 @@ public class Download {
                   GlobPrinter.toString(realAccount));
   }
 
-  private File doSave(String extension, byte[] prefix, String message) throws WebCommandFailed {
-    WebResponse response = getWebResponse(message);
-    InputStream contentAsStream = getStream(response, message);
+  private File doSave(String extension, byte[] prefix, String errorMessage) throws WebCommandFailed {
+    WebResponse response = getWebResponse(errorMessage);
+    return saveResponseToTempFile(response, extension, prefix, errorMessage);
+  }
 
+  static File saveResponseToTempFile(WebResponse response, String extension, byte[] prefix, String errorMessage) throws WebCommandFailed {
+    InputStream contentAsStream = getStream(response, errorMessage);
     File file = null;
     try {
       file = File.createTempFile("budgetview_download", extension);
@@ -56,7 +59,7 @@ public class Download {
     return file;
   }
 
-  private InputStream getStream(WebResponse response, String message) throws WebCommandFailed {
+  private static InputStream getStream(WebResponse response, String message) throws WebCommandFailed {
     InputStream contentAsStream = null;
     try {
       contentAsStream = response.getContentAsStream();

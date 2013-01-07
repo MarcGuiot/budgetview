@@ -6,6 +6,7 @@ import org.designup.picsou.bank.connectors.webcomponents.utils.DomNodeFilter;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HtmlUnit;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
@@ -26,6 +27,10 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     }
   }
 
+  public WebFrame getFrameByName(String name) throws WebParsingError {
+    return new WebFrame(browser,  (HtmlFrame)getElementByName("frame", name, HtmlFrame.class));
+  }
+
   public WebTextInput getTextInput() throws WebParsingError {
     return new WebTextInput(browser,
                             (HtmlTextInput)HtmlUnit.getElementWithAttribute(node, "input", "type", "text"));
@@ -35,31 +40,43 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new WebTextInput(browser, (HtmlTextInput)getElementById(id, HtmlTextInput.class));
   }
 
+  public WebTextInput getTextInputByName(String name) throws WebParsingError {
+    return new WebTextInput(browser, (HtmlTextInput)getElementByName("input", name, HtmlTextInput.class));
+  }
+
   public WebPasswordInput getPasswordInputById(String id) throws WebParsingError {
     return new WebPasswordInput(browser, (HtmlPasswordInput)getElementById(id, HtmlPasswordInput.class));
   }
 
-  public WebLink getLinkById(String id) throws WebParsingError {
-    return new WebLink(browser, (HtmlAnchor)getElementById(id, HtmlAnchor.class));
+  public WebPasswordInput getPasswordInputByName(String name) throws WebParsingError {
+    return new WebPasswordInput(browser, (HtmlPasswordInput)getElementByName("input", name, HtmlPasswordInput.class));
   }
 
-  public WebLink getFirstLinkWithText(String text) throws WebParsingError {
-    List anchors = HtmlUnit.getElementsWithText(node, "a", text);
-    return new WebLink(browser, (HtmlAnchor)anchors.get(0));
-  }
-
-  public WebLink getSingleLink() throws WebParsingError {
+  public WebAnchor getSingleAnchor() throws WebParsingError {
     HtmlAnchor anchor = (HtmlAnchor)HtmlUnit.getSingleElementByTag(node, "a", HtmlAnchor.class);
-    return new WebLink(browser, anchor);
+    return new WebAnchor(browser, anchor);
   }
 
-  public WebLink getAnchorWithRef(String src) throws WebParsingError {
-    return new WebLink(browser, HtmlUnit.getFirstElementWithAttribute(node, HtmlAnchor.class, HtmlAnchor.TAG_NAME, "href", src));
+  public boolean containsAnchor() {
+    return !node.getElementsByTagName("a").isEmpty();
   }
 
-  public WebLink getLinkWithImage(String src) throws WebParsingError {
+  public WebAnchor getAnchorById(String id) throws WebParsingError {
+    return new WebAnchor(browser, (HtmlAnchor)getElementById(id, HtmlAnchor.class));
+  }
+
+  public WebAnchor getFirstAnchorWithText(String text) throws WebParsingError {
+    List anchors = HtmlUnit.getElementsWithText(node, "a", text);
+    return new WebAnchor(browser, (HtmlAnchor)anchors.get(0));
+  }
+
+  public WebAnchor getAnchorWithRef(String src) throws WebParsingError {
+    return new WebAnchor(browser, HtmlUnit.getFirstElementWithAttribute(node, HtmlAnchor.class, HtmlAnchor.TAG_NAME, "href", src));
+  }
+
+  public WebAnchor getAnchorWithImage(String src) throws WebParsingError {
     HtmlElement img = HtmlUnit.getElementWithAttribute(node, "img", "src", src);
-    return new WebLink(browser, (HtmlAnchor)HtmlUnit.getFirstParent(img, "a"));
+    return new WebAnchor(browser, (HtmlAnchor)HtmlUnit.getFirstParent(img, "a"));
   }
 
   public WebImage getSingleImage() throws WebParsingError {
@@ -75,8 +92,17 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new WebMap(browser, (HtmlMap)HtmlUnit.getFirstElementWithAttribute(node, HtmlMap.TAG_NAME, "name", name));
   }
 
+  public WebForm getSingleForm() throws WebParsingError {
+    return new WebForm(browser, (HtmlForm)getSingleElement("form", HtmlForm.class));
+  }
+
   public WebForm getFormByName(String name) throws WebParsingError {
     return new WebForm(browser, (HtmlForm)getElementByName("form", name, HtmlForm.class));
+  }
+
+  public WebForm getFormByAction(String action) throws WebParsingError {
+    return new WebForm(browser,
+                       (HtmlForm)HtmlUnit.getElementWithAttribute(node, HtmlForm.class, "form", "action", action));
   }
 
   public WebRadioButton getRadioButtonById(String id) throws WebParsingError {
@@ -95,8 +121,22 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   }
 
   public WebInput getInputByValue(String value) throws WebParsingError {
-    HtmlInput input =
-      (HtmlInput)HtmlUnit.getElementWithAttribute(node, "input", "value", value);
+    HtmlInput input = (HtmlInput)HtmlUnit.getElementWithAttribute(node, "input", "value", value);
+    return new WebInput(browser, input);
+  }
+
+  public WebInput getInputByAttribute(String attribute, String value) throws WebParsingError {
+    HtmlInput input = (HtmlInput)HtmlUnit.getElementWithAttribute(node, "input", attribute, value);
+    return new WebInput(browser, input);
+  }
+
+  public WebInput getInputByNameAndValue(final String name, final String value) throws WebParsingError {
+    HtmlInput input = (HtmlInput)HtmlUnit.getSingleElement(node, "input", new HtmlUnit.Filter() {
+      public boolean matches(HtmlElement element) {
+        return element.getAttribute("name").equals(name)
+               && element.getAttribute("value").equals(value);
+      }
+    });
     return new WebInput(browser, input);
   }
 
@@ -140,6 +180,10 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new WebComboBox(browser, (HtmlSelect)getElementById(id, HtmlSelect.class));
   }
 
+  public WebComboBox getComboBoxByName(String name) throws WebParsingError {
+    return new WebComboBox(browser, (HtmlSelect)getElementByName("select", name, HtmlSelect.class));
+  }
+
   public WebComboBox getComboBoxByLabel(String label) throws WebParsingError {
     return new WebComboBox(browser, (HtmlSelect)getElementByLabel(label, HtmlSelect.class));
   }
@@ -158,6 +202,14 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new WebTable(browser, (HtmlTable)HtmlUnit.getFirstParent(input, "table"));
   }
 
+  public List<WebTableCell> getTableCellsWithClass(String className) {
+    List<WebTableCell> result = new ArrayList<WebTableCell>();
+    for (HtmlElement element : HtmlUnit.getVisibleElementsWithAttribute(node, "td", "class", className)) {
+      result.add(new WebTableCell(browser, (HtmlTableCell)element));
+    }
+    return result;
+  }
+
   public WebTextArea getTextArea() throws WebParsingError {
     return new WebTextArea(browser, (HtmlTextArea)getSingleElement("textarea", HtmlTextArea.class));
   }
@@ -172,6 +224,10 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
 
   public WebSpan getSingleSpan() throws WebParsingError {
     return new WebSpan(browser, (HtmlSpan)getSingleElement("span", HtmlSpan.class));
+  }
+
+  public WebImageMap getImageMapByName(String name) throws WebParsingError {
+    return new WebImageMap(browser, (HtmlMap)getElementByName("map", name, HtmlMap.class));
   }
 
   private HtmlElement getSingleElement(String tagName, Class expectedClass) throws WebParsingError {

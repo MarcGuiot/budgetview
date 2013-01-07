@@ -1,7 +1,6 @@
 package org.designup.picsou.bank.connectors.webcomponents;
 
 import com.gargoylesoftware.htmlunit.html.HtmlButton;
-import org.designup.picsou.bank.connectors.webcomponents.utils.Download;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 
 import java.io.IOException;
@@ -13,11 +12,6 @@ public class WebButton extends WebComponent<HtmlButton> {
   }
 
   public WebPage click() throws WebCommandFailed {
-    try {
-      return browser.setCurrentPage(node.click());
-    }
-    catch (IOException e) {
-      throw new WebCommandFailed(e);
-    }
+    return browser.doClick(node);
   }
 }

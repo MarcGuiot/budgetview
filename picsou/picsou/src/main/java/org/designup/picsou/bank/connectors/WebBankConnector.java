@@ -6,11 +6,10 @@ import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.designup.picsou.bank.connectors.webcomponents.WebBrowser;
 import org.designup.picsou.bank.connectors.webcomponents.WebPage;
-import org.designup.picsou.bank.connectors.webcomponents.utils.Download;
+import org.designup.picsou.bank.connectors.webcomponents.Download;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
@@ -18,10 +17,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
-import javax.imageio.ImageReader;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public abstract class WebBankConnector extends AbstractBankConnector {
@@ -74,12 +70,6 @@ public abstract class WebBankConnector extends AbstractBankConnector {
       }
     }
     throw new RuntimeException("Can not find ref '" + ref + "' in :\n" + page.asXml());
-  }
-
-  /** @deprecated use webcomponents */
-  protected File downloadQifFile(Glob realAccount, HtmlElement anchor) throws WebCommandFailed {
-    Download download = new Download(browser, anchor);
-    return download.saveAsQif(realAccount);
   }
 
   public void stop() {

@@ -1,23 +1,32 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.formLabel" font="-,bold,12" anchor="left" marginBottom="10" foreground="#222222"/>
+    <style selector="label#keyboardLabel" cursor="hand" preferredSize="(136,136)"
+           icon="roundedRect(136,136,4,4,#F0F0F0,#E0E0E0)" anchor="top"/>
+  </styles>
 
-  <panel styleClass="innerDialog">
+  <panel styleClass="innerDialogBlockPanel">
     <column>
+      <label text="1. Saisissez votre code client" styleClass="formLabel"/>
+      <textField ref="code" columns="12" fill="none" anchor="center"/>
+
+      <label text="2. Composez votre code secret à 6 chiffres" styleClass="formLabel" marginTop="20"/>
       <row>
-        <label text="Entrez votre code" styleClass="formLabel"/>
-        <textField ref="code"/>
+        <filler fill="horizontal"/>
+        <grid>
+          <label ref="keyboardLabel" gridPos="(0,0,1,4)" marginRight="10"/>
+          <textField ref="password" gridPos="(1,0)" marginBottom="4"/>
+          <button action="clearCode" gridPos="(1,1)" text="Effacer" fill="none"
+                  styleClass="hyperlink" font="-,plain,10" anchor="right"/>
+          <filler gridPos="(1,2)" fill="vertical"/>
+          <button action="login" gridPos="(1,3)" text="Connexion" fill="none" anchor="center"/>
+        </grid>
+        <filler fill="horizontal"/>
       </row>
-      <row>
-        <panel ref="imageClavier" minimumSize="(136,136)" size="(136,136)" maximumSize="(136,136)"/>
-      </row>
-      <textField ref="password" marginTop="10" marginBottom="10"/>
-      <row>
-        <filler fill="horizontal" weightX="0.1"/>
-        <button ref="corriger" fill="none"/>
-        <button ref="valider" fill="none"/>
-        <filler fill="horizontal" weightX="0.1"/>
-      </row>
+
+      <filler fill="vertical"/>
     </column>
   </panel>
 </splits>

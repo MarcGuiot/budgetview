@@ -5,12 +5,11 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 
-public class WebLink extends WebComponent<HtmlAnchor> {
+public class WebAnchor extends WebComponent<HtmlAnchor> {
 
-  public WebLink(WebBrowser browser, HtmlAnchor anchor) {
+  public WebAnchor(WebBrowser browser, HtmlAnchor anchor) {
     super(browser, anchor);
   }
 
@@ -24,12 +23,11 @@ public class WebLink extends WebComponent<HtmlAnchor> {
   }
 
   public WebPage click() throws WebCommandFailed {
-    try {
-      return browser.setCurrentPage(node.click());
-    }
-    catch (IOException e) {
-      throw new WebCommandFailed(e);
-    }
+    return browser.doClick(node);
+  }
+  
+  public Download clickAndDownload() {
+    return new Download(browser, node);
   }
 
   public String toString() {

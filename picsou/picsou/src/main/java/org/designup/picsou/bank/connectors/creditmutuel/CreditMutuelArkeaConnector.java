@@ -106,10 +106,10 @@ public class CreditMutuelArkeaConnector extends WebBankConnector {
         }
       }
     }
-    webForm.getLinkWithImage("valider.gif").click();
+    webForm.getAnchorWithImage("valider.gif").click();
     WebForm patametersWeb = web.getFormByName("parametresForm");
     patametersWeb.getInputByValue("2").select();
-    web.getLinkWithImage("telecharger.gif").click();
+    web.getAnchorWithImage("telecharger.gif").click();
     DomNodeList<DomElement> tables = (DomNodeList)page.getElementsByTagName(HtmlTable.TAG_NAME);
     HtmlTable table = (HtmlTable)tables.get(0);
     int count = table.getRowCount();
@@ -159,7 +159,7 @@ public class CreditMutuelArkeaConnector extends WebBankConnector {
         HtmlElement elementById = getElementById("quotidien");
         getAnchor(elementById).click();
         WebPage webPage = new WebPage(browser, page);
-        webPage.getFirstLinkWithText("telechargement").click();
+        webPage.getFirstAnchorWithText("telechargement").click();
 
         HtmlElement comptes = webPage.getElementByName("div", "choixCompte");
         accountsTable = (HtmlTable)comptes.getElementsByTagName(HtmlTable.TAG_NAME).get(1);

@@ -303,7 +303,7 @@ public class LaBanquePostaleConnector extends WebBankConnector {
       String name = row.getCell(0).asText();
       String number = row.getCell(1).asText();
       String position = row.getCell(2).asText();
-      String url = row.getCell(0).getSingleLink().getTargetUrl();
+      String url = row.getCell(0).getSingleAnchor().getTargetUrl();
       entries.add(new AccountEntry(name, number, position, url, savings));
     }
   }

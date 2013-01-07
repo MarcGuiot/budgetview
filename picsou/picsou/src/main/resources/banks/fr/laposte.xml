@@ -3,7 +3,7 @@
   <bankFormat id='3'>
 
     <bank name="La Banque Postale" url="https://www.labanquepostale.fr" id='3' icon="banks/labanquepostale.png"
-          downloadUrl="https://ofx.videoposte.com" fid="0" org="0" ofxDownload="true">
+          synchroEnabled="true">
       <bankEntity id="20041"/>
     </bank>
 

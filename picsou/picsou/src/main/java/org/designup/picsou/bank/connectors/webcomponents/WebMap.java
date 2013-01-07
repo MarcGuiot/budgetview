@@ -10,7 +10,6 @@ public class WebMap extends WebComponent<HtmlMap>{
     super(browser, node);
   }
 
-
   public WebMapArea getAreaById(String id) throws WebParsingError {
     return new WebMapArea(browser, HtmlUnit.getElementById(node, id, HtmlArea.class));
   }

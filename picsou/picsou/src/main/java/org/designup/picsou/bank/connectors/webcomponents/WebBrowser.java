@@ -3,10 +3,12 @@ package org.designup.picsou.bank.connectors.webcomponents;
 import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.util.UrlUtils;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -121,7 +123,27 @@ public class WebBrowser {
     webClient.closeAllWindows();
   }
 
+  public File downloadToTempFile(String url, String extension) throws WebCommandFailed {
+    try {
+      WebRequest request = new WebRequest(UrlUtils.toUrlUnsafe(url));
+      WebResponse response = new HttpWebConnection(webClient).getResponse(request);
+      return Download.saveResponseToTempFile(response, extension, null, "Unable to save " + url);
+    }
+    catch (IOException e) {
+      throw new WebCommandFailed(e, "Cannot download file");
+    }
+  }
+
   public void waitForBackgroundJavaScript(int timeout) {
     webClient.waitForBackgroundJavaScript(timeout);
+  }
+
+  WebPage doClick(HtmlElement element) throws WebCommandFailed {
+    try {
+      return setCurrentPage(element.click());
+    }
+    catch (IOException e) {
+      throw new WebCommandFailed(e);
+    }
   }
 }

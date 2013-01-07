@@ -1,7 +1,6 @@
 package org.designup.picsou.bank.connectors.webcomponents;
 
 import com.gargoylesoftware.htmlunit.html.*;
-import org.designup.picsou.bank.connectors.webcomponents.utils.HtmlUnit;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 
 import java.util.ArrayList;
@@ -16,6 +15,10 @@ public class WebTable extends WebComponent<HtmlTable> {
 
   public List<WebTableRow> getAllRows() {
     return convertRows(node.getRows());
+  }
+
+  public WebTableRow getRow(int index) {
+    return new WebTableRow(browser, node.getRow(index));
   }
 
   public List<WebTableRow> getRowsWithoutHeaderAndFooters() {
@@ -73,11 +76,11 @@ public class WebTable extends WebComponent<HtmlTable> {
     return new WebTableColumn(cells);
   }
 
-  public String[][] getContentAsText() {
+  public String[][] getContentAsTextItems() {
     List list = new ArrayList();
     for (Iterator iterator = node.getRows().iterator(); iterator.hasNext(); ) {
       HtmlTableRow row = (HtmlTableRow)iterator.next();
-      String[] cells = convertRow(row);
+      String[] cells = rowAsTextItems(row);
       list.add(cells);
     }
     String[][] content = new String[list.size()][];
@@ -88,7 +91,7 @@ public class WebTable extends WebComponent<HtmlTable> {
     return content;
   }
 
-  private String[] convertRow(HtmlTableRow row) {
+  private String[] rowAsTextItems(HtmlTableRow row) {
     List cells = row.getCells();
     String[] result = new String[cells.size()];
     int columnIndex = 0;

@@ -450,8 +450,7 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
         Log.write("SG : can not find periode");
       }
     }
-    WebLink link = browser.getCurrentPage().getAnchorWithRef("javascript:telecharger(this)");
-
-    return downloadQifFile(realAccount, link.getNode());
+    WebAnchor link = browser.getCurrentPage().getAnchorWithRef("javascript:telecharger(this)");
+    return link.clickAndDownload().saveAsQif(realAccount);
   }
 }
