@@ -326,7 +326,6 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
 
   public void downloadFile() throws Exception {
     notifyInitialConnection();
-//    HtmlSelect compte = getElementById("compte");
     WebComboBox compte = browser.getCurrentPage().getComboBoxById("compte");
     List<String> accountList = compte.getEntryNames();
     for (int i = 0, size = accountList.size(); i < size; i++) {

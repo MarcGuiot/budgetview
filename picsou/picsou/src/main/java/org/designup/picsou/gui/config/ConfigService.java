@@ -1,5 +1,7 @@
 package org.designup.picsou.gui.config;
 
+import com.budgetview.shared.model.MobileModel;
+import com.budgetview.shared.utils.Crypt;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -12,6 +14,7 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.AbstractVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.BasicClientConnectionManager;
@@ -77,8 +80,8 @@ public class ConfigService {
   public static final String REQUEST_FOR_CONFIG = "/requestForConfig";
   public static final String REQUEST_FOR_MAIL = "/mailTo";
   public static final String REQUEST_SEND_MAIL = "/sendMailToUs";
-  public static final String REQUEST_REGISTER_DATA = "/registerData";
-  public static final String REQUEST_RETRIEVE_DATA = "/retrieveData";
+  public static final String REQUEST_CLIENT_TO_SERVER_DATA = "/sendMobileData";
+  public static final String REQUEST_SERVER_TO_MOBILE_DATA = "/getMobileData";
   public static final String REQUEST_CREATE_MOBILE_ACCOUNT = "/sendMailToCreateMobileUser";
   public static final String CODING = "coding";
   public static final String SOME_PASSWORD = "HdsB 8(Rfm";
@@ -195,16 +198,6 @@ public class ConfigService {
   private HttpClient getNewHttpClient() {
     try {
       SchemeRegistry schemeRegistry = new SchemeRegistry();
-      schemeRegistry.register(new Scheme("https", 8843,
-                                         new SSLSocketFactory(new TrustStrategy() {
-                                           public boolean isTrusted(X509Certificate[] chain, String authType) {
-                                             return true;
-                                           }
-                                         }, new AbstractVerifier() {
-                                           public void verify(String host, String[] cns, String[] subjectAlts) throws SSLException {
-                                           }
-                                         }
-                                         )));
       schemeRegistry.register(new Scheme("https", 443,
                                          new SSLSocketFactory(new TrustStrategy() {
                                            public boolean isTrusted(X509Certificate[] chain, String authType) {
@@ -322,11 +315,37 @@ public class ConfigService {
   }
 
 
-//  public void sendMobileData(){
-//    HttpClient client = getNewHttpClient();
-//    URIBuilder builder = new URIBuilder();
-//    createPostMethod();
-//  }
+  public boolean sendMobileData(String mail, String password, byte[] bytes) {
+
+    HttpClient client = getNewHttpClient();
+    HttpPost postMethod;
+    postMethod = createPostMethod(URL + REQUEST_CLIENT_TO_SERVER_DATA);
+
+    try {
+
+      MD5PasswordBasedEncryptor encryptor =
+        new MD5PasswordBasedEncryptor(ConfigService.MOBILE_SALT.getBytes(), password.toCharArray(), 5);
+
+      byte[] data = encryptor.encrypt(bytes);
+      byte[] encryptedMail = encryptor.encrypt(mail.getBytes("UTF-8"));
+      String sha1Mail = Crypt.encodeSHA1AndHex(encryptedMail);
+      postMethod.setHeader(HEADER_LANG, Lang.get("lang"));
+      postMethod.setHeader(HEADER_MAIL, mail);
+      postMethod.setHeader(MobileModel.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
+      postMethod.setHeader(MobileModel.MAJOR_VERSION_NAME, Integer.toString(MobileModel.MAJOR_VERSION));
+      postMethod.setHeader(MobileModel.MINOR_VERSION_NAME, Integer.toString(MobileModel.MINOR_VERSION));
+      postMethod.setEntity(new ByteArrayEntity(data));
+      client.execute(postMethod);
+      return true;
+    }
+    catch (Exception e) {
+      Log.write("while sending data", e);
+      return false;
+    }
+    finally {
+      postMethod.releaseConnection();
+    }
+  }
 
   synchronized public void sendRegister(String mail, String code, final GlobRepository repository) {
     Utils.beginRemove();

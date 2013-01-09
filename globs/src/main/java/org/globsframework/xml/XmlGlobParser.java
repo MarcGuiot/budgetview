@@ -9,9 +9,7 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.links.FieldMappingFunctor;
 import org.globsframework.metamodel.utils.GlobTypeUtils;
 import org.globsframework.model.*;
-import org.globsframework.utils.exceptions.InvalidParameter;
-import org.globsframework.utils.exceptions.ItemAmbiguity;
-import org.globsframework.utils.exceptions.ItemNotFound;
+import org.globsframework.utils.exceptions.*;
 import org.saxstack.parser.*;
 import org.saxstack.utils.XmlUtils;
 import org.xml.sax.Attributes;
@@ -20,16 +18,23 @@ import java.io.Reader;
 
 public class XmlGlobParser {
   private GlobModel model;
+  private boolean ignoreError;
   private GlobRepository repository;
 
   public static void parse(GlobModel model, GlobRepository repository, Reader reader, String rootTag) {
-    XmlGlobParser parser = new XmlGlobParser(model, repository);
+    XmlGlobParser parser = new XmlGlobParser(model, repository, false);
     parser.parse(reader, rootTag);
   }
 
-  private XmlGlobParser(GlobModel model, GlobRepository repository) {
+  public static void parseIgnoreError(GlobModel model, GlobRepository repository, Reader reader, String rootTag) {
+    XmlGlobParser parser = new XmlGlobParser(model, repository, true);
+    parser.parse(reader, rootTag);
+  }
+
+  private XmlGlobParser(GlobModel model, GlobRepository repository, boolean ignoreError) {
     this.repository = repository;
     this.model = model;
+    this.ignoreError = ignoreError;
   }
 
   private void parse(Reader reader, String rootTag) {
@@ -43,7 +48,7 @@ public class XmlGlobParser {
   }
 
   private class RootProxyNode extends DefaultXmlNode {
-    private FieldConverter fieldConverter = new FieldConverter();
+    private FieldConverter fieldConverter = new FieldConverter(ignoreError);
     private Glob parent;
 
     public RootProxyNode() {
@@ -67,17 +72,43 @@ public class XmlGlobParser {
     }
 
     private Glob parse(String childName, Attributes xmlAttrs) throws Exception {
-      GlobType globType = model.getType(childName);
-      FieldValuesBuilder builder = FieldValuesBuilder.init();
-      if (parent != null) {
-        processParent(globType, builder);
-      }
-      processAttributes(builder, xmlAttrs, globType);
+      try {
+        GlobType globType = model.getType(childName);
+        FieldValuesBuilder builder = FieldValuesBuilder.init();
+        if (parent != null) {
+          processParent(globType, builder);
+        }
+        processAttributes(builder, xmlAttrs, globType);
 
-      if (hasUnsetIntegerKey(globType, builder)) {
-        return repository.create(globType, builder.toArray());
+        if (hasUnsetIntegerKey(globType, builder)) {
+          return repository.create(globType, builder.toArray());
+        }
+        return repository.findOrCreate(KeyBuilder.createFromValues(globType, builder.get()), builder.toArray());
       }
-      return repository.findOrCreate(KeyBuilder.createFromValues(globType, builder.get()), builder.toArray());
+      catch (ItemNotFound found) {
+        if (ignoreError){
+          return null;
+        }
+        else {
+          throw found;
+        }
+      }
+      catch (MissingInfo info) {
+        if (ignoreError){
+          return null;
+        }
+        else {
+          throw info;
+        }
+      }
+      catch (ItemAlreadyExists exists) {
+        if (ignoreError){
+          return null;
+        }
+        else {
+          throw exists;
+        }
+      }
     }
 
     private boolean hasUnsetIntegerKey(GlobType type, FieldValuesBuilder builder) {
@@ -141,6 +172,10 @@ public class XmlGlobParser {
           if (xmlAttrs.getIndex(linkField.getName()) < 0) {
             processLinkValue(linkField, xmlValue, fieldValuesBuilder);
           }
+          continue;
+        }
+
+        if (ignoreError){
           continue;
         }
 

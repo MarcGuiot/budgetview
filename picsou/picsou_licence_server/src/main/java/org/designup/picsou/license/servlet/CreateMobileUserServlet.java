@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.Arrays;
 
 public class CreateMobileUserServlet extends HttpServlet {
@@ -40,7 +41,7 @@ public class CreateMobileUserServlet extends HttpServlet {
 
   protected void action(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
     String lang = httpServletRequest.getParameter(ConfigService.HEADER_LANG);
-    String mail = httpServletRequest.getParameter(ConfigService.HEADER_MAIL);
+    String mail = URLDecoder.decode(httpServletRequest.getParameter(ConfigService.HEADER_MAIL), "UTF-8");
     String coding = httpServletRequest.getParameter(ConfigService.CODING);
     byte[] decryptedMail = encryptor.decrypt(Base64.decodeBase64(coding.getBytes()));
     if (!Arrays.equals(decryptedMail, mail.getBytes("UTF-8"))) {
@@ -48,7 +49,7 @@ public class CreateMobileUserServlet extends HttpServlet {
       logger.info("Bap password " + mail);
     }
     else {
-      String dirName = ReceiveDataServlet.generateFileName(mail);
+      String dirName = ReceiveDataServlet.generateDirName(mail);
       File dir = new File(root, dirName);
       if (!dir.exists()) {
         if (dir.mkdir()) {

@@ -119,4 +119,11 @@ public class GlobTestUtils {
                         new StringReader("<globs>" + xmlStream + "</globs>"),
                         "globs");
   }
+
+  public static void parseIgnoreError(GlobModel model, GlobRepository repository, String xmlStream) {
+    XmlGlobParser.parseIgnoreError(model, repository,
+                                   new StringReader("<globs>" + xmlStream + "</globs>"),
+                                   "globs");
+  }
+
 }

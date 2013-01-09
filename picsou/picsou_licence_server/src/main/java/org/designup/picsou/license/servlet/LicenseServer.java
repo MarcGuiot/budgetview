@@ -24,6 +24,8 @@ import java.io.InputStreamReader;
 import java.util.Timer;
 
 public class LicenseServer {
+  public static final String GET_MOBILE_DATA = "/getMobileData";
+  public static final String SEND_MAIL_FROM_MOBILE = "/sendMailFromMobile";
   static Logger logger = Logger.getLogger("LicenseServer");
   public static final String USE_SSHL = "picsou.server.useSsl";
   public static final String KEYSTORE = "picsou.server.keystore";
@@ -44,6 +46,7 @@ public class LicenseServer {
   private Directory directory;
   private static final String JDBC_HSQLDB = "jdbc:hsqldb:.";
   private Context context;
+  private String pathForMobileData = "/tmp/data";
 
   public LicenseServer() throws IOException {
     try {
@@ -142,10 +145,12 @@ public class LicenseServer {
     context.addServlet(new ServletHolder(new SendMailServlet(directory)), ConfigService.REQUEST_SEND_MAIL);
     context.addServlet(new ServletHolder(new SendUseInfo()), ConfigService.SEND_USE_INFO);
 
-    context.addServlet(new ServletHolder(new ReceiveDataServlet("/tmp/data", directory)), ConfigService.REQUEST_REGISTER_DATA);
-    context.addServlet(new ServletHolder(new RetrieveDataServlet("/tmp/data", directory)), ConfigService.REQUEST_RETRIEVE_DATA);
-    context.addServlet(new ServletHolder(new SendMailCreateMobileUserServlet("/tmp/data", directory)), "/sendMailToCreateMobileUser");
-    context.addServlet(new ServletHolder(new CreateMobileUserServlet("/tmp/data", directory)), "/createMobileUser");
+    context.addServlet(new ServletHolder(new ReceiveDataServlet(pathForMobileData, directory)), ConfigService.REQUEST_CLIENT_TO_SERVER_DATA);
+    context.addServlet(new ServletHolder(new RetrieveDataServlet(pathForMobileData, directory)), GET_MOBILE_DATA);
+    context.addServlet(new ServletHolder(new SendMailCreateMobileUserServlet(pathForMobileData, directory)), "/sendMailToCreateMobileUser");
+    context.addServlet(new ServletHolder(new CreateMobileUserServlet(pathForMobileData, directory)), "/createMobileUser");
+
+    context.addServlet(new ServletHolder(new SendMailFromMobileServlet(directory)), SEND_MAIL_FROM_MOBILE);
   }
 
   public void addServlet(ServletHolder holder, String name) {

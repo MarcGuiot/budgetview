@@ -88,6 +88,17 @@ public class Mailer {
     return false;
   }
 
+  public boolean sendFromMobileToUseBV(String mailTo, String lang) {
+    SendEmail sent  = new SendEmail(Lang.get("mobile.mail.subject", lang), Lang.get("mobile.mail.message", lang),
+                                    fromAdress, mailTo);
+    if (sent.sent()){
+      return true;
+    }
+    add(sent);
+    return false;
+  }
+
+
   private void sendMail(String to, String from, String subject, String content) throws MessagingException {
 
     Properties mailProperties = new Properties();

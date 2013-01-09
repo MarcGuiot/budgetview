@@ -702,4 +702,8 @@ public class OperationChecker {
   public MobileChecker openCreateMobileUser(){
     return MobileChecker.open(getFileMenu().getSubMenu(Lang.get("mobile.user.create.action.name")).triggerClick());
   }
+
+  public MessageDialogChecker sendDataToServer() {
+    return MessageDialogChecker.open(getDevMenu().getSubMenu("[Dump XML for android app]").triggerClick());
+  }
 }

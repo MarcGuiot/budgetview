@@ -33,7 +33,7 @@ public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
       httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
-    String dirName = ReceiveDataServlet.generateFileName(mail);
+    String dirName = ReceiveDataServlet.generateDirName(mail);
     File dir = new File(root, dirName);
     if (!dir.exists()) {
       URIBuilder builder = new URIBuilder("https://www.mybudgetview.fr:443/createMobileUser");

@@ -3,10 +3,7 @@ package com.budgetview.android;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import com.budgetview.android.components.Header;
 import com.budgetview.android.datasync.DataSync;
@@ -32,11 +29,11 @@ public class LoginActivity extends Activity {
       return;
     }
 
-    DataSync sync = new DataSync(this);
-    sync.connect(loginInfo.email, loginInfo.password, new DataSync.Callback() {
+    DataSync sync = new DataSync(this, loginInfo.email, loginInfo.password);
+    sync.connect(new DataSync.Callback() {
       public void onActionFinished() {
         LoginInfo.save(loginInfo, LoginActivity.this);
-        loadData();
+        loadData(loginInfo.email, loginInfo.password);
       }
 
       public void onConnectionUnavailable() {
@@ -49,11 +46,11 @@ public class LoginActivity extends Activity {
     });
   }
 
-  private void loadData() {
+  private void loadData(String email, String password) {
 
     showProgressBar(View.VISIBLE);
 
-    DataSync sync = new DataSync(this);
+    DataSync sync = new DataSync(this, email, password);
     sync.load(new DataSync.Callback() {
       public void onActionFinished() {
         showProgressBar(View.INVISIBLE);

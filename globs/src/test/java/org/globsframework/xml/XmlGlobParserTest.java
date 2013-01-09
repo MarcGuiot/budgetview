@@ -161,6 +161,27 @@ public class XmlGlobParserTest extends TestCase {
     }
   }
 
+  public void testReadInvalidContent() throws Exception {
+    parseIgnoreError("" +
+            "<dummyObject id='1' count='sdf'/>" +
+            "<dummyUnknownObject id='1' COUNT='titi'/>" +
+            "<dummyObject id='2' undefined='toto'/>" +
+            "");
+
+      GlobList objects = repository.getAll(DummyObject.TYPE);
+      assertEquals(2, objects.size());
+    repository.get(KeyBuilder.newKey(DummyObject.TYPE, 1));
+    repository.get(KeyBuilder.newKey(DummyObject.TYPE, 2));
+  }
+
+  public void testInvalideReadSetDefaultValues() throws Exception {
+    parseIgnoreError("<dummyObjectWithDefaultValues id='1' long='lg' double='dbl'/>");
+
+    Glob glob = repository.get(KeyBuilder.newKey(DummyObjectWithDefaultValues.TYPE, 1));
+    assertEquals(3.14159265, glob.get(DummyObjectWithDefaultValues.DOUBLE));
+    assertEquals(5L, glob.get(DummyObjectWithDefaultValues.LONG).longValue());
+  }
+
   public static class AnObject {
     public static GlobType TYPE;
 
@@ -206,6 +227,14 @@ public class XmlGlobParserTest extends TestCase {
 
   private void parse(GlobModel globModel, String xmlStream) {
     GlobTestUtils.parse(globModel, repository, xmlStream);
+  }
+
+  private void parseIgnoreError(String xmlStream) {
+    parseIgnoreError(DummyModel.get(), xmlStream);
+  }
+
+  private void parseIgnoreError(GlobModel globModel, String xmlStream) {
+    GlobTestUtils.parseIgnoreError(globModel, repository, xmlStream);
   }
 
   private Glob getObject(int id) {

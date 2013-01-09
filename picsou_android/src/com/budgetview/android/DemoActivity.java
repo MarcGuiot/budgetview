@@ -45,7 +45,7 @@ public class DemoActivity extends Activity {
       Views.showAlert(this, R.string.demoEmailEmpty);
       return;
     }
-    DataSync dataSync = new DataSync(this);
+    DataSync dataSync = new DataSync(this, null, null);
     dataSync.sendDownloadEmail(email, new DataSync.Callback() {
       public void onActionFinished() {
         Views.showAlert(DemoActivity.this, R.string.demoEmailSent);

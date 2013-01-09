@@ -15,23 +15,40 @@ public class FieldConverter {
   private static final DateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
   private DateFormat dateFormat = DATE_FORMAT;
+  private XmlStringifierVisitor xmlStringifierVisitor;
+  private FieldStringifierVisitor fieldStringifierVisitor;
+  private boolean ignoreError = false;
+
+  public FieldConverter() {
+    xmlStringifierVisitor = new XmlStringifierVisitor();
+    fieldStringifierVisitor = new FieldStringifierVisitor();
+  }
+
+  public FieldConverter(boolean ignoreError) {
+    this.ignoreError = ignoreError;
+    xmlStringifierVisitor = new XmlStringifierVisitor();
+    fieldStringifierVisitor = new FieldStringifierVisitor();
+  }
 
   public String toString(Field field, Object value) {
     if (value == null) {
       return "(null)";
     }
-    FieldStringifierVisitor visitor = new FieldStringifierVisitor(value);
-    field.safeVisit(visitor);
-    return visitor.getStringValue();
+    fieldStringifierVisitor.setValue(value);
+    field.safeVisit(fieldStringifierVisitor);
+    return fieldStringifierVisitor.getStringValue();
   }
 
   public Object toObject(Field field, String stringValue) {
     try {
-      XmlStringifierVisitor visitor = new XmlStringifierVisitor(stringValue);
-      field.safeVisit(visitor);
-      return visitor.getValue();
+      xmlStringifierVisitor.setStringValue(stringValue);
+      field.safeVisit(xmlStringifierVisitor);
+      return xmlStringifierVisitor.getValue();
     }
     catch (Exception e) {
+      if (ignoreError) {
+        return field.getDefaultValue();
+      }
       throw new InvalidParameter("'" + stringValue + "' is not a proper value for field '" + field.getName() +
                                  "' in type '" + field.getGlobType().getName() + "'", e);
     }
@@ -50,6 +67,9 @@ public class FieldConverter {
       return dateFormat.parse(value);
     }
     catch (ParseException e) {
+      if (ignoreError){
+        return null;
+      }
       throw new InvalidParameter("'" + value + "' is not a properly formatted date", e);
     }
   }
@@ -59,16 +79,27 @@ public class FieldConverter {
       return TIMESTAMP_FORMAT.parse(value);
     }
     catch (ParseException e) {
+      if (ignoreError){
+        return null;
+      }
       throw new InvalidParameter("'" + value + "' is not a properly formatted timestamp", e);
     }
   }
 
   private class XmlStringifierVisitor implements FieldVisitor {
-    private final String stringValue;
+    private String stringValue;
     private Object value;
 
     public XmlStringifierVisitor(String stringValue) {
       this.stringValue = stringValue;
+    }
+
+    private XmlStringifierVisitor() {
+    }
+
+    public void setStringValue(String stringValue) {
+      this.stringValue = stringValue;
+      value = null;
     }
 
     public void visitDate(DateField field) throws Exception {
@@ -116,8 +147,12 @@ public class FieldConverter {
     private Object value;
     private String stringValue;
 
-    private FieldStringifierVisitor(Object value) {
+    private FieldStringifierVisitor() {
+    }
+
+    public void setValue(Object value) {
       this.value = value;
+      stringValue = null;
     }
 
     public String getStringValue() {
