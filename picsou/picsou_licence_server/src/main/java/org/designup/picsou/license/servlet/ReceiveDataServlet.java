@@ -1,8 +1,7 @@
 package org.designup.picsou.license.servlet;
 
-import com.budgetview.shared.model.MobileModel;
+import com.budgetview.shared.utils.ComCst;
 import com.budgetview.shared.utils.Crypt;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 import org.designup.picsou.gui.config.ConfigService;
 import org.globsframework.utils.Files;
@@ -25,14 +24,14 @@ public class ReceiveDataServlet extends AbstractHttpServlet {
     InputStream inputStream = httpServletRequest.getInputStream();
     OutputStream outputStream = httpServletResponse.getOutputStream();
     String mail = httpServletRequest.getHeader(ConfigService.HEADER_MAIL);
-    String majorVersion = httpServletRequest.getHeader(MobileModel.MAJOR_VERSION_NAME);
-    String minorVersion = httpServletRequest.getHeader(MobileModel.MINOR_VERSION_NAME);
-    String sha1Mail = httpServletRequest.getHeader(MobileModel.CRYPTED_INFO);
+    String majorVersion = httpServletRequest.getHeader(ComCst.MAJOR_VERSION_NAME);
+    String minorVersion = httpServletRequest.getHeader(ComCst.MINOR_VERSION_NAME);
+    String sha1Mail = httpServletRequest.getHeader(ComCst.CRYPTED_INFO);
     if (Strings.isNullOrEmpty(mail) || Strings.isNullOrEmpty(majorVersion) || Strings.isNullOrEmpty(minorVersion)
        || Strings.isNullOrEmpty(sha1Mail)){
       logger.info("missing info mail : '" + mail + "' major version : '" + majorVersion + "' minor version '" + minorVersion + "' sha1Mail : '"
       + sha1Mail + "'");
-      httpServletResponse.setHeader("STATUS", "FAIL");
+      httpServletResponse.setHeader(ComCst.STATUS, "Missing info");
       return;
     }
     logger.info("receive data from " + mail);
@@ -41,12 +40,13 @@ public class ReceiveDataServlet extends AbstractHttpServlet {
     if (!dir.exists()){
       logger.warn("No directory '" + dirName + "' for " + mail);
       outputStream.write("error".getBytes());
+      httpServletResponse.setHeader(ComCst.STATUS, "No mobile account");
     }
     else {
       File file = new File(dir, "data.ser");
       if (file.exists() && !file.delete()){
         logger.error("Can not delete file " + file.getAbsolutePath());
-        httpServletResponse.setHeader("STATUS", "Can not delete file");
+        httpServletResponse.setHeader(ComCst.STATUS, "Can not delete file");
       }
       else {
         OutputStream fileOutputStream = new BufferedOutputStream(new FileOutputStream(file));
@@ -55,7 +55,7 @@ public class ReceiveDataServlet extends AbstractHttpServlet {
         stream.writeInt(Integer.parseInt(majorVersion));
         stream.writeInt(Integer.parseInt(minorVersion));
         Files.copyStream(inputStream, fileOutputStream);
-        httpServletResponse.setHeader("STATUS", "OK");
+        httpServletResponse.setHeader(ComCst.STATUS, "OK");
       }
     }
   }

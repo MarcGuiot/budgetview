@@ -1,6 +1,7 @@
 package org.designup.picsou.license.functests;
 
 import com.budgetview.shared.model.MobileModel;
+import com.budgetview.shared.utils.ComCst;
 import com.budgetview.shared.utils.Crypt;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -12,7 +13,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.designup.picsou.functests.checkers.ApplicationChecker;
 import org.designup.picsou.functests.checkers.MessageDialogChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.ConnectedTestCase;
 import org.designup.picsou.license.checkers.Email;
 import org.designup.picsou.license.servlet.LicenseServer;
@@ -66,10 +66,10 @@ public class MobileTest extends ConnectedTestCase {
     messageDialogChecker.checkMessageContains("Data sent to server")
     .close();
     HttpClient httpClient = new DefaultHttpClient();
-    URIBuilder builder = new URIBuilder("http://localhost:" + httpPort + LicenseServer.GET_MOBILE_DATA);
+    URIBuilder builder = new URIBuilder("http://localhost:" + httpPort + ComCst.GET_MOBILE_DATA);
     Crypt crypt = new Crypt("hello".toCharArray());
     builder.addParameter("mail", URLEncoder.encode(mail, "UTF-8"));
-    builder.addParameter(MobileModel.CRYPTED_INFO,
+    builder.addParameter(ComCst.CRYPTED_INFO,
                          URLEncoder.encode(Crypt.encodeSHA1AndHex(crypt.encodeData(mail.getBytes("UTF-8"))), "UTF-8"));
     HttpGet method = new HttpGet(builder.build());
     HttpResponse response = httpClient.execute(method);

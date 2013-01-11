@@ -1,5 +1,6 @@
 package org.designup.picsou.license.servlet;
 
+import com.budgetview.shared.utils.ComCst;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.designup.picsou.gui.config.ConfigService;
@@ -24,9 +25,9 @@ import java.io.InputStreamReader;
 import java.util.Timer;
 
 public class LicenseServer {
-  public static final String GET_MOBILE_DATA = "/getMobileData";
-  public static final String SEND_MAIL_FROM_MOBILE = "/sendMailFromMobile";
   static Logger logger = Logger.getLogger("LicenseServer");
+  public static final String SEND_MAIL_FROM_MOBILE = "/sendMailFromMobile";
+  public static final String CREATE_MOBILE_USER = "/createMobileUser";
   public static final String USE_SSHL = "picsou.server.useSsl";
   public static final String KEYSTORE = "picsou.server.keystore";
   public static final String HOST_PROPERTY = "picsou.server.host";
@@ -146,9 +147,9 @@ public class LicenseServer {
     context.addServlet(new ServletHolder(new SendUseInfo()), ConfigService.SEND_USE_INFO);
 
     context.addServlet(new ServletHolder(new ReceiveDataServlet(pathForMobileData, directory)), ConfigService.REQUEST_CLIENT_TO_SERVER_DATA);
-    context.addServlet(new ServletHolder(new RetrieveDataServlet(pathForMobileData, directory)), GET_MOBILE_DATA);
-    context.addServlet(new ServletHolder(new SendMailCreateMobileUserServlet(pathForMobileData, directory)), "/sendMailToCreateMobileUser");
-    context.addServlet(new ServletHolder(new CreateMobileUserServlet(pathForMobileData, directory)), "/createMobileUser");
+    context.addServlet(new ServletHolder(new RetrieveDataServlet(pathForMobileData, directory)), ComCst.GET_MOBILE_DATA);
+    context.addServlet(new ServletHolder(new SendMailCreateMobileUserServlet(pathForMobileData, directory)), ComCst.SEND_MAIL_FROM_MOBILE);
+    context.addServlet(new ServletHolder(new CreateMobileUserServlet(pathForMobileData, directory)), CREATE_MOBILE_USER);
 
     context.addServlet(new ServletHolder(new SendMailFromMobileServlet(directory)), SEND_MAIL_FROM_MOBILE);
   }

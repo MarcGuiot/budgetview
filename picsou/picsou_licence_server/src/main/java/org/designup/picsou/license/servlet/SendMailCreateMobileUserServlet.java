@@ -36,13 +36,13 @@ public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
     String dirName = ReceiveDataServlet.generateDirName(mail);
     File dir = new File(root, dirName);
     if (!dir.exists()) {
-      URIBuilder builder = new URIBuilder("https://www.mybudgetview.fr:443/createMobileUser");
+      URIBuilder builder = new URIBuilder("https://www.mybudgetview.fr:443/" + LicenseServer.CREATE_MOBILE_USER);
       builder.addParameter(ConfigService.HEADER_MAIL, mail);
       builder.addParameter(ConfigService.HEADER_LANG, lang);
       builder.addParameter(ConfigService.CODING, codedMail);
 
-      String asciUrl = builder.build().toASCIIString();
-      mailer.sendNewMobileAccount(mail, lang, asciUrl);
+      String asciiUrl = builder.build().toASCIIString();
+      mailer.sendNewMobileAccount(mail, lang, asciiUrl);
       httpServletResponse.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
     }
     else {

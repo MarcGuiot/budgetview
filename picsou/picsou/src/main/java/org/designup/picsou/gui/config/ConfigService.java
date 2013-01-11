@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.config;
 
 import com.budgetview.shared.model.MobileModel;
+import com.budgetview.shared.utils.ComCst;
 import com.budgetview.shared.utils.Crypt;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
@@ -331,9 +332,9 @@ public class ConfigService {
       String sha1Mail = Crypt.encodeSHA1AndHex(encryptedMail);
       postMethod.setHeader(HEADER_LANG, Lang.get("lang"));
       postMethod.setHeader(HEADER_MAIL, mail);
-      postMethod.setHeader(MobileModel.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
-      postMethod.setHeader(MobileModel.MAJOR_VERSION_NAME, Integer.toString(MobileModel.MAJOR_VERSION));
-      postMethod.setHeader(MobileModel.MINOR_VERSION_NAME, Integer.toString(MobileModel.MINOR_VERSION));
+      postMethod.setHeader(ComCst.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
+      postMethod.setHeader(ComCst.MAJOR_VERSION_NAME, Integer.toString(MobileModel.MAJOR_VERSION));
+      postMethod.setHeader(ComCst.MINOR_VERSION_NAME, Integer.toString(MobileModel.MINOR_VERSION));
       postMethod.setEntity(new ByteArrayEntity(data));
       client.execute(postMethod);
       return true;
@@ -492,7 +493,7 @@ public class ConfigService {
       Log.write("error", e);
     }
     finally {
-      if (postMethod == null) {
+      if (postMethod != null) {
         postMethod.releaseConnection();
       }
     }

@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import com.budgetview.android.App;
 import com.budgetview.android.R;
 import com.budgetview.shared.model.MobileModel;
+import com.budgetview.shared.utils.ComCst;
 import com.budgetview.shared.utils.Crypt;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -41,8 +42,6 @@ public class DataSync {
   public static final String URL_BV = "https://www.mybudgetview.fr";
 //"https://192.168.0.20:8443/";
   private static final String LOCAL_TEMP_FILE_NAME = "temp.xml";
-  public static final String GET_MOBILE_DATA = "getMobileData";
-  public static final String SEND_MAIL_FROM_MOBILE = "sendMailFromMobile";
 
   private Activity activity;
   private String email;
@@ -166,11 +165,11 @@ public class DataSync {
 
         Crypt crypt = new Crypt(DataSync.this.password.toCharArray());
 
-        Uri.Builder uri = Uri.parse(URL_BV + GET_MOBILE_DATA).buildUpon();
-        uri.appendQueryParameter("mail", URLEncoder.encode(email, "UTF-8"));
+        Uri.Builder uri = Uri.parse(URL_BV + ComCst.GET_MOBILE_DATA).buildUpon();
+        uri.appendQueryParameter(ComCst.MAIL, URLEncoder.encode(email, "UTF-8"));
 
         String data = Crypt.encodeSHA1AndHex(crypt.encodeData(email.getBytes("UTF-8")));
-        uri.appendQueryParameter(MobileModel.CRYPTED_INFO, URLEncoder.encode(data, "UTF-8"));
+        uri.appendQueryParameter(ComCst.CRYPTED_INFO, URLEncoder.encode(data, "UTF-8"));
 
         get = new HttpGet(uri.toString());
         response = client.execute(get, new BasicHttpContext());
@@ -178,9 +177,9 @@ public class DataSync {
         if (response.getStatusLine().getStatusCode() != 200) {
           return false;
         }
-        Header statusHeader = response.getFirstHeader("STATUS");
-        Header majorVersionHeader = response.getFirstHeader(MobileModel.MAJOR_VERSION_NAME);
-        Header minorVersionHeader = response.getFirstHeader(MobileModel.MINOR_VERSION_NAME);
+        Header statusHeader = response.getFirstHeader(ComCst.STATUS);
+        Header majorVersionHeader = response.getFirstHeader(ComCst.MAJOR_VERSION_NAME);
+        Header minorVersionHeader = response.getFirstHeader(ComCst.MINOR_VERSION_NAME);
         if (majorVersionHeader == null || minorVersionHeader == null || statusHeader == null) {
           return false;
         }
@@ -243,7 +242,7 @@ public class DataSync {
     try {
       DefaultHttpClient client = createHttpClient();
 
-      Uri.Builder uri = Uri.parse(URL_BV + SEND_MAIL_FROM_MOBILE).buildUpon();
+      Uri.Builder uri = Uri.parse(URL_BV + ComCst.SEND_MAIL_FROM_MOBILE).buildUpon();
       uri.appendQueryParameter("mail", URLEncoder.encode(email, "UTF-8"));
       uri.appendQueryParameter("lang", URLEncoder.encode(email, "fr"));
 
