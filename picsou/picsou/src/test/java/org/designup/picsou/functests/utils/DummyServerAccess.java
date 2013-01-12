@@ -74,6 +74,9 @@ public class DummyServerAccess implements ServerAccess {
   public void downloadedVersion(long version) {
   }
 
+  public void setLang(String lang) {
+  }
+
   public List<UserInfo> getLocalUsers() {
     return null;
   }

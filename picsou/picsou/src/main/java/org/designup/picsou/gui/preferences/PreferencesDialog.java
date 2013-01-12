@@ -1,6 +1,8 @@
 package org.designup.picsou.gui.preferences;
 
+import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.preferences.components.ColorThemeItemFactory;
 import org.designup.picsou.model.ColorTheme;
 import org.designup.picsou.model.NumericDateType;
@@ -19,8 +21,11 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class PreferencesDialog {
+  public static final String FRANÇAIS = "Français";
+  public static final String ENGLISH = "English";
   private PicsouDialog dialog;
 
   private LocalGlobRepository repository;
@@ -29,7 +34,7 @@ public class PreferencesDialog {
   private ColorThemeItemFactory colorThemeFactory;
   private GlobRepository parentRepository;
 
-  public PreferencesDialog(Window parent, final GlobRepository parentRepository, Directory directory) {
+  public PreferencesDialog(Window parent, final GlobRepository parentRepository, final Directory directory) {
     this.parentRepository = parentRepository;
     this.repository = createLocalRepository(parentRepository);
 
@@ -54,6 +59,19 @@ public class PreferencesDialog {
 
     builder.addComboEditor("numericDate", UserPreferences.NUMERIC_DATE_TYPE)
       .forceSelection(UserPreferences.KEY);
+
+    final JComboBox langCombo = new JComboBox(new String[]{ENGLISH, FRANÇAIS});
+    builder.add("lang", langCombo);
+    langCombo.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        String lg = langCombo.getSelectedItem().toString();
+        if (lg.equalsIgnoreCase(ENGLISH)){
+          directory.get(ConfigService.class).setLang("en");
+        }else{
+          directory.get(ConfigService.class).setLang("fr");
+        }
+      }
+    });
 
     dialog = PicsouDialog.create(parent, directory);
     dialog.addPanelWithButtons((JPanel)builder.load(), new OkAction(), new CancelAction());

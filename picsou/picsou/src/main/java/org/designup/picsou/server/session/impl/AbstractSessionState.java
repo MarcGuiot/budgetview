@@ -62,6 +62,10 @@ public abstract class AbstractSessionState implements SessionState {
     throw new InvalidActionForState("localDownload", getStateName());
   }
 
+  public void setLang(SerializedInput input) {
+    throw new InvalidActionForState("setLang", getStateName());
+  }
+
   public abstract String getStateName();
 
   public ConnectingState connect(SerializedInput input, SerializedOutput output) throws InvalidActionForState {

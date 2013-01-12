@@ -67,6 +67,7 @@ public class PRootDataManager implements RootDataManager {
     serializablePolicy.registerFactory(Register.getFactory());
     serializablePolicy.registerFactory(PRootData.getFactory());
     serializablePolicy.registerFactory(SetDownloadedVersion.getFactory());
+    serializablePolicy.registerFactory(SetLang.getFactory());
     return serializablePolicy;
   }
 
@@ -171,6 +172,19 @@ public class PRootDataManager implements RootDataManager {
   public void setDownloadedVersion(long version) {
     try {
       prevayler.execute(new SetDownloadedVersion(version));
+      prevayler.takeSnapshot();
+    }
+    catch (GlobsException e) {
+      throw e;
+    }
+    catch (Exception e) {
+      throw new UnexpectedApplicationState(e);
+    }
+  }
+
+  public void setLang(String lang) {
+    try {
+      prevayler.execute(new SetLang(lang));
       prevayler.takeSnapshot();
     }
     catch (GlobsException e) {

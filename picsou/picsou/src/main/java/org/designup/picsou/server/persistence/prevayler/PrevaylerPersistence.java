@@ -131,6 +131,10 @@ public class PrevaylerPersistence implements Persistence {
     rootDataManager.setDownloadedVersion(version);
   }
 
+  public void setLang(String lang) {
+    rootDataManager.setLang(lang);
+  }
+
   public void getData(SerializedOutput output, Integer userId) {
     accountDataManager.getUserData(output, userId);
   }
@@ -148,6 +152,7 @@ public class PrevaylerPersistence implements Persistence {
     output.writeJavaString(accountInfo.getActivationCode());
     output.write(accountInfo.getCount());
     output.write(accountInfo.getDownloadedVersion());
+    output.writeUtf8String(accountInfo.getLang());
   }
 
 }

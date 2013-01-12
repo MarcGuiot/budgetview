@@ -20,15 +20,9 @@ import org.designup.picsou.gui.license.LicenseCheckerThread;
 import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.startup.SlaValidationDialog;
 import org.designup.picsou.gui.undo.UndoRedoService;
-import org.designup.picsou.model.Bank;
-import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
@@ -87,6 +81,9 @@ public class MainWindow implements WindowManager {
     ConfigService configService = directory.get(ConfigService.class);
     ServerAccess.LocalInfo info = initServerAccess(serverAddress, prevaylerPath, dataInMemory);
     if (info != null) {
+      if (Strings.isNotEmpty(info.getLang())) {
+        Lang.setLang(info.getLang());
+      }
       registered = configService.update(info.getRepoId(), info.getCount(), info.getMail(),
                                         info.getSignature(), info.getActivationCode(), serverAccess);
       long downloadVersion = info.getDownloadVersion();

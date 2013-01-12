@@ -14,6 +14,7 @@ import com.budgetview.shared.utils.Crypt;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.scheme.LayeredSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
@@ -242,12 +243,12 @@ public class DataSync {
     try {
       DefaultHttpClient client = createHttpClient();
 
-      Uri.Builder uri = Uri.parse(URL_BV + ComCst.SEND_MAIL_FROM_MOBILE).buildUpon();
-      uri.appendQueryParameter("mail", URLEncoder.encode(email, "UTF-8"));
+      Uri.Builder uri = Uri.parse(URL_BV + ComCst.SEND_MAIL_REMINDER_FROM_MOBILE).buildUpon();
+      uri.appendQueryParameter(ComCst.MAIL, URLEncoder.encode(email, "UTF-8"));
       uri.appendQueryParameter("lang", URLEncoder.encode(email, "fr"));
 
-      HttpGet get = new HttpGet(uri.toString());
-      HttpResponse response = client.execute(get, new BasicHttpContext());
+      HttpPost post = new HttpPost(uri.toString());
+      HttpResponse response = client.execute(post, new BasicHttpContext());
 
       if (response.getStatusLine().getStatusCode() != 200) {
         return false;

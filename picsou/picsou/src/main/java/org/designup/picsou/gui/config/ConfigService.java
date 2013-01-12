@@ -54,6 +54,7 @@ import java.util.zip.ZipEntry;
 public class ConfigService {
 
   public static final String COM_APP_LICENSE_URL = PicsouApplication.APPNAME + ".license.url";
+  public static final String COM_APP_MOBILE_URL = PicsouApplication.APPNAME + ".license.url";
   public static final String COM_APP_LICENSE_FTP_URL = PicsouApplication.APPNAME + ".license.ftp.url";
   public static final String HEADER_TO_MAIL = "toMail";
   public static final String HEADER_MAIL = "mail";
@@ -82,8 +83,6 @@ public class ConfigService {
   public static final String REQUEST_FOR_MAIL = "/mailTo";
   public static final String REQUEST_SEND_MAIL = "/sendMailToUs";
   public static final String REQUEST_CLIENT_TO_SERVER_DATA = "/sendMobileData";
-  public static final String REQUEST_SERVER_TO_MOBILE_DATA = "/getMobileData";
-  public static final String REQUEST_CREATE_MOBILE_ACCOUNT = "/sendMailToCreateMobileUser";
   public static final String CODING = "coding";
   public static final String SOME_PASSWORD = "HdsB 8(Rfm";
   public static final String SEND_USE_INFO = "/sendUseInfo";
@@ -95,6 +94,7 @@ public class ConfigService {
 
 
   private String URL = PicsouApplication.REGISTER_URL;
+  private String URL_MOBILE = PicsouApplication.REGISTER_URL_MOBILE;
   private String FTP_URL = PicsouApplication.FTP_URL;
   private long localJarVersion = -1;
   private long localConfigVersion = -1;
@@ -117,6 +117,7 @@ public class ConfigService {
     Utils.beginRemove();
     RETRY_PERIOD = 500;
     URL = System.getProperty(COM_APP_LICENSE_URL);
+    URL_MOBILE = System.getProperty(COM_APP_MOBILE_URL);
     FTP_URL = System.getProperty(COM_APP_LICENSE_FTP_URL);
     Utils.endRemove();
     this.applicationVersion = applicationVersion;
@@ -143,7 +144,7 @@ public class ConfigService {
         HttpClient httpClient = getNewHttpClient();
         response = httpClient.execute(postMethod);
       }
-      catch (IOException e) {
+      catch (Exception e) {
         if (postMethod != null) {
           postMethod.releaseConnection();
         }
@@ -320,7 +321,7 @@ public class ConfigService {
 
     HttpClient client = getNewHttpClient();
     HttpPost postMethod;
-    postMethod = createPostMethod(URL + REQUEST_CLIENT_TO_SERVER_DATA);
+    postMethod = createPostMethod(URL_MOBILE + REQUEST_CLIENT_TO_SERVER_DATA);
 
     try {
 
@@ -465,7 +466,7 @@ public class ConfigService {
   public boolean createMobileAccount(String mail, Ref<String> message) {
     HttpPost postMethod = null;
     try {
-      String url = URL + REQUEST_CREATE_MOBILE_ACCOUNT;
+      String url = URL_MOBILE + ComCst.SEND_MAIL_TO_CONFIRM_MOBILE;
 
       MD5PasswordBasedEncryptor encryptor =
         new MD5PasswordBasedEncryptor(ConfigService.MOBILE_SALT.getBytes(), ConfigService.SOME_PASSWORD.toCharArray(), 5);
@@ -876,5 +877,9 @@ public class ConfigService {
     public void run() {
       computeResponse(repository, response);
     }
+  }
+
+  public void setLang(String lang){
+    serverAccess.setLang(lang);
   }
 }

@@ -7,6 +7,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -109,4 +110,14 @@ public class MobileTest extends ConnectedTestCase {
     return url;
   }
 
+  public void testReminderMail() throws Exception {
+    HttpClient httpClient = new DefaultHttpClient();
+    URIBuilder builder = new URIBuilder("http://localhost:" + httpPort + ComCst.SEND_MAIL_REMINDER_FROM_MOBILE);
+    builder.addParameter("mail", URLEncoder.encode("test@budgetview.fr", "UTF-8"));
+    HttpPost method = new HttpPost(builder.build());
+    HttpResponse response = httpClient.execute(method);
+    assertEquals(200, response.getStatusLine().getStatusCode());
+    Email email = mailServer.checkReceivedMail("test@budgetview.fr");
+    assertTrue(email.getContent(), email.getContent().contains("Ne pas oublier de"));
+  }
 }

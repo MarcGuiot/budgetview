@@ -63,4 +63,9 @@ public class PreferencesChecker extends GuiChecker {
     window.getButton("ok").click();
     UISpecAssert.assertFalse(window.isVisible());
   }
+
+  public PreferencesChecker setLang(String lang) {
+    window.getComboBox("lang").select(lang);
+    return this;
+  }
 }

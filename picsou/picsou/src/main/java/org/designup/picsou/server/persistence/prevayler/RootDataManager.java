@@ -30,6 +30,8 @@ public interface RootDataManager {
 
   void setDownloadedVersion(long version);
 
+  void setLang(String lang);
+
   static class RepoInfo {
     private byte[] id;
     private byte[] mail;
@@ -37,14 +39,17 @@ public interface RootDataManager {
     private String activationCode;
     private long count;
     private long downloadedVersion;
+    private String lang;
 
-    public RepoInfo(byte[] id, byte[] mail, byte[] signature, String activationCode, long count, long downloadedVersion) {
+    public RepoInfo(byte[] id, byte[] mail, byte[] signature, String activationCode, long count,
+                    long downloadedVersion, String lang) {
       this.id = id;
       this.mail = mail;
       this.signature = signature;
       this.activationCode = activationCode;
       this.count = count;
       this.downloadedVersion = downloadedVersion;
+      this.lang = lang;
     }
 
     public byte[] getId() {
@@ -69,6 +74,10 @@ public interface RootDataManager {
 
     public long getDownloadedVersion() {
       return downloadedVersion;
+    }
+
+    public String getLang() {
+      return lang;
     }
   }
 

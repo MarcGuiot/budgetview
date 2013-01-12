@@ -1,5 +1,6 @@
 package org.designup.picsou.license.servlet;
 
+import com.budgetview.shared.utils.ComCst;
 import org.apache.log4j.Logger;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.mail.Mailer;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLDecoder;
 
 public class SendMailFromMobileServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("sendMailFromMobile");
@@ -25,7 +27,8 @@ public class SendMailFromMobileServlet extends HttpServlet {
     try {
       req.setCharacterEncoding("UTF-8");
       resp.setCharacterEncoding("UTF-8");
-      String mailTo = req.getParameter(ConfigService.HEADER_TO_MAIL);
+      String mailTo = req.getParameter(ComCst.MAIL);
+      logger.info("request for reminder " + mailTo);
       if (Strings.isNullOrEmpty(mailTo)) {
         logger.info("sendMail: missing mail address " + (mailTo == null ? "<no email>" : mailTo));
         resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -35,13 +38,13 @@ public class SendMailFromMobileServlet extends HttpServlet {
       if (Strings.isNullOrEmpty(lang)){
         lang = "fr";
       }
-
-      mailTo = mailTo.trim();
+      mailTo = URLDecoder.decode(mailTo.trim(), "UTF-8");
       mailer.sendFromMobileToUseBV(mailTo, lang);
       resp.setStatus(HttpServletResponse.SC_OK);
     }
     catch (Exception e) {
       logger.error("sendMail failed: ", e);
+      resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
   }
 }

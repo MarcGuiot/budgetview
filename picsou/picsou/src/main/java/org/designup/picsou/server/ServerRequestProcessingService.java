@@ -43,6 +43,8 @@ public interface ServerRequestProcessingService {
 
   void localDownload(Long sessionId, SerializedInput input);
 
+  void setLang(Long sessionId, SerializedInput input);
+
   void getSnapshotInfos(Long sessionId, SerializedInput input, SerializedOutput output);
 
   void getSnapshotData(Long sessionId, SerializedInput input, SerializedOutput output);

@@ -66,6 +66,14 @@ public class LocalClientTransport implements ClientTransport {
     serverRequestProcessingService.localDownload(sessionId, byteOutput.getInput());
   }
 
+  public void setLang(Long sessionId, byte[] privateId, String lang) {
+    SerializedByteArrayOutput byteOutput = new SerializedByteArrayOutput();
+    SerializedOutput output = byteOutput.getOutput();
+    output.writeBytes(privateId);
+    output.writeUtf8String(lang);
+    serverRequestProcessingService.setLang(sessionId, byteOutput.getInput());
+  }
+
   public SerializedInput identifyUser(Long sessionId, byte[] data) {
     SerializedByteArrayOutput output = new SerializedByteArrayOutput();
     serverRequestProcessingService.identify(sessionId, SerializedInputOutputFactory.init(data), output.getOutput());
