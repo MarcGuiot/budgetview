@@ -35,6 +35,15 @@ public class BnpWebConnection extends HttpWebConnection {
     URL url = request.getUrl();
     String path = url.getPath();
     WebResponse response = null;
+//    if (path.endsWith("/scripts/particulier_portail.js")) {
+//      return new StringWebResponse(Files.loadFileToString("/connectors/bnp/particulier_portail.js"), url);
+//    }
+//    if (path.endsWith("rsc/ia/overview/scripts/prototype.js")) {
+//      return new StringWebResponse(Files.loadFileToString("/connectors/bnp/prototype.js"), url);
+//    }
+//    if (path.endsWith("rsc/ia/overview/scripts/overview.js")) {
+//      return new StringWebResponse(Files.loadFileToString("/connectors/bnp/overview.js"), url);
+//    }
     if (!FILTER_JS || shouldInclude(path)) {
       System.out.print("    web request: " + url + "... ");
       Time time = Time.now();

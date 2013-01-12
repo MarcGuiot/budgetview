@@ -13,6 +13,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -153,6 +154,14 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       progressLabel.setText(Lang.get("import.synchro.progress.downloadInProgress"));
     }
 
+    public void preparingAccount(String accountName) {
+      progressLabel.setText(Lang.get("import.synchro.progress.preparingAccount", Strings.cut(accountName, 30)));
+    }
+
+    public void downloadingAccount(String accountName) {
+      progressLabel.setText(Lang.get("import.synchro.progress.downloadForAccount", Strings.cut(accountName, 30)));
+    }
+
     public void waitingForUser() {
       if (closed) {
         return;
@@ -195,10 +204,6 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       }
       importedRealAccounts.addAll(realAccounts);
       installNextConnector();
-    }
-
-    public void notifyDownload(String description) {
-      progressLabel.setText(description);
     }
   }
 

@@ -336,7 +336,7 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
         compte.select(option);
         File file = null;
         try {
-          notifyDownload(getAccountDescription(realAccount));
+          notifyDownloadForAccount(getAccountName(realAccount));
           file = downloadFor(realAccount);
         }
         catch (WebCommandFailed failed) {

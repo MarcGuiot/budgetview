@@ -52,6 +52,10 @@ public class WebBrowser {
     webClient.setAlertHandler(errorAlertHandler);
   }
 
+  public void setTimeout(int timeout) {
+    getClient().setTimeout(timeout);
+  }
+
   public WebPage load(String url) throws WebCommandFailed {
     try {
       currentPage = getClient().getPage(url);

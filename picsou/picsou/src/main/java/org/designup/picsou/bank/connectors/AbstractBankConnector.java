@@ -174,16 +174,20 @@ public abstract class AbstractBankConnector implements BankConnector {
     monitor.importCompleted(accounts);
   }
 
-  protected String getAccountDescription(Glob account) {
-    return Strings.join(account.get(RealAccount.NAME), account.get(RealAccount.NUMBER), account.get(RealAccount.POSITION));
+  protected String getAccountName(Glob account) {
+    return account.get(RealAccount.NAME);
   }
 
   protected void notifyInitialConnection() {
     monitor.initialConnection();
   }
 
-  protected void notifyDownload(String description) {
-    monitor.notifyDownload(description);
+  protected void notifyPreparingAccount(String accountName) {
+    monitor.downloadingAccount(accountName);
+  }
+
+  protected void notifyDownloadForAccount(String accountName) {
+    monitor.downloadingAccount(accountName);
   }
 
   protected void notifyIdentificationInProgress() {

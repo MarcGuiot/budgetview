@@ -17,8 +17,6 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.model.format.DescriptionService;
-import org.globsframework.model.repository.DefaultGlobIdGenerator;
-import org.globsframework.model.repository.DefaultGlobRepository;
 import org.globsframework.utils.directory.DefaultDirectory;
 
 import javax.swing.*;
@@ -78,8 +76,8 @@ public class WebConnectorLauncher {
       System.out.println("Initial connection...");
     }
 
-    public void downloadInProgress() {
-      System.out.println("Download in progress...");
+    public void waitingForUser() {
+      System.out.println("Waiting for user...");
     }
 
     public void identificationInProgress() {
@@ -90,8 +88,16 @@ public class WebConnectorLauncher {
       System.out.println("Identification failed...");
     }
 
-    public void waitingForUser() {
-      System.out.println("Waiting for user...");
+    public void preparingAccount(String accountName) {
+      System.out.println("preparing account: " + accountName);
+    }
+
+    public void downloadInProgress() {
+      System.out.println("Download in progress...");
+    }
+
+    public void downloadingAccount(String accountName) {
+      System.out.println("downloading account: " + accountName);
     }
 
     public void errorFound(String errorMessage) {
@@ -107,10 +113,6 @@ public class WebConnectorLauncher {
 
     public void importCompleted(GlobList realAccounts) {
       System.out.println("Import completed: " + realAccounts);
-    }
-
-    public void notifyDownload(String description) {
-      System.out.println("downloading " + description);
     }
   }
 }

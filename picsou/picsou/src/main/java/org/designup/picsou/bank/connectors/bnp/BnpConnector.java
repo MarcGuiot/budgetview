@@ -6,15 +6,13 @@ import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.*;
-import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
-import org.designup.picsou.bank.connectors.webcomponents.utils.ImageMapper;
-import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
-import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
+import org.designup.picsou.bank.connectors.webcomponents.utils.*;
 import org.designup.picsou.model.RealAccount;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
+import org.joda.time.DateTime;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -55,6 +53,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
 
   private BnpConnector(GlobRepository repository, Directory directory) {
     super(BANK_ID, repository, directory);
+    browser.setTimeout(15000);
   }
 
   protected JPanel createPanel() {
@@ -148,8 +147,11 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
               }
               String name = labelCell.asText();
               String onclick = labelCell.getSingleAnchor().getOnclick();
-              System.out.println("adding entry (" + name + ", " + onclick + ")");
-              entries.add(new AccountEntry(name, onclick));
+              AccountEntry entry = new AccountEntry(name, onclick);
+              entries.add(entry);
+
+              String positionText = labelCell.getEnclosingRow().getCell(3).asText();
+              entry.setPositionForDefaultDate(positionText);
             }
 
             if (entries.isEmpty()) {
@@ -158,11 +160,25 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
               return;
             }
 
-            for (AccountEntry entry : entries) {
-              System.out.println("loading entry: " + entry.onclick + " on " + HOME_URL);
-              WebPage accountPage = browser.load(HOME_URL).executeJavascript(entry.onclick);
-              parseAccountPage(entry, accountPage);
+            notifyDownloadInProgress();
+
+            try {
+              for (AccountEntry entry : entries) {
+                System.out.println("loading entry: " + entry.onclick + " on " + HOME_URL);
+                WebPage accountPage = browser.load(HOME_URL).executeJavascript(entry.onclick);
+                parseAccountPage(entry, accountPage);
+              }
             }
+            catch (WebCommandFailed e) {
+              // server took too long, ignore this part
+              System.out.println("-- BNPP response taking too long: skipped");
+            }
+            catch (WebParsingError e) {
+              System.out.println(browser.getCurrentPage().asXml());
+              throw e;
+            }
+
+            notifyDownloadInProgress();
 
             WebFrame frame = browser.load(DOWNLOADS_URL).getFrameByName("main");
             WebForm downloadConfigForm = frame.loadTargetPage().getFormByAction("/SAF_TLC_CNF");
@@ -186,6 +202,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
             accounts.clear();
             for (AccountEntry entry : entries) {
               System.out.println("==>  " + entry);
+              notifyDownloadForAccount(entry.name);
               Glob account = createOrUpdateRealAccount(entry.name,
                                                        entry.number,
                                                        entry.position,
@@ -197,6 +214,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
             }
           }
           catch (Throwable e) {
+            e.printStackTrace();
             notifyErrorFound(e);
           }
           importCompleted();
@@ -207,6 +225,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
   }
 
   private void parseAccountPage(AccountEntry entry, WebPage accountPage) throws WebParsingError {
+    notifyPreparingAccount(entry.name);
     WebTable table = accountPage.getTableWithClass("infoCompteDroite");
     System.out.println("BnpConnector.parseAccountPage: table=" + table.asText());
     Matcher matcher = ACCOUNT_DATE_REGEXP.matcher(table.asText().replaceAll("[ \n\t]+", " "));
@@ -216,8 +235,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
     String date = matcher.group(1);
 
     String position = table.getRow(0).getCell(1).asText().replaceAll("[ €]+", "");
-
-    entry.update(position, date);
+    entry.setPosition(position, date);
   }
 
   private AccountEntry findEntry(List<AccountEntry> entries, String path) throws WebParsingError {
@@ -283,8 +301,12 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
       this.onclick = onclick;
     }
 
-    public void update(String positionText, String updateDateText) throws WebParsingError {
-      System.out.println("update entry: " + positionText + " on " + updateDate);
+    public void setPositionForDefaultDate(String positionText) throws WebParsingError {
+      DateTime today = new DateTime();
+      setPosition(positionText, DATE_FORMAT.format(today.minusDays(1).toDate()));
+    }
+
+    public void setPosition(String positionText, String updateDateText) throws WebParsingError {
       position = cleanUpAmount(positionText);
       updateDate = extractDate(updateDateText);
     }

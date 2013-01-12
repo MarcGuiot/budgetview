@@ -6,21 +6,23 @@ public interface SynchroMonitor {
 
   void initialConnection();
 
+  void waitingForUser();
+
   void identificationInProgress();
 
   void identificationFailed();
 
   void downloadInProgress();
 
-  void waitingForUser();
+  void preparingAccount(String accountName);
+
+  void downloadingAccount(String accountName);
+
+  void importCompleted(GlobList realAccounts);
 
   void errorFound(String errorMessage);
 
   void errorFound(Throwable exception);
-
-  void importCompleted(GlobList realAccounts);
-
-  void notifyDownload(String description);
 
   public static SynchroMonitor SILENT = new SynchroMonitor() {
     public void initialConnection() {
@@ -32,10 +34,16 @@ public interface SynchroMonitor {
     public void identificationFailed() {
     }
 
+    public void waitingForUser() {
+    }
+
+    public void preparingAccount(String accountName) {
+    }
+
     public void downloadInProgress() {
     }
 
-    public void waitingForUser() {
+    public void downloadingAccount(String accountName) {
     }
 
     public void errorFound(String errorMessage) {
@@ -45,9 +53,6 @@ public interface SynchroMonitor {
     }
 
     public void importCompleted(GlobList realAccounts) {
-    }
-
-    public void notifyDownload(String description) {
     }
   };
 
