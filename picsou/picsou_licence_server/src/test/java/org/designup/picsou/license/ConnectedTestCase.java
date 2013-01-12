@@ -29,7 +29,8 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
     BrowsingService.setDummyBrowser(true);
     Locale.setDefault(Locale.ENGLISH);
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
-    System.setProperty(ConfigService.COM_APP_LICENSE_URL, "http://localhost:5000");
+    System.setProperty(ConfigService.COM_APP_LICENSE_URL, "http://localhost:" + httpPort);
+    System.setProperty(ConfigService.COM_APP_MOBILE_URL, "http://localhost:" + httpPort);
     System.setProperty(ConfigService.COM_APP_LICENSE_FTP_URL, "ftp://localhost:12000");
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");

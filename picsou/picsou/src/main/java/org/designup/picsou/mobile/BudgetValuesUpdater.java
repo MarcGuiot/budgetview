@@ -61,6 +61,7 @@ public class BudgetValuesUpdater {
     try {
       targetRepository.deleteAll();
 
+      createVersion();
       createMonths();
       createBudgetAreas();
       createBudgetStats();
@@ -72,6 +73,12 @@ public class BudgetValuesUpdater {
     finally {
       targetRepository.completeChangeSet();
     }
+  }
+
+  private void createVersion() {
+    targetRepository.create(BudgetViewVersion.key,
+                            value(BudgetViewVersion.MAJOR_VERSION, MobileModel.MAJOR_VERSION),
+                            value(BudgetViewVersion.MINOR_VERSION, MobileModel.MINOR_VERSION));
   }
 
   private void createMonths() {

@@ -39,4 +39,6 @@ public interface ClientTransport {
   SerializedInput getSnapshotInfos(Long sessionId, byte[] bytes);
 
   SerializedInput getSnapshotData(Long sessionId, byte[] data);
+
+  void setLang(Long sessionId, byte[] privateId, String lang);
 }

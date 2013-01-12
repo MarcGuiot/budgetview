@@ -54,6 +54,10 @@ public class ServerAccessDecorator implements ServerAccess {
     serverAccess.downloadedVersion(version);
   }
 
+  public void setLang(String lang) {
+    serverAccess.setLang(lang);
+  }
+
   public void applyChanges(ChangeSet changeSet, GlobRepository globRepository) {
     serverAccess.applyChanges(changeSet, globRepository);
   }

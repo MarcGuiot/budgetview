@@ -9,7 +9,6 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import org.xml.sax.Attributes;
 
 public class XmlSingleGlobParser {
-  private static FieldConverter fieldConverter = new FieldConverter();
 
   private XmlSingleGlobParser() {
   }
@@ -29,6 +28,7 @@ public class XmlSingleGlobParser {
   }
 
   private static void processFields(DefaultGlob glob, Attributes xmlAttrs, GlobType globType) {
+    FieldConverter fieldConverter = new FieldConverter();
     int length = xmlAttrs.getLength();
     for (int i = 0; i < length; i++) {
       String name = xmlAttrs.getQName(i);

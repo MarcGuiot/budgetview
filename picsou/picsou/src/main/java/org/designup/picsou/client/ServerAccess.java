@@ -27,6 +27,8 @@ public interface ServerAccess {
 
   void downloadedVersion(long version);
 
+  void setLang(String lang);
+
   void applyChanges(ChangeSet changeSet, GlobRepository globRepository);
 
   void takeSnapshot();
@@ -109,6 +111,9 @@ public interface ServerAccess {
     public void downloadedVersion(long version) {
     }
 
+    public void setLang(String lang) {
+    }
+
     public void applyChanges(ChangeSet changeSet, GlobRepository globRepository) {
     }
 
@@ -167,14 +172,17 @@ public interface ServerAccess {
     private String activationCode;
     private long count;
     private long downloadVersion;
+    private String lang;
 
-    public LocalInfo(byte[] repoId, byte[] mail, byte[] signature, String activationCode, long count, long downloadVersion) {
+    public LocalInfo(byte[] repoId, byte[] mail, byte[] signature, String activationCode,
+                     long count, long downloadVersion, String lang) {
       this.repoId = repoId;
       this.mail = mail;
       this.signature = signature;
       this.activationCode = activationCode;
       this.count = count;
       this.downloadVersion = downloadVersion;
+      this.lang = lang;
     }
 
     public byte[] getRepoId() {
@@ -199,6 +207,10 @@ public interface ServerAccess {
 
     public long getDownloadVersion() {
       return downloadVersion;
+    }
+
+    public String getLang() {
+      return lang;
     }
   }
 }

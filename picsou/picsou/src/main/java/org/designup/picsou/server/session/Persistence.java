@@ -48,6 +48,8 @@ public interface Persistence {
 
   void setDownloadedVersion(long version);
 
+  void setLang(String lang);
+
   List<AccountDataManager.SnapshotInfo> getSnapshotInfos(Integer userId);
 
   void getSnapshotData(String fileName, SerializedOutput output, Integer userId);

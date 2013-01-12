@@ -19,8 +19,7 @@ import java.io.Writer;
 import java.util.List;
 
 public class XmlGlobWriter {
-
-  private static FieldConverter fieldConverter = new FieldConverter();
+  private FieldConverter fieldConverter = new FieldConverter();
   private GlobList globsToWrite;
   private GlobList writtenGlobs = new GlobList();
   private GlobRepository repository;
@@ -98,7 +97,7 @@ public class XmlGlobWriter {
     return children;
   }
 
-  private static void writeFields(Glob glob, Writer writer) throws IOException {
+  private void writeFields(Glob glob, Writer writer) throws IOException {
     for (Field field : glob.getType().getFields()) {
       Object value = glob.getValue(field);
       if (value == null) {
@@ -108,7 +107,7 @@ public class XmlGlobWriter {
     }
   }
 
-  private static void writeFieldValue(Writer writer, Field field, Object value) throws IOException {
+  private void writeFieldValue(Writer writer, Field field, Object value) throws IOException {
     writeAttribute(writer, field.getName(), fieldConverter.toString(field, value));
   }
 

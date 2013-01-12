@@ -40,6 +40,11 @@
         <filler fill="horizontal"/>
       </row>
 
+      <row>
+          <label text="$preferences.langText" styleClass="formLabel"/>
+          <comboBox ref="lang"/>
+      </row>
+
     </column>
   </panel>
 

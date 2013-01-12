@@ -60,6 +60,9 @@ public class HttpsClientTransport implements ClientTransport {
     return null;
   }
 
+  public void setLang(Long sessionId, byte[] privateId, String lang) {
+  }
+
   public SerializedInput identifyUser(Long sessionId, byte[] data) {
     return sendRequest(sessionId, "/identifyUser", data);
   }

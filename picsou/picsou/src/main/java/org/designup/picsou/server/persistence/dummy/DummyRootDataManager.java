@@ -63,7 +63,10 @@ public class DummyRootDataManager implements RootDataManager {
   public void setDownloadedVersion(long version) {
   }
 
+  public void setLang(String lang) {
+  }
+
   public RepoInfo getAndUpdateAccountInfo() {
-    return new RepoInfo(new byte[0], new byte[0], new byte[0], "", 0, 0);
+    return new RepoInfo(new byte[0], new byte[0], new byte[0], "", 0, 0, "en");
   }
 }

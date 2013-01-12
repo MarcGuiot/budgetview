@@ -122,4 +122,15 @@ public class Lang {
       return null;
     }
   }
+
+  public static void setLang(String lang) {
+    if (lang.equals("fr")) {
+      Locale.setDefault(Locale.FRANCE);
+      setLocale(Locale.FRANCE);
+    }
+    else if (lang.equals("en")) {
+      Locale.setDefault(Locale.ENGLISH);
+      setLocale(Locale.ENGLISH);
+    }
+  }
 }

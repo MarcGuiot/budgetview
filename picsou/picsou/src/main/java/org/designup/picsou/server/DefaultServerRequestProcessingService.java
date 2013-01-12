@@ -104,4 +104,9 @@ public class DefaultServerRequestProcessingService implements ServerRequestProce
     SessionState state = sessionService.getSessionState(sessionId);
     state.localDownload(input);
   }
+
+  public void setLang(Long sessionId, SerializedInput input) {
+    SessionState state = sessionService.getSessionState(sessionId);
+    state.setLang(input);
+  }
 }

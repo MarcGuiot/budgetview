@@ -20,6 +20,7 @@ import java.util.Set;
 public class PRootData implements CustomSerializable {
   private static final byte V1 = 1;
   private static final byte V2 = 2;
+  private static final byte V3 = 3;
   private byte[] id = null;
   private byte[] mail = null;
   private byte[] signature = null;
@@ -29,6 +30,7 @@ public class PRootData implements CustomSerializable {
   private Map<String, Glob> users = new HashMap<String, Glob>();
   private static final String USERS_ROOT_DATA = "UsersRootData";
   private long downloadedVersion = -1;
+  private String lang;
 
   public PRootData() {
   }
@@ -76,15 +78,19 @@ public class PRootData implements CustomSerializable {
       case V2:
         readV2(input);
         break;
+      case V3:
+        readV3(input);
+        break;
       default:
         throw new InvalidData("Unable to read version " + version);
     }
   }
 
   public void write(SerializedOutput output, Directory directory) {
-    output.writeByte(V2);
+    output.writeByte(V3);
     writeV1Info(output);
     output.write(downloadedVersion);
+    output.writeUtf8String(lang);
   }
 
   private void writeV1Info(SerializedOutput output) {
@@ -111,10 +117,16 @@ public class PRootData implements CustomSerializable {
     }
   }
 
+  private void readV3(SerializedInput input) {
+    readV2(input);
+    lang = input.readUtf8String();
+  }
+
   private void readV2(SerializedInput input) {
     readV1Info(input);
     downloadedVersion = input.readNotNullLong();
   }
+
 
   private void readV1(SerializedInput input) {
     readV1Info(input);
@@ -181,7 +193,7 @@ public class PRootData implements CustomSerializable {
 
   public RootDataManager.RepoInfo getRepoInfo() {
     count++;
-    return new RootDataManager.RepoInfo(id, mail, signature, activationCode, count, downloadedVersion);
+    return new RootDataManager.RepoInfo(id, mail, signature, activationCode, count, downloadedVersion, lang);
   }
 
   public void setRepoId(byte[] repoId) {
@@ -196,6 +208,10 @@ public class PRootData implements CustomSerializable {
 
   public void setDownloadedVersion(long version) {
     this.downloadedVersion = version;
+  }
+
+  public void setLang(String lang) {
+    this.lang = lang;
   }
 
   private static class Factory implements CustomSerializableFactory {

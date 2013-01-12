@@ -1,5 +1,8 @@
 package org.designup.picsou.gui.config;
 
+import com.budgetview.shared.model.MobileModel;
+import com.budgetview.shared.utils.ComCst;
+import com.budgetview.shared.utils.Crypt;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -12,6 +15,7 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.AbstractVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.BasicClientConnectionManager;
@@ -50,6 +54,7 @@ import java.util.zip.ZipEntry;
 public class ConfigService {
 
   public static final String COM_APP_LICENSE_URL = PicsouApplication.APPNAME + ".license.url";
+  public static final String COM_APP_MOBILE_URL = PicsouApplication.APPNAME + ".license.url";
   public static final String COM_APP_LICENSE_FTP_URL = PicsouApplication.APPNAME + ".license.ftp.url";
   public static final String HEADER_TO_MAIL = "toMail";
   public static final String HEADER_MAIL = "mail";
@@ -77,9 +82,7 @@ public class ConfigService {
   public static final String REQUEST_FOR_CONFIG = "/requestForConfig";
   public static final String REQUEST_FOR_MAIL = "/mailTo";
   public static final String REQUEST_SEND_MAIL = "/sendMailToUs";
-  public static final String REQUEST_REGISTER_DATA = "/registerData";
-  public static final String REQUEST_RETRIEVE_DATA = "/retrieveData";
-  public static final String REQUEST_CREATE_MOBILE_ACCOUNT = "/sendMailToCreateMobileUser";
+  public static final String REQUEST_CLIENT_TO_SERVER_DATA = "/sendMobileData";
   public static final String CODING = "coding";
   public static final String SOME_PASSWORD = "HdsB 8(Rfm";
   public static final String SEND_USE_INFO = "/sendUseInfo";
@@ -91,6 +94,7 @@ public class ConfigService {
 
 
   private String URL = PicsouApplication.REGISTER_URL;
+  private String URL_MOBILE = PicsouApplication.REGISTER_URL_MOBILE;
   private String FTP_URL = PicsouApplication.FTP_URL;
   private long localJarVersion = -1;
   private long localConfigVersion = -1;
@@ -113,6 +117,7 @@ public class ConfigService {
     Utils.beginRemove();
     RETRY_PERIOD = 500;
     URL = System.getProperty(COM_APP_LICENSE_URL);
+    URL_MOBILE = System.getProperty(COM_APP_MOBILE_URL);
     FTP_URL = System.getProperty(COM_APP_LICENSE_FTP_URL);
     Utils.endRemove();
     this.applicationVersion = applicationVersion;
@@ -139,7 +144,7 @@ public class ConfigService {
         HttpClient httpClient = getNewHttpClient();
         response = httpClient.execute(postMethod);
       }
-      catch (IOException e) {
+      catch (Exception e) {
         if (postMethod != null) {
           postMethod.releaseConnection();
         }
@@ -195,16 +200,6 @@ public class ConfigService {
   private HttpClient getNewHttpClient() {
     try {
       SchemeRegistry schemeRegistry = new SchemeRegistry();
-      schemeRegistry.register(new Scheme("https", 8843,
-                                         new SSLSocketFactory(new TrustStrategy() {
-                                           public boolean isTrusted(X509Certificate[] chain, String authType) {
-                                             return true;
-                                           }
-                                         }, new AbstractVerifier() {
-                                           public void verify(String host, String[] cns, String[] subjectAlts) throws SSLException {
-                                           }
-                                         }
-                                         )));
       schemeRegistry.register(new Scheme("https", 443,
                                          new SSLSocketFactory(new TrustStrategy() {
                                            public boolean isTrusted(X509Certificate[] chain, String authType) {
@@ -322,11 +317,37 @@ public class ConfigService {
   }
 
 
-//  public void sendMobileData(){
-//    HttpClient client = getNewHttpClient();
-//    URIBuilder builder = new URIBuilder();
-//    createPostMethod();
-//  }
+  public boolean sendMobileData(String mail, String password, byte[] bytes) {
+
+    HttpClient client = getNewHttpClient();
+    HttpPost postMethod;
+    postMethod = createPostMethod(URL_MOBILE + REQUEST_CLIENT_TO_SERVER_DATA);
+
+    try {
+
+      MD5PasswordBasedEncryptor encryptor =
+        new MD5PasswordBasedEncryptor(ConfigService.MOBILE_SALT.getBytes(), password.toCharArray(), 5);
+
+      byte[] data = encryptor.encrypt(bytes);
+      byte[] encryptedMail = encryptor.encrypt(mail.getBytes("UTF-8"));
+      String sha1Mail = Crypt.encodeSHA1AndHex(encryptedMail);
+      postMethod.setHeader(HEADER_LANG, Lang.get("lang"));
+      postMethod.setHeader(HEADER_MAIL, mail);
+      postMethod.setHeader(ComCst.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
+      postMethod.setHeader(ComCst.MAJOR_VERSION_NAME, Integer.toString(MobileModel.MAJOR_VERSION));
+      postMethod.setHeader(ComCst.MINOR_VERSION_NAME, Integer.toString(MobileModel.MINOR_VERSION));
+      postMethod.setEntity(new ByteArrayEntity(data));
+      client.execute(postMethod);
+      return true;
+    }
+    catch (Exception e) {
+      Log.write("while sending data", e);
+      return false;
+    }
+    finally {
+      postMethod.releaseConnection();
+    }
+  }
 
   synchronized public void sendRegister(String mail, String code, final GlobRepository repository) {
     Utils.beginRemove();
@@ -445,7 +466,7 @@ public class ConfigService {
   public boolean createMobileAccount(String mail, Ref<String> message) {
     HttpPost postMethod = null;
     try {
-      String url = URL + REQUEST_CREATE_MOBILE_ACCOUNT;
+      String url = URL_MOBILE + ComCst.SEND_MAIL_TO_CONFIRM_MOBILE;
 
       MD5PasswordBasedEncryptor encryptor =
         new MD5PasswordBasedEncryptor(ConfigService.MOBILE_SALT.getBytes(), ConfigService.SOME_PASSWORD.toCharArray(), 5);
@@ -473,7 +494,7 @@ public class ConfigService {
       Log.write("error", e);
     }
     finally {
-      if (postMethod == null) {
+      if (postMethod != null) {
         postMethod.releaseConnection();
       }
     }
@@ -856,5 +877,9 @@ public class ConfigService {
     public void run() {
       computeResponse(repository, response);
     }
+  }
+
+  public void setLang(String lang){
+    serverAccess.setLang(lang);
   }
 }

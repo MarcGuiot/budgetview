@@ -2,6 +2,7 @@ package org.designup.picsou.functests.general;
 
 import org.designup.picsou.functests.utils.LangTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.utils.Lang;
 
 public class LangSelectionTest extends LangTestCase {
   public void setUp() throws Exception {
@@ -53,5 +54,21 @@ public class LangSelectionTest extends LangTestCase {
       .validate();
 
     checkDates("15/08/2008", "15/08/2008", "11 August 2008");
+  }
+
+  public void testChangeLang() throws Exception {
+    operations.openPreferences()
+      .setLang("fr")
+      .validate();
+    restartApplication();
+
+    assertEquals("fr", Lang.getLang());
+
+    operations.openPreferences()
+      .setLang("en")
+      .validate();
+
+    restartApplication();
+    assertEquals("en", Lang.getLang());
   }
 }

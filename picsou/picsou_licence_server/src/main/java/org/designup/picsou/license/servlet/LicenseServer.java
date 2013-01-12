@@ -1,5 +1,6 @@
 package org.designup.picsou.license.servlet;
 
+import com.budgetview.shared.utils.ComCst;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.designup.picsou.gui.config.ConfigService;
@@ -25,6 +26,7 @@ import java.util.Timer;
 
 public class LicenseServer {
   static Logger logger = Logger.getLogger("LicenseServer");
+  public static final String CREATE_MOBILE_USER = "/createMobileUser";
   public static final String USE_SSHL = "picsou.server.useSsl";
   public static final String KEYSTORE = "picsou.server.keystore";
   public static final String HOST_PROPERTY = "picsou.server.host";
@@ -44,6 +46,8 @@ public class LicenseServer {
   private Directory directory;
   private static final String JDBC_HSQLDB = "jdbc:hsqldb:.";
   private Context context;
+  private String pathForMobileData = "/tmp/data";
+  private boolean onlyMobile = false;
 
   public LicenseServer() throws IOException {
     try {
@@ -76,9 +80,20 @@ public class LicenseServer {
 
   public static void main(String[] args) throws Exception {
     LicenseServer server = new LicenseServer();
+    for (int i = 0; i < args.length; i++) {
+      String arg = args[i];
+      if (arg.equalsIgnoreCase("-data")){
+        server.usePort(1443);
+        server.onlyMobile();
+      }
+    }
     server.getParams();
     server.init();
     server.start();
+  }
+
+  private void onlyMobile() {
+    this.onlyMobile = true;
   }
 
   private static void initLogger() throws IOException {
@@ -127,25 +142,28 @@ public class LicenseServer {
     directory = createDirectory();
 
     initHslqDb(directory.get(SqlService.class));
-    timer = new Timer(true);
-    queryVersionTask = new QueryVersionTask(directory.get(SqlService.class),
-                                            directory.get(VersionService.class));
-    queryVersionTask.run();
-    timer.schedule(queryVersionTask, 5000, 5000);
-
     context = new Context(jetty, "/", Context.SESSIONS);
     context.setResourceBase("resources");
-    context.addServlet(new ServletHolder(new AskForCodeServlet(directory)), ConfigService.REQUEST_FOR_MAIL);
-    context.addServlet(new ServletHolder(new RequestForConfigServlet(directory)), ConfigService.REQUEST_FOR_CONFIG);
-    context.addServlet(new ServletHolder(new RegisterServlet(directory)), ConfigService.REQUEST_FOR_REGISTER);
-    context.addServlet(new ServletHolder(new NewUserServlet(directory)), NEW_USER);
-    context.addServlet(new ServletHolder(new SendMailServlet(directory)), ConfigService.REQUEST_SEND_MAIL);
-    context.addServlet(new ServletHolder(new SendUseInfo()), ConfigService.SEND_USE_INFO);
+    if (!onlyMobile) {
+      timer = new Timer(true);
+      queryVersionTask = new QueryVersionTask(directory.get(SqlService.class),
+                                              directory.get(VersionService.class));
+      queryVersionTask.run();
+      timer.schedule(queryVersionTask, 5000, 5000);
+      context.addServlet(new ServletHolder(new AskForCodeServlet(directory)), ConfigService.REQUEST_FOR_MAIL);
+      context.addServlet(new ServletHolder(new RequestForConfigServlet(directory)), ConfigService.REQUEST_FOR_CONFIG);
+      context.addServlet(new ServletHolder(new RegisterServlet(directory)), ConfigService.REQUEST_FOR_REGISTER);
+      context.addServlet(new ServletHolder(new NewUserServlet(directory)), NEW_USER);
+      context.addServlet(new ServletHolder(new SendMailServlet(directory)), ConfigService.REQUEST_SEND_MAIL);
+      context.addServlet(new ServletHolder(new SendUseInfo()), ConfigService.SEND_USE_INFO);
+    }
 
-    context.addServlet(new ServletHolder(new ReceiveDataServlet("/tmp/data", directory)), ConfigService.REQUEST_REGISTER_DATA);
-    context.addServlet(new ServletHolder(new RetrieveDataServlet("/tmp/data", directory)), ConfigService.REQUEST_RETRIEVE_DATA);
-    context.addServlet(new ServletHolder(new SendMailCreateMobileUserServlet("/tmp/data", directory)), "/sendMailToCreateMobileUser");
-    context.addServlet(new ServletHolder(new CreateMobileUserServlet("/tmp/data", directory)), "/createMobileUser");
+    context.addServlet(new ServletHolder(new ReceiveDataServlet(pathForMobileData, directory)), ConfigService.REQUEST_CLIENT_TO_SERVER_DATA);
+    context.addServlet(new ServletHolder(new RetrieveDataServlet(pathForMobileData, directory)), ComCst.GET_MOBILE_DATA);
+    context.addServlet(new ServletHolder(new SendMailCreateMobileUserServlet(pathForMobileData, directory)), ComCst.SEND_MAIL_TO_CONFIRM_MOBILE);
+    context.addServlet(new ServletHolder(new CreateMobileUserServlet(pathForMobileData, directory)), CREATE_MOBILE_USER);
+
+    context.addServlet(new ServletHolder(new SendMailFromMobileServlet(directory)), ComCst.SEND_MAIL_REMINDER_FROM_MOBILE);
   }
 
   public void addServlet(ServletHolder holder, String name) {

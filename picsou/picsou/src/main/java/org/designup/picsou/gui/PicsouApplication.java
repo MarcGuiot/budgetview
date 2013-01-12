@@ -73,11 +73,10 @@ public class PicsouApplication {
   public static String FORCE_DATE = APPNAME + ".today";
 
   public static final String REGISTER_URL = "https://register.mybudgetview.fr:443";
+  public static final String REGISTER_URL_MOBILE = "https://register.mybudgetview.fr:1443";
   public static final String FTP_URL = "ftp://ftpjar.mybudgetview.fr";
 
   public static boolean EXIT_ON_DATA_ERROR = true;
-  public static final int MAJOR_VERSION = 1;
-  public static final int MINOR_VERSION = 0;
 
   private OpenRequestManager openRequestManager = new OpenRequestManager();
   private SingleApplicationInstanceListener singleInstanceListener;
@@ -229,14 +228,7 @@ public class PicsouApplication {
         }
         String lang = iterator.next();
         iterator.remove();
-        if (lang.toLowerCase().contains("fr")) {
-          Locale.setDefault(Locale.FRANCE);
-          Lang.setLocale(Locale.FRANCE);
-        }
-        else if (lang.toLowerCase().contains("en")) {
-          Locale.setDefault(Locale.ENGLISH);
-          Lang.setLocale(Locale.ENGLISH);
-        }
+        Lang.setLang(lang);
         return arguments.toArray(new String[arguments.size()]);
       }
     }

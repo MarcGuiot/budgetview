@@ -101,6 +101,13 @@ public class DefaultConnectedState extends AbstractSessionState implements Conne
     persistence.setDownloadedVersion(version);
   }
 
+  public void setLang(SerializedInput input) {
+    lastAccess();
+    checkPrivateId(input);
+    String lang = input.readUtf8String();
+    persistence.setLang(lang);
+  }
+
   public void register(SerializedInput input) {
     lastAccess();
     checkPrivateId(input);

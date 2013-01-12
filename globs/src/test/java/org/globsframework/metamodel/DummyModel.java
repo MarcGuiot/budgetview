@@ -17,7 +17,8 @@ public class DummyModel {
       DummyObjectWithCompositeKey.TYPE,
       DummyObjectWithStringKey.TYPE,
       DummyObjectWithLinkFieldId.TYPE,
-      DummyObjectIndex.TYPE
+      DummyObjectIndex.TYPE,
+      DummyObjectWithDefaultValues.TYPE
     );
   }
 }

@@ -26,8 +26,8 @@ public class HomeActivity extends Activity {
       return;
     }
 
-    final DataSync dataSync = new DataSync(this);
-    dataSync.connect(loginInfo.email, loginInfo.password, new DataSync.Callback() {
+    final DataSync dataSync = new DataSync(this, loginInfo.email, loginInfo.password);
+    dataSync.connect(new DataSync.Callback() {
       public void onActionFinished() {
         loadData(dataSync);
       }
@@ -78,7 +78,7 @@ public class HomeActivity extends Activity {
   }
 
   public void onDemo(View view) throws IOException {
-    DataSync dataSync = new DataSync(this);
+    DataSync dataSync = new DataSync(this, null, null);
     dataSync.loadDemoFile();
     gotoBudgetOverview(false, true);
   }
