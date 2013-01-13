@@ -471,11 +471,11 @@ public class ConfigService {
       MD5PasswordBasedEncryptor encryptor =
         new MD5PasswordBasedEncryptor(ConfigService.MOBILE_SALT.getBytes(), ConfigService.SOME_PASSWORD.toCharArray(), 5);
 
-      byte[] password = Base64.encodeBase64(encryptor.encrypt((mail.getBytes("UTF-8"))));
+      byte[] password = Base64.encodeBase64(encryptor.encrypt(mail.getBytes("UTF-8")));
       postMethod = createPostMethod(url);
       postMethod.setHeader(HEADER_LANG, Lang.get("lang"));
-      postMethod.setHeader(HEADER_MAIL, mail);
-      postMethod.setHeader(CODING, new String(password));
+      postMethod.setHeader(HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
+      postMethod.setHeader(CODING, URLEncoder.encode(new String(password), "UTF-8"));
       HttpClient httpClient = getNewHttpClient();
       HttpResponse response = httpClient.execute(postMethod);
       if (response.getStatusLine().getStatusCode() != 200) {
