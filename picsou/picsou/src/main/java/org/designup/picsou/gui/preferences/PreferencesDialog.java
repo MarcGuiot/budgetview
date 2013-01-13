@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.preferences;
 
-import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.preferences.components.ColorThemeItemFactory;
@@ -64,10 +63,11 @@ public class PreferencesDialog {
     builder.add("lang", langCombo);
     langCombo.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        String lg = langCombo.getSelectedItem().toString();
-        if (lg.equalsIgnoreCase(ENGLISH)){
+        String lang = langCombo.getSelectedItem().toString();
+        if (lang.equalsIgnoreCase(ENGLISH)) {
           directory.get(ConfigService.class).setLang("en");
-        }else{
+        }
+        else {
           directory.get(ConfigService.class).setLang("fr");
         }
       }

@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.components.tips;
 
 import net.java.balloontip.BalloonTip;
-import net.java.balloontip.positioners.Left_Above_Positioner;
 import net.java.balloontip.styles.RoundedBalloonStyle;
 import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.splits.color.ColorChangeListener;
@@ -41,9 +40,9 @@ public class ErrorTip implements Disposable, ColorChangeListener {
     return new ErrorTip(component, text, directory, position);
   }
 
-  public static ErrorTip show(JTextField component, String text, Directory directory, TipPosition position) {
-    ErrorTip errorTip = new ErrorTip(component, text, directory, position);
-    AutoDispose.registerTextEdition(component, errorTip);
+  public static ErrorTip show(JTextField textField, String text, Directory directory, TipPosition position) {
+    ErrorTip errorTip = new ErrorTip(textField, text, directory, position);
+    AutoDispose.registerTextEdition(textField, errorTip);
     return errorTip;
   }
 

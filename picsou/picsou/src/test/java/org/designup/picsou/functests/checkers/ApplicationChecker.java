@@ -141,7 +141,7 @@ public class ApplicationChecker extends GuiChecker {
     return new PrinterChecker(printService);
   }
 
-  public MobileChecker getMobileAccountChecker() {
+  public CreateMobileAccountChecker openMobileAccountDialog() {
     return getOperations().openCreateMobileUser();
   }
 

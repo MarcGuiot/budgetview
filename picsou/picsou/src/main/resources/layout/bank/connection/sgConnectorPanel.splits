@@ -1,21 +1,18 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
-  <styles>
-    <style selector="label.formLabel" font="-,bold,12" anchor="left" marginBottom="10" foreground="#222222"/>
-  </styles>
 
   <panel styleClass="innerDialogBlockPanel">
     <column>
 
-      <label text="1. Saisissez votre code client" styleClass="formLabel"/>
+      <label text="1. Saisissez votre code client" styleClass="formSection"/>
       <grid>
         <textField ref="userIdField" gridPos="(0,0)" columns="10"/>
         <button action="validateUserId" gridPos="(1,0)" />
         <button action="userIdHelp" gridPos="(0,1)" styleClass="hyperlink" font="-,plain,10" anchor="right"/>
       </grid>
 
-      <label text="2. Composez votre code secret à 6 chiffres" styleClass="formLabel" marginTop="20"/>
+      <label text="2. Composez votre code secret à 6 chiffres" styleClass="formSection" marginTop="20"/>
       <row>
         <filler fill="horizontal" weightX="0.1"/>
         <grid>

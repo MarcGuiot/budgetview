@@ -16,7 +16,6 @@ import org.designup.picsou.functests.checkers.MessageDialogChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.license.ConnectedTestCase;
 import org.designup.picsou.license.checkers.Email;
-import org.designup.picsou.license.servlet.LicenseServer;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.repository.DefaultGlobIdGenerator;
 import org.globsframework.model.repository.DefaultGlobRepository;
@@ -43,13 +42,25 @@ public class MobileTest extends ConnectedTestCase {
     String mail = "test@mybudgetview.fr";
     String url = requestMobileAccount(mail);
     followUrl(url, 302, "http://www.mybudgetview.fr/mobileAccountOk-en.html");
-    application.getMobileAccountChecker()
-      .setMail(mail)
+    application.openMobileAccountDialog()
+      .setEmail(mail)
       .setPassword("hello")
-      .checkAlreadyCreated()
-      .cancel();
+      .validateAndCheckAlreadyCreated()
+      .close();
   }
 
+  public void testEmptyEmailAndPasswordMessages() throws Exception {
+    String mail = "test@mybudgetview.fr";
+    application.openMobileAccountDialog()
+      .validateAndCheckEmailTip("You must enter your email address")
+      .setEmail(mail)
+      .validateAndCheckPasswordTip("You must enter a password")
+      .setPassword("hello")
+      .checkNoErrorsShown()
+      .validate();
+    Email email = mailServer.checkReceivedMail(mail);
+    email.checkContains("http");
+  }
 
   public void testGetData() throws Exception {
     String mail = "test@mybudgetview.fr";
@@ -97,8 +108,8 @@ public class MobileTest extends ConnectedTestCase {
   }
 
   private String requestMobileAccount(String userMail) throws InterruptedException {
-    application.getMobileAccountChecker()
-      .setMail(userMail)
+    application.openMobileAccountDialog()
+      .setEmail(userMail)
       .setPassword("hello")
       .validate();
     Email email = mailServer.checkReceivedMail(userMail);

@@ -699,8 +699,8 @@ public class OperationChecker {
     getDevMenu().getSubMenu("[Change current date]").click();
   }
 
-  public MobileChecker openCreateMobileUser(){
-    return MobileChecker.open(getFileMenu().getSubMenu(Lang.get("mobile.user.create.action.name")).triggerClick());
+  public CreateMobileAccountChecker openCreateMobileUser(){
+    return CreateMobileAccountChecker.open(getFileMenu().getSubMenu(Lang.get("mobile.user.create.action.name")).triggerClick());
   }
 
   public MessageDialogChecker sendDataToServer() {

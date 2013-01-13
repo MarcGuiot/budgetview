@@ -111,6 +111,10 @@ public class UserPreferences {
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 
+  public static Glob get(GlobRepository repository) {
+    return repository.get(KEY);
+  }
+
   public static boolean isReconciliationShown(GlobRepository repository) {
     Glob prefs = repository.findOrCreate(KEY);
     return prefs.isTrue(SHOW_RECONCILIATION);

@@ -2,17 +2,16 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector="label.formLabel" font="-,bold,12" anchor="left" marginBottom="10" foreground="#222222"/>
     <style selector="label#keyboardLabel" cursor="hand" preferredSize="(136,136)"
            icon="roundedRect(136,136,4,4,#F0F0F0,#E0E0E0)" anchor="top"/>
   </styles>
 
   <panel styleClass="innerDialogBlockPanel">
     <column>
-      <label text="1. Saisissez votre code client" styleClass="formLabel"/>
+      <label text="1. Saisissez votre code client" styleClass="formSection"/>
       <textField ref="code" columns="12" fill="none" anchor="center"/>
 
-      <label text="2. Composez votre code secret à 6 chiffres" styleClass="formLabel" marginTop="20"/>
+      <label text="2. Composez votre code secret à 6 chiffres" styleClass="formSection" marginTop="20"/>
       <row>
         <filler fill="horizontal"/>
         <grid>

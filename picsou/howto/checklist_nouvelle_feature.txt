@@ -6,8 +6,12 @@
 
 - Upgrade des données utilisateur pris en compte
 
+GUI
+---------
 - Couleurs des nouveaux éléments GUI réglées pour tous les thèmes
-
 - Traduction EN finalisée
-
--
+- Gestion du focus (composant initial + séquence)
+- Cas d'erreur + guidage
+  * Saisie vide
+  * Doublons
+- Enter sur les champs pour valider

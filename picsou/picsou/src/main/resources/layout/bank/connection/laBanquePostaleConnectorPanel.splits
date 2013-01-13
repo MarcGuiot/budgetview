@@ -2,7 +2,6 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector="label.formLabel" font="-,bold,12" anchor="left" marginBottom="10" foreground="#222222"/>
     <style selector="label.keyboardLabel" cursor="hand"
            icon="roundedRect(32,31,4,4,#F0F0F0,#E0E0E0)" preferredSize="(32,31)"
            marginBottom="2" marginRight="2"/>
@@ -13,13 +12,13 @@
   <panel styleClass="innerDialogBlockPanel">
     <column>
 
-      <label text="1. Saisissez votre identifiant" styleClass="formLabel"/>
+      <label text="1. Saisissez votre identifiant" styleClass="formSection"/>
       <grid>
         <textField ref="userIdField" gridPos="(0,0)" columns="10"/>
         <button action="userIdHelp" gridPos="(0,1)" styleClass="hyperlink" font="-,plain,10" anchor="right"/>
       </grid>
 
-      <label text="2. Composez votre code secret à 6 chiffres" styleClass="formLabel" marginTop="20"/>
+      <label text="2. Composez votre code secret à 6 chiffres" styleClass="formSection" marginTop="20"/>
       <row>
         <filler fill="horizontal"/>
         <column>

@@ -62,6 +62,9 @@
            fill="none" anchor="east" horizontalAlignment="right"
            marginRight="5" weightX="0"/>
 
+    <style selector="label.formSection"
+           font="-,bold,12" anchor="left" marginBottom="10" foreground="#222222"/>
+
     <style selector="checkBox.formElement"
            font="-,plain,12" foreground="import.form.label"
            anchor="east" marginRight="10" weightX="0"/>
