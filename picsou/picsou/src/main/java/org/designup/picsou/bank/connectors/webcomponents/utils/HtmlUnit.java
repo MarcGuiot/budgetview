@@ -23,7 +23,7 @@ public class HtmlUnit {
   public static <T extends HtmlElement> T getElementById(HtmlElement container, String id, Class<T> expectedClass) throws WebParsingError {
     T result = null;
     try {
-      result = container.getElementById(id);
+      result = container.<T>getElementById(id);
     }
     catch (com.gargoylesoftware.htmlunit.ElementNotFoundException e) {
       fail(container, "Cannot find element with id: " + id +
@@ -205,7 +205,7 @@ public class HtmlUnit {
 
   public static <T extends HtmlElement> T getElementByLabel(String text, HtmlElement container, Class<T> expectedClass) throws WebParsingError {
     String targetElementId = getTargetIdFromLabel(container, text);
-    T element = container.getElementById(targetElementId);
+    T element = container.<T>getElementById(targetElementId);
     if (!expectedClass.isAssignableFrom(element.getClass())) {
       fail(container, "Unexpected class '" + element.getClass().getName() + "' for component with label: " + text +
                       " - actual content: " + dump(container));

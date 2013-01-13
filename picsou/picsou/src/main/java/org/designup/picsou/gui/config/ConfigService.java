@@ -54,7 +54,7 @@ import java.util.zip.ZipEntry;
 public class ConfigService {
 
   public static final String COM_APP_LICENSE_URL = PicsouApplication.APPNAME + ".license.url";
-  public static final String COM_APP_MOBILE_URL = PicsouApplication.APPNAME + ".license.url";
+  public static final String COM_APP_MOBILE_URL = PicsouApplication.APPNAME + ".mobile.url";
   public static final String COM_APP_LICENSE_FTP_URL = PicsouApplication.APPNAME + ".license.ftp.url";
   public static final String HEADER_TO_MAIL = "toMail";
   public static final String HEADER_MAIL = "mail";

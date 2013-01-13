@@ -43,7 +43,8 @@ public class CreateMobileUserServlet extends HttpServlet {
     String lang = httpServletRequest.getParameter(ConfigService.HEADER_LANG);
     String mail = URLDecoder.decode(httpServletRequest.getParameter(ConfigService.HEADER_MAIL), "UTF-8");
     String coding = httpServletRequest.getParameter(ConfigService.CODING);
-    byte[] decryptedMail = encryptor.decrypt(Base64.decodeBase64(coding.getBytes()));
+    byte[] decryptedMail =
+      encryptor.decrypt(Base64.decodeBase64(URLDecoder.decode(coding, "UTF-8")));
     if (!Arrays.equals(decryptedMail, mail.getBytes("UTF-8"))) {
       httpServletResponse.sendRedirect("http://www.mybudgetview.fr/invalidCreateUserRequest-" + lang + ".html");
       logger.info("Bap password " + mail);
