@@ -21,8 +21,8 @@ import java.util.List;
 
 public class BankSynchroService {
   private Map<Integer, BankConnectorFactory> banks = new HashMap<Integer, BankConnectorFactory>();
-  static public boolean SHOW_SYNCHRO =
-    System.getProperty("budgetview.synchro", "false").equalsIgnoreCase("true");
+  static public boolean SHOW_SYNCHRO = true;
+//    System.getProperty("budgetview.synchro", "false").equalsIgnoreCase("true");
 
   public BankSynchroService() {
     register(SgConnector.BANK_ID, new SgConnector.Factory());
