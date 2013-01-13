@@ -3,7 +3,6 @@ package org.designup.picsou.bank.connectors.bnp;
 import com.gargoylesoftware.htmlunit.*;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.wicket.util.time.Time;
 import org.globsframework.utils.stream.ReplacementInputStreamBuilder;
 
 import java.io.IOException;
@@ -26,6 +25,18 @@ public class BnpWebConnection extends HttpWebConnection {
     "banque/portail/particulier/bandeau",
     "common/vide.htm"
   };
+  static ReplacementInputStreamBuilder builder;
+
+  static {
+    builder = new ReplacementInputStreamBuilder();
+    builder.replace("maxlength=\"10\" value=\"\" name=\"ch1\" type=\"text\"&gt;".getBytes(),
+                    "<INPUT size=\"10\" maxlength=\"6\" name=\"ch1\" value=\"\" type=\"text\" > ".getBytes());
+    builder.replace("maxlength=\"6\" name=\"ch2\" value=\"\" type=\"password\" disabled &gt;>".getBytes(),
+                    "<INPUT size=\"10\" maxlength=\"6\" name=\"ch2\" value=\"\" type=\"password\" disabled > ".getBytes());
+    builder.replace("document.write('<INPUT size=\"10\" ');".getBytes(), " ".getBytes());
+    builder.replace("document.write('<INPUT size=\"5\" ');".getBytes(), " ".getBytes());
+
+  }
 
   public BnpWebConnection(WebClient client) {
     super(client);
@@ -46,9 +57,8 @@ public class BnpWebConnection extends HttpWebConnection {
 //    }
     if (!FILTER_JS || shouldInclude(path)) {
       System.out.print("    web request: " + url + "... ");
-      Time time = Time.now();
       response = super.getResponse(request);
-      System.out.println(" >> done in " + Math.abs(time.fromNow().seconds()) + "s");
+      System.out.println(" >> done in " + (response.getLoadTime() / 1000) + "s");
     }
     else {
       response = new StringWebResponse("", url);
@@ -80,13 +90,6 @@ public class BnpWebConnection extends HttpWebConnection {
     if (type.getValue() != null && type.getValue().contains("text/html")) {
       return new DownloadedContent() {
         public InputStream getInputStream() throws IOException {
-          ReplacementInputStreamBuilder builder = new ReplacementInputStreamBuilder();
-          builder.replace("maxlength=\"10\" value=\"\" name=\"ch1\" type=\"text\"&gt;".getBytes(),
-                          "<INPUT size=\"10\" maxlength=\"6\" name=\"ch1\" value=\"\" type=\"text\" > ".getBytes());
-          builder.replace("maxlength=\"6\" name=\"ch2\" value=\"\" type=\"password\" disabled &gt;>".getBytes(),
-                          "<INPUT size=\"10\" maxlength=\"6\" name=\"ch2\" value=\"\" type=\"password\" disabled > ".getBytes());
-          builder.replace("document.write('<INPUT size=\"10\" ');".getBytes(), " ".getBytes());
-          builder.replace("document.write('<INPUT size=\"5\" ');".getBytes(), " ".getBytes());
           return builder.create(content.getInputStream());
         }
       };

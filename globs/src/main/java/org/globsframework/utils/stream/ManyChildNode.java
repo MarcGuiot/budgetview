@@ -1,9 +1,9 @@
 package org.globsframework.utils.stream;
 
-import org.apache.wicket.util.collections.IntHashMap;
+import java.util.HashMap;
 
 public class ManyChildNode implements Node {
-  private IntHashMap child = new IntHashMap();
+  private HashMap<Integer, Node> child = new HashMap<Integer, Node>();
   private int[] partialPath;
 
   public ManyChildNode(int[] partialPath) {
@@ -15,7 +15,7 @@ public class ManyChildNode implements Node {
   }
 
   public Node next(int next, State state) {
-    Node element = (Node)child.get(next);
+    Node element = child.get(next);
     if (element != null) {
       return element.react(state);
     }

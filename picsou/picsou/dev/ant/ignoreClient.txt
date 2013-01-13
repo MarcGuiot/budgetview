@@ -12,4 +12,5 @@ P help/.svn
 P images/.svn
 C org.cyberneko.html.xercesbridge.XercesBridge_2_0
 C org.cyberneko.html.xercesbridge.XercesBridge_2_1
-
+P org/globsframework/wicket
+P org/apache/wicket

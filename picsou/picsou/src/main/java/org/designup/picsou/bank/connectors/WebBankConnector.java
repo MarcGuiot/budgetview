@@ -60,7 +60,7 @@ public abstract class WebBankConnector extends AbstractBankConnector {
   }
 
   protected <T extends HtmlElement> T getElementById(final String id) throws WebParsingError {
-    return browser.getElementById(id);
+    return browser.<T>getElementById(id);
   }
 
   protected HtmlAnchor findLink(List<HtmlAnchor> anchors, String ref) {
