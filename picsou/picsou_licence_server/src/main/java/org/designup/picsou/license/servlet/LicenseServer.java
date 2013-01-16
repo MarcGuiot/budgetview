@@ -160,7 +160,7 @@ public class LicenseServer {
 
     context.addServlet(new ServletHolder(new ReceiveDataServlet(pathForMobileData, directory)), ConfigService.REQUEST_CLIENT_TO_SERVER_DATA);
     context.addServlet(new ServletHolder(new RetrieveDataServlet(pathForMobileData, directory)), ComCst.GET_MOBILE_DATA);
-    context.addServlet(new ServletHolder(new SendMailCreateMobileUserServlet(pathForMobileData, directory)), ComCst.SEND_MAIL_TO_CONFIRM_MOBILE);
+    context.addServlet(new ServletHolder(new SendMailCreateMobileUserServlet(pathForMobileData, directory, port)), ComCst.SEND_MAIL_TO_CONFIRM_MOBILE);
     context.addServlet(new ServletHolder(new CreateMobileUserServlet(pathForMobileData, directory)), CREATE_MOBILE_USER);
 
     context.addServlet(new ServletHolder(new SendMailFromMobileServlet(directory)), ComCst.SEND_MAIL_REMINDER_FROM_MOBILE);
