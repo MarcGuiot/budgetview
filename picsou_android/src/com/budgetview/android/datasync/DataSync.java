@@ -40,7 +40,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 public class DataSync {
-  public static final String URL_BV = "https://www.mybudgetview.fr";
+  public static final String URL_BV = "https://register.mybudgetview.fr:1443";
 //"https://192.168.0.20:8443/";
   private static final String LOCAL_TEMP_FILE_NAME = "temp.xml";
 
@@ -152,8 +152,9 @@ public class DataSync {
       if (!loadSuccessful) {
         callback.onActionFailed();
       }
-
-      callback.onActionFinished();
+      else {
+        callback.onActionFinished();
+      }
     }
 
 
@@ -216,7 +217,11 @@ public class DataSync {
       }
       finally {
         if (inputStream != null) {
-          inputStream.close();
+          try {
+            inputStream.close();
+          }
+          catch (IOException e) {
+          }
         }
       }
     }

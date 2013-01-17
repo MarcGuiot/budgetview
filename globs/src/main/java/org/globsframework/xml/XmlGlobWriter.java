@@ -11,6 +11,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
+import org.saxstack.utils.XmlUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -116,9 +117,9 @@ public class XmlGlobWriter {
                                      Object attributeValue) throws IOException {
     writer.write(" ");
     writer.write(attributeName);
-    writer.write("='");
-    writer.write(Strings.toString(attributeValue));
-    writer.write("'");
+    writer.write("=\"");
+    writer.write(XmlUtils.convertEntities(Strings.toString(attributeValue)));
+    writer.write("\"");
   }
 
   private static void writeLinks(final Glob glob, final GlobRepository repository, final Writer writer) throws IOException {

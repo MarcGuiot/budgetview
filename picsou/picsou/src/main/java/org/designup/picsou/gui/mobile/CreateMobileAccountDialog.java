@@ -111,8 +111,8 @@ public class CreateMobileAccountDialog {
                                    messageRef);
             progressBar.stop();
             if (dialog.isVisible()) {
+              localRepository.commitChanges(true);
               if (isOk) {
-                localRepository.commitChanges(true);
                 dialog.setVisible(false);
               }
               else {
