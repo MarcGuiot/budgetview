@@ -1,6 +1,7 @@
 package org.designup.picsou.bank.connectors.webcomponents;
 
 import com.gargoylesoftware.htmlunit.html.*;
+import org.designup.picsou.bank.connectors.webcomponents.utils.HtmlUnit;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 
 import java.util.ArrayList;
@@ -74,6 +75,11 @@ public class WebTable extends WebComponent<HtmlTable> {
       }
     }
     return new WebTableColumn(cells);
+  }
+  
+  public WebTableCell getCellById(String id) throws WebParsingError {
+    HtmlTableCell cell = HtmlUnit.getElementById(node, id, HtmlTableCell.class);
+    return new WebTableCell(browser, cell);
   }
 
   public String[][] getContentAsTextItems() {

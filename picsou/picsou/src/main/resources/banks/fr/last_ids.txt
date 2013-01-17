@@ -1,0 +1,1 @@
+Last french bank id AmexFr - bankId = 16

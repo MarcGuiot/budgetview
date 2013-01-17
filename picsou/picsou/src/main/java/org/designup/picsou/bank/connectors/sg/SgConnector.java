@@ -326,7 +326,7 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
 
   public void downloadFile() throws Exception {
     notifyInitialConnection();
-    WebComboBox compte = browser.getCurrentPage().getComboBoxById("compte");
+    WebSelect compte = browser.getCurrentPage().getSelectById("compte");
     List<String> accountList = compte.getEntryNames();
     for (int i = 0, size = accountList.size(); i < size; i++) {
       String option = accountList.get(i);
@@ -352,14 +352,14 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
 //            }
 //            else {
           browser.load(URL_TELECHARGEMENT);
-          compte = browser.getCurrentPage().getComboBoxById("compte");
+          compte = browser.getCurrentPage().getSelectById("compte");
           accountList = compte.getEntryNames();
 //            }
         }
         catch (Exception e) {
           Log.write("Can not go back", e);
           browser.load(URL_TELECHARGEMENT);
-          compte = browser.getCurrentPage().getComboBoxById("compte");
+          compte = browser.getCurrentPage().getSelectById("compte");
           accountList = compte.getEntryNames();
         }
       }

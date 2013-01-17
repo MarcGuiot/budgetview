@@ -1,6 +1,7 @@
 otherBank.xml
 budgetview_demo_bank.xml
 fr/french_banks.xml
+fr/amex_fr.xml
 fr/caisseepargne.xml
 fr/cic.xml
 fr/sg.xml

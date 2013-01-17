@@ -181,9 +181,9 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
               WebFrame frame = browser.load(DOWNLOADS_URL).getFrameByName("main");
               WebForm downloadConfigForm = frame.loadTargetPage().getFormByAction("/SAF_TLC_CNF");
               downloadConfigForm.getInputByNameAndValue("ch_rop", "tous").select();
-              downloadConfigForm.getComboBoxByName("ch_rop_fmt_fic").selectByValue("RQM2005TF");
-              downloadConfigForm.getComboBoxByName("ch_rop_fmt_dat").selectByValue("MMJJAAAA");
-              downloadConfigForm.getComboBoxByName("ch_rop_fmt_sep").selectByValue("PT");
+              downloadConfigForm.getSelectByName("ch_rop_fmt_fic").selectByValue("RQM2005TF");
+              downloadConfigForm.getSelectByName("ch_rop_fmt_dat").selectByValue("MMJJAAAA");
+              downloadConfigForm.getSelectByName("ch_rop_fmt_sep").selectByValue("PT");
               downloadConfigForm.getInputByNameAndValue("ch_rop_dat", "tous").select();
               downloadConfigForm.getInputByNameAndValue("ch_memo", "OUI").select();
 
@@ -299,8 +299,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
     }
 
     public void setPositionForDefaultDate(String positionText) throws WebParsingError {
-      DateTime today = new DateTime();
-      setPosition(positionText, DATE_FORMAT.format(today.minusDays(1).toDate()));
+      setPosition(positionText, DATE_FORMAT.format(getYesterdaysDate()));
     }
 
     public void setPosition(String positionText, String updateDateText) throws WebParsingError {

@@ -4,7 +4,6 @@ import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.*;
-import org.designup.picsou.bank.connectors.webcomponents.Download;
 import org.designup.picsou.bank.connectors.webcomponents.utils.UserAndPasswordPanel;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
 import org.designup.picsou.model.RealAccount;
@@ -14,7 +13,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -23,6 +21,7 @@ public class CicConnector extends WebBankConnector {
 
   private static final String INDEX = "https://www.cic.fr/cic/fr/banques/particuliers/index.html";
   private static final String DOWNLOAD_PAGE_ADDRESS = "https://www.cic.fr/cic/fr/banque/telechargement.cgi";
+
   private UserAndPasswordPanel userAndPasswordPanel;
 
   public static void main(String[] args) throws IOException {
@@ -70,7 +69,7 @@ public class CicConnector extends WebBankConnector {
   public void reset() {
   }
 
-  private class ConnectAction implements ActionListener {
+  private class ConnectAction extends AbstractAction {
 
     public void actionPerformed(ActionEvent event) {
       notifyIdentificationInProgress();
@@ -145,7 +144,7 @@ public class CicConnector extends WebBankConnector {
     boolean toImport = false;
     for (Glob account : accounts) {
       if (siteAccountName.contains(account.get(RealAccount.NAME))) {
-       toImport = true;
+        toImport = true;
       }
     }
     return toImport;

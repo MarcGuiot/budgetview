@@ -5,6 +5,7 @@ import com.gargoylesoftware.htmlunit.html.*;
 import org.designup.picsou.bank.connectors.webcomponents.utils.DomNodeFilter;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HtmlUnit;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
+import org.globsframework.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,10 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     catch (ElementNotFoundException e) {
       return null;
     }
+  }
+
+  public WebPanel getPanelByAttribute(String tag, String attribute, String value) throws WebParsingError {
+    return new WebPanel(browser, HtmlUnit.getElementWithAttribute(node, tag, attribute, value));
   }
 
   public WebFrame getFrameByName(String name) throws WebParsingError {
@@ -77,6 +82,25 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   public WebAnchor getAnchorWithImage(String src) throws WebParsingError {
     HtmlElement img = HtmlUnit.getElementWithAttribute(node, "img", "src", src);
     return new WebAnchor(browser, (HtmlAnchor)HtmlUnit.getFirstParent(img, "a"));
+  }
+
+  public List<WebAnchor> getAnchorsWithClass(final String targetClass) {
+    List<HtmlElement> elements = HtmlUnit.getElements(node, "a", new HtmlUnit.Filter() {
+      public boolean matches(HtmlElement element) {
+        String[] classes = element.getAttribute("class").split(" ");
+        for (String aClass : classes) {
+          if (Utils.equal(aClass, targetClass)) {
+            return true;
+          }
+        }
+        return false;
+      }
+    });
+    List<WebAnchor> result = new ArrayList<WebAnchor>();
+    for (HtmlElement element : elements) {
+      result.add(new WebAnchor(browser, (HtmlAnchor)element));
+    }
+    return result;
   }
 
   public WebImage getSingleImage() throws WebParsingError {
@@ -172,20 +196,20 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new WebCheckBox(browser, (HtmlInput)getElementByLabel(label, HtmlInput.class));
   }
 
-  public WebComboBox getComboBox() throws WebParsingError {
-    return new WebComboBox(browser, (HtmlSelect)getSingleElement("select", HtmlSelect.class));
+  public WebSelect getSelect() throws WebParsingError {
+    return new WebSelect(browser, (HtmlSelect)getSingleElement("select", HtmlSelect.class));
   }
 
-  public WebComboBox getComboBoxById(String id) throws WebParsingError {
-    return new WebComboBox(browser, (HtmlSelect)getElementById(id, HtmlSelect.class));
+  public WebSelect getSelectById(String id) throws WebParsingError {
+    return new WebSelect(browser, (HtmlSelect)getElementById(id, HtmlSelect.class));
   }
 
-  public WebComboBox getComboBoxByName(String name) throws WebParsingError {
-    return new WebComboBox(browser, (HtmlSelect)getElementByName("select", name, HtmlSelect.class));
+  public WebSelect getSelectByName(String name) throws WebParsingError {
+    return new WebSelect(browser, (HtmlSelect)getElementByName("select", name, HtmlSelect.class));
   }
 
-  public WebComboBox getComboBoxByLabel(String label) throws WebParsingError {
-    return new WebComboBox(browser, (HtmlSelect)getElementByLabel(label, HtmlSelect.class));
+  public WebSelect getSelectByLabel(String label) throws WebParsingError {
+    return new WebSelect(browser, (HtmlSelect)getElementByLabel(label, HtmlSelect.class));
   }
 
   public WebTable getTableById(String id) throws WebParsingError {

@@ -26,6 +26,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 
 import static org.globsframework.model.FieldValue.value;
 
@@ -173,67 +175,66 @@ public class LaBanquePostaleConnector extends WebBankConnector {
     public void actionPerformed(ActionEvent event) {
       notifyIdentificationInProgress();
       loginAction.setEnabled(false);
-      Thread thread = new Thread(new Runnable() {
-        public void run() {
-          try {
-            WebPage loginPage = browser.getCurrentPage();
-            WebForm loginForm = loginPage.getFormByName("formAccesCompte");
+      directory.get(ExecutorService.class)
+        .submit(new Callable<Object>() {
+          public Object call() throws Exception {
+            try {
+              WebPage loginPage = browser.getCurrentPage();
+              WebForm loginForm = loginPage.getFormByName("formAccesCompte");
 
-            loginForm.getTextInputById("val_cel_dentifiant").setText(userIdField.getText());
-            loginForm.setHiddenFieldById("cs", currentCode);
+              loginForm.getTextInputById("val_cel_dentifiant").setText(userIdField.getText());
+              loginForm.setHiddenFieldById("cs", currentCode);
 
-            WebPage accountsPage = loginPage.executeJavascript("window.document.forms[\"formAccesCompte\"].submit();");
-            if (!accountsPage.getUrl().contains("voscomptesenligne.labanquepostale.fr/voscomptes/") ||
-                !accountsPage.containsTagWithId("table", "comptes")) {
-              notifyIdentificationFailed();
-              reset();
-              return;
-            }
+              WebPage accountsPage = loginPage.executeJavascript("window.document.forms[\"formAccesCompte\"].submit();");
+              if (!accountsPage.getUrl().contains("voscomptesenligne.labanquepostale.fr/voscomptes/") ||
+                  !accountsPage.containsTagWithId("table", "comptes")) {
+                notifyIdentificationFailed();
+                reset();
+                return null;
+              }
 
-            notifyDownloadInProgress();
+              notifyDownloadInProgress();
 
-            List<AccountEntry> entries = new ArrayList<AccountEntry>();
-            parseAccounts(accountsPage, "comptes", false, entries);
-            parseAccounts(accountsPage, "comptesEpargne", true, entries);
+              List<AccountEntry> entries = new ArrayList<AccountEntry>();
+              parseAccounts(accountsPage, "comptes", false, entries);
+              parseAccounts(accountsPage, "comptesEpargne", true, entries);
 
-            accounts.clear();
-            if (!entries.isEmpty()) {
+              accounts.clear();
+              if (!entries.isEmpty()) {
 
-              for (AccountEntry entry : entries) {
+                for (AccountEntry entry : entries) {
 
-                System.out.println("\n\nLoading: " + entry.name);
+                  WebPage accountPage = browser.loadPageInSameSite(entry.url);
+                  String urlPrefix = "/voscomptes/canalXHTML/CCP/releves_ccp/init-releve_ccp.ea";
+                  if (accountPage.containsText(urlPrefix)) {
+                    accountPage = browser.loadPageInSameSite(urlPrefix + "?typeRecherche=10&compte.numero=" + entry.number);
+                  }
 
-                WebPage accountPage = browser.loadPageInSameSite(entry.url);
-                String urlPrefix = "/voscomptes/canalXHTML/CCP/releves_ccp/init-releve_ccp.ea";
-                if (accountPage.containsText(urlPrefix)) {
-                  accountPage = browser.loadPageInSameSite(urlPrefix + "?typeRecherche=10&compte.numero=" + entry.number);
+                  String path = loadOperationsForAccount(accountPage, entry);
+
+                  Glob account = createOrUpdateRealAccount(entry.name,
+                                                           entry.number,
+                                                           entry.position,
+                                                           null,
+                                                           BANK_ID);
+                  repository.update(account.getKey(),
+                                    value(RealAccount.FILE_NAME, path),
+                                    value(RealAccount.SAVINGS, entry.isSavings));
+
                 }
-
-                String path = loadOperationsForAccount(accountPage, entry);
-
-                Glob account = createOrUpdateRealAccount(entry.name,
-                                                         entry.number,
-                                                         entry.position,
-                                                         null,
-                                                         BANK_ID);
-                repository.update(account.getKey(),
-                                  value(RealAccount.FILE_NAME, path),
-                                  value(RealAccount.SAVINGS, entry.isSavings));
-
               }
+              importCompleted();
             }
-            importCompleted();
+            catch (final Exception e) {
+              SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                  notifyErrorFound(e);
+                }
+              });
+            }
+            return null;
           }
-          catch (final Exception e) {
-            SwingUtilities.invokeLater(new Runnable() {
-              public void run() {
-                notifyErrorFound(e);
-              }
-            });
-          }
-        }
-      });
-      thread.start();
+        });
     }
   }
 

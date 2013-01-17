@@ -17,6 +17,7 @@ import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
+import org.joda.time.DateTime;
 
 import javax.swing.*;
 import java.io.File;
@@ -212,5 +213,10 @@ public abstract class AbstractBankConnector implements BankConnector {
 
   protected void notifyErrorFound(Throwable exception) {
     monitor.errorFound(exception);
+  }
+
+  protected Date getYesterdaysDate() {
+    DateTime today = new DateTime();
+    return today.minusDays(1).toDate();
   }
 }

@@ -3,6 +3,7 @@ package org.designup.picsou.bank.connectors.webcomponents;
 import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.util.DebuggingWebConnection;
 import com.gargoylesoftware.htmlunit.util.UrlUtils;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;

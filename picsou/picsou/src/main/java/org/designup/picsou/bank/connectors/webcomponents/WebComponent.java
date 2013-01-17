@@ -1,8 +1,10 @@
 package org.designup.picsou.bank.connectors.webcomponents;
 
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HtmlUnit;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
+import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 
 import java.io.IOException;
 

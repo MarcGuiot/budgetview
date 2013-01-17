@@ -8,11 +8,10 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 public class UserAndPasswordPanel {
 
-  private final ActionListener connectAction;
+  private final Action connectAction;
   private final Directory directory;
 
   private JTextField userCodeField;
@@ -20,7 +19,7 @@ public class UserAndPasswordPanel {
   private JPasswordField passwordField;
   private JPanel panel;
 
-  public UserAndPasswordPanel(ActionListener connectAction, Directory directory) {
+  public UserAndPasswordPanel(Action connectAction, Directory directory) {
     this.connectAction = connectAction;
     this.directory = directory;
   }
@@ -36,9 +35,9 @@ public class UserAndPasswordPanel {
     builder.add("password", passwordField);
     passwordField.addActionListener(connectAction);
 
-    connectButton = new JButton(Lang.get("synchro.userAndPassword.connect"));
+    connectAction.putValue(Action.NAME, Lang.get("synchro.userAndPassword.connect"));
+    connectButton = new JButton(connectAction);
     builder.add("connectButton", connectButton);
-    connectButton.addActionListener(connectAction);
 
     setEnabled(false);
 
@@ -52,10 +51,10 @@ public class UserAndPasswordPanel {
   }
 
   public void setEnabled(boolean enabled) {
-    if (connectButton == null) {
+    if (connectAction == null) {
       createPanel();
     }
-    connectButton.setEnabled(enabled);
+    connectAction.setEnabled(enabled);
   }
 
   public void setFieldsEnabled(boolean enabled) {
@@ -75,7 +74,7 @@ public class UserAndPasswordPanel {
   }
 
   public String getPassword() {
-    return new String(passwordField.getPassword())  ;
+    return new String(passwordField.getPassword());
   }
 
   public void requestFocus() {
