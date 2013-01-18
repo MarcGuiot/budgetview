@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.mobile;
 
-import org.apache.wicket.util.string.Strings;
 import org.designup.picsou.gui.browsing.BrowsingAction;
 import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.components.dialogs.CloseDialogAction;
@@ -12,6 +11,7 @@ import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.utils.Strings;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobRepository;
@@ -111,8 +111,8 @@ public class CreateMobileAccountDialog {
                                    messageRef);
             progressBar.stop();
             if (dialog.isVisible()) {
+              localRepository.commitChanges(true);
               if (isOk) {
-                localRepository.commitChanges(true);
                 dialog.setVisible(false);
               }
               else {
@@ -127,13 +127,13 @@ public class CreateMobileAccountDialog {
 
   private boolean checkFieldsAreValid() {
     String email = emailField.getText();
-    if (Strings.isEmpty(email) || !email.contains("@")) {
+    if (Strings.isNullOrEmpty(email) || !email.contains("@")) {
       ErrorTip.show(emailField, Lang.get("mobile.mail.empty"), localDirectory, TipPosition.TOP_LEFT);
       return false;
     }
 
     String password = passwordField.getText();
-    if (Strings.isEmpty(password)) {
+    if (Strings.isNullOrEmpty(password)) {
       ErrorTip.show(passwordField, Lang.get("mobile.password.empty"), localDirectory, TipPosition.TOP_LEFT);
       return false;
     }
