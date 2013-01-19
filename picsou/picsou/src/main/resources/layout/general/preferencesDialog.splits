@@ -19,12 +19,12 @@
 
       <label text="$preferences.title" name="title" styleClass="title"/>
 
-        <label text="$preferences.colors" marginTop="10"/>
-        <scrollPane weightY="100">
-          <repeat ref="colorThemes" layout="wrappedRow" margin="5">
-            <toggleButton ref="themeToggle" styleClass="themeSelector"/>
-          </repeat>
-        </scrollPane>
+      <label text="$preferences.colors" marginTop="10"/>
+      <scrollPane weightY="100">
+        <repeat ref="colorThemes" layout="wrappedRow" margin="5">
+          <toggleButton ref="themeToggle" styleClass="themeSelector"/>
+        </repeat>
+      </scrollPane>
 
       <row weightY="0.1" marginTop="10">
         <label text="$preferences.future.month" styleClass="formLabel"/>
@@ -41,8 +41,10 @@
       </row>
 
       <row>
-          <label text="$preferences.langText" styleClass="formLabel"/>
-          <comboBox ref="lang"/>
+        <label text="$preferences.lang.start" styleClass="formLabel"/>
+        <comboBox ref="lang" marginLeft="5" marginRight="5"/>
+        <label text="$preferences.lang.end" styleClass="formLabel"/>
+        <filler fill="horizontal"/>
       </row>
 
     </column>

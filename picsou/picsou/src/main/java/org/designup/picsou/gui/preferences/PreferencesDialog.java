@@ -23,8 +23,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class PreferencesDialog {
-  public static final String FRANÇAIS = "Français";
-  public static final String ENGLISH = "English";
   private PicsouDialog dialog;
 
   private LocalGlobRepository repository;
@@ -59,12 +57,26 @@ public class PreferencesDialog {
     builder.addComboEditor("numericDate", UserPreferences.NUMERIC_DATE_TYPE)
       .forceSelection(UserPreferences.KEY);
 
-    final JComboBox langCombo = new JComboBox(new String[]{ENGLISH, FRANÇAIS});
-    builder.add("lang", langCombo);
+    builder.add("lang", createLangCombo(directory));
+
+    dialog = PicsouDialog.create(parent, directory);
+    dialog.addPanelWithButtons((JPanel)builder.load(), new OkAction(), new CancelAction());
+  }
+
+  private JComboBox createLangCombo(final Directory directory) {
+    final String langEn = Lang.get("lang.en");
+    final String langFr = Lang.get("lang.fr");
+    final JComboBox langCombo = new JComboBox(new String[]{langEn, langFr});
+    if ("fr".equalsIgnoreCase(Lang.getLocale().getCountry())) {
+      langCombo.setSelectedItem(langFr);
+    }
+    else {
+      langCombo.setSelectedItem(langEn);
+    }
     langCombo.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         String lang = langCombo.getSelectedItem().toString();
-        if (lang.equalsIgnoreCase(ENGLISH)) {
+        if (lang.equalsIgnoreCase(langEn)) {
           directory.get(ConfigService.class).setLang("en");
         }
         else {
@@ -72,9 +84,7 @@ public class PreferencesDialog {
         }
       }
     });
-
-    dialog = PicsouDialog.create(parent, directory);
-    dialog.addPanelWithButtons((JPanel)builder.load(), new OkAction(), new CancelAction());
+    return langCombo;
   }
 
   private static LocalGlobRepository createLocalRepository(GlobRepository parentRepository) {
