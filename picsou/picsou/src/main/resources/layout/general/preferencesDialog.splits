@@ -14,7 +14,7 @@
            marginLeft="5" weightX="0" fill="none"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(680, 350)" opaque="true">
+  <panel styleClass="dialog" preferredSize="(580, 430)" opaque="true">
     <column styleClass="innerDialog">
 
       <label text="$preferences.title" name="title" styleClass="title"/>

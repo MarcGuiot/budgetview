@@ -17,7 +17,8 @@ public enum ColorTheme implements GlobConstantContainer {
   CLASSIC_BLUE(2, "colors/color_classic_blue.properties", "classic_blue.png"),
   BLUE(3, "colors/color_blue.properties", "blue.png"),
   BLACK(4, "colors/color_black.properties", "black.png"),
-  PURPLE(5, "colors/color_purple.properties", "purple.png");
+  PURPLE(5, "colors/color_purple.properties", "purple.png"),
+  GREEN(6, "colors/color_green.properties", "green.png");
 
   private final int id;
   private final String filePath;
@@ -72,6 +73,8 @@ public enum ColorTheme implements GlobConstantContainer {
         return BLACK;
       case 5:
         return PURPLE;
+      case 6:
+        return GREEN;
     }
     throw new InvalidParameter("Unexpected value: " + id);
   }
