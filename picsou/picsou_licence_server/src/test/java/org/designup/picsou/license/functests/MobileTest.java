@@ -129,6 +129,7 @@ public class MobileTest extends ConnectedTestCase {
     HttpResponse response = httpClient.execute(method);
     assertEquals(200, response.getStatusLine().getStatusCode());
     Email email = mailServer.checkReceivedMail("test@budgetview.fr");
-    assertTrue(email.getContent(), email.getContent().contains("Ne pas oublier de"));
+    email.checkSubjectContains("Votre rappel pour BudgetView");
+    email.checkContains("l'adresse suivante");
   }
 }

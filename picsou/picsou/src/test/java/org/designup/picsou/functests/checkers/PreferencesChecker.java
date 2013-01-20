@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.model.ColorTheme;
+import org.designup.picsou.utils.Lang;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 
@@ -64,8 +65,8 @@ public class PreferencesChecker extends GuiChecker {
     UISpecAssert.assertFalse(window.isVisible());
   }
 
-  public PreferencesChecker setLang(String lang) {
-    window.getComboBox("lang").select(lang);
+  public PreferencesChecker setLang(String langKey) {
+    window.getComboBox("lang").select(Lang.get("lang." + langKey));
     return this;
   }
 }
