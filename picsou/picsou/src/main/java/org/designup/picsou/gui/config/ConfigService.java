@@ -46,7 +46,6 @@ import java.lang.reflect.Constructor;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.cert.X509Certificate;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -94,21 +93,21 @@ public class ConfigService {
   public static final String ADMIN_EMAIL = "admin";
 
   static final byte[] expectedPublicKey = {48, -126, 1, 34, 48, 13, 6, 9, 42, -122, 72, -122, -9, 13, 1, 1, 1, 5, 0, 3, -126, 1,
-                                  15, 0, 48, -126, 1, 10, 2, -126, 1, 1, 0, -83, 16, 42, 127, -66, -24, 109, 66, 114,
-                                  8, -45, 44, 99, 77, -86, 60, 41, -113, -113, -123, 57, 54, 28, 40, -29, 73, 4, -103,
-                                  66, -108, 26, 29, -38, -101, 23, -66, 31, -125, 52, -59, 51, -80, 121, 22, -8, -18,
-                                  -57, -48, 63, 15, 30, -15, -19, -113, 90, 7, -75, -31, 1, 77, 95, 118, -79, -102, -34,
-                                  -87, -46, -118, -23, 38, -30, -97, 26, -125, 79, -115, -9, 110, -110, -20, 14, -93,
-                                  49, -111, 78, -73, -9, -29, -22, -41, -91, -47, -37, 81, 23, -88, 9, -32, -116, 17,
-                                  32, -121, -114, 14, -99, -117, 120, 86, -27, -122, -35, 103, -104, -97, 108, 34, 55,
-                                  -34, 96, -56, -64, -5, -5, 90, -120, 8, -84, 25, -105, 62, -83, 36, 115, 114, 97, 22,
-                                  -120, -29, 3, -79, 85, 49, 81, -70, -54, 13, -35, -28, 117, 75, 14, -19, -84, -98, 33,
-                                  125, -54, -93, -15, -1, -15, 87, -114, 104, -27, -6, 22, 11, 63, 39, -46, 106, -42, 70,
-                                  -107, -40, 103, -120, 89, 2, 126, -9, 6, -21, 57, -34, -116, -36, 115, -105, 113, -35,
-                                  59, -64, -121, 96, -67, -122, 87, 17, 30, 119, 70, -104, -50, 125, -12, 66, -100, 101,
-                                  -82, -62, 24, -95, -91, 58, 55, -88, 34, -41, -100, -13, -101, -74, 52, 115, -97, -3,
-                                  124, 59, 15, -50, 71, -16, -17, -26, -124, 53, -120, 46, -53, 36, 103, -86, -92, -57,
-                                  -31, -77, -106, -30, -88, -18, -48, -117, 39, 107, 2, 3, 1, 0, 1};
+                                           15, 0, 48, -126, 1, 10, 2, -126, 1, 1, 0, -83, 16, 42, 127, -66, -24, 109, 66, 114,
+                                           8, -45, 44, 99, 77, -86, 60, 41, -113, -113, -123, 57, 54, 28, 40, -29, 73, 4, -103,
+                                           66, -108, 26, 29, -38, -101, 23, -66, 31, -125, 52, -59, 51, -80, 121, 22, -8, -18,
+                                           -57, -48, 63, 15, 30, -15, -19, -113, 90, 7, -75, -31, 1, 77, 95, 118, -79, -102, -34,
+                                           -87, -46, -118, -23, 38, -30, -97, 26, -125, 79, -115, -9, 110, -110, -20, 14, -93,
+                                           49, -111, 78, -73, -9, -29, -22, -41, -91, -47, -37, 81, 23, -88, 9, -32, -116, 17,
+                                           32, -121, -114, 14, -99, -117, 120, 86, -27, -122, -35, 103, -104, -97, 108, 34, 55,
+                                           -34, 96, -56, -64, -5, -5, 90, -120, 8, -84, 25, -105, 62, -83, 36, 115, 114, 97, 22,
+                                           -120, -29, 3, -79, 85, 49, 81, -70, -54, 13, -35, -28, 117, 75, 14, -19, -84, -98, 33,
+                                           125, -54, -93, -15, -1, -15, 87, -114, 104, -27, -6, 22, 11, 63, 39, -46, 106, -42, 70,
+                                           -107, -40, 103, -120, 89, 2, 126, -9, 6, -21, 57, -34, -116, -36, 115, -105, 113, -35,
+                                           59, -64, -121, 96, -67, -122, 87, 17, 30, 119, 70, -104, -50, 125, -12, 66, -100, 101,
+                                           -82, -62, 24, -95, -91, 58, 55, -88, 34, -41, -100, -13, -101, -74, 52, 115, -97, -3,
+                                           124, 59, 15, -50, 71, -16, -17, -26, -124, 53, -120, 46, -53, 36, 103, -86, -92, -57,
+                                           -31, -77, -106, -30, -88, -18, -48, -117, 39, 107, 2, 3, 1, 0, 1};
 
   private String URL = PicsouApplication.REGISTER_URL;
   private String URL_MOBILE = PicsouApplication.REGISTER_URL_MOBILE;
@@ -171,6 +170,7 @@ public class ConfigService {
         HttpClient httpClient = getNewHttpClient();
         response = httpClient.execute(postMethod);
       }
+      updateConnectionStatusOk();
       int statusCode = response.getStatusLine().getStatusCode();
       if (statusCode == 200) {
         Header status = response.getFirstHeader(HEADER_STATUS);
@@ -359,10 +359,12 @@ public class ConfigService {
       postMethod.setHeader(ComCst.MINOR_VERSION_NAME, Integer.toString(MobileModel.MINOR_VERSION));
       postMethod.setEntity(new ByteArrayEntity(data));
       client.execute(postMethod);
+      updateConnectionStatusOk();
       return true;
     }
     catch (Exception e) {
       Log.write("while sending data", e);
+      updateConnectionStatus(e);
       return false;
     }
     finally {
@@ -499,6 +501,7 @@ public class ConfigService {
       postMethod.setHeader(CODING, URLEncoder.encode(new String(password), "UTF-8"));
       HttpClient httpClient = getNewHttpClient();
       HttpResponse response = httpClient.execute(postMethod);
+      updateConnectionStatusOk();
       if (response.getStatusLine().getStatusCode() != 200) {
         message.set(Lang.get("mobile.user.create.connection.failed"));
         return false;
@@ -513,6 +516,7 @@ public class ConfigService {
     }
     catch (Exception e) {
       Log.write("error", e);
+      updateConnectionStatus(e);
     }
     finally {
       if (postMethod != null) {
@@ -545,6 +549,17 @@ public class ConfigService {
       });
     }
   }
+
+  private void updateConnectionStatusOk() {
+    if (!repository.get(User.KEY).get(User.CONNECTED)){
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          repository.update(User.KEY, User.CONNECTED, true);
+        }
+      });
+    }
+  }
+
 
   synchronized public boolean update(final byte[] repoId, final long launchCount, byte[] mailInBytes,
                                      byte[] signatureInByte, final String activationCode,
@@ -836,6 +851,7 @@ public class ConfigService {
           postMethod = createPost(url);
           response = httpClient.execute(postMethod);
         }
+        updateConnectionStatusOk();
         Log.write("Send mail ok");
       }
       catch (final Exception e) {
@@ -900,7 +916,7 @@ public class ConfigService {
     }
   }
 
-  public void setLang(String lang){
+  public void setLang(String lang) {
     serverAccess.setLang(lang);
   }
 }

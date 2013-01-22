@@ -10,7 +10,6 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
@@ -27,7 +26,7 @@ public class OtherBankConnector extends AbstractBankConnector {
   private JComboBox errorModeCombo;
 
   public static class Factory implements BankConnectorFactory {
-    public BankConnector create(GlobRepository repository, Directory directory) {
+    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount) {
       return new OtherBankConnector(repository, directory);
     }
   }

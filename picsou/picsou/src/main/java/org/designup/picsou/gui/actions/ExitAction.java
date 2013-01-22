@@ -1,14 +1,8 @@
 package org.designup.picsou.gui.actions;
 
 import org.designup.picsou.gui.WindowManager;
-import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.feedback.UserEvaluationDialog;
-import org.designup.picsou.gui.feedback.UserProgressInfoSender;
-import org.designup.picsou.model.SignpostStatus;
-import org.designup.picsou.model.User;
-import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 

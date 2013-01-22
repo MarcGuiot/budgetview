@@ -15,6 +15,7 @@ import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.SendImportedFileAction;
+import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.feedback.FeedbackService;
 import org.designup.picsou.gui.feedback.FeedbackView;
 import org.designup.picsou.gui.feedback.actions.OpenFeedbackDialogAction;
@@ -292,6 +293,8 @@ public class MainPanel {
 
     menu.addSeparator();
     menu.add(createMobileAccountAction);
+    menu.add(new DumpMobileXmlAction(repository, directory));
+
 
     if (Gui.useMacOSMenu()) {
       if (exitActionWhitoutUserEvaluation != null) {
@@ -344,7 +347,6 @@ public class MainPanel {
     devMenu.add(new ShowUserEvaluationDialogAction(repository, directory));
     devMenu.add(new LicenseExpirationAction(repository, directory));
     devMenu.add(new DumpRepositoryAction(repository));
-    devMenu.add(new DumpMobileXmlAction(repository, directory));
     devMenu.add(new ChangeDateAction(repository));
     devMenu.add(new AddAccountErrorAction(repository));
     devMenu.add(threadsAction);
@@ -419,6 +421,10 @@ public class MainPanel {
       }
     }
     directory.get(OpenRequestManager.class).popCallback();
+  }
+
+  public void end() {
+    DumpMobileXmlAction.sendToMobile(repository, directory.get(ConfigService.class));
   }
 
   private class MainPanelLogoutService implements LogoutService {

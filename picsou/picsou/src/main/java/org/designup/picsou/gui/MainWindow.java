@@ -150,6 +150,7 @@ public class MainWindow implements WindowManager {
     frame.addWindowListener(windowOpenListener);
     frame.addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
+        mainPanel.end();
         picsouApplication.shutdown();
       }
     });

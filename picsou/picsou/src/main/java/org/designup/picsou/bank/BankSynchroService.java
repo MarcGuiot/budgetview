@@ -4,6 +4,7 @@ import org.designup.picsou.bank.connectors.OtherBankConnector;
 import org.designup.picsou.bank.connectors.americanexpressfr.AmexFrConnector;
 import org.designup.picsou.bank.connectors.bnp.BnpConnector;
 import org.designup.picsou.bank.connectors.cic.CicConnector;
+import org.designup.picsou.bank.connectors.creditagricole.CreditAgricoleConnector;
 import org.designup.picsou.bank.connectors.creditmutuel.CreditMutuelArkeaConnector;
 import org.designup.picsou.bank.connectors.labanquepostale.LaBanquePostaleConnector;
 import org.designup.picsou.bank.connectors.ofx.OfxDownloadPage;
@@ -14,6 +15,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
@@ -27,12 +29,15 @@ public class BankSynchroService {
 
   public BankSynchroService() {
     register(SgConnector.BANK_ID, new SgConnector.Factory());
-    register(CreditMutuelArkeaConnector.BANK_ID, new CreditMutuelArkeaConnector.Factory());
+//    register(CreditMutuelArkeaConnector.BANK_ID, new CreditMutuelArkeaConnector.Factory());
     register(CicConnector.BANK_ID, new CicConnector.Factory());
     register(LaBanquePostaleConnector.BANK_ID, new LaBanquePostaleConnector.Factory());
     register(BnpConnector.BANK_ID, new BnpConnector.Factory());
+    CreditAgricoleConnector.register(this);
     register(AmexFrConnector.BANK_ID, new AmexFrConnector.Factory());
+    Utils.beginRemove();
     register(OtherBankConnector.BANK_ID, new OtherBankConnector.Factory());
+    Utils.endRemove();
   }
 
   public void register(Integer bankId, BankConnectorFactory connectorDisplay) {
@@ -62,7 +67,7 @@ public class BankSynchroService {
     for (Integer bankId : bankToRealAccount.keySet()) {
       BankConnectorFactory factory = banks.get(bankId);
       if (factory != null) {
-        connectors.add(factory.create(repository, directory));
+        connectors.add(factory.create(repository, directory, true));
       }
     }
     return connectors;
@@ -71,7 +76,7 @@ public class BankSynchroService {
   public BankConnector getConnector(Integer bankId, Window parent, GlobRepository repository, Directory directory) {
     BankConnectorFactory factory = banks.get(bankId);
     if (factory != null) {
-      return factory.create(repository, directory);
+      return factory.create(repository, directory, false);
     }
 
     Glob bank = repository.find(Key.create(Bank.TYPE, bankId));

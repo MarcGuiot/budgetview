@@ -29,13 +29,13 @@ public class CicConnector extends WebBankConnector {
   }
 
   public static class Factory implements BankConnectorFactory {
-    public BankConnector create(GlobRepository repository, Directory directory) {
-      return new CicConnector(repository, directory);
+    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount) {
+      return new CicConnector(syncExistingAccount, repository, directory);
     }
   }
 
-  private CicConnector(GlobRepository repository, Directory directory) {
-    super(BANK_ID, repository, directory);
+  private CicConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory) {
+    super(BANK_ID, syncExistingAccount, repository, directory);
     browser.setJavascriptEnabled(false);
   }
 

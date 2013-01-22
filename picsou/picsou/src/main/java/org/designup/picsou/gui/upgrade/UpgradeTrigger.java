@@ -134,6 +134,10 @@ public class UpgradeTrigger implements ChangeSetListener {
       updateDeferredAccount(repository);
     }
 
+    if (currentJarVersion < 97) {
+      reassignBankId(repository);
+    }
+
     deleteDeprecatedGlobs(repository);
 
     Glob appVersion = repository.get(AppVersionInformation.KEY);
@@ -143,6 +147,30 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
 
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
+  }
+
+  private void reassignBankId(GlobRepository repository) {
+    GlobList accounts = repository.getAll(Account.TYPE);
+    for (Glob glob : accounts) {
+      Glob bankEntity = repository.findLinkTarget(glob, Account.BANK_ENTITY);
+      if (bankEntity != null) {
+        repository.update(glob.getKey(), Account.BANK, BankEntity.getBank(bankEntity, repository).get(Bank.ID));
+      }
+    }
+
+    GlobList realAccounts = repository.getAll(RealAccount.TYPE);
+    for (Glob account : realAccounts) {
+      Glob associatedAccount = repository.findLinkTarget(account, RealAccount.ACCOUNT);
+      if (associatedAccount != null) {
+        repository.update(account.getKey(), RealAccount.BANK, associatedAccount.get(Account.BANK));
+      }
+      else {
+        Glob bankEntity = repository.findLinkTarget(account, RealAccount.BANK_ENTITY);
+        if (bankEntity != null){
+          repository.update(account.getKey(), RealAccount.BANK, bankEntity.get(BankEntity.BANK));
+        }
+      }
+    }
   }
 
   private void updateDeferredAccount(GlobRepository repository) {

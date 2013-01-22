@@ -76,13 +76,13 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
   }
 
   public static class Factory implements BankConnectorFactory {
-    public BankConnector create(GlobRepository repository, Directory directory) {
-      return new SgConnector(repository, directory);
+    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount) {
+      return new SgConnector(syncExistingAccount, repository, directory);
     }
   }
 
-  private SgConnector(GlobRepository repository, Directory directory) {
-    super(BANK_ID, repository, directory);
+  private SgConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory) {
+    super(BANK_ID, syncExistingAccount, repository, directory);
     this.setBrowserVersion(BrowserVersion.INTERNET_EXPLORER_7);
   }
 
@@ -90,7 +90,8 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/sgConnectorPanel.splits");
     initCardCode(builder);
-    Thread thread = new Thread() {
+    directory.get(ExecutorService.class)
+      .submit(new Runnable() {
       public void run() {
         try {
           notifyInitialConnection();
@@ -108,8 +109,7 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
           notifyWaitingForUser();
         }
       }
-    };
-    thread.start();
+    });
     return builder.load();
   }
 

@@ -27,7 +27,8 @@ import java.io.InputStream;
 import java.util.Date;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public abstract class AbstractBankConnector implements BankConnector {
   private GlobRepository parentRepository;
@@ -37,6 +38,7 @@ public abstract class AbstractBankConnector implements BankConnector {
   protected GlobList accounts = new GlobList();
   private SynchroMonitor monitor = SynchroMonitor.SILENT;
   private JPanel panel;
+  private boolean synchro = false;
 
   public AbstractBankConnector(Integer bankId, GlobRepository parentRepository, Directory directory) {
     this.parentRepository = parentRepository;
@@ -99,6 +101,9 @@ public abstract class AbstractBankConnector implements BankConnector {
       repository.update(account.getKey(),
                         value(RealAccount.POSITION_DATE, date),
                         value(RealAccount.POSITION, Strings.toString(position).trim()));
+      if (account.get(RealAccount.ACCOUNT) == null && synchro) {
+        return null;
+      }
     }
     accounts.add(account);
     return account;
@@ -129,6 +134,9 @@ public abstract class AbstractBankConnector implements BankConnector {
     }
     else {
       repository.update(account.getKey(), RealAccount.FROM_SYNCHRO, Boolean.TRUE);
+      if (account.get(RealAccount.ACCOUNT) == null && synchro) {
+        return;
+      }
     }
 
     accounts.add(account);

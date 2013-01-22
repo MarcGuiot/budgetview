@@ -70,6 +70,11 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new WebAnchor(browser, (HtmlAnchor)getElementById(id, HtmlAnchor.class));
   }
 
+  public WebAnchor getAnchor(HtmlUnit.Filter filter) throws WebParsingError {
+    HtmlElement element = HtmlUnit.getHtmlElement(node, and(filterTag(HtmlAnchor.TAG_NAME), filter));
+    return new WebAnchor(browser, (HtmlAnchor)element);
+  }
+
   public WebAnchor getFirstAnchorWithText(String text) throws WebParsingError {
     List anchors = HtmlUnit.getElementsWithText(node, "a", text);
     return new WebAnchor(browser, (HtmlAnchor)anchors.get(0));
@@ -164,6 +169,66 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new WebInput(browser, input);
   }
 
+  static public HtmlUnit.Filter and(final HtmlUnit.Filter...filters){
+    return new HtmlUnit.Filter() {
+      public boolean matches(HtmlElement element) {
+        for (HtmlUnit.Filter filter : filters) {
+          if (!filter.matches(element)){
+            return false;
+          }
+        }
+        return true;
+      }
+
+      public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (HtmlUnit.Filter filter : filters) {
+          builder.append(filter.toString()).append(" and ");
+        }
+        String s = builder.toString();
+        return s.length() == 0 ? s : s.substring(0, s.length() - 5);
+      }
+    };
+  }
+
+  static public HtmlUnit.Filter filterType(final String type){
+    return new HtmlUnit.Filter() {
+      public boolean matches(HtmlElement element) {
+        return element.getAttribute("type").equalsIgnoreCase(type);
+      }
+
+      public String toString() {
+        return "type == " + type;
+      }
+    };
+  }
+
+  static public HtmlUnit.Filter refContain(final String text) {
+    final String s = text.toLowerCase();
+    return new HtmlUnit.Filter() {
+      public boolean matches(HtmlElement element) {
+        return element.getAttribute("href").toLowerCase().startsWith(s);
+      }
+
+      public String toString() {
+        return " ref start with " + text;
+      }
+    };
+  }
+
+
+  static public HtmlUnit.Filter filterTag(final String tagName) {
+    return new HtmlUnit.Filter() {
+      public boolean matches(HtmlElement element) {
+        return element.getTagName().equalsIgnoreCase(tagName);
+      }
+
+      public String toString() {
+        return "tagName == " + tagName;
+      }
+    };
+  }
+
   public WebButton getButton() throws WebParsingError {
     return new WebButton(browser, (HtmlButton)getSingleElement("button", HtmlButton.class));
   }
@@ -214,6 +279,17 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
 
   public WebTable getTableById(String id) throws WebParsingError {
     return new WebTable(browser, (HtmlTable)getElementById(id, HtmlTable.class));
+  }
+
+  public WebTable getTableContaining(HtmlUnit.Filter filter) throws WebParsingError {
+    DomNode element = HtmlUnit.getHtmlElement(node, filter);
+    while (element != null) {
+      if (element instanceof HtmlTable){
+        return new WebTable(browser, (HtmlTable)element);
+      }
+      element = element.getParentNode();
+    }
+    throw new WebParsingError(this, "Can not find table as parent of " + node.getTagName() + " for " + filter);
   }
 
   public WebTable getTableWithClass(String name) throws WebParsingError {
@@ -309,5 +385,10 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
 
   public boolean containsText(String text) {
     return node.asXml().contains(text);
+  }
+
+
+  public HtmlElement find(HtmlUnit.Filter filter) throws WebParsingError {
+    return HtmlUnit.findHtmlElement(node, filter);
   }
 }
