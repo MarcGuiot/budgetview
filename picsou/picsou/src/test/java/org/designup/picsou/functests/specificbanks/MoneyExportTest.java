@@ -86,6 +86,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
                      "Auto-moto:Remboursement de pret auto-moto", "Alimentation:Epicerie", "Auto-moto:Essence")
       .setRecurring("Alimentation:Epicerie", "Auto-moto:Remboursement de pret auto-moto")
       .setVariable("Loisirs-culture-sport:Journaux", "Loisirs-culture-sport", "Auto-moto:Essence")
+      .unset("[TEST]")
       .validateAndFinishImport(7, 7, 6);
   }
 

@@ -1,20 +1,21 @@
 package org.designup.picsou.importer.analyzer;
 
 import org.designup.picsou.model.Bank;
+import org.designup.picsou.model.BankFormat;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
-import org.designup.picsou.model.BankFormat;
-import static org.designup.picsou.model.TransactionType.PRELEVEMENT;
-import static org.designup.picsou.model.TransactionType.VIREMENT;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.collections.MultiMap;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.designup.picsou.model.TransactionType.PRELEVEMENT;
+import static org.designup.picsou.model.TransactionType.VIREMENT;
 
 public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
   private List<TransactionTypeFinalizer> finalizers = new ArrayList<TransactionTypeFinalizer>();
@@ -55,10 +56,10 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
         if (Utils.equal(name, memo)) {
           content = name;
         }
-        else if (name != null && memo != null && name.contains(memo)){
+        else if (name != null && memo != null && name.contains(memo)) {
           content = name;
         }
-        else if (name != null && memo != null && memo.contains(name)){
+        else if (name != null && memo != null && memo.contains(name)) {
           content = memo;
         }
         else {
@@ -105,6 +106,9 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
       if (transaction.get(Transaction.TRANSACTION_TYPE) == null) {
         setDefaultType(transaction, repository);
       }
+      if (transaction.get(Transaction.LABEL) == null) {
+        repository.update(transaction.getKey(), Transaction.LABEL, "");
+      }
     }
   }
 
@@ -150,7 +154,7 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
                                                              num, label, Transaction.ORIGINAL_LABEL, type, date, format, transactionType));
   }
 
-  public void addOriginalQif(String mValue, String pValue, String label, Glob bankFormat, String type, 
+  public void addOriginalQif(String mValue, String pValue, String label, Glob bankFormat, String type,
                              String date, String format, TransactionType transactionType) {
     analyserForOriginalLabel.put(bankFormat.get(BankFormat.ID),
                                  new QifTransactionFinalizer(mValue, pValue, label,

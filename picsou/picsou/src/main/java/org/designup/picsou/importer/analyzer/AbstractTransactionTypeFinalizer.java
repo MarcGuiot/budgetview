@@ -8,6 +8,7 @@ import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
 
 import java.text.ParseException;
@@ -26,7 +27,14 @@ public abstract class AbstractTransactionTypeFinalizer implements TransactionTyp
       if (labelRegexp == null) {
         labelRegexp = ALL;
       }
-      return Utils.replace(labelRegexp, placementRegexp, fileContentValue, newLabel);
+      try {
+        return Utils.replace(labelRegexp, placementRegexp, fileContentValue.replace("$", "\\$"), newLabel);
+      }
+      catch (RuntimeException e) {
+        Log.write("erreur label : " + labelRegexp + " placement :" + placementRegexp + " file content : " + fileContentValue
+                  + " newlabel " + newLabel, e);
+        throw e;
+      }
     }
     else if (labelRegexp != null) {
       return null;

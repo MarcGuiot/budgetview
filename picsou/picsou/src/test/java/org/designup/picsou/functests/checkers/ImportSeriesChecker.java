@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.utils.Lang;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
 
@@ -35,6 +36,13 @@ public class ImportSeriesChecker {
 
   public ImportSeriesChecker setVariable(String ...series) {
     return set(BudgetArea.VARIABLE, series);
+  }
+
+  public ImportSeriesChecker unset(String ...series) {
+    for (String s : series) {
+      dialog.getComboBox("choice_" + s).select(Lang.get("import.series.uncategorized"));
+    }
+    return this;
   }
 
   private ImportSeriesChecker set(BudgetArea budgetArea, String... series) {
