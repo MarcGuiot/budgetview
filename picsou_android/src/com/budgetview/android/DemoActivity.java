@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import com.budgetview.android.components.Header;
 import com.budgetview.android.datasync.DataSync;
+import com.budgetview.android.datasync.DataSyncCallback;
+import com.budgetview.android.datasync.DataSyncFactory;
 import org.globsframework.utils.Strings;
 
 public class DemoActivity extends Activity {
@@ -45,8 +47,8 @@ public class DemoActivity extends Activity {
       Views.showAlert(this, R.string.demoEmailEmpty);
       return;
     }
-    DataSync dataSync = new DataSync(this, null, null);
-    dataSync.sendDownloadEmail(email, new DataSync.Callback() {
+    DataSync dataSync = DataSyncFactory.create(this);
+    dataSync.sendDownloadEmail(email, new DataSyncCallback() {
       public void onActionFinished() {
         Views.showAlert(DemoActivity.this, R.string.demoEmailSent);
       }

@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.EditText;
 import com.budgetview.android.components.Header;
 import com.budgetview.android.datasync.DataSync;
+import com.budgetview.android.datasync.DataSyncCallback;
+import com.budgetview.android.datasync.DataSyncFactory;
 import com.budgetview.android.datasync.LoginInfo;
 
 public class LoginActivity extends Activity {
@@ -29,11 +31,11 @@ public class LoginActivity extends Activity {
       return;
     }
 
-    DataSync sync = new DataSync(this, loginInfo.email, loginInfo.password);
-    sync.connect(new DataSync.Callback() {
+    final DataSync sync = DataSyncFactory.create(this);
+    sync.connect(loginInfo.email, loginInfo.password, new DataSyncCallback() {
       public void onActionFinished() {
         LoginInfo.save(loginInfo, LoginActivity.this);
-        loadData(loginInfo.email, loginInfo.password);
+        loadData(sync);
       }
 
       public void onConnectionUnavailable() {
@@ -46,12 +48,11 @@ public class LoginActivity extends Activity {
     });
   }
 
-  private void loadData(String email, String password) {
+  private void loadData(DataSync sync) {
 
     showProgressBar(View.VISIBLE);
 
-    DataSync sync = new DataSync(this, email, password);
-    sync.load(new DataSync.Callback() {
+    sync.load(new DataSyncCallback() {
       public void onActionFinished() {
         showProgressBar(View.INVISIBLE);
         Intent intent = new Intent(LoginActivity.this, BudgetOverviewActivity.class);

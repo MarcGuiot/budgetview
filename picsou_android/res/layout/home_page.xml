@@ -16,6 +16,7 @@
   <ImageView style="@style/DownArrow"/>
 
   <Button
+    android:id="@+id/home_connect"
     style="@style/LargeButton"
     android:text="@string/homeConnect"
     android:onClick="onLogin"/>
@@ -24,6 +25,7 @@
     style="@style/HorizontalSeparator"/>
 
   <TextView
+    android:id="@+id/home_demo"
     style="@style/TextMessage"
     android:text="@string/homeDemoMessage"
     />

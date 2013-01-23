@@ -1,8 +1,8 @@
 package org.globsframework.utils;
 
-import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.utils.SplitsUtils;
 import org.globsframework.utils.exceptions.InvalidParameter;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -279,13 +279,13 @@ public class Utils {
     return result;
   }
 
-  public static <T extends Enum<T>> T toEnum(Class<T> enumClass, String name) throws SplitsException {
+  public static <T extends Enum<T>> T toEnum(Class<T> enumClass, String name) throws ItemNotFound {
     if (name == null) {
       return null;
     }
     T result = T.valueOf(enumClass, SplitsUtils.toNiceUpperCase(name.trim()));
     if (result == null) {
-      throw new SplitsException("No enum " + enumClass.getSimpleName() + " found for value: " + name);
+      throw new ItemNotFound("No enum " + enumClass.getSimpleName() + " found for value: " + name);
     }
     return result;
   }
@@ -300,8 +300,8 @@ public class Utils {
     throw exception;
   }
 
-  public static void dumpStack(){
-    Map<Thread,StackTraceElement[]> map = Thread.getAllStackTraces();
+  public static void dumpStack() {
+    Map<Thread, StackTraceElement[]> map = Thread.getAllStackTraces();
     for (StackTraceElement[] elements : map.values()) {
       System.err.println("dumpStack ------------------------------------------");
       for (StackTraceElement element : elements) {
@@ -322,7 +322,7 @@ public class Utils {
     if (count <= 0) {
       throw new InvalidParameter("Parameter 'count' must be > 0 - actual: " + count);
     }
-    
+
     ArrayList<List<T>> result = new ArrayList<List<T>>();
     int pos = 0;
     while (pos < list.size()) {

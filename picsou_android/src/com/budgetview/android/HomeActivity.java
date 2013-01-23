@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import com.budgetview.android.datasync.DataSync;
+import com.budgetview.android.datasync.DataSyncCallback;
+import com.budgetview.android.datasync.DataSyncFactory;
 import com.budgetview.android.datasync.LoginInfo;
 
 import java.io.IOException;
@@ -26,8 +28,8 @@ public class HomeActivity extends Activity {
       return;
     }
 
-    final DataSync dataSync = new DataSync(this, loginInfo.email, loginInfo.password);
-    dataSync.connect(new DataSync.Callback() {
+    final DataSync dataSync = DataSyncFactory.create(this);
+    dataSync.connect(loginInfo.email, loginInfo.password, new DataSyncCallback() {
       public void onActionFinished() {
         loadData(dataSync);
       }
@@ -49,7 +51,7 @@ public class HomeActivity extends Activity {
 
   private void loadData(DataSync dataSync) {
     showSplashPage();
-    dataSync.load(new DataSync.Callback() {
+    dataSync.load(new DataSyncCallback() {
       public void onActionFinished() {
         gotoBudgetOverview(true, false);
       }
@@ -78,7 +80,7 @@ public class HomeActivity extends Activity {
   }
 
   public void onDemo(View view) throws IOException {
-    DataSync dataSync = new DataSync(this, null, null);
+    DataSync dataSync = DataSyncFactory.create(this);
     dataSync.loadDemoFile();
     gotoBudgetOverview(false, true);
   }
