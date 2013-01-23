@@ -2,7 +2,7 @@
 <globs>
   <bankFormat id='1'>
 
-    <bank name="Crédit Agricole" url="http://www.credit-agricole.fr/particuliers/" id='1'>
+    <bank name="Crédit Agricole" url="http://www.credit-agricole.fr/particuliers/" id='1' icon="banks/credit_agricole.png">
       <bankEntity id="13006"/>
       <bankEntity id="10206"/>
       <bankEntity id="11206"/>

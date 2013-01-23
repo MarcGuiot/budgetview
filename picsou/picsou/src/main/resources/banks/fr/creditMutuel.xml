@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
   <bankFormat id='7'>
-    <bank name="Crédit Mutuel" url="https://www.creditmutuel.fr" id='7' invalidPosition="true">
+    <bank name="Crédit Mutuel" url="https://www.creditmutuel.fr" id='7' invalidPosition="true" icon="banks/credit_mutuel.png">
       <bankEntity id="16306"/>
       <bankEntity id="10278"/>
       <bankEntity id="18829"/>
