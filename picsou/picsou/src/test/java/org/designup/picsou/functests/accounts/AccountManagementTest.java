@@ -166,7 +166,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .validate();
 
     accountEditionChecker.validate();
-    mainAccounts.checkAccountWithoutPosition("no position", "2008/08/31");
+    mainAccounts.checkAccountWithoutPosition("no position", "2008/08/01");
   }
 
   public void testMultipleAccountAtDifferentDate() throws Exception {

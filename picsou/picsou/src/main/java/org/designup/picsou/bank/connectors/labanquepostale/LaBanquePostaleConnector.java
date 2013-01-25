@@ -1,18 +1,22 @@
 package org.designup.picsou.bank.connectors.labanquepostale;
 
+import com.gargoylesoftware.htmlunit.HttpWebConnection;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.WebResponse;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.*;
+import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
-import org.designup.picsou.exporter.ofx.OfxExporter;
 import org.designup.picsou.gui.browsing.BrowsingAction;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -20,18 +24,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 import static org.globsframework.model.FieldValue.value;
 
-public class LaBanquePostaleConnector extends WebBankConnector {
+public class LaBanquePostaleConnector extends WebBankConnector implements HttpConnectionProvider {
   public static final Integer BANK_ID = 3;
 
   private static final String LOGIN_URL = "https://voscomptesenligne.labanquepostale.fr/voscomptes/canalXHTML/identif.ea?origin=particuliers";
@@ -57,6 +59,24 @@ public class LaBanquePostaleConnector extends WebBankConnector {
   private LaBanquePostaleConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory) {
     super(BANK_ID, syncExistingAccount, repository, directory);
     browser.setJavascriptEnabled(true);
+    browser.getClient().getCookieManager().setCookiesEnabled(true);
+  }
+
+
+  public HttpWebConnection getHttpConnection(WebClient client) {
+    return new HttpWebConnection(client) {
+      public WebResponse getResponse(WebRequest request) throws IOException {
+        String s = request.getUrl().toString();
+        System.out.println("LaBanquePostaleConnector.getResponse " + s);
+//        if (s.startsWith("https://logs128.xiti.com") || s.startsWith("https://societegenerale.solution.weborama.fr")
+//            || s.startsWith("https://ssl.weborama.fr")) {
+//          throw new IOException("not available");
+//        }
+        WebResponse response = super.getResponse(request);
+        System.out.println("LaBanquePostaleConnector.getResponse " + response.getLoadTime() + " ms.");
+        return response;
+      }
+    };
   }
 
   protected JPanel createPanel() {
@@ -194,38 +214,7 @@ public class LaBanquePostaleConnector extends WebBankConnector {
               }
 
               notifyDownloadInProgress();
-
-              List<AccountEntry> entries = new ArrayList<AccountEntry>();
-              parseAccounts(accountsPage, "comptes", false, entries);
-              parseAccounts(accountsPage, "comptesEpargne", true, entries);
-
-              accounts.clear();
-              if (!entries.isEmpty()) {
-
-                for (AccountEntry entry : entries) {
-
-                  WebPage accountPage = browser.loadPageInSameSite(entry.url);
-
-                  String urlPrefix = "/voscomptes/canalXHTML/CCP/releves_ccp/init-releve_ccp.ea";
-                  if (accountPage.containsText(urlPrefix)) {
-                    accountPage = browser.loadPageInSameSite(urlPrefix + "?typeRecherche=10&compte.numero=" + entry.number);
-                  }
-
-                  String path = loadOperationsForAccount(accountPage, entry);
-
-                  Glob account = createOrUpdateRealAccount(entry.name,
-                                                           entry.number,
-                                                           entry.position,
-                                                           null,
-                                                           BANK_ID);
-                  if (account != null){
-                    repository.update(account.getKey(),
-                                      value(RealAccount.FILE_NAME, path),
-                                      value(RealAccount.SAVINGS, entry.isSavings));
-                  }
-                }
-              }
-              importCompleted();
+              doImport();
             }
             catch (final Exception e) {
               SwingUtilities.invokeLater(new Runnable() {
@@ -240,42 +229,79 @@ public class LaBanquePostaleConnector extends WebBankConnector {
     }
   }
 
-  private String loadOperationsForAccount(WebPage accountPage, AccountEntry entry) throws Exception {
-    GlobRepository tempRepository = GlobRepositoryBuilder.createEmpty();
-    Glob account =
-      tempRepository.create(Account.TYPE,
-                            value(Account.BANK, BANK_ID),
-                            value(Account.NUMBER, entry.number),
-                            value(Account.NAME, entry.name),
-                            value(Account.ACCOUNT_TYPE, entry.isSavings ? AccountType.SAVINGS.getId() : AccountType.MAIN.getId()));
+  public void downloadFile() throws Exception {
+    WebPage accountsPage = browser.getCurrentPage();
+    List<AccountEntry> entries = new ArrayList<AccountEntry>();
+    parseAccounts(accountsPage, "comptes", false, entries);
+    parseAccounts(accountsPage, "comptesEpargne", true, entries);
 
-    Integer accountId = account.get(Account.ID);
-
-    List<WebTableRow> rows = accountPage.getTableById("mouvements").getRowsWithoutHeaderAndFooters();
-    for (WebTableRow row : rows) {
-
-      Date date = DATE_FORMAT.parse(row.getCell(0).asText().trim());
-      int monthId = Month.getMonthId(date);
-      int day = Month.getDay(date);
-      String label = extractLabel(row.getCell(1).getSingleSpan().asXml());
-      Double amount = extractAmount(row.getCell(2).asText());
-
-      tempRepository.create(Transaction.TYPE,
-                            value(Transaction.ACCOUNT, accountId),
-                            value(Transaction.MONTH, monthId),
-                            value(Transaction.DAY, day),
-                            value(Transaction.BANK_MONTH, monthId),
-                            value(Transaction.BANK_DAY, day),
-                            value(Transaction.LABEL, label),
-                            value(Transaction.ORIGINAL_LABEL, label),
-                            value(Transaction.AMOUNT, amount));
+    if (entries.isEmpty()){
+      return;
     }
+    WebPage newPage = entries.get(0).anchor.click();
 
-    File file = File.createTempFile("budgetview_download", "ofx");
-    FileWriter writer = new FileWriter(file);
-    OfxExporter.write(tempRepository, writer, false);
-    return file.getAbsolutePath();
+    for (AccountEntry entry : entries) {
+      WebSelect listeComptes = newPage.getSelectById("listeComptes");
+      listeComptes.selectByValue(entry.account.get(RealAccount.NUMBER));
+      newPage = newPage.getInputById("idNum0").click();
+      WebPanel main = newPage.getPanelById("main");
+      WebComponent.HtmlNavigate liens = main.findFirst(WebContainer.filterAttribute("class", "liens"));
+      WebAnchor telecharger = liens.in().next().in().asAnchor();
+      newPage = telecharger.click();
+      WebForm form = newPage.getFormById("formID");
+      WebAnchor anchor = form.getAnchor(WebContainer.filterAttribute("title", "Modifier"));
+      WebPage currentPage = anchor.click();
+      WebSelect format = currentPage.getSelectById("format");
+      currentPage = format.selectByValue("OFX");
+      currentPage.getRadioButtonById("duree0").select();
+
+      form = currentPage.getFormById("formulaire");
+      Download download = form.submitByIdAndDownload("idNum0");
+      File file = download.saveAsOfx();
+      repository.update(entry.account.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+      currentPage = new WebPage(browser, (HtmlPage)browser.getClient().getCurrentWindow().getParentWindow().getEnclosedPage());
+      WebPanel window = currentPage.getPanelById("modalWindow");
+      newPage = window.getAnchorWithRef("#").click();
+    }
   }
+
+
+  //  private String loadOperationsForAccount(WebPage accountPage, AccountEntry entry) throws Exception {
+//    GlobRepository tempRepository = GlobRepositoryBuilder.createEmpty();
+//    Glob account =
+//      tempRepository.create(Account.TYPE,
+//                            value(Account.BANK, BANK_ID),
+//                            value(Account.NUMBER, entry.number),
+//                            value(Account.NAME, entry.name),
+//                            value(Account.ACCOUNT_TYPE, entry.isSavings ? AccountType.SAVINGS.getId() : AccountType.MAIN.getId()));
+//
+//    Integer accountId = account.get(Account.ID);
+//
+//    List<WebTableRow> rows = accountPage.getTableById("mouvements").getRowsWithoutHeaderAndFooters();
+//    for (WebTableRow row : rows) {
+//
+//      Date date = DATE_FORMAT.parse(row.getCell(0).asText().trim());
+//      int monthId = Month.getMonthId(date);
+//      int day = Month.getDay(date);
+//      String label = extractLabel(row.getCell(1).getSingleSpan().asXml());
+//      Double amount = extractAmount(row.getCell(2).asText());
+//
+//      tempRepository.create(Transaction.TYPE,
+//                            value(Transaction.ACCOUNT, accountId),
+//                            value(Transaction.MONTH, monthId),
+//                            value(Transaction.DAY, day),
+//                            value(Transaction.BANK_MONTH, monthId),
+//                            value(Transaction.BANK_DAY, day),
+//                            value(Transaction.LABEL, label),
+//                            value(Transaction.ORIGINAL_LABEL, label),
+//                            value(Transaction.AMOUNT, amount));
+//    }
+//
+//    File file = File.createTempFile("budgetview_download", "ofx");
+//    FileWriter writer = new FileWriter(file);
+//    OfxExporter.write(tempRepository, writer, false);
+//    return file.getAbsolutePath();
+//  }
 
   static String extractLabel(String xml) {
     return xml
@@ -306,27 +332,22 @@ public class LaBanquePostaleConnector extends WebBankConnector {
       String name = row.getCell(0).asText();
       String number = row.getCell(1).asText();
       String position = row.getCell(2).asText();
-      String url = row.getCell(0).getSingleAnchor().getTargetUrl();
-      entries.add(new AccountEntry(name, number, position, url, savings));
+      WebAnchor anchor = row.getCell(0).getSingleAnchor();
+      Glob account = createOrUpdateRealAccount(name, number, position, null, bankId);
+      if (account != null){
+        repository.update(account.getKey(), RealAccount.SAVINGS, savings);
+        entries.add(new AccountEntry(account, anchor));
+      }
     }
   }
 
-  private class AccountEntry {
-    public final String name;
-    public final String number;
-    public final String position;
-    public final String url;
-    public final boolean isSavings;
+  public class AccountEntry {
+    private Glob account;
+    public final WebAnchor anchor;
 
-    private AccountEntry(String name, String number, String position, String url, boolean savings) {
-      isSavings = savings;
-      this.name = name;
-      this.number = number;
-      this.position = position;
-      this.url = url;
+    public AccountEntry(Glob account, WebAnchor anchor) {
+      this.account = account;
+      this.anchor = anchor;
     }
-  }
-
-  public void downloadFile() throws Exception {
   }
 }

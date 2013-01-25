@@ -149,6 +149,16 @@ public class HtmlUnit {
     return getHtmlElement(container, filter, false);
   }
 
+  public static HtmlElement findHtmlFirstElement(HtmlElement container, Filter filter) throws WebParsingError {
+    Iterable<HtmlElement> elementDescendants = container.getHtmlElementDescendants();
+    for (HtmlElement element : elementDescendants) {
+      if (filter.matches(element)) {
+        return element;
+      }
+    }
+    return null;
+  }
+
     public static HtmlElement getHtmlElement(HtmlElement container, Filter filter, boolean nullIfNotFind) throws WebParsingError {
     Iterable<HtmlElement> elementDescendants = container.getHtmlElementDescendants();
     List<HtmlElement> result = new ArrayList<HtmlElement>();

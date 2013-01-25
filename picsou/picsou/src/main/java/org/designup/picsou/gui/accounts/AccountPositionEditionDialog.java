@@ -1,7 +1,9 @@
 package org.designup.picsou.gui.accounts;
 
+import com.budgetview.shared.utils.AmountFormat;
 import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -22,7 +24,12 @@ public class AccountPositionEditionDialog {
   private AccountPositionEditionPanel editionPanel;
   private GlobsPanelBuilder builder;
 
-  public AccountPositionEditionDialog(Glob account, boolean accountInitialization,
+
+  public AccountPositionEditionDialog(Glob account, GlobRepository repository, Directory directory, Window parent) {
+    this(account, null, repository, directory, parent);
+  }
+
+  public AccountPositionEditionDialog(Glob account, Double value,
                                       GlobRepository repository, Directory directory, Window parent) {
 
     this.localRepository =
@@ -35,6 +42,8 @@ public class AccountPositionEditionDialog {
 
     ValidateAction validateAction = new ValidateAction();
 
+    boolean accountInitialization = value != null;
+
     editionPanel = new AccountPositionEditionPanel(validateAction, localRepository, directory,
                                                    accountInitialization ? Account.LAST_IMPORT_POSITION : Account.PAST_POSITION);
     builder.add("editionPanel", editionPanel.getPanel());
@@ -45,7 +54,7 @@ public class AccountPositionEditionDialog {
     if (accountInitialization) {
       dialog = PicsouDialog.createWithButton(parent, builder.<JPanel>load(), validateAction, directory);
       dialog.disableEscShortcut();
-      editionPanel.setText("0.0");
+      editionPanel.setText(AmountFormat.DECIMAL_FORMAT.format(value));
       dialog.setPreferredSize(new Dimension(400, 350));
     }
     else {

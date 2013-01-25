@@ -2,17 +2,22 @@ package org.designup.picsou.bank.connectors.webcomponents.utils;
 
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
+import org.designup.picsou.bank.BankPluginService;
 import org.designup.picsou.bank.connectors.SynchroMonitor;
+import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.browsing.DummyBrowsingService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.utils.ApplicationColors;
+import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
@@ -29,8 +34,11 @@ import java.util.concurrent.Executors;
 public class WebConnectorLauncher {
   public static void show(BankConnectorFactory factory) throws IOException {
 
-    DefaultDirectory directory = createDirectoryWithDefaultServices();
-    GlobRepository repository = GlobRepositoryBuilder.createEmpty();
+    GlobRepository repository = GlobRepositoryBuilder.init()
+      .add(PicsouGuiModel.get().getConstants())
+      .get();
+
+    DefaultDirectory directory = createDirectoryWithDefaultServices(repository);
 
     BankConnector connector = factory.create(repository, directory, false);
 
@@ -47,7 +55,7 @@ public class WebConnectorLauncher {
     GuiUtils.showCentered(frame);
   }
 
-  private static DefaultDirectory createDirectoryWithDefaultServices() throws IOException {
+  private static DefaultDirectory createDirectoryWithDefaultServices(final GlobRepository repository) throws IOException {
     DefaultDirectory directory = new DefaultDirectory();
     directory.add(TextLocator.class, Lang.TEXT_LOCATOR);
     directory.add(SelectionService.class, new SelectionService());
@@ -68,6 +76,11 @@ public class WebConnectorLauncher {
         System.out.println("read: " + files.size());
       }
     });
+    directory.add(new BankPluginService());
+    directory.add(new TransactionAnalyzerFactory(PicsouGuiModel.get()));
+    directory.get(TransactionAnalyzerFactory.class)
+      .load(WebConnectorLauncher.class.getClassLoader(), PicsouApplication.BANK_CONFIG_VERSION, repository, directory);
+
     return directory;
   }
 

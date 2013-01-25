@@ -32,7 +32,7 @@ public class DumpMobileXmlAction extends AbstractAction {
   private ConfigService configService;
 
   public DumpMobileXmlAction(GlobRepository repository, Directory directory) {
-    super(Lang.get("mobile.send.data"));
+    super(Lang.get("mobile.menu.send.data"));
     this.repository = repository;
     this.directory = directory;
     configService = directory.get(ConfigService.class);

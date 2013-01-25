@@ -180,6 +180,17 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+
+  public void testNoAccountPositionStartAtZero() throws Exception {
+    QifBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "VIR.LOGITEL Tx 1 with ${toto}")
+      .addTransaction("2006/01/11", -2.23, "Tx 2")
+      .loadFirstStartingAtZero(-3.33);
+
+    mainAccounts.checkPosition("", -3.33);
+  }
+
   public void testAutomaticallySelectAccount() throws Exception {
     QifBuilder
       .init(this)

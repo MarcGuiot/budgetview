@@ -210,7 +210,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkAccountLabel("Account: Main")
       .checkCancelNotAvailable()
       .checkEscNotAvailable()
-      .checkInitialAmountSelected("0.0")
+      .checkInitialAmountSelected("-1.10")
       .checkInitialMessageDisplayed()
       .setAmount(12.33)
       .validate();

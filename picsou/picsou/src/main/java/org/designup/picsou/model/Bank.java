@@ -26,6 +26,9 @@ public class Bank {
   @NamingField @NoObfuscation
   public static StringField NAME;
 
+  @NamingField @NoObfuscation
+  public static StringField SHORT_NAME;
+
   @DefaultString("") @NoObfuscation
   public static StringField URL;
 
@@ -69,7 +72,7 @@ public class Bank {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 5;
+      return 6;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -80,6 +83,7 @@ public class Bank {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeUtf8String(values.get(NAME));
+      outputStream.writeUtf8String(values.get(SHORT_NAME));
       outputStream.writeUtf8String(values.get(URL));
       outputStream.writeUtf8String(values.get(ICON));
       outputStream.writeUtf8String(values.get(DOWNLOAD_URL));
@@ -116,6 +120,7 @@ public class Bank {
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(SHORT_NAME, input.readUtf8String());
       fieldSetter.set(URL, input.readUtf8String());
       fieldSetter.set(ICON, input.readUtf8String());
       fieldSetter.set(DOWNLOAD_URL, input.readUtf8String());

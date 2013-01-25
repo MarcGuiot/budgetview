@@ -70,7 +70,8 @@ public class PicsouApplication {
   public static String DELETE_LOCAL_PREVAYLER_PROPERTY = APPNAME + ".prevayler.delete";
   public static String IS_DATA_IN_MEMORY = APPNAME + ".data.in.memory";
 
-  public static String FORCE_DATE = APPNAME + ".today";
+  public static final String TODAY = ".today";
+  public static String FORCE_DATE = APPNAME + TODAY;
 
   public static final String REGISTER_URL = "https://register.mybudgetview.fr:443";
   public static final String REGISTER_URL_MOBILE = "https://register.mybudgetview.fr:1443";

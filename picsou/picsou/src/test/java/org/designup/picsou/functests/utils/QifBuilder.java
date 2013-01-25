@@ -60,4 +60,15 @@ public class QifBuilder {
     save();
     operations.importQifFile(fileName, "Société Générale");
   }
+
+  public void loadFirstStartingAtZero(double amount) throws IOException {
+    save();
+    operations.openImportDialog().setFilePath(fileName)
+      .acceptFile()
+      .selectNewAccount()
+      .setAccountName("Main account")
+      .setMainAccount()
+      .selectBank("Société Générale")
+      .completeImportStartFromZero(amount);
+  }
 }

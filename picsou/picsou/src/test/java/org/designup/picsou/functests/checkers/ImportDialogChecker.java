@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import com.budgetview.shared.utils.AmountFormat;
 import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.importer.steps.ImportCompletionPanel;
@@ -132,6 +133,14 @@ public class ImportDialogChecker extends GuiChecker {
 
   public void completeImport(double amount) {
     doImportWithBalance().setAmount(amount).validate();
+    ImportDialogChecker.complete(-1, -1, -1, dialog);
+    UISpecAssert.assertFalse(dialog.isVisible());
+  }
+
+  public void completeImportStartFromZero(double amount) {
+    AccountPositionEditionChecker positionEditionChecker = doImportWithBalance();
+    positionEditionChecker.checkInitialAmountSelected(AmountFormat.DECIMAL_FORMAT.format(amount));
+    positionEditionChecker.validate();
     ImportDialogChecker.complete(-1, -1, -1, dialog);
     UISpecAssert.assertFalse(dialog.isVisible());
   }
@@ -310,14 +319,21 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public ImportDialogChecker createNewAccount(String bank, String accountName, String number, double initialBalance) {
+  public ImportDialogChecker createNewAccount(String bank, String accountName, String number) {
+    return createNewAccount(bank, accountName, number, null);
+  }
+
+  public ImportDialogChecker createNewAccount(String bank, String accountName, String number, Double initialBalance) {
     addNewAccount();
-    getAccountEditionChecker()
+    AccountEditionChecker editionChecker = getAccountEditionChecker()
       .selectBank(bank)
       .setAsMain()
       .setName(accountName)
-      .setAccountNumber(number)
-      .setPosition(initialBalance);
+      .setAccountNumber(number);
+    if (initialBalance != null) {
+      editionChecker
+        .setPosition(initialBalance);
+    }
     return this;
   }
 
@@ -454,6 +470,7 @@ public class ImportDialogChecker extends GuiChecker {
   public void waitForPreview() {
     UISpecAssert.waitUntil(new Assertion() {
       private String expectedTitle = Lang.get("import.preview.title");
+
       public void check() {
         if (!dialog.containsLabel(expectedTitle).isTrue()) {
           UISpecAssert.fail("Current title is '" + dialog.getTextBox("title").getText()

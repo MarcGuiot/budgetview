@@ -1,8 +1,6 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.collections.Pair;
