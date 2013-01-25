@@ -1,6 +1,5 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -8,17 +7,17 @@ import org.designup.picsou.model.UserPreferences;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class MonthTrigger implements ChangeSetListener {
-  private TimeService time;
 
   public MonthTrigger(Directory directory) {
-    time = directory.get(TimeService.class);
   }
 
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
@@ -47,8 +46,15 @@ public class MonthTrigger implements ChangeSetListener {
       repository.startChangeSet();
       Glob glob = repository.get(CurrentMonth.KEY);
       int currentMonthId = glob.get(CurrentMonth.CURRENT_MONTH);
-      int startMonth = Math.max(currentMonthId,
-                                glob.get(CurrentMonth.LAST_TRANSACTION_MONTH));
+      SortedSet<Integer> actualMonth = repository.getAll(Month.TYPE).getSortedSet(Month.ID);
+      int startMonth;
+      if (actualMonth.isEmpty()){
+        Integer lastTransactionMonth = glob.get(CurrentMonth.LAST_TRANSACTION_MONTH);
+        startMonth = Math.min(currentMonthId, lastTransactionMonth == 0 ? currentMonthId : lastTransactionMonth);
+      }
+      else {
+        startMonth = actualMonth.first();
+      }
       List<Integer> pastMonth = Month.createMonths(startMonth, currentMonthId);
       for (Integer monthId : pastMonth) {
         repository.findOrCreate(Key.create(Month.TYPE, monthId));

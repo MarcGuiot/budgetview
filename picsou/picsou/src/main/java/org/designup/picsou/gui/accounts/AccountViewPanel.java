@@ -164,7 +164,7 @@ public abstract class AccountViewPanel {
                             new GlobListFunctor() {
                               public void run(GlobList list, GlobRepository repository) {
                                 AccountPositionEditionDialog accountPositionEditor =
-                                  new AccountPositionEditionDialog(account, false, repository, directory, directory.get(JFrame.class));
+                                  new AccountPositionEditionDialog(account, repository, directory, directory.get(JFrame.class));
                                 accountPositionEditor.show();
                               }
                             }

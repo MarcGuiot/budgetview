@@ -104,7 +104,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
 
   public void checkAccountWithoutPosition(String accountName, String yyyymmdd) {
     Panel parentPanel = getAccountPanel(accountName);
-    assertThat(parentPanel.getButton("accountPosition").textEquals("Click here to set the account position"));
+    assertThat(parentPanel.getButton("accountPosition").textEquals("0.00"));
     Date date = Dates.parse(yyyymmdd);
     UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals(Formatting.toString(date)));
   }

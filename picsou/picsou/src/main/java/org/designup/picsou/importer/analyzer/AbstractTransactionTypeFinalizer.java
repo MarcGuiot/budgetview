@@ -33,7 +33,7 @@ public abstract class AbstractTransactionTypeFinalizer implements TransactionTyp
       catch (RuntimeException e) {
         Log.write("erreur label : " + labelRegexp + " placement :" + placementRegexp + " file content : " + fileContentValue
                   + " newlabel " + newLabel, e);
-        throw e;
+        return fileContentValue;
       }
     }
     else if (labelRegexp != null) {

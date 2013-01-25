@@ -534,6 +534,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testShiftManualOpNotPossible() throws Exception {
+    fail("tdb");
   }
 
   public void testManualOnly() throws Exception {

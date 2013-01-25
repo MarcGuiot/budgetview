@@ -3,6 +3,7 @@ package org.designup.picsou.bank.connectors.webcomponents;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.attachment.AttachmentHandler;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.model.RealAccount;

@@ -42,6 +42,11 @@ public class WebForm extends WebContainer<HtmlForm> {
     return new Download(browser, input);
   }
 
+  public Download submitByIdAndDownload(String id) throws WebParsingError {
+    HtmlInput input = HtmlUnit.getElementById(node, id, HtmlInput.class);
+    return new Download(browser, input);
+  }
+
   public Download submitAndDownload() throws WebParsingError {
     HtmlInput input = (HtmlInput)HtmlUnit.getElementWithAttribute(node, "input", "type", "submit");
     return new Download(browser, input);

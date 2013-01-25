@@ -281,6 +281,11 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     operations.backupAndLaunchApplication(LoginPanel.AUTOLOG_USER, LoginPanel.AUTOLOG_USER, currentDate);
   }
 
+  public void openApplication(String user, String password) throws Exception {
+    currentDate = TimeService.getToday();
+    operations.backupAndLaunchApplication(user, password, currentDate);
+  }
+
   protected void restartApplication(String user, String passwd) throws Exception {
     if (mainWindow != null) {
       operations.exit();

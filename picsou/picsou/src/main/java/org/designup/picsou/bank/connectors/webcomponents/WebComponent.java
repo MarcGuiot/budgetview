@@ -1,10 +1,10 @@
 package org.designup.picsou.bank.connectors.webcomponents;
 
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
+import com.gargoylesoftware.htmlunit.html.*;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HtmlUnit;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
+import sun.text.normalizer.TrieIterator;
 
 import java.io.IOException;
 
@@ -71,5 +71,57 @@ public abstract class WebComponent<T extends HtmlElement> {
 
   public T getNode() {
     return node;
+  }
+
+  static public class HtmlNavigate {
+    private WebBrowser browser;
+    private HtmlElement node;
+
+    public HtmlNavigate(WebBrowser browser, HtmlElement node) {
+      this.browser = browser;
+      this.node = node;
+    }
+
+    public HtmlNavigate next() throws WebParsingError {
+      node = (HtmlElement)findFirstHtmlElement(node.getNextSibling());
+      return this;
+    }
+
+    private DomNode findFirstHtmlElement(DomNode sibling) throws WebParsingError {
+      while (!(sibling instanceof HtmlElement) && sibling != null){
+        sibling = sibling.getNextSibling();
+      }
+      if (sibling == null){
+        throw new WebParsingError(node, "Can not find next");
+      }
+      return sibling;
+    }
+
+    public HtmlNavigate in() throws WebParsingError {
+      node = (HtmlElement)findFirstHtmlElement(node.getFirstChild());
+      return this;
+    }
+
+    public WebAnchor asAnchor() throws WebParsingError {
+      if (node instanceof HtmlAnchor){
+        return new WebAnchor(browser, ((HtmlAnchor)node));
+      }
+      else {
+        throw new WebParsingError(node, "not an anchor");
+      }
+    }
+
+    public WebCheckBox asCheckBox() throws WebParsingError {
+      if (node instanceof HtmlInput){
+        return new WebCheckBox(browser, ((HtmlInput)node));
+      }
+      else {
+        throw new WebParsingError(node, "not an anchor");
+      }
+    }
+  }
+
+  public HtmlNavigate navigate() {
+    return new HtmlNavigate(browser, node);
   }
 }

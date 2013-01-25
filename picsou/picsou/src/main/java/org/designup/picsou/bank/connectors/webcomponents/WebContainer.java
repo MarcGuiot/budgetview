@@ -129,6 +129,10 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new WebForm(browser, (HtmlForm)getElementByName("form", name, HtmlForm.class));
   }
 
+  public WebForm getFormById(String id) throws WebParsingError {
+    return new WebForm(browser, (HtmlForm)getElementById(id, HtmlForm.class));
+  }
+
   public WebForm getFormByAction(String action) throws WebParsingError {
     return new WebForm(browser,
                        (HtmlForm)HtmlUnit.getElementWithAttribute(node, HtmlForm.class, "form", "action", action));
@@ -192,13 +196,17 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   }
 
   static public HtmlUnit.Filter filterType(final String type){
+    return filterAttribute("type", type);
+  }
+
+  static public HtmlUnit.Filter filterAttribute(final String attrName, final String value){
     return new HtmlUnit.Filter() {
       public boolean matches(HtmlElement element) {
-        return element.getAttribute("type").equalsIgnoreCase(type);
+        return element.getAttribute(attrName).equalsIgnoreCase(value);
       }
 
       public String toString() {
-        return "type == " + type;
+        return attrName + " == " + value;
       }
     };
   }
@@ -388,7 +396,15 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   }
 
 
-  public HtmlElement find(HtmlUnit.Filter filter) throws WebParsingError {
+  public HtmlElement get(HtmlUnit.Filter filter) throws WebParsingError {
     return HtmlUnit.findHtmlElement(node, filter);
+  }
+
+  public HtmlNavigate findFirst(HtmlUnit.Filter filter) throws WebParsingError {
+    return new HtmlNavigate(browser, HtmlUnit.findHtmlFirstElement(node, filter));
+  }
+
+  public boolean hasId(String id) {
+    return node.hasHtmlElementWithId(id);
   }
 }

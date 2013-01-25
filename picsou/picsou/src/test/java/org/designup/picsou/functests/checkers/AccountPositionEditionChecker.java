@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import com.budgetview.shared.utils.AmountFormat;
 import junit.framework.Assert;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.Panel;
@@ -76,6 +77,11 @@ public class AccountPositionEditionChecker extends GuiChecker {
 
   public void validate() {
     window.getButton("ok").click();
+    UISpecAssert.assertFalse(window.isVisible());
+  }
+
+  public void cancel() {
+    window.getButton(Lang.get("accountPositionEdition.zero")).click();
     UISpecAssert.assertFalse(window.isVisible());
   }
 }

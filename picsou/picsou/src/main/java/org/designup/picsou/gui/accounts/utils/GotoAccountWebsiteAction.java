@@ -70,8 +70,10 @@ public class GotoAccountWebsiteAction extends AbstractAction implements ChangeSe
     if (bank == null) {
       return "";
     }
-    String bankName = descriptionService.getStringifier(Bank.TYPE)
-      .toString(bank, repository);
+    String bankName = bank.get(Bank.SHORT_NAME);
+    if (Strings.isNullOrEmpty(bankName)){
+      bankName = descriptionService.getStringifier(Bank.TYPE).toString(bank, repository);
+    }
     return Lang.get("accountView.goto.website", bankName);
   }
 }

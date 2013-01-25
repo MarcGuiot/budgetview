@@ -8,6 +8,7 @@ import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.utils.AutoDispose;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;

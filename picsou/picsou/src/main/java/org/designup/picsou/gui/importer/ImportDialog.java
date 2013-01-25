@@ -23,6 +23,7 @@ import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
+import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -32,9 +33,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 
 public class ImportDialog implements RealAccountImporter {
   private GlobRepository parentRepository;
@@ -220,17 +220,28 @@ public class ImportDialog implements RealAccountImporter {
     closeDialog();
   }
 
+  static class DoubleRef {
+    double value = 0.;
+  }
+
   public void showAccountPositionDialogsIfNeeded() {
     Set<Key> transactions = localRepository.getCurrentChanges().getCreated(Transaction.TYPE);
-    Set<Integer> accounts = new HashSet<Integer>();
+    Map<Integer, DoubleRef> accounts = new HashMap<Integer, DoubleRef>();
     for (Key transaction : transactions) {
-      accounts.add(localRepository.get(transaction).get(Transaction.ACCOUNT));
+      Glob glob = localRepository.get(transaction);
+      Integer account = glob.get(Transaction.ACCOUNT);
+      DoubleRef value = accounts.get(account);
+      if (value == null){
+        value = new DoubleRef();
+        accounts.put(account, value);
+      }
+      value.value += glob.get(Transaction.AMOUNT);
     }
-    for (Integer accountId : accounts) {
-      Glob account = localRepository.get(Key.create(Account.TYPE, accountId));
+    for (Map.Entry<Integer, DoubleRef> accountAndTotal : accounts.entrySet()) {
+      Glob account = localRepository.get(Key.create(Account.TYPE, accountAndTotal.getKey()));
       if (account.get(Account.LAST_IMPORT_POSITION) == null && !AccountCardType.DEFERRED.getId().equals(account.get(Account.CARD_TYPE))) {
         AccountPositionEditionDialog dialog =
-          new AccountPositionEditionDialog(account, true, localRepository, localDirectory, this.dialog);
+          new AccountPositionEditionDialog(account, accountAndTotal.getValue().value, localRepository, localDirectory, this.dialog);
         dialog.show();
       }
     }

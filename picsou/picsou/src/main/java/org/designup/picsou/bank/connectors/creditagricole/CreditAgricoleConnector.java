@@ -1,16 +1,16 @@
 package org.designup.picsou.bank.connectors.creditagricole;
 
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.HttpWebConnection;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.*;
-import org.designup.picsou.bank.connectors.webcomponents.utils.HtmlUnit;
-import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
-import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
-import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
+import org.designup.picsou.bank.connectors.webcomponents.utils.*;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.RealAccount;
 import org.globsframework.gui.splits.SplitsBuilder;
@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-public class CreditAgricoleConnector extends WebBankConnector {
+public class CreditAgricoleConnector extends WebBankConnector implements HttpConnectionProvider {
   private JTextField codeField;
   private JButton validerCode;
   private JPasswordField passwordTextField;
@@ -37,7 +37,7 @@ public class CreditAgricoleConnector extends WebBankConnector {
 
 
   public static void main(String[] args) throws IOException {
-    WebConnectorLauncher.show(new CreditAgricoleFactory(61));
+    WebConnectorLauncher.show(new CreditAgricoleFactory(67));
   }
 
   public CreditAgricoleConnector(int bankId, String url, GotoAutentifcation autentification,
@@ -47,14 +47,30 @@ public class CreditAgricoleConnector extends WebBankConnector {
     urlGrid = url;
   }
 
+  public HttpWebConnection getHttpConnection(WebClient client) {
+    return new HttpWebConnection(client) {
+      public WebResponse getResponse(WebRequest request) throws IOException {
+        String s = request.getUrl().toString();
+        System.out.println("LaBanquePostaleConnector.getResponse " + s);
+//        if (s.startsWith("https://logs128.xiti.com") || s.startsWith("https://societegenerale.solution.weborama.fr")
+//            || s.startsWith("https://ssl.weborama.fr")) {
+//          throw new IOException("not available");
+//        }
+        WebResponse response = super.getResponse(request);
+        System.out.println("LaBanquePostaleConnector.getResponse " + response.getLoadTime() + " ms.");
+        return response;
+      }
+    };
+  }
+
   public static void register(BankSynchroService bankSynchroService) {
-    for (int i = 51 ; i <= 88; i++){
+    for (int i = 51; i <= 88; i++) {
       bankSynchroService.register(i, new CreditAgricoleFactory(i));
     }
   }
 
   interface GotoAutentifcation {
-    public void go(WebPage webPage) throws WebCommandFailed, WebParsingError;
+    public boolean go(WebPage webPage, String code) throws WebCommandFailed, WebParsingError;
   }
 
 
@@ -64,15 +80,26 @@ public class CreditAgricoleConnector extends WebBankConnector {
     CreditAgricoleFactory(int id) {
       this.id = id;
     }
+
     public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount) {
       Glob glob = repository.get(Key.create(Bank.TYPE, id));
       return new CreditAgricoleConnector(id,
                                          glob.get(Bank.URL),
                                          new GotoAutentifcation() {
 
-                                           public void go(WebPage webPage) throws WebCommandFailed, WebParsingError {
-                                             WebAnchor ref = webPage.getAnchorWithRef("javascript:bamv3_validation();");
-                                             ref.click();
+                                           public boolean go(WebPage webPage, String code) throws WebCommandFailed, WebParsingError {
+                                             WebPanel comptes = webPage.getPanelById("btnComptes");
+                                             if (comptes.hasId("inputcomptes")) {
+                                               comptes.getTextInputById("inputcomptes").setText(code);
+                                               //comptes.getAnchorWithRef("#").click();
+                                               webPage.executeJavascript("startComptes()");
+                                               return true;
+                                             }
+                                             else {
+                                               WebAnchor ref = webPage.getAnchorWithRef("javascript:bamv3_validation();");
+                                               ref.click();
+                                               return false;
+                                             }
                                            }
                                          },
                                          syncExistingAccount, repository, directory);
@@ -99,7 +126,7 @@ public class CreditAgricoleConnector extends WebBankConnector {
         public void run() {
           try {
             notifyInitialConnection();
-            autentification.go(loadPage(urlGrid));
+            loadPage(urlGrid);
             SwingUtilities.invokeLater(new Runnable() {
               public void run() {
                 validerCode.setEnabled(true);
@@ -140,8 +167,15 @@ public class CreditAgricoleConnector extends WebBankConnector {
         public void run() {
           try {
             WebPage homePage = browser.getCurrentPage();
-            WebTextInput ccpte = homePage.getTextInputByName("CCPTE");
-            ccpte.setText(codeField.getText());
+            if (!autentification.go(homePage, codeField.getText())) {
+              homePage = browser.getCurrentPage();
+              WebTextInput ccpte = homePage.getTextInputByName("CCPTE");
+              ccpte.setText(codeField.getText());
+            }
+            else {
+              browser.waitForBackgroundJavaScript(10000);
+            }
+            homePage = browser.getCurrentPage();
             WebTable table = homePage.getTableById("pave-saisie-code");
             String[][] items = table.getContentAsTextItems();
             for (char c : passwordTextField.getPassword()) {
@@ -159,11 +193,11 @@ public class CreditAgricoleConnector extends WebBankConnector {
             WebTable accountList = downloadForm.getTableContaining(checkboxFilter);
             List<WebTableRow> rows = accountList.getAllRows();
             for (WebTableRow row : rows) {
-              HtmlElement checkBox = null;
+              WebCheckBox checkBox = null;
               for (WebTableCell cell : row.getCells()) {
-                checkBox = cell.find(checkboxFilter);
+                checkBox = cell.findFirst(checkboxFilter).asCheckBox();
                 if (checkBox != null) {
-                  new WebInput(browser, (HtmlInput)checkBox).select();
+                  checkBox.setChecked(true);
                   break;
                 }
               }
@@ -196,7 +230,7 @@ public class CreditAgricoleConnector extends WebBankConnector {
           catch (WebCommandFailed failed) {
             notifyErrorFound(failed);
           }
-          catch (Exception e){
+          catch (Exception e) {
             notifyErrorFound(e);
           }
         }
@@ -210,7 +244,7 @@ public class CreditAgricoleConnector extends WebBankConnector {
           String s = item[i2];
           if (Strings.isNotEmpty(s) && s.trim().contains(c)) {
             table.getRow(i1).getCell(i2).click();
-            return ;
+            return;
           }
         }
       }

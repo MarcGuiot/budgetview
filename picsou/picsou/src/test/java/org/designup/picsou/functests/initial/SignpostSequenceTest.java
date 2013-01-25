@@ -483,6 +483,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
                      "Auto-moto:Remboursement de pret auto-moto", "Alimentation:Epicerie", "Auto-moto:Essence")
       .setRecurring("Alimentation:Epicerie", "Auto-moto:Remboursement de pret auto-moto")
       .setVariable("Loisirs-culture-sport:Journaux", "Loisirs-culture-sport", "Auto-moto:Essence")
+      .unset("[Test]")
       .validateAndFinishImport();
 
     views.selectCategorization();

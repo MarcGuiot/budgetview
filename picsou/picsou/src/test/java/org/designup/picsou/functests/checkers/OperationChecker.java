@@ -506,7 +506,7 @@ public class OperationChecker {
     args.add("-D" + PicsouApplication.IS_DATA_IN_MEMORY + "=true");
     args.add("-D" + PicsouApplication.APPNAME + ".log.sout=true");
     if (currentDate != null) {
-      args.add("-D" + PicsouApplication.APPNAME + ".today=" + Dates.toString(currentDate));
+      args.add("-D" + PicsouApplication.APPNAME + PicsouApplication.TODAY + "=" + Dates.toString(currentDate));
     }
     args.add("org.designup.picsou.gui.MainWindowLauncher");
     if (user != null) {
@@ -704,6 +704,6 @@ public class OperationChecker {
   }
 
   public MessageDialogChecker sendDataToServer() {
-    return MessageDialogChecker.open(getDevMenu().getSubMenu("[Dump XML for android app]").triggerClick());
+    return MessageDialogChecker.open(getFileMenu().getSubMenu(Lang.get("mobile.menu.send.data")).triggerClick());
   }
 }

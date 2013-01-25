@@ -9,15 +9,12 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.designup.picsou.bank.connectors.webcomponents.WebBrowser;
 import org.designup.picsou.bank.connectors.webcomponents.WebPage;
-import org.designup.picsou.bank.connectors.webcomponents.Download;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
-import java.io.File;
 import java.util.List;
 
 public abstract class WebBankConnector extends AbstractBankConnector {
@@ -33,12 +30,12 @@ public abstract class WebBankConnector extends AbstractBankConnector {
     super(bankId, repository, directory);
     this.bankId = bankId;
     this.browser = new WebBrowser(new ErrorAlertHandler());
-    if (this instanceof HttpConnectionProvider){
+    if (this instanceof HttpConnectionProvider) {
       browser.setHttpConnectionProvider((HttpConnectionProvider)this);
     }
   }
 
-  public void setBrowserVersion(BrowserVersion browserVersion){
+  public void setBrowserVersion(BrowserVersion browserVersion) {
     browser.setBrowserVersion(browserVersion);
   }
 
