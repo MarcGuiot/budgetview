@@ -44,13 +44,13 @@ public class AmexFrConnector extends WebBankConnector {
   }
 
   public static class Factory implements BankConnectorFactory {
-    public BankConnector create(GlobRepository repository, Directory directory) {
-      return new AmexFrConnector(repository, directory);
+    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount) {
+      return new AmexFrConnector(syncExistingAccount, repository, directory);
     }
   }
 
-  private AmexFrConnector(GlobRepository repository, Directory directory) {
-    super(BANK_ID, repository, directory);
+  private AmexFrConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory) {
+    super(BANK_ID, syncExistingAccount, repository, directory);
     browser.setJavascriptEnabled(false);
     browser.setHttpConnectionProvider(new HttpConnectionProvider() {
       public HttpWebConnection getHttpConnection(WebClient client) {
@@ -269,7 +269,7 @@ public class AmexFrConnector extends WebBankConnector {
   }
 
   public Double extractAmount(String text) throws WebParsingError {
-    if (text.trim().isEmpty()) {
+    if (text.trim().length() == 0) {
       return null;
     }
     String amountText = text.replace(" EUR", "").replace(".", "").replace(",", ".");

@@ -7,6 +7,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.designup.picsou.bank.connectors.webcomponents.WebBrowser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -138,7 +139,34 @@ public class HtmlUnit {
       fail(container, "Too many <" + tagName + "> found matching filter");
     }
     return (T)result.get(0);
+  }
 
+  public static HtmlElement findHtmlElement(HtmlElement container, Filter filter) throws WebParsingError {
+    return getHtmlElement(container, filter, true);
+  }
+
+  public static HtmlElement getHtmlElement(HtmlElement container, Filter filter) throws WebParsingError {
+    return getHtmlElement(container, filter, false);
+  }
+
+    public static HtmlElement getHtmlElement(HtmlElement container, Filter filter, boolean nullIfNotFind) throws WebParsingError {
+    Iterable<HtmlElement> elementDescendants = container.getHtmlElementDescendants();
+    List<HtmlElement> result = new ArrayList<HtmlElement>();
+    for (HtmlElement element : elementDescendants) {
+      if (filter.matches(element)) {
+        result.add(element);
+      }
+    }
+    if (result.isEmpty()) {
+      if (nullIfNotFind){
+        return null;
+      }
+      fail(container, "No <" + filter + "> found matching filter");
+    }
+    if (result.size() > 1) {
+      fail(container, "Too many <" + filter + "> found matching filter");
+    }
+    return result.get(0);
   }
 
   public static List<HtmlElement> getElements(HtmlElement container, String tagName, Filter filter) {

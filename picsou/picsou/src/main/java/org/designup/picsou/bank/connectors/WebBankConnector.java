@@ -29,7 +29,7 @@ public abstract class WebBankConnector extends AbstractBankConnector {
    */
   protected HtmlPage page;
 
-  public WebBankConnector(Integer bankId, GlobRepository repository, Directory directory) {
+  public WebBankConnector(Integer bankId, boolean syncExistingAccount, GlobRepository repository, Directory directory) {
     super(bankId, repository, directory);
     this.bankId = bankId;
     this.browser = new WebBrowser(new ErrorAlertHandler());

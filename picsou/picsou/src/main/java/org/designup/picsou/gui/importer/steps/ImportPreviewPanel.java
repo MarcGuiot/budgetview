@@ -343,9 +343,12 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
         sessionRepository.update(importedAccount.getKey(),
                                  FieldValue.value(RealAccount.ACCOUNT, currentlySelectedAccount.get(Account.ID)));
         deleteAccountIfDuplicate(importedAccount);
+        Integer bankId = importedAccount.get(RealAccount.BANK);
         sessionRepository.update(currentlySelectedAccount.getKey(),
-                                 Account.UPDATE_MODE,
-                                 AccountUpdateMode.AUTOMATIC.getId());
+                                 FieldValue.value(Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId()));
+        if (bankId != null && currentlySelectedAccount.get(Account.BANK) == null){
+          sessionRepository.update(currentlySelectedAccount.getKey(), FieldValue.value(Account.BANK, bankId));
+        }
         newAccount = null;
         controller.completeImport(importedAccount, currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
       }

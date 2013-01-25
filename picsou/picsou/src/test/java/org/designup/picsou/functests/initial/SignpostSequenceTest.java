@@ -470,7 +470,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     signpostView.checkSummaryViewShown();
   }
 
-  public void testImportMoneyWithOneUncategorised() throws Exception {
+  public void testImportMoneyWithOneUncategorized() throws Exception {
     signpostView.checkSignpostViewShown();
 
     operations.openImportDialog()

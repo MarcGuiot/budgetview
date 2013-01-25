@@ -47,13 +47,13 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
   }
 
   public static class Factory implements BankConnectorFactory {
-    public BankConnector create(GlobRepository repository, Directory directory) {
-      return new BnpConnector(repository, directory);
+    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount) {
+      return new BnpConnector(syncExistingAccount, repository, directory);
     }
   }
 
-  private BnpConnector(GlobRepository repository, Directory directory) {
-    super(BANK_ID, repository, directory);
+  private BnpConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory) {
+    super(BANK_ID, syncExistingAccount, repository, directory);
     browser.setTimeout(15000);
   }
 
@@ -207,8 +207,10 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
                                                          entry.updateDate,
                                                          BANK_ID);
 
-                File file = browser.downloadToTempFile(entry.downloadUrl, ".qif");
-                repository.update(account.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+                if (account != null){
+                  File file = browser.downloadToTempFile(entry.downloadUrl, ".qif");
+                  repository.update(account.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+                }
               }
             }
             catch (Throwable e) {

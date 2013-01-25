@@ -1,6 +1,7 @@
 package org.designup.picsou.model;
 
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
@@ -19,6 +20,7 @@ public class ImportedSeries {
 
   @Target(BudgetArea.class)
   @Required
+  @DefaultInteger(2) // => variable
   public static LinkField BUDGET_AREA;
 
   @Target(Series.class)

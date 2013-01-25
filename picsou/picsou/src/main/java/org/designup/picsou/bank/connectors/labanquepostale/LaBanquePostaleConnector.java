@@ -49,13 +49,13 @@ public class LaBanquePostaleConnector extends WebBankConnector {
   }
 
   public static class Factory implements BankConnectorFactory {
-    public BankConnector create(GlobRepository repository, Directory directory) {
-      return new LaBanquePostaleConnector(repository, directory);
+    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount) {
+      return new LaBanquePostaleConnector(syncExistingAccount, repository, directory);
     }
   }
 
-  private LaBanquePostaleConnector(GlobRepository repository, Directory directory) {
-    super(BANK_ID, repository, directory);
+  private LaBanquePostaleConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory) {
+    super(BANK_ID, syncExistingAccount, repository, directory);
     browser.setJavascriptEnabled(true);
   }
 
@@ -109,32 +109,32 @@ public class LaBanquePostaleConnector extends WebBankConnector {
   private void initLogin() {
     loginAction.setEnabled(false);
 
-    Thread thread = new Thread() {
-      public void run() {
-        try {
-          notifyInitialConnection();
-          WebPage homePage = loadPage(LOGIN_URL);
-          notifyWaitingForUser();
+    directory.get(ExecutorService.class)
+      .submit(new Runnable() {
+        public void run() {
+          try {
+            notifyInitialConnection();
+            WebPage homePage = loadPage(LOGIN_URL);
+            notifyWaitingForUser();
 
-          WebForm loginForm = homePage.getFormByName("formAccesCompte");
+            WebForm loginForm = homePage.getFormByName("formAccesCompte");
 
-          for (int i = 0; i < keyboardLabels.length; i++) {
-            WebPanel cell = loginForm.getPanelById("val_cel_" + i);
-            keyboardLabels[i].setIcon(cell.getSingleImage().asIcon());
-          }
-
-          SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-              loginAction.setEnabled(true);
+            for (int i = 0; i < keyboardLabels.length; i++) {
+              WebPanel cell = loginForm.getPanelById("val_cel_" + i);
+              keyboardLabels[i].setIcon(cell.getSingleImage().asIcon());
             }
-          });
+
+            SwingUtilities.invokeLater(new Runnable() {
+              public void run() {
+                loginAction.setEnabled(true);
+              }
+            });
+          }
+          catch (Exception e) {
+            notifyErrorFound(e);
+          }
         }
-        catch (Exception e) {
-          notifyErrorFound(e);
-        }
-      }
-    };
-    thread.start();
+      });
   }
 
   public void panelShown() {
@@ -205,6 +205,7 @@ public class LaBanquePostaleConnector extends WebBankConnector {
                 for (AccountEntry entry : entries) {
 
                   WebPage accountPage = browser.loadPageInSameSite(entry.url);
+
                   String urlPrefix = "/voscomptes/canalXHTML/CCP/releves_ccp/init-releve_ccp.ea";
                   if (accountPage.containsText(urlPrefix)) {
                     accountPage = browser.loadPageInSameSite(urlPrefix + "?typeRecherche=10&compte.numero=" + entry.number);
@@ -217,10 +218,11 @@ public class LaBanquePostaleConnector extends WebBankConnector {
                                                            entry.position,
                                                            null,
                                                            BANK_ID);
-                  repository.update(account.getKey(),
-                                    value(RealAccount.FILE_NAME, path),
-                                    value(RealAccount.SAVINGS, entry.isSavings));
-
+                  if (account != null){
+                    repository.update(account.getKey(),
+                                      value(RealAccount.FILE_NAME, path),
+                                      value(RealAccount.SAVINGS, entry.isSavings));
+                  }
                 }
               }
               importCompleted();

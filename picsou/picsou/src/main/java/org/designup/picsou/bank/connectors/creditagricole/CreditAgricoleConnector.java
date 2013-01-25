@@ -1,0 +1,224 @@
+package org.designup.picsou.bank.connectors.creditagricole;
+
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlInput;
+import org.designup.picsou.bank.BankConnector;
+import org.designup.picsou.bank.BankConnectorFactory;
+import org.designup.picsou.bank.BankSynchroService;
+import org.designup.picsou.bank.connectors.WebBankConnector;
+import org.designup.picsou.bank.connectors.webcomponents.*;
+import org.designup.picsou.bank.connectors.webcomponents.utils.HtmlUnit;
+import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
+import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
+import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
+import org.designup.picsou.model.Bank;
+import org.designup.picsou.model.RealAccount;
+import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.directory.Directory;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+
+public class CreditAgricoleConnector extends WebBankConnector {
+  private JTextField codeField;
+  private JButton validerCode;
+  private JPasswordField passwordTextField;
+  private String urlGrid;
+  private GotoAutentifcation autentification;
+
+
+  public static void main(String[] args) throws IOException {
+    WebConnectorLauncher.show(new CreditAgricoleFactory(61));
+  }
+
+  public CreditAgricoleConnector(int bankId, String url, GotoAutentifcation autentification,
+                                 boolean syncExistingAccount, GlobRepository repository, Directory directory) {
+    super(bankId, syncExistingAccount, repository, directory);
+    this.autentification = autentification;
+    urlGrid = url;
+  }
+
+  public static void register(BankSynchroService bankSynchroService) {
+    for (int i = 51 ; i <= 88; i++){
+      bankSynchroService.register(i, new CreditAgricoleFactory(i));
+    }
+  }
+
+  interface GotoAutentifcation {
+    public void go(WebPage webPage) throws WebCommandFailed, WebParsingError;
+  }
+
+
+  public static class CreditAgricoleFactory implements BankConnectorFactory {
+    private int id;
+
+    CreditAgricoleFactory(int id) {
+      this.id = id;
+    }
+    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount) {
+      Glob glob = repository.get(Key.create(Bank.TYPE, id));
+      return new CreditAgricoleConnector(id,
+                                         glob.get(Bank.URL),
+                                         new GotoAutentifcation() {
+
+                                           public void go(WebPage webPage) throws WebCommandFailed, WebParsingError {
+                                             WebAnchor ref = webPage.getAnchorWithRef("javascript:bamv3_validation();");
+                                             ref.click();
+                                           }
+                                         },
+                                         syncExistingAccount, repository, directory);
+    }
+  }
+
+  protected JPanel createPanel() {
+    SplitsBuilder builder = SplitsBuilder.init(directory);
+    builder.setSource(getClass(), "/layout/bank/connection/userAndPasswordPanel.splits");
+
+    codeField = new JTextField();
+    builder.add("userCode", codeField);
+
+    validerCode = new JButton("valider");
+    builder.add("connectButton", validerCode);
+    validerCode.addActionListener(new ValidateAction());
+    validerCode.setEnabled(false);
+
+    passwordTextField = new JPasswordField();
+    builder.add("password", passwordTextField);
+
+    directory.get(ExecutorService.class)
+      .submit(new Runnable() {
+        public void run() {
+          try {
+            notifyInitialConnection();
+            autentification.go(loadPage(urlGrid));
+            SwingUtilities.invokeLater(new Runnable() {
+              public void run() {
+                validerCode.setEnabled(true);
+              }
+            });
+          }
+          catch (Exception e) {
+            notifyErrorFound(e);
+          }
+        }
+      });
+
+    return builder.load();
+  }
+
+  public void downloadFile() throws Exception {
+    notifyDownloadInProgress();
+    WebAnchor confirmer = browser.getCurrentPage().getAnchorWithRef("javascript:verifForm('Confirmer')");
+    WebPage webPage = confirmer.click();
+    WebAnchor open = webPage.getAnchor(WebContainer.refContain("javascript:ouvreTelechargement"));
+    Download download = open.clickAndDownload();
+    File file = download.saveAsOfx();
+    for (Glob realAccount : accounts) {
+      repository.update(realAccount.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+    }
+  }
+
+  public void panelShown() {
+  }
+
+  public void reset() {
+  }
+
+  private class ValidateAction extends AbstractAction {
+    public void actionPerformed(ActionEvent e) {
+      setEnabled(false);
+      directory.get(ExecutorService.class).submit(new Runnable() {
+        public void run() {
+          try {
+            WebPage homePage = browser.getCurrentPage();
+            WebTextInput ccpte = homePage.getTextInputByName("CCPTE");
+            ccpte.setText(codeField.getText());
+            WebTable table = homePage.getTableById("pave-saisie-code");
+            String[][] items = table.getContentAsTextItems();
+            for (char c : passwordTextField.getPassword()) {
+              findAndClickInCell(table, items, "" + c);
+            }
+            homePage = homePage.getAnchorWithRef("javascript:ValidCertif();").click();
+
+//            WebForm lst = homePage.getFormByName("FRM_LST");
+            WebPage webPage = homePage.executeJavascript("javascript:doAction('Telechargement','bnt')");
+//            WebAnchor telechargement = lst.getFirstAnchorWithText("Téléchargement");
+//            WebPage webPage = telechargement.click();
+            WebForm downloadForm = webPage.getFormByName("frm_fwk");
+            HtmlUnit.Filter checkboxFilter = WebContainer.and(WebContainer.filterTag(HtmlInput.TAG_NAME),
+                                                              WebContainer.filterType("CHECKBOX"));
+            WebTable accountList = downloadForm.getTableContaining(checkboxFilter);
+            List<WebTableRow> rows = accountList.getAllRows();
+            for (WebTableRow row : rows) {
+              HtmlElement checkBox = null;
+              for (WebTableCell cell : row.getCells()) {
+                checkBox = cell.find(checkboxFilter);
+                if (checkBox != null) {
+                  new WebInput(browser, (HtmlInput)checkBox).select();
+                  break;
+                }
+              }
+              if (checkBox != null) {
+                int i = 0;
+                String accountName = null;
+                String accountNumber = null;
+                for (WebTableCell cell : row.getCells()) {
+                  if (i == 1) {
+                    accountName = cell.asText();
+                  }
+                  if (i == 3) {
+                    accountNumber = cell.asText();
+                  }
+                  ++i;
+                }
+                createOrUpdateRealAccount(accountName, accountNumber, null, null, bankId);
+              }
+            }
+
+            WebPage currentPage = browser.getCurrentPage();
+            currentPage.getSelectById("TEL1_TYPE").select("OFX-Quicken");
+            currentPage.getInputByValue("INTERVAL").select();
+
+            doImport();
+          }
+          catch (WebParsingError error) {
+            notifyErrorFound(error);
+          }
+          catch (WebCommandFailed failed) {
+            notifyErrorFound(failed);
+          }
+          catch (Exception e){
+            notifyErrorFound(e);
+          }
+        }
+      });
+    }
+
+    private void findAndClickInCell(WebTable table, String[][] items, String c) throws WebCommandFailed {
+      for (int i1 = 0; i1 < items.length; i1++) {
+        String[] item = items[i1];
+        for (int i2 = 0; i2 < item.length; i2++) {
+          String s = item[i2];
+          if (Strings.isNotEmpty(s) && s.trim().contains(c)) {
+            table.getRow(i1).getCell(i2).click();
+            return ;
+          }
+        }
+      }
+      StringBuilder builder = new StringBuilder();
+      for (String[] item : items) {
+        builder.append(Arrays.toString(item));
+      }
+      notifyErrorFound("Can not find password got " + builder.toString());
+    }
+  }
+}

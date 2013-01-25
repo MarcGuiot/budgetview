@@ -32,7 +32,7 @@ public class WebConnectorLauncher {
     DefaultDirectory directory = createDirectoryWithDefaultServices();
     GlobRepository repository = GlobRepositoryBuilder.createEmpty();
 
-    BankConnector connector = factory.create(repository, directory);
+    BankConnector connector = factory.create(repository, directory, false);
 
     JFrame frame = new JFrame("Test: " + connector.getClass().getSimpleName());
     directory.add(JFrame.class, frame);

@@ -7,8 +7,7 @@ import com.gargoylesoftware.htmlunit.html.*;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
-import org.designup.picsou.bank.connectors.webcomponents.WebForm;
-import org.designup.picsou.bank.connectors.webcomponents.WebPage;
+import org.designup.picsou.bank.connectors.webcomponents.*;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
 import org.designup.picsou.model.RealAccount;
 import org.globsframework.gui.splits.SplitsBuilder;
@@ -24,25 +23,26 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 public class CreditMutuelArkeaConnector extends WebBankConnector {
 
   public static final int BANK_ID = 15;
 
-  private String INDEX = "https://www.cmso.com/creditmutuel/cmso/index.jsp?fede=cmso";
+  private String INDEX = "https://www.cmso.com/banque/assurance/credit-mutuel/web/j_6/accueil";
   private JTextField codeField;
   private JButton validerCode;
   private JPasswordField passwordTextField;
   private HtmlTable accountsTable;
 
   public static class Factory implements BankConnectorFactory {
-    public BankConnector create(GlobRepository repository, Directory directory) {
-      return new CreditMutuelArkeaConnector(directory, repository);
+    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount) {
+      return new CreditMutuelArkeaConnector(syncExistingAccount, directory, repository);
     }
   }
 
-  private CreditMutuelArkeaConnector(Directory directory, GlobRepository repository) {
-    super(BANK_ID, repository, directory);
+  private CreditMutuelArkeaConnector(boolean syncExistingAccount, Directory directory, GlobRepository repository) {
+    super(BANK_ID, syncExistingAccount, repository, directory);
   }
 
   protected JPanel createPanel() {
@@ -50,16 +50,17 @@ public class CreditMutuelArkeaConnector extends WebBankConnector {
     builder.setSource(getClass(), "/layout/bank/connection/userAndPasswordPanel.splits");
 
     codeField = new JTextField();
-    builder.add("code", codeField);
+    builder.add("userCode", codeField);
 
     validerCode = new JButton("valider");
-    builder.add("validerCode", validerCode);
+    builder.add("connectButton", validerCode);
     validerCode.addActionListener(new ValiderActionListener());
 
     passwordTextField = new JPasswordField();
     builder.add("password", passwordTextField);
 
-    Thread thread = new Thread() {
+    directory.get(ExecutorService.class)
+      .submit(new Runnable() {
       public void run() {
         try {
           loadPage(INDEX);
@@ -73,8 +74,7 @@ public class CreditMutuelArkeaConnector extends WebBankConnector {
           notifyErrorFound(e);
         }
       }
-    };
-    thread.start();
+    });
 
     return builder.load();
   }
@@ -148,28 +148,35 @@ public class CreditMutuelArkeaConnector extends WebBankConnector {
     public void actionPerformed(ActionEvent event) {
       try {
         notifyIdentificationInProgress();
-        HtmlForm form = page.getFormByName("formIdentification");
-        HtmlInput personne = form.getInputByName("noPersonne");
-        HtmlInput password = form.getInputByName("motDePasse");
-        personne.setValueAttribute(codeField.getText());
-        password.setValueAttribute(new String(passwordTextField.getPassword()));
-        HtmlElement element = getAnchor(form);
-        page = element.click();
-        getClient().waitForBackgroundJavaScript(10000);
-        HtmlElement elementById = getElementById("quotidien");
-        getAnchor(elementById).click();
-        WebPage webPage = new WebPage(browser, page);
-        webPage.getFirstAnchorWithText("telechargement").click();
 
-        HtmlElement comptes = webPage.getElementByName("div", "choixCompte");
-        accountsTable = (HtmlTable)comptes.getElementsByTagName(HtmlTable.TAG_NAME).get(1);
-        int count = accountsTable.getRowCount();
-        for (int i = 1; i < count; i++) {
-          HtmlTableCell name = accountsTable.getCellAt(i, 1);
-          HtmlTableCell position = accountsTable.getCellAt(i, 2);
-          createOrUpdateRealAccount(name.getTextContent(), "", position.getTextContent(), null, BANK_ID);
-        }
-        doImport();
+        WebPage currentPage = browser.getCurrentPage();
+        WebPanel connection = currentPage.getPanelById("connexion-bouton");
+        WebAnchor connectButton = connection.getAnchorWithRef("javascript:void(0)");
+        currentPage = connectButton.click();
+
+        WebTextInput personne = currentPage.getTextInputById("identifiant");
+        WebPasswordInput password = currentPage.getPasswordInputById("password");
+
+        personne.setText(codeField.getText());
+        password.setText(new String(passwordTextField.getPassword()));
+
+//        HtmlElement element = getAnchor(form);
+//        page = element.click();
+//        getClient().waitForBackgroundJavaScript(10000);
+//        HtmlElement elementById = getElementById("quotidien");
+//        getAnchor(elementById).click();
+//        WebPage webPage = new WebPage(browser, page);
+//        webPage.getFirstAnchorWithText("telechargement").click();
+//
+//        HtmlElement comptes = webPage.getElementByName("div", "choixCompte");
+//        accountsTable = (HtmlTable)comptes.getElementsByTagName(HtmlTable.TAG_NAME).get(1);
+//        int count = accountsTable.getRowCount();
+//        for (int i = 1; i < count; i++) {
+//          HtmlTableCell name = accountsTable.getCellAt(i, 1);
+//          HtmlTableCell position = accountsTable.getCellAt(i, 2);
+//          createOrUpdateRealAccount(name.getTextContent(), "", position.getTextContent(), null, BANK_ID);
+//        }
+//        doImport();
       }
       catch (Exception e) {
         throw new RuntimeException(page.asXml(), e);
