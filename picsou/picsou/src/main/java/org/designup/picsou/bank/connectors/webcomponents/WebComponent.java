@@ -76,13 +76,18 @@ public abstract class WebComponent<T extends HtmlElement> {
   static public class HtmlNavigate {
     private WebBrowser browser;
     private HtmlElement node;
+    private final boolean optional;
 
-    public HtmlNavigate(WebBrowser browser, HtmlElement node) {
+    public HtmlNavigate(WebBrowser browser, HtmlElement node, boolean optional) {
       this.browser = browser;
       this.node = node;
+      this.optional = optional;
     }
 
     public HtmlNavigate next() throws WebParsingError {
+      if (optional && node == null){
+        return this;
+      }
       node = (HtmlElement)findFirstHtmlElement(node.getNextSibling());
       return this;
     }
@@ -98,11 +103,17 @@ public abstract class WebComponent<T extends HtmlElement> {
     }
 
     public HtmlNavigate in() throws WebParsingError {
+      if (optional && node == null){
+        return this;
+      }
       node = (HtmlElement)findFirstHtmlElement(node.getFirstChild());
       return this;
     }
 
     public WebAnchor asAnchor() throws WebParsingError {
+      if (optional && node == null){
+        return null;
+      }
       if (node instanceof HtmlAnchor){
         return new WebAnchor(browser, ((HtmlAnchor)node));
       }
@@ -112,6 +123,9 @@ public abstract class WebComponent<T extends HtmlElement> {
     }
 
     public WebCheckBox asCheckBox() throws WebParsingError {
+      if (optional && node == null){
+        return null;
+      }
       if (node instanceof HtmlInput){
         return new WebCheckBox(browser, ((HtmlInput)node));
       }
@@ -122,6 +136,6 @@ public abstract class WebComponent<T extends HtmlElement> {
   }
 
   public HtmlNavigate navigate() {
-    return new HtmlNavigate(browser, node);
+    return new HtmlNavigate(browser, node, false);
   }
 }

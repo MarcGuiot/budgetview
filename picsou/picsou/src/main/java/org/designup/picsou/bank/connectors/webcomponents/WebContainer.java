@@ -401,7 +401,7 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   }
 
   public HtmlNavigate findFirst(HtmlUnit.Filter filter) throws WebParsingError {
-    return new HtmlNavigate(browser, HtmlUnit.findHtmlFirstElement(node, filter));
+    return new HtmlNavigate(browser, HtmlUnit.findHtmlFirstElement(node, filter), true);
   }
 
   public boolean hasId(String id) {

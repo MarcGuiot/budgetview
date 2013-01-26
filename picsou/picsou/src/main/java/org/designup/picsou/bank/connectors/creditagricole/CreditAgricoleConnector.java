@@ -37,7 +37,7 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
 
 
   public static void main(String[] args) throws IOException {
-    WebConnectorLauncher.show(new CreditAgricoleFactory(67));
+    WebConnectorLauncher.show(new CreditAgricoleFactory(61));
   }
 
   public CreditAgricoleConnector(int bankId, String url, GotoAutentifcation autentification,
@@ -91,8 +91,7 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
                                              WebPanel comptes = webPage.getPanelById("btnComptes");
                                              if (comptes.hasId("inputcomptes")) {
                                                comptes.getTextInputById("inputcomptes").setText(code);
-                                               //comptes.getAnchorWithRef("#").click();
-                                               webPage.executeJavascript("startComptes()");
+                                               comptes.getAnchorWithRef("#").click();
                                                return true;
                                              }
                                              else {
@@ -167,21 +166,34 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
         public void run() {
           try {
             WebPage homePage = browser.getCurrentPage();
-            if (!autentification.go(homePage, codeField.getText())) {
+            boolean codeInMain = autentification.go(homePage, codeField.getText());
+            if (codeInMain) {
+              browser.waitForBackgroundJavaScript(10000);
+              homePage = homePage.getGlobalFrameByName("frameIdent");
+            }
+            else {
               homePage = browser.getCurrentPage();
               WebTextInput ccpte = homePage.getTextInputByName("CCPTE");
               ccpte.setText(codeField.getText());
             }
-            else {
-              browser.waitForBackgroundJavaScript(10000);
-            }
-            homePage = browser.getCurrentPage();
             WebTable table = homePage.getTableById("pave-saisie-code");
             String[][] items = table.getContentAsTextItems();
             for (char c : passwordTextField.getPassword()) {
               findAndClickInCell(table, items, "" + c);
             }
-            homePage = homePage.getAnchorWithRef("javascript:ValidCertif();").click();
+            if (codeInMain) {
+              homePage = homePage.getAnchorWithRef("javascript:Valid()").click();
+              WebPanel liberror = homePage.findPanelById("liberror");
+              if (liberror != null){
+                notifyErrorFound(liberror.asText());
+                return;
+              }
+            }
+            else {
+              homePage.getAnchorWithRef("javascript:ValidCertif();").click();
+            }
+
+            homePage = browser.getCurrentPage();
 
 //            WebForm lst = homePage.getFormByName("FRM_LST");
             WebPage webPage = homePage.executeJavascript("javascript:doAction('Telechargement','bnt')");
