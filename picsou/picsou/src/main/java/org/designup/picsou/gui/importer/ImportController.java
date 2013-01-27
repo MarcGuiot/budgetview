@@ -295,6 +295,10 @@ public class ImportController implements RealAccountImporter {
     importDialog.showSynchro(bankId);
   }
 
+  public void showSynchro(GlobList realAccounts) {
+    importDialog.showSynchro(realAccounts);
+  }
+
   public void importAccounts(GlobList realAccounts) {
     for (Glob realAccount : realAccounts) {
       String file = realAccount.get(RealAccount.FILE_NAME);

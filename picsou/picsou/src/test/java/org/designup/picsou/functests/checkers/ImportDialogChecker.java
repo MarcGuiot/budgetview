@@ -5,6 +5,7 @@ import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.importer.steps.ImportCompletionPanel;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.utils.TestUtils;
 import org.uispec4j.*;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
@@ -14,6 +15,8 @@ import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
@@ -499,7 +502,7 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public ImportDialogChecker checkAccountDescription(String text) {
+  public ImportDialogChecker checkExistingAccountDescription(String text) {
     TextBox description = dialog.getTextBox("readOnlyDescription");
     assertTrue(description.isVisible());
     assertTrue(description.textEquals(text));
@@ -592,6 +595,30 @@ public class ImportDialogChecker extends GuiChecker {
       accountEditionChecker = new AccountEditionChecker(dialog);
     }
     return accountEditionChecker;
+  }
+
+  public OtherBankSynchroChecker startSynchro() {
+    Button startSynchroButton = dialog.getButton("startSynchro");
+    assertThat(startSynchroButton.isVisible());
+    startSynchroButton.click();
+    return new OtherBankSynchroChecker(this, dialog);
+  }
+
+  public ImportDialogChecker checkSynchroAvailableForAccounts(String... expectedAccountNames) {
+    Set<String> actualNames = new HashSet<String>();
+    Panel panel = dialog.getPanel("synchroAccountGroups");
+    assertThat(panel.isVisible());
+    for (UIComponent component : panel.getUIComponents(TextBox.class, "synchroAccountLabel")) {
+      TextBox textBox = (TextBox)component;
+      actualNames.add(textBox.getText());
+    }
+    TestUtils.assertSetEquals(actualNames, expectedAccountNames);
+    return this;
+  }
+
+  public ImportDialogChecker checkSynchroNotShown() {
+    checkComponentVisible(dialog, JPanel.class, "synchroAccountGroups", false);
+    return this;
   }
 
   public static class CompletionChecker {

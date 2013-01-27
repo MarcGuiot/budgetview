@@ -27,8 +27,7 @@ import java.io.InputStream;
 import java.util.Date;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.and;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public abstract class AbstractBankConnector implements BankConnector {
   private GlobRepository parentRepository;
@@ -38,7 +37,6 @@ public abstract class AbstractBankConnector implements BankConnector {
   protected GlobList accounts = new GlobList();
   private SynchroMonitor monitor = SynchroMonitor.SILENT;
   private JPanel panel;
-  private boolean synchro = false;
 
   public AbstractBankConnector(Integer bankId, GlobRepository parentRepository, Directory directory) {
     this.parentRepository = parentRepository;
@@ -83,28 +81,12 @@ public abstract class AbstractBankConnector implements BankConnector {
       return null;
     }
 
-    Glob account = repository.getAll(RealAccount.TYPE,
-                                     and(fieldEquals(RealAccount.NAME, Strings.toString(name).trim()),
-                                         fieldEquals(RealAccount.NUMBER, Strings.toString(number).trim()),
-                                         fieldEquals(RealAccount.BANK, bankId)))
-      .getFirst();
-    if (account == null) {
-      account = repository.create(RealAccount.TYPE,
-                                  value(RealAccount.NAME, Strings.toString(name).trim()),
-                                  value(RealAccount.NUMBER, Strings.toString(number).trim()),
-                                  value(RealAccount.BANK, bankId),
-                                  value(RealAccount.POSITION_DATE, date),
-                                  value(RealAccount.POSITION, Strings.toString(position).trim()),
-                                  value(RealAccount.FROM_SYNCHRO, true));
-    }
-    else {
-      repository.update(account.getKey(),
-                        value(RealAccount.POSITION_DATE, date),
-                        value(RealAccount.POSITION, Strings.toString(position).trim()));
-      if (account.get(RealAccount.ACCOUNT) == null && synchro) {
-        return null;
-      }
-    }
+    Glob account = RealAccount.findOrCreate(Strings.toString(name).trim(), Strings.toString(number).trim(),
+                                            bankId, repository);
+    repository.update(account.getKey(),
+                      value(RealAccount.POSITION_DATE, date),
+                      value(RealAccount.POSITION, Strings.toString(position).trim()),
+                      value(RealAccount.FROM_SYNCHRO, true));
     accounts.add(account);
     return account;
   }
@@ -134,9 +116,6 @@ public abstract class AbstractBankConnector implements BankConnector {
     }
     else {
       repository.update(account.getKey(), RealAccount.FROM_SYNCHRO, Boolean.TRUE);
-      if (account.get(RealAccount.ACCOUNT) == null && synchro) {
-        return;
-      }
     }
 
     accounts.add(account);

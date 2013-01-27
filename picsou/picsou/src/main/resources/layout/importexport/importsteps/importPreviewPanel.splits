@@ -25,6 +25,8 @@
             <scrollPane maximumSize="(400,300)" weightY="500">
               <table ref="table"/>
             </scrollPane>
+            <label icon="downArrow(50,15,50,15,categorization.downArrow)"
+                   fill="none" anchor="center" weightY="0.01" marginBottom="5"/>
           </column>
         </card>
         <card name="noOperations">
@@ -39,10 +41,12 @@
 
       <panel ref="dateSelectionPanel"/>
 
-      <row weightY="0.01">
-        <label ref="accountSelectionLabel" styleClass="formLabel" autoHideSource="accountCombo" marginBottom="5"/>
-        <comboBox ref="accountCombo" marginBottom="5"/>
-      </row>
+      <column weightY="0.01">
+        <label ref="accountSelectionLabel" styleClass="formLabel" autoHideSource="accountCombo"
+               fill="none" anchor="center" marginBottom="5"/>
+        <comboBox ref="accountCombo"
+                  fill="none" anchor="center" marginBottom="5"/>
+      </column>
 
       <panel weightY="0.01" background="import.preview.account.bg" border="line(dialog.border)">
         <panel ref="accountEditionPanel" margin="10"/>

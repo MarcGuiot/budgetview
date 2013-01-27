@@ -62,7 +62,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
   private JPanel panel;
   private AccountEditionPanel accountEditionPanel;
   private LocalGlobRepository accountEditionRepository;
-  private Glob importedAccount;
+  private Glob realAccount;
   private ImportPreviewPanel.FinishAction finishAction;
   private String lastExceptionDetails;
   private Glob newAccount;
@@ -203,7 +203,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
   public void updateForNextImport(List<String> dateFormats, Glob importedAccount,
                                   Integer accountNumber, Integer accountCount) {
     createPanelIfNeeded();
-    this.importedAccount = importedAccount;
+    this.realAccount = importedAccount;
     accountEditionRepository.rollback();
     newAccount = RealAccount.createAccountFromImported(importedAccount, accountEditionRepository, true);
 
@@ -340,17 +340,17 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
           accountEditionRepository.rollback();
         }
 
-        sessionRepository.update(importedAccount.getKey(),
+        sessionRepository.update(realAccount.getKey(),
                                  FieldValue.value(RealAccount.ACCOUNT, currentlySelectedAccount.get(Account.ID)));
-        deleteAccountIfDuplicate(importedAccount);
-        Integer bankId = importedAccount.get(RealAccount.BANK);
+        deleteAccountIfDuplicate(realAccount);
+        Integer bankId = realAccount.get(RealAccount.BANK);
         sessionRepository.update(currentlySelectedAccount.getKey(),
                                  FieldValue.value(Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId()));
         if (bankId != null && currentlySelectedAccount.get(Account.BANK) == null){
           sessionRepository.update(currentlySelectedAccount.getKey(), FieldValue.value(Account.BANK, bankId));
         }
         newAccount = null;
-        controller.completeImport(importedAccount, currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
+        controller.completeImport(realAccount, currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
       }
       finally {
         setEnabled(true);
@@ -358,12 +358,11 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
     }
   }
 
-  private void deleteAccountIfDuplicate(Glob importedAccount) {
-    GlobList all = sessionRepository.getAll(RealAccount.TYPE);
-    for (Glob glob : all) {
-      if (RealAccount.areStrictlyEquivalent(importedAccount, glob) &&
-          Utils.equal(importedAccount.get(RealAccount.ACCOUNT), glob.get(RealAccount.ACCOUNT))) {
-        sessionRepository.delete(glob.getKey());
+  private void deleteAccountIfDuplicate(Glob selectedRealAccount) {
+    for (Glob realAccount : sessionRepository.getAll(RealAccount.TYPE)) {
+      if (RealAccount.areStrictlyEquivalent(selectedRealAccount, realAccount) &&
+          Utils.equal(selectedRealAccount.get(RealAccount.ACCOUNT), realAccount.get(RealAccount.ACCOUNT))) {
+        sessionRepository.delete(realAccount.getKey());
         return;
       }
     }

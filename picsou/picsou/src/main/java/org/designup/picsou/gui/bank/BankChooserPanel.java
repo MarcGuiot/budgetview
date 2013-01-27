@@ -50,9 +50,9 @@ public class BankChooserPanel {
     menu.add(new EditBankAction(owner, repository, directory));
     deleteBankAction = new DeleteBankAction(owner, repository, directory);
     menu.add(deleteBankAction);
+    menu.addSeparator();
+    menu.add(new AddBankAction(owner, repository, builder.getDirectory()));
     builder.add("bankActions", new JPopupButton(Lang.get("budgetView.actions"), menu));
-
-    builder.add("addBank", new AddBankAction(owner, repository, builder.getDirectory()));
 
     panel = builder.load();
   }

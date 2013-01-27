@@ -55,7 +55,9 @@ public class BankChooserPanelChecker<T extends BankChooserPanelChecker> extends 
   }
 
   public BankEditionDialogChecker addNewBank() {
-    return BankEditionDialogChecker.open(window.getButton("addBank"));
+    String menuItem = "Add a bank";
+    PopupButton popupButton = new PopupButton(window.getButton("bankActions"));
+    return BankEditionDialogChecker.open(popupButton.triggerClick(menuItem));
   }
 
   public T addNewBank(String name, String url) {

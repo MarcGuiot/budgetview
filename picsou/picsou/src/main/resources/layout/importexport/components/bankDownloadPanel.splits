@@ -6,16 +6,57 @@
     <style selector="htmlEditorPane" hyperlinkListener="hyperlinkHandler"/>
     <style selector="htmlEditorPane.multiLineLabel" font="-,plain,11"/>
     <style selector="button.synchronize" marginTop="10" fill="none" anchor="center"/>
+    <style selector="textArea.sectionTitle" font="-,bold,14" marginBottom="10"
+           opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"/>
+    <style selector="button.rightButton" fill="none" anchor="right"/>
+    <style selector="label.nextArrow" border="empty(0,5,0,0)" icon="rightArrow(18,18,12,12,#999999)"/>
   </styles>
 
   <column>
     <cards ref="mainCards">
 
+      <card name="synchroSelection">
+        <column>
+          <textArea text="$import.synchroSelection.synchro.title" weightY="1" styleClass="sectionTitle"/>
+          <htmlEditorPane text="$import.synchroSelection.synchro.intro" marginBottom="5" font="-,plain,11"
+                          styleClass="multiLineLabel" weightY="0.1"/>
+          <scrollPane weightY="50" marginBottom="5">
+            <column margin="10">
+              <repeat ref="synchroAccountGroups" layout="verticalGrid">
+                <label ref="bankLabel" weightX="0.01" fill="none" anchor="center" marginRight="10"/>
+                <repeat ref="synchroAccounts" border="matte(0,1,0,0,#AAAAAA)" layout="column" weightX="10">
+                  <label ref="synchroAccountLabel" border="empty(0,10,0,0)"/>
+                </repeat>
+              </repeat>
+              <filler fill="vertical"/>
+            </column>
+          </scrollPane>
+          <row>
+            <filler fill="horizontal"/>
+            <button action="startSynchro" styleClass="rightButton"/>
+            <label styleClass="nextArrow"/>
+          </row>
+
+          <column styleClass="separator" weightY="1" marginTop="15">
+            <textArea text="$import.fileSelection.bank.title" weightY="1" styleClass="sectionTitle" marginTop="20"/>
+            <row>
+              <htmlEditorPane text="$import.synchroSelection.bankSelection.message" styleClass="multiLineLabel" weightX="100"/>
+              <button action="showBankDownload" styleClass="rightButton" weightX="0.1"/>
+              <label styleClass="nextArrow"/>
+            </row>
+          </column>
+
+        </column>
+      </card>
+
       <card name="bankSelection">
         <column>
-          <htmlEditorPane text="$bankDownload.select" marginBottom="5" font="-,plain,11" styleClass="multiLineLabel"/>
+          <textArea text="$import.fileSelection.bank.title" weightY="1" styleClass="sectionTitle" marginTop="10"/>
 
-          <row marginLeft="10">
+          <htmlEditorPane text="$bankDownload.select" marginBottom="5" font="-,plain,11" styleClass="multiLineLabel"
+                          weightY="0.1"/>
+
+          <row marginLeft="10" weightY="100">
 
             <column weightX="2" preferredSize="(200,200)">
               <panel ref="bankChooserPanel"/>
@@ -68,6 +109,7 @@
 
       <card name="manualDownload">
         <column>
+          <textArea text="$import.fileSelection.bank.title" weightY="1" styleClass="sectionTitle"/>
           <scrollPane forceVerticalScroll="true">
             <column margin="5">
               <htmlEditorPane ref="manualDownloadMessage" styleClass="multiLineLabel"

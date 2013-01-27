@@ -20,6 +20,5 @@
         <button ref="bankActions" icon="arrow_down.png" rolloverIcon="arrow_down_roll.png"/>
       </row>
     </column>
-    <button action="addBank" styleClass="addBank"/>
   </column>
 </splits>

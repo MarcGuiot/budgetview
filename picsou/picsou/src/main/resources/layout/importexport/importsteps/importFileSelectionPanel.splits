@@ -15,25 +15,26 @@
 
       <label text="$import.fileSelection.title" name="title" styleClass="title"/>
 
-      <textArea text="$import.fileSelection.file.title" styleClass="sectionTitle" marginTop="20"/>
+      <panel ref="bankDownload" weightY="500"/>
 
-      <htmlEditorPane text="$import.fileSelection.file.message" styleClass="multiLineLabel"/>
+      <column styleClass="separator" weightY="10" marginTop="15">
+        <textArea text="$import.fileSelection.file.title" styleClass="sectionTitle" marginTop="20"/>
 
-      <row margin="5" defaultAnchor="center">
-        <button action="browseFiles" anchor="left"/>
-        <textField ref="fileField" marginRight="10" marginLeft="10" anchor="center" weightX="100"/>
-        <button name="import" action="import" fill="none" anchor="right"/>
-      </row>
+        <htmlEditorPane text="$import.fileSelection.file.message" styleClass="multiLineLabel"/>
 
-      <panel opaque="false" marginTop="0" weightY="0.01">
-        <htmlEditorPane ref="importMessage" styleClass="errorMessage" hyperlinkListener="hyperlinkHandler"
-                        border="empty(0,0,10,0)"/>
-      </panel>
+        <row margin="5" defaultAnchor="center">
+          <button action="browseFiles" anchor="left"/>
+          <textField ref="fileField" marginRight="10" marginLeft="10" anchor="center" weightX="100"/>
+          <button name="import" action="import" fill="none" anchor="right"/>
+        </row>
 
-      <column styleClass="separator" weightY="5000" marginTop="15">
-        <textArea text="$import.fileSelection.bank.title" weightY="1" styleClass="sectionTitle" marginTop="20"/>
-        <panel ref="bankDownload" weightY="100"/>
+        <panel opaque="false" marginTop="0" weightY="0.01">
+          <htmlEditorPane ref="importMessage" styleClass="errorMessage" hyperlinkListener="hyperlinkHandler"
+                          border="empty(0,0,10,0)"/>
+        </panel>
       </column>
+
+      <filler fill="vertical"/>
 
       <button name="close" action="close" margin="10" marginRight="0" fill="none" anchor="right"/>
 

@@ -10,6 +10,7 @@ import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
+import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -18,6 +19,7 @@ import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
 import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class RealAccount {
 
@@ -77,6 +79,28 @@ public class RealAccount {
 
   static {
     GlobTypeLoader.init(RealAccount.class, "realAccount");
+  }
+
+  public static Glob findOrCreate(String name, String number, Integer bankId, GlobRepository repository) {
+    return findOrCreate(name, number, bankId, repository, repository.getIdGenerator());
+  }
+
+  public static Glob findOrCreate(String name, String number, Integer bankId,
+                                  GlobRepository repository, GlobIdGenerator generator) {
+    GlobList accounts = repository.getAll(RealAccount.TYPE,
+                                          and(fieldEquals(RealAccount.NAME, name),
+                                              fieldEquals(RealAccount.NUMBER, number),
+                                              fieldEquals(RealAccount.BANK, bankId)));
+    if (accounts.size() > 0) {
+      return accounts.getFirst();
+    }
+
+    return repository.create(RealAccount.TYPE,
+                             value(RealAccount.ID, generator.getNextId(RealAccount.ID, 1)),
+                             value(RealAccount.NAME, name),
+                             value(RealAccount.NUMBER, number),
+                             value(RealAccount.BANK, bankId));
+
   }
 
   public static boolean areStrictlyEquivalent(Glob account, Glob glob) {
@@ -177,8 +201,8 @@ public class RealAccount {
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
-      }else
-      if (version == 2) {
+      }
+      else if (version == 2) {
         deserializeDataV2(fieldSetter, data);
       }
     }

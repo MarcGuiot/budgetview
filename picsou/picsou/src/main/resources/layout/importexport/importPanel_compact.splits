@@ -7,10 +7,6 @@
 
   <row>
 
-    <button ref="synchroLabel"
-            icon="button_synchro_small.png" rolloverIcon="button_synchro_small_rollover.png" pressedIcon="button_synchro_small.png"
-            styleClass="hyperlinkWithoutUnderline" marginLeft="5" foreground="import.label.compact" autoHideIfDisabled="true"/>
-
     <button ref="importLabel"
             icon="button_import_small.png" rolloverIcon="button_import_small_rollover.png" pressedIcon="button_import_small.png"
             styleClass="hyperlinkWithoutUnderline" marginLeft="20" foreground="import.label.compact"/>
