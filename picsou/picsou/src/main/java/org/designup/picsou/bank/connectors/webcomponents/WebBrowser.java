@@ -12,6 +12,7 @@ import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 
 public class WebBrowser {
   public WebClient webClient;

@@ -617,6 +617,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
           byte[] bytes = "Corruption".getBytes();
           channel.write(ByteBuffer.wrap(bytes), size - 10);
           channel.close();
+          fileOutputStream.close();
         }
       }
     }
