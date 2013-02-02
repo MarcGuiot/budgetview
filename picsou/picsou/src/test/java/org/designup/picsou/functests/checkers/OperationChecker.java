@@ -371,8 +371,8 @@ public class OperationChecker {
     return getImportMenu().triggerClick();
   }
 
-  public Trigger getExportTrigger() {
-    return getExportMenu().triggerClick();
+  public ExportDialogChecker openExport() {
+    return ExportDialogChecker.init(getExportMenu().triggerClick());
   }
 
   public PreferencesChecker openPreferences() {

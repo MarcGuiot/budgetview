@@ -187,21 +187,15 @@ public class ExportTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("MONOP'S", "Groceries");
 
     String fileName = TestUtils.getFileName(this, "txt");
-    WindowInterceptor
-      .init(operations.getExportTrigger())
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          window.getRadioButton("TSV").click();
-          return window.getButton("OK").triggerClick();
-        }
-      })
-      .process(FileChooserHandler.init().select(fileName))
-      .run();
 
-    assertEquals("Date\tBank date\tLabel\tAmount\tBudget area\tSeries\n" +
-                 "2008/06/13\t2008/06/15\tCAROUF\t1.00\tTo categorize\t\n" +
-                 "2008/06/10\t2008/06/10\tFNAC\t-100.00\tTo categorize\t\n" +
-                 "2008/06/05\t2008/06/05\tMONOP'S\t-256.00\tVariable\tGroceries\n",
+    operations.openExport()
+      .selectTsv()
+      .validate(fileName);
+
+    assertEquals("Operation date\tBank date\tLabel\tAmount\tCompte\tBudget area\tSeries\n" +
+                 "2008/06/13\t2008/06/15\tCAROUF\t1.00\tAccount n. 12345678b\tTo categorize\t\n" +
+                 "2008/06/10\t2008/06/10\tFNAC\t-100.00\tAccount n. 000123\tTo categorize\t\n" +
+                 "2008/06/05\t2008/06/05\tMONOP'S\t-256.00\tAccount n. 12345678b\tVariable\tGroceries\n",
                  Files.loadFileToString(fileName));
   }
 
@@ -210,28 +204,15 @@ public class ExportTest extends LoggedInFunctionalTestCase {
 
     Files.dumpStringToFile(fileName, "Blah");
 
-    WindowInterceptor
-      .init(operations.getExportTrigger())
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          window.getRadioButton("OFX").click();
-          return window.getButton("OK").triggerClick();
-        }
-      })
-      .process(FileChooserHandler.init().select(fileName))
-      .process(ConfirmationHandler.cancel("Confirmation",
-                                          "This file already exists. Do you want to replace it?"))
-      .run();
+    operations.openExport()
+      .selectOfx()
+      .validateAndCancelReplace(fileName);
 
     assertEquals("Blah", Files.loadFileToString(fileName).trim());
 
-    WindowInterceptor
-      .init(operations.getExportTrigger())
-      .processWithButtonClick("OK")
-      .process(FileChooserHandler.init().select(fileName))
-      .process(ConfirmationHandler.validate("Confirmation",
-                                            "This file already exists. Do you want to replace it?"))
-      .run();
+    operations.openExport()
+      .selectOfx()
+      .validateAndConfirmReplace(fileName);
 
     assertTrue(Files.loadFileToString(fileName).startsWith("<OFX>"));
   }

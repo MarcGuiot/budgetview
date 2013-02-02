@@ -6,6 +6,7 @@ import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifi
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -38,7 +39,21 @@ public class TsvExporter implements Exporter {
 
   public void export(GlobRepository repository, Writer writer) throws IOException {
 
-    writer.write("Date\tBank date\tLabel\tAmount\tBudget area\tSeries\n");
+    boolean first = true;
+    for (String header : new String[]{"transactionView.date.user",
+                                      "transactionView.date.bank",
+                                      "label",
+                                      "amount",
+                                      "account",
+                                      "budgetArea",
+                                      "series"}) {
+      if (!first) {
+        writer.write('\t');
+      }
+      writer.write(Lang.get(header));
+      first = false;
+    }
+    writer.write('\n');
 
     GlobList transactions =
       repository
@@ -54,6 +69,7 @@ public class TsvExporter implements Exporter {
                                      Transaction.POSITION_DAY),
       GlobStringifiers.get(Transaction.LABEL),
       new AmountStringifier(Transaction.AMOUNT),
+      descriptionService.getStringifier(Transaction.ACCOUNT),
       GlobStringifiers.target(Transaction.SERIES, descriptionService.getStringifier(Series.BUDGET_AREA)),
       descriptionService.getStringifier(Transaction.SERIES)
     );

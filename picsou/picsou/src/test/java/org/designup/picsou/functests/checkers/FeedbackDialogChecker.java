@@ -11,12 +11,12 @@ import javax.swing.*;
 public class FeedbackDialogChecker extends GuiChecker{
   private Window dialog;
 
-  public FeedbackDialogChecker(Window dialog) {
-    this.dialog = dialog;
+  public static FeedbackDialogChecker init(Trigger trigger){
+    return new FeedbackDialogChecker(WindowInterceptor.getModalDialog(trigger));
   }
 
-  static FeedbackDialogChecker init(Trigger trigger){
-    return new FeedbackDialogChecker(WindowInterceptor.getModalDialog(trigger));
+  private FeedbackDialogChecker(Window dialog) {
+    this.dialog = dialog;
   }
 
   public FeedbackDialogChecker checkComponents() {

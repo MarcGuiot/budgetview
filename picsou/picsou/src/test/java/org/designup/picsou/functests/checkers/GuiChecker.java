@@ -134,6 +134,4 @@ public abstract class GuiChecker {
     Rectangle bounds = component.getBounds();
     click(component, bounds.x, bounds.y, Key.Modifier.NONE, true);
   }
-
-
 }
