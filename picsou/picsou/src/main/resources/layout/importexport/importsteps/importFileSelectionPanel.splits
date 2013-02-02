@@ -1,11 +1,9 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
+  <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
 
   <styles>
-    <style selector="scrollPane" marginBottom="10"/>
-    <style selector="textArea.sectionTitle" font="-,bold,14" marginBottom="10"
-           opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"/>
     <style selector="htmlEditorPane.multiLineLabel" font="-,plain,11"/>
   </styles>
 
@@ -15,10 +13,11 @@
 
       <label text="$import.fileSelection.title" name="title" styleClass="title"/>
 
-      <panel ref="bankDownload" weightY="500"/>
+      <panel ref="bankDownload" weightY="500" marginTop="10"/>
 
       <column styleClass="separator" weightY="10" marginTop="15">
-        <textArea text="$import.fileSelection.file.title" styleClass="sectionTitle" marginTop="20"/>
+        <label icon="import_files.png" text="$import.fileSelection.file.title" styleClass="sectionTitle"
+               marginTop="20"/>
 
         <htmlEditorPane text="$import.fileSelection.file.message" styleClass="multiLineLabel"/>
 

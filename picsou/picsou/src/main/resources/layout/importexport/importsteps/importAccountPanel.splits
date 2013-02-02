@@ -5,7 +5,6 @@
   <styles>
     <style selector="label#fileName"
            fill="none" anchor="left" font="-,bold,12" marginBottom="5"/>
-    <style selector="scrollPane" marginBottom="10"/>
     <style selector=".additionalActionMessage" foreground="$dialog.text.error" anchor="left"
            opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"/>
     <style selector="label.additionalActionButton" anchor="center" fill="none"/>

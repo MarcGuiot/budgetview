@@ -1,0 +1,7 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+  <styles>
+    <style selector="label.sectionTitle" font="-,bold,14" marginBottom="10" iconTextGap="5"
+           fill="horizontal" anchor="left" opaque="false" weightY="0.1"/>
+    <style selector="scrollPane" marginBottom="10"/>
+  </styles>
+</splits>

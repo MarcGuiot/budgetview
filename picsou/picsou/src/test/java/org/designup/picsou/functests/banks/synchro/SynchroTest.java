@@ -352,8 +352,15 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .add("23/01/2006", TransactionType.PRELEVEMENT, "OPERATION 2 COMPTE 123", "", -10.00)
       .check();
 
+    fail("TODO: supprimer cette ligne apres finalisation de la gestion des RealAccount / Synchro");
+
     operations.openImportDialog()
-      .checkSynchroAvailableForAccounts("Account n.000123", "Account n. 000246")
+      .checkSynchroAvailableForAccounts("Account n. 000123", "Account n. 000246")
+      .checkManualDownloadAvailableForAccounts("Account n. 000345")
+      .checkManualDownloadLink("BNP Paribas", "aaa")
       .close();
+
+
+
   }
 }

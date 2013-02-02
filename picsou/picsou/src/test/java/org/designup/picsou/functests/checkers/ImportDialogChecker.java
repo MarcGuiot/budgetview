@@ -605,10 +605,24 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker checkSynchroAvailableForAccounts(String... expectedAccountNames) {
+    return checkAccountLabels(dialog.getPanel("synchroAccountsPanel"), expectedAccountNames);
+  }
+
+  public ImportDialogChecker checkManualDownloadAvailableForAccounts(String... expectedAccountNames) {
+    return checkAccountLabels(dialog.getPanel("manualAccountsPanel"), expectedAccountNames);
+  }
+
+  public ImportDialogChecker checkManualDownloadLink(String bankLabel, String url) {
+    TextBox label = dialog.getPanel("manualAccountsPanel").getTextBox(bankLabel);
+    Button button = new Button((JButton)getSibling(label, 2, "gotoWebsite"));
+    BrowsingChecker.checkDisplay(button, url);
+    return this;
+  }
+
+  private ImportDialogChecker checkAccountLabels(Panel panel, String[] expectedAccountNames) {
     Set<String> actualNames = new HashSet<String>();
-    Panel panel = dialog.getPanel("synchroAccountGroups");
     assertThat(panel.isVisible());
-    for (UIComponent component : panel.getUIComponents(TextBox.class, "synchroAccountLabel")) {
+    for (UIComponent component : panel.getUIComponents(TextBox.class, "accountLabel")) {
       TextBox textBox = (TextBox)component;
       actualNames.add(textBox.getText());
     }

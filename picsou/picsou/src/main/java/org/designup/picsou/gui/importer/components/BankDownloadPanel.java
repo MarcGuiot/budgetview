@@ -15,17 +15,14 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.layout.CardHandler;
-import org.globsframework.gui.splits.repeat.Repeat;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
-import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFieldsComparator;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
@@ -37,7 +34,7 @@ import java.awt.event.ActionEvent;
 import java.util.*;
 import java.util.List;
 
-import static org.globsframework.model.utils.GlobMatchers.isTrue;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class BankDownloadPanel implements GlobSelectionListener {
   private Window parent;
@@ -54,7 +51,6 @@ public class BankDownloadPanel implements GlobSelectionListener {
   private JPanel synchroPanel;
   private Integer bankId;
   private GlobsPanelBuilder builder;
-  private Repeat<SynchroAccountGroup> synchroAccountsRepeat;
 
   public BankDownloadPanel(Window parent,
                            ImportController controller,
@@ -82,17 +78,19 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
     selectionCards = builder.addCardHandler("selectionCards");
 
-    synchroAccountsRepeat =
-      builder.addRepeat("synchroAccountGroups", Collections.<SynchroAccountGroup>emptyList(), new SynchroAccountRepeatFactory());
+    BankAccountGroupsPanel synchroAccountsPanel = new BankAccountGroupsPanel(false, repository, directory);
+    builder.add("synchroAccountsPanel", synchroAccountsPanel.getComponent());
     builder.add("startSynchro", new AbstractAction(Lang.get("import.synchroSelection.synchro.button")) {
       public void actionPerformed(ActionEvent event) {
         controller.showSynchro(repository.getAll(RealAccount.TYPE, GlobMatchers.isTrue(RealAccount.FROM_SYNCHRO)));
       }
     });
 
+    BankAccountGroupsPanel manualAccountsPanel = new BankAccountGroupsPanel(true, repository, directory);
+    builder.add("manualAccountsPanel", manualAccountsPanel.getComponent());
     builder.add("showBankDownload", new AbstractAction(Lang.get("import.synchroSelection.bankSelection.button")) {
       public void actionPerformed(ActionEvent event) {
-        mainCards.show("bankSelection");
+        switchToBankSelection();
       }
     });
 
@@ -109,14 +107,14 @@ public class BankDownloadPanel implements GlobSelectionListener {
     builder.add("gotoBankSelection",
                 new AbstractAction(Lang.get("bankDownload.manualDownload.back.button")) {
                   public void actionPerformed(ActionEvent actionEvent) {
-                    mainCards.show("bankSelection");
+                    switchToBankSelection();
                   }
                 });
 
     AbstractAction gotoManualDownload =
       new AbstractAction(Lang.get("bankDownload.selection.manual.button")) {
         public void actionPerformed(ActionEvent actionEvent) {
-          mainCards.show("manualDownload");
+          switchToManual();
         }
       };
     builder.add("gotoManualDownload", gotoManualDownload);
@@ -127,6 +125,13 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
     bankChooser = new BankChooserPanel(repository, directory, gotoManualDownload, null, parent);
     builder.add("bankChooserPanel", bankChooser.getPanel());
+
+    JButton backToSynchroButton = new JButton(new AbstractAction(Lang.get("bankDownload.selection.backToSynchro")) {
+      public void actionPerformed(ActionEvent event) {
+        switchToSynchro();
+      }
+    });
+    builder.add("backToSynchro", backToSynchroButton);
 
     final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(directory, parent);
     hyperlinkHandler.registerLinkAction("manualInput", new GotoTransactionCreationFunctor());
@@ -150,14 +155,29 @@ public class BankDownloadPanel implements GlobSelectionListener {
       }
     });
 
-    List<SynchroAccountGroup> accountGroups = getSynchroAccountGroups();
+    List<BankAccountGroup> accountGroups = getSynchroAccountGroups(isTrue(RealAccount.FROM_SYNCHRO));
     if (accountGroups.isEmpty()) {
-      mainCards.show("bankSelection");
+      backToSynchroButton.setEnabled(false);
+      switchToBankSelection();
     }
     else {
-      synchroAccountsRepeat.set(accountGroups);
-      mainCards.show("synchroSelection");
+      synchroAccountsPanel.update(accountGroups);
+      manualAccountsPanel.update(getSynchroAccountGroups(not(isTrue(RealAccount.FROM_SYNCHRO))));
+      switchToSynchro();
     }
+  }
+
+  private void switchToBankSelection() {
+    mainCards.show("bankSelection");
+    bankChooser.requestFocus();
+  }
+
+  private void switchToSynchro() {
+    mainCards.show("synchroSelection");
+  }
+
+  private void switchToManual() {
+    mainCards.show("manualDownload");
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -218,8 +238,8 @@ public class BankDownloadPanel implements GlobSelectionListener {
     }
   }
 
-  private List<SynchroAccountGroup> getSynchroAccountGroups() {
-    GlobList realAccounts = repository.getAll(RealAccount.TYPE, isTrue(RealAccount.FROM_SYNCHRO));
+  private List<BankAccountGroup> getSynchroAccountGroups(GlobMatcher filter) {
+    GlobList realAccounts = repository.getAll(RealAccount.TYPE, filter);
     GlobList accounts = realAccounts.getTargets(RealAccount.ACCOUNT, repository);
     System.out.println("BankDownloadPanel.getSynchroAccountGroups: ");
     GlobPrinter.print(repository, RealAccount.TYPE);
@@ -227,13 +247,13 @@ public class BankDownloadPanel implements GlobSelectionListener {
     accounts.sort(new GlobFieldsComparator(Account.ACCOUNT_TYPE, true,
                                            Account.POSITION_DATE, true,
                                            Account.NAME, true));
-    List<SynchroAccountGroup> result = new ArrayList<SynchroAccountGroup>();
-    Map<Glob, SynchroAccountGroup> groups = new HashMap<Glob, SynchroAccountGroup>();
+    List<BankAccountGroup> result = new ArrayList<BankAccountGroup>();
+    Map<Glob, BankAccountGroup> groups = new HashMap<Glob, BankAccountGroup>();
     for (Glob account : accounts) {
       Glob bank = repository.findLinkTarget(account, Account.BANK);
-      SynchroAccountGroup group = groups.get(bank);
+      BankAccountGroup group = groups.get(bank);
       if (group == null) {
-        group = new SynchroAccountGroup(bank);
+        group = new BankAccountGroup(bank);
         result.add(group);
         groups.put(bank, group);
       }
@@ -243,47 +263,4 @@ public class BankDownloadPanel implements GlobSelectionListener {
     return result;
   }
 
-  private class SynchroAccountGroup {
-    final Glob bank;
-    final GlobList accounts = new GlobList();
-
-    private SynchroAccountGroup(Glob bank) {
-      this.bank = bank;
-    }
-
-    public void add(Glob account) {
-      accounts.add(account);
-    }
-  }
-
-  private class SynchroAccountRepeatFactory implements RepeatComponentFactory<SynchroAccountGroup> {
-    public void registerComponents(RepeatCellBuilder groupCellBuilder, SynchroAccountGroup accountsGroup) {
-      groupCellBuilder.add("bankLabel", createBankLabel(accountsGroup));
-
-      groupCellBuilder.addRepeat("synchroAccounts", accountsGroup.accounts, new RepeatComponentFactory<Glob>() {
-        public void registerComponents(RepeatCellBuilder cellBuilder, Glob account) {
-          cellBuilder.add("synchroAccountLabel", new JLabel(account.get(Account.NAME)));
-        }
-      });
-    }
-
-    private JLabel createBankLabel(SynchroAccountGroup accountsGroup) {
-      JLabel bankLabel = new JLabel();
-      String iconPath = accountsGroup.bank.get(Bank.ICON);
-      if (iconPath != null) {
-        bankLabel.setIcon(directory.get(ImageLocator.class).get(iconPath));
-        return bankLabel;
-      }
-
-      String shortName = accountsGroup.bank.get(Bank.SHORT_NAME);
-      if (Strings.isNotEmpty(shortName)) {
-        bankLabel.setText(shortName);
-        return bankLabel;
-      }
-
-      String name = accountsGroup.bank.get(Bank.NAME);
-      bankLabel.setText(Strings.cut(name, 30));
-      return bankLabel;
-    }
-  }
 }

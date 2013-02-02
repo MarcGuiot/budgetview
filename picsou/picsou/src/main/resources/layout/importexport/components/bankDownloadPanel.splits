@@ -1,15 +1,21 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
+  <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
 
   <styles>
     <style selector="htmlEditorPane" hyperlinkListener="hyperlinkHandler"/>
     <style selector="htmlEditorPane.multiLineLabel" font="-,plain,11"/>
     <style selector="button.synchronize" marginTop="10" fill="none" anchor="center"/>
-    <style selector="textArea.sectionTitle" font="-,bold,14" marginBottom="10"
-           opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"/>
-    <style selector="button.rightButton" fill="none" anchor="right"/>
+    <style selector="button.rightButton" fill="none" anchor="right" weightX="0.1"/>
     <style selector="label.nextArrow" border="empty(0,5,0,0)" icon="rightArrow(18,18,12,12,#999999)"/>
+    <style selector=".accountPanel" weightY="50"/>
+    <style selector="button.backButton"
+           marginTop="5" fill="none" anchor="left"
+           ui="hyperlinkButton" foreground="hyperlink"
+           font="-,plain,11"
+           icon="leftArrow(10,14,8,8, #222222)"
+           rolloverIcon="leftArrow(10,14,8,8, #0000FF)"/>
   </styles>
 
   <column>
@@ -17,30 +23,24 @@
 
       <card name="synchroSelection">
         <column>
-          <textArea text="$import.synchroSelection.synchro.title" weightY="1" styleClass="sectionTitle"/>
-          <htmlEditorPane text="$import.synchroSelection.synchro.intro" marginBottom="5" font="-,plain,11"
-                          styleClass="multiLineLabel" weightY="0.1"/>
-          <scrollPane weightY="50" marginBottom="5">
-            <column margin="10">
-              <repeat ref="synchroAccountGroups" layout="verticalGrid">
-                <label ref="bankLabel" weightX="0.01" fill="none" anchor="center" marginRight="10"/>
-                <repeat ref="synchroAccounts" border="matte(0,1,0,0,#AAAAAA)" layout="column" weightX="10">
-                  <label ref="synchroAccountLabel" border="empty(0,10,0,0)"/>
-                </repeat>
-              </repeat>
-              <filler fill="vertical"/>
-            </column>
-          </scrollPane>
-          <row>
-            <filler fill="horizontal"/>
-            <button action="startSynchro" styleClass="rightButton"/>
-            <label styleClass="nextArrow"/>
-          </row>
+          <column weightY="1">
+            <label icon="import_synchro.png" text="$import.synchroSelection.synchro.title" styleClass="sectionTitle"/>
+            <htmlEditorPane text="$import.synchroSelection.synchro.intro" marginBottom="5" font="-,plain,11"
+                            styleClass="multiLineLabel"/>
+            <row>
+              <component ref="synchroAccountsPanel" styleClass="accountPanel"/>
+              <button action="startSynchro" styleClass="rightButton"/>
+              <label styleClass="nextArrow"/>
+            </row>
+          </column>
 
           <column styleClass="separator" weightY="1" marginTop="15">
-            <textArea text="$import.fileSelection.bank.title" weightY="1" styleClass="sectionTitle" marginTop="20"/>
+            <label icon="import_bank.png" text="$import.fileSelection.bank.title" styleClass="sectionTitle"
+                   marginTop="20"/>
+            <component ref="manualAccountsPanel" styleClass="accountPanel"/>
             <row>
-              <htmlEditorPane text="$import.synchroSelection.bankSelection.message" styleClass="multiLineLabel" weightX="100"/>
+              <htmlEditorPane text="$import.synchroSelection.bankSelection.message" styleClass="multiLineLabel"
+                              weightX="100"/>
               <button action="showBankDownload" styleClass="rightButton" weightX="0.1"/>
               <label styleClass="nextArrow"/>
             </row>
@@ -51,7 +51,8 @@
 
       <card name="bankSelection">
         <column>
-          <textArea text="$import.fileSelection.bank.title" weightY="1" styleClass="sectionTitle" marginTop="10"/>
+          <label icon="import_bank.png" text="$import.fileSelection.bank.title" styleClass="sectionTitle"
+                 marginTop="10"/>
 
           <htmlEditorPane text="$bankDownload.select" marginBottom="5" font="-,plain,11" styleClass="multiLineLabel"
                           weightY="0.1"/>
@@ -104,12 +105,14 @@
             </cards>
           </row>
 
+          <button ref="backToSynchro" styleClass="backButton"/>
+
         </column>
       </card>
 
       <card name="manualDownload">
         <column>
-          <textArea text="$import.fileSelection.bank.title" weightY="1" styleClass="sectionTitle"/>
+          <label icon="import_bank.png" text="$import.fileSelection.bank.title" styleClass="sectionTitle"/>
           <scrollPane forceVerticalScroll="true">
             <column margin="5">
               <htmlEditorPane ref="manualDownloadMessage" styleClass="multiLineLabel"
@@ -118,13 +121,7 @@
             </column>
           </scrollPane>
 
-          <button action="gotoBankSelection" marginTop="5"
-                  foreground="#0000FF"
-                  font="-,plain,11"
-                  styleClass="hyperlink"
-                  icon="leftArrow(10,14,8,8, #222222)"
-                  rolloverIcon="leftArrow(10,14,8,8, #0000FF)"
-                  anchor="left" fill="none"/>
+          <button action="gotoBankSelection" styleClass="backButton"/>
         </column>
       </card>
 

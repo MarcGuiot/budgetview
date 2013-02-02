@@ -789,6 +789,7 @@
     <xs:attribute name="rolloverIcon" type="xs:string"/>
     <xs:attribute name="pressedIcon" type="xs:string"/>
     <xs:attribute name="disabledIcon" type="xs:string"/>
+    <xs:attribute name="iconTextGap" type="xs:integer"/>
   </xs:attributeGroup>
 
   <xs:attributeGroup name="buttonAttributes">
@@ -796,7 +797,6 @@
     <xs:attributeGroup ref="iconAttributes"/>
     <xs:attribute name="action" type="xs:string"/>
     <xs:attribute name="text" type="xs:string"/>
-    <xs:attribute name="iconTextGap" type="xs:integer"/>
     <xs:attribute name="horizontalTextPosition" type="xs:string"/>
   </xs:attributeGroup>
 

@@ -47,13 +47,14 @@
   <panel styleClass="block">
     <column styleClass="innerBlock">
       <column styleClass="blockScrollBorder">
-        <scrollPane marginTop="0" marginBottom="0" weightY="100">
+        <scrollPane marginTop="0" marginBottom="0" weightY="100" forceVerticalScroll="true">
           <column ref="unselect">
             <repeat ref="accountRepeat" marginTop="5" marginBottom="15">
               <panel ref="accountPanel" margin="3">
                 <grid margin="2">
                   <button ref="editAccount" gridPos="(0,0)" styleClass="itemLink"/>
-                  <button ref="accountPosition" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
+                  <button ref="accountPosition" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"
+                          marginLeft="10"/>
 
                   <button action="gotoWebsite" styleClass="website" gridPos="(0,1)" fill="none" anchor="west"/>
                   <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
