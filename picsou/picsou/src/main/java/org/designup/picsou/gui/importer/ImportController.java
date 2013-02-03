@@ -296,6 +296,7 @@ public class ImportController implements RealAccountImporter {
   }
 
   public void showSynchro(GlobList realAccounts) {
+    isSynchro = true;
     importDialog.showSynchro(realAccounts);
   }
 

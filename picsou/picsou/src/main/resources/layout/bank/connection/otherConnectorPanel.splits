@@ -19,13 +19,14 @@
       </row>
       <button ref="add"/>
 
-      <scrollPane>
-        <table ref="table"/>
-      </scrollPane>
 
-      <comboBox ref="errorModeCombo"/>
-
-      <button action="update"/>
+        <panel weightY="10" weightX="10">
+           <table ref="table"/>
+        </panel>
+        <row>
+            <comboBox ref="errorModeCombo"/>
+        </row>
+        <button action="update"/>
     </column>
   </panel>
 </splits>

@@ -88,7 +88,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkAccount("secondary", 10, null);
 
     notifications.checkHidden();
-
+//openApplication();
     importPanel.openImport()
       .startSynchro()
       .selectAccount("secondary")
@@ -359,8 +359,5 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .checkManualDownloadAvailableForAccounts("Account n. 000345")
       .checkManualDownloadLink("BNP Paribas", "aaa")
       .close();
-
-
-
   }
 }
