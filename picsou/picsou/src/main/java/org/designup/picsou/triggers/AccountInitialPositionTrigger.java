@@ -2,6 +2,7 @@ package org.designup.picsou.triggers;
 
 import org.designup.picsou.model.*;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.BreakException;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 
@@ -74,6 +75,7 @@ public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
             }
           }
         }
+        throw new BreakException();
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {

@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 public class OfxDownloadPage extends AbstractBankConnector {
   private JTextField codeField;
@@ -28,8 +29,8 @@ public class OfxDownloadPage extends AbstractBankConnector {
   private String fid;
   private OfxDownloadPage.ValidateAction validateAction;
 
-  public OfxDownloadPage(GlobRepository repository, Directory directory, Integer bankId, String url, String org, String fid) {
-    super(bankId, repository, directory);
+  public OfxDownloadPage(GlobRepository repository, Directory directory, Integer bankId, String url, String org, String fid, Glob synchro) {
+    super(bankId, repository, directory, synchro);
     this.url = url;
     this.org = org;
     this.fid = fid;
@@ -46,6 +47,8 @@ public class OfxDownloadPage extends AbstractBankConnector {
     codeField = new JTextField();
     codeField.setName("code");
     builder.add(codeField);
+
+    codeField.setText(getSyncCode());
 
     passwordField = new JPasswordField();
     passwordField.setName("password");
@@ -99,6 +102,10 @@ public class OfxDownloadPage extends AbstractBankConnector {
     }
   }
 
+  public String getCode() {
+    return codeField.getText();
+  }
+
   public void stop() {
   }
 
@@ -119,24 +126,24 @@ public class OfxDownloadPage extends AbstractBankConnector {
 
     public void actionPerformed(ActionEvent e) {
       notifyDownloadInProgress();
-      Thread thread = new Thread(new Runnable() {
-        public void run() {
-          try {
-            List<OfxConnection.AccountInfo> list = OfxConnection.getInstance()
-              .getAccounts(codeField.getText(), new String(passwordField.getPassword()), OfxConnection.previousDate(1),
-                           urlField.getText(), orgField.getText(), fidField.getText());
+      directory.get(ExecutorService.class)
+        .submit(new Runnable() {
+          public void run() {
+            try {
+              List<OfxConnection.AccountInfo> list = OfxConnection.getInstance()
+                .getAccounts(codeField.getText(), new String(passwordField.getPassword()), OfxConnection.previousDate(1),
+                             urlField.getText(), orgField.getText(), fidField.getText());
 
-            for (OfxConnection.AccountInfo info : list) {
-              createOrUpdateRealAccount(info.accType, info.number, urlField.getText(), orgField.getText(), fidField.getText());
+              for (OfxConnection.AccountInfo info : list) {
+                createOrUpdateRealAccount(info.accType, info.number, urlField.getText(), orgField.getText(), fidField.getText());
+              }
+              doImport();
             }
-            doImport();
+            catch (final RuntimeException exception) {
+              notifyErrorFound(exception);
+            }
           }
-          catch (RuntimeException exception) {
-            notifyErrorFound(exception);
-          }
-        }
-      });
-      thread.start();
+        });
     }
   }
 }

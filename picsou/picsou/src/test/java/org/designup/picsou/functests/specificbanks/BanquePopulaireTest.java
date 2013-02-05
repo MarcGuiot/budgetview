@@ -5,7 +5,7 @@ import org.designup.picsou.model.TransactionType;
 public class BanquePopulaireTest extends SpecificBankTestCase {
 
   public void test() throws Exception {
-    setCurrentDate("13/02/2009");
+    setCurrentDate("2009/02/13");
     operations.changeDate();
 
     operations.importOfxFile(getFile("banque_pop.ofx"));

@@ -25,22 +25,23 @@ public class CicConnector extends WebBankConnector {
   private UserAndPasswordPanel userAndPasswordPanel;
 
   public static void main(String[] args) throws IOException {
-    WebConnectorLauncher.show(new Factory());
+    WebConnectorLauncher.show(BANK_ID, new Factory());
   }
 
   public static class Factory implements BankConnectorFactory {
-    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount) {
-      return new CicConnector(syncExistingAccount, repository, directory);
+    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount, Glob synchro) {
+      return new CicConnector(syncExistingAccount, repository, directory, synchro);
     }
   }
 
-  private CicConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory) {
-    super(BANK_ID, syncExistingAccount, repository, directory);
+  private CicConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory, Glob synchro) {
+    super(BANK_ID, syncExistingAccount, repository, directory, synchro);
     browser.setJavascriptEnabled(false);
   }
 
   protected JPanel createPanel() {
     userAndPasswordPanel = new UserAndPasswordPanel(new ConnectAction(), directory);
+    userAndPasswordPanel.setUserCode(getSyncCode());
     Thread thread = new Thread() {
       public void run() {
         try {
@@ -138,6 +139,10 @@ public class CicConnector extends WebBankConnector {
         }
       }
     }
+  }
+
+  public String getCode() {
+    return userAndPasswordPanel.getUser();
   }
 
   private boolean isToImport(String siteAccountName) {

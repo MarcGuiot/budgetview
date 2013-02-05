@@ -50,7 +50,11 @@ public class LicenseTest extends ConnectedTestCase {
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "true");
     if (window != null) {
-      exit();
+      try {
+        exit();
+      }
+      catch (Throwable e) {
+      }
     }
     picsouApplication.shutdown();
     picsouApplication = null;
@@ -546,6 +550,35 @@ public class LicenseTest extends ConnectedTestCase {
     assertNull(l12.get(License.REPO_ID));
     assertEquals(l13.get(License.ACTIVATION_CODE), "1111");
     assertNull(l13.get(License.REPO_ID));
+  }
+
+
+  public void testRegisterTwice() throws Exception {
+    TimeService.setCurrentDate(Dates.parse("2008/10/10"));
+    db.registerMail(MAIL, "4321");
+    db.registerMail(MAIL, "4321");
+
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
+    register(MAIL, "4321");
+    exit();
+    startApplication(false);
+    login.logExistingUser("user", "passw@rd", false);
+    LicenseActivationChecker.enterLicense(window, MAIL, "4321");
+    exit();
+    startApplication(false);
+    login.logExistingUser("user", "passw@rd", false);
+    LicenseActivationChecker activation = LicenseActivationChecker.open(window);
+    activation.enterLicense(MAIL, "");
+    activation.askForCode();
+    String mail = mailServer.checkReceivedMail(MAIL).getContent();
+    int length = mail.indexOf("Activation code : <b>");
+    String newCode = mail.substring(length + "Activation code : <b>".length(), length + "Activation code : <b>".length() + 4).trim();
+    LicenseActivationChecker.enterLicense(window, MAIL, newCode);
+    exit();
+    startApplication(false);
+    login.logExistingUser("user", "passw@rd", false);
+    checkValidLicense(false);
+
   }
 
   private void checkLicenseExpired() {

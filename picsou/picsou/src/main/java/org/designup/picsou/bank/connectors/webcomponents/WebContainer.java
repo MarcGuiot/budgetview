@@ -224,6 +224,13 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     };
   }
 
+  public static HtmlUnit.Filter filterContentContain(final String value) {
+    return new HtmlUnit.Filter() {
+      public boolean matches(HtmlElement element) {
+        return element.getTextContent().contains(value);
+      }
+    };
+  }
 
   static public HtmlUnit.Filter filterTag(final String tagName) {
     return new HtmlUnit.Filter() {
@@ -401,7 +408,11 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   }
 
   public HtmlNavigate findFirst(HtmlUnit.Filter filter) throws WebParsingError {
-    return new HtmlNavigate(browser, HtmlUnit.findHtmlFirstElement(node, filter), true);
+    return new HtmlNavigate(browser, HtmlUnit.findFirstHtmlElement(node, filter), true);
+  }
+
+  public HtmlNavigates findAll(HtmlUnit.Filter filter) throws WebParsingError {
+    return new HtmlNavigates(browser, HtmlUnit.findAllHtmlElement(node, filter), true);
   }
 
   public boolean hasId(String id) {

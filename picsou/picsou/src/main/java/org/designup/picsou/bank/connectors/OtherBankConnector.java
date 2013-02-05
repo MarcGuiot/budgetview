@@ -24,15 +24,17 @@ public class OtherBankConnector extends AbstractBankConnector {
   public static int BANK_ID = Bank.GENERIC_BANK_ID;
   private Map<Key, String> files = new HashMap<Key, String>();
   private JComboBox errorModeCombo;
+  private JTextField code;
 
   public static class Factory implements BankConnectorFactory {
-    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount) {
-      return new OtherBankConnector(repository, directory);
+    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount,
+                                Glob synchro) {
+      return new OtherBankConnector(repository, directory, synchro);
     }
   }
 
-  public OtherBankConnector(GlobRepository repository, Directory directory) {
-    super(BANK_ID, repository, directory);
+  public OtherBankConnector(GlobRepository repository, Directory directory, Glob synchro) {
+    super(BANK_ID, repository, directory, synchro);
   }
 
   public String getCurrentLocation() {
@@ -45,6 +47,9 @@ public class OtherBankConnector extends AbstractBankConnector {
   protected JPanel createPanel() {
     final SelectionService selectionService = directory.get(SelectionService.class);
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/bank/connection/otherConnectorPanel.splits", repository, directory);
+    code = new JTextField();
+    builder.add("code", code);
+    code.setText(getSyncCode());
     builder.addEditor("number", RealAccount.NUMBER);
     builder.addEditor("name", RealAccount.NAME);
     builder.addEditor("position", RealAccount.POSITION);
@@ -60,6 +65,14 @@ public class OtherBankConnector extends AbstractBankConnector {
         selectionService.select(glob);
       }
     });
+    JButton removeRealAccount = new JButton("remove");
+    builder.add("remove", removeRealAccount);
+    removeRealAccount.addActionListener(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        repository.delete(selectionService.getSelection(RealAccount.TYPE));
+      }
+    });
+
     final GlobTableView table = builder.addTable("table", RealAccount.TYPE, new GlobFieldComparator(RealAccount.ID))
       .setFilter(GlobMatchers.fieldEquals(RealAccount.BANK, BANK_ID))
       .addColumn(RealAccount.NUMBER)
@@ -119,6 +132,10 @@ public class OtherBankConnector extends AbstractBankConnector {
 
   protected Double extractAmount(String position) {
     return Amounts.extractAmount(position);
+  }
+
+  public String getCode() {
+    return code.getText();
   }
 
   private boolean errorModeSelected(ErrorMode mode) {

@@ -4,7 +4,9 @@ package org.designup.picsou.model;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
@@ -21,10 +23,10 @@ public class Synchro {
   @Key
   public static IntegerField ID;
 
+  @Target(Bank.class)
+  public static LinkField BANK;
+
   public static StringField CODE;
-
-  public static StringField PASSWORD;
-
 
   static {
     GlobTypeLoader.init(Synchro.class, "synchro");
@@ -44,7 +46,7 @@ public class Synchro {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput output = serializedByteArrayOutput.getOutput();
       output.writeUtf8String(fieldValues.get(Synchro.CODE));
-      output.writeUtf8String(fieldValues.get(Synchro.PASSWORD));
+      output.writeInteger(fieldValues.get(Synchro.BANK));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -57,7 +59,7 @@ public class Synchro {
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(Synchro.CODE, input.readUtf8String());
-      fieldSetter.set(Synchro.PASSWORD, input.readUtf8String());
+      fieldSetter.set(Synchro.BANK, input.readInteger());
     }
   }
 }

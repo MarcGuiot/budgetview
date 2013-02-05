@@ -97,9 +97,10 @@ public class ImportController implements RealAccountImporter {
     for (Glob glob : realAccountWithoutImport) {
       Glob target = localRepository.findLinkTarget(glob, RealAccount.ACCOUNT);
       if (target != null) {
-        localRepository.update(target.getKey(),
-                               value(Account.LAST_IMPORT_POSITION,
-                                     Amounts.extractAmount(glob.get(RealAccount.POSITION))));
+        String amount = glob.get(RealAccount.POSITION);
+        if (Strings.isNotEmpty(amount)){
+          localRepository.update(target.getKey(), value(Account.LAST_IMPORT_POSITION, Amounts.extractAmount(amount)));
+        }
       }
     }
     if (nextImport()) {
@@ -143,10 +144,12 @@ public class ImportController implements RealAccountImporter {
 
     File file;
     Glob realAccount = null;
+    Integer synchroId = null;
     if (!realAccountWithImport.isEmpty()) {
       AccountWithFile accountWithFile = realAccountWithImport.remove(0);
       realAccount = accountWithFile.realAccount;
       file = new File(accountWithFile.fileName);
+      synchroId = accountWithFile.synchroId;
     }
     else {
       synchronized (selectedFiles) {
@@ -154,7 +157,7 @@ public class ImportController implements RealAccountImporter {
       }
     }
     try {
-      List<String> dateFormats = importSession.loadFile(file, realAccount, importDialog.getDialog());
+      List<String> dateFormats = importSession.loadFile(file, realAccount, synchroId, importDialog.getDialog());
       Ref<Integer> accountCount = new Ref<Integer>();
       Ref<Integer> accountNumber = new Ref<Integer>();
       Glob importedAccount = importSession.gotoNextContent(accountNumber, accountCount);
@@ -295,9 +298,9 @@ public class ImportController implements RealAccountImporter {
     importDialog.showSynchro(bankId);
   }
 
-  public void showSynchro(GlobList realAccounts) {
+  public void showSynchro(GlobList synchro) {
     isSynchro = true;
-    importDialog.showSynchro(realAccounts);
+    importDialog.showSynchro(synchro);
   }
 
   public void importAccounts(GlobList realAccounts) {
@@ -320,12 +323,14 @@ public class ImportController implements RealAccountImporter {
   private void addRealAccountWithImport(Glob realAccount) {
     String fileName = realAccount.get(RealAccount.FILE_NAME);
     for (AccountWithFile accountWithFile : realAccountWithImport) {
+      // on est en ofx => on prendra le compte dans le fichier.
       if (Utils.equal(fileName, accountWithFile.fileName)) {
         accountWithFile.realAccount = null;
         return;
       }
     }
-    realAccountWithImport.add(new AccountWithFile(realAccount, fileName));
+    realAccountWithImport.add(new AccountWithFile(realAccount, fileName,
+                                                  realAccount.get(RealAccount.SYNCHO)));
   }
 
   private static class HasOperationFunctor implements GlobFunctor {
@@ -406,10 +411,12 @@ public class ImportController implements RealAccountImporter {
   private class AccountWithFile {
     private String fileName;
     private Glob realAccount;
+    private Integer synchroId;
 
-    private AccountWithFile(Glob realAccount, String fileName) {
+    private AccountWithFile(Glob realAccount, String fileName, Integer synchroId) {
       this.realAccount = realAccount;
       this.fileName = fileName;
+      this.synchroId = synchroId;
     }
   }
 }

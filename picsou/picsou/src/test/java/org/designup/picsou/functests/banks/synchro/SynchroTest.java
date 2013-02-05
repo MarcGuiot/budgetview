@@ -186,6 +186,24 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testImportOneOfxTakePositionInOfx() throws Exception {
+    String path = OfxBuilder
+      .init(this)
+      .addBankAccount(30004, 12345, "000123", 100.00, "2006/01/23")
+      .addTransaction("2006/01/23", -10.00, "Menu K")
+      .save();
+
+    OtherBankSynchroChecker synchro = operations.openImportDialog().openSynchro("Other");
+    synchro.createAccount("000123 123", "principal", "", path);
+    synchro.doImportAndWaitForPreview()
+      .checkAccount("Account n. 000123")
+      .checkAccountPosition(100.00)
+      .setMainAccount()
+      .completeImport();
+
+    mainAccounts.checkPosition("Account n. 000123", 100.);
+  }
+
   public void testImportTwoAccountsInSameOfxFile() throws Exception {
 
     String path = OfxBuilder
@@ -197,8 +215,8 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .save();
 
     OtherBankSynchroChecker synchro = operations.openImportDialog().openSynchro("Other");
-    synchro.createAccount("000123", "principal", "100.00", path);
-    synchro.createAccount("000246", "secondaire", "200.00", path);
+    synchro.createAccount("000123 123", "principal", "", path);
+    synchro.createAccount("000246 123", "secondaire", "", path);
     synchro.doImportAndWaitForPreview()
       .checkAccount("Account n. 000123")
       .checkAccountPosition(100.00)
@@ -213,6 +231,8 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .add("23/01/2006", TransactionType.PRELEVEMENT, "FNAC", "", -20.00)
       .add("23/01/2006", TransactionType.PRELEVEMENT, "MENU K", "", -10.00)
       .check();
+    mainAccounts.checkPosition("Account n. 000123", 100.);
+    mainAccounts.checkPosition("Account n. 000246", 200.);
   }
 
   public void testOfxDirectConnect() throws Exception {
@@ -352,12 +372,53 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .add("23/01/2006", TransactionType.PRELEVEMENT, "OPERATION 2 COMPTE 123", "", -10.00)
       .check();
 
-    fail("TODO: supprimer cette ligne apres finalisation de la gestion des RealAccount / Synchro");
-
     operations.openImportDialog()
       .checkSynchroAvailableForAccounts("Account n. 000123", "Account n. 000246")
       .checkManualDownloadAvailableForAccounts("Account n. 000345")
-      .checkManualDownloadLink("BNP Paribas", "aaa")
+      .checkManualDownloadLink("BNP Paribas", "http://www.bnpparibas.net")
       .close();
+  }
+
+  public void testMultipleSynchroInSameBank() throws Exception {
+    String path = QifBuilder
+      .init(this)
+      .addTransaction("2006/01/23", -10.00, "Menu K")
+      .save();
+
+    OtherBankSynchroChecker synchro = operations.openImportDialog().openSynchro("Other");
+    synchro.setCode("1")
+      .createAccount("000123 123", "principal", "", path)
+      .setAmount("100");
+    synchro.doImportAndWaitForPreview()
+      .checkAccount("principal")
+      .checkAccountPosition(100.00)
+      .setMainAccount()
+      .completeImport();
+
+    mainAccounts.checkPosition("principal", 100.);
+
+    String path2 = QifBuilder
+      .init(this)
+      .addTransaction("2006/02/23", -10.00, "Menu K")
+      .save();
+    //  on change le code mais on garde le meme comptes
+    OtherBankSynchroChecker secondSynchro = importPanel.openImport().startSynchro();
+    secondSynchro.checkCode("1")
+      .setCode("2")
+      .selectAccount("principal")
+      .setFile(path2)
+      .doImportAndWaitForPreview()
+      .completeImport();
+    mainAccounts.checkPosition("principal", 90);
+
+    OtherBankSynchroChecker thrirdSynchro = importPanel.openImport().startSynchro();
+    thrirdSynchro.checkCode("2")
+      .removeAccount("principal")
+      .setCode("3")
+      .createAccount("321", "nex account", null)
+      .setFile(path2)
+      .doImportAndWaitForPreview()
+      .completeImport();
+    mainAccounts.checkPosition("principal", 90);
   }
 }

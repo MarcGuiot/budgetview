@@ -7,6 +7,8 @@ import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 import sun.text.normalizer.TrieIterator;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class WebComponent<T extends HtmlElement> {
   protected final WebBrowser browser;
@@ -133,9 +135,130 @@ public abstract class WebComponent<T extends HtmlElement> {
         throw new WebParsingError(node, "not an anchor");
       }
     }
+
+    public WebSelect asSelect() throws WebParsingError {
+      if (optional && node == null){
+        return null;
+      }
+      if (node instanceof HtmlSelect){
+        return new WebSelect(browser, ((HtmlSelect)node));
+      }
+      else {
+        throw new WebParsingError(node, "not an anchor");
+      }
+    }
+
+    public HtmlNavigate parent() {
+      if (optional && node == null){
+        return this;
+      }
+      node = (HtmlElement)node.getParentNode();
+      return this;
+    }
   }
 
   public HtmlNavigate navigate() {
     return new HtmlNavigate(browser, node, false);
+  }
+
+
+  static public class HtmlNavigates {
+    private WebBrowser browser;
+    private List<HtmlElement> nodes;
+    private final boolean optional;
+
+    public HtmlNavigates(WebBrowser browser, List<HtmlElement> nodes, boolean optional) {
+      this.browser = browser;
+      this.nodes = nodes;
+      this.optional = optional;
+    }
+
+    public HtmlNavigates next() throws WebParsingError {
+      if (optional && nodes.isEmpty()){
+        return this;
+      }
+      List<HtmlElement> tmp = new ArrayList<HtmlElement>();
+      for (HtmlElement node : nodes) {
+        tmp.add((HtmlElement)findFirstHtmlElement(node.getNextSibling()));
+      }
+      nodes = tmp;
+      return this;
+    }
+
+    private DomNode findFirstHtmlElement(DomNode sibling) throws WebParsingError {
+      while (!(sibling instanceof HtmlElement) && sibling != null){
+        sibling = sibling.getNextSibling();
+      }
+      if (sibling == null){
+        throw new WebParsingError(nodes.get(0), "Can not find next");
+      }
+      return sibling;
+    }
+
+    public HtmlNavigates in() throws WebParsingError {
+      if (optional && nodes.isEmpty()){
+        return this;
+      }
+      List<HtmlElement> tmp = new ArrayList<HtmlElement>();
+      for (HtmlElement node : nodes) {
+        tmp.add((HtmlElement)findFirstHtmlElement(node.getFirstChild()));
+      }
+      nodes = tmp;
+
+      return this;
+    }
+
+    public List<WebAnchor> asAnchor() throws WebParsingError {
+      if (optional && nodes.isEmpty()){
+        return null;
+      }
+      List<WebAnchor> anchors = new ArrayList<WebAnchor>();
+      for (HtmlElement node : nodes) {
+        if (node instanceof HtmlAnchor){
+          anchors.add(new WebAnchor(browser, ((HtmlAnchor)node)));
+        }
+      }
+      return anchors;
+    }
+
+    public List<WebCheckBox> asCheckBox() throws WebParsingError {
+      if (optional && nodes.isEmpty()){
+        return null;
+      }
+      List<WebCheckBox> checkBoxes = new ArrayList<WebCheckBox>();
+      for (HtmlElement node : nodes) {
+        if (node instanceof HtmlInput){
+          checkBoxes.add(new WebCheckBox(browser, ((HtmlInput)node)));
+        }
+      }
+      return checkBoxes;
+
+    }
+
+    public List<WebSelect> asSelect() throws WebParsingError {
+      if (optional && nodes.isEmpty()){
+        return null;
+      }
+      List<WebSelect> webSelects = new ArrayList<WebSelect>();
+      for (HtmlElement node : nodes) {
+        if (node instanceof HtmlSelect){
+          webSelects.add(new WebSelect(browser, ((HtmlSelect)node)));
+        }
+      }
+      return webSelects;
+
+    }
+
+    public HtmlNavigates parent() {
+      if (optional && nodes.isEmpty()){
+        return this;
+      }
+      List<HtmlElement> tmp = new ArrayList<HtmlElement>();
+      for (HtmlElement node : nodes) {
+        tmp.add((HtmlElement)node.getParentNode());
+      }
+      nodes = tmp;
+      return this;
+    }
   }
 }

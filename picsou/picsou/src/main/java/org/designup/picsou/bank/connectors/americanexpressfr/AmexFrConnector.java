@@ -40,17 +40,17 @@ public class AmexFrConnector extends WebBankConnector {
   private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
   public static void main(String[] args) throws IOException {
-    WebConnectorLauncher.show(new Factory());
+    WebConnectorLauncher.show(BANK_ID, new Factory());
   }
 
   public static class Factory implements BankConnectorFactory {
-    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount) {
-      return new AmexFrConnector(syncExistingAccount, repository, directory);
+    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount, Glob synchro) {
+      return new AmexFrConnector(syncExistingAccount, repository, directory, synchro);
     }
   }
 
-  private AmexFrConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory) {
-    super(BANK_ID, syncExistingAccount, repository, directory);
+  private AmexFrConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory, Glob synchro) {
+    super(BANK_ID, syncExistingAccount, repository, directory, synchro);
     browser.setJavascriptEnabled(false);
     browser.setHttpConnectionProvider(new HttpConnectionProvider() {
       public HttpWebConnection getHttpConnection(WebClient client) {
@@ -65,7 +65,9 @@ public class AmexFrConnector extends WebBankConnector {
   protected JPanel createPanel() {
 
     userAndPasswordPanel = new UserAndPasswordPanel(new ConnectAction(), directory);
-    Thread thread = new Thread() {
+    userAndPasswordPanel.setUserCode(getSyncCode());
+
+    directory.get(ExecutorService.class).submit(new Runnable() {
       public void run() {
         try {
           notifyInitialConnection();
@@ -81,9 +83,12 @@ public class AmexFrConnector extends WebBankConnector {
           notifyErrorFound(e);
         }
       }
-    };
-    thread.start();
+    });
     return userAndPasswordPanel.getPanel();
+  }
+
+  public String getCode() {
+    return userAndPasswordPanel.getUser();
   }
 
   public void panelShown() {
@@ -132,11 +137,7 @@ public class AmexFrConnector extends WebBankConnector {
               importCompleted();
             }
             catch (final Exception e) {
-              SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
                   notifyErrorFound(e);
-                }
-              });
             }
             return null;
           }

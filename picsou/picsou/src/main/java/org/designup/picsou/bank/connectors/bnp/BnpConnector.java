@@ -8,11 +8,12 @@ import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.*;
 import org.designup.picsou.bank.connectors.webcomponents.utils.*;
 import org.designup.picsou.model.RealAccount;
+import org.designup.picsou.model.Synchro;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
-import org.joda.time.DateTime;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -43,17 +44,17 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
   private JLabel keyboardLabel;
 
   public static void main(String[] args) throws IOException {
-    WebConnectorLauncher.show(new Factory());
+    WebConnectorLauncher.show(BANK_ID, new Factory());
   }
 
   public static class Factory implements BankConnectorFactory {
-    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount) {
-      return new BnpConnector(syncExistingAccount, repository, directory);
+    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount, Glob synchro) {
+      return new BnpConnector(syncExistingAccount, repository, directory, synchro);
     }
   }
 
-  private BnpConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory) {
-    super(BANK_ID, syncExistingAccount, repository, directory);
+  private BnpConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory, Glob synchro) {
+    super(BANK_ID, syncExistingAccount, repository, directory, synchro);
     browser.setTimeout(15000);
   }
 
@@ -63,6 +64,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
 
     codeField = new JTextField();
     builder.add("code", codeField);
+    codeField.setText(getSyncCode());
 
     passwordField = new JTextField();
     passwordField.setEditable(false);
@@ -126,7 +128,12 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
   }
 
   public void panelShown() {
-    codeField.requestFocus();
+    if (Strings.isNullOrEmpty(codeField.getText())){
+      codeField.requestFocus();
+    }
+    else {
+      passwordField.requestFocus();
+    }
   }
 
   private class LoginAction extends AbstractAction {
@@ -199,7 +206,6 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
 
               accounts.clear();
               for (AccountEntry entry : entries) {
-                System.out.println("==>  " + entry);
                 notifyDownloadForAccount(entry.name);
                 Glob account = createOrUpdateRealAccount(entry.name,
                                                          entry.number,
@@ -213,9 +219,13 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
                 }
               }
             }
-            catch (Throwable e) {
-              e.printStackTrace();
-              notifyErrorFound(e);
+            catch (final Throwable e) {
+              SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                  notifyErrorFound(e);
+                }
+              });
+              return;
             }
             importCompleted();
           }
@@ -259,6 +269,10 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
   }
 
   public void downloadFile() throws Exception {
+  }
+
+  public String getCode() {
+    return codeField.getText();
   }
 
   public void reset() {

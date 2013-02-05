@@ -144,8 +144,9 @@ public class OfxImporter implements AccountFileImporter {
       if (tag.equals("OFX") || tag.equals("OFC")) {
         fileCompleted = true;
       }
-
-      currentTransactionKey = null;
+      if (tag.equals("STMTTRN")){
+        currentTransactionKey = null;
+      }
     }
 
     private void checkTransaction() {

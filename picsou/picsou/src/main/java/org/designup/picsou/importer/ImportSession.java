@@ -24,10 +24,7 @@ import org.globsframework.model.utils.ChangeSetAggregator;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Files;
-import org.globsframework.utils.Log;
-import org.globsframework.utils.Ref;
-import org.globsframework.utils.Utils;
+import org.globsframework.utils.*;
 import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
@@ -88,7 +85,7 @@ public class ImportSession {
     return localRepository;
   }
 
-  public List<String> loadFile(File file, final Glob synchronizedAccount, PicsouDialog dialog)
+  public List<String> loadFile(File file, final Glob synchronizedAccount, Integer synchroId, PicsouDialog dialog)
     throws IOException, TruncatedFile, NoOperations, InvalidFormat, OperationCancelled {
 
     this.importSeries = null;
@@ -150,12 +147,18 @@ public class ImportSession {
 
     accountCount = accountIds.size();
     if (synchronizedAccount != null) {
-      if (accountIds.size() > 1) {
-        Log.write("Import multiple accounts: ignoring realAccount");
-      }
-      else {
+      if (accountIds.size() == 1 && typedStream.getType() != BankFileType.OFX) {
         if (accountIds.size() == 1) {
           Glob account = accountIds.remove(0);
+
+          //cas de l'ofx avec un seul compte (donc comme le qif sauf que la position est peut-etre
+          // bien renseignée.
+          if (Strings.isNotEmpty(account.get(RealAccount.POSITION))) {
+            if (Strings.isNullOrEmpty(synchronizedAccount.get(RealAccount.POSITION))) {
+              localRepository.update(synchronizedAccount.getKey(),
+                                     RealAccount.POSITION, account.get(RealAccount.POSITION));
+            }
+          }
           importRepository.delete(account.getKey());
         }
         accountIds.add(synchronizedAccount);
@@ -166,6 +169,9 @@ public class ImportSession {
             }
           }, importRepository);
       }
+    }
+    for (Glob realAccount : accountIds) {
+      importRepository.update(realAccount.getKey(), RealAccount.SYNCHO, synchroId);
     }
     List<String> dateFormat = getImportedTransactionFormat(importRepository);
 
@@ -203,6 +209,13 @@ public class ImportSession {
       Integer realAccountId = currentImportedAccount.get(RealAccount.ID);
       for (Glob operation : importedOperations) {
         localRepository.update(operation.getKey(), ImportedTransaction.ACCOUNT, realAccountId);
+      }
+    }
+    else {
+      if (Strings.isNullOrEmpty(realAccount.get(RealAccount.POSITION)) &&
+        Strings.isNotEmpty(currentImportedAccount.get(RealAccount.POSITION))) {
+        localRepository.update(realAccount.getKey(), RealAccount.POSITION,
+                               currentImportedAccount.get(RealAccount.POSITION));
       }
     }
 
