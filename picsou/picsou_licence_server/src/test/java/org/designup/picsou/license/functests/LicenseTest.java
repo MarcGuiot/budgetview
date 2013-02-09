@@ -262,7 +262,7 @@ public class LicenseTest extends ConnectedTestCase {
 
     stopServers();
 
-    license.validate();
+    license.validateWithError();
     license.checkErrorMessage("You must be connected to the Internet")
       .cancel();
 
@@ -284,11 +284,11 @@ public class LicenseTest extends ConnectedTestCase {
     license.checkMsgToReceiveNewCode();
     license.enterLicense("titi@foo.org", "az");
     license.checkMsgSendNewCode();
-    license.validate();
+    license.validateWithError();
     license.checkErrorMessage("Activation failed");
     license.enterLicense("titi@foo.org", "");
     license.checkMsgSendNewCode();
-    license.validate();
+    license.validateWithError();
     license.checkErrorMessage("Activation failed");
     license.cancel();
 

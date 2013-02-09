@@ -13,9 +13,9 @@
         <row>
           <grid marginLeft="30">
             <label text="$synchro.ofx.id" styleClass="formLabel" gridPos="(0,0)"/>
-            <textField ref="code" gridPos="(1,0)"/>
+            <textField ref="code" gridPos="(1,0)" columns="20"/>
             <label text="$synchro.ofx.password" styleClass="formLabel" gridPos="(0,1)"/>
-            <textField ref="password" gridPos="(1,1)"/>
+            <textField ref="password" gridPos="(1,1)" columns="15"/>
           </grid>
           <button action="validate" fill="none" anchor="center"/>
           <button ref="securityInfo" styleClass="iconOnly"

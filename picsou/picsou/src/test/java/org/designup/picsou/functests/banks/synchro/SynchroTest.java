@@ -245,13 +245,13 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     final ArrayList<OfxConnection.AccountInfo> accountInfoArrayList = new ArrayList<OfxConnection.AccountInfo>();
 
     OfxConnection.register(new OfxConnection() {
-      public List<AccountInfo> getAccounts(String user, String password, String date, String url, String org, String fid) {
+      public List<AccountInfo> getAccounts(String user, String password, String date, String url, String org, String fid, String uuid) {
         AccountInfo account1 = new AccountInfo(null, "1223", "any");
         accountInfoArrayList.add(account1);
         return accountInfoArrayList;
       }
 
-      public void loadOperation(Glob realAccount, String fromDate, String user, String password, String url, String org, String fid, File outputFile) throws IOException {
+      public void loadOperation(Glob realAccount, String fromDate, String user, String password, String url, String org, String fid, File outputFile, final String uuid) throws IOException {
         assertEquals("a", user);
         assertEquals("b", password);
         Files.copyStream(new FileInputStream(fileName), new FileOutputStream(outputFile));

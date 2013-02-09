@@ -66,7 +66,7 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
         System.out.println("SgConnector.getResponse " + s);
         if (s.startsWith("https://logs128.xiti.com") || s.startsWith("https://societegenerale.solution.weborama.fr")
             || s.startsWith("https://ssl.weborama.fr")) {
-          throw new IOException("not available");
+          return new StringWebResponse("", request.getUrl());
         }
         WebResponse response = super.getResponse(request);
         System.out.println("SgConnector.getResponse " + response.getLoadTime() + " ms.");

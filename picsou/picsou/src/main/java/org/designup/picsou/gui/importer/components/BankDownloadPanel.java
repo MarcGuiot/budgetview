@@ -21,7 +21,6 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Strings;
@@ -155,7 +154,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
       }
     });
 
-    List<BankAccountGroup> accountGroups = getSynchroAccountGroups(isNotNull(RealAccount.SYNCHO));
+    List<BankAccountGroup> accountGroups = getSynchroAccountGroups();
     if (accountGroups.isEmpty()) {
       backToSynchroButton.setEnabled(false);
       switchToBankSelection();
@@ -247,20 +246,34 @@ public class BankDownloadPanel implements GlobSelectionListener {
     List<BankAccountGroup> result = new ArrayList<BankAccountGroup>();
     Map<Glob, BankAccountGroup> groups = new HashMap<Glob, BankAccountGroup>();
     for (Glob account : accounts) {
-      Glob bank = repository.findLinkTarget(account, Account.BANK);
-      BankAccountGroup group = groups.get(bank);
-      if (group == null) {
-        group = new BankAccountGroup(bank);
-        result.add(group);
-        groups.put(bank, group);
+      if (!hasASynchroFor(account))
+      {
+        Glob bank = repository.findLinkTarget(account, Account.BANK);
+        BankAccountGroup group = groups.get(bank);
+        if (group == null) {
+          group = new BankAccountGroup(bank);
+          result.add(group);
+          groups.put(bank, group);
+        }
+        group.add(account);
       }
-      group.add(account);
     }
 
     return result;
   }
 
-  private List<BankAccountGroup> getSynchroAccountGroups(GlobMatcher filter) {
+  private boolean hasASynchroFor(Glob account) {
+    GlobList realAccountForAccount = repository.findLinkedTo(account, RealAccount.ACCOUNT);
+    for (Glob realAccount : realAccountForAccount) {
+      if (realAccount.get(RealAccount.SYNCHO) != null){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private List<BankAccountGroup> getSynchroAccountGroups() {
+    GlobMatcher filter = isNotNull(RealAccount.SYNCHO);
     GlobList realAccounts = repository.getAll(RealAccount.TYPE, filter);
     Map<Integer, Glob> synchroByAccount = new HashMap<Integer, Glob>();
     for (Glob account : realAccounts) {

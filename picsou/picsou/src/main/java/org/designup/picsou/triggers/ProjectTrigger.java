@@ -104,7 +104,7 @@ public class ProjectTrigger extends AbstractChangeSetListener{
 
     double totalAmount = 0.00;
     for (Glob item : projectItems) {
-      Double itemAmount = item.get(ProjectItem.AMOUNT);
+      Double itemAmount = item.get(ProjectItem.AMOUNT, 0.0);
       totalAmount += itemAmount;
 
       Integer monthId = item.get(ProjectItem.MONTH);

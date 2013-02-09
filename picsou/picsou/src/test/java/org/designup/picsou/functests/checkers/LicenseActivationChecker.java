@@ -7,6 +7,7 @@ import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 
 public class LicenseActivationChecker {
@@ -35,7 +36,12 @@ public class LicenseActivationChecker {
         TextBox codeField = window.getInputTextBox("ref-code");
         codeField.clear();
         codeField.appendText(code);
-        return window.getButton("OK").triggerClick();
+        if (email.equals("admin")){
+          return window.getButton("ok").triggerClick();
+        }
+        else {
+          return MessageDialogChecker.open(window.getButton("ok").triggerClick()).triggerClose();
+        }
       }
     });
   }
@@ -117,6 +123,13 @@ public class LicenseActivationChecker {
   }
 
   public LicenseActivationChecker validate() {
+    assertThat(dialog.isVisible());
+    MessageDialogChecker.open(dialog.getButton("ok").triggerClick()).close();
+    return this;
+  }
+
+  public LicenseActivationChecker validateWithError() {
+    assertThat(dialog.isVisible());
     dialog.getButton("ok").click();
     return this;
   }

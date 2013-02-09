@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class AddUser {
-  public static void main(String[] args) throws IOException {
+  public static void main(String... args) throws IOException {
     String databaseUrl = null;
     String user = null;
     String passwd = null;

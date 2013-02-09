@@ -2,11 +2,8 @@ package org.designup.picsou.bank.connectors.webcomponents;
 
 import com.gargoylesoftware.htmlunit.html.*;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HtmlUnit;
-import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
-import sun.text.normalizer.TrieIterator;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +44,7 @@ public abstract class WebComponent<T extends HtmlElement> {
     node.fireEvent(event);
   }
 
-  public String getClassName(){
+  public String getClassName() {
     return node.getAttribute("className");
   }
 
@@ -87,7 +84,7 @@ public abstract class WebComponent<T extends HtmlElement> {
     }
 
     public HtmlNavigate next() throws WebParsingError {
-      if (optional && node == null){
+      if (optional && node == null) {
         return this;
       }
       node = (HtmlElement)findFirstHtmlElement(node.getNextSibling());
@@ -95,17 +92,17 @@ public abstract class WebComponent<T extends HtmlElement> {
     }
 
     private DomNode findFirstHtmlElement(DomNode sibling) throws WebParsingError {
-      while (!(sibling instanceof HtmlElement) && sibling != null){
+      while (!(sibling instanceof HtmlElement) && sibling != null) {
         sibling = sibling.getNextSibling();
       }
-      if (sibling == null){
+      if (sibling == null) {
         throw new WebParsingError(node, "Can not find next");
       }
       return sibling;
     }
 
     public HtmlNavigate in() throws WebParsingError {
-      if (optional && node == null){
+      if (optional && node == null) {
         return this;
       }
       node = (HtmlElement)findFirstHtmlElement(node.getFirstChild());
@@ -113,10 +110,10 @@ public abstract class WebComponent<T extends HtmlElement> {
     }
 
     public WebAnchor asAnchor() throws WebParsingError {
-      if (optional && node == null){
+      if (optional && node == null) {
         return null;
       }
-      if (node instanceof HtmlAnchor){
+      if (node instanceof HtmlAnchor) {
         return new WebAnchor(browser, ((HtmlAnchor)node));
       }
       else {
@@ -125,10 +122,10 @@ public abstract class WebComponent<T extends HtmlElement> {
     }
 
     public WebCheckBox asCheckBox() throws WebParsingError {
-      if (optional && node == null){
+      if (optional && node == null) {
         return null;
       }
-      if (node instanceof HtmlInput){
+      if (node instanceof HtmlInput) {
         return new WebCheckBox(browser, ((HtmlInput)node));
       }
       else {
@@ -137,10 +134,10 @@ public abstract class WebComponent<T extends HtmlElement> {
     }
 
     public WebSelect asSelect() throws WebParsingError {
-      if (optional && node == null){
+      if (optional && node == null) {
         return null;
       }
-      if (node instanceof HtmlSelect){
+      if (node instanceof HtmlSelect) {
         return new WebSelect(browser, ((HtmlSelect)node));
       }
       else {
@@ -149,7 +146,7 @@ public abstract class WebComponent<T extends HtmlElement> {
     }
 
     public HtmlNavigate parent() {
-      if (optional && node == null){
+      if (optional && node == null) {
         return this;
       }
       node = (HtmlElement)node.getParentNode();
@@ -174,7 +171,7 @@ public abstract class WebComponent<T extends HtmlElement> {
     }
 
     public HtmlNavigates next() throws WebParsingError {
-      if (optional && nodes.isEmpty()){
+      if (optional && nodes.isEmpty()) {
         return this;
       }
       List<HtmlElement> tmp = new ArrayList<HtmlElement>();
@@ -186,17 +183,17 @@ public abstract class WebComponent<T extends HtmlElement> {
     }
 
     private DomNode findFirstHtmlElement(DomNode sibling) throws WebParsingError {
-      while (!(sibling instanceof HtmlElement) && sibling != null){
+      while (!(sibling instanceof HtmlElement) && sibling != null) {
         sibling = sibling.getNextSibling();
       }
-      if (sibling == null){
+      if (sibling == null) {
         throw new WebParsingError(nodes.get(0), "Can not find next");
       }
       return sibling;
     }
 
     public HtmlNavigates in() throws WebParsingError {
-      if (optional && nodes.isEmpty()){
+      if (optional && nodes.isEmpty()) {
         return this;
       }
       List<HtmlElement> tmp = new ArrayList<HtmlElement>();
@@ -209,12 +206,12 @@ public abstract class WebComponent<T extends HtmlElement> {
     }
 
     public List<WebAnchor> asAnchor() throws WebParsingError {
-      if (optional && nodes.isEmpty()){
+      if (optional && nodes.isEmpty()) {
         return null;
       }
       List<WebAnchor> anchors = new ArrayList<WebAnchor>();
       for (HtmlElement node : nodes) {
-        if (node instanceof HtmlAnchor){
+        if (node instanceof HtmlAnchor) {
           anchors.add(new WebAnchor(browser, ((HtmlAnchor)node)));
         }
       }
@@ -222,12 +219,12 @@ public abstract class WebComponent<T extends HtmlElement> {
     }
 
     public List<WebCheckBox> asCheckBox() throws WebParsingError {
-      if (optional && nodes.isEmpty()){
+      if (optional && nodes.isEmpty()) {
         return null;
       }
       List<WebCheckBox> checkBoxes = new ArrayList<WebCheckBox>();
       for (HtmlElement node : nodes) {
-        if (node instanceof HtmlInput){
+        if (node instanceof HtmlInput) {
           checkBoxes.add(new WebCheckBox(browser, ((HtmlInput)node)));
         }
       }
@@ -236,12 +233,12 @@ public abstract class WebComponent<T extends HtmlElement> {
     }
 
     public List<WebSelect> asSelect() throws WebParsingError {
-      if (optional && nodes.isEmpty()){
+      if (optional && nodes.isEmpty()) {
         return null;
       }
       List<WebSelect> webSelects = new ArrayList<WebSelect>();
       for (HtmlElement node : nodes) {
-        if (node instanceof HtmlSelect){
+        if (node instanceof HtmlSelect) {
           webSelects.add(new WebSelect(browser, ((HtmlSelect)node)));
         }
       }
@@ -250,7 +247,7 @@ public abstract class WebComponent<T extends HtmlElement> {
     }
 
     public HtmlNavigates parent() {
-      if (optional && nodes.isEmpty()){
+      if (optional && nodes.isEmpty()) {
         return this;
       }
       List<HtmlElement> tmp = new ArrayList<HtmlElement>();
