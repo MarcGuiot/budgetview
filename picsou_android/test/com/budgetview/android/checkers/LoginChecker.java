@@ -1,15 +1,12 @@
 package com.budgetview.android.checkers;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.budgetview.android.LoginActivity;
 import com.budgetview.android.R;
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.shadows.ShadowAlertDialog;
-import junit.framework.Assert;
+import org.robolectric.Robolectric;
 
 public class LoginChecker extends AndroidChecker<LoginActivity> {
 
@@ -27,7 +24,7 @@ public class LoginChecker extends AndroidChecker<LoginActivity> {
   }
 
   public LoginChecker setPassword(String password) {
-    Robolectric.shadowOf((TextView)activity.findViewById(R.id.login_password  )).setText(password);
+    Robolectric.shadowOf((TextView)activity.findViewById(R.id.login_password)).setText(password);
     return this;
   }
 

@@ -6,20 +6,22 @@ import com.budgetview.android.checkers.utils.ExpectationQueue;
 import com.budgetview.android.datasync.DataSync;
 import com.budgetview.android.datasync.DataSyncCallback;
 import com.budgetview.android.datasync.DataSyncFactory;
-import com.xtremelabs.robolectric.Robolectric;
 import junit.framework.Assert;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Strings;
+import org.robolectric.Robolectric;
 
 import java.io.IOException;
 
 public class DataSyncChecker {
 
+  private final boolean verbose;
   private DataSync dataSync;
   private ExpectationQueue expectations = new ExpectationQueue();
 
-  public DataSyncChecker() {
+  public DataSyncChecker(boolean verbose) {
+    this.verbose = verbose;
     dataSync = new DummyDataSync();
     DataSyncFactory.setForcedSync(dataSync);
   }
@@ -94,7 +96,9 @@ public class DataSyncChecker {
     public void load(DataSyncCallback callback) {
       GlobRepository repository = getApp().getRepository();
       loadBuilder.apply(repository);
-      GlobPrinter.print(repository);
+      if (verbose) {
+        GlobPrinter.print(repository);
+      }
       callback.onActionFinished();
     }
   }

@@ -1,12 +1,12 @@
 package com.budgetview.android.checkers;
 
 import com.budgetview.shared.model.*;
-import com.xtremelabs.robolectric.shadows.ShadowContentValues;
 import junit.framework.Assert;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
 import org.globsframework.model.Key;
+import org.globsframework.utils.Strings;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class LoadBuilder {
     for (BudgetArea budgetArea : BudgetArea.values()) {
       tempRepository.create(BudgetAreaEntity.TYPE,
                             value(BudgetAreaEntity.ID, budgetArea.id),
-                            value(BudgetAreaEntity.LABEL, budgetArea.name().toLowerCase()));
+                            value(BudgetAreaEntity.LABEL, Strings.capitalize(budgetArea.name().toLowerCase()  )));
     }
     seriesEntitiesByName.put("Uncategorized",
                              tempRepository.create(SeriesEntity.TYPE,
@@ -95,7 +95,7 @@ public class LoadBuilder {
     return entity;
   }
 
-  public void addTransactionToSeries(String label, int day, double amount) {
+  public LoadBuilder addTransactionToSeries(String label, int day, double amount) {
     Assert.assertNotNull("A series must be created first", currentSeriesValues);
     Assert.assertNotNull("An account must be created first", currentAccountId);
     tempRepository.create(TransactionValues.TYPE,
@@ -129,6 +129,8 @@ public class LoadBuilder {
                           value(SeriesValues.AMOUNT, newSeriesAmount),
                           value(SeriesValues.REMAINING_AMOUNT, remaining),
                           value(SeriesValues.OVERRUN_AMOUNT, overrun));
+
+    return this;
   }
 
   private void complete() {

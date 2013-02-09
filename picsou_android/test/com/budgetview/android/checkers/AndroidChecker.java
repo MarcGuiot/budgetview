@@ -5,9 +5,9 @@ import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.shadows.ShadowAlertDialog;
 import junit.framework.Assert;
+import org.robolectric.Robolectric;
+import org.robolectric.shadows.ShadowAlertDialog;
 
 public abstract class AndroidChecker<T extends Activity> {
 
@@ -35,8 +35,8 @@ public abstract class AndroidChecker<T extends Activity> {
     try {
       T activity = tClass.newInstance();
       activity.setIntent(intent);
-      Bundle bundle = intent.getExtras();
-      System.out.println("AndroidChecker.getCurrentActivity: " + toString(bundle));
+//      Bundle bundle = intent.getExtras();
+//      System.out.println("AndroidChecker.getCurrentActivity: " + toString(bundle));
       callOnCreate(activity, intent.getExtras());
       return activity;
     }

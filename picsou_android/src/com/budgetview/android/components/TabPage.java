@@ -33,6 +33,8 @@ public class TabPage implements TabHost.OnTabChangeListener, ViewPager.OnPageCha
   private TabPagerAdapter pagerAdapter;
   private String title;
 
+  private boolean selectionInProgress;
+
   public TabPage(FragmentActivity activity,
                  CharSequence title,
                  int currentMonthId,
@@ -89,15 +91,31 @@ public class TabPage implements TabHost.OnTabChangeListener, ViewPager.OnPageCha
   }
 
   public void onTabChanged(String tag) {
-    int pos = this.tabHost.getCurrentTab();
-    this.viewPager.setCurrentItem(pos);
+    if (!selectionInProgress) {
+      try {
+        selectionInProgress = true;
+        int pos = this.tabHost.getCurrentTab();
+        this.viewPager.setCurrentItem(pos);
+      }
+      finally {
+        selectionInProgress = false;
+      }
+    }
   }
 
   public void onPageScrolled(int i, float v, int i1) {
   }
 
   public void onPageSelected(int position) {
-    this.tabHost.setCurrentTab(position);
+    if (!selectionInProgress) {
+      try {
+        selectionInProgress = true;
+        this.tabHost.setCurrentTab(position);
+      }
+      finally {
+        selectionInProgress = false;
+      }
+    }
   }
 
   public void onPageScrollStateChanged(int i) {
@@ -119,7 +137,8 @@ public class TabPage implements TabHost.OnTabChangeListener, ViewPager.OnPageCha
       super(fm);
 
       for (Integer monthId : monthIds) {
-        fragments.add(handler.createFragmentWithArgs(monthId));
+        Fragment fragment = handler.createFragmentWithArgs(monthId);
+        fragments.add(fragment);
       }
     }
 

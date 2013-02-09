@@ -8,11 +8,13 @@ import com.budgetview.android.components.TabPageHandler;
 
 public class BudgetOverviewActivity extends FragmentActivity {
 
+  private TabPage page;
+
   public void onCreate(final Bundle state) {
     super.onCreate(state);
 
     App app = (App)getApplication();
-    TabPage page = new TabPage(this,
+    page = new TabPage(this,
                                getResources().getText(R.string.app_name),
                                app.getCurrentMonthId(),
                                new TabPageHandler() {
