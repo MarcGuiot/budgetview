@@ -12,6 +12,7 @@ import org.designup.picsou.bank.connectors.webcomponents.WebPage;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -26,8 +27,8 @@ public abstract class WebBankConnector extends AbstractBankConnector {
    */
   protected HtmlPage page;
 
-  public WebBankConnector(Integer bankId, boolean syncExistingAccount, GlobRepository repository, Directory directory) {
-    super(bankId, repository, directory);
+  public WebBankConnector(Integer bankId, boolean syncExistingAccount, GlobRepository repository, Directory directory, Glob synchro) {
+    super(bankId, repository, directory, synchro);
     this.bankId = bankId;
     this.browser = new WebBrowser(new ErrorAlertHandler());
     if (this instanceof HttpConnectionProvider) {

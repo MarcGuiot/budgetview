@@ -3,6 +3,7 @@ package org.globsframework.model.delta;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.BreakException;
 import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.xml.XmlChangeSetWriter;
@@ -91,6 +92,8 @@ public class DefaultChangeSet implements MutableChangeSet {
   public void safeVisit(GlobType type, ChangeSetVisitor visitor) {
     try {
       visit(type, visitor);
+    }
+    catch (BreakException e){
     }
     catch (RuntimeException e) {
       throw e;

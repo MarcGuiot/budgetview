@@ -20,7 +20,7 @@
         <label ref="bankLabel" margin="5" anchor="center" fill="none" font="-,plain,16"/>
         <panel border="matte(1,0,0,0,#E0E0E0)" opaque="false" fill="horizontal" marginLeft="10" marginRight="10"/>
         <filler fill="vertical" weightY="10"/>
-        <panel ref="connectorPanel" margin="10" styleClass="innerDialogBlockPanel" weightY="1"/>
+        <panel ref="connectorPanel" margin="10" styleClass="innerDialogBlockPanel" weightY="100"/>
         <row preferredSize="(100,30)" weightY="1">
           <filler fill="horizontal"/>
           <component ref="progressPanel"
@@ -40,7 +40,7 @@
         </row>
       </row>
 
-      <filler fill="vertical" weightY="100"/>
+      <filler fill="vertical" weightY="1"/>
 
       <row weightY="1">
         <filler fill="horizontal"/>

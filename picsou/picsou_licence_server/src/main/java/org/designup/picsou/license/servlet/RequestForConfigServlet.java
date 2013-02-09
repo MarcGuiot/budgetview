@@ -289,6 +289,7 @@ public class RequestForConfigServlet extends HttpServlet {
             else {
               logInfo("Run_count_decrease_with_different_activation_code_for mail = " + mail);
             }
+            return null;
           }
           else {
             if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
@@ -302,6 +303,7 @@ public class RequestForConfigServlet extends HttpServlet {
               resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
               resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
               logInfo("Different_code_for mail = " + mail);
+              return null;
             }
           }
         }

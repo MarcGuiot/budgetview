@@ -30,14 +30,14 @@ public class OfxWriter {
 
   public void writeLoadOp(String fromDate, String currentDate, String user, String password, final String org,
                           final String fid, final String bankId,
-                          final String accountNumber, final String accountType){
-    writeHeader(user, password, org, fid, currentDate);
+                          final String accountNumber, final String accountType, final String uuid){
+    writeHeader(user, password, org, fid, currentDate, uuid);
 
     String str;
     if (bankId == null) {
       str = "<CREDITCARDMSGSRQV1>\n" +
             "<CCSTMTTRNRQ>\n" +
-            "<TRNUID>" + UUID.randomUUID().toString()+ "\n" +
+            "<TRNUID>" + uuid + "\n" +
             "<CLTCOOKIE>1\n" +
             "<CCSTMTRQ>\n" +
             "<CCACCTFROM>\n" +
@@ -50,7 +50,7 @@ public class OfxWriter {
             "</CCSTMTRQ>\n" +
             "</CCSTMTTRNRQ>\n" +
             "</CREDITCARDMSGSRQV1>\n" +
-            "</OFX>";
+            "</OFX>\n";
     }
     else {
       str = "<BANKMSGSRQV1>\n" +
@@ -70,27 +70,27 @@ public class OfxWriter {
                    "</STMTRQ>\n" +
                    "</STMTTRNRQ>\n" +
                    "</BANKMSGSRQV1>\n" +
-                   "</OFX>";
+                   "</OFX>\n";
     }
     write(str);
   }
 
-  public void writeQuery(String user, String password, String currentDate, final String org, final String fid){
-      writeHeader(user, password, org, fid, currentDate);
+  public void writeQuery(String user, String password, String currentDate, final String org, final String fid, String uuid){
+      writeHeader(user, password, org, fid, currentDate, UUID.randomUUID().toString());
       write(
       "<SIGNUPMSGSRQV1>\n" +
       "<ACCTINFOTRNRQ>\n" +
-      "<TRNUID>" + UUID.randomUUID().toString() + "\n" +
+      "<TRNUID>" + uuid + "\n" +
       "<CLTCOOKIE>1\n" +
       "<ACCTINFORQ>\n" +
       "<DTACCTUP>" + currentDate + "\n" +
       "</ACCTINFORQ>\n" +
       "</ACCTINFOTRNRQ>\n" +
       "</SIGNUPMSGSRQV1>\n" +
-      "</OFX>");
+      "</OFX>\n");
   }
 
-  private void writeHeader(String user, String password, String org, String fid, String currentDate) {
+  private void writeHeader(String user, String password, String org, String fid, String currentDate, final String uuid) {
 //    String applicationId = "Money"; //many institutions just won't work with an unrecognized app id...
 //    String applicationVersion = "1600"; //many institutions just won't work with an unrecognized app id...
     String applicationId = "QWIN"; //many institutions just won't work with an unrecognized app id...
@@ -103,7 +103,7 @@ public class OfxWriter {
     "CHARSET:1252\n" +
     "COMPRESSION:NONE\n" +
     "OLDFILEUID:NONE\n" +
-    "NEWFILEUID:" +  UUID.randomUUID().toString() + "\n\n" +
+    "NEWFILEUID:" + uuid + "\n\n" +
     "<OFX>\n" +
     "<SIGNONMSGSRQV1>\n" +
     "<SONRQ>\n" +
@@ -195,7 +195,7 @@ public class OfxWriter {
   }
 
   private String getFileFooter() {
-    return "</OFX>";
+    return "</OFX>\n";
   }
 
   private String getFileHeader() {

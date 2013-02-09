@@ -85,4 +85,8 @@ public class UserAndPasswordPanel {
     userCodeField.setText("");
     passwordField.setText("");
   }
+
+  public void setUserCode(String code) {
+    userCodeField.setText(code);
+  }
 }

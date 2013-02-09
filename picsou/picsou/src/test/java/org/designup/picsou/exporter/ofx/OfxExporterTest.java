@@ -250,7 +250,7 @@ public class OfxExporterTest extends PicsouTestCase {
     OfxExporter.write(repository, writer, exportCustomFields);
     writer.close();
     assertEquals(
-      expected,
-      writer.toString());
+      expected.trim(),
+      writer.toString().trim());
   }
 }

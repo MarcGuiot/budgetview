@@ -12,12 +12,13 @@ import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
+import org.designup.picsou.model.Synchro;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.metamodel.GlobModel;
+import org.globsframework.model.FieldValue;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
@@ -32,7 +33,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class WebConnectorLauncher {
-  public static void show(BankConnectorFactory factory) throws IOException {
+  public static void show(Integer bankId, BankConnectorFactory factory) throws IOException {
 
     GlobRepository repository = GlobRepositoryBuilder.init()
       .add(PicsouGuiModel.get().getConstants())
@@ -40,7 +41,8 @@ public class WebConnectorLauncher {
 
     DefaultDirectory directory = createDirectoryWithDefaultServices(repository);
 
-    BankConnector connector = factory.create(repository, directory, false);
+    BankConnector connector = factory.create(repository, directory, false, repository.create(Synchro.TYPE,
+                                                                                             FieldValue.value(Synchro.BANK, bankId)));
 
     JFrame frame = new JFrame("Test: " + connector.getClass().getSimpleName());
     directory.add(JFrame.class, frame);

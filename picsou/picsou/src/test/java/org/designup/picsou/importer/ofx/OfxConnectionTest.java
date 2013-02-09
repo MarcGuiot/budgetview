@@ -14,10 +14,8 @@ public class OfxConnectionTest extends TestCase {
   public void test() throws Exception {
     StringWriter stringWriter = new StringWriter();
     OfxWriter writer = new OfxWriter(stringWriter);
-    writer.writeQuery("user", "password", "date", "0", "0");
-    String request = stringWriter.toString()
-      .replaceAll("NEWFILEUID:.*\n", "NEWFILEUID:123\n")
-      .replaceAll("<TRNUID>.*\n", "<TRNUID>321\n");
+    writer.writeQuery("user", "password", "date", "0", "0", "321");
+    String request = stringWriter.toString();
     assertEquals("OFXHEADER:100\n" +
                  "DATA:OFXSGML\n" +
                  "VERSION:102\n" +
@@ -26,7 +24,7 @@ public class OfxConnectionTest extends TestCase {
                  "CHARSET:1252\n" +
                  "COMPRESSION:NONE\n" +
                  "OLDFILEUID:NONE\n" +
-                 "NEWFILEUID:123\n" +
+                 "NEWFILEUID:321\n" +
                  "\n" +
                  "<OFX>\n" +
                  "<SIGNONMSGSRQV1>\n" +

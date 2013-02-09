@@ -17,6 +17,7 @@ import org.designup.picsou.model.*;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -44,20 +45,18 @@ public class LaBanquePostaleConnector extends WebBankConnector implements HttpCo
   private String currentCode = "";
   private LoginAction loginAction;
 
-  private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
-
   public static void main(String[] args) throws IOException {
-    WebConnectorLauncher.show(new Factory());
+    WebConnectorLauncher.show(BANK_ID, new Factory());
   }
 
   public static class Factory implements BankConnectorFactory {
-    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount) {
-      return new LaBanquePostaleConnector(syncExistingAccount, repository, directory);
+    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount, Glob synchro) {
+      return new LaBanquePostaleConnector(syncExistingAccount, repository, directory, synchro);
     }
   }
 
-  private LaBanquePostaleConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory) {
-    super(BANK_ID, syncExistingAccount, repository, directory);
+  private LaBanquePostaleConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory, Glob synchro) {
+    super(BANK_ID, syncExistingAccount, repository, directory, synchro);
     browser.setJavascriptEnabled(true);
     browser.getClient().getCookieManager().setCookiesEnabled(true);
   }
@@ -86,6 +85,8 @@ public class LaBanquePostaleConnector extends WebBankConnector implements HttpCo
 
     userIdField = new JTextField();
     builder.add("userIdField", userIdField);
+
+    userIdField.setText(getSyncCode());
 
     builder.add("userIdHelp", new BrowsingAction("Aide du site", directory) {
       protected String getUrl() {
@@ -217,11 +218,7 @@ public class LaBanquePostaleConnector extends WebBankConnector implements HttpCo
               doImport();
             }
             catch (final Exception e) {
-              SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
                   notifyErrorFound(e);
-                }
-              });
             }
             return null;
           }
@@ -323,6 +320,10 @@ public class LaBanquePostaleConnector extends WebBankConnector implements HttpCo
     catch (NumberFormatException e) {
       throw new WebParsingError(browser.getUrl(), e);
     }
+  }
+
+  public String getCode() {
+    return userIdField.getText();
   }
 
   private void parseAccounts(WebPage accountsPage, String tableId, boolean savings, List<AccountEntry> entries) throws WebParsingError {

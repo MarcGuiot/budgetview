@@ -1,5 +1,7 @@
 package org.designup.picsou.gui.license;
 
+import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.undo.UndoRedoService;
@@ -23,6 +25,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 
 public class LicenseActivationDialog {
   private PicsouDialog dialog;
@@ -61,19 +64,18 @@ public class LicenseActivationDialog {
         if ("newCode".equals(href)) {
           final String mail = localRepository.get(User.KEY).get(User.EMAIL);
           if (Strings.isNotEmpty(mail)) {
-            Thread thread = new Thread() {
-              public void run() {
-                final String response = directory.get(ConfigService.class).askForNewCodeByMail(mail);
-                SwingUtilities.invokeLater(new Runnable() {
-                  public void run() {
-                    connectionMessage.setText(response);
-                    connectionMessage.setVisible(true);
-                  }
-                });
-              }
-            };
-            thread.setDaemon(true);
-            thread.run();
+            directory.get(ExecutorService.class)
+              .submit(new Runnable() {
+                public void run() {
+                  final String response = directory.get(ConfigService.class).askForNewCodeByMail(mail);
+                  SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                      connectionMessage.setText(response);
+                      connectionMessage.setVisible(true);
+                    }
+                  });
+                }
+              });
           }
         }
       }
@@ -131,6 +133,8 @@ public class LicenseActivationDialog {
           activationState = user.get(User.ACTIVATION_STATE);
           if (activationState != null) {
             if (activationState == User.ACTIVATION_OK) {
+              MessageDialog.show("license.title", dialog, localDirectory,
+                                 "license.activation.ok.content");
               dialog.setVisible(false);
               repository.removeChangeListener(changeSetListener);
               localRepository.dispose();

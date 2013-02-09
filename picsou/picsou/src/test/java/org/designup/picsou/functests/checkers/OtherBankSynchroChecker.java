@@ -78,4 +78,20 @@ public class OtherBankSynchroChecker extends SynchroChecker {
     window.getComboBox().select("No error");
     return this;
   }
+
+  public OtherBankSynchroChecker setCode(String code) {
+    window.getInputTextBox("code").setText(code);
+    return this;
+  }
+
+  public OtherBankSynchroChecker checkCode(String code) {
+    assertThat(window.getInputTextBox("code").textEquals(code));
+    return this;
+  }
+
+  public OtherBankSynchroChecker removeAccount(String account) {
+    selectAccount(account);
+    window.getButton("remove").click();
+    return this;
+  }
 }

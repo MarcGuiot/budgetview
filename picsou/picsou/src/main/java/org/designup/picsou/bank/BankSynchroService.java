@@ -5,16 +5,14 @@ import org.designup.picsou.bank.connectors.americanexpressfr.AmexFrConnector;
 import org.designup.picsou.bank.connectors.bnp.BnpConnector;
 import org.designup.picsou.bank.connectors.cic.CicConnector;
 import org.designup.picsou.bank.connectors.creditagricole.CreditAgricoleConnector;
-import org.designup.picsou.bank.connectors.creditmutuel.CreditMutuelArkeaConnector;
 import org.designup.picsou.bank.connectors.labanquepostale.LaBanquePostaleConnector;
 import org.designup.picsou.bank.connectors.ofx.OfxDownloadPage;
 import org.designup.picsou.bank.connectors.sg.SgConnector;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.RealAccount;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.designup.picsou.model.Synchro;
+import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -44,30 +42,33 @@ public class BankSynchroService {
     banks.put(bankId, connectorDisplay);
   }
 
-  public List<BankConnector> getConnectors(GlobList realAccounts, Window parent, GlobRepository repository, Directory directory) {
-    Map<String, Glob> realAccountByUrl = new HashMap<String, Glob>();
-    Map<Integer, Glob> bankToRealAccount = new HashMap<Integer, Glob>();
-    for (Glob account : realAccounts) {
-      Glob bank = repository.findLinkTarget(account, RealAccount.BANK);
+  public List<BankConnector> getConnectors(GlobList allSynchro, Window parent, GlobRepository repository, Directory directory) {
+    Map<Key, Glob> realAccountByUrl = new HashMap<Key, Glob>();
+    Map<Key, Integer> bankToRealAccount = new HashMap<Key, Integer>();
+    for (Glob synchro : allSynchro) {
+      Glob bank = repository.findLinkTarget(synchro, Synchro.BANK);
       if (bank != null) {
         if (bank.isTrue(Bank.OFX_DOWNLOAD)) {
-          realAccountByUrl.put(account.get(RealAccount.URL), account);
+          realAccountByUrl.put(synchro.getKey(), synchro);
         }
         else {
-          bankToRealAccount.put(bank.get(Bank.ID), account);
+          bankToRealAccount.put(synchro.getKey(), bank.get(Bank.ID));
         }
       }
     }
 
     List<BankConnector> connectors = new ArrayList<BankConnector>();
-    for (Glob glob : realAccountByUrl.values()) {
+    for (Map.Entry<Key, Glob> entry : realAccountByUrl.entrySet()) {
+      Glob glob = entry.getValue();
+
       connectors.add(new OfxDownloadPage(repository, directory, glob.get(RealAccount.BANK), glob.get(RealAccount.URL),
-                                         glob.get(RealAccount.ORG), glob.get(RealAccount.FID)));
+                                         glob.get(RealAccount.ORG), glob.get(RealAccount.FID),
+                                         repository.get(entry.getKey())));
     }
-    for (Integer bankId : bankToRealAccount.keySet()) {
-      BankConnectorFactory factory = banks.get(bankId);
+    for (Map.Entry<Key, Integer> entry : bankToRealAccount.entrySet()) {
+      BankConnectorFactory factory = banks.get(entry.getValue());
       if (factory != null) {
-        connectors.add(factory.create(repository, directory, true));
+        connectors.add(factory.create(repository, directory, true, repository.get(entry.getKey())));
       }
     }
     return connectors;
@@ -76,13 +77,16 @@ public class BankSynchroService {
   public BankConnector getConnector(Integer bankId, Window parent, GlobRepository repository, Directory directory) {
     BankConnectorFactory factory = banks.get(bankId);
     if (factory != null) {
-      return factory.create(repository, directory, false);
+      return factory.create(repository, directory, false, repository.create(Synchro.TYPE,
+                                                                            FieldValue.value(Synchro.BANK, bankId)));
     }
 
     Glob bank = repository.find(Key.create(Bank.TYPE, bankId));
     if ((bank != null) && bank.isTrue(Bank.OFX_DOWNLOAD)) {
       return new OfxDownloadPage(repository, directory, bankId, bank.get(Bank.DOWNLOAD_URL),
-                            bank.get(Bank.ORG), bank.get(Bank.FID));
+                            bank.get(Bank.ORG), bank.get(Bank.FID),
+                            repository.create(Synchro.TYPE,
+                                              FieldValue.value(Synchro.BANK, bankId)));
     }
     return null;
   }

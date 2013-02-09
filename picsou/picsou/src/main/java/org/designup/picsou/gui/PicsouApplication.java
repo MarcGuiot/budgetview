@@ -19,8 +19,8 @@ import org.designup.picsou.gui.plaf.ApplicationLAF;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.printing.PrinterService;
 import org.designup.picsou.gui.printing.utils.DefaultPrinterService;
-import org.designup.picsou.gui.startup.components.AppLogger;
 import org.designup.picsou.gui.startup.AppPaths;
+import org.designup.picsou.gui.startup.components.AppLogger;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.startup.components.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.time.TimeService;
@@ -56,8 +56,8 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "2.34b";
-  public static final Long JAR_VERSION = 98L;
+  public static final String APPLICATION_VERSION = "2.34c";
+  public static final Long JAR_VERSION = 99L;
   public static final Long BANK_CONFIG_VERSION = 7L;
 
   public static final String APPNAME = "budgetview";
@@ -119,6 +119,23 @@ public class PicsouApplication {
     Utils.beginRemove();
     changeDate();
     Utils.endRemove();
+
+//    try {
+//      for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+//        if ("Windows".equals(info.getName())) {
+//          UIManager.setLookAndFeel(info.getClassName());
+//          break;
+//        }
+//        if ("Nimbus".equals(info.getName())) {
+//          UIManager.setLookAndFeel(info.getClassName());
+//          break;
+//        }
+//      }
+//    }
+//    catch (Exception e) {
+//      // If Nimbus is not available, you can set the GUI to another look and feel.
+//    }
+
     SwingUtilities.invokeAndWait(new Runnable() {
       public void run() {
         try {

@@ -56,7 +56,7 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
   public static void main(String[] args) throws IOException {
     BasicConfigurator.configure(new NullAppender());
     Logger.getRootLogger().setLevel(Level.ERROR);
-    WebConnectorLauncher.show(new Factory());
+    WebConnectorLauncher.show(BANK_ID, new Factory());
   }
 
   public HttpWebConnection getHttpConnection(WebClient client) {
@@ -66,7 +66,7 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
         System.out.println("SgConnector.getResponse " + s);
         if (s.startsWith("https://logs128.xiti.com") || s.startsWith("https://societegenerale.solution.weborama.fr")
             || s.startsWith("https://ssl.weborama.fr")) {
-          throw new IOException("not available");
+          return new StringWebResponse("", request.getUrl());
         }
         WebResponse response = super.getResponse(request);
         System.out.println("SgConnector.getResponse " + response.getLoadTime() + " ms.");
@@ -76,13 +76,13 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
   }
 
   public static class Factory implements BankConnectorFactory {
-    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount) {
-      return new SgConnector(syncExistingAccount, repository, directory);
+    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount, Glob synchro) {
+      return new SgConnector(syncExistingAccount, repository, directory, synchro);
     }
   }
 
-  private SgConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory) {
-    super(BANK_ID, syncExistingAccount, repository, directory);
+  private SgConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory, Glob synchro) {
+    super(BANK_ID, syncExistingAccount, repository, directory, synchro);
     this.setBrowserVersion(BrowserVersion.INTERNET_EXPLORER_7);
   }
 
@@ -127,6 +127,8 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
 
     userIdField = new JTextField();
     userIdField.addActionListener(validateUserIdAction);
+
+    userIdField.setText(getSyncCode());
     builder.add("userIdField", userIdField);
 
     builder.add("userIdHelp", new BrowsingAction("Aide Société Générale", directory) {
@@ -155,6 +157,10 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
 
   protected Double extractAmount(String position) {
     return Amounts.extractAmount(position.replace("EUR", ""));
+  }
+
+  public String getCode() {
+    return userIdField.getText();
   }
 
   private class ValidateUserIdAction extends AbstractAction {
@@ -309,10 +315,10 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
               doImport();
             }
           }
-          catch (WebCommandFailed failed) {
+          catch (final WebCommandFailed failed) {
             notifyErrorFound(failed);
           }
-          catch (Exception e1) {
+          catch (final Exception e1) {
             notifyErrorFound(e1);
           }
           finally {

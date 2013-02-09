@@ -90,9 +90,9 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
     doUpdate(Collections.singletonList(connector), importer);
   }
 
-  public void update(GlobList realAccounts, RealAccountImporter importer) {
+  public void update(GlobList synchro, RealAccountImporter importer) {
     closed = false;
-    doUpdate(bankSynchroService.getConnectors(realAccounts, dialog, repository, localDirectory), importer);
+    doUpdate(bankSynchroService.getConnectors(synchro, dialog, repository, localDirectory), importer);
   }
 
   private void doUpdate(java.util.List<BankConnector> connectors, RealAccountImporter importer) {

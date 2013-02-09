@@ -15,6 +15,9 @@ public class LocalServer {
     server.usePort(8443);
     server.setDatabaseUrl("jdbc:hsqldb:.");
     server.init();
+
+    AddUser.main("-d", "jdbc:hsqldb:.", "-u", "sa", "-p", "", "user@localhost");
+
     server.addServlet(new ServletHolder(new DefaultServlet()), "/");
     server.start();
   }

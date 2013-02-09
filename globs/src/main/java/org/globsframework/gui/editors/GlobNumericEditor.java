@@ -171,6 +171,9 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
       public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
         StringBuilder buffer = new StringBuilder();
         String text = textComponent.getText();
+        if (text.length() == 0) {
+          return;
+        }
         buffer
           .append(text, 0, offset)
           .append(text, offset + length, text.length());

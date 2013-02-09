@@ -37,12 +37,12 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
 
 
   public static void main(String[] args) throws IOException {
-    WebConnectorLauncher.show(new CreditAgricoleFactory(61));
+    WebConnectorLauncher.show(61, new CreditAgricoleFactory(61));
   }
 
   public CreditAgricoleConnector(int bankId, String url, GotoAutentifcation autentification,
-                                 boolean syncExistingAccount, GlobRepository repository, Directory directory) {
-    super(bankId, syncExistingAccount, repository, directory);
+                                 boolean syncExistingAccount, GlobRepository repository, Directory directory, Glob synchro) {
+    super(bankId, syncExistingAccount, repository, directory, synchro);
     this.autentification = autentification;
     urlGrid = url;
   }
@@ -81,7 +81,7 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
       this.id = id;
     }
 
-    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount) {
+    public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount, Glob synchro) {
       Glob glob = repository.get(Key.create(Bank.TYPE, id));
       return new CreditAgricoleConnector(id,
                                          glob.get(Bank.URL),
@@ -101,7 +101,7 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
                                              }
                                            }
                                          },
-                                         syncExistingAccount, repository, directory);
+                                         syncExistingAccount, repository, directory, synchro);
     }
   }
 
@@ -111,6 +111,7 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
 
     codeField = new JTextField();
     builder.add("userCode", codeField);
+    codeField.setText(getSyncCode());
 
     validerCode = new JButton("valider");
     builder.add("connectButton", validerCode);
@@ -131,6 +132,7 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
                 validerCode.setEnabled(true);
               }
             });
+            notifyWaitingForUser();
           }
           catch (Exception e) {
             notifyErrorFound(e);
@@ -153,6 +155,10 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
     }
   }
 
+  public String getCode() {
+    return codeField.getText();
+  }
+
   public void panelShown() {
   }
 
@@ -162,6 +168,7 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
   private class ValidateAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
       setEnabled(false);
+      notifyIdentificationInProgress();
       directory.get(ExecutorService.class).submit(new Runnable() {
         public void run() {
           try {
@@ -226,6 +233,7 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
                   }
                   ++i;
                 }
+                notifyPreparingAccount(accountName);
                 createOrUpdateRealAccount(accountName, accountNumber, null, null, bankId);
               }
             }

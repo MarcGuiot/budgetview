@@ -114,7 +114,8 @@ public class ImportDialog implements RealAccountImporter {
     GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, MonthDay.TYPE,
                             Account.TYPE, AccountUpdateMode.TYPE, BudgetArea.TYPE,
                             Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE,
-                            Series.TYPE, SubSeries.TYPE, ImportedSeries.TYPE, TransactionImport.TYPE, CsvMapping.TYPE};
+                            Series.TYPE, SubSeries.TYPE, ImportedSeries.TYPE, TransactionImport.TYPE, CsvMapping.TYPE,
+                            Synchro.TYPE};
 
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)
@@ -152,8 +153,8 @@ public class ImportDialog implements RealAccountImporter {
     setCurrentPanel(importSynchroPanel);
   }
 
-  public void showSynchro(GlobList realAccounts) {
-    importSynchroPanel.update(realAccounts, this);
+  public void showSynchro(GlobList synchro) {
+    importSynchroPanel.update(synchro, this);
     setCurrentPanel(importSynchroPanel);
   }
 

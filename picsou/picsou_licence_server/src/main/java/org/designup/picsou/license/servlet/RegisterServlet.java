@@ -92,7 +92,7 @@ public class RegisterServlet extends HttpServlet {
         if (activationCode.equals(license.get(License.ACTIVATION_CODE))) {
           logger.info("License activation ok " + license.get(License.ID));
           if (license.get(License.REPO_ID) != null) {
-            logger.info("Invalidating " + license.get(License.ID) + " ropId : " + license.get(License.REPO_ID));
+            logger.info("Invalidating previous " + license.get(License.ID) + " ropId : " + license.get(License.REPO_ID));
           }
           byte[] signature = LicenseGenerator.generateSignature(mail);
           db.getUpdateBuilder(License.TYPE, Constraints.equal(License.ID, license.get(License.ID)))
@@ -117,6 +117,19 @@ public class RegisterServlet extends HttpServlet {
           db.commit();
           resp.setHeader(ConfigService.HEADER_SIGNATURE, Encoder.byteToString(signature));
           resp.setStatus(HttpServletResponse.SC_OK);
+          for (Glob glob : globList) {
+            if (glob != license) {
+              // on ne doit avoir qu'un seul enregistrement valide par repo.
+              if (Utils.equal(glob.get(License.REPO_ID), repoId)) {
+                db.getUpdateBuilder(License.TYPE, Constraints.equal(License.ID, glob.get(License.ID)))
+                  .update(License.REPO_ID, ((String)null))
+                  .getRequest()
+                  .run();
+                db.commit();
+                logger.info("duplicate line with same repoid => updating to null other repoId");
+              }
+            }
+          }
           return;
         }
       }

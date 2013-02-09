@@ -6,13 +6,12 @@ import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.RealAccount;
+import org.designup.picsou.model.Synchro;
 import org.globsframework.gui.splits.ImageLocator;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
@@ -25,9 +24,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public abstract class AbstractBankConnector implements BankConnector {
   private GlobRepository parentRepository;
@@ -37,13 +39,15 @@ public abstract class AbstractBankConnector implements BankConnector {
   protected GlobList accounts = new GlobList();
   private SynchroMonitor monitor = SynchroMonitor.SILENT;
   private JPanel panel;
+  protected Glob synchro;
 
-  public AbstractBankConnector(Integer bankId, GlobRepository parentRepository, Directory directory) {
+  public AbstractBankConnector(Integer bankId, GlobRepository parentRepository, Directory directory, Glob synchro) {
     this.parentRepository = parentRepository;
     this.directory = directory;
     this.bankId = bankId;
+    this.synchro = synchro;
     this.repository = LocalGlobRepositoryBuilder.init(parentRepository)
-      .copy(Account.TYPE, RealAccount.TYPE)
+      .copy(Account.TYPE, RealAccount.TYPE, Synchro.TYPE)
       .get();
   }
 
@@ -64,7 +68,7 @@ public abstract class AbstractBankConnector implements BankConnector {
   }
 
   public void init(SynchroMonitor monitor) {
-    this.monitor = monitor;
+    this.monitor = new SwingSynchroMonitor(monitor);
   }
 
   public final JPanel getPanel() {
@@ -143,18 +147,62 @@ public abstract class AbstractBankConnector implements BankConnector {
     return Amounts.extractAmount(position);
   }
 
+
+  public abstract String getCode();
+
+  public String getSyncCode(){
+    return synchro.get(Synchro.CODE);
+  }
+
   public void doImport() {
     for (Glob account : accounts) {
       repository.update(account.getKey(), RealAccount.FILE_NAME, null);
     }
     try {
       downloadFile();
+      if (Strings.isNullOrEmpty(synchro.get(Synchro.CODE))) {
+        repository.update(synchro.getKey(), Synchro.CODE, getCode());
+        for (Glob account : accounts) {
+          repository.update(account.getKey(), RealAccount.SYNCHO, synchro.get(Synchro.ID));
+        }
+      }
+      else if (!getCode().equals(synchro.get(Synchro.CODE))) {
+        if (hasAKnownAccount()){
+          repository.update(synchro.getKey(), Synchro.CODE, getCode());
+        }
+        else {
+          // autre telechargement
+          Glob otherSynchro = repository.getAll(Synchro.TYPE,
+                                           GlobMatchers.and(GlobMatchers.fieldEquals(Synchro.CODE, getCode()),
+                                                            GlobMatchers.fieldEquals(Synchro.BANK, bankId))).getFirst();
+          if (otherSynchro == null) {
+            otherSynchro = repository.create(Synchro.TYPE, FieldValue.value(Synchro.CODE, getCode()),
+                                             FieldValue.value(Synchro.BANK, bankId));
+          }
+          for (Glob account : accounts) {
+            repository.update(account.getKey(), RealAccount.SYNCHO, otherSynchro.get(Synchro.ID));
+          }
+        }
+      }
     }
-    catch (Exception e) {
+    catch (final Exception e) {
       monitor.errorFound(e);
       return;
     }
     importCompleted();
+  }
+
+  private boolean hasAKnownAccount() {
+    GlobList accountsForPreviousSynchro = repository.findLinkedTo(synchro, RealAccount.SYNCHO);
+    Set<Key> accountsForPreviousSynchroKeySet = accountsForPreviousSynchro.getKeySet();
+    // changement de code
+    for (Glob account : accounts) {
+      if (accountsForPreviousSynchroKeySet.contains(account.getKey())){
+        // probablement un changement de code car au moins un compte en commun.
+        return true;
+      }
+    }
+    return false;
   }
 
   protected void importCompleted() {

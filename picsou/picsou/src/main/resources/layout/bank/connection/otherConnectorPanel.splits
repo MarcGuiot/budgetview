@@ -4,7 +4,11 @@
 
   <panel styleClass="innerDialog">
     <column>
-      <row>
+        <row>
+            <label text="Code : " marginRight="5"/>
+            <textField ref="code"/>
+        </row>
+        <row>
         <label text="Number" marginRight="5"/>
         <textField ref="number"/>
         <label text="Name" marginRight="5"/>
@@ -17,15 +21,16 @@
         <label text="File path" marginRight="5"/>
         <textField ref="file"/>
       </row>
-      <button ref="add"/>
+        <button ref="add"/>
+        <button ref="remove"/>
 
-      <scrollPane>
-        <table ref="table"/>
-      </scrollPane>
-
-      <comboBox ref="errorModeCombo"/>
-
-      <button action="update"/>
+        <panel weightY="10" weightX="10">
+           <table ref="table"/>
+        </panel>
+        <row>
+            <comboBox ref="errorModeCombo"/>
+        </row>
+        <button action="update"/>
     </column>
   </panel>
 </splits>

@@ -152,4 +152,15 @@ public class WebBrowser {
       throw new WebCommandFailed(e);
     }
   }
+
+  public WebPage updateCurrentPage() {
+    Page page = webClient.getCurrentWindow().getEnclosedPage();
+    if (page instanceof HtmlPage){
+      if (page != currentPage){
+        currentPage = (HtmlPage)page;
+        return new WebPage(this, (HtmlPage)page);
+      }
+    }
+    return new WebPage(this, currentPage);
+  }
 }

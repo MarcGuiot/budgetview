@@ -202,6 +202,9 @@ public class MainWindow implements WindowManager {
   }
 
   public void logout() {
+    //  TODO il faudrait pouvoir faire un reset sinon le repository n'est pas deconnecté
+    // mais probleme avec les bank qui ne sont initialisé qu'une fois.
+//    picsouInit.reset();
     initServerAccess(serverAddress, prevaylerPath, dataInMemory);
     frame.setJMenuBar(null);
     setPanel(loginPanel.preparePanelForShow(localUsers));

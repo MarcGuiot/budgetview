@@ -37,6 +37,7 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import picsou.AwtExceptionHandler;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -146,6 +147,12 @@ public class PicsouInit {
 
   public PreLoadData loadUserData(String user, boolean useDemoAccount, boolean autoLogin) {
     return new PreLoadData(user, useDemoAccount, autoLogin);
+  }
+
+  public void reset() {
+    Collection<GlobType> userTypes = PicsouGuiModel.getUserSpecificType();
+    PicsouInit.this.repository.reset(GlobList.EMPTY,
+                                     userTypes.toArray(new GlobType[userTypes.size()]));
   }
 
   class PreLoadData {
