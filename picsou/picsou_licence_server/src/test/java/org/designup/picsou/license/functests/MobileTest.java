@@ -41,7 +41,7 @@ public class MobileTest extends ConnectedTestCase {
   public void testCreateAccount() throws Exception {
     String mail = "test@mybudgetview.fr";
     String url = requestMobileAccount(mail);
-    followUrl(url, 302, "http://www.mybudgetview.fr/mobileAccountOk-en.html");
+    followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok");
     application.openMobileAccountDialog()
       .setEmail(mail)
       .setPassword("hello")
@@ -65,7 +65,7 @@ public class MobileTest extends ConnectedTestCase {
   public void testGetData() throws Exception {
     String mail = "test@mybudgetview.fr";
     String url = requestMobileAccount(mail);
-    followUrl(url, 302, "http://www.mybudgetview.fr/mobileAccountOk-en.html");
+    followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok");
 
     String path = OfxBuilder
       .init(this)

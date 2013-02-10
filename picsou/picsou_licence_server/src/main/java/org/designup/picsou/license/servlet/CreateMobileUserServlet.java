@@ -44,8 +44,11 @@ public class CreateMobileUserServlet extends HttpServlet {
     String mail = URLDecoder.decode(httpServletRequest.getParameter(ConfigService.HEADER_MAIL), "UTF-8");
     String coding = URLDecoder.decode(httpServletRequest.getParameter(ConfigService.CODING), "UTF-8");
     byte[] decryptedMail = encryptor.decrypt(Base64.decodeBase64(coding));
+
+    String baseUrl = "fr".equals(lang) ? "http://www.mybudgetview.fr" : "http://www.mybudgetview.com";
+
     if (!Arrays.equals(decryptedMail, mail.getBytes("UTF-8"))) {
-      httpServletResponse.sendRedirect("http://www.mybudgetview.fr/invalidCreateUserRequest-" + lang + ".html");
+      httpServletResponse.sendRedirect("/mobile/invalidCreateUserRequest");
       logger.info("Bap password " + mail);
     }
     else {
@@ -54,17 +57,17 @@ public class CreateMobileUserServlet extends HttpServlet {
       if (!dir.exists()) {
         if (dir.mkdir()) {
           logger.info("created : " + dir.getAbsolutePath());
-          httpServletResponse.sendRedirect("http://www.mybudgetview.fr/mobileAccountOk-" + lang + ".html");
+          httpServletResponse.sendRedirect(baseUrl + "/mobile/account-ok");
         }
         else {
           String content = "Can not create dir " + dir.getAbsolutePath();
           logger.error(content + " : " + mail);
           mailer.sendToSupport(Mailer.Mailbox.ADMIN, mail, "Error fs", content);
-          httpServletResponse.sendRedirect("http://www.mybudgetview.fr/internalError-" + lang + ".html");
+          httpServletResponse.sendRedirect(baseUrl + "/mobile/internal-error");
         }
       }
       else {
-        httpServletResponse.sendRedirect("http://www.mybudgetview.fr/accountAlreadyPresent-" + lang + ".html");
+        httpServletResponse.sendRedirect(baseUrl + "/mobile/account-already-present");
         logger.warn("Duplicate create : " + mail);
       }
     }
