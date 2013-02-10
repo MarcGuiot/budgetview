@@ -153,6 +153,11 @@ public class MainWindow implements WindowManager {
         mainPanel.end();
         picsouApplication.shutdown();
       }
+
+      public void windowClosed(WindowEvent e) {
+        mainPanel.end();
+        picsouApplication.shutdown();
+      }
     });
 
     boolean autoLogin = false;
@@ -202,9 +207,10 @@ public class MainWindow implements WindowManager {
   }
 
   public void logout() {
+    mainPanel.end();
     //  TODO il faudrait pouvoir faire un reset sinon le repository n'est pas deconnecté
     // mais probleme avec les bank qui ne sont initialisé qu'une fois.
-//    picsouInit.reset();
+    picsouInit.partialReset();
     initServerAccess(serverAddress, prevaylerPath, dataInMemory);
     frame.setJMenuBar(null);
     setPanel(loginPanel.preparePanelForShow(localUsers));
@@ -219,6 +225,7 @@ public class MainWindow implements WindowManager {
     catch (RemoteException e) {
       MessageDialog.show("delete.user.fail.title", frame, directory, "delete.user.fail.content");
     }
+    picsouInit.partialReset();
     logout();
   }
 

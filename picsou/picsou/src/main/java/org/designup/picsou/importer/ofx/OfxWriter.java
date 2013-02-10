@@ -55,7 +55,7 @@ public class OfxWriter {
     else {
       str = "<BANKMSGSRQV1>\n" +
                    "<STMTTRNRQ>\n" +
-                   "<TRNUID>" + UUID.randomUUID().toString()+ "\n" +
+                   "<TRNUID>" + uuid+ "\n" +
                    "<CLTCOOKIE>1\n" +
                    "<STMTRQ>\n" +
                    "<BANKACCTFROM>\n" +
@@ -76,7 +76,7 @@ public class OfxWriter {
   }
 
   public void writeQuery(String user, String password, String currentDate, final String org, final String fid, String uuid){
-      writeHeader(user, password, org, fid, currentDate, UUID.randomUUID().toString());
+      writeHeader(user, password, org, fid, currentDate, uuid);
       write(
       "<SIGNUPMSGSRQV1>\n" +
       "<ACCTINFOTRNRQ>\n" +

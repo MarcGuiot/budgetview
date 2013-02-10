@@ -155,6 +155,11 @@ public class PicsouInit {
                                      userTypes.toArray(new GlobType[userTypes.size()]));
   }
 
+  public void partialReset() {
+    PicsouInit.this.repository.reset(GlobList.EMPTY,
+                                     UserPreferences.TYPE);
+  }
+
   class PreLoadData {
     MutableChangeSet changeSet;
     GlobList userData;

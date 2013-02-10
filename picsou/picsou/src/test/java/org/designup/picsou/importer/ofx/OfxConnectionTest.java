@@ -49,7 +49,7 @@ public class OfxConnectionTest extends TestCase {
                  "</ACCTINFORQ>\n" +
                  "</ACCTINFOTRNRQ>\n" +
                  "</SIGNUPMSGSRQV1>\n" +
-                 "</OFX>", request);
+                 "</OFX>\n", request);
   }
 
   public void testParseResult() throws Exception {

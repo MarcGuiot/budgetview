@@ -65,6 +65,7 @@ public class AmexFrConnector extends WebBankConnector {
   protected JPanel createPanel() {
 
     userAndPasswordPanel = new UserAndPasswordPanel(new ConnectAction(), directory);
+    JPanel panel = userAndPasswordPanel.getPanel();
     userAndPasswordPanel.setUserCode(getSyncCode());
 
     directory.get(ExecutorService.class).submit(new Runnable() {
@@ -84,7 +85,7 @@ public class AmexFrConnector extends WebBankConnector {
         }
       }
     });
-    return userAndPasswordPanel.getPanel();
+    return panel;
   }
 
   public String getCode() {

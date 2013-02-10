@@ -13,14 +13,7 @@ public class Log {
 
   public static void init(PrintStream stream) {
     Log.stream = stream;
-    System.setOut(new PrintStream(stream){
-      public void println(String x) {
-        if (x!= null && x.startsWith("Image file")){
-          return;
-        }
-        super.println(x);
-      }
-    });
+    System.setOut(stream);
     System.setErr(stream);
   }
 

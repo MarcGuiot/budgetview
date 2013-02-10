@@ -124,7 +124,7 @@ public class SplitsBuilder {
   }
 
   public SplitsBuilder setSource(Class referenceClass, String resourceName) throws ResourceAccessFailed {
-    setSource(referenceClass, resourceName, null);
+    setSource(referenceClass, resourceName, "UTF-8");
     return this;
   }
 
@@ -252,10 +252,13 @@ public class SplitsBuilder {
 
     public Reader getReader() {
       try {
-        return new FileReader(file);
+        return new InputStreamReader(new FileInputStream(file), "UTF-8");
       }
       catch (FileNotFoundException e) {
         throw new ResourceAccessFailed("File not found: " + file.getAbsolutePath(), e);
+      }
+      catch (UnsupportedEncodingException e) {
+        throw new ResourceAccessFailed("UTF-8", e);
       }
     }
   }

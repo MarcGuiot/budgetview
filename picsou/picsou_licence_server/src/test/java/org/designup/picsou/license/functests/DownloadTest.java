@@ -65,6 +65,7 @@ public class DownloadTest extends ConnectedTestCase {
 
     Window window = application.getWindow();
     LicenseActivationChecker.enterLicense(window, email, "1234");
+    Thread.sleep(1000);
     application.getOperations().exit();
     window.dispose();
 

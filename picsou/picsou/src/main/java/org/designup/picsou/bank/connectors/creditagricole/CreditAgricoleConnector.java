@@ -50,14 +50,7 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
   public HttpWebConnection getHttpConnection(WebClient client) {
     return new HttpWebConnection(client) {
       public WebResponse getResponse(WebRequest request) throws IOException {
-        String s = request.getUrl().toString();
-        System.out.println("LaBanquePostaleConnector.getResponse " + s);
-//        if (s.startsWith("https://logs128.xiti.com") || s.startsWith("https://societegenerale.solution.weborama.fr")
-//            || s.startsWith("https://ssl.weborama.fr")) {
-//          throw new IOException("not available");
-//        }
         WebResponse response = super.getResponse(request);
-        System.out.println("LaBanquePostaleConnector.getResponse " + response.getLoadTime() + " ms.");
         return response;
       }
     };

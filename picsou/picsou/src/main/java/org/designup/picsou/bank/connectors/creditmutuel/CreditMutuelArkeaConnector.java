@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -33,6 +34,7 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
   private JButton validerCode;
   private JPasswordField passwordTextField;
   private HtmlTable accountsTable;
+  private List<WebAnchor> anchor;
 
   public static class Factory implements BankConnectorFactory {
     public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount, Glob synchro) {
@@ -123,29 +125,6 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
 
   public void downloadFile() throws Exception {
 
-    String downloadUrl = browser.getUrl() + "#TelechargementOperationPlace:";
-    WebPage currentPage = browser.load(downloadUrl);
-    browser.waitForBackgroundJavaScript(15000);
-    browser.updateCurrentPage();
-    WebPanel subPanel = currentPage.getPanelById("titrePageFonctionnelle");
-    subPanel.findFirst(WebContainer.and(WebContainer.filterTag(HtmlOption.TAG_NAME),
-                                        WebContainer.filterAttribute("value", "OFX")))
-      .parent().asSelect().selectByValue("OFX");
-
-    subPanel.findFirst(WebContainer.and(WebContainer.filterTag(HtmlInput.TAG_NAME),
-                                        WebContainer.filterType("checkbox")))
-      .asCheckBox().setChecked(true);
-
-    subPanel.findFirst(WebContainer.and(WebContainer.filterTag(HtmlAnchor.TAG_NAME),
-                                        WebContainer.filterAttribute("title", "RECHERCHER")))
-      .asAnchor().click();
-
-    browser.waitForBackgroundJavaScript(5000);
-
-    List<WebAnchor> anchor = currentPage.findAll(WebContainer.and(WebContainer.filterTag(HtmlAnchor.TAG_NAME),
-                                                                  WebContainer.filterContentContain("Télécharger")))
-      .asAnchor();
-
     for (WebAnchor webAnchor : anchor) {
       Download download = webAnchor.clickAndDownload();
       File file = download.saveAsOfx();
@@ -180,10 +159,36 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
         browser.waitForBackgroundJavaScript(30000);
         currentPage = browser.updateCurrentPage();
 
-        // rechercher la liste des comptes
-        // faire les
+        WebPanel menu = currentPage.findPanelById("menuPART");
+        WebComponent.HtmlNavigate menuItem = menu.findFirst(WebContainer.and(WebContainer.filterType(HtmlAnchor.TAG_NAME),
+                                                                          WebContainer.filterContentContain("Télécharger mes opérations")));
+        WebPage newPage = menuItem.asAnchor().click();
+        browser.waitForBackgroundJavaScript(15000);
+        currentPage = browser.updateCurrentPage();
 
-//        createOrUpdateRealAccount();
+        WebPanel subPanel = currentPage.getPanelById("titrePageFonctionnelle");
+        subPanel.findFirst(WebContainer.and(WebContainer.filterTag(HtmlOption.TAG_NAME),
+                                            WebContainer.filterAttribute("value", "OFX")))
+          .parent().asSelect().selectByValue("OFX");
+
+        subPanel.findFirst(WebContainer.and(WebContainer.filterTag(HtmlInput.TAG_NAME),
+                                            WebContainer.filterType("checkbox")))
+          .asCheckBox().setChecked(true);
+
+        subPanel.findFirst(WebContainer.and(WebContainer.filterTag(HtmlAnchor.TAG_NAME),
+                                            WebContainer.filterAttribute("title", "RECHERCHER")))
+          .asAnchor().click();
+
+        browser.waitForBackgroundJavaScript(5000);
+
+        anchor = currentPage.findAll(WebContainer.and(WebContainer.filterTag(HtmlAnchor.TAG_NAME),
+                                                      WebContainer.filterContentContain("Télécharger")))
+          .asAnchor();
+        String text;
+        for (WebAnchor webAnchor : anchor) {
+          text = webAnchor.navigate().parent().in().next().next().asPanel().getNode().asText();
+          createOrUpdateRealAccount(getCode(), text, null, (Date)null, null);
+        }
 
         doImport();
       }

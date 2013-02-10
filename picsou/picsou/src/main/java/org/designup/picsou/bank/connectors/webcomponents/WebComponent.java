@@ -152,6 +152,18 @@ public abstract class WebComponent<T extends HtmlElement> {
       node = (HtmlElement)node.getParentNode();
       return this;
     }
+
+    public WebPanel asPanel() throws WebParsingError {
+      if (optional && node == null) {
+        return null;
+      }
+      if (node instanceof HtmlDivision) {
+        return new WebPanel(browser, ((HtmlDivision)node));
+      }
+      else {
+        throw new WebParsingError(node, "not an anchor");
+      }
+    }
   }
 
   public HtmlNavigate navigate() {

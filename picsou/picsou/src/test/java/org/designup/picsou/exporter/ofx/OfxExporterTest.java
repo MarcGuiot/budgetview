@@ -138,7 +138,7 @@ public class OfxExporterTest extends PicsouTestCase {
                 "    </CCSTMTRS>\n" +
                 "   </CCSTMTTRNRS>\n" +
                 "  </CREDITCARDMSGSRSV1>\n" +
-                "</OFX>");
+                "</OFX>\n");
 
     checkExport(false,
                 "<OFX>\n" +
@@ -241,7 +241,7 @@ public class OfxExporterTest extends PicsouTestCase {
                 "    </CCSTMTRS>\n" +
                 "   </CCSTMTTRNRS>\n" +
                 "  </CREDITCARDMSGSRSV1>\n" +
-                "</OFX>");
+                "</OFX>\n");
 
   }
 

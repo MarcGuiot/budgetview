@@ -33,10 +33,18 @@ public class AppLogger {
       }
 
       FileOutputStream stream = new FileOutputStream(logFile, true);
-      PrintStream output = new PrintStream(stream);
+      PrintStream output = new PrintStream(stream){
+        public void println(String x) {
+          if (x.startsWith("Image file")){
+            return;
+          }
+          super.println(x);
+        }
+      };
       output.println("---------------------------");
       output.println(TimeService.getToday() + " - version: " + PicsouApplication.JAR_VERSION);
       output.println("---------------------------");
+
       Log.init(output);
     }
     catch (IOException e) {
