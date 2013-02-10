@@ -1,16 +1,15 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import static org.uispec4j.assertion.UISpecAssert.assertTrue;
+import static org.uispec4j.assertion.UISpecAssert.*;
 
-public class LicenseActivationChecker {
+public class LicenseActivationChecker extends GuiChecker {
   private Window dialog;
 
   public LicenseActivationChecker(Window dialog) {
@@ -36,12 +35,8 @@ public class LicenseActivationChecker {
         TextBox codeField = window.getInputTextBox("ref-code");
         codeField.clear();
         codeField.appendText(code);
-        if (email.equals("admin")){
-          return window.getButton("ok").triggerClick();
-        }
-        else {
-          return MessageDialogChecker.open(window.getButton("ok").triggerClick()).triggerClose();
-        }
+        window.getButton("Activate").click();
+        return window.getButton(Lang.get("close")).triggerClick();
       }
     });
   }
@@ -54,7 +49,7 @@ public class LicenseActivationChecker {
         TextBox box = window.getTextBox("connectionMessage");
         assertTrue(box.isVisible());
         assertTrue(box.textEquals(message));
-        return window.getButton("cancel").triggerClick();
+        return window.getButton(Lang.get("close")).triggerClick();
       }
     });
   }
@@ -81,7 +76,7 @@ public class LicenseActivationChecker {
 
   public LicenseActivationChecker enterLicenseAndValidate(final String mail, final String code) {
     enterLicense(mail, code);
-    dialog.getButton("ok").click();
+    dialog.getButton("Activate").click();
     return this;
   }
 
@@ -94,8 +89,7 @@ public class LicenseActivationChecker {
   public void checkConnectionNotAvailable() {
     assertFalse(dialog.getInputTextBox("ref-mail").isEnabled());
     assertFalse(dialog.getInputTextBox("ref-code").isEnabled());
-    assertTrue(dialog.getTextBox("connectionMessage")
-      .textEquals("You must be connected to the Internet"));
+    assertTrue(dialog.getTextBox("connectionMessage").textEquals("You must be connected to the Internet"));
   }
 
   public void checkConnectionIsAvailable() {
@@ -112,30 +106,29 @@ public class LicenseActivationChecker {
   }
 
   public LicenseActivationChecker checkErrorMessage(String message) {
-    assertFalse(dialog.getProgressBar().isVisible());
+    assertTrue(dialog.isVisible());
+    checkComponentVisible(dialog, ProgressPanel.class, "progressPanel", false);
     assertTrue(dialog.getTextBox("connectionMessage").textEquals(message));
     return this;
   }
 
-  public void cancel() {
-    dialog.getButton("cancel").click();
+  public void close() {
+    dialog.getButton(Lang.get("close")).click();
     assertFalse(dialog.isVisible());
+    dialog = null;
   }
 
-  public LicenseActivationChecker validate() {
+  public void validate() {
+    dialog.getButton("Activate").click();
     assertThat(dialog.isVisible());
-    MessageDialogChecker.open(dialog.getButton("ok").triggerClick()).close();
-    return this;
+//    checkComponentVisible(dialog, JEditorPane.class, "completionMessage", true);
+    close();
   }
 
   public LicenseActivationChecker validateWithError() {
+    dialog.getButton("Activate").click();
     assertThat(dialog.isVisible());
-    dialog.getButton("ok").click();
     return this;
-  }
-
-  public void checkClosed() {
-    assertFalse(dialog.isVisible());
   }
 
   public LicenseActivationChecker checkMsgToReceiveNewCode() {

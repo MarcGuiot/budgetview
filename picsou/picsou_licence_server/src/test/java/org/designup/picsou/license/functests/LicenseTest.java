@@ -221,35 +221,34 @@ public class LicenseTest extends ConnectedTestCase {
   public void testUnknownEmailAddress() throws Exception {
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
-    LicenseActivationChecker activationChecker = LicenseActivationChecker.open(window);
-    activationChecker
+    LicenseActivationChecker activation = LicenseActivationChecker.open(window);
+    activation
       .enterLicenseAndValidate("titi@foo.org", "az")
       .checkErrorMessage("Unknown email address")
       .checkActivationCodeIsEmptyAndMailIs("titi@foo.org");
     checkMessage("Unknown email address");
 
     db.registerMail("toto@zer", "1234");
-    activationChecker
+    activation
       .enterLicense("toto@zer", "1234")
-      .validate()
-      .checkClosed();
+      .validate();
     checkValidLicense(false);
   }
 
   public void testRegistrationWithBadKey() throws Exception {
     db.registerMail("titi@foo.org", "1234");
-    LoginChecker loginChecker = new LoginChecker(window);
-    loginChecker.logNewUser("user", "passw@rd");
+    LoginChecker login = new LoginChecker(window);
+    login.logNewUser("user", "passw@rd");
     LicenseActivationChecker.open(window)
       .enterLicenseAndValidate("titi@foo.org", "az")
       .checkErrorMessage("Activation failed")
-      .cancel();
+      .close();
     checkMessage("46 days left for trying BudgetView");
     checkMessage("This activation code is not valid. You can request");
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     exit();
     startApplication(false);
-    login.logExistingUser("user", "passw@rd", true);
+    this.login.logExistingUser("user", "passw@rd", true);
     checkLicenseExpired();
   }
 
@@ -264,7 +263,7 @@ public class LicenseTest extends ConnectedTestCase {
 
     license.validateWithError();
     license.checkErrorMessage("You must be connected to the Internet")
-      .cancel();
+      .close();
 
     checkMessage("46 days left for trying BudgetView");
     checkMessage("Cannot connect to remote server");
@@ -290,7 +289,7 @@ public class LicenseTest extends ConnectedTestCase {
     license.checkMsgSendNewCode();
     license.validateWithError();
     license.checkErrorMessage("Activation failed");
-    license.cancel();
+    license.close();
 
     checkMessage("46 days left for trying BudgetView");
     checkMessage("This activation code is not valid. You can request");
@@ -343,7 +342,7 @@ public class LicenseTest extends ConnectedTestCase {
     activation.askForCode();
     String newCode = checkMailAndExtractCode();
     assertFalse(newCode.equals("1234"));
-    activation.cancel();
+    activation.close();
   }
 
   public void testMailSentLater() throws Exception {
@@ -450,7 +449,6 @@ public class LicenseTest extends ConnectedTestCase {
 
     register(MAIL, "4321");
     exit();
-
 
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     restartAppAndLogAndDispose();
@@ -585,7 +583,7 @@ public class LicenseTest extends ConnectedTestCase {
     OperationChecker operations = new OperationChecker(window);
     Window dialog = WindowInterceptor.getModalDialog(operations.getImportTrigger());
     LicenseActivationChecker licenseActivation = new LicenseActivationChecker(dialog);
-    licenseActivation.cancel();
+    licenseActivation.close();
     checkMessageOver();
   }
 

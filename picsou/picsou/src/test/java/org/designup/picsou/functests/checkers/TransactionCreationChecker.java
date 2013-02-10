@@ -5,7 +5,6 @@ import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 
 import javax.swing.*;
-import javax.swing.text.Document;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
@@ -296,7 +295,7 @@ public class TransactionCreationChecker extends ViewChecker {
   public void checkTrialExpiredMessage() {
     LicenseActivationChecker.open(getShowHideButton().triggerClick())
       .checkCodeIsEmpty()
-      .cancel();
+      .close();
   }
 
   public void checkPanelSignpostShown(String text) {
