@@ -48,7 +48,7 @@ public class CreateMobileUserServlet extends HttpServlet {
     String baseUrl = "fr".equals(lang) ? "http://www.mybudgetview.fr" : "http://www.mybudgetview.com";
 
     if (!Arrays.equals(decryptedMail, mail.getBytes("UTF-8"))) {
-      httpServletResponse.sendRedirect("/mobile/invalidCreateUserRequest");
+      httpServletResponse.sendRedirect(baseUrl + "/mobile/invalidCreateUserRequest");
       logger.info("Bap password " + mail);
     }
     else {
