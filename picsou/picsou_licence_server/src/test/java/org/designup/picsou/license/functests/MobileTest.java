@@ -57,7 +57,7 @@ public class MobileTest extends ConnectedTestCase {
       .validateAndCheckPasswordTip("You must enter a password")
       .setPassword("hello")
       .checkNoErrorsShown()
-      .validate();
+      .validateAndClose();
     Email email = mailServer.checkReceivedMail(mail);
     email.checkContains("http");
   }
@@ -111,7 +111,7 @@ public class MobileTest extends ConnectedTestCase {
     application.openMobileAccountDialog()
       .setEmail(userMail)
       .setPassword("hello")
-      .validate();
+      .validateAndClose();
     Email email = mailServer.checkReceivedMail(userMail);
     email.checkContains("http");
     int httpStartIndex = email.getContent().indexOf("href=\"");

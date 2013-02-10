@@ -11,6 +11,8 @@ import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.editors.GlobTextEditor;
+import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.utils.Strings;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -35,9 +37,10 @@ public class CreateMobileAccountDialog {
   private PicsouDialog dialog;
   private JEditorPane message;
   private ProgressPanel progressBar;
-  private Future<String> submit;
   private JTextField emailField;
   private JTextField passwordField;
+  private CardHandler cards;
+  private ValidateCreateMobileAccountAction validateAction;
 
   public CreateMobileAccountDialog(Directory directory, GlobRepository parentRepository) {
     this.localRepository =
@@ -54,9 +57,11 @@ public class CreateMobileAccountDialog {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/mobile/createMobileAccountDialog.splits",
                                                       localRepository, localDirectory);
 
-    ValidateCreateMobileAccountAction validateAction = new ValidateCreateMobileAccountAction();
+    validateAction = new ValidateCreateMobileAccountAction();
     JButton createButton = new JButton(validateAction);
     builder.add("create", createButton);
+
+    cards = builder.addCardHandler("cards");
 
     emailField = builder.addEditor("email", UserPreferences.MAIL_FOR_MOBILE).getComponent();
     emailField.addActionListener(validateAction);
@@ -76,7 +81,7 @@ public class CreateMobileAccountDialog {
     });
 
     dialog = PicsouDialog.create(localDirectory.get(JFrame.class), localDirectory);
-    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseDialogAction(dialog));
+    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(dialog));
     dialog.setFocusTraversalPolicy(
       new CustomFocusTraversalPolicy(emailField, passwordField, createButton));
   }
@@ -90,17 +95,21 @@ public class CreateMobileAccountDialog {
 
   private class ValidateCreateMobileAccountAction extends AbstractAction {
 
+    private Future<String> submit;
+    private boolean submitInProgress = false;
+
     public ValidateCreateMobileAccountAction() {
       super(Lang.get("mobile.user.create.button"));
     }
 
     public void actionPerformed(ActionEvent e) {
-      if (submit != null) {
+      if (submitInProgress ||
+          (submit != null) ||
+          !checkFieldsAreValid()) {
         return;
       }
-      if (!checkFieldsAreValid()) {
-        return;
-      }
+
+      submitInProgress = true;
       progressBar.start();
       submit = localDirectory.get(ExecutorService.class)
         .submit(new Callable<String>() {
@@ -109,11 +118,12 @@ public class CreateMobileAccountDialog {
             boolean isOk = localDirectory.get(ConfigService.class)
               .createMobileAccount(UserPreferences.get(localRepository).get(UserPreferences.MAIL_FOR_MOBILE),
                                    messageRef);
+
             progressBar.stop();
             if (dialog.isVisible()) {
-              localRepository.commitChanges(true);
+              localRepository.commitChanges(false);
               if (isOk) {
-                dialog.setVisible(false);
+                cards.show("confirmation");
               }
               else {
                 message.setText(messageRef.get());
@@ -141,4 +151,14 @@ public class CreateMobileAccountDialog {
     return true;
   }
 
+  private class CloseAction extends CloseDialogAction {
+    public CloseAction(JDialog dialog) {
+      super(dialog);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      super.actionPerformed(e);
+      localRepository.dispose();
+    }
+  }
 }

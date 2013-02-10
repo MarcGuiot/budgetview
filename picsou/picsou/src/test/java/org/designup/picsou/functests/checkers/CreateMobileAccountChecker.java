@@ -6,6 +6,8 @@ import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
 
+import javax.swing.*;
+
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
@@ -30,9 +32,12 @@ public class CreateMobileAccountChecker extends GuiChecker{
     return this;
   }
 
-  public CreateMobileAccountChecker validate() {
+  public CreateMobileAccountChecker validateAndClose() {
     clickCreateButton();
-    assertFalse(dialog.isVisible());
+    checkComponentVisible(dialog, JButton.class, "create", false);
+    checkComponentVisible(dialog, JEditorPane.class, "completionMessage", true);
+    assertThat(dialog.isVisible());
+    close();
     return this;
   }
 
