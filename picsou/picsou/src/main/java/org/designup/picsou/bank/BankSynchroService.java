@@ -12,13 +12,14 @@ import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.model.Synchro;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BankSynchroService {
   private Map<Integer, BankConnectorFactory> banks = new HashMap<Integer, BankConnectorFactory>();
@@ -84,9 +85,9 @@ public class BankSynchroService {
     Glob bank = repository.find(Key.create(Bank.TYPE, bankId));
     if ((bank != null) && bank.isTrue(Bank.OFX_DOWNLOAD)) {
       return new OfxDownloadPage(repository, directory, bankId, bank.get(Bank.DOWNLOAD_URL),
-                            bank.get(Bank.ORG), bank.get(Bank.FID),
-                            repository.create(Synchro.TYPE,
-                                              FieldValue.value(Synchro.BANK, bankId)));
+                                 bank.get(Bank.ORG), bank.get(Bank.FID),
+                                 repository.create(Synchro.TYPE,
+                                                   FieldValue.value(Synchro.BANK, bankId)));
     }
     return null;
   }

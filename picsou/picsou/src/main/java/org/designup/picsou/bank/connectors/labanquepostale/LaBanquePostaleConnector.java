@@ -34,7 +34,7 @@ import java.util.concurrent.ExecutorService;
 
 import static org.globsframework.model.FieldValue.value;
 
-public class LaBanquePostaleConnector extends WebBankConnector implements HttpConnectionProvider {
+public class LaBanquePostaleConnector extends WebBankConnector {
   public static final Integer BANK_ID = 3;
 
   private static final String LOGIN_URL = "https://voscomptesenligne.labanquepostale.fr/voscomptes/canalXHTML/identif.ea?origin=particuliers";
@@ -61,22 +61,6 @@ public class LaBanquePostaleConnector extends WebBankConnector implements HttpCo
     browser.getClient().getCookieManager().setCookiesEnabled(true);
   }
 
-
-  public HttpWebConnection getHttpConnection(WebClient client) {
-    return new HttpWebConnection(client) {
-      public WebResponse getResponse(WebRequest request) throws IOException {
-        String s = request.getUrl().toString();
-        System.out.println("LaBanquePostaleConnector.getResponse " + s);
-//        if (s.startsWith("https://logs128.xiti.com") || s.startsWith("https://societegenerale.solution.weborama.fr")
-//            || s.startsWith("https://ssl.weborama.fr")) {
-//          throw new IOException("not available");
-//        }
-        WebResponse response = super.getResponse(request);
-        System.out.println("LaBanquePostaleConnector.getResponse " + response.getLoadTime() + " ms.");
-        return response;
-      }
-    };
-  }
 
   protected JPanel createPanel() {
 

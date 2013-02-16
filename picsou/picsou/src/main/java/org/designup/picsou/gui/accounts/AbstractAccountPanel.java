@@ -2,6 +2,7 @@ package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.bank.BankChooserDialog;
 import org.designup.picsou.gui.components.MandatoryFieldFlag;
+import org.designup.picsou.gui.components.TextFieldLimit;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.components.tips.TipPosition;
 import org.designup.picsou.gui.help.actions.HelpAction;
@@ -33,6 +34,9 @@ import java.util.Collections;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class AbstractAccountPanel<T extends GlobRepository> {
+
+  private static final int ACCOUNT_NAME_MAX_LENGTH = 25;
+
   protected JPanel panel;
   protected T localRepository;
   protected Glob currentAccount;
@@ -102,6 +106,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
     nameField = builder.addEditor("name", Account.NAME).setNotifyOnKeyPressed(true);
     nameFlag = new MandatoryFieldFlag("nameFlag", builder);
+    TextFieldLimit.install(nameField.getComponent(), ACCOUNT_NAME_MAX_LENGTH);
     accountNumber = builder.addEditor("number", Account.NUMBER).setNotifyOnKeyPressed(true);
     builder.add("type", accountTypeCombo.createAccountTypeCombo());
     accountTypeFlag = new MandatoryFieldFlag("accountTypeFlag", builder);
@@ -200,6 +205,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   public boolean check() {
     if (panel.isVisible() && editable) {
       clearMessage();
+
       if (Strings.isNullOrEmpty(currentAccount.get(Account.NAME))) {
         errorTip = ErrorTip.show(nameField.getComponent(),
                                  Lang.get("account.error.missing.name"),
@@ -207,6 +213,15 @@ public class AbstractAccountPanel<T extends GlobRepository> {
         accountDefinitionErrorShown();
         return false;
       }
+
+      if (currentAccount.get(Account.NAME).length() > ACCOUNT_NAME_MAX_LENGTH) {
+        errorTip = ErrorTip.show(nameField.getComponent(),
+                                 Lang.get("account.error.name.too.long", ACCOUNT_NAME_MAX_LENGTH),
+                                 localDirectory, TipPosition.BOTTOM_LEFT);
+        accountDefinitionErrorShown();
+        return false;
+      }
+
       if (localRepository.getAll(Account.TYPE, fieldEquals(Account.NAME, currentAccount.get(Account.NAME))).size() != 1) {
         errorTip = ErrorTip.show(nameField.getComponent(),
                                  Lang.get("account.error.duplicate.name"),

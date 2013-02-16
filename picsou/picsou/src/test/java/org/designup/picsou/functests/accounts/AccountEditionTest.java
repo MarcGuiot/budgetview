@@ -122,6 +122,27 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccountNames("Account n. 0000123");
   }
 
+  public void testAccountNamesMustBe25CharsOrLess() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "0000123", 100.00, "2008/10/15")
+      .addTransaction("2008/10/01", 15.00, "MacDo")
+      .load();
+
+    views.selectHome();
+
+    mainAccounts.edit("Account n. 0000123")
+      .checkAccountName("Account n. 0000123")
+      .setName("123456789_123456789_123456")
+      .selectAdvancedTab()
+      .checkNameValidationError("The name must not exceed 25 characters")
+      .checkStandardTabSelected()
+      .setName("123456789_123456789_12345")
+      .checkNoErrorDisplayed()
+      .validate();
+
+    mainAccounts.checkAccountNames("123456789_123456789_12345");
+  }
+
   public void testChangingAMainAccountIntoASavingsAccount() throws Exception {
     views.selectHome();
 
