@@ -19,6 +19,20 @@ import org.globsframework.utils.serialization.SerializedOutput;
 
 import static org.globsframework.model.FieldValue.value;
 
+/*
+   quel type d'operations peut-etre weekly :
+       loyer ?
+       salaire ?
+       credit ?
+       ==> que des mono operations.
+   ajouter un WeeklyBudget avec comme clée parent l'ID du budget parent
+   On laisse l'observed ici. On ne fait porter par WeeklyBudget que le montant pour
+   la semaine et le jour
+   Question : peut-on desactiver un WeeklyBugdet ==> si oui il faut le representer qqpart
+
+ */
+
+
 public class SeriesBudget {
   public static GlobType TYPE;
 

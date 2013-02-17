@@ -5,6 +5,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
+import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.BankSynchroService;
@@ -26,6 +27,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 public class CreditAgricoleConnector extends WebBankConnector implements HttpConnectionProvider {
@@ -38,6 +41,7 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
 
   public static void main(String[] args) throws IOException {
     WebConnectorLauncher.show(61, new CreditAgricoleFactory(61));
+//    WebConnectorLauncher.show(67, new CreditAgricoleFactory(67));
   }
 
   public CreditAgricoleConnector(int bankId, String url, GotoAutentifcation autentification,
@@ -50,7 +54,20 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
   public HttpWebConnection getHttpConnection(WebClient client) {
     return new HttpWebConnection(client) {
       public WebResponse getResponse(WebRequest request) throws IOException {
+//        String s = request.getUrl().toString();
+//        System.out.println("webRequest " + s);
+//        Map<String, String> headers = request.getAdditionalHeaders();
+//        for (Map.Entry<String, String> entry : headers.entrySet()) {
+//          System.out.println("webRequest header : " + entry.getKey() + "<=>" + entry.getValue());
+//        }
+//        List<NameValuePair> parameters = request.getRequestParameters();
+//        for (NameValuePair parameter : parameters) {
+//          System.out.println("webRequest param : " + parameter.getName() + " ==> " + parameter.getValue());
+//        }
+//        String body = request.getRequestBody();
+//        System.out.println("webRequest body : " + body);
         WebResponse response = super.getResponse(request);
+//        System.out.println("webRequest response " + response.getLoadTime() + " ms.");
         return response;
       }
     };
@@ -167,39 +184,55 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
           try {
             WebPage homePage = browser.getCurrentPage();
             boolean codeInMain = autentification.go(homePage, codeField.getText());
+            final WebPanel indent;
             if (codeInMain) {
-              browser.waitForBackgroundJavaScript(10000);
-              homePage = homePage.getGlobalFrameByName("frameIdent");
+              indent = browser.retry(new Callable<WebPanel>() {
+                public WebPanel call() throws Exception {
+                  WebPage ident = browser.getCurrentPage().getGlobalFrameByName("frameIdent");
+                  return ident.getPanelById("bloc-pave-saisis-code");
+                }
+              });
             }
             else {
-              homePage = browser.getCurrentPage();
-              WebTextInput ccpte = homePage.getTextInputByName("CCPTE");
+              indent = browser.getCurrentPage().getPanelById("contenu");
+              WebTextInput ccpte = indent.getTextInputByName("CCPTE");
               ccpte.setText(codeField.getText());
             }
-            WebTable table = homePage.getTableById("pave-saisie-code");
+            WebTable table = browser.retry(new Callable<WebTable>() {
+              public WebTable call() throws Exception {
+                return indent.getTableById("pave-saisie-code");
+              }
+            });
             String[][] items = table.getContentAsTextItems();
             for (char c : passwordTextField.getPassword()) {
               findAndClickInCell(table, items, "" + c);
             }
             if (codeInMain) {
-              homePage = homePage.getAnchorWithRef("javascript:Valid()").click();
+              homePage = indent.getAnchorWithRef("javascript:Valid()").click();
+              browser.waitForBackgroundJavaScript(5000);
               WebPanel liberror = homePage.findPanelById("liberror");
-              if (liberror != null){
-                notifyErrorFound(liberror.asText());
-                return;
+              if (liberror != null) {
+                notifyInfo(liberror.asText());
+                browser.waitForBackgroundJavaScript(10000);
+                liberror = homePage.findPanelById("liberror");
+                if (liberror != null && Strings.isNotEmpty(liberror.asText())){
+                  notifyErrorFound(liberror.asText());
+                  return;
+                }
               }
             }
             else {
-              homePage.getAnchorWithRef("javascript:ValidCertif();").click();
+              indent.getAnchorWithRef("javascript:ValidCertif();").click();
             }
 
             homePage = browser.getCurrentPage();
 
-//            WebForm lst = homePage.getFormByName("FRM_LST");
-            WebPage webPage = homePage.executeJavascript("javascript:doAction('Telechargement','bnt')");
-//            WebAnchor telechargement = lst.getFirstAnchorWithText("Téléchargement");
-//            WebPage webPage = telechargement.click();
-            WebForm downloadForm = webPage.getFormByName("frm_fwk");
+            final WebPage webPage = homePage.executeJavascript("javascript:doAction('Telechargement','bnt')");
+            WebForm downloadForm = browser.retry(new Callable<WebForm>() {
+              public WebForm call() throws Exception {
+                return webPage.getFormByName("frm_fwk");
+              }
+            });
             HtmlUnit.Filter checkboxFilter = WebContainer.and(WebContainer.filterTag(HtmlInput.TAG_NAME),
                                                               WebContainer.filterType("CHECKBOX"));
             WebTable accountList = downloadForm.getTableContaining(checkboxFilter);

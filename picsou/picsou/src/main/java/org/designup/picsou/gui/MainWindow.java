@@ -210,8 +210,8 @@ public class MainWindow implements WindowManager {
     mainPanel.end();
     //  TODO il faudrait pouvoir faire un reset sinon le repository n'est pas deconnecté
     // mais probleme avec les bank qui ne sont initialisé qu'une fois.
-    picsouInit.partialReset();
     initServerAccess(serverAddress, prevaylerPath, dataInMemory);
+    picsouInit.partialReset();
     frame.setJMenuBar(null);
     setPanel(loginPanel.preparePanelForShow(localUsers));
     directory.get(UndoRedoService.class).reset();
@@ -225,7 +225,6 @@ public class MainWindow implements WindowManager {
     catch (RemoteException e) {
       MessageDialog.show("delete.user.fail.title", frame, directory, "delete.user.fail.content");
     }
-    picsouInit.partialReset();
     logout();
   }
 

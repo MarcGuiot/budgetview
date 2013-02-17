@@ -41,7 +41,7 @@ public class OfxExporter implements Exporter {
 
   public void export(GlobRepository repository, Writer writer) throws IOException {
     this.repository = repository;
-    this.writer = new OfxWriter(writer);
+    this.writer = new OfxWriter(writer, false);
     write();
   }
 

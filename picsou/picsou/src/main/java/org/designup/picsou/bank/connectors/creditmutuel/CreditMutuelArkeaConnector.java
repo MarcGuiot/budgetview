@@ -8,7 +8,9 @@ import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.*;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
+import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
+import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -24,6 +26,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
+
+import static org.designup.picsou.bank.connectors.webcomponents.WebComponent.HtmlNavigate;
 
 public class CreditMutuelArkeaConnector extends WebBankConnector implements HttpConnectionProvider {
 
@@ -52,19 +56,19 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
     return new HttpWebConnection(client) {
       public WebResponse getResponse(WebRequest request) throws IOException {
         String s = request.getUrl().toString();
-        System.out.println("CreditMutuel.getResponse " + s);
-        Map<String,String> headers = request.getAdditionalHeaders();
+        System.out.println("webRequest " + s);
+        Map<String, String> headers = request.getAdditionalHeaders();
         for (Map.Entry<String, String> entry : headers.entrySet()) {
-          System.out.println("CreditMutuelArkeaConnector.getResponse " + entry.getKey() + "<=>" + entry.getValue());
+          System.out.println("webRequest header : " + entry.getKey() + "<=>" + entry.getValue());
         }
         List<NameValuePair> parameters = request.getRequestParameters();
         for (NameValuePair parameter : parameters) {
-          System.out.println("CreditMutuelArkeaConnector.getResponse " + parameter.getName() + " ==> " + parameter.getValue());
+          System.out.println("webRequest param : " + parameter.getName() + " ==> " + parameter.getValue());
         }
         String body = request.getRequestBody();
-        System.out.println("CreditMutuelArkeaConnector.getResponse body : " + body);
+        System.out.println("webRequest body : " + body);
         WebResponse response = super.getResponse(request);
-        System.out.println("CreditMutuel.getResponse " + response.getLoadTime() + " ms.");
+        System.out.println("webRequest response " + response.getLoadTime() + " ms.");
         return response;
       }
     };
@@ -156,37 +160,74 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
                                                WebContainer.filterContentContain("CONNECTEZ-VOUS")))
           .asAnchor()
           .click();
-        browser.waitForBackgroundJavaScript(30000);
+        browser.waitForBackgroundJavaScript(10000);
         currentPage = browser.updateCurrentPage();
 
-        WebPanel menu = currentPage.findPanelById("menuPART");
-        WebComponent.HtmlNavigate menuItem = menu.findFirst(WebContainer.and(WebContainer.filterType(HtmlAnchor.TAG_NAME),
-                                                                          WebContainer.filterContentContain("Télécharger mes opérations")));
-        WebPage newPage = menuItem.asAnchor().click();
-        browser.waitForBackgroundJavaScript(15000);
+        tryClickDownload(currentPage);
+//        String downloadUrl = browser.getUrl() + "#TelechargementOperationPlace:";
+//        browser.load(downloadUrl);
+        browser.waitForBackgroundJavaScript(5000);
         currentPage = browser.updateCurrentPage();
 
-        WebPanel subPanel = currentPage.getPanelById("titrePageFonctionnelle");
-        subPanel.findFirst(WebContainer.and(WebContainer.filterTag(HtmlOption.TAG_NAME),
-                                            WebContainer.filterAttribute("value", "OFX")))
-          .parent().asSelect().selectByValue("OFX");
+        WebPanel subPanel = null;
+        WebSelect select = null;
+        int count = 0;
+        while (select == null && count < 10) {
+          subPanel = currentPage.getPanelById("titrePageFonctionnelle");
+          select = subPanel.findFirst(WebContainer.and(WebContainer.filterTag(HtmlOption.TAG_NAME),
+                                                       WebContainer.filterAttribute("value", "OFX")))
+            .parent().asSelect();
+          browser.waitForBackgroundJavaScript(1000);
+          currentPage = browser.updateCurrentPage();
+          count++;
+        }
+        if (select == null){
+          throw new RuntimeException("download page not loaded ");
+        }
+        select.selectByValue("OFX");
 
         subPanel.findFirst(WebContainer.and(WebContainer.filterTag(HtmlInput.TAG_NAME),
                                             WebContainer.filterType("checkbox")))
           .asCheckBox().setChecked(true);
 
-        subPanel.findFirst(WebContainer.and(WebContainer.filterTag(HtmlAnchor.TAG_NAME),
-                                            WebContainer.filterAttribute("title", "RECHERCHER")))
-          .asAnchor().click();
+        System.out.println("CreditMutuelArkeaConnector$ValiderActionListener.actionPerformed RECHERCHER ");
 
-        browser.waitForBackgroundJavaScript(5000);
-
-        anchor = currentPage.findAll(WebContainer.and(WebContainer.filterTag(HtmlAnchor.TAG_NAME),
-                                                      WebContainer.filterContentContain("Télécharger")))
+        WebAnchor rechercher = subPanel.findFirst(WebContainer.and(WebContainer.filterTag(HtmlAnchor.TAG_NAME),
+                                                                WebContainer.filterContentContain("RECHERCHER")))
           .asAnchor();
+        rechercher.click();
+
+
+        HtmlNavigate first;
+        WebPanel subPanel2;
+        count = 0;
+        do {
+          browser.waitForBackgroundJavaScript(1000);
+          currentPage = browser.updateCurrentPage();
+          subPanel2 = currentPage.getPanelById("titrePageFonctionnelle");
+          first = subPanel2.findFirst(WebContainer.and(WebContainer.filterTag(HtmlDivision.TAG_NAME),
+                                                       WebContainer.filterContentContain("Chargement en cours ...")));
+          count++;
+        }
+        while (first.asPanel() != null && count < 10);
+
+        count = 0;
+        while (anchor == null && count < 10){
+          anchor = subPanel2.findAll(WebContainer.and(WebContainer.filterTag(HtmlAnchor.TAG_NAME),
+                                                      WebContainer.filterContentContain("Télécharger")))
+            .asAnchor();
+          count++;
+          if (anchor == null){
+            browser.waitForBackgroundJavaScript(1000);
+          }
+        }
+        if (anchor == null) {
+          notifyErrorFound("Impossible de trouver le bouton télécharger.");
+          return;
+        }
         String text;
         for (WebAnchor webAnchor : anchor) {
-          text = webAnchor.navigate().parent().in().next().next().asPanel().getNode().asText();
+          text = webAnchor.navigate().parent(6).in().in().asPanel().getNode().asText();
           createOrUpdateRealAccount(getCode(), text, null, (Date)null, null);
         }
 
@@ -199,6 +240,28 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
       finally {
         notifyWaitingForUser();
       }
+    }
+
+    private void tryClickDownload(WebPage currentPage) throws WebParsingError, WebCommandFailed {
+      WebPanel menu = currentPage.findPanelById("menuPART");
+
+      HtmlNavigate menuItem = findMenu(menu);
+      menuItem.asAnchor().mouseOver();
+
+      HtmlNavigate subMenuItem = findSubMenu(menu);
+      subMenuItem.asAnchor().mouseOver();
+      subMenuItem.asAnchor().click();
+    }
+
+    private HtmlNavigate findSubMenu(WebPanel menu) throws WebParsingError {
+      return menu.findFirst(WebContainer.and(WebContainer.filterTag(HtmlAnchor.TAG_NAME),
+                                             WebContainer.filterContentContain("Télécharger mes opérations")));
+    }
+
+    private HtmlNavigate findMenu(WebPanel menu) throws WebParsingError {
+      HtmlNavigate first = menu.findFirst(WebContainer.and(WebContainer.filterTag(HtmlAnchor.TAG_NAME),
+                                                           WebContainer.filterContentContain("MES OUTILS DE GESTION")));
+      return first;
     }
 
     private HtmlElement getAnchor(HtmlElement form) {

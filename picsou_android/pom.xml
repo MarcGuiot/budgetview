@@ -12,11 +12,6 @@
   <dependencies>
 
     <!-- Make sure this is below the android dependencies -->
-    <dependency>
-      <groupId>org.robolectric</groupId>
-      <artifactId>robolectric</artifactId>
-      <version>2.0-alpha-1</version>
-    </dependency>
 
     <dependency>
       <groupId>junit</groupId>
@@ -25,6 +20,19 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+    <profiles>
+        <profile>
+            <id>robolectric</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.robolectric</groupId>
+                    <artifactId>robolectric</artifactId>
+                    <version>2.0-alpha-1</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
   <build>
     <finalName>${project.artifactId}</finalName>

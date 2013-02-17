@@ -3,6 +3,7 @@ package com.budgetview.shared.model;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -21,11 +22,14 @@ public class SeriesEntity {
   public static GlobType TYPE;
 
   @Key
+  @NoObfuscation
   public static IntegerField ID;
 
   @Target(BudgetAreaEntity.class)
+  @NoObfuscation
   public static LinkField BUDGET_AREA;
 
+  @NoObfuscation
   public static StringField NAME;
 
   static {

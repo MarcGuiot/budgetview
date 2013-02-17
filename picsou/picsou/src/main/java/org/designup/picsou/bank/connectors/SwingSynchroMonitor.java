@@ -91,6 +91,13 @@ public class SwingSynchroMonitor implements SynchroMonitor {
         synchroMonitor.errorFound(exception);
       }
     });
+  }
 
+  public void info(final String message) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        synchroMonitor.info(message);
+      }
+    });
   }
 }

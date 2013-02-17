@@ -133,6 +133,18 @@ public abstract class WebComponent<T extends HtmlElement> {
       }
     }
 
+    public WebInput asInput() throws WebParsingError {
+      if (optional && node == null) {
+        return null;
+      }
+      if (node instanceof HtmlInput) {
+        return new WebInput(browser, ((HtmlInput)node));
+      }
+      else {
+        throw new WebParsingError(node, "not an anchor");
+      }
+    }
+
     public WebSelect asSelect() throws WebParsingError {
       if (optional && node == null) {
         return null;
@@ -152,6 +164,14 @@ public abstract class WebComponent<T extends HtmlElement> {
       node = (HtmlElement)node.getParentNode();
       return this;
     }
+
+    public HtmlNavigate parent(int count) {
+      for (int i = 0; i < count; i++){
+        parent();
+      }
+      return this;
+    }
+
 
     public WebPanel asPanel() throws WebParsingError {
       if (optional && node == null) {

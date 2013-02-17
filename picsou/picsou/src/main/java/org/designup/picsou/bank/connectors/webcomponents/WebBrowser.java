@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public class WebBrowser {
   public WebClient webClient;
@@ -162,5 +164,26 @@ public class WebBrowser {
       }
     }
     return new WebPage(this, currentPage);
+  }
+
+
+  public <T> T retry(Callable<T> callable) {
+    long timeOut = System.currentTimeMillis() + 10000;
+    while (true){
+      try {
+        return callable.call();
+      }
+      catch (Exception e) {
+        if (System.currentTimeMillis() > timeOut) {
+          if (e instanceof RuntimeException){
+            throw ((RuntimeException)e);
+          }
+          else {
+            throw new RuntimeException("on ", e);
+          }
+        }
+        waitForBackgroundJavaScript(500);
+      }
+    }
   }
 }
