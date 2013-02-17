@@ -331,7 +331,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/21", 1.0, "V'lib")
       .addBankAccount(777, 1027, "87654321", 21.0, "2008/06/21")
       .addTransaction("2008/06/10", 10.0, "McDo")
-      .addCardAccount("1111222233334444", 7.5, "2008/06/21")
+      .addCardAccount("11112222", 7.5, "2008/06/21")
       .addTransaction("2008/06/10", 71.0, "Metro")
       .save();
 
