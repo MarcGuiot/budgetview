@@ -3,66 +3,53 @@ package com.budgetview.android.checkers;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import com.budgetview.android.BudgetOverviewActivity;
 import com.budgetview.android.R;
+import com.budgetview.android.SeriesListActivity;
 import com.budgetview.android.checkers.utils.BlockParser;
 import com.budgetview.android.checkers.utils.Views;
 import com.budgetview.shared.utils.AmountFormat;
 import junit.framework.Assert;
 import org.globsframework.utils.TablePrinter;
 
-public class BudgetOverviewChecker extends AndroidChecker<BudgetOverviewActivity> {
+public class SeriesListChecker extends AndroidChecker<SeriesListActivity> {
 
-  private View view;
-
-  public BudgetOverviewChecker() {
-    super(BudgetOverviewActivity.class);
+  public SeriesListChecker() {
+    super(SeriesListActivity.class);
   }
 
-  protected void callOnCreate(BudgetOverviewActivity activity, Bundle bundle) {
+  protected void callOnCreate(SeriesListActivity activity, Bundle bundle) {
     activity.onCreate(bundle);
   }
 
-  private View getView() {
-    if (view == null) {
-      view = getCurrentPagerFragmentView(R.id.viewPager);
-    }
-    return view;
+  public SeriesRows initContent() {
+    return new SeriesRows();
   }
 
-  public SeriesListChecker edit(String budgetAreaName) {
-    Views.clickBlockWithTextView(getView(), R.id.budgetAreaBlock, R.id.budgetAreaLabel, budgetAreaName);
-    return new SeriesListChecker();
-  }
-
-  public BudgetAreaRows initContent() {
-    return new BudgetAreaRows();
-  }
-
-  public class BudgetAreaRows {
+  public class SeriesRows {
 
     private TablePrinter expected = new TablePrinter();
 
-    public BudgetAreaRows add(String budgetArea, double planned, double actual) {
-      expected.addRow(budgetArea, AmountFormat.DECIMAL_FORMAT.format(planned), AmountFormat.DECIMAL_FORMAT.format(actual));
+    public SeriesRows add(String seriesName, double planned, double actual) {
+      expected.addRow(seriesName, AmountFormat.DECIMAL_FORMAT.format(planned), AmountFormat.DECIMAL_FORMAT.format(actual));
       return this;
     }
 
     public void check() {
+      View view = getCurrentPagerFragmentView(R.id.viewPager);
       TablePrinter actual = new TablePrinter();
-      Views.parse(getView(), new BudgetAreaBlockParser(actual));
-      Assert.assertEquals(expected.toString(), actual.toString());
+      Views.parse(view, new SeriesBlockParser(actual));
+      Assert.assertEquals("", expected.toString(), actual.toString());
     }
   }
 
-  public static class BudgetAreaBlockParser implements BlockParser {
+  public static class SeriesBlockParser implements BlockParser {
 
     private String label;
     private String planned;
     private String actual;
     private TablePrinter tablePrinter;
 
-    public BudgetAreaBlockParser(TablePrinter tablePrinter) {
+    public SeriesBlockParser(TablePrinter tablePrinter) {
       this.tablePrinter = tablePrinter;
       resetLabels();
     }
@@ -71,7 +58,7 @@ public class BudgetOverviewChecker extends AndroidChecker<BudgetOverviewActivity
     }
 
     public void end(int id) {
-      if (id == R.id.budgetAreaBlock) {
+      if (id == R.id.seriesBlock) {
         tablePrinter.addRow(label, planned, actual);
         resetLabels();
       }
@@ -79,13 +66,13 @@ public class BudgetOverviewChecker extends AndroidChecker<BudgetOverviewActivity
 
     public void processText(int id, TextView textView) {
       switch (id) {
-        case R.id.budgetAreaLabel:
+        case R.id.seriesLabel:
           this.label = textView.getText().toString();
           break;
-        case R.id.budgetAreaPlanned:
+        case R.id.seriesPlanned:
           this.planned = textView.getText().toString();
           break;
-        case R.id.budgetAreaActual:
+        case R.id.seriesActual:
           this.actual = textView.getText().toString();
           break;
         default:

@@ -15,7 +15,7 @@ public class SeriesListActivity extends FragmentActivity {
   public static String MONTH_PARAMETER = "com.budgetview.seriesListActivity.parameters.month";
   public static String BUDGET_AREA_PARAMETER = "com.budgetview.seriesListActivity.parameters.series";
 
-  protected void onCreate(Bundle state) {
+  public void onCreate(Bundle state) {
     super.onCreate(state);
 
     Intent intent = getIntent();

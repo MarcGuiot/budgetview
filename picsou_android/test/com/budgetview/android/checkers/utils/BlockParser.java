@@ -2,7 +2,7 @@ package com.budgetview.android.checkers.utils;
 
 import android.widget.TextView;
 
-public interface ViewParserCallback {
+public interface BlockParser {
   void start(int id);
   void end(int id);
   void processText(int id, TextView textView);
