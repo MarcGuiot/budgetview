@@ -122,7 +122,7 @@ public class LicenseServer {
         host = "0.0.0.0";
       }
       connector.setHost(host);
-//      connector.setPassword();
+      connector.setPassword("ninja600");
       connector.setKeyPassword("ninja600");
       connector.setPort(port);
       jetty.addConnector(connector);
