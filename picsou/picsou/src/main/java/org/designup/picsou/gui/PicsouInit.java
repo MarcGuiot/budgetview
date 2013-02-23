@@ -149,15 +149,12 @@ public class PicsouInit {
     return new PreLoadData(user, useDemoAccount, autoLogin);
   }
 
-  public void reset() {
-    Collection<GlobType> userTypes = PicsouGuiModel.getUserSpecificType();
-    PicsouInit.this.repository.reset(GlobList.EMPTY,
-                                     userTypes.toArray(new GlobType[userTypes.size()]));
-  }
-
   public void partialReset() {
-    PicsouInit.this.repository.reset(GlobList.EMPTY,
-                                     UserPreferences.TYPE);
+    GlobList additionalGlobToInsert = additionalGlobToAdd(PicsouInit.this.repository);
+    Collection<GlobType> globTypeCollection = PicsouGuiModel.getUserSpecificType();
+    repository.reset(GlobList.EMPTY, globTypeCollection.toArray(new GlobType[globTypeCollection.size()]));
+    Set<GlobType> types = additionalGlobToInsert.getTypes();
+    repository.reset(additionalGlobToInsert, types.toArray(new GlobType[types.size()]));
   }
 
   class PreLoadData {

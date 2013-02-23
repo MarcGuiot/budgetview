@@ -24,6 +24,8 @@ public interface SynchroMonitor {
 
   void errorFound(Throwable exception);
 
+  void info(String message);
+
   public static SynchroMonitor SILENT = new SynchroMonitor() {
     public void initialConnection() {
     }
@@ -52,8 +54,10 @@ public interface SynchroMonitor {
     public void errorFound(Throwable exception) {
     }
 
+    public void info(String message) {
+    }
+
     public void importCompleted(GlobList realAccounts) {
     }
   };
-
 }

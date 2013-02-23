@@ -92,6 +92,9 @@ public class BnpWebConnection extends HttpWebConnection {
         public InputStream getInputStream() throws IOException {
           return builder.create(content.getInputStream());
         }
+
+        public void cleanUp() {
+        }
       };
     }
     else {

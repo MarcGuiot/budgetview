@@ -40,13 +40,13 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     mainAccounts.checkAccount("Account n. 123123123", 0, "2006/01/15");
-    mainAccounts.checkAccount("Card n. 1000-2000-3000-4000", -9, "2006/01/28");
+    mainAccounts.checkAccount("Card n. 1000-2000-30", -9, "2006/01/28");
     mainAccounts.checkSummary(0, "2006/01/15");
 
     timeline.selectAll();
     transactions.initAmountContent()
-      .add("20/01/2006", "BAR", -6.00, "To categorize", -9.00, -9.00, "Card n. 1000-2000-3000-4000")
-      .add("17/01/2006", "FOO", -3.00, "To categorize", -3.00, -3.00, "Card n. 1000-2000-3000-4000")
+      .add("20/01/2006", "BAR", -6.00, "To categorize", -9.00, -9.00, "Card n. 1000-2000-30")
+      .add("17/01/2006", "FOO", -3.00, "To categorize", -3.00, -3.00, "Card n. 1000-2000-30")
       .add("15/01/2006", "GDF", -10.00, "To categorize", 0.00, 0.00, "Account n. 123123123")
       .add("10/01/2006", "EDF", -1.00, "To categorize", 10.00, 10.00, "Account n. 123123123")
       .check();

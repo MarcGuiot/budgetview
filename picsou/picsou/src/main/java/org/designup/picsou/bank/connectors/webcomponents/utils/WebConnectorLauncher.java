@@ -126,6 +126,10 @@ public class WebConnectorLauncher {
       System.err.flush();
     }
 
+    public void info(String message) {
+      System.out.println("Info : " + message);
+    }
+
     public void importCompleted(GlobList realAccounts) {
       System.out.println("Import completed: " + realAccounts);
     }

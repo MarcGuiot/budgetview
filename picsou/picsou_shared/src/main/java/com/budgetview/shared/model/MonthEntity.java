@@ -3,6 +3,7 @@ package com.budgetview.shared.model;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
@@ -18,6 +19,7 @@ public class MonthEntity {
   public static GlobType TYPE;
 
   @Key
+  @NoObfuscation
   public static IntegerField ID;
 
   static {

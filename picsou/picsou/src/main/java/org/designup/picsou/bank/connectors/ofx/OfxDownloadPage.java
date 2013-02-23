@@ -30,6 +30,7 @@ public class OfxDownloadPage extends AbstractBankConnector {
   private String fid;
   private OfxDownloadPage.ValidateAction validateAction;
   private String uuid = UUID.randomUUID().toString();
+  private boolean v2 = false;
 
 
   public OfxDownloadPage(GlobRepository repository, Directory directory, Integer bankId, String url, String org, String fid, Glob synchro) {
@@ -95,7 +96,7 @@ public class OfxDownloadPage extends AbstractBankConnector {
       try {
         File file = File.createTempFile("download", ".ofx");
         OfxConnection.getInstance().loadOperation(account, OfxConnection.previousDate(120), codeField.getText(), new String(passwordField.getPassword()),
-                                                  urlField.getText(), orgField.getText(), fidField.getText(), file, uuid);
+                                                  urlField.getText(), orgField.getText(), fidField.getText(), file, uuid, v2);
         file.deleteOnExit();
         repository.update(account.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
       }
@@ -133,20 +134,31 @@ public class OfxDownloadPage extends AbstractBankConnector {
         .submit(new Runnable() {
           public void run() {
             try {
-              List<OfxConnection.AccountInfo> list = OfxConnection.getInstance()
-                .getAccounts(codeField.getText(), new String(passwordField.getPassword()), OfxConnection.previousDate(1),
-                             urlField.getText(), orgField.getText(), fidField.getText(), uuid);
-
-              for (OfxConnection.AccountInfo info : list) {
-                createOrUpdateRealAccount(info.accType, info.number, urlField.getText(), orgField.getText(), fidField.getText());
-              }
-              doImport();
+              preload();
             }
             catch (final RuntimeException exception) {
+              v2 = true;
+              try {
+                preload();
+                return;
+              }
+              catch (Exception e1) {
+              }
               notifyErrorFound(exception);
             }
           }
         });
     }
+  }
+
+  private void preload() {
+    List<OfxConnection.AccountInfo> list = OfxConnection.getInstance()
+      .getAccounts(codeField.getText(), new String(passwordField.getPassword()), OfxConnection.current(),
+                   urlField.getText(), orgField.getText(), fidField.getText(), uuid, v2);
+
+    for (OfxConnection.AccountInfo info : list) {
+      createOrUpdateRealAccount(info.accType, info.number, urlField.getText(), orgField.getText(), fidField.getText());
+    }
+    doImport();
   }
 }

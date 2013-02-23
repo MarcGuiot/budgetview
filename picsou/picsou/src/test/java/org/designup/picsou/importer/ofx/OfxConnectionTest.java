@@ -13,7 +13,7 @@ public class OfxConnectionTest extends TestCase {
 
   public void test() throws Exception {
     StringWriter stringWriter = new StringWriter();
-    OfxWriter writer = new OfxWriter(stringWriter);
+    OfxWriter writer = new OfxWriter(stringWriter, false);
     writer.writeQuery("user", "password", "date", "0", "0", "321");
     String request = stringWriter.toString();
     assertEquals("OFXHEADER:100\n" +
@@ -32,7 +32,8 @@ public class OfxConnectionTest extends TestCase {
                  "<DTCLIENT>date\n" +
                  "<USERID>user\n" +
                  "<USERPASS>password\n" +
-                 "<LANGUAGE>ENG<FI>\n" +
+                 "<LANGUAGE>ENG\n" +
+                 "<FI>\n" +
                  "<ORG>0\n" +
                  "<FID>0\n" +
                  "</FI>\n" +

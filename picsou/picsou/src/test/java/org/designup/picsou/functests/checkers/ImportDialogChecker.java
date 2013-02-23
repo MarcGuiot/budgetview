@@ -421,6 +421,9 @@ public class ImportDialogChecker extends GuiChecker {
     setFilePath(fileName)
       .acceptFile();
     if (getAccountEditionChecker().getAccountName().equals(accountName)) {
+      if (accountName.length() > 20){
+        getAccountEditionChecker().setName(accountName.substring(0, 20));
+      }
       setDeferredAccount(25, 28, 0);
     }
     else {
@@ -429,6 +432,9 @@ public class ImportDialogChecker extends GuiChecker {
     if (withMainAccount) {
       doImport();
       if (getAccountEditionChecker().getAccountName().equals(accountName)) {
+        if (accountName.length() > 20){
+          getAccountEditionChecker().setName(accountName.substring(0, 20));
+        }
         setDeferredAccount(25, 28, 0);
       }
       else {

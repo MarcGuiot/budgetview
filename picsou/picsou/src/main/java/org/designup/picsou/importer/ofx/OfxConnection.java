@@ -26,6 +26,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,6 +36,12 @@ public class OfxConnection {
   static OfxConnection connection = new OfxConnection();
 
   static final DateFormat format = new SimpleDateFormat("yyyyMMdd");
+
+
+  public static String current() {
+    final DateFormat format = new SimpleDateFormat("yyyyMMddHHmmss.000");
+    return format.format(new Date());
+  }
 
   public static class AccountInfo {
     public String bankId;
@@ -65,9 +72,8 @@ public class OfxConnection {
   }
 
   public List<AccountInfo> getAccounts(String user, String password, String date, final String url,
-                                       final String org, final String fid, String uuid) {
-    String accountInfo = getAccountInfo(user, password, date, url, org, fid, uuid);
-    System.out.println(accountInfo);
+                                       final String org, final String fid, String uuid, final boolean v2) {
+    String accountInfo = getAccountInfo(user, password, date, url, org, fid, uuid, v2);
     OfxParser parser = new OfxParser();
     AccountInfoOfxFunctor accountInfoOfxFunctor = new AccountInfoOfxFunctor();
     try {
@@ -81,10 +87,10 @@ public class OfxConnection {
 
   public void loadOperation(Glob realAccount, String fromDate, String user, String password,
                             final String url, final String org, final String fid,
-                            final File outputFile, final String uuid) throws IOException {
+                            final File outputFile, final String uuid, final boolean v2) throws IOException {
     StringWriter stringWriter = new StringWriter();
-    OfxWriter writer = new OfxWriter(stringWriter);
-    writer.writeLoadOp(fromDate, OfxConnection.previousDate(1), user, password, org, fid, realAccount.get(RealAccount.BANK_ID),
+    OfxWriter writer = new OfxWriter(stringWriter, v2);
+    writer.writeLoadOp(fromDate, OfxConnection.current(), user, password, org, fid, realAccount.get(RealAccount.BANK_ID),
                        realAccount.get(RealAccount.NUMBER), realAccount.get(RealAccount.ACC_TYPE), uuid);
     String request = stringWriter.toString();
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -94,10 +100,10 @@ public class OfxConnection {
     Files.copyStream(inputStream, fileOutputStream);
   }
 
-  public String getAccountInfo(String user, String password, String date, final String url, final String org, final String fid, String uuid) {
+  public String getAccountInfo(String user, String password, String date, final String url, final String org, final String fid, String uuid, final boolean v2) {
     try {
       StringWriter stringWriter = new StringWriter();
-      OfxWriter writer = new OfxWriter(stringWriter);
+      OfxWriter writer = new OfxWriter(stringWriter, v2);
       writer.writeQuery(user, password, date, org, fid, uuid);
       String request = stringWriter.toString();
       ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -218,8 +224,8 @@ public class OfxConnection {
     String fid = "0";
     String uuid = UUID.randomUUID().toString();
     DefaultGlobRepository repository = new DefaultGlobRepository(new DefaultGlobIdGenerator());
-    List<AccountInfo> globList = OfxConnection.getInstance().getAccounts(account, password, previousDate(1),
-                                                                         url, org, fid, uuid);
+    List<AccountInfo> globList = OfxConnection.getInstance().getAccounts(account, password, current(),
+                                                                         url, org, fid, uuid, false);
     System.out.println("OfxConnection.main " + globList);
     for (AccountInfo accountInfo : globList) {
       System.out.println("OfxConnection.main " + accountInfo.number + " " + accountInfo.accType);
@@ -230,7 +236,7 @@ public class OfxConnection {
                                     value(RealAccount.NUMBER, accountInfo.number),
                                     value(RealAccount.FROM_SYNCHRO, true));
       OfxConnection.getInstance().loadOperation(glob, fromDate, account, password,
-                                                url, org, fid, outputFile, uuid);
+                                                url, org, fid, outputFile, uuid, false);
       OfxImporter importer = new OfxImporter();
       GlobList list = importer.loadTransactions(new FileReader(outputFile), repository, repository, null);
       System.out.println("OfxConnection.main " + list.size());

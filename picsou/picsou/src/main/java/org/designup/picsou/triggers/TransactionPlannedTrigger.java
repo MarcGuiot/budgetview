@@ -208,6 +208,11 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       Log.write("Missing series " + seriesBudget.get(SeriesBudget.SERIES));
     }
     else {
+//      if (series.get(Series.IS_WEEKLY) ){
+//
+//      }
+
+
       TheoricalPlanned[] theoricalPlanneds =
         getTheoricalPlanned(series, repository, monthId, seriesBudget.get(SeriesBudget.PLANNED_AMOUNT));
       Double observedAmount = Utils.zeroIfNull(seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT));

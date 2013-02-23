@@ -198,6 +198,10 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       messageDialog.show();
     }
 
+    public void info(String message) {
+      progressLabel.setText(message);
+    }
+
     public void importCompleted(GlobList realAccounts) {
       if (closed) {
         return;

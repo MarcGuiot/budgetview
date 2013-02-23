@@ -196,7 +196,15 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   }
 
   static public HtmlUnit.Filter filterType(final String type){
-    return filterAttribute("type", type);
+    return new HtmlUnit.Filter() {
+      public boolean matches(HtmlElement element) {
+        return element.getAttribute("type").equalsIgnoreCase(type);
+      }
+
+      public String toString() {
+        return "type = " + type;
+      }
+    };
   }
 
   static public HtmlUnit.Filter filterAttribute(final String attrName, final String value){
@@ -297,7 +305,7 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   }
 
   public WebTable getTableContaining(HtmlUnit.Filter filter) throws WebParsingError {
-    DomNode element = HtmlUnit.getHtmlElement(node, filter);
+    DomNode element = HtmlUnit.findHtmlElement(node, filter);
     while (element != null) {
       if (element instanceof HtmlTable){
         return new WebTable(browser, (HtmlTable)element);

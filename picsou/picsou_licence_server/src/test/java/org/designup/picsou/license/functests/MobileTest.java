@@ -96,6 +96,23 @@ public class MobileTest extends ConnectedTestCase {
     assertFalse(all.isEmpty());
   }
 
+  public void testAlreadyActivated() throws Exception {
+    String mail = "test@mybudgetview.fr";
+    String url1 = requestMobileAccount(mail);
+    String url2 = requestMobileAccount(mail);
+    followUrl(url1, 302, "http://www.mybudgetview.com/mobile/account-ok");
+    followUrl(url2, 302, "http://www.mybudgetview.com/mobile/account-already-present");
+  }
+
+  public void testError() throws Exception {
+    File directory = new File("/tmp/data/");
+    Files.deleteSubtree(directory);
+    String mail = "test@mybudgetview.fr";
+    String url = requestMobileAccount(mail);
+    followUrl(url, 302, "http://www.mybudgetview.com/mobile/internal-error");
+  }
+
+
   private void followUrl(String url, final int expectedReturnCode, final String expectedRedirect) throws IOException {
     HttpClient httpClient = new DefaultHttpClient();
     HttpGet method = new HttpGet(url);
