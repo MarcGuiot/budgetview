@@ -4,8 +4,8 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:background="@drawable/tab_bg_selector"
-              android:paddingTop="10dp"
-              android:paddingBottom="5dp"
+              android:paddingTop="14dp"
+              android:paddingBottom="7dp"
   >
 
   <TextView

@@ -11,7 +11,7 @@ import org.globsframework.model.GlobRepository;
 
 public class TransactionListActivity extends FragmentActivity {
 
-  protected void onCreate(Bundle state) {
+  public void onCreate(Bundle state) {
     super.onCreate(state);
 
     Intent intent = getIntent();
@@ -24,12 +24,11 @@ public class TransactionListActivity extends FragmentActivity {
       public Fragment createFragmentWithArgs(int monthId) {
         TransactionListFragment fragment = new TransactionListFragment();
         Bundle bundle = new Bundle();
-        transactionSet.save(bundle);
+        transactionSet.copy(monthId).save(bundle);
         fragment.setArguments(bundle);
         return fragment;
       }
     }
-
     );
     page.initView();
   }

@@ -11,7 +11,7 @@ import com.budgetview.shared.utils.AmountFormat;
 import junit.framework.Assert;
 import org.globsframework.utils.TablePrinter;
 
-public class SeriesListChecker extends AndroidChecker<SeriesListActivity> {
+public class SeriesListChecker extends AndroidTabsChecker<SeriesListActivity> {
 
   public SeriesListChecker() {
     super(SeriesListActivity.class);
@@ -25,20 +25,24 @@ public class SeriesListChecker extends AndroidChecker<SeriesListActivity> {
     return new SeriesRows();
   }
 
-  public class SeriesRows {
+  public TransactionListChecker edit(String seriesName) {
+    Views.clickBlockWithTextView(getCurrentView(), R.id.seriesBlock, R.id.seriesLabel, seriesName);
+    return new TransactionListChecker();
+  }
 
-    private TablePrinter expected = new TablePrinter();
+  public class SeriesRows extends TableChecker {
+
+    public SeriesRows() {
+      super("SeriesList", getCurrentView());
+    }
 
     public SeriesRows add(String seriesName, double planned, double actual) {
       expected.addRow(seriesName, AmountFormat.DECIMAL_FORMAT.format(planned), AmountFormat.DECIMAL_FORMAT.format(actual));
       return this;
     }
 
-    public void check() {
-      View view = getCurrentPagerFragmentView(R.id.viewPager);
-      TablePrinter actual = new TablePrinter();
-      Views.parse(view, new SeriesBlockParser(actual));
-      Assert.assertEquals("", expected.toString(), actual.toString());
+    protected BlockParser getParser(TablePrinter actual) {
+      return new SeriesBlockParser(actual);
     }
   }
 
