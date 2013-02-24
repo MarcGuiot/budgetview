@@ -2,11 +2,18 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(400,200)" opaque="true">
+  <panel styleClass="dialog" preferredSize="(460,260)" opaque="true">
     <column styleClass="innerDialog">
       <label ref="title" styleClass="title"/>
-      <htmlEditorPane ref="message" marginBottom="10"/>
-      <filler fill="vertical"/>
+      <scrollPane forceVerticalScroll="true">
+        <row>
+          <label ref="icon" weightX="1" marginLeft="10" marginRight="5" marginTop="10" fill="none" anchor="top"/>
+          <column weightX="100">
+            <htmlEditorPane ref="message" marginBottom="10" anchor="top"/>
+            <filler fill="vertical"/>
+          </column>
+        </row>
+      </scrollPane>
     </column>
   </panel>
 

@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.importer.steps;
 
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.importer.ImportController;
 import org.designup.picsou.gui.importer.ImportStepPanel;
@@ -20,11 +21,11 @@ public abstract class AbstractImportStepPanel implements ImportStepPanel {
   }
 
   public void showFileErrorMessage(String message) {
-    MessageDialog.show("import.error.title", dialog, localDirectory, "import.error.message", message);
+    MessageDialog.show("import.error.title", MessageType.ERROR, dialog, localDirectory, "import.error.message", message);
   }
 
   public void showFileErrorMessage(String message, String details) {
-    MessageDialog.show("import.error.title", dialog, localDirectory, "import.error.messageWithDetails", message, details);
+    MessageDialog.show("import.error.title", MessageType.ERROR, dialog, localDirectory, "import.error.messageWithDetails", message, details);
   }
 
   protected abstract void createPanelIfNeeded();

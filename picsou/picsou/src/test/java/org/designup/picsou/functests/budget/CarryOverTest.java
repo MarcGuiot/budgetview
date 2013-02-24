@@ -232,7 +232,7 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/08");
     budgetView.variable.carryExpensesOverdrawOverWithMessage("Courses")
-      .checkMessageContains("There is no planned amount for this envelope in the next months. Nothing can be carried over.")
+      .checkInfoMessageContains("There is no planned amount for this envelope in the next months. Nothing can be carried over.")
       .close();
 
     budgetView.variable.checkSeries("Courses", -250.00, -100.00);

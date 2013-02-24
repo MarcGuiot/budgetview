@@ -35,7 +35,7 @@ public class SetPasswordChecker extends GuiChecker{
   public void validate(String title, String message) {
     MessageDialogChecker.open(window.getButton("ok").triggerClick())
       .checkTitle(title)
-      .checkMessageContains(message)
+      .checkSuccessMessageContains(message)
       .close();
     assertFalse(window.isVisible());
   }

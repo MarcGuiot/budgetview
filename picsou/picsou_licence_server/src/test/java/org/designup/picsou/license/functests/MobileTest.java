@@ -75,7 +75,7 @@ public class MobileTest extends ConnectedTestCase {
     application.getOperations().importOfxFile(path);
 
     MessageDialogChecker messageDialogChecker = application.getOperations().sendDataToServer();
-    messageDialogChecker.checkMessageContains("Data sent to server")
+    messageDialogChecker.checkSuccessMessageContains("Data sent to server")
     .close();
     HttpClient httpClient = new DefaultHttpClient();
     URIBuilder builder = new URIBuilder("http://localhost:" + httpPort + ComCst.GET_MOBILE_DATA);

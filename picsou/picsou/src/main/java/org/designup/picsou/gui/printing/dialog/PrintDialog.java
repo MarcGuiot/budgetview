@@ -2,6 +2,7 @@ package org.designup.picsou.gui.printing.dialog;
 
 import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.printing.PrinterService;
 import org.designup.picsou.gui.printing.report.BudgetReport;
@@ -85,7 +86,7 @@ public class PrintDialog {
         directory.get(PrinterService.class).print(Lang.get("application"), report);
       }
       catch (OperationFailed e) {
-        MessageDialog.show("print.completion.failed.title", directory,
+        MessageDialog.show("print.completion.failed.title", MessageType.ERROR, directory,
                            "print.completion.failed.message", e.getMessage());
       }
     }

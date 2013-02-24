@@ -1,20 +1,16 @@
 package org.designup.picsou.gui.transactions.actions;
 
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.transactions.edition.EditTransactionDialog;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.actions.MultiSelectionAction;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,7 +26,7 @@ public class EditTransactionAction extends MultiSelectionAction {
     for (Glob transaction : transactions) {
       if (transaction.isTrue(Transaction.PLANNED)) {
         MessageDialog.show("transaction.edition.planned.title",
-                           directory,
+                           MessageType.INFO, directory,
                            "transaction.edition.planned.message");
         return;
       }

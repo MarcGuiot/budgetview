@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.transactions.actions;
 
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.transactions.edition.DeleteTransactionDialog;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -20,13 +21,13 @@ public class DeleteTransactionAction extends MultiSelectionAction {
 
   protected void process(GlobList transactions, GlobRepository repository, Directory directory) {
     if (hasPlanned(transactions)) {
-      MessageDialog.show("transaction.delete.title.forbidden", directory,
+      MessageDialog.show("transaction.delete.title.forbidden", MessageType.ERROR, directory,
                          "transaction.delete.planned");
       return;
     }
 
     if (hasAutoCreated(transactions)) {
-      MessageDialog.show("transaction.delete.title.forbidden", directory,
+      MessageDialog.show("transaction.delete.title.forbidden", MessageType.ERROR, directory,
                          "transaction.delete.auto");
       return;
     }

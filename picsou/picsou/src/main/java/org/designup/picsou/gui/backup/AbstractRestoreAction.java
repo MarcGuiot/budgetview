@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.backup;
 
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.CurrentMonth;
@@ -33,7 +34,7 @@ public abstract class AbstractRestoreAction extends AbstractBackupRestoreAction 
           Gui.setDefaultCursor(frame);
         }
         if (completed == BackupService.Status.BAD_VERSION) {
-          MessageDialog.show("restore.error.title", frame, directory, "restore.bad.version");
+          MessageDialog.show("restore.error.title", MessageType.ERROR, frame, directory, "restore.bad.version");
           return;
         }
         if (completed == BackupService.Status.OK) {

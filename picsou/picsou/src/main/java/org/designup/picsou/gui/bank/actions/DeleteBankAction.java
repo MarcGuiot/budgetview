@@ -2,6 +2,7 @@ package org.designup.picsou.gui.bank.actions;
 
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.BankEntity;
@@ -10,8 +11,6 @@ import org.globsframework.gui.actions.SingleSelectionAction;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
@@ -38,7 +37,7 @@ public class DeleteBankAction extends SingleSelectionAction {
     accounts.filterSelf(not(fieldIn(Account.ID,  excludedAccountIds)), repository);
     if (accounts.size() > 0) {
       MessageDialog.show("bank.delete.title",
-                         owner, directory,
+                         MessageType.INFO, owner, directory,
                          "bank.delete.used", accounts.get(0).get(Account.NAME));
       return;
     }

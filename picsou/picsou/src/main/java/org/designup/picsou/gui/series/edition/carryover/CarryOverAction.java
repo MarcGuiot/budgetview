@@ -2,6 +2,7 @@ package org.designup.picsou.gui.series.edition.carryover;
 
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Project;
@@ -201,7 +202,7 @@ public class CarryOverAction
     CarryOverOption option = CarryOverOption.DEFAULT;
     if (!computer.canCarryOver()) {
       MessageDialog.show("series.carryOver.dialog.title",
-                         directory, "series.carryOver.confirm.noCarryOverPossible");
+                         MessageType.INFO, directory, "series.carryOver.confirm.noCarryOverPossible");
       option = CarryOverOption.NONE;
     }
     else if ((result.size() > 1) && (result.get(1).getCarriedOver() == 0.00)) {

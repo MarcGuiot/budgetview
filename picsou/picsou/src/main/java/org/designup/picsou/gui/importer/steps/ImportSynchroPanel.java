@@ -6,6 +6,7 @@ import org.designup.picsou.bank.connectors.SynchroMonitor;
 import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.importer.ImportController;
 import org.designup.picsou.gui.importer.components.RealAccountImporter;
@@ -143,7 +144,7 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       }
       progressPanel.stop();
       progressLabel.setText("");
-      MessageDialog.show("synchro.login.failed.title", dialog, localDirectory, "synchro.login.failed.message");
+      MessageDialog.show("synchro.login.failed.title", MessageType.ERROR, dialog, localDirectory, "synchro.login.failed.message");
     }
 
     public void downloadInProgress() {
@@ -174,7 +175,7 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       if (closed) {
         return;
       }
-      MessageDialog.show("bank.error", dialog, localDirectory, "bank.error.msg", errorMessage);
+      MessageDialog.show("bank.error", MessageType.ERROR, dialog, localDirectory, "bank.error.msg", errorMessage);
     }
 
     public void errorFound(Throwable exception) {

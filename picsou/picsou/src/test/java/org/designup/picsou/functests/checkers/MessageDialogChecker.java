@@ -1,9 +1,13 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
+
+import javax.swing.*;
 
 public class MessageDialogChecker extends GuiChecker {
   protected Window dialog;
@@ -21,22 +25,27 @@ public class MessageDialogChecker extends GuiChecker {
     return this;
   }
 
-  public MessageDialogChecker checkMessageContains(String message) {
+  public MessageDialogChecker checkSuccessMessageContains(String message) {
+    return checkMessage(message, MessageDialog.SUCCESS_ICON);
+  }
+
+  public MessageDialogChecker checkInfoMessageContains(String message) {
+    return checkMessage(message, MessageDialog.INFO_ICON);
+  }
+
+  public MessageDialogChecker checkErrorMessageContains(String message) {
+    return checkMessage(message, MessageDialog.ERROR_ICON);
+  }
+
+  private MessageDialogChecker checkMessage(String message, Icon icon) {
     assertThat(dialog.getTextBox("message").textContains(message));
+    assertThat(dialog.getTextBox("icon").iconEquals(icon));
     return this;
   }
 
   public void close() {
     dialog.getButton("Close").click();
     assertFalse(dialog.isVisible());
-  }
-
-  public Trigger triggerCloseUndefined() {
-    return new Trigger() {
-      public void run() throws Exception {
-        dialog.getButton().click();
-      }
-    };
   }
 
   public Trigger triggerClose() {
@@ -46,14 +55,4 @@ public class MessageDialogChecker extends GuiChecker {
       }
     };
   }
-
-  public Trigger triggerClose(final String buttonMessage) {
-    return new Trigger() {
-      public void run() throws Exception {
-        dialog.getButton(buttonMessage).click();
-      }
-    };
-  }
-
-
 }

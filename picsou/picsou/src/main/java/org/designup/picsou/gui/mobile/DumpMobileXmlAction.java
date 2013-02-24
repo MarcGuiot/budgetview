@@ -1,6 +1,7 @@
-package org.designup.picsou.gui.utils.dev;
+package org.designup.picsou.gui.mobile;
 
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.mobile.BudgetValuesUpdater;
 import org.designup.picsou.model.User;
@@ -35,7 +36,7 @@ public class DumpMobileXmlAction extends AbstractAction {
     super(Lang.get("mobile.menu.send.data"));
     this.repository = repository;
     this.directory = directory;
-    configService = directory.get(ConfigService.class);
+    this.configService = directory.get(ConfigService.class);
     updateStatus(repository);
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -62,10 +63,10 @@ public class DumpMobileXmlAction extends AbstractAction {
 
   public void actionPerformed(ActionEvent actionEvent) {
     if (sendToMobile(repository, configService)) {
-      MessageDialog.show("mobile.data.send.title", directory, "mobile.data.send.content.ok");
+      MessageDialog.show("mobile.data.send.title", MessageType.SUCCESS, directory, "mobile.data.send.content.ok");
     }
     else {
-      MessageDialog.show("mobile.data.send.title", directory, "mobile.data.send.content.fail");
+      MessageDialog.show("mobile.data.send.title", MessageType.ERROR, directory, "mobile.data.send.content.fail");
     }
   }
 

@@ -54,7 +54,7 @@ public class RestoreSnapshotChecker extends GuiChecker {
         .process(new WindowHandler() {
           public Trigger process(Window window) throws Exception {
             MessageDialogChecker dialogChecker = new MessageDialogChecker(window);
-            dialogChecker.checkMessageContains("successfully reloaded");
+            dialogChecker.checkSuccessMessageContains("successfully reloaded");
             return dialogChecker.triggerClose();
           }
         }).run();
