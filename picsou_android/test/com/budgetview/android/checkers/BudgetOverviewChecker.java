@@ -1,7 +1,6 @@
 package com.budgetview.android.checkers;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 import com.budgetview.android.BudgetOverviewActivity;
 import com.budgetview.android.R;
@@ -9,11 +8,10 @@ import com.budgetview.android.checkers.utils.BlockParser;
 import com.budgetview.android.checkers.utils.Views;
 import com.budgetview.shared.utils.AmountFormat;
 import junit.framework.Assert;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.TablePrinter;
 
-public class BudgetOverviewChecker extends AndroidChecker<BudgetOverviewActivity> {
-
-  private View view;
+public class BudgetOverviewChecker extends AndroidTabsChecker<BudgetOverviewActivity> {
 
   public BudgetOverviewChecker() {
     super(BudgetOverviewActivity.class);
@@ -23,15 +21,8 @@ public class BudgetOverviewChecker extends AndroidChecker<BudgetOverviewActivity
     activity.onCreate(bundle);
   }
 
-  private View getView() {
-    if (view == null) {
-      view = getCurrentPagerFragmentView(R.id.viewPager);
-    }
-    return view;
-  }
-
   public SeriesListChecker edit(String budgetAreaName) {
-    Views.clickBlockWithTextView(getView(), R.id.budgetAreaBlock, R.id.budgetAreaLabel, budgetAreaName);
+    Views.clickBlockWithTextView(getCurrentView(), R.id.budgetAreaBlock, R.id.budgetAreaLabel, budgetAreaName);
     return new SeriesListChecker();
   }
 
@@ -39,19 +30,18 @@ public class BudgetOverviewChecker extends AndroidChecker<BudgetOverviewActivity
     return new BudgetAreaRows();
   }
 
-  public class BudgetAreaRows {
-
-    private TablePrinter expected = new TablePrinter();
+  public class BudgetAreaRows extends TableChecker {
+    public BudgetAreaRows() {
+      super("BudgetOverview", getCurrentView());
+    }
 
     public BudgetAreaRows add(String budgetArea, double planned, double actual) {
       expected.addRow(budgetArea, AmountFormat.DECIMAL_FORMAT.format(planned), AmountFormat.DECIMAL_FORMAT.format(actual));
       return this;
     }
 
-    public void check() {
-      TablePrinter actual = new TablePrinter();
-      Views.parse(getView(), new BudgetAreaBlockParser(actual));
-      Assert.assertEquals(expected.toString(), actual.toString());
+    protected BlockParser getParser(TablePrinter actual) {
+      return new BudgetAreaBlockParser(actual);
     }
   }
 

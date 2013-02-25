@@ -2,7 +2,6 @@ package com.budgetview.android.utils;
 
 import android.content.Intent;
 import android.os.Bundle;
-import com.budgetview.android.TransactionListFragment;
 import com.budgetview.shared.model.AccountEntity;
 import com.budgetview.shared.model.SeriesEntity;
 import com.budgetview.shared.model.TransactionValues;
@@ -27,6 +26,8 @@ public class TransactionSet {
 
   private String sectionLabel;
   private GlobMatcher matcher;
+
+  private GlobRepository repository;
 
   public TransactionSet(int monthId, Integer seriesEntityId, Integer accountId, GlobRepository repository) {
     this.monthId = monthId;
@@ -64,6 +65,7 @@ public class TransactionSet {
   }
 
   private void init(GlobRepository repository) {
+    this.repository = repository;
     if (seriesEntityId != null) {
       matcher = and(fieldEquals(TransactionValues.BANK_MONTH, monthId),
                     fieldEquals(TransactionValues.SERIES, seriesEntityId));
@@ -91,6 +93,10 @@ public class TransactionSet {
 
   public GlobMatcher getMatcher() {
     return matcher;
+  }
+
+  public TransactionSet copy(int newMonthId) {
+    return new TransactionSet(newMonthId, seriesEntityId, accountId, repository);
   }
 
   public void save(Bundle bundle) {

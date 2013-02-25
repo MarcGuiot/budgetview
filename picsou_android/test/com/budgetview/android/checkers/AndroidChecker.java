@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import com.budgetview.android.R;
 import junit.framework.Assert;
 import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowAlertDialog;
@@ -69,22 +70,5 @@ public abstract class AndroidChecker<T extends Activity> {
     if (dialog != null) {
       Assert.fail("Unexpected dialog shown: " + Robolectric.shadowOf(dialog).getMessage());
     }
-  }
-
-  protected View getCurrentPagerFragmentView(int viewPagerId) {
-    ViewPager pager = (ViewPager)activity.findViewById(viewPagerId);
-    PagerAdapter adapter = Robolectric.shadowOf(pager).getAdapter();
-    Fragment fragment = (Fragment)adapter.instantiateItem(pager, 0);
-
-    FragmentActivity fragmentActivity = (FragmentActivity)activity;
-    android.support.v4.app.FragmentManager fragmentManager = fragmentActivity.getSupportFragmentManager();
-    android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-    fragmentTransaction.add(fragment, null);
-    fragmentTransaction.commit();
-
-    ShadowFragment shadowFragment = Robolectric.shadowOf(fragment);
-    shadowFragment.setActivity(fragmentActivity);
-    shadowFragment.createView();
-    return shadowFragment.getView();
   }
 }

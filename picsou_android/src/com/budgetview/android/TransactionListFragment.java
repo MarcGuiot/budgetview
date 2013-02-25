@@ -60,7 +60,6 @@ public class TransactionListFragment extends Fragment {
     }
 
     public View getView(int i, View previousView, ViewGroup parent) {
-
       View view = previousView;
       if (view == null) {
         view = inflater.inflate(R.layout.transaction_block, parent, false);
