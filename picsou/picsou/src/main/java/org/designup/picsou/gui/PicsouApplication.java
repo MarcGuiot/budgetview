@@ -56,8 +56,8 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "2.34h";
-  public static final Long JAR_VERSION = 104L;
+  public static final String APPLICATION_VERSION = "2.34i";
+  public static final Long JAR_VERSION = 105L;
   public static final Long BANK_CONFIG_VERSION = 7L;
 
   public static final String APPNAME = "budgetview";
@@ -136,8 +136,8 @@ public class PicsouApplication {
 //      // If Nimbus is not available, you can set the GUI to another look and feel.
 //    }
 
-    SwingUtilities.invokeAndWait(new Runnable() {
-      public void run() {
+//    SwingUtilities.invokeAndWait(new Runnable() {
+//      public void run() {
         try {
           new PicsouApplication().run(args);
         }
@@ -145,8 +145,8 @@ public class PicsouApplication {
           Log.write("At startup ", e);
           System.exit(-1);
         }
-      }
-    });
+//      }
+//    });
   }
 
   static void changeDate() {

@@ -10,7 +10,8 @@ import org.globsframework.utils.Strings;
 import javax.swing.*;
 import java.util.*;
 
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.isTrue;
+import static org.globsframework.model.utils.GlobMatchers.not;
 
 public class AutoCompletionModel extends Searchable {
 
@@ -62,6 +63,9 @@ public class AutoCompletionModel extends Searchable {
   }
 
   private void addLabel(String label) {
+    if (label == null) {
+      return;
+    }
     String upperCaseLabel = label.toUpperCase();
     int index = Collections.binarySearch(labels, upperCaseLabel);
     if (index >= 0) {

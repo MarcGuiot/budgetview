@@ -7,7 +7,6 @@ import org.globsframework.utils.Strings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CsvReader {
@@ -51,9 +50,18 @@ public class CsvReader {
     }
     List<String> elements = new ArrayList<String>();
     String name = "";
+    boolean startQuote = false;
     for (int i = 0; i < line.length(); ++i) {
       char c = line.charAt(i);
-      if (c == separator.getSeparator()) {
+      if (c == '\"' && (name.length() == 0 || startQuote)) {
+        if (name.length() == 0){
+          startQuote = true;
+        }
+        else {
+          startQuote = false;
+        }
+      }
+      else if (c == separator.getSeparator() && !startQuote) {
         if (Strings.isNotEmpty(name)) {
           elements.add(normalizeItem(name));
         }
@@ -61,6 +69,7 @@ public class CsvReader {
           elements.add("");
         }
         name = "";
+        startQuote = false;
       }
       else {
         name += c;
@@ -75,7 +84,7 @@ public class CsvReader {
   }
 
   public static TextType getTextType(String str) {
-    if (Strings.isNullOrEmpty(str)){
+    if (Strings.isNullOrEmpty(str)) {
       return null;
     }
     str = str.replaceAll("\\s", "");
