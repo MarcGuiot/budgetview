@@ -10,7 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import com.budgetview.android.components.GaugeView;
 import com.budgetview.android.components.TabPage;
-import com.budgetview.android.utils.TransactionSet;
+import com.budgetview.android.utils.AbstractBlock;
 import com.budgetview.shared.model.AccountEntity;
 import com.budgetview.shared.model.BudgetAreaEntity;
 import com.budgetview.shared.model.BudgetAreaValues;
@@ -103,7 +103,7 @@ public class BudgetOverviewFragment extends Fragment {
     }
   }
 
-  protected class BudgetAreaBlock extends Block {
+  protected class BudgetAreaBlock extends AbstractBlock {
     private Glob budgetAreaValues;
 
     public BudgetAreaBlock(Glob budgetAreaValues) {
@@ -144,42 +144,26 @@ public class BudgetOverviewFragment extends Fragment {
     }
   }
 
-  protected class AccountBlock extends Block {
+  protected class AccountBlock implements Block {
+
     private Glob accountEntity;
 
     public AccountBlock(Glob accountEntity) {
-      super(R.layout.account_block);
       this.accountEntity = accountEntity;
+    }
+
+    public View getView(LayoutInflater inflater, View previousView, ViewGroup parent) {
+      AccountBlockView view = new AccountBlockView(getActivity(), null);
+      view.update(monthId, accountEntity, getActivity());
+      return view;
     }
 
     protected boolean isProperViewType(View view) {
       return view.findViewById(R.id.accountLabel) != null;
     }
-
-    protected void populateView(View view) {
-      Views.setText(view, R.id.accountLabel, accountEntity.get(AccountEntity.LABEL));
-      Double position = accountEntity.get(AccountEntity.POSITION);
-      Views.setColoredText(view, R.id.accountPosition, position);
-      Views.setText(view, R.id.accountPositionDate, Text.toOnDayMonthString(accountEntity.get(AccountEntity.POSITION_DAY),
-                                                                        accountEntity.get(AccountEntity.POSITION_MONTH),
-                                                                        getResources()));
-
-      view.setOnClickListener(new View.OnClickListener() {
-        public void onClick(View view) {
-          Intent intent = new Intent(getActivity(), TransactionListActivity.class);
-
-          TransactionSet transactionSet =
-            new TransactionSet(monthId, null, accountEntity.get(AccountEntity.ID),
-                               ((App)getActivity().getApplication()).getRepository());
-          transactionSet.save(intent);
-          TabPage.copyDemoMode(getActivity(), intent);
-          startActivity(intent);
-        }
-      });
-    }
   }
 
-  protected class AccountSectionBlock extends Block {
+  protected class AccountSectionBlock extends AbstractBlock {
     private int titleId;
 
     public AccountSectionBlock(int titleId) {

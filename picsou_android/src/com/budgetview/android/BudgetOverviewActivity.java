@@ -15,18 +15,18 @@ public class BudgetOverviewActivity extends FragmentActivity {
 
     App app = (App)getApplication();
     page = new TabPage(this,
-                               getResources().getText(R.string.app_name),
-                               app.getCurrentMonthId(),
-                               new TabPageHandler() {
-                                 public Fragment createFragmentWithArgs(int monthId) {
-                                   BudgetOverviewFragment fragment = new BudgetOverviewFragment();
-                                   Bundle bundle = new Bundle();
-                                   bundle.putInt(BudgetOverviewFragment.BUDGET_OVERVIEW_MONTH, monthId);
-                                   TabPage.copyDemoMode(BudgetOverviewActivity.this, bundle);
-                                   fragment.setArguments(bundle);
-                                   return fragment;
-                                 }
-                               });
+                       getResources().getText(R.string.app_name),
+                       app.getCurrentMonthId(),
+                       new TabPageHandler() {
+                         public Fragment createFragmentWithArgs(int monthId) {
+                           BudgetOverviewFragment fragment = new BudgetOverviewFragment();
+                           Bundle bundle = new Bundle();
+                           bundle.putInt(BudgetOverviewFragment.BUDGET_OVERVIEW_MONTH, monthId);
+                           TabPage.copyDemoMode(BudgetOverviewActivity.this, bundle);
+                           fragment.setArguments(bundle);
+                           return fragment;
+                         }
+                       });
     page.initView();
   }
 }

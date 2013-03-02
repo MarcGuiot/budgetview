@@ -120,8 +120,7 @@ public class BudgetValuesUpdater {
     Set<Integer> seriesIds = new HashSet<Integer>();
     for (Glob seriesStat : sourceRepository.getAll(SeriesStat.TYPE, fieldIn(SeriesStat.MONTH, selectedMonths))) {
       Glob series = sourceRepository.findLinkTarget(seriesStat, SeriesStat.SERIES);
-
-      if (seriesStat.isTrue(SeriesStat.ACTIVE)) {
+      if (seriesStat.isTrue(SeriesStat.ACTIVE) && !series.isTrue(Series.IS_MIRROR)) {
         Integer seriesId = series.get(Series.ID);
         seriesIds.add(seriesId);
         targetRepository.create(SeriesValues.TYPE,

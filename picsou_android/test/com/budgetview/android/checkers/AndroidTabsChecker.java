@@ -24,6 +24,7 @@ public abstract class AndroidTabsChecker<T extends FragmentActivity> extends And
   public AndroidTabsChecker(Class<T> activityClass) {
     super(activityClass);
   }
+
   protected View getCurrentView() {
     if (currentView == null) {
       loadView();

@@ -60,12 +60,12 @@ public class AppLoginTest {
       .add("Variable", -600.00, -50.00)
       .check();
 
-    SeriesListChecker series201301 = budgetOverview.edit("Recurring");
-    series201301.initContent()
+    SeriesListChecker recurring201301 = budgetOverview.edit("Recurring");
+    recurring201301.initContent()
       .add("Mortgage", -1500.00, -1495.00)
       .check();
 
-    TransactionListChecker mortgageTransactions201301 = series201301.edit("Mortgage");
+    TransactionListChecker mortgageTransactions201301 = recurring201301.edit("Mortgage");
     mortgageTransactions201301.initContent()
       .add("on 2/1", "Credit XYZ", -1495.00)
       .check();
@@ -84,8 +84,20 @@ public class AppLoginTest {
       .add("Mortgage", -1600.00, -1600.00)
       .check();
 
-    recurring201302.edit("Mortgage").initContent()
+    TransactionListChecker mortgage201302 = recurring201302.edit("Mortgage");
+    mortgage201302.initContent()
       .add("planned on 2/2", "Planned Mortgage", -1600.00)
       .check();
+
+    // --- January
+
+    mortgage201302.selectTab(1, "Jan");
+
+    mortgage201302.initContent()
+      .add("on 2/1", "Credit XYZ", -1495.00)
+      .check();
+
+    TransactionPageChecker creditXYZ203101=  mortgage201302.edit("Credit XYZ");
+    creditXYZ203101.checkDisplay("Credit XYZ", "on 2/1", -1495.00);
   }
 }

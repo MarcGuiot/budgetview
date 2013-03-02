@@ -67,5 +67,8 @@
   <string name="demoEmailSendingFailure">L\'email n\'a pas pu vous être envoyé</string>
   <string name="demoEmailConnectionUnavailable">Vous devez avoir une connexion Internet pour cela</string>
 
+  <string name="transactionAccount">Compte</string>
+  <string name="transactionSeries">Enveloppe</string>
+
 </resources>
 

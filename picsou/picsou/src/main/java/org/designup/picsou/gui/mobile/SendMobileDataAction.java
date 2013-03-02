@@ -27,12 +27,12 @@ import java.io.Writer;
 import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
-public class DumpMobileXmlAction extends AbstractAction {
+public class SendMobileDataAction extends AbstractAction {
   private GlobRepository repository;
   private Directory directory;
   private ConfigService configService;
 
-  public DumpMobileXmlAction(GlobRepository repository, Directory directory) {
+  public SendMobileDataAction(GlobRepository repository, Directory directory) {
     super(Lang.get("mobile.menu.send.data"));
     this.repository = repository;
     this.directory = directory;

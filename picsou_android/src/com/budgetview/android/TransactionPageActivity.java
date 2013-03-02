@@ -22,7 +22,7 @@ public class TransactionPageActivity extends FragmentActivity {
 
   public static final String TRANSACTION_ID_PARAMETER = "transactionPageActivity.parameters.transactionId";
 
-  protected void onCreate(Bundle state) {
+  public void onCreate(Bundle state) {
     super.onCreate(state);
 
     setContentView(R.layout.transaction_pager);

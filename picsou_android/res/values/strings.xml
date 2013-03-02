@@ -66,4 +66,7 @@
   <string name="demoEmailSendingFailure">Could not sent an email to this address</string>
   <string name="demoEmailConnectionUnavailable">You need an internet connection to do this</string>
 
+  <string name="transactionAccount">Account</string>
+  <string name="transactionSeries">Envelope</string>
+
 </resources>
