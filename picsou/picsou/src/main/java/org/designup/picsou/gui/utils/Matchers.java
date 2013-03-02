@@ -89,14 +89,14 @@ public class Matchers {
     return and(
       isNotNull(Transaction.SERIES),
       not(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)),
-      not(isTrue(Transaction.PLANNED))
+      isNotTrue(Transaction.PLANNED)
     );
   }
 
   public static GlobMatcher exportableTransactions() {
     return and(
-      not(isTrue(Transaction.PLANNED)),
-      not(isTrue(Transaction.MIRROR))
+      isNotTrue(Transaction.PLANNED),
+      isNotTrue(Transaction.MIRROR)
     );
   }
 

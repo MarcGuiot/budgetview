@@ -9,7 +9,9 @@ import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -29,6 +31,9 @@ public class BudgetAreaEntity {
     GlobTypeLoader.init(BudgetAreaEntity.class, "budgetAreaEntity");
   }
 
+  public static boolean isUncategorized(Glob budgetAreaEntity) {
+    return Utils.equal(6, budgetAreaEntity.get(BudgetAreaEntity.ID));
+  }
 
   public static class Serializer implements PicsouGlobSerializer {
 

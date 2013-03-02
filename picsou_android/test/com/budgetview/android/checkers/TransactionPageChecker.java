@@ -66,4 +66,7 @@ public class TransactionPageChecker extends AndroidChecker<TransactionPageActivi
     Assert.assertEquals(expected, textView.getText());
   }
 
+  public void checkUncategorized() {
+
+  }
 }

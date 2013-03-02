@@ -95,6 +95,19 @@ public class GlobMatchers {
     return fieldEqualsObject(field, true);
   }
 
+  public static GlobMatcher isNotTrue(final BooleanField field) {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        Boolean value = item.get(field);
+        return value == null || value == false;
+      }
+
+      public String toString() {
+        return field.getName() + " is not true";
+      }
+    };
+  }
+
   public static GlobMatcher isFalse(BooleanField field) {
     return fieldEqualsObject(field, false);
   }

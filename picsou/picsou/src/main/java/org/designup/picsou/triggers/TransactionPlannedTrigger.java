@@ -262,7 +262,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       .findByIndex(Transaction.POSITION_MONTH, month)
       .getGlobs()
       .filter(and(isTrue(Transaction.PLANNED),
-                  not(isTrue(Transaction.MIRROR))), repository)
+                  isNotTrue(Transaction.MIRROR)), repository)
       .sort(Transaction.DAY);
   }
 

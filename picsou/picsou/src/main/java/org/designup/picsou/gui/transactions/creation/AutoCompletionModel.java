@@ -52,7 +52,7 @@ public class AutoCompletionModel extends Searchable {
     labels.clear();
     SortedSet<String> transactionLabels = new TreeSet<String>();
     for (String label : repository
-      .getAll(Transaction.TYPE, not(isTrue(Transaction.PLANNED)))
+      .getAll(Transaction.TYPE, isNotTrue(Transaction.PLANNED))
       .getValueSet(Transaction.LABEL)) {
       if (Strings.isNotEmpty(label)) {
         transactionLabels.add(label.toUpperCase());

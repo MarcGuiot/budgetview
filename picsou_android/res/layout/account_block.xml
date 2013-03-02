@@ -4,12 +4,14 @@
               style="@style/ListItemRow">
 
   <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                style="@style/ListItem">
+                style="@style/ListItem"
+                android:background="@drawable/list_background">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
-                  android:orientation="horizontal">
+                  android:orientation="horizontal"
+                  android:background="@drawable/list_background">
 
       <TextView android:id="@+id/accountLabel"
                 style="@style/ListItemLabel"
@@ -25,6 +27,7 @@
                   android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
+                  android:background="@drawable/list_background"
       >
 
       <View style="@style/Spacer"/>

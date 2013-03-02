@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class BudgetValuesUpdater {
 
@@ -145,8 +145,8 @@ public class BudgetValuesUpdater {
   private void createAccounts() {
 
     GlobMatcher matcher =
-      GlobMatchers.and(Matchers.userCreatedAccounts(),
-                       new Matchers.AccountDateMatcher(Utils.set(selectedMonths)));
+      and(Matchers.userCreatedAccounts(),
+          new Matchers.AccountDateMatcher(Utils.set(selectedMonths)));
 
     GlobList accounts =
       sourceRepository.getAll(Account.TYPE, matcher)
@@ -178,7 +178,9 @@ public class BudgetValuesUpdater {
 
   private void createTransactions() {
     GlobList transactions = sourceRepository
-      .getAll(Transaction.TYPE, fieldIn(Transaction.BUDGET_MONTH, selectedMonths))
+      .getAll(Transaction.TYPE,
+              and(fieldIn(Transaction.BUDGET_MONTH, selectedMonths),
+                  isNotTrue(Transaction.PLANNED)))
       .sort(TransactionComparator.DESCENDING_BANK_SPLIT_AFTER);
     int sequenceNumber = 0;
     for (Glob transaction : transactions) {
@@ -188,7 +190,6 @@ public class BudgetValuesUpdater {
                               value(TransactionValues.LABEL, transaction.get(Transaction.LABEL)),
                               value(TransactionValues.BANK_DAY, transaction.get(Transaction.BANK_DAY)),
                               value(TransactionValues.BANK_MONTH, transaction.get(Transaction.BANK_MONTH)),
-                              value(TransactionValues.PLANNED, transaction.get(Transaction.PLANNED)),
                               value(TransactionValues.SERIES, transaction.get(Transaction.SERIES)),
                               value(TransactionValues.SEQUENCE_NUMBER, sequenceNumber++)
       );

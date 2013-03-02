@@ -9,7 +9,6 @@
   <color name="amount_positive">#4D9A2C</color>
   <color name="amount_negative">#DB1811</color>
   <color name="item_label">#222222</color>
-  <color name="item_label_disabled">#888888</color>
   <color name="tab_text_color">#FFFFFF</color>
   <color name="horizontal_separator">#C7C0BA</color>
   <color name="form_label">#333333</color>

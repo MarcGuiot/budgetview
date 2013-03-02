@@ -11,15 +11,18 @@ import android.widget.ListView;
 import com.budgetview.android.components.GaugeView;
 import com.budgetview.android.components.TabPage;
 import com.budgetview.android.utils.AbstractBlock;
+import com.budgetview.android.utils.TransactionSet;
 import com.budgetview.shared.model.AccountEntity;
 import com.budgetview.shared.model.BudgetAreaEntity;
 import com.budgetview.shared.model.BudgetAreaValues;
+import com.budgetview.shared.model.SeriesEntity;
 import com.budgetview.shared.utils.AccountEntityMatchers;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,17 +121,34 @@ public class BudgetOverviewFragment extends Fragment {
     protected void populateView(View view) {
 
       App app = (App)getActivity().getApplication();
-      Glob entity = app.getRepository().findLinkTarget(budgetAreaValues, BudgetAreaValues.BUDGET_AREA);
+      final Glob entity = app.getRepository().findLinkTarget(budgetAreaValues, BudgetAreaValues.BUDGET_AREA);
 
-      view.setOnClickListener(new View.OnClickListener() {
-        public void onClick(View view) {
-          Intent intent = new Intent(getActivity(), SeriesListActivity.class);
-          intent.putExtra(SeriesListActivity.MONTH_PARAMETER, budgetAreaValues.get(BudgetAreaValues.MONTH));
-          intent.putExtra(SeriesListActivity.BUDGET_AREA_PARAMETER, budgetAreaValues.get(BudgetAreaValues.BUDGET_AREA));
-          TabPage.copyDemoMode(getActivity(), intent);
-          startActivity(intent);
-        }
-      });
+      if (BudgetAreaEntity.isUncategorized(entity)) {
+        view.setOnClickListener(new View.OnClickListener() {
+          public void onClick(View view) {
+            final App app = (App)getActivity().getApplication();
+            GlobList all = app.getRepository().getAll(SeriesEntity.TYPE, GlobMatchers.linkedTo(entity, SeriesEntity.BUDGET_AREA));
+            Glob seriesEntity = all.getFirst();
+            Intent intent = new Intent(getActivity(), TransactionListActivity.class);
+            TransactionSet transactionSet =
+              new TransactionSet(monthId, seriesEntity.get(SeriesEntity.ID), null, app.getRepository());
+            transactionSet.save(intent);
+            TabPage.copyDemoMode(getActivity(), intent);
+            startActivity(intent);
+          }
+        });
+      }
+      else {
+        view.setOnClickListener(new View.OnClickListener() {
+          public void onClick(View view) {
+            Intent intent = new Intent(getActivity(), SeriesListActivity.class);
+            intent.putExtra(SeriesListActivity.MONTH_PARAMETER, budgetAreaValues.get(BudgetAreaValues.MONTH));
+            intent.putExtra(SeriesListActivity.BUDGET_AREA_PARAMETER, budgetAreaValues.get(BudgetAreaValues.BUDGET_AREA));
+            TabPage.copyDemoMode(getActivity(), intent);
+            startActivity(intent);
+          }
+        });
+      }
 
       Views.setText(view, R.id.budgetAreaLabel, entity.get(BudgetAreaEntity.LABEL));
       Views.setText(view, R.id.budgetAreaActual, budgetAreaValues.get(BudgetAreaValues.ACTUAL));
