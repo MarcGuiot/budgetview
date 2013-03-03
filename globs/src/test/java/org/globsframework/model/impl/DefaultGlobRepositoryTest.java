@@ -550,6 +550,25 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     checkDummyObjectDisabled(glob);
   }
 
+  public void testDeleteAllWithNoArgumentsDeletesAllTypes() throws Exception {
+    init("<dummyObject id='1' name='name'/>" +
+         "<dummyObjectWithCompositeKey id1='1' id2='2' name='targetName'/>" +
+         "<dummyObjectWithLinks id='0' targetId1='1' targetId2='2'/>" +
+         "<dummyObjectWithLinks id='1' targetId1='1' targetId2='2'/>" +
+         "<dummyObjectWithLinks id='2' targetId1='2' targetId2='2'/>");
+
+    Key key = getKey(1);
+    Glob glob = repository.get(key);
+    assertTrue(glob.exists());
+
+    repository.deleteAll();
+    checkDummyObjectDisabled(glob);
+
+    assertFalse(repository.contains(DummyObject.TYPE));
+    assertFalse(repository.contains(DummyObjectWithCompositeKey.TYPE));
+    assertFalse(repository.contains(DummyObjectWithLinks.TYPE));
+  }
+
   private void checkDummyObjectDisabled(Glob glob) {
     assertFalse(glob.exists());
     try {

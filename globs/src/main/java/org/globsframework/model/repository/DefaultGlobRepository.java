@@ -469,6 +469,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
   public void deleteAll(GlobType... types) throws OperationDenied {
     startChangeSet();
+    if (types.length == 0) {
+      Set<GlobType> allTypes = getTypes();
+      types = allTypes.toArray(new GlobType[allTypes.size()]);
+    }
     OperationDenied exception = null;
     try {
       List<Pair<Key, FieldValues>> toBeRemoved = new ArrayList<Pair<Key, FieldValues>>();
