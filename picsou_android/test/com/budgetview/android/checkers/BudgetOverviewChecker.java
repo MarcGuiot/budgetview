@@ -26,6 +26,11 @@ public class BudgetOverviewChecker extends AndroidTabsChecker<BudgetOverviewActi
     return new SeriesListChecker();
   }
 
+  public TransactionListChecker editUncategorized() {
+    Views.clickBlockWithTextView(getCurrentView(), R.id.budgetAreaBlock, R.id.budgetAreaLabel, "Uncategorized");
+    return new TransactionListChecker();
+  }
+
   public BudgetAreaRows initContent() {
     return new BudgetAreaRows();
   }

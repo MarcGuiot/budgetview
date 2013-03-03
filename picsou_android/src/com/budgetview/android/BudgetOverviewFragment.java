@@ -10,16 +10,19 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import com.budgetview.android.components.GaugeView;
 import com.budgetview.android.components.TabPage;
+import com.budgetview.android.utils.AbstractBlock;
 import com.budgetview.android.utils.TransactionSet;
 import com.budgetview.shared.model.AccountEntity;
 import com.budgetview.shared.model.BudgetAreaEntity;
 import com.budgetview.shared.model.BudgetAreaValues;
+import com.budgetview.shared.model.SeriesEntity;
 import com.budgetview.shared.utils.AccountEntityMatchers;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +106,7 @@ public class BudgetOverviewFragment extends Fragment {
     }
   }
 
-  protected class BudgetAreaBlock extends Block {
+  protected class BudgetAreaBlock extends AbstractBlock {
     private Glob budgetAreaValues;
 
     public BudgetAreaBlock(Glob budgetAreaValues) {
@@ -118,17 +121,34 @@ public class BudgetOverviewFragment extends Fragment {
     protected void populateView(View view) {
 
       App app = (App)getActivity().getApplication();
-      Glob entity = app.getRepository().findLinkTarget(budgetAreaValues, BudgetAreaValues.BUDGET_AREA);
+      final Glob entity = app.getRepository().findLinkTarget(budgetAreaValues, BudgetAreaValues.BUDGET_AREA);
 
-      view.setOnClickListener(new View.OnClickListener() {
-        public void onClick(View view) {
-          Intent intent = new Intent(getActivity(), SeriesListActivity.class);
-          intent.putExtra(SeriesListActivity.MONTH_PARAMETER, budgetAreaValues.get(BudgetAreaValues.MONTH));
-          intent.putExtra(SeriesListActivity.BUDGET_AREA_PARAMETER, budgetAreaValues.get(BudgetAreaValues.BUDGET_AREA));
-          TabPage.copyDemoMode(getActivity(), intent);
-          startActivity(intent);
-        }
-      });
+      if (BudgetAreaEntity.isUncategorized(entity)) {
+        view.setOnClickListener(new View.OnClickListener() {
+          public void onClick(View view) {
+            final App app = (App)getActivity().getApplication();
+            GlobList all = app.getRepository().getAll(SeriesEntity.TYPE, GlobMatchers.linkedTo(entity, SeriesEntity.BUDGET_AREA));
+            Glob seriesEntity = all.getFirst();
+            Intent intent = new Intent(getActivity(), TransactionListActivity.class);
+            TransactionSet transactionSet =
+              new TransactionSet(monthId, seriesEntity.get(SeriesEntity.ID), null, app.getRepository());
+            transactionSet.save(intent);
+            TabPage.copyDemoMode(getActivity(), intent);
+            startActivity(intent);
+          }
+        });
+      }
+      else {
+        view.setOnClickListener(new View.OnClickListener() {
+          public void onClick(View view) {
+            Intent intent = new Intent(getActivity(), SeriesListActivity.class);
+            intent.putExtra(SeriesListActivity.MONTH_PARAMETER, budgetAreaValues.get(BudgetAreaValues.MONTH));
+            intent.putExtra(SeriesListActivity.BUDGET_AREA_PARAMETER, budgetAreaValues.get(BudgetAreaValues.BUDGET_AREA));
+            TabPage.copyDemoMode(getActivity(), intent);
+            startActivity(intent);
+          }
+        });
+      }
 
       Views.setText(view, R.id.budgetAreaLabel, entity.get(BudgetAreaEntity.LABEL));
       Views.setText(view, R.id.budgetAreaActual, budgetAreaValues.get(BudgetAreaValues.ACTUAL));
@@ -144,42 +164,26 @@ public class BudgetOverviewFragment extends Fragment {
     }
   }
 
-  protected class AccountBlock extends Block {
+  protected class AccountBlock implements Block {
+
     private Glob accountEntity;
 
     public AccountBlock(Glob accountEntity) {
-      super(R.layout.account_block);
       this.accountEntity = accountEntity;
+    }
+
+    public View getView(LayoutInflater inflater, View previousView, ViewGroup parent) {
+      AccountBlockView view = new AccountBlockView(getActivity(), null);
+      view.update(monthId, accountEntity, getActivity());
+      return view;
     }
 
     protected boolean isProperViewType(View view) {
       return view.findViewById(R.id.accountLabel) != null;
     }
-
-    protected void populateView(View view) {
-      Views.setText(view, R.id.accountLabel, accountEntity.get(AccountEntity.LABEL));
-      Double position = accountEntity.get(AccountEntity.POSITION);
-      Views.setColoredText(view, R.id.accountPosition, position);
-      Views.setText(view, R.id.accountPositionDate, Text.toOnDayMonthString(accountEntity.get(AccountEntity.POSITION_DAY),
-                                                                        accountEntity.get(AccountEntity.POSITION_MONTH),
-                                                                        getResources()));
-
-      view.setOnClickListener(new View.OnClickListener() {
-        public void onClick(View view) {
-          Intent intent = new Intent(getActivity(), TransactionListActivity.class);
-
-          TransactionSet transactionSet =
-            new TransactionSet(monthId, null, accountEntity.get(AccountEntity.ID),
-                               ((App)getActivity().getApplication()).getRepository());
-          transactionSet.save(intent);
-          TabPage.copyDemoMode(getActivity(), intent);
-          startActivity(intent);
-        }
-      });
-    }
   }
 
-  protected class AccountSectionBlock extends Block {
+  protected class AccountSectionBlock extends AbstractBlock {
     private int titleId;
 
     public AccountSectionBlock(int titleId) {

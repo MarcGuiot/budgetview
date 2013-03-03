@@ -3,6 +3,7 @@ package org.designup.picsou.gui.backup;
 import org.designup.picsou.client.exceptions.RemoteException;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.startup.components.Passwords;
 import org.designup.picsou.model.User;
@@ -91,7 +92,7 @@ public class SetPasswordDialog {
               String messagePrefix = user.isTrue(User.AUTO_LOGIN) ?
                                      "setPassword.write.protect.success." :
                                      "setPassword.write.setPassword.success.";
-              MessageDialog.show(messagePrefix + "title", directory,
+              MessageDialog.show(messagePrefix + "title", MessageType.SUCCESS, directory,
                                  messagePrefix + "message");
             }
           }

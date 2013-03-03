@@ -265,14 +265,14 @@ public class TransactionChecker extends ViewChecker {
   public void checkDeletionForbidden(int[] rows, String message) {
     openDeletionForbiddenDialog(rows)
       .checkTitle("Deletion denied")
-      .checkMessageContains(message)
+      .checkErrorMessageContains(message)
       .close();
   }
 
   public void checkDeletionForbidden(int row, String message) {
     openDeletionForbiddenDialog(row)
       .checkTitle("Deletion denied")
-      .checkMessageContains(message)
+      .checkErrorMessageContains(message)
       .close();
   }
 
@@ -397,7 +397,7 @@ public class TransactionChecker extends ViewChecker {
                                 .run(table.triggerRightClick(rowIndices[0], 0))
                                 .getSubMenu("Edit")
                                 .triggerClick())
-      .checkMessageContains(message)
+      .checkInfoMessageContains(message)
       .close();
   }
 

@@ -2,10 +2,9 @@ package org.designup.picsou.gui.backup;
 
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageFileDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.license.LicenseService;
-import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -23,7 +22,7 @@ public class RestoreFileAction extends AbstractRestoreAction {
   public void actionPerformed(ActionEvent e) {
 
     if (LicenseService.trialInProgress(repository)) {
-      MessageDialog.show("restore.trial.title", frame, directory, "restore.trial.content");
+      MessageDialog.show("restore.trial.title", MessageType.INFO, frame, directory, "restore.trial.content");
       return;
     }
 

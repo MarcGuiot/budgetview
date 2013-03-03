@@ -10,9 +10,6 @@ import org.globsframework.utils.Strings;
 import javax.swing.*;
 import java.util.*;
 
-import static org.globsframework.model.utils.GlobMatchers.isTrue;
-import static org.globsframework.model.utils.GlobMatchers.not;
-
 public class AutoCompletionModel extends Searchable {
 
   private List<String> labels = new ArrayList<String>();
@@ -53,7 +50,7 @@ public class AutoCompletionModel extends Searchable {
     labels.clear();
     SortedSet<String> transactionLabels = new TreeSet<String>();
     for (String label : repository
-      .getAll(Transaction.TYPE, not(isTrue(Transaction.PLANNED)))
+      .getAll(Transaction.TYPE, GlobMatchers.isNotTrue(Transaction.PLANNED))
       .getValueSet(Transaction.LABEL)) {
       if (Strings.isNotEmpty(label)) {
         transactionLabels.add(label.toUpperCase());

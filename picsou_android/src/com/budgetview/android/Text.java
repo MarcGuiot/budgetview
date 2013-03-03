@@ -74,10 +74,6 @@ public class Text {
     return resources.getText(R.string.on_date) + " " + day + "/" + (monthId % 100);
   }
 
-  public static String toPlannedOnDayMonthString(Integer day, Integer monthId, Resources resources) {
-    return resources.getText(R.string.on_date_planned) + " " + day + "/" + (monthId % 100);
-  }
-
   public static String toShortMonthString(int monthId, Resources resources) {
     return resources.getText(getResourceIdForShortMonth(monthId % 100)) + "";
   }

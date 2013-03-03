@@ -2,6 +2,7 @@ package org.designup.picsou.gui.utils.datacheck;
 
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.MonthsToSeriesBudgetTrigger;
@@ -68,7 +69,7 @@ public class DataCheckingService {
           dialog.show();
         }
         else {
-          MessageDialog.show("data.checker.ok.title", directory.get(JFrame.class), directory, "data.checker.ok.message"
+          MessageDialog.show("data.checker.ok.title", MessageType.SUCCESS, directory.get(JFrame.class), directory, "data.checker.ok.message"
           );
         }
       }

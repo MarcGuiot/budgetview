@@ -5,6 +5,7 @@ import android.widget.TextView;
 import com.budgetview.android.R;
 import com.budgetview.android.TransactionListActivity;
 import com.budgetview.android.checkers.utils.BlockParser;
+import com.budgetview.android.checkers.utils.Views;
 import com.budgetview.shared.utils.AmountFormat;
 import org.globsframework.utils.TablePrinter;
 
@@ -20,6 +21,11 @@ public class TransactionListChecker extends AndroidTabsChecker<TransactionListAc
 
   public TransactionRows initContent() {
     return new TransactionRows();
+  }
+
+  public TransactionPageChecker edit(String transactionLabel) {
+    Views.clickBlockWithTextView(getCurrentView(), R.id.transactionBlock, R.id.transactionLabel, transactionLabel);
+    return new TransactionPageChecker();
   }
 
   public class TransactionRows extends TableChecker {

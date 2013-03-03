@@ -6,23 +6,25 @@ import org.uispec4j.interception.WindowInterceptor;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import junit.framework.Assert;
 
-public class MessageAndDetailsDialogChecker extends MessageDialogChecker {
+public class MessageAndDetailsDialogChecker {
+
+  private final Window dialog;
 
   public static MessageAndDetailsDialogChecker init(Trigger trigger) {
     return new MessageAndDetailsDialogChecker(WindowInterceptor.getModalDialog(trigger));
   }
 
   private MessageAndDetailsDialogChecker(Window dialog) {
-    super(dialog);
+    this.dialog = dialog;
   }
 
   public MessageAndDetailsDialogChecker checkTitle(String title) {
-    super.checkTitle(title);
+    assertThat(dialog.getTextBox("title").textEquals(title));
     return this;
   }
 
   public MessageAndDetailsDialogChecker checkMessageContains(String message) {
-    super.checkMessageContains(message);
+    assertThat(dialog.getTextBox("message").textContains(message));
     return this;
   }
 
@@ -42,4 +44,8 @@ public class MessageAndDetailsDialogChecker extends MessageDialogChecker {
     return this;
   }
 
+  public void close() {
+    dialog.getButton("Close").click();
+    assertFalse(dialog.isVisible());
+  }
 }

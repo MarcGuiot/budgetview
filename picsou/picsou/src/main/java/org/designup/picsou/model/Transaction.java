@@ -259,7 +259,7 @@ public class Transaction {
 
   public static GlobMatcher getMatcherForRealOperations(int accountId) {
     return and(fieldEquals(ACCOUNT, accountId),
-               not(isTrue(TO_RECONCILE)),
+               isNotTrue(TO_RECONCILE),
                isFalse(PLANNED),
                not(fieldEquals(TRANSACTION_TYPE, TransactionType.OPEN_ACCOUNT_EVENT.getId())),
                not(fieldEquals(TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId())));

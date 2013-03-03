@@ -4,12 +4,11 @@ import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageFileDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
@@ -32,7 +31,7 @@ public class BackupAction extends AbstractBackupRestoreAction {
   public void actionPerformed(ActionEvent event) {
 
     if (LicenseService.trialInProgress(repository)) {
-      MessageDialog.show("backup.trial.title", frame, directory, "backup.trial.content");
+      MessageDialog.show("backup.trial.title", MessageType.INFO, frame, directory, "backup.trial.content");
     }
 
     JFileChooser chooser = getFileChooser();

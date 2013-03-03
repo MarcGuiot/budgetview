@@ -43,9 +43,6 @@ public class TransactionValues {
   public static IntegerField BANK_DAY;
 
   @NoObfuscation
-  public static BooleanField PLANNED;
-
-  @NoObfuscation
   public static IntegerField SEQUENCE_NUMBER;
 
   static {
@@ -68,7 +65,6 @@ public class TransactionValues {
       output.writeDouble(fieldValues.get(AMOUNT));
       output.writeInteger(fieldValues.get(BANK_MONTH));
       output.writeInteger(fieldValues.get(BANK_DAY));
-      output.writeBoolean(fieldValues.get(PLANNED));
       output.writeInteger(fieldValues.get(SEQUENCE_NUMBER));
       return serializedByteArrayOutput.toByteArray();
     }
@@ -88,7 +84,6 @@ public class TransactionValues {
       fieldSetter.set(AMOUNT, input.readDouble());
       fieldSetter.set(BANK_MONTH, input.readInteger());
       fieldSetter.set(BANK_DAY, input.readInteger());
-      fieldSetter.set(PLANNED, input.readBoolean());
       fieldSetter.set(SEQUENCE_NUMBER, input.readInteger());
     }
 

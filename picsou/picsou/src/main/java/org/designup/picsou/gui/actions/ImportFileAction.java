@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.actions;
 
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.importer.ImportDialog;
 import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
@@ -123,7 +124,7 @@ public class ImportFileAction extends AbstractAction {
       }
       else {
         if (User.isDemoUser(repository.get(User.KEY))) {
-          MessageDialog.show("demo.import.title", directory.get(JFrame.class), directory, "demo.import.content");
+          MessageDialog.show("demo.import.title", MessageType.INFO, directory.get(JFrame.class), directory, "demo.import.content");
         }
         else {
           LicenseActivationDialog dialog = new LicenseActivationDialog(directory.get(JFrame.class),

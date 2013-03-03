@@ -44,16 +44,24 @@ public class CicConnector extends WebBankConnector {
     userAndPasswordPanel = new UserAndPasswordPanel(new ConnectAction(), directory);
     JPanel panel = userAndPasswordPanel.getPanel();
     userAndPasswordPanel.setUserCode(getSyncCode());
+    loadHomePage();
+    return panel;
+  }
+
+  private void loadHomePage() {
+    userAndPasswordPanel.setFieldsEnabled(true);
+    userAndPasswordPanel.setEnabled(false);
     ExecutorService executorService = directory.get(ExecutorService.class);
     executorService.submit(new Runnable() {
       public void run() {
         try {
           notifyInitialConnection();
           loadPage(INDEX);
+          userAndPasswordPanel.setEnabled(true);
           notifyWaitingForUser();
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-              userAndPasswordPanel.setEnabled(true);
+              userAndPasswordPanel.requestFocus();
             }
           });
         }
@@ -62,7 +70,6 @@ public class CicConnector extends WebBankConnector {
         }
       }
     });
-    return panel;
   }
 
   public void panelShown() {
@@ -87,10 +94,8 @@ public class CicConnector extends WebBankConnector {
             idForm.getPasswordInputById("e_mdp").setText(userAndPasswordPanel.getPassword());
             WebPage loggedInPage = idForm.submit();
             if (!loggedInPage.getUrl().contains("www.cic.fr/cic/fr/banque/espace_personnel")) {
-              userAndPasswordPanel.requestFocus();
-              userAndPasswordPanel.setFieldsEnabled(true);
-              userAndPasswordPanel.setEnabled(true);
               notifyIdentificationFailed();
+              loadHomePage();
               return;
             }
 

@@ -60,16 +60,16 @@ public class LoadBuilder {
     return doAddSeries(BudgetArea.VARIABLE, name, monthId, planned);
   }
 
-  public void addExtrasSeries(String name, int monthId, Double planned) {
-    doAddSeries(BudgetArea.EXTRAS, name, monthId, planned);
+  public LoadBuilder addExtrasSeries(String name, int monthId, Double planned) {
+    return doAddSeries(BudgetArea.EXTRAS, name, monthId, planned);
   }
 
-  public void addSavingsSeries(String name, int monthId, Double planned) {
-    doAddSeries(BudgetArea.SAVINGS, name, monthId, planned);
+  public LoadBuilder addSavingsSeries(String name, int monthId, Double planned) {
+    return doAddSeries(BudgetArea.SAVINGS, name, monthId, planned);
   }
 
-  public void addUncategorizedSeries(String name, int monthId, Double planned) {
-    doAddSeries(BudgetArea.UNCATEGORIZED, "Uncategorized", monthId, planned);
+  public LoadBuilder addUncategorizedSeries(int monthId, Double planned) {
+    return doAddSeries(BudgetArea.UNCATEGORIZED, "Uncategorized", monthId, planned);
   }
 
   public LoadBuilder startPlanned() {
@@ -179,7 +179,7 @@ public class LoadBuilder {
     VARIABLE(2),
     EXTRAS(3),
     SAVINGS(4),
-    UNCATEGORIZED(-1);
+    UNCATEGORIZED(6);
 
     private final int id;
 

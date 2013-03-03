@@ -15,6 +15,7 @@ import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.license.LicenseCheckerThread;
 import org.designup.picsou.gui.startup.LoginPanel;
@@ -223,7 +224,7 @@ public class MainWindow implements WindowManager {
       serverAccess.deleteUser(name, password);
     }
     catch (RemoteException e) {
-      MessageDialog.show("delete.user.fail.title", frame, directory, "delete.user.fail.content");
+      MessageDialog.show("delete.user.fail.title", MessageType.ERROR, frame, directory, "delete.user.fail.content");
     }
     logout();
   }

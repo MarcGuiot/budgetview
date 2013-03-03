@@ -108,7 +108,7 @@ public class BankChooserPanelChecker<T extends BankChooserPanelChecker> extends 
     PopupButton popupButton = new PopupButton(window.getButton("bankActions"));
     MessageDialogChecker.open(popupButton.triggerClick("Delete bank"))
       .checkTitle(title)
-      .checkMessageContains(message)
+      .checkInfoMessageContains(message)
       .close();
     return (T)this;
   }

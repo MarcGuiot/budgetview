@@ -1,6 +1,5 @@
 package com.budgetview.android;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,13 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import com.budgetview.android.components.GaugeView;
-import com.budgetview.android.components.TabPage;
-import com.budgetview.android.utils.TransactionSet;
-import com.budgetview.shared.model.SeriesEntity;
 import com.budgetview.shared.model.SeriesValues;
-import com.budgetview.shared.utils.AmountFormat;
 import com.budgetview.shared.utils.SeriesValuesComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -74,49 +67,18 @@ public class SeriesListFragment extends Fragment {
 
     public View getView(int i, View previousView, ViewGroup parent) {
 
-      View view = previousView;
+      SeriesBlockView view = (SeriesBlockView)previousView;
       if (view == null) {
-        view = inflater.inflate(R.layout.series_block, parent, false);
+        view = new SeriesBlockView(getActivity(), null);
       }
 
       final App app = (App)getActivity().getApplication();
       final Glob seriesValues = seriesValuesList.get(i);
       Glob seriesEntity = app.getRepository().findLinkTarget(seriesValues, SeriesValues.SERIES_ENTITY);
 
-      setText(view, R.id.seriesLabel, seriesEntity.get(SeriesEntity.NAME));
-      setText(view, R.id.seriesActual, seriesValues.get(SeriesValues.AMOUNT));
-      setText(view, R.id.seriesPlanned, seriesValues.get(SeriesValues.PLANNED_AMOUNT));
-
-      GaugeView gaugeView = (GaugeView)view.findViewById(R.id.seriesGauge);
-      gaugeView.getModel()
-        .setValues(seriesValues.get(SeriesValues.AMOUNT, 0.00),
-                   seriesValues.get(SeriesValues.PLANNED_AMOUNT, 0.00),
-                   seriesValues.get(SeriesValues.OVERRUN_AMOUNT, 0.00),
-                   seriesValues.get(SeriesValues.REMAINING_AMOUNT, 0.00),
-                   "", false);
-
-      view.setOnClickListener(new View.OnClickListener() {
-        public void onClick(View view) {
-          Intent intent = new Intent(getActivity(), TransactionListActivity.class);
-          TransactionSet transactionSet =
-            new TransactionSet(monthId, seriesValues.get(SeriesValues.SERIES_ENTITY), null, app.getRepository());
-          transactionSet.save(intent);
-          TabPage.copyDemoMode(getActivity(), intent);
-          startActivity(intent);
-        }
-      });
+      view.update(monthId, seriesEntity, seriesValues, getActivity());
 
       return view;
-    }
-
-    private void setText(View view, int textId, Double value) {
-      String text = (value == null) ? "-" : AmountFormat.DECIMAL_FORMAT.format(value);
-      setText(view, textId, text);
-    }
-
-    private void setText(View view, int textId, String text) {
-      TextView textView = (TextView)view.findViewById(textId);
-      textView.setText(text);
     }
   }
 }

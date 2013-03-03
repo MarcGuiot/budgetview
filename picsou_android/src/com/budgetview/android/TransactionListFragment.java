@@ -71,10 +71,6 @@ public class TransactionListFragment extends Fragment {
       Views.setColoredText(view, R.id.transactionAmount, amount);
       Views.setText(view, R.id.transactionDate, getDate(values));
 
-      if (values.isTrue(TransactionValues.PLANNED)) {
-        Views.setTextColor(view, R.id.transactionLabel, R.color.item_label_disabled);
-      }
-
       view.setOnClickListener(new View.OnClickListener() {
         public void onClick(View view) {
           Intent intent = new Intent(getActivity(), TransactionPageActivity.class);
@@ -89,16 +85,9 @@ public class TransactionListFragment extends Fragment {
     }
 
     private String getDate(Glob values) {
-      if (values.isTrue(TransactionValues.PLANNED)) {
-        return Text.toPlannedOnDayMonthString(values.get(TransactionValues.BANK_DAY),
-                                              values.get(TransactionValues.BANK_MONTH),
-                                              getResources());
-      }
-      else {
-        return Text.toOnDayMonthString(values.get(TransactionValues.BANK_DAY),
-                                       values.get(TransactionValues.BANK_MONTH),
-                                       getResources());
-      }
+      return Text.toOnDayMonthString(values.get(TransactionValues.BANK_DAY),
+                                     values.get(TransactionValues.BANK_MONTH),
+                                     getResources());
     }
   }
 }

@@ -2,6 +2,7 @@ package org.designup.picsou.gui.backup;
 
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
@@ -53,14 +54,14 @@ public class RestoreSnapshotAction extends AbstractRestoreAction {
     }
 
     public void showConfirmationDialog() {
-      MessageDialog.show("restore.snapshot.ok.title", dialog, directory,
+      MessageDialog.show("restore.snapshot.ok.title", MessageType.SUCCESS, dialog, directory,
                          "restore.snapshot.ok.message",
                          Dates.DEFAULT_TIMESTAMP_FORMAT.format(new Date(snapshotInfo.timestamp)));
       dialog.setVisible(false);
     }
 
     public void showError() {
-      MessageDialog.show("restore.snapshot.error.title", dialog, directory,
+      MessageDialog.show("restore.snapshot.error.title", MessageType.ERROR, dialog, directory,
                          "restore.snapshot.error.message",
                          Dates.DEFAULT_TIMESTAMP_FORMAT.format(new Date(snapshotInfo.timestamp)));
     }

@@ -291,7 +291,7 @@ public class OperationChecker {
       interceptor.process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           MessageDialogChecker checker = new MessageDialogChecker(window);
-          checker.checkMessageContains("Backup is possible during the trial period but restore is not possible.");
+          checker.checkInfoMessageContains("Backup is possible during the trial period but restore is not possible.");
           return checker.triggerClose();
         }
       });
@@ -330,7 +330,7 @@ public class OperationChecker {
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           MessageDialogChecker dialogChecker = new MessageDialogChecker(window);
-          dialogChecker.checkMessageContains("Restore is not possible during trial periode.");
+          dialogChecker.checkInfoMessageContains("Restore is not possible during trial period.");
           return dialogChecker.triggerClose();
         }
       })
@@ -576,7 +576,7 @@ public class OperationChecker {
 
   public void checkDataIsOk() {
     MessageDialogChecker.open(getCheckMenu().triggerClick())
-      .checkMessageContains("No error was found").close();
+      .checkSuccessMessageContains("No error was found").close();
   }
 
   public void nextMonth() {

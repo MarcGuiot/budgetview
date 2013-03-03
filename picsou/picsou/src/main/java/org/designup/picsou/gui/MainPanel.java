@@ -27,6 +27,7 @@ import org.designup.picsou.gui.license.LicenseExpirationAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
 import org.designup.picsou.gui.mobile.CreateMobileAccountAction;
+import org.designup.picsou.gui.mobile.SendMobileDataAction;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.notes.ShowNotesAction;
@@ -293,7 +294,7 @@ public class MainPanel {
 
     menu.addSeparator();
     menu.add(createMobileAccountAction);
-    menu.add(new DumpMobileXmlAction(repository, directory));
+    menu.add(new SendMobileDataAction(repository, directory));
 
 
     if (Gui.useMacOSMenu()) {
@@ -424,7 +425,7 @@ public class MainPanel {
   }
 
   public void end() {
-    DumpMobileXmlAction.sendToMobile(repository, directory.get(ConfigService.class));
+    SendMobileDataAction.sendToMobile(repository, directory.get(ConfigService.class));
   }
 
   private class MainPanelLogoutService implements LogoutService {

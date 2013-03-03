@@ -363,7 +363,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     login.clickDemoLink();
     OperationChecker operations = new OperationChecker(window);
     MessageDialogChecker dialogChecker = MessageDialogChecker.open(operations.getImportTrigger());
-    dialogChecker.checkMessageContains("You cannot import operations in the demo account");
+    dialogChecker.checkInfoMessageContains("You cannot import operations in the demo account");
     dialogChecker.close();
   }
 
@@ -448,7 +448,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           MessageDialogChecker checker = new MessageDialogChecker(window);
-          checker.checkMessageContains("Bad password");
+          checker.checkErrorMessageContains("Bad password");
           return checker.triggerClose();
         }
       })
