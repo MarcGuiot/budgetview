@@ -292,10 +292,11 @@ public class MainPanel {
     menu.addSeparator();
     menu.add(new PrintAction(replicationGlobRepository, directory));
 
+    Utils.beginRemove();
     menu.addSeparator();
     menu.add(createMobileAccountAction);
     menu.add(new SendMobileDataAction(repository, directory));
-
+    Utils.endRemove();
 
     if (Gui.useMacOSMenu()) {
       if (exitActionWhitoutUserEvaluation != null) {

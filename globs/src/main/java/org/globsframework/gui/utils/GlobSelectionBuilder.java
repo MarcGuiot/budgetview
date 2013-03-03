@@ -16,6 +16,11 @@ public class GlobSelectionBuilder {
   }
 
   public static GlobSelection create(Collection<Glob> globs, GlobType type) {
+    for (Glob glob : globs) {
+      if (glob == null){
+        throw new RuntimeException("null not allowed here for " + type.getName());
+      }
+    }
     return new SingleListGlobSelection(globs, type);
   }
 

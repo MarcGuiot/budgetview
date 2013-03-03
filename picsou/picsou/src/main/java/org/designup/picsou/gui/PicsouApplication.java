@@ -56,8 +56,8 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "2.34i";
-  public static final Long JAR_VERSION = 105L;
+  public static final String APPLICATION_VERSION = "2.34";
+  public static final Long JAR_VERSION = 106L;
   public static final Long BANK_CONFIG_VERSION = 7L;
 
   public static final String APPNAME = "budgetview";
@@ -190,6 +190,8 @@ public class PicsouApplication {
 
     preinitDirectory(directory);
     initDirectory(directory, openRequestManager);
+
+
 
     try {
       final MainWindow mainWindow = new MainWindow(this, getServerAddress(), AppPaths.getLocalPrevaylerPath(), isDataInMemory(), directory);

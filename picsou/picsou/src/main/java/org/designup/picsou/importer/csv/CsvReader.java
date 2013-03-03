@@ -51,15 +51,17 @@ public class CsvReader {
     List<String> elements = new ArrayList<String>();
     String name = "";
     boolean startQuote = false;
+    boolean first = true;
     for (int i = 0; i < line.length(); ++i) {
       char c = line.charAt(i);
-      if (c == '\"' && (name.length() == 0 || startQuote)) {
-        if (name.length() == 0){
+      if (c == '\"' && (first || startQuote)) {
+        if (first) {
           startQuote = true;
         }
         else {
           startQuote = false;
         }
+        first = false;
       }
       else if (c == separator.getSeparator() && !startQuote) {
         if (Strings.isNotEmpty(name)) {
@@ -70,9 +72,11 @@ public class CsvReader {
         }
         name = "";
         startQuote = false;
+        first = true;
       }
       else {
         name += c;
+        first = false;
       }
     }
     elements.add(normalizeItem(name));

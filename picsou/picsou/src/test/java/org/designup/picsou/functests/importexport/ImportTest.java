@@ -1027,4 +1027,33 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkSummary(0., "2008/06/08");
   }
+
+  public void testMixDate() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/5", 2.0, "V'lib")
+      .addTransaction("2008/06/8", 2.0, "V'lib")
+      .load();
+
+    timeline.selectAll();
+    transactions.initAmountContent()
+      .add("08/06/2008", "V'LIB", 2.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("05/06/2008", "V'LIB", 2.00, "To categorize", -2.00, -2.00, "Account n. 00001123")
+      .check();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/06", 2.0, "V'lib")
+      .addTransaction("2008/06/09", 2.0, "V'lib")
+      .load();
+
+    timeline.selectAll();
+    transactions.initAmountContent()
+      .add("09/06/2008", "V'LIB", 2.00, "To categorize", 4.00, 4.00, "Account n. 00001123")
+      .add("08/06/2008", "V'LIB", 2.00, "To categorize", 2.00, 2.00, "Account n. 00001123")
+      .add("06/06/2008", "V'LIB", 2.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("05/06/2008", "V'LIB", 2.00, "To categorize", -2.00, -2.00, "Account n. 00001123")
+      .check();
+
+    mainAccounts.checkSummary(4., "2008/06/09");
+  }
+
 }

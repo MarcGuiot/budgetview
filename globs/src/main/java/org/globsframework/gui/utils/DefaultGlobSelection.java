@@ -17,10 +17,18 @@ public class DefaultGlobSelection implements GlobSelection {
   }
 
   public DefaultGlobSelection(Glob selection) {
+    if (selection == null){
+      throw new RuntimeException("null not allowed here." );
+    }
     globs.put(selection.getType(), new GlobList(selection));
   }
 
   public DefaultGlobSelection add(Collection<Glob> globs, GlobType type) {
+    for (Glob glob : globs) {
+      if (glob == null){
+        throw new RuntimeException("null not allowed here for " + type.getName());
+      }
+    }
     GlobList globList = this.globs.get(type);
     if (globList == null) {
       globList = new GlobList();
@@ -31,6 +39,9 @@ public class DefaultGlobSelection implements GlobSelection {
   }
 
   public DefaultGlobSelection add(Glob glob, GlobType type) {
+    if (glob == null){
+      throw new RuntimeException("null not allowed here for " + type.getName());
+    }
     GlobList globList = this.globs.get(type);
     if (globList == null) {
       globList = new GlobList();

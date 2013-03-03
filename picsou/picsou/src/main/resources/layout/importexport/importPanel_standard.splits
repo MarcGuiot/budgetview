@@ -21,8 +21,8 @@
   <row>
     <filler fill="horizontal"/>
     <button ref="importButton" fill="none"
-            icon="button_import.png" rolloverIcon="button_import_rollover.png" pressedIcon="button_import.png"
-            ui="roundButton" minimumSize="(0,0)"/>
+            icon="button_import_small.png" rolloverIcon="button_import_small_rollover.png" pressedIcon="button_import_small.png"
+            ui="roundButton" preferredSize="(23,23)" minimumSize="(23,23)" maximumSize="(23,23)"/>
     <button ref="importLabel"
             icon="leftArrow(12,16,10,10, import.arrow)"
             rolloverIcon="leftArrow(12,16,10,10, import.arrow.rollover)"

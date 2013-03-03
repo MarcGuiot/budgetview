@@ -15,6 +15,7 @@ public class CsvReaderTest extends TestCase {
     check("\"k;F\"", CsvSeparator.SEMICOLON, "k;F");
     check("aa\"k;F", CsvSeparator.SEMICOLON, "aa\"k", "F");
     check("aa\"k\";F", CsvSeparator.SEMICOLON, "aa\"k\"", "F");
+    check("aa\"k\";\"\";F", CsvSeparator.SEMICOLON, "aa\"k\"", "","F");
   }
 
   private void check(final String line, CsvSeparator separator, String ...expected) {

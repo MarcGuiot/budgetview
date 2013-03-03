@@ -8,7 +8,6 @@
     <panel styleClass="block">
       <column styleClass="innerBlock" margin="10" marginLeft="15" marginRight="15">
 
-        <panel ref="importPanel" marginLeft="10" marginBottom="2" weightY="0" weightX="0.01"/>
 
         <verticalSplit styleClass="blockDivider" opaque="false">
           <column weightY="10">
@@ -16,6 +15,7 @@
               <filler fill="horizontal"/>
               <panel ref="customFilterMessage" fill="none" anchor="center"/>
               <filler fill="horizontal"/>
+              <panel ref="importPanel" marginLeft="10" marginBottom="2" weightY="0" weightX="0"/>
             </row>
             <scrollPane borderPos="center" viewportBackground="transactions.bg"
                         border="line(transaction.border)" opaque="false"

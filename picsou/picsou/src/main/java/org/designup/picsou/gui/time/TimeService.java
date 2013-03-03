@@ -1,13 +1,18 @@
 package org.designup.picsou.gui.time;
 
 import org.designup.picsou.model.Month;
+import org.globsframework.utils.Log;
 
 import java.util.Date;
 
 public class TimeService {
-  private static Date today = new Date();
-  private static int monthId = Month.getMonthId(today);
-  private static int day = Month.getDay(today);
+  private static Date today;
+  private static int monthId;
+  private static int day;
+
+  static {
+    reset();
+  }
 
   public TimeService() {
   }
@@ -15,6 +20,13 @@ public class TimeService {
   public TimeService(Date day) {
     today = day;
     monthId = Month.getMonthId(day);
+  }
+
+  public static void reset(){
+    today = new Date();
+    Log.write("new day " + today);
+    day = Month.getDay(today);
+    monthId = Month.getMonthId(today);
   }
 
   public static int getCurrentFullDate() {
