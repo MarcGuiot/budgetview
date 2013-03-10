@@ -20,7 +20,6 @@ public class LoadBuilder {
   private Glob currentSeriesValues = null;
   private int accountSequenceIndex = 0;
   private int transactionSequenceIndex = 0;
-  private boolean plannedTransaction;
   private Map<String, Glob> seriesEntitiesByName = new HashMap<String, Glob>();
 
   LoadBuilder() {
@@ -72,11 +71,6 @@ public class LoadBuilder {
     return doAddSeries(BudgetArea.UNCATEGORIZED, "Uncategorized", monthId, planned);
   }
 
-  public LoadBuilder startPlanned() {
-    plannedTransaction = true;
-    return this;
-  }
-
   private LoadBuilder doAddSeries(BudgetArea budgetArea, String name, int monthId, Double planned) {
     Glob seriesEntity = findOrCreateSeriesEntity(name, budgetArea);
     currentSeriesValues = tempRepository.create(SeriesValues.TYPE,
@@ -85,7 +79,7 @@ public class LoadBuilder {
                                                 value(SeriesValues.MONTH, monthId),
                                                 value(SeriesValues.AMOUNT, 0.00),
                                                 value(SeriesValues.PLANNED_AMOUNT, planned),
-                                                value(SeriesValues.OVERRUN_AMOUNT, null),
+                                                value(SeriesValues.OVERRUN_AMOUNT, 0.00),
                                                 value(SeriesValues.REMAINING_AMOUNT, planned));
     return this;
   }
@@ -111,7 +105,6 @@ public class LoadBuilder {
                           value(TransactionValues.AMOUNT, amount),
                           value(TransactionValues.BANK_MONTH, currentSeriesValues.get(SeriesValues.MONTH)),
                           value(TransactionValues.BANK_DAY, day),
-                          value(TransactionValues.PLANNED, plannedTransaction),
                           value(TransactionValues.SEQUENCE_NUMBER, transactionSequenceIndex++));
 
     Double newSeriesAmount = currentSeriesValues.get(SeriesValues.AMOUNT) + amount;

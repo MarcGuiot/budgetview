@@ -5,9 +5,28 @@
               android:orientation="vertical"
               android:background="@color/background">
 
+  <com.budgetview.android.AmountsBlockView
+            android:id="@+id/transaction_amounts"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"/>
+
+  <com.budgetview.android.AccountSummaryBlockView
+            android:id="@+id/transaction_account_position"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"/>
+
   <ListView android:id="@+id/transactionList"
             android:choiceMode="none"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"/>
+
+  <com.budgetview.android.EmptyListView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/emptyListView"/>
 
 </LinearLayout>

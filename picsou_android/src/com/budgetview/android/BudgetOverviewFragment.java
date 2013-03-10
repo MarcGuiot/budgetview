@@ -11,6 +11,7 @@ import android.widget.ListView;
 import com.budgetview.android.components.GaugeView;
 import com.budgetview.android.components.TabPage;
 import com.budgetview.android.utils.AbstractBlock;
+import com.budgetview.android.utils.SectionHeaderBlock;
 import com.budgetview.android.utils.TransactionSet;
 import com.budgetview.shared.model.AccountEntity;
 import com.budgetview.shared.model.BudgetAreaEntity;
@@ -26,6 +27,7 @@ import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
@@ -64,7 +66,7 @@ public class BudgetOverviewFragment extends Fragment {
 
     private void addBudgetAreaBlocks(GlobRepository repository) {
 
-      blocks.add(new AccountSectionBlock(R.string.budget_section));
+      blocks.add(new SectionHeaderBlock(R.string.budget_section, getResources()));
 
       GlobList budgetAreaValuesList =
         repository
@@ -83,7 +85,7 @@ public class BudgetOverviewFragment extends Fragment {
         return;
       }
 
-      blocks.add(new AccountSectionBlock(sectionTitleId));
+      blocks.add(new SectionHeaderBlock(sectionTitleId, getResources()));
       for (Glob accountEntity : accountList) {
         blocks.add(new AccountBlock(accountEntity));
       }
@@ -180,23 +182,6 @@ public class BudgetOverviewFragment extends Fragment {
 
     protected boolean isProperViewType(View view) {
       return view.findViewById(R.id.accountLabel) != null;
-    }
-  }
-
-  protected class AccountSectionBlock extends AbstractBlock {
-    private int titleId;
-
-    public AccountSectionBlock(int titleId) {
-      super(R.layout.account_section_block);
-      this.titleId = titleId;
-    }
-
-    protected boolean isProperViewType(View view) {
-      return view.findViewById(R.id.accountSectionLabel) != null;
-    }
-
-    protected void populateView(View view) {
-      Views.setText(view, R.id.accountSectionLabel, getResources().getText(titleId));
     }
   }
 }

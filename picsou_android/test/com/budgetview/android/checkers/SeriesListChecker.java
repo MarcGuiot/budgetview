@@ -1,14 +1,12 @@
 package com.budgetview.android.checkers;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 import com.budgetview.android.R;
 import com.budgetview.android.SeriesListActivity;
 import com.budgetview.android.checkers.utils.BlockParser;
-import com.budgetview.android.checkers.utils.Views;
+import com.budgetview.android.checkers.utils.ViewParser;
 import com.budgetview.shared.utils.AmountFormat;
-import junit.framework.Assert;
 import org.globsframework.utils.TablePrinter;
 
 public class SeriesListChecker extends AndroidTabsChecker<SeriesListActivity> {
@@ -26,7 +24,7 @@ public class SeriesListChecker extends AndroidTabsChecker<SeriesListActivity> {
   }
 
   public TransactionListChecker edit(String seriesName) {
-    Views.clickBlockWithTextView(getCurrentView(), R.id.seriesBlock, R.id.seriesLabel, seriesName);
+    ViewParser.clickBlockWithTextView(getCurrentView(), R.id.seriesBlock, R.id.seriesLabel, seriesName);
     return new TransactionListChecker();
   }
 

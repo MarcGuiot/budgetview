@@ -25,17 +25,9 @@ public class SeriesBlockView extends LinearLayout {
   }
 
   public void update(final int monthId, Glob seriesEntity, final Glob seriesValues, final Activity activity) {
-    setText(R.id.seriesLabel, seriesEntity.get(SeriesEntity.NAME));
-    setText(R.id.seriesActual, seriesValues.get(SeriesValues.AMOUNT));
-    setText(R.id.seriesPlanned, seriesValues.get(SeriesValues.PLANNED_AMOUNT));
+    Views.setText(this, R.id.seriesLabel, seriesEntity.get(SeriesEntity.NAME));
 
-    GaugeView gaugeView = (GaugeView)findViewById(R.id.seriesGauge);
-    gaugeView.getModel()
-      .setValues(seriesValues.get(SeriesValues.AMOUNT, 0.00),
-                 seriesValues.get(SeriesValues.PLANNED_AMOUNT, 0.00),
-                 seriesValues.get(SeriesValues.OVERRUN_AMOUNT, 0.00),
-                 seriesValues.get(SeriesValues.REMAINING_AMOUNT, 0.00),
-                 "", false);
+    updateAmounts(this, seriesValues);
 
     findViewById(R.id.seriesBlock).setOnClickListener(new View.OnClickListener() {
       public void onClick(View view) {
@@ -51,13 +43,15 @@ public class SeriesBlockView extends LinearLayout {
 
   }
 
-  private void setText(int textId, Double value) {
-    String text = (value == null) ? "-" : AmountFormat.DECIMAL_FORMAT.format(value);
-    setText(textId, text);
-  }
-
-  private void setText(int textId, String text) {
-    TextView textView = (TextView)findViewById(textId);
-    textView.setText(text);
+  public static void updateAmounts(View parentView, Glob seriesValues) {
+    Views.setText(parentView, R.id.seriesActual, seriesValues.get(SeriesValues.AMOUNT));
+    Views.setText(parentView, R.id.seriesPlanned, seriesValues.get(SeriesValues.PLANNED_AMOUNT));
+    GaugeView gaugeView = (GaugeView)parentView.findViewById(R.id.seriesGauge);
+    gaugeView.getModel()
+      .setValues(seriesValues.get(SeriesValues.AMOUNT, 0.00),
+                 seriesValues.get(SeriesValues.PLANNED_AMOUNT, 0.00),
+                 seriesValues.get(SeriesValues.OVERRUN_AMOUNT, 0.00),
+                 seriesValues.get(SeriesValues.REMAINING_AMOUNT, 0.00),
+                 "", false);
   }
 }

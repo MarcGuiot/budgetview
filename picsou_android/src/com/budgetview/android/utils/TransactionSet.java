@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.budgetview.shared.model.AccountEntity;
 import com.budgetview.shared.model.SeriesEntity;
+import com.budgetview.shared.model.SeriesValues;
 import com.budgetview.shared.model.TransactionValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -93,6 +94,20 @@ public class TransactionSet {
 
   public GlobMatcher getMatcher() {
     return matcher;
+  }
+
+  public Glob getSeriesValues() {
+    if (seriesEntityId == null) {
+      return null;
+    }
+    return repository.find(Key.create(SeriesValues.SERIES_ENTITY, seriesEntityId, SeriesValues.MONTH, monthId));
+  }
+
+  public Glob getAccountEntity() {
+    if (accountId == null) {
+      return null;
+    }
+    return repository.find(Key.create(AccountEntity.TYPE, accountId));
   }
 
   public TransactionSet copy(int newMonthId) {

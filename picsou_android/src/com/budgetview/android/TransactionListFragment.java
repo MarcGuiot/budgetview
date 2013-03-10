@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import com.budgetview.android.components.TabPage;
+import com.budgetview.android.utils.SectionHeaderBlock;
 import com.budgetview.android.utils.TransactionSet;
+import com.budgetview.shared.model.SeriesValues;
 import com.budgetview.shared.model.TransactionValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -25,10 +27,22 @@ public class TransactionListFragment extends Fragment {
 
     Bundle args = getArguments();
     GlobRepository repository = ((App)getActivity().getApplication()).getRepository();
-    this.transactionSet = new TransactionSet(args, repository);
+    transactionSet = new TransactionSet(args, repository);
+
+    AmountsBlockView seriesBlock = (AmountsBlockView)view.findViewById(R.id.transaction_amounts);
+    seriesBlock.update(transactionSet.getSeriesValues(),
+                       SeriesValues.AMOUNT, SeriesValues.PLANNED_AMOUNT,
+                       SeriesValues.OVERRUN_AMOUNT, SeriesValues.REMAINING_AMOUNT);
+
+    AccountSummaryBlockView positionBlock = (AccountSummaryBlockView)view.findViewById(R.id.transaction_account_position);
+    positionBlock.update(transactionSet.getAccountEntity());
 
     ListView list = (ListView)view.findViewById(R.id.transactionList);
     list.setAdapter(new TransactionListAdapter(inflater));
+
+    EmptyListView emptyView = (EmptyListView)view.findViewById(R.id.emptyListView);
+    emptyView.update(R.string.transactionListEmptyMessage);
+    list.setEmptyView(emptyView);
 
     return view;
   }
@@ -37,6 +51,7 @@ public class TransactionListFragment extends Fragment {
 
     private GlobList transactionValuesList;
     private LayoutInflater inflater;
+    private SectionHeaderBlock headerBlock;
 
     private TransactionListAdapter(LayoutInflater inflater) {
       this.inflater = inflater;
@@ -48,24 +63,38 @@ public class TransactionListFragment extends Fragment {
     }
 
     public int getCount() {
-      return transactionValuesList.size();
+      if (transactionValuesList.isEmpty()) {
+        return 0;
+      }
+      return transactionValuesList.size() + 1;
     }
 
-    public Object getItem(int i) {
-      return transactionValuesList.get(i);
+    public Object getItem(int index) {
+      if (index == 0) {
+        return "Header";
+      }
+      return transactionValuesList.get(index - 1);
     }
 
     public long getItemId(int i) {
       return getItem(i).hashCode();
     }
 
-    public View getView(int i, View previousView, ViewGroup parent) {
+    public View getView(int index, View previousView, ViewGroup parent) {
+
+      if (index == 0) {
+        if (headerBlock == null) {
+          headerBlock = new SectionHeaderBlock(R.string.transactionListSectionLabel, getResources());
+        }
+        return headerBlock.getView(inflater, previousView, parent);
+      }
+
       View view = previousView;
-      if (view == null) {
+      if (view == null || view.findViewById(R.id.transactionLabel) == null) {
         view = inflater.inflate(R.layout.transaction_block, parent, false);
       }
 
-      final Glob values = transactionValuesList.get(i);
+      final Glob values = transactionValuesList.get(index - 1);
       Double amount = values.get(TransactionValues.AMOUNT);
       Views.setText(view, R.id.transactionLabel, values.get(TransactionValues.LABEL));
       Views.setColoredText(view, R.id.transactionAmount, amount);

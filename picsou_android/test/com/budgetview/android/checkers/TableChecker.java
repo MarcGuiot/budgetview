@@ -1,9 +1,8 @@
 package com.budgetview.android.checkers;
 
 import android.view.View;
-import com.budgetview.android.BudgetOverviewActivity;
 import com.budgetview.android.checkers.utils.BlockParser;
-import com.budgetview.android.checkers.utils.Views;
+import com.budgetview.android.checkers.utils.ViewParser;
 import junit.framework.Assert;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.TablePrinter;
@@ -21,9 +20,9 @@ public abstract class TableChecker {
 
   public void check() {
     TablePrinter actual = new TablePrinter();
-    Views.parse(view, getParser(actual));
+    ViewParser.parse(view, getParser(actual));
     String actualText = actual.toString();
-    if (Strings.isNullOrEmpty(actualText)) {
+    if (!expected.toString().isEmpty() && Strings.isNullOrEmpty(actualText)) {
       Assert.fail(title + " is unexpectedly empty");
     }
     Assert.assertEquals("Unexpected " + title + " content", expected.toString(), actual.toString());

@@ -5,10 +5,8 @@ import android.widget.TextView;
 import com.budgetview.android.BudgetOverviewActivity;
 import com.budgetview.android.R;
 import com.budgetview.android.checkers.utils.BlockParser;
-import com.budgetview.android.checkers.utils.Views;
+import com.budgetview.android.checkers.utils.ViewParser;
 import com.budgetview.shared.utils.AmountFormat;
-import junit.framework.Assert;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.TablePrinter;
 
 public class BudgetOverviewChecker extends AndroidTabsChecker<BudgetOverviewActivity> {
@@ -22,12 +20,17 @@ public class BudgetOverviewChecker extends AndroidTabsChecker<BudgetOverviewActi
   }
 
   public SeriesListChecker edit(String budgetAreaName) {
-    Views.clickBlockWithTextView(getCurrentView(), R.id.budgetAreaBlock, R.id.budgetAreaLabel, budgetAreaName);
+    ViewParser.clickBlockWithTextView(getCurrentView(), R.id.budgetAreaBlock, R.id.budgetAreaLabel, budgetAreaName);
     return new SeriesListChecker();
   }
 
   public TransactionListChecker editUncategorized() {
-    Views.clickBlockWithTextView(getCurrentView(), R.id.budgetAreaBlock, R.id.budgetAreaLabel, "Uncategorized");
+    ViewParser.clickBlockWithTextView(getCurrentView(), R.id.budgetAreaBlock, R.id.budgetAreaLabel, "Uncategorized");
+    return new TransactionListChecker();
+  }
+
+  public TransactionListChecker editAccount(String accountName) {
+    ViewParser.clickBlockWithTextView(getCurrentView(), R.id.accountBlock, R.id.accountLabel, accountName);
     return new TransactionListChecker();
   }
 

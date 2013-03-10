@@ -4,11 +4,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
 import android.widget.TextView;
+import com.budgetview.shared.utils.AmountFormat;
 import junit.framework.Assert;
 import org.globsframework.utils.Strings;
 import org.robolectric.Robolectric;
 
-public class Views {
+public class ViewParser {
   public static void parse(View view, BlockParser viewParser) {
     recursiveParse(view, viewParser);
     viewParser.complete();
@@ -32,7 +33,7 @@ public class Views {
   public static void clickBlockWithTextView(View view, int blockId, int textViewId, String text) {
     boolean found = recursiveClickBlockWithTextView(view, blockId, textViewId, text);
     if (!found) {
-      Assert.fail("No text found with text '" + text + "' in:\n" + Views.toString(view));
+      Assert.fail("No text found with text '" + text + "' in:\n" + ViewParser.toString(view));
     }
   }
 
@@ -121,5 +122,26 @@ public class Views {
       public void complete() {
       }
     });
+  }
+
+  public static void checkText(View view, int textViewId, double value) {
+    checkText(view, textViewId, AmountFormat.DECIMAL_FORMAT.format(value));
+  }
+
+  public static void checkText(View view, int textViewId, String text) {
+    TextView textView = (TextView)view.findViewById(textViewId);
+    if (textView == null) {
+      Assert.fail("No view found with id " + textViewId + " in view: " + toString(view));
+    }
+    Assert.assertEquals(text, textView.getText());
+  }
+
+  public static void checkHidden(View view, int id) {
+    View target = view.findViewById(id);
+    if (target == null) {
+      Assert.fail("No View found with id " + id + " in:\n " + ViewParser.toString(view));
+    }
+    Assert.assertEquals(View.GONE, target.getVisibility());
+
   }
 }

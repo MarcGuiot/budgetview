@@ -27,6 +27,7 @@ import org.designup.picsou.gui.license.LicenseExpirationAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
 import org.designup.picsou.gui.mobile.CreateMobileAccountAction;
+import org.designup.picsou.gui.mobile.DumpMobileXmlAction;
 import org.designup.picsou.gui.mobile.SendMobileDataAction;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
@@ -350,6 +351,7 @@ public class MainPanel {
     devMenu.add(new DumpRepositoryAction(repository));
     devMenu.add(new ChangeDateAction(repository));
     devMenu.add(new AddAccountErrorAction(repository));
+    devMenu.add(new DumpMobileXmlAction(repository, directory));
     devMenu.add(threadsAction);
     return devMenu;
   }

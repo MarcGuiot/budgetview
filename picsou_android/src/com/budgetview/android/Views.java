@@ -11,14 +11,14 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 
 public class Views {
 
-  public static void setText(View view, int textId, Double value) {
-    String text = (value == null) ? "-" : AmountFormat.DECIMAL_FORMAT.format(value);
-    setText(view, textId, text);
-  }
-
   public static void setColoredText(View view, int textId, Double value) {
     setText(view, textId, AmountFormat.DECIMAL_FORMAT.format(value));
     setColorAmount(view, textId, value);
+  }
+
+  public static void setText(View view, int textId, Double value) {
+    String text = (value == null) ? "-" : AmountFormat.DECIMAL_FORMAT.format(value);
+    setText(view, textId, text);
   }
 
   public static void setText(View view, int textId, CharSequence text) {

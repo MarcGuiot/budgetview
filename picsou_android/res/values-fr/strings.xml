@@ -70,5 +70,14 @@
   <string name="transactionAccount">Compte</string>
   <string name="transactionSeries">Enveloppe</string>
 
+  <string name="amountBlockActual">Réel</string>
+  <string name="amountBlockPlanned">Prévu</string>
+
+  <string name="seriesListSectionLabel">Enveloppes</string>
+  <string name="seriesListEmptyMessage">Il n\'y a pas d\'enveloppes ce mois-ci</string>
+
+  <string name="transactionListSectionLabel">Opérations</string>
+  <string name="transactionListEmptyMessage">Il n\'y a pas d\'opérations ce mois-ci</string>
+
 </resources>
 

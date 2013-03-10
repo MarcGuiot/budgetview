@@ -33,7 +33,7 @@ public class AccountBlockView extends LinearLayout {
                                                                           accountEntity.get(AccountEntity.POSITION_MONTH),
                                                                           activity.getResources()));
 
-    view.setOnClickListener(new View.OnClickListener() {
+    view.findViewById(R.id.accountBlock).setOnClickListener(new View.OnClickListener() {
       public void onClick(View view) {
         Intent intent = new Intent(activity, TransactionListActivity.class);
 

@@ -7,10 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import com.budgetview.android.utils.SectionHeaderBlock;
+import com.budgetview.shared.model.BudgetAreaValues;
 import com.budgetview.shared.model.SeriesValues;
 import com.budgetview.shared.utils.SeriesValuesComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.Key;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
 
@@ -29,8 +32,22 @@ public class SeriesListFragment extends Fragment {
 
     View view = inflater.inflate(R.layout.series_list, container, false);
 
+    AmountsBlockView amountsBlock = (AmountsBlockView)view.findViewById(R.id.budget_area_amounts);
+    App app = (App)getActivity().getApplication();
+    Glob budgetAreaValues = app.getRepository().find(Key.create(BudgetAreaValues.BUDGET_AREA, budgetAreaId,
+                                                                 BudgetAreaValues.MONTH, monthId));
+    amountsBlock.update(budgetAreaValues,
+                        BudgetAreaValues.ACTUAL,
+                        BudgetAreaValues.INITIALLY_PLANNED,
+                        BudgetAreaValues.OVERRUN,
+                        BudgetAreaValues.REMAINDER);
+
     ListView list = (ListView)view.findViewById(R.id.seriesList);
     list.setAdapter(new SeriesListAdapter(inflater));
+
+    EmptyListView emptyView = (EmptyListView)view.findViewById(R.id.emptyListView);
+    emptyView.update(R.string.seriesListEmptyMessage);
+    list.setEmptyView(emptyView);
 
     return view;
   }
@@ -39,6 +56,7 @@ public class SeriesListFragment extends Fragment {
 
     private GlobList seriesValuesList;
     private LayoutInflater inflater;
+    private SectionHeaderBlock headerBlock;
 
     private SeriesListAdapter(LayoutInflater inflater) {
       this.inflater = inflater;
@@ -54,29 +72,42 @@ public class SeriesListFragment extends Fragment {
     }
 
     public int getCount() {
-      return seriesValuesList.size();
+      if (seriesValuesList.isEmpty()) {
+        return 0;
+      }
+      return seriesValuesList.size() + 1;
     }
 
-    public Object getItem(int i) {
-      return seriesValuesList.get(i);
+    public Object getItem(int index) {
+      if (index == 0) {
+        return "Header";
+      }
+      return seriesValuesList.get(index - 1);
     }
 
     public long getItemId(int i) {
       return getItem(i).hashCode();
     }
 
-    public View getView(int i, View previousView, ViewGroup parent) {
+    public View getView(int index, View previousView, ViewGroup parent) {
 
-      SeriesBlockView view = (SeriesBlockView)previousView;
-      if (view == null) {
+      if (index == 0) {
+        if (headerBlock == null) {
+          headerBlock = new SectionHeaderBlock(R.string.seriesListSectionLabel, getResources());
+        }
+        return headerBlock.getView(inflater, previousView, parent);
+      }
+
+      View view = previousView;
+      if (view == null || !(view instanceof SeriesBlockView)) {
         view = new SeriesBlockView(getActivity(), null);
       }
 
       final App app = (App)getActivity().getApplication();
-      final Glob seriesValues = seriesValuesList.get(i);
+      final Glob seriesValues = seriesValuesList.get(index - 1);
       Glob seriesEntity = app.getRepository().findLinkTarget(seriesValues, SeriesValues.SERIES_ENTITY);
 
-      view.update(monthId, seriesEntity, seriesValues, getActivity());
+      ((SeriesBlockView)view).update(monthId, seriesEntity, seriesValues, getActivity());
 
       return view;
     }
