@@ -94,28 +94,23 @@ public class PicsouInit {
 
     ColorThemeUpdater.register(repository, directory);
 
-    Calendar calendar = Calendar.getInstance();
-    calendar.set(Calendar.HOUR_OF_DAY, 0);
-    calendar.set(Calendar.MINUTE, 0);
-    calendar.set(Calendar.SECOND, 1);
-    calendar.add(Calendar.DAY_OF_YEAR, 1);
-
     if (timer != null) {
       timer.cancel();
     }
     timer = new Timer(true);
     timer.scheduleAtFixedRate(new TimerTask() {
       public void run() {
-        SwingUtilities.invokeLater(new Runnable() {
-          public void run() {
-            TimeService.reset();
-            repository.update(CurrentMonth.KEY,
-                              value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
-                              value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
-          }
-        });
+        if (TimeService.reset()) {
+          SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+              repository.update(CurrentMonth.KEY,
+                                value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
+                                value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
+            }
+          });
+        }
       }
-    }, calendar.getTime(), 24 * 3600 * 1000);
+    }, 60 * 1000 * 10, 60 * 1000 * 10);
   }
 
   private void initBank(Directory directory) {

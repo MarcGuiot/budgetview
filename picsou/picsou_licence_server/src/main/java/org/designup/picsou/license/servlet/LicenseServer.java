@@ -36,7 +36,8 @@ public class LicenseServer {
   public static final String NEW_USER = "/newUser";
   private Server jetty;
   private boolean useSsl = true;
-  private int port = 443;
+  private int sslPort = 443;
+  private int port = 8080;
   private int mailPort = 25;
   private String databaseUrl = JDBC_HSQLDB;
   private String databaseUser = "sa";
@@ -74,8 +75,8 @@ public class LicenseServer {
     this.useSsl = useSsl;
   }
 
-  public void usePort(int port) {
-    this.port = port;
+  public void useSslPort(int port) {
+    this.sslPort = port;
   }
 
   public static void main(String[] args) throws Exception {
@@ -83,7 +84,7 @@ public class LicenseServer {
     for (int i = 0; i < args.length; i++) {
       String arg = args[i];
       if (arg.equalsIgnoreCase("-data")){
-        server.usePort(1443);
+        server.useSslPort(1443);
         server.onlyMobile();
       }
     }
@@ -109,21 +110,28 @@ public class LicenseServer {
 
   public void init() {
     if (useSsl) {
-      SslSocketConnector connector = new SslSocketConnector();
-      connector.setHeaderBufferSize(1024 * 1024);
-      connector.setRequestBufferSize(1024 * 1024);
+      SslSocketConnector sslConnector = new SslSocketConnector();
+      sslConnector.setHeaderBufferSize(1024 * 1024);
+      sslConnector.setRequestBufferSize(1024 * 1024);
       String keyStore = System.getProperty(KEYSTORE);
       if (keyStore == null) {
         keyStore = "resources/.keystore";
       }
-      connector.setKeystore(keyStore);
+      sslConnector.setKeystore(keyStore);
       String host = System.getProperty(HOST_PROPERTY);
       if (host == null) {
         host = "0.0.0.0";
       }
+      sslConnector.setHost(host);
+      sslConnector.setPassword("ninja600");
+      sslConnector.setKeyPassword("ninja600");
+      sslConnector.setPort(sslPort);
+      jetty.addConnector(sslConnector);
+
+      SocketConnector connector = new SocketConnector();
+      connector.setHeaderBufferSize(1024 * 1024);
+      connector.setRequestBufferSize(1024 * 1024);
       connector.setHost(host);
-      connector.setPassword("ninja600");
-      connector.setKeyPassword("ninja600");
       connector.setPort(port);
       jetty.addConnector(connector);
     }
@@ -132,7 +140,7 @@ public class LicenseServer {
       connector.setHeaderBufferSize(1024 * 1024);
       connector.setRequestBufferSize(1024 * 1024);
       connector.setHost("0.0.0.0");
-      connector.setPort(port);
+      connector.setPort(sslPort);
       jetty.addConnector(connector);
     }
     String database = System.getProperty(DATABASE_URL);
@@ -160,7 +168,7 @@ public class LicenseServer {
 
     context.addServlet(new ServletHolder(new ReceiveDataServlet(pathForMobileData, directory)), ConfigService.REQUEST_CLIENT_TO_SERVER_DATA);
     context.addServlet(new ServletHolder(new RetrieveDataServlet(pathForMobileData, directory)), ComCst.GET_MOBILE_DATA);
-    context.addServlet(new ServletHolder(new SendMailCreateMobileUserServlet(pathForMobileData, directory, port)), ComCst.SEND_MAIL_TO_CONFIRM_MOBILE);
+    context.addServlet(new ServletHolder(new SendMailCreateMobileUserServlet(pathForMobileData, directory, sslPort)), ComCst.SEND_MAIL_TO_CONFIRM_MOBILE);
     context.addServlet(new ServletHolder(new CreateMobileUserServlet(pathForMobileData, directory)), CREATE_MOBILE_USER);
 
     context.addServlet(new ServletHolder(new SendMailFromMobileServlet(directory)), ComCst.SEND_MAIL_REMINDER_FROM_MOBILE);

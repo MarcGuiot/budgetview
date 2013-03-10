@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.time;
 
 import org.designup.picsou.model.Month;
-import org.globsframework.utils.Log;
 
 import java.util.Date;
 
@@ -9,6 +8,21 @@ public class TimeService {
   private static Date today;
   private static int monthId;
   private static int day;
+  private static Now now = new Now() {
+    public long now() {
+      return System.currentTimeMillis();
+    }
+  };
+
+  public interface Now {
+    long now();
+  }
+
+  public static Now setTimeAccessor(Now now){
+    Now tmp = TimeService.now;
+    TimeService.now = now;
+    return tmp;
+  }
 
   static {
     reset();
@@ -22,11 +36,17 @@ public class TimeService {
     monthId = Month.getMonthId(day);
   }
 
-  public static void reset(){
-    today = new Date();
-    Log.write("new day " + today);
-    day = Month.getDay(today);
-    monthId = Month.getMonthId(today);
+  public static boolean reset() {
+    Date newDate = new Date(now.now());
+    int newDay = Month.getDay(newDate);
+    int newMonth = Month.getMonthId(newDate);
+    if (newDay != day || monthId != newMonth) {
+      today = newDate;
+      day = newDay;
+      monthId = newMonth;
+      return true;
+    }
+    return false;
   }
 
   public static int getCurrentFullDate() {
@@ -45,6 +65,11 @@ public class TimeService {
     today = date;
     monthId = Month.getMonthId(date);
     day = Month.getDay(date);
+    now = new Now() {
+      public long now() {
+        return today.getTime();
+      }
+    };
   }
 
   public static int getCurrentMonth() {

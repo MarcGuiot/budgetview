@@ -450,19 +450,27 @@ public class PositionTrigger implements ChangeSetListener {
         repository.update(account.getKey(),
                           value(Account.POSITION_DATE, accountDate),
                           value(Account.POSITION_WITH_PENDING, lastTransaction.get(Transaction.ACCOUNT_POSITION)));
-        if (checkAccountPosition && account.get(Account.LAST_IMPORT_POSITION) != null &&
-            !Amounts.equal(lastTransaction.get(Transaction.ACCOUNT_POSITION), account.get(Account.LAST_IMPORT_POSITION))) {
-          Glob accountError = repository.findOrCreate(Key.create(AccountPositionError.TYPE, account.get(Account.ID)));
-          repository.update(accountError.getKey(),
-                            value(AccountPositionError.UPDATE_DATE, new Date()),
-                            value(AccountPositionError.CLEARED, false),
-                            value(AccountPositionError.IMPORTED_POSITION, account.get(Account.LAST_IMPORT_POSITION)),
-                            value(AccountPositionError.LAST_REAL_OPERATION_POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION)),
-                            value(AccountPositionError.LAST_PREVIOUS_IMPORT_DATE,
-                                  lastOp != null ? Month.toFullDate(lastOp.get(Transaction.BANK_MONTH),
-                                                                    lastOp.get(Transaction.BANK_DAY))
-                                                 : null)
-          );
+        if (checkAccountPosition) {
+          if (account.get(Account.LAST_IMPORT_POSITION) != null &&
+              !Amounts.equal(lastTransaction.get(Transaction.ACCOUNT_POSITION), account.get(Account.LAST_IMPORT_POSITION))) {
+            Glob accountError = repository.findOrCreate(Key.create(AccountPositionError.TYPE, account.get(Account.ID)));
+            repository.update(accountError.getKey(),
+                              value(AccountPositionError.UPDATE_DATE, new Date()),
+                              value(AccountPositionError.CLEARED, false),
+                              value(AccountPositionError.IMPORTED_POSITION, account.get(Account.LAST_IMPORT_POSITION)),
+                              value(AccountPositionError.LAST_REAL_OPERATION_POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION)),
+                              value(AccountPositionError.LAST_PREVIOUS_IMPORT_DATE,
+                                    lastOp != null ? Month.toFullDate(lastOp.get(Transaction.BANK_MONTH),
+                                                                      lastOp.get(Transaction.BANK_DAY))
+                                                   : null)
+            );
+          }
+          else {
+            Glob accountError = repository.find(Key.create(AccountPositionError.TYPE, account.get(Account.ID)));
+            if (accountError != null) {
+              repository.update(accountError.getKey(), AccountPositionError.CLEARED, true);
+            }
+          }
         }
       }
       else if (openTransaction != null) {
