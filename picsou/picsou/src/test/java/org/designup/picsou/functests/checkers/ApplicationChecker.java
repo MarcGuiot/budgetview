@@ -32,7 +32,6 @@ public class ApplicationChecker extends GuiChecker {
     return enterFromSla(slaWindow);
   }
 
-
   public Window startWithoutSLA() {
     application = new DummyPicsouApplication();
     clearCheckers();

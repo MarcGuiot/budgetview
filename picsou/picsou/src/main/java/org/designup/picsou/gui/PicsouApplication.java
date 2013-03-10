@@ -56,8 +56,8 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "2.34g";
-  public static final Long JAR_VERSION = 103L;
+  public static final String APPLICATION_VERSION = "2.34";
+  public static final Long JAR_VERSION = 106L;
   public static final Long BANK_CONFIG_VERSION = 7L;
 
   public static final String APPNAME = "budgetview";
@@ -74,7 +74,7 @@ public class PicsouApplication {
   public static String FORCE_DATE = APPNAME + TODAY;
 
   public static final String REGISTER_URL = "https://register.mybudgetview.fr:443";
-  public static final String REGISTER_URL_MOBILE = "https://register.mybudgetview.fr:1443";
+  public static final String REGISTER_URL_MOBILE = "http://register.mybudgetview.fr:8080";
   public static final String FTP_URL = "ftp://ftpjar.mybudgetview.fr";
 
   public static boolean EXIT_ON_DATA_ERROR = true;
@@ -136,8 +136,8 @@ public class PicsouApplication {
 //      // If Nimbus is not available, you can set the GUI to another look and feel.
 //    }
 
-    SwingUtilities.invokeAndWait(new Runnable() {
-      public void run() {
+//    SwingUtilities.invokeAndWait(new Runnable() {
+//      public void run() {
         try {
           new PicsouApplication().run(args);
         }
@@ -145,8 +145,8 @@ public class PicsouApplication {
           Log.write("At startup ", e);
           System.exit(-1);
         }
-      }
-    });
+//      }
+//    });
   }
 
   static void changeDate() {
@@ -190,6 +190,8 @@ public class PicsouApplication {
 
     preinitDirectory(directory);
     initDirectory(directory, openRequestManager);
+
+
 
     try {
       final MainWindow mainWindow = new MainWindow(this, getServerAddress(), AppPaths.getLocalPrevaylerPath(), isDataInMemory(), directory);

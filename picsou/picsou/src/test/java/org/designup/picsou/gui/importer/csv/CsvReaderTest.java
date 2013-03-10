@@ -10,6 +10,12 @@ public class CsvReaderTest extends TestCase {
     check(";az;RE", CsvSeparator.SEMICOLON, "", "az", "RE");
     check("az;RE", CsvSeparator.SEMICOLON, "az", "RE");
     check("az;RE;", CsvSeparator.SEMICOLON, "az", "RE", "");
+    check("az;\"k;F\";RE;", CsvSeparator.SEMICOLON, "az", "k;F", "RE", "");
+    check("az;\"k;F\"", CsvSeparator.SEMICOLON, "az", "k;F");
+    check("\"k;F\"", CsvSeparator.SEMICOLON, "k;F");
+    check("aa\"k;F", CsvSeparator.SEMICOLON, "aa\"k", "F");
+    check("aa\"k\";F", CsvSeparator.SEMICOLON, "aa\"k\"", "F");
+    check("aa\"k\";\"\";F", CsvSeparator.SEMICOLON, "aa\"k\"", "","F");
   }
 
   private void check(final String line, CsvSeparator separator, String ...expected) {

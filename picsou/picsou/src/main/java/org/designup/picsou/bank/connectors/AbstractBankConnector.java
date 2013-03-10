@@ -211,7 +211,7 @@ public abstract class AbstractBankConnector implements BankConnector {
   }
 
   protected String getAccountName(Glob account) {
-    return account.get(RealAccount.NAME);
+    return account.get(RealAccount.NAME) + " " + account.get(RealAccount.NUMBER);
   }
 
   protected void notifyInitialConnection() {

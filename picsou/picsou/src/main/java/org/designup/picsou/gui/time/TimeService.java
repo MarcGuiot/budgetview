@@ -5,9 +5,28 @@ import org.designup.picsou.model.Month;
 import java.util.Date;
 
 public class TimeService {
-  private static Date today = new Date();
-  private static int monthId = Month.getMonthId(today);
-  private static int day = Month.getDay(today);
+  private static Date today;
+  private static int monthId;
+  private static int day;
+  private static Now now = new Now() {
+    public long now() {
+      return System.currentTimeMillis();
+    }
+  };
+
+  public interface Now {
+    long now();
+  }
+
+  public static Now setTimeAccessor(Now now){
+    Now tmp = TimeService.now;
+    TimeService.now = now;
+    return tmp;
+  }
+
+  static {
+    reset();
+  }
 
   public TimeService() {
   }
@@ -15,6 +34,19 @@ public class TimeService {
   public TimeService(Date day) {
     today = day;
     monthId = Month.getMonthId(day);
+  }
+
+  public static boolean reset() {
+    Date newDate = new Date(now.now());
+    int newDay = Month.getDay(newDate);
+    int newMonth = Month.getMonthId(newDate);
+    if (newDay != day || monthId != newMonth) {
+      today = newDate;
+      day = newDay;
+      monthId = newMonth;
+      return true;
+    }
+    return false;
   }
 
   public static int getCurrentFullDate() {
@@ -33,6 +65,11 @@ public class TimeService {
     today = date;
     monthId = Month.getMonthId(date);
     day = Month.getDay(date);
+    now = new Now() {
+      public long now() {
+        return today.getTime();
+      }
+    };
   }
 
   public static int getCurrentMonth() {

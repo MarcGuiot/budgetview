@@ -23,17 +23,19 @@ import java.util.Map;
 
 public class BankSynchroService {
   private Map<Integer, BankConnectorFactory> banks = new HashMap<Integer, BankConnectorFactory>();
-  static public boolean SHOW_SYNCHRO = true;
-//    System.getProperty("budgetview.synchro", "false").equalsIgnoreCase("true");
+  static public boolean SHOW_SYNCHRO = System.getProperty("budgetview.synchro", "false")
+    .equalsIgnoreCase("true");
 
   public BankSynchroService() {
-    register(SgConnector.BANK_ID, new SgConnector.Factory());
+    if (SHOW_SYNCHRO){
+      register(SgConnector.BANK_ID, new SgConnector.Factory());
 //    register(CreditMutuelArkeaConnector.BANK_ID, new CreditMutuelArkeaConnector.Factory());
-    register(CicConnector.BANK_ID, new CicConnector.Factory());
-    register(LaBanquePostaleConnector.BANK_ID, new LaBanquePostaleConnector.Factory());
-    register(BnpConnector.BANK_ID, new BnpConnector.Factory());
-    CreditAgricoleConnector.register(this);
-    register(AmexFrConnector.BANK_ID, new AmexFrConnector.Factory());
+      register(CicConnector.BANK_ID, new CicConnector.Factory());
+      register(LaBanquePostaleConnector.BANK_ID, new LaBanquePostaleConnector.Factory());
+      register(BnpConnector.BANK_ID, new BnpConnector.Factory());
+      CreditAgricoleConnector.register(this);
+      register(AmexFrConnector.BANK_ID, new AmexFrConnector.Factory());
+    }
     Utils.beginRemove();
     register(OtherBankConnector.BANK_ID, new OtherBankConnector.Factory());
     Utils.endRemove();

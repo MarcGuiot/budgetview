@@ -299,6 +299,29 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testNoLabel() throws Exception {
+    String file =
+      createQifFile("file",
+                    "!Type:Bank\n" +
+                    "D30/04/2006\n" +
+                    "T-20.00\n" +
+                    "N\n" +
+                    "^");
+    operations.importQifFile(file, SOCIETE_GENERALE, 0.);
+
+    transactionCreation
+      .show()
+      .setAmount(-12.50)
+      .setDay(15)
+      .setLabel("toto")
+      .create();
+    views.selectData();
+    transactions.initContent()
+      .add("30/04/2006", TransactionType.PRELEVEMENT, "", "", -20.00)
+      .add("15/04/2006", TransactionType.MANUAL, "TOTO", "", -12.50)
+      .check();
+  }
+
   public void testPartialInvalidFormat() throws Exception {
     String file =
       createQifFile("file",

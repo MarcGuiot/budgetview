@@ -305,7 +305,7 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   }
 
   public WebTable getTableContaining(HtmlUnit.Filter filter) throws WebParsingError {
-    DomNode element = HtmlUnit.findHtmlElement(node, filter);
+    DomNode element = HtmlUnit.findFirstHtmlElement(node, filter);
     while (element != null) {
       if (element instanceof HtmlTable){
         return new WebTable(browser, (HtmlTable)element);

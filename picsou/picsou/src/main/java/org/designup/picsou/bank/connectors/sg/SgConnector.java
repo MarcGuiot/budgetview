@@ -63,13 +63,13 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
     return new HttpWebConnection(client) {
       public WebResponse getResponse(WebRequest request) throws IOException {
         String s = request.getUrl().toString();
-        System.out.println("SgConnector.getResponse " + s);
+//        System.out.println("SgConnector.getResponse " + s);
         if (s.startsWith("https://logs128.xiti.com") || s.startsWith("https://societegenerale.solution.weborama.fr")
             || s.startsWith("https://ssl.weborama.fr")) {
           return new StringWebResponse("", request.getUrl());
         }
         WebResponse response = super.getResponse(request);
-        System.out.println("SgConnector.getResponse " + response.getLoadTime() + " ms.");
+//        System.out.println("SgConnector.getResponse " + response.getLoadTime() + " ms.");
         return response;
       }
     };
@@ -92,24 +92,24 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
     initCardCode(builder);
     directory.get(ExecutorService.class)
       .submit(new Runnable() {
-      public void run() {
-        try {
-          notifyInitialConnection();
-          loadPage(INDEX);
-          SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-              validateUserIdAction.setEnabled(true);
-            }
-          });
+        public void run() {
+          try {
+            notifyInitialConnection();
+            loadPage(INDEX);
+            SwingUtilities.invokeLater(new Runnable() {
+              public void run() {
+                validateUserIdAction.setEnabled(true);
+              }
+            });
+          }
+          catch (Exception e) {
+            notifyErrorFound(e);
+          }
+          finally {
+            notifyWaitingForUser();
+          }
         }
-        catch (Exception e) {
-          notifyErrorFound(e);
-        }
-        finally {
-          notifyWaitingForUser();
-        }
-      }
-    });
+      });
     return builder.load();
   }
 
@@ -199,7 +199,6 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
         validateCode.setEnabled(true);
       }
       catch (Exception e) {
-        Log.write(page.asXml());
         notifyErrorFound(e);
       }
     }
@@ -335,39 +334,23 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
     WebSelect compte = browser.getCurrentPage().getSelectById("compte");
     List<String> accountList = compte.getEntryNames();
     for (int i = 0, size = accountList.size(); i < size; i++) {
-      String option = accountList.get(i);
-      Glob realAccount = find(option, this.accounts);
-      if (realAccount != null) {
-        compte.select(option);
-        File file = null;
-        try {
+      try {
+        String option = accountList.get(i);
+        Glob realAccount = find(option, this.accounts);
+        if (realAccount != null) {
+          compte.select(option);
           notifyDownloadForAccount(getAccountName(realAccount));
-          file = downloadFor(realAccount);
+          File file = downloadFor(realAccount);
+          if (file != null) {
+            repository.update(realAccount.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+          }
         }
-        catch (WebCommandFailed failed) {
-        }
-        if (file != null) {
-          repository.update(realAccount.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
-        }
-
-        try {
-//            DomElement error = ((HtmlPage)client.getCurrentWindow().getEnclosedPage()).getElementById("div_NET2G");
-//            DomNodeList<HtmlElement> name = error.getElementsByTagName(HtmlAnchor.TAG_NAME);
-//            if (name.size() == 1 && name.get(0).hasAttribute()){
-//              page = name.get(0).click();
-//            }
-//            else {
-          browser.load(URL_TELECHARGEMENT);
-          compte = browser.getCurrentPage().getSelectById("compte");
-          accountList = compte.getEntryNames();
-//            }
-        }
-        catch (Exception e) {
-          Log.write("Can not go back", e);
-          browser.load(URL_TELECHARGEMENT);
-          compte = browser.getCurrentPage().getSelectById("compte");
-          accountList = compte.getEntryNames();
-        }
+      }
+      catch (Exception e) {
+        Log.write("Can not go back", e);
+        browser.load(URL_TELECHARGEMENT);
+        compte = browser.getCurrentPage().getSelectById("compte");
+        accountList = compte.getEntryNames();
       }
     }
     getClient().closeAllWindows();
@@ -428,33 +411,33 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
       return null;
     }
     HtmlElement periodes = getElementById("Periode");
-    List<HtmlElement> from90LastDays = periodes.getElementsByAttribute(HtmlInput.TAG_NAME, "value", "XXJOURS");
-    if (!from90LastDays.isEmpty()) {
-      ((HtmlInput)from90LastDays.get(0)).setChecked(true);
+//    List<HtmlElement> from90LastDays = periodes.getElementsByAttribute(HtmlInput.TAG_NAME, "value", "XXJOURS");
+//    if (!from90LastDays.isEmpty()) {
+//      ((HtmlInput)from90LastDays.get(0)).setChecked(true);
+//    }
+//    else {
+    List<HtmlElement> periodesFromTo = periodes.getElementsByAttribute(HtmlInput.TAG_NAME, "value", "INTERVALLE");
+    if (periodesFromTo.isEmpty()) {
+      periodesFromTo = periodes.getElementsByAttribute(HtmlInput.TAG_NAME, "value", "PREMIER");
+    }
+    if (!periodesFromTo.isEmpty()) {
+      ((HtmlInput)periodesFromTo.get(0)).setChecked(true);
+      List<HtmlElement> fromDates = periodes.getElementsByAttribute(HtmlInput.TAG_NAME, "name", "datedu");
+      HtmlElement fromDate = getFirst(fromDates, "datedu");
+      List<HtmlElement> toDates = periodes.getElementsByAttribute(HtmlInput.TAG_NAME, "name", "dateau");
+      if (!toDates.isEmpty()) {
+        HtmlElement toDate = getFirst(toDates, "dateau");
+        String value = ((HtmlInput)toDate).getValueAttribute();
+        if (Strings.isNullOrEmpty(value)) {
+          setDate(toDate, 0, -1);
+        }
+      }
+      setDate(fromDate, -3, 4);
     }
     else {
-      List<HtmlElement> periodesFromTo = periodes.getElementsByAttribute(HtmlInput.TAG_NAME, "value", "INTERVALLE");
-      if (periodesFromTo.isEmpty()) {
-        periodesFromTo = periodes.getElementsByAttribute(HtmlInput.TAG_NAME, "value", "PREMIER");
-      }
-      if (!periodesFromTo.isEmpty()) {
-        ((HtmlInput)periodesFromTo.get(0)).setChecked(true);
-        List<HtmlElement> fromDates = periodes.getElementsByAttribute(HtmlInput.TAG_NAME, "name", "datedu");
-        HtmlElement fromDate = getFirst(fromDates, "datedu");
-        List<HtmlElement> toDates = periodes.getElementsByAttribute(HtmlInput.TAG_NAME, "name", "dateau");
-        if (!toDates.isEmpty()) {
-          HtmlElement toDate = getFirst(toDates, "dateau");
-          String value = ((HtmlInput)toDate).getValueAttribute();
-          if (Strings.isNullOrEmpty(value)) {
-            setDate(toDate, 0, -1);
-          }
-        }
-        setDate(fromDate, -3, 4);
-      }
-      else {
-        Log.write("SG : can not find periode");
-      }
+      Log.write("SG : can not find periode");
     }
+//    }
     WebAnchor link = browser.getCurrentPage().getAnchorWithRef("javascript:telecharger(this)");
     return link.clickAndDownload().saveAsQif(realAccount);
   }

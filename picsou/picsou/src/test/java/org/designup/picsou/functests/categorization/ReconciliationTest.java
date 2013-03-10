@@ -2,6 +2,7 @@ package org.designup.picsou.functests.categorization;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.time.TimeService;
 
 public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
@@ -582,5 +583,5 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .check();
 
   }
-  
+
 }

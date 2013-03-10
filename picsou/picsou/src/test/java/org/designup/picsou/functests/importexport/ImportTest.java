@@ -5,12 +5,17 @@ import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 
 import java.io.File;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ImportTest extends LoggedInFunctionalTestCase {
 
@@ -1026,5 +1031,95 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 //      .check();
 
     mainAccounts.checkSummary(0., "2008/06/08");
+  }
+
+  public void testMixDate() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/5", 2.0, "V'lib")
+      .addTransaction("2008/06/8", 2.0, "V'lib")
+      .load();
+
+    timeline.selectAll();
+    transactions.initAmountContent()
+      .add("08/06/2008", "V'LIB", 2.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("05/06/2008", "V'LIB", 2.00, "To categorize", -2.00, -2.00, "Account n. 00001123")
+      .check();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/06", 2.0, "V'lib")
+      .addTransaction("2008/06/09", 2.0, "V'lib")
+      .load();
+
+    timeline.selectAll();
+    transactions.initAmountContent()
+      .add("09/06/2008", "V'LIB", 2.00, "To categorize", 4.00, 4.00, "Account n. 00001123")
+      .add("08/06/2008", "V'LIB", 2.00, "To categorize", 2.00, 2.00, "Account n. 00001123")
+      .add("06/06/2008", "V'LIB", 2.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("05/06/2008", "V'LIB", 2.00, "To categorize", -2.00, -2.00, "Account n. 00001123")
+      .check();
+
+    mainAccounts.checkSummary(4., "2008/06/09");
+  }
+
+  public void testImportAndChangeDate() throws Exception {
+    MutableNow now = new MutableNow();
+    OfxBuilder.init(this)
+      .addBankAccount("111", 100, now.format())
+      .addTransaction(now.format(), -100.00, "Virement")
+      .load();
+
+    now.addOneDay();
+
+    OfxBuilder.init(this)
+      .addBankAccount("111", 110., now.format())
+      .addTransaction(now.format(), -100.00, "Virement")
+      .load();
+
+    notifications.checkVisible(1);
+
+    TimeService.Now previous = TimeService.setTimeAccessor(now);
+
+    OfxBuilder.init(this)
+      .addBankAccount("111", 0., now.format())
+      .addTransaction(now.format(), -100.00, "Virement")
+      .load();
+
+    notifications.checkHidden();
+    TimeService.setTimeAccessor(previous);
+
+    timeline.selectAll();
+    transactions.initAmountContent()
+      .add("01/09/2008", "VIREMENT", -100.00, "To categorize", 0.00, 0.00, "Account n. 111")
+      .add("31/08/2008", "VIREMENT", -100.00, "To categorize", 100.00, 100.00, "Account n. 111")
+      .check();
+
+    fail("Si on met -100 a la place de -110 dans la position de compte, changeSet.containChange retourne false car c'est la meme valeur " +
+         "meme si c'est un nouvelle import, du coup, on ne fait pas le check car on pense que ce n'est pas un import " +
+         "/org/designup/picsou/triggers/PositionTrigger.java:449");
+  }
+
+  private static class MutableNow implements TimeService.Now {
+    private long time;
+    Format format = new SimpleDateFormat("yyyy/MM/dd");
+
+    private MutableNow() {
+      time = TimeService.getToday().getTime();
+    }
+
+    public long now() {
+      return time;
+    }
+
+    public void set(long time) {
+      this.time = time;
+    }
+
+    public void addOneDay() {
+      time += 24 * 3600 * 1000;
+    }
+
+    public String format(){
+      return format.format(new Date(time));
+    }
   }
 }
