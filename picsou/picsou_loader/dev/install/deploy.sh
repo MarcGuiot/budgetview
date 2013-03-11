@@ -40,6 +40,9 @@ fi
 if [ -a budgetview-${SOFT_VERSION}.deb ];
 then
    scp budgetview-${SOFT_VERSION}.deb fr_mybudgetview@91.121.123.100:files/app
+   ssh fr_mybudgetview@91.121.123.100 cp files/app/budgetview-${SOFT_VERSION}.deb /tmp
+   ssh en_mybudgetview@91.121.123.100 cp /tmp/budgetview-${SOFT_VERSION}.deb files/app/
+   ssh fr_mybudgetview@91.121.123.100 rm /tmp/budgetview-${SOFT_VERSION}.deb
 fi
 
 if [ -a dev/install/output/BudgetView-${SOFT_VERSION}-en-Setup.exe ];
