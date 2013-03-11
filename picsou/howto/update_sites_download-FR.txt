@@ -17,13 +17,13 @@ Modifications souhaitées pour le logiciel BudgetView (id = 50969)
 
 Bonjour,
 
-J'ai le plaisir de vous informer qu'une nouvelle version de BudgetView est disponible. Il agit de la version 2.33, dont les liens directs de téléchargement sont les suivants :
+J'ai le plaisir de vous informer qu'une nouvelle version de BudgetView est disponible. Il agit de la version 2.34, dont les liens directs de téléchargement sont les suivants :
 
-- Windows : http://www.mybudgetview.fr/files/app/BudgetView-2.33-fr-Setup.exe
+- Windows : http://www.mybudgetview.fr/files/app/BudgetView-2.34-fr-Setup.exe
 
-- Mac : http://www.mybudgetview.fr/files/app/BudgetView-2.33-fr.dmg
+- Mac : http://www.mybudgetview.fr/files/app/BudgetView-2.34-fr.dmg
 
-- Linux : http://www.mybudgetview.fr/files/app/budgetview-2.33-fr.tar.gz
+- Linux : http://www.mybudgetview.fr/files/app/budgetview-2.34-fr.tar.gz
 
 L'historique des modifications est visible sur cette page : 
 
@@ -77,13 +77,13 @@ J'ai le plaisir de vous informer qu'une nouvelle version est disponible pour le 
 
  http://www.jetelecharge.com/Bureautique/6452.php
 
-La nouvelle version porte le numéro 2.33, et le fichier d'installation correspondant est disponible à l'adresse suivante :
+La nouvelle version porte le numéro 2.34, et le fichier d'installation correspondant est disponible à l'adresse suivante :
 
-- Windows : http://www.mybudgetview.fr/files/app/BudgetView-2.33-fr-Setup.exe
+- Windows : http://www.mybudgetview.fr/files/app/BudgetView-2.34-fr-Setup.exe
 
-- Mac : http://www.mybudgetview.fr/files/app/BudgetView-2.33-fr.dmg
+- Mac : http://www.mybudgetview.fr/files/app/BudgetView-2.34-fr.dmg
 
-- Linux : http://www.mybudgetview.fr/files/app/budgetview-2.33-fr.tar.gz
+- Linux : http://www.mybudgetview.fr/files/app/budgetview-2.34-fr.tar.gz
 
 L'historique des modifications est visible sur cette page :
 
@@ -97,30 +97,6 @@ Vous remerciant par avance,
 
 Régis.
 
-
-================================================
-    Anshare
-================================================
-
-1. Aller sur :
-
-  http://www.anshare.org/login/accespasse.asp
-
-2. S'identifier avec :
-
-  regis@mybudgetview.fr
-  fr912m
-
-3. Aller sur :
-
-  http://www.anshare.org/logue/logiciel_new.asp?EMail=&Passe=&ID=34763
-
-4. Mettre à jour :
-
-  * version
-  * URL download
-
-
 ================================================
     Top-logiciel.net
 ================================================
@@ -133,17 +109,17 @@ Régis.
 
 3. Message :
 
-Nom et version : BudgetView 2.33
+Nom et version : BudgetView 2.34
 
 Adresse (directe) de téléchargement : 
 
-http://www.mybudgetview.fr/files/app/BudgetView-2.33-fr-Setup.exe
+http://www.mybudgetview.fr/files/app/BudgetView-2.34-fr-Setup.exe
 
 Email : regis@mybudgetview.fr
 
 Bonjour,
 
-La version 2.33 de BudgetView est disponible. Les derniers changements sont décrits sur cette page :
+La version 2.34 de BudgetView est disponible. Les derniers changements sont décrits sur cette page :
 
   http://www.mybudgetview.fr/support/derniers-changements
 
