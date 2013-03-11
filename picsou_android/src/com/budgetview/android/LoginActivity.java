@@ -32,20 +32,9 @@ public class LoginActivity extends Activity {
     }
 
     final DataSync sync = DataSyncFactory.create(this);
-    sync.connect(loginInfo.email, loginInfo.password, new DataSyncCallback() {
-      public void onActionFinished() {
-        LoginInfo.save(loginInfo, LoginActivity.this);
-        loadData(sync);
-      }
-
-      public void onConnectionUnavailable() {
-        Views.showAlert(LoginActivity.this, R.string.syncWithNoConnection);
-      }
-
-      public void onActionFailed() {
-        Views.showAlert(LoginActivity.this, R.string.syncWithInvalidId);
-      }
-    });
+    sync.setUser(loginInfo.email, loginInfo.password);
+    LoginInfo.save(loginInfo, LoginActivity.this);
+    loadData(sync);
   }
 
   private void loadData(DataSync sync) {

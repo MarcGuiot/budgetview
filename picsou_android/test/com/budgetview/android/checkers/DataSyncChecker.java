@@ -18,6 +18,7 @@ public class DataSyncChecker {
 
   private final boolean verbose;
   private DataSync dataSync;
+  private boolean connectionAvailable = true;
   private ExpectationQueue expectations = new ExpectationQueue();
 
   public DataSyncChecker(boolean verbose) {
@@ -26,12 +27,8 @@ public class DataSyncChecker {
     DataSyncFactory.setForcedSync(dataSync);
   }
 
-  public void acceptLogin(String email) {
-    expectations.push(new ExpectLogin(email, true));
-  }
-
-  public void rejectLogin(String email) {
-    expectations.push(new ExpectLogin(email, false));
+  public void prepareLogin(String email, String password) {
+    expectations.push(new ExpectLogin(email, password));
   }
 
   public LoadBuilder prepareLoad() {
@@ -40,13 +37,27 @@ public class DataSyncChecker {
     return expectLoad.loadBuilder;
   }
 
+  public void checkAllCallsProcessed() {
+    if (!expectations.isEmpty()) {
+      Assert.fail("Remaining items: " + expectations.toString());
+    }
+  }
+
+  public void setConnectionAvailable(boolean connectionAvailable) {
+    this.connectionAvailable = connectionAvailable;
+  }
+
   private class DummyDataSync implements DataSync {
 
-    public void connect(String email, String password, DataSyncCallback callback) {
-      expectations.pop(ExpectLogin.class).connect(email, password, callback);
+    public void setUser(String email, String password) {
+      expectations.pop(ExpectLogin.class).connect(email, password);
     }
 
     public void load(DataSyncCallback callback) {
+      if (!connectionAvailable) {
+        callback.onConnectionUnavailable();
+        return;
+      }
       expectations.pop(ExpectLoad.class).load(callback);
     }
 
@@ -69,24 +80,16 @@ public class DataSyncChecker {
 
   private class ExpectLogin implements Expectation {
     private String expectedEmail;
-    private boolean acceptLogin;
+    private final String expectedPassword;
 
-    private ExpectLogin(String email, boolean acceptLogin) {
+    private ExpectLogin(String email, String password) {
       this.expectedEmail = email;
-      this.acceptLogin = acceptLogin;
+      this.expectedPassword = password;
     }
 
-    public void connect(String email, String password, DataSyncCallback callback) {
+    public void connect(String email, String password) {
       Assert.assertEquals(expectedEmail, email);
-      if (Strings.isNullOrEmpty(password)) {
-        Assert.fail("Provided invalid empty password");
-      }
-      if (acceptLogin) {
-        callback.onActionFinished();
-      }
-      else {
-        callback.onActionFailed();
-      }
+      Assert.assertEquals(expectedPassword, password);
     }
   }
 

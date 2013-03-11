@@ -29,24 +29,8 @@ public class HomeActivity extends Activity {
     }
 
     final DataSync dataSync = DataSyncFactory.create(this);
-    dataSync.connect(loginInfo.email, loginInfo.password, new DataSyncCallback() {
-      public void onActionFinished() {
-        loadData(dataSync);
-      }
-
-      public void onConnectionUnavailable() {
-        if (dataSync.loadTempFile()) {
-          gotoBudgetOverview(true, false);
-        }
-        else {
-          showHomePage();
-        }
-      }
-
-      public void onActionFailed() {
-        showHomePage();
-      }
-    });
+    dataSync.setUser(loginInfo.email, loginInfo.password);
+    loadData(dataSync);
   }
 
   private void loadData(DataSync dataSync) {

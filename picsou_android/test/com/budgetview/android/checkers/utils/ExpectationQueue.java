@@ -18,12 +18,16 @@ public class ExpectationQueue {
     }
     Expectation expectation = expectations.removeFirst();
     if (!expectedClass.isInstance(expectation)) {
-      throw new UnexpectedApplicationState("Unexpected call: " + expectedClass + " - actual queue:\n" + dumpQueue());
+      throw new UnexpectedApplicationState("Unexpected call: " + expectedClass + " - actual queue:\n" + toString());
     }
     return (T)expectation;
   }
 
-  private String dumpQueue() {
+  public boolean isEmpty() {
+    return expectations.isEmpty();
+  }
+
+  public String toString() {
     StringBuilder builder = new StringBuilder();
     int index = 0;
     for (Expectation expectation : expectations) {

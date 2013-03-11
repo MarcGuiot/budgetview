@@ -44,26 +44,9 @@ public class HttpsDataSync implements DataSync {
     this.activity = activity;
   }
 
-  public void connect(String email, String password, DataSyncCallback callback) {
+  public void setUser(String email, String password) {
     this.email = email;
     this.password = password;
-
-    if (!canConnect()) {
-      callback.onConnectionUnavailable();
-      return;
-    }
-
-    if (idAndPasswordCorrect(this.email, this.password)) {
-      callback.onActionFinished();
-    }
-    else {
-      callback.onActionFailed();
-    }
-  }
-
-  private boolean idAndPasswordCorrect(String email, String password) {
-    // TODO: à remplacer par une connexion serveur
-    return !"fail".equals(email);
   }
 
   public void load(DataSyncCallback callback) {

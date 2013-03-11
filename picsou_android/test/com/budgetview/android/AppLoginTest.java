@@ -1,31 +1,16 @@
 package com.budgetview.android;
 
 import com.budgetview.android.checkers.*;
-import com.budgetview.android.shadow.CustomShadowTabHost;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
-public class AppLoginTest {
-
-  private DataSyncChecker dataSync;
-  private AndroidAppChecker app;
-
-  private static final String EMAIL = "test@mybudgetview.fr";
-  private static final String PASSWORD = "pwd";
-
-  @Before public void setUp() throws Exception {
-    Robolectric.bindShadowClass(CustomShadowTabHost.class);
-    dataSync = new DataSyncChecker(false);
-    app = new AndroidAppChecker();
-  }
+public class AppLoginTest extends AndroidAppTestCase {
 
   @Test public void test() throws Exception {
 
-    dataSync.acceptLogin(EMAIL);
+    dataSync.prepareLogin(EMAIL, PASSWORD);
     dataSync.prepareLoad()
       .addMainAccount("account1", 201212, 31, 10.0)
       .addRecurringSeries("Mortgage", 201212, -1500.00)
@@ -99,7 +84,7 @@ public class AppLoginTest {
   }
 
   @Test public void testAccountOperations() throws Exception {
-    dataSync.acceptLogin(EMAIL);
+    dataSync.prepareLogin(EMAIL, PASSWORD);
     dataSync.prepareLoad()
       .addMainAccount("account1", 201212, 31, 10.0)
       .addRecurringSeries("Mortgage", 201212, -1500.00)
@@ -125,7 +110,7 @@ public class AppLoginTest {
   }
 
   @Test public void testUncategorizedTransactions() throws Exception {
-    dataSync.acceptLogin(EMAIL);
+    dataSync.prepareLogin(EMAIL, PASSWORD);
     dataSync.prepareLoad()
       .addMainAccount("account1", 201212, 31, 10.0)
       .addRecurringSeries("Mortgage", 201301, -1500.00)

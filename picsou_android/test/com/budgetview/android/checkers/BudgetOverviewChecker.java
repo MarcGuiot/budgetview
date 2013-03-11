@@ -101,4 +101,70 @@ public class BudgetOverviewChecker extends AndroidTabsChecker<BudgetOverviewActi
     }
   }
 
+  public AccountRows initAccountContent() {
+    return new AccountRows();
+  }
+
+  public class AccountRows extends TableChecker {
+    public AccountRows() {
+      super("Account", getCurrentView());
+    }
+
+    public AccountRows add(String accountName, double position, String date) {
+      expected.addRow(accountName, AmountFormat.DECIMAL_FORMAT.format(position), date);
+      return this;
+    }
+
+    protected BlockParser getParser(TablePrinter actual) {
+      return new AccountBlockParser(actual);
+    }
+  }
+
+  public static class AccountBlockParser implements BlockParser {
+
+    private String accountName;
+    private String position;
+    private String positionDate;
+    private TablePrinter tablePrinter;
+
+    public AccountBlockParser(TablePrinter tablePrinter) {
+      this.tablePrinter = tablePrinter;
+      resetLabels();
+    }
+
+    public void start(int id) {
+    }
+
+    public void end(int id) {
+      if (id == R.id.accountBlock) {
+        tablePrinter.addRow(accountName, position, positionDate);
+        resetLabels();
+      }
+    }
+
+    public void processText(int id, TextView textView) {
+      switch (id) {
+        case R.id.accountLabel:
+          this.accountName = textView.getText().toString();
+          break;
+        case R.id.accountPosition:
+          this.position = textView.getText().toString();
+          break;
+        case R.id.accountPositionDate:
+          this.positionDate = textView.getText().toString();
+          break;
+        default:
+          // ignore
+      }
+    }
+
+    public void complete() {
+    }
+
+    private void resetLabels() {
+      accountName = "";
+      position = "";
+      positionDate = "";
+    }
+  }
 }

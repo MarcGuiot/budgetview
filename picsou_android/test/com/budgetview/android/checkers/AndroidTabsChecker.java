@@ -1,12 +1,12 @@
 package com.budgetview.android.checkers;
 
-import android.R;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TabHost;
+import com.budgetview.android.R;
 import com.budgetview.android.shadow.CustomShadowTabHost;
 import junit.framework.Assert;
 import org.robolectric.Robolectric;
@@ -86,5 +86,9 @@ public abstract class AndroidTabsChecker<T extends FragmentActivity> extends And
     CustomShadowTabHost tabHost = getTabHost();
     ShadowTabSpec tabSpec = Robolectric.shadowOf(tabHost.getCurrentTabSpec());
     return tabSpec.getContentView();
+  }
+
+  public HeaderChecker header() {
+    return new HeaderChecker(activity, R.id.header);
   }
 }

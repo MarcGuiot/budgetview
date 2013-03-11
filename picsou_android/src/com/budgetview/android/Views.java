@@ -1,7 +1,7 @@
 package com.budgetview.android;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.view.View;
@@ -41,17 +41,17 @@ public class Views {
     textView.setTextColor(color);
   }
 
-  public static void showAlert(Activity activity, int messageId) {
-    showAlert(activity, messageId, new DialogInterface.OnClickListener() {
+  public static void showAlert(Context context, int messageId) {
+    showAlert(context, messageId, new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int which) {
         dialog.dismiss();
       }
     });
   }
 
-  public static void showAlert(final Activity activity, int messageId, DialogInterface.OnClickListener listener) {
-    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-    builder.setMessage(activity.getResources().getText(messageId))
+  public static void showAlert(final Context context, int messageId, DialogInterface.OnClickListener listener) {
+    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    builder.setMessage(context.getResources().getText(messageId))
       .setCancelable(false)
       .setPositiveButton("OK", listener);
     AlertDialog alert = builder.create();

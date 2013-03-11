@@ -4,7 +4,7 @@ import java.io.*;
 
 public interface DataSync {
 
-  void connect(String email, String password, DataSyncCallback callback);
+  void setUser(String email, String password);
 
   void load(DataSyncCallback callback);
 

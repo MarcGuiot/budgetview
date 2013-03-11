@@ -51,7 +51,7 @@ public class TabPage implements TabHost.OnTabChangeListener, ViewPager.OnPageCha
 
     pagerAdapter = new TabPagerAdapter(activity.getSupportFragmentManager());
 
-    tabHost = (TabHost)activity.findViewById(android.R.id.tabhost);
+    tabHost = (TabHost)activity.findViewById(R.id.tabhost);
     tabHost.setup();
     int selectedIndex = -1;
     int index = 0;
