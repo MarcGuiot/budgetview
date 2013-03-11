@@ -23,8 +23,8 @@ import java.util.Map;
 
 public class BankSynchroService {
   private Map<Integer, BankConnectorFactory> banks = new HashMap<Integer, BankConnectorFactory>();
-  static public boolean SHOW_SYNCHRO = System.getProperty("budgetview.synchro", "false")
-    .equalsIgnoreCase("true");
+  static public boolean SHOW_SYNCHRO = true;
+  //System.getProperty("budgetview.synchro", "true").equalsIgnoreCase("true");
 
   public BankSynchroService() {
     if (SHOW_SYNCHRO){
