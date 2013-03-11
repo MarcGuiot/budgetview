@@ -29,13 +29,12 @@ public class HomeActivity extends Activity {
     }
 
     final DataSync dataSync = DataSyncFactory.create(this);
-    dataSync.setUser(loginInfo.email, loginInfo.password);
-    loadData(dataSync);
+    loadData(dataSync, loginInfo);
   }
 
-  private void loadData(DataSync dataSync) {
+  private void loadData(DataSync dataSync, LoginInfo loginInfo) {
     showSplashPage();
-    dataSync.load(new DataSyncCallback() {
+    dataSync.load(loginInfo.email, loginInfo.password, new DataSyncCallback() {
       public void onActionFinished() {
         gotoBudgetOverview(true, false);
       }

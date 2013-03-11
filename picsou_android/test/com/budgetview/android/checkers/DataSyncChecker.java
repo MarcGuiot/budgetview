@@ -9,7 +9,6 @@ import com.budgetview.android.datasync.DataSyncFactory;
 import junit.framework.Assert;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.utils.Strings;
 import org.robolectric.Robolectric;
 
 import java.io.IOException;
@@ -27,12 +26,8 @@ public class DataSyncChecker {
     DataSyncFactory.setForcedSync(dataSync);
   }
 
-  public void prepareLogin(String email, String password) {
-    expectations.push(new ExpectLogin(email, password));
-  }
-
-  public LoadBuilder prepareLoad() {
-    ExpectLoad expectLoad = new ExpectLoad();
+  public LoadBuilder prepareLoad(String email, String password) {
+    ExpectLoad expectLoad = new ExpectLoad(email, password);
     expectations.push(expectLoad);
     return expectLoad.loadBuilder;
   }
@@ -49,16 +44,12 @@ public class DataSyncChecker {
 
   private class DummyDataSync implements DataSync {
 
-    public void setUser(String email, String password) {
-      expectations.pop(ExpectLogin.class).connect(email, password);
-    }
-
-    public void load(DataSyncCallback callback) {
+    public void load(String email, String password, DataSyncCallback callback) {
       if (!connectionAvailable) {
         callback.onConnectionUnavailable();
         return;
       }
-      expectations.pop(ExpectLoad.class).load(callback);
+      expectations.pop(ExpectLoad.class).load(email, password, callback);
     }
 
     public void loadDemoFile() throws IOException {
@@ -78,25 +69,19 @@ public class DataSyncChecker {
     return (App)Robolectric.application;
   }
 
-  private class ExpectLogin implements Expectation {
+  private class ExpectLoad implements Expectation {
+    private final LoadBuilder loadBuilder = new LoadBuilder();
     private String expectedEmail;
     private final String expectedPassword;
 
-    private ExpectLogin(String email, String password) {
-      this.expectedEmail = email;
-      this.expectedPassword = password;
+    private ExpectLoad(String expectedEmail, String expectedPassword) {
+      this.expectedEmail = expectedEmail;
+      this.expectedPassword = expectedPassword;
     }
 
-    public void connect(String email, String password) {
+    public void load(String email, String password, DataSyncCallback callback) {
       Assert.assertEquals(expectedEmail, email);
       Assert.assertEquals(expectedPassword, password);
-    }
-  }
-
-  private class ExpectLoad implements Expectation {
-    private final LoadBuilder loadBuilder = new LoadBuilder();
-
-    public void load(DataSyncCallback callback) {
       GlobRepository repository = getApp().getRepository();
       loadBuilder.apply(repository);
       if (verbose) {

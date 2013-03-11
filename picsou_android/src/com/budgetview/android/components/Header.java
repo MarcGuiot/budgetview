@@ -9,13 +9,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.budgetview.android.BudgetOverviewActivity;
-import com.budgetview.android.DemoActivity;
-import com.budgetview.android.R;
-import com.budgetview.android.Views;
+import com.budgetview.android.*;
 import com.budgetview.android.datasync.DataSync;
 import com.budgetview.android.datasync.DataSyncCallback;
 import com.budgetview.android.datasync.DataSyncFactory;
+import com.budgetview.android.datasync.LoginInfo;
 
 public class Header extends LinearLayout {
 
@@ -89,7 +87,16 @@ public class Header extends LinearLayout {
     }
     showProgressBar();
     DataSync dataSync = DataSyncFactory.create(activity);
-    dataSync.load(new DataSyncCallback() {
+    LoginInfo loginInfo = LoginInfo.load(activity);
+    if (!loginInfo.isSet()) {
+      Intent intent = new Intent(activity, HomeActivity.class);
+      intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+      activity.finish();
+      activity.startActivity(intent);
+      return;
+    }
+
+    dataSync.load(loginInfo.email, loginInfo.password, new DataSyncCallback() {
       public void onActionFinished() {
         Intent intent = new Intent(activity, BudgetOverviewActivity.class);
         intent.putExtra(DemoActivity.USE_DEMO, false);

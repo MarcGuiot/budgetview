@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 import com.budgetview.android.App;
 import com.budgetview.android.R;
 import com.budgetview.android.datasync.DataSync;
@@ -33,7 +34,7 @@ import java.net.URLEncoder;
 
 public class HttpsDataSync implements DataSync {
   public static final String URL_BV = "https://register.mybudgetview.fr:1443";
-//"https://192.168.0.20:8443";
+  //"https://192.168.0.20:8443";
   private static final String LOCAL_TEMP_FILE_NAME = "temp.xml";
 
   private Activity activity;
@@ -44,12 +45,9 @@ public class HttpsDataSync implements DataSync {
     this.activity = activity;
   }
 
-  public void setUser(String email, String password) {
+  public void load(String email, String password, DataSyncCallback callback) {
     this.email = email;
     this.password = password;
-  }
-
-  public void load(DataSyncCallback callback) {
     if (!canConnect()) {
       callback.onConnectionUnavailable();
       return;
@@ -108,12 +106,7 @@ public class HttpsDataSync implements DataSync {
     }
 
     protected Boolean doInBackground(URL... urls) {
-      try {
-        return downloadUrl();
-      }
-      catch (IOException e) {
-        return false;
-      }
+      return downloadUrl();
     }
 
     protected void onPostExecute(Boolean loadSuccessful) {
@@ -125,8 +118,7 @@ public class HttpsDataSync implements DataSync {
       }
     }
 
-
-    private Boolean downloadUrl() throws IOException {
+    private Boolean downloadUrl() {
       InputStream inputStream = null;
       HttpResponse response = null;
       HttpGet get = null;
@@ -153,7 +145,7 @@ public class HttpsDataSync implements DataSync {
         if (majorVersionHeader == null || minorVersionHeader == null || statusHeader == null) {
           return false;
         }
-        if (!statusHeader.getValue().equalsIgnoreCase("ok")){
+        if (!statusHeader.getValue().equalsIgnoreCase("ok")) {
           return false;
         }
         int majorVersion = Integer.parseInt(majorVersionHeader.getValue());
@@ -181,6 +173,7 @@ public class HttpsDataSync implements DataSync {
         return true;
       }
       catch (Throwable e) {
+        Log.d("HttpsDataSync", "downloadUrl", e);
         return false;
       }
       finally {

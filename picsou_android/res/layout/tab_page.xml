@@ -17,7 +17,7 @@
     android:text="@string/demoFooter"
     />
 
-  <TabHost android:id="@+id/tabhost"
+  <TabHost android:id="@android:id/tabhost"
            android:layout_width="fill_parent"
            android:layout_height="fill_parent"
            android:layout_below="@+id/header"

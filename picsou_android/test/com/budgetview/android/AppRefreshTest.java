@@ -1,6 +1,6 @@
 package com.budgetview.android;
 
-import com.budgetview.android.checkers.*;
+import com.budgetview.android.checkers.BudgetOverviewChecker;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -10,8 +10,7 @@ public class AppRefreshTest extends AndroidAppTestCase {
 
   @Test public void testRefresh() throws Exception {
 
-    dataSync.prepareLogin(EMAIL, PASSWORD);
-    dataSync.prepareLoad()
+    dataSync.prepareLoad(EMAIL, PASSWORD)
       .addMainAccount("account1", 201303, 10, 1000.0)
       .addVariableSeries("Groceries", 201303, -500.00)
       .addTransactionToSeries("Carrefour", 5, -50.00);
@@ -24,7 +23,7 @@ public class AppRefreshTest extends AndroidAppTestCase {
       .add("Variable", -500.00, -50.00)
       .check();
 
-    dataSync.prepareLoad()
+    dataSync.prepareLoad(EMAIL, PASSWORD)
       .addMainAccount("account1", 201303, 11, 900.0)
       .addVariableSeries("Groceries", 201303, -500.00)
       .addTransactionToSeries("Carrefour", 5, -50.00)
@@ -45,8 +44,7 @@ public class AppRefreshTest extends AndroidAppTestCase {
 
   @Test public void testRefreshWithNoConnection() throws Exception {
 
-    dataSync.prepareLogin(EMAIL, PASSWORD);
-    dataSync.prepareLoad()
+    dataSync.prepareLoad(EMAIL, PASSWORD)
       .addMainAccount("account1", 201303, 10, 1000.0)
       .addVariableSeries("Groceries", 201303, -500.00)
       .addTransactionToSeries("Carrefour", 5, -50.00);
