@@ -77,6 +77,8 @@ public class RealAccount {
 
   public static StringField FILE_NAME;
 
+  public static StringField FILE_CONTENT;
+
   static {
     GlobTypeLoader.init(RealAccount.class, "realAccount");
   }

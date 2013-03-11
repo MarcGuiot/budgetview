@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -182,12 +183,9 @@ public class AmexFrConnector extends WebBankConnector {
       }
     }
 
-    File file = File.createTempFile("budgetview_download_" + realAccount.get(RealAccount.ID), "ofx");
-    FileWriter writer = new FileWriter(file);
+    StringWriter writer = new StringWriter();
     OfxExporter.write(tempRepository, writer, false);
-    System.out.println("AmexFrConnector.parseCardPage: " + Files.loadFileToString(file.getAbsolutePath()));
-    repository.update(realAccount.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
-
+    repository.update(realAccount.getKey(), RealAccount.FILE_CONTENT, writer.toString());
     return browser.getCurrentPage();
   }
 

@@ -11,10 +11,7 @@ import org.designup.picsou.model.TransactionType;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Files;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -251,10 +248,10 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
         return accountInfoArrayList;
       }
 
-      public void loadOperation(Glob realAccount, String fromDate, String user, String password, String url, String org, String fid, File outputFile, final String uuid, final boolean v2) throws IOException {
+      public String loadOperation(Glob realAccount, String fromDate, String user, String password, String url, String org, String fid, final String uuid, final boolean v2) throws IOException {
         assertEquals("a", user);
         assertEquals("b", password);
-        Files.copyStream(new FileInputStream(fileName), new FileOutputStream(outputFile));
+        return Files.loadStreamToString(new FileInputStream(fileName), "UTF-8");
       }
     }
     );

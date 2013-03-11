@@ -3,6 +3,7 @@ package org.designup.picsou.bank.connectors;
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
+import org.designup.picsou.gui.components.filtering.FilterSet;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.RealAccount;
@@ -13,6 +14,8 @@ import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Files;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -105,6 +108,7 @@ public class OtherBankConnector extends AbstractBankConnector {
       .safeApply(new GlobFunctor() {
         public void run(Glob glob, GlobRepository repository) throws Exception {
           repository.update(glob.getKey(), RealAccount.FILE_NAME, null);
+          repository.update(glob.getKey(), RealAccount.FILE_CONTENT, null);
         }
       }, repository);
     return builder.load();
@@ -123,7 +127,8 @@ public class OtherBankConnector extends AbstractBankConnector {
       throw new RuntimeException("boom");
     }
     for (Map.Entry<Key, String> entry : files.entrySet()) {
-      repository.update(entry.getKey(), FieldValue.value(RealAccount.FILE_NAME, entry.getValue()));
+      repository.update(entry.getKey(), FieldValue.value(RealAccount.FILE_CONTENT, Strings.isNotEmpty(entry.getValue()) ?
+                                                                                   Files.loadFileToString(entry.getValue()): null));
     }
     for (Glob account : accounts) {
       repository.update(account.getKey(), RealAccount.POSITION_DATE, TimeService.getToday());

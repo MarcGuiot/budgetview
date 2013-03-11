@@ -17,11 +17,13 @@ import java.util.Arrays;
 public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
   static Logger logger = Logger.getLogger("SendMailCreateMobileUserServlet");
   private String root;
-  private int port;
+  private Integer sslPort;
+  private Integer port;
   private Mailer mailer;
 
-  public SendMailCreateMobileUserServlet(String root, Directory directory, int port) {
+  public SendMailCreateMobileUserServlet(String root, Directory directory, Integer sslPort, Integer port) {
     this.root = root;
+    this.sslPort = sslPort;
     this.port = port;
     this.mailer = directory.get(Mailer.class);
   }
@@ -40,7 +42,7 @@ public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
     String dirName = ReceiveDataServlet.generateDirName(mail);
     File dir = new File(root, dirName);
     if (!dir.exists()) {
-      URIBuilder builder = new URIBuilder("https://www.mybudgetview.fr" +(port != 443 ? ":" + port : "")+ LicenseServer.CREATE_MOBILE_USER);
+      URIBuilder builder = new URIBuilder("http://www.mybudgetview.fr:" + port+ LicenseServer.CREATE_MOBILE_USER);
       builder.addParameter(ConfigService.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
       builder.addParameter(ConfigService.HEADER_LANG, lang);
       builder.addParameter(ConfigService.CODING, codedMail);

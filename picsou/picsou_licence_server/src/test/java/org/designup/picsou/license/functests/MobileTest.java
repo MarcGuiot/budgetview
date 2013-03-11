@@ -134,7 +134,7 @@ public class MobileTest extends ConnectedTestCase {
     int httpStartIndex = email.getContent().indexOf("href=\"");
     int httpEndIndex = email.getContent().indexOf("\">http");
     String url = email.getContent().substring(httpStartIndex + "href=\"".length(), httpEndIndex);
-    url = url.replace("https://www.mybudgetview.fr", "http://localhost");
+    url = url.replace("http://www.mybudgetview.fr", "http://localhost");
     return url;
   }
 

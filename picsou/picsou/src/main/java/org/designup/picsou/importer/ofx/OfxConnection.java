@@ -15,12 +15,12 @@ import org.globsframework.model.repository.DefaultGlobIdGenerator;
 import org.globsframework.model.repository.DefaultGlobRepository;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.Strings;
 import org.saxstack.parser.DefaultXmlNode;
 import org.saxstack.parser.XmlNode;
 import org.xml.sax.Attributes;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -85,9 +85,9 @@ public class OfxConnection {
     return accountInfoOfxFunctor.getAccounts();
   }
 
-  public void loadOperation(Glob realAccount, String fromDate, String user, String password,
-                            final String url, final String org, final String fid,
-                            final File outputFile, final String uuid, final boolean v2) throws IOException {
+  public String loadOperation(Glob realAccount, String fromDate, String user, String password,
+                              final String url, final String org, final String fid,
+                              final String uuid, final boolean v2) throws IOException {
     StringWriter stringWriter = new StringWriter();
     OfxWriter writer = new OfxWriter(stringWriter, v2);
     writer.writeLoadOp(fromDate, OfxConnection.current(), user, password, org, fid, realAccount.get(RealAccount.BANK_ID),
@@ -95,9 +95,7 @@ public class OfxConnection {
     String request = stringWriter.toString();
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     buffer.write(request.getBytes("UTF-8"));
-    InputStream inputStream = sendBuffer(new URL(url), buffer);
-    FileOutputStream fileOutputStream = new FileOutputStream(outputFile);
-    Files.copyStream(inputStream, fileOutputStream);
+    return sendBuffer(new URL(url), buffer);
   }
 
   public String getAccountInfo(String user, String password, String date, final String url, final String org, final String fid, String uuid, final boolean v2) {
@@ -108,8 +106,8 @@ public class OfxConnection {
       String request = stringWriter.toString();
       ByteArrayOutputStream buffer = new ByteArrayOutputStream();
       buffer.write(request.getBytes("UTF-8"));
-      InputStream inputStream = sendBuffer(new URL(url), buffer);
-      String tmp = Files.loadStreamToString(inputStream, "UTF-8");
+      String tmp = sendBuffer(new URL(url), buffer);
+
       if (tmp.contains("<html>")) {
         throw new RuntimeException(Lang.get("synchro.ofx.content.invalid") + " : " + tmp);
       }
@@ -120,48 +118,11 @@ public class OfxConnection {
     }
   }
 
-  static public InputStream sendBuffer(URL url, ByteArrayOutputStream outBuffer) {
-
-    if (System.getProperty("ofx.use.httpClient", "true").equalsIgnoreCase("true")) {
+  static public String sendBuffer(URL url, ByteArrayOutputStream outBuffer) {
       return sendWithHttpClient(url, outBuffer);
-    }
-
-    InputStream in;
-    try {
-      HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-      connection.setRequestMethod("POST");
-      connection.setRequestProperty("Content-Type", "application/x-ofx");
-      connection.setRequestProperty("Content-Length", String.valueOf(outBuffer.size()));
-      connection.setRequestProperty("Accept", "*/*, application/x-ofx");
-      connection.setDoOutput(true);
-      connection.setConnectTimeout(60000);
-      connection.setReadTimeout(60000);
-      connection.connect();
-
-      OutputStream out = connection.getOutputStream();
-      out.write(outBuffer.toByteArray());
-
-      int responseCode = connection.getResponseCode();
-      if (responseCode >= 200 && responseCode < 300) {
-        in = connection.getInputStream();
-      }
-      else if (responseCode >= 400 && responseCode < 500) {
-        String message = Lang.get("synchro.ofx.response.error") + connection.getResponseMessage();
-        throw new RuntimeException(message);
-      }
-      else {
-        String message = Lang.get("synchro.ofx.response.error") + connection.getResponseMessage();
-        throw new RuntimeException(message);
-      }
-    }
-    catch (IOException e) {
-      Log.write("ofx time out", e);
-      throw new RuntimeException(Lang.get("synchro.ofx.timeout"));
-    }
-    return in;
   }
 
-  private static InputStream sendWithHttpClient(URL url, ByteArrayOutputStream outBuffer) {
+  private static String sendWithHttpClient(URL url, ByteArrayOutputStream outBuffer) {
     HttpPost postMethod = null;
     HttpClient client = null;
     try {
@@ -177,9 +138,11 @@ public class OfxConnection {
       HttpResponse response = client.execute(postMethod);
       int statusCode = response.getStatusLine().getStatusCode();
       if (statusCode >= 200 && statusCode < 300) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        Files.copyStream(response.getEntity().getContent(), stream);
-        return new ByteArrayInputStream(stream.toByteArray());
+        String charset = (String)response.getParams().getParameter(CoreProtocolPNames.HTTP_ELEMENT_CHARSET);
+        if (Strings.isNullOrEmpty(charset)){
+          charset = "UTF-8";
+        }
+        return Files.loadStreamToString(response.getEntity().getContent(), charset);
       }
       else {
         String msg = Lang.get("synchro.ofx.response.error", response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase());
@@ -229,16 +192,16 @@ public class OfxConnection {
     System.out.println("OfxConnection.main " + globList);
     for (AccountInfo accountInfo : globList) {
       System.out.println("OfxConnection.main " + accountInfo.number + " " + accountInfo.accType);
-      File outputFile = new File("/tmp/operation.ofx");
+      OutputStream outputFile = new ByteArrayOutputStream();
       Glob glob = repository.create(RealAccount.TYPE,
                                     value(RealAccount.ACC_TYPE, accountInfo.accType),
                                     value(RealAccount.BANK_ID, accountInfo.bankId),
                                     value(RealAccount.NUMBER, accountInfo.number),
                                     value(RealAccount.FROM_SYNCHRO, true));
-      OfxConnection.getInstance().loadOperation(glob, fromDate, account, password,
-                                                url, org, fid, outputFile, uuid, false);
+      String result = OfxConnection.getInstance().loadOperation(glob, fromDate, account, password,
+                                                           url, org, fid, uuid, false);
       OfxImporter importer = new OfxImporter();
-      GlobList list = importer.loadTransactions(new FileReader(outputFile), repository, repository, null);
+      GlobList list = importer.loadTransactions(new StringReader(result), repository, repository, null);
       System.out.println("OfxConnection.main " + list.size());
     }
   }

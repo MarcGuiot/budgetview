@@ -156,7 +156,7 @@ public abstract class AbstractBankConnector implements BankConnector {
 
   public void doImport() {
     for (Glob account : accounts) {
-      repository.update(account.getKey(), RealAccount.FILE_NAME, null);
+      repository.update(account.getKey(), RealAccount.FILE_CONTENT, null);
     }
     try {
       downloadFile();

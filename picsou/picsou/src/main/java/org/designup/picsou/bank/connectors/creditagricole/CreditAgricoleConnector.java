@@ -5,7 +5,6 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
-import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.BankSynchroService;
@@ -27,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
@@ -159,9 +157,9 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
     WebPage webPage = confirmer.click();
     WebAnchor open = webPage.getAnchor(WebContainer.refContain("javascript:ouvreTelechargement"));
     Download download = open.clickAndDownload();
-    File file = download.saveAsOfx();
+    String fileContent = download.readAsOfx();
     for (Glob realAccount : accounts) {
-      repository.update(realAccount.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+      repository.update(realAccount.getKey(), RealAccount.FILE_CONTENT, fileContent);
     }
   }
 

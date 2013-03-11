@@ -131,8 +131,8 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
 
     for (WebAnchor webAnchor : anchor) {
       Download download = webAnchor.clickAndDownload();
-      File file = download.saveAsOfx();
-      System.out.println("CreditMutuelArkeaConnector$ValiderActionListener.actionPerformed " + file.getAbsolutePath());
+      String fileContent = download.readAsOfx();
+      System.out.println("CreditMutuelArkeaConnector$ValiderActionListener.actionPerformed  : " + fileContent);
     }
   }
 

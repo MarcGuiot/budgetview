@@ -32,7 +32,6 @@ import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.OperationCancelled;
 import org.globsframework.utils.exceptions.TruncatedFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -85,7 +84,7 @@ public class ImportSession {
     return localRepository;
   }
 
-  public List<String> loadFile(File file, final Glob synchronizedAccount, Integer synchroId, PicsouDialog dialog)
+  public List<String> loadFile(final Glob synchronizedAccount, Integer synchroId, PicsouDialog dialog, final TypedInputStream typedInputStream)
     throws IOException, TruncatedFile, NoOperations, InvalidFormat, OperationCancelled {
 
     this.importSeries = null;
@@ -107,8 +106,7 @@ public class ImportSession {
 
     importRepository.startChangeSet();
     final Set<Integer> tmpAccountIds = new HashSet<Integer>();
-    TypedInputStream typedStream = new TypedInputStream(file);
-    importService.run(typedStream, referenceRepository, importRepository, directory, dialog);
+    importService.run(typedInputStream, referenceRepository, importRepository, directory, dialog);
     importRepository.completeChangeSet();
     changes = importRepository.getCurrentChanges();
     changes.safeVisit(RealAccount.TYPE, new ChangeSetVisitor() {
@@ -147,7 +145,7 @@ public class ImportSession {
 
     accountCount = accountIds.size();
     if (synchronizedAccount != null) {
-      if (accountIds.size() == 1 && typedStream.getType() != BankFileType.OFX) {
+      if (accountIds.size() == 1 && typedInputStream.getType() != BankFileType.OFX) {
         if (accountIds.size() == 1) {
           Glob account = accountIds.remove(0);
 
@@ -175,7 +173,7 @@ public class ImportSession {
     }
     List<String> dateFormat = getImportedTransactionFormat(importRepository);
 
-    importKey = createCurrentImport(typedStream, referenceRepository);
+    importKey = createCurrentImport(typedInputStream, referenceRepository);
 
     return dateFormat;
   }

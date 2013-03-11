@@ -340,9 +340,9 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
         if (realAccount != null) {
           compte.select(option);
           notifyDownloadForAccount(getAccountName(realAccount));
-          File file = downloadFor(realAccount);
-          if (file != null) {
-            repository.update(realAccount.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+          String content = downloadFor(realAccount);
+          if (Strings.isNotEmpty(content)) {
+            repository.update(realAccount.getKey(), RealAccount.FILE_CONTENT, content);
           }
         }
       }
@@ -383,7 +383,7 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
     return htmlElements.get(0);
   }
 
-  private File downloadFor(Glob realAccount) throws Exception {
+  private String downloadFor(Glob realAccount) throws Exception {
     HtmlElement div = getElementById("logicielFull");
     String style = div.getAttribute("style");
     if (Strings.isNotEmpty(style)) {
@@ -439,6 +439,6 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
     }
 //    }
     WebAnchor link = browser.getCurrentPage().getAnchorWithRef("javascript:telecharger(this)");
-    return link.clickAndDownload().saveAsQif(realAccount);
+    return link.clickAndDownload().readAsQif(realAccount);
   }
 }

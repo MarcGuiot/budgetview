@@ -3,7 +3,6 @@ package org.designup.picsou.bank.connectors.webcomponents;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.attachment.AttachmentHandler;
-import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.model.RealAccount;
@@ -11,11 +10,9 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.exceptions.IOFailure;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 public class Download {
   private WebBrowser browser;
@@ -26,38 +23,33 @@ public class Download {
     this.element = element;
   }
 
-  public File saveAsOfx() throws WebCommandFailed {
+  public String readAsOfx() throws WebCommandFailed {
     return doSave(".ofx", null, "all accounts");
   }
 
-  public File saveAsQif(final Glob realAccount) throws WebCommandFailed {
+  public String readAsQif(final Glob realAccount) throws WebCommandFailed {
     return doSave(".qif",
                   ("! accountId=" + realAccount.get(RealAccount.ID) + "\n").getBytes(),
                   GlobPrinter.toString(realAccount));
   }
 
-  private File doSave(String extension, byte[] prefix, String errorMessage) throws WebCommandFailed {
+  private String doSave(String extension, byte[] prefix, String errorMessage) throws WebCommandFailed {
     WebResponse response = getWebResponse(errorMessage);
-    return saveResponseToTempFile(response, extension, prefix, errorMessage);
+    return readResponse(response, extension, prefix, errorMessage);
   }
 
-  static File saveResponseToTempFile(WebResponse response, String extension, byte[] prefix, String errorMessage) throws WebCommandFailed {
+  static String readResponse(WebResponse response, String extension, byte[] prefix, String errorMessage) throws WebCommandFailed {
     InputStream contentAsStream = getStream(response, errorMessage);
-    File file = null;
     try {
-      file = File.createTempFile("budgetview_download", extension);
-      FileOutputStream fileOutputStream = new FileOutputStream(file);
+      OutputStream fileOutputStream = new ByteArrayOutputStream();
       if (prefix != null) {
         fileOutputStream.write(prefix);
       }
-      Files.copyInUtf8(contentAsStream, response.getContentCharset(), fileOutputStream);
-      file.deleteOnExit();
+      return Files.loadStreamToString(contentAsStream, response.getContentCharset());
     }
     catch (IOException e) {
-      throw new WebCommandFailed(e, "Cannot create temporary file: " +
-                                    (file != null ? file.getAbsolutePath() : "?"));
+      throw new IOFailure(e);
     }
-    return file;
   }
 
   private static InputStream getStream(WebResponse response, String message) throws WebCommandFailed {

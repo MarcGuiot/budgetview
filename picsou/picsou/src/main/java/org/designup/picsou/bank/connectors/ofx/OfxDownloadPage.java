@@ -94,11 +94,9 @@ public class OfxDownloadPage extends AbstractBankConnector {
   public void downloadFile() throws Exception {
     for (Glob account : this.accounts) {
       try {
-        File file = File.createTempFile("download", ".ofx");
-        OfxConnection.getInstance().loadOperation(account, OfxConnection.previousDate(120), codeField.getText(), new String(passwordField.getPassword()),
-                                                  urlField.getText(), orgField.getText(), fidField.getText(), file, uuid, v2);
-        file.deleteOnExit();
-        repository.update(account.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+        String s = OfxConnection.getInstance().loadOperation(account, OfxConnection.previousDate(120), codeField.getText(), new String(passwordField.getPassword()),
+                                                             urlField.getText(), orgField.getText(), fidField.getText(), uuid, v2);
+        repository.update(account.getKey(), RealAccount.FILE_CONTENT, s);
       }
       catch (IOException e) {
         notifyErrorFound(e);

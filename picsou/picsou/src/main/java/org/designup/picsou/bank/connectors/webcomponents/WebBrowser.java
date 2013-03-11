@@ -3,7 +3,6 @@ package org.designup.picsou.bank.connectors.webcomponents;
 import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.util.DebuggingWebConnection;
 import com.gargoylesoftware.htmlunit.util.UrlUtils;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
@@ -12,9 +11,7 @@ import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 
 public class WebBrowser {
   public WebClient webClient;
@@ -131,11 +128,11 @@ public class WebBrowser {
     webClient.closeAllWindows();
   }
 
-  public File downloadToTempFile(String url, String extension) throws WebCommandFailed {
+  public String downloadToString(String url, String extension) throws WebCommandFailed {
     try {
       WebRequest request = new WebRequest(UrlUtils.toUrlUnsafe(url));
       WebResponse response = new HttpWebConnection(webClient).getResponse(request);
-      return Download.saveResponseToTempFile(response, extension, null, "Unable to save " + url);
+      return Download.readResponse(response, extension, null, "Unable to save " + url);
     }
     catch (IOException e) {
       throw new WebCommandFailed(e, "Cannot download file");

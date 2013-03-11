@@ -8,7 +8,6 @@ import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.*;
 import org.designup.picsou.bank.connectors.webcomponents.utils.*;
 import org.designup.picsou.model.RealAccount;
-import org.designup.picsou.model.Synchro;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -214,8 +213,8 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
                                                          BANK_ID);
 
                 if (account != null){
-                  File file = browser.downloadToTempFile(entry.downloadUrl, ".qif");
-                  repository.update(account.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+                  String fileContent = browser.downloadToString(entry.downloadUrl, ".qif");
+                  repository.update(account.getKey(), RealAccount.FILE_CONTENT, fileContent);
                 }
               }
             }

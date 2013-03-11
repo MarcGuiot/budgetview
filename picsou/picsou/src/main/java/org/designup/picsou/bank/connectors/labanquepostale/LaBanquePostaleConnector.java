@@ -1,15 +1,10 @@
 package org.designup.picsou.bank.connectors.labanquepostale;
 
-import com.gargoylesoftware.htmlunit.HttpWebConnection;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.WebRequest;
-import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.*;
-import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 import org.designup.picsou.gui.browsing.BrowsingAction;
@@ -17,7 +12,6 @@ import org.designup.picsou.model.*;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -26,7 +20,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -238,8 +231,8 @@ public class LaBanquePostaleConnector extends WebBankConnector {
 
       form = currentPage.getFormById("formulaire");
       Download download = form.submitByIdAndDownload("idNum0");
-      File file = download.saveAsOfx();
-      repository.update(entry.account.getKey(), RealAccount.FILE_NAME, file.getAbsolutePath());
+      String fileContent = download.readAsOfx();
+      repository.update(entry.account.getKey(), RealAccount.FILE_CONTENT, fileContent);
       currentPage = new WebPage(browser, (HtmlPage)browser.getClient().getCurrentWindow().getParentWindow().getEnclosedPage());
       WebPanel window = currentPage.getPanelById("modalWindow");
       newPage = window.getAnchorWithRef("#").click();
