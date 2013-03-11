@@ -10,8 +10,7 @@ public class AppLoginTest extends AndroidAppTestCase {
 
   @Test public void test() throws Exception {
 
-    dataSync.prepareLogin(EMAIL, PASSWORD);
-    dataSync.prepareLoad()
+    dataSync.prepareLoad(EMAIL, PASSWORD)
       .addMainAccount("account1", 201212, 31, 10.0)
       .addRecurringSeries("Mortgage", 201212, -1500.00)
       .addTransactionToSeries("Credit XYZ", 3, -1490.00)
@@ -84,8 +83,7 @@ public class AppLoginTest extends AndroidAppTestCase {
   }
 
   @Test public void testAccountOperations() throws Exception {
-    dataSync.prepareLogin(EMAIL, PASSWORD);
-    dataSync.prepareLoad()
+    dataSync.prepareLoad(EMAIL, PASSWORD)
       .addMainAccount("account1", 201212, 31, 10.0)
       .addRecurringSeries("Mortgage", 201212, -1500.00)
       .addTransactionToSeries("Credit XYZ", 3, -1490.00)
@@ -110,8 +108,7 @@ public class AppLoginTest extends AndroidAppTestCase {
   }
 
   @Test public void testUncategorizedTransactions() throws Exception {
-    dataSync.prepareLogin(EMAIL, PASSWORD);
-    dataSync.prepareLoad()
+    dataSync.prepareLoad(EMAIL, PASSWORD)
       .addMainAccount("account1", 201212, 31, 10.0)
       .addRecurringSeries("Mortgage", 201301, -1500.00)
       .addTransactionToSeries("Credit XYZ", 2, -1495.00)

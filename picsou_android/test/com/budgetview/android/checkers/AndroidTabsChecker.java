@@ -60,7 +60,7 @@ public abstract class AndroidTabsChecker<T extends FragmentActivity> extends And
   }
 
   private CustomShadowTabHost getTabHost() {
-    TabHost original = (TabHost)activity.findViewById(R.id.tabhost);
+    TabHost original = (TabHost)activity.findViewById(android.R.id.tabhost);
     if (original == null) {
       Assert.fail("No tab host found");
     }

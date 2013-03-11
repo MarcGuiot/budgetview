@@ -32,16 +32,15 @@ public class LoginActivity extends Activity {
     }
 
     final DataSync sync = DataSyncFactory.create(this);
-    sync.setUser(loginInfo.email, loginInfo.password);
     LoginInfo.save(loginInfo, LoginActivity.this);
-    loadData(sync);
+    loadData(sync, loginInfo);
   }
 
-  private void loadData(DataSync sync) {
+  private void loadData(DataSync sync, LoginInfo loginInfo) {
 
     showProgressBar(View.VISIBLE);
 
-    sync.load(new DataSyncCallback() {
+    sync.load(loginInfo.email, loginInfo.password, new DataSyncCallback() {
       public void onActionFinished() {
         showProgressBar(View.INVISIBLE);
         Intent intent = new Intent(LoginActivity.this, BudgetOverviewActivity.class);
