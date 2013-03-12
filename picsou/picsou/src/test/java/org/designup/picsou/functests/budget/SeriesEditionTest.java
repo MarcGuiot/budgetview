@@ -1330,6 +1330,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     categorization.setNewRecurring("Free Telecom", "Internet");
+    categorization.editSeries("Internet").gotoSubSeriesTab().addSubSeries("Free").addSubSeries("sfr").validate();
     categorization.editSeries("Internet")
       .checkBudgetAreaContent()
       .checkBudgetArea("Recurring")
@@ -1345,17 +1346,18 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkSeries("Internet", -29., -29.);
 
     seriesAnalysis.initContent()
-      .add("Main accounts", "", "", "", "", "", "", "", "", "", "", "", "")
-      .add("Balance", "", "-29.00", "", "", "", "", "", "", "", "", "", "")
-      .add("Savings accounts", "", "", "", "", "", "", "", "", "", "", "", "")
-      .add("To categorize", "", "", "", "", "", "", "", "", "", "", "", "")
-      .add("Income", "", "", "", "", "", "", "", "", "", "", "", "")
-      .add("Recurring", "", "", "", "", "", "", "", "", "", "", "", "")
-      .add("Variable", "", "29.00", "", "", "", "", "", "", "", "", "", "")
-      .add("Internet", "", "29.00", "", "", "", "", "", "", "", "", "", "")
-      .add("Extras", "", "", "", "", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "", "", "", "", "")
-      .check();
+      .add("Main accounts", "", "", "", "", "", "", "", "")
+      .add("Balance", "", "-29.00", "", "", "", "", "", "")
+      .add("Savings accounts", "", "", "", "", "", "", "", "")
+      .add("To categorize", "", "", "", "", "", "", "", "")
+      .add("Income", "", "", "", "", "", "", "", "")
+      .add("Recurring", "", "", "", "", "", "", "", "")
+      .add("Variable", "", "29.00", "", "", "", "", "", "")
+      .add("Internet", "", "29.00", "", "", "", "", "", "")
+      .add("Free", "", "", "", "", "", "", "", "")
+      .add("sfr", "", "", "", "", "", "", "", "")
+      .add("Extras", "", "", "", "", "", "", "", "")
+      .add("Savings", "", "", "", "", "", "", "", "");
   }
 
   public void testNoBudgetAreaForSavingsAndIncome() throws Exception {
