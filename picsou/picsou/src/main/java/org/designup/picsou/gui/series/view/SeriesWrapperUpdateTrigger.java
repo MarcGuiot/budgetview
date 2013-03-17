@@ -57,6 +57,10 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
           Glob wrapper = SeriesWrapper.find(repository, SeriesWrapperType.SERIES, key.get(Series.ID));
           if (wrapper != null) {
             repository.delete(wrapper.getKey());
+            GlobList subSeries = repository.findLinkedTo(repository.get(key), SubSeries.SERIES);
+            for (Glob sub : subSeries) {
+              repository.delete(SeriesWrapper.findAll(repository, SeriesWrapperType.SUB_SERIES, sub.get(SubSeries.ID)));
+            }
             Integer budgetAreaId = values.get(Series.BUDGET_AREA);
             if (BudgetArea.OTHER.getId().equals(budgetAreaId)) {
               return;
@@ -71,10 +75,16 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
               Log.write("Bug : no seriesWrapper parent for " + budgetAreaId);
             }
             else {
-              repository.create(SeriesWrapper.TYPE,
-                                value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
-                                value(SeriesWrapper.ITEM_ID, key.get(Series.ID)),
-                                value(SeriesWrapper.PARENT, budgetAreaWrapper.get(SeriesWrapper.ID)));
+              Glob seriesWrapper = repository.create(SeriesWrapper.TYPE,
+                                                     value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
+                                                     value(SeriesWrapper.ITEM_ID, key.get(Series.ID)),
+                                                     value(SeriesWrapper.PARENT, budgetAreaWrapper.get(SeriesWrapper.ID)));
+              for (Glob sub : subSeries) {
+                repository.create(SeriesWrapper.TYPE,
+                                  value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
+                                  value(SeriesWrapper.ITEM_ID, sub.get(SubSeries.ID)),
+                                  value(SeriesWrapper.PARENT, seriesWrapper.get(SeriesWrapper.ID)));
+              }
             }
           }
         }
