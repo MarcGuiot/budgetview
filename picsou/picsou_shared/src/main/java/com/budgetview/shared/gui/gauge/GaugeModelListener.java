@@ -1,4 +1,4 @@
-package com.budgetview.shared.gui;
+package com.budgetview.shared.gui.gauge;
 
 public interface GaugeModelListener {
   void modelUpdated();

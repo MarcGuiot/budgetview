@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.components.charts.histo;
 
+import com.budgetview.shared.gui.histochart.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.utils.DefaultHistoSelection;
 import org.globsframework.model.Key;
 import org.globsframework.utils.Utils;

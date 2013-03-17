@@ -1,7 +1,8 @@
-package org.designup.picsou.gui.components.charts.histo.utils;
+package com.budgetview.shared.gui.histochart.utils;
 
-import org.designup.picsou.gui.components.charts.histo.HistoDataset;
-import org.designup.picsou.gui.description.Formatting;
+import com.budgetview.shared.gui.histochart.HistoDataset;
+import com.budgetview.shared.gui.histochart.HistoDatasetElement;
+import com.budgetview.shared.utils.AmountFormat;
 import org.globsframework.utils.Strings;
 
 import java.util.ArrayList;
@@ -103,7 +104,7 @@ public abstract class AbstractHistoDataset<E extends HistoDatasetElement> implem
     for (int i = 0; i < elements.size(); i++) {
       E element = elements.get(i);
       builder
-        .append(Formatting.TWO_DIGIT_INTEGER_FORMAT.format(i))
+        .append(AmountFormat.TWO_DIGIT_INTEGER_FORMAT.format(i))
         .append(": ")
         .append(element)
         .append("\n");

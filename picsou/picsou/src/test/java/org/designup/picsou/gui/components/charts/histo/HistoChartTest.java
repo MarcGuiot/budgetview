@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.components.charts.histo;
 
+import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import junit.framework.TestCase;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineDataset;

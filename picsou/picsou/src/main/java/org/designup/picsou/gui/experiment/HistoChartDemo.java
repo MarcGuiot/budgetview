@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.experiment;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
-import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
+import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffBarLinePainter;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffColors;

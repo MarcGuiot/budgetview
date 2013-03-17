@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components.charts.histo.diff;
 
-import org.designup.picsou.gui.components.charts.histo.utils.HistoDatasetElement;
+import com.budgetview.shared.gui.histochart.HistoDatasetElement;
 
 public class HistoDiffElement extends HistoDatasetElement {
   public final double referenceValue;

@@ -1,10 +1,13 @@
 package org.designup.picsou.mobile;
 
 import com.budgetview.shared.model.*;
+import org.designup.picsou.gui.accounts.position.DailyAccountPositionComputer;
+import org.designup.picsou.gui.accounts.position.DailyAccountPositionValues;
 import org.designup.picsou.gui.budget.summary.TotalBudgetAreaAmounts;
 import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.utils.DaySelection;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
@@ -13,10 +16,10 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -147,22 +150,73 @@ public class BudgetValuesUpdater {
     GlobMatcher matcher =
       and(Matchers.userCreatedAccounts(),
           new Matchers.AccountDateMatcher(Utils.set(selectedMonths)));
-
     GlobList accounts =
       sourceRepository.getAll(Account.TYPE, matcher)
         .sort(new AccountComparator());
     int index = 0;
     for (Glob account : accounts) {
-      Date positionDate = account.get(Account.POSITION_DATE);
-      targetRepository.create(AccountEntity.TYPE,
-                              value(AccountEntity.ID, account.get(Account.ID)),
-                              value(AccountEntity.LABEL, account.get(Account.NAME)),
-                              value(AccountEntity.POSITION, account.get(Account.POSITION_WITH_PENDING)),
-                              value(AccountEntity.POSITION_MONTH, Month.getMonthId(positionDate)),
-                              value(AccountEntity.POSITION_DAY, Month.getDay(positionDate)),
-                              value(AccountEntity.ACCOUNT_TYPE, convertAccountType(account.get(Account.ACCOUNT_TYPE))),
-                              value(AccountEntity.SEQUENCE_NUMBER, index++));
+      final Integer accountId = account.get(Account.ID);
+      index = createAccountEntity(index, accountId, account, true);
+      createUserAccountPositions(accountId);
     }
+
+    Glob mainAccount = sourceRepository.get(Account.MAIN_SUMMARY_KEY);
+    createAccountEntity(Account.MAIN_SUMMARY_ACCOUNT_ID, AccountEntity.ACCOUNT_ID_MAIN, mainAccount, false);
+    createMainAccountsPositions();
+
+    Glob savingsAccount = sourceRepository.get(Account.SAVINGS_SUMMARY_KEY);
+    createAccountEntity(Account.MAIN_SUMMARY_ACCOUNT_ID, AccountEntity.ACCOUNT_ID_SAVINGS, savingsAccount, false);
+    createSavingsAccountsPositions();
+  }
+
+  private int createAccountEntity(int index, Integer accountEntityId, Glob account, boolean isUserAccount) {
+    Date positionDate = account.get(Account.POSITION_DATE);
+    targetRepository.create(AccountEntity.TYPE,
+                            value(AccountEntity.ID, accountEntityId),
+                            value(AccountEntity.LABEL, account.get(Account.NAME)),
+                            value(AccountEntity.IS_USER_ACCOUNT, isUserAccount),
+                            value(AccountEntity.POSITION, account.get(Account.POSITION_WITH_PENDING)),
+                            value(AccountEntity.POSITION_MONTH, positionDate == null ? null : Month.getMonthId(positionDate)),
+                            value(AccountEntity.POSITION_DAY, positionDate == null ? null : Month.getDay(positionDate)),
+                            value(AccountEntity.ACCOUNT_TYPE, convertAccountType(account.get(Account.ACCOUNT_TYPE))),
+                            value(AccountEntity.SEQUENCE_NUMBER, index++));
+    return index;
+  }
+
+  private void createMainAccountsPositions() {
+    DailyAccountPositionComputer positionComputer = new DailyAccountPositionComputer(sourceRepository);
+    DailyAccountPositionValues positionValues = positionComputer.getMainValues(Arrays.asList(selectedMonths), currentMonthId);
+    createAccountPositions(positionValues, AccountEntity.ACCOUNT_ID_MAIN);
+  }
+
+  private void createSavingsAccountsPositions() {
+    DailyAccountPositionComputer positionComputer = new DailyAccountPositionComputer(sourceRepository);
+    DailyAccountPositionValues positionValues = positionComputer.getSavingsValues(Arrays.asList(selectedMonths), currentMonthId);
+    createAccountPositions(positionValues, AccountEntity.ACCOUNT_ID_SAVINGS);
+  }
+
+  private void createUserAccountPositions(Integer accountId) {
+    DailyAccountPositionComputer positionComputer = new DailyAccountPositionComputer(sourceRepository);
+    DailyAccountPositionValues positionValues =
+      positionComputer.getDailyValues(Arrays.asList(selectedMonths), currentMonthId,
+                                      fieldEquals(Transaction.ACCOUNT, accountId),
+                                      DaySelection.EMPTY, Transaction.ACCOUNT_POSITION);
+    createAccountPositions(positionValues, accountId);
+  }
+
+  private void createAccountPositions(DailyAccountPositionValues positionValues, final int accountId) {
+    positionValues.apply(new DailyAccountPositionValues.Functor() {
+      public void processPositions(int monthId, Double[] minValues, boolean monthSelected, boolean[] daysSelected) {
+        for (int i = 0; i < minValues.length; i++) {
+          targetRepository.create(AccountPosition.TYPE,
+                                  value(AccountPosition.ACCOUNT, accountId),
+                                  value(AccountPosition.MONTH, monthId),
+                                  value(AccountPosition.DAY, i + 1),
+                                  value(AccountPosition.POSITION, minValues[i]));
+
+        }
+      }
+    });
   }
 
   private Integer convertAccountType(Integer accountType) {

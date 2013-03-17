@@ -8,8 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import com.budgetview.android.components.GaugeView;
-import com.budgetview.android.components.TabPage;
+import com.budgetview.android.components.*;
 import com.budgetview.android.utils.AbstractBlock;
 import com.budgetview.android.utils.SectionHeaderBlock;
 import com.budgetview.android.utils.TransactionSet;
@@ -27,7 +26,6 @@ import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
@@ -60,8 +58,8 @@ public class BudgetOverviewFragment extends Fragment {
       GlobRepository repository = ((App)getActivity().getApplication()).getRepository();
 
       addBudgetAreaBlocks(repository);
-      addAccountBlocks(repository, AccountEntityMatchers.main(), R.string.main_accounts_section);
-      addAccountBlocks(repository, AccountEntityMatchers.savings(), R.string.savings_accounts_section);
+      addAccountBlocks(repository, AccountEntity.ACCOUNT_ID_MAIN, AccountEntityMatchers.main(), R.string.main_accounts_section);
+      addAccountBlocks(repository, AccountEntity.ACCOUNT_ID_SAVINGS, AccountEntityMatchers.savings(), R.string.savings_accounts_section);
     }
 
     private void addBudgetAreaBlocks(GlobRepository repository) {
@@ -77,7 +75,7 @@ public class BudgetOverviewFragment extends Fragment {
       }
     }
 
-    private void addAccountBlocks(GlobRepository repository, GlobMatcher matcher, int sectionTitleId) {
+    private void addAccountBlocks(GlobRepository repository, Integer summaryAccountEntityId, GlobMatcher matcher, int sectionTitleId) {
       GlobList accountList =
         repository
           .getAll(AccountEntity.TYPE, matcher).sort(AccountEntity.SEQUENCE_NUMBER);
@@ -86,6 +84,7 @@ public class BudgetOverviewFragment extends Fragment {
       }
 
       blocks.add(new SectionHeaderBlock(sectionTitleId, getResources()));
+      blocks.add(new AccountPositionBlockView(summaryAccountEntityId, monthId, getActivity()));
       for (Glob accountEntity : accountList) {
         blocks.add(new AccountBlock(accountEntity));
       }

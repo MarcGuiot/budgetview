@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.experiment;
 
-import com.budgetview.shared.gui.GaugeModel;
+import com.budgetview.shared.gui.gauge.GaugeModel;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.charts.LangGaugeTextSource;
 import org.globsframework.gui.splits.layout.Anchor;

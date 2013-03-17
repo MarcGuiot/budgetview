@@ -76,6 +76,7 @@
   <string name="seriesListSectionLabel">Enveloppes</string>
   <string name="seriesListEmptyMessage">Il n\'y a pas d\'enveloppes ce mois-ci</string>
 
+  <string name="transactionListAccountSectionLabel">Solde</string>
   <string name="transactionListSectionLabel">Opérations</string>
   <string name="transactionListEmptyMessage">Il n\'y a pas d\'opérations ce mois-ci</string>
 

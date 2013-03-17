@@ -9,6 +9,7 @@ public class MobileModel {
 
   private static GlobModel MODEL =
   GlobModelBuilder.init(AccountEntity.TYPE,
+                        AccountPosition.TYPE,
                         MonthEntity.TYPE,
                         BudgetAreaEntity.TYPE,
                         BudgetAreaValues.TYPE,

@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.time.tooltip;
 
-import org.designup.picsou.gui.description.Formatting;
+import com.budgetview.shared.utils.AmountFormat;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.gui.time.utils.TimeViewColors;
@@ -41,7 +41,7 @@ public class TimeViewTooltipHandler implements TimeViewMouseHandler {
     panel.setToolTipText(
       Lang.get("timeView.tooltip.month.standard",
                month,
-               Formatting.toStandardValueString(minPosition),
+               AmountFormat.toStandardValueString(minPosition),
                Colors.toString(colors.getAmountTextColor(minPosition, Color.BLACK))));
   }
 

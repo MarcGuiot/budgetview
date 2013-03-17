@@ -8,9 +8,9 @@ import android.graphics.RectF;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.view.View;
-import com.budgetview.shared.gui.GaugeModel;
-import com.budgetview.shared.gui.GaugeModelListener;
-import com.budgetview.shared.gui.GaugeTextSource;
+import com.budgetview.shared.gui.gauge.GaugeModel;
+import com.budgetview.shared.gui.gauge.GaugeModelListener;
+import com.budgetview.shared.gui.gauge.GaugeTextSource;
 import org.globsframework.utils.Utils;
 
 public class GaugeView extends View {

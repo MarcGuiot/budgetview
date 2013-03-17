@@ -33,8 +33,10 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 public class HttpsDataSync implements DataSync {
-  public static final String URL_BV = "https://register.mybudgetview.fr:1443";
-  //"https://192.168.0.20:8443";
+  public static final String URL_BV =
+  "https://register.mybudgetview.fr:1443";
+  //"https://192.168.0.20:8443"; // Marc
+//  "https://192.168.0.24:8443"; // Regis
   private static final String LOCAL_TEMP_FILE_NAME = "temp.xml";
 
   private Activity activity;

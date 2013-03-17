@@ -4,7 +4,7 @@ import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import org.designup.picsou.functests.checkers.components.PopupChecker;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
-import org.designup.picsou.gui.components.charts.histo.HistoDataset;
+import com.budgetview.shared.gui.histochart.HistoDataset;
 import org.uispec4j.*;
 import org.uispec4j.MenuItem;
 import org.uispec4j.Panel;

@@ -10,8 +10,9 @@ public class AccountEntityMatchers {
   public static GlobMatcher main() {
     return new GlobMatcher() {
       public boolean matches(Glob accountEntity, GlobRepository repository) {
-        return Utils.equal(accountEntity.get(AccountEntity.ACCOUNT_TYPE),
-                           AccountEntity.ACCOUNT_TYPE_MAIN);
+        return accountEntity.isTrue(AccountEntity.IS_USER_ACCOUNT)
+               && Utils.equal(accountEntity.get(AccountEntity.ACCOUNT_TYPE),
+                              AccountEntity.ACCOUNT_TYPE_MAIN);
       }
     };
   }
@@ -19,8 +20,9 @@ public class AccountEntityMatchers {
   public static GlobMatcher savings() {
     return new GlobMatcher() {
       public boolean matches(Glob accountEntity, GlobRepository repository) {
-        return Utils.equal(accountEntity.get(AccountEntity.ACCOUNT_TYPE),
-                           AccountEntity.ACCOUNT_TYPE_SAVINGS);
+        return accountEntity.isTrue(AccountEntity.IS_USER_ACCOUNT)
+               && Utils.equal(accountEntity.get(AccountEntity.ACCOUNT_TYPE),
+                              AccountEntity.ACCOUNT_TYPE_SAVINGS);
       }
     };
   }

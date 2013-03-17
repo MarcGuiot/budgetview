@@ -1,9 +1,9 @@
-package org.designup.picsou.gui.components.charts.histo;
+package com.budgetview.shared.gui.histochart;
 
+import com.budgetview.shared.gui.TextMetrics;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -25,7 +25,7 @@ public class HistoChartMetrics {
 
   private int panelWidth;
   private int panelHeight;
-  private FontMetrics fontMetrics;
+  private TextMetrics textMetrics;
   private int columnCount;
   private HistoChartConfig config;
   private double maxPositiveValue;
@@ -46,7 +46,7 @@ public class HistoChartMetrics {
 
   public HistoChartMetrics(int panelWidth,
                            int panelHeight,
-                           FontMetrics fontMetrics,
+                           TextMetrics textMetrics,
                            int columnCount,
                            double maxNegativeValue,
                            double maxPositiveValue,
@@ -55,7 +55,7 @@ public class HistoChartMetrics {
                            boolean snapToScale) {
     this.panelWidth = panelWidth;
     this.panelHeight = panelHeight;
-    this.fontMetrics = fontMetrics;
+    this.textMetrics = textMetrics;
     this.columnCount = columnCount;
     this.config = config;
     this.maxPositiveValue = adjustLimit(maxPositiveValue, snapToScale);
@@ -101,7 +101,7 @@ public class HistoChartMetrics {
 
   private int scaleZoneWidth() {
     double value = Math.max(maxPositiveValue, maxNegativeValue);
-    int valueWidth = fontMetrics.stringWidth(Integer.toString((int)value));
+    int valueWidth = textMetrics.stringWidth(Integer.toString((int)value));
     return Math.max(MIN_SCALE_ZONE_WIDTH, valueWidth + RIGHT_SCALE_MARGIN);
   }
 
@@ -199,7 +199,7 @@ public class HistoChartMetrics {
 
   public int labelX(String label, int index) {
     checkIndex(index);
-    return left(index) + columnWidth / 2 - fontMetrics.stringWidth(label) / 2;
+    return left(index) + columnWidth / 2 - textMetrics.stringWidth(label) / 2;
   }
 
   public double[] scaleValues() {
@@ -239,11 +239,11 @@ public class HistoChartMetrics {
   }
 
   public int scaleX(String label) {
-    return scaleZoneWidth - RIGHT_SCALE_MARGIN - fontMetrics.stringWidth(label);
+    return scaleZoneWidth - RIGHT_SCALE_MARGIN - textMetrics.stringWidth(label);
   }
 
   public int scaleY(double value) {
-    return y(value) + fontMetrics.getAscent() / 2;
+    return y(value) + textMetrics.getAscent() / 2;
   }
 
   public boolean isDrawingInnerLabels() {
@@ -255,17 +255,13 @@ public class HistoChartMetrics {
   }
 
   public int labelTextWidth(String text) {
-    return fontMetrics.stringWidth(text);
+    return textMetrics.stringWidth(text);
   }
 
   private void checkIndex(int index) {
     if (index >= columnCount) {
       throw new InvalidParameter("Invalid index " + index + ", chart only contains " + columnCount + " columns");
     }
-  }
-
-  public FontMetrics getFontMetrics() {
-    return fontMetrics;
   }
 
   public static class Section {
@@ -337,7 +333,7 @@ public class HistoChartMetrics {
     int blockWidth = blockRight - blockLeft;
     int blockHeight = SECTION_ZONE_HEIGHT;
     int blockY = panelHeight - blockHeight;
-    int textX = blockLeft + blockWidth / 2 - fontMetrics.stringWidth(previousName) / 2;
+    int textX = blockLeft + blockWidth / 2 - textMetrics.stringWidth(previousName) / 2;
     int textY = sectionZoneHeight - SECTION_BOTTOM_MARGIN;
     int lineY = sectionZoneHeight / 2;
     int lineHeight = panelHeight - lineY;

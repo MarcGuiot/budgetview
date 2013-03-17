@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.components.charts.histo.button;
 
-import org.designup.picsou.gui.components.charts.histo.utils.AbstractHistoDataset;
-import org.designup.picsou.gui.components.charts.histo.utils.HistoDatasetElement;
+import com.budgetview.shared.gui.histochart.utils.AbstractHistoDataset;
+import com.budgetview.shared.gui.histochart.HistoDatasetElement;
 import org.globsframework.model.Key;
 import org.globsframework.utils.exceptions.InvalidState;
 

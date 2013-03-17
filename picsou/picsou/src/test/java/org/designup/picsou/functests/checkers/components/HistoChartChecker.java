@@ -3,7 +3,7 @@ package org.designup.picsou.functests.checkers.components;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.AbstractHistoChecker;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
-import org.designup.picsou.gui.components.charts.histo.HistoDataset;
+import com.budgetview.shared.gui.histochart.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyDataset;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffDataset;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineDataset;

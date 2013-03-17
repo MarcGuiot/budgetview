@@ -38,6 +38,7 @@ public class LoadBuilder {
   public LoadBuilder addMainAccount(String accountName, Integer positionMonth, Integer positionDay, double position) {
     Glob account = tempRepository.create(AccountEntity.TYPE,
                                          value(AccountEntity.LABEL, accountName),
+                                         value(AccountEntity.IS_USER_ACCOUNT, true),
                                          value(AccountEntity.POSITION, position),
                                          value(AccountEntity.POSITION_MONTH, positionMonth),
                                          value(AccountEntity.POSITION_DAY, positionDay),

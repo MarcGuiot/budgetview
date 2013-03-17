@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.components.charts.histo.utils;
+package com.budgetview.shared.gui.histochart;
 
 public class HistoDatasetElement {
   public final int id;

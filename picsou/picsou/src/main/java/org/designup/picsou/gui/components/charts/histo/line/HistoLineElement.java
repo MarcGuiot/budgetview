@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components.charts.histo.line;
 
-import org.designup.picsou.gui.components.charts.histo.utils.HistoDatasetElement;
+import com.budgetview.shared.gui.histochart.HistoDatasetElement;
 
 public class HistoLineElement extends HistoDatasetElement {
   public final double value;

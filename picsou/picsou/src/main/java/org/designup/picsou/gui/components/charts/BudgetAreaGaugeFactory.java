@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components.charts;
 
-import com.budgetview.shared.gui.GaugeModel;
+import com.budgetview.shared.gui.gauge.GaugeModel;
 import org.designup.picsou.model.BudgetArea;
 
 public class BudgetAreaGaugeFactory {

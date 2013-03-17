@@ -1,8 +1,12 @@
 package org.designup.picsou.gui.components.charts.histo.daily;
 
+import com.budgetview.shared.gui.dailychart.HistoDailyMetrics;
+import com.budgetview.shared.gui.histochart.HistoChartConfig;
+import com.budgetview.shared.gui.histochart.HistoChartMetrics;
+import com.budgetview.shared.gui.histochart.HistoDataset;
+import com.budgetview.shared.utils.AmountFormat;
 import org.designup.picsou.gui.components.charts.histo.*;
 import org.designup.picsou.gui.components.charts.histo.utils.HorizontalBlocksClickMap;
-import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.model.Key;
 
 import java.awt.*;
@@ -135,28 +139,28 @@ public class HistoDailyPainter implements HistoPainter {
     g2.drawString(label, labelX, labelY);
   }
 
-  private void drawMinLabel(Graphics2D g2, HistoDailyDataset dataset, int dayIndex, HistoDailyMetrics metrics) {
-    int minDayIndex = dataset.getMinDay(dayIndex);
-    Double minValue = dataset.getValue(dayIndex, minDayIndex);
+  private void drawMinLabel(Graphics2D g2, HistoDailyDataset dataset, int monthIndex, HistoDailyMetrics metrics) {
+    int minDayIndex = dataset.getMinDay(monthIndex);
+    Double minValue = dataset.getValue(monthIndex, minDayIndex);
     if ((minValue == null) || !metrics.isDrawingInnerLabels()) {
       return;
     }
 
-    String text = getMinText(dayIndex, minValue);
-    int minX = metrics.minX(minDayIndex, dataset.getValues(dayIndex).length, dayIndex);
+    String text = getMinText(monthIndex, minValue);
+    int minX = metrics.minX(minDayIndex, dataset.getValues(monthIndex).length, monthIndex);
 
     g2.setStroke(new BasicStroke(1));
     g2.setComposite(AlphaComposite.Src);
     g2.setColor(colors.getInnerLabelColor(minValue));
-    g2.drawString(text, metrics.innerLabelX(dayIndex, minX, text), metrics.innerLabelY());
+    g2.drawString(text, metrics.innerLabelX(monthIndex, minX, text), metrics.innerLabelY());
 
-    g2.drawLine(metrics.innerLabelLineX(dayIndex, minX, text),
+    g2.drawLine(metrics.innerLabelLineX(monthIndex, minX, text),
                 metrics.innerLabelLineY(),
                 minX,
                 metrics.y(minValue));
   }
 
   private String getMinText(int index, Double minValue) {
-    return Formatting.toStandardValueString(minValue);
+    return AmountFormat.toStandardValueString(minValue);
   }
 }

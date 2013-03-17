@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.accounts.chart;
 
-import org.designup.picsou.gui.components.charts.histo.HistoChartConfig;
+import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;

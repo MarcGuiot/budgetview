@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components.charts.histo.diff;
 
-import org.designup.picsou.gui.components.charts.histo.utils.AbstractHistoDataset;
+import com.budgetview.shared.gui.histochart.utils.AbstractHistoDataset;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Key;

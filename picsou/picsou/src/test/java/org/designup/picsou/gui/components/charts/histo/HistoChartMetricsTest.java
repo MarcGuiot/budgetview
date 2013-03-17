@@ -1,5 +1,8 @@
 package org.designup.picsou.gui.components.charts.histo;
 
+import com.budgetview.shared.gui.TextMetrics;
+import com.budgetview.shared.gui.histochart.HistoChartConfig;
+import com.budgetview.shared.gui.histochart.HistoChartMetrics;
 import org.designup.picsou.gui.components.ChartTestCase;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineDataset;
 import org.globsframework.utils.TestUtils;
@@ -137,7 +140,17 @@ public class HistoChartMetricsTest extends ChartTestCase {
                                           boolean drawSections,
                                           boolean drawInnerLabels,
                                           boolean snapToScale) {
-    return new HistoChartMetrics(panelWidth, panelHeight, getFontMetrics(), columnCount,
+    return new HistoChartMetrics(panelWidth, panelHeight,
+                                 new TextMetrics() {
+                                   public int stringWidth(String text) {
+                                     return text.length() * 5;
+                                   }
+
+                                   public int getAscent() {
+                                     return 5;
+                                   }
+                                 },
+                                 columnCount,
                                  maxNegativeValue, maxPositiveValue,
                                  new HistoChartConfig(drawLabels, drawSections, drawInnerLabels, true, true, true, true, true, false),
                                  true, snapToScale);

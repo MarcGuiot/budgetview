@@ -75,6 +75,7 @@
   <string name="seriesListSectionLabel">Envelopes</string>
   <string name="seriesListEmptyMessage">There are no envelopes for this month</string>
 
+  <string name="transactionListAccountSectionLabel">Position</string>
   <string name="transactionListSectionLabel">Transactions</string>
   <string name="transactionListEmptyMessage">There are no transactions this month</string>
 

@@ -1,23 +1,20 @@
 package org.designup.picsou.gui.description;
 
 import com.budgetview.shared.utils.AmountFormat;
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.NumericDateType;
 import org.designup.picsou.model.TextDateType;
-import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Strings;
 
-import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class Formatting extends AmountFormat {
-  public static final DecimalFormat INTEGER_FORMAT = new DecimalFormat("0");
-  public static final DecimalFormat TWO_DIGIT_INTEGER_FORMAT = new DecimalFormat("00");
 
   private static SimpleDateFormat dateFormat;
   private static SimpleDateFormat yearMonthFormat;
@@ -25,20 +22,6 @@ public class Formatting extends AmountFormat {
   private static MessageFormat dateMessageFormat;
   private static SimpleDateFormat dateAndTimeFormat;
   private static MessageFormat fullLabelFormat;
-
-  public static String toAbsString(Double value) {
-    return toString(Math.abs(value));
-  }
-
-  public static String toString(Double value) {
-    if (value == null) {
-      return "";
-    }
-    if (Amounts.isNearZero(value)) {
-      value = +0.00;
-    }
-    return DECIMAL_FORMAT.format(value);
-  }
 
   public static SimpleDateFormat getDateFormat() {
     if (dateFormat == null) {
@@ -59,33 +42,6 @@ public class Formatting extends AmountFormat {
       updateWithDefaults();
     }
     return dateAndTimeFormat;
-  }
-
-  public static String toStringWithPlus(Double value) {
-    if (value == null) {
-      return "";
-    }
-    if (value <= 0) {
-      return DECIMAL_FORMAT.format(value);
-    }
-    else {
-      return "+" + DECIMAL_FORMAT.format(value);
-    }
-  }
-
-  public static String toStandardValueString(Double value) {
-    if (value == null) {
-      return "";
-    }
-    if (Amounts.isNearZero(value)) {
-      return "0";
-    }
-    if (value < 0) {
-      return INTEGER_FORMAT.format(value);
-    }
-    else {
-      return "+" + INTEGER_FORMAT.format(value);
-    }
   }
 
   public static String toString(Date date) {

@@ -11,6 +11,7 @@ import android.widget.ListView;
 import com.budgetview.android.components.TabPage;
 import com.budgetview.android.utils.SectionHeaderBlock;
 import com.budgetview.android.utils.TransactionSet;
+import com.budgetview.shared.model.AccountEntity;
 import com.budgetview.shared.model.SeriesValues;
 import com.budgetview.shared.model.TransactionValues;
 import org.globsframework.model.Glob;
@@ -20,6 +21,7 @@ import org.globsframework.model.GlobRepository;
 public class TransactionListFragment extends Fragment {
 
   private TransactionSet transactionSet;
+  private boolean isAccountView;
 
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -37,6 +39,8 @@ public class TransactionListFragment extends Fragment {
     AccountSummaryBlockView positionBlock = (AccountSummaryBlockView)view.findViewById(R.id.transaction_account_position);
     positionBlock.update(transactionSet.getAccountEntity());
 
+    isAccountView = transactionSet.getAccountEntity() != null;
+
     ListView list = (ListView)view.findViewById(R.id.transactionList);
     list.setAdapter(new TransactionListAdapter(inflater));
 
@@ -52,6 +56,8 @@ public class TransactionListFragment extends Fragment {
     private GlobList transactionValuesList;
     private LayoutInflater inflater;
     private SectionHeaderBlock headerBlock;
+    private SectionHeaderBlock accountPositionHeaderBlock;
+    private AccountPositionBlockView accountPositionBlockView;
 
     private TransactionListAdapter(LayoutInflater inflater) {
       this.inflater = inflater;
@@ -63,6 +69,12 @@ public class TransactionListFragment extends Fragment {
     }
 
     public int getCount() {
+      if (isAccountView) {
+        if (transactionValuesList.isEmpty()) {
+          return 2;
+        }
+        return transactionValuesList.size() + 3;
+      }
       if (transactionValuesList.isEmpty()) {
         return 0;
       }
@@ -82,7 +94,23 @@ public class TransactionListFragment extends Fragment {
 
     public View getView(int index, View previousView, ViewGroup parent) {
 
-      if (index == 0) {
+      if (isAccountPositionHeaderIndex(index)) {
+        if (accountPositionHeaderBlock == null) {
+          accountPositionHeaderBlock = new SectionHeaderBlock(R.string.transactionListAccountSectionLabel, getResources());
+        }
+        return accountPositionHeaderBlock.getView(inflater, previousView, parent);
+      }
+
+      if (isAccountPositionIndex(index)) {
+        if (accountPositionBlockView == null) {
+          accountPositionBlockView = new AccountPositionBlockView(transactionSet.getAccountEntity().get(AccountEntity.ID),
+                                                                  transactionSet.getMonthId(),
+                                                                  getActivity());
+        }
+        return accountPositionBlockView.getView(inflater, previousView, parent);
+      }
+
+      if (!transactionValuesList.isEmpty() && isTransactionHeaderIndex(index)) {
         if (headerBlock == null) {
           headerBlock = new SectionHeaderBlock(R.string.transactionListSectionLabel, getResources());
         }
@@ -94,7 +122,8 @@ public class TransactionListFragment extends Fragment {
         view = inflater.inflate(R.layout.transaction_block, parent, false);
       }
 
-      final Glob values = transactionValuesList.get(index - 1);
+      final int adjustedIndex = isAccountView ? index - 3 : index - 1;
+      final Glob values = transactionValuesList.get(adjustedIndex);
       Double amount = values.get(TransactionValues.AMOUNT);
       Views.setText(view, R.id.transactionLabel, values.get(TransactionValues.LABEL));
       Views.setColoredText(view, R.id.transactionAmount, amount);
@@ -111,6 +140,18 @@ public class TransactionListFragment extends Fragment {
       });
 
       return view;
+    }
+
+    private boolean isAccountPositionHeaderIndex(int index) {
+      return isAccountView && index == 0;
+    }
+
+    private boolean isAccountPositionIndex(int index) {
+      return isAccountView && index == 1;
+    }
+
+    private boolean isTransactionHeaderIndex(int index) {
+      return (isAccountView && index == 2) || (!isAccountView && index == 0);
     }
 
     private String getDate(Glob values) {

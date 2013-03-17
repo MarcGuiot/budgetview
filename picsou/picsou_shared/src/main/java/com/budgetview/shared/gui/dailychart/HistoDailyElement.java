@@ -1,6 +1,6 @@
-package org.designup.picsou.gui.components.charts.histo.daily;
+package com.budgetview.shared.gui.dailychart;
 
-import org.designup.picsou.gui.components.charts.histo.utils.HistoDatasetElement;
+import com.budgetview.shared.gui.histochart.HistoDatasetElement;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.util.Arrays;

@@ -1,6 +1,6 @@
-package org.designup.picsou.gui.components.charts.histo.daily;
+package com.budgetview.shared.gui.dailychart;
 
-import org.designup.picsou.gui.components.charts.histo.HistoChartMetrics;
+import com.budgetview.shared.gui.histochart.HistoChartMetrics;
 
 public class HistoDailyMetrics {
 
@@ -26,10 +26,6 @@ public class HistoDailyMetrics {
 
   public int columnTop() {
     return metrics.columnTop();
-  }
-
-  public int columnBottom() {
-    return metrics.columnBottom();
   }
 
   public int columnHeight() {

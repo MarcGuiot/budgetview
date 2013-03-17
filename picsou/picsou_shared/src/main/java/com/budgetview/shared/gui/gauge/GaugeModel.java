@@ -1,4 +1,4 @@
-package com.budgetview.shared.gui;
+package com.budgetview.shared.gui.gauge;
 
 import com.budgetview.shared.utils.AmountFormat;
 import com.budgetview.shared.utils.Amounts;

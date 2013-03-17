@@ -1,10 +1,8 @@
 package org.designup.picsou.gui.components.charts;
 
-import com.budgetview.shared.gui.GaugeModel;
-import com.budgetview.shared.gui.GaugeModelListener;
-import com.budgetview.shared.gui.GaugeTextSource;
+import com.budgetview.shared.gui.gauge.GaugeModel;
+import com.budgetview.shared.gui.gauge.GaugeModelListener;
 import org.designup.picsou.gui.components.ActionablePanel;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 

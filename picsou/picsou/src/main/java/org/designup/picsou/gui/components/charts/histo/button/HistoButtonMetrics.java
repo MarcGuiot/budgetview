@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components.charts.histo.button;
 
-import org.designup.picsou.gui.components.charts.histo.HistoChartMetrics;
+import com.budgetview.shared.gui.histochart.HistoChartMetrics;
 
 import java.awt.*;
 

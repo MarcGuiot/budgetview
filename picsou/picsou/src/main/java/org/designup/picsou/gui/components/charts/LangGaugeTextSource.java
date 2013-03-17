@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.components.charts;
 
-import com.budgetview.shared.gui.GaugeTextSource;
+import com.budgetview.shared.gui.gauge.GaugeTextSource;
 import org.designup.picsou.utils.Lang;
 
 public class LangGaugeTextSource implements GaugeTextSource {

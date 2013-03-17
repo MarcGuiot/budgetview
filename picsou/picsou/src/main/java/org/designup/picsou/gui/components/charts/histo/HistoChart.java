@@ -1,5 +1,10 @@
 package org.designup.picsou.gui.components.charts.histo;
 
+import com.budgetview.shared.gui.TextMetrics;
+import com.budgetview.shared.gui.histochart.HistoChartConfig;
+import com.budgetview.shared.gui.histochart.HistoChartMetrics;
+import com.budgetview.shared.gui.histochart.HistoDataset;
+import org.designup.picsou.gui.components.charts.histo.utils.AwtTextMetrics;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Key;
@@ -106,7 +111,7 @@ public class HistoChart extends JPanel {
 
     if (metrics == null) {
       metrics = new HistoChartMetrics(panelWidth, panelHeight,
-                                      getFontMetrics(getFont()),
+                                      getTextMetrics(g, getFont()),
                                       dataset.size(),
                                       dataset.getMaxNegativeValue(), dataset.getMaxPositiveValue(),
                                       config,
@@ -125,6 +130,10 @@ public class HistoChart extends JPanel {
     painter.paint(g2, metrics, config, selectionManager.getRollover());
 
     paintSections(g2, dataset);
+  }
+
+  private TextMetrics getTextMetrics(Graphics g, Font font) {
+    return new AwtTextMetrics(g, font);
   }
 
   private void paintBg(Graphics2D g2) {

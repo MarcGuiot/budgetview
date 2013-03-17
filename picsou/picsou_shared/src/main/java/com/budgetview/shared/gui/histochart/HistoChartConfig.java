@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.components.charts.histo;
+package com.budgetview.shared.gui.histochart;
 
 public class HistoChartConfig {
   public final boolean drawLabels;

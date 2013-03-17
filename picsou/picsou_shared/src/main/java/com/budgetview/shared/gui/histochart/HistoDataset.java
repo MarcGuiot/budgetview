@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.components.charts.histo;
+package com.budgetview.shared.gui.histochart;
 
 import org.globsframework.model.Key;
 
