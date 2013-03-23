@@ -22,13 +22,18 @@ public class HomeActivity extends Activity {
       return;
     }
 
+    final DataSync dataSync = DataSyncFactory.create(this);
+    if (!dataSync.canConnect() && dataSync.loadTempFile()) {
+      gotoBudgetOverview(true, false);
+      return;
+    }
+
     LoginInfo loginInfo = LoginInfo.load(this);
     if (!loginInfo.isSet()) {
       showHomePage();
       return;
     }
 
-    final DataSync dataSync = DataSyncFactory.create(this);
     loadData(dataSync, loginInfo);
   }
 

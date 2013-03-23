@@ -12,4 +12,5 @@ public interface DataSync {
 
   boolean sendDownloadEmail(String email, DataSyncCallback callback);
 
+  boolean canConnect();
 }
