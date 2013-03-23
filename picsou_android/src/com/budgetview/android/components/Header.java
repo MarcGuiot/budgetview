@@ -43,6 +43,7 @@ public class Header extends LinearLayout {
     installNavigateUpListener(R.id.header_back_arrow);
     installNavigateUpListener(R.id.header_logo);
     installNavigateUpListener(R.id.header_title);
+
     installRefreshListener();
   }
 
@@ -70,6 +71,14 @@ public class Header extends LinearLayout {
   public void setActivity(final Activity activity) {
     this.activity = activity;
     setBackVisible(View.VISIBLE);
+    updateRefreshVisibility(activity);
+  }
+
+  private void updateRefreshVisibility(Activity activity) {
+    boolean visible =
+      (activity != null) &&
+      (activity.getIntent().getBooleanExtra(DemoActivity.USE_DEMO, false) == false);
+    findViewById(R.id.header_refresh).setVisibility(visible ? VISIBLE : GONE);
   }
 
   private void setBackVisible(int visible) {

@@ -40,7 +40,28 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:gravity="center"
-    android:src="@drawable/desktop_screenshot"/>
+    android:src="@drawable/desktop_screenshot"
+    android:contentDescription="@string/demoScreenshotDescription"/>
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:textSize="16dp"
+    android:textColor="#222222"
+    android:text="@string/demoLinkMessage"/>
+
+  <TextView
+    android:id="@+id/goto_website"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:textSize="18dp"
+    android:textColor="#0000FF"
+    android:autoLink="web"
+    />
 
   <TextView
     android:layout_width="wrap_content"
@@ -69,26 +90,6 @@
     android:layout_marginTop="5dp"
     android:text="@string/demoEmailButton"
     android:onClick="onSendEmail"/>
-
-  <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:textSize="16dp"
-    android:textColor="#222222"
-    android:text="@string/demoLinkMessage"/>
-
-  <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:textSize="18dp"
-    android:textColor="#0000FF"
-    android:autoLink="web"
-    android:text="@string/demoLink"
-    />
 
   <View style="@style/Spacer"/>
 

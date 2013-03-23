@@ -91,4 +91,9 @@ public abstract class AndroidTabsChecker<T extends FragmentActivity> extends And
   public HeaderChecker header() {
     return new HeaderChecker(activity, R.id.header);
   }
+
+  public void checkRefreshHidden() {
+    View refresh = activity.findViewById(R.id.header_refresh);
+    Assert.assertEquals(View.GONE, refresh.getVisibility());
+  }
 }
