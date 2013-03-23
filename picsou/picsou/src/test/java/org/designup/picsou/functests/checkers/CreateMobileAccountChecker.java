@@ -23,13 +23,12 @@ public class CreateMobileAccountChecker extends GuiChecker{
   }
 
   public CreateMobileAccountChecker setEmail(String mail) {
-    dialog.getInputTextBox("email").setText(mail);
+    dialog.getInputTextBox("emailField").setText(mail);
     return this;
   }
 
-  public CreateMobileAccountChecker setPassword(String password) {
-    dialog.getInputTextBox("password").setText(password);
-    return this;
+  public String getPassword() {
+    return dialog.getTextBox("passwordLabel").getText();
   }
 
   public CreateMobileAccountChecker validateAndClose() {
@@ -42,11 +41,7 @@ public class CreateMobileAccountChecker extends GuiChecker{
   }
 
   public CreateMobileAccountChecker validateAndCheckEmailTip(String errorMessage) {
-    return checkErrorTip(errorMessage, "email");
-  }
-
-  public CreateMobileAccountChecker validateAndCheckPasswordTip(String errorMessage) {
-    return checkErrorTip(errorMessage, "password");
+    return checkErrorTip(errorMessage, "emailField");
   }
 
   private CreateMobileAccountChecker checkErrorTip(String errorMessage, String fieldName) {

@@ -64,7 +64,7 @@ public class PicsouInit {
     this.serverAccess = serverAccess;
     this.directory = directory;
 
-    idGenerator = new DefaultGlobIdGenerator();
+    this.idGenerator = new DefaultGlobIdGenerator();
     this.exceptionHandler = new ShowDialogAndExitExceptionHandler(directory);
     this.repository =
       GlobRepositoryBuilder.init(idGenerator, exceptionHandler)
@@ -253,6 +253,8 @@ public class PicsouInit {
             PicsouInit.this.repository.reset(userData, typesToReplace);
           }
         }
+
+        UserPreferences.initMobilePassword(repository);
 
         serverAccess.applyChanges(changeSet, repository);
       }

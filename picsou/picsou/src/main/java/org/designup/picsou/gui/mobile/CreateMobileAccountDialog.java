@@ -38,7 +38,6 @@ public class CreateMobileAccountDialog {
   private JEditorPane message;
   private ProgressPanel progressBar;
   private JTextField emailField;
-  private JTextField passwordField;
   private CardHandler cards;
   private ValidateCreateMobileAccountAction validateAction;
 
@@ -63,10 +62,9 @@ public class CreateMobileAccountDialog {
 
     cards = builder.addCardHandler("cards");
 
-    emailField = builder.addEditor("email", UserPreferences.MAIL_FOR_MOBILE).getComponent();
+    emailField = builder.addEditor("emailField", UserPreferences.MAIL_FOR_MOBILE).getComponent();
     emailField.addActionListener(validateAction);
-    passwordField = builder.addEditor("password", UserPreferences.PASSWORD_FOR_MOBILE).getComponent();
-    passwordField.addActionListener(validateAction);
+    builder.addLabel("passwordLabel", UserPreferences.PASSWORD_FOR_MOBILE).getComponent();
 
     message = Gui.createHtmlDisplay();
     builder.add("message", message);
@@ -82,8 +80,7 @@ public class CreateMobileAccountDialog {
 
     dialog = PicsouDialog.create(localDirectory.get(JFrame.class), localDirectory);
     dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(dialog));
-    dialog.setFocusTraversalPolicy(
-      new CustomFocusTraversalPolicy(emailField, passwordField, createButton));
+    dialog.setFocusTraversalPolicy(new CustomFocusTraversalPolicy(emailField, createButton));
   }
 
   public void show() {
@@ -141,13 +138,6 @@ public class CreateMobileAccountDialog {
       ErrorTip.show(emailField, Lang.get("mobile.mail.empty"), localDirectory, TipPosition.TOP_LEFT);
       return false;
     }
-
-    String password = passwordField.getText();
-    if (Strings.isNullOrEmpty(password)) {
-      ErrorTip.show(passwordField, Lang.get("mobile.password.empty"), localDirectory, TipPosition.TOP_LEFT);
-      return false;
-    }
-
     return true;
   }
 

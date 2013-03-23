@@ -138,6 +138,8 @@ public class UpgradeTrigger implements ChangeSetListener {
       reassignBankId(repository);
     }
 
+    UserPreferences.initMobilePassword(repository);
+
     deleteDeprecatedGlobs(repository);
 
     Glob appVersion = repository.get(AppVersionInformation.KEY);

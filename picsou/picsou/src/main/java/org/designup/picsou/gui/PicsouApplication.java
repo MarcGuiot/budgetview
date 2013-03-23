@@ -120,33 +120,13 @@ public class PicsouApplication {
     changeDate();
     Utils.endRemove();
 
-//    try {
-//      for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-//        if ("Windows".equals(info.getName())) {
-//          UIManager.setLookAndFeel(info.getClassName());
-//          break;
-//        }
-//        if ("Nimbus".equals(info.getName())) {
-//          UIManager.setLookAndFeel(info.getClassName());
-//          break;
-//        }
-//      }
-//    }
-//    catch (Exception e) {
-//      // If Nimbus is not available, you can set the GUI to another look and feel.
-//    }
-
-//    SwingUtilities.invokeAndWait(new Runnable() {
-//      public void run() {
-        try {
-          new PicsouApplication().run(args);
-        }
-        catch (Exception e) {
-          Log.write("At startup ", e);
-          System.exit(-1);
-        }
-//      }
-//    });
+    try {
+      new PicsouApplication().run(args);
+    }
+    catch (Exception e) {
+      Log.write("At startup ", e);
+      System.exit(-1);
+    }
   }
 
   static void changeDate() {
@@ -190,8 +170,6 @@ public class PicsouApplication {
 
     preinitDirectory(directory);
     initDirectory(directory, openRequestManager);
-
-
 
     try {
       final MainWindow mainWindow = new MainWindow(this, getServerAddress(), AppPaths.getLocalPrevaylerPath(), isDataInMemory(), directory);

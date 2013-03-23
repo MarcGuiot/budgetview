@@ -1,5 +1,6 @@
 package org.designup.picsou.model;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.designup.picsou.gui.license.LicenseService;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
@@ -118,6 +119,13 @@ public class UserPreferences {
   public static boolean isReconciliationShown(GlobRepository repository) {
     Glob prefs = repository.findOrCreate(KEY);
     return prefs.isTrue(SHOW_RECONCILIATION);
+  }
+
+  public static void initMobilePassword(GlobRepository repository) {
+    Glob prefs = repository.findOrCreate(KEY);
+    if (prefs.get(PASSWORD_FOR_MOBILE) == null) {
+      repository.update(KEY, PASSWORD_FOR_MOBILE, RandomStringUtils.randomAlphanumeric(6).toLowerCase());
+    }
   }
 
   public static class Serializer implements PicsouGlobSerializer {
