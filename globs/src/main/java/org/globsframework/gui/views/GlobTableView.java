@@ -849,24 +849,44 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     addKeyBinding(GuiUtils.ctrl(KeyEvent.VK_C), "Copy", new CopySelectionToClipboardAction());
   }
 
-  public Action getCopyAction(String label) {
-    return new CopySelectionToClipboardAction(label);
+  public Action getCopySelectionAction(String label, int... columnsToHide) {
+    CopySelectionToClipboardAction action = new CopySelectionToClipboardAction(label);
+    action.setColumnsToHide(columnsToHide);
+    return action;
   }
 
-  private class CopySelectionToClipboardAction extends AbstractAction {
+  public Action getCopyTableAction(String label, int... columnsToHide) {
+    CopyTableToClipboardAction action = new CopyTableToClipboardAction(label);
+    action.setColumnsToHide(columnsToHide);
+    return action;
+  }
 
-    private CopySelectionToClipboardAction() {
+  private abstract class AbstractCopyToClipboardAction extends AbstractAction {
+
+    private Set<Integer> columnsToHide = new HashSet<Integer>();
+
+    protected AbstractCopyToClipboardAction() {
     }
 
-    private CopySelectionToClipboardAction(String label) {
-      super(label);
+    protected AbstractCopyToClipboardAction(String name) {
+      super(name);
+    }
+
+    public void setColumnsToHide(int... indices) {
+      for (int index : indices) {
+        columnsToHide.add(index);
+      }
     }
 
     public void actionPerformed(ActionEvent e) {
       StringBuilder buffer = new StringBuilder();
 
       boolean firstColumn = true;
-      for (GlobTableColumn column : columns) {
+      for (int i = 0; i < columns.size(); i++) {
+        if (columnsToHide.contains(i)) {
+          continue;
+        }
+        GlobTableColumn column = columns.get(i);
         if (!firstColumn) {
           buffer.append("\t");
         }
@@ -875,9 +895,13 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       }
       buffer.append("\n");
 
-      for (Glob glob : getCurrentSelection()) {
+      for (Glob glob : getGlobsToCopy()) {
         firstColumn = true;
-        for (GlobTableColumn column : columns) {
+        for (int i = 0; i < columns.size(); i++) {
+          if (columnsToHide.contains(i)) {
+            continue;
+          }
+          GlobTableColumn column = columns.get(i);
           if (!firstColumn) {
             buffer.append("\t");
           }
@@ -889,6 +913,32 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       }
 
       GuiUtils.copyTextToClipboard(buffer.toString());
+    }
+
+    protected abstract GlobList getGlobsToCopy();
+  }
+
+  private class CopySelectionToClipboardAction extends AbstractCopyToClipboardAction {
+
+    private CopySelectionToClipboardAction() {
+    }
+
+    private CopySelectionToClipboardAction(String label) {
+      super(label);
+    }
+
+    protected GlobList getGlobsToCopy() {
+      return getCurrentSelection();
+    }
+  }
+
+  private class CopyTableToClipboardAction extends AbstractCopyToClipboardAction {
+    private CopyTableToClipboardAction(String name) {
+      super(name);
+    }
+
+    protected GlobList getGlobsToCopy() {
+      return tableModel.getAll();
     }
   }
 }

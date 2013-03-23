@@ -19,6 +19,19 @@
            foreground="seriesAnalysis.stackToggle" icon="rightArrow(12,16,8,8,seriesAnalysis.stackToggle)"
            font="-,plain,12" iconTextGap="3" marginLeft="5"
            anchor="right"/>
+
+    <style selector="button.rightArrow" ui="basicButtonUI"
+           preferredSize="(16,16)"
+           icon="rightArrow(12,16,10,10,seriesEvolution.nextprev)"
+           rolloverIcon="rightArrow(12,16,10,10,seriesEvolution.nextprev.rollover)" weightX="0.01"
+           text="" opaque="false" borderPainted="false" cursor="hand"/>
+
+    <style selector="button.leftArrow" ui="basicButtonUI"
+           preferredSize="(16,16)"
+           icon="leftArrow(12,16,10,10,seriesEvolution.nextprev)"
+           rolloverIcon="leftArrow(12,16,10,10,seriesEvolution.nextprev.rollover)" weightX="0.01"
+           text="" opaque="false" borderPainted="false" cursor="hand"/>
+
   </styles>
 
   <column styleClass="main">
@@ -82,11 +95,10 @@
           </scrollPane>
 
           <row styleClass="footer">
-            <button action="expand" tooltipText="$series.expand.tooltip"/>
-            <button action="collapse" tooltipText="$series.collapse.tooltip"/>
+            <button ref="actionsMenu" styleClass="actionsButton" marginLeft="5"/>
             <filler fill="horizontal"/>
-            <button action="previousMonth"/>
-            <button action="nextMonth"/>
+            <button action="previousMonth" styleClass="leftArrow" tooltipText="$series.previous.tooltip"/>
+            <button action="nextMonth" styleClass="rightArrow" tooltipText="$series.next.tooltip"/>
           </row>
 
         </column>

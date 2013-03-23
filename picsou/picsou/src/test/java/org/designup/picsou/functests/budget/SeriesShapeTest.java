@@ -108,7 +108,7 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
 
     categorization.setVariable("ED1", "Courses");
 
-    transactions.showPlannedTransactions()
+    transactions.checkShowsPlannedTransactions()
       .initContent()
       .add("18/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -200.00, "Courses")
       .add("02/09/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
@@ -245,7 +245,7 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .setForceSingleOperationDay(20)
       .validate();
 
-    transactions.showPlannedTransactions()
+    transactions
       .initContent()
       .add("20/10/2008", TransactionType.PLANNED, "Planned: Courses", "", -90.00, "Courses")
       .add("20/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -90.00, "Courses")
@@ -264,7 +264,7 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .checkForceSingleOperationDayEnabled(false)
       .validate();
 
-    transactions.showPlannedTransactions()
+    transactions
       .initContent()
       .add("27/10/2008", TransactionType.PLANNED, "Planned: Courses", "", -33.00, "Courses")
       .add("19/10/2008", TransactionType.PLANNED, "Planned: Courses", "", -22.00, "Courses")
@@ -291,7 +291,7 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .validate();
 
     // Takes into account actual last day of month in september
-    transactions.showPlannedTransactions()
+    transactions
       .initContent()
       .add("31/10/2008", TransactionType.PLANNED, "Planned: Courses", "", -90.00, "Courses")
       .add("30/09/2008", TransactionType.PLANNED, "Planned: Courses", "", -90.00, "Courses")
@@ -332,7 +332,7 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .setForceSingleOperationDay(9)
       .validate();
 
-    transactions.showPlannedTransactions()
+    transactions
       .initContent()
       .add("09/08/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("09/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
@@ -347,7 +347,7 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .unselectedForceSingleOperationForecast()
       .validate();
 
-    transactions.showPlannedTransactions()
+    transactions
       .initContent()
       .add("11/08/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("11/07/2008", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")

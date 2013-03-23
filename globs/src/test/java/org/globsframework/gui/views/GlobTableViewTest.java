@@ -1148,11 +1148,60 @@ public class GlobTableViewTest extends GuiComponentTestCase {
                  Clipboard.getContentAsText());
 
     table.selectRows(2);
-    Action action = view.getCopyAction("Copy rows");
+    Action action = view.getCopySelectionAction("Copy rows");
     assertEquals("Copy rows", action.getValue(Action.NAME));
     action.actionPerformed(null);
     assertEquals("id\tCustom\tOther\n" +
                  "3\ta3\tb3\n",
+                 Clipboard.getContentAsText());
+
+    view.getCopySelectionAction("Copy rows", 1).actionPerformed(null);
+    assertEquals("id\tOther\n" +
+                 "3\tb3\n",
+                 Clipboard.getContentAsText());
+
+    view.getCopySelectionAction("Copy rows", 0,2,4).actionPerformed(null);
+    assertEquals("Custom\n" +
+                 "a3\n",
+                 Clipboard.getContentAsText());
+  }
+
+  public void testCopyTableToClipboard() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' value='1.1'/>" +
+                    "<dummyObject id='2' name='name2' value='2.2'/>" +
+                    "<dummyObject id='3' name='name3' value='3.3'/>" +
+                    "<dummyObject id='4' name='name4' value='4.4'/>" +
+                    "");
+    view = GlobTableView.init(DummyObject.TYPE, repository, new GlobFieldComparator(ID), directory)
+      .addColumn(DummyObject.ID)
+      .addColumn("Custom", new DummyStringifier("a"))
+      .addColumn("Other", new DefaultTableCellRenderer(), new DummyStringifier("b"));
+    Table table = new Table(view.getComponent());
+    table.selectRow(1);
+
+    view.getCopyTableAction("copy").actionPerformed(null);
+    assertEquals("id\tCustom\tOther\n" +
+                 "1\ta1\tb1\n" +
+                 "2\ta2\tb2\n" +
+                 "3\ta3\tb3\n" +
+                 "4\ta4\tb4\n",
+                 Clipboard.getContentAsText());
+
+    view.getCopyTableAction("copy", 1).actionPerformed(null);
+    assertEquals("id\tOther\n" +
+                 "1\tb1\n" +
+                 "2\tb2\n" +
+                 "3\tb3\n" +
+                 "4\tb4\n",
+                 Clipboard.getContentAsText());
+
+    view.getCopyTableAction("copy", 0, 2,4).actionPerformed(null);
+    assertEquals("Custom\n" +
+                 "a1\n" +
+                 "a2\n" +
+                 "a3\n" +
+                 "a4\n",
                  Clipboard.getContentAsText());
   }
 

@@ -62,16 +62,6 @@ public abstract class ExpandableTableChecker<T extends ExpandableTableChecker> e
     return (T)this;
   }
 
-  public T expandAll() {
-    getPanel().getButton("expand").click();
-    return (T)this;
-  }
-
-  public T collapseAll() {
-    getPanel().getButton("collapse").click();
-    return (T)this;
-  }
-
   protected UIComponent getMainComponent() {
     return getTable();
   }

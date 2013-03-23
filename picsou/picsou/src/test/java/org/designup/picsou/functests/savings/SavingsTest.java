@@ -335,7 +335,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     transactionDetails.split("50", "Comportement impossible?");
     categorization.selectVariable().selectNewSeries("Occasional");
     transactions
-      .showPlannedTransactions()
       .initAmountContent()
       .add("10/08/2008", "VIREMENT", 50.00, "Epargne", 1050.00, 1050.00, "Epargne")
       .add("10/08/2008", "VIREMENT", -50.00, "Epargne", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)

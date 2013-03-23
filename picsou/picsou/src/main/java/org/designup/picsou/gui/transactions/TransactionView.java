@@ -5,6 +5,7 @@ import org.designup.picsou.gui.accounts.chart.TransactionAccountPositionsChartVi
 import org.designup.picsou.gui.accounts.utils.AccountFilter;
 import org.designup.picsou.gui.card.ImportPanel;
 import org.designup.picsou.gui.card.utils.GotoCardAction;
+import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;
@@ -79,8 +80,9 @@ public class TransactionView extends View implements Filterable {
   private GlobMatcher filter = GlobMatchers.ALL;
   private FilterManager filterManager;
   private PicsouTableHeaderPainter headerPainter;
-  private JCheckBox showPlannedTransactionsCheckbox;
+  private JCheckBoxMenuItem showPlannedTransactionsCheckbox;
   private TextFilterPanel search;
+  private TransactionTableActions tableActions;
 
   public TransactionView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -115,6 +117,13 @@ public class TransactionView extends View implements Filterable {
       }
     });
 
+
+    JPopupMenu tableMenu = new JPopupMenu();
+    tableMenu.add(showPlannedTransactionsCheckbox);
+    tableMenu.addSeparator();
+    tableMenu.add(view.getCopyTableAction(Lang.get("copyTable")));
+    builder.add("actionsMenu", new JPopupButton(Lang.get("budgetView.actions"), tableMenu));
+
     builder.addLabel("sum", Transaction.TYPE,
                      GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, false, Transaction.AMOUNT))
       .setAutoHideIfEmpty(true);
@@ -127,6 +136,7 @@ public class TransactionView extends View implements Filterable {
 
     GlobLabelView legend = builder.addLabel("accountChartLegend", Account.TYPE, new LegendStringifier(directory));
     selectionService.addListener(legend, Month.TYPE);
+
 
     parentBuilder.add("transactionView", builder);
   }
@@ -175,7 +185,7 @@ public class TransactionView extends View implements Filterable {
   }
 
   private void addShowPlannedTransactionsCheckbox(GlobsPanelBuilder builder) {
-    showPlannedTransactionsCheckbox = builder.add("showPlannedTransactions", new JCheckBox()).getComponent();
+    showPlannedTransactionsCheckbox = new JCheckBoxMenuItem(Lang.get("transactionView.showPlannedTransactions"));
     showPlannedTransactionsCheckbox.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         updateShowTransactionsMatcher();
@@ -202,9 +212,9 @@ public class TransactionView extends View implements Filterable {
     headerPainter = PicsouTableHeaderPainter.install(view, directory);
     this.filterManager = new FilterManager(this);
 
-    TransactionTableActions actions = new TransactionTableActions(view.getCopyAction(Lang.get("copy")),
+    tableActions = new TransactionTableActions(view.getCopySelectionAction(Lang.get("copy")),
                                                                   repository, directory);
-    view.setPopupFactory(actions);
+    view.setPopupFactory(tableActions);
 
     JTable table = view.getComponent();
     table.setDefaultRenderer(Glob.class,
@@ -212,7 +222,7 @@ public class TransactionView extends View implements Filterable {
                                                           rendererColors,
                                                           SERIES_COLUMN_INDEX));
 
-    TransactionKeyListener.install(table, NOTE_COLUMN_INDEX).setDeleteEnabled(actions.getDelete());
+    TransactionKeyListener.install(table, NOTE_COLUMN_INDEX).setDeleteEnabled(tableActions.getDelete());
 
     Gui.installRolloverOnButtons(table, SERIES_COLUMN_INDEX, AMOUNT_COLUMN_INDEX);
     table.setDragEnabled(false);

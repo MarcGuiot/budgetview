@@ -95,8 +95,6 @@ public class SeriesAnalysisView extends View {
                                                                       directory, parentDirectory);
     tableView.registerComponents(builder);
 
-    builder.add("expand", tableView.getExpandAction());
-    builder.add("collapse", tableView.getCollapseAction());
     builder.add("previousMonth", new SelectPreviousMonthAction(repository, parentDirectory));
     builder.add("nextMonth", new SelectNextMonthAction(repository, parentDirectory));
 

@@ -206,7 +206,6 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     editionDialogChecker.validate();
 
     transactions
-      .showPlannedTransactions()
       .initContent()
       .add("27/07/2008", TransactionType.PLANNED, "Planned: Maison", "", -20.00, "Maison")
       .check();

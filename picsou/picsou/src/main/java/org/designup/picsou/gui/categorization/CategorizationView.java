@@ -174,7 +174,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
                              new OnChangeLabelCustomizer(fontSize(9)),
                              repository, directory);
 
-    CategorizationTableActions actions = new CategorizationTableActions(transactionTable.getCopyAction(Lang.get("copy")),
+    CategorizationTableActions actions = new CategorizationTableActions(transactionTable.getCopySelectionAction(Lang.get("copy")),
                                                                         repository, directory);
     transactionTable.setPopupFactory(actions);
 
