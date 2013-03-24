@@ -28,6 +28,13 @@ public class LoginInfo {
     editor.commit();
   }
 
+  public static void clear(Context context) {
+    SharedPreferences settings = context.getSharedPreferences(PREFS_ID, Context.MODE_PRIVATE);
+    SharedPreferences.Editor editor = settings.edit();
+    editor.clear();
+    editor.commit();
+  }
+
   public LoginInfo(String email, String password) {
     this.email = email;
     this.password = password;

@@ -18,41 +18,30 @@ import com.budgetview.android.datasync.LoginInfo;
 public class Header extends LinearLayout {
 
   private Activity activity;
+  private UpHandler upHandler;
 
   public Header(Context context) {
     super(context);
-    init(context);
+    initComponents(context);
   }
 
   public Header(Context context, AttributeSet attrs) {
     super(context, attrs);
-    init(context);
+    initComponents(context);
   }
 
   public Header(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
-    init(context);
+    initComponents(context);
   }
 
-  private void init(Context context) {
+  private void initComponents(Context context) {
     LayoutInflater inflater = (LayoutInflater)
       context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     inflater.inflate(R.layout.header, this, true);
     setBackVisible(View.INVISIBLE);
 
-    installNavigateUpListener(R.id.header_back_arrow);
-    installNavigateUpListener(R.id.header_logo);
-    installNavigateUpListener(R.id.header_title);
-
     installRefreshListener();
-  }
-
-  private void installNavigateUpListener(int viewId) {
-    findViewById(viewId).setOnClickListener(new OnClickListener() {
-      public void onClick(View v) {
-        navigateUp();
-      }
-    });
   }
 
   private void installRefreshListener() {
@@ -63,31 +52,37 @@ public class Header extends LinearLayout {
     });
   }
 
-  public void setTitle(String title) {
-    TextView button = (TextView)findViewById(R.id.header_title);
-    button.setText(title);
-  }
+  public void init(Activity activity, UpHandler handler) {
+    this.upHandler = handler;
 
-  public void setActivity(final Activity activity) {
+    TextView button = (TextView)findViewById(R.id.header_title);
+    button.setText(handler.getLabel());
+
+    installNavigateUpListener(R.id.header_back_arrow);
+    installNavigateUpListener(R.id.header_logo);
+    installNavigateUpListener(R.id.header_title);
+
     this.activity = activity;
     setBackVisible(View.VISIBLE);
     updateRefreshVisibility(activity);
   }
 
+  private void installNavigateUpListener(int viewId) {
+    findViewById(viewId).setOnClickListener(new OnClickListener() {
+      public void onClick(View v) {
+        upHandler.processUp();
+      }
+    });
+  }
+
   private void updateRefreshVisibility(Activity activity) {
-    boolean visible =
-      (activity != null) &&
-      (activity.getIntent().getBooleanExtra(DemoActivity.USE_DEMO, false) == false);
+    boolean visible = (activity != null) && !DemoActivity.isInDemoMode(activity);
     findViewById(R.id.header_refresh).setVisibility(visible ? VISIBLE : GONE);
   }
 
   private void setBackVisible(int visible) {
     ImageView button = (ImageView)findViewById(R.id.header_back_arrow);
     button.setVisibility(visible);
-  }
-
-  public void navigateUp() {
-    activity.finish();
   }
 
   public void refresh() {

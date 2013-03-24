@@ -98,6 +98,10 @@ public class HttpsDataSync implements DataSync {
     }
   }
 
+  public void deleteTempFile() {
+    activity.deleteFile(LOCAL_TEMP_FILE_NAME);
+  }
+
   private class DownloadWebpage extends AsyncTask<URL, Integer, Boolean> {
     private Activity activity;
     private DataSyncCallback callback;

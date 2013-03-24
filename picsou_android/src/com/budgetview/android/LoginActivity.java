@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import com.budgetview.android.components.Header;
+import com.budgetview.android.components.UpHandler;
 import com.budgetview.android.datasync.DataSync;
 import com.budgetview.android.datasync.DataSyncCallback;
 import com.budgetview.android.datasync.DataSyncFactory;
@@ -18,7 +19,7 @@ public class LoginActivity extends Activity {
     setContentView(R.layout.login_page);
 
     Header header = (Header)findViewById(R.id.header);
-    header.setActivity(this);
+    header.init(this, new LoginUpHandler());
 
     showProgressBar(View.INVISIBLE);
   }
@@ -67,5 +68,15 @@ public class LoginActivity extends Activity {
     EditText emailView = (EditText)findViewById(R.id.login_email);
     EditText passwordView = (EditText)findViewById(R.id.login_password);
     return new LoginInfo(emailView.getText().toString(), passwordView.getText().toString());
+  }
+
+  private class LoginUpHandler implements UpHandler {
+    public String getLabel() {
+      return getResources().getString(R.string.app_name);
+    }
+
+    public void processUp() {
+      finish();
+    }
   }
 }

@@ -96,11 +96,19 @@ public class TransactionSet {
     return matcher;
   }
 
+  public boolean isSeriesList() {
+    return seriesEntityId != null;
+  }
+
   public Glob getSeriesValues() {
     if (seriesEntityId == null) {
       return null;
     }
     return repository.find(Key.create(SeriesValues.SERIES_ENTITY, seriesEntityId, SeriesValues.MONTH, monthId));
+  }
+
+  public boolean isAccountEntity() {
+    return accountId != null;
   }
 
   public Glob getAccountEntity() {

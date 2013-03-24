@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.widget.Button;
 import com.budgetview.android.components.Header;
+import com.budgetview.android.components.TabPage;
+import com.budgetview.android.components.UpHandler;
 import com.budgetview.android.utils.TransactionSet;
 import com.budgetview.shared.model.TransactionValues;
 import org.globsframework.model.GlobList;
@@ -61,8 +63,7 @@ public class TransactionPageActivity extends FragmentActivity {
     }
 
     Header header = (Header)findViewById(R.id.header);
-    header.setActivity(this);
-    header.setTitle(transactionSet.getSectionLabel());
+    header.init(this, new TransactionPageUpHandler(transactionSet));
 
     Button demoButton = (Button)findViewById(R.id.demoFooter);
     DemoActivity.install(demoButton, this);
@@ -94,4 +95,22 @@ public class TransactionPageActivity extends FragmentActivity {
     }
   }
 
+  private class TransactionPageUpHandler implements UpHandler {
+    private final TransactionSet transactionSet;
+
+    public TransactionPageUpHandler(TransactionSet transactionSet) {
+      this.transactionSet = transactionSet;
+    }
+
+    public String getLabel() {
+      return transactionSet.getSectionLabel();
+    }
+
+    public void processUp() {
+      Intent intent = new Intent(TransactionPageActivity.this, TransactionListActivity.class);
+      transactionSet.save(intent);
+      TabPage.copyDemoMode(TransactionPageActivity.this, intent);
+      startActivity(intent);
+    }
+  }
 }

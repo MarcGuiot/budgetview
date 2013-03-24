@@ -41,6 +41,10 @@ public class App extends Application {
     return iterator.next();
   }
 
+  public void reset() {
+    getRepository().deleteAll();
+  }
+
   public boolean isLoaded() {
     return getRepository().contains(BudgetAreaValues.TYPE);
   }

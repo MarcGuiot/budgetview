@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import com.budgetview.android.components.TabPage;
 import com.budgetview.android.components.TabPageHandler;
+import com.budgetview.android.components.UpHandler;
 import com.budgetview.shared.model.BudgetAreaEntity;
 import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
@@ -26,7 +27,7 @@ public class SeriesListActivity extends FragmentActivity {
     Glob budgetAreaEntity = app.getRepository().get(Key.create(BudgetAreaEntity.TYPE, budgetAreaId));
     String budgetAreaLabel = budgetAreaEntity.get(BudgetAreaEntity.LABEL);
 
-    TabPage page = new TabPage(this, budgetAreaLabel,
+    TabPage page = new TabPage(this, new SeriesListUpHandler(budgetAreaLabel, monthId),
                                monthId, new TabPageHandler() {
       public Fragment createFragmentWithArgs(int monthId) {
         SeriesListFragment fragment = new SeriesListFragment();
@@ -39,5 +40,27 @@ public class SeriesListActivity extends FragmentActivity {
       }
     });
     page.initView();
+  }
+
+  private class SeriesListUpHandler implements UpHandler {
+
+    private final String budgetAreaLabel;
+    private final int monthId;
+
+    public SeriesListUpHandler(String budgetAreaLabel, int monthId) {
+      this.budgetAreaLabel = budgetAreaLabel;
+      this.monthId = monthId;
+    }
+
+    public String getLabel() {
+      return budgetAreaLabel;
+    }
+
+    public void processUp() {
+      Intent intent = new Intent(SeriesListActivity.this, BudgetOverviewActivity.class);
+      intent.putExtra(BudgetOverviewActivity.MONTH_PARAMETER, monthId);
+      TabPage.copyDemoMode(SeriesListActivity.this, intent);
+      startActivity(intent);
+    }
   }
 }

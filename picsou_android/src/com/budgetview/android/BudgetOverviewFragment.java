@@ -60,6 +60,8 @@ public class BudgetOverviewFragment extends Fragment {
       addBudgetAreaBlocks(repository);
       addAccountBlocks(repository, AccountEntity.ACCOUNT_ID_MAIN, AccountEntityMatchers.main(), R.string.main_accounts_section);
       addAccountBlocks(repository, AccountEntity.ACCOUNT_ID_SAVINGS, AccountEntityMatchers.savings(), R.string.savings_accounts_section);
+
+      blocks.add(new LogoutBlockView(getActivity()));
     }
 
     private void addBudgetAreaBlocks(GlobRepository repository) {
