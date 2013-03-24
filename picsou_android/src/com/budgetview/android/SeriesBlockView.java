@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.budgetview.android.components.GaugeView;
 import com.budgetview.android.components.TabPage;
 import com.budgetview.android.utils.TransactionSet;
+import com.budgetview.shared.model.BudgetAreaEntity;
 import com.budgetview.shared.model.SeriesEntity;
 import com.budgetview.shared.model.SeriesValues;
 import com.budgetview.shared.utils.AmountFormat;
@@ -25,14 +26,16 @@ public class SeriesBlockView extends LinearLayout {
   }
 
   public void update(final int monthId, Glob seriesEntity, final Glob seriesValues, final Activity activity) {
+
+
     Views.setText(this, R.id.seriesLabel, seriesEntity.get(SeriesEntity.NAME));
 
-    updateAmounts(this, seriesValues);
+    updateAmounts(this, activity, seriesValues);
 
+    final App app = (App)activity.getApplication();
     findViewById(R.id.seriesBlock).setOnClickListener(new View.OnClickListener() {
       public void onClick(View view) {
         Intent intent = new Intent(activity, TransactionListActivity.class);
-        final App app = (App)activity.getApplication();
         TransactionSet transactionSet =
           new TransactionSet(monthId, seriesValues.get(SeriesValues.SERIES_ENTITY), null, app.getRepository());
         transactionSet.save(intent);
@@ -43,9 +46,13 @@ public class SeriesBlockView extends LinearLayout {
 
   }
 
-  public static void updateAmounts(View parentView, Glob seriesValues) {
-    Views.setText(parentView, R.id.seriesActual, seriesValues.get(SeriesValues.AMOUNT));
-    Views.setText(parentView, R.id.seriesPlanned, seriesValues.get(SeriesValues.PLANNED_AMOUNT));
+  public static void updateAmounts(View parentView, Activity activity, Glob seriesValues) {
+    final App app = (App)activity.getApplication();
+    Glob budgetAreaEntity = app.getRepository().findLinkTarget(seriesValues, SeriesValues.BUDGET_AREA);
+    boolean shouldInvert = budgetAreaEntity.get(BudgetAreaEntity.INVERT_AMOUNTS);
+
+    Views.setText(parentView, R.id.seriesActual, seriesValues.get(SeriesValues.AMOUNT), shouldInvert);
+    Views.setText(parentView, R.id.seriesPlanned, seriesValues.get(SeriesValues.PLANNED_AMOUNT), shouldInvert);
     GaugeView gaugeView = (GaugeView)parentView.findViewById(R.id.seriesGauge);
     gaugeView.getModel()
       .setValues(seriesValues.get(SeriesValues.AMOUNT, 0.00),

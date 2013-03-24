@@ -7,7 +7,7 @@ import com.budgetview.android.checkers.utils.ViewParser;
 import junit.framework.Assert;
 
 public class AmountBlockChecker {
-  public static void check(View view, int blockId, double planned, double actual) {
+  public static void check(View view, int blockId, String planned, String actual) {
     AmountsBlockView block = (AmountsBlockView)view.findViewById(blockId);
     if (block == null) {
       Assert.fail("No AmountBlockView found with id " + blockId + " in:\n " + ViewParser.toString(view));

@@ -143,6 +143,10 @@ public enum BudgetArea implements GlobConstantContainer {
     return isIncome() ? 1 : -1;
   }
 
+  public static boolean shouldInvertAmounts(BudgetArea area) {
+    return !area.isIncome() && (area != BudgetArea.UNCATEGORIZED);
+  }
+
   public static Set<org.globsframework.model.Key> getKeys(Set<BudgetArea> budgetAreas) {
     Set<org.globsframework.model.Key> keys = new HashSet<org.globsframework.model.Key>();
     for (BudgetArea budgetArea : budgetAreas) {

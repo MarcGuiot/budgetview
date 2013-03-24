@@ -16,6 +16,21 @@ public class AmountFormat {
     return toString(Math.abs(value));
   }
 
+  public static String toString(Double value, boolean invert) {
+    if (!invert) {
+      return toString(value);
+    }
+    else if (Amounts.isNullOrZero(value)) {
+      return "0.00";
+    }
+    else if (value < 0) {
+      return toString(-value);
+    }
+    else {
+      return "+" + toString(value);
+    }
+  }
+
   public static String toString(Double value) {
     if (value == null) {
       return "";

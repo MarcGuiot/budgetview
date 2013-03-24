@@ -8,7 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import com.budgetview.android.components.*;
+import com.budgetview.android.components.GaugeView;
+import com.budgetview.android.components.TabPage;
 import com.budgetview.android.utils.AbstractBlock;
 import com.budgetview.android.utils.SectionHeaderBlock;
 import com.budgetview.android.utils.TransactionSet;
@@ -60,8 +61,7 @@ public class BudgetOverviewFragment extends Fragment {
       addBudgetAreaBlocks(repository);
       addAccountBlocks(repository, AccountEntity.ACCOUNT_ID_MAIN, AccountEntityMatchers.main(), R.string.main_accounts_section);
       addAccountBlocks(repository, AccountEntity.ACCOUNT_ID_SAVINGS, AccountEntityMatchers.savings(), R.string.savings_accounts_section);
-
-      blocks.add(new LogoutBlockView(getActivity()));
+      addLogoutBlock();
     }
 
     private void addBudgetAreaBlocks(GlobRepository repository) {
@@ -89,6 +89,12 @@ public class BudgetOverviewFragment extends Fragment {
       blocks.add(new AccountPositionBlockView(summaryAccountEntityId, monthId, getActivity()));
       for (Glob accountEntity : accountList) {
         blocks.add(new AccountBlock(accountEntity));
+      }
+    }
+
+    private void addLogoutBlock() {
+      if (!DemoActivity.isInDemoMode(getActivity())) {
+        blocks.add(new LogoutBlockView(getActivity()));
       }
     }
 
@@ -154,8 +160,9 @@ public class BudgetOverviewFragment extends Fragment {
       }
 
       Views.setText(view, R.id.budgetAreaLabel, entity.get(BudgetAreaEntity.LABEL));
-      Views.setText(view, R.id.budgetAreaActual, budgetAreaValues.get(BudgetAreaValues.ACTUAL));
-      Views.setText(view, R.id.budgetAreaPlanned, budgetAreaValues.get(BudgetAreaValues.INITIALLY_PLANNED));
+      boolean invert = entity.get(BudgetAreaEntity.INVERT_AMOUNTS);
+      Views.setText(view, R.id.budgetAreaActual, budgetAreaValues.get(BudgetAreaValues.ACTUAL), invert);
+      Views.setText(view, R.id.budgetAreaPlanned, budgetAreaValues.get(BudgetAreaValues.INITIALLY_PLANNED), invert);
 
       GaugeView gaugeView = (GaugeView)view.findViewById(R.id.budgetAreaGauge);
       gaugeView.getModel()

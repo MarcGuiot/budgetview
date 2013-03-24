@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import com.budgetview.android.utils.SectionHeaderBlock;
+import com.budgetview.shared.model.BudgetAreaEntity;
 import com.budgetview.shared.model.BudgetAreaValues;
 import com.budgetview.shared.model.SeriesValues;
 import com.budgetview.shared.utils.SeriesValuesComparator;
@@ -34,13 +35,15 @@ public class SeriesListFragment extends Fragment {
 
     AmountsBlockView amountsBlock = (AmountsBlockView)view.findViewById(R.id.budget_area_amounts);
     App app = (App)getActivity().getApplication();
+    Glob budgetAreaEntity = app.getRepository().find(Key.create(BudgetAreaEntity.TYPE, budgetAreaId));
     Glob budgetAreaValues = app.getRepository().find(Key.create(BudgetAreaValues.BUDGET_AREA, budgetAreaId,
                                                                  BudgetAreaValues.MONTH, monthId));
     amountsBlock.update(budgetAreaValues,
                         BudgetAreaValues.ACTUAL,
                         BudgetAreaValues.INITIALLY_PLANNED,
                         BudgetAreaValues.OVERRUN,
-                        BudgetAreaValues.REMAINDER);
+                        BudgetAreaValues.REMAINDER,
+                        budgetAreaEntity.get(BudgetAreaEntity.INVERT_AMOUNTS));
 
     ListView list = (ListView)view.findViewById(R.id.seriesList);
     list.setAdapter(new SeriesListAdapter(inflater));

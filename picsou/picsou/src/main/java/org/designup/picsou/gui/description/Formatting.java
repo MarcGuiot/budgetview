@@ -55,18 +55,8 @@ public class Formatting extends AmountFormat {
   }
 
   public static String toString(Double value, BudgetArea area) {
-    if (area.isIncome() || area == BudgetArea.UNCATEGORIZED) {
-      return toString(value);
-    }
-    else if (Amounts.isNullOrZero(value)) {
-      return "0.00";
-    }
-    else if (value < 0) {
-      return toString(-value);
-    }
-    else {
-      return "+" + toString(value);
-    }
+    boolean invert = BudgetArea.shouldInvertAmounts(area);
+    return toString(value, invert);
   }
 
   public static String toString(int year, int month, int day) {

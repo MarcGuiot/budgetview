@@ -27,7 +27,8 @@ public class LoadBuilder {
     for (BudgetArea budgetArea : BudgetArea.values()) {
       tempRepository.create(BudgetAreaEntity.TYPE,
                             value(BudgetAreaEntity.ID, budgetArea.id),
-                            value(BudgetAreaEntity.LABEL, Strings.capitalize(budgetArea.name().toLowerCase()  )));
+                            value(BudgetAreaEntity.LABEL, Strings.capitalize(budgetArea.name().toLowerCase())),
+                            value(BudgetAreaEntity.INVERT_AMOUNTS, budgetArea.invertAmounts));
     }
     seriesEntitiesByName.put("Uncategorized",
                              tempRepository.create(SeriesEntity.TYPE,
@@ -123,7 +124,7 @@ public class LoadBuilder {
       }
     }
     else {
-      Assert.fail("Not supported - tbd");
+      remaining = seriesPlanned - newSeriesAmount;
     }
     tempRepository.update(currentSeriesValues.getKey(),
                           value(SeriesValues.AMOUNT, newSeriesAmount),
@@ -168,17 +169,19 @@ public class LoadBuilder {
   }
 
   private enum BudgetArea {
-    INCOME(0),
-    RECURRING(1),
-    VARIABLE(2),
-    EXTRAS(3),
-    SAVINGS(4),
-    UNCATEGORIZED(6);
+    INCOME(0, false),
+    RECURRING(1, true),
+    VARIABLE(2, true),
+    EXTRAS(3, true),
+    SAVINGS(4, true),
+    UNCATEGORIZED(6, false);
 
     private final int id;
+    private final boolean invertAmounts;
 
-    private BudgetArea(int id) {
+    private BudgetArea(int id, boolean invertAmounts) {
       this.id = id;
+      this.invertAmounts = invertAmounts;
     }
   }
 }

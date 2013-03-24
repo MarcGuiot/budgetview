@@ -21,7 +21,7 @@ public class AppRefreshTest extends AndroidAppTestCase {
     budgetOverview.checkSelectedTab("Mar");
 
     budgetOverview.initContent()
-      .add("Variable", -500.00, -50.00)
+      .add("Variable", "500.00", "50.00")
       .check();
 
     dataSync.prepareLoad(EMAIL, PASSWORD)
@@ -37,7 +37,7 @@ public class AppRefreshTest extends AndroidAppTestCase {
       .check();
 
     budgetOverview.initContent()
-      .add("Variable", -500.00, -150.00)
+      .add("Variable", "500.00", "150.00")
       .check();
 
     dataSync.checkAllCallsProcessed();
@@ -55,7 +55,7 @@ public class AppRefreshTest extends AndroidAppTestCase {
     budgetOverview.checkSelectedTab("Mar");
 
     budgetOverview.initContent()
-      .add("Variable", -500.00, -50.00)
+      .add("Variable", "500.00", "50.00")
       .check();
 
     dataSync.setConnectionAvailable(false);
@@ -63,7 +63,7 @@ public class AppRefreshTest extends AndroidAppTestCase {
     budgetOverview.header().refreshAndCheckError("You need an internet access to login");
 
     budgetOverview.initContent()
-      .add("Variable", -500.00, -50.00)
+      .add("Variable", "500.00", "50.00")
       .check();
 
     budgetOverview.initAccountContent()

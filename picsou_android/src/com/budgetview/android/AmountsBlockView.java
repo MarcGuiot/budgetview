@@ -15,7 +15,10 @@ public class AmountsBlockView extends LinearLayout {
     inflater.inflate(R.layout.amounts_block, this);
   }
 
-  public void update(Glob seriesValues, DoubleField actualAmount, DoubleField plannedAmount, DoubleField overrunAmount, DoubleField remainingAmount) {
+  public void update(Glob seriesValues,
+                     DoubleField actualAmount, DoubleField plannedAmount,
+                     DoubleField overrunAmount, DoubleField remainingAmount,
+                     boolean invertAmounts) {
     if (seriesValues == null) {
       setVisibility(GONE);
       return;
@@ -23,8 +26,8 @@ public class AmountsBlockView extends LinearLayout {
 
     setVisibility(VISIBLE);
 
-    Views.setText(this, R.id.actualAmount, seriesValues.get(actualAmount));
-    Views.setText(this, R.id.plannedAmount, seriesValues.get(plannedAmount));
+    Views.setText(this, R.id.actualAmount, seriesValues.get(actualAmount), invertAmounts);
+    Views.setText(this, R.id.plannedAmount, seriesValues.get(plannedAmount), invertAmounts);
     GaugeView gaugeView = (GaugeView)findViewById(R.id.amountsGauge);
     gaugeView.getModel()
       .setValues(seriesValues.get(actualAmount, 0.00),
