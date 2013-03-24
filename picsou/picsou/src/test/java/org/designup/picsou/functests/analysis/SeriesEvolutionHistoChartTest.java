@@ -262,6 +262,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     views.selectAnalysis();
 
     timeline.selectMonth("2009/07");
+    seriesAnalysis.toggleTable();
     seriesAnalysis.select("Income");
     seriesAnalysis.histoChart
       .checkColumnCount(14)

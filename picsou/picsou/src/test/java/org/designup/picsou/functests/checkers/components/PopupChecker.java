@@ -1,8 +1,10 @@
 package org.designup.picsou.functests.checkers.components;
 
+import junit.framework.Assert;
 import org.uispec4j.MenuItem;
 import org.uispec4j.Trigger;
 
+import javax.swing.*;
 import java.awt.*;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
@@ -20,6 +22,37 @@ public abstract class PopupChecker {
   public void checkChoices(String... actions) {
     MenuItem menu = openMenu();
     menu.contentEquals(actions).check();
+    close(menu);
+  }
+
+  public void checkItemSelected(String menuItem) {
+    checkCheckBoxItem(menuItem, menuItem + " is not selected", true);
+  }
+
+  public void checkItemUnselected(String menuItem) {
+    checkCheckBoxItem(menuItem, menuItem + " is selected", false);
+  }
+
+  private void checkCheckBoxItem(String menuItem, String message, boolean expected) {
+    MenuItem menu = openMenu();
+    JCheckBoxMenuItem item = (JCheckBoxMenuItem)menu.getSubMenu(menuItem).getAwtComponent();
+    Assert.assertEquals(message, expected, item.isSelected());
+    close(menu);
+  }
+
+  public void select(String menuItem) {
+    setCheckBoxSelected(menuItem, menuItem + " is already selected", true);
+  }
+
+  public void unselect(String menuItem) {
+    setCheckBoxSelected(menuItem, menuItem + " is not selected", false);
+  }
+
+  private void setCheckBoxSelected(String menuItem, String message, boolean selected) {
+    MenuItem menu = openMenu();
+    JCheckBoxMenuItem item = (JCheckBoxMenuItem)menu.getSubMenu(menuItem).getAwtComponent();
+    Assert.assertEquals(message, !selected, item.isSelected());
+    item.doClick();
     close(menu);
   }
 

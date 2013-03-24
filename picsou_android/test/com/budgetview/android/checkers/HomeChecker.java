@@ -21,4 +21,10 @@ public class HomeChecker extends AndroidChecker<HomeActivity> {
     Robolectric.shadowOf(connectButton).performClick();
     return new LoginChecker();
   }
+
+  public BudgetOverviewChecker openDemo() throws Exception {
+    Button demoButton = (Button)activity.findViewById(R.id.home_demo);
+    Robolectric.shadowOf(demoButton).performClick();
+    return new BudgetOverviewChecker();
+  }
 }

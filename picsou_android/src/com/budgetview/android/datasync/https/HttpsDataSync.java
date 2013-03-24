@@ -84,7 +84,7 @@ public class HttpsDataSync implements DataSync {
       parseAndLoadContent(reader);
       return true;
     }
-    catch (FileNotFoundException e) {
+    catch (Exception e) {
       return false;
     }
     finally {
@@ -236,7 +236,7 @@ public class HttpsDataSync implements DataSync {
     app.forceLocale("fr");
   }
 
-  private boolean canConnect() {
+  public boolean canConnect() {
     ConnectivityManager connMgr = (ConnectivityManager)
       activity.getSystemService(Context.CONNECTIVITY_SERVICE);
     NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();

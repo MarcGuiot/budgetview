@@ -1,6 +1,7 @@
 package com.budgetview.android;
 
 import com.budgetview.android.checkers.BudgetOverviewChecker;
+import com.budgetview.android.checkers.HomeChecker;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -72,4 +73,15 @@ public class AppRefreshTest extends AndroidAppTestCase {
     dataSync.checkAllCallsProcessed();
   }
 
+  @Test public void testRefreshHiddenInDemoMode() throws Exception {
+
+    dataSync.prepareOpenDemo()
+      .addMainAccount("account1", 201303, 10, 1000.0)
+      .addVariableSeries("Groceries", 201303, -500.00)
+      .addTransactionToSeries("Carrefour", 5, -50.00);
+
+    HomeChecker home = app.start();
+    BudgetOverviewChecker overview = home.openDemo();
+    overview.checkRefreshHidden();
+  }
 }

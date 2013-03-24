@@ -30,6 +30,9 @@ public class HeaderChecker {
     if (refreshView == null) {
       Assert.fail("No refresh button found in \n" + ViewParser.toString(header));
     }
+    if (refreshView.getVisibility() != View.VISIBLE) {
+      Assert.fail("Refresh button hidden in \n" + ViewParser.toString(header));
+    }
     ShadowImageView refresh = Robolectric.shadowOf((ImageView)refreshView);
     refresh.performClick();
   }

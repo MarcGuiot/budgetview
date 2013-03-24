@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.HistoDailyChecker;
+import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.functests.checkers.converters.BankDateCellConverter;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.functests.checkers.converters.SeriesCellConverter;
@@ -10,9 +11,9 @@ import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
-import org.globsframework.utils.collections.IntSet;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.collections.IntSet;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
@@ -34,7 +35,6 @@ public class TransactionChecker extends ViewChecker {
 
   private Table table;
   private Table amountTable;
-  private CheckBox showPlannedTransactionsCheckbox;
   private TextBox searchField;
   private boolean useDisplayedDates;
 
@@ -331,25 +331,32 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public TransactionChecker hidePlannedTransactions() {
-    getShowPlannedTransactionsCheckbox().unselect();
+    openActionPopup().unselect(Lang.get("transactionView.showPlannedTransactions"));
     return this;
   }
 
-  public void checkShowsPlannedTransaction(boolean show) {
-    UISpecAssert.assertEquals(show, getShowPlannedTransactionsCheckbox().isSelected());
+  public TransactionChecker checkShowsPlannedTransactions() {
+    openActionPopup().checkItemSelected(Lang.get("transactionView.showPlannedTransactions"));
+    return this;
+  }
+
+  public TransactionChecker checkHidesPlannedTransactions() {
+    openActionPopup().checkItemUnselected(Lang.get("transactionView.showPlannedTransactions"));
+    return this;
   }
 
   public TransactionChecker showPlannedTransactions() {
-    getShowPlannedTransactionsCheckbox().select();
+    openActionPopup().select(Lang.get("transactionView.showPlannedTransactions"));
     return this;
   }
 
-  private CheckBox getShowPlannedTransactionsCheckbox() {
-    if (showPlannedTransactionsCheckbox == null) {
-      views.selectData();
-      showPlannedTransactionsCheckbox = mainWindow.getCheckBox("showPlannedTransactions");
-    }
-    return showPlannedTransactionsCheckbox;
+  private PopupButton openActionPopup() {
+    views.selectData();
+    return new PopupButton(mainWindow.getButton("actionsMenu"));
+  }
+
+  public void copyTable() {
+    openActionPopup().click(Lang.get("copyTable"));
   }
 
   public void copy(int row, int... rows) {
@@ -375,7 +382,7 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public void setUseDisplayedDates() {
-    this.useDisplayedDates= true;
+    this.useDisplayedDates = true;
     this.table = null;
   }
 
@@ -389,7 +396,7 @@ public class TransactionChecker extends ViewChecker {
                                             .getSubMenu("Edit")
                                             .triggerClick());
   }
-  
+
   public void checkEditionRejected(int[] rowIndices, String message) {
     Table table = getTable();
     table.selectRows(rowIndices);

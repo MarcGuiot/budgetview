@@ -74,10 +74,8 @@
         <grid>
           <label gridPos="(0,0,2,1)"
                  ref="userLabel" weightX="100" fill="horizontal" marginBottom="5"/>
-          <button gridPos="(2,0,1,1)"
-                  ref="transactionActions" tooltipText="$budgetView.actions.tooltip"
-                  icon="arrow_down.png" rolloverIcon="arrow_down_roll.png"
-                  styleClass="hyperlink" foreground="#0000FF" marginBottom="5"/>
+          <button gridPos="(2,0,1,1)" ref="transactionActions" styleClass="actionsButton"
+                  marginBottom="5"/>
 
           <htmlEditorPane gridPos="(0,1,3,1)"
                           ref="originalLabel" foreground="transaction.detail.formLabel" font="-,plain,10"/>

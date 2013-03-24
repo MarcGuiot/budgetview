@@ -2,11 +2,9 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
-import org.designup.picsou.functests.checkers.components.HistoChartChecker;
-import org.designup.picsou.functests.checkers.components.PopupChecker;
-import org.designup.picsou.functests.checkers.components.StackChecker;
-import org.designup.picsou.functests.checkers.components.TableChecker;
+import org.designup.picsou.functests.checkers.components.*;
 import org.designup.picsou.gui.series.analysis.SeriesEvolutionTableView;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.uispec4j.Button;
@@ -212,20 +210,57 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker<SeriesAnalysis
     throw new AssertionFailedError("unexpected component: " + panel.getDescription());
   }
 
-  public void checkClipboardExport(String expectedClipboardContent) throws Exception {
+  public void checkSelectionClipboardExport(int[] indices, String expectedClipboardContent) throws Exception {
+
+    Clipboard.putText("something to clean up the clipboard before running the test");
 
     Table table = getTable();
-    table.selectAllRows();
+    table.selectRows(indices);
     KeyUtils.pressKey(table, org.uispec4j.Key.plaformSpecificCtrl(org.uispec4j.Key.C));
-    Assert.assertEquals(expectedClipboardContent, Clipboard.getContentAsText());
+    checkClipboardContent(expectedClipboardContent);
 
-    Clipboard.putText("something to clean up the clipboard before starting again");
+    Clipboard.putText("something to clean up the clipboard before running the test");
 
     PopupMenuInterceptor
-      .run(getTable().triggerRightClick(0, 0))
+      .run(getTable().triggerRightClick(indices[0], 0))
       .getSubMenu("Copy")
       .click();
-    Assert.assertEquals(expectedClipboardContent, Clipboard.getContentAsText());
+    checkClipboardContent(expectedClipboardContent);
+  }
+
+  private void checkClipboardContent(String expectedClipboardContent) throws Exception {
+    assertRowsEqual(expectedClipboardContent, Clipboard.getContentAsText());
+  }
+
+  private void assertRowsEqual(String expected, String actual) {
+    String[] expectedRows = expected.split("\n");
+    String[] actualRows = expected.split("\n");
+    if (!rowsEqual(expectedRows, actualRows)) {
+      Assert.assertEquals(expected, actual);
+    }
+  }
+
+  private boolean rowsEqual(String[] expectedRows, String[] actualRows) {
+    if (expectedRows.length != actualRows.length) {
+      return false;
+    }
+    for (int i = 0; i < expectedRows.length; i++) {
+      if (!actualRows[i].startsWith(expectedRows[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public void checkTableClipboardExport(String expectedClipboardContent) throws Exception {
+    Clipboard.putText("something to clean up the clipboard before running the test");
+    getActionsPopup().click(Lang.get("copyTable"));
+    checkClipboardContent(expectedClipboardContent);
+  }
+
+  private PopupButton getActionsPopup() {
+    views.selectAnalysis();
+    return new PopupButton(getPanel().getButton("actionsMenu"));
   }
 
   public SeriesAnalysisChecker checkHistoChartLabel(String text) {
@@ -453,5 +488,15 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker<SeriesAnalysis
         return PopupMenuInterceptor.run(table.triggerRightClick(rows[0], columnIndex));
       }
     };
+  }
+
+  public SeriesAnalysisChecker expandAll() {
+    getActionsPopup().click(Lang.get("expand"));
+    return this;
+  }
+
+  public SeriesAnalysisChecker collapseAll() {
+    getActionsPopup().click(Lang.get("collapse"));
+    return this;
   }
 }

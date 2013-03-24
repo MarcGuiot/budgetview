@@ -7,7 +7,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class CreateMobileAccountAction extends AbstractAction{
+public class CreateMobileAccountAction extends AbstractAction {
   private final Directory directory;
   private final GlobRepository repository;
 

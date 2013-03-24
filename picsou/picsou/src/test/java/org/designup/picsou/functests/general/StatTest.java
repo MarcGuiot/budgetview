@@ -170,7 +170,7 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .validate();
 
     transactions
-      .showPlannedTransactions()
+      .checkShowsPlannedTransactions()
       .initContent()
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, "courses")
       .add("01/07/2008", TransactionType.PRELEVEMENT, "Salaire", "", -200.00, "Salaire")

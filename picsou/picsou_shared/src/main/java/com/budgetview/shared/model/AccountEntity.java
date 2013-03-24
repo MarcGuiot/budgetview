@@ -36,8 +36,8 @@ public class AccountEntity {
   @NoObfuscation
   public static IntegerField SEQUENCE_NUMBER;
 
-  public static Integer ACCOUNT_ID_MAIN = 1;
-  public static Integer ACCOUNT_ID_SAVINGS = 2;
+  public static Integer ACCOUNT_ID_MAIN = -1;
+  public static Integer ACCOUNT_ID_SAVINGS = -2;
 
   public static Integer ACCOUNT_TYPE_MAIN = -1;
   public static Integer ACCOUNT_TYPE_SAVINGS = -2;

@@ -401,7 +401,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     views.selectData();
     timeline.selectAll();
 
-    transactions.checkShowsPlannedTransaction(false);
+    transactions.checkHidesPlannedTransactions();
     transactions.initContent()
       .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00, "Nounou")
       .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
@@ -420,6 +420,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00)
       .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00, "Voiture")
       .check();
+    transactions.checkShowsPlannedTransactions();
 
     transactions.hidePlannedTransactions();
     transactions.initContent()
@@ -458,6 +459,12 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
                         "2006/05/02\t2006/05/02\t\tSG\t-200.00\t\t130.00\t130.00\tAccount n. 00001123",
                         Clipboard.getContentAsText().trim());
 
-
+    transactions.copyTable();
+    Assert.assertEquals("Operation date\tBank date\tSeries\tLabel\tAmount\tNote\tAccount position\tTotal position\tAccount\n" +
+                        "2006/05/06\t2006/05/06\t\tNOUNOU\t-100.00\tnourrice\t0.00\t0.00\tAccount n. 00001123\n" +
+                        "2006/05/03\t2006/05/03\t\tPEAGE\t-30.00\t\t100.00\t100.00\tAccount n. 00001123\n" +
+                        "2006/05/02\t2006/05/02\t\tSG\t-200.00\t\t130.00\t130.00\tAccount n. 00001123\n" +
+                        "2006/05/01\t2006/05/01\t\tESSENCE\t-70.00\tfrais pro\t330.00\t330.00\tAccount n. 00001123",
+                        Clipboard.getContentAsText().trim());
   }
 }

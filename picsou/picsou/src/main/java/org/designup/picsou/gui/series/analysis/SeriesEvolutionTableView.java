@@ -2,6 +2,7 @@ package org.designup.picsou.gui.series.analysis;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.card.NavigationPopup;
+import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.expansion.*;
 import org.designup.picsou.gui.model.SeriesStat;
@@ -146,6 +147,13 @@ public class SeriesEvolutionTableView extends View {
       }
     });
 
+    JPopupMenu menu = new JPopupMenu();
+    menu.add(new ExpandTableAction(expansionModel));
+    menu.add(new CollapseTableAction(expansionModel));
+    menu.addSeparator();
+    menu.add(tableView.getCopyTableAction(Lang.get("copyTable"), 0));
+    builder.add("actionsMenu", new JPopupButton(Lang.get("actions"), menu));
+
     parentSelectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         SortedSet<Integer> monthIds = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
@@ -232,14 +240,6 @@ public class SeriesEvolutionTableView extends View {
     return size;
   }
 
-  public Action getExpandAction() {
-    return new ExpandTableAction(expansionModel);
-  }
-
-  public Action getCollapseAction() {
-    return new CollapseTableAction(expansionModel);
-  }
-
   private class ActiveSeriesMatcher implements GlobMatcher {
     public boolean matches(Glob wrapper, GlobRepository repository) {
       if (!SeriesWrapperType.SERIES.isOfType(wrapper)) {
@@ -290,7 +290,7 @@ public class SeriesEvolutionTableView extends View {
         popup.addSeparator();
       }
 
-      popup.add(tableView.getCopyAction(Lang.get("copy")));
+      popup.add(tableView.getCopySelectionAction(Lang.get("copy"), 0));
       return popup;
     }
   }

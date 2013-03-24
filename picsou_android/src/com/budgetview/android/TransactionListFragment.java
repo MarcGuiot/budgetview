@@ -85,6 +85,15 @@ public class TransactionListFragment extends Fragment {
       if (index == 0) {
         return "Header";
       }
+      if (isAccountView) {
+        if (transactionValuesList.isEmpty() || index < 3) {
+          return "Account info";
+        }
+        return transactionValuesList.get(index - 3);
+      }
+      if (transactionValuesList.isEmpty()) {
+        return "Account info";
+      }
       return transactionValuesList.get(index - 1);
     }
 

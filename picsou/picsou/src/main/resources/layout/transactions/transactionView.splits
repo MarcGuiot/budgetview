@@ -33,9 +33,7 @@
             </row>
 
             <row>
-              <checkBox ref="showPlannedTransactions"
-                        text="$transactionView.showPlannedTransactions"
-                        weightX="0"/>
+              <button ref="actionsMenu" styleClass="actionsButton"/>
 
               <filler fill="horizontal"/>
 

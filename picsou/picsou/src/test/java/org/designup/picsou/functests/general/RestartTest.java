@@ -430,7 +430,6 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     views.selectData();
     transactions
-      .showPlannedTransactions()
       .initContent()
       .add("27/02/2009", TransactionType.PLANNED, "Planned: Salaire", "", 1000.00, "Salaire")
       .add("11/02/2009", TransactionType.PLANNED, "Planned: Course", "", -400.00, "Course")

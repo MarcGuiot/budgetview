@@ -355,7 +355,6 @@ public class ConfigService {
       postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
       postMethod.setHeader(HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
       postMethod.setHeader(ComCst.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
-      System.err.println("ConfigService.sendMobileData " + sha1Mail);
       postMethod.setHeader(ComCst.MAJOR_VERSION_NAME, Integer.toString(MobileModel.MAJOR_VERSION));
       postMethod.setHeader(ComCst.MINOR_VERSION_NAME, Integer.toString(MobileModel.MINOR_VERSION));
       postMethod.setEntity(new ByteArrayEntity(data));

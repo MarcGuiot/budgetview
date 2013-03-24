@@ -53,7 +53,7 @@
   <string name="homeDemoMessage">Vous découvrez BudgetView ?</string>
 
   <string name="demoFooter">Découvrez BudgetView !</string>
-  <string name="demoLinkMessage">Voir le site :</string>
+  <string name="demoLinkMessage">Accedez à notre site :</string>
   <string name="demoLink">http://www.mybudgetview.fr</string>
   <string name="demoTitle">Découvrez BudgetView!</string>
   <string name="demoPlatforms">Mac/Windows/Linux</string>
@@ -66,6 +66,7 @@
   <string name="demoEmailSent">Un email vous a été envoyé</string>
   <string name="demoEmailSendingFailure">L\'email n\'a pas pu vous être envoyé</string>
   <string name="demoEmailConnectionUnavailable">Vous devez avoir une connexion Internet pour cela</string>
+  <string name="demoScreenshotDescription">BudgetView</string>
 
   <string name="transactionAccount">Compte</string>
   <string name="transactionSeries">Enveloppe</string>

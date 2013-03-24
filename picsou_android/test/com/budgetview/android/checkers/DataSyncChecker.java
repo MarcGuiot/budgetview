@@ -32,6 +32,12 @@ public class DataSyncChecker {
     return expectLoad.loadBuilder;
   }
 
+  public LoadBuilder prepareOpenDemo() {
+    ExpectLoadDemoFile expectLoad = new ExpectLoadDemoFile();
+    expectations.push(expectLoad);
+    return expectLoad.loadBuilder;
+  }
+
   public void checkAllCallsProcessed() {
     if (!expectations.isEmpty()) {
       Assert.fail("Remaining items: " + expectations.toString());
@@ -92,8 +98,11 @@ public class DataSyncChecker {
   }
 
   private class ExpectLoadDemoFile implements Expectation {
+    private final LoadBuilder loadBuilder = new LoadBuilder();
+
     public void loadDemoFile() {
-      Assert.fail("tbd");
+      GlobRepository repository = getApp().getRepository();
+      loadBuilder.apply(repository);
     }
   }
 
