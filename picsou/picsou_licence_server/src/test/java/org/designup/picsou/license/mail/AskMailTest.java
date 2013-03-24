@@ -1,5 +1,6 @@
 package org.designup.picsou.license.mail;
 
+import com.budgetview.shared.utils.ComCst;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -55,7 +56,7 @@ public class AskMailTest extends ConnectedTestCase {
     postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, "UTF-8");
     postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_ELEMENT_CHARSET, "UTF-8");
     postMethod.setHeader(ConfigService.HEADER_MAIL, "monPremierClient@pirate.du");
-    postMethod.setHeader(ConfigService.HEADER_LANG, lang);
+    postMethod.setHeader(ComCst.HEADER_LANG, lang);
     return client.execute(postMethod);
   }
 
@@ -65,7 +66,7 @@ public class AskMailTest extends ConnectedTestCase {
     postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, "UTF-8");
     postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_ELEMENT_CHARSET, "UTF-8");
     postMethod.setHeader(ConfigService.HEADER_MAIL, badMail);
-    postMethod.setHeader(ConfigService.HEADER_LANG, "en");
+    postMethod.setHeader(ComCst.HEADER_LANG, "en");
     HttpResponse response = client.execute(postMethod);
     Header header = response.getFirstHeader(ConfigService.HEADER_STATUS);
     assertEquals(ConfigService.HEADER_MAIL_UNKNOWN, header.getValue());

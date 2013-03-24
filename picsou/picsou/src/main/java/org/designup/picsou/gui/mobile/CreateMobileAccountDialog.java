@@ -117,6 +117,7 @@ public class CreateMobileAccountDialog {
             Ref<String> messageRef = new Ref<String>();
             boolean isOk = localDirectory.get(ConfigService.class)
               .createMobileAccount(UserPreferences.get(localRepository).get(UserPreferences.MAIL_FOR_MOBILE),
+                                   UserPreferences.get(localRepository).get(UserPreferences.PASSWORD_FOR_MOBILE),
                                    messageRef);
 
             progressBar.stop();

@@ -1,5 +1,6 @@
 package org.designup.picsou.license.servlet;
 
+import com.budgetview.shared.utils.ComCst;
 import org.apache.log4j.Logger;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.mail.Mailer;
@@ -34,7 +35,7 @@ public class SendMailServlet extends HttpServlet {
 
       String mailFrom = req.getHeader(ConfigService.HEADER_MAIL);
       String title = req.getHeader(ConfigService.HEADER_MAIL_TITLE);
-      String lang = req.getHeader(ConfigService.HEADER_LANG);
+      String lang = req.getHeader(ComCst.HEADER_LANG);
       String header = req.getHeader(ConfigService.HEADER_MAIL_CONTENT);
       String content;
       if (header != null) {

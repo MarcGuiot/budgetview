@@ -197,18 +197,17 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
       return;
     }
 
-    Integer transactionSubSeriesKey = transactionSubSeriesKeys.iterator().next();
-    if (transactionSubSeriesKey != null) {
-      return;
-    }
 
     Integer transactionSeriesKey = transactionSeriesKeys.iterator().next();
 
     Glob transactionSeries = repository.find(Key.create(Series.TYPE, transactionSeriesKey));
     if (transactionSeries.get(Series.BUDGET_AREA).equals(selectorSeries.get(Series.BUDGET_AREA)) &&
         !Series.UNCATEGORIZED_SERIES_ID.equals(transactionSeries.get(Series.ID))) {
-      boolean select = transactionSeries.getKey().equals(seriesKey);
-      selector.setSelected(select);
+      Integer transactionSubSeriesKey = transactionSubSeriesKeys.iterator().next();
+      if (transactionSubSeriesKey == null) {
+        boolean select = transactionSeries.getKey().equals(seriesKey);
+        selector.setSelected(select);
+      }
     }
     else {
       invisibleSelector.setSelected(true);

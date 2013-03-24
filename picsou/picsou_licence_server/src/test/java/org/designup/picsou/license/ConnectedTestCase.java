@@ -24,7 +24,6 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
-    UISpec4J.setAssertionTimeLimit(1500);
     LoggedInFunctionalTestCase.resetWindow();
     BrowsingService.setDummyBrowser(true);
     Locale.setDefault(Locale.ENGLISH);
@@ -44,6 +43,7 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
 //    Protocol.registerProtocol("http", http);
 
     ftpServer = new FtpServerChecker(12000);
+    UISpec4J.setAssertionTimeLimit(5000);
   }
 
   protected void tearDown() throws Exception {

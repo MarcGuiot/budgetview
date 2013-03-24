@@ -12,6 +12,7 @@ import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.designup.picsou.functests.checkers.ApplicationChecker;
+import org.designup.picsou.functests.checkers.CreateMobileAccountChecker;
 import org.designup.picsou.functests.checkers.MessageDialogChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.license.ConnectedTestCase;
@@ -40,13 +41,12 @@ public class MobileTest extends ConnectedTestCase {
 
   public void testCreateAccount() throws Exception {
     String mail = "test@mybudgetview.fr";
-    String url = requestMobileAccount(mail);
+    String url = requestMobileAccount(mail, "hello");
     followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok");
     application.openMobileAccountDialog()
       .setEmail(mail)
       .setPassword("hello")
-      .validateAndCheckAlreadyCreated()
-      .close();
+      .validateAndClose();
   }
 
   public void testEmptyEmailAndPasswordMessages() throws Exception {
@@ -64,42 +64,70 @@ public class MobileTest extends ConnectedTestCase {
 
   public void testGetData() throws Exception {
     String mail = "test@mybudgetview.fr";
-    String url = requestMobileAccount(mail);
-    followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok");
+    {
+      String url = requestMobileAccount(mail, "hello");
+      followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok");
 
-    String path = OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/10", -1.1, "TX 1")
-      .addTransaction("2006/01/11", -2.2, "TX 2")
-      .save();
-    application.getOperations().importOfxFile(path);
+      String path = OfxBuilder
+        .init(this)
+        .addTransaction("2006/01/10", -1.1, "TX 1")
+        .addTransaction("2006/01/11", -2.2, "TX 2")
+        .save();
+      application.getOperations().importOfxFile(path);
 
-    MessageDialogChecker messageDialogChecker = application.getOperations().sendDataToServer();
-    messageDialogChecker.checkSuccessMessageContains("Data sent to server")
-    .close();
-    HttpClient httpClient = new DefaultHttpClient();
-    URIBuilder builder = new URIBuilder("http://localhost:" + httpPort + ComCst.GET_MOBILE_DATA);
-    Crypt crypt = new Crypt("hello".toCharArray());
-    builder.addParameter("mail", URLEncoder.encode(mail, "UTF-8"));
-    builder.addParameter(ComCst.CRYPTED_INFO,
-                         URLEncoder.encode(Crypt.encodeSHA1AndHex(crypt.encodeData(mail.getBytes("UTF-8"))), "UTF-8"));
-    HttpGet method = new HttpGet(builder.build());
-    HttpResponse response = httpClient.execute(method);
-    assertEquals(200, response.getStatusLine().getStatusCode());
-    DefaultGlobRepository repository = new DefaultGlobRepository(new DefaultGlobIdGenerator());
-    InputStream content = response.getEntity().getContent();
-    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    Files.copyStream(content, stream);
-    String s = crypt.decodeAndUnzipData(stream.toByteArray());
-    XmlGlobParser.parse(MobileModel.get(), repository, new StringReader(s), "globs");
-    GlobList all = repository.getAll();
-    assertFalse(all.isEmpty());
+      MessageDialogChecker messageDialogChecker = application.getOperations().sendDataToServer();
+      messageDialogChecker.checkSuccessMessageContains("Data sent to server")
+        .close();
+      HttpClient httpClient = new DefaultHttpClient();
+      URIBuilder builder = new URIBuilder("http://localhost:" + httpPort + ComCst.GET_MOBILE_DATA);
+      Crypt crypt = new Crypt("hello".toCharArray());
+      builder.addParameter("mail", URLEncoder.encode(mail, "UTF-8"));
+      builder.addParameter(ComCst.CRYPTED_INFO,
+                           URLEncoder.encode(Crypt.encodeSHA1AndHex(crypt.encodeData(mail.getBytes("UTF-8"))), "UTF-8"));
+      HttpGet method = new HttpGet(builder.build());
+      HttpResponse response = httpClient.execute(method);
+      assertEquals(200, response.getStatusLine().getStatusCode());
+      DefaultGlobRepository repository = new DefaultGlobRepository(new DefaultGlobIdGenerator());
+      InputStream content = response.getEntity().getContent();
+      ByteArrayOutputStream stream = new ByteArrayOutputStream();
+      Files.copyStream(content, stream);
+      String s = crypt.decodeAndUnzipData(stream.toByteArray());
+      XmlGlobParser.parse(MobileModel.get(), repository, new StringReader(s), "globs");
+      GlobList all = repository.getAll();
+      assertFalse(all.isEmpty());
+
+      // change password
+      String url2 = newPasswordRequest(mail, "hello2");
+
+      messageDialogChecker = application.getOperations().sendDataToServer();
+      messageDialogChecker.checkErrorMessageContains("Fail to sent data to server: Password has change")
+        .close();
+
+      followUrl(url2, 302, "http://www.mybudgetview.com/mobile/account-already-present");
+
+      messageDialogChecker = application.getOperations().sendDataToServer();
+      messageDialogChecker.checkSuccessMessageContains("Data sent to server")
+        .close();
+    }
+
+    //try download with previous password.
+    {
+      HttpClient httpClient = new DefaultHttpClient();
+      URIBuilder builder = new URIBuilder("http://localhost:" + httpPort + ComCst.GET_MOBILE_DATA);
+      Crypt crypt = new Crypt("hello".toCharArray());
+      builder.addParameter("mail", URLEncoder.encode(mail, "UTF-8"));
+      builder.addParameter(ComCst.CRYPTED_INFO,
+                           URLEncoder.encode(Crypt.encodeSHA1AndHex(crypt.encodeData(mail.getBytes("UTF-8"))), "UTF-8"));
+      HttpGet method = new HttpGet(builder.build());
+      HttpResponse response = httpClient.execute(method);
+      assertEquals(403, response.getStatusLine().getStatusCode());
+    }
   }
 
   public void testAlreadyActivated() throws Exception {
     String mail = "test@mybudgetview.fr";
-    String url1 = requestMobileAccount(mail);
-    String url2 = requestMobileAccount(mail);
+    String url1 = requestMobileAccount(mail, "hello");
+    String url2 = requestMobileAccount(mail, "hello");
     followUrl(url1, 302, "http://www.mybudgetview.com/mobile/account-ok");
     followUrl(url2, 302, "http://www.mybudgetview.com/mobile/account-already-present");
   }
@@ -108,7 +136,7 @@ public class MobileTest extends ConnectedTestCase {
     File directory = new File("/tmp/data/");
     Files.deleteSubtree(directory);
     String mail = "test@mybudgetview.fr";
-    String url = requestMobileAccount(mail);
+    String url = requestMobileAccount(mail, "hello");
     followUrl(url, 302, "http://www.mybudgetview.com/mobile/internal-error");
   }
 
@@ -124,10 +152,20 @@ public class MobileTest extends ConnectedTestCase {
     assertEquals(expectedRedirect, locationHeader.getValue());
   }
 
-  private String requestMobileAccount(String userMail) throws InterruptedException {
-    application.openMobileAccountDialog()
-      .setEmail(userMail)
-      .setPassword("hello")
+  private String newPasswordRequest(String userMail, final String password) throws InterruptedException {
+    return requestMobileAccount(userMail, password, true);
+  }
+  private String requestMobileAccount(String userMail, final String password) throws InterruptedException {
+    return requestMobileAccount(userMail, password, false);
+  }
+
+    private String requestMobileAccount(String userMail, final String password, boolean sameUser) throws InterruptedException {
+    CreateMobileAccountChecker checker = application.openMobileAccountDialog();
+    if (!sameUser){
+      checker.setEmail(userMail);
+    }
+
+    checker.setPassword(password)
       .validateAndClose();
     Email email = mailServer.checkReceivedMail(userMail);
     email.checkContains("http");

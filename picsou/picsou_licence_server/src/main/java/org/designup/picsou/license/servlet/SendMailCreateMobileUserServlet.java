@@ -1,5 +1,6 @@
 package org.designup.picsou.license.servlet;
 
+import com.budgetview.shared.utils.ComCst;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.log4j.Logger;
@@ -29,9 +30,10 @@ public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
   }
 
   protected void action(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-    String lang = httpServletRequest.getHeader(ConfigService.HEADER_LANG);
+    String lang = httpServletRequest.getHeader(ComCst.HEADER_LANG);
     String mail = URLDecoder.decode(httpServletRequest.getHeader(ConfigService.HEADER_MAIL), "UTF-8");
     String codedMail = httpServletRequest.getHeader(ConfigService.CODING);
+    String sha1Mail = httpServletRequest.getHeader(ComCst.CRYPTED_INFO);
 
     byte[] decryptedMail = CreateMobileUserServlet.encryptor.decrypt(Base64.decodeBase64(URLDecoder.decode(codedMail, "UTF-8").getBytes()));
     if (!Arrays.equals(decryptedMail, mail.getBytes("UTF-8"))) {
@@ -41,20 +43,19 @@ public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
     }
     String dirName = ReceiveDataServlet.generateDirName(mail);
     File dir = new File(root, dirName);
-    if (!dir.exists()) {
-      URIBuilder builder = new URIBuilder("http://www.mybudgetview.fr:" + port+ LicenseServer.CREATE_MOBILE_USER);
-      builder.addParameter(ConfigService.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
-      builder.addParameter(ConfigService.HEADER_LANG, lang);
-      builder.addParameter(ConfigService.CODING, codedMail);
-
-      String asciiUrl = builder.build().toASCIIString();
-      mailer.sendNewMobileAccount(mail, lang, asciiUrl);
-      httpServletResponse.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
-    }
-    else {
+    if (dir.exists()) {
       String content = "Directory already exist " + dir.getAbsolutePath();
-      logger.error(content + " : " + mail);
-      httpServletResponse.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
+      logger.info(content + " : " + mail);
     }
+    URIBuilder builder = new URIBuilder("http://www.mybudgetview.fr:" + port+ LicenseServer.CREATE_MOBILE_USER);
+    builder.addParameter(ConfigService.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
+    builder.addParameter(ComCst.HEADER_LANG, lang);
+    builder.addParameter(ConfigService.CODING, codedMail);
+    builder.addParameter(ComCst.CRYPTED_INFO, sha1Mail);
+
+    String asciiUrl = builder.build().toASCIIString();
+    mailer.sendNewMobileAccount(mail, lang, asciiUrl);
+    httpServletResponse.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
+    httpServletResponse.setStatus(HttpServletResponse.SC_OK);
   }
 }

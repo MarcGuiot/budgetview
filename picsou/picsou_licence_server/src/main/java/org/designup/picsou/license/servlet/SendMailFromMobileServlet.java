@@ -2,9 +2,7 @@ package org.designup.picsou.license.servlet;
 
 import com.budgetview.shared.utils.ComCst;
 import org.apache.log4j.Logger;
-import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.mail.Mailer;
-import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -34,7 +32,7 @@ public class SendMailFromMobileServlet extends HttpServlet {
         resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         return;
       }
-      String lang = req.getParameter(ConfigService.HEADER_LANG);
+      String lang = req.getParameter(ComCst.HEADER_LANG);
       if (Strings.isNullOrEmpty(lang)){
         lang = "fr";
       }

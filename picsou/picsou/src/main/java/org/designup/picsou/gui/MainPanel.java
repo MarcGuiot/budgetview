@@ -75,6 +75,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.repository.ReplicationGlobRepository;
+import org.globsframework.utils.Ref;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -428,7 +429,7 @@ public class MainPanel {
   }
 
   public void end() {
-    SendMobileDataAction.sendToMobile(repository, directory.get(ConfigService.class));
+    SendMobileDataAction.sendToMobile(repository, directory.get(ConfigService.class), new Ref<String>());
   }
 
   private class MainPanelLogoutService implements LogoutService {

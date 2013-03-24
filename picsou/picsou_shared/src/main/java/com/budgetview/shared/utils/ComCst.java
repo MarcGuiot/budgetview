@@ -9,6 +9,7 @@ public class ComCst {
   public static final String SEND_MAIL_REMINDER_FROM_MOBILE = "/sendMailFromMobile";
 
   public static final String STATUS = "STATUS";
-  public static final String CRYPTED_INFO = "INFO";
+  public static final String CRYPTED_INFO = "info";
   public static final String MAIL = "mail";
+  public static final String HEADER_LANG = "lang";
 }

@@ -33,11 +33,12 @@ public class CreateMobileAccountChecker extends GuiChecker{
   }
 
   public CreateMobileAccountChecker validateAndClose() {
-    clickCreateButton();
+//    clickCreateButton();
     checkComponentVisible(dialog, JButton.class, "create", false);
     checkComponentVisible(dialog, JEditorPane.class, "completionMessage", true);
     assertThat(dialog.isVisible());
     close();
+    assertFalse(dialog.isVisible());
     return this;
   }
 

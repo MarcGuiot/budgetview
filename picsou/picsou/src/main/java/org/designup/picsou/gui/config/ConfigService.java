@@ -40,6 +40,7 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.Encoder;
 
 import javax.net.ssl.SSLException;
+import javax.servlet.http.HttpServletResponse;
 import javax.swing.*;
 import java.io.*;
 import java.lang.reflect.Constructor;
@@ -76,7 +77,6 @@ public class ConfigService {
   public static final String HEADER_JAR_VERSION = "jarVersion";
   public static final String HEADER_NEW_JAR_VERSION = "newJarVersion";
   public static final String HEADER_REPO_ID = "repoId";
-  public static final String HEADER_LANG = "lang";
   public static final String HEADER_USE_INFO = "use";
   public static final String REQUEST_FOR_REGISTER = "/register";
   public static final String REQUEST_FOR_CONFIG = "/requestForConfig";
@@ -156,7 +156,7 @@ public class ConfigService {
       try {
         postMethod = createPostMethod(url);
         postMethod.setHeader(HEADER_MAIL, mail);
-        postMethod.setHeader(HEADER_LANG, Lang.get("lang"));
+        postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
         HttpClient httpClient = getNewHttpClient();
         response = httpClient.execute(postMethod);
       }
@@ -166,7 +166,7 @@ public class ConfigService {
         }
         postMethod = createPostMethod(url);
         postMethod.setHeader(HEADER_MAIL, mail);
-        postMethod.setHeader(HEADER_LANG, Lang.get("lang"));
+        postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
         HttpClient httpClient = getNewHttpClient();
         response = httpClient.execute(postMethod);
       }
@@ -322,7 +322,7 @@ public class ConfigService {
     postMethod.setHeader(HEADER_JAR_VERSION, Long.toString(localJarVersion));
     postMethod.setHeader(HEADER_APPLICATION_VERSION, applicationVersion);
     postMethod.setHeader(HEADER_REPO_ID, Encoder.byteToString(repoId));
-    postMethod.setHeader(HEADER_LANG, Lang.get("lang"));
+    postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
     if (signature != null && signature.length() > 1 && mail != null && activationCode != null) {
       postMethod.setHeader(HEADER_MAIL, mail);
       postMethod.setHeader(HEADER_SIGNATURE, signature);
@@ -338,7 +338,7 @@ public class ConfigService {
   }
 
 
-  public boolean sendMobileData(String mail, String password, byte[] bytes) {
+  public boolean sendMobileData(String mail, String password, byte[] bytes, Ref<String> message) {
 
     HttpClient client = getNewHttpClient();
     HttpPost postMethod;
@@ -352,18 +352,26 @@ public class ConfigService {
       byte[] data = encryptor.encrypt(bytes);
       byte[] encryptedMail = encryptor.encrypt(mail.getBytes("UTF-8"));
       String sha1Mail = Crypt.encodeSHA1AndHex(encryptedMail);
-      postMethod.setHeader(HEADER_LANG, Lang.get("lang"));
-      postMethod.setHeader(HEADER_MAIL, mail);
+      postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
+      postMethod.setHeader(HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
       postMethod.setHeader(ComCst.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
+      System.err.println("ConfigService.sendMobileData " + sha1Mail);
       postMethod.setHeader(ComCst.MAJOR_VERSION_NAME, Integer.toString(MobileModel.MAJOR_VERSION));
       postMethod.setHeader(ComCst.MINOR_VERSION_NAME, Integer.toString(MobileModel.MINOR_VERSION));
       postMethod.setEntity(new ByteArrayEntity(data));
-      client.execute(postMethod);
+      HttpResponse response = client.execute(postMethod);
       updateConnectionStatusOk();
+      int statusCode = response.getStatusLine().getStatusCode();
+      if (statusCode == HttpServletResponse.SC_FORBIDDEN) {
+        Header configVersionHeader = response.getFirstHeader(ComCst.STATUS);
+        message.set(configVersionHeader.getValue());
+        return false;
+      }
       return true;
     }
     catch (Exception e) {
       Log.write("while sending data", e);
+      message.set(e.getMessage());
       updateConnectionStatus(e);
       return false;
     }
@@ -436,7 +444,7 @@ public class ConfigService {
     postMethod.setHeader(HEADER_MAIL, mail);
     postMethod.setHeader(HEADER_CODE, code);
     postMethod.setHeader(HEADER_REPO_ID, Encoder.byteToString(repoId));
-    postMethod.setHeader(HEADER_LANG, Lang.get("lang"));
+    postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
     return postMethod;
   }
 
@@ -486,7 +494,7 @@ public class ConfigService {
     httpClient.execute(postMethod);
   }
 
-  public boolean createMobileAccount(String mail, Ref<String> message) {
+  public boolean createMobileAccount(String mail, String password, Ref<String> message) {
     HttpPost postMethod = null;
     try {
       String url = URL_MOBILE + ComCst.SEND_MAIL_TO_CONFIRM_MOBILE;
@@ -494,11 +502,18 @@ public class ConfigService {
       MD5PasswordBasedEncryptor encryptor =
         new MD5PasswordBasedEncryptor(ConfigService.MOBILE_SALT.getBytes(), ConfigService.SOME_PASSWORD.toCharArray(), 5);
 
-      byte[] password = Base64.encodeBase64(encryptor.encrypt(mail.getBytes("UTF-8")));
+      byte[] localKey = Base64.encodeBase64(encryptor.encrypt(mail.getBytes("UTF-8")));
+
+      MD5PasswordBasedEncryptor userEncryptor =
+        new MD5PasswordBasedEncryptor(ConfigService.MOBILE_SALT.getBytes(), password.toCharArray(), 5);
+      byte[] encryptedMail = userEncryptor.encrypt(mail.getBytes("UTF-8"));
+      String sha1Mail = Crypt.encodeSHA1AndHex(encryptedMail);
+
       postMethod = createPostMethod(url);
-      postMethod.setHeader(HEADER_LANG, Lang.get("lang"));
+      postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
       postMethod.setHeader(HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
-      postMethod.setHeader(CODING, URLEncoder.encode(new String(password), "UTF-8"));
+      postMethod.setHeader(CODING, URLEncoder.encode(new String(localKey), "UTF-8"));
+      postMethod.setHeader(ComCst.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
       HttpClient httpClient = getNewHttpClient();
       HttpResponse response = httpClient.execute(postMethod);
       updateConnectionStatusOk();
@@ -888,7 +903,7 @@ public class ConfigService {
 
     private HttpPost createPost(String url) {
       HttpPost postMethod = createPostMethod(url);
-      postMethod.setHeader(HEADER_LANG, Lang.get("lang"));
+      postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
       postMethod.setHeader(HEADER_MAIL, fromMail);
       postMethod.setHeader(HEADER_TO_MAIL, toMail);
       postMethod.setHeader(HEADER_MAIL_TITLE, title);

@@ -14,11 +14,16 @@ public class Files {
   }
 
   public static String loadFileToString(String fileName) throws IOFailure {
+    File file = new File(fileName);
+    return loadFileToString(file);
+  }
+
+  public static String loadFileToString(File file) {
     StringBuilder builder = new StringBuilder();
     FileReader fileReader = null;
     BufferedReader reader = null;
     try {
-      fileReader = new FileReader(fileName);
+      fileReader = new FileReader(file);
       reader = new BufferedReader(fileReader);
       while (true) {
         String line = reader.readLine();

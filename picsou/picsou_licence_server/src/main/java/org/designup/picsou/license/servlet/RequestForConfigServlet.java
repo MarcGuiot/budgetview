@@ -1,5 +1,6 @@
 package org.designup.picsou.license.servlet;
 
+import com.budgetview.shared.utils.ComCst;
 import org.apache.log4j.Logger;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.generator.LicenseGenerator;
@@ -73,7 +74,7 @@ public class RequestForConfigServlet extends HttpServlet {
     String mail = req.getHeader(ConfigService.HEADER_MAIL);
     String activationCode = req.getHeader(ConfigService.HEADER_CODE);
     String count = req.getHeader(ConfigService.HEADER_COUNT);
-    String lang = req.getHeader(ConfigService.HEADER_LANG);
+    String lang = req.getHeader(ComCst.HEADER_LANG);
     String signature = req.getHeader(ConfigService.HEADER_SIGNATURE);
     String applicationVersion = req.getHeader(ConfigService.HEADER_CONFIG_VERSION);
     String jarVersion = req.getHeader(ConfigService.HEADER_JAR_VERSION);
