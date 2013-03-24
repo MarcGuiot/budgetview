@@ -16,14 +16,12 @@ import java.io.IOException;
 public class DataSyncChecker {
 
   private final boolean verbose;
-  private DataSync dataSync;
   private boolean connectionAvailable = true;
   private ExpectationQueue expectations = new ExpectationQueue();
 
   public DataSyncChecker(boolean verbose) {
     this.verbose = verbose;
-    dataSync = new DummyDataSync();
-    DataSyncFactory.setForcedSync(dataSync);
+    DataSyncFactory.setForcedSync(new DummyDataSync());
   }
 
   public LoadBuilder prepareLoad(String email, String password) {
@@ -66,8 +64,16 @@ public class DataSyncChecker {
       return expectations.pop(ExpectLoadTempFile.class).loadTempFile();
     }
 
+    public void deleteTempFile() {
+      Assert.fail("tbd");
+    }
+
     public boolean sendDownloadEmail(String email, DataSyncCallback callback) {
       return expectations.pop(ExpectSendDownloadEmail.class).sendDownloadEmail(email, callback);
+    }
+
+    public boolean canConnect() {
+      return connectionAvailable;
     }
   }
 

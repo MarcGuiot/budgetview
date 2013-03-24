@@ -6,7 +6,6 @@ import com.budgetview.android.R;
 import com.budgetview.android.SeriesListActivity;
 import com.budgetview.android.checkers.utils.BlockParser;
 import com.budgetview.android.checkers.utils.ViewParser;
-import com.budgetview.shared.utils.AmountFormat;
 import org.globsframework.utils.TablePrinter;
 
 public class SeriesListChecker extends AndroidTabsChecker<SeriesListActivity> {
@@ -34,8 +33,8 @@ public class SeriesListChecker extends AndroidTabsChecker<SeriesListActivity> {
       super("SeriesList", getCurrentView());
     }
 
-    public SeriesRows add(String seriesName, double planned, double actual) {
-      expected.addRow(seriesName, AmountFormat.DECIMAL_FORMAT.format(planned), AmountFormat.DECIMAL_FORMAT.format(actual));
+    public SeriesRows add(String seriesName, String planned, String actual) {
+      expected.addRow(seriesName, planned, actual);
       return this;
     }
 

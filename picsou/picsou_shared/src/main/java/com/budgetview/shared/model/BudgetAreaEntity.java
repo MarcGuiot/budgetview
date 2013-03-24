@@ -1,8 +1,10 @@
 package com.budgetview.shared.model;
 
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NoObfuscation;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
@@ -18,6 +20,9 @@ public class BudgetAreaEntity {
 
   @NoObfuscation
   public static StringField LABEL;
+
+  @NoObfuscation @DefaultBoolean(false)
+  public static BooleanField INVERT_AMOUNTS;
 
   static {
     GlobTypeLoader.init(BudgetAreaEntity.class, "budgetAreaEntity");

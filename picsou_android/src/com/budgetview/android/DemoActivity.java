@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.budgetview.android.components.Header;
+import com.budgetview.android.components.UpHandler;
 import com.budgetview.android.datasync.DataSync;
 import com.budgetview.android.datasync.DataSyncCallback;
 import com.budgetview.android.datasync.DataSyncFactory;
@@ -19,7 +20,7 @@ public class DemoActivity extends Activity {
   public static final String USE_DEMO = "com.budgetview.DemoActivity.useDemo";
 
   public static void install(Button demoButton, final Activity activity) {
-    boolean demoModeEnabled = activity.getIntent().getBooleanExtra(USE_DEMO, false);
+    boolean demoModeEnabled = isInDemoMode(activity);
     if (demoModeEnabled) {
       demoButton.setOnClickListener(new View.OnClickListener() {
         public void onClick(View v) {
@@ -33,13 +34,17 @@ public class DemoActivity extends Activity {
     }
   }
 
+  public static boolean isInDemoMode(Activity activity) {
+    return activity.getIntent().getBooleanExtra(USE_DEMO, false);
+  }
+
   public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.demo_page);
 
     Header header = (Header)findViewById(R.id.header);
-    header.setActivity(this);
+    header.init(this, new DemoUpHandler());
 
     TextView link = (TextView)findViewById(R.id.goto_website);
     link.setText(R.string.demoLink);
@@ -67,5 +72,15 @@ public class DemoActivity extends Activity {
         Views.showAlert(DemoActivity.this, R.string.demoEmailConnectionUnavailable);
       }
     });
+  }
+
+  private class DemoUpHandler implements UpHandler {
+    public String getLabel() {
+      return getResources().getString(R.string.app_name);
+    }
+
+    public void processUp() {
+      finish();
+    }
   }
 }

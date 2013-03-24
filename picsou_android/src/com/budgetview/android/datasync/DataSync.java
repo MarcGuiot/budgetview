@@ -10,6 +10,8 @@ public interface DataSync {
 
   boolean loadTempFile();
 
+  void deleteTempFile();
+
   boolean sendDownloadEmail(String email, DataSyncCallback callback);
 
   boolean canConnect();

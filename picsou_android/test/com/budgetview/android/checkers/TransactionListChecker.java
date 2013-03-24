@@ -19,7 +19,7 @@ public class TransactionListChecker extends AndroidTabsChecker<TransactionListAc
     activity.onCreate(bundle);
   }
 
-  public TransactionListChecker checkSeriesSummary(double planned, double actual) {
+  public TransactionListChecker checkSeriesSummary(String planned, String actual) {
     AmountBlockChecker.check(getCurrentView(), R.id.transaction_amounts, planned, actual);
     ViewParser.checkHidden(getCurrentView(), R.id.transaction_account_position);
     return this;

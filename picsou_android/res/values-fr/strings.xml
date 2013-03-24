@@ -81,5 +81,11 @@
   <string name="transactionListSectionLabel">Opérations</string>
   <string name="transactionListEmptyMessage">Il n\'y a pas d\'opérations ce mois-ci</string>
 
+  <string name="logoutButton">Deconnexion</string>
+  <string name="logoutTitle">Deconnexion</string>
+  <string name="logoutMessage">Voulez-vous vous déconnecter ?</string>
+  <string name="logoutYes">Oui</string>
+  <string name="logoutNo">Non</string>
+
 </resources>
 

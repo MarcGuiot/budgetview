@@ -43,8 +43,8 @@ public class BudgetOverviewChecker extends AndroidTabsChecker<BudgetOverviewActi
       super("BudgetOverview", getCurrentView());
     }
 
-    public BudgetAreaRows add(String budgetArea, double planned, double actual) {
-      expected.addRow(budgetArea, AmountFormat.DECIMAL_FORMAT.format(planned), AmountFormat.DECIMAL_FORMAT.format(actual));
+    public BudgetAreaRows add(String budgetArea, String planned, String actual) {
+      expected.addRow(budgetArea, planned, actual);
       return this;
     }
 

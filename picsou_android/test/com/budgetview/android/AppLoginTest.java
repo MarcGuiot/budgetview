@@ -37,18 +37,18 @@ public class AppLoginTest extends AndroidAppTestCase {
     budgetOverview.checkSelectedTab("Jan");
 
     budgetOverview.initContent()
-      .add("Recurring", -1500.00, -1495.00)
-      .add("Variable", -600.00, -50.00)
+      .add("Recurring", "1500.00", "1495.00")
+      .add("Variable", "600.00", "50.00")
       .check();
 
     SeriesListChecker recurring201301 = budgetOverview.edit("Recurring");
     recurring201301.initContent()
-      .add("Mortgage", -1500.00, -1495.00)
+      .add("Mortgage", "1500.00", "1495.00")
       .check();
 
     TransactionListChecker mortgageTransactions201301 = recurring201301.edit("Mortgage");
     mortgageTransactions201301
-      .checkSeriesSummary(-1500.00, -1495.00)
+      .checkSeriesSummary("1500.00", "1495.00")
       .initContent()
       .add("on 2/1", "Credit XYZ", -1495.00)
       .check();
@@ -58,13 +58,13 @@ public class AppLoginTest extends AndroidAppTestCase {
     budgetOverview.selectTab(2, "Feb");
 
     budgetOverview.initContent()
-      .add("Recurring", -1600.00, 0.00)
-      .add("Variable", -200.00, 0.00)
+      .add("Recurring", "1600.00", "0.00")
+      .add("Variable", "200.00", "0.00")
       .check();
 
     SeriesListChecker recurring201302 = budgetOverview.edit("Recurring");
     recurring201302.initContent()
-      .add("Mortgage", -1600.00, 0.00)
+      .add("Mortgage", "1600.00", "0.00")
       .check();
 
     TransactionListChecker mortgage201302 = recurring201302.edit("Mortgage");
@@ -80,6 +80,41 @@ public class AppLoginTest extends AndroidAppTestCase {
 
     TransactionPageChecker creditXYZ203101=  mortgage201302.edit("Credit XYZ");
     creditXYZ203101.checkDisplay("Credit XYZ", "on 2/1", -1495.00);
+  }
+
+  @Test public void testAmountSigns() throws Exception {
+
+    dataSync.prepareLoad(EMAIL, PASSWORD)
+      .addMainAccount("account1", 201212, 31, 10.0)
+      .addVariableSeries("Health", 201212, -100.00)
+      .addTransactionToSeries("Mut", 3, +200.00);
+
+    HomeChecker home = app.start();
+
+    BudgetOverviewChecker budgetOverview = home.login()
+      .setEmail(EMAIL)
+      .setPassword(PASSWORD)
+      .enter();
+
+    budgetOverview.checkTabNames("Dec");
+
+    budgetOverview.checkSelectedTab("Dec");
+
+    budgetOverview.initContent()
+      .add("Variable", "100.00", "+200.00")
+      .check();
+
+    SeriesListChecker variable = budgetOverview.edit("Variable");
+    variable.initContent()
+      .add("Health", "100.00", "+200.00")
+      .check();
+
+    TransactionListChecker mut201212 = variable.edit("Health");
+    mut201212
+      .checkSeriesSummary("100.00", "+200.00")
+      .initContent()
+      .add("on 3/12", "Mut", 200.00)
+      .check();
   }
 
   @Test public void testAccountOperations() throws Exception {
@@ -127,9 +162,9 @@ public class AppLoginTest extends AndroidAppTestCase {
     budgetOverview.checkSelectedTab("Jan");
 
     budgetOverview.initContent()
-      .add("Recurring", -1500.00, -1495.00)
-      .add("Variable", -600.00, -50.00)
-      .add("Uncategorized", -50.00, -50.00)
+      .add("Recurring", "1500.00", "1495.00")
+      .add("Variable", "600.00", "50.00")
+      .add("Uncategorized", "-50.00", "-50.00")
       .check();
 
     TransactionListChecker uncategorized = budgetOverview.editUncategorized();

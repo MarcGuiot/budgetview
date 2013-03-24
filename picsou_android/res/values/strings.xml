@@ -80,4 +80,10 @@
   <string name="transactionListSectionLabel">Transactions</string>
   <string name="transactionListEmptyMessage">There are no transactions this month</string>
 
+  <string name="logoutButton">Logout</string>
+  <string name="logoutTitle">Logout</string>
+  <string name="logoutMessage">Do you want to log out?</string>
+  <string name="logoutYes">Yes</string>
+  <string name="logoutNo">No</string>
+
 </resources>

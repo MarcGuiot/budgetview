@@ -24,6 +24,7 @@ import java.util.SortedSet;
 public class TabPage implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener {
 
   private FragmentActivity activity;
+  private final UpHandler upHandler;
   private int currentMonthId;
   private TabPageHandler handler;
   private SortedSet<Integer> monthIds;
@@ -31,19 +32,18 @@ public class TabPage implements TabHost.OnTabChangeListener, ViewPager.OnPageCha
   private TabHost tabHost;
   private ViewPager viewPager;
   private TabPagerAdapter pagerAdapter;
-  private String title;
 
   private boolean selectionInProgress;
 
   public TabPage(FragmentActivity activity,
-                 CharSequence title,
+                 UpHandler upHandler,
                  int currentMonthId,
                  TabPageHandler handler) {
     this.activity = activity;
+    this.upHandler = upHandler;
     this.currentMonthId = currentMonthId;
     this.handler = handler;
     this.monthIds = ((App)activity.getApplication()).getAllMonthIds();
-    this.title = String.valueOf(title);
   }
 
   public void initView() {
@@ -73,8 +73,7 @@ public class TabPage implements TabHost.OnTabChangeListener, ViewPager.OnPageCha
     }
 
     Header header = (Header)activity.findViewById(R.id.header);
-    header.setTitle(title);
-    header.setActivity(activity);
+    header.init(activity, upHandler);
 
     Button demoButton = (Button)activity.findViewById(R.id.demoFooter);
     DemoActivity.install(demoButton, activity);

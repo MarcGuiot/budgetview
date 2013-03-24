@@ -95,7 +95,8 @@ public class BudgetValuesUpdater {
     for (BudgetArea budgetArea : BUDGET_AREAS) {
       targetRepository.create(BudgetAreaEntity.TYPE,
                               value(BudgetAreaEntity.ID, budgetArea.getId()),
-                              value(BudgetAreaEntity.LABEL, budgetArea.getLabel()));
+                              value(BudgetAreaEntity.LABEL, budgetArea.getLabel()),
+                              value(BudgetAreaEntity.INVERT_AMOUNTS, BudgetArea.shouldInvertAmounts(budgetArea)));
     }
   }
 

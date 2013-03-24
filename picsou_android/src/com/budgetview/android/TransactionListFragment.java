@@ -12,6 +12,7 @@ import com.budgetview.android.components.TabPage;
 import com.budgetview.android.utils.SectionHeaderBlock;
 import com.budgetview.android.utils.TransactionSet;
 import com.budgetview.shared.model.AccountEntity;
+import com.budgetview.shared.model.BudgetAreaEntity;
 import com.budgetview.shared.model.SeriesValues;
 import com.budgetview.shared.model.TransactionValues;
 import org.globsframework.model.Glob;
@@ -34,7 +35,8 @@ public class TransactionListFragment extends Fragment {
     AmountsBlockView seriesBlock = (AmountsBlockView)view.findViewById(R.id.transaction_amounts);
     seriesBlock.update(transactionSet.getSeriesValues(),
                        SeriesValues.AMOUNT, SeriesValues.PLANNED_AMOUNT,
-                       SeriesValues.OVERRUN_AMOUNT, SeriesValues.REMAINING_AMOUNT);
+                       SeriesValues.OVERRUN_AMOUNT, SeriesValues.REMAINING_AMOUNT,
+                       shouldInvert(transactionSet, repository));
 
     AccountSummaryBlockView positionBlock = (AccountSummaryBlockView)view.findViewById(R.id.transaction_account_position);
     positionBlock.update(transactionSet.getAccountEntity());
@@ -49,6 +51,16 @@ public class TransactionListFragment extends Fragment {
     list.setEmptyView(emptyView);
 
     return view;
+  }
+
+  private boolean shouldInvert(TransactionSet transactionSet, GlobRepository repository) {
+    Glob seriesValues = transactionSet.getSeriesValues();
+    if (seriesValues == null) {
+      return false;
+    }
+
+    Glob budgetAreaEntity = repository.findLinkTarget(seriesValues, SeriesValues.BUDGET_AREA);
+    return budgetAreaEntity.get(BudgetAreaEntity.INVERT_AMOUNTS);
   }
 
   private class TransactionListAdapter extends BaseAdapter {
