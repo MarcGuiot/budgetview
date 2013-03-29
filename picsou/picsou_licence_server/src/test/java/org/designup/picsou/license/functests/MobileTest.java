@@ -13,6 +13,7 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.designup.picsou.functests.checkers.ApplicationChecker;
 import org.designup.picsou.functests.checkers.CreateMobileAccountChecker;
+import org.designup.picsou.functests.checkers.DeleteMobileAccountChecker;
 import org.designup.picsou.functests.checkers.MessageDialogChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.license.ConnectedTestCase;
@@ -39,13 +40,23 @@ public class MobileTest extends ConnectedTestCase {
     directory.mkdir();
   }
 
-  public void testCreateAccount() throws Exception {
+  public void testCreateAndDeleteAccount() throws Exception {
     String mail = "test@mybudgetview.fr";
-    String url = requestMobileAccount(mail).url;
+    SharingConnection connection = requestMobileAccount(mail);
+    String url = connection.url;
     followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok");
     application.openMobileAccountDialog()
       .setEmail(mail)
       .validateAndClose();
+
+    DeleteMobileAccountChecker deleteAccount = application.openDeleteMobileAccountDialog();
+    deleteAccount.checkUser(mail, connection.password);
+    deleteAccount.validateAndClose();
+
+    deleteAccount = application.openDeleteMobileAccountDialog();
+    deleteAccount.checkEmpty();
+    deleteAccount.setEmail(mail, connection.password);
+    deleteAccount.validateAndCheckUnknownUser();
   }
 
   public void testEmptyEmailMessage() throws Exception {

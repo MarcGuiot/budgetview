@@ -121,10 +121,10 @@ public class Files {
     }
   }
 
-  public static void deleteSubtree(File directory) {
+  public static boolean deleteSubtree(File directory) {
     File[] files = directory.listFiles();
     if (files == null) {
-      return;
+      return false;
     }
     for (File file : files) {
       if (file.isDirectory()) {
@@ -134,7 +134,7 @@ public class Files {
         file.delete();
       }
     }
-    directory.delete();
+    return directory.delete();
   }
 
   public static void copyStreamTofile(InputStream inputStream, String file) throws IOException {

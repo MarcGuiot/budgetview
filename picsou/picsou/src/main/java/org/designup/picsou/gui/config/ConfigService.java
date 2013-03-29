@@ -496,28 +496,12 @@ public class ConfigService {
   public boolean createMobileAccount(String mail, String password, Ref<String> message) {
     HttpPost postMethod = null;
     try {
-      String url = URL_MOBILE + ComCst.SEND_MAIL_TO_CONFIRM_MOBILE;
-
-      MD5PasswordBasedEncryptor encryptor =
-        new MD5PasswordBasedEncryptor(ConfigService.MOBILE_SALT.getBytes(), ConfigService.SOME_PASSWORD.toCharArray(), 5);
-
-      byte[] localKey = Base64.encodeBase64(encryptor.encrypt(mail.getBytes("UTF-8")));
-
-      MD5PasswordBasedEncryptor userEncryptor =
-        new MD5PasswordBasedEncryptor(ConfigService.MOBILE_SALT.getBytes(), password.toCharArray(), 5);
-      byte[] encryptedMail = userEncryptor.encrypt(mail.getBytes("UTF-8"));
-      String sha1Mail = Crypt.encodeSHA1AndHex(encryptedMail);
-
-      postMethod = createPostMethod(url);
-      postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
-      postMethod.setHeader(HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
-      postMethod.setHeader(CODING, URLEncoder.encode(new String(localKey), "UTF-8"));
-      postMethod.setHeader(ComCst.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
+      postMethod = createPostMessage(mail, password, URL_MOBILE + ComCst.SEND_MAIL_TO_CONFIRM_MOBILE);
       HttpClient httpClient = getNewHttpClient();
       HttpResponse response = httpClient.execute(postMethod);
       updateConnectionStatusOk();
       if (response.getStatusLine().getStatusCode() != 200) {
-        message.set(Lang.get("mobile.user.create.connection.failed"));
+        message.set(Lang.get("mobile.user.connection.failed"));
         return false;
       }
       Header isValid = response.getFirstHeader(ConfigService.HEADER_IS_VALIDE);
@@ -537,7 +521,58 @@ public class ConfigService {
         postMethod.releaseConnection();
       }
     }
-    message.set(Lang.get("mobile.user.create.connection.failed"));
+    message.set(Lang.get("mobile.user.connection.failed"));
+    return false;
+  }
+
+  private HttpPost createPostMessage(String mail, String password, final String url) throws UnsupportedEncodingException {
+
+    MD5PasswordBasedEncryptor encryptor =
+      new MD5PasswordBasedEncryptor(ConfigService.MOBILE_SALT.getBytes(), ConfigService.SOME_PASSWORD.toCharArray(), 5);
+
+    byte[] localKey = Base64.encodeBase64(encryptor.encrypt(mail.getBytes("UTF-8")));
+
+    MD5PasswordBasedEncryptor userEncryptor =
+      new MD5PasswordBasedEncryptor(ConfigService.MOBILE_SALT.getBytes(), password.toCharArray(), 5);
+    byte[] encryptedMail = userEncryptor.encrypt(mail.getBytes("UTF-8"));
+    String sha1Mail = Crypt.encodeSHA1AndHex(encryptedMail);
+
+    HttpPost postMethod = createPostMethod(url);
+    postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
+    postMethod.setHeader(HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
+    postMethod.setHeader(CODING, URLEncoder.encode(new String(localKey), "UTF-8"));
+    postMethod.setHeader(ComCst.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
+    return postMethod;
+  }
+
+  public boolean deleteMobileAccount(String mail, String password, Ref<String> message) {
+    HttpPost postMethod = null;
+    try {
+      postMethod = createPostMessage(mail, password, URL_MOBILE + ComCst.DELETE_MOBILE_ACCOUNT);
+      HttpClient httpClient = getNewHttpClient();
+      HttpResponse response = httpClient.execute(postMethod);
+      updateConnectionStatusOk();
+      int statusCode = response.getStatusLine().getStatusCode();
+      if (statusCode == HttpServletResponse.SC_FORBIDDEN){
+        message.set(Lang.get("mobile.user.delete.invalid.password"));
+        return false;
+      }
+      if (statusCode != 200) {
+        message.set(Lang.get("mobile.user.connection.failed"));
+        return false;
+      }
+      return true;
+    }
+    catch (Exception e) {
+      Log.write("error", e);
+      updateConnectionStatus(e);
+    }
+    finally {
+      if (postMethod != null) {
+        postMethod.releaseConnection();
+      }
+    }
+    message.set(Lang.get("mobile.user.connection.failed"));
     return false;
   }
 

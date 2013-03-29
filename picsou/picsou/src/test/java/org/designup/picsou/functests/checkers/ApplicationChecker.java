@@ -144,6 +144,10 @@ public class ApplicationChecker extends GuiChecker {
     return getOperations().openCreateMobileUser();
   }
 
+  public DeleteMobileAccountChecker openDeleteMobileAccountDialog() {
+    return getOperations().deleteMobileAccountUser();
+  }
+
   private class DummyPicsouApplication extends PicsouApplication {
     protected void preinitDirectory(Directory directory) {
       directory.add(PrinterService.class, printService);
