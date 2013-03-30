@@ -12,7 +12,7 @@ public interface DataSync {
 
   void deleteTempFile();
 
-  boolean sendDownloadEmail(String email, DataSyncCallback callback);
+  void sendDownloadEmail(String email, DataSyncCallback callback);
 
   boolean canConnect();
 }

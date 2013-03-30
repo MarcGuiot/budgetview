@@ -27,6 +27,7 @@ import org.designup.picsou.gui.license.LicenseExpirationAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
 import org.designup.picsou.gui.mobile.CreateMobileAccountAction;
+import org.designup.picsou.gui.mobile.DeleteMobileAccountAction;
 import org.designup.picsou.gui.mobile.DumpMobileXmlAction;
 import org.designup.picsou.gui.mobile.SendMobileDataAction;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
@@ -75,6 +76,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.repository.ReplicationGlobRepository;
+import org.globsframework.utils.Ref;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -116,6 +118,7 @@ public class MainPanel {
   private SignpostView signpostView;
   private Action threadsAction;
   private CreateMobileAccountAction createMobileAccountAction;
+  private DeleteMobileAccountAction deleteMobileAccountAction;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -170,6 +173,7 @@ public class MainPanel {
     setPasswordAction = new SetPasswordAction(repository, directory);
     deleteUserAction = new DeleteUserAction(this, repository, directory);
     createMobileAccountAction = new CreateMobileAccountAction(directory, repository);
+    deleteMobileAccountAction = new DeleteMobileAccountAction(directory, repository);
     threadsAction = new SendStackTracesAction(repository, directory);
 
     LicenseInfoView licenseInfoView = new LicenseInfoView(repository, directory);
@@ -296,6 +300,7 @@ public class MainPanel {
 //    Utils.beginRemove();
     menu.addSeparator();
     menu.add(createMobileAccountAction);
+    menu.add(deleteMobileAccountAction);
     menu.add(new SendMobileDataAction(repository, directory));
 //    Utils.endRemove();
 
@@ -428,7 +433,7 @@ public class MainPanel {
   }
 
   public void end() {
-    SendMobileDataAction.sendToMobile(repository, directory.get(ConfigService.class));
+    SendMobileDataAction.sendToMobile(repository, directory.get(ConfigService.class), new Ref<String>());
   }
 
   private class MainPanelLogoutService implements LogoutService {

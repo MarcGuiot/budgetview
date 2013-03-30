@@ -1619,4 +1619,22 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
     categorization.checkSearchCleared();
   }
+
+  public void testCategorizeSeriesToSubSeriesUnselectSeries() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -29.90, "Free Telecom")
+      .load();
+
+    categorization
+      .selectTransaction("Free Telecom")
+      .selectVariable()
+      .createSeries("other");
+
+    categorization
+      .selectRecurring()
+      .createSeries().setName("Free").gotoSubSeriesTab().addSubSeries("box").selectSubSeries("box").validate();
+
+    categorization.selectVariable().checkSeriesNotSelected("other");
+  }
 }

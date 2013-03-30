@@ -1,5 +1,6 @@
 package org.designup.picsou.license.servlet;
 
+import com.budgetview.shared.utils.ComCst;
 import org.apache.log4j.Logger;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.generator.LicenseGenerator;
@@ -47,7 +48,7 @@ public class RegisterServlet extends HttpServlet {
     String mail = req.getHeader(ConfigService.HEADER_MAIL).trim();
     String activationCode = req.getHeader(ConfigService.HEADER_CODE).trim();
     String repoId = req.getHeader(ConfigService.HEADER_REPO_ID).trim();
-    String lang = req.getHeader(ConfigService.HEADER_LANG).trim();
+    String lang = req.getHeader(ComCst.HEADER_LANG).trim();
     logger.info("mail : '" + mail + "' code d'activation :'" + activationCode + "' repoId : '" +
                 repoId + "' lang : " + lang);
     SqlConnection db = sqlService.getDb();

@@ -1,5 +1,6 @@
 package org.designup.picsou.license.servlet;
 
+import com.budgetview.shared.utils.ComCst;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.designup.picsou.client.http.MD5PasswordBasedEncryptor;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.Arrays;
@@ -35,15 +37,17 @@ public class CreateMobileUserServlet extends HttpServlet {
       action(req, resp);
     }
     catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e);
     }
   }
 
   protected void action(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
-    String lang = httpServletRequest.getParameter(ConfigService.HEADER_LANG);
+    String lang = httpServletRequest.getParameter(ComCst.HEADER_LANG);
     String mail = URLDecoder.decode(httpServletRequest.getParameter(ConfigService.HEADER_MAIL), "UTF-8");
     String coding = URLDecoder.decode(httpServletRequest.getParameter(ConfigService.CODING), "UTF-8");
     byte[] decryptedMail = encryptor.decrypt(Base64.decodeBase64(coding));
+
+    String sha1Mail = URLDecoder.decode(httpServletRequest.getParameter(ComCst.CRYPTED_INFO), "UTF-8");
 
     String baseUrl = "fr".equals(lang) ? "http://www.mybudgetview.fr" : "http://www.mybudgetview.com";
 
@@ -56,7 +60,8 @@ public class CreateMobileUserServlet extends HttpServlet {
       File dir = new File(root, dirName);
       if (!dir.exists()) {
         if (dir.mkdir()) {
-          logger.info("created : " + dir.getAbsolutePath());
+          logger.info("created : " + dir.getAbsolutePath() + " " + sha1Mail);
+          writeCode(sha1Mail, dir);
           httpServletResponse.sendRedirect(baseUrl + "/mobile/account-ok");
         }
         else {
@@ -67,9 +72,16 @@ public class CreateMobileUserServlet extends HttpServlet {
         }
       }
       else {
+        writeCode(sha1Mail, dir);
+        logger.warn("Duplicate create : " + mail + " " + sha1Mail);
         httpServletResponse.sendRedirect(baseUrl + "/mobile/account-already-present");
-        logger.warn("Duplicate create : " + mail);
       }
     }
+  }
+
+  private void writeCode(String sha1Mail, File dir) throws IOException {
+    FileWriter writer = new FileWriter(new File(dir, "code.ser"));
+    writer.append(sha1Mail);
+    writer.close();
   }
 }

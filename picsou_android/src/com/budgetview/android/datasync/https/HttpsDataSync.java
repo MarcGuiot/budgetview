@@ -206,10 +206,10 @@ public class HttpsDataSync implements DataSync {
     return client;
   }
 
-  public boolean sendDownloadEmail(String email, DataSyncCallback callback) {
+  public void sendDownloadEmail(String email, DataSyncCallback callback) {
     if (!canConnect()) {
       callback.onConnectionUnavailable();
-      return false;
+      return;
     }
 
     try {
@@ -223,12 +223,13 @@ public class HttpsDataSync implements DataSync {
       HttpResponse response = client.execute(post, new BasicHttpContext());
 
       if (response.getStatusLine().getStatusCode() != 200) {
-        return false;
+        callback.onActionFailed();
+        return;
       }
-      return true;
+      callback.onActionFinished();
     }
     catch (Exception e) {
-      return false;
+      callback.onActionFailed();
     }
   }
 

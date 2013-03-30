@@ -138,7 +138,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       reassignBankId(repository);
     }
 
-    UserPreferences.initMobilePassword(repository);
+    UserPreferences.initMobilePassword(repository, false);
 
     deleteDeprecatedGlobs(repository);
 

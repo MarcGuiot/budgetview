@@ -11,15 +11,15 @@ import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.editors.GlobTextEditor;
-import org.globsframework.gui.splits.layout.CardHandler;
-import org.globsframework.utils.Strings;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.model.FieldValue;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.Ref;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -29,7 +29,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-public class CreateMobileAccountDialog {
+public class DeleteMobileAccountDialog {
   private LocalGlobRepository localRepository;
   private final DefaultDirectory localDirectory;
   private final SelectionService selectionService;
@@ -38,11 +38,11 @@ public class CreateMobileAccountDialog {
   private JEditorPane message;
   private ProgressPanel progressBar;
   private JTextField emailField;
+  private JTextField passwordField;
   private CardHandler cards;
-  private ValidateCreateMobileAccountAction validateAction;
-  private GenerateNewPasswordAction generateAction;
+  private ValidateDeleteMobileAccountAction validateAction;
 
-  public CreateMobileAccountDialog(Directory directory, GlobRepository parentRepository) {
+  public DeleteMobileAccountDialog(Directory directory, GlobRepository parentRepository) {
     this.localRepository =
       LocalGlobRepositoryBuilder.init(parentRepository)
         .copy(UserPreferences.TYPE)
@@ -54,34 +54,23 @@ public class CreateMobileAccountDialog {
   }
 
   private void createDialog() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/mobile/createMobileAccountDialog.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/mobile/deleteMobileAccountDialog.splits",
                                                       localRepository, localDirectory);
 
-    validateAction = new ValidateCreateMobileAccountAction();
+    validateAction = new ValidateDeleteMobileAccountAction();
     JButton createButton = new JButton(validateAction);
-    builder.add("create", createButton);
+    builder.add("delete", createButton);
 
     cards = builder.addCardHandler("cards");
 
     emailField = builder.addEditor("emailField", UserPreferences.MAIL_FOR_MOBILE).getComponent();
-    emailField.addActionListener(validateAction);
-    builder.addLabel("passwordLabel", UserPreferences.PASSWORD_FOR_MOBILE).getComponent();
+    passwordField = builder.addEditor("passwordField", UserPreferences.PASSWORD_FOR_MOBILE).getComponent();
 
     message = Gui.createHtmlDisplay();
     builder.add("message", message);
 
     progressBar = new ProgressPanel();
     builder.add("progress", progressBar);
-
-    builder.add("gotoGooglePlay", new BrowsingAction(localDirectory) {
-      protected String getUrl() {
-        return Lang.get("mobile.dialog.app.url");
-      }
-    });
-
-    generateAction = new GenerateNewPasswordAction();
-    JButton generateButton = new JButton(generateAction);
-    builder.add("generateNew", generateButton);
 
     dialog = PicsouDialog.create(localDirectory.get(JFrame.class), localDirectory);
     dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction(dialog));
@@ -95,23 +84,14 @@ public class CreateMobileAccountDialog {
     dialog.showCentered();
   }
 
-  private class GenerateNewPasswordAction extends AbstractAction{
-    private GenerateNewPasswordAction() {
-      super(Lang.get("mobile.user.generate.new.password"));
-    }
 
-    public void actionPerformed(ActionEvent e) {
-      UserPreferences.initMobilePassword(localRepository, true);
-    }
-  }
-
-  private class ValidateCreateMobileAccountAction extends AbstractAction {
+  private class ValidateDeleteMobileAccountAction extends AbstractAction {
 
     private Future<String> submit;
     private boolean submitInProgress = false;
 
-    public ValidateCreateMobileAccountAction() {
-      super(Lang.get("mobile.user.create.button"));
+    public ValidateDeleteMobileAccountAction() {
+      super(Lang.get("mobile.user.delete.button"));
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -128,17 +108,21 @@ public class CreateMobileAccountDialog {
           public String call() throws Exception {
             Ref<String> messageRef = new Ref<String>();
             boolean isOk = localDirectory.get(ConfigService.class)
-              .createMobileAccount(UserPreferences.get(localRepository).get(UserPreferences.MAIL_FOR_MOBILE),
+              .deleteMobileAccount(UserPreferences.get(localRepository).get(UserPreferences.MAIL_FOR_MOBILE),
                                    UserPreferences.get(localRepository).get(UserPreferences.PASSWORD_FOR_MOBILE),
                                    messageRef);
 
             progressBar.stop();
             if (dialog.isVisible()) {
-              localRepository.commitChanges(false);
               if (isOk) {
+                localRepository.update(UserPreferences.get(localRepository).getKey(),
+                                       FieldValue.value(UserPreferences.MAIL_FOR_MOBILE, null),
+                                       FieldValue.value(UserPreferences.PASSWORD_FOR_MOBILE, null));
+                localRepository.commitChanges(false);
                 cards.show("confirmation");
               }
               else {
+                localRepository.commitChanges(false);
                 message.setText(messageRef.get());
               }
             }

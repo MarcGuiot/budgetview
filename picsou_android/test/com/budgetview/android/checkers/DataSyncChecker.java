@@ -68,8 +68,8 @@ public class DataSyncChecker {
       Assert.fail("tbd");
     }
 
-    public boolean sendDownloadEmail(String email, DataSyncCallback callback) {
-      return expectations.pop(ExpectSendDownloadEmail.class).sendDownloadEmail(email, callback);
+    public void sendDownloadEmail(String email, DataSyncCallback callback) {
+      expectations.pop(ExpectSendDownloadEmail.class).sendDownloadEmail(email, callback);
     }
 
     public boolean canConnect() {
@@ -120,9 +120,8 @@ public class DataSyncChecker {
   }
 
   private class ExpectSendDownloadEmail implements Expectation {
-    public boolean sendDownloadEmail(String email, DataSyncCallback callback) {
+    public void sendDownloadEmail(String email, DataSyncCallback callback) {
       Assert.fail("tbd");
-      return false;
     }
   }
 }

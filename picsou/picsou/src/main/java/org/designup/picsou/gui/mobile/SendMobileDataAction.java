@@ -14,6 +14,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.repository.DefaultGlobIdGenerator;
 import org.globsframework.model.repository.DefaultGlobRepository;
+import org.globsframework.utils.Ref;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.xml.XmlGlobWriter;
@@ -62,15 +63,16 @@ public class SendMobileDataAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent actionEvent) {
-    if (sendToMobile(repository, configService)) {
+    Ref<String> msg = new Ref<String>();
+    if (sendToMobile(repository, configService, msg)) {
       MessageDialog.show("mobile.data.send.title", MessageType.SUCCESS, directory, "mobile.data.send.content.ok");
     }
     else {
-      MessageDialog.show("mobile.data.send.title", MessageType.ERROR, directory, "mobile.data.send.content.fail");
+      MessageDialog.show("mobile.data.send.title", MessageType.ERROR, directory, "mobile.data.send.content.fail", msg.get());
     }
   }
 
-  public static boolean sendToMobile(final GlobRepository sourceRepository, final ConfigService configService) {
+  public static boolean sendToMobile(final GlobRepository sourceRepository, final ConfigService configService, Ref<String> msg) {
     Glob user = sourceRepository.find(User.KEY);
     if (user == null || !user.get(User.CONNECTED)) {
       return false;
@@ -96,7 +98,7 @@ public class SendMobileDataAction extends AbstractAction {
       Glob userPreference = sourceRepository.get(UserPreferences.KEY);
       String mail = userPreference.get(UserPreferences.MAIL_FOR_MOBILE);
       String password = userPreference.get(UserPreferences.PASSWORD_FOR_MOBILE);
-      return configService.sendMobileData(mail, password, out.toByteArray());
+      return configService.sendMobileData(mail, password, out.toByteArray(), msg);
     }
     catch (IOException e) {
       throw new RuntimeException(e);

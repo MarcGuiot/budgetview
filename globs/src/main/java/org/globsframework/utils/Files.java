@@ -14,11 +14,16 @@ public class Files {
   }
 
   public static String loadFileToString(String fileName) throws IOFailure {
+    File file = new File(fileName);
+    return loadFileToString(file);
+  }
+
+  public static String loadFileToString(File file) {
     StringBuilder builder = new StringBuilder();
     FileReader fileReader = null;
     BufferedReader reader = null;
     try {
-      fileReader = new FileReader(fileName);
+      fileReader = new FileReader(file);
       reader = new BufferedReader(fileReader);
       while (true) {
         String line = reader.readLine();
@@ -116,10 +121,10 @@ public class Files {
     }
   }
 
-  public static void deleteSubtree(File directory) {
+  public static boolean deleteSubtree(File directory) {
     File[] files = directory.listFiles();
     if (files == null) {
-      return;
+      return false;
     }
     for (File file : files) {
       if (file.isDirectory()) {
@@ -129,7 +134,7 @@ public class Files {
         file.delete();
       }
     }
-    directory.delete();
+    return directory.delete();
   }
 
   public static void copyStreamTofile(InputStream inputStream, String file) throws IOException {

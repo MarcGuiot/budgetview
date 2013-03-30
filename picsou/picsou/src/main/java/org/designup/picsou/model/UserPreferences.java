@@ -121,9 +121,9 @@ public class UserPreferences {
     return prefs.isTrue(SHOW_RECONCILIATION);
   }
 
-  public static void initMobilePassword(GlobRepository repository) {
+  public static void initMobilePassword(GlobRepository repository, boolean force) {
     Glob prefs = repository.findOrCreate(KEY);
-    if (prefs.get(PASSWORD_FOR_MOBILE) == null) {
+    if (prefs.get(PASSWORD_FOR_MOBILE) == null || force) {
       repository.update(KEY, PASSWORD_FOR_MOBILE, RandomStringUtils.randomAlphanumeric(6).toLowerCase());
     }
   }

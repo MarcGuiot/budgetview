@@ -1,5 +1,6 @@
 package org.designup.picsou.license.servlet;
 
+import com.budgetview.shared.utils.ComCst;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.generator.LicenseGenerator;
 import org.designup.picsou.license.mail.Mailer;
@@ -40,7 +41,7 @@ public class AskForCodeServlet extends HttpServlet {
       resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_UNKNOWN);
       return;
     }
-    String lang = req.getHeader(ConfigService.HEADER_LANG);
+    String lang = req.getHeader(ComCst.HEADER_LANG);
     mailTo = mailTo.trim();
     logger.info("code requested for '" + mailTo + "' in " + lang);
     try {

@@ -5,7 +5,9 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.log4j.Logger;
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.license.Lang;
 import org.designup.picsou.license.mail.Mailer;
+import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,18 +17,14 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Arrays;
 
-public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
-  static Logger logger = Logger.getLogger("SendMailCreateMobileUserServlet");
+public class DeleteMobileUserServlet extends AbstractHttpServlet {
+  static Logger logger = Logger.getLogger("DeleteMobileUserServlet");
   private String root;
-  private Integer sslPort;
-  private Integer port;
-  private Mailer mailer;
+  private final Mailer mailer;
 
-  public SendMailCreateMobileUserServlet(String root, Directory directory, Integer sslPort, Integer port) {
+  public DeleteMobileUserServlet(String root, Directory directory) {
     this.root = root;
-    this.sslPort = sslPort;
-    this.port = port;
-    this.mailer = directory.get(Mailer.class);
+    mailer = directory.get(Mailer.class);
   }
 
   protected void action(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
@@ -34,6 +32,7 @@ public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
     String mail = URLDecoder.decode(httpServletRequest.getHeader(ConfigService.HEADER_MAIL), "UTF-8");
     String codedMail = httpServletRequest.getHeader(ConfigService.CODING);
     String sha1Mail = httpServletRequest.getHeader(ComCst.CRYPTED_INFO);
+    logger.info("receive delete for " + mail + " " + sha1Mail);
 
     byte[] decryptedMail = CreateMobileUserServlet.encryptor.decrypt(Base64.decodeBase64(URLDecoder.decode(codedMail, "UTF-8").getBytes()));
     if (!Arrays.equals(decryptedMail, mail.getBytes("UTF-8"))) {
@@ -44,18 +43,24 @@ public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
     String dirName = ReceiveDataServlet.generateDirName(mail);
     File dir = new File(root, dirName);
     if (dir.exists()) {
-      String content = "Directory already exist " + dir.getAbsolutePath();
-      logger.info(content + " : " + mail);
+      if (!ReceiveDataServlet.checkSha1Code(sha1Mail, dir)){
+        logger.info("bad sha1 code");
+        httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+      }
+      else {
+        if (!Files.deleteSubtree(dir)){
+          logger.info("Directory found " + dir.getAbsolutePath() + " : " + mail + " but unable to delete it");
+          mailer.sendToSupport(Mailer.Mailbox.ADMIN, mail, "can not delete directory",
+                               "delete the directory '" + dir.getAbsolutePath() + "'");
+        } else {
+          logger.info("Directory found " + dir.getAbsolutePath() + " : " + mail + " and deleted.");
+        }
+        httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+      }
     }
-    URIBuilder builder = new URIBuilder("http://www.mybudgetview.fr:" + port+ LicenseServer.CREATE_MOBILE_USER);
-    builder.addParameter(ConfigService.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
-    builder.addParameter(ComCst.HEADER_LANG, lang);
-    builder.addParameter(ConfigService.CODING, codedMail);
-    builder.addParameter(ComCst.CRYPTED_INFO, sha1Mail);
-
-    String asciiUrl = builder.build().toASCIIString();
-    mailer.sendNewMobileAccount(mail, lang, asciiUrl);
-    httpServletResponse.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
-    httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+    else {
+      logger.info("directory " + dir.getAbsolutePath() + " not found.");
+      httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    }
   }
 }
