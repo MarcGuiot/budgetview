@@ -237,7 +237,6 @@ public class HttpsDataSync implements DataSync {
     GlobRepository repository = app.getRepository();
     repository.deleteAll();
     XmlGlobParser.parse(MobileModel.get(), repository, reader, "globs");
-    app.forceLocale("fr");
   }
 
   public boolean canConnect() {
