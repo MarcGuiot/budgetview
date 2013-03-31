@@ -11,55 +11,54 @@ import javax.swing.*;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
-public class DeleteMobileAccountChecker extends GuiChecker{
+public class EditMobileAccountChecker extends GuiChecker{
   private Window dialog;
 
-  public static DeleteMobileAccountChecker open(Trigger trigger) {
-    return new DeleteMobileAccountChecker(WindowInterceptor.getModalDialog(trigger));
+  public static EditMobileAccountChecker open(Trigger trigger) {
+    return new EditMobileAccountChecker(WindowInterceptor.getModalDialog(trigger));
   }
 
-  private DeleteMobileAccountChecker(Window dialog) {
+  private EditMobileAccountChecker(Window dialog) {
     this.dialog = dialog;
   }
 
-  public DeleteMobileAccountChecker setEmail(String mail, String password) {
+  public EditMobileAccountChecker setEmail(String mail) {
     dialog.getInputTextBox("emailField").setText(mail);
-    dialog.getInputTextBox("passwordField").setText(password);
     return this;
   }
 
   public String getPassword() {
-    return dialog.getInputTextBox("passwordField").getText();
+    return dialog.getTextBox("passwordLabel").getText();
   }
 
-  public DeleteMobileAccountChecker validateAndClose() {
+  public EditMobileAccountChecker validateAndClose() {
     clickDeleteButton();
     checkComponentVisible(dialog, JButton.class, "delete", false);
-    checkComponentVisible(dialog, JEditorPane.class, "completionMessage", true);
+    checkComponentVisible(dialog, JEditorPane.class, "deletionMessage", true);
     assertThat(dialog.isVisible());
     close();
     assertFalse(dialog.isVisible());
     return this;
   }
 
-  public DeleteMobileAccountChecker validateAndCheckEmailTip(String errorMessage) {
+  public EditMobileAccountChecker validateAndCheckEmailTip(String errorMessage) {
     return checkErrorTip(errorMessage, "emailField");
   }
 
-  private DeleteMobileAccountChecker checkErrorTip(String errorMessage, String fieldName) {
+  private EditMobileAccountChecker checkErrorTip(String errorMessage, String fieldName) {
     clickDeleteButton();
     UISpecAssert.assertTrue(dialog.isVisible());
     checkTipVisible(dialog, dialog.getInputTextBox(fieldName), errorMessage);
     return this;
   }
 
-  public DeleteMobileAccountChecker validateAndCheckUnknownUser() {
+  public EditMobileAccountChecker validateAndCheckUnknownUser() {
     clickDeleteButton();
     assertThat(dialog.getTextBox("message").textContains("Bad password or bad email"));
     return this;
   }
 
-  public DeleteMobileAccountChecker checkNoErrorsShown() {
+  public EditMobileAccountChecker checkNoErrorsShown() {
     checkNoTipVisible(dialog);
     assertThat(dialog.getTextBox("message").textIsEmpty());
     return this;
@@ -69,18 +68,14 @@ public class DeleteMobileAccountChecker extends GuiChecker{
     dialog.getButton(Lang.get("mobile.user.delete.button")).click();
   }
 
+  public EditMobileAccountChecker checkUser(String mail, String password) {
+    assertThat(dialog.getInputTextBox("emailField").textEquals(mail));
+    assertThat(dialog.getTextBox("passwordLabel").textEquals(password));
+    return this;
+  }
+
   public void close() {
     dialog.getButton(Lang.get("close")).click();
     assertFalse(dialog.isVisible());
-  }
-
-  public void checkUser(String mail, String password) {
-    assertThat(dialog.getInputTextBox("emailField").textEquals(mail));
-    assertThat(dialog.getInputTextBox("passwordField").textEquals(password));
-  }
-
-  public void checkEmpty() {
-    assertThat(dialog.getInputTextBox("emailField").textIsEmpty());
-    assertThat(dialog.getInputTextBox("passwordField").textIsEmpty());
   }
 }

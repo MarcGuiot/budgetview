@@ -35,7 +35,6 @@ public class BnpWebConnection extends HttpWebConnection {
                     "<INPUT size=\"10\" maxlength=\"6\" name=\"ch2\" value=\"\" type=\"password\" disabled > ".getBytes());
     builder.replace("document.write('<INPUT size=\"10\" ');".getBytes(), " ".getBytes());
     builder.replace("document.write('<INPUT size=\"5\" ');".getBytes(), " ".getBytes());
-
   }
 
   public BnpWebConnection(WebClient client) {
@@ -46,19 +45,8 @@ public class BnpWebConnection extends HttpWebConnection {
     URL url = request.getUrl();
     String path = url.getPath();
     WebResponse response = null;
-//    if (path.endsWith("/scripts/particulier_portail.js")) {
-//      return new StringWebResponse(Files.loadFileToString("/connectors/bnp/particulier_portail.js"), url);
-//    }
-//    if (path.endsWith("rsc/ia/overview/scripts/prototype.js")) {
-//      return new StringWebResponse(Files.loadFileToString("/connectors/bnp/prototype.js"), url);
-//    }
-//    if (path.endsWith("rsc/ia/overview/scripts/overview.js")) {
-//      return new StringWebResponse(Files.loadFileToString("/connectors/bnp/overview.js"), url);
-//    }
     if (!FILTER_JS || shouldInclude(path)) {
-      System.out.print("    web request: " + url + "... ");
       response = super.getResponse(request);
-      System.out.println(" >> done in " + (response.getLoadTime() / 1000) + "s");
     }
     else {
       response = new StringWebResponse("", url);

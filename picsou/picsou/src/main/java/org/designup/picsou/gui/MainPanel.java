@@ -26,8 +26,7 @@ import org.designup.picsou.gui.help.actions.SendLogsAction;
 import org.designup.picsou.gui.license.LicenseExpirationAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
-import org.designup.picsou.gui.mobile.CreateMobileAccountAction;
-import org.designup.picsou.gui.mobile.DeleteMobileAccountAction;
+import org.designup.picsou.gui.mobile.EditMobileAccountAction;
 import org.designup.picsou.gui.mobile.DumpMobileXmlAction;
 import org.designup.picsou.gui.mobile.SendMobileDataAction;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
@@ -117,8 +116,7 @@ public class MainPanel {
   private CategorizationView categorizationView;
   private SignpostView signpostView;
   private Action threadsAction;
-  private CreateMobileAccountAction createMobileAccountAction;
-  private DeleteMobileAccountAction deleteMobileAccountAction;
+  private EditMobileAccountAction editMobileAccountAction;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -172,8 +170,7 @@ public class MainPanel {
     logoutAction = new LogoutAction(logoutService);
     setPasswordAction = new SetPasswordAction(repository, directory);
     deleteUserAction = new DeleteUserAction(this, repository, directory);
-    createMobileAccountAction = new CreateMobileAccountAction(directory, repository);
-    deleteMobileAccountAction = new DeleteMobileAccountAction(directory, repository);
+    editMobileAccountAction = new EditMobileAccountAction(repository, directory);
     threadsAction = new SendStackTracesAction(repository, directory);
 
     LicenseInfoView licenseInfoView = new LicenseInfoView(repository, directory);
@@ -299,8 +296,7 @@ public class MainPanel {
 
 //    Utils.beginRemove();
     menu.addSeparator();
-    menu.add(createMobileAccountAction);
-    menu.add(deleteMobileAccountAction);
+    menu.add(editMobileAccountAction);
     menu.add(new SendMobileDataAction(repository, directory));
 //    Utils.endRemove();
 

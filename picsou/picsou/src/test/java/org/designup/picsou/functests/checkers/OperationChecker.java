@@ -703,11 +703,11 @@ public class OperationChecker {
     return CreateMobileAccountChecker.open(getFileMenu().getSubMenu(Lang.get("mobile.user.create.action.name")).triggerClick());
   }
 
-  public MessageDialogChecker sendDataToServer() {
-    return MessageDialogChecker.open(getFileMenu().getSubMenu(Lang.get("mobile.menu.send.data")).triggerClick());
+  public EditMobileAccountChecker deleteMobileAccountUser() {
+    return EditMobileAccountChecker.open(getFileMenu().getSubMenu(Lang.get("mobile.user.create.action.name")).triggerClick());
   }
 
-  public DeleteMobileAccountChecker deleteMobileAccountUser() {
-    return DeleteMobileAccountChecker.open(getFileMenu().getSubMenu(Lang.get("mobile.user.delete.action.name")).triggerClick());
+  public MessageDialogChecker sendDataToServer() {
+    return MessageDialogChecker.open(getFileMenu().getSubMenu(Lang.get("mobile.menu.send.data")).triggerClick());
   }
 }

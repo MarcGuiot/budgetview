@@ -73,9 +73,9 @@ public class PicsouApplication {
   public static final String TODAY = ".today";
   public static String FORCE_DATE = APPNAME + TODAY;
 
-  public static final String REGISTER_URL = "https://register.mybudgetview.fr:443";
-  public static final String REGISTER_URL_MOBILE = "http://register.mybudgetview.fr:8080";
-  public static final String FTP_URL = "ftp://ftpjar.mybudgetview.fr";
+  public static final String LICENSE_SERVER_URL = "https://register.mybudgetview.fr:443";
+  public static final String MOBILE_SERVER_URL = "http://register.mybudgetview.fr:8080";
+  public static final String FTP_SERVER_URL = "ftp://ftpjar.mybudgetview.fr";
 
   public static boolean EXIT_ON_DATA_ERROR = true;
 

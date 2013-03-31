@@ -19,31 +19,33 @@
             <card name="activation">
               <column>
                 <htmlEditorPane text="$mobile.dialog.intro.message" styleClass="multiLineLabel" margin="10"
-                                marginBottom="5"
-                                weightY="1"/>
+                                marginBottom="5" weightY="1"/>
 
-                <label text="$mobile.dialog.section.account" styleClass="formSection"/>
+                <button icon="googleplay.png" action="gotoGooglePlay" styleClass="iconOnly" anchor="center" margin="5"/>
 
-                <grid marginLeft="15" marginRight="15">
-                  <label text="$mobile.mail" gridPos="(0,0)" styleClass="formLabel"/>
-                  <textField ref="emailField" gridPos="(1,0)" columns="60"/>
-                  <button ref="create" gridPos="(2,0)" fill="none" marginLeft="10" anchor="center"/>
-                  <component ref="progress" gridPos="(3,0)" fill="none" marginLeft="10" anchor="center"
-                             weightX="0.1"/>
-                </grid>
+                <htmlEditorPane text="$mobile.dialog.intro.activate" styleClass="multiLineLabel" margin="10"
+                                marginBottom="5" weightY="1"/>
+
+                <row>
+                  <filler fill="horizontal"/>
+                  <grid>
+                    <label text="$mobile.mail" gridPos="(0,0)" styleClass="formLabel"/>
+                    <textField ref="emailField" gridPos="(1,0,2,1)" columns="60"/>
+                    <label text="$mobile.password" gridPos="(0,1)" styleClass="formLabel" marginTop="10"/>
+                    <label ref="passwordLabel" font="-,bold,16" gridPos="(1,1)" fill="none" anchor="right"
+                           marginRight="20" marginTop="10"/>
+                    <button action="changePassword" gridPos="(2,1)" styleClass="hyperlink" font="-,plain,10"
+                            fill="none" marginTop="10" marginLeft="5" anchor="left"/>
+                  </grid>
+                  <filler fill="horizontal"/>
+                </row>
+
+                <button ref="activate" fill="none" margin="10" marginTop="20" anchor="center"/>
+                <component ref="progress" gridPos="(4,0)" fill="none" margin="10" anchor="center"
+                           weightX="0.1"/>
 
                 <htmlEditorPane ref="message" styleClass="errorMessage" border="empty(10,0,10,0)"/>
 
-                <label text="$mobile.dialog.section.app" styleClass="formSection"/>
-                <htmlEditorPane text="$mobile.dialog.app.message" styleClass="multiLineLabel"/>
-                <button icon="googleplay.png" action="gotoGooglePlay" styleClass="iconOnly" anchor="center" margin="5"/>
-
-                <label text="$mobile.dialog.section.password" styleClass="formSection"/>
-                <htmlEditorPane text="$mobile.password" styleClass="multiLineLabel"/>
-                <grid marginLeft="15" marginRight="15" marginTop="10">
-                  <label ref="passwordLabel" font="-,bold,20" gridPos="(0,0)" fill="none" anchor="right" marginRight="20"/>
-                  <button ref="generateNew" gridPos="(1,0)" fill="none" marginLeft="5" anchor="left"/>
-                </grid>
                 <filler fill="vertical"/>
 
               </column>
@@ -51,14 +53,7 @@
             </card>
 
             <card name="confirmation">
-              <column>
-                <filler fill="vertical" weightY="50"/>
-                <row>
-                  <label icon="status_completed.png" marginRight="10" anchor="top"/>
-                  <htmlEditorPane text="$mobile.dialog.confirmation" name="completionMessage"/>
-                </row>
-                <filler fill="vertical" weightY="100"/>
-              </column>
+              <panel ref="confirmMobileAccount"/>
             </card>
 
           </cards>

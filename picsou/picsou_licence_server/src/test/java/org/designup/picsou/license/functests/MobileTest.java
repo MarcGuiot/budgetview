@@ -13,7 +13,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.designup.picsou.functests.checkers.ApplicationChecker;
 import org.designup.picsou.functests.checkers.CreateMobileAccountChecker;
-import org.designup.picsou.functests.checkers.DeleteMobileAccountChecker;
 import org.designup.picsou.functests.checkers.MessageDialogChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.license.ConnectedTestCase;
@@ -43,29 +42,28 @@ public class MobileTest extends ConnectedTestCase {
   public void testCreateAndDeleteAccount() throws Exception {
     String mail = "test@mybudgetview.fr";
     SharingConnection connection = requestMobileAccount(mail);
-    String url = connection.url;
-    followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok");
+    followUrl(connection.url, 302, "http://www.mybudgetview.com/mobile/account-ok");
+
     application.openMobileAccountDialog()
-      .setEmail(mail)
+      .setEmailAndValidate(mail)
+      .checkConfirmationAndClose();
+
+    application.openDeleteMobileAccountDialog()
+      .checkUser(mail, connection.password)
       .validateAndClose();
 
-    DeleteMobileAccountChecker deleteAccount = application.openDeleteMobileAccountDialog();
-    deleteAccount.checkUser(mail, connection.password);
-    deleteAccount.validateAndClose();
-
-    deleteAccount = application.openDeleteMobileAccountDialog();
-    deleteAccount.checkEmpty();
-    deleteAccount.setEmail(mail, connection.password);
-    deleteAccount.validateAndCheckUnknownUser();
+    application.openMobileAccountDialog()
+      .checkTitle()
+      .close();
   }
 
   public void testEmptyEmailMessage() throws Exception {
     String mail = "test@mybudgetview.fr";
     application.openMobileAccountDialog()
       .validateAndCheckEmailTip("You must enter your email address")
-      .setEmail(mail)
+      .setEmailAndValidate(mail)
       .checkNoErrorsShown()
-      .validateAndClose();
+      .checkConfirmationAndClose();
     Email email = mailServer.checkReceivedMail(mail);
     email.checkContains("http");
   }
@@ -74,8 +72,8 @@ public class MobileTest extends ConnectedTestCase {
     String mail = "test@mybudgetview.fr";
     {
       //String url = requestMobileAccount(mail, "hello");
-    SharingConnection sharingConnection = requestMobileAccount(mail);
-    String url = sharingConnection.url;
+      SharingConnection sharingConnection = requestMobileAccount(mail);
+      String url = sharingConnection.url;
       followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok");
 
       String path = OfxBuilder
@@ -85,12 +83,14 @@ public class MobileTest extends ConnectedTestCase {
         .save();
       application.getOperations().importOfxFile(path);
 
-      MessageDialogChecker messageDialogChecker = application.getOperations().sendDataToServer();
-      messageDialogChecker.checkSuccessMessageContains("Data sent to server")
+      application.getOperations()
+        .sendDataToServer()
+        .checkSuccessMessageContains("Data sent to server")
         .close();
+
       HttpClient httpClient = new DefaultHttpClient();
       URIBuilder builder = new URIBuilder("http://localhost:" + httpPort + ComCst.GET_MOBILE_DATA);
-    Crypt crypt = new Crypt(sharingConnection.password.toCharArray());
+      Crypt crypt = new Crypt(sharingConnection.password.toCharArray());
       builder.addParameter("mail", URLEncoder.encode(mail, "UTF-8"));
       builder.addParameter(ComCst.CRYPTED_INFO,
                            URLEncoder.encode(Crypt.encodeSHA1AndHex(crypt.encodeData(mail.getBytes("UTF-8"))), "UTF-8"));
@@ -109,14 +109,15 @@ public class MobileTest extends ConnectedTestCase {
       // change password
       String url2 = newPasswordRequest(mail).url;
 
-      messageDialogChecker = application.getOperations().sendDataToServer();
-      messageDialogChecker.checkErrorMessageContains("Fail to sent data to server: Password has change")
+      application.getOperations()
+        .sendDataToServer()
+        .checkErrorMessageContains("Failed to send data to server: Password has changed")
         .close();
 
       followUrl(url2, 302, "http://www.mybudgetview.com/mobile/account-already-present");
-
-      messageDialogChecker = application.getOperations().sendDataToServer();
-      messageDialogChecker.checkSuccessMessageContains("Data sent to server")
+      application.getOperations()
+        .sendDataToServer()
+        .checkSuccessMessageContains("Data sent to server")
         .close();
     }
 
@@ -180,14 +181,15 @@ public class MobileTest extends ConnectedTestCase {
   private SharingConnection requestMobileAccount(String userMail) throws InterruptedException {
     return requestMobileAccount(userMail, false);
   }
+
   private SharingConnection requestMobileAccount(String userMail, boolean generateNewPwd) throws InterruptedException {
     CreateMobileAccountChecker dialog = application.openMobileAccountDialog();
-    if (generateNewPwd){
+    if (generateNewPwd) {
       dialog.generateNewPassword();
     }
     String password = dialog.getPassword();
-    dialog.setEmail(userMail);
-    dialog.validateAndClose();
+    dialog.setEmailAndValidate(userMail);
+    dialog.checkConfirmationAndClose();
 
     Email email = mailServer.checkReceivedMail(userMail);
     email.checkContains("http");

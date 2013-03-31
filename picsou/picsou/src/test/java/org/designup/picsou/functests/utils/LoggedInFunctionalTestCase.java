@@ -83,7 +83,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     System.setProperty(PicsouApplication.LOG_TO_SOUT, "true");
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
     System.setProperty(ConfigService.COM_APP_LICENSE_URL, "");
-    System.setProperty(ConfigService.COM_APP_LICENSE_FTP_URL, "");
+    System.setProperty(ConfigService.COM_APP_FTP_URL, "");
     DefaultSeriesFactory.AUTO_CREATE_DEFAULT_SERIES = createDefaultSeries;
 
     application = new ApplicationChecker();

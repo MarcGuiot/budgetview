@@ -144,7 +144,7 @@ public class ApplicationChecker extends GuiChecker {
     return getOperations().openCreateMobileUser();
   }
 
-  public DeleteMobileAccountChecker openDeleteMobileAccountDialog() {
+  public EditMobileAccountChecker openDeleteMobileAccountDialog() {
     return getOperations().deleteMobileAccountUser();
   }
 

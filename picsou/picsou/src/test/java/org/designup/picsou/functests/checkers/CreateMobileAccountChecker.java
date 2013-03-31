@@ -22,7 +22,7 @@ public class CreateMobileAccountChecker extends GuiChecker{
     this.dialog = dialog;
   }
 
-  public CreateMobileAccountChecker setEmail(String mail) {
+  public CreateMobileAccountChecker setEmailAndValidate(String mail) {
     dialog.getInputTextBox("emailField").setText(mail);
     return this;
   }
@@ -31,13 +31,11 @@ public class CreateMobileAccountChecker extends GuiChecker{
     return dialog.getTextBox("passwordLabel").getText();
   }
 
-  public CreateMobileAccountChecker validateAndClose() {
-//    clickCreateButton();
-    checkComponentVisible(dialog, JButton.class, "create", false);
+  public CreateMobileAccountChecker checkConfirmationAndClose() {
+    checkComponentVisible(dialog, JButton.class, "activate", false);
     checkComponentVisible(dialog, JEditorPane.class, "completionMessage", true);
     assertThat(dialog.isVisible());
     close();
-    assertFalse(dialog.isVisible());
     return this;
   }
 
@@ -75,5 +73,10 @@ public class CreateMobileAccountChecker extends GuiChecker{
 
   public void generateNewPassword() {
     dialog.getButton(Lang.get("mobile.user.generate.new.password")).click();
+  }
+
+  public CreateMobileAccountChecker checkTitle() {
+    assertThat(dialog.getTextBox("title").textEquals(Lang.get("mobile.dialog.title")));
+    return this;
   }
 }

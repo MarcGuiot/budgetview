@@ -33,8 +33,6 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
   private static final String INDEX = "https://www.secure.bnpparibas.net/banque/portail/particulier/HomeConnexion?type=homeconnex";
   private static final String HOME_URL = "https://www.secure.bnpparibas.net/banque/portail/particulier/FicheA?pageId=unedescomptesnode";
   private static final String DOWNLOADS_URL = "https://www.secure.bnpparibas.net/NSFR?Action=ASK_TELE";
-  //  private static final String INDEX = "file:index.html";
-  //  private static final String URL_TELECHARGEMENT = "file:tel_telechargement.html";
   private static final Pattern ACCOUNT_DATE_REGEXP = Pattern.compile("Solde[ \n]+au[ \n]+([0-9]+/[0-9]+/[0-9]+).*");
   private Action loginAction;
   private Action clearCodeAction;

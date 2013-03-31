@@ -56,7 +56,7 @@ public class ConfigService {
 
   public static final String COM_APP_LICENSE_URL = PicsouApplication.APPNAME + ".license.url";
   public static final String COM_APP_MOBILE_URL = PicsouApplication.APPNAME + ".mobile.url";
-  public static final String COM_APP_LICENSE_FTP_URL = PicsouApplication.APPNAME + ".license.ftp.url";
+  public static final String COM_APP_FTP_URL = PicsouApplication.APPNAME + ".license.ftp.url";
   public static final String HEADER_TO_MAIL = "toMail";
   public static final String HEADER_MAIL = "mail";
   public static final String HEADER_MAIL_TITLE = "title";
@@ -109,9 +109,9 @@ public class ConfigService {
                                            124, 59, 15, -50, 71, -16, -17, -26, -124, 53, -120, 46, -53, 36, 103, -86, -92, -57,
                                            -31, -77, -106, -30, -88, -18, -48, -117, 39, 107, 2, 3, 1, 0, 1};
 
-  private String URL = PicsouApplication.REGISTER_URL;
-  private String URL_MOBILE = PicsouApplication.REGISTER_URL_MOBILE;
-  private String FTP_URL = PicsouApplication.FTP_URL;
+  private final String LICENSE_SERVER_URL;
+  private final String MOBILE_SERVER_URL;
+  private final String FTP_SERVER_URL;
   private long localJarVersion = -1;
   private long localConfigVersion = -1;
   private String applicationVersion;
@@ -132,15 +132,15 @@ public class ConfigService {
     this.currentConfigFile = currentConfigFile;
     Utils.beginRemove();
     RETRY_PERIOD = 500;
-    URL = System.getProperty(COM_APP_LICENSE_URL);
-    URL_MOBILE = System.getProperty(COM_APP_MOBILE_URL);
-    FTP_URL = System.getProperty(COM_APP_LICENSE_FTP_URL);
+
+    LICENSE_SERVER_URL = System.getProperty(COM_APP_LICENSE_URL, PicsouApplication.LICENSE_SERVER_URL);
+    MOBILE_SERVER_URL = System.getProperty(COM_APP_MOBILE_URL, PicsouApplication.MOBILE_SERVER_URL);
+    FTP_SERVER_URL = System.getProperty(COM_APP_FTP_URL, PicsouApplication.FTP_SERVER_URL);
+
     Utils.endRemove();
     this.applicationVersion = applicationVersion;
     localJarVersion = jarVersion;
     this.localConfigVersion = localConfigVersion;
-//    Protocol easyhttps = new Protocol("https", new HttpsClientTransport.EasySSLProtocolSocketFactory(), 8443);
-//    Protocol.registerProtocol("https", easyhttps);
   }
 
   synchronized public boolean loadConfigFileFromLastestJar(Directory directory, GlobRepository repository) {
@@ -151,7 +151,7 @@ public class ConfigService {
   synchronized public String askForNewCodeByMail(String mail) {
     HttpPost postMethod = null;
     try {
-      String url = URL + REQUEST_FOR_MAIL;
+      String url = LICENSE_SERVER_URL + REQUEST_FOR_MAIL;
       HttpResponse response;
       try {
         postMethod = createPostMethod(url);
@@ -248,7 +248,7 @@ public class ConfigService {
     HttpPost postMethod = null;
     try {
       this.repoId = repoId;
-      String url = URL + REQUEST_FOR_CONFIG;
+      String url = LICENSE_SERVER_URL + REQUEST_FOR_CONFIG;
       HttpResponse response;
       try {
         postMethod = createNewConfigPostMethod(repoId, mail, signature, launchCount, activationCode, url);
@@ -271,7 +271,7 @@ public class ConfigService {
           if (localConfigVersion < newConfigVersion) {
             configReceive = new ConfigReceive(directory, repository);
             dowloadConfigThread =
-              new DownloadThread(FTP_URL, AppPaths.getBankConfigPath(),
+              new DownloadThread(FTP_SERVER_URL, AppPaths.getBankConfigPath(),
                                  generateConfigJarName(newConfigVersion), newConfigVersion, configReceive);
             dowloadConfigThread.start();
           }
@@ -282,7 +282,7 @@ public class ConfigService {
           if (localJarVersion < newJarVersion) {
             jarReceive = new JarReceive(directory, repository, serverAccess);
             dowloadJarThread =
-              new DownloadThread(FTP_URL, AppPaths.getJarPath(),
+              new DownloadThread(FTP_SERVER_URL, AppPaths.getJarPath(),
                                  generatePicsouJarName(newJarVersion), newJarVersion, jarReceive);
             dowloadJarThread.start();
           }
@@ -342,7 +342,7 @@ public class ConfigService {
 
     HttpClient client = getNewHttpClient();
     HttpPost postMethod;
-    postMethod = createPostMethod(URL_MOBILE + REQUEST_CLIENT_TO_SERVER_DATA);
+    postMethod = createPostMethod(MOBILE_SERVER_URL + REQUEST_CLIENT_TO_SERVER_DATA);
 
     try {
 
@@ -381,14 +381,14 @@ public class ConfigService {
 
   synchronized public void sendRegister(String mail, String code, final GlobRepository repository) {
     Utils.beginRemove();
-    if (URL == null || URL.length() == 0) {
+    if (LICENSE_SERVER_URL == null || LICENSE_SERVER_URL.length() == 0) {
       return;
     }
     Utils.endRemove();
     HttpPost postMethod = null;
     HttpResponse response;
     try {
-      String url = URL + REQUEST_FOR_REGISTER;
+      String url = LICENSE_SERVER_URL + REQUEST_FOR_REGISTER;
       try {
         postMethod = createRegisterPostMethod(mail, code, url);
         HttpClient httpClient = getNewHttpClient();
@@ -485,7 +485,7 @@ public class ConfigService {
   }
 
   public void sendUsageData(String msg) throws IOException {
-    String url = URL + SEND_USE_INFO;
+    String url = LICENSE_SERVER_URL + SEND_USE_INFO;
 
     HttpPost postMethod = createPostMethod(url);
     postMethod.setHeader(HEADER_USE_INFO, msg);
@@ -496,7 +496,7 @@ public class ConfigService {
   public boolean createMobileAccount(String mail, String password, Ref<String> message) {
     HttpPost postMethod = null;
     try {
-      postMethod = createPostMessage(mail, password, URL_MOBILE + ComCst.SEND_MAIL_TO_CONFIRM_MOBILE);
+      postMethod = createPostMessage(mail, password, MOBILE_SERVER_URL + ComCst.SEND_MAIL_TO_CONFIRM_MOBILE);
       HttpClient httpClient = getNewHttpClient();
       HttpResponse response = httpClient.execute(postMethod);
       updateConnectionStatusOk();
@@ -548,7 +548,7 @@ public class ConfigService {
   public boolean deleteMobileAccount(String mail, String password, Ref<String> message) {
     HttpPost postMethod = null;
     try {
-      postMethod = createPostMessage(mail, password, URL_MOBILE + ComCst.DELETE_MOBILE_ACCOUNT);
+      postMethod = createPostMessage(mail, password, MOBILE_SERVER_URL + ComCst.DELETE_MOBILE_ACCOUNT);
       HttpClient httpClient = getNewHttpClient();
       HttpResponse response = httpClient.execute(postMethod);
       updateConnectionStatusOk();
@@ -631,7 +631,7 @@ public class ConfigService {
       isValideUser = false;
     }
     final String signature = signatureInByte == null ? null : Encoder.byteToString(signatureInByte);
-    if (URL != null && URL.length() != 0) {
+    if (LICENSE_SERVER_URL != null && LICENSE_SERVER_URL.length() != 0) {
       // le thread est inliné pour eviter de copier (donc de rendre visible) les variables (repoId, ...)
       // dans des donnée membres
       Thread request = new Thread() {
@@ -640,7 +640,7 @@ public class ConfigService {
         }
 
         public void run() {
-          if (URL == null) {
+          if (LICENSE_SERVER_URL == null) {
             return;
           }
           boolean connectionEstablished = false;
@@ -701,7 +701,7 @@ public class ConfigService {
 
   public Boolean isVerifiedServerValidity() {
     Utils.beginRemove();
-    if (URL == null || URL.length() == 0) {
+    if (LICENSE_SERVER_URL == null || LICENSE_SERVER_URL.length() == 0) {
       userState = new CompletedUserState("local");
       return true;
     }
@@ -885,7 +885,7 @@ public class ConfigService {
     }
 
     public void run() {
-      String url = URL + REQUEST_SEND_MAIL;
+      String url = LICENSE_SERVER_URL + REQUEST_SEND_MAIL;
       HttpPost postMethod = createPost(url);
       HttpResponse response;
       try {

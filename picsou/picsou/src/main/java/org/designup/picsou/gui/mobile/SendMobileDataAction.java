@@ -28,38 +28,16 @@ import java.io.Writer;
 import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
-public class SendMobileDataAction extends AbstractAction {
-  private GlobRepository repository;
-  private Directory directory;
+public class SendMobileDataAction extends AbstractMobileAction {
   private ConfigService configService;
 
   public SendMobileDataAction(GlobRepository repository, Directory directory) {
-    super(Lang.get("mobile.menu.send.data"));
-    this.repository = repository;
-    this.directory = directory;
+    super(Lang.get("mobile.menu.send.data"), repository, directory);
     this.configService = directory.get(ConfigService.class);
-    updateStatus(repository);
-    repository.addChangeListener(new ChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(UserPreferences.KEY)) {
-          updateStatus(repository);
-        }
-      }
-
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        if (changedTypes.contains(UserPreferences.TYPE)) {
-          updateStatus(repository);
-        }
-      }
-    });
   }
 
-  private Glob updateStatus(GlobRepository repository) {
-    Glob preference = repository.find(UserPreferences.KEY);
-    if (preference != null) {
-      setEnabled(Strings.isNotEmpty(preference.get(UserPreferences.MAIL_FOR_MOBILE)));
-    }
-    return preference;
+  protected void processMobileStatusChange(boolean enabled) {
+    setEnabled(enabled);
   }
 
   public void actionPerformed(ActionEvent actionEvent) {
