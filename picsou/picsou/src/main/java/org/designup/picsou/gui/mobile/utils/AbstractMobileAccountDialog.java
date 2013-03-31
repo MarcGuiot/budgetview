@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.mobile;
+package org.designup.picsou.gui.mobile.utils;
 
 import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.components.dialogs.CloseDialogAction;
@@ -20,12 +20,12 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-public abstract class MobileAccountDialog {
+public abstract class AbstractMobileAccountDialog {
   protected final LocalGlobRepository localRepository;
   protected final DefaultDirectory localDirectory;
   protected final SelectionService selectionService;
 
-  public MobileAccountDialog(GlobRepository parentRepository, Directory directory) {
+  public AbstractMobileAccountDialog(GlobRepository parentRepository, Directory directory) {
     this.localRepository =
       LocalGlobRepositoryBuilder.init(parentRepository)
         .copy(UserPreferences.TYPE)

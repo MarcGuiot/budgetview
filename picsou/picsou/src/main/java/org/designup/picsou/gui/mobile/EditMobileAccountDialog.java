@@ -6,6 +6,8 @@ import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.components.tips.TipPosition;
 import org.designup.picsou.gui.components.utils.CustomFocusTraversalPolicy;
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.gui.mobile.utils.AbstractMobileAccountDialog;
+import org.designup.picsou.gui.mobile.utils.ConfirmMobileAccountPanel;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
@@ -24,7 +26,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-public class DeleteMobileAccountDialog extends MobileAccountDialog {
+public class EditMobileAccountDialog extends AbstractMobileAccountDialog {
 
   private PicsouDialog dialog;
   private JEditorPane message;
@@ -32,7 +34,7 @@ public class DeleteMobileAccountDialog extends MobileAccountDialog {
   private JTextField emailField;
   private CardHandler cards;
 
-  public DeleteMobileAccountDialog(Directory directory, GlobRepository parentRepository) {
+  public EditMobileAccountDialog(Directory directory, GlobRepository parentRepository) {
     super(parentRepository, directory);
     createDialog();
   }
@@ -41,7 +43,7 @@ public class DeleteMobileAccountDialog extends MobileAccountDialog {
     dialog = PicsouDialog.create(localDirectory.get(JFrame.class), localDirectory);
     progressBar = new ProgressPanel();
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/mobile/deleteMobileAccountDialog.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/mobile/editMobileAccountDialog.splits",
                                                       localRepository, localDirectory);
 
     cards = builder.addCardHandler("cards");

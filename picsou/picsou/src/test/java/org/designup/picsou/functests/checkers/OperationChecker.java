@@ -1,6 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.TestCase;
+import org.designup.picsou.functests.checkers.mobile.CreateMobileAccountChecker;
+import org.designup.picsou.functests.checkers.mobile.EditMobileAccountChecker;
 import org.designup.picsou.functests.checkers.printing.PrintDialogChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.utils.Lang;

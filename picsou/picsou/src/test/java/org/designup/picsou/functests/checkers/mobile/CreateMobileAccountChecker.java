@@ -1,5 +1,6 @@
-package org.designup.picsou.functests.checkers;
+package org.designup.picsou.functests.checkers.mobile;
 
+import org.designup.picsou.functests.checkers.GuiChecker;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
@@ -11,7 +12,7 @@ import javax.swing.*;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
-public class CreateMobileAccountChecker extends GuiChecker{
+public class CreateMobileAccountChecker extends GuiChecker {
   private Window dialog;
 
   public static CreateMobileAccountChecker open(Trigger trigger) {

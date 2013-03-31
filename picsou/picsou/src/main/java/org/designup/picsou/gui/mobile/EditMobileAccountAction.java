@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.mobile;
 
+import org.designup.picsou.gui.mobile.utils.AbstractMobileAction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -24,7 +25,7 @@ public class EditMobileAccountAction extends AbstractMobileAction {
       dialog.show();
     }
     else {
-      DeleteMobileAccountDialog dialog = new DeleteMobileAccountDialog(directory, repository);
+      EditMobileAccountDialog dialog = new EditMobileAccountDialog(directory, repository);
       dialog.show();
     }
   }

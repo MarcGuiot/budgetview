@@ -6,6 +6,8 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.components.tips.TipPosition;
 import org.designup.picsou.gui.components.utils.CustomFocusTraversalPolicy;
+import org.designup.picsou.gui.mobile.utils.AbstractMobileAccountDialog;
+import org.designup.picsou.gui.mobile.utils.ConfirmMobileAccountPanel;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
@@ -18,7 +20,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
-public class CreateMobileAccountDialog extends MobileAccountDialog {
+public class CreateMobileAccountDialog extends AbstractMobileAccountDialog {
 
   private PicsouDialog dialog;
   private JEditorPane message;

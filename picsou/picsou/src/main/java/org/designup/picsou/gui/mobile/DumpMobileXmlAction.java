@@ -13,13 +13,10 @@ import java.awt.event.ActionEvent;
 
 public class DumpMobileXmlAction extends AbstractAction {
   private GlobRepository repository;
-  private Directory directory;
-  private ConfigService configService;
 
-  public DumpMobileXmlAction(GlobRepository repository, Directory directory) {
+  public DumpMobileXmlAction(GlobRepository repository) {
     super("[Dump mobile XML]");
     this.repository = repository;
-    this.directory = directory;
   }
 
   public void actionPerformed(ActionEvent actionEvent) {

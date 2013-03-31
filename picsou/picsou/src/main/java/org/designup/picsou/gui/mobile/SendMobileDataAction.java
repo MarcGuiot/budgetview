@@ -3,13 +3,11 @@ package org.designup.picsou.gui.mobile;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.gui.mobile.utils.AbstractMobileAction;
 import org.designup.picsou.mobile.BudgetValuesUpdater;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.repository.DefaultGlobIdGenerator;
@@ -19,13 +17,11 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.xml.XmlGlobWriter;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 public class SendMobileDataAction extends AbstractMobileAction {

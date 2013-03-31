@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.mobile;
+package org.designup.picsou.gui.mobile.utils;
 
 import org.designup.picsou.model.UserPreferences;
 import org.globsframework.metamodel.GlobType;

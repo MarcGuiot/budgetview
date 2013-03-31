@@ -353,7 +353,7 @@ public class MainPanel {
     devMenu.add(new DumpRepositoryAction(repository));
     devMenu.add(new ChangeDateAction(repository));
     devMenu.add(new AddAccountErrorAction(repository));
-    devMenu.add(new DumpMobileXmlAction(repository, directory));
+    devMenu.add(new DumpMobileXmlAction(repository));
     devMenu.add(threadsAction);
     return devMenu;
   }
