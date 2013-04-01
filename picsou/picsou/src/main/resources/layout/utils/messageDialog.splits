@@ -9,7 +9,7 @@
         <row>
           <label ref="icon" weightX="1" marginLeft="10" marginRight="5" marginTop="10" fill="none" anchor="top"/>
           <column weightX="100">
-            <htmlEditorPane ref="message" marginBottom="10" anchor="top"/>
+            <htmlEditorPane ref="messageField" marginBottom="10" anchor="top"/>
             <filler fill="vertical"/>
           </column>
         </row>

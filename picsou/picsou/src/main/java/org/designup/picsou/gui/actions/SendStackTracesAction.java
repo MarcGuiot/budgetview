@@ -67,7 +67,7 @@ public class SendStackTracesAction extends AbstractAction {
                                                       Log.write("Mail sent from " + mail + " - title : " + title + "\n" + content);
                                                     }
 
-                                                    public void sendFail(String mail, String title, String content) {
+                                                    public void sendFailed(String mail, String title, String content) {
                                                       Log.write("Failed to send mail from " + mail + " - title : " + title + "\n" + content);
                                                     }
                                                   });

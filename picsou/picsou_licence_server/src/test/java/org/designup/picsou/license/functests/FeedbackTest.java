@@ -101,4 +101,18 @@ public class FeedbackTest extends ConnectedTestCase {
                      PicsouApplication.APPLICATION_VERSION,
                      "[no log file found]");
   }
+
+  public void testSendFeedbackWithServerError() throws Exception {
+    startServers();
+    application.start();
+    Lang.setLocale(Locale.ENGLISH);
+
+    FeedbackDialogChecker feedbackDialog = openFeedback();
+    licenseServer.stop();
+    feedbackDialog.sendWithError("me@gg.fr", "some content\n\n-----\nfooter",
+                                 "Your message could not be sent");
+    mailServer.checkEmpty();
+
+    Lang.setLocale(Lang.ROOT);
+  }
 }

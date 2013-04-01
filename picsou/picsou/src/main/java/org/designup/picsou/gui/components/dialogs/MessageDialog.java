@@ -46,7 +46,7 @@ public class MessageDialog {
       .setSource(getClass(), "/layout/utils/messageDialog.splits");
 
     builder.add("title", new JLabel(Lang.get(titleKey)));
-    builder.add("message", new JEditorPane("text/html", Lang.get(contentKey, contentArgs)));
+    builder.add("messageField", new JEditorPane("text/html", Lang.get(contentKey, contentArgs)));
 
     builder.add("icon", new JLabel(getIcon(type)));
 

@@ -2,6 +2,8 @@ package org.designup.picsou.gui.feedback;
 
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.components.dialogs.CancelAction;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.server.DisconnectionTip;
 import org.designup.picsou.gui.config.ConfigService;
@@ -22,7 +24,6 @@ import java.io.File;
 
 public class FeedbackDialog {
   private PicsouDialog dialog;
-  private GlobRepository repository;
   private Directory directory;
 
   private JTextArea contentEditor;
@@ -32,13 +33,12 @@ public class FeedbackDialog {
   private DisconnectionTip disconnectionTip;
 
   public FeedbackDialog(Window parent, GlobRepository repository, final Directory directory) {
-    this.repository = repository;
     this.directory = directory;
 
     dialog = PicsouDialog.create(parent, directory);
 
     final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/feedback/feedbackDialog.splits",
-                                                      repository, directory);
+                                                            repository, directory);
     this.contentEditor = new JTextArea();
     builder.add("mailContent", contentEditor);
 
@@ -102,13 +102,24 @@ public class FeedbackDialog {
                                                   getMessageText(),
                                                   new ConfigService.Listener() {
                                                     public void sent(String mail, String title, String content) {
-                                                      Log.write("Mail sent from " + mail + " - title : " + title + "\n" + content);
+                                                      System.out.println("FeedbackDialog$SendAction.sent: ");
+                                                      showConfirmation();
                                                     }
 
-                                                    public void sendFail(String mail, String title, String content) {
-                                                      Log.write("Failed to send mail from " + mail + " - title : " + title + "\n" + content);
+                                                    public void sendFailed(String mail, String title, String content) {
+                                                      System.out.println("FeedbackDialog$SendAction.sendFailed: ");
+                                                      showFailure();
                                                     }
                                                   });
+    }
+
+    private void showConfirmation() {
+      MessageDialog.show("feedback.confirmation.ok.title", MessageType.SUCCESS, directory, "feedback.confirmation.ok.message");
+      dialog.setVisible(false);
+    }
+
+    private void showFailure() {
+      MessageDialog.show("feedback.confirmation.failed.title", MessageType.ERROR, directory, "feedback.confirmation.failed.message");
       dialog.setVisible(false);
     }
 

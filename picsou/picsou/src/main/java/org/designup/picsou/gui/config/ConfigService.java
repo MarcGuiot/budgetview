@@ -579,7 +579,7 @@ public class ConfigService {
   public interface Listener {
     void sent(String mail, String title, String content);
 
-    void sendFail(String mail, String title, String content);
+    void sendFailed(String mail, String title, String content);
   }
 
   synchronized public void sendMail(final String toMail, final String fromMail,
@@ -909,7 +909,7 @@ public class ConfigService {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
             Log.write("mail not sent", e);
-            listener.sendFail(fromMail, title, content);
+            listener.sendFailed(fromMail, title, content);
           }
         });
         return;
@@ -929,7 +929,7 @@ public class ConfigService {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
             Log.write("Mail not sent with error code " + statusCode);
-            listener.sendFail(fromMail, title, content);
+            listener.sendFailed(fromMail, title, content);
           }
         });
       }

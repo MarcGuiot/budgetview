@@ -26,6 +26,20 @@ public class MailServerChecker {
     started = true;
   }
 
+  public void checkEmpty() throws InterruptedException {
+    if (mailServer == null) {
+      Assert.fail("Mail server not started");
+    }
+
+    synchronized (mailServer) {
+      Iterator receivedEmail = mailServer.getReceivedEmail();
+      if (receivedEmail.hasNext()) {
+        SmtpMessage message = (SmtpMessage)receivedEmail.next();
+        Assert.fail("Unexpected message sent to:" + message.getHeaderValue("To") + ": " + message.getBody());
+      }
+    }
+  }
+
   public Email checkReceivedMail(String mailTo) throws InterruptedException {
     if (mailServer == null) {
       Assert.fail("Mail server not started");

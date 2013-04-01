@@ -44,7 +44,18 @@ public class FeedbackDialogChecker extends GuiChecker{
   public void send(String email, String content) {
     dialog.getTextBox("fromMail").setText(email);
     dialog.getTextBox("mailContent").setText(content);
-    dialog.getButton("Send").click();
+    MessageDialogChecker.open(dialog.getButton("Send").triggerClick())
+      .checkSuccessMessageContains("Your message was successfully sent")
+      .close();
+    assertFalse(dialog.isVisible());
+  }
+
+  public void sendWithError(String email, String mailContent, String errorMessage) {
+    dialog.getTextBox("fromMail").setText(email);
+    dialog.getTextBox("mailContent").setText(mailContent);
+    MessageDialogChecker.open(dialog.getButton("Send").triggerClick())
+      .checkErrorMessageContains(errorMessage)
+      .close();
     assertFalse(dialog.isVisible());
   }
 
