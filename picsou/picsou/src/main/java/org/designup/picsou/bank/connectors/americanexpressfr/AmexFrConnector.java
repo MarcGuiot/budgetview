@@ -14,16 +14,12 @@ import org.globsframework.model.FieldValuesBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
-import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -37,8 +33,6 @@ public class AmexFrConnector extends WebBankConnector {
   private static final String LOGIN_URL = "https://www.americanexpress.com/france/";
 
   private UserAndPasswordPanel userAndPasswordPanel;
-
-  private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
   public static void main(String[] args) throws IOException {
     WebConnectorLauncher.show(BANK_ID, new Factory());
@@ -57,23 +51,29 @@ public class AmexFrConnector extends WebBankConnector {
       public HttpWebConnection getHttpConnection(WebClient client) {
         FilteringConnection connection = new FilteringConnection(client);
         connection.exclude("doubleclick.net", "bootstrap.js", "s_code.js", "compresscacheservlet?filetype=js", "backbutton.js");
-        connection.setDebugEnabled(true);
+        connection.setDebugEnabled(false);
         return connection;
       }
     });
   }
 
   protected JPanel createPanel() {
-
     userAndPasswordPanel = new UserAndPasswordPanel(new ConnectAction(), directory);
     JPanel panel = userAndPasswordPanel.getPanel();
     userAndPasswordPanel.setUserCode(getSyncCode());
+    loadHomePage();
+    return panel;
+  }
 
+  private void loadHomePage() {
+    userAndPasswordPanel.setFieldsEnabled(true);
+    userAndPasswordPanel.setEnabled(false);
     directory.get(ExecutorService.class).submit(new Runnable() {
       public void run() {
         try {
           notifyInitialConnection();
           loadPage(LOGIN_URL);
+          userAndPasswordPanel.setEnabled(true);
           notifyWaitingForUser();
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -86,7 +86,6 @@ public class AmexFrConnector extends WebBankConnector {
         }
       }
     });
-    return panel;
   }
 
   public String getCode() {
@@ -121,30 +120,34 @@ public class AmexFrConnector extends WebBankConnector {
                 userAndPasswordPanel.setFieldsEnabled(true);
                 userAndPasswordPanel.setEnabled(true);
                 notifyIdentificationFailed();
+                loadHomePage();
                 return null;
               }
 
-              notifyDownloadInProgress();
-
-              WebPage cardPage = cardsPage.getAnchorById("fr_myca_view_transactions").click();
-              List<String> cardNames = cardPage.getSelectById("cardAccount").getEntryNames();
-              if (cardNames.size() == 0) {
-                throw new WebParsingError(cardPage.getUrl(), "Found no accounts in: " + cardPage.getSelectById("cardAccount").asXml());
-              }
-              else if (cardNames.size() > 1) {
-                throw new WebParsingError(cardPage.getUrl(), "Found too many accounts in: " + cardPage.getTableById("summaryTable").asXml());
-              }
-              parseCardPage(cardNames.get(0), cardPage);
-
-              importCompleted();
+              doImport();
             }
             catch (final Exception e) {
-                  notifyErrorFound(e);
+              notifyErrorFound(e);
             }
             return null;
           }
         });
     }
+  }
+
+  public void downloadFile() throws Exception {
+    notifyDownloadInProgress();
+
+    WebPage cardsPage = browser.getCurrentPage();
+    WebPage cardPage = cardsPage.getAnchorById("fr_myca_view_transactions").click();
+    List<String> cardNames = cardPage.getSelectById("cardAccount").getEntryNames();
+    if (cardNames.size() == 0) {
+      throw new WebParsingError(cardPage.getUrl(), "Found no accounts in: " + cardPage.getSelectById("cardAccount").asXml());
+    }
+    else if (cardNames.size() > 1) {
+      throw new WebParsingError(cardPage.getUrl(), "Found too many accounts in: " + cardPage.getTableById("summaryTable").asXml());
+    }
+    parseCardPage(cardNames.get(0), cardPage);
   }
 
   private WebPage parseCardPage(String cardName, WebPage cardPage) throws WebParsingError, WebCommandFailed, IOException {
@@ -200,7 +203,6 @@ public class AmexFrConnector extends WebBankConnector {
       extractDate(row.getCell(0), valuesBuilder);
       extractLabel(row.getCell(1), valuesBuilder);
       extractAmount(row.getCell(2), row.getCell(3), valuesBuilder);
-      System.out.println("AmexFrConnector.parseTransactions: " + valuesBuilder);
       tempRepository.create(Transaction.TYPE, valuesBuilder.toArray());
     }
   }
@@ -296,9 +298,6 @@ public class AmexFrConnector extends WebBankConnector {
 
   private String extractCardNumber(String cardName) {
     return cardName.replaceAll("[A-z -]+", "").trim();
-  }
-
-  public void downloadFile() throws Exception {
   }
 
   private int getMonthNumber(WebTableCell cell, String month) throws WebParsingError {
