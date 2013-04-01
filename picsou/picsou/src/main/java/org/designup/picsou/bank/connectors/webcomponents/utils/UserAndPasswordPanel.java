@@ -4,6 +4,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -78,7 +79,15 @@ public class UserAndPasswordPanel {
   }
 
   public void requestFocus() {
-    userCodeField.requestFocus();
+    if (userCodeField.hasFocus() || passwordField.hasFocus()) {
+      return;
+    }
+    if (Strings.isNotEmpty(getUser()) && Strings.isNullOrEmpty(getPassword())) {
+      passwordField.requestFocus();
+    }
+    else {
+      userCodeField.requestFocus();
+    }
   }
 
   public void reset() {
