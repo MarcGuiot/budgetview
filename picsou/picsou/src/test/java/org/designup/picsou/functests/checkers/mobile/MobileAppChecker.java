@@ -76,6 +76,5 @@ public class MobileAppChecker {
     HttpPost method = new HttpPost(builder.build());
     HttpResponse response = httpClient.execute(method);
     Assert.assertEquals(200, response.getStatusLine().getStatusCode());
-
   }
 }

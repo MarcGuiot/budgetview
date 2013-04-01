@@ -36,7 +36,7 @@ public abstract class AbstractMobileAccountDialog {
   }
 
   protected class ChangePasswordAction extends AbstractAction{
-    protected ChangePasswordAction() {
+    public ChangePasswordAction() {
       super(Lang.get("mobile.user.generate.new.password"));
     }
 

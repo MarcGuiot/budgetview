@@ -36,6 +36,7 @@ public class MobileTest extends ConnectedTestCase {
     super.tearDown();
     application.dispose();
     application = null;
+    mobileApp = null;
   }
 
   public void testCreateAndDeleteAccount() throws Exception {
