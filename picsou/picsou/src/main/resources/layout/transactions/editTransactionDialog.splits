@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(500,180)">
+  <panel styleClass="dialog" preferredSize="(500,250)">
 
     <column styleClass="innerDialog">
 
@@ -11,11 +11,15 @@
       <label text="$transaction.edition.label" styleClass="formLabelTop"/>
       <textField ref="labelEditor"/>
 
-      <label text="$transaction.edition.originalLabel" styleClass="separatorTitle" marginTop="10"/>
-      <row styleClass="separator" weightY="100">
+      <row margin="10" marginTop="5" marginBottom="15">
+        <label text="$transaction.edition.originalLabel" styleClass="separatorTitle" marginRight="10"/>
         <htmlEditorPane ref="originalLabel"/>
       </row>
 
+      <panel ref="dateAndAmount"/>
+      <htmlEditorPane ref="notice"/>
+
+      <filler fill="vertical"/>
     </column>
 
   </panel>

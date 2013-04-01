@@ -102,6 +102,15 @@
            text="" opaque="false" borderPainted="false" icon="button_delete.png"
            cursor="hand"/>
 
+    <style selector="button.monthEditor" ui="hyperlinkButtonWithoutUnderline"
+           icon="button_calendar.png"
+           pressedIcon="button_calendar_pressed.png"
+           disabledIcon="button_calendar_disabled.png"
+           rolloverIcon="button_calendar_rollover.png"
+           font="-,plain,12" foreground="import.form.label"
+           horizontalTextPosition="left"
+           horizontalAlignment="left" fill="none" anchor="east"/>
+
     <style selector="cards" opaque="false"/>
 
     <style selector="radioButton" opaque="false"/>

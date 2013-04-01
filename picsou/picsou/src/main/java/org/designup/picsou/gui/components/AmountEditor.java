@@ -128,6 +128,10 @@ public class AmountEditor {
     negativeToggle.doClick();
   }
 
+  public void dispose() {
+    numericEditor.dispose();
+  }
+
   private class NumericEditor extends GlobNumericEditor {
     private NumericEditor(Field field, GlobRepository repository, Directory directory) {
       super(field, repository, directory);

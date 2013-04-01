@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.utils.Lang;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
@@ -47,11 +48,33 @@ public class TransactionEditionChecker extends GuiChecker {
     return this;
   }
 
-  public TransactionEditionChecker checkValidationError(String errorMessage) {
+  public TransactionEditionChecker checkLabelError(String errorMessage) {
     dialog.getButton("OK").click();
     assertThat(dialog.isVisible());
     checkTipVisible(dialog, dialog.getTextBox("labelEditor"), errorMessage);
     return this;
+  }
+
+  public TransactionEditionChecker checkDateAndAmountShown() {
+    checkEditsLabelOnly(false);
+    return this;
+  }
+
+  public TransactionEditionChecker checkImportedTransactionsMessage() {
+    checkEditsLabelOnly(true);
+    dialog.getTextBox("notice").textEquals(Lang.get("transaction.edition.notice.imported"));
+    return this;
+  }
+
+  public TransactionEditionChecker checkMultiselectionMessage() {
+    checkEditsLabelOnly(true);
+    dialog.getTextBox("notice").textEquals(Lang.get("transaction.edition.notice.imported"));
+    return this;
+  }
+
+  private void checkEditsLabelOnly(boolean labelOnly) {
+    checkComponentVisible(dialog, JPanel.class, "dateAndAmount", !labelOnly);
+    checkComponentVisible(dialog, JEditorPane.class, "notice", labelOnly);
   }
 
   public TransactionEditionChecker checkNoTipShown() {
@@ -59,8 +82,53 @@ public class TransactionEditionChecker extends GuiChecker {
     return this;
   }
 
+  public TransactionEditionChecker checkDay(String text) {
+    assertThat(dialog.getTextBox("day").textEquals(text));
+    return this;
+  }
+
+  public TransactionEditionChecker setDay(String text) {
+    dialog.getTextBox("day").setText(text);
+    return this;
+  }
+
+  public TransactionEditionChecker validateAndCheckDayError(String errorMessage) {
+    dialog.getButton("OK").click();
+    checkTipVisible(dialog, dialog.getInputTextBox("day"), errorMessage);
+    assertTrue(dialog.isVisible());
+    return this;
+  }
+
+  public TransactionEditionChecker checkMonth(int monthId) {
+    MonthChooserChecker.open(dialog.getButton("month").triggerClick()).checkSelectedInCurrentMonth(monthId);
+    return this;
+  }
+
+  public TransactionEditionChecker setMonth(int monthId) {
+    MonthChooserChecker.open(dialog.getButton("month").triggerClick()).selectMonth(monthId);
+    return this;
+  }
+
+  public TransactionEditionChecker checkAmount(String amount) {
+    assertThat(dialog.getInputTextBox("amountEditor").textEquals(amount));
+    return this;
+  }
+
+  public TransactionEditionChecker setAmount(String amount) {
+    dialog.getInputTextBox("amountEditor").setText(amount);
+    return this;
+  }
+
+  public TransactionEditionChecker validateAndCheckAmountError(String errorMessage) {
+    dialog.getButton("OK").click();
+    checkTipVisible(dialog, dialog.getInputTextBox("amountEditor"), errorMessage);
+    assertTrue(dialog.isVisible());
+    return this;
+  }
+
   public void validate() {
     dialog.getButton("OK").click();
+    checkNoTipVisible(dialog);
     assertFalse(dialog.isVisible());
   }
 

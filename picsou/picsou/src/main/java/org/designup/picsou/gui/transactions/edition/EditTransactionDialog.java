@@ -2,13 +2,17 @@ package org.designup.picsou.gui.transactions.edition;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
+import org.designup.picsou.gui.transactions.edition.utils.DateAndAmountPanel;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobHtmlView;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifiers;
@@ -24,14 +28,16 @@ import java.awt.event.ActionEvent;
 public class EditTransactionDialog {
   private LocalGlobRepository localRepository;
   private Directory localDirectory;
+  private SelectionService selectionService;
 
   private PicsouDialog dialog;
   private GlobTextEditor labelEditor;
-  private SelectionService selectionService;
+  private JTextField labelField;
+  private JEditorPane notice;
+  private DateAndAmountPanel dateAndAmountPanel;
 
-  public EditTransactionDialog(GlobRepository localRepository, Directory directory) {
-    this.localRepository =
-      LocalGlobRepositoryBuilder.init(localRepository).get();
+  public EditTransactionDialog(GlobRepository parentRepository, Directory directory) {
+    this.localRepository = LocalGlobRepositoryBuilder.init(parentRepository).get();
     this.selectionService = new SelectionService();
     this.localDirectory = createDirectory(directory);
     createDialog(directory.get(JFrame.class));
@@ -54,12 +60,39 @@ public class EditTransactionDialog {
     labelEditor = GlobTextEditor.init(Transaction.LABEL, localRepository, localDirectory)
       .setMultiSelectionText("")
       .setValidationAction(okAction);
-    builder.add("labelEditor", labelEditor.getComponent());
+    labelField = labelEditor.getComponent();
+    builder.add("labelEditor", labelField);
 
     builder.add("originalLabel",
                 GlobHtmlView.init(Transaction.TYPE, localRepository, localDirectory,
                                   GlobListStringifiers.fieldValue(Transaction.ORIGINAL_LABEL, "",
                                                                   Lang.get("transaction.edition.originalLabel.multi"))));
+
+    dateAndAmountPanel = new DateAndAmountPanel(dialog, localRepository, localDirectory);
+    builder.add("dateAndAmount", dateAndAmountPanel.getPanel());
+
+    notice = builder.add("notice", GuiUtils.createReadOnlyHtmlComponent()).getComponent();
+
+    selectionService.addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+        GlobList transactions = selection.getAll(Transaction.TYPE);
+        if ((transactions.size() == 1) && Transaction.isManuallyCreated(transactions.getFirst())) {
+          notice.setVisible(false);
+          dateAndAmountPanel.show(transactions);
+          return;
+        }
+
+        dateAndAmountPanel.hide();
+        notice.setVisible(true);
+        for (Glob transaction : transactions) {
+          if (!Transaction.isManuallyCreated(transaction)) {
+            notice.setText(Lang.get("transaction.edition.notice.imported"));
+            return;
+          }
+        }
+        notice.setText(Lang.get("transaction.edition.notice.multi"));
+      }
+    }, Transaction.TYPE);
 
     dialog.addPanelWithButtons(builder.<JPanel>load(), okAction, new CancelAction());
     dialog.pack();
@@ -84,11 +117,9 @@ public class EditTransactionDialog {
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
-      JTextField labelField = labelEditor.getComponent();
-      if (Strings.isNullOrEmpty(labelField.getText())) {
-        ErrorTip.showLeft(labelField,
-                          Lang.get("transaction.edition.emptyLabelMessage"),
-                          localDirectory);
+
+      dateAndAmountPanel.apply();
+      if (!checkValues()) {
         return;
       }
 
@@ -96,6 +127,17 @@ public class EditTransactionDialog {
       labelEditor.apply();
       localRepository.commitChanges(false);
       dialog.setVisible(false);
+    }
+
+    private boolean checkValues() {
+      if (Strings.isNullOrEmpty(labelField.getText())) {
+        ErrorTip.showLeft(labelField,
+                          Lang.get("transaction.edition.emptyLabelMessage"),
+                          localDirectory);
+        return false;
+      }
+
+      return dateAndAmountPanel.validateFields();
     }
   }
 

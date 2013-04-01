@@ -1,0 +1,12 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <row>
+    <label text="$transaction.edition.day" styleClass="formLabel"/>
+    <textField ref="day" columns="3" marginRight="5" weightX="0.01" fill="none"/>
+    <button ref="month" styleClass="monthEditor" weightX="0.01"/>
+    <label text="$transaction.edition.amount" styleClass="formLabel"/>
+    <component ref="amountEditor"/>
+  </row>
+</splits>

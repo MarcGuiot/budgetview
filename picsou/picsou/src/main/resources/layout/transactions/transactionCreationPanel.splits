@@ -6,18 +6,8 @@
     <style selector="checkBox.formElement" foreground="block.outer.text" />
     <style selector="radioButton" foreground="block.outer.text" opaque="false" font="-,plain,10"/>
 
-    <style selector=".transactionCreation"
-           opaque="true" border="line(block.inner.border)"
+    <style selector=".transactionCreation" opaque="true" border="line(block.inner.border)"
            background="block.inner.bg.secondary"/>
-
-    <style selector="button#month" ui="hyperlinkButtonWithoutUnderline"
-           icon="button_calendar.png"
-           pressedIcon="button_calendar_pressed.png"
-           disabledIcon="button_calendar_disabled.png"
-           rolloverIcon="button_calendar_rollover.png"
-           font="-,plain,12" foreground="import.form.label"
-           horizontalTextPosition="left"
-           horizontalAlignment="left" fill="none" anchor="east"/>
   </styles>
 
   <column styleClass="transactionCreation">
@@ -31,7 +21,7 @@
     <row marginLeft="10" marginRight="10" defaultMarginTop="5">
       <label text="$transactionCreation.day" styleClass="formLabel"/>
       <textField ref="day" columns="3" marginRight="5" weightX="0.01" fill="none"/>
-      <button ref="month" weightX="0.01"/>
+      <button ref="month" styleClass="monthEditor" weightX="0.01"/>
       <label text="$transactionCreation.label" styleClass="formLabel"/>
       <textField ref="label" weightX="10"/>
     </row>
