@@ -42,6 +42,7 @@ public class TsvExporter implements Exporter {
     boolean first = true;
     for (String header : new String[]{"transactionView.date.user",
                                       "transactionView.date.bank",
+                                      "transactionView.date.budget",
                                       "label",
                                       "amount",
                                       "account",
@@ -67,6 +68,9 @@ public class TsvExporter implements Exporter {
       new TransactionDateStringifier(TransactionComparator.DESCENDING_SPLIT_AFTER,
                                      Transaction.POSITION_MONTH,
                                      Transaction.POSITION_DAY),
+      new TransactionDateStringifier(TransactionComparator.DESCENDING_SPLIT_AFTER,
+                                     Transaction.BUDGET_MONTH,
+                                     Transaction.BUDGET_DAY),
       GlobStringifiers.get(Transaction.LABEL),
       new AmountStringifier(Transaction.AMOUNT),
       descriptionService.getStringifier(Transaction.ACCOUNT),

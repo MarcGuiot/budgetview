@@ -180,11 +180,14 @@ public class ExportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/10", -100.0, "FNAC")
       .addBankAccount(-1, 1024, "12345678b", 12.00, "15/06/2008")
       .addTransaction("2008/06/05", -256.00, "Monop's")
-      .addTransaction("2008/06/13", "2008/06/15", 1.00, "Carouf")
+      .addTransaction("2008/06/08", "2008/06/15", 1.00, "Carouf")
       .load();
 
     views.selectCategorization();
     categorization.setNewVariable("MONOP'S", "Groceries");
+
+    categorization.selectTransaction("CAROUF");
+    transactionDetails.shift();
 
     String fileName = TestUtils.getFileName(this, "txt");
 
@@ -192,10 +195,10 @@ public class ExportTest extends LoggedInFunctionalTestCase {
       .selectTsv()
       .validate(fileName);
 
-    assertEquals("Operation date\tBank date\tLabel\tAmount\tCompte\tBudget area\tSeries\n" +
-                 "2008/06/13\t2008/06/15\tCAROUF\t1.00\tAccount n. 12345678b\tTo categorize\t\n" +
-                 "2008/06/10\t2008/06/10\tFNAC\t-100.00\tAccount n. 000123\tTo categorize\t\n" +
-                 "2008/06/05\t2008/06/05\tMONOP'S\t-256.00\tAccount n. 12345678b\tVariable\tGroceries\n",
+    assertEquals("Operation date\tBank date\tBudget date\tLabel\tAmount\tCompte\tBudget area\tSeries\n" +
+                 "2008/06/10\t2008/06/10\t2008/06/10\tFNAC\t-100.00\tAccount n. 000123\tTo categorize\t\n" +
+                 "2008/06/08\t2008/06/15\t2008/05/31\tCAROUF\t1.00\tAccount n. 12345678b\tTo categorize\t\n" +
+                 "2008/06/05\t2008/06/05\t2008/06/05\tMONOP'S\t-256.00\tAccount n. 12345678b\tVariable\tGroceries\n",
                  Files.loadFileToString(fileName));
   }
 
