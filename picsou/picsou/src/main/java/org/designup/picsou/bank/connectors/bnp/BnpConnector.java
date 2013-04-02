@@ -11,6 +11,7 @@ import org.designup.picsou.model.RealAccount;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -170,14 +171,13 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
 
               try {
                 for (AccountEntry entry : entries) {
-                  System.out.println("loading entry: " + entry.onclick + " on " + HOME_URL);
                   WebPage accountPage = browser.load(HOME_URL).executeJavascript(entry.onclick);
                   parseAccountPage(entry, accountPage);
                 }
               }
               catch (WebCommandFailed e) {
                 // server took too long, ignore this part
-                System.out.println("-- BNPP response taking too long: skipped");
+                Log.write("-- BNPP response taking too long: skipped");
               }
 
               notifyDownloadInProgress();
@@ -233,7 +233,6 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
   private void parseAccountPage(AccountEntry entry, WebPage accountPage) throws WebParsingError {
     notifyPreparingAccount(entry.name);
     WebTable table = accountPage.getTableWithClass("infoCompteDroite");
-    System.out.println("BnpConnector.parseAccountPage: table=" + table.asText());
     Matcher matcher = ACCOUNT_DATE_REGEXP.matcher(table.asText().replaceAll("[ \n\t]+", " "));
     if (!matcher.matches()) {
       throw new WebParsingError(table, "Position date not found");

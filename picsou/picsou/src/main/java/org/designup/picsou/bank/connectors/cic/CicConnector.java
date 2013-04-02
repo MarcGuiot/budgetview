@@ -85,7 +85,7 @@ public class CicConnector extends WebBankConnector {
       notifyIdentificationInProgress();
       userAndPasswordPanel.setEnabled(false);
       userAndPasswordPanel.setFieldsEnabled(false);
-      Thread thread = new Thread(new Runnable() {
+      directory.get(ExecutorService.class).submit(new Runnable() {
         public void run() {
           try {
             WebPage homePage = browser.getCurrentPage();
@@ -118,7 +118,6 @@ public class CicConnector extends WebBankConnector {
           }
         }
       });
-      thread.start();
     }
   }
 

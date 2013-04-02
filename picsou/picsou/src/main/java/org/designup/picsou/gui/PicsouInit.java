@@ -103,6 +103,11 @@ public class PicsouInit {
         if (TimeService.reset()) {
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+              //check a user is connected
+              Glob userPrefs = repository.find(UserPreferences.KEY);
+              if (userPrefs == null){
+                return;
+              }
               repository.update(CurrentMonth.KEY,
                                 value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
                                 value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));

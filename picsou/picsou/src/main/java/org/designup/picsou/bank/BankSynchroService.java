@@ -3,6 +3,7 @@ package org.designup.picsou.bank;
 import org.designup.picsou.bank.connectors.OtherBankConnector;
 import org.designup.picsou.bank.connectors.americanexpressfr.AmexFrConnector;
 import org.designup.picsou.bank.connectors.bnp.BnpConnector;
+import org.designup.picsou.bank.connectors.cassedepargne.CaisseDEpargne;
 import org.designup.picsou.bank.connectors.cic.CicConnector;
 import org.designup.picsou.bank.connectors.creditagricole.CreditAgricoleConnector;
 import org.designup.picsou.bank.connectors.labanquepostale.LaBanquePostaleConnector;
@@ -35,6 +36,7 @@ public class BankSynchroService {
       register(BnpConnector.BANK_ID, new BnpConnector.Factory());
       CreditAgricoleConnector.register(this);
       register(AmexFrConnector.BANK_ID, new AmexFrConnector.Factory());
+      register(CaisseDEpargne.BANK_ID, new CaisseDEpargne.Factory());
     }
     Utils.beginRemove();
     register(OtherBankConnector.BANK_ID, new OtherBankConnector.Factory());

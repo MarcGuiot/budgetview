@@ -2,7 +2,7 @@
 <globs>
   <bankFormat id='6'>
 
-    <bank name="Caisse d'épargne" url="https://www.caisse-epargne.fr" id='6' invalidPosition="true">
+    <bank name="Caisse d'épargne" url="https://www.caisse-epargne.fr" id='6' synchroEnabled="true" >
       <bankEntity id="18645"/>
       <bankEntity id="13335"/>
       <bankEntity id="12225"/>
@@ -21,6 +21,7 @@
       <bankEntity id="11315"/>
       <bankEntity id="13705"/>
       <bankEntity id="11425"/>
+      <bankEntity id="13485"/>
     </bank>
 
     <transactionMatcher qifP="ECH PRET" transactionTypeName="credit"

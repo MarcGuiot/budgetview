@@ -152,6 +152,11 @@ public class WebBrowser {
     }
   }
 
+  public WebPage setToTopLevelWindow(){
+    webClient.setCurrentWindow(webClient.getTopLevelWindows().get(0));
+    return updateCurrentPage();
+  }
+
   public WebPage updateCurrentPage() {
     Page page = webClient.getCurrentWindow().getEnclosedPage();
     if (page instanceof HtmlPage){
