@@ -177,7 +177,7 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new HtmlUnit.Filter() {
       public boolean matches(HtmlElement element) {
         for (HtmlUnit.Filter filter : filters) {
-          if (!filter.matches(element)){
+          if (filter != null && !filter.matches(element)){
             return false;
           }
         }
@@ -187,7 +187,9 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
       public String toString() {
         StringBuilder builder = new StringBuilder();
         for (HtmlUnit.Filter filter : filters) {
-          builder.append(filter.toString()).append(" and ");
+          if (filter != null){
+            builder.append(filter.toString()).append(" and ");
+          }
         }
         String s = builder.toString();
         return s.length() == 0 ? s : s.substring(0, s.length() - 5);

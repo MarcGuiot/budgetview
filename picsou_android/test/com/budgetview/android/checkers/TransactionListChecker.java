@@ -1,12 +1,14 @@
 package com.budgetview.android.checkers;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 import com.budgetview.android.R;
 import com.budgetview.android.TransactionListActivity;
 import com.budgetview.android.checkers.utils.BlockParser;
 import com.budgetview.android.checkers.utils.ViewParser;
 import com.budgetview.shared.utils.AmountFormat;
+import junit.framework.Assert;
 import org.globsframework.utils.TablePrinter;
 
 public class TransactionListChecker extends AndroidTabsChecker<TransactionListActivity> {
@@ -42,6 +44,16 @@ public class TransactionListChecker extends AndroidTabsChecker<TransactionListAc
   public TransactionPageChecker edit(String transactionLabel) {
     ViewParser.clickBlockWithTextView(getCurrentView(), R.id.transactionBlock, R.id.transactionLabel, transactionLabel);
     return new TransactionPageChecker();
+  }
+
+  public void checkSummaryHidden() {
+    ViewParser.checkHidden(getCurrentView(), R.id.transaction_amounts);
+    ViewParser.checkHidden(getCurrentView(), R.id.transaction_account_position);
+  }
+
+  public BudgetOverviewChecker up() {
+    ViewParser.click(activity.findViewById(R.id.header), R.id.header_logo);
+    return new BudgetOverviewChecker();
   }
 
   public class TransactionRows extends TableChecker {

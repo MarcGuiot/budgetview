@@ -13,6 +13,8 @@ public class AmountsTest extends TestCase {
     checkExtract(6, "6");
     checkExtract(33, "33");
     checkExtract(100, "100");
+    checkExtract(100.2, "100,2");
+    checkExtract(100.23, "100,23");
     checkExtract(2223.9, "2,223.9");
     checkExtract(2223.9, "2,223.90");
     checkExtract(2223.9, "2223,9");

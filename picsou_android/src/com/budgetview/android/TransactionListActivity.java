@@ -8,7 +8,6 @@ import com.budgetview.android.components.TabPage;
 import com.budgetview.android.components.TabPageHandler;
 import com.budgetview.android.components.UpHandler;
 import com.budgetview.android.utils.TransactionSet;
-import com.budgetview.shared.model.BudgetAreaValues;
 import com.budgetview.shared.model.SeriesValues;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.exceptions.InvalidState;
@@ -23,7 +22,7 @@ public class TransactionListActivity extends FragmentActivity {
     final TransactionSet transactionSet = new TransactionSet(intent, repository);
 
     TabPage page = new TabPage(this,
-                               new TransactionListUpActivity(transactionSet),
+                               new TransactionListUpHandler(transactionSet),
                                transactionSet.getMonthId(), new TabPageHandler() {
       public Fragment createFragmentWithArgs(int monthId) {
         TransactionListFragment fragment = new TransactionListFragment();
@@ -37,10 +36,10 @@ public class TransactionListActivity extends FragmentActivity {
     page.initView();
   }
 
-  private class TransactionListUpActivity implements UpHandler {
+  private class TransactionListUpHandler implements UpHandler {
     private final TransactionSet transactionSet;
 
-    public TransactionListUpActivity(TransactionSet transactionSet) {
+    public TransactionListUpHandler(TransactionSet transactionSet) {
       this.transactionSet = transactionSet;
     }
 
@@ -49,22 +48,24 @@ public class TransactionListActivity extends FragmentActivity {
     }
 
     public void processUp() {
+      Intent intent = getIntentForUpActivity();
+      intent.putExtra(BudgetOverviewActivity.MONTH_PARAMETER, transactionSet.getMonthId());
+      TabPage.copyDemoMode(TransactionListActivity.this, intent);
+      startActivity(intent);
+    }
+
+    private Intent getIntentForUpActivity() {
+      if (transactionSet.isAccountEntity() || transactionSet.isUncategorized()) {
+        return new Intent(TransactionListActivity.this, BudgetOverviewActivity.class);
+      }
+
       if (transactionSet.isSeriesList()) {
         Intent intent = new Intent(TransactionListActivity.this, SeriesListActivity.class);
-        intent.putExtra(SeriesListActivity.MONTH_PARAMETER, transactionSet.getMonthId());
         intent.putExtra(SeriesListActivity.BUDGET_AREA_PARAMETER, transactionSet.getSeriesValues().get(SeriesValues.BUDGET_AREA));
-        TabPage.copyDemoMode(TransactionListActivity.this, intent);
-        startActivity(intent);
+        return intent;
       }
-      else if (transactionSet.isAccountEntity()) {
-        Intent intent = new Intent(TransactionListActivity.this, BudgetOverviewActivity.class);
-        intent.putExtra(BudgetOverviewActivity.MONTH_PARAMETER, transactionSet.getMonthId());
-        TabPage.copyDemoMode(TransactionListActivity.this, intent);
-        startActivity(intent);
-      }
-      else {
-        throw new InvalidState("TransactionSet should be in Series or Account mode");
-      }
+
+      throw new InvalidState("TransactionSet should be in Series or Account mode");
     }
   }
 }

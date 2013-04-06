@@ -2,10 +2,8 @@ package com.budgetview.android.utils;
 
 import android.content.Intent;
 import android.os.Bundle;
-import com.budgetview.shared.model.AccountEntity;
-import com.budgetview.shared.model.SeriesEntity;
-import com.budgetview.shared.model.SeriesValues;
-import com.budgetview.shared.model.TransactionValues;
+import com.budgetview.shared.model.*;
+import org.apache.http.entity.ByteArrayEntity;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -98,6 +96,14 @@ public class TransactionSet {
 
   public boolean isSeriesList() {
     return seriesEntityId != null;
+  }
+
+  public boolean isUncategorized() {
+    if (seriesEntityId == null) {
+      return false;
+    }
+    Glob seriesEntity = repository.find(Key.create(SeriesEntity.TYPE, seriesEntityId));
+    return seriesEntity != null && BudgetAreaEntity.isUncategorized(seriesEntity.get(SeriesEntity.BUDGET_AREA));
   }
 
   public Glob getSeriesValues() {

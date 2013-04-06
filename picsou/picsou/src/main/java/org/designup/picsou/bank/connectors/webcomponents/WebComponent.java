@@ -184,6 +184,18 @@ public abstract class WebComponent<T extends HtmlElement> {
         throw new WebParsingError(node, "not an anchor");
       }
     }
+
+    public WebTextInput asTextInput() throws WebParsingError {
+      if (optional && node == null) {
+        return null;
+      }
+      if (node instanceof HtmlInput) {
+        return new WebTextInput(browser, ((HtmlTextInput)node));
+      }
+      else {
+        throw new WebParsingError(node, "not an anchor");
+      }
+    }
   }
 
   public HtmlNavigate navigate() {

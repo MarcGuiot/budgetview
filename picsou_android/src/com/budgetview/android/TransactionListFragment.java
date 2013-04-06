@@ -11,10 +11,7 @@ import android.widget.ListView;
 import com.budgetview.android.components.TabPage;
 import com.budgetview.android.utils.SectionHeaderBlock;
 import com.budgetview.android.utils.TransactionSet;
-import com.budgetview.shared.model.AccountEntity;
-import com.budgetview.shared.model.BudgetAreaEntity;
-import com.budgetview.shared.model.SeriesValues;
-import com.budgetview.shared.model.TransactionValues;
+import com.budgetview.shared.model.*;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -33,10 +30,23 @@ public class TransactionListFragment extends Fragment {
     transactionSet = new TransactionSet(args, repository);
 
     AmountsBlockView seriesBlock = (AmountsBlockView)view.findViewById(R.id.transaction_amounts);
-    seriesBlock.update(transactionSet.getSeriesValues(),
-                       SeriesValues.AMOUNT, SeriesValues.PLANNED_AMOUNT,
-                       SeriesValues.OVERRUN_AMOUNT, SeriesValues.REMAINING_AMOUNT,
-                       shouldInvert(transactionSet, repository));
+    Glob seriesValues = transactionSet.getSeriesValues();
+    if (seriesValues == null) {
+      seriesBlock.setVisibility(View.GONE);
+    }
+    else {
+      Glob seriesEntity = repository.findLinkTarget(seriesValues, SeriesValues.SERIES_ENTITY);
+      if ((seriesEntity == null) || BudgetAreaEntity.isUncategorized(seriesEntity.get(SeriesEntity.BUDGET_AREA))) {
+        seriesBlock.setVisibility(View.GONE);
+      }
+      else {
+        seriesBlock.update(seriesValues,
+                           SeriesValues.AMOUNT, SeriesValues.PLANNED_AMOUNT,
+                           SeriesValues.OVERRUN_AMOUNT, SeriesValues.REMAINING_AMOUNT,
+                           shouldInvert(transactionSet, repository)
+        );
+      }
+    }
 
     AccountSummaryBlockView positionBlock = (AccountSummaryBlockView)view.findViewById(R.id.transaction_account_position);
     positionBlock.update(transactionSet.getAccountEntity());

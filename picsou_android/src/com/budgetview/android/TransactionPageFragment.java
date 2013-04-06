@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.budgetview.shared.model.BudgetAreaEntity;
 import com.budgetview.shared.model.SeriesEntity;
 import com.budgetview.shared.model.SeriesValues;
 import com.budgetview.shared.model.TransactionValues;
@@ -45,8 +46,8 @@ public class TransactionPageFragment extends Fragment {
       accountBlock.update(monthId, account, getActivity());
     }
     else {
-      view.findViewById(R.id.transaction_account_label).setVisibility(View.INVISIBLE);
-      accountBlock.setVisibility(View.INVISIBLE);
+      view.findViewById(R.id.transaction_account_label).setVisibility(View.GONE);
+      accountBlock.setVisibility(View.GONE);
     }
 
     SeriesBlockView seriesBlock = (SeriesBlockView)view.findViewById(R.id.transaction_series);
@@ -57,8 +58,8 @@ public class TransactionPageFragment extends Fragment {
       seriesBlock.update(monthId, seriesEntity, seriesValues, getActivity());
     }
     else {
-      view.findViewById(R.id.transaction_series_label).setVisibility(View.INVISIBLE);
-      seriesBlock.setVisibility(View.INVISIBLE);
+      view.findViewById(R.id.transaction_series_label).setVisibility(View.GONE);
+      seriesBlock.setVisibility(View.GONE);
     }
 
     return view;

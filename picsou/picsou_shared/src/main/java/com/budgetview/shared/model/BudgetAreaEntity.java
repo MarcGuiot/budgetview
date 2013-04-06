@@ -29,6 +29,10 @@ public class BudgetAreaEntity {
   }
 
   public static boolean isUncategorized(Glob budgetAreaEntity) {
-    return Utils.equal(6, budgetAreaEntity.get(BudgetAreaEntity.ID));
+    return isUncategorized(budgetAreaEntity.get(BudgetAreaEntity.ID));
+  }
+
+  public static boolean isUncategorized(Integer budgetAreaEntityId) {
+    return Utils.equal(6, budgetAreaEntityId);
   }
 }
