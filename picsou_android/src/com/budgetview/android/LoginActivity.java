@@ -7,10 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import com.budgetview.android.components.Header;
 import com.budgetview.android.components.UpHandler;
-import com.budgetview.android.datasync.DataSync;
-import com.budgetview.android.datasync.DataSyncCallback;
-import com.budgetview.android.datasync.DataSyncFactory;
-import com.budgetview.android.datasync.LoginInfo;
+import com.budgetview.android.datasync.*;
 
 public class LoginActivity extends Activity {
 
@@ -41,7 +38,7 @@ public class LoginActivity extends Activity {
 
     showProgressBar(View.VISIBLE);
 
-    sync.load(loginInfo.email, loginInfo.password, new DataSyncCallback() {
+    sync.load(loginInfo.email, loginInfo.password, new DownloadCallback() {
       public void onActionFinished() {
         showProgressBar(View.INVISIBLE);
         Intent intent = new Intent(LoginActivity.this, BudgetOverviewActivity.class);
@@ -56,6 +53,16 @@ public class LoginActivity extends Activity {
       public void onActionFailed() {
         showProgressBar(View.INVISIBLE);
         Views.showAlert(LoginActivity.this, R.string.syncWithInvalidId);
+      }
+
+      public void onDownloadFailed(String errorMessage) {
+        showProgressBar(View.INVISIBLE);
+        Views.showAlert(LoginActivity.this, errorMessage);
+      }
+
+      public void onDownloadFailed(Integer errorId) {
+        showProgressBar(View.INVISIBLE);
+        Views.showAlert(LoginActivity.this, errorId);
       }
     });
   }

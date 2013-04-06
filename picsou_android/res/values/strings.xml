@@ -91,4 +91,8 @@
   <string name="sendEmailDefaultSubject">My comment about BudgetView</string>
   <string name="sendEmailError">Could not send the email</string>
 
+  <string name="downloadError">Download error</string>
+  <string name="downloadFailedUpdateMobile">You must update this application</string>
+  <string name="downloadFailedUpdateDesktop">You must update the BudgetView application on your computer</string>
+
 </resources>

@@ -11,10 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.budgetview.android.*;
-import com.budgetview.android.datasync.DataSync;
-import com.budgetview.android.datasync.DataSyncCallback;
-import com.budgetview.android.datasync.DataSyncFactory;
-import com.budgetview.android.datasync.LoginInfo;
+import com.budgetview.android.datasync.*;
 
 public class Header extends LinearLayout {
 
@@ -118,7 +115,7 @@ public class Header extends LinearLayout {
       return;
     }
 
-    dataSync.load(loginInfo.email, loginInfo.password, new DataSyncCallback() {
+    dataSync.load(loginInfo.email, loginInfo.password, new DownloadCallback() {
       public void onActionFinished() {
         Intent intent = new Intent(activity, BudgetOverviewActivity.class);
         intent.putExtra(DemoActivity.USE_DEMO, false);
@@ -135,6 +132,16 @@ public class Header extends LinearLayout {
       public void onActionFailed() {
         hideProgressBar();
         Views.showAlert(activity, R.string.syncWithInvalidId);
+      }
+
+      public void onDownloadFailed(String errorMessage) {
+        hideProgressBar();
+        Views.showAlert(activity, errorMessage);
+      }
+
+      public void onDownloadFailed(Integer errorId) {
+        hideProgressBar();
+        Views.showAlert(activity, errorId);
       }
     });
   }

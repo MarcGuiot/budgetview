@@ -4,7 +4,7 @@ import java.io.*;
 
 public interface DataSync {
 
-  void load(String email, String password, DataSyncCallback callback);
+  void load(String email, String password, DownloadCallback callback);
 
   void loadDemoFile() throws IOException;
 

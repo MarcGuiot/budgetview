@@ -4,10 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import com.budgetview.android.datasync.DataSync;
-import com.budgetview.android.datasync.DataSyncCallback;
-import com.budgetview.android.datasync.DataSyncFactory;
-import com.budgetview.android.datasync.LoginInfo;
+import com.budgetview.android.datasync.*;
 
 import java.io.IOException;
 
@@ -39,7 +36,7 @@ public class HomeActivity extends Activity {
 
   private void loadData(DataSync dataSync, LoginInfo loginInfo) {
     showSplashPage();
-    dataSync.load(loginInfo.email, loginInfo.password, new DataSyncCallback() {
+    dataSync.load(loginInfo.email, loginInfo.password, new DownloadCallback() {
       public void onActionFinished() {
         gotoBudgetOverview(true, false);
       }
@@ -49,6 +46,14 @@ public class HomeActivity extends Activity {
       }
 
       public void onActionFailed() {
+        showHomePage();
+      }
+
+      public void onDownloadFailed(String errorMessage) {
+        showHomePage();
+      }
+
+      public void onDownloadFailed(Integer errorId) {
         showHomePage();
       }
     });

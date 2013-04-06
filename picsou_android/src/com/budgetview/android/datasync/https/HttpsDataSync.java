@@ -11,6 +11,7 @@ import com.budgetview.android.App;
 import com.budgetview.android.R;
 import com.budgetview.android.datasync.DataSync;
 import com.budgetview.android.datasync.DataSyncCallback;
+import com.budgetview.android.datasync.DownloadCallback;
 import com.budgetview.shared.model.MobileModel;
 import com.budgetview.shared.utils.ComCst;
 import com.budgetview.shared.utils.Crypt;
@@ -34,7 +35,7 @@ import java.net.URLEncoder;
 
 public class HttpsDataSync implements DataSync {
   public static final String URL_BV =
-  "https://register.mybudgetview.fr:1443";
+    "https://register.mybudgetview.fr:1443";
   //"https://192.168.0.20:8443"; // Marc
 //  "https://192.168.0.24:8443"; // Regis
   private static final String LOCAL_TEMP_FILE_NAME = "temp.xml";
@@ -47,7 +48,7 @@ public class HttpsDataSync implements DataSync {
     this.activity = activity;
   }
 
-  public void load(String email, String password, DataSyncCallback callback) {
+  public void load(String email, String password, DownloadCallback callback) {
     this.email = email;
     this.password = password;
     if (!canConnect()) {
@@ -102,29 +103,24 @@ public class HttpsDataSync implements DataSync {
     activity.deleteFile(LOCAL_TEMP_FILE_NAME);
   }
 
-  private class DownloadWebpage extends AsyncTask<URL, Integer, Boolean> {
+  private class DownloadWebpage extends AsyncTask<URL, Integer, DownloadResult> {
     private Activity activity;
-    private DataSyncCallback callback;
+    private DownloadCallback callback;
 
-    public DownloadWebpage(Activity activity, DataSyncCallback callback) {
+    public DownloadWebpage(Activity activity, DownloadCallback callback) {
       this.activity = activity;
       this.callback = callback;
     }
 
-    protected Boolean doInBackground(URL... urls) {
+    protected DownloadResult doInBackground(URL... urls) {
       return downloadUrl();
     }
 
-    protected void onPostExecute(Boolean loadSuccessful) {
-      if (!loadSuccessful) {
-        callback.onActionFailed();
-      }
-      else {
-        callback.onActionFinished();
-      }
+    protected void onPostExecute(DownloadResult result) {
+      result.apply(callback);
     }
 
-    private Boolean downloadUrl() {
+    private DownloadResult downloadUrl() {
       InputStream inputStream = null;
       HttpResponse response = null;
       HttpGet get = null;
@@ -143,26 +139,25 @@ public class HttpsDataSync implements DataSync {
         response = client.execute(get, new BasicHttpContext());
 
         if (response.getStatusLine().getStatusCode() != 200) {
-          return false;
+          return DownloadResult.error(R.string.downloadError);
         }
         Header statusHeader = response.getFirstHeader(ComCst.STATUS);
         Header majorVersionHeader = response.getFirstHeader(ComCst.MAJOR_VERSION_NAME);
         Header minorVersionHeader = response.getFirstHeader(ComCst.MINOR_VERSION_NAME);
         if (majorVersionHeader == null || minorVersionHeader == null || statusHeader == null) {
-          return false;
+          return DownloadResult.error(R.string.downloadError);
         }
         if (!statusHeader.getValue().equalsIgnoreCase("ok")) {
-          return false;
+          return DownloadResult.error(statusHeader.getValue());
         }
-        int majorVersion = Integer.parseInt(majorVersionHeader.getValue());
-        int minorVersion = Integer.parseInt(minorVersionHeader.getValue());
-        if (majorVersion != MobileModel.MAJOR_VERSION) {
+        int contentMajorVersion = Integer.parseInt(majorVersionHeader.getValue());
+        if (contentMajorVersion > MobileModel.MAJOR_VERSION) {
+          return DownloadResult.error(R.string.downloadFailedUpdateMobile);
+        }
+        else if (contentMajorVersion < MobileModel.MAJOR_VERSION) {
+          return DownloadResult.error(R.string.downloadFailedUpdateDesktop);
+        }
 
-          // TODO mettre un message pour dire qu'il faut upgrader la version:
-          // majorVersion > MobileModel.MAJOR_VERSION ==> la mobile
-          // majorVersion < MobileModel.MAJOR_VERSION ==> BV
-          return false;
-        }
         inputStream = response.getEntity().getContent();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         Files.copyStream(inputStream, stream);
@@ -176,11 +171,11 @@ public class HttpsDataSync implements DataSync {
         writer.write(content);
         writer.close();
 
-        return true;
+        return DownloadResult.success();
       }
       catch (Throwable e) {
         Log.d("HttpsDataSync", "downloadUrl", e);
-        return false;
+        return DownloadResult.error(e.getMessage());
       }
       finally {
         if (inputStream != null) {
@@ -190,6 +185,45 @@ public class HttpsDataSync implements DataSync {
           catch (IOException e) {
           }
         }
+      }
+    }
+  }
+
+  private static class DownloadResult {
+    private boolean success;
+    private String errorMessage;
+    private final Integer errorId;
+
+    public static DownloadResult success() {
+      return new DownloadResult(true, null, null);
+    }
+
+    public static DownloadResult error(String errorMessage) {
+      return new DownloadResult(false, errorMessage, null);
+    }
+
+    public static DownloadResult error(Integer errorId) {
+      return new DownloadResult(false, null, errorId);
+    }
+
+    private DownloadResult(boolean success, String errorMessage, Integer errorId) {
+      this.success = success;
+      this.errorMessage = errorMessage;
+      this.errorId = errorId;
+    }
+
+    public void apply(DownloadCallback callback) {
+      if (success) {
+        callback.onActionFinished();
+      }
+      else if (errorMessage != null) {
+        callback.onDownloadFailed(errorMessage);
+      }
+      else if (errorId != null) {
+        callback.onDownloadFailed(errorId);
+      }
+      else {
+        callback.onDownloadFailed("Unexpected result");
       }
     }
   }

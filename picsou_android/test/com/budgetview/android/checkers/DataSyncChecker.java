@@ -6,6 +6,7 @@ import com.budgetview.android.checkers.utils.ExpectationQueue;
 import com.budgetview.android.datasync.DataSync;
 import com.budgetview.android.datasync.DataSyncCallback;
 import com.budgetview.android.datasync.DataSyncFactory;
+import com.budgetview.android.datasync.DownloadCallback;
 import junit.framework.Assert;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobPrinter;
@@ -48,7 +49,7 @@ public class DataSyncChecker {
 
   private class DummyDataSync implements DataSync {
 
-    public void load(String email, String password, DataSyncCallback callback) {
+    public void load(String email, String password, DownloadCallback callback) {
       if (!connectionAvailable) {
         callback.onConnectionUnavailable();
         return;

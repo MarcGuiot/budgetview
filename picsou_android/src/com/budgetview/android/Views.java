@@ -46,6 +46,14 @@ public class Views {
     textView.setTextColor(color);
   }
 
+  public static void showAlert(Context context, String message) {
+    showAlert(context, message, new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int which) {
+        dialog.dismiss();
+      }
+    });
+  }
+
   public static void showAlert(Context context, int messageId) {
     showAlert(context, messageId, new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int which) {
@@ -55,8 +63,13 @@ public class Views {
   }
 
   public static void showAlert(final Context context, int messageId, DialogInterface.OnClickListener listener) {
+    CharSequence message = context.getResources().getText(messageId);
+    showAlert(context, message, listener);
+  }
+
+  private static void showAlert(Context context, CharSequence message, DialogInterface.OnClickListener listener) {
     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-    builder.setMessage(context.getResources().getText(messageId))
+    builder.setMessage(message)
       .setCancelable(false)
       .setPositiveButton("OK", listener);
     AlertDialog alert = builder.create();
