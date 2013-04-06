@@ -86,4 +86,9 @@
   <string name="logoutYes">Yes</string>
   <string name="logoutNo">No</string>
 
+  <string name="sendEmailMessage">Contact us!</string>
+  <string name="sendEmailSupportAddress">support@mybudgetview.com</string>
+  <string name="sendEmailDefaultSubject">My comment about BudgetView</string>
+  <string name="sendEmailError">Could not send the email</string>
+
 </resources>

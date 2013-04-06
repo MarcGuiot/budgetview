@@ -3,6 +3,7 @@ package com.budgetview.android.components;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +65,13 @@ public class Header extends LinearLayout {
 
     this.activity = activity;
     setBackVisible(View.VISIBLE);
+    installEmail();
     updateRefreshVisibility(activity);
+  }
+
+  private void setBackVisible(int visible) {
+    ImageView button = (ImageView)findViewById(R.id.header_back_arrow);
+    button.setVisibility(visible);
   }
 
   private void installNavigateUpListener(int viewId) {
@@ -75,14 +82,25 @@ public class Header extends LinearLayout {
     });
   }
 
+  private void installEmail() {
+    findViewById(R.id.header_mail).setOnClickListener(new OnClickListener() {
+      public void onClick(View v) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO,
+                                   Uri.parse("mailto:" + activity.getString(R.string.sendEmailSupportAddress) +
+                                             "?subject=" + Uri.encode(activity.getString(R.string.sendEmailDefaultSubject))));
+        try {
+          activity.startActivity(Intent.createChooser(intent, activity.getString(R.string.sendEmailMessage)));
+        }
+        catch (android.content.ActivityNotFoundException ex) {
+          Views.showAlert(activity, R.string.sendEmailError);
+        }
+      }
+    });
+  }
+
   private void updateRefreshVisibility(Activity activity) {
     boolean visible = (activity != null) && !DemoActivity.isInDemoMode(activity);
     findViewById(R.id.header_refresh).setVisibility(visible ? VISIBLE : GONE);
-  }
-
-  private void setBackVisible(int visible) {
-    ImageView button = (ImageView)findViewById(R.id.header_back_arrow);
-    button.setVisibility(visible);
   }
 
   public void refresh() {
