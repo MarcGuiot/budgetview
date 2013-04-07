@@ -47,6 +47,9 @@ public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
       String content = "Directory already exist " + dir.getAbsolutePath();
       logger.info(content + " : " + mail);
     }
+    else {
+      dir.mkdir();
+    }
     URIBuilder builder = new URIBuilder("http://www.mybudgetview.fr:" + port+ LicenseServer.CREATE_MOBILE_USER);
     builder.addParameter(ConfigService.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
     builder.addParameter(ComCst.HEADER_LANG, lang);

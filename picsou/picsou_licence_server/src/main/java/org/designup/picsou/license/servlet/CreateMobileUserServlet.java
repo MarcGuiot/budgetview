@@ -6,19 +6,19 @@ import org.apache.log4j.Logger;
 import org.designup.picsou.client.http.MD5PasswordBasedEncryptor;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.mail.Mailer;
+import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URLDecoder;
 import java.util.Arrays;
 
 public class CreateMobileUserServlet extends HttpServlet {
+  public static final String PENDING = "pending";
   static Logger logger = Logger.getLogger("CreateMobileUserServlet");
   private String root;
   private Mailer mailer;
@@ -72,15 +72,44 @@ public class CreateMobileUserServlet extends HttpServlet {
         }
       }
       else {
-        writeCode(sha1Mail, dir);
-        logger.warn("Duplicate create : " + mail + " " + sha1Mail);
-        httpServletResponse.sendRedirect(baseUrl + "/mobile/account-already-present");
+        boolean hasPending = false;
+        File pendingCode = new File(dir, PENDING + ReceiveDataServlet.CODE_FILE_NAME);
+        File pendingData = new File(dir, PENDING + ReceiveDataServlet.DATA_FILE_NAME);
+        if (pendingCode.exists() && pendingData.exists()) {
+          Files.copyFile(pendingCode, new File(dir, ReceiveDataServlet.CODE_FILE_NAME));
+          Files.copyFile(pendingData, new File(dir, ReceiveDataServlet.DATA_FILE_NAME));
+          hasPending = true;
+        }
+        pendingCode.delete();
+        pendingData.delete();
+        if (!ReceiveDataServlet.checkSha1Code(sha1Mail, dir)) {
+          Files.deleteSubtreeOnly(dir);
+          writeCode(sha1Mail, dir);
+          logger.warn("Duplicate create : " + mail + " " + sha1Mail + " delete previous data.");
+          httpServletResponse.sendRedirect(baseUrl + "/mobile/account-already-present");
+        }
+        else {
+          if (hasPending) {
+            logger.info("created with pending : " + dir.getAbsolutePath() + " " + sha1Mail);
+            httpServletResponse.sendRedirect(baseUrl + "/mobile/account-ok");
+          }else {
+            logger.warn("Duplicate create : " + mail + " " + sha1Mail + " with same code.");
+            httpServletResponse.sendRedirect(baseUrl + "/mobile/account-already-present");
+          }
+        }
       }
     }
+    httpServletResponse.setStatus(HttpServletResponse.SC_FOUND);
   }
 
-  private void writeCode(String sha1Mail, File dir) throws IOException {
-    FileWriter writer = new FileWriter(new File(dir, "code.ser"));
+  public static void writeCode(String sha1Mail, File dir) throws IOException {
+    Writer writer = new BufferedWriter(new FileWriter(new File(dir, ReceiveDataServlet.CODE_FILE_NAME)));
+    writer.append(sha1Mail);
+    writer.close();
+  }
+
+  public static void writePendingCode(String sha1Mail, File dir) throws IOException {
+    FileWriter writer = new FileWriter(new File(dir, PENDING + ReceiveDataServlet.CODE_FILE_NAME));
     writer.append(sha1Mail);
     writer.close();
   }

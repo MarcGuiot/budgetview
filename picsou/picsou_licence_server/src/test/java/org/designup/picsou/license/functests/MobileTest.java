@@ -131,6 +131,26 @@ public class MobileTest extends ConnectedTestCase {
     email.checkContains("l'adresse suivante");
   }
 
+
+  public void testPendingDataAreSentAtAccountCreation() throws Exception {
+    String emailAddress = "test@mybudgetview.fr";
+
+    String path = OfxBuilder
+      .init(this)
+      .addTransaction("2006/01/10", -1.1, "TX 1")
+      .addTransaction("2006/01/11", -2.2, "TX 2")
+      .save();
+    application.getOperations().importOfxFile(path);
+
+
+    SharingConnection sharingConnection = requestNewMobileAccount(emailAddress);
+    String url = sharingConnection.url;
+    followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok");
+
+    mobileApp.checkLogin(emailAddress, sharingConnection.password);
+
+  }
+
   private void followUrl(String url, final int expectedReturnCode, final String expectedRedirect) throws IOException {
     HttpClient httpClient = new DefaultHttpClient();
     HttpGet method = new HttpGet(url);

@@ -31,6 +31,7 @@ public class RetrieveDataServlet extends HttpServlet {
     if (Strings.isNullOrEmpty(mail) || Strings.isNullOrEmpty(sha1Mail)) {
       logger.info("missing mail or key " + mail + " " + sha1Mail);
       httpServletResponse.setHeader(ComCst.STATUS, "missing mail or key");
+      httpServletResponse.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
       return;
     }
     mail = URLDecoder.decode(mail, "UTF-8");
@@ -40,6 +41,7 @@ public class RetrieveDataServlet extends HttpServlet {
     File rootDir = new File(root, fileName);
     if (!rootDir.exists()) {
       httpServletResponse.setHeader(ComCst.STATUS, Lang.get("mobile.no.account", lang));
+      httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
     else {
       if (!ReceiveDataServlet.checkSha1Code(sha1Mail, rootDir)){
@@ -66,6 +68,7 @@ public class RetrieveDataServlet extends HttpServlet {
         httpServletResponse.setHeader(ComCst.MINOR_VERSION_NAME, Integer.toString(minorVersion));
         httpServletResponse.setHeader(ComCst.MINOR_VERSION_NAME, Integer.toString(minorVersion));
         Files.copyStream(fileInputStream, outputStream);
+        fileInputStream.close();
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
       }
       else {

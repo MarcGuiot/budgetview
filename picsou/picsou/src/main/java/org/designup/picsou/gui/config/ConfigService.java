@@ -109,9 +109,9 @@ public class ConfigService {
                                            124, 59, 15, -50, 71, -16, -17, -26, -124, 53, -120, 46, -53, 36, 103, -86, -92, -57,
                                            -31, -77, -106, -30, -88, -18, -48, -117, 39, 107, 2, 3, 1, 0, 1};
 
-  private final String LICENSE_SERVER_URL;
-  private final String MOBILE_SERVER_URL;
-  private final String FTP_SERVER_URL;
+  private String LICENSE_SERVER_URL = PicsouApplication.LICENSE_SERVER_URL;
+  private String MOBILE_SERVER_URL = PicsouApplication.MOBILE_SERVER_URL;
+  private String FTP_SERVER_URL = PicsouApplication.FTP_SERVER_URL;
   private long localJarVersion = -1;
   private long localConfigVersion = -1;
   private String applicationVersion;
@@ -338,7 +338,7 @@ public class ConfigService {
   }
 
 
-  public boolean sendMobileData(String mail, String password, byte[] bytes, Ref<String> message) {
+  public synchronized boolean sendMobileData(String mail, String password, byte[] bytes, Ref<String> message) {
 
     HttpClient client = getNewHttpClient();
     HttpPost postMethod;
