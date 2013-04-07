@@ -104,21 +104,28 @@ public class Main {
     return files[files.length - 1];
   }
 
-  public static String getDataPath() {
+  public static String getCodePath() {
+    if (System.getProperty(PICSOU + ".jar.path") == null) {
+      return getJarPath();
+    }
+    return System.getProperty(PICSOU + ".jar.path", System.getProperty("user.home")) + "/." + PICSOU + JAR_DIRECTORY;
+  }
+
+  public static String getJarPath() {
     if (isMacOSX()) {
-      return System.getProperty("user.home") + "/Library/Application Support/" + PICSOU + JAR_DIRECTORY;
+      return System.getProperty("user.home") + "/Library/Application Support/BudgetView" + JAR_DIRECTORY;
     }
     if (isVista()) {
-      return System.getProperty("user.home") + "/AppData/Local/" + PICSOU + JAR_DIRECTORY;
+      return System.getProperty("user.home") + "/AppData/Local/BudgetView"  + JAR_DIRECTORY;
     }
     if (isWindows()) {
-      return System.getProperty("user.home") + "/Application Data/" + PICSOU + JAR_DIRECTORY;
+      return System.getProperty("user.home") + "/Application Data/BudgetView" + JAR_DIRECTORY;
     }
-    return System.getProperty("user.home") + "/." + PICSOU + JAR_DIRECTORY;
+    return System.getProperty("user.home") + "/.budgetview"  + JAR_DIRECTORY;
   }
 
   private File loadJar() {
-    String path = getDataPath();
+    String path = getCodePath();
     return findLastJar(path);
   }
 

@@ -21,7 +21,7 @@ public class AppLogger {
         return;
       }
 
-      File logFilePath = new File(AppPaths.getDataPath() + "/" + "logs");
+      File logFilePath = new File(AppPaths.getCodePath() + "/" + "logs");
       logFilePath.mkdirs();
       File logFile = new File(logFilePath, "log.txt");
       if (logFile.exists() && logFile.length() > 2 * 1024 * 1024) {
@@ -53,7 +53,7 @@ public class AppLogger {
   }
 
   public static File getLogFile() {
-    File logFilePath = new File(AppPaths.getDataPath() + "/" + "logs");
+    File logFilePath = new File(AppPaths.getCodePath() + "/" + "logs");
     logFilePath.mkdirs();
     return new File(logFilePath, "log.txt");
   }

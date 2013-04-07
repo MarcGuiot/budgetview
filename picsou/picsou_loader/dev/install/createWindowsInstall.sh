@@ -27,3 +27,5 @@ cat dev/install/picsou.template.en.mpi | sed -e "s/JAR_FOURMICS/budgetview${JAR_
     sed -e "s/SOFT_VERSION/${SOFT_VERSION}/" > dev/install/picsou.en.mpi
 
 ~/dev/installer/installjammer/installjammer --build-for-release dev/install/picsou.en.mpi
+
+dev/install/createWindowsZip.sh

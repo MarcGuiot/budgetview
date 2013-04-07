@@ -1,8 +1,8 @@
 package org.globsframework.utils;
 
 import org.globsframework.utils.exceptions.IOFailure;
-import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import org.globsframework.utils.exceptions.ItemNotFound;
+import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import java.io.*;
 import java.util.Properties;
@@ -122,6 +122,14 @@ public class Files {
   }
 
   public static boolean deleteSubtree(File directory) {
+    return delete(directory, true);
+  }
+
+  public static boolean deleteSubtreeOnly(File directory) {
+    return delete(directory, false);
+  }
+
+  private static boolean delete(File directory, boolean andRoot) {
     File[] files = directory.listFiles();
     if (files == null) {
       return false;
@@ -134,7 +142,7 @@ public class Files {
         file.delete();
       }
     }
-    return directory.delete();
+    return andRoot ? directory.delete() : true;
   }
 
   public static void copyStreamTofile(InputStream inputStream, String file) throws IOException {
@@ -191,7 +199,7 @@ public class Files {
 
   public static void copyInUtf8(InputStream contentAsStream, String charset, OutputStream fileOutputStream) throws IOException {
     InputStreamReader inputStreamReader;
-    if (Strings.isNotEmpty(charset)){
+    if (Strings.isNotEmpty(charset)) {
       inputStreamReader = new InputStreamReader(contentAsStream, charset);
     }
     else {
@@ -204,5 +212,37 @@ public class Files {
       outputStreamWriter.write(chars, 0, readed);
     }
     outputStreamWriter.close();
+  }
+
+  public static boolean copyDirectory(File source, File target){
+    try {
+      File[] files = source.listFiles();
+      if (files != null && files.length != 0) {
+        for (File file : files) {
+          File targetFile = new File(target, file.getName());
+          if (file.isDirectory()) {
+            if (!targetFile.mkdir()) {
+              return false;
+            }
+            if (!copyDirectory(file, targetFile)){
+              return false;
+            }
+          }
+          else {
+            copyFile(file, targetFile);
+          }
+        }
+      }
+      return true;
+    }
+    catch (IOException e) {
+      return false;
+    }
+  }
+
+  public static void copyFile(File sourceFile, File targetFile) throws IOException {
+    BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(sourceFile));
+    copyStream(inputStream, new BufferedOutputStream(new FileOutputStream(targetFile)));
+    inputStream.close();
   }
 }

@@ -37,6 +37,16 @@ then
    scp budgetview-${SOFT_VERSION}-fr.tar.gz fr_mybudgetview@91.121.123.100:files/app
 fi
 
+if [ -a budgetview-${SOFT_VERSION}-en.zip ];
+then
+   scp budgetview-${SOFT_VERSION}-en.zip en_mybudgetview@91.121.123.100:files/app
+fi
+
+if [ -a budgetview-${SOFT_VERSION}-fr.zip ];
+then
+   scp budgetview-${SOFT_VERSION}-fr.zip fr_mybudgetview@91.121.123.100:files/app
+fi
+
 if [ -a budgetview-${SOFT_VERSION}.deb ];
 then
    scp budgetview-${SOFT_VERSION}.deb fr_mybudgetview@91.121.123.100:files/app
