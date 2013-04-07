@@ -11,7 +11,7 @@
                   android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
-                  android:layout_marginBottom="4dp"
+                  android:layout_marginBottom="2dp"
       >
 
       <TextView android:id="@+id/budgetAreaLabel"
@@ -29,7 +29,7 @@
                   android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
-                  android:layout_marginBottom="4dp"
+                  android:layout_marginBottom="2dp"
       >
 
       <com.budgetview.android.components.GaugeView

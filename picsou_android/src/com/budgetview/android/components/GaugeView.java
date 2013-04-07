@@ -70,7 +70,7 @@ public class GaugeView extends View {
   }
 
   protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    setMeasuredDimension(200, 20);
+    setMeasuredDimension(200, 25);
   }
 
   public GaugeModel getModel() {
