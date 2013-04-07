@@ -34,36 +34,31 @@ public class Amounts {
   }
 
   static public double extractAmount(String amount) {
-    double coef;
     amount = amount.trim();
     amount = amount.replaceAll("[^0-9-+,.]", "");
-    int len = amount.length();
-    int commaSep = amount.lastIndexOf(",");
 
-    if (commaSep != -1 && commaSep == len - 2) {
-      coef = 10.;
-    }
-    else if (commaSep != -1 && commaSep == len - 3) {
-      coef = 100.;
-    }
-    else {
-      int dotSep = amount.lastIndexOf(".");
-      if (dotSep != -1 && dotSep == len - 2) {
-        coef = 10.;
-      }
-      else if (dotSep != -1 && dotSep == len - 3) {
-        coef = 100.;
-      }
-      else {
-        coef = 1.;
-      }
-    }
+    double coef = getCoef(amount);
 
     String tmp = amount.replaceAll("[^0-9-]", "");
     if (Strings.isNullOrEmpty(tmp)) {
       return 0.0;
     }
     return Double.parseDouble(tmp) / coef;
+  }
+
+  private static double getCoef(String amount) {
+    int index = -1;
+    double coef = 1.;
+    for (int i = amount.length() - 1; i >= 0; i--) {
+      if (amount.charAt(i) == '.' || amount.charAt(i) == ',') {
+        index = amount.length() - i - 1;
+        break;
+      }
+    }
+    if (index != -1) {
+      coef = Math.pow(10, index);
+    }
+    return coef;
   }
 
   public static boolean equal(Double val1, Double val2) {
