@@ -21,6 +21,7 @@ import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.toolkit.UISpecDisplay;
 
+import javax.swing.*;
 import java.util.Date;
 
 public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
@@ -196,8 +197,12 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     catch (Throwable e) {
 //      e.printStackTrace();  // on perd l'assert si il y en a eu un.
       try {
-        mainWindow.getAwtComponent().setVisible(false);
-        mainWindow.dispose();
+        SwingUtilities.invokeAndWait(new Runnable() {
+          public void run() {
+            mainWindow.getAwtComponent().setVisible(false);
+            mainWindow.dispose();
+          }
+        });
       }
       catch (Throwable e1) {
 //        e1.printStackTrace();
@@ -245,7 +250,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     repository = null;
   }
 
-  protected void shutdown() {
+  public void shutdown() {
     if (application != null) {
       application.dispose();
     }
@@ -303,7 +308,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     initCheckers();
   }
 
-  protected void restartApplication() throws Exception {
+  public void restartApplication() throws Exception {
     restartApplication(false);
   }
 

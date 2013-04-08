@@ -47,6 +47,17 @@
         <filler fill="horizontal"/>
       </row>
 
+      <row marginTop="20">
+          <label text="$data.path.pref.text" marginRight="5"/>
+          <filler fill="horizontal"/>
+      </row>
+      <row marginTop="5">
+          <button action="backToDefault" anchor="left" text="$data.path.remove" marginRight="5"/>
+          <button action="browsePathToData" anchor="left" marginRight="5"/>
+          <label ref="pathToData" marginRight="5"/>
+          <filler fill="horizontal"/>
+      </row>
+
     </column>
   </panel>
 

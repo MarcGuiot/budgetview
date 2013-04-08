@@ -174,7 +174,7 @@ public class PicsouApplication {
     initDirectory(directory, openRequestManager);
 
     try {
-      final MainWindow mainWindow = new MainWindow(this, getServerAddress(), AppPaths.getLocalPrevaylerPath(), isDataInMemory(), directory);
+      final MainWindow mainWindow = new MainWindow(this, getServerAddress(), AppPaths.getDataPath(), isDataInMemory(), directory);
       mainWindow.show();
     }
     catch (InvalidState e) {
@@ -244,7 +244,7 @@ public class PicsouApplication {
   }
 
   public static void clearRepository() {
-    Files.deleteSubtree(new File(AppPaths.getDataPath()));
+    Files.deleteSubtree(new File(AppPaths.getRootDataPath()));
   }
 
   public static void clearRepositoryIfNeeded() {

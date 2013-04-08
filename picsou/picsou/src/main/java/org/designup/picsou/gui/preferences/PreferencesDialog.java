@@ -1,8 +1,11 @@
 package org.designup.picsou.gui.preferences;
 
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.preferences.components.ColorThemeItemFactory;
+import org.designup.picsou.gui.startup.AppPaths;
 import org.designup.picsou.model.ColorTheme;
 import org.designup.picsou.model.NumericDateType;
 import org.designup.picsou.model.TextDateType;
@@ -14,6 +17,8 @@ import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobComparators;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Ref;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -21,8 +26,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class PreferencesDialog {
+  private final JLabel pathToDataLabel;
+  private final AbstractAction backToDefaultPathAction;
   private PicsouDialog dialog;
 
   private LocalGlobRepository repository;
@@ -30,9 +38,11 @@ public class PreferencesDialog {
   private GlobsPanelBuilder builder;
   private ColorThemeItemFactory colorThemeFactory;
   private GlobRepository parentRepository;
+  private Directory directory;
 
   public PreferencesDialog(Window parent, final GlobRepository parentRepository, final Directory directory) {
     this.parentRepository = parentRepository;
+    this.directory = directory;
     this.repository = createLocalRepository(parentRepository);
 
     builder = new GlobsPanelBuilder(PreferencesDialog.class,
@@ -58,6 +68,25 @@ public class PreferencesDialog {
       .forceSelection(UserPreferences.KEY);
 
     builder.add("lang", createLangCombo(directory));
+
+    pathToDataLabel = new JLabel();
+    builder.add("pathToData", pathToDataLabel);
+    builder.add("browsePathToData", new BrowseDataPath());
+    backToDefaultPathAction = new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        pathToDataLabel.setText("");
+        backToDefaultPathAction.setEnabled(false);
+      }
+    };
+    builder.add("backToDefault", backToDefaultPathAction);
+    String redirect = AppPaths.getRedirect();
+    if (Strings.isNotEmpty(redirect)){
+      pathToDataLabel.setText(redirect);
+      backToDefaultPathAction.setEnabled(true);
+    }
+    else {
+      backToDefaultPathAction.setEnabled(false);
+    }
 
     dialog = PicsouDialog.create(parent, directory);
     dialog.addPanelWithButtons((JPanel)builder.load(), new OkAction(), new CancelAction());
@@ -108,7 +137,30 @@ public class PreferencesDialog {
     public void actionPerformed(ActionEvent e) {
       repository.commitChanges(true);
       colorThemeFactory.complete(parentRepository);
+      boolean exit = false;
+      if (!pathToDataLabel.getText().trim().equals(Strings.toString(AppPaths.getRedirect()).trim())) {
+        String pathToData = pathToDataLabel.getText();
+        Ref<String> message = new Ref<String>();
+        if (Strings.isNullOrEmpty(pathToData) || AppPaths.newRedirect(pathToData, message)) {
+          if (AppPaths.updateRedirect(pathToData, message)){
+            MessageDialog.show("data.path.title", MessageType.INFO, dialog, directory, "data.path.exit");
+            exit = true;
+          }else {
+            MessageDialog.showMessage("data.path.title", MessageType.ERROR, dialog, directory, message.get());
+            return;
+          }
+        }
+        else {
+          MessageDialog.showMessage("data.path.title", MessageType.ERROR, dialog, directory, message.get());
+          return;
+        }
+      }
       dialog.setVisible(false);
+      if (exit) {
+        JFrame frame = directory.get(JFrame.class);
+        frame.setVisible(false);
+        frame.dispose();
+      }
     }
   }
 
@@ -120,6 +172,30 @@ public class PreferencesDialog {
     public void actionPerformed(ActionEvent e) {
       colorThemeFactory.complete(parentRepository);
       dialog.setVisible(false);
+    }
+  }
+
+  private class BrowseDataPath extends AbstractAction {
+    private BrowseDataPath() {
+      super(Lang.get("browse"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      JFileChooser chooser = new JFileChooser();
+      String path = AppPaths.getRedirect();
+      if (path != null && new File(path).exists()) {
+        chooser.setCurrentDirectory(new File(path));
+      }
+      chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+      chooser.setMultiSelectionEnabled(false);
+      int returnVal = chooser.showOpenDialog(dialog);
+      if (returnVal == JFileChooser.APPROVE_OPTION) {
+        File file = chooser.getSelectedFile();
+        if (file != null) {
+          pathToDataLabel.setText(file.getAbsolutePath());
+          backToDefaultPathAction.setEnabled(true);
+        }
+      }
     }
   }
 }
