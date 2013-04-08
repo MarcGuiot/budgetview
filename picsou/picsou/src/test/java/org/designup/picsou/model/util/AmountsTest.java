@@ -36,6 +36,8 @@ public class AmountsTest extends TestCase {
     checkExtract(1222.223, "1,222.223");
     checkExtract(1222.2, "1,222.2");
     checkExtract(1222., "1,222.");
+
+    checkExtract(13745.40, "13'745.40"); // en suisse
   }
 
   private void checkExtract(double expected, String input) {
