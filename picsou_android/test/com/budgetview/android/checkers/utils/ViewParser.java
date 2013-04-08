@@ -136,12 +136,19 @@ public class ViewParser {
     Assert.assertEquals(text, textView.getText());
   }
 
+  public static void click(View view, int itemId) {
+    View target = view.findViewById(itemId);
+    if (target == null) {
+      Assert.fail("Could not find item to click in view: " + toString(view));
+    }
+    Robolectric.shadowOf(target).performClick();
+  }
+
   public static void checkHidden(View view, int id) {
     View target = view.findViewById(id);
     if (target == null) {
       Assert.fail("No View found with id " + id + " in:\n " + ViewParser.toString(view));
     }
     Assert.assertEquals(View.GONE, target.getVisibility());
-
   }
 }

@@ -43,7 +43,8 @@ public class SeriesListFragment extends Fragment {
                         BudgetAreaValues.INITIALLY_PLANNED,
                         BudgetAreaValues.OVERRUN,
                         BudgetAreaValues.REMAINDER,
-                        budgetAreaEntity.get(BudgetAreaEntity.INVERT_AMOUNTS));
+                        budgetAreaEntity.get(BudgetAreaEntity.INVERT_AMOUNTS)
+    );
 
     ListView list = (ListView)view.findViewById(R.id.seriesList);
     list.setAdapter(new SeriesListAdapter(inflater));

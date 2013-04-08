@@ -19,6 +19,7 @@ public class LoadBuilder {
   private Integer currentAccountId = null;
   private Glob currentSeriesValues = null;
   private int accountSequenceIndex = 0;
+  private boolean uncategorized = false;
   private int transactionSequenceIndex = 0;
   private Map<String, Glob> seriesEntitiesByName = new HashMap<String, Glob>();
 
@@ -50,30 +51,31 @@ public class LoadBuilder {
   }
 
   public LoadBuilder addIncomeSeries(String name, int monthId, Double planned) {
-    return doAddSeries(BudgetArea.INCOME, name, monthId, planned);
+    return doAddSeries(BudgetArea.INCOME, name, monthId, planned, false);
   }
 
   public LoadBuilder addRecurringSeries(String name, int monthId, Double planned) {
-    return doAddSeries(BudgetArea.RECURRING, name, monthId, planned);
+    return doAddSeries(BudgetArea.RECURRING, name, monthId, planned, false);
   }
 
   public LoadBuilder addVariableSeries(String name, int monthId, Double planned) {
-    return doAddSeries(BudgetArea.VARIABLE, name, monthId, planned);
+    return doAddSeries(BudgetArea.VARIABLE, name, monthId, planned, false);
   }
 
   public LoadBuilder addExtrasSeries(String name, int monthId, Double planned) {
-    return doAddSeries(BudgetArea.EXTRAS, name, monthId, planned);
+    return doAddSeries(BudgetArea.EXTRAS, name, monthId, planned, false);
   }
 
   public LoadBuilder addSavingsSeries(String name, int monthId, Double planned) {
-    return doAddSeries(BudgetArea.SAVINGS, name, monthId, planned);
+    return doAddSeries(BudgetArea.SAVINGS, name, monthId, planned, false);
   }
 
-  public LoadBuilder addUncategorizedSeries(int monthId, Double planned) {
-    return doAddSeries(BudgetArea.UNCATEGORIZED, "Uncategorized", monthId, planned);
+  public LoadBuilder addUncategorizedSeries(int monthId) {
+    return doAddSeries(BudgetArea.UNCATEGORIZED, "Uncategorized", monthId, 0.00, true);
   }
 
-  private LoadBuilder doAddSeries(BudgetArea budgetArea, String name, int monthId, Double planned) {
+  private LoadBuilder doAddSeries(BudgetArea budgetArea, String name, int monthId, Double planned, boolean uncategorized) {
+    this.uncategorized = uncategorized;
     Glob seriesEntity = findOrCreateSeriesEntity(name, budgetArea);
     currentSeriesValues = tempRepository.create(SeriesValues.TYPE,
                                                 value(SeriesValues.BUDGET_AREA, budgetArea.id),
@@ -109,22 +111,28 @@ public class LoadBuilder {
                           value(TransactionValues.BANK_DAY, day),
                           value(TransactionValues.SEQUENCE_NUMBER, transactionSequenceIndex++));
 
-    Double newSeriesAmount = currentSeriesValues.get(SeriesValues.AMOUNT) + amount;
-    Double seriesPlanned = currentSeriesValues.get(SeriesValues.PLANNED_AMOUNT);
+    Double newSeriesAmount;
     Double remaining = 0.00;
     Double overrun = 0.00;
-    if (Math.signum(newSeriesAmount) == Math.signum(seriesPlanned)) {
-      if (Math.abs(newSeriesAmount) < Math.abs(seriesPlanned)) {
-        remaining = seriesPlanned - newSeriesAmount;
-        overrun = 0.00;
-      }
-      else {
-        remaining = 0.00;
-        overrun = newSeriesAmount - seriesPlanned;
-      }
+    if (uncategorized) {
+      newSeriesAmount = currentSeriesValues.get(SeriesValues.AMOUNT) + Math.abs(amount);
     }
     else {
-      remaining = seriesPlanned - newSeriesAmount;
+      newSeriesAmount = currentSeriesValues.get(SeriesValues.AMOUNT) + amount;
+      Double seriesPlanned = currentSeriesValues.get(SeriesValues.PLANNED_AMOUNT);
+      if (Math.signum(newSeriesAmount) == Math.signum(seriesPlanned)) {
+        if (Math.abs(newSeriesAmount) < Math.abs(seriesPlanned)) {
+          remaining = seriesPlanned - newSeriesAmount;
+          overrun = 0.00;
+        }
+        else {
+          remaining = 0.00;
+          overrun = newSeriesAmount - seriesPlanned;
+        }
+      }
+      else {
+        remaining = seriesPlanned - newSeriesAmount;
+      }
     }
     tempRepository.update(currentSeriesValues.getKey(),
                           value(SeriesValues.AMOUNT, newSeriesAmount),

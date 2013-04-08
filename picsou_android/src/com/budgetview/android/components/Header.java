@@ -3,6 +3,7 @@ package com.budgetview.android.components;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.budgetview.android.*;
-import com.budgetview.android.datasync.DataSync;
-import com.budgetview.android.datasync.DataSyncCallback;
-import com.budgetview.android.datasync.DataSyncFactory;
-import com.budgetview.android.datasync.LoginInfo;
+import com.budgetview.android.datasync.*;
 
 public class Header extends LinearLayout {
 
@@ -64,7 +62,13 @@ public class Header extends LinearLayout {
 
     this.activity = activity;
     setBackVisible(View.VISIBLE);
+    installEmail();
     updateRefreshVisibility(activity);
+  }
+
+  private void setBackVisible(int visible) {
+    ImageView button = (ImageView)findViewById(R.id.header_back_arrow);
+    button.setVisibility(visible);
   }
 
   private void installNavigateUpListener(int viewId) {
@@ -75,14 +79,25 @@ public class Header extends LinearLayout {
     });
   }
 
+  private void installEmail() {
+    findViewById(R.id.header_mail).setOnClickListener(new OnClickListener() {
+      public void onClick(View v) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO,
+                                   Uri.parse("mailto:" + activity.getString(R.string.sendEmailSupportAddress) +
+                                             "?subject=" + Uri.encode(activity.getString(R.string.sendEmailDefaultSubject))));
+        try {
+          activity.startActivity(Intent.createChooser(intent, activity.getString(R.string.sendEmailMessage)));
+        }
+        catch (android.content.ActivityNotFoundException ex) {
+          Views.showAlert(activity, R.string.sendEmailError);
+        }
+      }
+    });
+  }
+
   private void updateRefreshVisibility(Activity activity) {
     boolean visible = (activity != null) && !DemoActivity.isInDemoMode(activity);
     findViewById(R.id.header_refresh).setVisibility(visible ? VISIBLE : GONE);
-  }
-
-  private void setBackVisible(int visible) {
-    ImageView button = (ImageView)findViewById(R.id.header_back_arrow);
-    button.setVisibility(visible);
   }
 
   public void refresh() {
@@ -100,7 +115,7 @@ public class Header extends LinearLayout {
       return;
     }
 
-    dataSync.load(loginInfo.email, loginInfo.password, new DataSyncCallback() {
+    dataSync.load(loginInfo.email, loginInfo.password, new DownloadCallback() {
       public void onActionFinished() {
         Intent intent = new Intent(activity, BudgetOverviewActivity.class);
         intent.putExtra(DemoActivity.USE_DEMO, false);
@@ -117,6 +132,16 @@ public class Header extends LinearLayout {
       public void onActionFailed() {
         hideProgressBar();
         Views.showAlert(activity, R.string.syncWithInvalidId);
+      }
+
+      public void onDownloadFailed(String errorMessage) {
+        hideProgressBar();
+        Views.showAlert(activity, errorMessage);
+      }
+
+      public void onDownloadFailed(Integer errorId) {
+        hideProgressBar();
+        Views.showAlert(activity, errorId);
       }
     });
   }

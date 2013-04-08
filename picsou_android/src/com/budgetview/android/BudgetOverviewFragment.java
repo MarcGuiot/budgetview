@@ -13,6 +13,7 @@ import com.budgetview.android.components.TabPage;
 import com.budgetview.android.utils.AbstractBlock;
 import com.budgetview.android.utils.SectionHeaderBlock;
 import com.budgetview.android.utils.TransactionSet;
+import com.budgetview.shared.gui.gauge.GaugeModel;
 import com.budgetview.shared.model.AccountEntity;
 import com.budgetview.shared.model.BudgetAreaEntity;
 import com.budgetview.shared.model.BudgetAreaValues;
@@ -132,7 +133,8 @@ public class BudgetOverviewFragment extends Fragment {
       App app = (App)getActivity().getApplication();
       final Glob entity = app.getRepository().findLinkTarget(budgetAreaValues, BudgetAreaValues.BUDGET_AREA);
 
-      if (BudgetAreaEntity.isUncategorized(entity)) {
+      boolean isUncategorized = BudgetAreaEntity.isUncategorized(entity);
+      if (isUncategorized) {
         view.setOnClickListener(new View.OnClickListener() {
           public void onClick(View view) {
             final App app = (App)getActivity().getApplication();
@@ -164,13 +166,17 @@ public class BudgetOverviewFragment extends Fragment {
       Views.setText(view, R.id.budgetAreaActual, budgetAreaValues.get(BudgetAreaValues.ACTUAL), invert);
       Views.setText(view, R.id.budgetAreaPlanned, budgetAreaValues.get(BudgetAreaValues.INITIALLY_PLANNED), invert);
 
+      view.findViewById(R.id.budgetAreaSeparator).setVisibility(isUncategorized ? View.GONE : View.VISIBLE);
+      view.findViewById(R.id.budgetAreaPlanned).setVisibility(isUncategorized ? View.GONE : View.VISIBLE);
+
       GaugeView gaugeView = (GaugeView)view.findViewById(R.id.budgetAreaGauge);
-      gaugeView.getModel()
-        .setValues(budgetAreaValues.get(BudgetAreaValues.ACTUAL),
-                   budgetAreaValues.get(BudgetAreaValues.INITIALLY_PLANNED),
-                   budgetAreaValues.get(BudgetAreaValues.OVERRUN),
-                   budgetAreaValues.get(BudgetAreaValues.REMAINDER),
-                   "", false);
+      GaugeModel gaugeModel = gaugeView.getModel();
+      gaugeModel.setInvertAll(isUncategorized);
+      gaugeModel.setValues(budgetAreaValues.get(BudgetAreaValues.ACTUAL),
+                           budgetAreaValues.get(BudgetAreaValues.INITIALLY_PLANNED),
+                           budgetAreaValues.get(BudgetAreaValues.OVERRUN),
+                           budgetAreaValues.get(BudgetAreaValues.REMAINDER),
+                           "", false);
     }
   }
 

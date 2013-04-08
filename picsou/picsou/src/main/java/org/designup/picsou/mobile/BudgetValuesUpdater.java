@@ -86,8 +86,7 @@ public class BudgetValuesUpdater {
 
   private void createMonths() {
     for (Integer monthId : selectedMonths) {
-      targetRepository.create(MonthEntity.TYPE,
-                              value(MonthEntity.ID, monthId));
+      targetRepository.create(MonthEntity.TYPE, value(MonthEntity.ID, monthId));
     }
   }
 
@@ -117,6 +116,14 @@ public class BudgetValuesUpdater {
                                 value(BudgetAreaValues.INITIALLY_PLANNED, totalAmounts.getInitiallyPlanned()),
                                 value(BudgetAreaValues.ACTUAL, totalAmounts.getActual()));
       }
+      Double absUncategorized = budgetStat.get(BudgetStat.UNCATEGORIZED_ABS);
+      targetRepository.create(BudgetAreaValues.TYPE,
+                              value(BudgetAreaValues.BUDGET_AREA, BudgetArea.UNCATEGORIZED.getId()),
+                              value(BudgetAreaValues.MONTH, budgetStat.get(BudgetStat.MONTH)),
+                              value(BudgetAreaValues.REMAINDER, 0.00),
+                              value(BudgetAreaValues.OVERRUN, absUncategorized),
+                              value(BudgetAreaValues.INITIALLY_PLANNED, 0.00),
+                              value(BudgetAreaValues.ACTUAL, absUncategorized));
     }
   }
 
@@ -143,6 +150,18 @@ public class BudgetValuesUpdater {
                               value(SeriesEntity.ID, seriesId),
                               value(SeriesEntity.NAME, series.get(Series.NAME)),
                               value(SeriesEntity.BUDGET_AREA, series.get(Series.BUDGET_AREA)));
+    }
+    for (Glob budgetStat : sourceRepository.getAll(BudgetStat.TYPE, fieldIn(BudgetStat.MONTH, selectedMonths))) {
+      Glob seriesValues = targetRepository.find(Key.create(SeriesValues.SERIES_ENTITY, Series.UNCATEGORIZED_SERIES_ID,
+                                                           SeriesValues.MONTH, budgetStat.get(BudgetStat.MONTH)));
+      if (seriesValues != null) {
+        Double absAmount = budgetStat.get(BudgetStat.UNCATEGORIZED_ABS);
+        targetRepository.update(seriesValues.getKey(),
+                                value(SeriesValues.PLANNED_AMOUNT, 0.00),
+                                value(SeriesValues.AMOUNT, absAmount),
+                                value(SeriesValues.OVERRUN_AMOUNT, absAmount),
+                                value(SeriesValues.REMAINING_AMOUNT, 0.00));
+      }
     }
   }
 

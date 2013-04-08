@@ -149,8 +149,10 @@ public class AppLoginTest extends AndroidAppTestCase {
       .addTransactionToSeries("Credit XYZ", 2, -1495.00)
       .addVariableSeries("Groceries ", 201301, -600.00)
       .addTransactionToSeries("Auchan ", 5, -50.00)
-      .addUncategorizedSeries(201301, -50.00)
-      .addTransactionToSeries("Blah", 15, -50.00);
+      .addUncategorizedSeries(201301)
+      .addTransactionToSeries("Blah", 15, -50.00)
+      .addTransactionToSeries("Other", 17, -30.00)
+    ;
 
     HomeChecker home = app.start();
 
@@ -164,17 +166,34 @@ public class AppLoginTest extends AndroidAppTestCase {
     budgetOverview.initContent()
       .add("Recurring", "1500.00", "1495.00")
       .add("Variable", "600.00", "50.00")
-      .add("Uncategorized", "-50.00", "-50.00")
+      .add("Uncategorized", "0.00", "80.00")
       .check();
 
     TransactionListChecker uncategorized = budgetOverview.editUncategorized();
+    uncategorized.checkSummaryHidden();
     uncategorized.initContent()
       .add("on 15/1", "Blah", -50.00)
+      .add("on 17/1", "Other", -30.00)
       .check();
 
     TransactionPageChecker blah = uncategorized.edit("Blah");
     blah
       .checkDisplay("Blah", "on 15/1", -50.00)
       .checkUncategorized();
+
+    uncategorized = blah.up();
+    uncategorized.checkSummaryHidden();
+    uncategorized.initContent()
+      .add("on 15/1", "Blah", -50.00)
+      .add("on 17/1", "Other", -30.00)
+      .check();
+
+    budgetOverview = uncategorized.up();
+    budgetOverview.checkSelectedTab("Jan");
+    budgetOverview.initContent()
+      .add("Recurring", "1500.00", "1495.00")
+      .add("Variable", "600.00", "50.00")
+      .add("Uncategorized", "0.00", "80.00")
+      .check();
   }
 }

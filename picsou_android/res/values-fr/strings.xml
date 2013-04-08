@@ -87,5 +87,14 @@
   <string name="logoutYes">Oui</string>
   <string name="logoutNo">Non</string>
 
+  <string name="sendEmailMessage">Contactez-nous !</string>
+  <string name="sendEmailSupportAddress">support@mybudgetview.fr</string>
+  <string name="sendEmailDefaultSubject">Mon commentaire sur BudgetView</string>
+  <string name="sendEmailError">Impossible d\'envoyer le message</string>
+
+  <string name="downloadError">Erreur de téléchargement</string>
+  <string name="downloadFailedUpdateMobile">Vous devez mettre à jour cette application</string>
+  <string name="downloadFailedUpdateDesktop">Vous devez mettre à jour l\'application BudgetView installée sur votre ordinateur</string>
+
 </resources>
 

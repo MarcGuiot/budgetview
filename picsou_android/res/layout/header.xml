@@ -49,6 +49,19 @@
     <View style="@style/Spacer"/>
 
     <ImageView
+      android:id="@+id/header_mail"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginRight="5dp"
+      android:layout_marginLeft="2dp"
+      android:layout_marginTop="3dp"
+      android:layout_marginBottom="3dp"
+      android:src="@drawable/mail"
+      android:contentDescription="Mail"
+      />
+
+    <ImageView
       android:id="@+id/header_refresh"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

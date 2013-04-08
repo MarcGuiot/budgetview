@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 import com.budgetview.android.R;
 import com.budgetview.android.TransactionPageActivity;
+import com.budgetview.android.checkers.utils.ViewParser;
 import com.budgetview.shared.utils.AmountFormat;
 import junit.framework.Assert;
 import org.robolectric.Robolectric;
@@ -68,5 +69,10 @@ public class TransactionPageChecker extends AndroidChecker<TransactionPageActivi
 
   public void checkUncategorized() {
 
+  }
+
+  public TransactionListChecker up() {
+    ViewParser.click(activity.findViewById(R.id.header), R.id.header_logo);
+    return new TransactionListChecker();
   }
 }
