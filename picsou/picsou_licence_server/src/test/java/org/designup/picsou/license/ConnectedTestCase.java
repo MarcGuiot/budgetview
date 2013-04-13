@@ -8,9 +8,11 @@ import org.designup.picsou.gui.startup.components.SingleApplicationInstanceListe
 import org.designup.picsou.license.checkers.DbChecker;
 import org.designup.picsou.license.checkers.FtpServerChecker;
 import org.designup.picsou.license.checkers.MailServerChecker;
+import org.globsframework.utils.Files;
 import org.uispec4j.UISpec4J;
 import org.uispec4j.UISpecTestCase;
 
+import java.io.File;
 import java.util.Locale;
 
 public abstract class ConnectedTestCase extends UISpecTestCase {
@@ -33,6 +35,7 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
     System.setProperty(ConfigService.COM_APP_FTP_URL, "ftp://localhost:12000");
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+    Files.deleteSubtreeOnly(new File(PATH_TO_DATA));
 
     mailServer = new MailServerChecker();
 
@@ -43,7 +46,7 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
 //    Protocol.registerProtocol("http", http);
 
     ftpServer = new FtpServerChecker(12000);
-    UISpec4J.setAssertionTimeLimit(5000);
+    UISpec4J.setAssertionTimeLimit(10000);  //=> l'envoie de mail est parfois res long
   }
 
   protected void tearDown() throws Exception {

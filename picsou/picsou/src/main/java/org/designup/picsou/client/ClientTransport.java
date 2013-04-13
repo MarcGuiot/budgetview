@@ -5,7 +5,7 @@ import org.globsframework.utils.serialization.SerializedInput;
 
 public interface ClientTransport {
 
-  SerializedInput connect() throws BadConnection;
+  SerializedInput connect(long version) throws BadConnection;
 
   void localRegister(Long sessionId, byte[] privateId, byte[] mail, byte[] signature, String activationCode);
 

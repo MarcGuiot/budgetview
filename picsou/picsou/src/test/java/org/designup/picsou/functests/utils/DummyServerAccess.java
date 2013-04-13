@@ -27,7 +27,7 @@ public class DummyServerAccess implements ServerAccess {
   public void takeSnapshot() {
   }
 
-  public LocalInfo connect() {
+  public LocalInfo connect(long version) {
     return null;
   }
 

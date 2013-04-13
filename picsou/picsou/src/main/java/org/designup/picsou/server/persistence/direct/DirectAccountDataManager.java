@@ -58,9 +58,9 @@ public class DirectAccountDataManager implements AccountDataManager {
       streamLock = new RandomAccessFile(file, "rw");
       lock = streamLock.getChannel().tryLock();
     }
-    catch (IOException e) {
+    catch (Exception e) {
       streamLock = null;
-      throw new InvalidState(prevaylerPath);
+      throw new InvalidState(prevaylerPath, e);
     }
     if (lock == null) {
       streamLock = null;

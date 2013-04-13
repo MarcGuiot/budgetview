@@ -25,7 +25,7 @@ public class LicenseCheckerThread extends Thread {
   }
 
   public void run() {
-    if (!ConfigService.waitEndOfConfigRequest(directory)){
+    if (!ConfigService.waitEndOfConfigRequest(directory, -1)){
       return ;
     }
     try {

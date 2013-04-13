@@ -24,6 +24,7 @@ import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
@@ -34,8 +35,10 @@ import java.awt.event.WindowEvent;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class MainWindow implements WindowManager {
   public static final String DEMO_USER_NAME = "anonymous";
@@ -94,12 +97,68 @@ public class MainWindow implements WindowManager {
           registered = false;
         }
       }
+      if (info.getJarVersion() > PicsouApplication.JAR_VERSION) {
+        showDownloadJar(directory, configService);
+        throw new RuntimeException("End bad jar version");
+      }
     }
     else {
       configService.update(null, 0, null, null, null, serverAccess);
     }
 
     MRJAdapter.addAboutListener(new AboutAction(directory));
+  }
+
+  private static void showDownloadJar(Directory directory, final ConfigService configService) throws InvocationTargetException, InterruptedException {
+    if (configService.downloadStep() < 0) {
+      Log.write("bad version, no download");
+      MessageDialog.show("jar.version.title", MessageType.ERROR, null, directory,
+                         "jar.version.message");
+    }
+    else {
+      final MessageDialog messageDialog = MessageDialog.create("jar.version.title", MessageType.INFO, null, directory,
+                                                               "jar.version.step", "" + configService.downloadStep());
+      Executors.newSingleThreadExecutor()
+        .submit(new Runnable() {
+        public void run() {
+          try {
+            int current = configService.downloadStep();
+            while (current >= 0) {
+              if (current == 100) {
+                changeMessage(Lang.get("jar.version.step.complete"));
+                return;
+              }
+              else {
+                messageDialog.changeMessage(Lang.get("jar.version.step", "" + current));
+              }
+              Thread.sleep(200);
+              int newValue = configService.downloadStep();
+              int count = 0;
+              while (newValue != 100 && newValue == current && count < 10) {
+                Thread.sleep(500);
+                count++;
+                newValue = configService.downloadStep();
+              }
+              if (newValue != 100 && newValue == current) {
+                messageDialog.changeMessage(Lang.get("jar.version.message"));
+                return;
+              }
+              current = configService.downloadStep();
+            }
+          }
+          catch (InterruptedException e) {
+          }
+        }
+          public void changeMessage(final String message){
+            SwingUtilities.invokeLater(new Runnable() {
+              public void run() {
+                messageDialog.changeMessage(message);
+              }
+            });
+          }
+      });
+      messageDialog.show();
+    }
   }
 
   public void setPanel(JPanel panel) {
@@ -112,8 +171,8 @@ public class MainWindow implements WindowManager {
   }
 
   public void shutdown() {
-    if(thread == null){
-      return ;
+    if (thread == null) {
+      return;
     }
     try {
       LicenseCheckerThread local = licenseCheckerThread;
@@ -230,7 +289,7 @@ public class MainWindow implements WindowManager {
   }
 
   public void logOutAndOpenDemo() {
-    login(DEMO_USER_NAME,  DEMO_PASSWORD.toCharArray(), false, true, false);
+    login(DEMO_USER_NAME, DEMO_PASSWORD.toCharArray(), false, true, false);
   }
 
   public void logOutAndAutoLogin() {
@@ -260,7 +319,7 @@ public class MainWindow implements WindowManager {
                                              directory);
       this.serverAccess.setServerAccess(serverAccess);
     }
-    ServerAccess.LocalInfo info = serverAccess.connect();
+    ServerAccess.LocalInfo info = serverAccess.connect(PicsouApplication.JAR_VERSION);
     localUsers = serverAccess.getLocalUsers();
     return info;
   }
@@ -287,7 +346,7 @@ public class MainWindow implements WindowManager {
 
     this.serverAccess.setServerAccess(serverAccess);
     localUsers = Collections.emptyList();
-    this.serverAccess.connect();
+    this.serverAccess.connect(PicsouApplication.JAR_VERSION);
   }
 
   interface FeedbackLoadingData {

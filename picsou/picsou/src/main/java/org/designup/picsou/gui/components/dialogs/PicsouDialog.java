@@ -58,7 +58,7 @@ public class PicsouDialog extends JDialog {
       return new PicsouDialog((JDialog)parent, modal, directory);
     }
     else {
-      return new PicsouDialog((JFrame)null, true, directory);
+      return new PicsouDialog((JFrame)null, modal, directory);
     }
   }
 

@@ -57,7 +57,7 @@ import java.util.regex.Pattern;
 public class PicsouApplication {
 
   public static final String APPLICATION_VERSION = "3.0b4";
-  public static final Long JAR_VERSION = 110L;
+  public static Long JAR_VERSION = 111L; // not final for test
   public static final Long BANK_CONFIG_VERSION = 7L;
 
   public static final String APPNAME = "budgetview";
@@ -180,6 +180,9 @@ public class PicsouApplication {
     catch (InvalidState e) {
       Log.write("Erreur au lancement", e);
       showMultipleInstanceError(e.getMessage());
+    }
+    catch (Exception e){
+      Log.write("Erreur au lancement exit", e);
     }
   }
 

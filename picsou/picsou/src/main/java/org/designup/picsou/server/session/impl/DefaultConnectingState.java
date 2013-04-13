@@ -24,7 +24,8 @@ public class DefaultConnectingState extends AbstractSessionState implements Conn
     lastAccess();
     Boolean isLocal = input.readBoolean();
     if (isLocal) {
-      persistence.connect(output);
+      long version = input.readNotNullLong();
+      persistence.connect(output, version);
     }
     else {
       output.write(false);

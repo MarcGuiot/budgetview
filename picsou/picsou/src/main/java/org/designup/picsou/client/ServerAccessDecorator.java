@@ -72,8 +72,8 @@ public class ServerAccessDecorator implements ServerAccess {
     return serverAccess.canRead(data);
   }
 
-  public LocalInfo connect() {
-    return serverAccess.connect();
+  public LocalInfo connect(long version) {
+    return serverAccess.connect(version);
   }
 
   public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {

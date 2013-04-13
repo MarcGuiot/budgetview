@@ -2,6 +2,7 @@ package org.designup.picsou.license.functests;
 
 import org.designup.picsou.functests.checkers.ApplicationChecker;
 import org.designup.picsou.functests.checkers.LicenseActivationChecker;
+import org.designup.picsou.functests.checkers.MessageDialogChecker;
 import org.designup.picsou.functests.checkers.NewVersionChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.PicsouApplication;
@@ -28,15 +29,17 @@ import java.util.zip.ZipEntry;
  * Note: Il faut mettre les banques specifiques dans la liste de banques de generateConfigContent()
 */
 public class DownloadTest extends ConnectedTestCase {
-
   private ApplicationChecker application;
+  long currentVersion;
 
   protected void setUp() throws Exception {
     System.setProperty("budgetview.log.sout", "true");
     super.setUp();
+    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
     TimeService.setCurrentDate(Dates.parseMonth("2008/07"));
     application = new ApplicationChecker();
+    currentVersion = PicsouApplication.JAR_VERSION;
   }
 
   protected void tearDown() throws Exception {
@@ -44,13 +47,42 @@ public class DownloadTest extends ConnectedTestCase {
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
     application.dispose();
     application = null;
+    PicsouApplication.JAR_VERSION = currentVersion;
+  }
+
+  public void testDataVersionInTheFuture() throws Exception {
+    PicsouApplication.JAR_VERSION = currentVersion + 1;
+
+    updateDb(PicsouApplication.JAR_VERSION, PicsouApplication.BANK_CONFIG_VERSION);
+    startServers();
+    String ofxFile = OfxBuilder.init(this)
+      .addBankAccount(30066, -2, "1111", 123.3, "10/09/2008")
+      .addTransaction("2008/09/10", -100., "STUPID HEADER blabla")
+      .save();
+
+    application.start();
+    application.getOperations().importOfxFile(ofxFile);
+    application.getOperations().exit();
+    application.dispose();
+
+    PicsouApplication.JAR_VERSION = currentVersion;
+
+    final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1);
+    FtpServerChecker.Retr retr = ftpServer.setFtpReply(jarName, new String(new byte[12 * 1024 * 1024]), null, null);
+    application.startModal();
+
+    Window window1 = application.getWindow();
+    MessageDialogChecker messageDialogChecker = new MessageDialogChecker(window1);
+
+    messageDialogChecker.checkInfoMessageContains("The update is done you can restart BudgetView");
+    retr.assertOk();
   }
 
   public void testJarIsSentToSpecificUser() throws Exception {
     String email = "alfred@free.fr";
     db.registerMail(email, "1234");
-    updateDb();
-    updateDb(email, PicsouApplication.JAR_VERSION + 2L);
+    updateDb(PicsouApplication.JAR_VERSION + 1L, PicsouApplication.BANK_CONFIG_VERSION + 1L);
+    updateDb(email, PicsouApplication.JAR_VERSION + 2L, PicsouApplication.BANK_CONFIG_VERSION + 1L);
 
     startServers();
 
@@ -77,7 +109,7 @@ public class DownloadTest extends ConnectedTestCase {
   }
 
   public void testJarIsSentAndConfigUpdated() throws Exception {
-    updateDb();
+    updateDb(PicsouApplication.JAR_VERSION + 1L, PicsouApplication.BANK_CONFIG_VERSION + 1L);
     startServers();
     final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
     final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
@@ -117,27 +149,27 @@ public class DownloadTest extends ConnectedTestCase {
     assertTrue(configs.length == 1);
   }
 
-  private void updateDb() {
+  private void updateDb(final long jarVersion, final long configVersion) {
     SqlConnection connection = db.getConnection();
     connection.getCreateBuilder(SoftwareInfo.TYPE)
-      .set(SoftwareInfo.LATEST_JAR_VERSION, PicsouApplication.JAR_VERSION + 1L)
-      .set(SoftwareInfo.LATEST_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION + 1L)
+      .set(SoftwareInfo.LATEST_JAR_VERSION, jarVersion)
+      .set(SoftwareInfo.LATEST_CONFIG_VERSION, configVersion)
       .getRequest().run();
     connection.commitAndClose();
   }
 
-  private void updateDb(String mail, long version) {
+  private void updateDb(String mail, long version, final long configVersion) {
     SqlConnection connection = db.getConnection();
     connection.getCreateBuilder(SoftwareInfo.TYPE)
       .set(SoftwareInfo.MAIL, mail)
       .set(SoftwareInfo.LATEST_JAR_VERSION, version)
-      .set(SoftwareInfo.LATEST_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION + 1L)
+      .set(SoftwareInfo.LATEST_CONFIG_VERSION, configVersion)
       .getRequest().run();
     connection.commitAndClose();
   }
 
   public void testNewBankInConfig() throws Exception {
-    updateDb();
+    updateDb(PicsouApplication.JAR_VERSION + 1L, PicsouApplication.BANK_CONFIG_VERSION + 1L);
     licenseServer.init();
     application.start();
 

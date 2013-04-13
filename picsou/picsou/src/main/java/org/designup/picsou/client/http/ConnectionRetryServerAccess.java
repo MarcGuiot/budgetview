@@ -38,7 +38,7 @@ public class ConnectionRetryServerAccess extends ServerAccessDecorator {
       super.localRegister(mail, signature, activationCode, jarVersion);
     }
     catch (GlobsException e) {
-      super.connect();
+      super.connect(-1);
       super.initConnection(name, password, privateComputer);
       super.localRegister(mail, signature, activationCode, jarVersion);
     }
@@ -49,7 +49,7 @@ public class ConnectionRetryServerAccess extends ServerAccessDecorator {
       super.applyChanges(changeSet, globRepository);
     }
     catch (GlobsException e) {
-      super.connect();
+      super.connect(-1);
       super.initConnection(name, password, privateComputer);
       super.applyChanges(changeSet, globRepository);
     }
@@ -60,7 +60,7 @@ public class ConnectionRetryServerAccess extends ServerAccessDecorator {
       super.takeSnapshot();
     }
     catch (GlobsException e) {
-      super.connect();
+      super.connect(-1);
       super.initConnection(name, password, privateComputer);
       super.takeSnapshot();
     }
@@ -71,7 +71,7 @@ public class ConnectionRetryServerAccess extends ServerAccessDecorator {
       return super.getUserData(changeSet, idUpdater);
     }
     catch (GlobsException e) {
-      super.connect();
+      super.connect(-1);
       super.initConnection(name, password, privateComputer);
       return super.getUserData(changeSet, idUpdater);
     }

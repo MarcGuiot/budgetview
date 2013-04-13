@@ -46,7 +46,7 @@ public class LicenseServer {
   private Directory directory;
   private static final String JDBC_HSQLDB = "jdbc:hsqldb:.";
   private Context context;
-  private String pathForMobileData = "/tmp/data";
+  private String pathForMobileData = System.getProperty("data.mobile.path", "/tmp/data");
   private boolean onlyMobile = false;
 
   public LicenseServer() throws IOException {

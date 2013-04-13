@@ -235,7 +235,7 @@ public class ConfigService {
       schemeRegistry.register(new Scheme("http", 5000, new PlainSocketFactory()));
       ClientConnectionManager connectionManager = new BasicClientConnectionManager(schemeRegistry);
       HttpClient httpClient = new DefaultHttpClient(connectionManager);
-      httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 5000);
+      httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10000);
       return httpClient;
     }
     catch (Exception e) {
@@ -576,6 +576,14 @@ public class ConfigService {
     return false;
   }
 
+  public int downloadStep() {
+    waitEndOfConfigRequest(3000);
+    if (dowloadJarThread != null) {
+      return dowloadJarThread.step();
+    }
+    return -1;
+  }
+
   public interface Listener {
     void sent(String mail, String title, String content);
 
@@ -710,19 +718,25 @@ public class ConfigService {
   }
 
   @Inline
-  public static boolean waitEndOfConfigRequest(Directory directory) {
+  public static boolean waitEndOfConfigRequest(Directory directory, int timeout) {
     ConfigService configService = directory.get(ConfigService.class);
-    synchronized (configService) {
-      while (!configService.isVerifiedServerValidity() && !Thread.currentThread().isInterrupted()) {
+    return configService.waitEndOfConfigRequest(timeout);
+  }
+
+  public boolean waitEndOfConfigRequest(int timeout) {
+    long l = System.currentTimeMillis() + timeout;
+    synchronized (this) {
+      while (!isVerifiedServerValidity() && !Thread.currentThread().isInterrupted()
+        && (timeout < 0 || System.currentTimeMillis() < l)) {
         try {
-          configService.wait(200);
+          wait(200);
         }
         catch (InterruptedException e) {
           return false;
         }
       }
     }
-    return true;
+    return isVerifiedServerValidity();
   }
 
   public boolean isMailSend() {
@@ -814,7 +828,7 @@ public class ConfigService {
       return true;
     }
     catch (Exception e) {
-      Log.write("", e);
+      Log.write("for " + jarFile.getAbsolutePath(), e);
       return false;
     }
   }
