@@ -17,16 +17,14 @@
     <style selector="#colorsMessage" weightX="0.01" preferredSize="(100,100)"/>
   </styles>
 
-  <row>
-
-    <textArea text="$preferences.colors" name="colorsMessage" marginTop="10" styleClass="multiLineLabel"/>
-
-    <scrollPane weightY="100">
+  <horizontalBoxes>
+    <textArea text="$preferences.colors" name="colorsMessage" marginTop="10" styleClass="multiLineLabel"
+              preferredSize="(120,120)"/>
+    <scrollPane>
       <repeat ref="colorThemes" layout="wrappedRow" margin="5">
         <toggleButton ref="themeToggle" styleClass="themeSelector"/>
       </repeat>
     </scrollPane>
-
-  </row>
+  </horizontalBoxes>
 
 </splits>
