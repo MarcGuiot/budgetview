@@ -1,9 +1,12 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.model.ColorTheme;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.interception.FileChooserHandler;
+import org.uispec4j.interception.WindowInterceptor;
 
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
@@ -68,5 +71,41 @@ public class PreferencesChecker extends GuiChecker {
   public PreferencesChecker setLang(String langKey) {
     window.getComboBox("lang").select(Lang.get("lang." + langKey));
     return this;
+  }
+
+  public PreferencesChecker setDataPath(String path) {
+    WindowInterceptor.init(window.getButton(Lang.get("browse")))
+      .process(FileChooserHandler.init().select(new String[]{path}))
+      .run();
+    assertThat(window.getTextBox("storageDir").textEquals(path));
+    return this;
+  }
+
+  public void validateRestart(LoggedInFunctionalTestCase functionalTestCase) throws Exception {
+    MessageDialogChecker.open(window.getButton("ok").triggerClick())
+      .checkInfoMessageContains(Lang.get("data.path.exit"))
+      .close();
+    functionalTestCase.restartApplication(false);
+  }
+
+  public PreferencesChecker revertToDefaultDataPath(String expectedPath) {
+    window.getButton("revertToDefault").click();
+    assertThat(window.getTextBox("storageDir").textEquals(expectedPath));
+    return this;
+  }
+
+  public void validateUseTargetAndRestart(LoggedInFunctionalTestCase functionalTestCase) throws Exception {
+    ConfirmOverwriteDialogChecker.open(window.getButton("ok").triggerClick())
+      .checkOverwriteSelected()
+      .selectUse()
+      .validateAndConfirm();
+    functionalTestCase.restartApplication(false);
+  }
+
+  public void validateOverwriteTargetAndRestart(LoggedInFunctionalTestCase testCase) throws Exception {
+    ConfirmOverwriteDialogChecker.open(window.getButton("ok").triggerClick())
+      .checkOverwriteSelected()
+      .validateAndConfirm();
+    testCase.restartApplication(false);
   }
 }

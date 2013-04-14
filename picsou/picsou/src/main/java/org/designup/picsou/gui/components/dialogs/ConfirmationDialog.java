@@ -20,7 +20,7 @@ public abstract class ConfirmationDialog {
   public static boolean confirmed(String titleKey, String content, Window parent, Directory directory) {
     final Ref<Boolean> result = new Ref<Boolean>(false);
     ConfirmationDialog dialog = new ConfirmationDialog(titleKey, content, parent, directory) {
-      protected void postValidate() {
+      protected void processOk() {
         result.set(true);
       }
     };
@@ -81,10 +81,18 @@ public abstract class ConfirmationDialog {
     return Lang.get("ok");
   }
 
+  protected String getCancelButtonText() {
+    return Lang.get("cancel");
+  }
+
   protected void processCustomLink(String href) {
   }
 
-  protected void postValidate() {
+  protected void processOk() {
+    // override this
+  }
+
+  protected void processCancel() {
     // override this
   }
 
@@ -93,7 +101,7 @@ public abstract class ConfirmationDialog {
       public void actionPerformed(ActionEvent e) {
         dialog.setVisible(false);
         builder.dispose();
-        postValidate();
+        processOk();
       }
     };
     return ok;
@@ -101,9 +109,11 @@ public abstract class ConfirmationDialog {
 
 
   protected AbstractAction createCancelAction() {
-    cancel = new AbstractAction(Lang.get("cancel")) {
+    cancel = new AbstractAction(getCancelButtonText()) {
       public void actionPerformed(ActionEvent e) {
         dialog.setVisible(false);
+        builder.dispose();
+        processCancel();
       }
     };
     return cancel;

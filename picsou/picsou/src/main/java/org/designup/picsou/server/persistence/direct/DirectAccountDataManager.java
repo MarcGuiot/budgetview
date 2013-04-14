@@ -214,7 +214,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     String path = getPath(userId);
     File file = new File(path);
     if (file.exists()) {
-      Files.deleteSubtree(file);
+      Files.deleteWithSubtree(file);
     }
   }
 

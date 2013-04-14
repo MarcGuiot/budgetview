@@ -51,6 +51,7 @@ public class MobileAppChecker {
     XmlGlobParser.parse(MobileModel.get(), repository, new StringReader(fileAsText), "globs");
     GlobList all = repository.getAll();
     Assert.assertFalse(all.isEmpty());
+    content.close();
   }
 
   public void checkLoginFails(String mail, String newPassword) throws Exception {

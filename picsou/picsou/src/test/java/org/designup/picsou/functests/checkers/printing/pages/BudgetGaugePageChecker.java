@@ -104,7 +104,7 @@ public class BudgetGaugePageChecker {
       else if (block instanceof SeriesGaugeBlock) {
         SeriesGaugeBlock seriesBlock = (SeriesGaugeBlock)block;
         builder
-          .append("  .checkSeries(")
+          .append("    .checkSeries(")
           .append(Integer.toString(index++))
           .append(", \"")
           .append(seriesBlock.getLabel())

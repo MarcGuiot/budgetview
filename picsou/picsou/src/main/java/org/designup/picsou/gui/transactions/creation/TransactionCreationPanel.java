@@ -428,7 +428,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
           return Lang.get("transactionCreation.createAccount.okButton");
         }
 
-        protected void postValidate() {
+        protected void processOk() {
           AccountEditionDialog accountEdition = new AccountEditionDialog(frame, parentRepository, directory, true);
           accountEdition.showWithNewAccount(AccountType.MAIN, true, AccountUpdateMode.MANUAL);
         }

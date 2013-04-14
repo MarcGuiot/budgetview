@@ -84,7 +84,7 @@ public class AboutDialog {
 
     builder
       .append("<h2>").append(Lang.get("about.datapath")).append("</h2>")
-      .append("<p>").append(AppPaths.getDataPath()).append("</p>");
+      .append("<p>").append(AppPaths.getCurrentDataPath()).append("</p>");
 
     builder
       .append("<h2>").append(Lang.get("about.system.properties")).append("</h2>");

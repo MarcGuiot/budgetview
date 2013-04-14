@@ -1,0 +1,25 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <column>
+
+    <label ref="storageDirMessage" text="$data.path.prefs.currentPath" weightY="0.01"/>
+
+    <label ref="storageDir" font="-,bold,10" marginLeft="10" marginTop="15"/>
+
+    <label text="$data.path.prefs.change" marginTop="15"/>
+
+    <row marginTop="5">
+      <filler fill="horizontal"/>
+      <button action="revertToDefault" marginRight="10"/>
+      <button action="browseStorageDir"/>
+      <filler fill="horizontal"/>
+    </row>
+
+    <htmlEditorPane ref="updateMessage" marginTop="15"/>
+
+    <filler fill="vertical"/>
+  </column>
+
+</splits>

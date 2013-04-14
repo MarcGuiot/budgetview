@@ -145,6 +145,10 @@ public class Utils {
     return (int)Math.round(Math.random() * max);
   }
 
+  public static boolean isEmpty(Object[] array) {
+    return array == null || array.length == 0;
+  }
+
   public static String[] join(String[] first, String[] second) {
     String[] result = new String[first.length + second.length];
     System.arraycopy(first, 0, result, 0, first.length);

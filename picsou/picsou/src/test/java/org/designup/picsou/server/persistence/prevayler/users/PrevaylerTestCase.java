@@ -14,12 +14,12 @@ public abstract class PrevaylerTestCase extends TestCase {
     super.setUp();
     TMP_PREVAYLER = TestUtils.getFileName(this, "prevayler");
     file = new File(TMP_PREVAYLER);
-    Files.deleteSubtree(file);
+    Files.deleteWithSubtree(file);
     file.mkdirs();
   }
 
   protected void tearDown() throws Exception {
-    Files.deleteSubtree(file);
+    Files.deleteWithSubtree(file);
   }
 
   public static void dumpToStd(byte[] bytes) {

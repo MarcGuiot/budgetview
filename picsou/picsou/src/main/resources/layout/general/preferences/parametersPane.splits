@@ -1,0 +1,51 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="row.parametersSection" weightY="0.1" border="matte(0,0,1,0,dialog.separator)"/>
+    <style selector="row.parametersSection label" font="-,bold,12" marginBottom="2"/>
+    <style selector="row.parametersBlock" weightY="0.1" marginTop="2"/>
+  </styles>
+
+  <column>
+
+    <filler fill="vertical"/>
+
+    <row styleClass="parametersSection">
+      <label text="$preferences.timespan.section"/>
+    </row>
+    <row styleClass="parametersBlock">
+      <label text="$preferences.timespan.future" styleClass="formLabel"/>
+      <comboBox ref="futureMonth"/>
+      <filler fill="horizontal"/>
+    </row>
+
+    <filler fill="vertical"/>
+
+    <row styleClass="parametersSection">
+      <label text="$preferences.dates.section"/>
+    </row>
+    <row styleClass="parametersBlock">
+      <label text="$preferences.dates.textFormat" styleClass="formLabel"/>
+      <comboBox ref="textDate"/>
+      <label text="$preferences.dates.numericFormat" styleClass="formLabel" marginLeft="10"/>
+      <comboBox ref="numericDate"/>
+      <filler fill="horizontal"/>
+    </row>
+
+    <filler fill="vertical"/>
+
+    <row styleClass="parametersSection" marginTop="10">
+      <label text="$preferences.lang.section"/>
+    </row>
+    <row styleClass="parametersBlock">
+      <label text="$preferences.lang.start" styleClass="formLabel"/>
+      <comboBox ref="lang" marginLeft="5" marginRight="5"/>
+      <label text="$preferences.lang.end" styleClass="formLabel"/>
+      <filler fill="horizontal"/>
+    </row>
+
+    <filler fill="vertical"/>
+  </column>
+
+</splits>

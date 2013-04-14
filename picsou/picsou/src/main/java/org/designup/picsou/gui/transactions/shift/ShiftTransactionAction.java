@@ -148,7 +148,7 @@ public class ShiftTransactionAction extends SingleSelectionAction implements Cha
                              Lang.get("shift.transaction.seriesError.message", Month.getFullLabel(targetMonth)),
                              directory.get(JFrame.class),
                              directory) {
-        protected void postValidate() {
+        protected void processOk() {
           getSeriesEditor().showSeries(series, Collections.singleton(transaction.get(Transaction.BUDGET_MONTH)));
         }
       };
@@ -165,7 +165,7 @@ public class ShiftTransactionAction extends SingleSelectionAction implements Cha
                              Lang.get(getMessageKey(direction)),
                              directory.get(JFrame.class),
                              directory) {
-        protected void postValidate() {
+        protected void processOk() {
           doShift(transaction);
         }
       };

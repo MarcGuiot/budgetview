@@ -294,7 +294,7 @@ public class ProjectEditionDialog {
             }
           }
 
-          protected void postValidate() {
+          protected void processOk() {
             deleteProject(transactionKeys);
           }
         };

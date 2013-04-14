@@ -44,7 +44,7 @@ public class DeleteBankAction extends SingleSelectionAction {
 
     ConfirmationDialog confirmationDialog =
       new ConfirmationDialog("bank.delete.title", Lang.get("bank.delete.confirm"), owner, directory) {
-        protected void postValidate() {
+        protected void processOk() {
           try {
             repository.startChangeSet();
             repository.delete(BankEntity.TYPE, linkedTo(bank, BankEntity.BANK));

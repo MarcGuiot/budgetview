@@ -2,10 +2,8 @@ package org.designup.picsou.license.servlet;
 
 import com.budgetview.shared.utils.ComCst;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.log4j.Logger;
 import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsou.license.Lang;
 import org.designup.picsou.license.mail.Mailer;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
@@ -14,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.Arrays;
 
 public class DeleteMobileUserServlet extends AbstractHttpServlet {
@@ -48,7 +45,7 @@ public class DeleteMobileUserServlet extends AbstractHttpServlet {
         httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
       }
       else {
-        if (!Files.deleteSubtree(dir)){
+        if (!Files.deleteWithSubtree(dir)){
           logger.info("Directory found " + dir.getAbsolutePath() + " : " + mail + " but unable to delete it");
           mailer.sendToSupport(Mailer.Mailbox.ADMIN, mail, "can not delete directory",
                                "delete the directory '" + dir.getAbsolutePath() + "'");

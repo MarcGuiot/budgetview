@@ -24,7 +24,7 @@ public class DirectAccountDataManagerTest extends TestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
-    Files.deleteSubtree(new File(PATH));
+    Files.deleteWithSubtree(new File(PATH));
   }
 
   protected void tearDown() throws Exception {

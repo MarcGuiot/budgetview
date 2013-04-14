@@ -1,8 +1,9 @@
 package org.designup.picsou.gui.preferences;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsou.gui.preferences.components.ColorThemeItemFactory;
+import org.designup.picsou.gui.preferences.panes.ColorsPane;
+import org.designup.picsou.gui.preferences.panes.ParametersPane;
+import org.designup.picsou.gui.preferences.panes.StorageDirPane;
 import org.designup.picsou.model.ColorTheme;
 import org.designup.picsou.model.NumericDateType;
 import org.designup.picsou.model.TextDateType;
@@ -12,15 +13,12 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
-import org.globsframework.model.utils.GlobComparators;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class PreferencesDialog {
   private PicsouDialog dialog;
@@ -28,63 +26,31 @@ public class PreferencesDialog {
   private LocalGlobRepository repository;
 
   private GlobsPanelBuilder builder;
-  private ColorThemeItemFactory colorThemeFactory;
-  private GlobRepository parentRepository;
+  private Directory directory;
+  private java.util.List<PreferencesPane> panes;
 
   public PreferencesDialog(Window parent, final GlobRepository parentRepository, final Directory directory) {
-    this.parentRepository = parentRepository;
+    this.directory = directory;
     this.repository = createLocalRepository(parentRepository);
 
     builder = new GlobsPanelBuilder(PreferencesDialog.class,
-                                    "/layout/general/preferencesDialog.splits",
+                                    "/layout/general/preferences/preferencesDialog.splits",
                                     repository, directory);
-    int[] items = new int[]{12, 18, 24, 36};
-    Utils.beginRemove();
-    items = new int[]{0, 1, 2, 3, 4, 6, 12, 18, 24, 36};
-    Utils.endRemove();
-
-    builder.addComboEditor("futureMonth", UserPreferences.KEY,
-                           UserPreferences.FUTURE_MONTH_COUNT, items);
-
-    colorThemeFactory = new ColorThemeItemFactory(repository, directory);
-
-    builder.addRepeat("colorThemes", ColorTheme.TYPE, GlobMatchers.ALL, GlobComparators.ascending(ColorTheme.ID),
-                      colorThemeFactory);
-
-    builder.addComboEditor("textDate", UserPreferences.TEXT_DATE_TYPE)
-      .forceSelection(UserPreferences.KEY);
-
-    builder.addComboEditor("numericDate", UserPreferences.NUMERIC_DATE_TYPE)
-      .forceSelection(UserPreferences.KEY);
-
-    builder.add("lang", createLangCombo(directory));
 
     dialog = PicsouDialog.create(parent, directory);
-    dialog.addPanelWithButtons((JPanel)builder.load(), new OkAction(), new CancelAction());
-  }
 
-  private JComboBox createLangCombo(final Directory directory) {
-    final String langEn = Lang.get("lang.en");
-    final String langFr = Lang.get("lang.fr");
-    final JComboBox langCombo = new JComboBox(new String[]{langEn, langFr});
-    if ("fr".equalsIgnoreCase(Lang.getLocale().getCountry())) {
-      langCombo.setSelectedItem(langFr);
-    }
-    else {
-      langCombo.setSelectedItem(langEn);
-    }
-    langCombo.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        String lang = langCombo.getSelectedItem().toString();
-        if (lang.equalsIgnoreCase(langEn)) {
-          directory.get(ConfigService.class).setLang("en");
-        }
-        else {
-          directory.get(ConfigService.class).setLang("fr");
-        }
-      }
-    });
-    return langCombo;
+    PreferencesPane colorsPane = new ColorsPane(parentRepository, repository, directory);
+    builder.add("colorsPane", colorsPane.getPanel());
+
+    PreferencesPane parametersPane = new ParametersPane(repository, directory);
+    builder.add("parametersPane", parametersPane.getPanel());
+
+    PreferencesPane storageDirPane = new StorageDirPane(dialog, repository, directory);
+    builder.add("dataPathPane", storageDirPane.getPanel());
+
+    panes = Arrays.asList(colorsPane, parametersPane, storageDirPane);
+
+    dialog.addPanelWithButtons((JPanel)builder.load(), new OkAction(), new CancelAction());
   }
 
   private static LocalGlobRepository createLocalRepository(GlobRepository parentRepository) {
@@ -94,7 +60,9 @@ public class PreferencesDialog {
   }
 
   public void show() {
-    colorThemeFactory.init();
+    for (PreferencesPane pane : panes) {
+      pane.prepareForDisplay();
+    }
     dialog.pack();
     dialog.showCentered();
     builder.dispose();
@@ -107,8 +75,24 @@ public class PreferencesDialog {
 
     public void actionPerformed(ActionEvent e) {
       repository.commitChanges(true);
-      colorThemeFactory.complete(parentRepository);
+
+      PreferencesResult result = new PreferencesResult();
+      for (PreferencesPane pane : panes) {
+        pane.validate(result);
+      }
+      if (!result.shouldClose()) {
+        return;
+      }
+      for (PreferencesPane pane : panes) {
+        pane.postValidate();
+      }
+
       dialog.setVisible(false);
+      if (result.shouldExit()) {
+        JFrame frame = directory.get(JFrame.class);
+        frame.setVisible(false);
+        frame.dispose();
+      }
     }
   }
 
@@ -118,7 +102,9 @@ public class PreferencesDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
-      colorThemeFactory.complete(parentRepository);
+      for (PreferencesPane pane : panes) {
+        pane.processCancel();
+      }
       dialog.setVisible(false);
     }
   }

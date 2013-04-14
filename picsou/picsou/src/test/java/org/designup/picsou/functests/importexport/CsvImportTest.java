@@ -490,6 +490,39 @@ public class CsvImportTest extends SpecificBankTestCase {
       .cancel();
   }
 
+  public void testMultipleDescription() throws Exception {
+    String fileName =
+      saveFile(
+        "Date d'évaluation;Relation bancaire;Portefeuille;Produit;IBAN;Monn.;Date du;Date au;Description;Date de conclusion;Date de comptabilisation;Date de valeur;Description 1;Description 2;Description 3;N° de transaction;Cours des devises du montant initial en montant du décompte;Sous-montant;Débit;Crédit;Solde\n" +
+        "26.03.2013;0260 6A710323;;0260 6A710323.0;CH54 0026 0260 6A71 0323 0;CHF;01.01.2013;25.03.2013;Compte personnel UBS, Intérêt créditeur 0.05%;05.01.2013;07.01.2013;05.01.2013;PAIEMENT MAESTRO;CARTE 60522109-0 1412;Pharmacie-Parf. Sunsto;9930506BN3921323;;;11.8;;13'745.40\n" +
+        "26.03.2013;0260 6A710323;;0260 6A710323.0;CH54 0026 0260 6A71 0323 0;CHF;01.01.2013;25.03.2013;Compte personnel UBS, Intérêt créditeur 0.05%;05.01.2013;07.01.2013;05.01.2013;PAIEMENT MAESTRO;CARTE 60522109-0 1412;Coop-2852 Bulle B+;9930506BN3921322;;;14.9;;13'730.50\n" +
+        "26.03.2013;0260 6A710323;;0260 6A710323.0;CH54 0026 0260 6A71 0323 0;CHF;01.01.2013;25.03.2013;Compte personnel UBS, Intérêt créditeur 0.05%;05.01.2013;07.01.2013;05.01.2013;PAIEMENT MAESTRO;CARTE 60522109-0 1412;Pharmacie de la Poste;9930506BN3921324;;;40;;13'690.50\n" +
+        "26.03.2013;0260 6A710323;;0260 6A710323.0;CH54 0026 0260 6A71 0323 0;CHF;01.01.2013;25.03.2013;Compte personnel UBS, Intérêt créditeur 0.05%;05.01.2013;07.01.2013;05.01.2013;PAIEMENT MAESTRO;CARTE 60522109-0 1412;Coop-2474 Bulle, L;9930506BN3921321;;;;126.35;13'564.15\n");
+    ImportDialogChecker importDialog = operations.openImportDialog()
+      .setFilePath(fileName);
+
+    importDialog.acceptCsvFile()
+      .setAsBankDate("Date de comptabilisation")
+      .setAsUserDate("Date de comptabilisation")
+      .setAsCredit("Crédit")
+      .setAsDebit("Débit")
+      .setAsLabel("Description 1")
+      .setAsLabel("Description 3")
+      .validate()
+      .setAccountName("imported")
+      .setMainAccount()
+      .selectBank("Other")
+      .setPosition(100)
+      .selectDateFormat("Day/Month/Year")
+      .completeImport();
+
+    transactions.initAmountContent()
+      .add("07/01/2013", "PAIEMENT MAESTRO COOP-2474 BULLE, L", 126.35, "To categorize", 159.65, 159.65, "imported")
+      .add("07/01/2013", "PAIEMENT MAESTRO PHARMACIE DE LA POSTE", -40.00, "To categorize", 33.30, 33.30, "imported")
+      .add("07/01/2013", "PAIEMENT MAESTRO COOP-2852 BULLE B+", -14.90, "To categorize", 73.30, 73.30, "imported")
+      .add("07/01/2013", "PAIEMENT MAESTRO PHARMACIE-PARF. SUNSTO", -11.80, "To categorize", 88.20, 88.20, "imported")
+      .check();
+  }
 
   private String saveFile(String content) {
     String fileName = TestUtils.getFileName(this, ".csv");

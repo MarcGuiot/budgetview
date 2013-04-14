@@ -100,7 +100,7 @@ public class DownloadTest extends ConnectedTestCase {
     application.getTransactions().initContent()
       .add("10/09/2008", TransactionType.VIREMENT, "GOOD HEADER", "", -234.00)
       .check();
-    String path = AppPaths.getDataPath();
+    String path = AppPaths.getDefaultDataPath();
     File pathToJar = new File(path + "/jars");
     String[] jars = pathToJar.list(new FilenameFilter() {
       public boolean accept(File dir, String name) {

@@ -38,7 +38,7 @@ public class RestoreSnapshotAction extends AbstractRestoreAction {
       new ConfirmationDialog("restore.snapshot.confirmation.title",
                              Lang.get("restore.snapshot.confirmation.message", date),
                              dialog, directory) {
-        protected void postValidate() {
+        protected void processOk() {
           appyWithPasswordManagement(new RestoreSnapshot());
         }
       };

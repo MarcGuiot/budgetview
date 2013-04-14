@@ -26,12 +26,18 @@ public class AmountsTest extends TestCase {
     checkExtract(2223.9, "2 223.90");
     checkExtract(2223.9, "2 223,90");
     checkExtract(2223, "2223");
-    checkExtract(2223, "2,223");
-    checkExtract(2223, "2.223");
+    checkExtract(2.223, "2,223");
+    checkExtract(2.223, "2.223");
     checkExtract(2223, "2 223");
     checkExtract(-2223, "-2 223");
     checkExtract(2223, "2" + '\u00A0' + "223,00 ");
     checkExtract(2223, "2" + '\u00A0' + "223,00" + '\u00A0');
+
+    checkExtract(1222.223, "1,222.223");
+    checkExtract(1222.2, "1,222.2");
+    checkExtract(1222., "1,222.");
+
+    checkExtract(13745.40, "13'745.40"); // en suisse
   }
 
   private void checkExtract(double expected, String input) {

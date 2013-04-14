@@ -2,12 +2,16 @@ package org.designup.picsou.gui.mobile;
 
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
+import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.mobile.utils.AbstractMobileAction;
 import org.designup.picsou.mobile.BudgetValuesUpdater;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.repository.DefaultGlobIdGenerator;
@@ -22,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 public class SendMobileDataAction extends AbstractMobileAction {
@@ -30,6 +35,26 @@ public class SendMobileDataAction extends AbstractMobileAction {
   public SendMobileDataAction(GlobRepository repository, Directory directory) {
     super(Lang.get("mobile.menu.send.data"), repository, directory);
     this.configService = directory.get(ConfigService.class);
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        if (changeSet.containsChanges(UserPreferences.KEY)){
+          updateEnableStat(repository);
+        }
+      }
+
+      private void updateEnableStat(GlobRepository repository) {
+        Glob userPreference = repository.find(UserPreferences.KEY);
+        if (userPreference != null){
+          String mail = userPreference.get(UserPreferences.MAIL_FOR_MOBILE);
+          String password = userPreference.get(UserPreferences.PASSWORD_FOR_MOBILE);
+          setEnabled(Strings.isNotEmpty(mail) && Strings.isNotEmpty(password));
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        updateEnableStat(repository);
+      }
+    });
   }
 
   protected void processMobileStatusChange(boolean enabled) {
@@ -69,6 +94,7 @@ public class SendMobileDataAction extends AbstractMobileAction {
       writer = new OutputStreamWriter(new GZIPOutputStream(out), "UTF-8");
       XmlGlobWriter.write(tempRepository.getAll(), tempRepository, writer);
       writer.close();
+      writer = null;
       Glob userPreference = sourceRepository.get(UserPreferences.KEY);
       String mail = userPreference.get(UserPreferences.MAIL_FOR_MOBILE);
       String password = userPreference.get(UserPreferences.PASSWORD_FOR_MOBILE);
@@ -83,7 +109,6 @@ public class SendMobileDataAction extends AbstractMobileAction {
           writer.close();
         }
         catch (IOException e) {
-          throw new RuntimeException(e);
         }
       }
     }

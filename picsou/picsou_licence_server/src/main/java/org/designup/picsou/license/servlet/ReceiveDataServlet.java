@@ -15,6 +15,8 @@ import java.io.*;
 import java.net.URLDecoder;
 
 public class ReceiveDataServlet extends AbstractHttpServlet {
+  public static final String CODE_FILE_NAME = "code.ser";
+  public static final String DATA_FILE_NAME = "data.ser";
   static Logger logger = Logger.getLogger("ReceiveDataServlet");
   private String root;
 
@@ -48,13 +50,18 @@ public class ReceiveDataServlet extends AbstractHttpServlet {
       httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
     else {
-      if (!checkSha1Code(sha1Mail, dir)) {
+      boolean pending = false;
+      if (!new File(dir, CODE_FILE_NAME).exists()){
+        CreateMobileUserServlet.writePendingCode(sha1Mail, dir);
+        pending = true;
+      }
+      if (!pending && !checkSha1Code(sha1Mail, dir)) {
         logger.error("Not a valid password.");
         httpServletResponse.setHeader(ComCst.STATUS, Lang.get("mobile.data.invalid.password", lang));
         httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
       }
       else {
-        File file = new File(dir, "data.ser");
+        File file = new File(dir, (pending ? CreateMobileUserServlet.PENDING : "") + DATA_FILE_NAME);
         if (file.exists() && !file.delete()) {
           logger.error("Can not delete file " + file.getAbsolutePath());
           httpServletResponse.setHeader(ComCst.STATUS, Lang.get("mobile.data.internal", lang));
@@ -69,13 +76,14 @@ public class ReceiveDataServlet extends AbstractHttpServlet {
           Files.copyStream(inputStream, fileOutputStream);
           httpServletResponse.setHeader(ComCst.STATUS, "OK");
           httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+          inputStream.close();
         }
       }
     }
   }
 
   public static boolean checkSha1Code(String sha1Mail, File dir) {
-    return Files.loadFileToString(new File(dir, "code.ser")).trim().equals(sha1Mail);
+    return Files.loadFileToString(new File(dir, CODE_FILE_NAME)).trim().equals(sha1Mail);
   }
 
   // generate a file starting with the mail with only ascii character (other a replace with _)

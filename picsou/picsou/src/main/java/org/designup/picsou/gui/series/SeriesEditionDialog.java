@@ -733,7 +733,7 @@ public class SeriesEditionDialog {
                                                                        Lang.get("seriesDeletion.savings.message"),
                                                                        dialog, directory,
                                                                        ConfirmationDialog.Mode.STANDARD) {
-          protected void postValidate() {
+          protected void processOk() {
             doDelete(deleted);
           }
         };

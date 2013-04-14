@@ -56,8 +56,8 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "3.0b3";
-  public static final Long JAR_VERSION = 109L;
+  public static final String APPLICATION_VERSION = "3.0b4";
+  public static final Long JAR_VERSION = 110L;
   public static final Long BANK_CONFIG_VERSION = 7L;
 
   public static final String APPNAME = "budgetview";
@@ -66,6 +66,8 @@ public class PicsouApplication {
 
   public static final String LOG_TO_SOUT = APPNAME + ".log.sout";
   public static final String LOCAL_PREVAYLER_PATH_PROPERTY = APPNAME + ".prevayler.path";
+  public static final String LOCAL_DATA_PATH_PROPERTY = APPNAME + ".data.path";
+  public static final String LOCAL_CODE_PROPERTY = APPNAME + ".jar.path";
   public static final String DEFAULT_ADDRESS_PROPERTY = APPNAME + ".server.url";
   public static String DELETE_LOCAL_PREVAYLER_PROPERTY = APPNAME + ".prevayler.delete";
   public static String IS_DATA_IN_MEMORY = APPNAME + ".data.in.memory";
@@ -172,7 +174,7 @@ public class PicsouApplication {
     initDirectory(directory, openRequestManager);
 
     try {
-      final MainWindow mainWindow = new MainWindow(this, getServerAddress(), AppPaths.getLocalPrevaylerPath(), isDataInMemory(), directory);
+      final MainWindow mainWindow = new MainWindow(this, getServerAddress(), AppPaths.getCurrentDataPath(), isDataInMemory(), directory);
       mainWindow.show();
     }
     catch (InvalidState e) {
@@ -242,7 +244,7 @@ public class PicsouApplication {
   }
 
   public static void clearRepository() {
-    Files.deleteSubtree(new File(AppPaths.getDataPath()));
+    Files.deleteWithSubtree(new File(AppPaths.getDefaultDataPath()));
   }
 
   public static void clearRepositoryIfNeeded() {

@@ -96,7 +96,7 @@ public class PicsouServer {
   private boolean initPrevaylerDirectory(String prevaylerPath) {
     File prevaylerDirectory = new File(prevaylerPath);
     if ("true".equals(System.getProperty(DELETE_SERVER_PROPERTY))) {
-      Files.deleteSubtree(prevaylerDirectory);
+      Files.deleteWithSubtree(prevaylerDirectory);
     }
     if (!prevaylerDirectory.exists()) {
       if (!prevaylerDirectory.mkdir()) {

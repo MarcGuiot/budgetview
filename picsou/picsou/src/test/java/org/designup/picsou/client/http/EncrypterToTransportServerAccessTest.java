@@ -46,7 +46,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
 
   protected void tearDown() throws Exception {
     super.tearDown();
-    Files.deleteSubtree(new File(getUrl()));
+    Files.deleteWithSubtree(new File(getUrl()));
     serverDirectory = null;
     directory = null;
     url = null;

@@ -18,7 +18,7 @@ public class ColorThemeUpdater {
   public static void register(final GlobRepository repository, final Directory directory) {
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(UserPreferences.KEY)) {
+        if (changeSet.containsChanges(UserPreferences.KEY, UserPreferences.COLOR_THEME)) {
           apply(repository, directory);
         }
       }

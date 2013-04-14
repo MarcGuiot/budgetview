@@ -31,7 +31,7 @@ public class FirstTimeTest extends UISpecTestCase {
     Locale.setDefault(Locale.ENGLISH);
     System.setProperty("SINGLE_INSTANCE_DISABLED", "true");
     String tmpDir = System.getProperty("java.io.tmpdir") + File.separator + "budgetview";
-    Files.deleteSubtree(new File(tmpDir));
+    Files.deleteWithSubtree(new File(tmpDir));
     DummyRepaintManager.init();
   }
 
@@ -70,8 +70,8 @@ public class FirstTimeTest extends UISpecTestCase {
         String tmpJarDir = tmpDir + File.separator + "jars";
         File jarDir = new File(tmpJarDir);
         File prevaylerDir = new File(tmpDir + File.separator + "data");
-        Files.deleteSubtree(prevaylerDir);
-        Files.deleteSubtree(jarDir);
+        Files.deleteWithSubtree(prevaylerDir);
+        Files.deleteWithSubtree(jarDir);
         jarDir.mkdirs();
         prevaylerDir.mkdirs();
         InputStream stream =
@@ -358,8 +358,8 @@ public class FirstTimeTest extends UISpecTestCase {
         String tmpJarDir = tmpDir + File.separator + "jars";
         File jarDir = new File(tmpJarDir);
         File prevaylerDir = new File(tmpDir + File.separator + "data");
-        Files.deleteSubtree(prevaylerDir);
-        Files.deleteSubtree(jarDir);
+        Files.deleteWithSubtree(prevaylerDir);
+        Files.deleteWithSubtree(jarDir);
         jarDir.mkdirs();
         prevaylerDir.mkdirs();
         File userDir = new File(prevaylerDir + File.separator + "data" + File.separator + "users");
@@ -444,8 +444,8 @@ public class FirstTimeTest extends UISpecTestCase {
         String tmpJarDir = tmpDir + File.separator + "jars";
         File jarDir = new File(tmpJarDir);
         File prevaylerDir = new File(tmpDir + File.separator + "data");
-        Files.deleteSubtree(prevaylerDir);
-        Files.deleteSubtree(jarDir);
+        Files.deleteWithSubtree(prevaylerDir);
+        Files.deleteWithSubtree(jarDir);
         jarDir.mkdirs();
         prevaylerDir.mkdirs();
         File userDir = new File(prevaylerDir + File.separator + "data" + File.separator + "users");
@@ -530,8 +530,8 @@ public class FirstTimeTest extends UISpecTestCase {
         String tmpJarDir = tmpDir + File.separator + "jars";
         File jarDir = new File(tmpJarDir);
         File prevaylerDir = new File(tmpDir + File.separator + "data");
-        Files.deleteSubtree(prevaylerDir);
-        Files.deleteSubtree(jarDir);
+        Files.deleteWithSubtree(prevaylerDir);
+        Files.deleteWithSubtree(jarDir);
         jarDir.mkdirs();
         prevaylerDir.mkdirs();
         File userDir = new File(prevaylerDir + File.separator + "data" + File.separator + "users");
@@ -695,8 +695,8 @@ public class FirstTimeTest extends UISpecTestCase {
         String tmpJarDir = tmpDir + File.separator + "jars";
         File jarDir = new File(tmpJarDir);
         File prevaylerDir = new File(tmpDir + File.separator + "data");
-        Files.deleteSubtree(prevaylerDir);
-        Files.deleteSubtree(jarDir);
+        Files.deleteWithSubtree(prevaylerDir);
+        Files.deleteWithSubtree(jarDir);
         jarDir.mkdirs();
         prevaylerDir.mkdirs();
         File userDir = new File(prevaylerDir + File.separator + "data" + File.separator + "users");

@@ -4,6 +4,7 @@ import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.components.dialogs.CloseDialogAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.gui.mobile.SendMobileDataAction;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
@@ -24,8 +25,10 @@ public abstract class AbstractMobileAccountDialog {
   protected final LocalGlobRepository localRepository;
   protected final DefaultDirectory localDirectory;
   protected final SelectionService selectionService;
+  private GlobRepository parentRepository;
 
   public AbstractMobileAccountDialog(GlobRepository parentRepository, Directory directory) {
+    this.parentRepository = parentRepository;
     this.localRepository =
       LocalGlobRepositoryBuilder.init(parentRepository)
         .copy(UserPreferences.TYPE)
@@ -79,20 +82,42 @@ public abstract class AbstractMobileAccountDialog {
               .createMobileAccount(UserPreferences.get(localRepository).get(UserPreferences.MAIL_FOR_MOBILE),
                                    UserPreferences.get(localRepository).get(UserPreferences.PASSWORD_FOR_MOBILE),
                                    messageRef);
-
-            progressBar.stop();
-            if (dialog.isVisible()) {
-              localRepository.commitChanges(false);
-              if (isOk) {
-                showActivationConfirmation();
-              }
-              else {
-                showErrorMessage(messageRef.get());
-              }
-            }
+            SwingUtilities.invokeAndWait(new showStatus(isOk, messageRef));
             return null;
           }
         });
+    }
+
+    private class showStatus implements Runnable {
+      private final boolean ok;
+      private final Ref<String> messageRef;
+
+      public showStatus(boolean ok, Ref<String> messageRef) {
+        this.ok = ok;
+        this.messageRef = messageRef;
+      }
+
+      public void run() {
+        progressBar.stop();
+        if (dialog.isVisible()) {
+          localRepository.commitChanges(false);
+          if (ok) {
+            showActivationConfirmation();
+            localDirectory.get(ExecutorService.class)
+              .submit(new Callable<Object>() {
+                public Object call() throws Exception {
+                  Ref<String> msg = new Ref<String>();
+                  SendMobileDataAction.sendToMobile(parentRepository, localDirectory.get(ConfigService.class),
+                                                    msg);
+                  return msg.get();
+                }
+              });
+          }
+          else {
+            showErrorMessage(messageRef.get());
+          }
+        }
+      }
     }
   }
   protected abstract void showErrorMessage(String errorMessage);
