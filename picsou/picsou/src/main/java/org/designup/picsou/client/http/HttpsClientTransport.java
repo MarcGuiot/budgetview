@@ -28,7 +28,7 @@ public class HttpsClientTransport implements ClientTransport {
     this.httpClient = new DefaultHttpClient();
   }
 
-  public SerializedInput connect() throws BadConnection {
+  public SerializedInput connect(long version) throws BadConnection {
     SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
     serializedByteArrayOutput.getOutput().writeBoolean(false);
     return sendRequest(null, "/connect", serializedByteArrayOutput.toByteArray());

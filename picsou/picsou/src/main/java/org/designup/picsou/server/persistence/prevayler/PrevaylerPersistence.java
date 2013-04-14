@@ -143,8 +143,8 @@ public class PrevaylerPersistence implements Persistence {
     accountDataManager.updateUserData(input, userId);
   }
 
-  public void connect(SerializedOutput output) {
-    RootDataManager.RepoInfo accountInfo = rootDataManager.getAndUpdateAccountInfo();
+  public void connect(SerializedOutput output, long version) {
+    RootDataManager.RepoInfo accountInfo = rootDataManager.getAndUpdateAccountInfo(version);
     output.write(true);
     output.writeBytes(accountInfo.getId());
     output.writeBytes(accountInfo.getMail());
@@ -153,6 +153,7 @@ public class PrevaylerPersistence implements Persistence {
     output.write(accountInfo.getCount());
     output.write(accountInfo.getDownloadedVersion());
     output.writeUtf8String(accountInfo.getLang());
+    output.write(accountInfo.getVersion());
   }
 
 }

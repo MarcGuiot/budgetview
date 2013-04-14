@@ -17,7 +17,7 @@ public interface Persistence {
 
   void updateData(SerializedInput input, SerializedOutput output, Integer userId);
 
-  void connect(SerializedOutput output);
+  void connect(SerializedOutput output, long version);
 
   Glob identify(String name, byte[] encryptedPassword);
 

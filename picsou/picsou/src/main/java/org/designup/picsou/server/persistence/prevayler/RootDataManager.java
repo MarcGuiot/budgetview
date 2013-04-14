@@ -40,9 +40,10 @@ public interface RootDataManager {
     private long count;
     private long downloadedVersion;
     private String lang;
+    private long version;
 
     public RepoInfo(byte[] id, byte[] mail, byte[] signature, String activationCode, long count,
-                    long downloadedVersion, String lang) {
+                    long downloadedVersion, String lang, long version) {
       this.id = id;
       this.mail = mail;
       this.signature = signature;
@@ -50,6 +51,7 @@ public interface RootDataManager {
       this.count = count;
       this.downloadedVersion = downloadedVersion;
       this.lang = lang;
+      this.version = version;
     }
 
     public byte[] getId() {
@@ -79,7 +81,11 @@ public interface RootDataManager {
     public String getLang() {
       return lang;
     }
+
+    public long getVersion() {
+      return version;
+    }
   }
 
-  RepoInfo getAndUpdateAccountInfo();
+  RepoInfo getAndUpdateAccountInfo(long version);
 }

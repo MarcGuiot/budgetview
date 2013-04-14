@@ -131,7 +131,6 @@ public class MobileTest extends ConnectedTestCase {
     email.checkContains("l'adresse suivante");
   }
 
-
   public void testPendingDataAreSentAtAccountCreation() throws Exception {
     String emailAddress = "test@mybudgetview.fr";
 
@@ -144,10 +143,18 @@ public class MobileTest extends ConnectedTestCase {
 
 
     SharingConnection sharingConnection = requestNewMobileAccount(emailAddress);
+    File directory = new File("/tmp/data/");
+    String[] list = directory.list();
+    assertTrue(list != null && list.length == 1);
+    list = new File(directory, list[0]).list();
+    assertTrue(list != null && list.length == 2);
+    assertTrue(list[0].startsWith("pending"));
+    assertTrue(list[1].startsWith("pending"));
     String url = sharingConnection.url;
     followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok");
 
     mobileApp.checkLogin(emailAddress, sharingConnection.password);
+
 
   }
 

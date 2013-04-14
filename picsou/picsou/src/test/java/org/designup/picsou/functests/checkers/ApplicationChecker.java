@@ -45,6 +45,17 @@ public class ApplicationChecker extends GuiChecker {
     return window;
   }
 
+  public Window startModal(){
+    application = new DummyPicsouApplication();
+    clearCheckers();
+    window = WindowInterceptor.getModalDialog(new Trigger() {
+      public void run() throws Exception {
+        application.run();
+      }
+    });
+    return window;
+  }
+
   public void restart() {
     if (application == null) {
       Assert.fail("Application was not started");

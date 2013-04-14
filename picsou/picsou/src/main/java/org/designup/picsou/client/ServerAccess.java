@@ -33,7 +33,7 @@ public interface ServerAccess {
 
   void takeSnapshot();
 
-  LocalInfo connect();
+  LocalInfo connect(long version);
 
   MapOfMaps<String, Integer, SerializableGlobType> getServerData();
 
@@ -120,7 +120,7 @@ public interface ServerAccess {
     public void takeSnapshot() {
     }
 
-    public LocalInfo connect() {
+    public LocalInfo connect(long version) {
       return null;
     }
 
@@ -165,7 +165,7 @@ public interface ServerAccess {
     }
   };
 
-  class LocalInfo{
+  class LocalInfo {
     private byte[] repoId;
     private byte[] mail;
     private byte[] signature;
@@ -173,9 +173,10 @@ public interface ServerAccess {
     private long count;
     private long downloadVersion;
     private String lang;
+    private long jarVersion;
 
     public LocalInfo(byte[] repoId, byte[] mail, byte[] signature, String activationCode,
-                     long count, long downloadVersion, String lang) {
+                     long count, long downloadVersion, String lang, long jarVersion) {
       this.repoId = repoId;
       this.mail = mail;
       this.signature = signature;
@@ -183,6 +184,7 @@ public interface ServerAccess {
       this.count = count;
       this.downloadVersion = downloadVersion;
       this.lang = lang;
+      this.jarVersion = jarVersion;
     }
 
     public byte[] getRepoId() {
@@ -211,6 +213,10 @@ public interface ServerAccess {
 
     public String getLang() {
       return lang;
+    }
+
+    public long getJarVersion() {
+      return jarVersion;
     }
   }
 }

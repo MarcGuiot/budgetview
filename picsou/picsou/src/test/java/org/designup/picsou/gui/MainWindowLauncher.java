@@ -55,7 +55,7 @@ public class MainWindowLauncher {
     ServerAccess serverAccess =
       new EncrypterToTransportServerAccess(new LocalClientTransport(serverDirectory.getServiceDirectory()),
                                            directory);
-    serverAccess.connect();
+    serverAccess.connect(PicsouApplication.JAR_VERSION);
 
     boolean registered = isRegistered(user, password, serverAccess);
 

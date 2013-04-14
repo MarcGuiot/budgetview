@@ -49,8 +49,8 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     globModel = directory.get(GlobModel.class);
   }
 
-  public LocalInfo connect() {
-    SerializedInput response = clientTransport.connect();
+  public LocalInfo connect(long version) {
+    SerializedInput response = clientTransport.connect(version);
     try {
       if (response.readBoolean()) {
         byte[] repoId = response.readBytes();
@@ -60,9 +60,10 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
         long count = response.readNotNullLong();
         long downloadVersion = response.readNotNullLong();
         String lang = response.readUtf8String();
+        long jarVersion = response.readNotNullLong();
         sessionId = response.readLong();
         privateId = response.readBytes();
-        return new LocalInfo(repoId, mail, signature, activationCode, count, downloadVersion, lang);
+        return new LocalInfo(repoId, mail, signature, activationCode, count, downloadVersion, lang, jarVersion);
       }
       sessionId = response.readLong();
       privateId = response.readBytes();

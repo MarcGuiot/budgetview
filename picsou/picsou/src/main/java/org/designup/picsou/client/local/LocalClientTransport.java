@@ -16,8 +16,8 @@ public class LocalClientTransport implements ClientTransport {
     serverRequestProcessingService = serverDirectory.get(ServerRequestProcessingService.class);
   }
 
-  public SerializedInput connect() throws BadConnection {
-    SerializedInput input = getTrueInByteArray();
+  public SerializedInput connect(long version) throws BadConnection {
+    SerializedInput input = getTrueInByteArray(version);
     SerializedByteArrayOutput byteOutput = new SerializedByteArrayOutput();
     serverRequestProcessingService.connect(input, byteOutput.getOutput());
     return byteOutput.getInput();
@@ -33,10 +33,11 @@ public class LocalClientTransport implements ClientTransport {
     serverRequestProcessingService.register(sessionId, byteOutput.getInput());
   }
 
-  private SerializedInput getTrueInByteArray() {
+  private SerializedInput getTrueInByteArray(long version) {
     SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
     SerializedOutput output = serializedByteArrayOutput.getOutput();
     output.writeBoolean(true);
+    output.write(version);
     return serializedByteArrayOutput.getInput();
   }
 

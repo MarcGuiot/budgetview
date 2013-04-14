@@ -40,7 +40,14 @@ public class PRootDataManager implements RootDataManager {
     prevaylerFactory.configurePrevalentSystem(new PRootData());
     try {
       prevayler = prevaylerFactory.create();
-      prevayler.execute(InitialRepoIdTransaction.create());
+      Object result = prevayler.execute(new Query() {
+        public Object query(Object prevalentSystem, Date executionTime) throws Exception {
+          return ((PRootData)prevalentSystem).getId();
+        }
+      });
+      if (result == null) {
+        prevayler.execute(InitialRepoIdTransaction.create());
+      }
     }
     catch (Exception e) {
       throw new UnexpectedApplicationState(e);
@@ -68,6 +75,7 @@ public class PRootDataManager implements RootDataManager {
     serializablePolicy.registerFactory(PRootData.getFactory());
     serializablePolicy.registerFactory(SetDownloadedVersion.getFactory());
     serializablePolicy.registerFactory(SetLang.getFactory());
+    serializablePolicy.registerFactory(SetJarVersion.getFactory());
     return serializablePolicy;
   }
 
@@ -229,9 +237,13 @@ public class PRootDataManager implements RootDataManager {
     }
   }
 
-  public RepoInfo getAndUpdateAccountInfo() {
+  public RepoInfo getAndUpdateAccountInfo(long version) {
     try {
-      return (RepoInfo)prevayler.execute(new GetAndUpdateCount());
+      RepoInfo execute = (RepoInfo)prevayler.execute(new GetAndUpdateCount());
+      if (execute.getVersion() < version) {
+        prevayler.execute(new SetJarVersion(version));
+      }
+      return execute;
     }
     catch (Exception e) {
       throw new UnexpectedApplicationState(e);

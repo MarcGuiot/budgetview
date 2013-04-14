@@ -21,6 +21,7 @@ public class PRootData implements CustomSerializable {
   private static final byte V1 = 1;
   private static final byte V2 = 2;
   private static final byte V3 = 3;
+  private static final byte V4 = 4;
   private byte[] id = null;
   private byte[] mail = null;
   private byte[] signature = null;
@@ -31,6 +32,7 @@ public class PRootData implements CustomSerializable {
   private static final String USERS_ROOT_DATA = "UsersRootData";
   private long downloadedVersion = -1;
   private String lang;
+  private long jarVersion;
 
   public PRootData() {
   }
@@ -81,16 +83,20 @@ public class PRootData implements CustomSerializable {
       case V3:
         readV3(input);
         break;
+      case V4:
+        readV4(input);
+        break;
       default:
         throw new InvalidData("Unable to read version " + version);
     }
   }
 
   public void write(SerializedOutput output, Directory directory) {
-    output.writeByte(V3);
+    output.writeByte(V4);
     writeV1Info(output);
     output.write(downloadedVersion);
     output.writeUtf8String(lang);
+    output.write(jarVersion);
   }
 
   private void writeV1Info(SerializedOutput output) {
@@ -115,6 +121,11 @@ public class PRootData implements CustomSerializable {
         User.write(output, entry.getValue());
       }
     }
+  }
+
+  private void readV4(SerializedInput input) {
+    readV3(input);
+    jarVersion = input.readNotNullLong();
   }
 
   private void readV3(SerializedInput input) {
@@ -193,7 +204,7 @@ public class PRootData implements CustomSerializable {
 
   public RootDataManager.RepoInfo getRepoInfo() {
     count++;
-    return new RootDataManager.RepoInfo(id, mail, signature, activationCode, count, downloadedVersion, lang);
+    return new RootDataManager.RepoInfo(id, mail, signature, activationCode, count, downloadedVersion, lang, jarVersion);
   }
 
   public void setRepoId(byte[] repoId) {
@@ -212,6 +223,14 @@ public class PRootData implements CustomSerializable {
 
   public void setLang(String lang) {
     this.lang = lang;
+  }
+
+  public void setJarVersion(long jarVersion) {
+    this.jarVersion = jarVersion;
+  }
+
+  public byte[] getId() {
+    return id;
   }
 
   private static class Factory implements CustomSerializableFactory {
