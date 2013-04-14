@@ -19,9 +19,9 @@
             <card name="activation">
               <column>
                 <htmlEditorPane text="$mobile.dialog.intro.message" styleClass="multiLineLabel" margin="10"
-                                marginBottom="5" weightY="1"/>
+                                marginBottom="10" weightY="1"/>
 
-                <button icon="googleplay.png" action="gotoGooglePlay" styleClass="iconOnly" anchor="center" margin="5"/>
+                <!--<button icon="googleplay.png" action="gotoGooglePlay" styleClass="iconOnly" anchor="center" margin="5"/>-->
 
                 <htmlEditorPane text="$mobile.dialog.intro.activate" styleClass="multiLineLabel" margin="10"
                                 marginBottom="5" weightY="1"/>
