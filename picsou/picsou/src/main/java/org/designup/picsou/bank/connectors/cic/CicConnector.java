@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutorService;
 public class CicConnector extends WebBankConnector {
   public static final Integer BANK_ID = 2;
 
-  private static final String INDEX = "https://www.cic.fr/cic/fr/banques/particuliers/index.html";
+  private static final String INDEX = "https://www.cic.fr/";
   private static final String DOWNLOAD_PAGE_ADDRESS = "https://www.cic.fr/cic/fr/banque/telechargement.cgi";
 
   private UserAndPasswordPanel userAndPasswordPanel;
@@ -93,7 +93,7 @@ public class CicConnector extends WebBankConnector {
             idForm.getTextInputById("e_identifiant").setText(userAndPasswordPanel.getUser());
             idForm.getPasswordInputById("e_mdp").setText(userAndPasswordPanel.getPassword());
             WebPage loggedInPage = idForm.submit();
-            if (!loggedInPage.getUrl().contains("www.cic.fr/cic/fr/banque/espace_personnel")) {
+            if (!loggedInPage.containsAnchorWithHRef("/cic/fr/identification/deconnexion/deconnexion.cgi")) {
               notifyIdentificationFailed();
               loadHomePage();
               return;

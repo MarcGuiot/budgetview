@@ -66,6 +66,10 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return !node.getElementsByTagName("a").isEmpty();
   }
 
+  public boolean containsAnchorWithHRef(String href) {
+    return !node.getElementsByAttribute("a", "href", href).isEmpty();
+  }
+
   public WebAnchor getAnchorById(String id) throws WebParsingError {
     return new WebAnchor(browser, (HtmlAnchor)getElementById(id, HtmlAnchor.class));
   }
