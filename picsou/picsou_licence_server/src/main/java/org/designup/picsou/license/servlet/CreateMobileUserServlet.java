@@ -97,6 +97,7 @@ public class CreateMobileUserServlet extends HttpServlet {
             httpServletResponse.sendRedirect(baseUrl + "/mobile/account-already-present");
           }
         }
+        mailer.sendAndroidVersion(mail, lang);
       }
     }
     httpServletResponse.setStatus(HttpServletResponse.SC_FOUND);

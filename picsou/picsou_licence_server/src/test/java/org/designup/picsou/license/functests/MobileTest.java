@@ -42,7 +42,7 @@ public class MobileTest extends ConnectedTestCase {
   public void testCreateAndDeleteAccount() throws Exception {
     String mail = "test@mybudgetview.fr";
     SharingConnection connection = requestNewMobileAccount(mail);
-    followUrl(connection.url, 302, "http://www.mybudgetview.com/mobile/account-ok");
+    followUrl(connection.url, 302, "http://www.mybudgetview.com/mobile/account-ok", mail);
 
     application.openMobileAccountDialog()
       .setEmailAndValidate(mail)
@@ -73,7 +73,7 @@ public class MobileTest extends ConnectedTestCase {
 
     SharingConnection sharingConnection = requestNewMobileAccount(emailAddress);
     String url = sharingConnection.url;
-    followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok");
+    followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok", emailAddress);
 
     String path = OfxBuilder
       .init(this)
@@ -97,7 +97,7 @@ public class MobileTest extends ConnectedTestCase {
       .checkErrorMessageContains("Failed to send data to server: Password has changed")
       .close();
 
-    followUrl(url2, 302, "http://www.mybudgetview.com/mobile/account-already-present");
+    followUrl(url2, 302, "http://www.mybudgetview.com/mobile/account-already-present", emailAddress);
     application.getOperations()
       .sendDataToServer()
       .checkSuccessMessageContains("Data sent to server")
@@ -110,8 +110,8 @@ public class MobileTest extends ConnectedTestCase {
     String mail = "test@mybudgetview.fr";
     String url1 = requestNewMobileAccount(mail).url;
     String url2 = requestNewMobileAccount(mail).url;
-    followUrl(url1, 302, "http://www.mybudgetview.com/mobile/account-ok");
-    followUrl(url2, 302, "http://www.mybudgetview.com/mobile/account-already-present");
+    followUrl(url1, 302, "http://www.mybudgetview.com/mobile/account-ok", mail);
+    followUrl(url2, 302, "http://www.mybudgetview.com/mobile/account-already-present", mail);
   }
 
   public void testError() throws Exception {
@@ -151,14 +151,12 @@ public class MobileTest extends ConnectedTestCase {
     assertTrue(list[0].startsWith("pending"));
     assertTrue(list[1].startsWith("pending"));
     String url = sharingConnection.url;
-    followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok");
+    followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok", emailAddress);
 
     mobileApp.checkLogin(emailAddress, sharingConnection.password);
-
-
   }
 
-  private void followUrl(String url, final int expectedReturnCode, final String expectedRedirect) throws IOException {
+  private void followUrl(String url, final int expectedReturnCode, final String expectedRedirect) throws IOException, InterruptedException {
     HttpClient httpClient = new DefaultHttpClient();
     HttpGet method = new HttpGet(url);
     HttpClientParams.setRedirecting(method.getParams(), false);
@@ -167,6 +165,11 @@ public class MobileTest extends ConnectedTestCase {
     Header locationHeader = response.getFirstHeader("location");
     assertNotNull(locationHeader);
     assertEquals(expectedRedirect, locationHeader.getValue());
+  }
+
+  private void followUrl(String url, final int expectedReturnCode, final String expectedRedirect, String emailAddress) throws IOException, InterruptedException {
+    followUrl(url, expectedReturnCode, expectedRedirect);
+    mailServer.checkReceivedMail(emailAddress);
   }
 
   private SharingConnection requestAccountWithNewPassword(String userMail) throws InterruptedException {

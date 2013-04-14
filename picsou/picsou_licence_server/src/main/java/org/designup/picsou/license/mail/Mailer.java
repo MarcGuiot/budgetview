@@ -98,6 +98,17 @@ public class Mailer {
     return false;
   }
 
+  public boolean sendAndroidVersion(String mail, String lang) {
+    SendEmail sent  = new SendEmail(Lang.get("mobile.mail.subject", lang), Lang.get("mobile.mail.message", lang),
+                                    fromAdress, mail);
+    if (sent.sent()){
+      return true;
+    }
+    add(sent);
+    return false;
+  }
+
+
 
   private void sendMail(String to, String from, String subject, String content) throws MessagingException {
 
