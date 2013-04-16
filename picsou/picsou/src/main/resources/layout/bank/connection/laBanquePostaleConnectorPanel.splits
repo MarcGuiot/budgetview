@@ -21,37 +21,16 @@
       <label text="2. Composez votre code secret à 6 chiffres" styleClass="formSection" marginTop="20"/>
       <row>
         <filler fill="horizontal"/>
-        <column>
-          <grid>
-            <label ref="label0" gridPos="(0,0)" styleClass="keyboardLabel"/>
-            <label ref="label1" gridPos="(1,0)" styleClass="keyboardLabel"/>
-            <label ref="label2" gridPos="(2,0)" styleClass="keyboardLabel"/>
-            <label ref="label3" gridPos="(3,0)" styleClass="keyboardLabel"/>
-            <label ref="label4" gridPos="(4,0)" styleClass="keyboardLabel"/>
-
-            <label ref="label5" gridPos="(0,1)" styleClass="keyboardLabel"/>
-            <label ref="label6" gridPos="(1,1)" styleClass="keyboardLabel"/>
-            <label ref="label7" gridPos="(2,1)" styleClass="keyboardLabel"/>
-            <label ref="label8" gridPos="(3,1)" styleClass="keyboardLabel"/>
-            <label ref="label9" gridPos="(4,1)" styleClass="keyboardLabel"/>
-          </grid>
-          <row marginTop="5" marginBottom="15">
-            <row border="matte(1,1,1,1,#E0E0E0)">
-              <label ref="codeLabel0" styleClass="codeLabel"/>
-              <label ref="codeLabel1" styleClass="codeLabel"/>
-              <label ref="codeLabel2" styleClass="codeLabel"/>
-              <label ref="codeLabel3" styleClass="codeLabel"/>
-              <label ref="codeLabel4" styleClass="codeLabel"/>
-              <label ref="codeLabel5" styleClass="codeLabel"/>
-            </row>
-            <button action="clearCode" text="Effacer" styleClass="hyperlink" font="-,plain,10"/>
-            <filler fill="horizontal"/>
-          </row>
-        </column>
+        <grid>
+          <label ref="keyboardLabel" gridPos="(0,0,1,4)" marginRight="10"/>
+          <textField ref="password" gridPos="(1,0)" marginBottom="4"/>
+          <button action="clearCode" gridPos="(1,1)" text="Effacer" fill="none"
+                  styleClass="hyperlink" font="-,plain,10" anchor="right"/>
+          <filler gridPos="(1,2)" fill="vertical"/>
+          <button action="login" gridPos="(1,3)" text="Valider" fill="none" anchor="center"/>
+        </grid>
         <filler fill="horizontal"/>
       </row>
-
-      <button action="login" text="Valider"/>
 
       <filler fill="vertical"/>
 

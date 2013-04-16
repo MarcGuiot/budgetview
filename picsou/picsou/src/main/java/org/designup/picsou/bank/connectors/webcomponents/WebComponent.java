@@ -36,6 +36,10 @@ public abstract class WebComponent<T extends HtmlElement> {
     return HtmlUnit.dump(node);
   }
 
+  public String getAttributeValue(String attributeName) {
+    return node.getAttribute(attributeName);
+  }
+
   public void removeAttribute(String attributeName) {
     node.removeAttribute(attributeName);
   }

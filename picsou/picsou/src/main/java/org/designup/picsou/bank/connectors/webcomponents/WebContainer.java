@@ -274,6 +274,10 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new WebButton(browser, (HtmlButton)HtmlUnit.getElementWithAttribute(node, HtmlButton.class, "input", "value", value));
   }
 
+  public WebButtonInput getButtonInputByValue(String value) throws WebParsingError {
+    return new WebButtonInput(browser, (HtmlButtonInput)HtmlUnit.getElementWithAttribute(node, HtmlButtonInput.class, "input", "value", value));
+  }
+
   public WebCheckBox getCheckBox() throws WebParsingError {
     return new WebCheckBox(browser, (HtmlInput)getSingleElement("input", HtmlInput.class));
   }
@@ -357,6 +361,10 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
 
   public WebImageMap getImageMapByName(String name) throws WebParsingError {
     return new WebImageMap(browser, (HtmlMap)getElementByName("map", name, HtmlMap.class));
+  }
+
+  public WebImageMap getImageMapById(String id) throws WebParsingError {
+    return new WebImageMap(browser, getElementById(id, HtmlMap.class));
   }
 
   private HtmlElement getSingleElement(String tagName, Class expectedClass) throws WebParsingError {

@@ -12,17 +12,18 @@ import java.util.List;
 
 public class ImageMapper {
 
+  private JLabel mappedLabel;
+  private MouseAdapter lastMouseAdapter;
+
   public interface Listener {
     void imageClicked();
   }
 
   private List<Listener> listeners = new ArrayList<Listener>();
 
-  public static ImageMapper install(WebImageMap imageMap, JLabel label) throws WebParsingError {
-    return new ImageMapper(imageMap, label);
-  }
-
-  private ImageMapper(final WebImageMap imageMap, JLabel label) throws WebParsingError {
+ public ImageMapper install(final WebImageMap imageMap, JLabel label) throws WebParsingError {
+    reset();
+    this.mappedLabel = label;
     WebImage image = imageMap.getImage();
     Icon icon = image.asIcon();
     if (icon == null) {
@@ -30,7 +31,7 @@ public class ImageMapper {
     }
     label.setIcon(icon);
     label.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
-    label.addMouseListener(new MouseAdapter() {
+    lastMouseAdapter = new MouseAdapter() {
       public void mouseClicked(MouseEvent mouseEvent) {
         try {
           imageMap.click(mouseEvent.getX(), mouseEvent.getY());
@@ -40,7 +41,9 @@ public class ImageMapper {
           throw new RuntimeException(e);
         }
       }
-    });
+    };
+    label.addMouseListener(lastMouseAdapter);
+    return this;
   }
 
   public void addListener(Listener listener) {
@@ -51,5 +54,12 @@ public class ImageMapper {
     for (Listener listener : listeners) {
       listener.imageClicked();
     }
+  }
+
+  private void reset() {
+    if (mappedLabel != null) {
+      mappedLabel.removeMouseListener(lastMouseAdapter);
+    }
+    listeners.clear();
   }
 }

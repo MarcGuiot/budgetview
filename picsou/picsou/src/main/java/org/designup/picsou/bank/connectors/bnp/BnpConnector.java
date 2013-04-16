@@ -17,7 +17,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,6 +39,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
   private JTextField codeField;
   private JTextField passwordField;
   private JLabel keyboardLabel;
+  private ImageMapper imageMapper = new ImageMapper();
 
   public static void main(String[] args) throws IOException {
     WebConnectorLauncher.show(BANK_ID, new Factory());
@@ -93,7 +93,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
             notifyInitialConnection();
             WebPage loginPage = loadPage(INDEX);
 
-            ImageMapper.install(loginPage.getImageMapByName("MapGril"), keyboardLabel)
+            imageMapper.install(loginPage.getImageMapByName("MapGril"), keyboardLabel)
               .addListener(new ImageMapper.Listener() {
                 public void imageClicked() {
                   try {
@@ -126,7 +126,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
   }
 
   public void panelShown() {
-    if (Strings.isNullOrEmpty(codeField.getText())){
+    if (Strings.isNullOrEmpty(codeField.getText())) {
       codeField.requestFocus();
     }
     else {
@@ -210,7 +210,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
                                                          entry.updateDate,
                                                          BANK_ID);
 
-                if (account != null){
+                if (account != null) {
                   String fileContent = browser.downloadToString(entry.downloadUrl, ".qif");
                   repository.update(account.getKey(), RealAccount.FILE_CONTENT, fileContent);
                 }
