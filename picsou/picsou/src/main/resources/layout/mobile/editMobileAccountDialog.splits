@@ -26,17 +26,14 @@
                   <grid>
                     <label text="$mobile.delete.mail" gridPos="(0,0)" styleClass="formLabel"/>
                     <textField ref="emailField" gridPos="(1,0,2,1)" columns="60"/>
-                    <label ref="passwordLabel" font="-,bold,16" gridPos="(1,1)" fill="none" anchor="right"
-                           marginRight="20" marginTop="10"/>
-                    <button action="changePassword" gridPos="(2,1)" styleClass="hyperlink" font="-,plain,10"
-                            fill="none" marginTop="10" marginLeft="5" anchor="left"/>
+                    <component ref="passwordEdition" gridPos="(2,1)" marginTop="10" weightY="0.01"/>
                   </grid>
                   <filler fill="horizontal"/>
                 </row>
 
                 <htmlEditorPane text="$mobile.dialog.reactivate.message" styleClass="multiLineLabel" margin="10"
                                 marginTop="15" marginBottom="5" weightY="1"/>
-                <button ref="activate" fill="none" marginTop="10" anchor="center"/>
+                <button ref="activateMobileAccount" fill="none" marginTop="10" anchor="center"/>
 
                 <htmlEditorPane text="$mobile.dialog.delete.message" styleClass="multiLineLabel" margin="10"
                                 marginTop="15" marginBottom="5" weightY="1"/>

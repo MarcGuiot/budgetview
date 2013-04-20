@@ -13,6 +13,7 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.license.ConnectedTestCase;
 import org.designup.picsou.license.checkers.Email;
 import org.globsframework.utils.Files;
+import org.globsframework.utils.Strings;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,6 +65,23 @@ public class MobileTest extends ConnectedTestCase {
       .setEmailAndValidate(mail)
       .checkNoErrorsShown()
       .checkConfirmationAndClose();
+    Email email = mailServer.checkReceivedMail(mail);
+    email.checkContains("http");
+  }
+
+  public void testChangePassword() throws Exception {
+    String mail = "test@mybudgetview.fr";
+    CreateMobileAccountChecker dialog = application.openMobileAccountDialog();
+    String generatedPassword = dialog
+      .setEmailWithoutValidating(mail)
+      .getPassword();
+    dialog.checkReadOnlyPassword(generatedPassword)
+      .editPasswordAndCancel("dummy")
+      .checkReadOnlyPassword(generatedPassword);
+    dialog.setEmptyPasswordAndCheckErrorOnApply("You must enter a password");
+    dialog.setEmptyPasswordAndCheckErrorOnActivate("You must enter a password");
+    dialog.setNewPassword("newPassword")
+      .validateAndClose();
     Email email = mailServer.checkReceivedMail(mail);
     email.checkContains("http");
   }
@@ -141,7 +159,6 @@ public class MobileTest extends ConnectedTestCase {
       .save();
     application.getOperations().importOfxFile(path);
 
-
     SharingConnection sharingConnection = requestNewMobileAccount(emailAddress);
     File directory = new File("/tmp/data/");
     String[] list = directory.list();
@@ -173,19 +190,19 @@ public class MobileTest extends ConnectedTestCase {
   }
 
   private SharingConnection requestAccountWithNewPassword(String userMail) throws InterruptedException {
-    return requestMobileAccount(userMail, true);
+    return requestMobileAccount(userMail, "newpassword");
   }
 
   private SharingConnection requestNewMobileAccount(String userMail) throws InterruptedException {
-    return requestMobileAccount(userMail, false);
+    return requestMobileAccount(userMail, null);
   }
 
-  private SharingConnection requestMobileAccount(String userMail, boolean generateNewPwd) throws InterruptedException {
+  private SharingConnection requestMobileAccount(String userMail, String requestedPassword) throws InterruptedException {
     CreateMobileAccountChecker dialog = application.openMobileAccountDialog();
-    if (generateNewPwd) {
-      dialog.generateNewPassword();
+    if (Strings.isNotEmpty(requestedPassword)) {
+      dialog.setNewPassword(requestedPassword);
     }
-    String password = dialog.getPassword();
+    String activatedPassword = dialog.getPassword();
     dialog.setEmailAndValidate(userMail);
     dialog.checkConfirmationAndClose();
 
@@ -195,7 +212,7 @@ public class MobileTest extends ConnectedTestCase {
     int httpEndIndex = email.getContent().indexOf("\">http");
     String url = email.getContent().substring(httpStartIndex + "href=\"".length(), httpEndIndex);
     url = url.replace("http://www.mybudgetview.fr", "http://localhost");
-    return new SharingConnection(url, password);
+    return new SharingConnection(url, activatedPassword);
   }
 
   private class SharingConnection {

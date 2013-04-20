@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.functests.checkers.components.TipChecker;
 import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
+import org.designup.picsou.functests.checkers.utils.MessageIsHiddenAssertion;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Month;
@@ -48,6 +49,10 @@ public abstract class GuiChecker {
     String message = componentName + " " + (visible ? "is not visible" : "is visible");
     UISpecAssert.assertThat(message,
                             new ComponentIsVisibleAssertion<T>(panel, swingComponentClass, componentName, visible));
+  }
+
+  protected <T extends JComponent> void checkMessageHidden(final Panel panel, final String componentName) {
+    UISpecAssert.assertThat(new MessageIsHiddenAssertion(panel, componentName));
   }
 
   protected void checkSignpostVisible(Panel enclosingPanel,

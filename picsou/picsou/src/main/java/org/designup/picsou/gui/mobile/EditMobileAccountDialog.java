@@ -8,6 +8,7 @@ import org.designup.picsou.gui.components.utils.CustomFocusTraversalPolicy;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.mobile.utils.AbstractMobileAccountDialog;
 import org.designup.picsou.gui.mobile.utils.ConfirmMobileAccountPanel;
+import org.designup.picsou.gui.mobile.utils.PasswordEditionPanel;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
@@ -49,15 +50,14 @@ public class EditMobileAccountDialog extends AbstractMobileAccountDialog {
     cards = builder.addCardHandler("cards");
 
     emailField = builder.addEditor("emailField", UserPreferences.MAIL_FOR_MOBILE).getComponent();
-    builder.addLabel("passwordLabel", UserPreferences.PASSWORD_FOR_MOBILE).getComponent();
-    builder.add("changePassword", new ChangePasswordAction());
+    builder.add("passwordEdition", new PasswordEditionPanel(localRepository, localDirectory).getPanel());
 
     message = Gui.createHtmlDisplay();
     builder.add("message", message);
 
     ActivateMobileAccountAction activateAction = new ActivateMobileAccountAction(dialog, progressBar);
     JButton activateButton = new JButton(activateAction);
-    builder.add("activate", activateButton);
+    builder.add("activateMobileAccount", activateButton);
     emailField.addActionListener(activateAction);
 
     JButton deleteButton = new JButton(new DeleteMobileAccountAction());

@@ -38,16 +38,6 @@ public abstract class AbstractMobileAccountDialog {
     this.localDirectory.add(SelectionService.class, selectionService);
   }
 
-  protected class ChangePasswordAction extends AbstractAction{
-    public ChangePasswordAction() {
-      super(Lang.get("mobile.user.generate.new.password"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      changePassword();
-    }
-  }
-
   protected void changePassword() {
     UserPreferences.initMobilePassword(localRepository, true);
   }
@@ -82,17 +72,17 @@ public abstract class AbstractMobileAccountDialog {
               .createMobileAccount(UserPreferences.get(localRepository).get(UserPreferences.MAIL_FOR_MOBILE),
                                    UserPreferences.get(localRepository).get(UserPreferences.PASSWORD_FOR_MOBILE),
                                    messageRef);
-            SwingUtilities.invokeAndWait(new showStatus(isOk, messageRef));
+            SwingUtilities.invokeAndWait(new ShowCompletionStatus(isOk, messageRef));
             return null;
           }
         });
     }
 
-    private class showStatus implements Runnable {
+    private class ShowCompletionStatus implements Runnable {
       private final boolean ok;
       private final Ref<String> messageRef;
 
-      public showStatus(boolean ok, Ref<String> messageRef) {
+      public ShowCompletionStatus(boolean ok, Ref<String> messageRef) {
         this.ok = ok;
         this.messageRef = messageRef;
       }

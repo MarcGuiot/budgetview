@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.mobile;
 
+import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.designup.picsou.gui.browsing.BrowsingAction;
 import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
@@ -8,6 +9,7 @@ import org.designup.picsou.gui.components.tips.TipPosition;
 import org.designup.picsou.gui.components.utils.CustomFocusTraversalPolicy;
 import org.designup.picsou.gui.mobile.utils.AbstractMobileAccountDialog;
 import org.designup.picsou.gui.mobile.utils.ConfirmMobileAccountPanel;
+import org.designup.picsou.gui.mobile.utils.PasswordEditionPanel;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
@@ -27,6 +29,7 @@ public class CreateMobileAccountDialog extends AbstractMobileAccountDialog {
   private ProgressPanel progressBar;
   private JTextField emailField;
   private CardHandler cards;
+  private PasswordEditionPanel passwordEditionPanel;
 
   public CreateMobileAccountDialog(Directory directory, GlobRepository parentRepository) {
     super(parentRepository, directory);
@@ -42,14 +45,15 @@ public class CreateMobileAccountDialog extends AbstractMobileAccountDialog {
 
     ActivateMobileAccountAction validateAction = new ActivateMobileAccountAction(dialog, progressBar);
     JButton createButton = new JButton(validateAction);
-    builder.add("activate", createButton);
+    builder.add("activateMobileAccount", createButton);
 
     cards = builder.addCardHandler("cards");
 
     emailField = builder.addEditor("emailField", UserPreferences.MAIL_FOR_MOBILE).getComponent();
     emailField.addActionListener(validateAction);
-    builder.addLabel("passwordLabel", UserPreferences.PASSWORD_FOR_MOBILE).getComponent();
-    builder.add("changePassword", new ChangePasswordAction());
+
+    passwordEditionPanel = new PasswordEditionPanel(localRepository, localDirectory);
+    builder.add("passwordEdition", passwordEditionPanel.getPanel());
 
     message = Gui.createHtmlDisplay();
     builder.add("message", message);
@@ -61,7 +65,6 @@ public class CreateMobileAccountDialog extends AbstractMobileAccountDialog {
         return Lang.get("mobile.dialog.app.url");
       }
     });
-
 
     ConfirmMobileAccountPanel confirmPanel = new ConfirmMobileAccountPanel(localRepository, localDirectory);
     builder.add("confirmMobileAccount", confirmPanel.getPanel());
@@ -95,6 +98,6 @@ public class CreateMobileAccountDialog extends AbstractMobileAccountDialog {
       ErrorTip.show(this.emailField, Lang.get("mobile.mail.empty"), localDirectory, TipPosition.TOP_LEFT);
       return false;
     }
-    return true;
+    return passwordEditionPanel.check();
   }
 }

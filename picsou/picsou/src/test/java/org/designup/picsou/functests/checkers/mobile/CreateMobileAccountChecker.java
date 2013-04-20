@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers.mobile;
 
 import org.designup.picsou.functests.checkers.GuiChecker;
 import org.designup.picsou.utils.Lang;
+import org.uispec4j.TextBox;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
@@ -23,6 +24,17 @@ public class CreateMobileAccountChecker extends GuiChecker {
     this.dialog = dialog;
   }
 
+  public CreateMobileAccountChecker checkTitle() {
+    assertThat(dialog.getTextBox("title").textEquals(Lang.get("mobile.dialog.title")));
+    return this;
+  }
+
+  public CreateMobileAccountChecker setEmailWithoutValidating(String mail) {
+    dialog.getInputTextBox("emailField").setText(mail, false);
+    assertThat(dialog.isVisible());
+    return this;
+  }
+
   public CreateMobileAccountChecker setEmailAndValidate(String mail) {
     dialog.getInputTextBox("emailField").setText(mail);
     return this;
@@ -32,12 +44,69 @@ public class CreateMobileAccountChecker extends GuiChecker {
     return dialog.getTextBox("passwordLabel").getText();
   }
 
-  public CreateMobileAccountChecker checkConfirmationAndClose() {
-    checkComponentVisible(dialog, JButton.class, "activate", false);
+  public  CreateMobileAccountChecker checkEditablePassword() {
+    checkComponentVisible(dialog, JLabel.class, "passwordLabel", false);
+    checkComponentVisible(dialog, JButton.class, "changePassword", false);
+    assertThat(dialog.getTextBox("passwordField").isVisible());
+    assertThat(dialog.getButton("applyPasswordEdit").isVisible());
+    assertThat(dialog.getButton("cancelPasswordEdit").isVisible());
+    return this;
+  }
+
+  public CreateMobileAccountChecker setNewPassword(String requestedPassword) {
+    dialog.getButton("changePassword").click();
+    checkEditablePassword();
+    dialog.getTextBox("passwordField").setText(requestedPassword);
+    dialog.getButton("applyPasswordEdit").click();
+    checkReadOnlyPassword(requestedPassword);
+    checkNoTipVisible(dialog);
+    return this;
+  }
+
+  public CreateMobileAccountChecker editPasswordAndCancel(String dummyPassword) {
+    dialog.getButton("changePassword").click();
+    checkEditablePassword();
+    dialog.getTextBox("passwordField").setText(dummyPassword);
+    dialog.getButton("cancelPasswordEdit").click();
+    return this;
+  }
+
+  public CreateMobileAccountChecker setEmptyPasswordAndCheckErrorOnApply(String message) {
+    dialog.getButton("changePassword").click();
+    checkEditablePassword();
+    TextBox passwordField = dialog.getTextBox("passwordField");
+    passwordField.setText("");
+    dialog.getButton("applyPasswordEdit").click();
+    assertThat(passwordField.isVisible());
+    checkTipVisible(dialog, passwordField, message);
+    dialog.getButton("cancelPasswordEdit").click();
+    return this;
+  }
+
+  public CreateMobileAccountChecker setEmptyPasswordAndCheckErrorOnActivate(String message) {
+    dialog.getButton("changePassword").click();
+    checkEditablePassword();
+    TextBox passwordField = dialog.getTextBox("passwordField");
+    passwordField.setText("");
+    dialog.getButton("activateMobileAccount").click();
+    assertThat(passwordField.isVisible());
+    checkTipVisible(dialog, passwordField, message);
+    dialog.getButton("cancelPasswordEdit").click();
+    return this;
+  }
+
+  public void checkConfirmationAndClose() {
+    checkMessageHidden(dialog, "message");
     checkComponentVisible(dialog, JEditorPane.class, "completionMessage", true);
+    checkComponentVisible(dialog, JButton.class, "activateMobileAccount", false);
     assertThat(dialog.isVisible());
     close();
-    return this;
+  }
+
+  public void validateAndClose() {
+    activate();
+    checkNoTipVisible(dialog);
+    checkConfirmationAndClose();
   }
 
   public CreateMobileAccountChecker validateAndCheckEmailTip(String errorMessage) {
@@ -45,26 +114,26 @@ public class CreateMobileAccountChecker extends GuiChecker {
   }
 
   private CreateMobileAccountChecker checkErrorTip(String errorMessage, String fieldName) {
-    clickCreateButton();
+    activate();
     UISpecAssert.assertTrue(dialog.isVisible());
     checkTipVisible(dialog, dialog.getInputTextBox(fieldName), errorMessage);
     return this;
   }
 
   public CreateMobileAccountChecker validateAndCheckAlreadyCreated() {
-    clickCreateButton();
+    activate();
     assertThat(dialog.getTextBox("message").textContains("A mobile account was already created for this email."));
     return this;
   }
 
   public CreateMobileAccountChecker checkNoErrorsShown() {
     checkNoTipVisible(dialog);
-    assertThat(dialog.getTextBox("message").textIsEmpty());
+    checkMessageHidden(dialog, "message");
     return this;
   }
 
-  private void clickCreateButton() {
-    dialog.getButton(Lang.get("mobile.user.create.button")).click();
+  private void activate() {
+    dialog.getButton("activateMobileAccount").click();
   }
 
   public void close() {
@@ -72,12 +141,13 @@ public class CreateMobileAccountChecker extends GuiChecker {
     assertFalse(dialog.isVisible());
   }
 
-  public void generateNewPassword() {
-    dialog.getButton(Lang.get("mobile.user.generate.new.password")).click();
-  }
-
-  public CreateMobileAccountChecker checkTitle() {
-    assertThat(dialog.getTextBox("title").textEquals(Lang.get("mobile.dialog.title")));
+  public CreateMobileAccountChecker checkReadOnlyPassword(String password) {
+    assertThat(dialog.getTextBox("passwordLabel").isVisible());
+    assertThat(dialog.getTextBox("passwordLabel").textEquals(password));
+    assertThat(dialog.getButton("changePassword").isVisible());
+    checkComponentVisible(dialog, JTextField.class, "passwordField", false);
+    checkComponentVisible(dialog, JButton.class, "applyPasswordEdit", false);
+    checkComponentVisible(dialog, JButton.class, "cancelPasswordEdit", false);
     return this;
   }
 }

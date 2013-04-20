@@ -32,15 +32,12 @@
                     <label text="$mobile.mail" gridPos="(0,0)" styleClass="formLabel"/>
                     <textField ref="emailField" gridPos="(1,0,2,1)" columns="60"/>
                     <label text="$mobile.password" gridPos="(0,1)" styleClass="formLabel" marginTop="10"/>
-                    <label ref="passwordLabel" font="-,bold,16" gridPos="(1,1)" fill="none" anchor="right"
-                           marginRight="20" marginTop="10"/>
-                    <button action="changePassword" gridPos="(2,1)" styleClass="hyperlink" font="-,plain,10"
-                            fill="none" marginTop="10" marginLeft="5" anchor="left"/>
+                    <component ref="passwordEdition" gridPos="(2,1)" marginTop="10" weightY="0.01"/>
                   </grid>
                   <filler fill="horizontal"/>
                 </row>
 
-                <button ref="activate" fill="none" margin="10" marginTop="20" anchor="center"/>
+                <button ref="activateMobileAccount" fill="none" margin="10" marginTop="20" anchor="center"/>
                 <component ref="progress" gridPos="(4,0)" fill="none" margin="10" anchor="center"
                            weightX="0.1"/>
 
