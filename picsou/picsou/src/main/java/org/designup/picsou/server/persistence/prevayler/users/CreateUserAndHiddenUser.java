@@ -90,6 +90,9 @@ public class CreateUserAndHiddenUser implements TransactionWithQuery, CustomSeri
       case 4:
         readV4(input);
         break;
+      case 5:
+        readV5(input);
+        break;
       default:
         throw new UnexpectedApplicationState("version " + version + " not managed");
     }
@@ -130,13 +133,23 @@ public class CreateUserAndHiddenUser implements TransactionWithQuery, CustomSeri
     newUserId = input.readInteger();
   }
 
+  private void readV5(SerializedInput input) {
+    name = input.readUtf8String();
+    autoLog = input.readBoolean();
+    encryptedPassword = input.readBytes();
+    linkInfo = input.readBytes();
+    encryptedLinkInfo = input.readUtf8String();
+    isRegisteredUser = input.readBoolean();
+    newUserId = input.readInteger();
+  }
+
   public void write(SerializedOutput output, Directory directory) {
-    output.writeByte(4);
+    output.writeByte(5);
     output.writeUtf8String(name);
     output.writeBoolean(autoLog);
     output.writeBytes(encryptedPassword);
     output.writeBytes(linkInfo);
-    output.writeJavaString(encryptedLinkInfo);
+    output.writeUtf8String(encryptedLinkInfo);
     output.writeBoolean(isRegisteredUser);
     output.writeInteger(newUserId);
   }

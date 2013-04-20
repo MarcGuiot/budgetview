@@ -98,4 +98,9 @@ public class StringsTest extends TestCase {
     assertEquals("aaaa eeeee iii ooo uuu", Strings.unaccent("aàäâ eéèêë iïî oöô uùü"));
     assertEquals("AAAA EEEEE III OOO UUU", Strings.unaccent("AÀÄÂ EÉÈÊË IÏÎ OÖÔ UÙÜ"));
   }
+
+  public void testRemoveNewLine() throws Exception {
+    assertEquals("some new line", Strings.removeNewLine("some \n\nnew \n\rline\r"));
+
+  }
 }

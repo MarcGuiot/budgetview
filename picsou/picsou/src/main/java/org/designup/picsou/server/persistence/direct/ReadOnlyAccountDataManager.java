@@ -47,6 +47,9 @@ public class ReadOnlyAccountDataManager {
       if ("4".equals(version)){
         return readVersion4(serializedInput, globs);
       }
+      if ("5".equals(version)){
+        return readVersion5(serializedInput, globs);
+      }
     }
     finally {
       if (inputStream != null) {
@@ -76,8 +79,19 @@ public class ReadOnlyAccountDataManager {
   }
 
   private static SnapshotInfo readVersion4(SerializedInput serializedInput,
-                                     MapOfMaps<String, Integer, SerializableGlobType> data) {
+                                           MapOfMaps<String, Integer, SerializableGlobType> data) {
     String password = serializedInput.readJavaString();
+    long version = serializedInput.readNotNullLong();
+    long timestamp = serializedInput.readNotNullLong();
+    if (data != null){
+      SerializableGlobSerializer.deserialize(serializedInput, data);
+    }
+    return new SnapshotInfo(version, password == null ? null : password.toCharArray(), timestamp);
+  }
+
+   private static SnapshotInfo readVersion5(SerializedInput serializedInput,
+                                           MapOfMaps<String, Integer, SerializableGlobType> data) {
+    String password = serializedInput.readUtf8String();
     long version = serializedInput.readNotNullLong();
     long timestamp = serializedInput.readNotNullLong();
     if (data != null){
@@ -89,19 +103,19 @@ public class ReadOnlyAccountDataManager {
 
   public static void writeSnapshot(MapOfMaps<String, Integer, SerializableGlobType> data, File file,
                                       char[] password, long version, long timestamp) throws IOException {
-    writeSnapshot_V4(data, file, password, version, timestamp);
+    writeSnapshot_V5(data, file, password, version, timestamp);
   }
 
-  public static void writeSnapshot_V4(MapOfMaps<String, Integer, SerializableGlobType> data, File file,
+  public static void writeSnapshot_V5(MapOfMaps<String, Integer, SerializableGlobType> data, File file,
                                       char[] password, long version, long timestamp) throws IOException {
     FileOutputStream outputStream = new FileOutputStream(file);
     SerializedOutput serializedOutput = SerializedInputOutputFactory.init(outputStream);
-    serializedOutput.writeJavaString("4");
+    serializedOutput.writeJavaString("5");
     if (password != null) {
-      serializedOutput.writeJavaString(new String(password));
+      serializedOutput.writeUtf8String(new String(password));
     }
     else {
-      serializedOutput.writeJavaString(null);
+      serializedOutput.writeUtf8String(null);
     }
     serializedOutput.write(version);
     serializedOutput.write(timestamp);

@@ -26,6 +26,7 @@ import java.util.*;
 
 public class DirectAccountDataManager implements AccountDataManager {
 
+  public static final String LOCK_FILE_NAME = "app.lock";
   private Map<Integer, DurableOutputStream> outputStreamMap = new HashMap<Integer, DurableOutputStream>();
   private String prevaylerPath;
   private boolean inMemory;
@@ -52,7 +53,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     if (inMemory) {
       return;
     }
-    File file = new File(prevaylerPath, "app.lock");
+    File file = new File(prevaylerPath, LOCK_FILE_NAME);
     file.getParentFile().mkdirs();
     try {
       streamLock = new RandomAccessFile(file, "rw");

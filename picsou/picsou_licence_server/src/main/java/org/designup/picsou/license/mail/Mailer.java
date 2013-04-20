@@ -99,7 +99,7 @@ public class Mailer {
   }
 
   public boolean sendAndroidVersion(String mail, String lang) {
-    SendEmail sent  = new SendEmail(Lang.get("mobile.mail.subject", lang), Lang.get("mobile.mail.message", lang),
+    SendEmail sent  = new SendEmail(Lang.get("mobile.mail.download.subject", lang), Lang.get("mobile.mail.download.message", lang),
                                     fromAdress, mail);
     if (sent.sent()){
       return true;

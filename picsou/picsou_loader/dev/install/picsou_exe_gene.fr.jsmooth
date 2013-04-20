@@ -22,7 +22,7 @@
     <value>picsou.AwtExceptionHandler</value>
   </javaProperties>
   <mainClassName>com.budgetview.Main</mainClassName>
-  <maximumMemoryHeap>150217728</maximumMemoryHeap>
+  <maximumMemoryHeap>205721600</maximumMemoryHeap>
   <maximumVersion></maximumVersion>
   <minimumVersion>1.5</minimumVersion>
   <skeletonName>Windowed Wrapper</skeletonName>

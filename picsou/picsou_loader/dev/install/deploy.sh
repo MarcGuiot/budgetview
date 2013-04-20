@@ -27,6 +27,11 @@ then
   exit 2
 fi
 
+if [ -a ../../picsou_android/bin/picsou_android-debug.apk ];
+then
+   scp ../../picsou_android/bin/picsou_android-debug.apk fr_mybudgetview@91.121.123.100:files/app
+fi
+
 if [ -a budgetview-${SOFT_VERSION}-en.tar.gz ];
 then
    scp budgetview-${SOFT_VERSION}-en.tar.gz en_mybudgetview@91.121.123.100:files/app

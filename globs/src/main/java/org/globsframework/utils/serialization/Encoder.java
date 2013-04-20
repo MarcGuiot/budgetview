@@ -1,5 +1,6 @@
 package org.globsframework.utils.serialization;
 
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.IOFailure;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
@@ -10,7 +11,7 @@ public class Encoder {
 
   public static String byteToString(byte[] cryptedBytes) {
     BASE64Encoder b64 = new BASE64Encoder();
-    return b64.encode(cryptedBytes);
+    return Strings.removeNewLine(b64.encode(cryptedBytes));
   }
 
   public static byte[] stringToByte(String text) {

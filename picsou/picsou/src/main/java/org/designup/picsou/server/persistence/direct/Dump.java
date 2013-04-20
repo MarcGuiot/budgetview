@@ -1,6 +1,7 @@
 package org.designup.picsou.server.persistence.direct;
 
 import org.designup.picsou.server.model.ServerState;
+import org.designup.picsou.server.persistence.prevayler.users.PRootDataManager;
 import org.globsframework.utils.exceptions.EOFIOFailure;
 import org.globsframework.utils.serialization.DefaultSerializationInput;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -12,6 +13,12 @@ import java.io.*;
 public class Dump {
 
   public static void main(String[] args) throws FileNotFoundException {
+
+    if (true) {
+      PRootDataManager.main(args);
+      return;
+    }
+
     Dump dump = new Dump();
     for (String arg : args) {
       if (arg.endsWith("journal")) {
