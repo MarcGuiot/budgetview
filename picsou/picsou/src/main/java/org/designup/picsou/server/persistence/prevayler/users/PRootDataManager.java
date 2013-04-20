@@ -7,6 +7,7 @@ import org.designup.picsou.server.session.Persistence;
 import org.designup.picsou.client.exceptions.RemoteException;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.GlobsException;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
@@ -48,6 +49,9 @@ public class PRootDataManager implements RootDataManager {
       if (result == null) {
         prevayler.execute(InitialRepoIdTransaction.create());
       }
+    }
+    catch (RuntimeException e){
+      throw e;
     }
     catch (Exception e) {
       throw new UnexpectedApplicationState(e);
@@ -250,4 +254,22 @@ public class PRootDataManager implements RootDataManager {
     }
   }
 
+  private void dump() {
+    try {
+      prevayler.execute(new Query() {
+        public Object query(Object prevalentSystem, Date executionTime) throws Exception {
+          ((PRootData)prevalentSystem).dump();
+          return null;
+        }
+      });
+    }
+    catch (Exception e) {
+      throw new UnexpectedApplicationState(e);
+    }
+  }
+
+  public static void main(String[] args) {
+    PRootDataManager rootDataManager = new PRootDataManager(args[0], new DefaultDirectory(), false);
+    rootDataManager.dump();
+  }
 }

@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.startup;
 
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.server.persistence.direct.DirectAccountDataManager;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.Files;
@@ -12,6 +13,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class AppPaths {
 
@@ -81,7 +84,8 @@ public class AppPaths {
       String previousDataPath = getCurrentDataPath();
       File previousDataDir = new File(previousDataPath);
       if (previousDataDir.exists() && previousDataDir.isDirectory()) {
-        if (!Files.copyDirectory(previousDataDir, newPathDir)) {
+        if (!Files.copyDirectory(previousDataDir, newPathDir,
+                                 Collections.singleton(DirectAccountDataManager.LOCK_FILE_NAME))) {
           message.set(Lang.get("data.path.copy.fail", previousDataDir.getAbsolutePath(), newPathDir.getAbsolutePath()));
           return false;
         }

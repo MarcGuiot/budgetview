@@ -14,6 +14,7 @@ import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.config.ConfigService;
@@ -83,7 +84,21 @@ public class MainWindow implements WindowManager {
     this.frame = new PicsouFrame(Lang.get("application"), directory);
 
     ConfigService configService = directory.get(ConfigService.class);
-    ServerAccess.LocalInfo info = initServerAccess(serverAddress, prevaylerPath, dataInMemory);
+    ServerAccess.LocalInfo info;
+    try {
+      info = initServerAccess(serverAddress, prevaylerPath, dataInMemory);
+    }
+    catch (RuntimeException e) {
+      StringWriter writer = new StringWriter();
+      writer.append(e.getMessage());
+      e.printStackTrace(new PrintWriter(writer));
+      writer.append("\n\n\n");
+      MessageAndDetailsDialog dialog =
+        new MessageAndDetailsDialog("data.error.title", "data.error.message",
+                                    writer.toString(), null, directory);
+      dialog.show();
+      throw e;
+    }
     if (info != null) {
       if (Strings.isNotEmpty(info.getLang())) {
         Lang.setLang(info.getLang());

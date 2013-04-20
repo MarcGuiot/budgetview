@@ -105,7 +105,7 @@ public class PicsouInit {
             public void run() {
               //check a user is connected
               Glob userPrefs = repository.find(UserPreferences.KEY);
-              if (userPrefs == null){
+              if (userPrefs == null) {
                 return;
               }
               repository.update(CurrentMonth.KEY,

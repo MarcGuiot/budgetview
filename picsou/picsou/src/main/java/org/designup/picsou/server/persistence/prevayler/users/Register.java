@@ -11,6 +11,7 @@ import java.util.Date;
 
 class Register implements Transaction, CustomSerializable {
   private static final byte V1 = 1;
+  private static final byte V2 = 2;
   private static final String REGISTER = "register";
   private byte[] mail;
   private byte[] signature;
@@ -40,13 +41,18 @@ class Register implements Transaction, CustomSerializable {
       signature = input.readBytes();
       activationCode = input.readJavaString();
     }
+    if (version == V2) {
+      mail = input.readBytes();
+      signature = input.readBytes();
+      activationCode = input.readUtf8String();
+    }
   }
 
   public void write(SerializedOutput output, Directory directory) {
-    output.write(V1);
+    output.write(V2);
     output.writeBytes(mail);
     output.writeBytes(signature);
-    output.writeJavaString(activationCode);
+    output.writeUtf8String(activationCode);
   }
 
   public static CustomSerializableFactory getFactory() {

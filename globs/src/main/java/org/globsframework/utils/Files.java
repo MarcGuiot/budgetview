@@ -6,6 +6,7 @@ import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import java.io.*;
 import java.util.Properties;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -214,22 +215,24 @@ public class Files {
     outputStreamWriter.close();
   }
 
-  public static boolean copyDirectory(File source, File target){
+  public static boolean copyDirectory(File source, File target, Set<String> filesToIgnore) {
     try {
       File[] files = source.listFiles();
       if (files != null && files.length != 0) {
         for (File file : files) {
           File targetFile = new File(target, file.getName());
-          if (file.isDirectory()) {
-            if (!targetFile.mkdir()) {
-              return false;
+          if (!filesToIgnore.contains(targetFile.getName())) {
+            if (file.isDirectory()) {
+              if (!targetFile.mkdir()) {
+                return false;
+              }
+              if (!copyDirectory(file, targetFile, filesToIgnore)) {
+                return false;
+              }
             }
-            if (!copyDirectory(file, targetFile)){
-              return false;
+            else {
+              copyFile(file, targetFile);
             }
-          }
-          else {
-            copyFile(file, targetFile);
           }
         }
       }

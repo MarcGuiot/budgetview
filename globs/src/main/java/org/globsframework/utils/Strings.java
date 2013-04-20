@@ -203,6 +203,13 @@ public class Strings {
     return value ? "yes" : "no";
   }
 
+  public static String removeNewLine(String text) {
+    if (text != null) {
+      return text.replaceAll("\n|\r", "");
+    }
+    return null;
+  }
+
   public static String replaceSpace(String text) {
     if (text == null) {
       return null;
