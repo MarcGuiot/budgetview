@@ -17,7 +17,9 @@
       <filler fill="horizontal"/>
     </row>
 
-    <htmlEditorPane ref="updateMessage" marginTop="15"/>
+    <htmlEditorPane ref="updateMessage" border="empty(15,0,0,0)"/>
+
+    <htmlEditorPane text="$data.path.sharing.warning" marginTop="10"/>
 
     <filler fill="vertical"/>
   </column>
