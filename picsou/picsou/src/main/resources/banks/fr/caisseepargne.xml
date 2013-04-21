@@ -2,7 +2,7 @@
 <globs>
   <bankFormat id='6'>
 
-    <bank name="Caisse d'épargne" url="https://www.caisse-epargne.fr" id='6' synchroEnabled="true" >
+    <bank name="Caisse d'épargne" url="https://www.caisse-epargne.fr" id='6' synchroEnabled="true" icon="banks/caisse_epargne.png">
       <bankEntity id="18645"/>
       <bankEntity id="13335"/>
       <bankEntity id="12225"/>

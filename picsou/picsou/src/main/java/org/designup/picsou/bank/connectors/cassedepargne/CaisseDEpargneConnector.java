@@ -33,13 +33,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-public class CaisseDEpargne extends WebBankConnector implements HttpConnectionProvider {
+public class CaisseDEpargneConnector extends WebBankConnector implements HttpConnectionProvider {
   public static final int BANK_ID = 6;
   public static String INDEX = "https://www.caisse-epargne.fr/particuliers/ind_pauthpopup.aspx?srcurl=accueil";
   private UserAndPasswordPanel userAndPasswordPanel;
 
-
-  public CaisseDEpargne(boolean syncExistingAccount, GlobRepository repository, Directory directory, Glob synchro) {
+  public CaisseDEpargneConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory, Glob synchro) {
     super(BANK_ID, syncExistingAccount, repository, directory, synchro);
     setBrowserVersion(BrowserVersion.FIREFOX_10);
   }
@@ -52,7 +51,7 @@ public class CaisseDEpargne extends WebBankConnector implements HttpConnectionPr
 
   public static class Factory implements BankConnectorFactory {
     public BankConnector create(GlobRepository repository, Directory directory, boolean syncExistingAccount, Glob synchro) {
-      return new CaisseDEpargne(syncExistingAccount, repository, directory, synchro);
+      return new CaisseDEpargneConnector(syncExistingAccount, repository, directory, synchro);
     }
   }
 
