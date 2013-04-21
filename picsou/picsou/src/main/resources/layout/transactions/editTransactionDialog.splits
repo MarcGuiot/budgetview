@@ -2,22 +2,28 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(500,250)">
+  <panel styleClass="dialog" preferredSize="(500,270)">
 
     <column styleClass="innerDialog">
 
       <label text="$transaction.edition.title" name="title" styleClass="title"/>
 
       <label text="$transaction.edition.label" styleClass="formLabelTop"/>
-      <textField ref="labelEditor"/>
+      <column border="line(dialogBlock.border)" opaque="true" background="dialogBlock.bg">
 
-      <row margin="10" marginTop="5" marginBottom="15">
-        <label text="$transaction.edition.originalLabel" styleClass="separatorTitle" marginRight="10"/>
-        <htmlEditorPane ref="originalLabel"/>
-      </row>
+        <textField ref="labelEditor" margin="10" marginBottom="0"/>
 
-      <panel ref="dateAndAmount"/>
-      <htmlEditorPane ref="notice"/>
+        <row margin="10" marginTop="5">
+          <label text="$transaction.edition.originalLabel" styleClass="separatorTitle" marginRight="10"/>
+          <htmlEditorPane ref="originalLabel"/>
+        </row>
+      </column>
+
+      <label text="$transaction.edition.amountAndDate" styleClass="formLabelTop" marginTop="15"/>
+      <column border="line(dialogBlock.border)" opaque="true" background="dialogBlock.bg">
+        <panel ref="dateAndAmount" border="empty(10)"/>
+        <htmlEditorPane ref="notice" border="empty(10)"/>
+      </column>
 
       <filler fill="vertical"/>
     </column>
