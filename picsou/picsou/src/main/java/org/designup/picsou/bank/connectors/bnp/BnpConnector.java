@@ -27,6 +27,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class BnpConnector extends WebBankConnector implements HttpConnectionProvider {
   public static final int BANK_ID = 5;
 
@@ -40,6 +42,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
   private JTextField passwordField;
   private JLabel keyboardLabel;
   private ImageMapper imageMapper = new ImageMapper();
+  private List<AccountEntry> accountEntries;
 
   public static void main(String[] args) throws IOException {
     WebConnectorLauncher.show(BANK_ID, new Factory());
@@ -147,7 +150,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
               WebPage accountsPage = loginPage.getAnchorWithRef("javascript:valider2();").click();
 
               List<WebTableCell> labelCells = accountsPage.getTableCellsWithClass("libelleCompte");
-              List<AccountEntry> entries = new ArrayList<AccountEntry>();
+              accountEntries = new ArrayList<AccountEntry>();
               for (WebTableCell labelCell : labelCells) {
                 if (!labelCell.containsAnchor()) {
                   continue;
@@ -155,13 +158,13 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
                 String name = labelCell.asText();
                 String onclick = labelCell.getSingleAnchor().getOnclick();
                 AccountEntry entry = new AccountEntry(name, onclick);
-                entries.add(entry);
+                accountEntries.add(entry);
 
                 String positionText = labelCell.getEnclosingRow().getCell(3).asText();
                 entry.setPositionForDefaultDate(positionText);
               }
 
-              if (entries.isEmpty()) {
+              if (accountEntries.isEmpty()) {
                 notifyIdentificationFailed();
                 reset();
                 return;
@@ -170,7 +173,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
               notifyDownloadInProgress();
 
               try {
-                for (AccountEntry entry : entries) {
+                for (AccountEntry entry : accountEntries) {
                   WebPage accountPage = browser.load(HOME_URL).executeJavascript(entry.onclick);
                   parseAccountPage(entry, accountPage);
                 }
@@ -180,41 +183,11 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
                 Log.write("-- BNPP response taking too long: skipped");
               }
 
-              notifyDownloadInProgress();
-
-              WebFrame frame = browser.load(DOWNLOADS_URL).getFrameByName("main");
-              WebForm downloadConfigForm = frame.loadTargetPage().getFormByAction("/SAF_TLC_CNF");
-              downloadConfigForm.getInputByNameAndValue("ch_rop", "tous").select();
-              downloadConfigForm.getSelectByName("ch_rop_fmt_fic").selectByValue("RQM2005TF");
-              downloadConfigForm.getSelectByName("ch_rop_fmt_dat").selectByValue("MMJJAAAA");
-              downloadConfigForm.getSelectByName("ch_rop_fmt_sep").selectByValue("PT");
-              downloadConfigForm.getInputByNameAndValue("ch_rop_dat", "tous").select();
-              downloadConfigForm.getInputByNameAndValue("ch_memo", "OUI").select();
-
-              WebPage qifsPage = downloadConfigForm.getInputByAttribute("src", "/gif/bn_val.gif").click();
-              List<WebTableCell> cells = qifsPage.getTableCellsWithClass("hdoc1");
-              for (WebTableCell cell : cells) {
-                String targetUrl = cell.getSingleAnchor().getTargetUrl();
-                WebTableCell accountNameCell = cell.getEnclosingRow().getCell(1);
-                AccountEntry entry = findEntry(entries, accountNameCell.asText());
-                entry.setDownloadUrl(targetUrl);
-                entry.setNumber(extractNumber(accountNameCell.asXml()));
+              for (AccountEntry entry : accountEntries) {
+                createOrUpdateRealAccount(entry.name, entry.number, entry.position, entry.updateDate, BANK_ID);
               }
 
-              accounts.clear();
-              for (AccountEntry entry : entries) {
-                notifyDownloadForAccount(entry.name);
-                Glob account = createOrUpdateRealAccount(entry.name,
-                                                         entry.number,
-                                                         entry.position,
-                                                         entry.updateDate,
-                                                         BANK_ID);
-
-                if (account != null) {
-                  String fileContent = browser.downloadToString(entry.downloadUrl, ".qif");
-                  repository.update(account.getKey(), RealAccount.FILE_CONTENT, fileContent);
-                }
-              }
+              doImport();
             }
             catch (final Throwable e) {
               SwingUtilities.invokeLater(new Runnable() {
@@ -224,7 +197,6 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
               });
               return;
             }
-            importCompleted();
           }
         });
     }
@@ -265,6 +237,38 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
   }
 
   public void downloadFile() throws Exception {
+    notifyDownloadInProgress();
+
+    WebFrame frame = browser.load(DOWNLOADS_URL).getFrameByName("main");
+    WebForm downloadConfigForm = frame.loadTargetPage().getFormByAction("/SAF_TLC_CNF");
+    downloadConfigForm.getInputByNameAndValue("ch_rop", "tous").select();
+    downloadConfigForm.getSelectByName("ch_rop_fmt_fic").selectByValue("RQM2005TF");
+    downloadConfigForm.getSelectByName("ch_rop_fmt_dat").selectByValue("MMJJAAAA");
+    downloadConfigForm.getSelectByName("ch_rop_fmt_sep").selectByValue("PT");
+    downloadConfigForm.getInputByNameAndValue("ch_rop_dat", "tous").select();
+    downloadConfigForm.getInputByNameAndValue("ch_memo", "OUI").select();
+
+    WebPage qifsPage = downloadConfigForm.getInputByAttribute("src", "/gif/bn_val.gif").click();
+    List<WebTableCell> cells = qifsPage.getTableCellsWithClass("hdoc1");
+    for (WebTableCell cell : cells) {
+      String targetUrl = cell.getSingleAnchor().getTargetUrl();
+      WebTableCell accountNameCell = cell.getEnclosingRow().getCell(1);
+      AccountEntry entry = findEntry(accountEntries, accountNameCell.asText());
+      entry.setDownloadUrl(targetUrl);
+      entry.setNumber(extractNumber(accountNameCell.asXml()));
+    }
+
+    for (AccountEntry entry : accountEntries) {
+      notifyDownloadForAccount(entry.name);
+      String fileContent = browser.downloadToString(entry.downloadUrl, ".qif");
+      for (Glob realAccount : accounts) {
+        if (realAccount.get(RealAccount.NAME).trim().contains(entry.name)) {
+          repository.update(realAccount.getKey(),
+                            value(RealAccount.NUMBER, entry.number),
+                            value(RealAccount.FILE_CONTENT, fileContent));
+        }
+      }
+    }
   }
 
   public String getCode() {

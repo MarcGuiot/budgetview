@@ -12,24 +12,16 @@ import org.globsframework.model.*;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Files;
-import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.joda.time.DateTime;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.and;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public abstract class AbstractBankConnector implements BankConnector {
   private GlobRepository parentRepository;
@@ -85,14 +77,19 @@ public abstract class AbstractBankConnector implements BankConnector {
       return null;
     }
 
-    Glob account = RealAccount.findOrCreate(Strings.toString(name).trim(), Strings.toString(number).trim(),
-                                            bankId, repository);
+    Glob account = findOrCreateRealAccount(name, number, bankId);
+
     repository.update(account.getKey(),
                       value(RealAccount.POSITION_DATE, date),
                       value(RealAccount.POSITION, Strings.toString(position).trim()),
                       value(RealAccount.FROM_SYNCHRO, true));
     accounts.add(account);
     return account;
+  }
+
+  public Glob findOrCreateRealAccount(String name, String number, Integer bankId) {
+    return RealAccount.findOrCreate(Strings.toString(name).trim(), Strings.toString(number).trim(),
+                                    bankId, repository);
   }
 
   protected void createOrUpdateRealAccount(String type, String number,
@@ -125,32 +122,15 @@ public abstract class AbstractBankConnector implements BankConnector {
     accounts.add(account);
   }
 
-  public static File createQifLocalFile(Glob realAccount, InputStream contentAsStream, String charset) {
-    File file;
-    try {
-      file = File.createTempFile("download", ".qif");
-      FileOutputStream fileOutputStream = new FileOutputStream(file);
-      fileOutputStream.write(("! accountId=" + realAccount.get(RealAccount.ID) + "\n").getBytes());
-      Files.copyInUtf8(contentAsStream, charset, fileOutputStream);
-      file.deleteOnExit();
-    }
-    catch (IOException e) {
-      Log.write("Can not create temporary file.");
-      return null;
-    }
-    return file;
-  }
-
   public abstract void downloadFile() throws Exception;
 
   protected Double extractAmount(String position) throws WebParsingError {
     return Amounts.extractAmount(position);
   }
 
-
   public abstract String getCode();
 
-  public String getSyncCode(){
+  public String getSyncCode() {
     return synchro.get(Synchro.CODE);
   }
 
@@ -167,14 +147,14 @@ public abstract class AbstractBankConnector implements BankConnector {
         }
       }
       else if (!getCode().equals(synchro.get(Synchro.CODE))) {
-        if (hasAKnownAccount()){
+        if (hasAKnownAccount()) {
           repository.update(synchro.getKey(), Synchro.CODE, getCode());
         }
         else {
           // autre telechargement
           Glob otherSynchro = repository.getAll(Synchro.TYPE,
-                                           GlobMatchers.and(GlobMatchers.fieldEquals(Synchro.CODE, getCode()),
-                                                            GlobMatchers.fieldEquals(Synchro.BANK, bankId))).getFirst();
+                                                GlobMatchers.and(GlobMatchers.fieldEquals(Synchro.CODE, getCode()),
+                                                                 GlobMatchers.fieldEquals(Synchro.BANK, bankId))).getFirst();
           if (otherSynchro == null) {
             otherSynchro = repository.create(Synchro.TYPE, FieldValue.value(Synchro.CODE, getCode()),
                                              FieldValue.value(Synchro.BANK, bankId));
@@ -197,7 +177,7 @@ public abstract class AbstractBankConnector implements BankConnector {
     Set<Key> accountsForPreviousSynchroKeySet = accountsForPreviousSynchro.getKeySet();
     // changement de code
     for (Glob account : accounts) {
-      if (accountsForPreviousSynchroKeySet.contains(account.getKey())){
+      if (accountsForPreviousSynchroKeySet.contains(account.getKey())) {
         // probablement un changement de code car au moins un compte en commun.
         return true;
       }
@@ -246,7 +226,7 @@ public abstract class AbstractBankConnector implements BankConnector {
     monitor.errorFound(message);
   }
 
-  protected void notifyInfo(String message){
+  protected void notifyInfo(String message) {
     monitor.info(message);
   }
 
