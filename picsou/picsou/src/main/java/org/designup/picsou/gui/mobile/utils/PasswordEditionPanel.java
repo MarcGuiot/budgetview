@@ -1,16 +1,15 @@
 package org.designup.picsou.gui.mobile.utils;
 
-import org.apache.wicket.util.string.Strings;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.components.tips.TipPosition;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.ComponentHolder;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -38,7 +37,7 @@ public class PasswordEditionPanel {
   }
 
   public boolean check() {
-    if (Strings.isEmpty(passwordField.getComponent().getText())) {
+    if (Strings.isNullOrEmpty(passwordField.getComponent().getText())) {
       ErrorTip.show(passwordField.getComponent(), Lang.get("mobile.password.empty"), directory, TipPosition.TOP_LEFT);
       return false;
     }
