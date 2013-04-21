@@ -72,10 +72,6 @@ public class SendMobileDataAction extends AbstractMobileAction {
   }
 
   public static boolean sendToMobile(final GlobRepository sourceRepository, final ConfigService configService, Ref<String> msg) {
-    Glob user = sourceRepository.find(User.KEY);
-    if (user == null || !user.get(User.CONNECTED)) {
-      return false;
-    }
     Glob userPreferences = sourceRepository.find(UserPreferences.KEY);
     if (userPreferences == null) {
       return false;
