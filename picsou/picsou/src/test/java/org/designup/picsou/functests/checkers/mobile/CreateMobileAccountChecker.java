@@ -2,11 +2,13 @@ package org.designup.picsou.functests.checkers.mobile;
 
 import org.designup.picsou.functests.checkers.GuiChecker;
 import org.designup.picsou.utils.Lang;
+import org.uispec4j.Key;
 import org.uispec4j.TextBox;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.*;
 

@@ -30,6 +30,7 @@ import org.designup.picsou.gui.utils.KeyService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.AppVersionInformation;
 import org.designup.picsou.model.User;
+import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Inline;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
@@ -599,19 +600,25 @@ public class ConfigService {
 
   private void updateConnectionStatus(Exception e) {
     if (e instanceof IOException) {
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          repository.update(User.KEY, User.CONNECTED, false);
-        }
-      });
+      updateConnectedStatus(false);
     }
   }
 
+  private boolean checkIsUserLogged() {
+    return repository.find(UserPreferences.KEY) != null;
+  }
+
   private void updateConnectionStatusOk() {
-    if (!repository.get(User.KEY).get(User.CONNECTED)){
+    updateConnectedStatus(true);
+  }
+
+  private void updateConnectedStatus(final boolean isConnected) {
+    if (repository.find(User.KEY) != null && !repository.get(User.KEY).get(User.CONNECTED)){
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
-          repository.update(User.KEY, User.CONNECTED, true);
+          if (checkIsUserLogged()) {
+            repository.update(User.KEY, User.CONNECTED, isConnected);
+          }
         }
       });
     }
