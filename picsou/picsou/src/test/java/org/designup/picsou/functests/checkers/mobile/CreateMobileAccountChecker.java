@@ -12,6 +12,9 @@ import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.*;
 
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
@@ -32,7 +35,12 @@ public class CreateMobileAccountChecker extends GuiChecker {
   }
 
   public CreateMobileAccountChecker setEmailWithoutValidating(String mail) {
-    dialog.getInputTextBox("emailField").setText(mail, false);
+    TextBox field = dialog.getInputTextBox("emailField");
+    field.setText(mail, false);
+    FocusListener[] listeners = field.getAwtComponent().getFocusListeners();
+    for (FocusListener listener : listeners) {
+      listener.focusLost(new FocusEvent(field.getAwtComponent(), 0));
+    }
     assertThat(dialog.isVisible());
     return this;
   }

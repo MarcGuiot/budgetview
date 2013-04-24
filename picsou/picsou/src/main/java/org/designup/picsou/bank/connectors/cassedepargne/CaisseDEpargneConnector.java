@@ -13,10 +13,7 @@ import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.*;
 import org.designup.picsou.bank.connectors.webcomponents.filters.WebFilters;
-import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
-import org.designup.picsou.bank.connectors.webcomponents.utils.UserAndPasswordPanel;
-import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
-import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
+import org.designup.picsou.bank.connectors.webcomponents.utils.*;
 import org.designup.picsou.model.RealAccount;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -56,7 +53,6 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
     }
   }
 
-
   protected JPanel createPanel() {
     userAndPasswordPanel = new UserAndPasswordPanel(new ConnectAction(), directory);
     directory.get(ExecutorService.class)
@@ -88,62 +84,70 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
     WebSelect comptes = currentPage.getSelectById("MM_TELECHARGE_OPERATIONS_m_ExDDLListeComptes");
     List<String> names = comptes.getEntryNames();
 
-    int retry = 0;
     int count = 0;
     for (Glob account : accounts) {
+      int retry = 0;
+      count++;
       String element = getName(names, account);
       if (element != null) {
-
-        try {
-          notifyDownloadForAccount((++count) + " : " + element);
-          comptes = currentPage.getSelectById("MM_TELECHARGE_OPERATIONS_m_ExDDLListeComptes");
-          comptes.select(element);
-          browser.waitForBackgroundJavaScript(1000);
-          Date from = getDate(0, -60);
-          currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateDebut_JJ")
-            .setText(extractDay(from));
-          currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateDebut_MM")
-            .setText(extractMonth(from));
-          currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateDebut_AA")
-            .setText(extractYear(from));
-
-          Date to = getDate(0, -1);
-          currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateFin_JJ")
-            .setText(extractDay(to));
-          currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateFin_MM")
-            .setText(extractMonth(to));
-          currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateFin_AA")
-            .setText(extractYear(to));
-          currentPage.getAnchorById("MM_TELECHARGE_OPERATIONS_m_ChoiceBar_lnkRight")
-            .click();
-          browser.waitForBackgroundJavaScript(1000);
-          currentPage = browser.setToTopLevelWindow();
-          Download download = currentPage.getAnchor(WebFilters.and(
-            WebFilters.attributeEquals("class", "btnTelecharger"),
-            WebFilters.attributeEquals("title", "Télécharger")))
-            .clickAndDownload();
-          String s = download.readAsOfx();
-          repository.update(account.getKey(), RealAccount.FILE_CONTENT, s);
-
-          browser.waitForBackgroundJavaScript(1000);
-          currentPage.getAnchorById("MM_TELECHARGE_OPERATIONS_AR_m_ChoiceBar_lnkRight").click();
-          browser.waitForBackgroundJavaScript(1000);
-          currentPage = browser.setToTopLevelWindow();
-        }
-        catch (WebParsingError error) {
-          if (++retry < 3) {
-            Log.write("Caisse d'epargne : retry ");
-            WebPanel cptdmte0 = browser.getCurrentPage().getPanelById("CPTDMTE0");
-            cptdmte0.getAnchor(null).click();
-            browser.waitForBackgroundJavaScript(3000);
-            currentPage = browser.setToTopLevelWindow();
+        while (true) {
+          try {
+            currentPage = tryDownload(currentPage, count, account, element);
+            break;
           }
-          else {
-            throw error;
+          catch (WebParsingError error) {
+            if (++retry < 3) {
+              Log.write("Caisse d'epargne : retry ");
+              WebPanel cptdmte0 = browser.getCurrentPage().getPanelById("CPTDMTE0");
+              cptdmte0.getAnchor(null).click();
+              browser.waitForBackgroundJavaScript(3000);
+              currentPage = browser.setToTopLevelWindow();
+            }
+            else {
+              throw error;
+            }
           }
         }
       }
     }
+  }
+
+  private WebPage tryDownload(WebPage currentPage, int count, Glob account, String element) throws WebParsingError, WebCommandFailed {
+    notifyDownloadForAccount((count) + " : " + element);
+    WebSelect comptes = currentPage.getSelectById("MM_TELECHARGE_OPERATIONS_m_ExDDLListeComptes");
+    comptes.select(element);
+    browser.waitForBackgroundJavaScript(1500);
+    Date from = getDate(0, -60);
+    currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateDebut_JJ")
+      .setText(extractDay(from));
+    currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateDebut_MM")
+      .setText(extractMonth(from));
+    currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateDebut_AA")
+      .setText(extractYear(from));
+
+    Date to = getDate(0, -1);
+    currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateFin_JJ")
+      .setText(extractDay(to));
+    currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateFin_MM")
+      .setText(extractMonth(to));
+    currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateFin_AA")
+      .setText(extractYear(to));
+    currentPage.getAnchorById("MM_TELECHARGE_OPERATIONS_m_ChoiceBar_lnkRight")
+      .click();
+    browser.waitForBackgroundJavaScript(1500);
+    currentPage = browser.setToTopLevelWindow();
+    Download download = currentPage.getAnchor(WebFilters.and(
+      WebFilters.attributeEquals("class", "btnTelecharger"),
+      WebFilters.attributeEquals("title", "Télécharger")))
+      .clickAndDownload();
+    String s = download.readAsOfx();
+    repository.update(account.getKey(), RealAccount.FILE_CONTENT, s);
+
+    browser.waitForBackgroundJavaScript(1500);
+    currentPage.getAnchorById("MM_TELECHARGE_OPERATIONS_AR_m_ChoiceBar_lnkRight").click();
+    browser.waitForBackgroundJavaScript(1500);
+    currentPage = browser.setToTopLevelWindow();
+    return currentPage;
   }
 
   private String getName(List<String> names, Glob account) {
@@ -175,7 +179,6 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
 
   public void reset() {
   }
-
 
   class ConnectAction extends AbstractAction {
 
@@ -253,7 +256,6 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
       });
     }
   }
-
 
   public HttpWebConnection getHttpConnection(WebClient client) {
     return new HttpWebConnection(client) {
