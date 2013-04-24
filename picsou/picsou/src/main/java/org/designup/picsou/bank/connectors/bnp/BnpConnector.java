@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.regex.Matcher;
@@ -204,7 +205,17 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
 
   private void parseAccountPage(AccountEntry entry, WebPage accountPage) throws WebParsingError {
     notifyPreparingAccount(entry.name);
-    WebTable table = accountPage.getTableWithClass("infoCompteDroite");
+    WebTable table;
+    try {
+      table = accountPage.getTableWithClass("infoCompteDroite");
+    }
+    catch (WebParsingError error) {
+      // si pour le compte cheque on ne trouve pas l'infoCompteDroite c'est qu'il y a un probleme.
+      if (entry.name.startsWith("Compte de")) {
+        throw error;
+      }
+      return ;
+    }
     Matcher matcher = ACCOUNT_DATE_REGEXP.matcher(table.asText().replaceAll("[ \n\t]+", " "));
     if (!matcher.matches()) {
       throw new WebParsingError(table, "Position date not found");
@@ -214,6 +225,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
     WebTableCell cell = table.getRow(0).getCell(1);
     String position = cell.asText().replaceAll("[ €]+", "");
     entry.setPosition(position, date, cell);
+    return;
   }
 
   private AccountEntry findEntry(List<AccountEntry> entries, String path, WebTableCell accountNameCell) throws WebParsingError {
@@ -261,12 +273,19 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
 
     for (AccountEntry entry : accountEntries) {
       notifyDownloadForAccount(entry.name);
-      String fileContent = browser.downloadToString(entry.downloadUrl, ".qif");
-      for (Glob realAccount : accounts) {
-        if (realAccount.get(RealAccount.NAME).trim().contains(entry.name)) {
-          repository.update(realAccount.getKey(),
-                            value(RealAccount.NUMBER, entry.number),
-                            value(RealAccount.FILE_CONTENT, fileContent));
+      if (entry.downloadUrl != null) {
+        String fileContent = browser.downloadToString(entry.downloadUrl, ".qif");
+        // => on recoit un html avec :
+        //Aucune op&eacute;ration n'est &agrave; t&eacute;l&eacute;charger sur ce compte pour la p&eacute;riode choisie
+        if (!fileContent.startsWith("<html>")){
+          for (Glob realAccount : accounts) {
+            if (realAccount.get(RealAccount.NAME).trim().contains(entry.name)) {
+              repository.update(realAccount.getKey(),
+                                value(RealAccount.NUMBER, entry.number),
+                                value(RealAccount.FILE_CONTENT, fileContent));
+              break;
+            }
+          }
         }
       }
     }

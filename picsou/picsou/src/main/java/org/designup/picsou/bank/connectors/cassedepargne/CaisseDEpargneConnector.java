@@ -95,7 +95,8 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
             currentPage = tryDownload(currentPage, count, account, element);
             break;
           }
-          catch (WebParsingError error) {
+          catch (Exception e) {
+            System.out.println(browser.getCurrentPage().asXml());
             if (++retry < 3) {
               Log.write("Caisse d'epargne : retry ");
               WebPanel cptdmte0 = browser.getCurrentPage().getPanelById("CPTDMTE0");
@@ -104,7 +105,7 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
               currentPage = browser.setToTopLevelWindow();
             }
             else {
-              throw error;
+              throw e;
             }
           }
         }
@@ -249,7 +250,6 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
             doImport();
           }
           catch (Exception e) {
-            System.out.println(browser.getCurrentPage().asXml());
             notifyErrorFound(e);
           }
         }

@@ -335,15 +335,15 @@ public class ImportController implements RealAccountImporter {
   }
 
   private void addRealAccountWithImport(Glob realAccount) {
-    String fileName = realAccount.get(RealAccount.FILE_CONTENT);
+    String fileContent = realAccount.get(RealAccount.FILE_CONTENT);
     for (AccountWithFile accountWithFile : realAccountWithImport) {
       // on est en ofx => on prendra le compte dans le fichier.
-      if (Strings.isNotEmpty(fileName) && Utils.equal(fileName, accountWithFile.fileContent)) {
+      if (Strings.isNotEmpty(fileContent) && Utils.equal(fileContent, accountWithFile.fileContent)) {
         accountWithFile.realAccount = null;
         return;
       }
     }
-    realAccountWithImport.add(new AccountWithFile(realAccount, fileName,
+    realAccountWithImport.add(new AccountWithFile(realAccount, fileContent,
                                                   realAccount.get(RealAccount.SYNCHO)));
   }
 
