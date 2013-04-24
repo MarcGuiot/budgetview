@@ -26,10 +26,10 @@ public class WebPage extends WebContainer<HtmlElement> {
   }
 
   public WebPage getGlobalFrameByName(String name) throws WebParsingError {
-    Page page1 = page.getFrameByName(name).getEnclosedPage();
-    if (page1 instanceof HtmlPage){
-      return new WebPage(browser, (HtmlPage)page1);
+    Page page = this.page.getFrameByName(name).getEnclosedPage();
+    if (page instanceof HtmlPage){
+      return new WebPage(browser, (HtmlPage)page);
     }
-    throw new WebParsingError(this, "Not an htmlPage : " + page1);
+    throw new WebParsingError(this, "Not an htmlPage: " + page);
   }
 }

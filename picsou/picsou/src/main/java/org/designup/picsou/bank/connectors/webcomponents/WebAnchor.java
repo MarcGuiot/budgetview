@@ -18,7 +18,7 @@ public class WebAnchor extends WebComponent<HtmlAnchor> {
       return ((HtmlPage)node.getPage()).getFullyQualifiedUrl(node.getHrefAttribute()).toString();
     }
     catch (MalformedURLException e) {
-      throw new WebParsingError(browser.getUrl(), e);
+      throw new WebParsingError(this, e);
     }
   }
 

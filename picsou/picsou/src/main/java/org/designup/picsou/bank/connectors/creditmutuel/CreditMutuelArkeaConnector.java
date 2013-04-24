@@ -7,6 +7,7 @@ import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.*;
+import org.designup.picsou.bank.connectors.webcomponents.filters.WebFilters;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
@@ -20,7 +21,6 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -156,8 +156,8 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
 
         // todo verifier que les champs sont bien remplies
 
-        currentPage.findFirst(WebContainer.and(WebContainer.filterTag(HtmlAnchor.TAG_NAME),
-                                               WebContainer.filterContentContain("CONNECTEZ-VOUS")))
+        currentPage.findFirst(WebFilters.and(WebFilters.tagEquals(HtmlAnchor.TAG_NAME),
+                                             WebFilters.textContentContains("CONNECTEZ-VOUS")))
           .asAnchor()
           .click();
         browser.waitForBackgroundJavaScript(10000);
@@ -174,8 +174,8 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
         int count = 0;
         while (select == null && count < 10) {
           subPanel = currentPage.getPanelById("titrePageFonctionnelle");
-          select = subPanel.findFirst(WebContainer.and(WebContainer.filterTag(HtmlOption.TAG_NAME),
-                                                       WebContainer.filterAttribute("value", "OFX")))
+          select = subPanel.findFirst(WebFilters.and(WebFilters.tagEquals(HtmlOption.TAG_NAME),
+                                                     WebFilters.attributeEquals("value", "OFX")))
             .parent().asSelect();
           browser.waitForBackgroundJavaScript(1000);
           currentPage = browser.updateCurrentPage();
@@ -186,14 +186,14 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
         }
         select.selectByValue("OFX");
 
-        subPanel.findFirst(WebContainer.and(WebContainer.filterTag(HtmlInput.TAG_NAME),
-                                            WebContainer.filterType("checkbox")))
+        subPanel.findFirst(WebFilters.and(WebFilters.tagEquals(HtmlInput.TAG_NAME),
+                                          WebFilters.typeEquals("checkbox")))
           .asCheckBox().setChecked(true);
 
         System.out.println("CreditMutuelArkeaConnector$ValiderActionListener.actionPerformed RECHERCHER ");
 
-        WebAnchor rechercher = subPanel.findFirst(WebContainer.and(WebContainer.filterTag(HtmlAnchor.TAG_NAME),
-                                                                WebContainer.filterContentContain("RECHERCHER")))
+        WebAnchor rechercher = subPanel.findFirst(WebFilters.and(WebFilters.tagEquals(HtmlAnchor.TAG_NAME),
+                                                                 WebFilters.textContentContains("RECHERCHER")))
           .asAnchor();
         rechercher.click();
 
@@ -205,16 +205,16 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
           browser.waitForBackgroundJavaScript(1000);
           currentPage = browser.updateCurrentPage();
           subPanel2 = currentPage.getPanelById("titrePageFonctionnelle");
-          first = subPanel2.findFirst(WebContainer.and(WebContainer.filterTag(HtmlDivision.TAG_NAME),
-                                                       WebContainer.filterContentContain("Chargement en cours ...")));
+          first = subPanel2.findFirst(WebFilters.and(WebFilters.tagEquals(HtmlDivision.TAG_NAME),
+                                                     WebFilters.textContentContains("Chargement en cours ...")));
           count++;
         }
         while (first.asPanel() != null && count < 10);
 
         count = 0;
         while (anchor == null && count < 10){
-          anchor = subPanel2.findAll(WebContainer.and(WebContainer.filterTag(HtmlAnchor.TAG_NAME),
-                                                      WebContainer.filterContentContain("Télécharger")))
+          anchor = subPanel2.findAll(WebFilters.and(WebFilters.tagEquals(HtmlAnchor.TAG_NAME),
+                                                    WebFilters.textContentContains("Télécharger")))
             .asAnchor();
           count++;
           if (anchor == null){
@@ -254,13 +254,13 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
     }
 
     private HtmlNavigate findSubMenu(WebPanel menu) throws WebParsingError {
-      return menu.findFirst(WebContainer.and(WebContainer.filterTag(HtmlAnchor.TAG_NAME),
-                                             WebContainer.filterContentContain("Télécharger mes opérations")));
+      return menu.findFirst(WebFilters.and(WebFilters.tagEquals(HtmlAnchor.TAG_NAME),
+                                           WebFilters.textContentContains("Télécharger mes opérations")));
     }
 
     private HtmlNavigate findMenu(WebPanel menu) throws WebParsingError {
-      HtmlNavigate first = menu.findFirst(WebContainer.and(WebContainer.filterTag(HtmlAnchor.TAG_NAME),
-                                                           WebContainer.filterContentContain("MES OUTILS DE GESTION")));
+      HtmlNavigate first = menu.findFirst(WebFilters.and(WebFilters.tagEquals(HtmlAnchor.TAG_NAME),
+                                                         WebFilters.textContentContains("MES OUTILS DE GESTION")));
       return first;
     }
 

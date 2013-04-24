@@ -3,7 +3,7 @@ package org.designup.picsou.bank.connectors;
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
-import org.designup.picsou.gui.components.filtering.FilterSet;
+import org.designup.picsou.bank.connectors.webcomponents.WebTableCell;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.RealAccount;
@@ -135,8 +135,8 @@ public class OtherBankConnector extends AbstractBankConnector {
     }
   }
 
-  protected Double extractAmount(String position) {
-    return Amounts.extractAmount(position);
+  protected Double extractAmount(WebTableCell cell) {
+    return Amounts.extractAmount(cell.asText());
   }
 
   public String getCode() {

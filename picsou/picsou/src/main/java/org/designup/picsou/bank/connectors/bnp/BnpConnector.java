@@ -161,7 +161,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
                 accountEntries.add(entry);
 
                 String positionText = labelCell.getEnclosingRow().getCell(3).asText();
-                entry.setPositionForDefaultDate(positionText);
+                entry.setPositionForDefaultDate(positionText, labelCell);
               }
 
               if (accountEntries.isEmpty()) {
@@ -211,17 +211,18 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
     }
     String date = matcher.group(1);
 
-    String position = table.getRow(0).getCell(1).asText().replaceAll("[ €]+", "");
-    entry.setPosition(position, date);
+    WebTableCell cell = table.getRow(0).getCell(1);
+    String position = cell.asText().replaceAll("[ €]+", "");
+    entry.setPosition(position, date, cell);
   }
 
-  private AccountEntry findEntry(List<AccountEntry> entries, String path) throws WebParsingError {
+  private AccountEntry findEntry(List<AccountEntry> entries, String path, WebTableCell accountNameCell) throws WebParsingError {
     for (AccountEntry entry : entries) {
       if (path.contains(entry.name)) {
         return entry;
       }
     }
-    throw new WebParsingError(browser.getUrl(), "Cannot find entry for " + path);
+    throw new WebParsingError(accountNameCell, "Cannot find entry for " + path);
   }
 
   private class ClearCodeAction extends AbstractAction {
@@ -253,7 +254,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
     for (WebTableCell cell : cells) {
       String targetUrl = cell.getSingleAnchor().getTargetUrl();
       WebTableCell accountNameCell = cell.getEnclosingRow().getCell(1);
-      AccountEntry entry = findEntry(accountEntries, accountNameCell.asText());
+      AccountEntry entry = findEntry(accountEntries, accountNameCell.asText(), accountNameCell);
       entry.setDownloadUrl(targetUrl);
       entry.setNumber(extractNumber(accountNameCell.asXml()));
     }
@@ -314,13 +315,13 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
       this.onclick = onclick;
     }
 
-    public void setPositionForDefaultDate(String positionText) throws WebParsingError {
-      setPosition(positionText, DATE_FORMAT.format(getYesterdaysDate()));
+    public void setPositionForDefaultDate(String positionText, WebTableCell labelCell) throws WebParsingError {
+      setPosition(positionText, DATE_FORMAT.format(getYesterdaysDate()), labelCell);
     }
 
-    public void setPosition(String positionText, String updateDateText) throws WebParsingError {
+    public void setPosition(String positionText, String updateDateText, WebTableCell cell) throws WebParsingError {
       position = cleanUpAmount(positionText);
-      updateDate = extractDate(updateDateText);
+      updateDate = extractDate(updateDateText, cell);
     }
 
     public void setNumber(String number) {
@@ -345,12 +346,12 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
 
     private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
-    private Date extractDate(String text) throws WebParsingError {
+    private Date extractDate(String text, WebTableCell cell) throws WebParsingError {
       try {
         return DATE_FORMAT.parse(text);
       }
       catch (ParseException e) {
-        throw new WebParsingError(browser.getUrl(), e);
+        throw new WebParsingError(cell, e);
       }
     }
   }

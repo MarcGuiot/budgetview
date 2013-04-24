@@ -47,9 +47,7 @@ public class WebImageMap extends WebComponent<HtmlMap> {
   public WebImage getImage() throws WebParsingError {
     HtmlPage page = (HtmlPage)node.getPage();
     return new WebImage(browser,
-                        (HtmlImage)HtmlUnit.getElementWithAttribute(page.getDocumentElement(),
-                                                                    HtmlImage.class, "img",
-                                                                    "usemap", "#" + node.getNameAttribute()));
+                        (HtmlImage)(HtmlImage)HtmlUnit.getElementWithAttribute(page.getDocumentElement(), "img", "usemap", "#" + node.getNameAttribute(), HtmlImage.class));
   }
 
   public WebPage click(int x, int y) throws WebCommandFailed {

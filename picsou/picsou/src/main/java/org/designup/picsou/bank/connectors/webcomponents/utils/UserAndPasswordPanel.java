@@ -9,6 +9,8 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class UserAndPasswordPanel {
 
@@ -34,7 +36,13 @@ public class UserAndPasswordPanel {
 
     passwordField = new JPasswordField();
     builder.add("password", passwordField);
-    passwordField.addActionListener(connectAction);
+    passwordField.addActionListener(new ActionListener() {
+      public void actionPerformed(final ActionEvent e) {
+        if (connectAction.isEnabled()) {
+          connectAction.actionPerformed(e);
+        }
+      }
+    });
 
     connectAction.putValue(Action.NAME, Lang.get("synchro.userAndPassword.connect"));
     connectButton = new JButton(connectAction);

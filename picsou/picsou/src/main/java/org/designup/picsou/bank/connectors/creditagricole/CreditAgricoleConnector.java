@@ -10,6 +10,8 @@ import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.*;
+import org.designup.picsou.bank.connectors.webcomponents.filters.WebFilter;
+import org.designup.picsou.bank.connectors.webcomponents.filters.WebFilters;
 import org.designup.picsou.bank.connectors.webcomponents.utils.*;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.RealAccount;
@@ -22,7 +24,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -155,7 +156,7 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
     notifyDownloadInProgress();
     WebAnchor confirmer = browser.getCurrentPage().getAnchorWithRef("javascript:verifForm('Confirmer')");
     WebPage webPage = confirmer.click();
-    WebAnchor open = webPage.getAnchor(WebContainer.refContain("javascript:ouvreTelechargement"));
+    WebAnchor open = webPage.getAnchor(WebFilters.refStartsWith("javascript:ouvreTelechargement"));
     Download download = open.clickAndDownload();
     String fileContent = download.readAsOfx();
     for (Glob realAccount : accounts) {
@@ -231,8 +232,8 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
                 return webPage.getFormByName("frm_fwk");
               }
             });
-            HtmlUnit.Filter checkboxFilter = WebContainer.and(WebContainer.filterTag(HtmlInput.TAG_NAME),
-                                                              WebContainer.filterType("CHECKBOX"));
+            WebFilter checkboxFilter = WebFilters.and(WebFilters.tagEquals(HtmlInput.TAG_NAME),
+                                                      WebFilters.typeEquals("CHECKBOX"));
             WebTable accountList = downloadForm.getTableContaining(checkboxFilter);
             List<WebTableRow> rows = accountList.getAllRows();
             for (WebTableRow row : rows) {
@@ -296,7 +297,7 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
       for (String[] item : items) {
         builder.append(Arrays.toString(item));
       }
-      notifyErrorFound("Can not find password got " + builder.toString());
+      notifyErrorFound("Cannot find password got " + builder.toString());
     }
   }
 }

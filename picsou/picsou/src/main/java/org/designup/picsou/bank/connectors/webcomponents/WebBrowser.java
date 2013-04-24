@@ -8,9 +8,7 @@ import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionPro
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.concurrent.Callable;
 
 public class WebBrowser {
@@ -67,17 +65,8 @@ public class WebBrowser {
     }
   }
 
-  public WebPage loadPageInSameSite(String path) throws WebParsingError, WebCommandFailed {
-    try {
-      return load(currentPage.getFullyQualifiedUrl(path).toString());
-    }
-    catch (MalformedURLException e) {
-      throw new WebParsingError(getUrl(), e);
-    }
-  }
-
   public WebPage setCurrentPage(Page page) {
-    if (page instanceof UnexpectedPage){
+    if (page instanceof UnexpectedPage) {
       return getCurrentPage();
     }
     this.currentPage = (HtmlPage)page;
@@ -115,7 +104,7 @@ public class WebBrowser {
   public <T extends HtmlElement> T getElementById(final String id) throws WebParsingError {
     T select = (T)currentPage.getElementById(id);
     if (select == null) {
-      throw new WebParsingError(getUrl(), "Can not find tag '" + id + "' in :\n" + currentPage.asXml());
+      throw new WebParsingError(currentPage.getDocumentElement(), "Can not find tag '" + id + "'");
     }
     return select;
   }
@@ -152,15 +141,15 @@ public class WebBrowser {
     }
   }
 
-  public WebPage setToTopLevelWindow(){
+  public WebPage setToTopLevelWindow() {
     webClient.setCurrentWindow(webClient.getTopLevelWindows().get(0));
     return updateCurrentPage();
   }
 
   public WebPage updateCurrentPage() {
     Page page = webClient.getCurrentWindow().getEnclosedPage();
-    if (page instanceof HtmlPage){
-      if (page != currentPage){
+    if (page instanceof HtmlPage) {
+      if (page != currentPage) {
         currentPage = (HtmlPage)page;
         return new WebPage(this, (HtmlPage)page);
       }
@@ -168,16 +157,15 @@ public class WebBrowser {
     return new WebPage(this, currentPage);
   }
 
-
   public <T> T retry(Callable<T> callable) {
     long timeOut = System.currentTimeMillis() + 10000;
-    while (true){
+    while (true) {
       try {
         return callable.call();
       }
       catch (Exception e) {
         if (System.currentTimeMillis() > timeOut) {
-          if (e instanceof RuntimeException){
+          if (e instanceof RuntimeException) {
             throw ((RuntimeException)e);
           }
           else {

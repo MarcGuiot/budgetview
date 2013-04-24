@@ -18,7 +18,7 @@ public class WebFrame extends WebContainer<HtmlFrame> {
       return browser.load(targetUrl);
     }
     catch (MalformedURLException e) {
-      throw new WebParsingError(browser.getUrl(), e);
+      throw new WebParsingError(this, e);
     }
   }
 }

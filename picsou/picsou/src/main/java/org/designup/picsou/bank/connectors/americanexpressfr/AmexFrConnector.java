@@ -139,13 +139,16 @@ public class AmexFrConnector extends WebBankConnector {
     notifyDownloadInProgress();
 
     WebPage cardsPage = browser.getCurrentPage();
+    if (!cardsPage.containsTagWithId("a", "fr_myca_view_transactions")) {
+      return;
+    }
     WebPage cardPage = cardsPage.getAnchorById("fr_myca_view_transactions").click();
     List<String> cardNames = cardPage.getSelectById("cardAccount").getEntryNames();
     if (cardNames.size() == 0) {
-      throw new WebParsingError(cardPage.getUrl(), "Found no accounts in: " + cardPage.getSelectById("cardAccount").asXml());
+      throw new WebParsingError(cardPage.getSelectById("cardAccount"), "Found no accounts in select");
     }
     else if (cardNames.size() > 1) {
-      throw new WebParsingError(cardPage.getUrl(), "Found too many accounts in: " + cardPage.getTableById("summaryTable").asXml());
+      throw new WebParsingError(cardPage.getTableById("summaryTable"), "Found too many accounts in table");
     }
     parseCardPage(cardNames.get(0), cardPage);
   }
@@ -249,14 +252,14 @@ public class AmexFrConnector extends WebBankConnector {
   }
 
   private void extractAmount(WebTableCell creditCell, WebTableCell debitCell, FieldValuesBuilder valuesBuilder) throws WebParsingError {
-    Double credit = extractAmount(creditCell.asText());
-    Double debit = extractAmount(debitCell.asText());
+    Double credit = extractAmount(creditCell);
+    Double debit = extractAmount(debitCell);
     if (credit != null) {
       if (debit == null) {
         valuesBuilder.set(Transaction.AMOUNT, credit);
       }
       else {
-        throw new WebParsingError(browser.getUrl(), "Found both credit and debit amounts in: " + creditCell.getEnclosingRow().asXml());
+        throw new WebParsingError(creditCell.getEnclosingRow(), "Found both credit and debit amounts");
       }
     }
     else { // credit == null
@@ -264,13 +267,14 @@ public class AmexFrConnector extends WebBankConnector {
         valuesBuilder.set(Transaction.AMOUNT, -debit);
       }
       else {
-        throw new WebParsingError(browser.getUrl(), "Found no credit and debit amounts in: " + creditCell.getEnclosingRow().asXml());
+        throw new WebParsingError(creditCell.getEnclosingRow(), "Found no credit and debit amounts");
 
       }
     }
   }
 
-  public Double extractAmount(String text) throws WebParsingError {
+  public Double extractAmount(WebTableCell cell) throws WebParsingError {
+    String text = cell.asText();
     if (text.trim().length() == 0) {
       return null;
     }
@@ -279,14 +283,14 @@ public class AmexFrConnector extends WebBankConnector {
       return Double.parseDouble(amountText);
     }
     catch (NumberFormatException e) {
-      throw new WebParsingError(browser.getUrl(), "Cannot parse amount for: " + text);
+      throw new WebParsingError(cell, "Cannot parse amount for: " + text);
     }
   }
 
   private String extractCurrentPosition(WebPage cardPage) throws WebParsingError {
     WebTableCell cell = cardPage.getTableById("summaryTable").getCellById("colOSBalance");
     if (!cell.getPanelByAttribute("div", "class", "summaryTitles").asText().contains("Solde actuel")) {
-      throw new WebParsingError(browser.getUrl(), "Unexpected column title in: " + cell.asXml());
+      throw new WebParsingError(cell, "Unexpected column title");
     }
     return cell.asText()
       .replace("Solde actuel", "")

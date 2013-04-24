@@ -2,6 +2,7 @@ package org.designup.picsou.bank.connectors;
 
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.bank.BankConnector;
+import org.designup.picsou.bank.connectors.webcomponents.WebTableCell;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
@@ -124,8 +125,8 @@ public abstract class AbstractBankConnector implements BankConnector {
 
   public abstract void downloadFile() throws Exception;
 
-  protected Double extractAmount(String position) throws WebParsingError {
-    return Amounts.extractAmount(position);
+  protected Double extractAmount(WebTableCell cell) throws WebParsingError {
+    return Amounts.extractAmount(cell.asText());
   }
 
   public abstract String getCode();

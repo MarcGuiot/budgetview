@@ -5,6 +5,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlLabel;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.designup.picsou.bank.connectors.webcomponents.WebBrowser;
+import org.designup.picsou.bank.connectors.webcomponents.filters.WebFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,20 +18,15 @@ public class HtmlUnit {
 
   private static final String SEPARATOR = "------------------------------------------------------------------------\n";
 
-  public interface Filter {
-    boolean matches(HtmlElement element);
-  }
-
   public static <T extends HtmlElement> T getElementById(HtmlElement container, String id, Class<T> expectedClass) throws WebParsingError {
     T result = null;
     try {
       result = container.<T>getElementById(id);
     }
     catch (com.gargoylesoftware.htmlunit.ElementNotFoundException e) {
-      fail(container, "Cannot find element with id: " + id +
-                      " - actual panel content:\n" + dump(container));
+      fail(container, "Cannot find element with id: " + id);
     }
-    checkClass(container, expectedClass, result, "element '" + id + "'");
+    checkClass(container, result, "element '" + id + "'", expectedClass);
     return result;
   }
 
@@ -38,24 +34,24 @@ public class HtmlUnit {
     return getElementById(currentPage.getDocumentElement(), id, expectedClass);
   }
 
-  public static HtmlElement getSingleElementByTag(HtmlElement container, String tagName, Class expectedClass) throws WebParsingError {
+  public static <T extends HtmlElement> T getSingleElementByTag(HtmlElement container, String tagName, Class<T> expectedClass) throws WebParsingError {
     List list = container.getHtmlElementsByTagName(tagName);
     if (list.isEmpty()) {
-      fail(container, "No <" + tagName + "> found - actual content:\n" + dump(container));
+      fail(container, "No <" + tagName + "> found");
     }
     if (list.size() > 1) {
-      fail(container, "Too many <" + tagName + "> found - actual list= " + list +
-                      "\nactual content:\n" + dump(container));
+      fail(container, "Too many <" + tagName + "> found - actual list= " + list);
     }
     HtmlElement result = (HtmlElement)list.get(0);
-    checkClass(container, expectedClass, result, "<" + tagName + ">");
-    return result;
+    checkClass(container, result, "<" + tagName + ">", expectedClass);
+    return (T)result;
   }
 
-  public static HtmlElement getElementWithAttribute(HtmlElement container,
-                                                    String tagName,
-                                                    String attributeName,
-                                                    String attributeValue) throws WebParsingError {
+  public static <T extends HtmlElement> T getElementWithAttribute(HtmlElement container,
+                                                                  String tagName,
+                                                                  String attributeName,
+                                                                  String attributeValue,
+                                                                  Class<T> expectedClass) throws WebParsingError {
     List list = getVisibleElementsWithAttribute(container, tagName, attributeName, attributeValue);
     if (list.isEmpty()) {
       fail(container, "No <" + tagName + "> found with " + attributeName + "=" + attributeValue);
@@ -63,54 +59,41 @@ public class HtmlUnit {
     if (list.size() > 1) {
       fail(container, "Too many <" + tagName + "> found with " + attributeName + "=" + attributeValue + " - actual = " + list);
     }
-    return (HtmlElement)list.get(0);
+    T result = (T)list.get(0);
+    checkClass(container, result, tagName, expectedClass);
+    return result;
   }
 
-  public static HtmlElement getFirstElementWithAttribute(HtmlElement container,
-                                                         String tagName,
-                                                         String attributeName,
-                                                         String attributeValue) throws WebParsingError {
+  public static <T extends HtmlElement> T getFirstElementWithAttribute(HtmlElement container,
+                                                                       Class<T> expectedClass,
+                                                                       String tagName,
+                                                                       String attributeName,
+                                                                       String attributeValue) throws WebParsingError {
     List list = getVisibleElementsWithAttribute(container, tagName, attributeName, attributeValue);
     if (list.isEmpty()) {
       fail(container, "No <" + tagName + "> found with " + attributeName + "=" + attributeValue);
     }
-    return (HtmlElement)list.get(0);
-  }
-
-  public static HtmlElement getElementWithAttribute(HtmlElement container,
-                                                    Class expectedClass,
-                                                    String tagName,
-                                                    String attributeName,
-                                                    String attributeValue) throws WebParsingError {
-    HtmlElement result = getElementWithAttribute(container, tagName, attributeName, attributeValue);
-    checkClass(container, expectedClass, result, "<" + tagName + "> with " + attributeName + "=" + attributeValue);
-    return result;
-  }
-
-  public static <T extends HtmlElement> T getFirstElementWithAttribute(HtmlElement container, Class<T> expectedClass, String tagName, String attributeName, String attributeValue) throws WebParsingError {
-    HtmlElement result = getFirstElementWithAttribute(container, tagName, attributeName, attributeValue);
-    checkClass(container, expectedClass, result, "<" + tagName + "> with " + attributeName + "=" + attributeValue);
+    HtmlElement result = (HtmlElement)list.get(0);
+    checkClass(container, result, "<" + tagName + "> with " + attributeName + "=" + attributeValue, expectedClass);
     return (T)result;
   }
 
-  public static HtmlElement getFirstParent(HtmlElement element, String tag) throws WebParsingError {
+  public static <T extends HtmlElement> T getFirstParent(HtmlElement element, String tagName, Class<T> expectedClass) throws WebParsingError {
     for (DomNode parent = element.getParentNode(); parent != null; parent = parent.getParentNode()) {
-      String tagName = parent.getNodeName();
-      if (tag.equalsIgnoreCase(tagName)) {
-        return (HtmlElement)parent;
+      HtmlElement parentElement = (HtmlElement)parent;
+      String parentTagName = parent.getNodeName();
+      if (tagName.equalsIgnoreCase(parentTagName)) {
+        checkClass(parentElement, parentElement, tagName, expectedClass);
+        return (T)parent;
       }
     }
-    throw new WebParsingError(element, "No parent found with tag <" + tag + ">");
+    throw new WebParsingError(element, "No parent found with tag <" + tagName + ">");
   }
 
-  private static void checkClass(HtmlElement container,
-                                 Class expectedClass,
-                                 HtmlElement result,
-                                 String elementName) throws WebParsingError {
-    if (!expectedClass.isAssignableFrom(result.getClass())) {
-      fail(container, "Actual HtmlElement for " + elementName + " is " +
-                      result.getClass().getName() + " instead of " + expectedClass.getName() +
-                      "- actual content:\n" + dump(container));
+  private static void checkClass(HtmlElement container, HtmlElement element, String tagName, Class expectedClass) throws WebParsingError {
+    if (!expectedClass.isAssignableFrom(element.getClass())) {
+      fail(container, "Actual HtmlElement for " + tagName + " is " +
+                      element.getClass().getName() + " instead of " + expectedClass.getName());
     }
   }
 
@@ -130,26 +113,26 @@ public class HtmlUnit {
     return list;
   }
 
-  public static <T extends HtmlElement> T getSingleElement(HtmlElement container, String tagName, Filter filter) throws WebParsingError {
+  public static <T extends HtmlElement> T getSingleElement(HtmlElement container, String tagName, WebFilter filter) throws WebParsingError {
     List<HtmlElement> result = getElements(container, tagName, filter);
     if (result.isEmpty()) {
-      fail(container, "No <" + tagName + "> found matching filter");
+      fail(container, "No <" + tagName + "> found matching filter '" + filter + "'");
     }
     if (result.size() > 1) {
-      fail(container, "Too many <" + tagName + "> found matching filter");
+      fail(container, "Too many <" + tagName + "> found matching filter '" + filter + "'");
     }
     return (T)result.get(0);
   }
 
-  public static HtmlElement findHtmlElement(HtmlElement container, Filter filter) throws WebParsingError {
+  public static HtmlElement findHtmlElement(HtmlElement container, WebFilter filter) throws WebParsingError {
     return getHtmlElement(container, filter, true);
   }
 
-  public static HtmlElement getHtmlElement(HtmlElement container, Filter filter) throws WebParsingError {
+  public static HtmlElement getHtmlElement(HtmlElement container, WebFilter filter) throws WebParsingError {
     return getHtmlElement(container, filter, false);
   }
 
-  public static HtmlElement findFirstHtmlElement(HtmlElement container, Filter filter) throws WebParsingError {
+  public static HtmlElement findFirstHtmlElement(HtmlElement container, WebFilter filter) throws WebParsingError {
     Iterable<HtmlElement> elementDescendants = container.getHtmlElementDescendants();
     for (HtmlElement element : elementDescendants) {
       if (filter.matches(element)) {
@@ -159,7 +142,7 @@ public class HtmlUnit {
     return null;
   }
 
-  public static List<HtmlElement> findAllHtmlElement(HtmlElement container, Filter filter) throws WebParsingError {
+  public static List<HtmlElement> findAllHtmlElement(HtmlElement container, WebFilter filter) throws WebParsingError {
     Iterable<HtmlElement> elementDescendants = container.getHtmlElementDescendants();
     ArrayList<HtmlElement> elements = new ArrayList<HtmlElement>();
     for (HtmlElement element : elementDescendants) {
@@ -170,8 +153,7 @@ public class HtmlUnit {
     return elements;
   }
 
-
-  public static HtmlElement getHtmlElement(HtmlElement container, Filter filter, boolean nullIfNotFind) throws WebParsingError {
+  public static HtmlElement getHtmlElement(HtmlElement container, WebFilter filter, boolean nullIfNotFound) throws WebParsingError {
     Iterable<HtmlElement> elementDescendants = container.getHtmlElementDescendants();
     List<HtmlElement> result = new ArrayList<HtmlElement>();
     for (HtmlElement element : elementDescendants) {
@@ -180,18 +162,18 @@ public class HtmlUnit {
       }
     }
     if (result.isEmpty()) {
-      if (nullIfNotFind){
+      if (nullIfNotFound) {
         return null;
       }
-      fail(container, "No <" + filter + "> found matching filter");
+      fail(container, "No <" + filter + "> found matching filter '" + filter + "'");
     }
     if (result.size() > 1) {
-      fail(container, "Too many <" + filter + "> found matching filter");
+      fail(container, "Too many <" + filter + "> found matching filter '" + filter + "'");
     }
     return result.get(0);
   }
 
-  public static List<HtmlElement> getElements(HtmlElement container, String tagName, Filter filter) {
+  public static List<HtmlElement> getElements(HtmlElement container, String tagName, WebFilter filter) {
     List<HtmlElement> result = container.getHtmlElementsByTagName(tagName);
     for (Iterator iterator = result.iterator(); iterator.hasNext(); ) {
       HtmlElement element = (HtmlElement)iterator.next();
@@ -238,14 +220,15 @@ public class HtmlUnit {
   public static String dump(DomNode element) {
     HtmlPage page = (HtmlPage)element.getPage();
     StringBuffer buffer = new StringBuffer();
-    buffer.append(SEPARATOR);
-    buffer.append(page.getUrl());
-    buffer.append("\n");
-    buffer.append(page.getTitleText());
-    buffer.append("\n");
-    buffer.append(SEPARATOR);
-    buffer.append(element.asXml().replaceAll("\n[\\s]*\n", "\n"));
-    buffer.append(SEPARATOR);
+    buffer.append("\n")
+      .append(SEPARATOR)
+      .append(page.getUrl())
+      .append("\n")
+      .append(page.getTitleText())
+      .append("\n")
+      .append(SEPARATOR)
+      .append(element.asXml().replaceAll("\n[\\s]*\n", "\n").replaceAll("[0-9]", "9"))
+      .append(SEPARATOR);
     return buffer.toString();
   }
 
@@ -257,8 +240,8 @@ public class HtmlUnit {
     String targetElementId = getTargetIdFromLabel(container, text);
     T element = container.<T>getElementById(targetElementId);
     if (!expectedClass.isAssignableFrom(element.getClass())) {
-      fail(container, "Unexpected class '" + element.getClass().getName() + "' for component with label: " + text +
-                      " - actual content: " + dump(container));
+      fail(container,
+           "Unexpected class '" + element.getClass().getName() + "' for component with label: " + text);
     }
     return element;
   }

@@ -31,7 +31,6 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -155,8 +154,8 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
     validateCode.setEnabled(false);
   }
 
-  protected Double extractAmount(String position) {
-    return Amounts.extractAmount(position.replace("EUR", ""));
+  protected Double extractAmount(WebTableCell cell) {
+    return Amounts.extractAmount(cell.asText().replace("EUR", ""));
   }
 
   public String getCode() {

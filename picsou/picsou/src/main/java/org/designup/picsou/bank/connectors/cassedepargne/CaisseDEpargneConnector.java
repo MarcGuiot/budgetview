@@ -12,6 +12,7 @@ import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.*;
+import org.designup.picsou.bank.connectors.webcomponents.filters.WebFilters;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
 import org.designup.picsou.bank.connectors.webcomponents.utils.UserAndPasswordPanel;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
@@ -117,9 +118,9 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
             .click();
           browser.waitForBackgroundJavaScript(1000);
           currentPage = browser.setToTopLevelWindow();
-          Download download = currentPage.getAnchor(WebContainer.and(
-            WebContainer.filterAttribute("class", "btnTelecharger"),
-            WebContainer.filterAttribute("title", "Télécharger")))
+          Download download = currentPage.getAnchor(WebFilters.and(
+            WebFilters.attributeEquals("class", "btnTelecharger"),
+            WebFilters.attributeEquals("title", "Télécharger")))
             .clickAndDownload();
           String s = download.readAsOfx();
           repository.update(account.getKey(), RealAccount.FILE_CONTENT, s);
@@ -196,16 +197,16 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
 //            browser.getCurrentPage().executeJavascript(onclick);
             WebPage autentificationPage = browser.getCurrentPage();
             WebPanel auth_content = autentificationPage.getPanelById("auth-content");
-            WebTextInput webInput = auth_content.findFirst(WebContainer.filterTag(HtmlInput.TAG_NAME)).asTextInput();
+            WebTextInput webInput = auth_content.findFirst(WebFilters.tagEquals(HtmlInput.TAG_NAME)).asTextInput();
             webInput.setText(userAndPasswordPanel.getUser());
-            WebAnchor valider = auth_content.findFirst(WebContainer.and(WebContainer.filterTag(HtmlImage.TAG_NAME),
-                                                                        WebContainer.filterAttribute("title", "Valider")))
+            WebAnchor valider = auth_content.findFirst(WebFilters.and(WebFilters.tagEquals(HtmlImage.TAG_NAME),
+                                                                      WebFilters.attributeEquals("title", "Valider")))
               .parent().asAnchor();
 //            System.out.println("CaisseDEpargne$ConnectAction.run valider");
             valider.click();
             auth_content = browser.getCurrentPage().getPanelById("auth-content");
             WebPanel clavierparticulier = browser.getCurrentPage().getPanelById("clavierparticulier");
-            WebComponent.HtmlNavigates all = clavierparticulier.findAll(WebContainer.filterTag(HtmlAnchor.TAG_NAME));
+            WebComponent.HtmlNavigates all = clavierparticulier.findAll(WebFilters.tagEquals(HtmlAnchor.TAG_NAME));
             List<WebAnchor> anchors = all.asAnchor();
             for (int i = 0; i < userAndPasswordPanel.getPassword().length(); i++) {
               char value = userAndPasswordPanel.getPassword().charAt(i);
@@ -218,14 +219,14 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
               }
             }
 
-            auth_content.findFirst(WebContainer.and(WebContainer.filterTag(HtmlImage.TAG_NAME),
-                                                    WebContainer.filterAttribute("title", "Valider")))
+            auth_content.findFirst(WebFilters.and(WebFilters.tagEquals(HtmlImage.TAG_NAME),
+                                                  WebFilters.attributeEquals("title", "Valider")))
               .parent().asAnchor()
               .click();
 
             browser.waitForBackgroundJavaScript(2000);
             WebPanel cptdmte0 = browser.getCurrentPage().getPanelById("CPTDMTE0");
-            WebPage currentPage = cptdmte0.findFirst(WebContainer.filterTag(HtmlAnchor.TAG_NAME))
+            WebPage currentPage = cptdmte0.findFirst(WebFilters.tagEquals(HtmlAnchor.TAG_NAME))
               .asAnchor()
               .click();
             currentPage = browser.setToTopLevelWindow();

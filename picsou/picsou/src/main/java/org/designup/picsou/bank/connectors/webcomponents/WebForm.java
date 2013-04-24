@@ -14,17 +14,17 @@ public class WebForm extends WebContainer<HtmlForm> {
   }
 
   public void setHiddenFieldById(String id, String value) throws WebParsingError {
-    HtmlHiddenInput input = (HtmlHiddenInput)HtmlUnit.getElementById(node, id, HtmlHiddenInput.class);
+    HtmlHiddenInput input = HtmlUnit.getElementById(node, id, HtmlHiddenInput.class);
     input.setAttribute("value", value);
   }
 
   public WebPage submit() throws WebCommandFailed, WebParsingError {
-    HtmlInput input = (HtmlInput)HtmlUnit.getElementWithAttribute(node, "input", "type", "submit");
+    HtmlInput input = HtmlUnit.getElementWithAttribute(node, "input", "type", "submit", HtmlInput.class);
     return doSubmit(input);
   }
 
   public WebPage submitByName(String name) throws WebParsingError, WebCommandFailed {
-    HtmlInput input = (HtmlInput)getElementByName("input", name, HtmlSubmitInput.class);
+    HtmlInput input = getElementByName("input", name, HtmlSubmitInput.class);
     return doSubmit(input);
   }
 
@@ -38,7 +38,7 @@ public class WebForm extends WebContainer<HtmlForm> {
   }
 
   public Download submitByNameAndDownload(String name) throws WebParsingError {
-    HtmlInput input = (HtmlInput)HtmlUnit.getElementWithAttribute(node, "input", "name", name);
+    HtmlInput input = HtmlUnit.getElementWithAttribute(node, "input", "name", name, HtmlInput.class);
     return new Download(browser, input);
   }
 
@@ -48,7 +48,7 @@ public class WebForm extends WebContainer<HtmlForm> {
   }
 
   public Download submitAndDownload() throws WebParsingError {
-    HtmlInput input = (HtmlInput)HtmlUnit.getElementWithAttribute(node, "input", "type", "submit");
+    HtmlInput input = HtmlUnit.getElementWithAttribute(node, "input", "type", "submit", HtmlInput.class);
     return new Download(browser, input);
   }
 }

@@ -5,6 +5,7 @@ import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.*;
+import org.designup.picsou.bank.connectors.webcomponents.filters.WebFilters;
 import org.designup.picsou.bank.connectors.webcomponents.utils.ImageMapper;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
@@ -223,11 +224,11 @@ public class LaBanquePostaleConnector extends WebBankConnector {
       listeComptes.selectByValue(entry.account.get(RealAccount.NUMBER));
       newPage = newPage.getInputById("idNum0").click();
       WebPanel main = newPage.getPanelById("main");
-      WebComponent.HtmlNavigate liens = main.findFirst(WebContainer.filterAttribute("class", "liens"));
+      WebComponent.HtmlNavigate liens = main.findFirst(WebFilters.attributeEquals("class", "liens"));
       WebAnchor telecharger = liens.in().next().in().asAnchor();
       newPage = telecharger.click();
       WebForm form = newPage.getFormById("formID");
-      WebAnchor anchor = form.getAnchor(WebContainer.filterAttribute("title", "Modifier"));
+      WebAnchor anchor = form.getAnchor(WebFilters.attributeEquals("title", "Modifier"));
       WebPage currentPage = anchor.click();
       WebSelect format = currentPage.getSelectById("format");
       currentPage = format.selectByValue("OFX");
@@ -255,13 +256,14 @@ public class LaBanquePostaleConnector extends WebBankConnector {
       .trim();
   }
 
-  protected Double extractAmount(String amount) throws WebParsingError {
+  protected Double extractAmount(WebTableCell cell) throws WebParsingError {
+    String amount = cell.asText();
     String cleanedUpAmount = amount.replace("[ ]+", "").replace(",", ".");
     try {
       return Double.parseDouble(cleanedUpAmount);
     }
     catch (NumberFormatException e) {
-      throw new WebParsingError(browser.getUrl(), e);
+      throw new WebParsingError(cell, e);
     }
   }
 
