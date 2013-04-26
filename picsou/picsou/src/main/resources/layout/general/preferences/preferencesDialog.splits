@@ -11,15 +11,15 @@
       <label text="$preferences.title" name="title" styleClass="title"/>
 
       <tabs>
-        <tab title="Apparence">
+        <tab title="$preferences.tab.theme">
           <panel ref="colorsPane" styleClass="tabContent"/>
         </tab>
 
-        <tab title="Paramètres">
+        <tab title="$preferences.tab.params">
           <panel ref="parametersPane" styleClass="tabContent"/>
         </tab>
 
-        <tab title="Stockage">
+        <tab title="$preferences.tab.storage">
           <panel ref="dataPathPane" styleClass="tabContent"/>
         </tab>
       </tabs>
