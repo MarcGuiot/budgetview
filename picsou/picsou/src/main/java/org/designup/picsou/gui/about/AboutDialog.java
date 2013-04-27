@@ -5,6 +5,7 @@ import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.components.dialogs.CloseDialogAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.help.actions.GotoWebsiteAction;
 import org.designup.picsou.gui.startup.AppPaths;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
@@ -45,6 +46,7 @@ public class AboutDialog {
 
     String version = Lang.get("about.version", PicsouApplication.APPLICATION_VERSION);
     builder.add("versionLabel", new JLabel(version));
+    builder.add("website", new GotoWebsiteAction(Lang.get("site.url"), directory));
 
     builder.add("configurationArea", Gui.createHtmlEditor(getConfiguration()));
 
