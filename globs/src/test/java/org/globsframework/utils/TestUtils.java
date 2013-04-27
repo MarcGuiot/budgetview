@@ -1,6 +1,7 @@
 package org.globsframework.utils;
 
 import junit.framework.Assert;
+import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import org.globsframework.metamodel.GlobType;
 import org.uispec4j.Window;
@@ -245,5 +246,21 @@ public class TestUtils {
       }
       Assert.fail(text.toString());
     }
+  }
+
+  public static void retry(Runnable runnable) throws Exception {
+    long end = System.currentTimeMillis() + 3000;
+    AssertionFailedError exception = null;
+    while (System.currentTimeMillis() < end){
+      try {
+        runnable.run();
+        Thread.sleep(200);
+        return;
+      }
+      catch (AssertionFailedError e) {
+        exception = e;
+      }
+    }
+    throw exception;
   }
 }

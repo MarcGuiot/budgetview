@@ -79,6 +79,7 @@ public class ConfigService {
   public static final String HEADER_NEW_JAR_VERSION = "newJarVersion";
   public static final String HEADER_REPO_ID = "repoId";
   public static final String HEADER_USE_INFO = "use";
+  public static final String HEADER_PENDING = "pending";
   public static final String REQUEST_FOR_REGISTER = "/register";
   public static final String REQUEST_FOR_CONFIG = "/requestForConfig";
   public static final String REQUEST_FOR_MAIL = "/mailTo";
@@ -339,14 +340,11 @@ public class ConfigService {
   }
 
 
-  public synchronized boolean sendMobileData(String mail, String password, byte[] bytes, Ref<String> message) {
-
+  public synchronized boolean sendMobileData(String mail, String password, byte[] bytes, Ref<String> message, boolean pending) {
     HttpClient client = getNewHttpClient();
     HttpPost postMethod;
     postMethod = createPostMethod(MOBILE_SERVER_URL + REQUEST_CLIENT_TO_SERVER_DATA);
-
     try {
-
       MD5PasswordBasedEncryptor encryptor =
         new MD5PasswordBasedEncryptor(ConfigService.MOBILE_SALT.getBytes(), password.toCharArray(), 5);
 
@@ -358,6 +356,12 @@ public class ConfigService {
       postMethod.setHeader(ComCst.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
       postMethod.setHeader(ComCst.MAJOR_VERSION_NAME, Integer.toString(MobileModel.MAJOR_VERSION));
       postMethod.setHeader(ComCst.MINOR_VERSION_NAME, Integer.toString(MobileModel.MINOR_VERSION));
+      if (pending) {
+        postMethod.setHeader(HEADER_PENDING, "true");
+      }
+      else {
+        postMethod.setHeader(HEADER_PENDING, "false");
+      }
       postMethod.setEntity(new ByteArrayEntity(data));
       HttpResponse response = client.execute(postMethod);
       updateConnectionStatusOk();

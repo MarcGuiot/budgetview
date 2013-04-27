@@ -36,7 +36,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
   private static final String INDEX = "https://www.secure.bnpparibas.net/banque/portail/particulier/HomeConnexion?type=homeconnex";
   private static final String HOME_URL = "https://www.secure.bnpparibas.net/banque/portail/particulier/FicheA?pageId=unedescomptesnode";
   private static final String DOWNLOADS_URL = "https://www.secure.bnpparibas.net/NSFR?Action=ASK_TELE";
-  private static final Pattern ACCOUNT_DATE_REGEXP = Pattern.compile("Solde[ \n]+au[ \n]+([0-9]+/[0-9]+/[0-9]+).*");
+  private static final Pattern ACCOUNT_DATE_REGEXP = Pattern.compile(".*Solde[\\s]+au[\\s]+([0-9]+/[0-9]+/[0-9]+).*");
   private Action loginAction;
   private Action clearCodeAction;
   private JTextField codeField;
@@ -216,14 +216,14 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
       }
       return ;
     }
-    Matcher matcher = ACCOUNT_DATE_REGEXP.matcher(table.asText().replaceAll("[ \n\t]+", " "));
+    Matcher matcher = ACCOUNT_DATE_REGEXP.matcher(table.asText().replaceAll("\\s", " "));
     if (!matcher.matches()) {
       throw new WebParsingError(table, "Position date not found");
     }
     String date = matcher.group(1);
 
     WebTableCell cell = table.getRow(0).getCell(1);
-    String position = cell.asText().replaceAll("[ €]+", "");
+    String position = cell.asText().replaceAll("[\\s€]+", "");
     entry.setPosition(position, date, cell);
     return;
   }
@@ -254,7 +254,12 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
 
     WebFrame frame = browser.load(DOWNLOADS_URL).getFrameByName("main");
     WebForm downloadConfigForm = frame.loadTargetPage().getFormByAction("/SAF_TLC_CNF");
-    downloadConfigForm.getInputByNameAndValue("ch_rop", "tous").select();
+    try {
+      downloadConfigForm.getInputByNameAndValue("ch_rop", "tous").select();
+    }
+    catch (WebParsingError error) {
+      // ignore => il n'y a qu'un compte.
+    }
     downloadConfigForm.getSelectByName("ch_rop_fmt_fic").selectByValue("RQM2005TF");
     downloadConfigForm.getSelectByName("ch_rop_fmt_dat").selectByValue("MMJJAAAA");
     downloadConfigForm.getSelectByName("ch_rop_fmt_sep").selectByValue("PT");

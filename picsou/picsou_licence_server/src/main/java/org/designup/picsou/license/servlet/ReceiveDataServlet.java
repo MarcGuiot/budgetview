@@ -40,7 +40,7 @@ public class ReceiveDataServlet extends AbstractHttpServlet {
       httpServletResponse.setHeader(ComCst.STATUS, "Missing info");
       return;
     }
-    logger.info("receive data from " + mail + "sha1 " + sha1Mail);
+    logger.info("receive data from " + mail + " sha1 " + sha1Mail);
     String dirName = generateDirName(mail);
     File dir = new File(root, dirName);
     if (!dir.exists()) {
@@ -50,8 +50,9 @@ public class ReceiveDataServlet extends AbstractHttpServlet {
       httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
     else {
+      String header = httpServletRequest.getHeader(ConfigService.HEADER_PENDING);
       boolean pending = false;
-      if (!new File(dir, CODE_FILE_NAME).exists()){
+      if (!new File(dir, CODE_FILE_NAME).exists() || (header != null && header.equalsIgnoreCase("true"))) {
         CreateMobileUserServlet.writePendingCode(sha1Mail, dir);
         pending = true;
       }

@@ -429,7 +429,7 @@ public class MainPanel {
   }
 
   public void end() {
-    SendMobileDataAction.sendToMobile(repository, directory.get(ConfigService.class), new Ref<String>());
+    SendMobileDataAction.sendToMobile(repository, directory.get(ConfigService.class), new Ref<String>(), false);
   }
 
   private class MainPanelLogoutService implements LogoutService {
