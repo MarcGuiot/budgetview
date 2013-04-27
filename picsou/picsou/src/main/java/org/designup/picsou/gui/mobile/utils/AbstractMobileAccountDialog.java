@@ -71,9 +71,7 @@ public abstract class AbstractMobileAccountDialog {
             String mail = UserPreferences.get(localRepository).get(UserPreferences.MAIL_FOR_MOBILE);
             String password = UserPreferences.get(localRepository).get(UserPreferences.PASSWORD_FOR_MOBILE);
             boolean isOk = localDirectory.get(ConfigService.class)
-              .createMobileAccount(mail,
-                                   password,
-                                   messageRef);
+              .createMobileAccount(mail, password, messageRef);
             SwingUtilities.invokeAndWait(new ShowCompletionStatus(isOk, messageRef));
             return null;
           }
@@ -99,8 +97,7 @@ public abstract class AbstractMobileAccountDialog {
               .submit(new Callable<Object>() {
                 public Object call() throws Exception {
                   Ref<String> msg = new Ref<String>();
-                  SendMobileDataAction.sendToMobile(parentRepository, localDirectory.get(ConfigService.class),
-                                                    msg);
+                  SendMobileDataAction.sendToMobile(parentRepository, localDirectory.get(ConfigService.class), msg, true);
                   return msg.get();
                 }
               });

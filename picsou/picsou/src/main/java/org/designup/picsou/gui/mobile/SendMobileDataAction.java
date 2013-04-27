@@ -63,7 +63,7 @@ public class SendMobileDataAction extends AbstractMobileAction {
 
   public void actionPerformed(ActionEvent actionEvent) {
     Ref<String> msg = new Ref<String>();
-    if (sendToMobile(repository, configService, msg)) {
+    if (sendToMobile(repository, configService, msg, false)) {
       MessageDialog.show("mobile.data.send.title", MessageType.SUCCESS, directory, "mobile.data.send.content.ok");
     }
     else {
@@ -71,7 +71,8 @@ public class SendMobileDataAction extends AbstractMobileAction {
     }
   }
 
-  public static boolean sendToMobile(final GlobRepository sourceRepository, final ConfigService configService, Ref<String> msg) {
+  public static boolean sendToMobile(final GlobRepository sourceRepository, final ConfigService configService,
+                                     Ref<String> msg, boolean pending) {
     Glob userPreferences = sourceRepository.find(UserPreferences.KEY);
     if (userPreferences == null) {
       return false;
@@ -94,7 +95,7 @@ public class SendMobileDataAction extends AbstractMobileAction {
       Glob userPreference = sourceRepository.get(UserPreferences.KEY);
       String mail = userPreference.get(UserPreferences.MAIL_FOR_MOBILE);
       String password = userPreference.get(UserPreferences.PASSWORD_FOR_MOBILE);
-      return configService.sendMobileData(mail, password, out.toByteArray(), msg);
+      return configService.sendMobileData(mail, password, out.toByteArray(), msg, pending);
     }
     catch (IOException e) {
       throw new RuntimeException(e);

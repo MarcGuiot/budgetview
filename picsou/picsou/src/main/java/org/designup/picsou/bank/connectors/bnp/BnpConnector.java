@@ -254,7 +254,12 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
 
     WebFrame frame = browser.load(DOWNLOADS_URL).getFrameByName("main");
     WebForm downloadConfigForm = frame.loadTargetPage().getFormByAction("/SAF_TLC_CNF");
-    downloadConfigForm.getInputByNameAndValue("ch_rop", "tous").select();
+    try {
+      downloadConfigForm.getInputByNameAndValue("ch_rop", "tous").select();
+    }
+    catch (WebParsingError error) {
+      // ignore => il n'y a qu'un compte.
+    }
     downloadConfigForm.getSelectByName("ch_rop_fmt_fic").selectByValue("RQM2005TF");
     downloadConfigForm.getSelectByName("ch_rop_fmt_dat").selectByValue("MMJJAAAA");
     downloadConfigForm.getSelectByName("ch_rop_fmt_sep").selectByValue("PT");
