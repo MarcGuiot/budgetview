@@ -216,7 +216,7 @@ public class Mailer {
         }
       }
       catch (InterruptedException e) {
-        logger.info("ReSendMailThread run", e);
+        logger.info("ReSendMailThread end ", e);
       }
     }
   }

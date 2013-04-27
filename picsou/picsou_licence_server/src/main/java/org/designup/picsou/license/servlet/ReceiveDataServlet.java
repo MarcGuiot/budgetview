@@ -40,7 +40,7 @@ public class ReceiveDataServlet extends AbstractHttpServlet {
       httpServletResponse.setHeader(ComCst.STATUS, "Missing info");
       return;
     }
-    logger.info("receive data from " + mail + "sha1 " + sha1Mail);
+    logger.info("receive data from " + mail + " sha1 " + sha1Mail);
     String dirName = generateDirName(mail);
     File dir = new File(root, dirName);
     if (!dir.exists()) {
