@@ -74,7 +74,7 @@ public class DownloadTest extends ConnectedTestCase {
     Window window1 = application.getWindow();
     MessageDialogChecker messageDialogChecker = new MessageDialogChecker(window1);
 
-    messageDialogChecker.checkInfoMessageContains("The update is done you can restart BudgetView");
+    messageDialogChecker.checkInfoMessageContains("The update is completed, you can now restart BudgetView.");
     retr.assertOk();
   }
 
