@@ -11,7 +11,7 @@
           <label ref="nameFlag" gridPos="(2,0)" styleClass="mandatoryFieldFlag"/>
 
           <label text="$account.number" gridPos="(3,0)" styleClass="formLabel" marginLeft="15"/>
-          <textField ref="number" gridPos="(4,0)" marginBottom="10" columns="15" fill="none"/>
+          <textField ref="number" gridPos="(4,0)" marginBottom="10" columns="15"/>
 
           <label text="$account.bank" gridPos="(0,1)" styleClass="formLabel"/>
           <row gridPos="(1,1,4,1)" marginBottom="10">
