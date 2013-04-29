@@ -92,9 +92,9 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addBankAccount(30066, 10678, "00000123456", 1410.20, third(20))
         // Income
       .addTransaction(first(28), 1760.50, transaction("salary1"))
-      .addTransaction(first(29), 1312.80, transaction("salary2", first(29)))
+      .addTransaction(first(26), 1312.80, transaction("salary2", first(29)))
       .addTransaction(second(28), 1760.50, transaction("salary1"))
-      .addTransaction(second(28), 1312.80, transaction("salary2", second(28)))
+      .addTransaction(second(26), 1312.80, transaction("salary2", second(28)))
         // Fixed
       .addTransaction(first(9), -1010.00, transaction("house"))
       .addTransaction(second(9), -1010.00, transaction("house"))

@@ -1078,6 +1078,20 @@ a.showLink:hover, a.hideLink:hover {
   margin-bottom: 0;
 }
 
+#home #feature-list {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#home #feature-list h2 {
+  font-size: 12pt;
+}
+
+#home #feature-list table li {
+  margin-bottom: 0.2em;
+}
+
 /*=== HELP PAGE ===*/
 
 #showroom {
