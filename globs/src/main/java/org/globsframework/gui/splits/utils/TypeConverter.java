@@ -66,6 +66,9 @@ public class TypeConverter {
     if (ComponentUI.class.isAssignableFrom(targetClass)) {
       return context.getService(UIService.class).getUI(value, context);
     }
+    if (LayoutManager.class.isAssignableFrom(targetClass)) {
+      return SplitsUtils.instantiate(value, LayoutManager.class);
+    }
     throw new SplitsException("Cannot use string value for property '" + property +
                               "' of type '" + targetClass.getSimpleName() +
                               "' in class " + componentClass.getSimpleName());

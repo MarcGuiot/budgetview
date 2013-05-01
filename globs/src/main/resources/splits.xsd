@@ -260,6 +260,7 @@
       <xs:attribute name="cornerRadius" type="xs:integer"/>
       <xs:attribute name="shadowWidth" type="xs:integer"/>
       <xs:attribute name="opacity" type="xs:float"/>
+      <xs:attribute name="layout" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 

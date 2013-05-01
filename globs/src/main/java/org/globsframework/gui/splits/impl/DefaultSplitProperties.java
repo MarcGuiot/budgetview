@@ -22,6 +22,10 @@ public class DefaultSplitProperties extends AbstractSplitProperties {
     return keys.toArray(new String[keys.size()]);
   }
 
+  public boolean contains(String propertyName) {
+    return properties.containsKey(propertyName);
+  }
+
   public String get(String propertyName) {
     return properties.get(propertyName);
   }

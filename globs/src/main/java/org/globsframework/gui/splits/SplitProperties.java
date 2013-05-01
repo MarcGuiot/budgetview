@@ -4,6 +4,8 @@ public interface SplitProperties {
 
   String[] getPropertyNames();
 
+  boolean contains(String layout);
+
   String get(String propertyName);
 
   Integer getInt(String propertyName);
@@ -21,4 +23,5 @@ public interface SplitProperties {
   Double getDouble(String propertyName);
 
   Double getDouble(String propertyName, String parentPropertyName);
+
 }

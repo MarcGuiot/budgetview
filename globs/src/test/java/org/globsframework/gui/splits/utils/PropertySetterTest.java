@@ -163,6 +163,15 @@ public class PropertySetterTest extends UISpecTestCase {
                                           "in class JButton");
   }
 
+  public void testLayoutManager() throws Exception {
+    DefaultSplitProperties properties = new DefaultSplitProperties();
+    properties.put("layout", DummyLayoutManager.class.getName());
+
+    JPanel panel = new JPanel();
+    PropertySetter.process(panel, properties, context);
+    assertEquals(DummyLayoutManager.class, panel.getLayout().getClass());
+  }
+
   public void testExcludeList() throws Exception {
     DefaultSplitProperties properties = new DefaultSplitProperties();
     properties.put("tExT", "blah");
@@ -185,4 +194,5 @@ public class PropertySetterTest extends UISpecTestCase {
       assertEquals(expectedMessage, e.getMessage());
     }
   }
+
 }

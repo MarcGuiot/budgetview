@@ -9,10 +9,11 @@ import org.globsframework.gui.splits.layout.SwingStretches;
 import org.globsframework.gui.splits.layout.TabHandler;
 import org.globsframework.gui.splits.utils.DummyAction;
 import org.globsframework.gui.splits.utils.DummyImageLocator;
+import org.globsframework.gui.splits.utils.DummyLayoutManager;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
-import org.uispec4j.*;
+import org.uispec4j.TextBox;
 import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
 
@@ -311,6 +312,16 @@ public class SplitsComponentsTest extends SplitsTestCase {
     }
   }
 
+  public void testAPanelWithACustomLayoutCanHaveSeveralChildren() throws Exception {
+    builder.add("myPanel", new JPanel());
+    JPanel panel = parse(
+      "<panel ref='myPanel' layout='" + DummyLayoutManager.class.getName() + "'>" +
+      "  <button/>" +
+      "  <button/>" +
+      "</panel>");
+    assertEquals(2, panel.getComponentCount());
+  }
+
   private static class MyPanel extends JPanel {
   }
 
@@ -510,7 +521,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
       "  </tab>" +
       "</tabs>"
     );
-    
+
     assertEquals(2, tabs.getTabCount());
     assertEquals("Tab 1", tabs.getTitleAt(0));
     assertEquals("Tab 2", tabs.getTitleAt(1));
