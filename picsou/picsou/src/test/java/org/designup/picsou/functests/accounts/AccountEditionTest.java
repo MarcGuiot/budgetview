@@ -516,12 +516,12 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     mainAccounts.checkAccountWebsite("Account 1", "BNP Paribas website", "http://www.bnpparibas.net");
-    mainAccounts.checkAccountWebsiteLinkNotShown("No site account");
+    mainAccounts.checkAccountWebsiteLinkDisabled("No site account");
 
     mainAccounts.edit("Account 1")
       .selectBank("Other")
       .validate();
-    mainAccounts.checkAccountWebsiteLinkNotShown("Account 1");
+    mainAccounts.checkAccountWebsiteLinkDisabled("Account 1");
 
     mainAccounts.edit("Account 1")
       .selectBank("CIC")

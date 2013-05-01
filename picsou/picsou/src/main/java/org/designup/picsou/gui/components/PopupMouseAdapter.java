@@ -13,14 +13,6 @@ public class PopupMouseAdapter extends MouseAdapter {
     this.factory = factory;
   }
 
-  public void mousePressed(MouseEvent e) {
-    showPopup(e);
-  }
-
-  public void mouseClicked(MouseEvent e) {
-    showPopup(e);
-  }
-
   public void mouseReleased(MouseEvent e) {
     showPopup(e);
   }

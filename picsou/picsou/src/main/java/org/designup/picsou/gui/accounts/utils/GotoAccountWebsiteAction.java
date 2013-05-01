@@ -67,8 +67,8 @@ public class GotoAccountWebsiteAction extends AbstractAction implements ChangeSe
 
   private static String getName(Glob account, GlobRepository repository, DescriptionService descriptionService) {
     Glob bank = Account.findBank(account, repository);
-    if (bank == null) {
-      return "";
+    if ((bank == null) || Strings.isNullOrEmpty(bank.get(Bank.URL))) {
+      return Lang.get("accountView.goto.website.disabled");
     }
     String bankName = bank.get(Bank.SHORT_NAME);
     if (Strings.isNullOrEmpty(bankName)){

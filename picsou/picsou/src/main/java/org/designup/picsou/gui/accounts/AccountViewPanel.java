@@ -3,6 +3,7 @@ package org.designup.picsou.gui.accounts;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.utils.GotoAccountWebsiteAction;
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.gui.components.PopupMouseAdapter;
 import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
@@ -19,10 +20,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.utils.GlobRepeat;
-import org.globsframework.gui.utils.GlobSelectablePanel;
-import org.globsframework.gui.utils.GlobSelectionToggle;
-import org.globsframework.gui.utils.GlobUnselectPanel;
+import org.globsframework.gui.utils.*;
 import org.globsframework.gui.views.AbstractGlobTextView;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
@@ -33,9 +31,11 @@ import org.globsframework.model.utils.ChangeSetMatchers;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.util.Set;
 
 public abstract class AccountViewPanel {
@@ -131,7 +131,7 @@ public abstract class AccountViewPanel {
       cellBuilder.addDisposeListener(toggle);
 
       add("editAccount",
-          createEditAccountButton(repository, directory), account, cellBuilder);
+          createEditAccountButton(account, repository, directory), account, cellBuilder);
 
       add("showAccount",
           createShowAccountButton(repository, directory), account, cellBuilder);
@@ -139,8 +139,6 @@ public abstract class AccountViewPanel {
       GlobSelectionToggle selectionToggle = new GlobSelectionToggle(account.getKey(), repository, directory);
       cellBuilder.add("selectAccount", selectionToggle.getComponent());
       cellBuilder.addDisposeListener(selectionToggle);
-
-      cellBuilder.add("gotoWebsite", new GotoAccountWebsiteAction(account, repository, directory));
 
       add("accountUpdateDate",
           GlobLabelView.init(Account.POSITION_DATE, repository, directory)
@@ -163,9 +161,7 @@ public abstract class AccountViewPanel {
                             },
                             new GlobListFunctor() {
                               public void run(GlobList list, GlobRepository repository) {
-                                AccountPositionEditionDialog accountPositionEditor =
-                                  new AccountPositionEditionDialog(account, repository, directory, directory.get(JFrame.class));
-                                accountPositionEditor.show();
+                                editPosition(account, repository);
                               }
                             }
         ).forceSelection(account.getKey());
@@ -179,6 +175,12 @@ public abstract class AccountViewPanel {
       cellBuilder.add(name, labelView.getComponent());
       cellBuilder.addDisposeListener(labelView);
     }
+  }
+
+  private void editPosition(Glob account, GlobRepository repository) {
+    AccountPositionEditionDialog accountPositionEditor =
+      new AccountPositionEditionDialog(account, repository, directory, directory.get(JFrame.class));
+    accountPositionEditor.show();
   }
 
   public static GlobButtonView createShowAccountButton(final GlobRepository repository,
@@ -196,14 +198,37 @@ public abstract class AccountViewPanel {
                                });
   }
 
-  public static GlobButtonView createEditAccountButton(final GlobRepository repository,
-                                                       final Directory directory) {
-    return GlobButtonView.init(Account.NAME, repository, directory,
-                               new GlobListFunctor() {
-                                 public void run(GlobList accounts, GlobRepository repository) {
-                                   AccountEditionDialog dialog = new AccountEditionDialog(repository, directory, false);
-                                   dialog.show(accounts.get(0).getKey());
-                                 }
-                               });
+  private GlobButtonView createEditAccountButton(Glob account, final GlobRepository repository,
+                                                 final Directory directory) {
+    GlobButtonView buttonView = GlobButtonView.init(Account.NAME, repository, directory, GlobListFunctor.NO_OP);
+    buttonView.forceSelection(account.getKey());
+    buttonView.getComponent().addMouseListener(new PopupMouseAdapter(new AccountPopupFactory(account)));
+    return buttonView;
+  }
+
+  private class AccountPopupFactory implements PopupMenuFactory {
+    private final Glob account;
+
+    public AccountPopupFactory(Glob account) {
+      this.account = account;
+    }
+
+    public JPopupMenu createPopup() {
+      JPopupMenu menu = new JPopupMenu();
+      menu.add(new AbstractAction(Lang.get("accountView.edit")) {
+        public void actionPerformed(ActionEvent e) {
+          AccountEditionDialog dialog = new AccountEditionDialog(repository, directory, false);
+          dialog.show(account.getKey());
+        }
+      });
+      menu.add(new AbstractAction(Lang.get("accountView.editPosition")) {
+        public void actionPerformed(ActionEvent e) {
+          editPosition(account, repository);
+        }
+      });
+      menu.addSeparator();
+      menu.add(new GotoAccountWebsiteAction(account, repository, directory));
+      return menu;
+    }
   }
 }

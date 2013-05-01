@@ -1,7 +1,10 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.components.PopupButton;
+import org.designup.picsou.functests.checkers.components.PopupChecker;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.*;
@@ -152,13 +155,17 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
 
   public T changePosition(String accountName, final double balance, final String operationLabel) {
     editPosition(accountName)
-//      .checkOperationLabel(operationLabel.toUpperCase())
       .setAmountAndEnter(balance);
     return (T)this;
   }
 
   public AccountEditionChecker edit(String accountName) {
-    return AccountEditionChecker.open(getAccountPanel(accountName).getButton("editAccount").triggerClick());
+    return AccountEditionChecker.open(triggerEditAccount(accountName, Lang.get("accountView.edit")));
+  }
+
+  private Trigger triggerEditAccount(String accountName, String menuOption) {
+    PopupButton button = new PopupButton(getAccountPanel(accountName).getButton("editAccount"));
+    return button.triggerClick(menuOption);
   }
 
   private Panel getAccountPanel(final String accountName) {
@@ -207,17 +214,13 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
   }
 
   public void checkAccountWebsite(String accountName, String linkText, String expectedUrl) {
-    Panel panel = getAccountPanel(accountName);
-    Button button = panel.getButton(linkText);
-    assertThat(button.isVisible());
-    BrowsingChecker.checkDisplay(button, expectedUrl);
+    BrowsingChecker.checkDisplay(triggerEditAccount(accountName, linkText), expectedUrl);
   }
 
-  public void checkAccountWebsiteLinkNotShown(String accountName) {
-    Panel panel = getAccountPanel(accountName);
-    checkComponentVisible(panel, JButton.class, "gotoWebsite", false);
+  public void checkAccountWebsiteLinkDisabled(String accountName) {
+    PopupButton button = new PopupButton(getAccountPanel(accountName).getButton("editAccount"));
+    button.checkItemDisabled(Lang.get("accountView.goto.website.disabled"));
   }
-
 
   private Panel getAccountsPanel() {
     if (accountsPanel == null) {

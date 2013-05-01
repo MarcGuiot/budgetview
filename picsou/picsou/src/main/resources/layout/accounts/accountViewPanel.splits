@@ -6,12 +6,12 @@
     <style selector="button#editAccount"
            anchor="left" weightX="100"
            font="-,plain,14" cursor="hand"
-           icon="magnifier_small.png"
-           rolloverIcon="magnifier_rollover.png"
-           pressedIcon="magnifier_rollover.png"
+           icon="downArrow(10,18,8,8,block.inner.arrow.idle)"
+           rolloverIcon="downArrow(10,18,8,8,block.inner.arrow.rollover)"
+           pressedIcon="downArrow(10,18,8,8,block.inner.arrow.pressed)"
            horizontalAlignment="left"
-           horizontalTextPosition="left"
-           iconTextGap="4"/>
+           horizontalTextPosition="right"
+           iconTextGap="2"/>
 
     <style selector="button#accountPosition"
            font="-,bold,14" foreground="block.inner.link.big"/>
@@ -23,15 +23,6 @@
            rolloverIcon="rightArrow(18,18,10,12,block.inner.arrow.rollover)"
            pressedIcon="rightArrow(18,18,10,12,block.inner.arrow.pressed)"
            preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
-
-    <style selector="button.website" ui="hyperlinkButtonWithoutUnderline"
-           font="-,plain,11" fill="none" anchor="left"
-           foreground="block.item.link.light"
-           icon="open_website.png"
-           rolloverIcon="open_website_rollover.png"
-           iconTextGap="2"
-           horizontalAlignment="left"
-           horizontalTextPosition="left" verticalAlignment="bottom"/>
 
     <style selector=".left label.totalAmount"
            fill="horizontal" horizontalAlignment="left" marginLeft="10"/>
@@ -56,7 +47,6 @@
                   <button ref="accountPosition" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"
                           marginLeft="10"/>
 
-                  <button action="gotoWebsite" styleClass="website" gridPos="(0,1)" fill="none" anchor="west"/>
                   <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
 
                   <toggleButton ref="selectAccount" gridPos="(3,0,1,2)" marginLeft="5"/>

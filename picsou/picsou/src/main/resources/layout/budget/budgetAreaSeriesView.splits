@@ -17,7 +17,8 @@
     <style id="none" selector="x" icon=""/>
 
     <style selector="#seriesName" ui="hyperlinkButtonWithoutUnderline"
-           fill="none" anchor="right" horizontalAlignment="right"
+           fill="none" anchor="right"
+           horizontalAlignment="right"
            icon="empty(14,14)"
            rolloverIcon="circledArrow(block.inner.edit.rollover)"
            pressedIcon="circledArrow(block.inner.edit.pressed)"/>
@@ -122,7 +123,7 @@
             <button ref="specificAction"/>
             <filler fill="horizontal"/>
             <button ref="seriesActions" tooltipText="$budgetView.actions.tooltip"
-                    icon="arrow_down.png" rolloverIcon="arrow_down_roll.png"/>
+                    icon="downArrow(10,10,8,8,block.footer.arrow.default)" rolloverIcon="downArrow(10,10,8,8,block.footer.arrow.rollover)"/>
           </row>
         </column>
       </column>
