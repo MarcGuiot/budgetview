@@ -5,6 +5,7 @@ import org.designup.picsou.gui.accounts.position.DailyAccountPositionComputer;
 import org.designup.picsou.gui.accounts.position.DailyAccountPositionValues;
 import org.designup.picsou.gui.card.NavigationPopup;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
+import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
 import org.designup.picsou.gui.components.charts.histo.HistoChartListener;
 import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyColors;
@@ -21,6 +22,7 @@ import org.designup.picsou.gui.utils.DaySelection;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -50,15 +52,18 @@ public class HistoChartBuilder {
   private HistoDiffColors seriesColors;
 
   private HistoChartRange range;
+  private DisposableGroup disposables = new DisposableGroup();
 
   public HistoChartBuilder(HistoChartConfig config,
+                           HistoChartColors colors,
                            final HistoChartRange range,
                            final GlobRepository repository,
                            final Directory directory,
                            final SelectionService parentSelectionService) {
     this.range = range;
     this.repository = repository;
-    this.histoChart = new HistoChart(config, directory);
+    this.histoChart = new HistoChart(config, colors);
+    this.disposables.add(histoChart);
     final NavigationPopup popup = new NavigationPopup(histoChart, repository, directory, parentSelectionService);
     this.histoChart.addListener(new HistoChartListenerAdapter() {
       public void processClick(HistoSelection selection, Set<Key> objectKeys) {
@@ -88,52 +93,59 @@ public class HistoChartBuilder {
     histoChart.addListener(listener);
   }
 
+  public void dispose() {
+    disposables.dispose();
+    histoChart = null;
+    histoChartLabel = null;
+    histoChartLegend = null;
+  }
+
   private void initColors(Directory directory) {
-    balanceColors = new HistoDiffColors(
+    balanceColors = disposables.add(new HistoDiffColors(
       "histo.balance.line",
       "histo.balance.fill",
       directory
-    );
+    ));
 
-    incomeAndExpensesColors = new HistoDiffColors(
+    incomeAndExpensesColors = disposables.add(new HistoDiffColors(
       "histo.income.line",
       "histo.expenses.line",
       "histo.income.fill",
       "histo.expenses.fill",
       directory
-    );
+    ));
 
-    seriesColors = new HistoDiffColors(
+    seriesColors = disposables.add(new HistoDiffColors(
       "histo.series.line",
       "histo.series.fill",
       directory
-    );
+    ));
 
-    uncategorizedColors = new HistoLineColors(
+    uncategorizedColors = disposables.add(new HistoLineColors(
       "histo.uncategorized.line",
       "histo.uncategorized.line",
       "histo.uncategorized.fill.positive",
       "histo.uncategorized.fill.negative",
       directory
-    );
+    ));
 
-    incomeAndExpensesLineColors = new HistoLineColors(
+    incomeAndExpensesLineColors = disposables.add(new HistoLineColors(
       "histo.income.line",
       "histo.expenses.line",
       "histo.income.fill",
       "histo.expenses.fill",
       directory
-    );
+    ));
 
-    accountColors = new HistoLineColors(
+    accountColors = disposables.add(new HistoLineColors(
       "histo.account.line.positive",
       "histo.account.line.negative",
       "histo.account.fill.positive",
       "histo.account.fill.negative",
       directory
-    );
+    ));
 
-    accountDailyColors = new HistoDailyColors(
+    accountDailyColors = disposables.add(new HistoDailyColors(
       accountColors,
       "histo.account.daily.current",
       "histo.account.daily.current.annotation",
@@ -142,7 +154,7 @@ public class HistoChartBuilder {
       "histo.account.inner.rollover.day",
       "histo.account.inner.selected.day",
       directory
-    );
+    ));
   }
 
   public HistoChart getChart() {
@@ -190,7 +202,15 @@ public class HistoChartBuilder {
     showDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForSavingsAccounts(repository), DaySelection.EMPTY, "daily", Transaction.SUMMARY_POSITION);
   }
 
+  public void showDailyHisto(int selectedMonthId, Integer accountId, DaySelection daySelection, String daily, final DoubleField position, HistoDailyColors colors) {
+    showDailyHisto(selectedMonthId, false, GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId), daySelection, daily, position, colors);
+  }
+
   public void showDailyHisto(int selectedMonthId, boolean showFullMonthLabels, GlobMatcher accountMatcher, DaySelection daySelection, String daily, final DoubleField position) {
+    showDailyHisto(selectedMonthId, showFullMonthLabels, accountMatcher, daySelection, daily, position, accountDailyColors);
+  }
+
+  private void showDailyHisto(int selectedMonthId, boolean showFullMonthLabels, GlobMatcher accountMatcher, DaySelection daySelection, String daily, DoubleField position, HistoDailyColors colors) {
     final HistoDailyDatasetBuilder builder = createDailyDataset(daily, showFullMonthLabels);
 
     List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
@@ -207,7 +227,7 @@ public class HistoChartBuilder {
       }
     });
 
-    builder.apply(accountDailyColors, "daily");
+    builder.apply(colors, "daily");
   }
 
   public void showMainBalanceHisto(int selectedMonthId, boolean resetPosition) {

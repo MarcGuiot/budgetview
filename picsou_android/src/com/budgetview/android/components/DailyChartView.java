@@ -36,9 +36,8 @@ public class DailyChartView extends View {
 
   private void init() {
     setWillNotDraw(false);
-    this.config = new HistoChartConfig(false, false, true, true, true, false, false, false, true);
+    this.config = new HistoChartConfig(false, false, true, true, true, false, false, true, false, true);
     this.styles = new DailyChartStyles(getResources());
-
   }
 
   protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {

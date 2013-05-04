@@ -2,13 +2,14 @@ package org.designup.picsou.gui.components.charts.histo;
 
 import com.budgetview.shared.gui.histochart.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.utils.DefaultHistoSelection;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.Key;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.util.*;
 
-public class HistoSelectionManager {
+public class HistoSelectionManager implements Disposable {
 
   private java.util.List<HistoChartListener> listeners;
 
@@ -27,6 +28,11 @@ public class HistoSelectionManager {
       listeners = new ArrayList<HistoChartListener>();
     }
     this.listeners.add(listener);
+  }
+
+  public void dispose() {
+    listeners.clear();
+    dataset = null;
   }
 
   public void resetRollover(HistoDataset dataset) {
@@ -91,12 +97,13 @@ public class HistoSelectionManager {
     }
 
     HistoSelection selection = new DefaultHistoSelection(columnIds);
+    Set<Key> objectKeys = rollover.getObjectKeys();
     for (HistoChartListener listener : listeners) {
       if (isRightClick) {
-        listener.processRightClick(selection, rollover.getObjectKeys());
+        listener.processRightClick(selection, objectKeys);
       }
       else {
-        listener.processClick(selection, rollover.getObjectKeys());
+        listener.processClick(selection, objectKeys);
       }
     }
   }

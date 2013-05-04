@@ -3,11 +3,12 @@ package org.designup.picsou.gui.components.charts.histo;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
 
-public class HistoChartColors implements ColorChangeListener {
+public class HistoChartColors implements ColorChangeListener, Disposable {
   private static final BasicStroke VERTICAL_DIVIDER_STROKE = new BasicStroke(2.0f);
   private Color chartBgColor;
   private Color chartBorderColor;
@@ -23,24 +24,38 @@ public class HistoChartColors implements ColorChangeListener {
   private Color selectedColumnBorder;
   private Color columnDividerColor;
 
+  private String prefix;
+  private Directory directory;
+
   public HistoChartColors(Directory directory) {
+    this("histo", directory);
+  }
+
+  public HistoChartColors(String prefix, Directory directory) {
+    this.prefix = prefix;
+    this.directory = directory;
     directory.get(ColorService.class).addListener(this);
   }
 
+  public void dispose() {
+    directory.get(ColorService.class).removeListener(this);
+    directory = null;
+  }
+
   public void colorsChanged(ColorLocator colorLocator) {
-    this.chartBgColor = colorLocator.get("histo.chart.bg");
-    this.chartBorderColor = colorLocator.get("histo.chart.border");
-    this.scaleLineColor = colorLocator.get("histo.scale.line");
-    this.scaleOriginLineColor = colorLocator.get("histo.scale.line.origin");
-    this.scaleTextColor = colorLocator.get("histo.scale.text");
-    this.sectionLineColor = colorLocator.get("histo.section.line");
-    this.labelColor = colorLocator.get("histo.label");
-    this.selectedLabelColor = colorLocator.get("histo.label.selected");
-    this.rolloverLabelColor = colorLocator.get("histo.label.rollover");
-    this.selectedColumnColor = colorLocator.get("histo.selection.bg");
-    this.selectedLabelBackgroundColor = colorLocator.get("histo.selection.label.bg");
-    this.selectedColumnBorder = colorLocator.get("histo.selection.border");
-    this.columnDividerColor = colorLocator.get("histo.column.divider");
+    this.chartBgColor = colorLocator.get(prefix + ".chart.bg");
+    this.chartBorderColor = colorLocator.get(prefix + ".chart.border");
+    this.scaleLineColor = colorLocator.get(prefix + ".scale.line");
+    this.scaleOriginLineColor = colorLocator.get(prefix + ".scale.line.origin");
+    this.scaleTextColor = colorLocator.get(prefix + ".scale.text");
+    this.sectionLineColor = colorLocator.get(prefix + ".section.line");
+    this.labelColor = colorLocator.get(prefix + ".label");
+    this.selectedLabelColor = colorLocator.get(prefix + ".label.selected");
+    this.rolloverLabelColor = colorLocator.get(prefix + ".label.rollover");
+    this.selectedColumnColor = colorLocator.get(prefix + ".selection.bg");
+    this.selectedLabelBackgroundColor = colorLocator.get(prefix + ".selection.label.bg");
+    this.selectedColumnBorder = colorLocator.get(prefix + ".selection.border");
+    this.columnDividerColor = colorLocator.get(prefix + ".column.divider");
   }
 
   public Color getChartBgColor() {

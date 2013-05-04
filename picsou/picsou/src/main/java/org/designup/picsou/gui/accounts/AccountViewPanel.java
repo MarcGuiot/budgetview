@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.accounts;
 
+import org.designup.picsou.gui.accounts.chart.AccountPositionsChartView;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.utils.GotoAccountWebsiteAction;
 import org.designup.picsou.gui.card.NavigationService;
@@ -7,6 +8,7 @@ import org.designup.picsou.gui.components.PopupMouseAdapter;
 import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
+import org.designup.picsou.gui.series.analysis.histobuilders.range.SelectionHistoChartRange;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
@@ -135,6 +137,13 @@ public abstract class AccountViewPanel {
 
       add("showAccount",
           createShowAccountButton(repository, directory), account, cellBuilder);
+
+      AccountPositionsChartView positionsChart =
+        new AccountPositionsChartView(account.get(Account.ID),
+                                      "accountPositionsChart",
+                                      new SelectionHistoChartRange(repository, directory), repository, directory);
+      positionsChart.registerComponents(cellBuilder);
+      cellBuilder.addDisposeListener(positionsChart);
 
       GlobSelectionToggle selectionToggle = new GlobSelectionToggle(account.getKey(), repository, directory);
       cellBuilder.add("selectAccount", selectionToggle.getComponent());

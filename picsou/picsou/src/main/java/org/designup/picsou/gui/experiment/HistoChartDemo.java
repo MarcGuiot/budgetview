@@ -2,6 +2,7 @@ package org.designup.picsou.gui.experiment;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
+import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
 import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffBarLinePainter;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffColors;
@@ -47,7 +48,7 @@ public class HistoChartDemo {
       directory
     );
 
-    HistoChart chart = new HistoChart(new HistoChartConfig(true, true, false, true, true, true, true, false, false), directory);
+    HistoChart chart = new HistoChart(new HistoChartConfig(true, true, false, true, true, true, false, true, true, false), new HistoChartColors(directory));
 
     chart.addListener(new HistoChartListenerAdapter() {
       public void processClick(HistoSelection monthIds, Set<Key> objectKeys) {

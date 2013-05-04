@@ -123,7 +123,7 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
 
     public TransactionStringifier(GlobStringifier stringifier) {
       this.stringifier = stringifier;
-      planned = Lang.get("transaction.planned");
+      this.planned = Lang.get("transaction.planned").trim();
     }
 
     public String toString(Glob transaction, GlobRepository repository) {
@@ -132,11 +132,8 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
       }
       if (transaction.isTrue(Transaction.PLANNED)) {
         String label = stringifier.toString(transaction, repository);
-        return planned + (label == null ? "" : label);
+        return planned + (label == null ? "" : " " + label);
       }
-//      if (Strings.isNotEmpty(transaction.get(Transaction.NOTE))) {
-//        return transaction.get(Transaction.NOTE) + " : " + stringifier.toString(transaction, repository);
-//      }
       return stringifier.toString(transaction, repository);
     }
 

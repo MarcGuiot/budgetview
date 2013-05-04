@@ -4,11 +4,12 @@ import com.budgetview.shared.utils.Amounts;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
 
-public class HistoDiffColors implements ColorChangeListener {
+public class HistoDiffColors implements ColorChangeListener, Disposable {
 
   private String positiveFillKey;
   private String negativeFillKey;
@@ -19,6 +20,8 @@ public class HistoDiffColors implements ColorChangeListener {
   private Color positiveLineColor;
   private Color negativeFillColor;
   private Color negativeLineColor;
+
+  private final Directory directory;
 
   public HistoDiffColors(String lineKey,
                          String fillKey,
@@ -35,8 +38,13 @@ public class HistoDiffColors implements ColorChangeListener {
     this.positiveFillKey = positiveFillKey;
     this.negativeLineKey = negativeLineKey;
     this.negativeFillKey = negativeFillKey;
+    this.directory = directory;
 
     directory.get(ColorService.class).addListener(this);
+  }
+
+  public void dispose() {
+    directory.get(ColorService.class).removeListener(this);
   }
 
   public void colorsChanged(ColorLocator colorLocator) {

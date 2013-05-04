@@ -42,15 +42,14 @@
           <column ref="unselect">
             <repeat ref="accountRepeat" marginTop="5" marginBottom="15">
               <panel ref="accountPanel" margin="3">
-                <grid margin="2">
-                  <button ref="editAccount" gridPos="(0,0)" styleClass="itemLink"/>
-                  <button ref="accountPosition" gridPos="(1,0)" anchor="east" styleClass="hyperlinkWithoutUnderline"
-                          marginLeft="10"/>
-
-                  <label ref="accountUpdateDate" gridPos="(1,1)" anchor="east" styleClass="subitem"/>
-
-                  <toggleButton ref="selectAccount" gridPos="(3,0,1,2)" marginLeft="5"/>
-                </grid>
+                <panel margin="2" layout="org.designup.picsou.gui.accounts.utils.AccountBlockLayout" opaque="false">
+                  <button ref="editAccount" styleClass="itemLink"/>
+                  <component ref="accountPositionsChart"/>
+                  <button ref="accountPosition" anchor="east" styleClass="hyperlinkWithoutUnderline"
+                          preferredSize="(150,20)"/>
+                  <label ref="accountUpdateDate" styleClass="subitem"/>
+                  <toggleButton ref="selectAccount"/>
+                </panel>
               </panel>
             </repeat>
             <filler fill="vertical"/>

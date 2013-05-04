@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.accounts.chart.TransactionAccountPositionsChartView;
+import org.designup.picsou.gui.accounts.chart.SelectedAccountPositionsChartView;
 import org.designup.picsou.gui.accounts.utils.AccountFilter;
 import org.designup.picsou.gui.card.ImportPanel;
 import org.designup.picsou.gui.card.utils.GotoCardAction;
@@ -128,8 +128,8 @@ public class TransactionView extends View implements Filterable {
                      GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, false, Transaction.AMOUNT))
       .setAutoHideIfEmpty(true);
 
-    TransactionAccountPositionsChartView accountChart =
-      new TransactionAccountPositionsChartView("accountChart",
+    SelectedAccountPositionsChartView accountChart =
+      new SelectedAccountPositionsChartView("accountChart",
                                                new SelectionHistoChartRange(repository, directory),
                                                repository, directory);
     accountChart.registerComponents(builder);

@@ -2,6 +2,7 @@ package org.designup.picsou.gui.experiment;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
+import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
 import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.designup.picsou.gui.components.charts.histo.button.HistoButtonColors;
 import org.designup.picsou.gui.components.charts.histo.button.HistoButtonDataset;
@@ -58,7 +59,7 @@ public class HistoButtonChartDemo {
       directory
     );
 
-    HistoChart chart = new HistoChart(new HistoChartConfig(true, true, false, false, true, true, true, false, false), directory);
+    HistoChart chart = new HistoChart(new HistoChartConfig(true, true, false, false, true, true, false, true, true, false), new HistoChartColors(directory));
 
     chart.addListener(new HistoChartListenerAdapter() {
       public void processClick(HistoSelection selection, Set<Key> objectKeys) {

@@ -81,6 +81,9 @@ public class HistoDailyPainter implements HistoPainter {
 
         boolean current = dataset.isCurrent(monthIndex);
         boolean future = dataset.isFuture(monthIndex, dayIndex);
+        if (future && !config.drawFuture) {
+          break;
+        }
         boolean selected = dataset.isSelected(monthIndex);
         boolean isRollover = rollover.isOnColumn(monthIndex);
         int blockWidth = width / values.length;

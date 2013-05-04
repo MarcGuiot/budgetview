@@ -3,6 +3,7 @@ package com.budgetview.analytics.gui;
 import com.budgetview.analytics.AnalyticsApp;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
+import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
 import org.designup.picsou.gui.components.charts.histo.line.HistoBarPainter;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineDataset;
@@ -60,8 +61,8 @@ public class FieldRepeatComponentFactory implements RepeatComponentFactory<Field
   private HistoChart createPerfChart(final Field field) {
     HistoChartConfig chartConfig =
       new HistoChartConfig(true, field == fields.get(0),
-                           false, true, true, true, false, false, false);
-    final HistoChart chart = new HistoChart(chartConfig, directory);
+                           false, true, true, true, false, true, false, false);
+    final HistoChart chart = new HistoChart(chartConfig, new HistoChartColors(directory));
 
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {

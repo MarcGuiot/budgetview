@@ -3,11 +3,12 @@ package org.designup.picsou.gui.components.charts.histo.line;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
 
-public class HistoLineColors  {
+public class HistoLineColors implements Disposable {
 
   private String positiveLineKey;
   private String negativeLineKey;
@@ -19,6 +20,9 @@ public class HistoLineColors  {
   private Color positiveFillColor;
   private Color negativeFillColor;
 
+  private Directory directory;
+  private HistoLineColors.ColorUpdater colorUpdater;
+
   public HistoLineColors(String positiveLineKey, String negativeLineKey,
                          String positiveFillKey, String negativeFillKey,
                          Directory directory) {
@@ -26,8 +30,16 @@ public class HistoLineColors  {
     this.negativeLineKey = negativeLineKey;
     this.positiveFillKey = positiveFillKey;
     this.negativeFillKey = negativeFillKey;
+    this.directory = directory;
 
-    directory.get(ColorService.class).addListener(new ColorUpdater());
+    colorUpdater = new ColorUpdater();
+    directory.get(ColorService.class).addListener(colorUpdater);
+  }
+
+  public void dispose() {
+    directory.get(ColorService.class).removeListener(colorUpdater);
+    directory = null;
+    colorUpdater = null;
   }
 
   private class ColorUpdater implements ColorChangeListener {

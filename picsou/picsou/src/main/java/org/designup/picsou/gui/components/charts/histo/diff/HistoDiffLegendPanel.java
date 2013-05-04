@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.components.charts.histo.diff;
 
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 

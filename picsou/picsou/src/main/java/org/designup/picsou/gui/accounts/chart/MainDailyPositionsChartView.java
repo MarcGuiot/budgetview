@@ -10,7 +10,6 @@ import org.designup.picsou.gui.components.tips.DetailsTip;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.model.Day;
-import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -22,9 +21,7 @@ import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
-import static org.globsframework.model.utils.GlobMatchers.*;
-
-public class MainDailyPositionsChartView extends AccountsChartView {
+public class MainDailyPositionsChartView extends PositionsChartView {
 
   private boolean showFullMonthLabels = false;
   private String tooltipKey;
@@ -72,10 +69,7 @@ public class MainDailyPositionsChartView extends AccountsChartView {
         return;
       }
 
-      Key objectKey = objectKeys.iterator().next();
-      Integer monthId = objectKey.get(Day.MONTH);
-      Integer day = objectKey.get(Day.DAY);
-      GlobList transactions = getTransactions(monthId, day, repository);
+      GlobList transactions = getTransactions(objectKeys.iterator().next(), repository);
       GlobList series = transactions.getTargets(Transaction.SERIES, repository);
       highlightingService.select(series, Series.TYPE);
     }
@@ -91,9 +85,7 @@ public class MainDailyPositionsChartView extends AccountsChartView {
     }
 
     Key objectKey = objectKeys.iterator().next();
-    Integer monthId = objectKey.get(Day.MONTH);
-    Integer day = objectKey.get(Day.DAY);
-    GlobList transactions = getTransactions(monthId, day, repository);
+    GlobList transactions = getTransactions(objectKey, repository);
     if (transactions.isEmpty()) {
       DetailsTip tip =
         new DetailsTip(chart, Lang.get("seriesAnalysis.chart.histo.daily.budgetSummary.noData.tooltip",
@@ -102,19 +94,7 @@ public class MainDailyPositionsChartView extends AccountsChartView {
       return;
     }
 
-    Set<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getValueSet(Month.ID);
-    if (!selectedMonthIds.contains(monthId)) {
-      selectionService.select(repository.get(Key.create(Month.TYPE, monthId)));
-    }
-
-    selectionService.select(transactions, Transaction.TYPE);
-
-    directory.get(NavigationService.class).gotoDataWithPlannedTransactions();
-  }
-
-  private static GlobList getTransactions(Integer monthId, Integer day, GlobRepository repository) {
-    return repository.getAll(Transaction.TYPE,
-                             and(fieldEquals(Transaction.POSITION_MONTH, monthId),
-                                 fieldEquals(Transaction.POSITION_DAY, day)));
+    Integer monthId = objectKey.get(Day.MONTH);
+    showTransactions(transactions, monthId, selectionService, repository, directory);
   }
 }

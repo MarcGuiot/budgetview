@@ -3,6 +3,7 @@ package org.designup.picsou.gui.projects;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
+import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
 import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.designup.picsou.gui.components.charts.histo.button.HistoButtonColors;
 import org.designup.picsou.gui.components.charts.histo.button.HistoButtonPainter;
@@ -44,7 +45,7 @@ public class ProjectChartView extends View {
   public ProjectChartView(final HistoChartRange range, final GlobRepository repository, final Directory directory) {
     super(repository, directory);
     this.range = range;
-    this.histoChart = new HistoChart(new HistoChartConfig(true, false, true, false, true, true, true, true, false), directory);
+    this.histoChart = new HistoChart(new HistoChartConfig(true, false, true, false, true, true, false, true, true, true), new HistoChartColors(directory));
     this.updater = new HistoChartUpdater(repository, directory, Month.TYPE, Month.ID, Project.TYPE, ProjectItem.TYPE) {
       protected void update(Integer currentMonthId, boolean resetPosition) {
         updateChart(currentMonthId, resetPosition);

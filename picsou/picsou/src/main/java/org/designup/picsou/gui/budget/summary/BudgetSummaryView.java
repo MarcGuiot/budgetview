@@ -77,7 +77,7 @@ public class BudgetSummaryView
 
     MainDailyPositionsChartView chartView =
       new MainDailyPositionsChartView(new ScrollableHistoChartRange(0, 1, true, repository),
-                                      new HistoChartConfig(true, false, true, true, true, true, false, true, false),
+                                      new HistoChartConfig(true, false, true, true, true, true, false, true, false, true),
                                       "chart", repository, directory, "daily.budgetSummary");
     chartView.installHighlighting();
     chartView.setShowFullMonthLabels(true);

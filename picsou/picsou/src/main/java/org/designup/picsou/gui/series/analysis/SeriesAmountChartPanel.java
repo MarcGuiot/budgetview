@@ -2,6 +2,7 @@ package org.designup.picsou.gui.series.analysis;
 
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
+import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartUpdater;
@@ -21,8 +22,8 @@ public class SeriesAmountChartPanel {
   public SeriesAmountChartPanel(GlobRepository repository, Directory directory) {
 
     final HistoChartBuilder histoChartBuilder =
-      new HistoChartBuilder(new HistoChartConfig(true, true, false, true, true, true, true, false, false),
-                            new ScrollableHistoChartRange(4, 12, true, repository),
+      new HistoChartBuilder(new HistoChartConfig(true, true, false, true, true, true, false, true, true, false),
+                            new HistoChartColors(directory), new ScrollableHistoChartRange(4, 12, true, repository),
                             repository, directory, directory.get(SelectionService.class));
     histoChartBuilder.addListener(new HistoChartListenerAdapter() {
       public void scroll(int count) {

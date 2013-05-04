@@ -4,11 +4,12 @@ import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
 
-public class HistoDailyColors {
+public class HistoDailyColors implements Disposable {
 
   public final HistoLineColors line;
 
@@ -18,6 +19,7 @@ public class HistoDailyColors {
   private String negativeInnerLabelKey;
   private String rolloverDayKey;
   private String selectedDayKey;
+  private final Directory directory;
 
   private Color currentDayColor;
   private Color currentDayAnnotationColor;
@@ -25,6 +27,7 @@ public class HistoDailyColors {
   private Color negativeInnerLabelColor;
   private Color rolloverDayColor;
   private Color selectedDayColor;
+  private HistoDailyColors.ColorUpdater colorUpdater;
 
   public HistoDailyColors(HistoLineColors line,
                           String currentDayKey,
@@ -41,8 +44,14 @@ public class HistoDailyColors {
     this.negativeInnerLabelKey = negativeInnerLabelKey;
     this.rolloverDayKey = rolloverDayKey;
     this.selectedDayKey = selectedDayKey;
+    this.directory = directory;
 
-    directory.get(ColorService.class).addListener(new ColorUpdater());
+    this.colorUpdater = new ColorUpdater();
+    directory.get(ColorService.class).addListener(colorUpdater);
+  }
+
+  public void dispose() {
+    directory.get(ColorService.class).removeListener(colorUpdater);
   }
 
   private class ColorUpdater implements ColorChangeListener {

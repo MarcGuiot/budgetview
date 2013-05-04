@@ -152,7 +152,7 @@ public class HistoChartMetricsTest extends ChartTestCase {
                                  },
                                  columnCount,
                                  maxNegativeValue, maxPositiveValue,
-                                 new HistoChartConfig(drawLabels, drawSections, drawInnerLabels, true, true, true, true, true, false),
+                                 new HistoChartConfig(drawLabels, drawSections, drawInnerLabels, true, true, true, false, true, true, true),
                                  true, snapToScale);
 
   }

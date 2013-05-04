@@ -55,6 +55,6 @@ public class SummaryView extends View {
   }
 
   public static HistoChartConfig getChartConfigWithoutLabels(boolean drawInnerAnnotations) {
-    return new HistoChartConfig(false, false, false, true, true, true, true, true, drawInnerAnnotations);
+    return new HistoChartConfig(false, false, false, true, true, true, drawInnerAnnotations, true, true, true);
   }
 }

@@ -6,16 +6,17 @@ import com.budgetview.shared.gui.histochart.HistoChartMetrics;
 import com.budgetview.shared.gui.histochart.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.utils.AwtTextMetrics;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
+import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Key;
-import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Set;
 
-public class HistoChart extends JPanel {
+public class HistoChart extends JPanel implements Disposable {
 
   private HistoChartColors colors;
   private HistoPainter painter = HistoPainter.NULL;
@@ -26,15 +27,16 @@ public class HistoChart extends JPanel {
   private HistoChartConfig config;
 
   private HistoSelectionManager selectionManager;
+  private DisposableGroup disposables = new DisposableGroup();
 
   public static final BasicStroke SCALE_STROKE = new BasicStroke(1);
   public static final BasicStroke SCALE_ORIGIN_STROKE = new BasicStroke(1.2f);
   private Font defaultFont;
 
-  public HistoChart(HistoChartConfig config, Directory directory) {
+  public HistoChart(HistoChartConfig config, HistoChartColors colors) {
     this.config = config;
     this.selectionManager = new HistoSelectionManager();
-    this.colors = new HistoChartColors(directory);
+    this.colors = colors;
     this.defaultFont = getFont().deriveFont(9f);
     setFont(defaultFont);
     this.selectedLabelFont = getFont().deriveFont(Font.BOLD);
@@ -48,10 +50,18 @@ public class HistoChart extends JPanel {
         setCursor(Cursor.getPredefinedCursor(rollover.isActive() ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
       }
     });
+
+    disposables.add(colors);
+    disposables.add(selectionManager);
   }
 
   public void addListener(HistoChartListener listener) {
     selectionManager.addListener(listener);
+  }
+
+  public void dispose() {
+    disposables.dispose();
+    selectionManager = null;
   }
 
   // For testing

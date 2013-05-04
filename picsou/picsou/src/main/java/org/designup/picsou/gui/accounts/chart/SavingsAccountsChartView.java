@@ -7,7 +7,7 @@ import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRan
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
-public class SavingsAccountsChartView extends AccountsChartView {
+public class SavingsAccountsChartView extends PositionsChartView {
 
   public SavingsAccountsChartView(HistoChartRange range, HistoChartConfig config, GlobRepository repository, Directory directory) {
     super(range, config, "savingsHistoChart", repository, directory);

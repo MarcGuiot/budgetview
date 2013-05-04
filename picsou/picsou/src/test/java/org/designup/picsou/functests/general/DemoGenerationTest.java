@@ -287,9 +287,9 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth(Month.toString(thirdMonth));
     transactionCreation
       .setLabel(transaction("manual1")).setAmount(20).setDay(1).create()
-      .setLabel(transaction("manual1")).setAmount(20).setDay(9).create()
+      .setLabel(transaction("manual1")).setAmount(20).setDay(12).create()
       .setLabel(transaction("manual2")).setAmount(-5).setDay(6).create()
-      .setLabel(transaction("manual4")).setAmount(-20).setDay(9).create();
+      .setLabel(transaction("manual4")).setAmount(-20).setDay(15).create();
 
     categorization.setNewVariable(transaction("manual2"), series("manual.daily"), -30.00);
     categorization.setVariable(transaction("manual4"), series("manual.daily"));

@@ -3,6 +3,7 @@ package org.designup.picsou.gui.series.analysis;
 import org.designup.picsou.gui.card.NavigationPopup;
 import org.designup.picsou.gui.card.NavigationService;
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
+import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
 import org.designup.picsou.gui.components.charts.stack.StackChartColors;
@@ -79,8 +80,8 @@ public class SeriesChartsPanel implements GlobSelectionListener {
 
     setMainSummaryWrapperKey();
 
-    histoChartBuilder = new HistoChartBuilder(new HistoChartConfig(true, true, false, true, true, false, true, false, false),
-                                              range, repository, directory, parentSelectionService);
+    histoChartBuilder = new HistoChartBuilder(new HistoChartConfig(true, true, false, true, true, false, false, true, true, false),
+                                              new HistoChartColors(directory), range, repository, directory, parentSelectionService);
     histoChartBuilder.addListener(new HistoChartListenerAdapter() {
       public void scroll(int count) {
         updateCharts(false);

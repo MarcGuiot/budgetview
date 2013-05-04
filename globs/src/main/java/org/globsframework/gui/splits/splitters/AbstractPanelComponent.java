@@ -25,7 +25,6 @@ public abstract class AbstractPanelComponent<T extends JPanel> extends DefaultCo
   }
 
   protected void postCreateComponent(T component, SplitsContext context) {
-    component.setOpaque(false);
     if (customLayout) {
       for (Splitter subSplitter : getSubSplitters()) {
         ComponentConstraints constraints = subSplitter.createComponentStretch(context, true).componentConstraints;
