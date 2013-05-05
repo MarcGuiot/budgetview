@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.printing.report.gauges;
+package org.designup.picsou.gui.printing.budget.gauges;
 
 import java.awt.*;
 

@@ -1,10 +1,10 @@
-package org.designup.picsou.gui.printing.report.gauges;
+package org.designup.picsou.gui.printing.budget.gauges;
 
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.printing.PrintStyle;
-import org.designup.picsou.gui.printing.report.utils.PageBlock;
+import org.designup.picsou.gui.printing.utils.PageBlock;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.globsframework.model.Glob;

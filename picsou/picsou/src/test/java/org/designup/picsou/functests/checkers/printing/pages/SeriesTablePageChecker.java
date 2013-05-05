@@ -1,7 +1,7 @@
 package org.designup.picsou.functests.checkers.printing.pages;
 
 import junit.framework.Assert;
-import org.designup.picsou.gui.printing.report.tables.SeriesTable;
+import org.designup.picsou.gui.printing.budget.tables.SeriesTable;
 import org.globsframework.utils.TablePrinter;
 import org.globsframework.utils.TestUtils;
 

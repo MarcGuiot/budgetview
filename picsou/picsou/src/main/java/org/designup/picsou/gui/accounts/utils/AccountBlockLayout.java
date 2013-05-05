@@ -66,7 +66,7 @@ public class AccountBlockLayout implements LayoutManager {
 
   private class Metrics {
 
-    private static final int CHART_HEIGHT = 30;
+    private static final int CHART_HEIGHT = 35;
     private static final int CHART_LEFT_MARGIN = 10;
     private static final int TITLE_BOTTOM_MARGIN = 5;
     private static final int SELECT_RIGHT_MARGIN = 4;

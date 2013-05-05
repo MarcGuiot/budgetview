@@ -1,10 +1,11 @@
-package org.designup.picsou.gui.printing.report;
+package org.designup.picsou.gui.printing.budget;
 
+import org.designup.picsou.gui.printing.PrintablePage;
 import org.designup.picsou.gui.printing.PrintableReport;
-import org.designup.picsou.gui.printing.report.gauges.BudgetGaugePages;
-import org.designup.picsou.gui.printing.report.overview.BudgetOverviewPage;
-import org.designup.picsou.gui.printing.report.tables.SeriesTable;
-import org.designup.picsou.gui.printing.report.tables.SeriesTablePage;
+import org.designup.picsou.gui.printing.budget.gauges.BudgetGaugePages;
+import org.designup.picsou.gui.printing.budget.overview.BudgetOverviewPage;
+import org.designup.picsou.gui.printing.budget.tables.SeriesTable;
+import org.designup.picsou.gui.printing.budget.tables.SeriesTablePage;
 import org.designup.picsou.model.util.ClosedMonthRange;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -20,7 +21,7 @@ import java.util.SortedSet;
 public class BudgetReport implements PrintableReport {
 
   private PageFormat format;
-  private List<ReportPage> pages = new ArrayList<ReportPage>();
+  private List<PrintablePage> pages = new ArrayList<PrintablePage>();
   private SortedSet<Integer> selectedMonths;
   private Integer currentMonth;
   private ClosedMonthRange monthRange;

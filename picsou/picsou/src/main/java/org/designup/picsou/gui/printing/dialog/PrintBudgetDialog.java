@@ -5,7 +5,7 @@ import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.printing.PrinterService;
-import org.designup.picsou.gui.printing.report.BudgetReport;
+import org.designup.picsou.gui.printing.budget.BudgetReport;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.util.ClosedMonthRange;
 import org.designup.picsou.utils.Lang;
@@ -18,18 +18,18 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.SortedSet;
 
-public class PrintDialog {
+public class PrintBudgetDialog {
 
   private PicsouDialog dialog;
   private GlobRepository repository;
   private Directory directory;
   private Period currentPeriod;
-  private PrintDialog.CurrentMonthAction currentMonthAction;
-  private PrintDialog.CurrentYearAction currentYearAction;
+  private PrintBudgetDialog.CurrentMonthAction currentMonthAction;
+  private PrintBudgetDialog.CurrentYearAction currentYearAction;
   private SortedSet<Integer> selectedMonths;
   private Integer currentMonth;
 
-  public PrintDialog(GlobRepository repository, Directory directory) {
+  public PrintBudgetDialog(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
     initDialog();
@@ -48,7 +48,7 @@ public class PrintDialog {
   private void initDialog() {
     dialog = PicsouDialog.create(directory.get(JFrame.class), true, directory);
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/printing/printDialog.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/printing/printBudgetDialog.splits",
                                                       repository, directory);
 
     currentMonthAction = new CurrentMonthAction();
@@ -121,7 +121,7 @@ public class PrintDialog {
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
-      PrintDialog.this.currentPeriod = this;
+      PrintBudgetDialog.this.currentPeriod = this;
     }
   }
 

@@ -5,10 +5,10 @@ import org.designup.picsou.functests.checkers.printing.pages.BudgetGaugePageChec
 import org.designup.picsou.functests.checkers.printing.pages.BudgetOverviewPageChecker;
 import org.designup.picsou.functests.checkers.printing.pages.SeriesTablePageChecker;
 import org.designup.picsou.gui.printing.PrintableReport;
-import org.designup.picsou.gui.printing.report.BudgetReport;
-import org.designup.picsou.gui.printing.report.utils.BlockColumnPage;
-import org.designup.picsou.gui.printing.report.overview.BudgetOverviewPage;
-import org.designup.picsou.gui.printing.report.tables.SeriesTablePage;
+import org.designup.picsou.gui.printing.budget.BudgetReport;
+import org.designup.picsou.gui.printing.budget.overview.BudgetOverviewPage;
+import org.designup.picsou.gui.printing.budget.tables.SeriesTablePage;
+import org.designup.picsou.gui.printing.utils.BlockMultiColumnsPage;
 
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
@@ -53,9 +53,9 @@ public class BudgetReportChecker {
 
   public BudgetGaugePageChecker initGaugesPage(int page) {
     Printable printable = report.getPrintable(page);
-    if (!(printable instanceof BlockColumnPage)) {
+    if (!(printable instanceof BlockMultiColumnsPage)) {
       Assert.fail("Unexpected type for page " + page + ": " + printable.getClass());
     }
-    return new BudgetGaugePageChecker(((BlockColumnPage)printable));
+    return new BudgetGaugePageChecker(((BlockMultiColumnsPage)printable));
   }
 }

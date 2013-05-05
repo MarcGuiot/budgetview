@@ -1,10 +1,10 @@
-package org.designup.picsou.gui.printing.report.overview;
+package org.designup.picsou.gui.printing.budget.overview;
 
 import org.designup.picsou.gui.description.stringifiers.MonthListStringifier;
 import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.gui.printing.PrintMetrics;
 import org.designup.picsou.gui.printing.PrintStyle;
-import org.designup.picsou.gui.printing.report.ReportPage;
+import org.designup.picsou.gui.printing.PrintablePage;
 import org.designup.picsou.gui.series.analysis.SeriesChartsPanel;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.FixedHistoChartRange;
 import org.designup.picsou.model.util.ClosedMonthRange;
@@ -18,7 +18,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.SortedSet;
 
-public class BudgetOverviewPage extends ReportPage {
+public class BudgetOverviewPage extends PrintablePage {
 
   private SortedSet<Integer> selectedMonths;
   private ClosedMonthRange monthRange;

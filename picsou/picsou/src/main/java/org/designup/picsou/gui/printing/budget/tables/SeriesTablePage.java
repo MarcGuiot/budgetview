@@ -1,13 +1,13 @@
-package org.designup.picsou.gui.printing.report.tables;
+package org.designup.picsou.gui.printing.budget.tables;
 
 import org.designup.picsou.gui.printing.PrintStyle;
 import org.designup.picsou.gui.printing.PrintMetrics;
-import org.designup.picsou.gui.printing.report.ReportPage;
+import org.designup.picsou.gui.printing.PrintablePage;
 import org.globsframework.gui.views.Alignment;
 
 import java.awt.*;
 
-public class SeriesTablePage extends ReportPage {
+public class SeriesTablePage extends PrintablePage {
 
   private SeriesTable table;
 

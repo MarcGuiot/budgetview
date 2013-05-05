@@ -15,6 +15,7 @@ import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
 import org.designup.picsou.gui.model.Card;
+import org.designup.picsou.gui.printing.actions.PrintTransactionsAction;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.SelectionHistoChartRange;
 import org.designup.picsou.gui.transactions.actions.TransactionTableActions;
 import org.designup.picsou.gui.transactions.columns.*;
@@ -122,6 +123,7 @@ public class TransactionView extends View implements Filterable {
     tableMenu.add(showPlannedTransactionsCheckbox);
     tableMenu.addSeparator();
     tableMenu.add(view.getCopyTableAction(Lang.get("copyTable")));
+    tableMenu.add(new PrintTransactionsAction(view, repository, directory));
     builder.add("actionsMenu", new JPopupButton(Lang.get("budgetView.actions"), tableMenu));
 
     builder.addLabel("sum", Transaction.TYPE,

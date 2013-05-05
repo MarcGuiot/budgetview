@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.printing.report.tables;
+package org.designup.picsou.gui.printing.budget.tables;
 
 import org.designup.picsou.gui.printing.PrintFonts;
 import org.designup.picsou.gui.printing.PrintMetrics;

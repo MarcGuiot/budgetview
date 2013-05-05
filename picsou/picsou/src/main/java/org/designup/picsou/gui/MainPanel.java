@@ -35,7 +35,7 @@ import org.designup.picsou.gui.notes.ShowNotesAction;
 import org.designup.picsou.gui.notifications.NotificationsFlagView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.preferences.dev.DevOptionsAction;
-import org.designup.picsou.gui.printing.actions.PrintAction;
+import org.designup.picsou.gui.printing.actions.PrintBudgetAction;
 import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodBudgetAreaTrigger;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
@@ -292,7 +292,7 @@ public class MainPanel {
     menu.add(deleteUserAction);
 
     menu.addSeparator();
-    menu.add(new PrintAction(replicationGlobRepository, directory));
+    menu.add(new PrintBudgetAction(replicationGlobRepository, directory));
 
 //    Utils.beginRemove();
     menu.addSeparator();

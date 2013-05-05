@@ -1,11 +1,10 @@
-package org.designup.picsou.gui.printing.report.gauges;
+package org.designup.picsou.gui.printing.budget.gauges;
 
 import org.designup.picsou.gui.budget.BudgetAreaHeader;
 import org.designup.picsou.gui.budget.BudgetAreaHeaderUpdater;
-import org.designup.picsou.gui.components.ComponentTextDisplay;
-import org.designup.picsou.gui.components.TextDisplay;import org.designup.picsou.gui.components.TextDisplayHolder;import org.designup.picsou.gui.components.charts.Gauge;
+import org.designup.picsou.gui.components.TextDisplayHolder;import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.printing.PrintStyle;
-import org.designup.picsou.gui.printing.report.utils.PageBlock;
+import org.designup.picsou.gui.printing.utils.PageBlock;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.globsframework.gui.SelectionService;
@@ -13,7 +12,6 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.SortedSet;
 

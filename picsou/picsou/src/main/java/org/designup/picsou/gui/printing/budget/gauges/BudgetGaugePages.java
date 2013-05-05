@@ -1,17 +1,15 @@
-package org.designup.picsou.gui.printing.report.gauges;
+package org.designup.picsou.gui.printing.budget.gauges;
 
 import org.designup.picsou.gui.budget.BudgetAreaSeriesFilter;
 import org.designup.picsou.gui.description.DefaultPeriodSeriesStatComparator;
 import org.designup.picsou.gui.description.stringifiers.MonthListStringifier;
-import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.printing.report.ReportPage;
-import org.designup.picsou.gui.printing.report.utils.BlockColumnPage;
-import org.designup.picsou.gui.printing.report.utils.BudgetReportUtils;
-import org.designup.picsou.gui.printing.report.utils.PageBlock;
-import org.designup.picsou.gui.printing.report.utils.EmptyBlock;
+import org.designup.picsou.gui.printing.PrintablePage;
+import org.designup.picsou.gui.printing.utils.BlockMultiColumnsPage;
+import org.designup.picsou.gui.printing.utils.BudgetReportUtils;
+import org.designup.picsou.gui.printing.utils.PageBlock;
+import org.designup.picsou.gui.printing.utils.EmptyBlock;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
@@ -27,7 +25,7 @@ import java.util.SortedSet;
 
 public class BudgetGaugePages {
 
-  public static List<ReportPage> getPages(SortedSet<Integer> selectedMonths, PageFormat format,
+  public static List<PrintablePage> getPages(SortedSet<Integer> selectedMonths, PageFormat format,
                                           GlobRepository repository, Directory directory) {
     BudgetGaugePages budgetGaugePages = new BudgetGaugePages(selectedMonths, format, repository, directory);
     return budgetGaugePages.pages;
@@ -37,8 +35,8 @@ public class BudgetGaugePages {
   private PageFormat format;
   private GlobRepository repository;
   private Directory directory;
-  private List<ReportPage> pages = new ArrayList<ReportPage>();
-  private BlockColumnPage currentPage;
+  private List<PrintablePage> pages = new ArrayList<PrintablePage>();
+  private BlockMultiColumnsPage currentPage;
 
   private BudgetGaugePages(SortedSet<Integer> selectedMonths, PageFormat format,
                            GlobRepository repository, Directory directory) {
@@ -87,7 +85,7 @@ public class BudgetGaugePages {
     if ((currentPage == null) || !currentPage.hasSpaceLeftFor(block)) {
       String title = Lang.get("print.budgetGauge",
                               MonthListStringifier.toString(selectedMonths).toLowerCase());
-      currentPage = new BlockColumnPage(format, title);
+      currentPage = new BlockMultiColumnsPage(format, title);
       pages.add(currentPage);      
     }
     currentPage.append(block);

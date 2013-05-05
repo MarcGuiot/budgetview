@@ -1,20 +1,20 @@
 package org.designup.picsou.functests.checkers.printing.pages;
 
 import junit.framework.Assert;
-import org.designup.picsou.gui.printing.report.gauges.BudgetAreaGaugeBlock;
-import org.designup.picsou.gui.printing.report.gauges.SeriesGaugeBlock;
-import org.designup.picsou.gui.printing.report.utils.BlockColumnPage;
-import org.designup.picsou.gui.printing.report.utils.EmptyBlock;
-import org.designup.picsou.gui.printing.report.utils.PageBlock;
+import org.designup.picsou.gui.printing.budget.gauges.BudgetAreaGaugeBlock;
+import org.designup.picsou.gui.printing.budget.gauges.SeriesGaugeBlock;
+import org.designup.picsou.gui.printing.utils.BlockMultiColumnsPage;
+import org.designup.picsou.gui.printing.utils.EmptyBlock;
+import org.designup.picsou.gui.printing.utils.PageBlock;
 import org.globsframework.utils.Utils;
 
 import java.util.List;
 
 public class BudgetGaugePageChecker {
-  private BlockColumnPage page;
+  private BlockMultiColumnsPage page;
   private List<PageBlock> blocks;
 
-  public BudgetGaugePageChecker(BlockColumnPage page) {
+  public BudgetGaugePageChecker(BlockMultiColumnsPage page) {
     this.page = page;
     this.blocks = page.getBlocks();
   }

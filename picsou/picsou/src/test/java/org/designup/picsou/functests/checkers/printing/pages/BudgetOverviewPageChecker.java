@@ -3,7 +3,7 @@ package org.designup.picsou.functests.checkers.printing.pages;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.HistoChartChecker;
 import org.designup.picsou.functests.checkers.components.StackChecker;
-import org.designup.picsou.gui.printing.report.overview.BudgetOverviewPage;
+import org.designup.picsou.gui.printing.budget.overview.BudgetOverviewPage;
 import org.uispec4j.Panel;
 
 public class BudgetOverviewPageChecker {

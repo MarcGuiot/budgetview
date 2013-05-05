@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.printing.report.utils;
+package org.designup.picsou.gui.printing.utils;
 
 import org.designup.picsou.model.BudgetArea;
 

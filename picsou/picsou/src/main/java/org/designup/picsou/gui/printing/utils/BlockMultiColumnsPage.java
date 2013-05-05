@@ -1,14 +1,14 @@
-package org.designup.picsou.gui.printing.report.utils;
+package org.designup.picsou.gui.printing.utils;
 
 import org.designup.picsou.gui.printing.PrintMetrics;
 import org.designup.picsou.gui.printing.PrintStyle;
-import org.designup.picsou.gui.printing.report.ReportPage;
+import org.designup.picsou.gui.printing.PrintablePage;
 
 import java.awt.*;
 import java.awt.print.PageFormat;
 import java.util.*;
 
-public class BlockColumnPage extends ReportPage {
+public class BlockMultiColumnsPage extends PrintablePage {
 
   private final int MAX_COLUMNS = 3;
   private final int COLUMN_MARGIN = 10;
@@ -24,7 +24,7 @@ public class BlockColumnPage extends ReportPage {
   private java.util.List<BlockContext> blocks = new ArrayList<BlockContext>();
   private Rectangle contentArea;
 
-  public BlockColumnPage(PageFormat format, String title) {
+  public BlockMultiColumnsPage(PageFormat format, String title) {
     this.title = title;
 
     PrintMetrics metrics = new PrintMetrics(format);

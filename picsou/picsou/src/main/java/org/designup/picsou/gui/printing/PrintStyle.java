@@ -14,12 +14,14 @@ public class PrintStyle implements PrintFonts {
   private final Font footerFont = new Font("Arial", Font.PLAIN, 9);
 
   private final Color titleColor = Color.BLACK;
+  private final Color subTextColor = Colors.toColor("555555");
   private final Color textColor = Color.BLACK;
   private final Color tableRowColor = Colors.toColor("EEEEEE");
   private final Color tableLineColor = Colors.toColor("BBBBBB");
   private final Color sectionTextColor = Colors.toColor("FFFFFF");
   private final Color sectionBackgroundColor = Colors.toColor("999999");
   private final Color footerColor = Colors.toColor("999999");
+  private final Color rowSeparatorColor = Colors.toColor("EEEEEE");
 
   public PrintStyle() {
   }
@@ -52,12 +54,20 @@ public class PrintStyle implements PrintFonts {
     return textColor;
   }
 
+  public Color getSubTextColor() {
+    return subTextColor;
+  }
+
   public Color getTableRowColor() {
     return tableRowColor;
   }
 
   public Color getDividerColor() {
     return tableLineColor;
+  }
+
+  public Color getRowSeparatorColor() {
+    return rowSeparatorColor;
   }
 
   public void setColors(Gauge gauge) {

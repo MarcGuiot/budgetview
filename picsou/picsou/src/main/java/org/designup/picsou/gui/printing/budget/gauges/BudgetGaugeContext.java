@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.printing.report.gauges;
+package org.designup.picsou.gui.printing.budget.gauges;
 
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.printing.PrintStyle;

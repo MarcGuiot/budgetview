@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.printing.report;
+package org.designup.picsou.gui.printing;
 
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.printing.PrintStyle;
@@ -12,7 +12,7 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 
-public abstract class ReportPage implements Printable {
+public abstract class PrintablePage implements Printable {
   public int print(Graphics g, PageFormat format, int page) throws PrinterException {
     Graphics2D g2 = (Graphics2D)g;
     g2.translate(format.getImageableX(), format.getImageableY());
@@ -45,7 +45,6 @@ public abstract class ReportPage implements Printable {
   }
 
   private String getFooterText(int page) {
-    
     return Lang.get("print.footer", Formatting.toString(TimeService.getToday()), page);
   }
 

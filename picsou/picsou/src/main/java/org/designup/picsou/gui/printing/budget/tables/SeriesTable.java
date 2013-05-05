@@ -1,8 +1,8 @@
-package org.designup.picsou.gui.printing.report.tables;
+package org.designup.picsou.gui.printing.budget.tables;
 
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.gui.printing.report.utils.BudgetReportUtils;
+import org.designup.picsou.gui.printing.utils.BudgetReportUtils;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
