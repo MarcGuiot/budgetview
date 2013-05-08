@@ -23,7 +23,7 @@ public class TransactionBlock implements PageBlock {
   }
 
   public int getHeight() {
-    return Strings.isNotEmpty(transaction.get(Transaction.NOTE)) ? HEIGHT_WITH_NOTES : DEFAULT_HEIGHT;
+    return Strings.isNotEmpty(getNote()) ? HEIGHT_WITH_NOTES : DEFAULT_HEIGHT;
   }
 
   public int getNeededHeight() {
@@ -40,20 +40,51 @@ public class TransactionBlock implements PageBlock {
 
     g2.setColor(style.getTextColor());
     g2.setFont(labelFont);
-    g2.drawString(transaction.get(Transaction.LABEL), metrics.getLabelX(), metrics.getLabelY());
-    String amount = AmountFormat.toString(transaction.get(Transaction.AMOUNT));
+    g2.setClip(metrics.getLabelBounds());
+    g2.drawString(getLabel(), metrics.getLabelX(), metrics.getLabelY());
+    g2.setClip(null);
+    String amount = getAmount();
     g2.drawString(amount, metrics.getAmountX(amount), metrics.getAmountY());
 
     g2.setColor(style.getSubTextColor());
     g2.setFont(defaultFont);
-    g2.drawString(context.getBankDate(transaction), metrics.getBankDateX(), metrics.getBankDateY());
-    g2.drawString(context.getSeriesName(transaction), metrics.getSeriesX(), metrics.getSeriesY());
-    String accountLabel = context.getAccountLabel(transaction);
+    g2.drawString(getUserDate(), metrics.getUserDateX(), metrics.getUserDateY());
+    g2.drawString(getBankDate(), metrics.getBankDateX(), metrics.getBankDateY());
+    g2.drawString(getSeriesName(), metrics.getSeriesX(), metrics.getSeriesY());
+    String accountLabel = getAccountLabel();
     g2.drawString(accountLabel, metrics.getAccountLabelX(accountLabel), metrics.getAccountLabelY());
 
-    String note = transaction.get(Transaction.NOTE);
+    String note = getNote();
     if (Strings.isNotEmpty(note)) {
       g2.drawString(note, metrics.getNoteX(), metrics.getNoteY());
     }
+  }
+
+  public String getUserDate() {
+    return context.getUserDate(transaction);
+  }
+
+  public String getBankDate() {
+    return context.getBankDate(transaction);
+  }
+
+  public String getLabel() {
+    return transaction.get(Transaction.LABEL);
+  }
+
+  public String getAmount() {
+    return AmountFormat.toString(transaction.get(Transaction.AMOUNT));
+  }
+
+  public String getSeriesName() {
+    return context.getSeriesName(transaction);
+  }
+
+  public String getNote() {
+    return transaction.get(Transaction.NOTE);
+  }
+
+  public String getAccountLabel() {
+    return context.getAccountLabel(transaction);
   }
 }

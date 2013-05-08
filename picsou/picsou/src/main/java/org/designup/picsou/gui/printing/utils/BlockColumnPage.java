@@ -6,7 +6,7 @@ import org.designup.picsou.gui.printing.PrintablePage;
 
 import java.awt.*;
 import java.awt.print.PageFormat;
-import java.util.ArrayList;
+import java.util.*;
 
 public class BlockColumnPage extends PrintablePage {
 
@@ -53,6 +53,14 @@ public class BlockColumnPage extends PrintablePage {
       block.print(g2, style);
     }
     return PAGE_EXISTS;
+  }
+
+  public java.util.List<PageBlock> getBlocks() {
+    java.util.List<PageBlock> result = new ArrayList<PageBlock>();
+    for (BlockContext block : blocks) {
+      result.add(block.pageBlock);
+    }
+    return result;
   }
 
   private class BlockContext {

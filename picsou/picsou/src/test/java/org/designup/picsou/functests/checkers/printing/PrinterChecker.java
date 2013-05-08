@@ -13,6 +13,10 @@ public class PrinterChecker {
     return new BudgetReportChecker(printService.getLastReport());
   }
 
+  public TransactionPrintChecker getTransactions() {
+    return new TransactionPrintChecker(printService.getLastReport());
+  }
+
   public void setException(String exceptionMessage) {
     printService.setException(exceptionMessage);
   }

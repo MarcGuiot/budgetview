@@ -9,6 +9,7 @@ public class PrintStyle implements PrintFonts {
 
   private final Font titleFont = new Font("Arial", Font.BOLD, 20);
   private final Font textFont = new Font("Arial", Font.PLAIN, 9);
+  private final Font tableHeaderFont = new Font("Arial", Font.PLAIN, 9);
   private final Font selectedTextFont = new Font("Arial", Font.BOLD, 9);
   private final Font sectionTitleFont = new Font("Arial", Font.BOLD, 11);
   private final Font footerFont = new Font("Arial", Font.PLAIN, 9);
@@ -19,9 +20,10 @@ public class PrintStyle implements PrintFonts {
   private final Color tableRowColor = Colors.toColor("EEEEEE");
   private final Color tableLineColor = Colors.toColor("BBBBBB");
   private final Color sectionTextColor = Colors.toColor("FFFFFF");
-  private final Color sectionBackgroundColor = Colors.toColor("999999");
+  private final Color sectionBackgroundColor = Colors.toColor("888888");
   private final Color footerColor = Colors.toColor("999999");
-  private final Color rowSeparatorColor = Colors.toColor("EEEEEE");
+  private final Color tableHeaderColor = Colors.toColor("888888");
+  private final Color rowSeparatorColor = Colors.toColor("CCCCCC");
 
   public PrintStyle() {
   }
@@ -64,6 +66,14 @@ public class PrintStyle implements PrintFonts {
 
   public Color getDividerColor() {
     return tableLineColor;
+  }
+
+  public Color getTableHeaderColor() {
+    return tableHeaderColor;
+  }
+
+  public Font getTableHeaderFont() {
+    return tableHeaderFont;
   }
 
   public Color getRowSeparatorColor() {

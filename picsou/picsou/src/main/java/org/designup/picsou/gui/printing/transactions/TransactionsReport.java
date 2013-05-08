@@ -51,6 +51,7 @@ public class TransactionsReport implements PrintableReport {
       if (page == null || !page.hasSpaceLeftFor(block)) {
         page = new BlockColumnPage(format, Lang.get("print.transactions.title"));
         pages.add(page);
+        page.append(new TransactionHeaderBlock(context));
       }
       page.append(block);
     }

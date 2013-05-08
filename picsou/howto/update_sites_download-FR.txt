@@ -136,36 +136,17 @@ http://www.mybudgetview.fr
     logitheque.com
 ================================================
 
-1. Email à :
+1. Aller sur :
 
    webmaster@logitheque.com
 
-2. Message :
+2. S'identifier avec 
 
-Bonjour,
+   regis@mybudgetview.fr
+   8ypZAWVa
 
-J'ai le plaisir de vous informer qu'une nouvelle version est disponible pour le logiciel BudgetView, que vous proposez en téléchargement sur votre site :
-
- http://www.logitheque.com/logiciels/windows/index/editeur/budgetview_14899/
-
-La nouvelle version porte le numéro 3.03, et le fichier d'installation correspondant est disponible à l'adresse suivante :
+2. Mettre à jour la version et les liens :
 
 - Windows : http://www.mybudgetview.fr/files/app/BudgetView-3.03-fr-Setup.exe
 
 - Mac : http://www.mybudgetview.fr/files/app/BudgetView-3.03-fr.dmg
-
-- Linux : http://www.mybudgetview.fr/files/app/budgetview-3.03-fr.tar.gz
-
-L'historique des modifications est visible sur cette page :
-
- http://www.mybudgetview.fr/support/derniers-changements
-
-Pourriez-vous je vous prie mettre la fiche du logiciel à jour, ou bien m'indiquer comment m'y prendre pour procéder à cette mise à jour ?
-
-N'hésitez pas à me contacter si vous rencontrez la moindre difficulté ou si je peux vous être utile en quoi que ce soit.
-
-Vous remerciant par avance,
-
-Régis.
---
-http://www.mybudgetview.fr

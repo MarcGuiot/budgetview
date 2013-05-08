@@ -6,6 +6,7 @@ import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.functests.checkers.converters.BankDateCellConverter;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.functests.checkers.converters.SeriesCellConverter;
+import org.designup.picsou.functests.checkers.printing.TransactionPrintChecker;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
@@ -367,6 +368,16 @@ public class TransactionChecker extends ViewChecker {
       .click();
   }
 
+  public TransactionChecker print() {
+    openActionPopup().click(Lang.get("print.transactions.menu"));
+    return this;
+  }
+
+  public TransactionChecker checkPrintDisabled() {
+    openActionPopup().checkItemDisabled(Lang.get("print.transactions.menu"));
+    return this;
+  }
+
   public HistoDailyChecker checkGraph(String legend) {
     views.selectData();
     Panel panel = mainWindow.getPanel("transactionView");
@@ -625,4 +636,5 @@ public class TransactionChecker extends ViewChecker {
                                                expectedContent));
     }
   }
+
 }

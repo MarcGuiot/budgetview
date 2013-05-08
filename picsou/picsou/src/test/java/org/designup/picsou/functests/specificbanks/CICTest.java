@@ -21,7 +21,7 @@ public class CICTest extends SpecificBankTestCase {
       .add("18/05/2006", "18/05/2006", TransactionType.DEPOSIT, "REMISE CHEQUES REF10674R04", "", 400.00)
       .add("18/05/2006", "18/05/2006", TransactionType.VIREMENT, "ASS.GENERALES DE FRANCE AGFS", "", 6.00)
       .add("18/05/2006", "18/05/2006", TransactionType.WITHDRAWAL, "RETRAIT REF10674A01 CAR", "", -20.00)
-      .add("17/05/2006", "17/05/2006", TransactionType.CHECK, "CHEQUE N°0366943", "", -63.00)
+      .add("16/05/2006", "17/05/2006", TransactionType.CHECK, "CHEQUE N°0366943", "", -63.00)
       .check();
   }
 }

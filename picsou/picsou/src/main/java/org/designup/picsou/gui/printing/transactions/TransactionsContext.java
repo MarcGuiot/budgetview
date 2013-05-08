@@ -4,6 +4,7 @@ import com.budgetview.shared.utils.AmountFormat;
 import org.designup.picsou.gui.description.stringifiers.AccountStringifier;
 import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
 import org.designup.picsou.gui.description.stringifiers.TransactionSeriesStringifier;
+import org.designup.picsou.gui.printing.PrintStyle;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.Glob;
@@ -15,7 +16,10 @@ import java.awt.*;
 public class TransactionsContext {
 
   private GlobStringifier seriesStringifier = new TransactionSeriesStringifier();
-  private GlobStringifier dateStringifier =
+  private GlobStringifier userDateStringifier =
+    new TransactionDateStringifier(TransactionComparator.ASCENDING,
+                                   Transaction.MONTH, Transaction.DAY);
+  private GlobStringifier bankDateStringifier =
     new TransactionDateStringifier(TransactionComparator.ASCENDING,
                                    Transaction.BANK_MONTH, Transaction.BANK_DAY);
   private GlobStringifier accountStringifier = new AccountStringifier();
@@ -33,8 +37,12 @@ public class TransactionsContext {
     return seriesStringifier.toString(transaction, repository);
   }
 
+  public String getUserDate(Glob transaction) {
+    return userDateStringifier.toString(transaction, repository);
+  }
+
   public String getBankDate(Glob transaction) {
-    return dateStringifier.toString(transaction, repository);
+    return bankDateStringifier.toString(transaction, repository);
   }
 
   public String getAccountLabel(Glob transaction) {
