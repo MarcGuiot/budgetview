@@ -12,10 +12,13 @@
         <verticalSplit styleClass="blockDivider" opaque="false">
           <column weightY="10">
             <row>
+              <panel ref="importPanel" marginBottom="2" weightY="0.01"/>
               <filler fill="horizontal"/>
-              <panel ref="customFilterMessage" fill="none" anchor="center"/>
-              <filler fill="horizontal"/>
-              <panel ref="importPanel" marginLeft="10" marginBottom="2" weightY="0" weightX="0"/>
+              <component ref="transactionSearch"/>
+              <button ref="actionsMenu" styleClass="actionsButton" marginLeft="20"/>
+            </row>
+            <row border="empty(5,0,5,0)" autoHideSource="customFilterMessage">
+              <panel ref="customFilterMessage"/>
             </row>
             <scrollPane borderPos="center" viewportBackground="transactions.bg"
                         border="line(transaction.border)" opaque="true"
@@ -30,14 +33,6 @@
               <label text="$amount" styleClass="formLabelTop" autoHideSource="sum"
                      border="empty(0,0,0,5)" tooltipText="$amount.tooltip"/>
               <label ref="sum" font="-,bold,12"/>
-            </row>
-
-            <row>
-              <button ref="actionsMenu" styleClass="actionsButton"/>
-
-              <filler fill="horizontal"/>
-
-              <component ref="transactionSearch"/>
             </row>
           </column>
 

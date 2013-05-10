@@ -10,7 +10,8 @@
            fill="none" anchor="center"/>
   </styles>
 
-  <row ref="panel" styleClass="highlightedPanel" preferredSize="(220,20)">
+  <row ref="panel" background="highlightedPanel.top" border="matte(1,0,1,0,highlightedPanel.border)" opaque="true">
     <button action="cancel" styleClass="highlightedLink" />
   </row>
+
 </splits>

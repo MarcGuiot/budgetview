@@ -12,37 +12,19 @@ import javax.swing.*;
 
 public class ImportPanel extends View {
 
-  private Mode mode;
   private boolean showSignpost;
 
-  public enum Mode {
-    STANDARD("/layout/importexport/importPanel_standard.splits"),
-    COMPACT("/layout/importexport/importPanel_compact.splits");
-
-    final String filePath;
-
-    private Mode(String filePath) {
-      this.filePath = filePath;
-    }
-  }
-
-  public ImportPanel(Mode mode, boolean showSignpost, GlobRepository repository, Directory directory) {
+  public ImportPanel(boolean showSignpost, GlobRepository repository, Directory directory) {
     super(repository, directory);
-    this.mode = mode;
     this.showSignpost = showSignpost;
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), mode.filePath, repository, directory);
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importPanel.splits", repository, directory);
 
-    Action action = ImportFileAction.init(Lang.get("import"), repository, directory, null);
-    JButton button = new JButton(action);
+    JButton button = new JButton(ImportFileAction.init(Lang.get("importPanel.import.label"), repository, directory, null));
     builder.add("importButton", button);
-
-    JButton importLabel = new JButton(Lang.get("importPanel.import.label"));
-    importLabel.setModel(button.getModel());
-    builder.add("importLabel", importLabel);
 
     if (showSignpost) {
       final ImportSignpost importSignpost = new ImportSignpost(repository, directory);

@@ -7,9 +7,9 @@
 
   <row>
 
-    <button ref="importLabel"
+    <button ref="importButton"
             icon="button_import_small.png" rolloverIcon="button_import_small_rollover.png" pressedIcon="button_import_small.png"
-            styleClass="hyperlinkWithoutUnderline" marginLeft="20" foreground="import.label.compact"/>
+            styleClass="hyperlinkWithoutUnderline" foreground="import.label.compact"/>
     
   </row>
 

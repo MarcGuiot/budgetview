@@ -28,7 +28,7 @@ public class SummaryView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/summary/summaryView.splits",
                                                       repository, directory);
 
-    ImportPanel importPanel = new ImportPanel(ImportPanel.Mode.COMPACT, false, repository, directory);
+    ImportPanel importPanel = new ImportPanel(false, repository, directory);
     importPanel.registerComponents(builder);
 
     HistoChartRange range = new ScrollableHistoChartRange(MONTHS_BACK, MONTHS_FORWARD, false, repository);

@@ -52,7 +52,9 @@
             </row>
 
             <panel ref="reconciliationWarningPanel" border="empty(0,0,10,0)"/>
-            <panel ref="customFilterMessage" fill="none" anchor="center" border="empty(0,0,2,0)"/>
+            <row autoHideSource="customFilterMessage" border="empty(10,0,10,0)">
+              <panel ref="customFilterMessage"/>
+            </row>
             <scrollPane viewportBackground="#FFFFFF" marginBottom="0" weightY="100">
               <table ref="transactionsToCategorize" rowHeight="20"/>
             </scrollPane>
