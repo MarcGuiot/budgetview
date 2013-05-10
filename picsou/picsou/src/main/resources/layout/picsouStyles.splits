@@ -7,8 +7,8 @@
 
     <ui name="scrollPaneUI"
         class="org.designup.picsou.gui.components.ui.FlatScrollbarUI"
-        color="scrollBar.idle" rolloverColor="scrollBar.rollover"/>
-    <style selector="scrollPane" scrollbarUI="scrollPaneUI"/>
+        color="scrollBar.idle" rolloverColor="scrollBar.rollover" background="scrollBar.bg"/>
+    <style selector="scrollPane" scrollbarUI="scrollPaneUI" background="#FFFFFF"/>
 
     <!-- Default form elements -->
 

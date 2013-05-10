@@ -5,9 +5,9 @@ import java.awt.geom.GeneralPath;
 
 public class HistoDailyBlockPainter {
 
-  public static final BasicStroke DEFAULT_LINE_STROKE = new BasicStroke(1.2f);
+  public static final BasicStroke DEFAULT_LINE_STROKE = new BasicStroke(1.8f);
   public static final BasicStroke FUTURE_LINE_STROKE =
-    new BasicStroke(1.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{2, 3}, 0);
+    new BasicStroke(1.8f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{2, 3}, 0);
 
   private Graphics2D g2;
   private HistoDailyColors colors;

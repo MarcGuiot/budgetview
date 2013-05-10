@@ -14,6 +14,7 @@ public class FlatScrollbarUI extends BasicScrollBarUI {
 
   private Color color = Color.GRAY.brighter();
   private Color rolloverColor = Color.GRAY.darker();
+  private Color background = Color.WHITE;
 
   public void installUI(JComponent c) {
     super.installUI(c);
@@ -38,6 +39,10 @@ public class FlatScrollbarUI extends BasicScrollBarUI {
     this.rolloverColor = color;
   }
 
+  public void setBackground(Color color) {
+    this.background = color;
+  }
+
   protected JButton createDecreaseButton(int orientation) {
     return new MyScrollBarButton();
   }
@@ -47,6 +52,8 @@ public class FlatScrollbarUI extends BasicScrollBarUI {
   }
 
   protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
+    g.setColor(background);
+    g.fillRect(trackBounds.x, trackBounds.y, trackBounds.width, trackBounds.height);
   }
 
   protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
