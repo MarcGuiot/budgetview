@@ -5,6 +5,11 @@
     <ui name="wave" class="org.designup.picsou.gui.plaf.WavePanelUI"
         topColor="wave.panel.top" bottomColor="wave.panel.bottom" waveColor="wave.panel.wave"/>
 
+    <ui name="scrollPaneUI"
+        class="org.designup.picsou.gui.components.ui.FlatScrollbarUI"
+        color="scrollBar.idle" rolloverColor="scrollBar.rollover"/>
+    <style selector="scrollPane" scrollbarUI="scrollPaneUI"/>
+
     <!-- Default form elements -->
 
     <style selector="button" opaque="false"/>

@@ -4,6 +4,7 @@ import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.SplitsNode;
+import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorUpdater;
@@ -16,6 +17,8 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.ScrollBarUI;
 import java.awt.*;
 
 public class ScrollPaneComponent extends AbstractSplitter {
@@ -91,7 +94,22 @@ public class ScrollPaneComponent extends AbstractSplitter {
       scrollPane.setVerticalScrollBarPolicy(getVerticalPolicy(verticalPolicy));
     }
 
+    String uiName = properties.getString("scrollbarUI");
+    if (uiName != null) {
+      scrollPane.getVerticalScrollBar().setUI(getScrollbarUI(context, uiName));
+      scrollPane.getHorizontalScrollBar().setUI(getScrollbarUI(context, uiName));
+    }
+
     return new SplitComponent(constraints, splitsNode);
+  }
+
+  private ScrollBarUI getScrollbarUI(SplitsContext context, String uiName) {
+    ComponentUI ui = context.getService(UIService.class).getUI(uiName, context);
+    if (!ScrollBarUI.class.isInstance(ui)) {
+      throw new SplitsException("'"+ uiName +"' should be a subclass of ScrollBarUI" +
+                                context.dump());
+    }
+    return (ScrollBarUI)ui;
   }
 
   protected void complete(Component component) {
@@ -114,7 +132,7 @@ public class ScrollPaneComponent extends AbstractSplitter {
     return new String[]{"viewportBackground", "viewportOpaque",
                         "verticalUnitIncrement", "horizontalUnitIncrement",
                         "verticalScrollbarPolicy", "horizontalScrollbarPolicy",
-                        "forceVerticalScroll"};
+                        "forceVerticalScroll", "scrollbarUI"};
   }
 
   private int getHorizontalPolicy(String policy) {
@@ -171,5 +189,4 @@ public class ScrollPaneComponent extends AbstractSplitter {
       return 10;
     }
   }
-
 }
