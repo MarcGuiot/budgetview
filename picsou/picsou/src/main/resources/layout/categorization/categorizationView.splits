@@ -48,6 +48,7 @@
               <label text="$categorization.filter.label" styleClass="formLabel"
                      foreground="gauge.categorization.label" marginRight="5"/>
               <comboBox ref="transactionFilterCombo"/>
+              <button ref="actionsMenu" styleClass="actionsButton" marginLeft="10"/>
             </row>
 
             <panel ref="reconciliationWarningPanel" border="empty(0,0,10,0)"/>

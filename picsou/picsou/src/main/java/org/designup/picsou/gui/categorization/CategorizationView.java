@@ -8,6 +8,7 @@ import org.designup.picsou.gui.categorization.reconciliation.ReconciliationWarni
 import org.designup.picsou.gui.categorization.special.*;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
+import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterClearer;
 import org.designup.picsou.gui.components.filtering.FilterListener;
@@ -18,6 +19,7 @@ import org.designup.picsou.gui.description.stringifiers.SeriesDescriptionStringi
 import org.designup.picsou.gui.description.stringifiers.SeriesNameComparator;
 import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.printing.actions.PrintTransactionsAction;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.signpost.Signpost;
@@ -179,6 +181,12 @@ public class CategorizationView extends View implements TableView, Filterable, C
     transactionTable.setPopupFactory(actions);
 
     headerPainter = PicsouTableHeaderPainter.install(transactionTable, directory);
+
+    JPopupMenu tableMenu = new JPopupMenu();
+    tableMenu.add(transactionTable.getCopyTableAction(Lang.get("copyTable")));
+    tableMenu.addSeparator();
+    tableMenu.add(new PrintTransactionsAction(transactionTable, repository, directory));
+    builder.add("actionsMenu", new JPopupButton(Lang.get("budgetView.actions"), tableMenu));
 
     final JTable table = transactionTable.getComponent();
     TransactionKeyListener.install(table, -1).setDeleteEnabled(actions.getDelete());
