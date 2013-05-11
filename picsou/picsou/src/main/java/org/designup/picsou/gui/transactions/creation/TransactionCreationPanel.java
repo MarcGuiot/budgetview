@@ -83,6 +83,10 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     return new ReplicationGlobRepository(repository, Transaction.TYPE);
   }
 
+  public Action getShowHideAction() {
+    return showHideAction;
+  }
+
   public void registerComponents(GlobsPanelBuilder builder) {
     builder.add("transactionCreation", createPanel());
     if (showHideButton == null) {

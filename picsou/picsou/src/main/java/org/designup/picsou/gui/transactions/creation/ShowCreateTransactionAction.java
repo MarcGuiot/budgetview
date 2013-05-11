@@ -7,11 +7,11 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class CreateTransactionMenuAction extends AbstractAction {
+public class ShowCreateTransactionAction extends AbstractAction {
 
   private NavigationService navigationService;
 
-  public CreateTransactionMenuAction(Directory directory) {
+  public ShowCreateTransactionAction(Directory directory) {
     super(Lang.get("transactionCreation.menu"));
     this.navigationService = directory.get(NavigationService.class);
   }

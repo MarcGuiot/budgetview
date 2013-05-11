@@ -29,8 +29,10 @@ import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.columns.ReconciliationCustomizer;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
+import org.designup.picsou.gui.transactions.creation.ShowCreateTransactionAction;
 import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
 import org.designup.picsou.gui.transactions.reconciliation.annotations.ReconciliationAnnotationColumn;
+import org.designup.picsou.gui.transactions.reconciliation.annotations.ShowReconciliationAction;
 import org.designup.picsou.gui.transactions.search.TransactionFilterPanel;
 import org.designup.picsou.gui.transactions.utils.TransactionLabelCustomizer;
 import org.designup.picsou.gui.utils.ApplicationColors;
@@ -182,9 +184,15 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     headerPainter = PicsouTableHeaderPainter.install(transactionTable, directory);
 
+    transactionCreation = new TransactionCreationPanel(repository, directory, parentDirectory);
+    transactionCreation.registerComponents(builder);
+
     JPopupMenu tableMenu = new JPopupMenu();
-    tableMenu.add(transactionTable.getCopyTableAction(Lang.get("copyTable")));
+    tableMenu.add(transactionCreation.getShowHideAction());
     tableMenu.addSeparator();
+    tableMenu.add(new ShowReconciliationAction(repository, directory));
+    tableMenu.addSeparator();
+    tableMenu.add(transactionTable.getCopyTableAction(Lang.get("copyTable")));
     tableMenu.add(new PrintTransactionsAction(transactionTable, repository, directory));
     builder.add("actionsMenu", new JPopupButton(Lang.get("budgetView.actions"), tableMenu));
 
@@ -240,9 +248,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
     SkipCategorizationPanel skipPanel = new SkipCategorizationPanel(repository, directory);
     builder.add("skipCategorizationPanel", skipPanel.getPanel());
-
-    transactionCreation = new TransactionCreationPanel(repository, directory, parentDirectory);
-    transactionCreation.registerComponents(builder);
 
     CategorizationSelector selector = new CategorizationSelector(new ToReconcileMatcher(), colors, repository, directory);
     selector.registerComponents(builder);
