@@ -2,6 +2,7 @@ package org.designup.picsou.gui.components.charts.histo.utils;
 
 import org.globsframework.model.Key;
 import org.globsframework.utils.exceptions.InvalidState;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.ArrayList;
 import java.util.Collections;

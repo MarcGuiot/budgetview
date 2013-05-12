@@ -467,4 +467,19 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
                         "2006/05/01\t2006/05/01\t\tESSENCE\t-70.00\tfrais pro\t330.00\t330.00\tAccount n. 00001123",
                         Clipboard.getContentAsText().trim());
   }
+
+  public void testChart() throws Exception {
+    transactions.checkGraph("Main accounts - may 2006")
+      .checkValue(200605, 1, 330.00)
+      .checkValue(200605, 2, 130.00)
+      .checkValue(200605, 3, 100.00)
+      .checkValue(200605, 6, 0.00);
+
+    transactions.select("PEAGE");
+    transactions.checkGraph("Main accounts - may 2006")
+      .checkNotSelected(200605, 2)
+      .checkSelected(200605, 3)
+      .checkNotSelected(200605, 4)
+      .click(200605, 6);
+  }
 }

@@ -189,8 +189,16 @@ public class TransactionChecker extends ViewChecker {
     return amountTable;
   }
 
+  public void checkSelected(String label) {
+    assertTrue(table.rowIsSelected(getIndexOf(label)));
+  }
+
   public void checkSelectedRow(int row) {
     assertTrue(table.rowIsSelected(row));
+  }
+
+  public void checkNoSelection() {
+    assertTrue(table.selectionIsEmpty());
   }
 
   public void checkNotEmpty() {

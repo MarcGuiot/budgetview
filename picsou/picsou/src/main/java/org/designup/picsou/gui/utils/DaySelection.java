@@ -20,7 +20,7 @@ public class DaySelection {
     if (values == null) {
       values = new boolean[32];
     }
-    values[day] = true;
+    values[day - 1] = true;
     selection.put(monthId, values);
   }
 

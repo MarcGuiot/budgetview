@@ -5,7 +5,8 @@ import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import com.budgetview.shared.gui.histochart.HistoChartMetrics;
 import com.budgetview.shared.gui.histochart.HistoDataset;
 import com.budgetview.shared.utils.AmountFormat;
-import org.designup.picsou.gui.components.charts.histo.*;
+import org.designup.picsou.gui.components.charts.histo.HistoPainter;
+import org.designup.picsou.gui.components.charts.histo.HistoRollover;
 import org.designup.picsou.gui.components.charts.histo.utils.HorizontalBlocksClickMap;
 import org.globsframework.model.Key;
 
@@ -100,15 +101,6 @@ public class HistoDailyPainter implements HistoPainter {
           g2.fillRect(previousX, metrics.columnTop() + 1, blockWidth, metrics.columnHeight() - 1);
         }
 
-        if (dataset.isCurrent(monthIndex, dayIndex)) {
-          g2.setColor(colors.getCurrentDayColor());
-          g2.drawLine(x, metrics.currentDayLineTop(), x, metrics.currentDayLineBottom());
-
-          if (config.drawInnerAnnotations) {
-            drawCurrentDayAnnotation(g2, metrics, x);
-          }
-        }
-
         if (Math.signum(previousValue) == Math.signum(value)) {
           blockPainter.draw(previousX, previousY, x, y, value >= 0, current, future, selected, isRollover);
         }
@@ -116,6 +108,15 @@ public class HistoDailyPainter implements HistoPainter {
           int x0 = previousX + (int)(blockWidth * Math.abs(previousValue) / (Math.abs(previousValue) + Math.abs(value)));
           blockPainter.draw(previousX, previousY, x0, y0, previousValue >= 0, current, future, selected, isRollover);
           blockPainter.draw(x0, y0, x, y, value >= 0, current, future, selected, isRollover);
+        }
+
+        if (dataset.isCurrent(monthIndex, dayIndex)) {
+          g2.setColor(colors.getCurrentDayColor());
+          g2.drawLine(x, metrics.currentDayLineTop(), x, metrics.currentDayLineBottom());
+
+          if (config.drawInnerAnnotations) {
+            drawCurrentDayAnnotation(g2, metrics, x);
+          }
         }
 
         previousX = x;

@@ -1,16 +1,18 @@
 package org.designup.picsou.functests.checkers.components;
 
+import com.budgetview.shared.utils.Amounts;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.AbstractHistoChecker;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
-import com.budgetview.shared.gui.histochart.HistoDataset;
+import org.designup.picsou.gui.components.charts.histo.HistoSelectionManager;
+import org.designup.picsou.gui.components.charts.histo.button.HistoButtonBlock;
 import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyDataset;
 import org.designup.picsou.model.Day;
-import com.budgetview.shared.utils.Amounts;
 import org.globsframework.model.Key;
 import org.globsframework.utils.Utils;
 import org.uispec4j.Mouse;
 import org.uispec4j.Panel;
+import org.uispec4j.interception.toolkit.Empty;
 
 import java.util.Collections;
 
@@ -33,7 +35,7 @@ public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
   }
 
   public HistoDailyChecker checkSelected(int monthId) {
-    HistoDataset dataset = getDataset();
+    HistoDailyDataset dataset = getDataset();
     for (int i = 0; i < dataset.size(); i++) {
       if ((dataset.getId(i) == monthId)) {
         if (!dataset.isSelected(i)) {
@@ -44,6 +46,33 @@ public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
     }
     Assert.fail("Month " + monthId + " not shown. Actual content: " + dataset);
     return this;
+  }
+
+  public HistoDailyChecker checkSelected(int monthId, int day) {
+    HistoDailyDataset dataset = getDataset();
+    int monthIndex = dataset.getIndex(monthId);
+    if (!dataset.isDaySelected(monthIndex, day - 1)) {
+      Assert.fail("Day " + day + " of " + monthId + " is not selected. Actual content: " + dataset);
+    }
+    return this;
+  }
+
+  public HistoDailyChecker checkNotSelected(int monthId, int day) {
+    HistoDailyDataset dataset = getDataset();
+    int monthIndex = dataset.getIndex(monthId);
+    if (dataset.isDaySelected(monthIndex, day - 1)) {
+      Assert.fail("Day " + day + " of " + monthId + " is selected. Actual content: " + dataset);
+    }
+    return this;
+  }
+
+  public void click(int monthId, int day) {
+    HistoDailyDataset dataset = getDataset();
+    int monthIndex = dataset.getIndex(monthId);
+    HistoChart chart = getChart();
+    HistoSelectionManager selectionManager = chart.getSelectionManager();
+    selectionManager.updateRollover(monthIndex, Collections.singleton(Key.create(Day.MONTH, monthId, Day.DAY, day - 1)), false, false);
+    selectionManager.startClick(false);
   }
 
   public HistoDailyChecker checkValue(int monthId, int dayId, double expectedValue) {
