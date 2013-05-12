@@ -8,9 +8,8 @@ import java.security.InvalidParameterException;
 public class FlatScrollbarUI extends BasicScrollBarUI {
 
   private static final int SCROLLBAR_WIDTH = 12;
-  private static final int THUMB_BORDER_SIZE = 2;
-  private static final int THUMB_SIZE = 8;
-  private static final Color THUMB_COLOR = Color.BLACK;
+  private static final int THUMB_PADDING = 2;
+  private static final int THUMB_WIDTH = 8;
 
   private Color color = Color.GRAY.brighter();
   private Color rolloverColor = Color.GRAY.darker();
@@ -29,6 +28,10 @@ public class FlatScrollbarUI extends BasicScrollBarUI {
       default:
         throw new InvalidParameterException("Invalid orientation");
     }
+  }
+
+  protected void installDefaults() {
+    super.installDefaults();
   }
 
   public void setColor(Color color) {
@@ -51,31 +54,40 @@ public class FlatScrollbarUI extends BasicScrollBarUI {
     return new MyScrollBarButton();
   }
 
-  protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
-    g.setColor(background);
-    g.fillRect(trackBounds.x, trackBounds.y, trackBounds.width, trackBounds.height);
-  }
+  public void paint(Graphics g, JComponent c) {
 
-  protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
+    Rectangle trackBounds = getTrackBounds();
+    g.setClip(trackBounds.x, trackBounds.y, trackBounds.width, trackBounds.height);
+
+    Rectangle thumbBounds = getThumbBounds();
     int orientation = scrollbar.getOrientation();
-    int arc = THUMB_SIZE;
-    int x = thumbBounds.x + THUMB_BORDER_SIZE;
-    int y = thumbBounds.y + THUMB_BORDER_SIZE;
+    int arc = THUMB_WIDTH;
+    int x = thumbBounds.x + THUMB_PADDING;
+    int y = thumbBounds.y + THUMB_PADDING;
 
     int width = orientation == JScrollBar.VERTICAL ?
-                THUMB_SIZE : thumbBounds.width - (THUMB_BORDER_SIZE * 2);
-    width = Math.max(width, THUMB_SIZE);
+                THUMB_WIDTH : thumbBounds.width - (THUMB_PADDING * 2);
+    width = Math.max(width, THUMB_WIDTH);
 
     int height = orientation == JScrollBar.VERTICAL ?
-                 thumbBounds.height - (THUMB_BORDER_SIZE * 2) : THUMB_SIZE;
-    height = Math.max(height, THUMB_SIZE);
+                 thumbBounds.height - (THUMB_PADDING * 2) : THUMB_WIDTH;
+    height = Math.max(height, THUMB_WIDTH);
 
     Graphics2D graphics2D = (Graphics2D) g.create();
-    graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                RenderingHints.VALUE_ANTIALIAS_ON);
+
+    graphics2D.setColor(background);
+    graphics2D.fillRect(trackBounds.x, trackBounds.y, trackBounds.width, trackBounds.height);
+
+    graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     graphics2D.setColor(isThumbRollover() ? rolloverColor : color);
     graphics2D.fillRoundRect(x, y, width, height, arc, arc);
     graphics2D.dispose();
+  }
+
+  protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
+  }
+
+  protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
   }
 
   private static class MyScrollBarButton extends JButton {
