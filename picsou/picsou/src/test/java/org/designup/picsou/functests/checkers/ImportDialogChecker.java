@@ -1,9 +1,9 @@
 package org.designup.picsou.functests.checkers;
 
 import com.budgetview.shared.utils.AmountFormat;
+import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.utils.ComponentIsVisibleAssertion;
 import org.designup.picsou.functests.utils.BalloonTipTesting;
-import org.designup.picsou.gui.importer.steps.ImportCompletionPanel;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.*;
@@ -107,11 +107,11 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public boolean isLastStep() {
-    return dialog.getTextBox("title").getText().contains(Lang.get("import.end.info.title"));
+    return dialog.getTextBox("title").getText().contains(Lang.get("import.completion.title"));
   }
 
   public ImportDialogChecker checkLastStep() {
-    assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.end.info.title")));
+    assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.completion.title")));
     return this;
   }
 
@@ -148,24 +148,20 @@ public class ImportDialogChecker extends GuiChecker {
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
-  public void completeImport(final int importedTransactionCount, final int autocategorizedTransactionCount) {
-    validateAndComplete(-1, importedTransactionCount, autocategorizedTransactionCount, dialog, "import.preview.ok");
-  }
-
-  public void completeImportNone(int loadTransaction) {
-    validateAndComplete(loadTransaction, 0, 0, dialog, "import.preview.ok");
+  public void completeImport(final int importedTransactionCount, int ignoredTransactionCount, final int autocategorizedTransactionCount) {
+    validateAndComplete(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount, dialog, "import.preview.ok");
   }
 
   public void skipAndComplete() {
     validateAndComplete(-1, -1, -1, dialog, "import.skip.file");
   }
 
-  public void completeImportAndGotoCategorize(int importedTransactionCount, int autocategorizedTransactionCount) {
+  public void completeImportAndGotoCategorize(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount) {
     dialog.getButton(Lang.get("import.preview.ok")).click();
 
     CompletionChecker handler =
-      new CompletionChecker(0, importedTransactionCount,
-                            autocategorizedTransactionCount, Lang.get("import.end.button"));
+      new CompletionChecker(importedTransactionCount, ignoredTransactionCount,
+                            autocategorizedTransactionCount, Lang.get("import.completion.button"));
     handler.checkAndClose(dialog);
     UISpecAssert.assertFalse(dialog.isVisible());
   }
@@ -175,15 +171,17 @@ public class ImportDialogChecker extends GuiChecker {
                                                                       .triggerClick()), dialog);
   }
 
-  public static void validateAndComplete(final int loadedTransaction, final int importedTransactionCount, final int autocategorizedTransactionCount,
+  public static void validateAndComplete(final int importedTransactionCount,
+                                         final int ignoredTransactionCount,
+                                         final int autocategorizedTransactionCount,
                                          final Panel dialog, final String key) {
     dialog.getButton(Lang.get(key)).click();
-    complete(loadedTransaction, importedTransactionCount, autocategorizedTransactionCount, dialog);
+    complete(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount, dialog);
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
-  public static void complete(int loadedTransaction, int importedTransactionCount, int autocategorizedTransactionCount, Panel dialog) {
-    CompletionChecker handler = new CompletionChecker(loadedTransaction, importedTransactionCount, autocategorizedTransactionCount);
+  public static void complete(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount, Panel dialog) {
+    CompletionChecker handler = new CompletionChecker(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount);
     handler.checkAndClose(dialog);
   }
 
@@ -192,7 +190,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public void complete() {
-    dialog.getButton(Lang.get("import.end.button")).click();
+    dialog.getButton(Lang.get("import.completion.button")).click();
     assertFalse(dialog.isVisible());
   }
 
@@ -421,7 +419,7 @@ public class ImportDialogChecker extends GuiChecker {
     setFilePath(fileName)
       .acceptFile();
     if (getAccountEditionChecker().getAccountName().equals(accountName)) {
-      if (accountName.length() > 20){
+      if (accountName.length() > 20) {
         getAccountEditionChecker().setName(accountName.substring(0, 20));
       }
       setDeferredAccount(25, 28, 0);
@@ -432,7 +430,7 @@ public class ImportDialogChecker extends GuiChecker {
     if (withMainAccount) {
       doImport();
       if (getAccountEditionChecker().getAccountName().equals(accountName)) {
-        if (accountName.length() > 20){
+        if (accountName.length() > 20) {
           getAccountEditionChecker().setName(accountName.substring(0, 20));
         }
         setDeferredAccount(25, 28, 0);
@@ -642,39 +640,42 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public static class CompletionChecker {
-    private int loadedTransactionCount;
     private final int importedTransactionCount;
+    private final int ignoredTransactionCount;
     private final int autocategorizedTransactionCount;
     private String buttonMessage = null;
 
-    public CompletionChecker(int loadedTransactionCount, int importedTransactionCount, int autocategorizedTransactionCount) {
-      this.loadedTransactionCount = loadedTransactionCount;
+    public CompletionChecker(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount) {
       this.importedTransactionCount = importedTransactionCount;
+      this.ignoredTransactionCount = ignoredTransactionCount;
       this.autocategorizedTransactionCount = autocategorizedTransactionCount;
     }
 
-    public CompletionChecker(int loadedTransactionCount, int importedTransactionCount, int autocategorizedTransactionCount, String buttonMessage) {
-      this(loadedTransactionCount, importedTransactionCount, autocategorizedTransactionCount);
+    public CompletionChecker(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount, String buttonMessage) {
+      this(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount);
       this.buttonMessage = buttonMessage;
     }
 
     public Trigger checkAndGetTrigger(Panel dialog) {
-      assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.end.info.title")));
-      TextBox contentBox = dialog.getTextBox("message");
+      assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.completion.title")));
       if (importedTransactionCount != -1) {
-        String expectedMessage =
-          Lang.get(ImportCompletionPanel.getEndOfImportMessageKey(loadedTransactionCount, importedTransactionCount, autocategorizedTransactionCount),
-                   Integer.toString(importedTransactionCount),
-                   Integer.toString(autocategorizedTransactionCount),
-                   Integer.toString(loadedTransactionCount));
-        assertThat(contentBox.textContains(expectedMessage));
+        Assert.assertEquals(toSummaryString(Integer.toString(importedTransactionCount),
+                                            Integer.toString(ignoredTransactionCount),
+                                            Integer.toString(autocategorizedTransactionCount)),
+                            toSummaryString(dialog.getTextBox("importedCount").getText(),
+                                            dialog.getTextBox("ignoredCount").getText(),
+                                            dialog.getTextBox("categorizedCount").getText()));
       }
       if (buttonMessage == null) {
-        return dialog.getButton(Lang.get("import.end.button")).triggerClick();
+        return dialog.getButton(Lang.get("import.completion.button")).triggerClick();
       }
       else {
         return dialog.getButton(buttonMessage).triggerClick();
       }
+    }
+
+    private String toSummaryString(String imported, String ignored, String autocategorized) {
+      return "imported:" + imported +  "  - ignored:" + ignored + "  - autocategorized:" + autocategorized;
     }
 
     public void checkAndClose(Panel dialog) {

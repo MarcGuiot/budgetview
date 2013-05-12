@@ -58,10 +58,10 @@ public class ImportSeriesChecker {
     ImportDialogChecker.complete(-1, -1, -1, parent);
   }
 
-  public void validateAndFinishImport(int loadedTransaction, int importedTransactionCount, int autocategorizedTransactionCount) {
+  public void validateAndFinishImport(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount) {
     dialog.getButton("import").click();
     assertFalse(dialog.isVisible());
-    ImportDialogChecker.complete(loadedTransaction, importedTransactionCount, autocategorizedTransactionCount, parent);
+    ImportDialogChecker.complete(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount, parent);
   }
 
   public ImportSeriesChecker checkNotContain(String ...series) {

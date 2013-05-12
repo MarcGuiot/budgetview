@@ -24,13 +24,10 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.OperationCancelled;
-import org.hsqldb.lib.StringInputStream;
 
 import javax.swing.*;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 import static org.globsframework.model.FieldValue.value;
@@ -136,9 +133,9 @@ public class ImportController implements RealAccountImporter {
         deleteEmptyImport();
         importDialog.showAccountPositionDialogsIfNeeded();
         importDialog.showCompleteMessage(months,
-                                         importSession.getImportedOperationsCount(),
-                                         autoCategorizationFunctor.getAutocategorizedTransaction(),
-                                         autoCategorizationFunctor.getTransactionCount());
+                                         autoCategorizationFunctor.getImportedTransactionCount(),
+                                         autoCategorizationFunctor.getIgnoredTransactionCount(importSession.getTotalImportedTransactionsCount()),
+                                         autoCategorizationFunctor.getAutocategorizedTransactionCount());
         return false;
       }
       catch (Exception e) {

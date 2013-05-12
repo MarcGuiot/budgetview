@@ -40,7 +40,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .checkContains("[Test]")
       .setRecurring("[Test]")
       .checkNotContain("Alimentation")
-      .validateAndFinishImport(7, 0, 0);
+      .validateAndFinishImport(0, 7, 0);
 
     categorization.selectTransaction("SPLIT COURSES QUELCONQUES");
     transactionDetails.openSplitDialog()
@@ -87,7 +87,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .setRecurring("Alimentation:Epicerie", "Auto-moto:Remboursement de pret auto-moto")
       .setVariable("Loisirs-culture-sport:Journaux", "Loisirs-culture-sport", "Auto-moto:Essence")
       .unset("[TEST]")
-      .validateAndFinishImport(7, 7, 6);
+      .validateAndFinishImport(7, 0, 6);
   }
 
   public void testStrictQifFile() throws Exception {

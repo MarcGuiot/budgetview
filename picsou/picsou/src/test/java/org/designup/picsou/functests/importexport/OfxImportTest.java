@@ -22,13 +22,13 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/10", -1.1, "TX 1")
       .addTransaction("2006/01/11", -2.2, "TX 2")
-      .load();
+      .load(2, 0, 0);
 
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "TX 1")
       .addTransaction("2006/01/11", -2.2, "TX 2")
-      .load();
+      .load(0, 2, 0);
 
     views.selectData();
     transactions
@@ -49,7 +49,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/13", -3.3, "TX 3")
       .addTransaction("2006/01/14", -4.4, "TX 4")
-      .load();
+      .load(2, 0, 0);
 
     views.selectData();
     transactions
@@ -71,7 +71,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     OfxBuilder
       .init(this)
       .addTransaction("2005/12/25", -10.0, "Tx 0")
-      .load();
+      .load(1, 0, 0);
 
     timeline.selectMonths("2005/12", "2006/01");
     views.selectData();
@@ -88,13 +88,13 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/10", -1.1, "TX 1")
       .addTransaction("2006/01/11", -2.2, "TX 2")
-      .load();
+      .load(2, 0, 0);
 
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/11", -2.2, "TX 2")
       .addTransaction("2006/01/12", -3.3, "TX 3")
-      .load();
+      .load(1, 1, 0);
 
     views.selectData();
     transactions
@@ -111,7 +111,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/13", -3.3, "TX 3")
       .addTransaction("2006/01/14", -4.4, "TX 4")
       .addTransaction("2006/01/15", -5.5, "TX 5")
-      .load();
+      .load(3, 0, 0);
 
     OfxBuilder
       .init(this)
@@ -119,7 +119,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/15", -5.5, "TX 5")
       .addTransaction("2006/01/13", -3.3, "TX 3")
       .addTransaction("2006/01/12", -2.2, "TX 2")
-      .load();
+      .load(2, 2, 0);
 
     views.selectData();
     transactions
@@ -136,11 +136,11 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/15", "2006/01/10", -1.1, "Operation 1")
-      .load();
+      .load(1, 0, 0);
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/10", "2006/01/10", -1.1, "Operation 1")
-      .load();
+      .load(0, 1, 0);
 
     views.selectData();
     transactions
@@ -155,7 +155,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Tx 1")
       .addTransaction("2006/01/11", -2.2, "Tx 2")
-      .load();
+      .load(2, 0, 0);
 
     views.selectCategorization();
     categorization.selectTransactions("Tx 2");
@@ -166,7 +166,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Tx 1")
       .addTransaction("2006/01/11", -2.2, "Tx 2")
-      .load();
+      .load(0, 2, 0);
 
     views.selectData();
     transactions
@@ -199,7 +199,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Tx 1")
       .addTransaction("2006/01/11", -4.2, "Tx 2")
-      .load();
+      .load(0, 2, 0);
 
     views.selectData();
     transactions

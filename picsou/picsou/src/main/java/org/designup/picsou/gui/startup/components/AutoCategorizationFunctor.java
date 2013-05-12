@@ -96,12 +96,16 @@ public class AutoCategorizationFunctor implements GlobFunctor {
     return Amounts.sameSign(findTransaction.get(Transaction.AMOUNT), transaction.get(Transaction.AMOUNT));
   }
 
-  public int getAutocategorizedTransaction() {
-    return autocategorized;
+  public int getImportedTransactionCount() {
+    return transactionCount;
   }
 
-  public int getTransactionCount() {
-    return transactionCount;
+  public int getIgnoredTransactionCount(int total) {
+    return total - transactionCount;
+  }
+
+  public int getAutocategorizedTransactionCount() {
+    return autocategorized;
   }
 
   static class ValidTransactionFunctor {

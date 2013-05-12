@@ -4,17 +4,62 @@
   <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
 
   <styles>
-    <style selector="htmlEditorPane.multiLineLabel" font="-,plain,12"/>
+    <style selector="label.countTitle"
+           font="-,bold,14"
+           marginBottom="10"/>
+    <style selector="label.countLabel"
+           font="-,bold,18"
+           marginLeft="15" marginRight="8"
+           fill="none" anchor="center" weightX="0.1"/>
+    <style selector="label.countMessage"
+           font="-,plain,12"
+           fill="none" anchor="left" weightX="100"/>
+    <style selector="separator" marginTop="20" marginBottom="20" weightY="0.01"/>
   </styles>
 
   <panel styleClass="dialog" preferredSize="(600,690)">
 
     <column styleClass="innerDialog">
 
-      <label text="$import.end.info.title" name="title" styleClass="title"/>
+      <label text="$import.completion.title" name="title" styleClass="title"/>
 
-      <scrollPane marginTop="20">
-        <htmlEditorPane ref="message" styleClass="multiLineLabel" hyperlinkListener="hyperlinkHandler"/>
+      <scrollPane marginTop="20" forceVerticalScroll="true">
+        <column margin="20">
+
+          <row>
+            <label icon="status_completed.png" weightX="0.1" marginRight="10"/>
+            <label text="$import.completion.message" weightX="100"/>
+          </row>
+
+          <separator/>
+
+          <label text="$import.completion.imported.title" styleClass="countTitle"/>
+          <row>
+            <label ref="importedCount" styleClass="countLabel"/>
+            <label ref="importedMessage" styleClass="countMessage"/>
+          </row>
+
+          <separator/>
+
+          <label text="$import.completion.ignored.title" styleClass="countTitle"/>
+          <row>
+            <label ref="ignoredCount" styleClass="countLabel"/>
+            <label ref="ignoredMessage" styleClass="countMessage"/>
+          </row>
+
+          <separator/>
+
+          <label text="$import.completion.categorized.title" styleClass="countTitle"/>
+          <row>
+            <label ref="categorizedCount" styleClass="countLabel"/>
+            <label ref="categorizedMessage" styleClass="countMessage"/>
+          </row>
+
+          <htmlEditorPane ref="categorizationHelp" styleClass="multiLineLabel" marginTop="10"/>
+
+          <filler fill="vertical"/>
+
+        </column>
       </scrollPane>
 
       <row>

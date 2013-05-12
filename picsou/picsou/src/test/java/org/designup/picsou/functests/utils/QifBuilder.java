@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.utils;
 
 import junit.framework.TestCase;
+import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.utils.Strings;
@@ -59,6 +60,17 @@ public class QifBuilder {
   public void load() throws IOException {
     save();
     operations.importQifFile(fileName, "Société Générale");
+  }
+
+  public void load(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount) throws Exception {
+    save();
+    ImportDialogChecker importDialog = operations.openImportDialog()
+      .setFilePath(fileName)
+      .acceptFile();
+    if (importDialog.accountIsEditable()) {
+      importDialog.setMainAccount();
+    }
+    importDialog.completeImport(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount);
   }
 
   public void loadFirstStartingAtZero(double amount) throws IOException {

@@ -5,7 +5,6 @@ import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
@@ -624,7 +623,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/11", -1.3, "Menu K 1")
       .addTransaction("2006/01/12", -1.3, "Menu K 2")
-      .load(2, 0);
+      .load(2, 0, 0);
 
     String sameFile = OfxBuilder
       .init(this)
@@ -635,7 +634,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .setFilePath(sameFile)
       .acceptFile()
-      .completeImportNone(2);
+      .completeImport(0, 2, 0);
 
     views.selectCategorization();
     categorization.showLastImportedFileOnly();
@@ -650,7 +649,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(sameFile + ";" + otherFile)
       .acceptFile()
       .doImport()
-      .completeImport();
+      .completeImport(1, 2, 0);
 
     transactions.initContent()
       .add("13/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
@@ -678,7 +677,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkAccountMessage("Operations for single account:")
       .checkAccountSelectionMessage("Import operations in:")
       .setMainAccount()
-      .completeImport();
+      .completeImport(1, 0, 0);
 
     transactions.initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
@@ -1037,7 +1036,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/06/5", 2.0, "V'lib")
       .addTransaction("2008/06/8", 2.0, "V'lib")
-      .load();
+      .load(2, 0, 0);
 
     timeline.selectAll();
     transactions.initAmountContent()
@@ -1048,7 +1047,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/06/06", 2.0, "V'lib")
       .addTransaction("2008/06/09", 2.0, "V'lib")
-      .load();
+      .load(2, 0, 0);
 
     timeline.selectAll();
     transactions.initAmountContent()

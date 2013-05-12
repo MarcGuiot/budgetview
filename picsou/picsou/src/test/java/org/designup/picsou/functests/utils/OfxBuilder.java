@@ -175,7 +175,7 @@ public class OfxBuilder {
     importDialog.completeImport();
   }
 
-  public void load(int importedTransactionCount, int autocategorizedTransactionCount) {
+  public void load(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount) {
     save();
     ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName)
@@ -183,15 +183,15 @@ public class OfxBuilder {
     if (importDialog.accountIsEditable()) {
       importDialog.setMainAccount();
     }
-    importDialog.completeImport(importedTransactionCount, autocategorizedTransactionCount);
+    importDialog.completeImport(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount);
   }
 
-  public void loadAndGotoCategorize(int importedTransactionCount, int autocategorizedTransactionCount) {
+  public void loadAndGotoCategorize(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount) {
     save();
     operations.openImportDialog()
       .setFilePath(fileName)
       .acceptFile()
-      .completeImportAndGotoCategorize(importedTransactionCount, autocategorizedTransactionCount);
+      .completeImportAndGotoCategorize(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount);
   }
 
   public void loadDeferredCard(String accountName) {

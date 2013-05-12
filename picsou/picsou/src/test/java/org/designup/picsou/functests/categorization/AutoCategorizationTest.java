@@ -13,7 +13,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Menu K 1")
       .addTransaction("2006/01/11", -1.1, "Fouquet's")
-      .load(2, 0);
+      .load(2, 0, 0);
 
     views.selectCategorization();
     categorization.setNewVariable("Menu K 1", "dej");
@@ -22,7 +22,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/12", -1.3, "Menu K 2")
-      .loadAndGotoCategorize(1, 1);
+      .loadAndGotoCategorize(1, 0, 1);
 
     transactions.checkSeries("Menu K 1", "dej");
     transactions.checkSeries("Menu K 2", "dej");
@@ -55,7 +55,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/12", -15.00, "Menu K 2")
       .addTransaction("2006/01/12", -100.00, "FOUQUET's II")
-      .load(2, 1);
+      .load(2, 0, 1);
 
     categorization.showAllTransactions();
     categorization.checkTable(new Object[][]{
@@ -186,7 +186,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/11", -1.1, "Cheque 2")
-      .load(1, 0);
+      .load(1, 0, 0);
     views.selectData();
     transactions.initContent()
       .add("11/01/2006", TransactionType.CHECK, "CHEQUE N°2", "", -1.10)
@@ -198,7 +198,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
     QifBuilder
       .init(this)
       .addTransaction("2006/01/15", -1.1, "PRELEVEMENT 3766941826  M.N.P.A.F. M.N.P.A.F. 8811941800")
-      .load(0.);
+      .load(0.00);
 
     views.selectCategorization();
     categorization.setNewVariable(0, "Mutuelle");
@@ -206,7 +206,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
     QifBuilder
       .init(this)
       .addTransaction("2006/01/15", -1.3, "PRELEVEMENT 3766941834  M.N.P.A.F. M.N.P.A.F. 8811941800")
-      .load();
+      .load(1, 0, 1);
 
     views.selectData();
     transactions.checkSeries(0, "Mutuelle");
@@ -218,7 +218,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2008/05/25", -50.0, "Auchan")
       .addTransaction("2008/05/25", -50.0, "Auchan")
-      .load();
+      .load(2, 0, 0);
 
     views.selectBudget();
     budgetView.variable.createSeries()
@@ -242,7 +242,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/11", -50.0, "2_Auchan")
-      .load(1, 0);
+      .load(1, 0, 0);
 
     categorization
       .unselectAllTransactions()
@@ -254,7 +254,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/12", -50.0, "3_Auchan")
-      .load();
+      .load(1, 0, 1);
 
     categorization
       .selectTransaction("3_Auchan")
@@ -275,7 +275,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
     OfxBuilder
       .init(this)
       .addTransaction("2006/01/12", -1.3, "Menu K 1")
-      .load(1, 1);
+      .load(1, 0, 1);
     views.selectData();
     transactions.checkSeries(0, "dej");
     transactions.checkSeries(1, "petit dej");

@@ -23,7 +23,6 @@ import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
-import org.globsframework.utils.Ref;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -162,8 +161,8 @@ public class ImportDialog implements RealAccountImporter {
     setCurrentPanel(previewPanel);
   }
 
-  public void showCompleteMessage(Set<Integer> months, int importedTransactionCount, int autocategorizedTransaction, int transactionCount) {
-    completionPanel.update(months, importedTransactionCount, autocategorizedTransaction, transactionCount);
+  public void showCompleteMessage(Set<Integer> months, int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransaction) {
+    completionPanel.update(months, importedTransactionCount, ignoredTransactionCount, autocategorizedTransaction);
     setCurrentPanel(completionPanel);
   }
 

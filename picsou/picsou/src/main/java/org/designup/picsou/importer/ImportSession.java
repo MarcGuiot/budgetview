@@ -50,8 +50,8 @@ public class ImportSession {
   private GlobRepository localRepository;
   private ChangeSetAggregator importChangeSetAggregator;
   private boolean load = false;
-  private int lastLoadOperationsCount = 0;
-  private int importedOperationsCount = 0;
+  private int lastImportedTransactionsCount = 0;
+  private int totalImportedTransactionsCount = 0;
   private GlobList accountIds = new GlobList();
   private int accountCount;
   private ChangeSet changes;
@@ -200,12 +200,12 @@ public class ImportSession {
       localRepository.completeChangeSet();
     }
 
-    GlobList importedOperations = localRepository.getAll(ImportedTransaction.TYPE);
+    GlobList importedTransactions = localRepository.getAll(ImportedTransaction.TYPE);
 
     if (realAccount == null) {
       currentImportedAccount = findExistingRealAccount(currentImportedAccount);
       Integer realAccountId = currentImportedAccount.get(RealAccount.ID);
-      for (Glob operation : importedOperations) {
+      for (Glob operation : importedTransactions) {
         localRepository.update(operation.getKey(), ImportedTransaction.ACCOUNT, realAccountId);
       }
     }
@@ -217,7 +217,7 @@ public class ImportSession {
       }
     }
 
-    lastLoadOperationsCount = importedOperations.size();
+    lastImportedTransactionsCount = importedTransactions.size();
     return currentImportedAccount;
   }
 
@@ -321,7 +321,7 @@ public class ImportSession {
     finally {
       referenceRepository.completeChangeSet();
     }
-    importedOperationsCount += lastLoadOperationsCount;
+    totalImportedTransactionsCount += lastImportedTransactionsCount;
     return importKey;
   }
 
@@ -329,8 +329,8 @@ public class ImportSession {
     localRepository.delete(ImportedSeries.TYPE, GlobMatchers.ALL);
   }
 
-  public int getImportedOperationsCount() {
-    return importedOperationsCount;
+  public int getTotalImportedTransactionsCount() {
+    return totalImportedTransactionsCount;
   }
 
   private GlobList convertImportedTransaction(String selectedDateFormat, Integer accountId) {

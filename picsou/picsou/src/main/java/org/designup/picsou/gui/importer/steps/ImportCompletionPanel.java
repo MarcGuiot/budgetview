@@ -18,7 +18,10 @@ public class ImportCompletionPanel extends AbstractImportStepPanel {
 
   private GlobsPanelBuilder builder;
   private JPanel panel;
-  private JEditorPane message;
+  private Block importedBlock = new Block("imported");
+  private Block ignoredBlock = new Block("ignored");
+  private Block categorizedBlock = new Block("categorized");
+  private JEditorPane categorizationHelp;
   private Set<Integer> months;
 
   public ImportCompletionPanel(PicsouDialog dialog,
@@ -37,9 +40,13 @@ public class ImportCompletionPanel extends AbstractImportStepPanel {
 
     builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importCompletionPanel.splits", localRepository, localDirectory);
 
-    message = GuiUtils.createReadOnlyHtmlComponent();
+    importedBlock.register(builder);
+    ignoredBlock.register(builder);
+    categorizedBlock.register(builder);
 
-    builder.add("message", message);
+    categorizationHelp = GuiUtils.createReadOnlyHtmlComponent(Lang.get("import.completion.categorized.help"));
+    builder.add("categorizationHelp", categorizationHelp);
+
     builder.add("ok", new CommitAction());
     builder.add("close", new AbstractAction(textForCloseButton) {
       public void actionPerformed(ActionEvent e) {
@@ -68,48 +75,49 @@ public class ImportCompletionPanel extends AbstractImportStepPanel {
     }
   }
 
-  public void update(Set<Integer> months, int importedTransactionCount, int autocategorizedTransaction, int transactionCount) {
+  public void update(Set<Integer> months, int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount) {
     createPanelIfNeeded();
     this.months = months;
-    String content =
-      Lang.get(getEndOfImportMessageKey(importedTransactionCount, transactionCount, autocategorizedTransaction),
-               Integer.toString(transactionCount),
-               Integer.toString(autocategorizedTransaction),
-               Integer.toString(importedTransactionCount));
-    message.setText(content);
-    GuiUtils.revalidate(message);
+    importedBlock.update(importedTransactionCount);
+    ignoredBlock.update(ignoredTransactionCount);
+    categorizedBlock.update(autocategorizedTransactionCount);
+    categorizationHelp.setVisible(importedTransactionCount > autocategorizedTransactionCount);
+    GuiUtils.revalidate(categorizationHelp);
   }
 
-  public static String getEndOfImportMessageKey(int importedTransactionCount, int loadedTransactionCount, int autocategorizedTransactions) {
-    if (loadedTransactionCount == 0) {
-      if (autocategorizedTransactions > 0) {
-        return "import.end.info.operations.none.none." + normalize(importedTransactionCount);
-      }
-      else {
-        return "import.end.info.operations.none.none." + normalize(importedTransactionCount);
-      }
-    }
-    else {
-      if ((loadedTransactionCount > 1) && (loadedTransactionCount == autocategorizedTransactions)) {
-        return "import.end.info.operations.many.all";
-      }
-      return "import.end.info.operations." + normalize(loadedTransactionCount) + "." + normalize(autocategorizedTransactions);
-    }
-  }
+  private class Block {
+    private String prefix;
+    private final JLabel countLabel = new JLabel();
+    private final JLabel message = new JLabel();
 
-  private static String normalize(int count) {
-    if (count == 0) {
-      return "none";
+    private Block(String prefix) {
+      this.prefix = prefix;
     }
-    if (count == 1) {
-      return "one";
+
+    public void register(GlobsPanelBuilder builder) {
+      builder.add(prefix + "Message", message);
+      builder.add(prefix + "Count", countLabel);
     }
-    return "many";
+
+    public void update(int count) {
+      countLabel.setText(Integer.toString(count));
+      message.setText(Lang.get("import.completion." + prefix + ".message." + normalize(count)));
+    }
+
+    private String normalize(int count) {
+      if (count == 0) {
+        return "none";
+      }
+      if (count == 1) {
+        return "one";
+      }
+      return "many";
+    }
   }
 
   private class CommitAction extends AbstractAction {
     private CommitAction() {
-      super(Lang.get("import.end.button"));
+      super(Lang.get("import.completion.button"));
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
