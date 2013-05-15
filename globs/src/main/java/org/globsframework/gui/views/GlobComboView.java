@@ -229,6 +229,12 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
             }
           }
         }
+
+        public void startUpdate() {
+        }
+
+        public void updateComplete() {
+        }
       });
       if (matcher != null) {
         model.setFilter(matcher, false);

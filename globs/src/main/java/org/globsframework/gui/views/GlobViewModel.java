@@ -31,6 +31,10 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
     void globListPreReset();
 
     void globListReset();
+
+    void startUpdate();
+
+    void updateComplete();
   }
 
   public GlobViewModel(GlobType type, GlobRepository repository, Comparator<Glob> comparator, Listener listener) {
@@ -120,6 +124,7 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
     this.matcher = matcher;
     reloadGlobList();
     GlobList to = getAll();
+    listener.startUpdate();
     GlobUtils.diff(from, to, new GlobUtils.DiffFunctor<Glob>() {
       public void add(Glob glob, int index) {
         listener.globInserted(index);
@@ -133,6 +138,7 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
         listener.globMoved(previousIndex, newIndex);
       }
     });
+    listener.updateComplete();
   }
 
   public void sort(Comparator<Glob> comparator) {

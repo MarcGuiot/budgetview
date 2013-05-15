@@ -737,6 +737,12 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
             selectionService.select(newSelection, type);
           }
         }
+
+        public void startUpdate() {
+        }
+
+        public void updateComplete() {
+        }
       });
     }
 

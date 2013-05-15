@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.globsframework.model.utils.GlobMatchers.*;
-
 public class DailyAccountPositionComputer {
 
   private GlobRepository repository;
@@ -168,18 +166,24 @@ public class DailyAccountPositionComputer {
 
   private Double getLastValue(GlobMatcher accountMatcher, List<Integer> monthIdsToShow, DoubleField positionField) {
 
-    LastGlobFunctor callback = new LastGlobFunctor();
-    repository.safeApply(Transaction.TYPE,
-                         and(fieldStrictlyLessThan(Transaction.POSITION_MONTH, monthIdsToShow.get(0)),
-                             accountMatcher), callback);
+    LastGlobFunctor callback = new LastGlobFunctor(accountMatcher);
+
+    Integer monthId = monthIdsToShow.get(0);
+    monthId = Month.previous(monthId);
+    while (callback.transaction == null && repository.find(Key.create(Month.TYPE, monthId)) != null) {
+      repository.findByIndex(Transaction.POSITION_MONTH_INDEX, monthId).safeApply(callback, repository);
+      monthId = Month.previous(monthId);
+    }
     if (callback.transaction != null) {
       return callback.transaction.get(positionField);
     }
 
-    FirstGlobFunctor firstCallback = new FirstGlobFunctor();
-    repository.safeApply(Transaction.TYPE,
-                         and(fieldGreaterOrEqual(Transaction.POSITION_MONTH, monthIdsToShow.get(0)),
-                             accountMatcher), firstCallback);
+    FirstGlobFunctor firstCallback = new FirstGlobFunctor(accountMatcher);
+    monthId = monthIdsToShow.get(0);
+    while (firstCallback.transaction == null && repository.find(Key.create(Month.TYPE, monthId)) != null) {
+      repository.findByIndex(Transaction.POSITION_MONTH_INDEX, monthId).safeApply(firstCallback, repository);
+      monthId = Month.previous(monthId);
+    }
     if (firstCallback.transaction == null) {
       return null;
     }
@@ -188,26 +192,41 @@ public class DailyAccountPositionComputer {
 
   private static class LastGlobFunctor implements GlobFunctor {
     private Glob transaction;
+    private GlobMatcher accountMatcher;
+
+    public LastGlobFunctor(GlobMatcher accountMatcher) {
+      this.accountMatcher = accountMatcher;
+    }
 
     public void run(Glob glob, GlobRepository repository) throws Exception {
-      if (transaction == null){
-        transaction = glob;
-      }
-      if (TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, glob) < 0){
-        transaction = glob;
+      if (accountMatcher.matches(glob, repository)) {
+        if (transaction == null) {
+          transaction = glob;
+        }
+        if (TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, glob) < 0) {
+          transaction = glob;
+        }
       }
     }
   }
 
   private static class FirstGlobFunctor implements GlobFunctor {
     private Glob transaction;
+    private GlobMatcher accountMatcher;
+
+    public FirstGlobFunctor(GlobMatcher accountMatcher) {
+      this.accountMatcher = accountMatcher;
+    }
 
     public void run(Glob glob, GlobRepository repository) throws Exception {
-      if (transaction == null){
-        transaction = glob;
-      }
-      if (TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, glob) > 0){
-        transaction = glob;
+      if (accountMatcher.matches(glob, repository)) {
+        if (transaction == null) {
+          transaction = glob;
+        }
+        if (TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, glob) > 0) {
+          transaction = glob;
+        }
       }
     }
-  }}
+  }
+}

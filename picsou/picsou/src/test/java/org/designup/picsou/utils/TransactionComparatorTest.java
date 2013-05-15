@@ -54,10 +54,9 @@ public class TransactionComparatorTest extends PicsouTestCase {
     createPlannedAccount2(9);
     createPlannedAccount2(30);
 
-    SortedSet<Glob> list = repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_BANK, GlobMatchers.ALL);
-    Glob[] globs = list.toArray(new Glob[list.size()]);
+    Glob[] globs = repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_BANK, GlobMatchers.ALL);
     int pos = 0;
-    for (Glob glob : list) {
+    for (Glob glob : globs) {
       assertEquals(pos, Arrays.binarySearch(globs, glob, TransactionComparator.ASCENDING_BANK));
       pos++;
     }

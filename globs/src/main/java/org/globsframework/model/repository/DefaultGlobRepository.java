@@ -17,7 +17,6 @@ import org.globsframework.model.impl.DefaultGlob;
 import org.globsframework.model.indexing.IndexManager;
 import org.globsframework.model.indexing.IndexSource;
 import org.globsframework.model.indexing.IndexTables;
-import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
@@ -207,19 +206,20 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     return result;
   }
 
-  public SortedSet<Glob> getSorted(GlobType type, Comparator<Glob> comparator, GlobMatcher matcher) {
-    SortedSet<Glob> set = new TreeSet<Glob>(comparator);
+  Glob[] tmp = new Glob[10];
+
+  public Glob[] getSorted(GlobType type, Comparator<Glob> comparator, GlobMatcher matcher) {
+    int i = 0;
     for (Glob glob : globs.values(type)) {
       if (matcher.matches(glob, this)) {
-        boolean added = set.add(glob);
-        Utils.beginRemove();
-        if (!added) {
-          throw new RuntimeException("comparator not exclisif");
+        if (i >= tmp.length){
+          tmp = Arrays.copyOf(tmp, tmp.length * 2);
         }
-        Utils.endRemove();
+        tmp[i++] = glob;
       }
     }
-    return set;
+    Arrays.sort(tmp, 0, i, comparator);
+    return Arrays.copyOf(tmp, i);
   }
 
   public Set<GlobType> getTypes() {

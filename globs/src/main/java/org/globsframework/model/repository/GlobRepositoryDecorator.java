@@ -13,7 +13,6 @@ import org.globsframework.utils.exceptions.*;
 
 import java.util.Comparator;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.Collection;
 
 public class GlobRepositoryDecorator implements GlobRepository {
@@ -55,8 +54,8 @@ public class GlobRepositoryDecorator implements GlobRepository {
     return getRepository().findUnique(type, matcher);
   }
 
-  public SortedSet<Glob> getSorted(GlobType globType, Comparator<Glob> comparator, GlobMatcher matcher) {
-    return getRepository().getSorted(globType, comparator, matcher);
+  public Glob[] getSorted(GlobType type, Comparator<Glob> comparator, GlobMatcher matcher) {
+    return getRepository().getSorted(type, comparator, matcher);
   }
 
   public GlobList findByIndex(Index index, Object value) {

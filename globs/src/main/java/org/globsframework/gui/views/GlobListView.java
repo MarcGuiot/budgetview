@@ -330,6 +330,12 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
             selectSilently(newSelection);
           }
         }
+
+        public void startUpdate() {
+        }
+
+        public void updateComplete() {
+        }
       });
     }
 

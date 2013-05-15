@@ -15,17 +15,6 @@ import static org.globsframework.model.FieldValue.value;
 
 public class PositionTrigger implements ChangeSetListener {
 
-
-  static class OperationsPeriod {
-    final int firstDate;
-    final int lastDate;
-
-    OperationsPeriod(int firstDate, int lastDate) {
-      this.firstDate = firstDate;
-      this.lastDate = lastDate;
-    }
-  }
-
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
 
     final Set<Integer> accountIds = new HashSet<Integer>();
@@ -84,9 +73,8 @@ public class PositionTrigger implements ChangeSetListener {
 
   public static void computeTotal(GlobRepository repository) {
     TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
-    SortedSet<Glob> trs = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
 
-    Glob[] transactions = trs.toArray(new Glob[trs.size()]);
+    Glob[] transactions = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
 
     computeTotalPosition(repository, transactions);
   }
@@ -94,10 +82,9 @@ public class PositionTrigger implements ChangeSetListener {
   private void updateDeferredAccount(GlobRepository repository, Set<Integer> deferredAccountIds) {
     for (Integer id : deferredAccountIds) {
       TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
-      SortedSet<Glob> trs = repository.getSorted(Transaction.TYPE, comparator,
-                                                 GlobMatchers.fieldEquals(Transaction.ACCOUNT, id));
 
-      Glob[] transactions = trs.toArray(new Glob[trs.size()]);
+      Glob[] transactions = repository.getSorted(Transaction.TYPE, comparator,
+                                                 GlobMatchers.fieldEquals(Transaction.ACCOUNT, id));
 
       computeDeferredPosition(repository, transactions, repository.get(Key.create(Account.TYPE, id)));
     }
@@ -321,30 +308,8 @@ public class PositionTrigger implements ChangeSetListener {
     }
   */
   public Glob[] getAllTransactionForAccount(int accountId, GlobRepository repository) {
-    SortedSet<Glob> positions = repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_ACCOUNT,
-                                                     GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId)));
-    return positions.toArray(new Glob[positions.size()]);
-  }
-
-  public Glob[] getEffectiveTransactionForAccount(int accountId, GlobRepository repository, int monthId, int day) {
-    SortedSet<Glob> positions = repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_ACCOUNT,
-                                                     GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId),
-                                                                      GlobMatchers.isFalse(Transaction.PLANNED),
-                                                                      GlobMatchers.or(
-                                                                        GlobMatchers.fieldStrictlyLessThan(Transaction.POSITION_MONTH, monthId),
-                                                                        GlobMatchers.and(
-                                                                          GlobMatchers.fieldEquals(Transaction.POSITION_MONTH, monthId),
-                                                                          GlobMatchers.fieldLessOrEqual(Transaction.POSITION_DAY, day))
-                                                                      ))
-    );
-    return positions.toArray(new Glob[positions.size()]);
-  }
-
-  public Glob[] getFutureTransactionForAccount(int accountId, GlobRepository repository, int monthId, int day) {
-    SortedSet<Glob> positions = repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_ACCOUNT,
-                                                     getMatcherForFutureOperations(accountId, monthId, day)
-    );
-    return positions.toArray(new Glob[positions.size()]);
+    return repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_ACCOUNT,
+                                GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId)));
   }
 
   private GlobMatcher getMatcherForFutureOperations(int accountId, int monthId, int day) {

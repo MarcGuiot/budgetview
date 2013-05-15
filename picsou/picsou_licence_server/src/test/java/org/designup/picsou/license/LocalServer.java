@@ -16,6 +16,7 @@ public class LocalServer {
     server.init();
 
     AddUser.main("-d", "jdbc:hsqldb:.", "-u", "sa", "-p", "", "user@localhost");
+    System.out.println("LocalServer.main user : user@localhost");
 
     server.addServlet(new ServletHolder(new DefaultServlet()), "/");
     server.start();

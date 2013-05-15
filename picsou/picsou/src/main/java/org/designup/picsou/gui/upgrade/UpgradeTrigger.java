@@ -138,6 +138,10 @@ public class UpgradeTrigger implements ChangeSetListener {
       reassignBankId(repository);
     }
 
+    if (currentJarVersion < 116){
+      updateOpenCloseAccount(repository);
+    }
+
     UserPreferences.initMobilePassword(repository, false);
 
     deleteDeprecatedGlobs(repository);
@@ -230,8 +234,11 @@ public class UpgradeTrigger implements ChangeSetListener {
         if (!Account.isUserCreatedAccount(account)) {
           continue;
         }
-        GlobList transactions = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)))
-          .sort(TransactionComparator.ASCENDING_ACCOUNT);
+        if (account.get(Account.OPEN_TRANSACTION) != null) {
+          continue;
+        }
+        Glob[] transactions = repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_ACCOUNT,
+                                                   GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)));
         Date openDate = account.get(Account.OPEN_DATE);
         int open = Integer.MAX_VALUE;
 
@@ -239,8 +246,8 @@ public class UpgradeTrigger implements ChangeSetListener {
           open = Month.toFullDate(openDate);
         }
         double openAmount = 0;
-        if (!transactions.isEmpty()) {
-          Glob firstTransaction = transactions.get(0);
+        if (transactions.length != 0) {
+          Glob firstTransaction = transactions[0];
           open = Math.min(open, Month.toFullDate(firstTransaction.get(Transaction.POSITION_MONTH),
                                                  firstTransaction.get(Transaction.POSITION_DAY)));
           open = Math.min(open, Month.toFullDate(firstTransaction.get(Transaction.BANK_MONTH),
@@ -256,8 +263,8 @@ public class UpgradeTrigger implements ChangeSetListener {
         if (closeDate != null) {
           close = Month.toFullDate(closeDate);
         }
-        if (!transactions.isEmpty()) {
-          Glob lastTransaction = transactions.get(transactions.size() - 1);
+        if (transactions.length != 0) {
+          Glob lastTransaction = transactions[transactions.length - 1];
           close = Math.max(close, Month.toFullDate(lastTransaction.get(Transaction.POSITION_MONTH),
                                                    lastTransaction.get(Transaction.POSITION_DAY)));
           close = Math.max(close, Month.toFullDate(lastTransaction.get(Transaction.BANK_MONTH),
