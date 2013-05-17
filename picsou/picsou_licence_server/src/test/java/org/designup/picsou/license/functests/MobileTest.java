@@ -218,7 +218,6 @@ public class MobileTest extends ConnectedTestCase {
     Email email = mailServer.checkReceivedMail(userMail);
     email.checkContains("http");
     String content = email.getContent();
-    System.out.println("MobileTest.requestMobileAccount " + content);
     int httpStartIndex = content.indexOf("href=\"");
     int httpEndIndex = content.indexOf("\">http");
     String url = content.substring(httpStartIndex + "href=\"".length(), httpEndIndex);
