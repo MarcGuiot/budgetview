@@ -265,7 +265,12 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
 
             WebPage currentPage = browser.getCurrentPage();
             currentPage.getSelectById("TEL1_TYPE").select("OFX-Quicken");
-            currentPage.getInputByValue("INTERVAL").select();
+            WebInput interval = currentPage.findFirst(WebFilters.and(WebFilters.tagEquals(HtmlInput.TAG_NAME),
+                                                                     WebFilters.typeEquals("radio"),
+                                                                     WebFilters.attributeEquals("value", "INTERVAL"))).asInput();
+            if (interval != null) {
+              interval.select();
+            }
 
             doImport();
           }
