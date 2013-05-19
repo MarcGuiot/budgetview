@@ -3,16 +3,13 @@ package org.globsframework.remote;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.ChangeVisitor;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.Date;
 
 public class SerializedRemoteAccess {
-
-  public interface ChangeVisitor extends ChangeSetVisitor {
-    void complete();
-  }
 
   public byte[] apply(ChangeSet changeSet) {
     SerializedByteArrayOutput output = new SerializedByteArrayOutput();

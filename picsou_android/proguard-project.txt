@@ -18,3 +18,39 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keepattributes *Annotation*
+
+-keep @interface org.globsframework.metamodel.annotations.Key {
+}
+
+-keepclassmembers @interface org.globsframework.metamodel.annotations.Target {
+  Class value();
+}
+
+-keepclassmembers @interface org.globsframework.metamodel.annotations.DefaultBoolean {
+  boolean value();
+}
+
+-keepclassmembers @interface org.globsframework.metamodel.annotations.DefaultInteger {
+  int value();
+}
+
+-keepclassmembers @interface org.globsframework.metamodel.annotations.DefaultDouble {
+  double value();
+}
+
+-keep @interface org.globsframework.metamodel.annotations.DefaultDate {
+}
+
+-keepclassmembers @interface org.globsframework.metamodel.annotations.DefaultString {
+  String value();
+}
+
+-keepclassmembers @interface org.globsframework.metamodel.annotations.DoublePrecision {
+  int value();
+}
+
+-keepclassmembers class com.budgetview.shared.model.** {
+  public static <fields>;
+}

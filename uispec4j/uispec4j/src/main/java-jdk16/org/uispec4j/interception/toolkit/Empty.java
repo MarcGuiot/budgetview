@@ -77,6 +77,9 @@ public final class Empty {
     public void toBack() {
     }
 
+    public void updateAlwaysOnTopState() {
+    }
+
     public void updateWindow() {
     }
 

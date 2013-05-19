@@ -8,9 +8,9 @@ import org.globsframework.metamodel.index.Index;
 import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
+import org.globsframework.model.utils.ChangeVisitor;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.remote.SerializedRemoteAccess;
 import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.*;
@@ -294,7 +294,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
   public void apply(ChangeSet changeSet) throws InvalidParameter {
     final DefaultChangeSet localChangeSet = new DefaultChangeSet();
     final DefaultChangeSet remoteChangeSet = new DefaultChangeSet();
-    changeSet.safeVisit(new SerializedRemoteAccess.ChangeVisitor() {
+    changeSet.safeVisit(new ChangeVisitor() {
       public void complete() {
       }
 

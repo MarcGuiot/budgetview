@@ -9,7 +9,7 @@ import org.globsframework.gui.splits.layout.ComponentConstraints;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.utils.DoubleOperation;
-import org.globsframework.gui.splits.utils.SplitsUtils;
+import org.globsframework.utils.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +42,7 @@ public class BorderLayoutComponent extends AbstractSplitter {
       SplitComponent splitComponent = splitter.createComponentStretch(context, false);
       weightX = DoubleOperation.SUM.get(splitComponent.componentConstraints.getWeightX(), weightX);
       weightY = DoubleOperation.SUM.get(splitComponent.componentConstraints.getWeightY(), weightY);
-      panel.add(splitComponent.componentConstraints.getComponent(), SplitsUtils.capitalize(pos));
+      panel.add(splitComponent.componentConstraints.getComponent(), Utils.capitalize(pos));
     }
     return new SplitComponent(new ComponentConstraints(panel, Fill.BOTH, Anchor.CENTER, weightX, weightY),
                                  new DefaultSplitsNode(panel, context));

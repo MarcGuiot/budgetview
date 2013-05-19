@@ -1,6 +1,5 @@
 package org.globsframework.utils;
 
-import org.globsframework.gui.splits.utils.SplitsUtils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
@@ -287,7 +286,7 @@ public class Utils {
     if (name == null) {
       return null;
     }
-    T result = T.valueOf(enumClass, SplitsUtils.toNiceUpperCase(name.trim()));
+    T result = T.valueOf(enumClass, toNiceUpperCase(name.trim()));
     if (result == null) {
       throw new ItemNotFound("No enum " + enumClass.getSimpleName() + " found for value: " + name);
     }
@@ -368,5 +367,24 @@ public class Utils {
       return null;
     }
     return replace(matcher, placementRegexp, targetString);
+  }
+
+  public static String toNiceUpperCase(String value) {
+    StringBuilder builder = new StringBuilder();
+    for (int i = 0; i < value.length(); i++) {
+      char c = value.charAt(i);
+      if ((i > 0) && Character.isUpperCase(c) && Character.isLowerCase(value.charAt(i - 1))) {
+        builder.append("_");
+      }
+      builder.append(Character.toUpperCase(c));
+    }
+    return builder.toString();
+  }
+
+  public static String capitalize(String value) {
+    if ((value == null) || "".equals(value)) {
+      return value;
+    }
+    return value.substring(0, 1).toUpperCase() + value.substring(1, value.length());
   }
 }

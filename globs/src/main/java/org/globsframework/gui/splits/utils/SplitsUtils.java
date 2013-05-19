@@ -59,25 +59,6 @@ public class SplitsUtils {
     throw new SplitsException(DIMENSION_ERROR_MESSAGE);
   }
 
-  public static String toNiceUpperCase(String value) {
-    StringBuilder builder = new StringBuilder();
-    for (int i = 0; i < value.length(); i++) {
-      char c = value.charAt(i);
-      if ((i > 0) && Character.isUpperCase(c) && Character.isLowerCase(value.charAt(i - 1))) {
-        builder.append("_");
-      }
-      builder.append(Character.toUpperCase(c));
-    }
-    return builder.toString();
-  }
-
-  public static String capitalize(String value) {
-    if ((value == null) || "".equals(value)) {
-      return value;
-    }
-    return value.substring(0, 1).toUpperCase() + value.substring(1, value.length());
-  }
-
   public static Integer parseInt(String value) throws NumberFormatException {
     if (INT_FORMAT.matcher(value).matches()) {
       return Integer.valueOf(value);

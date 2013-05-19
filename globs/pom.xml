@@ -80,6 +80,9 @@
                     <include name="**/*.class"/>
                     <exclude name="**/gui/**"/>
                     <exclude name="**/wicket/**"/>
+                    <exclude name="**/sqlstreams/**"/>
+                    <exclude name="**/serialization/**"/>
+                    <exclude name="**/remote/**"/>
                   </fileset>
                 </jar>
               </tasks>
