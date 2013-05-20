@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.upgrade;
 
 import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.bank.connectors.AbstractBankConnector;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
 import org.designup.picsou.gui.license.LicenseService;
@@ -24,10 +25,7 @@ import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -138,8 +136,9 @@ public class UpgradeTrigger implements ChangeSetListener {
       reassignBankId(repository);
     }
 
-    if (currentJarVersion < 116){
+    if (currentJarVersion < 117){
       updateOpenCloseAccount(repository);
+      deleteDuplicateSynchro(repository);
     }
 
     UserPreferences.initMobilePassword(repository, false);
@@ -153,6 +152,42 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
 
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
+  }
+
+  private void deleteDuplicateSynchro(GlobRepository repository) {
+    GlobList otherSynchros = repository.getAll(Synchro.TYPE);
+
+    Set<Key> synchroToDelete = new HashSet<Key>();
+    for (Glob synchro : otherSynchros) {
+      for (Glob otherSynchro : otherSynchros) {
+        if (synchro != otherSynchro && !synchroToDelete.contains(otherSynchro.getKey())) {
+          if (sameAccount(repository, synchro, otherSynchro)) {
+            synchroToDelete.add(synchro.getKey());
+          }
+        }
+      }
+    }
+    for (Key key : synchroToDelete) {
+      GlobList all = repository.getAll(RealAccount.TYPE, GlobMatchers.fieldEquals(RealAccount.SYNCHRO, key.get(Synchro.ID)));
+      for (Glob glob : all) {
+        repository.update(glob.getKey(), RealAccount.SYNCHRO, null);
+      }
+      repository.delete(key);
+    }
+  }
+
+  private boolean sameAccount(GlobRepository repository, Glob sync1, Glob sync2) {
+    GlobList acc1 = repository.findLinkedTo(sync1, RealAccount.SYNCHRO);
+    GlobList acc2 = repository.findLinkedTo(sync2, RealAccount.SYNCHRO);
+    for (Glob glob : acc1) {
+      for (Glob glob1 : acc2) {
+        if (Utils.equal(glob.get(RealAccount.NUMBER), glob1.get(RealAccount.NUMBER)) &&
+            Utils.equal(glob.get(RealAccount.NAME), glob1.get(RealAccount.NAME)) ){
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private void reassignBankId(GlobRepository repository) {

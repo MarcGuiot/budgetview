@@ -169,7 +169,7 @@ public class ImportSession {
       }
     }
     for (Glob realAccount : accountIds) {
-      importRepository.update(realAccount.getKey(), RealAccount.SYNCHO, synchroId);
+      importRepository.update(realAccount.getKey(), RealAccount.SYNCHRO, synchroId);
     }
     List<String> dateFormat = getImportedTransactionFormat(importRepository);
 

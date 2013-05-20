@@ -32,7 +32,7 @@ public class RealAccount {
   public static LinkField BANK; // to protect if same name
 
   @Target(Synchro.class)
-  public static LinkField SYNCHO;
+  public static LinkField SYNCHRO;
 
   public static StringField BANK_ID;
 
@@ -177,7 +177,7 @@ public class RealAccount {
     public byte[] serializeData(FieldValues fieldValues) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput output = serializedByteArrayOutput.getOutput();
-      output.writeInteger(fieldValues.get(SYNCHO));
+      output.writeInteger(fieldValues.get(SYNCHRO));
       output.writeInteger(fieldValues.get(BANK));
       output.writeUtf8String(fieldValues.get(BANK_ID));
       output.writeInteger(fieldValues.get(BANK_ENTITY));
@@ -211,7 +211,7 @@ public class RealAccount {
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(SYNCHO, input.readInteger());
+      fieldSetter.set(SYNCHRO, input.readInteger());
       fieldSetter.set(BANK, input.readInteger());
       fieldSetter.set(BANK_ID, input.readUtf8String());
       fieldSetter.set(BANK_ENTITY, input.readInteger());

@@ -141,29 +141,25 @@ public abstract class AbstractBankConnector implements BankConnector {
     }
     try {
       downloadFile();
-      if (Strings.isNullOrEmpty(synchro.get(Synchro.CODE))) {
-        repository.update(synchro.getKey(), Synchro.CODE, getCode());
-        for (Glob account : accounts) {
-          repository.update(account.getKey(), RealAccount.SYNCHO, synchro.get(Synchro.ID));
+
+      GlobList otherSynchros = repository.getAll(Synchro.TYPE, GlobMatchers.fieldEquals(Synchro.BANK, bankId));
+      if (otherSynchros.size() > 2) {
+        for (Glob otherSynchro : otherSynchros) {
+          if (!otherSynchro.getKey().equals(synchro.getKey())){
+            if (hasAKnownAccount(otherSynchro)) {
+              GlobList linkedTo = repository.findLinkedTo(otherSynchro, RealAccount.SYNCHRO);
+              for (Glob glob : linkedTo) {
+                repository.update(glob.getKey(), RealAccount.SYNCHRO, null);
+              }
+              repository.delete(otherSynchros);
+            }
+          }
         }
       }
-      else if (!getCode().equals(synchro.get(Synchro.CODE))) {
-        if (hasAKnownAccount()) {
-          repository.update(synchro.getKey(), Synchro.CODE, getCode());
-        }
-        else {
-          // autre telechargement
-          Glob otherSynchro = repository.getAll(Synchro.TYPE,
-                                                GlobMatchers.and(GlobMatchers.fieldEquals(Synchro.CODE, getCode()),
-                                                                 GlobMatchers.fieldEquals(Synchro.BANK, bankId))).getFirst();
-          if (otherSynchro == null) {
-            otherSynchro = repository.create(Synchro.TYPE, FieldValue.value(Synchro.CODE, getCode()),
-                                             FieldValue.value(Synchro.BANK, bankId));
-          }
-          for (Glob account : accounts) {
-            repository.update(account.getKey(), RealAccount.SYNCHO, otherSynchro.get(Synchro.ID));
-          }
-        }
+
+      repository.update(synchro.getKey(), Synchro.CODE, getCode());
+      for (Glob account : accounts) {
+        repository.update(account.getKey(), RealAccount.SYNCHRO, synchro.get(Synchro.ID));
       }
     }
     catch (final Exception e) {
@@ -173,8 +169,8 @@ public abstract class AbstractBankConnector implements BankConnector {
     importCompleted();
   }
 
-  private boolean hasAKnownAccount() {
-    GlobList accountsForPreviousSynchro = repository.findLinkedTo(synchro, RealAccount.SYNCHO);
+  public boolean hasAKnownAccount(final Glob sync) {
+    GlobList accountsForPreviousSynchro = repository.findLinkedTo(sync, RealAccount.SYNCHRO);
     Set<Key> accountsForPreviousSynchroKeySet = accountsForPreviousSynchro.getKeySet();
     // changement de code
     for (Glob account : accounts) {

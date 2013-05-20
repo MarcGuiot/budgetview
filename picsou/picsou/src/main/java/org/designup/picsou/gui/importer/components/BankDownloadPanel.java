@@ -238,7 +238,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
   }
 
   private List<BankAccountGroup> getManualAccountGroups() {
-    GlobList realAccounts = repository.getAll(RealAccount.TYPE, and(isNull(RealAccount.SYNCHO), isFalse(RealAccount.FROM_SYNCHRO)));
+    GlobList realAccounts = repository.getAll(RealAccount.TYPE, and(isNull(RealAccount.SYNCHRO), isFalse(RealAccount.FROM_SYNCHRO)));
     GlobList accounts = realAccounts.getTargets(RealAccount.ACCOUNT, repository);
     accounts.sort(new GlobFieldsComparator(Account.ACCOUNT_TYPE, true,
                                            Account.POSITION_DATE, true,
@@ -265,7 +265,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
   private boolean hasASynchroFor(Glob account) {
     GlobList realAccountForAccount = repository.findLinkedTo(account, RealAccount.ACCOUNT);
     for (Glob realAccount : realAccountForAccount) {
-      if (realAccount.get(RealAccount.SYNCHO) != null){
+      if (realAccount.get(RealAccount.SYNCHRO) != null){
         return true;
       }
     }
@@ -273,11 +273,11 @@ public class BankDownloadPanel implements GlobSelectionListener {
   }
 
   private List<BankAccountGroup> getSynchroAccountGroups() {
-    GlobMatcher filter = isNotNull(RealAccount.SYNCHO);
+    GlobMatcher filter = isNotNull(RealAccount.SYNCHRO);
     GlobList realAccounts = repository.getAll(RealAccount.TYPE, filter);
     Map<Integer, Glob> synchroByAccount = new HashMap<Integer, Glob>();
     for (Glob account : realAccounts) {
-      Glob synchro = repository.findLinkTarget(account, RealAccount.SYNCHO);
+      Glob synchro = repository.findLinkTarget(account, RealAccount.SYNCHRO);
       if (synchro != null) {
         synchroByAccount.put(account.get(RealAccount.ACCOUNT), synchro);
       }

@@ -24,6 +24,7 @@ import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 
 public class LicenseTest extends ConnectedTestCase {
+  public static final String ACTIVATION_CODE = "Activation code : <b>";
   private PicsouApplication picsouApplication;
   private Window window;
   private LoginChecker login;
@@ -135,10 +136,9 @@ public class LicenseTest extends ConnectedTestCase {
     LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed. An email was sent at " + MAIL + " with further information.");
     licenseMessage.checkVisible("Activation failed. An email was sent");
     Email email = mailServer.checkReceivedMail(MAIL);
-    email.checkContains("Multiple use of the same license");
-
+    email.checkContains("To prevent anyone else from using your code");
     String emailcontent = email.getContent();
-    int startCode = emailcontent.indexOf("new code ") + 9;
+    int startCode = emailcontent.indexOf(ACTIVATION_CODE) + ACTIVATION_CODE.length();
     String newActivationCode = emailcontent.substring(startCode, startCode + 4);
     Integer.parseInt(newActivationCode);
     exit();
@@ -418,7 +418,13 @@ public class LicenseTest extends ConnectedTestCase {
   }
 
   private String checkMailAndExtractCode() throws InterruptedException {
-    return mailServer.checkReceivedMail(MAIL).getEnd(5);
+    String email = mailServer.checkReceivedMail(MAIL).getContent();
+    int start = email.indexOf(ACTIVATION_CODE);
+    if (start == -1){
+      fail(ACTIVATION_CODE + " not found in " + email);
+    }
+    int index = start + ACTIVATION_CODE.length();
+    return email.substring(index, index + 4);
   }
 
   public void testTrialVersionIsOver() throws Exception {

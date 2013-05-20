@@ -341,7 +341,7 @@ public class ImportController implements RealAccountImporter {
       }
     }
     realAccountWithImport.add(new AccountWithFile(realAccount, fileContent,
-                                                  realAccount.get(RealAccount.SYNCHO)));
+                                                  realAccount.get(RealAccount.SYNCHRO)));
   }
 
   private static class HasOperationFunctor implements GlobFunctor {
