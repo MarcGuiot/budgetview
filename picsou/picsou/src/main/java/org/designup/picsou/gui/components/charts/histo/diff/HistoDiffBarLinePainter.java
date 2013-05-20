@@ -51,8 +51,8 @@ public class HistoDiffBarLinePainter implements HistoPainter {
       g2.setColor(colors.getFillColor(reference, dataset.isInverted()));
       g2.fillRect(left, metrics.barTop(reference),
                   width, metrics.barHeight(reference));
-      g2.setComposite(AlphaComposite.Src);
     }
+    g2.setComposite(AlphaComposite.Src);
 
     double actual = dataset.getActualValue(0);
     g2.setColor(colors.getLineColor(actual, dataset.isInverted()));

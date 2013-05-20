@@ -8,11 +8,11 @@ import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.license.ConnectedTestCase;
 import org.designup.picsou.license.DuplicateLine;
-import org.designup.picsou.license.servlet.RegisterServlet;
 import org.designup.picsou.license.checkers.DbChecker;
 import org.designup.picsou.license.checkers.Email;
 import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.model.RepoInfo;
+import org.designup.picsou.license.servlet.RegisterServlet;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SqlConnection;
@@ -28,7 +28,7 @@ public class LicenseTest extends ConnectedTestCase {
   private Window window;
   private LoginChecker login;
   private LicenseMessageChecker licenseMessage;
-  
+
   private static final String MAIL = "alfred@free.fr";
   private static final String SECOND_PATH = "tmp/otherprevayler";
   private static final String THIRD_PATH = "tmp/otherprevayler_2";
@@ -257,7 +257,7 @@ public class LicenseTest extends ConnectedTestCase {
 
     LicenseActivationChecker license =
       LicenseActivationChecker.open(window)
-      .enterLicense("titi@foo.org", "az");
+        .enterLicense("titi@foo.org", "az");
 
     stopServers();
 
@@ -549,7 +549,6 @@ public class LicenseTest extends ConnectedTestCase {
     assertEquals(l13.get(License.ACTIVATION_CODE), "1111");
     assertNull(l13.get(License.REPO_ID));
   }
-
 
   public void testRegisterTwice() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));

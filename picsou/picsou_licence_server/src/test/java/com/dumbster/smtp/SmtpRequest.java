@@ -172,7 +172,12 @@ public class SmtpRequest {
         if (s.length() < 1) {
           params = "\n";
         } else {
-          params = s;
+          if (s.endsWith("=")){
+            params = s.substring(0, s.length() - 1).replace("=3D", "=");
+          }
+          else {
+            params = s.replace("=3D", "=");
+          }
         }
       }
     } else {

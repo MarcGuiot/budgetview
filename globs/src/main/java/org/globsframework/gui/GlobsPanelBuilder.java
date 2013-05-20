@@ -229,10 +229,13 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     private GlobViewModel model;
     private Repeat<Glob> repeat;
     private List<GlobRepeatListener> listeners;
+    boolean inUpdate = false;
 
     public void globInserted(int index) {
       repeat.insert(model.get(index), index);
-      notifyListeners();
+      if (!inUpdate){
+        notifyListeners();
+      }
     }
 
     public void globUpdated(int index) {
@@ -240,12 +243,16 @@ public class GlobsPanelBuilder extends SplitsBuilder {
 
     public void globRemoved(int index) {
       repeat.remove(index);
-      notifyListeners();
+      if (!inUpdate) {
+        notifyListeners();
+      }
     }
 
     public void globMoved(int previousIndex, int newIndex) {
       repeat.move(previousIndex, newIndex);
-      notifyListeners();
+      if (!inUpdate) {
+        notifyListeners();
+      }
     }
 
     public void globListPreReset() {
@@ -254,8 +261,19 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     public void globListReset() {
       if ((repeat != null) && (model != null)) {
         repeat.set(model.getAll());
-        notifyListeners();
+        if (!inUpdate){
+          notifyListeners();
+        }
       }
+    }
+
+    public void startUpdate() {
+      repeat.startUpdate();
+    }
+
+    public void updateComplete() {
+      repeat.updateComplete();
+      notifyListeners();
     }
 
     public void set(GlobViewModel model, Repeat<Glob> repeat) {

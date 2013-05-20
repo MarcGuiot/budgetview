@@ -186,17 +186,30 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
         }
         select.selectByValue("OFX");
 
-        subPanel.findFirst(WebFilters.and(WebFilters.tagEquals(HtmlInput.TAG_NAME),
-                                          WebFilters.typeEquals("checkbox")))
-          .asCheckBox().setChecked(true);
+        List<WebCheckBox> checkbox = subPanel.findAll(WebFilters.and(WebFilters.tagEquals(HtmlInput.TAG_NAME),
+                                                                     WebFilters.typeEquals("checkbox")))
+          .asCheckBox();
+        boolean next = false;
+        for (WebCheckBox box : checkbox) {
+          if (next){
+            box.setChecked(true);
+          }
+          next = true;
+        }
 
-        System.out.println("CreditMutuelArkeaConnector$ValiderActionListener.actionPerformed RECHERCHER ");
+        browser.waitForBackgroundJavaScript(1000);
+        currentPage = browser.updateCurrentPage();
+        subPanel = currentPage.getPanelById("titrePageFonctionnelle");
+
 
         WebAnchor rechercher = subPanel.findFirst(WebFilters.and(WebFilters.tagEquals(HtmlAnchor.TAG_NAME),
                                                                  WebFilters.textContentContains("RECHERCHER")))
           .asAnchor();
         rechercher.click();
+        browser.waitForBackgroundJavaScript(1000);
+        currentPage = browser.updateCurrentPage();
 
+        System.out.println("CreditMutuelArkeaConnector$ValiderActionListener.actionPerformed RECHERCHER " + browser.getCurrentPage().asXml());
 
         HtmlNavigate first;
         WebPanel subPanel2;

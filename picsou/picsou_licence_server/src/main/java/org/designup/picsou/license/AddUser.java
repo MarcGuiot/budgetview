@@ -60,6 +60,11 @@ public class AddUser {
         .set(License.ACTIVATION_CODE, code)
         .getRequest()
         .run();
+      db.getCreateBuilder(License.TYPE)
+        .set(License.MAIL, arg)
+        .set(License.ACTIVATION_CODE, code)
+        .getRequest()
+        .run();
       System.out.println("code d'activation : " + code);
     }
     db.commitAndClose();

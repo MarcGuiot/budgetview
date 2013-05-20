@@ -11,4 +11,7 @@ public interface Repeat<T> {
 
   void move(int index1, int index2);
 
+  void startUpdate();
+
+  void updateComplete();
 }

@@ -113,14 +113,14 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     }
   }
 
-  public SortedSet<Glob> getSorted(GlobType globType, Comparator<Glob> comparator, GlobMatcher matcher) {
+  public Glob[] getSorted(GlobType type, Comparator<Glob> comparator, GlobMatcher matcher) {
     GlobMatcher globMatcher = new DecoratedGlobMatcher(matcher);
 
-    if (managedTypes.contains(globType)) {
-      return super.getSorted(globType, comparator, globMatcher);
+    if (managedTypes.contains(type)) {
+      return super.getSorted(type, comparator, globMatcher);
     }
     else {
-      return originalRepository.getSorted(globType, comparator, globMatcher);
+      return originalRepository.getSorted(type, comparator, globMatcher);
     }
   }
 

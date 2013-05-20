@@ -96,6 +96,7 @@ public class SavingsSeriesView implements Disposable {
     List<Key> newSeries = repository.getAll(PeriodSeriesStat.TYPE, seriesFilter)
       .sort(comparator)
       .toKeyList();
+    seriesRepeat.startUpdate();
     GlobUtils.diff(currentSeries, newSeries, new GlobUtils.DiffFunctor<Key>() {
       public void add(Key key, int index) {
         seriesRepeat.insert(repository.get(key), index);
@@ -109,6 +110,7 @@ public class SavingsSeriesView implements Disposable {
         seriesRepeat.move(previousIndex, newIndex);
       }
     });
+    seriesRepeat.updateComplete();
     currentSeries = newSeries;
   }
 

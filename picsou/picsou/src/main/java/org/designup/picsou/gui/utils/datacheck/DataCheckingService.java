@@ -264,9 +264,8 @@ public class DataCheckingService {
     }
 
     TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
-    SortedSet<Glob> trs = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
-    
-    Glob[] transactions = trs.toArray(new Glob[trs.size()]);
+
+    Glob[] transactions = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
     Glob currentMonth = repository.get(CurrentMonth.KEY);
     Date lastTransactionDate = Month.toDate(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH),
                                     currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY));

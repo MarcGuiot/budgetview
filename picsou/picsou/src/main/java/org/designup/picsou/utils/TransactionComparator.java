@@ -87,13 +87,13 @@ public class TransactionComparator implements Comparator<Glob> {
 
   public int compare(Glob transaction1, Glob transaction2) {
     int tmp;
-    tmp = transaction1.get(monthField).compareTo(transaction2.get(monthField));
+    tmp = Utils.compare(transaction1.get(monthField), transaction2.get(monthField));
     if (tmp != 0) {
       return comparisonMultiplier * tmp;
     }
     final Integer day1 = transaction1.get(dayField);
     final Integer day2 = transaction2.get(dayField);
-    tmp = day1.compareTo(day2);
+    tmp = Utils.compare(day1, day2);
     if (tmp != 0) {
       return comparisonMultiplier * tmp;
     }
@@ -171,7 +171,7 @@ public class TransactionComparator implements Comparator<Glob> {
 
   int lastCompare(Glob transaction1, Glob transaction2) {
     if (transaction1.isTrue(Transaction.PLANNED)) { // les deux sont des planned
-      int amountCompareOnSameDay = comparisonMultiplier * transaction2.get(Transaction.AMOUNT).compareTo(transaction1.get(Transaction.AMOUNT));
+      int amountCompareOnSameDay = comparisonMultiplier * Utils.compare(transaction2.get(Transaction.AMOUNT), transaction1.get(Transaction.AMOUNT));
       if (amountCompareOnSameDay != 0) {
         return amountCompareOnSameDay;
       }

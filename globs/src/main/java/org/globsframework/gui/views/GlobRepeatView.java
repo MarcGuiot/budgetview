@@ -32,16 +32,21 @@ public class GlobRepeatView implements ComponentHolder {
     this.factory = factory;
     this.jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
     this.model = new GlobViewModel(type, repository, comparator, new GlobViewModel.Listener() {
+      boolean inUpdate = false;
       public void globInserted(int index) {
         Glob glob = model.get(index);
         ComponentHolder panel = factory.getComponent(glob, repository, directory);
         panels.add(index, panel);
         jPanel.add(panel.getComponent(), index);
-        revalidate();
+        if (!inUpdate){
+          revalidate();
+        }
       }
 
       public void globUpdated(int index) {
-        revalidate();
+        if (!inUpdate){
+          revalidate();
+        }
       }
 
       public void globMoved(int previousIndex, int newIndex) {
@@ -50,14 +55,18 @@ public class GlobRepeatView implements ComponentHolder {
         jPanel.remove(previousIndex);
         jPanel.add(component, newIndex);
         panels.add(newIndex, componentHolder);
-        revalidate();
+        if (!inUpdate){
+          revalidate();
+        }
       }
 
       public void globRemoved(int index) {
         jPanel.remove(index);
         ComponentHolder panel = panels.remove(index);
         panel.dispose();
-        revalidate();
+        if (!inUpdate){
+          revalidate();
+        }
       }
 
       public void globListPreReset() {
@@ -65,6 +74,15 @@ public class GlobRepeatView implements ComponentHolder {
 
       public void globListReset() {
         initPanel();
+        revalidate();
+      }
+
+      public void startUpdate() {
+        inUpdate = true;
+      }
+
+      public void updateComplete() {
+        inUpdate = false;
         revalidate();
       }
     });

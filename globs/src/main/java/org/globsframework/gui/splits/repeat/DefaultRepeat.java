@@ -55,6 +55,18 @@ public class DefaultRepeat<T> implements Repeat<T>, RepeatHandler<T> {
     }
   }
 
+  public void startUpdate() {
+    if (repeatPanel != null){
+      repeatPanel.startUpdate();
+    }
+  }
+
+  public void updateComplete() {
+    if (repeatPanel != null){
+      repeatPanel.updateComplete();
+    }
+  }
+
   public RepeatComponentFactory getFactory() {
     return factory;
   }

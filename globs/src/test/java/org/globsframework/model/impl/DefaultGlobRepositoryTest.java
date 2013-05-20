@@ -81,12 +81,12 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
          "<dummyObject2 id='1' label='name2'/>" +
          "<dummyObject2 id='3' label='name2'/>" +
          "");
-    SortedSet<Glob> result = repository.getSorted(DummyObject2.TYPE, new GlobFieldComparator(DummyObject2.ID),
-                                                  GlobMatchers.fieldEquals(DummyObject2.LABEL, "name2"));
+    Glob[] result = repository.getSorted(DummyObject2.TYPE, new GlobFieldComparator(DummyObject2.ID),
+                                         GlobMatchers.fieldEquals(DummyObject2.LABEL, "name2"));
     Glob firstGlob = repository.get(getKey2(1));
-    assertEquals(firstGlob, result.first());
+    assertEquals(firstGlob, result[0]);
     Glob lastGlob = repository.get(getKey2(4));
-    assertEquals(lastGlob, result.last());
+    assertEquals(lastGlob, result[result.length - 1]);
   }
 
   public void testContains() throws Exception {

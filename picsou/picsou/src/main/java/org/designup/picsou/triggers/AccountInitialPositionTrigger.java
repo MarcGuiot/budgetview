@@ -151,6 +151,9 @@ public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
       shiftTransactionTo(repository, openTransaction, monthId, day, openTransaction.get(Transaction.AMOUNT),
                          openTransaction.get(Transaction.ACCOUNT_POSITION));
     }
+    else {
+      createOpenTransaction(monthId, day, firstAndLastDateGlobFunctor.amount, repository, account.getKey());
+    }
     Date closeDate = account.get(Account.CLOSED_DATE);
     if (closeDate != null) {
       int closeMonthId = Month.getMonthId(closeDate);
@@ -313,6 +316,7 @@ public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
   private static class FirstAndLastDateGlobFunctor implements GlobFunctor {
     int first = Integer.MAX_VALUE;
     int last = 0;
+    Double amount;
 
     public FirstAndLastDateGlobFunctor(Date openDate, Date closeDate) {
       if (openDate != null) {
@@ -327,6 +331,7 @@ public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
       int date = Month.toFullDate(glob.get(Transaction.POSITION_MONTH), glob.get(Transaction.POSITION_DAY));
       if (date < first) {
         first = date;
+        amount = glob.get(Transaction.ACCOUNT_POSITION, 0) - glob.get(Transaction.AMOUNT, 0);
       }
       if (date > last) {
         last = date;

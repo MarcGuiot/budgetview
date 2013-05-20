@@ -24,6 +24,7 @@ public class RepeatPanel implements Repeat {
   private List<RepeatContext> repeatContexts = new ArrayList<RepeatContext>();
   private RepeatLayout layout;
   private DefaultSplitsNode<Component> splitsNode;
+  private boolean inUpdate = false;
 
   public RepeatPanel(String name, RepeatHandler repeatHandler, RepeatLayout layout,
                      boolean autoHideIfEmpty,
@@ -99,8 +100,10 @@ public class RepeatPanel implements Repeat {
       layout.insert(panel, createFooterStretchers(), adjustIndex(index + 1));
     }
 
-    GuiUtils.revalidate(panel);
-    updateVisibility();
+    if (!inUpdate) {
+      GuiUtils.revalidate(panel);
+      updateVisibility();
+    }
   }
 
   public void remove(int index) {
@@ -113,17 +116,31 @@ public class RepeatPanel implements Repeat {
       }
       panel.removeAll();
     }
-
-    GuiUtils.revalidate(panel);
-    panel.repaint();
-    updateVisibility();
+    if (!inUpdate) {
+      GuiUtils.revalidate(panel);
+      panel.repaint();
+      updateVisibility();
+    }
   }
 
   public void move(int previousIndex, int newIndex) {
     layout.move(panel, adjustIndex(previousIndex), adjustIndex(newIndex));
     RepeatContext context = repeatContexts.remove(previousIndex);
     repeatContexts.add(newIndex, context);
+    if (!inUpdate) {
+      GuiUtils.revalidate(panel);
+    }
+  }
+
+  public void startUpdate() {
+    inUpdate = true;
+  }
+
+  public void updateComplete() {
+    inUpdate = false;
     GuiUtils.revalidate(panel);
+    panel.repaint();
+    updateVisibility();
   }
 
   private int adjustIndex(int index) {

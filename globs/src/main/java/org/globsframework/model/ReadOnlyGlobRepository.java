@@ -41,7 +41,7 @@ public interface ReadOnlyGlobRepository {
   Glob findUnique(GlobType type, GlobMatcher matcher)
     throws ItemAmbiguity;
 
-  SortedSet<Glob> getSorted(GlobType globType, Comparator<Glob> comparator, GlobMatcher matcher);
+  Glob[] getSorted(GlobType type, Comparator<Glob> comparator, GlobMatcher matcher);
 
   GlobList findByIndex(Index index, Object value);
 

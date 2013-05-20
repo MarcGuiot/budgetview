@@ -14,6 +14,7 @@ import org.globsframework.model.Key;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.util.Set;
 
 public class HistoChart extends JPanel implements Disposable {
@@ -106,7 +107,8 @@ public class HistoChart extends JPanel implements Disposable {
   }
 
   public void paint(Graphics g) {
-    Graphics2D g2 = (Graphics2D)g;
+    BufferedImage image = ((Graphics2D)g).getDeviceConfiguration().createCompatibleImage(getWidth(), getHeight(), Transparency.TRANSLUCENT);
+    Graphics2D g2 = image.createGraphics();
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
     int panelWidth = getWidth() - 1;
@@ -140,6 +142,7 @@ public class HistoChart extends JPanel implements Disposable {
     painter.paint(g2, metrics, config, selectionManager.getRollover());
 
     paintSections(g2, dataset);
+    ((Graphics2D)g).drawImage(image, null, null);
   }
 
   private TextMetrics getTextMetrics(Graphics g, Font font) {

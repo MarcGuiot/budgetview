@@ -178,7 +178,6 @@ public class SimpleSmtpServer implements Runnable {
 
     while (smtpState != SmtpState.CONNECT) {
       String line = input.readLine();
-
       if (line == null) {
         break;
       }
