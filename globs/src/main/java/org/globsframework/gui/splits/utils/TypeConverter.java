@@ -3,6 +3,7 @@ package org.globsframework.gui.splits.utils;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.TextLocator;
+import org.globsframework.gui.splits.layout.LayoutService;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.font.Fonts;
@@ -67,7 +68,7 @@ public class TypeConverter {
       return context.getService(UIService.class).getUI(value, context);
     }
     if (LayoutManager.class.isAssignableFrom(targetClass)) {
-      return SplitsUtils.instantiate(value, LayoutManager.class);
+      return context.getService(LayoutService.class).getLayout(value, context);
     }
     throw new SplitsException("Cannot use string value for property '" + property +
                               "' of type '" + targetClass.getSimpleName() +

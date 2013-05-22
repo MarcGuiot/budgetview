@@ -1,8 +1,10 @@
 package org.designup.picsou.gui.plaf;
 
+import org.designup.picsou.gui.accounts.utils.AccountBlockLayout;
 import org.designup.picsou.gui.components.tabs.VerticalTabPanelUI;
 import org.designup.picsou.gui.components.tabs.VerticalTabToggleUI;
 import org.designup.picsou.gui.components.ui.*;
+import org.globsframework.gui.splits.layout.LayoutService;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
 import org.globsframework.gui.splits.components.StyledToggleButtonUI;
@@ -22,10 +24,13 @@ public class ApplicationLAF {
   private static final String BUTTON_PANEL_UI = org() + "designup.picsou.gui.plaf.ButtonPanelItemUI";
   private static final String ARROW_BUTTON_UI = org() + "designup.picsou.gui.components.ui.ArrowButtonUI";
   private static final String ROUND_BUTTON_UI = org() + "designup.picsou.gui.components.ui.RoundButtonUI";
+  private static final String FLAT_SCROLLBAR_UI = org() + "designup.picsou.gui.components.ui.FlatScrollbarUI";
   private static final String COLOR_BUTTON_UI = org() + "designup.picsou.gui.components.ui.ColorButtonUI";
   private static final String NOTIFICATION_FLAG_UI = org() + "designup.picsou.gui.components.ui.NotificationFlagUI";
   private static final String VERTICAL_TAB_TOGGLE_UI = org() + "designup.picsou.gui.components.tabs.VerticalTabToggleUI";
   private static final String VERTICAL_TAB_PANEL_UI = org() + "designup.picsou.gui.components.tabs.VerticalTabPanelUI";
+
+  private static final String ACCOUNT_BLOCK_LAYOUT = org() + "designup.picsou.gui.accounts.utils.AccountBlockLayout";
 
   private ApplicationLAF() {
   }
@@ -52,7 +57,14 @@ public class ApplicationLAF {
     uiService.registerClass(VERTICAL_TAB_TOGGLE_UI, VerticalTabToggleUI.class);
     uiService.registerClass(VERTICAL_TAB_PANEL_UI, VerticalTabPanelUI.class);
     uiService.registerClass(NOTIFICATION_FLAG_UI, NotificationFlagUI.class);
+    uiService.registerClass(FLAT_SCROLLBAR_UI, FlatScrollbarUI.class);
     return uiService;
+  }
+
+  public static LayoutService initLayoutService(){
+    LayoutService layoutService = new LayoutService();
+    layoutService.registerClass(ACCOUNT_BLOCK_LAYOUT, AccountBlockLayout.class);
+    return layoutService;
   }
 
   public static void initUI(UIDefaults defaults, Class componentClass, String uiName) throws ClassNotFoundException {

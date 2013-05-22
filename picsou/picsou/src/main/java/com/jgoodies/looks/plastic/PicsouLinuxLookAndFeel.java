@@ -1,5 +1,6 @@
 package com.jgoodies.looks.plastic;
 
+import org.designup.picsou.gui.components.ui.FlatScrollbarUI;
 import org.designup.picsou.gui.components.ui.RoundButtonUI;
 import org.designup.picsou.gui.plaf.ApplicationLAF;
 import org.designup.picsou.gui.plaf.*;
@@ -18,6 +19,7 @@ public class PicsouLinuxLookAndFeel extends PlasticXPLookAndFeel {
     try {
       ApplicationLAF.initUI(defaults, PicsouButtonUI.class, "ButtonUI");
       ApplicationLAF.initUI(defaults, RoundButtonUI.class, "RoundButtonUI");
+      ApplicationLAF.initUI(defaults, FlatScrollbarUI.class, "FlatScrollbarUI");
       ApplicationLAF.initUI(defaults, PicsouWindowsLabelUI.class, "LabelUI");
       ApplicationLAF.initUI(defaults, PicsouOptionPaneUI.class, "OptionPaneUI");
       ApplicationLAF.initUI(defaults, PicsouWindowsFileChooserUI.class, "FileChooserUI");

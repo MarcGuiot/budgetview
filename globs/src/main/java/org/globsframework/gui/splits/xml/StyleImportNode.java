@@ -1,5 +1,6 @@
 package org.globsframework.gui.splits.xml;
 
+import org.globsframework.gui.splits.layout.LayoutService;
 import org.saxstack.parser.DefaultXmlNode;
 import org.saxstack.utils.XmlUtils;
 import org.xml.sax.Attributes;
@@ -32,12 +33,15 @@ public class StyleImportNode extends DefaultXmlNode {
 
     context.getStyles().addAll(cachedContext.getStyles());
     context.getService(UIService.class).addAll(cachedContext.getService(UIService.class));
+    context.getService(LayoutService.class).addAll(cachedContext.getService(LayoutService.class));
   }
 
   private SplitsContext loadContext(String fileName, SplitsContext parentContext) {
 
     DefaultDirectory localDirectory = new DefaultDirectory(parentContext.getDirectory());
     localDirectory.add(new UIService(parentContext.getDirectory().get(UIService.class)));
+
+    localDirectory.add(new LayoutService(parentContext.getDirectory().get(LayoutService.class)));
 
     SplitsContext localContext = new DefaultSplitsContext(localDirectory);
     SplitsParser parser = new SplitsParser(localContext, new DefaultSplitterFactory());

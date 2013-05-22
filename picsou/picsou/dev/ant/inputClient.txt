@@ -12,6 +12,7 @@ C org.designup.picsou.gui.plaf.PicsouMacFileChooserUI
 C org.designup.picsou.gui.plaf.PicsouWindowsFileChooserUI
 C org.designup.picsou.gui.components.RoundButtonUI
 C org.designup.picsou.gui.components.ui.FlatScrollbarUI
+C org.designup.picsou.gui.accounts.utils.AccountBlockLayout
 C org.apache.commons.logging.impl.LogFactoryImpl
 C org.apache.commons.logging.impl.SimpleLog
 C org.apache.commons.httpclient.auth.CredentialsNotAvailableException

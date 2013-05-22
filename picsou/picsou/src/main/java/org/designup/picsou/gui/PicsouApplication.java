@@ -47,17 +47,17 @@ import org.globsframework.utils.exceptions.InvalidState;
 import picsou.AwtExceptionHandler;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "3.04";
-  public static Long JAR_VERSION = 117L; // not final for test
+  public static final String APPLICATION_VERSION = "3.05";
+  public static Long JAR_VERSION = 118L; // not final for test
   public static final Long BANK_CONFIG_VERSION = 7L;
 
   public static final String APPNAME = "budgetview";
@@ -126,6 +126,7 @@ public class PicsouApplication {
       new PicsouApplication().run(args);
     }
     catch (Exception e) {
+      showError(e);
       Log.write("At startup ", e);
       System.exit(-1);
     }
@@ -181,9 +182,21 @@ public class PicsouApplication {
       Log.write("Erreur au lancement", e);
       showMultipleInstanceError(e.getMessage());
     }
-    catch (Exception e){
+    catch (Exception e) {
+      showError(e);
       Log.write("Erreur au lancement exit", e);
+      System.exit(1);
     }
+  }
+
+  private static void showError(Exception e) {
+    StringWriter out = new StringWriter();
+    e.printStackTrace(new PrintWriter(out));
+    JDialog dialog = new JDialog((Frame)null, true);
+    dialog.setSize(900, 700);
+    dialog.getContentPane()
+    .add(new JTextArea(out.toString()));
+    dialog.setVisible(true);
   }
 
   private void initEncryption() {
@@ -296,6 +309,7 @@ public class PicsouApplication {
     wrapper.add(OpenRequestManager.class, openRequestManager);
     wrapper.add(OpenRequestManager.class, openRequestManager);
     wrapper.add(ApplicationLAF.initUiService());
+    wrapper.add(ApplicationLAF.initLayoutService());
     wrapper.add(new TimeService());
     wrapper.add(new UpgradeService(directory));
     wrapper.add(DescriptionService.class, new PicsouDescriptionService());
