@@ -1,6 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.components.HistoChartChecker;
+import org.designup.picsou.functests.checkers.components.HistoDailyChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.functests.checkers.components.PopupChecker;
 import org.designup.picsou.gui.description.Formatting;
@@ -230,7 +232,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
     return accountsPanel;
   }
 
-  public void checkLastImportPosition(String accountName, double amount) {
-    //TODO
+  public HistoDailyChecker initChart(String accountName) {
+    return new HistoDailyChecker(getAccountPanel(accountName), "accountPositionsChart");
   }
 }

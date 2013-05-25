@@ -5,6 +5,7 @@ import org.designup.picsou.gui.PicsouGuiTestCase;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.exceptions.IconNotFound;
+import org.globsframework.gui.splits.layout.LayoutService;
 import org.globsframework.gui.splits.utils.DummyImageLocator;
 import org.globsframework.gui.splits.utils.DummyTextLocator;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -24,6 +25,7 @@ public class HelpDialogTest extends PicsouGuiTestCase {
       }
     });
     directory.add(TextLocator.class, new DummyTextLocator());
+    directory.add(new LayoutService());
   }
 
   private void init(final String ref) {

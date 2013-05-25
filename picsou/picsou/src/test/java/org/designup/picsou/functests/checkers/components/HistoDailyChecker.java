@@ -153,7 +153,7 @@ public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
     return getDataset(HistoDailyDataset.class);
   }
 
-  public void dump() {
+  public void dumpCode() {
     StringBuilder builder = new StringBuilder();
     HistoDailyDataset dataset = getDataset();
     Double value = null;

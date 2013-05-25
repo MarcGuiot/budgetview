@@ -5,6 +5,7 @@ import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.time.TimeService;
 import org.globsframework.gui.GuiTestCase;
+import org.globsframework.gui.splits.layout.LayoutService;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
 
@@ -19,6 +20,7 @@ public class MonthChooserTest extends GuiTestCase {
     super.setUp();
     directory.add(new TimeService());
     directory.add(OpenRequestManager.class, new OpenRequestManager());
+    directory.add(new LayoutService());
     TimeService.setCurrentDate(Dates.parseMonth("2008/06"));
   }
 

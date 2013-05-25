@@ -198,7 +198,6 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     operations.checkDataIsOk();
   }
 
-
   public void testMultipleAccountAtWithDateOfAccountEqualToLastOperationDate() throws Exception {
     operations.openPreferences().setFutureMonthsCount(4).validate();
 
@@ -236,5 +235,45 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .acceptFile()
       .checkSelectedAccount("Account n. 321")
       .doImport();
+  }
+
+  public void testCharts() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount("13006", 13006, "111", 1000, "2008/05/24")
+      .addTransaction("2008/05/24", -100, "Tr 1a")
+      .addTransaction("2008/05/20", -200, "Tr 1b")
+      .addTransaction("2008/05/20", -200, "Tr 1c")
+      .load();
+
+    OfxBuilder.init(this)
+      .addBankAccount("13006", 13006, "222", 10000, "2008/05/20")
+      .addTransaction("2008/05/20", 1000, "Tr 2a")
+      .addTransaction("2008/04/20", 1000, "Tr 2b")
+      .load();
+
+    OfxBuilder.init(this)
+      .addBankAccount("13006", 13006, "333", 100, "2008/04/15")
+      .addTransaction("2008/04/10", 50, "Trans 3")
+      .load();
+
+    mainAccounts.edit("Account n. 222").setAsSavings().validate();
+    mainAccounts.edit("Account n. 333").setAsSavings().validate();
+
+    timeline.selectMonth(200805);
+
+    mainAccounts.checkAccount("Account n. 111", +1000.00, "2008/05/24");
+    mainAccounts.initChart("Account n. 111")
+      .checkValue(200805, 1, 1500.00)
+      .checkValue(200805, 20, 1100.00)
+      .checkValue(200805, 24, 1000.00);
+
+    savingsAccounts.checkAccount("Account n. 222", +10000.00, "2008/05/20");
+    savingsAccounts.initChart("Account n. 222")
+      .checkValue(200805, 1, 9000.00)
+      .checkValue(200805, 20, 10000.00);
+
+    savingsAccounts.checkAccount("Account n. 333", +100.00, "2008/04/10");
+    savingsAccounts.initChart("Account n. 333")
+      .checkValue(200805, 1, 100.00);
   }
 }

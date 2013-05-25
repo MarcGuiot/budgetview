@@ -78,7 +78,7 @@ public class AccountPositionsChartView extends PositionsChartView {
   protected void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
     histoChartBuilder.showDailyHisto(currentMonthId, accountId,
                                      DaySelection.EMPTY, "daily",
-                                     Transaction.SUMMARY_POSITION,
+                                     Transaction.ACCOUNT_POSITION,
                                      dailyColors);
   }
 

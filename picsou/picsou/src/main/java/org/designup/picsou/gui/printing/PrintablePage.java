@@ -45,7 +45,7 @@ public abstract class PrintablePage implements Printable {
   }
 
   private String getFooterText(int page) {
-    return Lang.get("print.footer", Formatting.toString(TimeService.getToday()), page);
+    return Lang.get("print.footer", Formatting.toString(TimeService.getToday()), page + 1);
   }
 
   protected abstract String getTitle();
