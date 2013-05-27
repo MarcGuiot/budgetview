@@ -213,13 +213,19 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     for (Glob glob : globs.values(type)) {
       if (matcher.matches(glob, this)) {
         if (i >= tmp.length){
-          tmp = Arrays.copyOf(tmp, tmp.length * 2);
+          Glob[] temporary = new Glob[tmp.length * 2];
+          System.arraycopy(tmp, 0, temporary, 0, tmp.length);
+          tmp = temporary;
+//          tmp = Arrays.copyOf(tmp, tmp.length * 2);
         }
         tmp[i++] = glob;
       }
     }
     Arrays.sort(tmp, 0, i, comparator);
-    return Arrays.copyOf(tmp, i);
+    Glob[] newTmp = new Glob[i];
+    System.arraycopy(tmp, 0, newTmp, 0, i);
+    return newTmp;
+//    return Arrays.copyOf(tmp, i);
   }
 
   public Set<GlobType> getTypes() {

@@ -16,7 +16,8 @@ public class Main {
   private static final String WINDOWS_PLATFORM_ID = "Windows";
   private static final String PICSOU = "budgetview";
   private static final Pattern FILTER = Pattern.compile(PICSOU + "[0-9][0-9]*" + "\\.jar");
-  private static final String JAR_DIRECTORY = "/jars";
+  private static final String JAR_DIRECTORY = File.separator + "jars";
+  public static final String BUDGET_VIEW = File.separator + "BudgetView";
 
   public static void main(String[] args) throws Exception {
     new Main().go(args);
@@ -115,13 +116,29 @@ public class Main {
     if (isMacOSX()) {
       return System.getProperty("user.home") + "/Library/Application Support/BudgetView" + JAR_DIRECTORY;
     }
-    if (isVista()) {
-      return System.getProperty("user.home") + "/AppData/Local/BudgetView"  + JAR_DIRECTORY;
-    }
     if (isWindows()) {
-      return System.getProperty("user.home") + "/Application Data/BudgetView" + JAR_DIRECTORY;
+      String windowsXPPath = System.getProperty("user.home") + "/Application Data";
+      String windowsVistaPath = System.getProperty("user.home") + "/AppData/Local";
+      if (new File(windowsXPPath + BUDGET_VIEW + JAR_DIRECTORY).exists()) {
+        return windowsXPPath + BUDGET_VIEW + JAR_DIRECTORY;
+      }
+      if (new File(windowsVistaPath + BUDGET_VIEW + JAR_DIRECTORY).exists()) {
+        return windowsVistaPath + BUDGET_VIEW + JAR_DIRECTORY;
+      }
+      if (new File(windowsVistaPath).exists()) {
+        return windowsVistaPath + BUDGET_VIEW + JAR_DIRECTORY;
+      }
+      if (new File(windowsXPPath).exists()) {
+        return windowsXPPath + BUDGET_VIEW + JAR_DIRECTORY;
+      }
+      if (isVista() || isWin7() || isWin8()) {
+        return System.getProperty("user.home") + File.separator + "AppData" + File.separator + "Local" + BUDGET_VIEW;
+      }
+      if (isXP()) {
+        return System.getProperty("user.home") + File.separator + "Application Data" + BUDGET_VIEW;
+      }
     }
-    return System.getProperty("user.home") + "/.budgetview"  + JAR_DIRECTORY;
+    return System.getProperty("user.home") + "/.budgetview" + JAR_DIRECTORY;
   }
 
   private File loadJar() {
@@ -132,6 +149,21 @@ public class Main {
   public static boolean isVista() {
     String os = (String)AccessController.doPrivileged(new GetPropertyAction("os.name"));
     return os.contains(WINDOWS_PLATFORM_ID) && os.toLowerCase().contains("vista");
+  }
+
+  public static boolean isWin7() {
+    String os = (String)AccessController.doPrivileged(new GetPropertyAction("os.name"));
+    return os.contains(WINDOWS_PLATFORM_ID) && os.toLowerCase().contains("7");
+  }
+
+  public static boolean isWin8() {
+    String os = (String)AccessController.doPrivileged(new GetPropertyAction("os.name"));
+    return os.contains(WINDOWS_PLATFORM_ID) && os.toLowerCase().contains("8");
+  }
+
+  public static boolean isXP() {
+    String os = (String)AccessController.doPrivileged(new GetPropertyAction("os.name"));
+    return os.contains(WINDOWS_PLATFORM_ID) && os.toLowerCase().contains("xp");
   }
 
   public static boolean isWindows() {

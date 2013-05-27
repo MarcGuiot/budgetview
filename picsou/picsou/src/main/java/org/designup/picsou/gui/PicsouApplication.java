@@ -57,7 +57,7 @@ import java.util.regex.Pattern;
 public class PicsouApplication {
 
   public static final String APPLICATION_VERSION = "3.05";
-  public static Long JAR_VERSION = 118L; // not final for test
+  public static Long JAR_VERSION = 119L; // not final for test
   public static final Long BANK_CONFIG_VERSION = 7L;
 
   public static final String APPNAME = "budgetview";
