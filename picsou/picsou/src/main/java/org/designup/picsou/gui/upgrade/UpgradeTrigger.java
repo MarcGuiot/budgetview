@@ -181,9 +181,11 @@ public class UpgradeTrigger implements ChangeSetListener {
     GlobList acc2 = repository.findLinkedTo(sync2, RealAccount.SYNCHRO);
     for (Glob glob : acc1) {
       for (Glob glob1 : acc2) {
-        if (Utils.equal(glob.get(RealAccount.NUMBER), glob1.get(RealAccount.NUMBER)) &&
-            Utils.equal(glob.get(RealAccount.NAME), glob1.get(RealAccount.NAME)) ){
-          return true;
+        if (glob1 != glob) {
+          if (Utils.equal(glob.get(RealAccount.NUMBER), glob1.get(RealAccount.NUMBER)) &&
+              Utils.equal(glob.get(RealAccount.NAME), glob1.get(RealAccount.NAME)) ){
+            return true;
+          }
         }
       }
     }

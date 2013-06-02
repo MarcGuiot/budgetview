@@ -1,0 +1,24 @@
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>../../target/budgetviewloader-1.0.jar</jar>
+  <outfile>budgetview.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl>http://www.mybudgetview.fr/support</supportUrl>
+  <customProcName>true</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon>../../dev/images/budgetview.ico</icon>
+  <jre>
+    <path></path>
+    <minVersion>1.5.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <maxHeapSize>220</maxHeapSize>
+    <opt>-Dbudgetview.exe.dir=&quot;%EXEDIR%&quot;</opt>
+  </jre>
+</launch4jConfig>

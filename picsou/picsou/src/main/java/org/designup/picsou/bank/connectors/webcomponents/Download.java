@@ -79,7 +79,7 @@ public class Download {
       synchronized (downloadAttachmentHandler) {
         if (downloadAttachmentHandler.page == null) {
           try {
-            downloadAttachmentHandler.wait(3000);
+            downloadAttachmentHandler.wait(10000);
           }
           catch (InterruptedException e1) {
           }

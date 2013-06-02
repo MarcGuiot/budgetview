@@ -157,6 +157,18 @@ public class WebBrowser {
     return new WebPage(this, currentPage);
   }
 
+  public interface Function1Arg<T, D> {
+    T call(D d) throws Exception;
+  }
+
+  public <T, D> T retry(final D d, final Function1Arg<T, D> callable){
+    return retry(new Callable<T>() {
+      public T call() throws Exception {
+        return callable.call(d);
+      }
+    });
+  }
+
   public <T> T retry(Callable<T> callable) {
     long timeOut = System.currentTimeMillis() + 10000;
     while (true) {

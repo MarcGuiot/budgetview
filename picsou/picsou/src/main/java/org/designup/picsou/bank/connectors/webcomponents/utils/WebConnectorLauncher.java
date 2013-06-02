@@ -16,6 +16,7 @@ import org.designup.picsou.model.Synchro;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.TextLocator;
+import org.globsframework.gui.splits.layout.LayoutService;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.FieldValue;
@@ -68,6 +69,7 @@ public class WebConnectorLauncher {
     ExecutorService executorService = Executors.newCachedThreadPool();
     directory.add(ExecutorService.class, executorService);
     directory.add(new UIService());
+    directory.add(new LayoutService());
     ApplicationColors.registerColorService(directory);
     openRequestManager.pushCallback(new OpenRequestManager.Callback() {
       public boolean accept() {

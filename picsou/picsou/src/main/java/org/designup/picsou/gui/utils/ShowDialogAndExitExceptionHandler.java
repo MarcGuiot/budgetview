@@ -39,6 +39,9 @@ public class ShowDialogAndExitExceptionHandler implements ExceptionHandler {
 
     builder.append("version: ")
       .append(PicsouApplication.APPLICATION_VERSION)
+      .append('\n')
+      .append("jar: ")
+      .append(PicsouApplication.JAR_VERSION)
       .append('\n');
 
     for (String property : AboutDialog.SYSTEM_PROPERTIES) {

@@ -10,6 +10,7 @@ import org.globsframework.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   protected WebContainer(WebBrowser browser, T node) {
@@ -73,6 +74,14 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
 
   public WebAnchor getAnchorById(String id) throws WebParsingError {
     return new WebAnchor(browser, getElementById(id, HtmlAnchor.class));
+  }
+
+  public WebAnchor getAnchorById(final String id, boolean updateToLevelWindow) throws WebParsingError {
+    return browser.retry(new Callable<WebAnchor>() {
+      public WebAnchor call() throws Exception {
+        return new WebAnchor(browser, getElementById(id, HtmlAnchor.class));
+      }
+    });
   }
 
   public WebAnchor getAnchor(WebFilter filter) throws WebParsingError {

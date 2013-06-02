@@ -3,6 +3,7 @@ package org.designup.picsou.gui.importer.steps;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.bank.connectors.SynchroMonitor;
+import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
@@ -184,6 +185,7 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       }
       StringWriter builder = new StringWriter();
       if (currentConnector != null) {
+        builder.append("version: ").append(Long.toString(PicsouApplication.JAR_VERSION));
         builder.append("bank: ").append(currentConnector.getLabel()).append("\n");
         builder.append("location: ").append(currentConnector.getCurrentLocation()).append("\n");
       }

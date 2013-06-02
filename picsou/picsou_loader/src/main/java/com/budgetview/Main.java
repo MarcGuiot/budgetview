@@ -117,8 +117,8 @@ public class Main {
       return System.getProperty("user.home") + "/Library/Application Support/BudgetView" + JAR_DIRECTORY;
     }
     if (isWindows()) {
-      String windowsXPPath = System.getProperty("user.home") + "/Application Data";
-      String windowsVistaPath = System.getProperty("user.home") + "/AppData/Local";
+      String windowsXPPath = System.getProperty("user.home") + File.separator + "Application Data";
+      String windowsVistaPath = System.getProperty("user.home") + File.separator + "AppData" + File.separator + "Local";
       if (new File(windowsXPPath + BUDGET_VIEW + JAR_DIRECTORY).exists()) {
         return windowsXPPath + BUDGET_VIEW + JAR_DIRECTORY;
       }
