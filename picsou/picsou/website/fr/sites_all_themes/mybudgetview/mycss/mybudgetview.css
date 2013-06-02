@@ -1281,8 +1281,18 @@ div#support-footer p {
 
 /* ========= FAQ PAGES ========== */
 
-.faq div.light-block {
-  border-right: 1px solid #E0E0E0;
+.faq {
+  border-bottom: solid 1px #CCC;
+}
+
+.faq h1 {
+  border-top: solid 1px #EEE;
+  border-bottom: solid 1px #EEE;
+}
+
+#content .faq div.light-block {
+  margin-top: 0;
+  padding-top: 5px;
 }
 
 /* ========= FAQ FOOTER ========== */
@@ -1292,6 +1302,7 @@ div#faq-footer {
   text-shadow: white 0 2px 0;
   color: #AAAAAA;
   margin-bottom: 20px;
+  padding-top: 5px;
 }
 
 div#faq-footer A:link {
