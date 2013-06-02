@@ -1,256 +1,273 @@
-<?php
-  drupal_set_html_head('<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>');
-drupal_set_html_head('
-<script type="text/javascript" src="/files/fancybox/jquery.fancybox-1.3.4.pack.js"></script>');
-drupal_set_html_head('
-<script type="text/javascript" src="/files/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>');
-drupal_set_html_head('
-<link rel="stylesheet" href="/files/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen"/>');
-?>
-
 <div id="home">
 <table id="front-table">
-  <tr>
-    <td>
-      <div id="text">
-        <h1>Votre budget<br/>en un coup d'oeil !</h1>
+    <tbody><tr>
+        <td>
+            <div id="text">
+                <h1>Votre budget<br>en un coup d'oeil !</h1>
 
-        <h2>Planifiez et pilotez vos dépenses<br/>
-          pour réaliser vos projets</h2>
+                <h2>Planifiez et pilotez vos dépenses<br>
+                    pour réaliser vos projets</h2>
 
-        <h2>...sans dévoiler vos codes ou informations bancaires</h2>
+                <h2>...sans dévoiler vos codes</br>ou informations bancaires</h2>
 
-        <p id="platforms">Windows - Mac - Linux</p>
-        <p id="purchase"><a href="/achat">14.90€</a> sans frais récurrents</p>
-        <a href="/telechargement">
-          <img src="/files/images/front/try_button.png" alt="Essayez maintenant !"
-               width="248" height="65" class="trial"/>
-        </a>
-        <p id="trial">Essai gratuit 45 jours</p>
-      </div>
-    </td>
-    <td>
-      <div id="videoBorder">
-        <div id="flashcontent">
-          <object width="560" height="420" style="background: #000">
-            <param name="movie" value="http://cdn.smugmug.com/ria/ShizVidz-2011030702.swf"/>
-            <param name="allowFullScreen" value="true"/>
-            <!-- To prevent the object from covering the fancybox div -->
-            <param name="wmode" value="opaque"/>
-            <param name="flashVars"
-                   value="s=ZT0xJmk9MTIyOTE5MDQ1NyZrPVZ2QjkyJmE9MTQ0NTcyNzlfNFRwTUImdT1idWRnZXR2aWV3&so=0&se=0&l=0"/>
-            <embed src="http://cdn.smugmug.com/ria/ShizVidz-2011030702.swf"
-                   flashVars="s=ZT0xJmk9MTIyOTE5MDQ1NyZrPVZ2QjkyJmE9MTQ0NTcyNzlfNFRwTUImdT1idWRnZXR2aWV3&so=0&se=0&l=0"
-                   width="560" height="420" type="application/x-shockwave-flash" allowFullScreen="true"></embed>
-          </object>
+                <a href="/telechargement">
+                    <img src="files/images/front/try_button.png" alt="Essayez maintenant !"
+                         class="trial" height="65" width="248">
+                </a>
+                <p id="platforms">Windows - Mac - Linux</p>
+                <p id="purchase"><a href="/achat">14.90€</a> sans frais récurrents</p>
+                <p id="trial">Essai gratuit 45 jours</p>
+            </div>
+        </td>
+        <td>
+            <div id="videoBorder">
+                <div id="flashcontent">
+                    <img src="files/images/front/budgetview_desktop_android.png"
+                         alt="BudgetView - gestion de comptes personnels pour Windows/Mac/Linux et Android"
+                         width="524" height="342"
+                         style="margin-top: 50px;">
+                </div>
+            </div>
+        </td>
+    </tr>
+    </tbody></table>
+
+<div id="testimonials-block">
+    <div id="testimonials">
+
+        <p>"Franchement, très bonne application de suivi de budget... L'application que je cherchais
+            depuis longtemps, je ne regrette pas mon achat. Interface soignée, ergonomie très bien pensée,
+            écrans façon "tableaux de bord" synthétiques et exploitables..."</p>
+
+        <a href="#" id="more-testimonials-show" class="showLink" onclick="showHide('more-testimonials');return false;">Voir tous les témoignages</a>
+
+        <div id="more-testimonials" class="more light-block">
+
+            <p>"Je suis fan de votre logiciel&nbsp;! Il m'aide au quotidien&nbsp;!
+                Bravo pour votre très bon travail! Vous êtes les meilleurs que j'ai pu voir sur
+                le marché des logiciels comptables visuels et simples d'utilisation."</p>
+
+            <p>"Apres une journée de recherche, je suis tombé sur LE logiciel que je cherchais
+                avec la trésorerie prévisionnelle au fil des mois, pouvoir anticiper les baisses
+                de revenus ou prévoir les vacances."</p>
+
+            <p>"Très grande facilité d'utilisation, génial&nbsp;! Enfin un super logiciel de compta sur Mac&nbsp;!"</p>
+
+            <p>"J'utilise votre logiciel tous les jours! Il m'a permis de reprendre en main mon budget,
+                de contrôler mes découverts, de comprendre où partait mon argent, pourquoi je dépassais mon budget
+                régulièrement, etc... Il est plus clair et plus facile d'utilisation que tous les autres que j'avais
+                pu essayer auparavant."</p>
+
+            <p>"Je suis pleinement satisfait du logiciel&nbsp;; je suis particulièrement impressionné par l'automatisation
+                et la
+                capacité à synthétiser l'information. J'aprécie beaucoup l'approche différente, novatrice d'une gestion de
+                budget
+                qui tranche des autres logiciels."</p>
+
+            <p>"Vous poursuivez dans votre logique, que je trouve inégalée jusqu'à présent.
+                Je suis sûr que je vais encore découvrir des tas d'autres petits trucs en plus...
+                Mais après tout les gars, c'est votre faute si je découvre le choses si lentement&nbsp;:
+                grâce à vous, je ne passe réellement que 15 à 20 mn par mois pour faire les comptes... :D<br>
+                Encore merci pour cet excellent travail."</p>
+
+            <p><a href="#" id="more-testimonials-hide" class="hideLink" onclick="showHide('more-testimonials');return false;">Masquer ces témoignages</a></p>
         </div>
-      </div>
-    </td>
-  </tr>
-</table>
 
-<div id="testimonials">
-
-  <p>"Franchement, très bonne application de suivi de budget... L'application que je cherchais
-    depuis longtemps, je ne regrette pas mon achat. Interface soignée, ergonomie très bien pensée,
-    écrans façon "tableaux de bord" synthétiques et exploitables..."</p>
-
-  <a href="#" id="more-testimonials-show" class="showLink"
-     onclick="showHide('more-testimonials');return false;">Voir tous les témoignages</a>
-
-  <div id="more-testimonials" class="more light-block">
-
-    <p>"Je suis fan de votre logiciel&nbsp;! Il m'aide au quotidien&nbsp;!
-      Bravo pour votre très bon travail! Vous êtes les meilleurs que j'ai pu voir sur
-      le marché des logiciels comptables visuels et simples d'utilisation."</p>
-
-    <p>"Apres une journée de recherche, je suis tombé sur LE logiciel que je cherchais
-      avec la trésorerie prévisionnelle au fil des mois, pouvoir anticiper les baisses
-      de revenus ou prévoir les vacances."</p>
-
-    <p>"Très grande facilité d'utilisation, génial&nbsp;! Enfin un super logiciel de compta sur Mac&nbsp;!"</p>
-
-    <p>"J'utilise votre logiciel tous les jours! Il m'a permis de reprendre en main mon budget,
-      de contrôler mes découverts, de comprendre où partait mon argent, pourquoi je dépassais mon budget
-      régulièrement, etc... Il est plus clair et plus facile d'utilisation que tous les autres que j'avais
-      pu essayer auparavant."</p>
-
-    <p>"Je suis pleinement satisfait du logiciel&nbsp;; je suis particulièrement impressionné par l'automatisation et la
-      capacité à synthétiser l'information. J'aprécie beaucoup l'approche différente, novatrice d'une gestion de budget
-      qui tranche des autres logiciels."</p>
-
-    <p>"Vous poursuivez dans votre logique, que je trouve inégalée jusqu'à présent.
-      Je suis sûr que je vais encore découvrir des tas d'autres petits trucs en plus...
-      Mais après tout les gars, c'est votre faute si je découvre le choses si lentement&nbsp;:
-      grâce à vous, je ne passe réellement que 15 à 20 mn par mois pour faire les comptes... :D<br/>
-      Encore merci pour cet excellent travail."</p>
-
-    <p><a href="#" id="more-testimonials-hide" class="hideLink"
-          onclick="showHide('more-testimonials');return false;">Masquer ces témoignages</a></p>
-  </div>
-
+    </div>
 </div>
 
 <div id="presentation" class="light-block">
 
-  <table class="image-and-text" style="width: 85%;">
-    <tr>
-      <td class="left">
+<div id="zoom" class="centered">
+    <h2 class="centered">Bienvenue sur votre nouveau tableau de bord</h2>
 
-        <div id="screenshots-gallery">
-          <a class="gallery" rel="group1" href="files/images/app/vue_budget.png">
-            <img src="/files/images/front/screenshot_magnifier.png" alt="BudgetView : gestion de budget familial"
-                 width="312" height="206"/>
-          </a>
+    <img src="files/images/front/budget_familial.png"
+         alt="Tableau de bord du budget familial"
+         width="947" height="379"/>
 
-          <a class="gallery" rel="group1" href="files/images/app/vue_accueil.png"></a>
-          <a class="gallery" rel="group1" href="files/images/app/vue_comptes.png"></a>
-          <a class="gallery" rel="group1" href="files/images/app/vue_categorisation.png"></a>
-          <a class="gallery" rel="group1" href="files/images/app/vue_analyse.png"></a>
-        </div>
-
-        <script type="text/javascript">
-          $("a.gallery").fancybox({
-          'overlayOpacity' : 0.8,
-          'overlayColor' : '#444'
-          });
-        </script>
-
-      <td class="center">
-        <img src="/files/images/front/separator_left.png" width="9" height="83"/>
-      </td>
-      <td class="right">
-        <h2>Visualisez l'essentiel</h2>
-        <p>Avec BudgetView, plus de longs listings d'opérations illisibles.<br/>
-          Visualisez votre budget familial sur une seule page, sous la forme d'enveloppes élémentaires
-          faciles à comprendre&nbsp;: courses, loisirs, etc.</p>
-      </td>
-    </tr>
-  </table>
-
-
-  <table id="budget" class="image-and-text" style="margin-top: -30px;width: 95%;">
-    <tr>
-      <td class="left align-right">
-        <h2>Vos projets d'abord&nbsp;!</h2>
-        <p>En début de mois, préparez votre budget en faisant de la place pour vos projets.
-          L'idéal&nbsp;: un virement permanent pour provisionner l'argent nécessaire sur vos comptes d'épargne,
-          pour vous payer en premier&nbsp;!
-          BudgetView vous aide alors à ajuster vos autres dépenses, pour éviter tout découvert.</p>
-      </td>
-      <td class="center">
-        <img src="/files/images/front/separator_right.png" width="9" height="83"/>
-      </td>
-      <td>
-        <img src="/files/images/front/postcards.png" alt="Préparer ses projets"
-             width="342" height="261" style="margin-left: 20px;"/>
-      </td>
-    </tr>
-  </table>
-
-  <table class="image-and-text" style="margin-top: -30px;width: 90%;">
-    <tr>
-      <td class="left">
-        <img src="/files/images/front/budgetArea.png" alt="Gérez les enveloppes de votre budget"
-             width="375" height="269"/>
-      </td>
-      <td class="center">
-        <img src="/files/images/front/separator_left.png" width="9" height="83"/>
-      </td>
-      <td class="right">
-        <h2>Détectez le moindre dépassement</h2>
-        <p>En cours de mois, importez les relevés d'opérations de votre banque
-          pour vérifier votre avancement par rapport à ce que vous aviez prévu.
-          D'un coup d'oeil, vous repérez le moindre dépassement, et vous pouvez
-          réagir afin d'éviter tout découvert et préserver vos provisions et vos projets.</p>
-      </td>
-    </tr>
-  </table>
-
-
-  <table id="future" class="image-and-text" style="margin-top: 10px;width: 95%;">
-    <tr>
-      <td class="left align-right">
-        <h2>Anticipez les mois à venir</h2>
-        <p>Observez l'évolution du solde de vos comptes courants dans les mois à venir.
-          Vous pouvez ainsi anticiper d'éventuelles difficultés, mais aussi
-          préparer vos projets et voir dès maintenant leur impact sur votre budget.
-        </p>
-      </td>
-      <td class="center">
-        <img src="/files/images/front/separator_right.png" width="9" height="83"/>
-      </td>
-      <td class="right">
-        <img src="/files/images/front/futur.png" alt="Anticipez l'évolution du solde de vos comptes bancaires"
-             width="383" height="166"/>
-      </td>
-    </tr>
-  </table>
-
-  <table id="import" class="image-and-text" style="margin-top: 20px;width: 100%;">
-    <tr>
-      <td class="left">
-        <img src="/files/images/front/import.png" alt="Récupérer automatiquement les relevés bancaires"
-             width="356" height="125"/>
-      </td>
-      <td class="center">
-        <img src="/files/images/front/separator_left.png" width="9" height="83"/>
-      </td>
-      <td class="right">
-        <h2>Pas de saisies fastidieuses</h2>
-        <p> Importez directement vos relevés bancaires à partir du site internet de votre banque.
-          <strong>BudgetView classe tout seul la plupart de vos opérations</strong>,
-          ce qui vous laisse moins d'une dizaine d'opérations à classer manuellement.
-          En quelques minutes, votre budget est à jour !
-        </p>
-      </td>
-    </tr>
-  </table>
-
-  <div id="security" style="margin-top: 30px;width: 60%;">
     <table>
-      <tr>
+        <tr>
+            <td class="left" width="40%">
+                <h2>Voyez dans le futur !</h2>
+                <p>Grâce à son approche inédite, BudgetView calcule automatiquement l'évolution du solde de vos
+                    comptes courants dans les semaines et les mois à venir. Vous pouvez alors optimiser votre budget pour éviter tout découvert et
+                    réaliser plus rapidement vos projets.
+                </p>			</td>
+            <td class="right" width="60%">
+                <h2>Détectez le moindre dépassement</h2>
+                <p>D'un coup d'oeil, vous repérez le moindre écart par rapport à ce que vous aviez prévu. Votre argent est enfin sous contrôle !</p>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<table id="budget" class="image-and-text" style="margin-top: -30px;width: 95%;">
+    <tbody><tr>
+        <td class="left align-right">
+            <h2>Réalisez les projets qui vous tiennent à coeur</h2>
+            <p>Préparez dès maintenant vos projets pour les mois à venir : BudgetView
+               vous montre automatiquement leur effet sur les soldes de vos comptes. Vous pouvez alors
+               ajuster vos autres dépenses en conséquence, et piloter votre budget mois après
+                mois pour atteindre votre objectif.</p>
+        </td>
+        <td class="center">
+            <img src="files/images/front/separator_right.png" height="83" width="9">
+        </td>
+        <td>
+            <img src="files/images/front/postcards.png" alt="Préparer ses projets" style="margin-left: 20px;"
+                 height="261" width="342">
+        </td>
+    </tr>
+    </tbody></table>
+
+<table id="import" class="image-and-text" style="margin-top: 20px;width: 100%;">
+    <tbody><tr>
         <td class="left">
-          <img src="/files/images/front/secret.png"
-               alt="Confidentialité / Sécurité" width="162" height="119"/>
+            <div class="centered">
+                <img src="files/images/front/import.png" alt="Récupérer automatiquement les relevés bancaires" height="123" width="373">
+                <img src="files/images/front/connexion_directe_banques_francaises.png"
+                     alt="Connexion directe aux principales banques Françaises"
+                     width="255" height="27"
+                     style="margin-top: 5px;">
+            </div>
+        </td>
+        <td class="center">
+            <img src="files/images/front/separator_left.png" height="83" width="9">
         </td>
         <td class="right">
-          <h2>Sûr et confidentiel</h2>
-          <p>
-            Vos données personnelles ne sont pas envoyées sur Internet.
-            Vous les gardez sur votre ordinateur, et pouvez les crypter avec un mot de passe
-            que vous êtes seul à connaître.
-          </p>
+            <h2>Pas de saisies fastidieuses</h2>
+            <p> Importez directement vos relevés bancaires à partir du site internet de votre banque.
+                BudgetView se connecte directement aux principales banques Françaises.</p>
+            <p>Après deux ou trois sessions, BudgetView classe tout seul la plupart de vos opérations,
+                ce qui vous laisse moins d'une dizaine d'opérations à classer manuellement.
+                En quelques minutes, votre budget est à jour !
+            </p>
+            <p></p>
         </td>
-      </tr>
-    </table>
-  </div>
+    </tr>
+    </tbody></table>
 
-  <div id="steps-intro" class="separator">
-    <p>Prêt à vous lancer ? Votre budget en 3 étapes</p>
-  </div>
+<table id="mobile" class="image-and-text" style="margin-top: 20px;width: 80%;">
+    <tbody><tr>
+        <td class="left align-right" width="49%">
+            <h2>Emportez votre budget avec vous</h2>
+            <p>Avec l'application BudgetView pour Android, vous pouvez visualiser votre budget
+                où que vous soyez.
+            </p>
+        </td>
+        <td class="center">
+            <img src="files/images/front/separator_right.png" height="83" width="9">
+        </td>
+        <td class="right" width="49%">
+            <img src="files/images/front/budgetview_application_android.png"
+                 alt="Application de gestion de comptes pour Android"
+                 width="264" height="177">
+        </td>
+    </tr>
+    </tbody></table>
 
-  <div class="centered">
-    <img src="/files/images/front/3steps.png" alt="3 étapes pour démarrer"
-         width="659" height="192" style="margin-top: 15px;"/>
-  </div>
+<div id="security" style="margin-top: 30px;width: 60%;">
+    <table>
+        <tbody><tr>
+            <td class="left">
+                <img src="files/images/front/secret.png" alt="Confidentialité / Sécurité" height="119" width="162">
+            </td>
+            <td class="right">
+                <h2>Sûr et confidentiel</h2>
+                <p>
+                    Vos données personnelles ne sont pas envoyées sur Internet.
+                    Vous les gardez sur votre ordinateur, et pouvez les crypter avec un mot de passe
+                    que vous êtes seul à connaître.
+                </p>
+            </td>
+        </tr>
+        </tbody></table>
+</div>
 
-  <hr/>
+<div id="steps-intro" class="separator">
+    <p>... et beaucoup de choses encore !</p>
+</div>
 
-  <div id="close">
+<div id="feature-list">
+    <table>
+        <tbody><tr>
+            <td class="left" width="50%">
+                <h2>Import de relevés</h2>
+                <ul>
+                    <li>Importez directement vos relevés d'opérations pour American Express (site France), BNP Paribas, CIC,
+                        Caisse d'Epargne, Crédit Agricole, La Banque Postale et Société Générale.</li>
+                    <li>Importez vos relevés d'opérations au format OFX, QIF ou CSV.</li>
+                    <li>Inutile de vous soucier des dates lors du téléchargement des relevés : BudgetView se charge
+                        d'ignorer les opérations en doublon.</li>
+                    <li>Saisissez vous-mêmes vos opérations, que ce soit pour vos comptes bancaires ou pour gérer votre
+                        argent liquide.</li>
+                    <li>BudgetView classe automatiquement vos opérations sur la base de vos catégorisation précédentes.</li>
+                </ul>
+
+                <h2>Opérations</h2>
+                <ul>
+                    <li>Ventilez une opération en plusieurs opérations.</li>
+                    <li>Décalez une opération sur le budget du mois précédent ou suivant.</li>
+                    <li>Filtrez vos opérations par comptes, par enveloppes, par mois.</li>
+                    <li>Ajoutez des notes à vos opérations, changez leurs libellés.</li>
+                    <li>Recherchez vos opérations par libellé.</li>
+                </ul>
+
+                <h2>Comptes</h2>
+                <ul>
+                    <li>Créez autant de comptes que vous le souhaitez.</li>
+                    <li>Gérez vos comptes chèques et vos comptes d'épargne.</li>
+                    <li>Gérez vos cartes à débit différé.</li>
+                </ul>
+            </td>
+
+            <td class="right" width="50%">
+                <h2>Budget</h2>
+                <ul>
+                    <li>Organisez votre budget sous forme d'enveloppes, organisées en postes de Revenus, Fixe, Variable,
+                        Epargne et Extras.</li>
+                    <li>En fin de mois, reportez le solde d'une enveloppe au mois suivant.</li>
+                    <li>Gérez vos prévisions de dépenses au sein de projets - voyages, travaux, mariage, etc.</li>
+                    <li>Observez l'évolution du solde de vos comptes dans les semaines et mois à venir.</li>
+                </ul>
+
+                <h2>Gestion des données</h2>
+                <ul>
+                    <li>Exportez vos relevés aux formats QIF ou TSV pour les importer dans d'autres outils de gestion de
+                        budget.</li>
+                    <li>Copiez le contenu des tableaux affichés dans BudgetView pour les coller dans un tableur tel que Excel ou
+                        Numbers.</li>
+                    <li>Créez et restaurez des copies de sauvegarde de vos données.</li>
+                    <li>Définissez l'endroit où vos données sont stockées, par exemple pour les placer sur un répertoire
+                        sauvegardé.</li>
+                    <li>Imprimez votre budget.</li>
+                </ul>
+
+                <h2>Personnalisation</h2>
+                <ul>
+                    <li>Choisissez le thème de couleurs que vous préférez.</li>
+                    <li>Affichez l'application en Français ou en Anglais.</li>
+                </ul>
+            </td>
+        </tr>
+        </tbody></table>
+</div>
+
+<hr>
+
+<div id="close">
     <p>Alors, qu'attendez-vous ?</p>
     <a href="/telechargement">
-      <img src="/files/images/front/try_button.png" alt="Essayez maintenant !"
-           width="248" height="65"/>
+        <img src="files/images/front/try_button.png" alt="Essayez maintenant !" height="65" width="248">
     </a>
 
     <p id="close-trial">Essai 45 jours gratuit et anonyme</p>
     <p id="close-showroom">Vous voulez en savoir plus ?<br>
-      Découvrez la présentation de <a href="presentation" class="highlighted">BudgetView en images</a><br/>
-      et notre guide&nbsp;: <a href="guide-gestion-de-budget-familial" class="highlighted">Bien gérer son budget
-        familial</a>
+        Découvrez la présentation de <a href="/presentation" class="highlighted">BudgetView en images</a><br>
+        et notre guide&nbsp;: <a href="/guide-gestion-de-budget-familial" class="highlighted">Bien gérer son budget
+            familial</a>
     </p>
-  </div>
+</div>
 
 </div>
 

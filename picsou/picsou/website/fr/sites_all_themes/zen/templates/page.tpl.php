@@ -131,7 +131,7 @@
       <?php if ($logo): ?>
           <div id="logo"><a href="<?php print $base_path; ?>" title="<?php print t('Home'); ?>" rel="home">
             <img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" id="logo-image"
-                 width="150" height="30"/>
+                 width="145" height="30"/>
            </a></div>
        <?php endif; ?>
 
