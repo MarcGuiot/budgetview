@@ -195,7 +195,7 @@ public class MobileTest extends ConnectedTestCase {
   private void followUrl(String url, final int expectedReturnCode, final String expectedRedirect, String emailAddress) throws IOException, InterruptedException {
     followUrl(url, expectedReturnCode, expectedRedirect);
     Email email = mailServer.checkReceivedMail(emailAddress);
-    email.checkContains("You will now be able to download the BudgetView");
+    email.checkContains("To install the Android app");
   }
 
   private SharingConnection requestAccountWithNewPassword(String userMail) throws InterruptedException {

@@ -1,5 +1,5 @@
 body {
-  background: #d9d1c5 url('bg.png') repeat-x;
+  background: #fff url('bg.png') repeat-x;
   color: #494949;
   text-align: left;
 }
@@ -51,9 +51,8 @@ h1 {
   font-size: 36pt;
   font-weight: bold;
   color: #222;
-  margin-top:0px;
-  margin-bottom: 35px;
-  text-shadow: white 0 2px 0;
+  margin-top:20px;
+  margin-bottom: 20px;
 }
 
 h1.multiline {
@@ -61,7 +60,7 @@ h1.multiline {
 }
 
 
-h2 {
+H2 {
   font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif;
   color: #232323;
   text-align: left;
@@ -69,7 +68,6 @@ h2 {
   margin-left: 0;
   font-size: 14pt;
 }
-
 
 h3 {
   font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif;
@@ -179,7 +177,7 @@ A.highlighted:hover {
   display: block:
   float: left;
   width: 300px;
-  padding-top: 1px;
+  padding-top: 6px;
 }
 
 #page #header #navigation {
@@ -189,7 +187,7 @@ A.highlighted:hover {
 }
 
 #page #header ul#main-menu {
-  margin-top: 7px;
+  margin-top: 12px;
   padding: 0;
   text-align: right;
 }
@@ -217,30 +215,30 @@ A.highlighted:hover {
 #page #header ul#main-menu A:link,
 #page #header ul#main-menu A:visited {
   text-decoration: none;
-  color: #DDD;
+  color: #999;
   font-weight: normal;
 }
 
 #page #header ul#main-menu A:hover {
   text-decoration: underline;
-  color: #FFF;
+  color: #00F;
 }
 
 #page #header ul#main-menu A.active,
   ul#main-menu li.expanded A:link,
   ul#main-menu li.expanded A:visited {
-  color: #FFF;
+  color: #000;
   font-weight: bold;
 }
 
 #page #header ul#main-menu li.expanded ul A:link,
 #page #header ul#main-menu li.expanded ul A:visited {
-  color: #999;
+  color: #555;
   font-weight: normal;
 }
 
 #page #header ul#main-menu li.expanded ul A.active {
-  color: #999;
+  color: #444;
   font-weight: bold;
   font-size: 10pt;
 }
@@ -330,10 +328,9 @@ table.vertical-bars td.right {
   font-size: 16pt;
   font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Verdana, sans-serif;
   margin-top: 25px;
-  border-top: 1px solid #DDD;
-  border-bottom: 1px solid #DDD;
   padding: 5px;
-  background: #F9F9F9;
+  border: 1px solid #EEEEEE;
+  background: #F6F6F6;
 }
 
 .full-separators h2 img {
@@ -391,10 +388,8 @@ div.summary p {
 }
 
 div.light-block {
-  background: #fff url('block_bg.png') repeat-x;
   margin-top: 10px;
   margin-bottom: 10px;
-  border: solid 1px #D5D5D5;
   padding: 10px 25px;
 }
 
@@ -566,6 +561,15 @@ div#webform {
 #faq p {
   margin-top: 2px;
   padding-left: 10px;
+}
+
+.faq {
+  border-bottom: solid 1px #CCC;
+}
+
+.faq h1 {
+  border-top: solid 1px #EEE;
+  border-bottom: solid 1px #EEE;
 }
 
 /* ========== CALENDAR TABLE ========== */
@@ -791,10 +795,9 @@ table.field-value td.value {
   font-size: 32px;
   letter-spacing: -1px;
   line-height: 1.1em;
-  margin: 30px 0px 30px;
+  margin: 50px 0px 20px;
   padding: 0px;
   text-align: center;
-  text-shadow: white 0 2px 0;
 }
 
 #home div#text h2 {
@@ -804,9 +807,8 @@ table.field-value td.value {
   font-weight: normal;
   line-height: 1.1em;
   text-align: center;
-  margin: 10px 0px 25px;
+  margin: 0px 0px 15px;
   padding: 0px;
-  text-shadow: white 0 1px 0;
 }
 
 #home div#text img.trial {
@@ -816,24 +818,24 @@ table.field-value td.value {
 #home div#text #platforms {
   margin: 0;
   margin-top: 25px;
-  color: #666;
+  color: #999;
   font-size: 11pt;
-}
-
-#home div#text #trial {
-  margin: -10px 0 0 0;
-  color: #333;
-  font-size: 12pt;
 }
 
 #home div#text #purchase {
   margin: 0;
-  color: #666;
-  font-size: 11pt;
+  color: #999;
+  font-size: 10pt;
+}
+
+#home div#text #trial {
+  margin: -10px 0 0 0;
+  color: #999;
+  font-size: 12pt;
 }
 
 #home table#front-table {
-  margin-bottom: 60px;
+  margin-bottom: 20px;
 }
 
 #home table#front-table td {
@@ -841,15 +843,9 @@ table.field-value td.value {
 }
 
 #home #videoBorder {
-  width: 560px;
-  height: 420px;
-  border: solid 1px #AAA;
+  height: 400px;
   margin-left: auto;
   margin-right: auto;
-}
-
-#home #videoBorder #flashcontent object {
-  z-order: 500;
 }
 
 #home #text {
@@ -863,11 +859,15 @@ table.field-value td.value {
 }
 
 #home #presentation {
-  padding-top: 30px;
+  padding-top: 10px;
 }
 
 #home #presentation p {
   line-height: 1.3em;
+}
+
+#home #presentation #zoom h2 {
+  margin-bottom: 5px;
 }
 
 #home table.image-and-text {
@@ -986,9 +986,8 @@ table.field-value td.value {
 
 #home div.separator {
   margin: 20px;
-  border-top: solid 1px #DDD;
-  border-bottom: solid 1px #D0D0D0;
-  background: #F9F9F9;
+  border: solid 1px #EEEEEE;
+  background: #F6F6F6;
   padding: 5px;
 }
 
@@ -1021,6 +1020,72 @@ table.field-value td.value {
 #home #security h2 {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+#home #feature-list {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#home #feature-list h2 {
+  font-size: 12pt;
+}
+
+#home #feature-list table li {
+  margin-bottom: 0.2em;
+}
+
+#home div#testimonials-block {
+  border: 1px solid #EEEEEE;
+  background: #F6F6F6;
+}
+
+#home div#testimonials {
+  width: 90%;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  text-align: center;
+  background: #F6F6F6;
+}
+
+#home div#testimonials p {
+  color: #222;
+  font-size: 11pt;
+  font-style: italic;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+#home div#more-testimonials {
+  margin-top: 5px;
+  border: none;
+  background: #F6F6F6;
+}
+
+#home div#more-testimonials p {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+/*=== SHOW/HIDE ===*/
+
+.more {
+  display: none;
+}
+a.showLink, a.hideLink {
+  text-decoration: none;
+  color: #36f;
+  padding-left: 8px;
+  background: transparent url(down.gif) no-repeat left;
+}
+a.hideLink {
+  background: transparent url(up.gif) no-repeat left;
+}
+a.showLink:hover, a.hideLink:hover {
+  border-bottom: 1px dotted #36f;
 }
 
 /*=== HELP PAGE ===*/
@@ -1126,6 +1191,10 @@ p#close-showroom A {
   font-size: 20pt;
 }
 
+.support h2 {
+  font-size: 16pt;
+}
+
 .support div.light-block {
   padding-top: 20px;
 }
@@ -1187,6 +1256,15 @@ div#block-block-5 {
 
 div#support-sidebar {
   margin-top: 80px;
+}
+
+div#support-sidebar-links {
+  border-left: solid 1px #CCC;
+  padding-left: 10px;
+}
+
+div#support-sidebar-links ul {
+  margin-top: 5px;
 }
 
 div#support-footer {

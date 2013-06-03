@@ -1,5 +1,5 @@
 body {
-  background: #d9d1c5 url('bg.png') repeat-x;
+  background: #fff url('bg.png') repeat-x;
   color: #494949;
   text-align: left;
 }
@@ -47,9 +47,8 @@ h1 {
   font-size: 36pt;
   font-weight: bold;
   color: #222;
-  margin-top:0px;
-  margin-bottom: 35px;
-  text-shadow: white 0 2px 0;
+  margin-top:20px;
+  margin-bottom: 20px;
 }
 
 h1.multiline {
@@ -57,7 +56,7 @@ h1.multiline {
 }
 
 
-h2 {
+H2 {
   font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif;
   color: #232323;
   text-align: left;
@@ -65,7 +64,6 @@ h2 {
   margin-left: 0;
   font-size: 14pt;
 }
-
 
 h3 {
   font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif;
@@ -161,6 +159,12 @@ A.highlighted:hover {
 
 /* ========== HEADER ========== */
 
+#header {
+	padding-top: 4px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
 #header-inner {
   margin-top: 10px;
   position: relative;
@@ -193,6 +197,7 @@ A.highlighted:hover {
 }
 
 #block-menu-primary-links {
+	padding-top:2px;
   float: right;
 }
 
@@ -219,7 +224,6 @@ A.highlighted:hover {
   display: inline;
   padding-left: 4px;
   padding-right: 8px;
-  border-right: solid 1px #AAA;
 }
 
 #block-menu-primary-links li.last {
@@ -229,30 +233,30 @@ A.highlighted:hover {
 #block-menu-primary-links A:link,
 #block-menu-primary-links A:visited {
   text-decoration: none;
-  color: #DDD;
+  color: #999;
   font-weight: normal;
 }
 
 #block-menu-primary-links A:hover {
   text-decoration: underline;
-  color: #FFF;
+  color: #00F;
 }
 
 #block-menu-primary-links A.active,
   #block-menu-primary-links li.expanded A:link,
   #block-menu-primary-links li.expanded A:visited {
-  color: #FFF;
+  color: #000;
   font-weight: bold;
 }
 
 #block-menu-primary-links li.expanded ul A:link,
 #block-menu-primary-links li.expanded ul A:visited {
-  color: #999;
+  color: #555;
   font-weight: normal;
 }
 
 #block-menu-primary-links li.expanded ul A.active {
-  color: #999;
+  color: #444;
   font-weight: bold;
   font-size: 10pt;
 }
@@ -342,10 +346,9 @@ table.vertical-bars td.right {
   font-size: 16pt;
   font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Verdana, sans-serif;
   margin-top: 25px;
-  border-top: 1px solid #DDD;
-  border-bottom: 1px solid #DDD;
   padding: 5px;
-  background: #F9F9F9;
+  border: 1px solid #EEEEEE;
+  background: #F6F6F6;
 }
 
 .full-separators h2 img {
@@ -403,10 +406,8 @@ div.summary p {
 }
 
 div.light-block {
-  background: #fff url('block_bg.png') repeat-x;
   margin-top: 10px;
   margin-bottom: 10px;
-  border: solid 1px #D5D5D5;
   padding: 10px 25px;
 }
 
@@ -565,7 +566,7 @@ div#webform {
   color: #888;
 }
 
-/* ========== DOCUMENTATION PAGE ========== */
+/* ========== SUPPORT / FAQ PAGE ========== */
 
 #faq {
   text-align: left;
@@ -808,22 +809,20 @@ table.field-value td.value {
   font-size: 38px;
   letter-spacing: -1px;
   line-height: 1.1em;
-  margin: 15px 0px 20px;
+  margin: 50px 0px 20px;
   padding: 0px;
   text-align: center;
-  text-shadow: white 0 2px 0;
 }
 
 #home div#text h2 {
   color: #444;
   font-family: georgia, arial, sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: normal;
   line-height: 1.1em;
   text-align: center;
   margin: 0px 0px 15px;
   padding: 0px;
-  text-shadow: white 0 1px 0;
 }
 
 #home div#text img.trial {
@@ -832,35 +831,34 @@ table.field-value td.value {
 
 #home div#text #platforms {
   margin: 0;
-  margin-top: 25px;
-  color: #666;
+  color: #999;
   font-size: 11pt;
-}
-
-#home div#text #trial {
-  margin: -10px 0 0 0;
-  color: #333;
-  font-size: 12pt;
 }
 
 #home div#text #purchase {
   margin: 0;
-  color: #666;
-  font-size: 11pt;
+  color: #999;
+  font-size: 10pt;
+}
+
+#home div#text #trial {
+  margin: 0;
+  color: #999;
+  font-size: 10pt;
 }
 
 #home table#front-table {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 
 #home table#front-table td {
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 #home #videoBorder {
   width: 560px;
-  height: 420px;
-  border: solid 1px #AAA;
+  height: 400px;
+  border: none;
   margin-left: auto;
   margin-right: auto;
 }
@@ -875,8 +873,12 @@ table.field-value td.value {
   line-height: 1.3em;
 }
 
-#home #presentation {
-  padding-top: 30px;
+#home #zoom table td {
+  padding-top:0px;
+}
+
+#home #zoom table h2 {
+  margin-top:0px;
 }
 
 #home table.image-and-text {
@@ -904,13 +906,19 @@ table.field-value td.value {
   padding: 0;
 }
 
+#home div#testimonials-block {
+  border: 1px solid #EEEEEE;
+  background: #F6F6F6;
+}
+
 #home div#testimonials {
   width: 90%;
-  margin-top: 10px;
+  margin-top: 20px;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   text-align: center;
+  background: #F6F6F6;
 }
 
 #home div#testimonials p {
@@ -918,12 +926,13 @@ table.field-value td.value {
   font-size: 11pt;
   font-style: italic;
   text-align: center;
-  text-shadow: white 0 1px 0;
   margin-bottom: 5px;
 }
 
 #home div#more-testimonials {
-  margin-top: 15px;
+  margin-top: 5px;
+  border: none;
+  background: #F6F6F6;
 }
 
 #home div#more-testimonials p {
@@ -1035,15 +1044,14 @@ a.showLink:hover, a.hideLink:hover {
   width: 90%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 30px;
 }
 
 #home div.separator {
   margin: 20px;
-  border-top: solid 1px #DDD;
-  border-bottom: solid 1px #D0D0D0;
-  background: #F9F9F9;
+  border: solid 1px #EEEEEE;
+  background: #F6F6F6;
   padding: 5px;
 }
 
@@ -1130,7 +1138,7 @@ p#close-showroom A {
   margin-right: auto;
 }
 
-#why #project-definition-intro p {
+#why #projectct-definition-intro p {
   font-size: 13pt;
   text-align: center;
 }
@@ -1271,6 +1279,22 @@ div#support-footer p {
   font-size: 14pt;
 }
 
+/* ========= FAQ PAGES ========== */
+
+.faq {
+  border-bottom: solid 1px #CCC;
+}
+
+.faq h1 {
+  border-top: solid 1px #EEE;
+  border-bottom: solid 1px #EEE;
+}
+
+#content .faq div.light-block {
+  margin-top: 0;
+  padding-top: 5px;
+}
+
 /* ========= FAQ FOOTER ========== */
 
 div#faq-footer {
@@ -1278,6 +1302,7 @@ div#faq-footer {
   text-shadow: white 0 2px 0;
   color: #AAAAAA;
   margin-bottom: 20px;
+  padding-top: 5px;
 }
 
 div#faq-footer A:link {
