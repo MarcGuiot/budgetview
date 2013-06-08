@@ -3,7 +3,7 @@ package org.designup.picsou.gui;
 import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.accounts.AccountView;
-import org.designup.picsou.gui.accounts.CreateAccountAction;
+import org.designup.picsou.gui.accounts.actions.CreateAccountAction;
 import org.designup.picsou.gui.actions.*;
 import org.designup.picsou.gui.backup.BackupAction;
 import org.designup.picsou.gui.backup.RestoreFileAction;

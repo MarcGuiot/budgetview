@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.series;
 
-import org.designup.picsou.gui.accounts.CreateAccountAction;
+import org.designup.picsou.gui.accounts.actions.CreateAccountAction;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
@@ -21,7 +21,6 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.editors.GlobCheckBoxView;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.layout.CardHandler;

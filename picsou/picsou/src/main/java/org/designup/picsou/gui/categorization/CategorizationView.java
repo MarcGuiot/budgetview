@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.accounts.CreateAccountAction;
+import org.designup.picsou.gui.accounts.actions.CreateAccountAction;
 import org.designup.picsou.gui.categorization.actions.CategorizationTableActions;
 import org.designup.picsou.gui.categorization.components.*;
 import org.designup.picsou.gui.categorization.reconciliation.ReconciliationWarningPanel;
@@ -29,7 +29,6 @@ import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.columns.ReconciliationCustomizer;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
-import org.designup.picsou.gui.transactions.creation.ShowCreateTransactionAction;
 import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
 import org.designup.picsou.gui.transactions.reconciliation.annotations.ReconciliationAnnotationColumn;
 import org.designup.picsou.gui.transactions.reconciliation.annotations.ShowReconciliationAction;

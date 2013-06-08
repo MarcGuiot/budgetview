@@ -166,8 +166,16 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
   }
 
   private Trigger triggerEditAccount(String accountName, String menuOption) {
-    PopupButton button = new PopupButton(getAccountPanel(accountName).getButton("editAccount"));
+    PopupButton button = openPopup(accountName);
     return button.triggerClick(menuOption);
+  }
+
+  private PopupButton openPopup(String accountName) {
+    return new PopupButton(getAccountPanel(accountName).getButton("editAccount"));
+  }
+
+  public ConfirmationDialogChecker delete(String accountName) {
+    return ConfirmationDialogChecker.open(openPopup(accountName).triggerClick("Delete..."));
   }
 
   private Panel getAccountPanel(final String accountName) {
@@ -220,7 +228,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
   }
 
   public void checkAccountWebsiteLinkDisabled(String accountName) {
-    PopupButton button = new PopupButton(getAccountPanel(accountName).getButton("editAccount"));
+    PopupButton button = openPopup(accountName);
     button.checkItemDisabled(Lang.get("accountView.goto.website.disabled"));
   }
 

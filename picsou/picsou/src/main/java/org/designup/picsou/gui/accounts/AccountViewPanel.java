@@ -1,5 +1,7 @@
 package org.designup.picsou.gui.accounts;
 
+import org.designup.picsou.gui.accounts.actions.CreateAccountAction;
+import org.designup.picsou.gui.accounts.actions.DeleteAccountAction;
 import org.designup.picsou.gui.accounts.chart.AccountPositionsChartView;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.utils.GotoAccountWebsiteAction;
@@ -33,7 +35,6 @@ import org.globsframework.model.utils.ChangeSetMatchers;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -237,6 +238,8 @@ public abstract class AccountViewPanel {
       });
       menu.addSeparator();
       menu.add(new GotoAccountWebsiteAction(account, repository, directory));
+      menu.addSeparator();
+      menu.add(new DeleteAccountAction(account, repository, directory));
       return menu;
     }
   }

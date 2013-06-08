@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.savings;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.accounts.CreateAccountAction;
+import org.designup.picsou.gui.accounts.actions.CreateAccountAction;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.position.SavingsAccountPositionLabels;
 import org.designup.picsou.gui.budget.SeriesEditionButtons;

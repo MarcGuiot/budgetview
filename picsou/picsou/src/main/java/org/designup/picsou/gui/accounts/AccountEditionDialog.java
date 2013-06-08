@@ -1,9 +1,9 @@
 package org.designup.picsou.gui.accounts;
 
+import org.designup.picsou.gui.accounts.utils.DeleteAccountHandler;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
-import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.DatePicker;
-import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
+import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.model.CurrentAccountInfo;
 import org.designup.picsou.gui.time.TimeService;
@@ -14,19 +14,20 @@ import org.globsframework.gui.splits.layout.TabHandler;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.*;
-
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
-import org.globsframework.model.utils.*;
-
+import org.globsframework.model.utils.DefaultChangeSetListener;
+import org.globsframework.model.utils.DefaultChangeSetVisitor;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobRepository> {
   private PicsouDialog dialog;
@@ -47,7 +48,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     dialog = PicsouDialog.create(owner, localDirectory);
 
     final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountEditionDialog.splits",
-                                                      localRepository, localDirectory);
+                                                            localRepository, localDirectory);
 
     titleLabel = builder.add("title", new JLabel("accountEditionDialog")).getComponent();
 
@@ -132,7 +133,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
       }
     });
     DeleteAction deleteAction = new DeleteAction();
-    if (createAccount){
+    if (createAccount) {
       deleteAction.setEnabled(false);
     }
     dialog.addPanelWithButtons(this.builder.<JPanel>load(),
@@ -140,7 +141,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
                                deleteAction);
   }
 
-  private static LocalGlobRepository createLocalRepository(GlobRepository parentRepository) {
+  public static LocalGlobRepository createLocalRepository(GlobRepository parentRepository) {
     return LocalGlobRepositoryBuilder.init(parentRepository)
       .copy(Bank.TYPE, BankEntity.TYPE, AccountUpdateMode.TYPE, MonthDay.TYPE, CurrentMonth.TYPE,
             Account.TYPE, AccountCardType.TYPE, AccountType.TYPE, Month.TYPE, DeferredCardDate.TYPE)
@@ -177,10 +178,6 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
       GuiUtils.selectAndRequestFocus(nameField.getComponent());
     }
     dialog.showCentered();
-  }
-
-  private boolean accountHasTransactions(Glob account) {
-    return parentRepository.contains(Transaction.TYPE, GlobMatchers.linkedTo(account, Transaction.ACCOUNT));
   }
 
   public void setAccountInfo(Glob accountInfo) {
@@ -223,48 +220,15 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   }
 
   private class DeleteAction extends AbstractAction {
-    private GlobMatcher transactionMatcher;
-    private GlobMatcher seriesMatcher;
+    DeleteAccountHandler handler;
 
-    private DeleteAction() {
+    public DeleteAction() {
       super(Lang.get("accountEdition.delete"));
+      handler = new DeleteAccountHandler(dialog, parentRepository, localRepository, localDirectory);
     }
 
     public void actionPerformed(ActionEvent e) {
-      transactionMatcher = and(linkedTo(currentAccount, Transaction.ACCOUNT), not(fieldEquals(Transaction.TRANSACTION_TYPE,
-                                                                                              TransactionType.OPEN_ACCOUNT_EVENT.getId())),
-                               not(fieldEquals(Transaction.TRANSACTION_TYPE,
-                                               TransactionType.CLOSE_ACCOUNT_EVENT.getId())));
-      seriesMatcher = or(linkedTo(currentAccount, Series.FROM_ACCOUNT),
-                         linkedTo(currentAccount, Series.TO_ACCOUNT));
-
-      ConfirmationDialog confirmDialog = new ConfirmationDialog("accountDeletion.confirm.title",
-                                                                Lang.get(getMessageKey()),
-                                                                dialog, localDirectory) {
-        protected void processOk() {
-          localRepository.delete(currentAccount.getKey());
-          localRepository.commitChanges(false);
-          dialog.setVisible(false);
-        }
-      };
-      confirmDialog.show();
-    }
-
-    private String getMessageKey() {
-
-      boolean hasTransactions = parentRepository.contains(Transaction.TYPE, transactionMatcher);
-      boolean hasSeries = parentRepository.contains(Series.TYPE, seriesMatcher);
-
-      if (hasTransactions && hasSeries) {
-        return "accountDeletion.confirm.all";
-      }
-      if (hasTransactions) {
-        return "accountDeletion.confirm.transactions";
-      }
-      if (hasSeries) {
-        return "accountDeletion.confirm.series";
-      }
-      return "accountDeletion.confirm.unused";
+      handler.delete(currentAccount, true);
     }
   }
 
