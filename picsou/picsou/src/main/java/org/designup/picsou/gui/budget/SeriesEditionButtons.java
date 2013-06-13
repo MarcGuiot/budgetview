@@ -2,6 +2,7 @@ package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.budget.components.SeriesPopupButton;
 import org.designup.picsou.gui.series.SeriesEditor;
+import org.designup.picsou.gui.series.edition.DeleteSeriesAction;
 import org.designup.picsou.gui.series.utils.SeriesPopupFactory;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;

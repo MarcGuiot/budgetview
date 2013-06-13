@@ -3,7 +3,6 @@ package org.designup.picsou.gui.series;
 import org.designup.picsou.gui.accounts.actions.CreateAccountAction;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
-import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
@@ -11,6 +10,7 @@ import org.designup.picsou.gui.description.stringifiers.MonthYearStringifier;
 import org.designup.picsou.gui.series.edition.MonthCheckBoxUpdater;
 import org.designup.picsou.gui.series.edition.SeriesForecastPanel;
 import org.designup.picsou.gui.series.subseries.SubSeriesEditionPanel;
+import org.designup.picsou.gui.series.utils.SeriesDeletionHandler;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.AmountMap;
@@ -271,7 +271,7 @@ public class SeriesEditionDialog {
     localRepository.addChangeListener(new OkButtonUpdater());
 
     JPanel panel = builder.load();
-    JButton deleteButton = new JButton(new DeleteSeriesAction());
+    JButton deleteButton = new JButton(new DeleteAction());
     deleteButton.setOpaque(false);
     deleteButton.setName("deleteSingleSeries");
     dialog.addPanelWithButtons(panel, okAction, new CancelAction(), deleteButton);
@@ -529,19 +529,7 @@ public class SeriesEditionDialog {
   private void initBudgetAreaSeries(BudgetArea budgetArea, Ref<Integer> fromAccount, Ref<Integer> toAccount) {
     this.budgetArea = budgetArea;
 
-    GlobList seriesList =
-      repository.getAll(Series.TYPE, not(fieldEquals(Series.BUDGET_AREA, BudgetArea.UNCATEGORIZED.getId())));
-
-    GlobList globsToLoad = new GlobList();
-    for (Glob series : seriesList) {
-      globsToLoad.add(series);
-      globsToLoad.addAll(repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES,
-                                                series.get(Series.ID)).getGlobs());
-      ReadOnlyGlobRepository.MultiFieldIndexed index =
-        repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID));
-      globsToLoad.addAll(index.getGlobs().filterSelf(isFalse(Transaction.PLANNED), repository));
-    }
-    localRepository.reset(globsToLoad, SeriesBudget.TYPE, Series.TYPE, Transaction.TYPE);
+    loadSeries(localRepository, repository);
 
     if (budgetArea == BudgetArea.SAVINGS) {
       Set<Integer> positiveAccount = new HashSet<Integer>();
@@ -592,6 +580,22 @@ public class SeriesEditionDialog {
     }
   }
 
+  public static void loadSeries(LocalGlobRepository localRepository, GlobRepository repository) {
+    GlobList seriesList =
+      repository.getAll(Series.TYPE, not(fieldEquals(Series.BUDGET_AREA, BudgetArea.UNCATEGORIZED.getId())));
+
+    GlobList globsToLoad = new GlobList();
+    for (Glob series : seriesList) {
+      globsToLoad.add(series);
+      globsToLoad.addAll(repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES,
+                                                series.get(Series.ID)).getGlobs());
+      ReadOnlyGlobRepository.MultiFieldIndexed index =
+        repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID));
+      globsToLoad.addAll(index.getGlobs().filterSelf(isFalse(Transaction.PLANNED), repository));
+    }
+    localRepository.reset(globsToLoad, SeriesBudget.TYPE, Series.TYPE, Transaction.TYPE);
+  }
+
   private void doShow(Set<Integer> monthIds, Glob series, boolean creation, final Boolean selectName) {
     setCurrentSeries(series);
     this.currentMonthIds = new TreeSet<Integer>(monthIds);
@@ -640,8 +644,6 @@ public class SeriesEditionDialog {
     this.forecastPanel.setCurrentSeries(currentSeries);
     endDateTextFieldView.getComponent().setEnabled(this.currentSeries != null);
     startTextFieldView.getComponent().setEnabled(this.currentSeries != null);
-//    reportCheckBox.getComponent().setEnabled(this.currentSeries != null);
-//    reportCheckBox.getComponent().setVisible(false); //this.currentSeries != null && !currentSeries.get(Series.IS_AUTOMATIC));
     if (currentSeries != null) {
       isAutomatic = currentSeries.get(Series.IS_AUTOMATIC);
     }
@@ -706,58 +708,17 @@ public class SeriesEditionDialog {
     }
   }
 
-  private class DeleteSeriesAction extends AbstractAction {
-    private GlobList seriesToDelete = GlobList.EMPTY;
+  private class DeleteAction extends AbstractAction {
 
-    public DeleteSeriesAction() {
+    public DeleteAction() {
       super(Lang.get("seriesEdition.deleteCurrent"));
     }
 
     public void actionPerformed(ActionEvent e) {
-      seriesToDelete = new GlobList();
-      seriesToDelete.add(currentSeries);
-      Glob mirrorSeries = repository.findLinkTarget(currentSeries, Series.MIRROR_SERIES);
-      if (mirrorSeries != null) {
-        seriesToDelete.add(mirrorSeries);
-      }
-
-      Set<Integer> seriesIds = seriesToDelete.getValueSet(Series.ID);
-      GlobList transactionsForSeries = localRepository.getAll(Transaction.TYPE, fieldIn(Transaction.SERIES, seriesIds));
-      final Ref<Boolean> deleted = new Ref<Boolean>(false);
-      if (transactionsForSeries.isEmpty()) {
-        doDelete(deleted);
-      }
-      else if (BudgetArea.SAVINGS.getId().equals(currentSeries.get(Series.BUDGET_AREA))) {
-        ConfirmationDialog confirmationDialog = new ConfirmationDialog("seriesDeletion.title",
-                                                                       Lang.get("seriesDeletion.savings.message"),
-                                                                       dialog, directory,
-                                                                       ConfirmationDialog.Mode.STANDARD) {
-          protected void processOk() {
-            doDelete(deleted);
-          }
-        };
-        confirmationDialog.show();
-      }
-      else {
-        SeriesDeletionDialog seriesDeletionDialog =
-          new SeriesDeletionDialog(currentSeries, transactionsForSeries, localRepository, localDirectory, dialog);
-        if (seriesDeletionDialog.show()) {
-          doDelete(deleted);
-        }
-      }
-
-      if (deleted.get()) {
-        localRepository.commitChanges(false);
-        localRepository.rollback();
-        dialog.setVisible(false);
-      }
-    }
-
-    private void doDelete(Ref<Boolean> deleted) {
-      GlobList tmp = new GlobList(seriesToDelete);
-      selectionService.clear(Series.TYPE);
-      localRepository.delete(tmp);
-      deleted.set(true);
+      SeriesDeletionHandler handler = new SeriesDeletionHandler(dialog,
+                                                                localRepository, repository,
+                                                                directory, localDirectory, selectionService);
+      handler.delete(currentSeries, true, false);
     }
   }
 

@@ -29,11 +29,17 @@ import static org.globsframework.model.FieldValue.value;
 
 public class SeriesDeletionDialog {
   private PicsouDialog dialog;
-  private boolean ok;
+  private Action action;
   private GlobsPanelBuilder builder;
   private final Glob currentSeries;
   private GlobRepository repository;
   private Directory localDirectory;
+
+  public enum Action {
+    DELETE,
+    SET_DATE,
+    CANCEL
+  }
 
   public SeriesDeletionDialog(Glob currentSeries, GlobList transactionsForSeries,
                               GlobRepository repository,
@@ -117,7 +123,7 @@ public class SeriesDeletionDialog {
       updateStartDate();
       updateEndDate();
       repository.completeChangeSet();
-      ok = true;
+      action = Action.DELETE;
       dialog.setVisible(false);
     }
 
@@ -144,7 +150,7 @@ public class SeriesDeletionDialog {
 
     public void actionPerformed(ActionEvent actionEvent) {
       repository.update(currentSeries.getKey(), Series.LAST_MONTH, lastMonth);
-      ok = false;
+      action = Action.SET_DATE;
       dialog.setVisible(false);
     }
   }
@@ -155,22 +161,22 @@ public class SeriesDeletionDialog {
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
-      ok = true;
+      action = Action.DELETE;
       dialog.setVisible(false);
     }
   }
 
   private void cancel() {
-    ok = false;
+    action = Action.CANCEL;
     dialog.setVisible(false);
   }
 
-  public boolean show() {
-    ok = false;
+  public Action show() {
+    action = null;
     dialog.pack();
     dialog.showCentered();
     builder.dispose();
-    return ok;
+    return action;
   }
 
   private class SeriesFilter implements GlobMatcher {

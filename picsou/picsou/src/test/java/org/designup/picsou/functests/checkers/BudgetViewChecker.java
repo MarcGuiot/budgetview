@@ -280,8 +280,15 @@ public class BudgetViewChecker extends ViewChecker {
 
     public SeriesAmountEditionDialogChecker editPlannedAmount(String seriesName) {
       Button button = getSeriesPanel(seriesName).getPlannedAmount();
-
       return SeriesAmountEditionDialogChecker.open(button.triggerClick());
+    }
+
+    public void deleteSeries(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton().click(Lang.get("seriesEdition.deleteCurrent"));
+    }
+
+    public SeriesDeletionDialogChecker openDeleteSeries(String seriesName) {
+      return SeriesDeletionDialogChecker.init(getSeriesPanel(seriesName).getSeriesButton().triggerClick(Lang.get("seriesEdition.deleteCurrent")));
     }
 
     protected Button getObservedAmountButton(String seriesName) {

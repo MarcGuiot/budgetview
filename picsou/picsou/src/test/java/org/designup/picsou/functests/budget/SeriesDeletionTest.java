@@ -1,12 +1,83 @@
 package org.designup.picsou.functests.budget;
 
+import org.designup.picsou.functests.checkers.SeriesDeletionDialogChecker;
 import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
 
 public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
-  public void testDeleteNewlyCreatedSeries() throws Exception {
+
+  private interface Access {
+
+    void uncategorizeVariable(String seriesName);
+
+    void processDeleteVariable(String seriesName, DeleteHandler handler);
+
+    void transferVariable(String sourceSeries, String targetSeries);
+
+    void setEndDate(String seriesName, String month);
+  }
+
+  private interface DeleteHandler {
+    void process(SeriesDeletionDialogChecker deletionDialog);
+  }
+
+  private final Access DIALOG = new Access() {
+    public void uncategorizeVariable(String seriesName) {
+      budgetView.variable.editSeries(seriesName)
+        .deleteCurrentSeriesWithConfirmation(seriesName);
+    }
+
+    public void processDeleteVariable(String seriesName, DeleteHandler handler) {
+      SeriesEditionDialogChecker seriesDialog = budgetView.variable.editSeries("Drinks");
+      handler.process(seriesDialog.openDeleteDialog());
+      seriesDialog.checkClosed();
+    }
+
+    public void transferVariable(String sourceSeries, String targetSeries) {
+      budgetView.variable.editSeries(sourceSeries)
+        .openDeleteDialog()
+        .selectTransferSeries(targetSeries)
+        .transfer();
+    }
+
+    public void setEndDate(String seriesName, String month) {
+      SeriesEditionDialogChecker seriesDialog = budgetView.variable.editSeries(seriesName);
+      seriesDialog.openDeleteDialog()
+        .checkEndDateMessageContains(month)
+        .setEndDate();
+      seriesDialog
+        .checkVisible()
+        .checkNoStartDate()
+        .checkEndDate(month)
+        .validate();
+    }
+  };
+
+  private final Access POPUP = new Access() {
+    public void uncategorizeVariable(String seriesName) {
+      budgetView.variable.openDeleteSeries(seriesName).uncategorize();
+    }
+
+    public void processDeleteVariable(String seriesName, DeleteHandler handler) {
+      handler.process(budgetView.variable.openDeleteSeries("Drinks"));
+    }
+
+    public void transferVariable(String sourceSeries, String targetSeries) {
+      budgetView.variable.openDeleteSeries(sourceSeries)
+        .selectTransferSeries(targetSeries)
+        .transfer();
+    }
+
+    public void setEndDate(String seriesName, String month) {
+      budgetView.variable.openDeleteSeries(seriesName)
+        .checkEndDateMessageContains(month)
+        .setEndDate();
+    }
+  };
+
+  public void testDeleteNewlyCreatedSeriesFromDialog() throws Exception {
     views.selectBudget();
     budgetView.income.createSeries()
       .setName("AA")
@@ -14,7 +85,24 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkNoSeriesShown();
   }
 
-  public void testDeleteUsedSeries() throws Exception {
+  public void testDeleteNewlyCreatedSeriesFromPopup() throws Exception {
+    views.selectBudget();
+    budgetView.income.createSeries()
+      .setName("AA")
+      .validate();
+    budgetView.income.deleteSeries("AA");
+    budgetView.income.checkNoSeriesShown();
+  }
+
+  public void testDeleteUsedSeriesFromDialog() throws Exception {
+    deleteUsedSeries(DIALOG);
+  }
+
+  public void testDeleteUsedSeriesFromPopup() throws Exception {
+    deleteUsedSeries(POPUP);
+  }
+
+  private void deleteUsedSeries(Access access) {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/30", -60, "Forfait Kro")
@@ -22,17 +110,18 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTableRow(0);
-    categorization.selectVariable();
     categorization.selectVariable().createSeries()
       .setName("AA")
       .validate();
     categorization.setVariable("Forfait Kro", "AA");
 
     views.selectBudget();
-    budgetView.variable.editSeries("AA")
-      .deleteCurrentSeriesWithConfirmation("AA");
+    access.uncategorizeVariable("AA");
 
     budgetView.variable.checkSeriesNotPresent("AA");
+    categorization.initContent()
+      .add("30/06/2008", "", "FORFAIT KRO", -60.00)
+      .check();
   }
 
   public void testDeleteFromSingleSeriesEditionDialog() throws Exception {
@@ -105,7 +194,15 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
   }
 
-  public void testTransfer() throws Exception {
+  public void testTransferFromDialog() throws Exception {
+    transfer(DIALOG);
+  }
+
+  public void testTransferFromPopup() throws Exception {
+    transfer(POPUP);
+  }
+
+  public void transfer(Access access) throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/30", -60.00, "Forfait Kro")
@@ -135,21 +232,23 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .setToAccount("Livret")
       .validate();
 
-    SeriesEditionDialogChecker seriesDialog = budgetView.variable.editSeries("Drinks");
-    seriesDialog.openDeleteDialog()
-      .checkMessage("Drinks")
-      .checkTransferDisabled()
-      .checkTransferSeries("Groceries", "Health", "Misc", "Salary")
-      .setTransferSeriesFilter("e")
-      .checkTransferSeries("Groceries", "Health")
-      .setTransferSeriesFilter("ea")
-      .checkTransferSeries("Health")
-      .setTransferSeriesFilter("")
-      .checkTransferSeries("Groceries", "Health", "Misc", "Salary")
-      .selectTransferSeries("Health")
-      .checkTransferEnabled()
-      .transfer();
-    seriesDialog.checkClosed();
+    access.processDeleteVariable("Drinks", new DeleteHandler() {
+      public void process(SeriesDeletionDialogChecker deletionDialog) {
+        deletionDialog
+          .checkMessage("Drinks")
+          .checkTransferDisabled()
+          .checkTransferSeries("Groceries", "Health", "Misc", "Salary")
+          .setTransferSeriesFilter("e")
+          .checkTransferSeries("Groceries", "Health")
+          .setTransferSeriesFilter("ea")
+          .checkTransferSeries("Health")
+          .setTransferSeriesFilter("")
+          .checkTransferSeries("Groceries", "Health", "Misc", "Salary")
+          .selectTransferSeries("Health")
+          .checkTransferEnabled()
+          .transfer();
+      }
+    });
 
     timeline.selectAll();
     transactions.initContent()
@@ -166,10 +265,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .checkNoEndDate()
       .validate();
 
-    budgetView.variable.editSeries("Health")
-      .openDeleteDialog()
-      .selectTransferSeries("Misc")
-      .transfer();
+    access.transferVariable("Health", "Misc");
 
     transactions.initContent()
       .add("30/06/2008", TransactionType.PRELEVEMENT, "FORFAIT KRO", "", -60.00, "Misc")
@@ -186,7 +282,15 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
-  public void testTransferFromSubseries() throws Exception {
+  public void testTransferFromSubseriesFromDialog() throws Exception {
+    transferFromSubseries(DIALOG);
+  }
+
+  public void testTransferFromSubseriesFromPopup() throws Exception {
+    transferFromSubseries(POPUP);
+  }
+
+  private void transferFromSubseries(Access access) {
     OfxBuilder
       .init(this)
       .addTransaction("2008/05/20", -30.00, "Forfait Kro")
@@ -206,17 +310,22 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       {"20/05/2008", "Drinks / Kro", "FORFAIT KRO", -30.0}
     });
 
-    categorization.getVariable().editSeries("Drinks")
-      .openDeleteDialog()
-      .selectTransferSeries("Health")
-      .transfer();
+    access.transferVariable("Drinks", "Health");
 
     categorization.checkTable(new Object[][]{
       {"20/05/2008", "Health", "FORFAIT KRO", -30.0}
     });
   }
 
-  public void testSetEndDate() throws Exception {
+  public void testSetEndDateFromDialog() throws Exception {
+    doSetEndDate(DIALOG);
+  }
+
+  public void testSetEndDateFromPopup() throws Exception {
+    doSetEndDate(POPUP);
+  }
+
+  private void doSetEndDate(Access access) throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/30", -60.00, "Something else")
@@ -227,13 +336,12 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
 
     categorization.setNewVariable("Forfait Kro", "Drinks");
 
-    SeriesEditionDialogChecker seriesDialog = budgetView.variable.editSeries("Drinks");
-    seriesDialog.openDeleteDialog()
-      .checkEndDateMessageContains("May 2008")
-      .setEndDate();
-    seriesDialog
-      .checkVisible()
-      .checkNoStartDate()
+    access.setEndDate("Drinks", "May 2008");
+
+    timeline.selectMonth(200806);
+    budgetView.variable.checkSeriesNotPresent("Drinks");
+    timeline.selectMonth(200805);
+    budgetView.variable.editSeries("Drinks")
       .checkEndDate("May 2008")
       .validate();
   }

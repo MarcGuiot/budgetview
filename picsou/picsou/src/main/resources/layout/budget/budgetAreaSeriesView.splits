@@ -19,9 +19,9 @@
     <style selector="#seriesName" ui="hyperlinkButtonWithoutUnderline"
            fill="none" anchor="right"
            horizontalAlignment="right"
-           icon="empty(14,14)"
-           rolloverIcon="circledArrow(block.inner.edit.rollover)"
-           pressedIcon="circledArrow(block.inner.edit.pressed)"/>
+           icon="empty(10,18)"
+           rolloverIcon="downArrow(10,18,8,8,block.inner.edit.rollover)"
+           pressedIcon="downArrow(10,18,8,8,block.inner.edit.pressed)"/>
     <style id="seriesEnabled" selector="x" foreground="block.item.link"/>
     <style id="seriesDisabled" selector="x" foreground="block.item.link.inactive"/>
 
