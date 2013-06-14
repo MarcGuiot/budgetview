@@ -13,7 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-public class    CreateAccountAction extends AbstractAction {
+public class CreateAccountAction extends AbstractAction {
   private AccountType accountType;
   private GlobRepository repository;
   private Directory directory;

@@ -13,13 +13,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class AppPaths {
 
-  private static final String JAR_DIRECTORY = "jars";
-  private static final String BANK_CONFIG_DIRECTORY = "configs";
+  private static final String JAR_DIRECTORY = File.separator + "jars";
+  private static final String BANK_CONFIG_DIRECTORY = File.separator + "configs";
+  private static final String BUDGET_VIEW = File.separator + "BudgetView";
 
   public static String getDefaultDataPath() {
     if (System.getProperty(PicsouApplication.LOCAL_DATA_PATH_PROPERTY) != null) {
@@ -31,11 +31,28 @@ public class AppPaths {
     if (GuiUtils.isMacOSX()) {
       return System.getProperty("user.home") + "/Library/Application Support/BudgetView";
     }
-    if (GuiUtils.isVista()) {
-      return System.getProperty("user.home") + "/AppData/Local/BudgetView";
-    }
     if (GuiUtils.isWindows()) {
-      return System.getProperty("user.home") + "/Application Data/BudgetView";
+      String windowsXPPath = System.getProperty("user.home") + File.separator + "Application Data";
+      String windowsVistaPath = System.getProperty("user.home") + File.separator + "AppData" + File.separator + "Local";
+
+      if (new File(windowsXPPath + BUDGET_VIEW + JAR_DIRECTORY).exists()) {
+        return windowsXPPath + BUDGET_VIEW;
+      }
+      if (new File(windowsVistaPath + BUDGET_VIEW + JAR_DIRECTORY).exists()) {
+        return windowsVistaPath + BUDGET_VIEW;
+      }
+      if (new File(windowsVistaPath).exists()) {
+        return windowsVistaPath + BUDGET_VIEW;
+      }
+      if (new File(windowsXPPath).exists()) {
+        return windowsXPPath + BUDGET_VIEW;
+      }
+      if (GuiUtils.isVista() || GuiUtils.isWin7() || GuiUtils.isWin8()) {
+        return System.getProperty("user.home") + File.separator + "AppData" + File.separator + "Local" + BUDGET_VIEW;
+      }
+      if (GuiUtils.isXP()) {
+        return System.getProperty("user.home") + File.separator + "Application Data" + BUDGET_VIEW;
+      }
     }
     return System.getProperty("user.home") + "/.budgetview";
   }
@@ -154,10 +171,10 @@ public class AppPaths {
   }
 
   public static String getBankConfigPath() {
-    return getCodePath() + "/" + BANK_CONFIG_DIRECTORY;
+    return getCodePath() + BANK_CONFIG_DIRECTORY;
   }
 
   public static String getJarPath() {
-    return getCodePath() + "/" + JAR_DIRECTORY;
+    return getCodePath() + JAR_DIRECTORY;
   }
 }

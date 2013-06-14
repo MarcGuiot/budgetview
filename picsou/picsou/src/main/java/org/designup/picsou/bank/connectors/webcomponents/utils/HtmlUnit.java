@@ -227,6 +227,8 @@ public class HtmlUnit {
       .append(page.getTitleText())
       .append("\n")
       .append(SEPARATOR)
+      .append(element.asText().replaceAll("\n[\\s]*\n", "\n").replaceAll("[0-9]", "9"))
+      .append(SEPARATOR)
       .append(element.asXml().replaceAll("\n[\\s]*\n", "\n").replaceAll("[0-9]", "9"))
       .append(SEPARATOR);
     return buffer.toString();

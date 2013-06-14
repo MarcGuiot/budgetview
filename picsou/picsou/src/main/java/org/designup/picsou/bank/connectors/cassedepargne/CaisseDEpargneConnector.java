@@ -29,12 +29,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 public class CaisseDEpargneConnector extends WebBankConnector implements HttpConnectionProvider {
   public static final int BANK_ID = 6;
   public static String INDEX = "https://www.caisse-epargne.fr/particuliers/ind_pauthpopup.aspx?srcurl=accueil";
   private UserAndPasswordPanel userAndPasswordPanel;
+  private int tempo = 0;
 
   public CaisseDEpargneConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory, Glob synchro) {
     super(BANK_ID, syncExistingAccount, repository, directory, synchro);
@@ -81,7 +83,11 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
   public void downloadFile() throws Exception {
     notifyDownloadInProgress();
     WebPage currentPage = browser.getCurrentPage();
-    WebSelect comptes = currentPage.getSelectById("MM_TELECHARGE_OPERATIONS_m_ExDDLListeComptes");
+    WebSelect comptes = browser.retry(currentPage, new WebBrowser.Function1Arg<WebSelect, WebPage>() {
+      public WebSelect call(WebPage webPage) throws Exception {
+        return webPage.getSelectById("MM_TELECHARGE_OPERATIONS_m_ExDDLListeComptes");
+      }
+    });
     List<String> names = comptes.getEntryNames();
 
     int count = 0;
@@ -96,17 +102,18 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
             break;
           }
           catch (Exception e) {
-            if (++retry < 1) {
+            tempo += 1000;
+            if (++retry < 3) {
               Log.write("Caisse d'epargne : retry ");
               WebPanel cptdmte0 = browser.getCurrentPage().getPanelById("NavExt");
               cptdmte0.findFirst(WebFilters.and(WebFilters.tagEquals(HtmlAnchor.TAG_NAME), WebFilters.textContentContains("Mes comptes")))
                 .asAnchor()
                 .click();
-              currentPage = browser.setToTopLevelWindow();
+//              currentPage = browser.setToTopLevelWindow();
               currentPage.getAnchor(WebFilters.textContentContains("Télécharger des opérations"))
                 .click();
-              browser.waitForBackgroundJavaScript(3000);
-              currentPage = browser.setToTopLevelWindow();
+              waitJavaScript(3000);
+//              currentPage = browser.setToTopLevelWindow();
             }
             else {
               throw e;
@@ -117,18 +124,37 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
     }
   }
 
+  private void waitJavaScript(int timeout) {
+    browser.waitForBackgroundJavaScript(timeout + tempo);
+  }
+
   private WebPage tryDownload(WebPage currentPage, int count, Glob account, String element) throws WebParsingError, WebCommandFailed {
     notifyDownloadForAccount((count) + " : " + element);
-    WebSelect comptes = currentPage.getSelectById("MM_TELECHARGE_OPERATIONS_m_ExDDLListeComptes");
+    WebSelect comptes = browser.retry(currentPage, new WebBrowser.Function1Arg<WebSelect, WebPage>() {
+      public WebSelect call(WebPage webPage) throws Exception {
+        return webPage.getSelectById("MM_TELECHARGE_OPERATIONS_m_ExDDLListeComptes");
+      }
+    });
     comptes.select(element);
-    browser.waitForBackgroundJavaScript(1500);
-    currentPage = browser.setToTopLevelWindow();
-    currentPage.getRadioButtonById("MM_TELECHARGE_OPERATIONS_chkDate").select();
+    waitJavaScript(1500);
+//    currentPage = browser.setToTopLevelWindow();
+//    WebRadioButton date = currentPage.getRadioButtonById("MM_TELECHARGE_OPERATIONS_chkDate");
+    browser.retry(currentPage, new WebBrowser.Function1Arg<WebRadioButton, WebPage>() {
+      public WebRadioButton call(WebPage webPage) throws Exception {
+        return webPage.getRadioButtonById("MM_TELECHARGE_OPERATIONS_chkDate");
+      }
+    }).select();
     currentPage.executeJavascript("javascript:setTimeout('__doPostBack(\\'MM$TELECHARGE_OPERATIONS$chkDate\\',\\'\\')', 0)");
-    browser.waitForBackgroundJavaScript(3000);
-    currentPage = browser.setToTopLevelWindow();
+    waitJavaScript(3000);
     Date from = getDate(0, -120);
-    currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateDebut_txtDate")
+    WebTextInput debutTxtDate = browser.retry(currentPage, new WebBrowser.Function1Arg<WebTextInput, WebPage>() {
+      public WebTextInput call(WebPage currentPage) throws Exception {
+//        WebPage currentPage = browser.setToTopLevelWindow();
+        return currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateDebut_txtDate");
+      }
+    });
+//    currentPage = browser.setToTopLevelWindow();
+    debutTxtDate
       .setText(extractDay(from));
     Date to = getDate(0, -1);
     currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateFin_txtDate")
@@ -136,21 +162,31 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
 
     currentPage.getSelectById("MM_TELECHARGE_OPERATIONS_ddlChoixLogiciel")
       .selectByValue("0");
-    browser.waitForBackgroundJavaScript(1500);
-    currentPage = browser.setToTopLevelWindow();
-    currentPage = currentPage.getAnchorById("MM_TELECHARGE_OPERATIONS_m_ChoiceBar_lnkRight").click();
+    waitJavaScript(1500);
+//    currentPage = browser.setToTopLevelWindow();
+    currentPage = browser.retry(currentPage, new WebBrowser.Function1Arg<WebAnchor, WebPage>() {
+      public WebAnchor call(WebPage webPage) throws Exception {
+        return webPage.getAnchorById("MM_TELECHARGE_OPERATIONS_m_ChoiceBar_lnkRight");
+      }
+    }).click();
 
-    browser.waitForBackgroundJavaScript(1500);
+    waitJavaScript(1500);
 
-    Download download = currentPage.getAnchorById("MM_TELECHARGE_OPERATIONS_AR_lnkTelechargement_lnk")
-      .clickAndDownload();
+    Download download = browser.retry(currentPage, new WebBrowser.Function1Arg<WebAnchor,WebPage>() {
+      public WebAnchor call(WebPage webPage) throws Exception {
+        return webPage.getAnchorById("MM_TELECHARGE_OPERATIONS_AR_lnkTelechargement_lnk");
+      }
+    }).clickAndDownload();
     String s = download.readAsOfx();
     repository.update(account.getKey(), RealAccount.FILE_CONTENT, s);
 
-    currentPage.getAnchor(WebFilters.textContentContains("Télécharger des opérations"))
-      .click();
-    browser.waitForBackgroundJavaScript(1500);
-    currentPage = browser.setToTopLevelWindow();
+    browser.retry(currentPage, new WebBrowser.Function1Arg<WebAnchor, WebPage>() {
+      public WebAnchor call(WebPage webPage) throws Exception {
+        return webPage.getAnchor(WebFilters.textContentContains("Télécharger des opérations"));
+      }
+    }).click();
+    waitJavaScript(1500);
+//    currentPage = browser.setToTopLevelWindow();
     return currentPage;
   }
 
@@ -221,14 +257,15 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
               .parent().asAnchor()
               .click();
 
-            browser.waitForBackgroundJavaScript(2000);
+            waitJavaScript(2000);
             WebPanel cptdmte0 = browser.getCurrentPage().getPanelById("NavExt");
             cptdmte0.findFirst(WebFilters.and(WebFilters.tagEquals(HtmlAnchor.TAG_NAME), WebFilters.textContentContains("Mes comptes")))
               .asAnchor()
               .click();
-            WebPage currentPage = browser.setToTopLevelWindow();
+            WebPage currentPage = browser.getCurrentPage();
+//            browser.setToTopLevelWindow();
             currentPage.getAnchor(WebFilters.textContentContains("Télécharger des opérations")).click();
-            currentPage = browser.setToTopLevelWindow();
+//            currentPage = browser.setToTopLevelWindow();
             WebSelect comptes = currentPage.getSelectById("MM_TELECHARGE_OPERATIONS_m_ExDDLListeComptes");
             List<String> accounts = comptes.getEntryNames();
             for (String account : accounts) {
@@ -258,7 +295,7 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
         if (s.startsWith("https://logs2.xiti.com")) {
           return new StringWebResponse("", request.getUrl());
         }
-        System.out.println("Request : " + s);
+//        System.out.println("Request : " + s);
         WebResponse response = super.getResponse(request);
         return response;
       }
