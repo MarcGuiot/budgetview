@@ -77,6 +77,18 @@ public class TransactionChecker extends ViewChecker {
     return this;
   }
 
+  public TransactionChecker checkCategorizePopupDisabled(int... rows) {
+    if (rows.length == 0) {
+      Assert.fail("At least one row must be selected");
+    }
+    getTable().selectRows(rows);
+    assertFalse(PopupMenuInterceptor
+                  .run(getTable().triggerRightClick(rows[0], 0))
+                  .getSubMenu("Categorize")
+                  .isEnabled());
+    return this;
+  }
+
   public TransactionChecker categorize(String... labels) {
     select(labels);
     clickSeries(getTable().getRowIndex(TransactionView.LABEL_COLUMN_INDEX, labels[0].toUpperCase()));

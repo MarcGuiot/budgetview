@@ -20,7 +20,7 @@ public class TransactionTableActions implements PopupMenuFactory {
   public TransactionTableActions(Action copy, GlobRepository repository, Directory directory) {
     this.copy = copy;
     this.edit = new EditTransactionAction(repository, directory);
-    this.categorize = new CategorizeTransactionsAction(directory);
+    this.categorize = new CategorizeTransactionsAction(repository, directory);
     this.shift = new ShiftTransactionAction(repository, directory);
     this.delete = new DeleteTransactionAction(repository, directory);
     this.editSeries = new EditTransactionSeriesAction(repository, directory);

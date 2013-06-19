@@ -3,6 +3,7 @@ package org.globsframework.model;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
@@ -176,6 +177,14 @@ public class GlobList extends ArrayList<Glob> {
 
   public Set<Integer> getValueSet(IntegerField field) {
     Set<Integer> result = new HashSet<Integer>();
+    for (Glob glob : this) {
+      result.add(glob.get(field));
+    }
+    return result;
+  }
+
+  public Set<Boolean> getValueSet(BooleanField field) {
+    Set<Boolean> result = new HashSet<Boolean>();
     for (Glob glob : this) {
       result.add(glob.get(field));
     }

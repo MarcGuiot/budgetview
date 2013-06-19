@@ -130,7 +130,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     categorization.checkSelectedTableRows(1);
     categorization.checkCustomFilterVisible(false);
     categorization.showUncategorizedTransactionsOnly();
-    categorization.setNewVariable("SOMETHING ELSE", "Clothes");
+    categorization.setNewVariable("SOMETHING ELSE", "Clothes", 100.00);
 
     views.back();
     views.checkDataSelected();
@@ -162,6 +162,20 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     views.checkCategorizationSelected();
     categorization.checkShowsSelectedMonthsOnly();
     categorization.checkSelectedTableRow("SOMETHING ELSE");
+
+    timeline.selectMonth(200605);
+    views.selectData();
+    transactions.showPlannedTransactions();
+    transactions.initContent()
+      .add("11/05/2006", TransactionType.PLANNED, "Planned: Clothes", "", 100.00, "Clothes")
+      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00)
+      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
+      .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00)
+      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00)
+      .check();
+
+    transactions.checkCategorizePopupDisabled(0);
+    transactions.checkCategorizePopupDisabled(0,1);
   }
 
   public void testNavigatingInCategorizationIsDisabledForMirrorAndCreatedFromSeries() throws Exception {
