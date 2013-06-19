@@ -19,7 +19,7 @@ public class DeleteTransactionAction extends MultiSelectionAction {
     super(Lang.get("transaction.delete.action"), Transaction.TYPE, repository, directory);
   }
 
-  protected void process(GlobList transactions, GlobRepository repository, Directory directory) {
+  protected void processClick(GlobList transactions, GlobRepository repository, Directory directory) {
     if (hasPlanned(transactions)) {
       MessageDialog.show("transaction.delete.title.forbidden", MessageType.ERROR, directory,
                          "transaction.delete.planned");

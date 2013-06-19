@@ -43,6 +43,11 @@ public class ProjectEditionChecker extends GuiChecker {
     return this;
   }
 
+  public ProjectEditionChecker checkName(String text) {
+    assertThat(dialog.getTextBox("projectName").textEquals(text));
+    return this;
+  }
+
   public ProjectEditionChecker checkGauge(double actual, double planned) {
 
     assertThat(dialog.getTextBox("totalActual").textEquals(Formatting.toString(actual, BudgetArea.EXTRAS)));

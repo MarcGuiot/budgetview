@@ -49,7 +49,7 @@ public class AlignSeriesBudgetAmountsAction extends MultiSelectionAction {
     getActualAmountLabel().setText(Formatting.toString(value, getBudgetArea()));
   }
 
-  protected void process(GlobList selection, GlobRepository repository, Directory directory) {
+  protected void processClick(GlobList selection, GlobRepository repository, Directory directory) {
     repository.startChangeSet();
     try {
       double lastValue = 0.00;

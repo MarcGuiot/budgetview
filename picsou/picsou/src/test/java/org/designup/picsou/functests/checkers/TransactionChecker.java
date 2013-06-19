@@ -6,7 +6,6 @@ import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.functests.checkers.converters.BankDateCellConverter;
 import org.designup.picsou.functests.checkers.converters.DateCellConverter;
 import org.designup.picsou.functests.checkers.converters.SeriesCellConverter;
-import org.designup.picsou.functests.checkers.printing.TransactionPrintChecker;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
@@ -425,6 +424,38 @@ public class TransactionChecker extends ViewChecker {
                                 .triggerClick())
       .checkInfoMessageContains(message)
       .close();
+  }
+
+  public SeriesEditionDialogChecker editSeries(int... rowIndices) {
+    if (rowIndices.length == 0) {
+      Assert.fail("At least one index must be provided");
+    }
+    getTable().selectRows(rowIndices);
+    return SeriesEditionDialogChecker.open(PopupMenuInterceptor
+                                             .run(getTable().triggerRightClick(rowIndices[0], 0))
+                                             .getSubMenu(Lang.get("transaction.editSeries"))
+                                             .triggerClick());
+  }
+
+  public ProjectEditionChecker editProject(int... rowIndices) {
+    if (rowIndices.length == 0) {
+      Assert.fail("At least one index must be provided");
+    }
+    getTable().selectRows(rowIndices);
+    return ProjectEditionChecker.open(PopupMenuInterceptor
+                                        .run(getTable().triggerRightClick(rowIndices[0], 0))
+                                        .getSubMenu(Lang.get("transaction.editSeries"))
+                                        .triggerClick());
+  }
+
+  public void checkEditSeriesDisabled(int... rowIndices) {
+    if (rowIndices.length == 0) {
+      Assert.fail("At least one index must be provided");
+    }
+    getTable().selectRows(rowIndices);
+    assertThat(PopupMenuInterceptor
+                 .run(getTable().triggerRightClick(rowIndices[0], 0))
+                 .isEnabled());
   }
 
   public TransactionChecker checkAmountLabelColor(String label, String expectedColor) {

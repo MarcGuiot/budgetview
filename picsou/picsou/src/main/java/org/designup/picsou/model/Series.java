@@ -246,6 +246,10 @@ public class Series {
            series.get(Series.TARGET_ACCOUNT).equals(Account.EXTERNAL_ACCOUNT_ID);
   }
 
+  public static boolean isUncategorized(Integer seriesId) {
+    return UNCATEGORIZED_SERIES_ID.equals(seriesId);
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {

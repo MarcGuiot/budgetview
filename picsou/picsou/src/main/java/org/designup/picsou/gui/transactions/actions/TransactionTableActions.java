@@ -10,11 +10,12 @@ import javax.swing.*;
 
 public class TransactionTableActions implements PopupMenuFactory {
 
-  private EditTransactionAction edit;
-  private CategorizeTransactionsAction categorize;
-  private ShiftTransactionAction shift;
-  private DeleteTransactionAction delete;
-  private Action copy;
+  private final EditTransactionAction edit;
+  private final CategorizeTransactionsAction categorize;
+  private final ShiftTransactionAction shift;
+  private final DeleteTransactionAction delete;
+  private final Action copy;
+  private final EditTransactionSeriesAction editSeries;
 
   public TransactionTableActions(Action copy, GlobRepository repository, Directory directory) {
     this.copy = copy;
@@ -22,6 +23,7 @@ public class TransactionTableActions implements PopupMenuFactory {
     this.categorize = new CategorizeTransactionsAction(directory);
     this.shift = new ShiftTransactionAction(repository, directory);
     this.delete = new DeleteTransactionAction(repository, directory);
+    this.editSeries = new EditTransactionSeriesAction(repository, directory);
   }
 
   public DeleteTransactionAction getDelete() {
@@ -32,6 +34,7 @@ public class TransactionTableActions implements PopupMenuFactory {
     JPopupMenu popup = new JPopupMenu();
     popup.add(edit);
     popup.add(categorize);
+    popup.add(editSeries);
     popup.add(shift);
     popup.addSeparator();
     popup.add(copy);

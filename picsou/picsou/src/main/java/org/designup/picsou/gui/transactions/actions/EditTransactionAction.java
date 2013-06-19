@@ -22,7 +22,7 @@ public class EditTransactionAction extends MultiSelectionAction {
     super(Lang.get("transaction.edition.action"), Transaction.TYPE, repository, directory);
   }
 
-  protected void process(GlobList transactions, GlobRepository repository, Directory directory) {
+  protected void processClick(GlobList transactions, GlobRepository repository, Directory directory) {
     for (Glob transaction : transactions) {
       if (transaction.isTrue(Transaction.PLANNED)) {
         MessageDialog.show("transaction.edition.planned.title",

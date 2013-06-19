@@ -4,6 +4,7 @@ import org.designup.picsou.functests.checkers.ProjectEditionChecker;
 import org.designup.picsou.functests.checkers.components.TipChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.TransactionType;
 
 public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
@@ -556,5 +557,34 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     projects.selectMonth(201101);
     timeline.checkSelection("2011/01");
+  }
+
+  public void testEditProjectTransaction() throws Exception {
+    operations.hideSignposts();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/01/10")
+      .addTransaction("2010/11/01", 1000.00, "Income")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/11/15", -100.00, "Resa")
+      .load();
+
+    projects
+      .create()
+      .setName("Trip")
+      .setItem(0, "Booking", 201011, -200.00)
+      .validate();
+
+    timeline.selectMonth("2010/11");
+    categorization.setExtra("RESA", "Trip");
+
+    views.selectData();
+    transactions.initContent()
+      .add("15/11/2010", TransactionType.PRELEVEMENT, "RESA", "", -100.00, "Trip")
+      .add("01/11/2010", TransactionType.VIREMENT, "INCOME", "", 1000.00)
+      .check();
+    transactions.editProject(0)
+      .checkName("Trip")
+      .validate();
   }
 }

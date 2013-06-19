@@ -20,7 +20,7 @@ public class DeleteSubSeriesAction extends MultiSelectionAction {
     this.owner = owner;
   }
 
-  protected void process(GlobList subSeriesList, GlobRepository repository, Directory directory) {
+  protected void processClick(GlobList subSeriesList, GlobRepository repository, Directory directory) {
     GlobList transactions =
       repository.getAll(Transaction.TYPE,
                         fieldIn(Transaction.SUB_SERIES,

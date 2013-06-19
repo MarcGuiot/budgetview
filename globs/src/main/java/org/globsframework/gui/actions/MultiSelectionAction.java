@@ -4,7 +4,6 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
@@ -45,12 +44,12 @@ public abstract class MultiSelectionAction extends AbstractAction {
     processSelection(selection);
   }
 
+  public void actionPerformed(ActionEvent actionEvent) {
+    processClick(selectionService.getSelection(type), repository, directory);
+  }
+
   protected void processSelection(GlobList selection) {
   }
 
-  public void actionPerformed(ActionEvent actionEvent) {
-    process(selectionService.getSelection(type), repository, directory);
-  }
-
-  protected abstract void process(GlobList selection, GlobRepository repository, Directory directory);
+  protected abstract void processClick(GlobList selection, GlobRepository repository, Directory directory);
 }

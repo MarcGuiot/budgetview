@@ -31,7 +31,7 @@ public class AnnotateReconciledTransactionAction extends MultiSelectionAction {
     putValue(Action.NAME, Lang.get(reconcile ? "reconciliation.annotation.action.do" : "reconciliation.annotation.action.undo"));
   }
 
-  protected void process(GlobList transactions, GlobRepository repository, Directory directory) {
+  protected void processClick(GlobList transactions, GlobRepository repository, Directory directory) {
     boolean reconcile = shouldReconcile(transactions);
     try {
       repository.startChangeSet();

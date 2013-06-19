@@ -15,7 +15,7 @@
            iconTextGap="5" horizontalAlignment="left" horizontalTextPosition="left"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(550,360)">
+  <panel styleClass="dialog" preferredSize="(550,390)">
     <column styleClass="innerDialog">
 
       <label ref="title" styleClass="title"/>

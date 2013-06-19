@@ -18,7 +18,7 @@ public class PrintBudgetAction extends MultiSelectionAction {
     super(Lang.get("print.menu"), Month.TYPE, repository, directory);
   }
 
-  protected void process(GlobList months, GlobRepository repository, Directory directory) {
+  protected void processClick(GlobList months, GlobRepository repository, Directory directory) {
     if (dialog == null) {
       dialog = new PrintBudgetDialog(repository, directory);
     }
