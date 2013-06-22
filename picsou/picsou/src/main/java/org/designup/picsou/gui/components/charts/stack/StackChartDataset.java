@@ -13,7 +13,6 @@ public class StackChartDataset {
   private List<Element> elements = new ArrayList<Element>();
   private double total = 0.0;
   private String longestLabel = "";
-  private boolean containsSelection;
 
   public void add(String label, Double value) {
     add(label, value, null, false);
@@ -39,7 +38,6 @@ public class StackChartDataset {
       longestLabel = label;
     }
 
-    containsSelection |= selected;
   }
 
   public String getLabel(int index) {
@@ -106,10 +104,10 @@ public class StackChartDataset {
   }
 
   private static class Element implements Comparable<Element> {
-    String label;
-    double value;
-    private Key key;
-    boolean selected;
+    final String label;
+    final double value;
+    final private Key key;
+    final boolean selected;
 
     public Element(String label, double value, Key key, boolean selected) {
       this.label = label;

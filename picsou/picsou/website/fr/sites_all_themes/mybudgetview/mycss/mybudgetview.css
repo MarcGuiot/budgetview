@@ -46,13 +46,13 @@ h1 {
   text-align: center;
   font-size: 36pt;
   font-weight: bold;
-  color: #222;
+  color: #333;
   margin-top:20px;
   margin-bottom: 20px;
 }
 
 h1.multiline {
-  font-size: 24pt;  
+  font-size: 30pt;
 }
 
 
@@ -743,13 +743,16 @@ table.field-value td.value {
 #about #about-info td.left {
   font-size: 18pt;
   padding: 5px;
-  text-align: center;
+  padding-right: 10px;
+  border-right: solid 1px #DDD;
+  text-align: right;
   vertical-align: middle;
   width: 150px;
 }
 
 #about #about-info td.right{
   font-size: 11pt;
+  padding-left: 10px;
 }
 
 #about #about-contact p {
@@ -803,19 +806,35 @@ table.field-value td.value {
   margin-top: 3em;
 }
 
+#home div#text {
+  margin-top: 60px;
+  margin-right: 15px;
+  text-align: center;
+}
+
 #home div#text h1 {
   font-family: helvetica, arial, sans-serif;
   color: #333;
   font-size: 38px;
   letter-spacing: -1px;
   line-height: 1.1em;
-  margin: 50px 0px 20px;
+  margin: 0px 0px 20px;
   padding: 0px;
   text-align: center;
 }
 
+#home div#text table tr td {
+  vertical-align: middle;
+}
+
+#home div#text img#smiley {
+  margin-right: -60px;
+  margin-bottom: -20px;
+  margin-left: 10px;
+}
+
 #home div#text h2 {
-  color: #444;
+  color: #707070;
   font-family: georgia, arial, sans-serif;
   font-size: 18px;
   font-weight: normal;
@@ -863,14 +882,19 @@ table.field-value td.value {
   margin-right: auto;
 }
 
-#home #text {
-  margin-right: 30px;
-  text-align: center;
-}
-
 #home .intro {
   font-size: 24pt;
   line-height: 1.3em;
+}
+
+#home h2.section-title {
+  color: #FF9230;
+}
+
+#home #zoom h2.zoom-title {
+  text-align: center;
+  color: #333;
+  font-size: 18pt;
 }
 
 #home #zoom table td {
@@ -909,6 +933,7 @@ table.field-value td.value {
 #home div#testimonials-block {
   border: 1px solid #EEEEEE;
   background: #F6F6F6;
+  margin-top: 15px;
 }
 
 #home div#testimonials {
@@ -1061,10 +1086,6 @@ a.showLink:hover, a.hideLink:hover {
   text-align: center;
 }
 
-#home #steps-intro {
-  margin-top: 0;
-}
-
 #home #security {
   width: 70%;
   margin-top: 15px;
@@ -1094,6 +1115,7 @@ a.showLink:hover, a.hideLink:hover {
 
 #home #feature-list h2 {
   font-size: 12pt;
+  color: #333;
 }
 
 #home #feature-list table li {
