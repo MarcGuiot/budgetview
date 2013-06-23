@@ -364,6 +364,14 @@ public class GuiUtils {
     css.addRule("td { vertical-align:top;}");
   }
 
+  public static JTextArea createReadOnlyTextArea(String content) {
+    JTextArea textArea = new JTextArea();
+    textArea.setText(content);
+    textArea.setCaretPosition(0);
+    textArea.setEditable(false);
+    return textArea;
+  }
+
   public static void loadCssResource(String path, JEditorPane htmlEditor, Class referenceClass) {
     InputStream is = referenceClass.getResourceAsStream(path);
     if (is == null) {

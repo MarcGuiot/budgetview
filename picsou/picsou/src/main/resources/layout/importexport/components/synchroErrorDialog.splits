@@ -1,0 +1,52 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+  <style selector="button.next"
+         ui="hyperlinkButtonWithoutUnderline"
+         icon="rightArrow(10,12,9,9,hyperlink)"
+         foreground="hyperlink"
+         horizontalTextPosition="left" iconTextGap="5"
+         fill="none" anchor="right"
+         marginTop="10"/>
+    <style selector="scrollPane" forceVerticalScroll="true"/>
+    <style selector="scrollPane column" margin="10"/>
+  </styles>
+
+  <panel styleClass="dialog" preferredSize="(500,500)" opaque="true">
+    <column styleClass="innerDialog">
+      <label text="$synchroError.title" name="title" styleClass="title"/>
+
+      <cards ref="cards">
+        <card name="intro">
+          <scrollPane>
+            <column>
+              <label icon="synchro_error.png" margin="10" anchor="center" fill="none"/>
+              <htmlEditorPane text="$synchroError.intro.message" name="message" weightY="0"/>
+              <button action="link" styleClass="next"/>
+              <filler fill="vertical"/>
+            </column>
+          </scrollPane>
+        </card>
+        <card name="send">
+          <column>
+            <htmlEditorPane name="detailsIntro" text="$synchroError.send.message" marginBottom="10" weightY="0"/>
+            <scrollPane>
+              <column>
+                <textArea ref="details"/>
+                <filler fill="vertical"/>
+              </column>
+            </scrollPane>
+            <row marginTop="5" marginBottom="15">
+              <filler fill="horizontal"/>
+              <button action="copy"/>
+              <filler fill="horizontal"/>
+            </row>
+          </column>
+        </card>
+      </cards>
+
+    </column>
+  </panel>
+
+</splits>
