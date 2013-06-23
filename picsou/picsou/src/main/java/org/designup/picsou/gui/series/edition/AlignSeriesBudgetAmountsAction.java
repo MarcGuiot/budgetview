@@ -19,8 +19,12 @@ public class AlignSeriesBudgetAmountsAction extends MultiSelectionAction {
   private JLabel label;
 
   public AlignSeriesBudgetAmountsAction(GlobRepository repository, Directory directory) {
-    super("", SeriesBudget.TYPE, repository, directory);
+    super(SeriesBudget.TYPE, repository, directory);
     getActualAmountLabel().setToolTipText(Lang.get("seriesAmountEdition.alignValue.actual.tooltip"));
+  }
+
+  protected String getLabel(GlobList selection) {
+    return "";
   }
 
   public JLabel getActualAmountLabel() {

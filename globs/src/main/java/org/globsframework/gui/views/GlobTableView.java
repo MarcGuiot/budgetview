@@ -15,8 +15,8 @@ import org.globsframework.gui.views.utils.LabelCustomizers;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
-import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobMatcher;
@@ -55,6 +55,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   private LabelCustomizer defaultLabelCustomizer = LabelCustomizer.NO_OP;
   private LabelTableCellRenderer headerRenderer;
   private SavingInfo reorderInfo;
+  private MouseAdapter popupListener;
 
   public static GlobTableView init(GlobType type, GlobRepository globRepository,
                                    Comparator<Glob> comparator, Directory directory) {
@@ -224,6 +225,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
 
   public GlobTableView setPopupFactory(PopupMenuFactory factory) {
     this.popupMenuFactory = factory;
+    initPopupFactory();
     return this;
   }
 
@@ -316,7 +318,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       if (initialFilter != null) {
         setFilter(initialFilter);
       }
-      if (reorderInfo != null){
+      if (reorderInfo != null) {
         reorderInfo.init();
       }
     }
@@ -417,7 +419,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     if (structChanged) {
       resetColumns();
     }
-    if (reorderInfo != null){
+    if (reorderInfo != null) {
       reorderInfo.init();
     }
   }
@@ -492,21 +494,21 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
       this.repository.addChangeListener(this);
     }
 
-    public void init(){
+    public void init() {
       TableColumnModel tableColumnModel = tableView.getComponent().getColumnModel();
       tableColumnModel.removeColumnModelListener(this);
       int i = 0;
       Glob glob = repository.find(key);
-      if (glob == null){
+      if (glob == null) {
         return;
       }
-      while (i != tableColumnModel.getColumnCount()){
+      while (i != tableColumnModel.getColumnCount()) {
         int modelIndex = tableColumnModel.getColumn(i).getModelIndex();
         Integer wantedPos = glob.get(access.getPosField(modelIndex));
-        if (wantedPos == null){
+        if (wantedPos == null) {
           break;
         }
-        if (wantedPos != i){
+        if (wantedPos != i) {
           tableView.getComponent().moveColumn(i, wantedPos);
           i = 0;
         }
@@ -526,7 +528,7 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     public void columnMoved(TableColumnModelEvent e) {
       TableColumnModel tableColumnModel = tableView.getComponent().getColumnModel();
       repository.startChangeSet();
-      for (int i = 0; i < tableColumnModel.getColumnCount(); i++){
+      for (int i = 0; i < tableColumnModel.getColumnCount(); i++) {
         repository.update(key, access.getPosField(tableColumnModel.getColumn(i).getModelIndex()), i);
       }
       repository.completeChangeSet();
@@ -542,8 +544,8 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     }
 
     public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-      if (changedTypes.contains(key.getGlobType())){
-        if (tableView.table != null){
+      if (changedTypes.contains(key.getGlobType())) {
+        if (tableView.table != null) {
           init();
         }
       }
@@ -554,37 +556,44 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     IntegerField getPosField(int modelIndex);
   }
 
-  public void registerSaving(Key key, FieldAccess fieldAccess, GlobRepository repository){
+  public void registerSaving(Key key, FieldAccess fieldAccess, GlobRepository repository) {
     reorderInfo = new SavingInfo(this, key, fieldAccess, repository);
-    if (table != null){
+    if (table != null) {
       reorderInfo.init();
     }
   }
 
   private void initPopupFactory() {
     if (popupMenuFactory == null) {
+      if (popupListener != null) {
+        table.removeMouseListener(popupListener);
+        popupListener = null;
+      }
       return;
     }
-    table.addMouseListener(new MouseAdapter() {
-      public void mousePressed(MouseEvent event) {
-        selectRowOnRightClickIfNeeded(table, event);
-        showPopup(event);
-      }
+    if ((table != null) && (popupListener == null)) {
+      popupListener = new MouseAdapter() {
+        public void mousePressed(MouseEvent event) {
+          selectRowOnRightClickIfNeeded(table, event);
+          showPopup(event);
+        }
 
-      public void mouseReleased(MouseEvent event) {
-        selectRowOnRightClickIfNeeded(table, event);
-        showPopup(event);
-      }
+        public void mouseReleased(MouseEvent event) {
+          selectRowOnRightClickIfNeeded(table, event);
+          showPopup(event);
+        }
 
-      private void showPopup(MouseEvent e) {
-        if (e.isPopupTrigger()) {
-          JPopupMenu popup = popupMenuFactory.createPopup();
-          if (popup != null) {
-            popup.show(e.getComponent(), e.getX(), e.getY());
+        private void showPopup(MouseEvent e) {
+          if (e.isPopupTrigger()) {
+            JPopupMenu popup = popupMenuFactory.createPopup();
+            if (popup != null) {
+              popup.show(e.getComponent(), e.getX(), e.getY());
+            }
           }
         }
-      }
-    });
+      };
+      table.addMouseListener(popupListener);
+    }
   }
 
   private void selectRowOnRightClickIfNeeded(JTable table, MouseEvent e) {
@@ -924,13 +933,24 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
     protected abstract GlobList getGlobsToCopy();
   }
 
-  private class CopySelectionToClipboardAction extends AbstractCopyToClipboardAction {
-
-    private CopySelectionToClipboardAction() {
-    }
+  private class CopySelectionToClipboardAction extends AbstractCopyToClipboardAction implements ListSelectionListener {
 
     private CopySelectionToClipboardAction(String label) {
       super(label);
+      getComponent().getSelectionModel().addListSelectionListener(this);
+      update();
+    }
+
+    private CopySelectionToClipboardAction() {
+      this(null);
+    }
+
+    public void valueChanged(ListSelectionEvent e) {
+      update();
+    }
+
+    private void update() {
+      setEnabled(!getComponent().getSelectionModel().isSelectionEmpty());
     }
 
     protected GlobList getGlobsToCopy() {

@@ -21,11 +21,9 @@ public abstract class MultiSelectionAction extends AbstractAction {
   protected final GlobRepository repository;
   protected final Directory directory;
 
-  public MultiSelectionAction(String name,
-                              GlobType type,
+  public MultiSelectionAction(GlobType type,
                               GlobRepository repository,
                               Directory directory) {
-    super(name);
     this.type = type;
     this.repository = repository;
     this.directory = directory;
@@ -40,9 +38,12 @@ public abstract class MultiSelectionAction extends AbstractAction {
 
   private void update() {
     GlobList selection = selectionService.getSelection(type);
+    putValue(NAME, getLabel(selection));
     setEnabled(!selection.isEmpty());
     processSelection(selection);
   }
+
+  protected abstract String getLabel(GlobList selection);
 
   public void actionPerformed(ActionEvent actionEvent) {
     processClick(selectionService.getSelection(type), repository, directory);

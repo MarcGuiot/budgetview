@@ -421,9 +421,13 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public TransactionEditionChecker edit(int rowIndex) {
+    return edit(rowIndex, false);
+  }
+
+  public TransactionEditionChecker edit(int rowIndex, boolean plural) {
     return TransactionEditionChecker.open(PopupMenuInterceptor
                                             .run(getTable().triggerRightClick(rowIndex, 0))
-                                            .getSubMenu("Edit")
+                                            .getSubMenu(plural ? Lang.get("transaction.edition.action.multi") : Lang.get("transaction.edition.action.single"))
                                             .triggerClick());
   }
 
@@ -432,7 +436,7 @@ public class TransactionChecker extends ViewChecker {
     table.selectRows(rowIndices);
     MessageDialogChecker.open(PopupMenuInterceptor
                                 .run(table.triggerRightClick(rowIndices[0], 0))
-                                .getSubMenu("Edit")
+                                .getSubMenu(rowIndices.length > 1 ? Lang.get("transaction.edition.action.multi") : Lang.get("transaction.edition.action.single"))
                                 .triggerClick())
       .checkInfoMessageContains(message)
       .close();

@@ -32,14 +32,22 @@ public class TransactionTableActions implements PopupMenuFactory {
 
   public JPopupMenu createPopup() {
     JPopupMenu popup = new JPopupMenu();
+    addActions(popup, true);
+    return popup;
+  }
+
+  public void addActions(JPopupMenu popup, boolean addSeparators) {
     popup.add(edit);
     popup.add(categorize);
     popup.add(editSeries);
     popup.add(shift);
-    popup.addSeparator();
+    if (addSeparators) {
+      popup.addSeparator();
+    }
     popup.add(copy);
-    popup.addSeparator();
+    if (addSeparators) {
+      popup.addSeparator();
+    }
     popup.add(delete);
-    return popup;
   }
 }

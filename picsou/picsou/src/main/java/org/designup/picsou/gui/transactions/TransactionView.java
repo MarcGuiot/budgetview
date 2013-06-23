@@ -118,13 +118,13 @@ public class TransactionView extends View implements Filterable {
       }
     });
 
-
-    JPopupMenu tableMenu = new JPopupMenu();
-    tableMenu.add(showPlannedTransactionsCheckbox);
-    tableMenu.addSeparator();
-    tableMenu.add(view.getCopyTableAction(Lang.get("copyTable")));
-    tableMenu.add(new PrintTransactionsAction(view, repository, directory));
-    builder.add("actionsMenu", new JPopupButton(Lang.get("budgetView.actions"), tableMenu));
+    JPopupMenu tablePopup = new JPopupMenu();
+    tableActions.addActions(tablePopup, false);
+    tablePopup.addSeparator();
+    tablePopup.add(showPlannedTransactionsCheckbox);
+    tablePopup.add(view.getCopyTableAction(Lang.get("copyTable")));
+    tablePopup.add(new PrintTransactionsAction(view, repository, directory));
+    builder.add("actionsMenu", new JPopupButton(Lang.get("budgetView.actions"), tablePopup));
 
     builder.addLabel("sum", Transaction.TYPE,
                      GlobListStringifiers.sum(Formatting.DECIMAL_FORMAT, false, Transaction.AMOUNT))
@@ -132,13 +132,12 @@ public class TransactionView extends View implements Filterable {
 
     SelectedAccountPositionsChartView accountChart =
       new SelectedAccountPositionsChartView("accountChart",
-                                               new SelectionHistoChartRange(repository, directory),
-                                               repository, directory);
+                                            new SelectionHistoChartRange(repository, directory),
+                                            repository, directory);
     accountChart.registerComponents(builder);
 
     GlobLabelView legend = builder.addLabel("accountChartLegend", Account.TYPE, new LegendStringifier(directory));
     selectionService.addListener(legend, Month.TYPE);
-
 
     parentBuilder.add("transactionView", builder);
   }
@@ -214,11 +213,11 @@ public class TransactionView extends View implements Filterable {
     headerPainter = PicsouTableHeaderPainter.install(view, directory);
     this.filterManager = new FilterManager(this);
 
+    JTable table = view.getComponent();
     tableActions = new TransactionTableActions(view.getCopySelectionAction(Lang.get("copy")),
-                                                                  repository, directory);
+                                               repository, directory);
     view.setPopupFactory(tableActions);
 
-    JTable table = view.getComponent();
     table.setDefaultRenderer(Glob.class,
                              new TransactionTableRenderer(table.getDefaultRenderer(Glob.class),
                                                           rendererColors,

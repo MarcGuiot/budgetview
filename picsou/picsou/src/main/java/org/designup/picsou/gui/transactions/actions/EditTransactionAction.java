@@ -19,7 +19,11 @@ public class EditTransactionAction extends MultiSelectionAction {
   private EditTransactionDialog dialog;
 
   public EditTransactionAction(GlobRepository repository, Directory directory) {
-    super(Lang.get("transaction.edition.action"), Transaction.TYPE, repository, directory);
+    super(Transaction.TYPE, repository, directory);
+  }
+
+  protected String getLabel(GlobList selection) {
+    return selection.size() > 1 ? Lang.get("transaction.edition.action.multi")  : Lang.get("transaction.edition.action.single");
   }
 
   protected void processClick(GlobList transactions, GlobRepository repository, Directory directory) {

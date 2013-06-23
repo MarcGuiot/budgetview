@@ -9,12 +9,12 @@ import org.designup.picsou.gui.categorization.special.*;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
 import org.designup.picsou.gui.components.JPopupButton;
-import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.filtering.FilterClearer;
 import org.designup.picsou.gui.components.filtering.FilterListener;
 import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;
+import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.stringifiers.SeriesDescriptionStringifier;
 import org.designup.picsou.gui.description.stringifiers.SeriesNameComparator;
 import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
@@ -53,6 +53,7 @@ import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.GlobRepeat;
+import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.utils.ShowHideButton;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
@@ -176,9 +177,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
                              transactionComparator,
                              new OnChangeLabelCustomizer(fontSize(9)),
                              repository, directory);
-
-    CategorizationTableActions actions = new CategorizationTableActions(transactionTable.getCopySelectionAction(Lang.get("copy")),
-                                                                        repository, directory);
+    final CategorizationTableActions actions = new CategorizationTableActions(transactionTable.getCopySelectionAction(Lang.get("copy")),
+                                                                              repository, directory);
     transactionTable.setPopupFactory(actions);
 
     headerPainter = PicsouTableHeaderPainter.install(transactionTable, directory);
@@ -186,14 +186,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
     transactionCreation = new TransactionCreationPanel(repository, directory, parentDirectory);
     transactionCreation.registerComponents(builder);
 
-    JPopupMenu tableMenu = new JPopupMenu();
-    tableMenu.add(transactionCreation.getShowHideAction());
-    tableMenu.addSeparator();
-    tableMenu.add(new ShowReconciliationAction(repository, directory));
-    tableMenu.addSeparator();
-    tableMenu.add(transactionTable.getCopyTableAction(Lang.get("copyTable")));
-    tableMenu.add(new PrintTransactionsAction(transactionTable, repository, directory));
-    builder.add("actionsMenu", new JPopupButton(Lang.get("budgetView.actions"), tableMenu));
+    builder.add("actionsMenu", new JPopupButton(Lang.get("budgetView.actions"), new TablePopupFactory(actions)));
 
     final JTable table = transactionTable.getComponent();
     TransactionKeyListener.install(table, -1).setDeleteEnabled(actions.getDelete());
@@ -310,7 +303,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
                  chain(extraLabelCustomizer, tooltip(SeriesDescriptionStringifier.transactionSeries(), repository)))
       .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL),
                  chain(BOLD, new ReconciliationCustomizer(directory), autoTooltip()))
-      .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT), 
+      .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT),
                  LabelCustomizers.chain(ALIGN_RIGHT, new TransactionAmountCustomizer(colors)));
   }
 
@@ -561,7 +554,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
     transactionTable.select(transactions);
   }
 
-
   public void showUncategorizedForSelectedMonths() {
     showWithMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
   }
@@ -762,6 +754,33 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private class ToReconcileMatcher implements GlobMatcher {
     public boolean matches(Glob transaction, GlobRepository repository) {
       return Transaction.isToReconcile(transaction) && !categorizedTransactions.contains(transaction.getKey());
+    }
+  }
+
+  private class TablePopupFactory implements PopupMenuFactory {
+    private final CategorizationTableActions actions;
+    private Action showHideAction;
+    private ShowReconciliationAction showReconciliationAction;
+    private Action copyTableAction;
+    private PrintTransactionsAction printTransactionsAction;
+
+    public TablePopupFactory(CategorizationTableActions actions) {
+      this.actions = actions;
+      this.showHideAction = transactionCreation.getShowHideAction();
+      this.showReconciliationAction = new ShowReconciliationAction(repository, directory);
+      this.copyTableAction = transactionTable.getCopyTableAction(Lang.get("copyTable"));
+      this.printTransactionsAction = new PrintTransactionsAction(transactionTable, repository, directory);
+    }
+
+    public JPopupMenu createPopup() {
+      JPopupMenu tableMenu = new JPopupMenu();
+      actions.addPopupActions(tableMenu, false);
+      tableMenu.addSeparator();
+      tableMenu.add(showHideAction);
+      tableMenu.add(showReconciliationAction);
+      tableMenu.add(copyTableAction);
+      tableMenu.add(printTransactionsAction);
+      return tableMenu;
     }
   }
 }

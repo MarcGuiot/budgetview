@@ -16,7 +16,11 @@ import java.util.Set;
 public class EditTransactionSeriesAction extends MultiSelectionAction {
 
   public EditTransactionSeriesAction(GlobRepository repository, Directory directory) {
-    super(Lang.get("transaction.editSeries"), Transaction.TYPE, repository, directory);
+    super(Transaction.TYPE, repository, directory);
+  }
+
+  protected String getLabel(GlobList selection) {
+    return Lang.get("transaction.editSeries");
   }
 
   protected void processSelection(GlobList selection) {

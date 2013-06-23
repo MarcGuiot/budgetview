@@ -14,12 +14,16 @@ import javax.swing.*;
 public class AnnotateReconciledTransactionAction extends MultiSelectionAction {
 
   public AnnotateReconciledTransactionAction(GlobRepository repository, Directory directory) {
-    super("", Transaction.TYPE, repository, directory);
+    super(Transaction.TYPE, repository, directory);
     repository.addChangeListener(new TypeChangeSetListener(Transaction.TYPE) {
       protected void update(GlobRepository repository) {
         updateLabel();
       }
     });
+  }
+
+  protected String getLabel(GlobList selection) {
+    return "";
   }
 
   protected void processSelection(GlobList selection) {

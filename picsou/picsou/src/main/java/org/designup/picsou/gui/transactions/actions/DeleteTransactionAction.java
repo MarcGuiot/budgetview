@@ -16,7 +16,11 @@ import java.util.Iterator;
 public class DeleteTransactionAction extends MultiSelectionAction {
 
   public DeleteTransactionAction(GlobRepository repository, Directory directory) {
-    super(Lang.get("transaction.delete.action"), Transaction.TYPE, repository, directory);
+    super(Transaction.TYPE, repository, directory);
+  }
+
+  protected String getLabel(GlobList selection) {
+    return Lang.get("transaction.delete.action");
   }
 
   protected void processClick(GlobList transactions, GlobRepository repository, Directory directory) {

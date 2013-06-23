@@ -117,8 +117,8 @@ public class UserPreferences {
   }
 
   public static boolean isReconciliationShown(GlobRepository repository) {
-    Glob prefs = repository.findOrCreate(KEY);
-    return prefs.isTrue(SHOW_RECONCILIATION);
+    Glob prefs = repository.find(KEY);
+    return (prefs != null) && prefs.isTrue(SHOW_RECONCILIATION);
   }
 
   public static void initMobilePassword(GlobRepository repository, boolean force) {

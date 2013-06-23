@@ -103,11 +103,8 @@ public class TransactionDetailsView extends View {
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
 
-    JPopupMenu menu = new JPopupMenu();
-    menu.add(new EditTransactionAction(repository, directory));
-    menu.add(actions.getShift());
-    menu.add(actions.getSplit());
-    builder.add("transactionActions", new JPopupButton(Lang.get("budgetView.actions"), menu));
+    builder.add("transactionActions",
+                new JPopupButton(Lang.get("transaction.details.actions"), actions.createEditPopup()));
 
     return builder;
   }

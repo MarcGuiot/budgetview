@@ -16,8 +16,12 @@ public class DeleteSubSeriesAction extends MultiSelectionAction {
   private JDialog owner;
 
   public DeleteSubSeriesAction(GlobRepository repository, Directory directory, JDialog owner) {
-    super(Lang.get("delete"), SubSeries.TYPE, repository, directory);
+    super(SubSeries.TYPE, repository, directory);
     this.owner = owner;
+  }
+
+  protected String getLabel(GlobList selection) {
+    return Lang.get("delete");
   }
 
   protected void processClick(GlobList subSeriesList, GlobRepository repository, Directory directory) {

@@ -1139,6 +1139,8 @@ public class GlobTableViewTest extends GuiComponentTestCase {
       .addColumn("Other", new DefaultTableCellRenderer(), new DummyStringifier("b"));
     JTable jTable = view.getComponent();
     Table table = new Table(jTable);
+    Action action = view.getCopySelectionAction("Copy rows");
+    assertFalse(action.isEnabled());
 
     table.selectRows(1, 3);
     KeyUtils.pressKey(jTable, org.uispec4j.Key.plaformSpecificCtrl(org.uispec4j.Key.C));
@@ -1148,12 +1150,17 @@ public class GlobTableViewTest extends GuiComponentTestCase {
                  Clipboard.getContentAsText());
 
     table.selectRows(2);
-    Action action = view.getCopySelectionAction("Copy rows");
     assertEquals("Copy rows", action.getValue(Action.NAME));
     action.actionPerformed(null);
     assertEquals("id\tCustom\tOther\n" +
                  "3\ta3\tb3\n",
                  Clipboard.getContentAsText());
+
+    table.clearSelection();
+    assertFalse(action.isEnabled());
+
+    table.selectRows(2);
+    assertTrue(action.isEnabled());
 
     view.getCopySelectionAction("Copy rows", 1).actionPerformed(null);
     assertEquals("id\tOther\n" +

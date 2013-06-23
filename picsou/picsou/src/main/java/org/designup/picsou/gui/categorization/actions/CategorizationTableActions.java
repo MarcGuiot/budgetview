@@ -32,30 +32,41 @@ public class CategorizationTableActions implements PopupMenuFactory {
     this.delete = new DeleteTransactionAction(repository, directory);
   }
 
-  public ShiftTransactionAction getShift() {
-    return shift;
-  }
-
-  public SplitTransactionAction getSplit() {
-    return split;
-  }
-
   public DeleteTransactionAction getDelete() {
     return delete;
   }
 
   public JPopupMenu createPopup() {
     JPopupMenu popup = new JPopupMenu();
+    addPopupActions(popup, true);
+    return popup;
+  }
+
+  public void addPopupActions(JPopupMenu popup, boolean addSeparators) {
     popup.add(edit);
     popup.add(split);
     popup.add(shift);
-
     if (UserPreferences.isReconciliationShown(repository)) {
       popup.add(reconcile);
     }
-    popup.addSeparator();
+    if (addSeparators) {
+      popup.addSeparator();
+    }
     popup.add(copy);
-    popup.addSeparator();
+    if (addSeparators) {
+      popup.addSeparator();
+    }
+    popup.add(delete);
+  }
+
+  public JPopupMenu createEditPopup() {
+    JPopupMenu popup = new JPopupMenu();
+    popup.add(edit);
+    popup.add(split);
+    popup.add(shift);
+    if (UserPreferences.isReconciliationShown(repository)) {
+      popup.add(reconcile);
+    }
     popup.add(delete);
     return popup;
   }

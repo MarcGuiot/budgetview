@@ -18,5 +18,4 @@ public class JPopupButton extends JButton {
       }
     });
   }
-
 }

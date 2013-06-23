@@ -13,7 +13,11 @@ import java.util.Set;
 public class CategorizeTransactionsAction extends MultiSelectionAction {
 
   public CategorizeTransactionsAction(GlobRepository repository, Directory directory) {
-    super(Lang.get("transaction.categorize.action"), Transaction.TYPE, repository, directory);
+    super(Transaction.TYPE, repository, directory);
+  }
+
+  protected String getLabel(GlobList selection) {
+    return Lang.get("transaction.categorize.action");
   }
 
   protected void processSelection(GlobList selection) {
