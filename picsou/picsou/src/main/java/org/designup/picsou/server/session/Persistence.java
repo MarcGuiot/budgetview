@@ -54,6 +54,8 @@ public interface Persistence {
 
   void getSnapshotData(String fileName, SerializedOutput output, Integer userId);
 
+  boolean hasChanged(Integer userId);
+
   class UserInfo {
     final public Integer userId;
     final public boolean isRegistered;

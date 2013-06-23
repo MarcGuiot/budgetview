@@ -17,10 +17,12 @@ class DurableOutputStream {
   private PrevaylerDirectory prevaylerDirectory;
   private FileDescriptor fd;
   private DirectAccountDataManager manager;
+  private long transactionIdAtCreation;
 
   public DurableOutputStream(DirectAccountDataManager manager, long nextTransactionVersion, Integer userId) {
     this.manager = manager;
     this.nextTransactionVersion = nextTransactionVersion;
+    transactionIdAtCreation = nextTransactionVersion;
     prevaylerDirectory = new PrevaylerDirectory(manager.getPath(userId));
     try {
       prevaylerDirectory.produceDirectory();
@@ -76,5 +78,10 @@ class DurableOutputStream {
 
   public PrevaylerDirectory getPrevaylerDirectory() {
     return prevaylerDirectory;
+  }
+
+  public boolean checkIsLast() {
+    File file = prevaylerDirectory.findInitialJournalFile(Integer.MAX_VALUE);
+    return file == null || PrevaylerDirectory.journalVersion(file) <= transactionIdAtCreation;
   }
 }

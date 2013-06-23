@@ -287,6 +287,10 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new WebSpan(browser, getSingleElement("span", HtmlSpan.class));
   }
 
+  public WebSpan getSpanById(String id) throws WebParsingError {
+    return new WebSpan(browser, getElementById(id, HtmlSpan.class));
+  }
+
   public WebImageMap getImageMapByName(String name) throws WebParsingError {
     return new WebImageMap(browser, getElementByName("map", name, HtmlMap.class));
   }

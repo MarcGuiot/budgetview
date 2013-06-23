@@ -68,7 +68,6 @@ public class OfxImporter implements AccountFileImporter {
     private String memo;
     private String transactionType;
     private String checkNum;
-    private boolean forceAccount = false;
     private Integer lastTransactionId;
 
     public Functor(GlobRepository targetRepository) {
@@ -106,6 +105,9 @@ public class OfxImporter implements AccountFileImporter {
         isCreditCard = false;
       }
       else if (tag.equalsIgnoreCase("STMTTRN")) {
+        if (currentAccount == null){
+
+        }
         int accountId = currentAccount.get(RealAccount.ID);
         lastTransactionId = generator.getNextId(ImportedTransaction.ID, 1);
         Glob transaction =
@@ -292,9 +294,6 @@ public class OfxImporter implements AccountFileImporter {
     }
 
     private void updateAccount(final String accountNumber) {
-      if (forceAccount) {
-        return;
-      }
       Integer bankId = null;
       Integer bankEntityId = BankEntity.find(bankEntityLabel, repository);
       if (bankEntityId != null) {

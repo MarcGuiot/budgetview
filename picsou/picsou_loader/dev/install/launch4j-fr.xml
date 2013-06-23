@@ -1,0 +1,42 @@
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>../../target/budgetviewloader-1.0.jar</jar>
+  <outfile>budgetview.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl>http://www.mybudgetview.fr/support</supportUrl>
+  <customProcName>true</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon>../../dev/images/budgetview.ico</icon>
+  <jre>
+    <path></path>
+    <minVersion>1.5.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <maxHeapSize>220</maxHeapSize>
+    <opt>-Dbudgetview.exe.dir=&quot;%EXEDIR%&quot;</opt>
+  </jre>
+  <splash>
+    <file>../../dev/images/budgetview_startup.bmp</file>
+    <waitForWindow>true</waitForWindow>
+    <timeout>60</timeout>
+    <timeoutErr>true</timeoutErr>
+  </splash>
+  <messages>
+    <startupErr>Une erreur est survenue au demarage. Nous sommes désolé pour ce désagrement.
+Pouvez vous nous contacter via notre support : http://www.mybudgetview.fr/support
+</startupErr>
+    <bundledJreErr>This application was configured to use a bundled Java Runtime Environment but the runtime is missing or corrupted.</bundledJreErr>
+    <jreVersionErr>Java n&apos;a pas été trouvé, pouvez vous l&apos;installer depuis l&apos;addresse http://java.com/download 
+et lancer de nouveau BudgetView</jreVersionErr>
+    <launcherErr>The registry refers to a nonexistent Java Runtime Environment installation or the runtime is corrupted.</launcherErr>
+    <instanceAlreadyExistsMsg>BudgetView ne semble pas avoir été installé correctement. 
+Pouvez vous le desinstaller et installer de nouveau budgetview (vos donnés ne seront pas détruites)
+</instanceAlreadyExistsMsg>
+  </messages>
+</launch4jConfig>

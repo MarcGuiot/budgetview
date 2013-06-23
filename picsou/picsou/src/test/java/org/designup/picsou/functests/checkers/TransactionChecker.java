@@ -304,8 +304,8 @@ public class TransactionChecker extends ViewChecker {
     return new ConfirmationDialogChecker(getDeleteDialog(rows));
   }
 
-  private ConfirmationDialogChecker openDeletionDialog() {
-    return new ConfirmationDialogChecker(getDeleteDialog());
+  public TransactionDeleteChecker openDeletionDialog() {
+    return new TransactionDeleteChecker(getDeleteDialog());
   }
 
   private MessageDialogChecker openDeletionForbiddenDialog(int row) {

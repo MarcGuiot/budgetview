@@ -164,7 +164,7 @@ public class PositionTrigger implements ChangeSetListener {
                                                                        -(positions[positions.length - 2].get(Transaction.ACCOUNT_POSITION))),
                               value(Transaction.ACCOUNT_POSITION, 0.));
           }
-          if (openClose.openOperation != null) {
+          if (openClose.openOperation != null && positions.length > 1) {
             double value = (positions[1].get(Transaction.ACCOUNT_POSITION)) - positions[1].get(Transaction.AMOUNT);
             repository.update(openClose.openOperation.getKey(), value(Transaction.AMOUNT, value),
                               value(Transaction.ACCOUNT_POSITION, 0.));

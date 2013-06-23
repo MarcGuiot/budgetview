@@ -20,6 +20,8 @@ public interface ClientTransport {
 
   SerializedInput getUserData(Long sessionId, byte[] bytes);
 
+  SerializedInput hasChanged(Long sessionId, byte[] bytes);
+
   SerializedInput restore(Long sessionId, byte[] data);
 
   void disconnect(Long sessionId, byte[] bytes);

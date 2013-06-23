@@ -21,10 +21,16 @@ import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.license.LicenseCheckerThread;
 import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.startup.SlaValidationDialog;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.undo.UndoRedoService;
+import org.designup.picsou.model.CurrentMonth;
+import org.designup.picsou.model.User;
+import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -40,6 +46,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class MainWindow implements WindowManager {
   public static final String DEMO_USER_NAME = "anonymous";
@@ -213,7 +221,8 @@ public class MainWindow implements WindowManager {
   public void show() {
     loginPanel = new LoginPanel(this, directory);
     picsouInit = PicsouInit.init(serverAccess, directory, registered, badJarVersion);
-    mainPanel = MainPanel.init(picsouInit.getRepository(), picsouInit.getDirectory(), this);
+    final GlobRepository repository = picsouInit.getRepository();
+    mainPanel = MainPanel.init(repository, picsouInit.getDirectory(), this);
 
     windowOpenListener = new WindowAdapter() {
       public void windowOpened(WindowEvent e) {
@@ -232,6 +241,37 @@ public class MainWindow implements WindowManager {
       public void windowClosed(WindowEvent e) {
         mainPanel.end();
         picsouApplication.shutdown();
+      }
+
+      public void windowActivated(WindowEvent e) {
+
+        if (serverAccess.hasChanged()) {
+          Glob userPrefs = repository.find(UserPreferences.KEY);
+          Glob user = repository.find(User.KEY);
+          if (userPrefs != null && user != null) {
+            final PicsouInit.PreLoadData preLoadData =
+              picsouInit.loadUserData(user.get(User.NAME), user.get(User.IS_DEMO_USER),
+                                      user.get(User.AUTO_LOGIN));
+            preLoadData.load();
+          }
+        }
+        else {
+          if (TimeService.reset()) {
+            SwingUtilities.invokeLater(new Runnable() {
+              public void run() {
+                //check a user is connected
+                Glob userPrefs = repository.find(UserPreferences.KEY);
+                if (userPrefs == null) {
+                  return;
+                }
+                serverAccess.takeSnapshot();
+                repository.update(CurrentMonth.KEY,
+                                  value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
+                                  value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
+              }
+            });
+          }
+        }
       }
     });
 
@@ -260,7 +300,7 @@ public class MainWindow implements WindowManager {
 
     GuiUtils.setSizeWithinScreen(frame, 1100, 800);
     GuiUtils.showCentered(frame);
-    licenseCheckerThread = LicenseCheckerThread.launch(directory, picsouInit.getRepository());
+    licenseCheckerThread = LicenseCheckerThread.launch(directory, repository);
     synchronized (this) {
       initDone = true;
       notify();

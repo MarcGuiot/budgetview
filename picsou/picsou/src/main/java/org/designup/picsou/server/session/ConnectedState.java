@@ -21,4 +21,6 @@ public interface ConnectedState extends SessionState {
   void getSnapshotInfos(SerializedInput input, SerializedOutput output);
 
   void getSnapshotData(SerializedInput input, SerializedOutput output);
+
+  void hasChanged(SerializedInput input, SerializedOutput output);
 }

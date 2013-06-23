@@ -54,7 +54,6 @@ public class PicsouInit {
   private UpgradeTrigger upgradeTrigger;
   private ServerChangeSetListener changeSetListenerToDb;
   private ShowDialogAndExitExceptionHandler exceptionHandler;
-  private static Timer timer;
 
   public static PicsouInit init(ServerAccess serverAccess, Directory directory, boolean registeredUser, boolean badJarVersion) {
     return new PicsouInit(serverAccess, directory, registeredUser, badJarVersion);
@@ -93,29 +92,6 @@ public class PicsouInit {
     initBank(directory);
 
     ColorThemeUpdater.register(repository, directory);
-
-    if (timer != null) {
-      timer.cancel();
-    }
-    timer = new Timer(true);
-    timer.scheduleAtFixedRate(new TimerTask() {
-      public void run() {
-        if (TimeService.reset()) {
-          SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-              //check a user is connected
-              Glob userPrefs = repository.find(UserPreferences.KEY);
-              if (userPrefs == null) {
-                return;
-              }
-              repository.update(CurrentMonth.KEY,
-                                value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
-                                value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
-            }
-          });
-        }
-      }
-    }, 60 * 1000 * 10, 60 * 1000 * 10);
   }
 
   private void initBank(Directory directory) {

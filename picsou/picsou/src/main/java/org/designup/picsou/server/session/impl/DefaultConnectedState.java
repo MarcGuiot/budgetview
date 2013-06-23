@@ -65,6 +65,12 @@ public class DefaultConnectedState extends AbstractSessionState implements Conne
     persistence.getSnapshotData(file, output, userId);
   }
 
+  public void hasChanged(SerializedInput input, SerializedOutput output) {
+    lastAccess();
+    checkPrivateId(input);
+    output.writeBoolean(persistence.hasChanged(userId));
+  }
+
   public void restore(SerializedInput input, SerializedOutput output) {
     lastAccess();
     checkPrivateId(input);

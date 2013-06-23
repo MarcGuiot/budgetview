@@ -71,6 +71,10 @@ public class InMemoryAccountDataManager implements AccountDataManager {
   public void getSnapshotData(Integer userId, String snapshotInfo, SerializedOutput output) {
   }
 
+  public boolean hasChanged(Integer userId) {
+    return false;
+  }
+
   public GlobList getLocalUsers() {
     return GlobList.EMPTY;
   }

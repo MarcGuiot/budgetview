@@ -48,4 +48,6 @@ public interface ServerRequestProcessingService {
   void getSnapshotInfos(Long sessionId, SerializedInput input, SerializedOutput output);
 
   void getSnapshotData(Long sessionId, SerializedInput input, SerializedOutput output);
+
+  void hasChanged(Long id, SerializedInput input, SerializedOutput output);
 }

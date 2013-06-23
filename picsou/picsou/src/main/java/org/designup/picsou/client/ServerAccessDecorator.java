@@ -62,6 +62,13 @@ public class ServerAccessDecorator implements ServerAccess {
     serverAccess.applyChanges(changeSet, globRepository);
   }
 
+  public boolean hasChanged() {
+    if (serverAccess != null) {
+      return serverAccess.hasChanged();
+    }
+    return false;
+  }
+
   public void takeSnapshot() {
     if (serverAccess != null) {
       serverAccess.takeSnapshot();
