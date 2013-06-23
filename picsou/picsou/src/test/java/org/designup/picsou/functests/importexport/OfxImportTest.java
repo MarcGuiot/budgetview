@@ -727,7 +727,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
   }
 
 
-  public void testImportWithoutAccount() throws Exception {
+  public void testImportWithoutAccountAndDoubleMinus() throws Exception {
     final String TEXT =
       "OFXHEADER:100\n" +
       "DATA:OFXSGML\n" +
@@ -771,7 +771,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       "          </STMTTRN>\n" +
       "        </BANKTRANLIST>\n" +
       "        <LEDGERBAL>\n" +
-      "          <BALAMT>-683.25\n" +
+      "          <BALAMT>--683.25\n" +
       "          <DTASOF>20060704000000\n" +
       "        </LEDGERBAL>\n" +
       "        <AVAILBAL>\n" +
@@ -785,7 +785,19 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     File file = File.createTempFile("import", ".ofx");
     file.deleteOnExit();
     Files.dumpStringToFile(file, TEXT);
-    operations.openImportDialog().setFilePath(file.getAbsolutePath());
+    ImportDialogChecker importDialogChecker = operations.openImportDialog();
+    importDialogChecker.setFilePath(file.getAbsolutePath())
+      .acceptFile()
+      .setMainAccount()
+      .selectBank("CIC")
+      .setAccountName("main account")
+      .completeImport();
+
+    transactions.initContent()
+      .add("31/01/2006", TransactionType.CREDIT_CARD, "DROITS DE GARDE 1 SEM. 2006 3006", "", -21.53)
+      .check();
+    mainAccounts.checkPosition("main account", -683.25);
+
 
   }
 }

@@ -106,7 +106,7 @@ public class OfxImporter implements AccountFileImporter {
       }
       else if (tag.equalsIgnoreCase("STMTTRN")) {
         if (currentAccount == null){
-
+          updateAccount(null);
         }
         int accountId = currentAccount.get(RealAccount.ID);
         lastTransactionId = generator.getNextId(ImportedTransaction.ID, 1);
@@ -308,7 +308,7 @@ public class OfxImporter implements AccountFileImporter {
         }
       }
 
-      String accountName = Account.getName(accountNumber, isCreditCard);
+      String accountName = Strings.isNotEmpty(accountNumber) ? Account.getName(accountNumber, isCreditCard) : "";
       GlobList similarAccounts = repository.getAll(RealAccount.TYPE, new RealAccountMatcher(accountNumber, bankId));
       if (similarAccounts.size() == 1) {
         accountName = similarAccounts.get(0).get(RealAccount.NAME);

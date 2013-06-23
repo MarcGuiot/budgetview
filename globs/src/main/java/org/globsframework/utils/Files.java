@@ -93,7 +93,7 @@ public class Files {
   }
 
   public static void dumpStringToFile(File file, String content) throws IOFailure {
-    if ((file == null) || file.exists()) {
+    if (file == null) {
       return;
     }
     dumpStringToFile(file.getAbsolutePath(), content);
