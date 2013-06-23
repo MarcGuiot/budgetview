@@ -29,7 +29,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 public class CaisseDEpargneConnector extends WebBankConnector implements HttpConnectionProvider {
@@ -57,6 +56,7 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
 
   protected JPanel createPanel() {
     userAndPasswordPanel = new UserAndPasswordPanel(new ConnectAction(), directory);
+    userAndPasswordPanel.createPanel(this);
     directory.get(ExecutorService.class)
       .submit(new Runnable() {
         public void run() {

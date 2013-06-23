@@ -21,4 +21,6 @@ public interface BankConnector {
   void stop();
 
   void reset();
+
+  void release();
 }
