@@ -143,43 +143,44 @@ public class MainWindow implements WindowManager {
                                                                "jar.version.step", "" + configService.downloadStep());
       Executors.newSingleThreadExecutor()
         .submit(new Runnable() {
-        public void run() {
-          try {
-            int current = configService.downloadStep();
-            while (current >= 0) {
-              if (current == 100) {
-                changeMessage(Lang.get("jar.version.step.complete"));
-                return;
+          public void run() {
+            try {
+              int current = configService.downloadStep();
+              while (current >= 0) {
+                if (current == 100) {
+                  changeMessage(Lang.get("jar.version.step.complete"));
+                  return;
+                }
+                else {
+                  messageDialog.changeMessage(Lang.get("jar.version.step", "" + current));
+                }
+                Thread.sleep(200);
+                int newValue = configService.downloadStep();
+                int count = 0;
+                while (newValue != 100 && newValue == current && count < 10) {
+                  Thread.sleep(500);
+                  count++;
+                  newValue = configService.downloadStep();
+                }
+                if (newValue != 100 && newValue == current) {
+                  messageDialog.changeMessage(Lang.get("jar.version.message"));
+                  return;
+                }
+                current = configService.downloadStep();
               }
-              else {
-                messageDialog.changeMessage(Lang.get("jar.version.step", "" + current));
-              }
-              Thread.sleep(200);
-              int newValue = configService.downloadStep();
-              int count = 0;
-              while (newValue != 100 && newValue == current && count < 10) {
-                Thread.sleep(500);
-                count++;
-                newValue = configService.downloadStep();
-              }
-              if (newValue != 100 && newValue == current) {
-                messageDialog.changeMessage(Lang.get("jar.version.message"));
-                return;
-              }
-              current = configService.downloadStep();
+            }
+            catch (InterruptedException e) {
             }
           }
-          catch (InterruptedException e) {
-          }
-        }
-          public void changeMessage(final String message){
+
+          public void changeMessage(final String message) {
             SwingUtilities.invokeLater(new Runnable() {
               public void run() {
                 messageDialog.changeMessage(message);
               }
             });
           }
-      });
+        });
       messageDialog.show();
     }
   }
@@ -244,34 +245,34 @@ public class MainWindow implements WindowManager {
       }
 
       public void windowActivated(WindowEvent e) {
-
-        if (serverAccess.hasChanged()) {
-          Glob userPrefs = repository.find(UserPreferences.KEY);
-          Glob user = repository.find(User.KEY);
-          if (userPrefs != null && user != null) {
+        Glob userPrefs = repository.find(UserPreferences.KEY);
+        Glob user = repository.find(User.KEY);
+        if (userPrefs != null && user != null) {
+          if (serverAccess.hasChanged()) {
             final PicsouInit.PreLoadData preLoadData =
               picsouInit.loadUserData(user.get(User.NAME), user.get(User.IS_DEMO_USER),
                                       user.get(User.AUTO_LOGIN));
             preLoadData.load();
           }
-        }
-        else {
-          if (TimeService.reset()) {
-            SwingUtilities.invokeLater(new Runnable() {
-              public void run() {
-                //check a user is connected
-                Glob userPrefs = repository.find(UserPreferences.KEY);
-                if (userPrefs == null) {
-                  return;
+          else {
+            if (TimeService.reset()) {
+              SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                  //check a user is connected
+                  Glob userPrefs = repository.find(UserPreferences.KEY);
+                  if (userPrefs == null) {
+                    return;
+                  }
+                  serverAccess.takeSnapshot();
+                  repository.update(CurrentMonth.KEY,
+                                    value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
+                                    value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
                 }
-                serverAccess.takeSnapshot();
-                repository.update(CurrentMonth.KEY,
-                                  value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
-                                  value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
-              }
-            });
+              });
+            }
           }
         }
+
       }
     });
 
