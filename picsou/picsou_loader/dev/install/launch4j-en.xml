@@ -28,12 +28,10 @@
     <timeoutErr>true</timeoutErr>
   </splash>
   <messages>
-    <startupErr>An error appear at startup can you please contact the support at http://www.mybudgetview.com/support
-</startupErr>
+    <startupErr>An error appear at startup can you please contact the support at http://www.mybudgetview.com/support </startupErr>
     <bundledJreErr>This application was configured to use a bundled Java Runtime Environment but the runtime is missing or corrupted.</bundledJreErr>
     <jreVersionErr>Java not found can you please install it from http://java.com/download and restart BudgetView</jreVersionErr>
     <launcherErr>The registry refers to a nonexistent Java Runtime Environment installation or the runtime is corrupted.</launcherErr>
-    <instanceAlreadyExistsMsg>BudgetView was not properly installed. Can you uninstall and install again BudgetView (Your data won't be removed)
-</instanceAlreadyExistsMsg>
+    <instanceAlreadyExistsMsg>BudgetView was not properly installed. Can you uninstall and install again BudgetView (Your data won&apos;t be removed) </instanceAlreadyExistsMsg>
   </messages>
 </launch4jConfig>
