@@ -101,6 +101,13 @@ public class LocalClientTransport implements ClientTransport {
     return output.getInput();
   }
 
+  public SerializedInput hasChanged(Long sessionId, byte[] bytes) {
+    SerializedByteArrayOutput output = new SerializedByteArrayOutput();
+    serverRequestProcessingService.hasChanged(sessionId,
+                                               SerializedInputOutputFactory.init(bytes), output.getOutput());
+    return output.getInput();
+  }
+
   public SerializedInput restore(Long sessionId, byte[] data) {
     SerializedByteArrayOutput output = new SerializedByteArrayOutput();
     serverRequestProcessingService.restore(sessionId, SerializedInputOutputFactory.init(data), output.getOutput());

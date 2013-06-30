@@ -1,0 +1,29 @@
+1 : dans un compte avec import relatif a la date de la derniere operations importées.
+  1.1 operation creer dans le passé
+
+Reconcialiation  impact_account     effet
+Oui              oui                pas coherent : cela signifirait que l'operation a deja impacté le compte alors qu'elle n'est pas encore arrivé
+Oui (defaut)     non (defaut)       A priori l'operation va arriver mais n'a pas encore impacté la position (pour la banque)
+                                    donc on decale la date de banque (pas de budget) apres la derniere operations importée.
+                                    Sur changement de mois on fait comme si l'operation avait été decalée.
+Non              oui                elle est prises en compte a la date user et impact le solde. (cela pourrait etre le cas d'un import
+                                    dans laquelle il manque des operations)
+Non              non                Idem sauf que le solde du compte a deja été corrigé.
+
+  1.2 operations creer dans le futur ou du jour
+Oui (defaut)     Oui/non            le solde n'est pas impacté.
+Non              Oui/non            Ce cas est bizarre, ou alors c'est que la personne ne veux/peux plus faire d'import.
+
+2 : dans un compte manuelle relatif a la date du jour
+  2.1 operation creer dans le passé ou le present
+
+Reconcialiation  impact_account     effet
+Oui              oui/Non            Pas de reconciliation possible (a ne pas confondre avec le pointage).
+Non              oui                le solde est impacté
+Non              non                le solde n'est pas impacté
+
+  2.2 operation dans le futur
+Reconcialiation  impact_account     effet
+Oui             oui/non             idem passé
+Non             oui/non             le solde n'est pas impacté.
+

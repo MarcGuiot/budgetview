@@ -13,7 +13,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 
@@ -42,7 +41,7 @@ public class CicConnector extends WebBankConnector {
 
   protected JPanel createPanel() {
     userAndPasswordPanel = new UserAndPasswordPanel(new ConnectAction(), directory);
-    JPanel panel = userAndPasswordPanel.getPanel();
+    JPanel panel = userAndPasswordPanel.createPanel(this);
     userAndPasswordPanel.setUserCode(getSyncCode());
     loadHomePage();
     return panel;

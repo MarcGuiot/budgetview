@@ -29,7 +29,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 public class CaisseDEpargneConnector extends WebBankConnector implements HttpConnectionProvider {
@@ -57,6 +56,7 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
 
   protected JPanel createPanel() {
     userAndPasswordPanel = new UserAndPasswordPanel(new ConnectAction(), directory);
+    userAndPasswordPanel.createPanel(this);
     directory.get(ExecutorService.class)
       .submit(new Runnable() {
         public void run() {
@@ -109,11 +109,9 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
               cptdmte0.findFirst(WebFilters.and(WebFilters.tagEquals(HtmlAnchor.TAG_NAME), WebFilters.textContentContains("Mes comptes")))
                 .asAnchor()
                 .click();
-//              currentPage = browser.setToTopLevelWindow();
               currentPage.getAnchor(WebFilters.textContentContains("Télécharger des opérations"))
                 .click();
               waitJavaScript(3000);
-//              currentPage = browser.setToTopLevelWindow();
             }
             else {
               throw e;
@@ -137,8 +135,6 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
     });
     comptes.select(element);
     waitJavaScript(1500);
-//    currentPage = browser.setToTopLevelWindow();
-//    WebRadioButton date = currentPage.getRadioButtonById("MM_TELECHARGE_OPERATIONS_chkDate");
     browser.retry(currentPage, new WebBrowser.Function1Arg<WebRadioButton, WebPage>() {
       public WebRadioButton call(WebPage webPage) throws Exception {
         return webPage.getRadioButtonById("MM_TELECHARGE_OPERATIONS_chkDate");
@@ -149,11 +145,9 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
     Date from = getDate(0, -120);
     WebTextInput debutTxtDate = browser.retry(currentPage, new WebBrowser.Function1Arg<WebTextInput, WebPage>() {
       public WebTextInput call(WebPage currentPage) throws Exception {
-//        WebPage currentPage = browser.setToTopLevelWindow();
         return currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateDebut_txtDate");
       }
     });
-//    currentPage = browser.setToTopLevelWindow();
     debutTxtDate
       .setText(extractDay(from));
     Date to = getDate(0, -1);
@@ -163,7 +157,6 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
     currentPage.getSelectById("MM_TELECHARGE_OPERATIONS_ddlChoixLogiciel")
       .selectByValue("0");
     waitJavaScript(1500);
-//    currentPage = browser.setToTopLevelWindow();
     currentPage = browser.retry(currentPage, new WebBrowser.Function1Arg<WebAnchor, WebPage>() {
       public WebAnchor call(WebPage webPage) throws Exception {
         return webPage.getAnchorById("MM_TELECHARGE_OPERATIONS_m_ChoiceBar_lnkRight");
@@ -172,11 +165,24 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
 
     waitJavaScript(1500);
 
-    Download download = browser.retry(currentPage, new WebBrowser.Function1Arg<WebAnchor,WebPage>() {
-      public WebAnchor call(WebPage webPage) throws Exception {
-        return webPage.getAnchorById("MM_TELECHARGE_OPERATIONS_AR_lnkTelechargement_lnk");
+    Download download = null;
+    try {
+      download = browser.retry(currentPage, new WebBrowser.Function1Arg<WebAnchor,WebPage>() {
+        public WebAnchor call(WebPage webPage) throws Exception {
+          return webPage.getAnchorById("MM_TELECHARGE_OPERATIONS_AR_lnkTelechargement_lnk");
+        }
+      }).clickAndDownload();
+    }
+    catch (RuntimeException e) {
+      try {
+        WebSpan error = currentPage.getSpanById("MM_LblMessagePopinErro");
+        notifyInfo(account.get(RealAccount.NAME) + " : " + error.asText());
+        return currentPage;
       }
-    }).clickAndDownload();
+      catch (WebParsingError error1) {
+        throw e;
+      }
+    }
     String s = download.readAsOfx();
     repository.update(account.getKey(), RealAccount.FILE_CONTENT, s);
 
@@ -186,7 +192,6 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
       }
     }).click();
     waitJavaScript(1500);
-//    currentPage = browser.setToTopLevelWindow();
     return currentPage;
   }
 

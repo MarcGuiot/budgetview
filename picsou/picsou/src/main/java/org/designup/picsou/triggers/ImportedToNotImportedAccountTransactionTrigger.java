@@ -4,12 +4,9 @@ import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 
-import java.util.Set;
-
-public class ImportedToNotImportedAccountTransactionTrigger extends AbstractChangeSetListener{
+public class ImportedToNotImportedAccountTransactionTrigger extends AbstractChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
@@ -47,51 +44,46 @@ public class ImportedToNotImportedAccountTransactionTrigger extends AbstractChan
               repository.delete(mirrorKey);
             }
           }
-          Integer newSeriesId = values.get(Transaction.SERIES);
-          if (newSeriesId != null) {
-            Glob series = repository.find(Key.create(Series.TYPE, newSeriesId));
-            Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
-            Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-            if (Account.shouldCreateMirrorTransaction(fromAccount, toAccount)) {
-              Integer targetAccount = repository.findLinkTarget(series, Series.MIRROR_SERIES).get(Series.TARGET_ACCOUNT);
-              TransactionUtils.createMirrorTransaction(key, transaction, targetAccount,
-                                                       series.get(Series.MIRROR_SERIES), repository);
-            }
-          }
+          createMirrorTransactionIfNeeded(key, values, transaction, repository);
         }
         else {
           if (mirrorTransactionId != null) {
             Key mirrorKey = Key.create(Transaction.TYPE, mirrorTransactionId);
-            if (values.contains(Transaction.AMOUNT) && mirrorTransactionId != null) {
-              repository.update(mirrorKey,
-                                Transaction.AMOUNT, -values.get(Transaction.AMOUNT));
+            if (repository.contains(mirrorKey)) {
+              if (values.contains(Transaction.AMOUNT)) {
+                repository.update(mirrorKey,
+                                  Transaction.AMOUNT, -values.get(Transaction.AMOUNT));
+              }
+              if (values.contains(Transaction.DAY)) {
+                repository.update(mirrorKey, Transaction.DAY, values.get(Transaction.DAY));
+              }
+              if (values.contains(Transaction.MONTH)) {
+                repository.update(mirrorKey, Transaction.MONTH, values.get(Transaction.MONTH));
+              }
+              if (values.contains(Transaction.BUDGET_DAY)) {
+                repository.update(mirrorKey, Transaction.BUDGET_DAY, values.get(Transaction.BUDGET_DAY));
+              }
+              if (values.contains(Transaction.BUDGET_MONTH)) {
+                repository.update(mirrorKey, Transaction.BUDGET_MONTH, values.get(Transaction.BUDGET_MONTH));
+              }
+              if (values.contains(Transaction.POSITION_DAY)) {
+                repository.update(mirrorKey, Transaction.POSITION_DAY, values.get(Transaction.POSITION_DAY));
+              }
+              if (values.contains(Transaction.POSITION_MONTH)) {
+                repository.update(mirrorKey, Transaction.POSITION_MONTH, values.get(Transaction.POSITION_MONTH));
+              }
+              if (values.contains(Transaction.LABEL)) {
+                repository.update(mirrorKey, Transaction.LABEL, values.get(Transaction.LABEL));
+              }
+              if (values.contains(Transaction.CATEGORY)) {
+                repository.update(mirrorKey, Transaction.CATEGORY, values.get(Transaction.CATEGORY));
+              }
+              if (values.contains(Transaction.SUB_SERIES)) {
+                repository.update(mirrorKey, Transaction.SUB_SERIES, values.get(Transaction.SUB_SERIES));
+              }
             }
-            if (values.contains(Transaction.DAY)) {
-              repository.update(mirrorKey, Transaction.DAY, values.get(Transaction.DAY));
-            }
-            if (values.contains(Transaction.MONTH)) {
-              repository.update(mirrorKey, Transaction.MONTH, values.get(Transaction.MONTH));
-            }
-            if (values.contains(Transaction.BUDGET_DAY)) {
-              repository.update(mirrorKey, Transaction.BUDGET_DAY, values.get(Transaction.BUDGET_DAY));
-            }
-            if (values.contains(Transaction.BUDGET_MONTH)) {
-              repository.update(mirrorKey, Transaction.BUDGET_MONTH, values.get(Transaction.BUDGET_MONTH));
-            }
-            if (values.contains(Transaction.POSITION_DAY)) {
-              repository.update(mirrorKey, Transaction.POSITION_DAY, values.get(Transaction.POSITION_DAY));
-            }
-            if (values.contains(Transaction.POSITION_MONTH)) {
-              repository.update(mirrorKey, Transaction.POSITION_MONTH, values.get(Transaction.POSITION_MONTH));
-            }
-            if (values.contains(Transaction.LABEL)) {
-              repository.update(mirrorKey, Transaction.LABEL, values.get(Transaction.LABEL));
-            }
-            if (values.contains(Transaction.CATEGORY)) {
-              repository.update(mirrorKey, Transaction.CATEGORY, values.get(Transaction.CATEGORY));
-            }
-            if (values.contains(Transaction.SUB_SERIES)) {
-              repository.update(mirrorKey, Transaction.SUB_SERIES, values.get(Transaction.SUB_SERIES));
+            else {
+              createMirrorTransactionIfNeeded(key, values, transaction, repository);
             }
           }
         }
@@ -105,5 +97,19 @@ public class ImportedToNotImportedAccountTransactionTrigger extends AbstractChan
         }
       }
     });
+  }
+
+  private void createMirrorTransactionIfNeeded(Key key, FieldValuesWithPrevious values, Glob transaction, GlobRepository repository) {
+    Integer newSeriesId = values.get(Transaction.SERIES);
+    if (newSeriesId != null) {
+      Glob series = repository.find(Key.create(Series.TYPE, newSeriesId));
+      Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
+      Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
+      if (Account.shouldCreateMirrorTransaction(fromAccount, toAccount)) {
+        Integer targetAccount = repository.findLinkTarget(series, Series.MIRROR_SERIES).get(Series.TARGET_ACCOUNT);
+        TransactionUtils.createMirrorTransaction(key, transaction, targetAccount,
+                                                 series.get(Series.MIRROR_SERIES), repository);
+      }
+    }
   }
 }

@@ -24,6 +24,10 @@ public class DummyServerAccess implements ServerAccess {
   public void applyChanges(ChangeSet changeSet, GlobRepository globRepository) {
   }
 
+  public boolean hasChanged() {
+    return false;
+  }
+
   public void takeSnapshot() {
   }
 

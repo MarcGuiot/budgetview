@@ -109,6 +109,10 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
     if (closed) {
       return;
     }
+    if (currentConnector != null){
+      currentConnector.release();
+      currentConnector = null;
+    }
     if (currentConnectors.isEmpty()) {
       currentConnector = null;
       importer.importAccounts(importedRealAccounts);
@@ -223,6 +227,7 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       closed = true;
       if (currentConnector != null) {
         currentConnector.stop();
+        currentConnector.release();
         currentConnector = null;
       }
       dialog.setVisible(false);

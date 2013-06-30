@@ -66,6 +66,11 @@ public class DefaultServerRequestProcessingService implements ServerRequestProce
     state.connected().updateData(input, output);
   }
 
+  public void hasChanged(Long sessionId, SerializedInput input, SerializedOutput output) {
+    SessionState state = sessionService.getSessionState(sessionId);
+    state.connected().hasChanged(input, output);
+  }
+
   public void disconnect(Long sessionId, SerializedInput input) {
     SessionState state = sessionService.getSessionState(sessionId);
     state.disconnect(input);

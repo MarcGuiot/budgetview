@@ -31,6 +31,8 @@ public interface ServerAccess {
 
   void applyChanges(ChangeSet changeSet, GlobRepository globRepository);
 
+  boolean hasChanged();
+
   void takeSnapshot();
 
   LocalInfo connect(long version);
@@ -115,6 +117,10 @@ public interface ServerAccess {
     }
 
     public void applyChanges(ChangeSet changeSet, GlobRepository globRepository) {
+    }
+
+    public boolean hasChanged() {
+      return false;
     }
 
     public void takeSnapshot() {

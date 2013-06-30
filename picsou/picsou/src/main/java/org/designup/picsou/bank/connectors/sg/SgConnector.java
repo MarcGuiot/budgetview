@@ -20,6 +20,7 @@ import org.designup.picsou.gui.browsing.BrowsingAction;
 import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -86,7 +87,7 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
   }
 
   protected JPanel createPanel() {
-    SplitsBuilder builder = SplitsBuilder.init(directory);
+    final SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/sgConnectorPanel.splits");
     initCardCode(builder);
     directory.get(ExecutorService.class)
@@ -109,6 +110,12 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
           }
         }
       });
+    addToBeDisposed(new Disposable() {
+      public void dispose() {
+        builder.dispose();
+      }
+    });
+
     return builder.load();
   }
 

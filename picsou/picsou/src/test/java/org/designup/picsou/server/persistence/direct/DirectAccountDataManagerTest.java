@@ -91,13 +91,13 @@ public class DirectAccountDataManagerTest extends TestCase {
     checkSnapshot(directAccountDataManager, permanent);
 
     TestUtils.assertSetEquals(new String[]{"0000000000000000003.snapshot", "0000000000000000002.journal",
-                                           "0000000000000000001.journal"},
+                                           "0000000000000000001.journal", "0000000000000000003.journal"},
                               new File(pathForUser).list());
     directAccountDataManager.takeSnapshot(userId);
     permanent = directory.snapshotFile(4, "snapshot");
     checkSnapshot(directAccountDataManager, permanent);
     TestUtils.assertSetEquals(new String[]{"0000000000000000004.snapshot", "0000000000000000003.snapshot",
-                                           "0000000000000000002.journal"},
+                                           "0000000000000000003.journal"},
                               new File(pathForUser).list());
     directAccountDataManager.close();
     continueWriting(pathForUser);
@@ -174,7 +174,7 @@ public class DirectAccountDataManagerTest extends TestCase {
     SerializableDeltaGlobSerializer.serialize(output.getOutput(), globMultiMap);
     directAccountDataManager.updateUserData(output.getInput(), userId);
     TestUtils.assertSetEquals(new String[]{"0000000000000000004.snapshot", "0000000000000000003.snapshot",
-                                           "0000000000000000002.journal", "0000000000000000004.journal"},
+                                           "0000000000000000003.journal", "0000000000000000004.journal"},
                               new File(pathForUser).list());
 
     directAccountDataManager.takeSnapshot(userId);

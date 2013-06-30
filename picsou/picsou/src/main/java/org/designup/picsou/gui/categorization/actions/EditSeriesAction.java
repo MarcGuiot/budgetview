@@ -37,6 +37,7 @@ public class EditSeriesAction extends AbstractAction {
   public void actionPerformed(ActionEvent e) {
     Glob series = repository.get(seriesKey);
     SelectionService selectionService = directory.get(SelectionService.class);
+    Set<Integer> monthIds = this.monthIds;
     if (monthIds == null) {
       monthIds = selectionService.getSelection(Month.TYPE).getValueSet(Month.ID);
     }

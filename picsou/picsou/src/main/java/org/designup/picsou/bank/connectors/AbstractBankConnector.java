@@ -9,23 +9,33 @@ import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.model.Synchro;
 import org.globsframework.gui.splits.ImageLocator;
-import org.globsframework.model.*;
+import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.splits.utils.DisposableGroup;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 import org.joda.time.DateTime;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public abstract class AbstractBankConnector implements BankConnector {
   private GlobRepository parentRepository;
+  private List<Disposable> disposables = new ArrayList<Disposable>();
   protected Directory directory;
   protected Integer bankId;
   protected LocalGlobRepository repository;
@@ -62,6 +72,16 @@ public abstract class AbstractBankConnector implements BankConnector {
 
   public void init(SynchroMonitor monitor) {
     this.monitor = new SwingSynchroMonitor(monitor);
+  }
+
+  public void addToBeDisposed(Disposable disposable) {
+    disposables.add(disposable);
+  }
+
+  public void release() {
+    for (Disposable disposable : disposables) {
+      disposable.dispose();
+    }
   }
 
   public final JPanel getPanel() {
@@ -145,7 +165,7 @@ public abstract class AbstractBankConnector implements BankConnector {
       GlobList otherSynchros = repository.getAll(Synchro.TYPE, GlobMatchers.fieldEquals(Synchro.BANK, bankId));
       if (otherSynchros.size() > 2) {
         for (Glob otherSynchro : otherSynchros) {
-          if (!otherSynchro.getKey().equals(synchro.getKey())){
+          if (!otherSynchro.getKey().equals(synchro.getKey())) {
             if (hasAKnownAccount(otherSynchro)) {
               GlobList linkedTo = repository.findLinkedTo(otherSynchro, RealAccount.SYNCHRO);
               for (Glob glob : linkedTo) {

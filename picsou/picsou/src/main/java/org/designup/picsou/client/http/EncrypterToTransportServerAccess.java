@@ -334,6 +334,13 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     }
   }
 
+  public boolean hasChanged() {
+    SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
+    outputStream.getOutput().writeBytes(privateId);
+    SerializedInput serializedInput = clientTransport.hasChanged(sessionId, outputStream.toByteArray());
+    return serializedInput.readBoolean();
+  }
+
   public void takeSnapshot() {
     if (notConnected) {
       return;

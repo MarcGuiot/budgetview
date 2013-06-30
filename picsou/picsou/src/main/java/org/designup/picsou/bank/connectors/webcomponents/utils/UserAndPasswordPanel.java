@@ -1,9 +1,11 @@
 package org.designup.picsou.bank.connectors.webcomponents.utils;
 
+import org.designup.picsou.bank.connectors.AbstractBankConnector;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -27,8 +29,8 @@ public class UserAndPasswordPanel {
     this.directory = directory;
   }
 
-  public void createPanel() {
-    SplitsBuilder builder = SplitsBuilder.init(directory);
+  public JPanel createPanel(AbstractBankConnector connector) {
+    final SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/bank/connection/userAndPasswordPanel.splits");
 
     userCodeField = new JTextField();
@@ -57,12 +59,15 @@ public class UserAndPasswordPanel {
     });
 
     panel = builder.load();
+    connector.addToBeDisposed(new Disposable() {
+      public void dispose() {
+        builder.dispose();
+      }
+    });
+    return panel;
   }
 
   public void setEnabled(boolean enabled) {
-    if (connectAction == null) {
-      createPanel();
-    }
     connectAction.setEnabled(enabled);
   }
 
@@ -72,9 +77,6 @@ public class UserAndPasswordPanel {
   }
 
   public JPanel getPanel() {
-    if (panel == null) {
-      createPanel();
-    }
     return panel;
   }
 

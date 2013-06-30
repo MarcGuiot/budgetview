@@ -22,9 +22,16 @@
     <opt>-Dbudgetview.exe.dir=&quot;%EXEDIR%&quot;</opt>
   </jre>
   <splash>
-    <file>/home/guiot/dev/java/lesueur/ref/picsou/picsou_loader/dev/images/budgetview_startup.bmp</file>
+    <file>../../dev/images/budgetview_startup.bmp</file>
     <waitForWindow>true</waitForWindow>
     <timeout>60</timeout>
     <timeoutErr>true</timeoutErr>
   </splash>
+  <messages>
+    <startupErr>An error appeared at startup. Please contact us at support@mybudgetview.com.</startupErr>
+    <bundledJreErr>This application was configured to use a bundled Java Runtime Environment but the runtime is missing or corrupted.</bundledJreErr>
+    <jreVersionErr>Java not found. Please install it from http://java.com/download and restart BudgetView.</jreVersionErr>
+    <launcherErr>The registry refers to a nonexistent Java Runtime Environment installation or the runtime is corrupted.</launcherErr>
+    <instanceAlreadyExistsMsg>BudgetView was not properly installed. Please uninstall and reinstall again BudgetView (Your data won&apos;t be removed).</instanceAlreadyExistsMsg>
+  </messages>
 </launch4jConfig>

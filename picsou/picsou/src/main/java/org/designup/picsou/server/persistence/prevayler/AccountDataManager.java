@@ -28,6 +28,8 @@ public interface AccountDataManager {
 
   void getSnapshotData(Integer userId, String snapshotInfo, final SerializedOutput output);
 
+  boolean hasChanged(Integer userId);
+
   public class SnapshotInfo {
     public final long timestamp;
     public char[] password;

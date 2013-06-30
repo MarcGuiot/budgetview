@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.checkers;
 
-import org.designup.picsou.utils.Lang;
 import org.uispec4j.Window;
 
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;

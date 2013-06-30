@@ -725,4 +725,79 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .check();
 
   }
+
+
+  public void testImportWithoutAccountAndDoubleMinus() throws Exception {
+    final String TEXT =
+      "OFXHEADER:100\n" +
+      "DATA:OFXSGML\n" +
+      "VERSION:102\n" +
+      "SECURITY:NONE\n" +
+      "ENCODING:USASCII\n" +
+      "CHARSET:1252\n" +
+      "COMPRESSION:NONE\n" +
+      "OLDFILEUID:NONE\n" +
+      "NEWFILEUID:NONE\n" +
+      "<OFX>\n" +
+      "  <SIGNONMSGSRSV1>\n" +
+      "    <SONRS>\n" +
+      "      <STATUS>\n" +
+      "        <CODE>0\n" +
+      "        <SEVERITY>INFO\n" +
+      "      </STATUS>\n" +
+      "      <DTSERVER>20060716000000\n" +
+      "      <LANGUAGE>FRA\n" +
+      "    </SONRS>\n" +
+      "  </SIGNONMSGSRSV1>\n" +
+      "  <BANKMSGSRSV1>\n" +
+      "    <STMTTRNRS>\n" +
+      "      <TRNUID>20060716000000\n" +
+      "      <STATUS>\n" +
+      "        <CODE>0\n" +
+      "        <SEVERITY>INFO\n" +
+      "      </STATUS>\n" +
+      "      <STMTRS>\n" +
+      "        <CURDEF>EUR\n" +
+      "        <BANKTRANLIST>\n" +
+      "          <DTSTART>20060131000000\n" +
+      "          <DTEND>20060203000000\n" +
+      "          <STMTTRN>\n" +
+      "            <TRNTYPE>DEBIT\n" +
+      "            <DTPOSTED>20060131\n" +
+      "            <DTUSER>20060131\n" +
+      "            <TRNAMT>-21.53\n" +
+      "            <FITID>LOIB4G3LLF\n" +
+      "            <NAME>DROITS DE GARDE 1 SEM. 2006 3006\n" +
+      "          </STMTTRN>\n" +
+      "        </BANKTRANLIST>\n" +
+      "        <LEDGERBAL>\n" +
+      "          <BALAMT>--683.25\n" +
+      "          <DTASOF>20060704000000\n" +
+      "        </LEDGERBAL>\n" +
+      "        <AVAILBAL>\n" +
+      "          <BALAMT>0.0\n" +
+      "          <DTASOF>20060704000000\n" +
+      "        </AVAILBAL>\n" +
+      "      </CCSTMTRS>\n" +
+      "    </CCSTMTTRNRS>\n" +
+      "  </CREDITCARDMSGSRSV1>\n" +
+      "</OFX>\n";
+    File file = File.createTempFile("import", ".ofx");
+    file.deleteOnExit();
+    Files.dumpStringToFile(file, TEXT);
+    ImportDialogChecker importDialogChecker = operations.openImportDialog();
+    importDialogChecker.setFilePath(file.getAbsolutePath())
+      .acceptFile()
+      .setMainAccount()
+      .selectBank("CIC")
+      .setAccountName("main account")
+      .completeImport();
+
+    transactions.initContent()
+      .add("31/01/2006", TransactionType.CREDIT_CARD, "DROITS DE GARDE 1 SEM. 2006 3006", "", -21.53)
+      .check();
+    mainAccounts.checkPosition("main account", -683.25);
+
+
+  }
 }

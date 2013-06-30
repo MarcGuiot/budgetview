@@ -237,12 +237,10 @@ test
 
 }
 FileGroup ::8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42 -setup Install -active Yes -platforms {Windows} -name {Program Files} -parent FileGroups
-File ::2B46BFAC-3F00-4290-B80A-D790CCEB6778 -name msvcr71.dll -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::09B3F2A4-3934-FAA3-B4DF-514E8A7332E9 -name license.txt -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::2FD90047-B823-2003-90B2-D3469C68FBE9 -name budgetview.exe -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::7D0C4D57-E1C1-C244-4722-B0DDFF5C6150 -name ../images/budgetview.ico -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 File ::A427121E-CA00-2A1E-B0AF-61AAE6EB9666 -name ../../../picsou/obfuscated/JAR_FOURMICS.jar -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
-File ::306F0D12-3AA1-725E-60FD-7B8171F42DD6 -name msvcr100.dll -parent 8E95AD9C-73BE-47CC-B4ED-BC4FF44D4B42
 Component ::89CFA7AC-2A3E-4B5F-AFAA-A115D2FE6F92 -setup Install -active Yes -platforms Windows -name {Default Component} -parent Components
 SetupType ::C40711B9-D384-4BA7-BD59-C41C7FDE9BA0 -setup Install -active Yes -platforms Windows -name Typical -parent SetupTypes
 

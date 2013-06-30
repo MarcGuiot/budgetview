@@ -472,6 +472,13 @@ public class CsvImportTest extends SpecificBankTestCase {
       .add("26/03/2012", "ACHAT MAESTRO 26.03.2012 19:05 IKEA SA VERNIER NUMÉRO DE CARTE: 78868866", -27.10, "To categorize", -1666.60, -1666.60, "imported")
       .check();
 
+    // on test la suppression de toute les operations.
+    transactions.selectAll();
+    transactions.openDeletionDialog()
+      .selectNoUpdateOfPosition()
+      .validate();
+    transactions.initContent().check();
+
   }
 
   public void testOther2() throws Exception {

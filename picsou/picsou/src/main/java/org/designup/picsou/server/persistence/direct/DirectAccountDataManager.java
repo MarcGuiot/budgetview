@@ -69,6 +69,16 @@ public class DirectAccountDataManager implements AccountDataManager {
     }
   }
 
+  public boolean hasChanged(Integer userId) {
+    DurableOutputStream durableOutputStream = outputStreamMap.get(userId);
+    if (durableOutputStream == null){
+      return false;
+    }
+    else {
+      return !durableOutputStream.checkIsLast();
+    }
+  }
+
   void setCountFileNotToDelete(int countFileNotToDelete) {
     this.countFileNotToDelete = countFileNotToDelete;
   }
@@ -248,6 +258,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     if (inMemory) {
       return;
     }
+    close(userId);
     PrevaylerDirectory directory = new PrevaylerDirectory(getPath(userId));
     MapOfMaps<String, Integer, SerializableGlobType> globs = new MapOfMaps<String, Integer, SerializableGlobType>();
     TransactionInfo transactionInfo = readData(userId, globs);
@@ -261,6 +272,7 @@ public class DirectAccountDataManager implements AccountDataManager {
         Log.write("for " + userId, e);
       }
     }
+    outputStreamMap.put(userId, new DurableOutputStream(this, transactionInfo.transactionId, userId));
   }
 
   synchronized public boolean restore(SerializedInput input, Integer userId) {

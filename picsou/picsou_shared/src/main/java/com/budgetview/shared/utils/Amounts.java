@@ -36,6 +36,7 @@ public class Amounts {
   static public double extractAmount(String amount) {
     amount = amount.trim();
     amount = amount.replaceAll("[^0-9-+,.]", "");
+    amount = amount.replaceAll("--+", "-");
 
     double coef = getCoef(amount);
 
