@@ -113,6 +113,12 @@ public class BorderParser {
       }
     }
 
-    throw new SplitsException("Unknown border type '" + desc + "'");
+    throw new SplitsException("Unknown border type '" + desc + "' - possible examples:\n" +
+                              "- empty(2,3,4,5)\n" +
+                              "- etched\n" +
+                              "- bevel(lowered)\n" +
+                              "- bevel(raised)\n" +
+                              "- matte(1,2,3,4,#00FF00\n" +
+                              "- line(#00FF00)");
   }
 }

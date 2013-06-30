@@ -5,7 +5,7 @@
   <styles>
     <style selector=".licenseInfoPanel" opaque="true" background="licenseInfo.bg"/>
     <style selector=".licenseInfoBorder" opaque="true"
-           border="matte(1,0,0,0,licenseInfo.border)" background="licenseInfo.bg"/>
+           border="${licenseInfo.border}" background="licenseInfo.bg"/>
     <style selector=".licenseInfoBorder htmlEditorPane"
            margin="1" border="empty(5)" opaque="true" background="licenseInfo.bg"
            font="-,bold,12" fill="both"/>

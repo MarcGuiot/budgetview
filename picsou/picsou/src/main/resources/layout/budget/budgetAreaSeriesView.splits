@@ -67,7 +67,7 @@
     <label ref="budgetAreaTitle" styleClass="blockTitle"/>
 
     <panel styleClass="block" preferredSize="(300,400)">
-      <column border="empty(5,8,10,8)">
+      <column border="${budget.block.border}">
 
         <grid name="total" weightY="0" marginLeft="15" marginRight="15">
           <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(1,0)"
@@ -78,7 +78,7 @@
                  tooltipText="$budgetview.tooltip.total.planned"/>
         </grid>
 
-        <grid name="total" weightY="0" marginLeft="5" marginRight="5">
+        <grid name="total" weightY="0" marginLeft="5" marginRight="5" border="${budget.blockHeader.border}">
           <label text="$budgetview.observed" styleClass="totalAmountTitle" gridPos="(0,0)" marginRight="5"/>
           <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(1,0)"
                  tooltipText="$budgetview.tooltip.total.observed"/>

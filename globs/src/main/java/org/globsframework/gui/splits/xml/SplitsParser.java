@@ -10,10 +10,14 @@ import org.saxstack.parser.SaxStackParser;
 import org.saxstack.parser.XmlNode;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
-import java.awt.*;
+import javax.xml.validation.Schema;
+import javax.xml.validation.Validator;
+import javax.xml.validation.ValidatorHandler;
 import java.io.Reader;
 import java.util.Arrays;
 
@@ -36,8 +40,8 @@ public class SplitsParser {
 
     SplitsBootstrapXmlNode bootstrap = new SplitsBootstrapXmlNode();
     try {
-      javax.xml.parsers.SAXParser PARSER = xmlFactory.newSAXParser();
-      SaxStackParser.parse(PARSER.getXMLReader(), bootstrap, reader);
+      javax.xml.parsers.SAXParser parser = xmlFactory.newSAXParser();
+      SaxStackParser.parse(parser.getXMLReader(), bootstrap, reader);
     }
     catch (SAXException e) {
       throw new ExceptionHolder(e);

@@ -5,7 +5,9 @@ import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.font.FontService;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
+import org.globsframework.gui.splits.layout.LayoutService;
 import org.globsframework.gui.splits.layout.SingleComponentLayout;
+import org.globsframework.gui.splits.parameters.ConfiguredPropertiesService;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.utils.DummyImageLocator;
 import org.globsframework.gui.splits.utils.DummyTextLocator;
@@ -29,6 +31,7 @@ public abstract class SplitsTestCase extends UISpecTestCase {
   protected FontService fontService = new FontService();
   protected DummyImageLocator iconLocator = new DummyImageLocator();
   protected DummyTextLocator textLocator = new DummyTextLocator();
+  protected ConfiguredPropertiesService configuredPropertiesService = new ConfiguredPropertiesService();
   protected UIService uiService = new UIService();
 
   protected JTable aTable = new JTable();
@@ -47,6 +50,8 @@ public abstract class SplitsTestCase extends UISpecTestCase {
     directory.add(TextLocator.class, textLocator);
     directory.add(ImageLocator.class, iconLocator);
     directory.add(UIService.class, uiService);
+    directory.add(new LayoutService());
+    directory.add(configuredPropertiesService);
     builder = new SplitsBuilder(directory);
   }
 
@@ -55,8 +60,9 @@ public abstract class SplitsTestCase extends UISpecTestCase {
   }
 
   protected <T extends Component> SplitsNode<T> parseWithHandler(final String xml) throws Exception {
-    validateDocument(toStream(xml));
-    return builder.setSource(complete(xml)).<T>loadWithNode();
+    System.out.println("SplitsTestCase.parseWithHandler: TODO");
+//    validateDocument(toStream(xml));
+    return builder.setSource(complete(xml)).loadWithNode();
   }
 
   protected void parseWithoutSchemaValidation(String xml) throws Exception {

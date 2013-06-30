@@ -60,10 +60,10 @@
            autoHideIfDisabled="true" marginLeft="10"/>
   </styles>
 
-  <panel name="backgroundPanel" styleClass="main" ui="wave">
-    <column marginTop="10" marginLeft="15" marginRight="15" marginBottom="10">
+  <column name="backgroundPanel" styleClass="main" ui="wave">
 
-      <horizontalBoxes weightY="0.1" name="mainWindowHeader">
+    <column name="mainWindowHeader" background="header.bg" opaque="${mainWindowHeader.header.opaque}" weightY="0.1">
+      <horizontalBoxes marginTop="5" marginLeft="15" marginRight="15" marginBottom="10">
         <row>
           <column weightX="0.1" preferredSize="(280,26)">
             <row weightY="1" anchor="left" fill="horizontal" marginBottom="2">
@@ -110,7 +110,9 @@
           </row>
         </row>
       </horizontalBoxes>
+    </column>
 
+    <column marginLeft="15" marginRight="15" marginBottom="10">
       <cards ref="mainCards" marginTop="10" weightY="10.0">
 
         <card name="home">
@@ -180,5 +182,5 @@
       <panel ref="demoMessageView" weightY="0"/>
 
     </column>
-  </panel>
+  </column>
 </splits>

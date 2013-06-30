@@ -29,7 +29,7 @@
 
     <style selector="#accountPanel" opaque="true" background="block.inner.bg"/>
 
-    <style selector=".summaryFooter" marginTop="6"/>
+    <style selector=".summaryFooter" marginTop="6" border="${accountPanel.summaryFooter.border}"/>
 
     <style selector=".summaryFooter label" fill="none" anchor="center"/>
 

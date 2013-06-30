@@ -16,12 +16,12 @@ public class ColorTest extends TestCase {
       SortedSet<Object> reference = load(themes[0]);
       SortedSet<Object> underTest = load(themes[i]);
       reference.removeAll(underTest);
-      TestUtils.checkEmpty(reference, "Missing entries in " + themes[i].getFilePath());
+      TestUtils.checkEmpty(reference, "Missing entries in " + themes[i].getColorFilePath());
     }
   }
 
   private static SortedSet<Object> load(ColorTheme theme) throws IOException {
-    return Files.loadPropertyKeys("/" + theme.getFilePath(), ColorTheme.class);
+    return Files.loadPropertyKeys("/" + theme.getColorFilePath(), ColorTheme.class);
   }
 
 }

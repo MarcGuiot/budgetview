@@ -56,6 +56,7 @@ R icons/
 R jide/
 R docs/
 R colors/
+R themes/
 R fonts.properties
 R logging.properties
 R demo/demo-fr.snapshot

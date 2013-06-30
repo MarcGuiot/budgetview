@@ -213,15 +213,16 @@
         borderWidth="1" cornerRadius="15"/>
     <style selector=".block" ui="block" opaque="false" marginBottom="0"/>
     <style selector=".block .innerBlock" margin="8"/>
-    <style selector=".budgetAreaSelection" opaque="true" background="block.inner.bg"
-           border="matte(1,0,1,1,block.inner.border)"/>
+    <style selector=".budgetAreaSelection" opaque="true" background="block.inner.bg"/>
 
     <style selector=".budgetAreaSelection htmlEditorPane" border="empty(10)"/>
     <style selector=".budgetAreaSelection textArea" border="empty(10)"/>
 
-    <style selector="label.blockTitle" anchor="center"
-           foreground="block.title" marginBottom="5" font="-,bold,13" weightY="0"
-           shadowDirection="northwest" shadowColor="block.title.shadow"/>
+    <ui name="shadowedTitle" class="org.globsframework.gui.splits.components.ShadowedLabelUI"
+        shadowDirection="northwest" shadowColor="block.title.shadow"/>
+    <ui name="basicTitle" class="javax.swing.plaf.basic.BasicLabelUI"/>
+    <style selector="label.blockTitle" anchor="center" ui="${block.title.ui}"
+           foreground="block.title" marginBottom="5" font="-,bold,13" weightY="0"/>
     <style selector="label.totalAmountTitle" foreground="block.total.title" font="-,plain,10"
            fill="none" anchor="bottom" weightY="0"/>
     <style selector=".totalAmount" foreground="block.total" font="-,bold,14"

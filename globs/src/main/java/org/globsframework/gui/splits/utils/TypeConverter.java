@@ -20,7 +20,7 @@ public class TypeConverter {
     if (targetClass == String.class) {
       return SplitsUtils.convertString(value, context.getService(TextLocator.class));
     }
-    if (value.length() == 0) {
+    if ((value == null) || (value.length() == 0)) {
       if (targetClass.isPrimitive()) {
         throw new SplitsException("Empty value not allowed for property '" + property +
                                   "' of type " + targetClass.getSimpleName() +
