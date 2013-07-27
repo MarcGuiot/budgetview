@@ -12,7 +12,7 @@
         <button action="userIdHelp" gridPos="(0,1)" styleClass="hyperlink" font="-,plain,10" anchor="right"/>
       </grid>
 
-      <label text="2. Composez votre code secret à 4 chiffres" styleClass="formSection" marginTop="20"/>
+      <label text="2. Composez votre code secret" styleClass="formSection" marginTop="20"/>
       <row>
         <filler fill="horizontal" weightX="0.1"/>
         <grid>
