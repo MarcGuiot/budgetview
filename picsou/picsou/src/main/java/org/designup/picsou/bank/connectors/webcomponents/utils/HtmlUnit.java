@@ -18,6 +18,18 @@ public class HtmlUnit {
 
   private static final String SEPARATOR = "------------------------------------------------------------------------\n";
 
+  public static <T extends HtmlElement> T findElementById(HtmlElement container, String id, Class<T> expectedClass) throws WebParsingError {
+    T result = null;
+    try {
+      result = container.<T>getElementById(id);
+    }
+    catch (com.gargoylesoftware.htmlunit.ElementNotFoundException e) {
+      return null;
+    }
+    checkClass(container, result, "element '" + id + "'", expectedClass);
+    return result;
+  }
+
   public static <T extends HtmlElement> T getElementById(HtmlElement container, String id, Class<T> expectedClass) throws WebParsingError {
     T result = null;
     try {

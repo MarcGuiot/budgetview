@@ -239,6 +239,14 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new WebSelect(browser, getElementByLabel(label, HtmlSelect.class));
   }
 
+  public WebTable findTableById(String id) throws WebParsingError {
+    HtmlTable table = getElementById(id, HtmlTable.class);
+    if (table == null) {
+      return null;
+    }
+    return new WebTable(browser, table);
+  }
+
   public WebTable getTableById(String id) throws WebParsingError {
     return new WebTable(browser, getElementById(id, HtmlTable.class));
   }
@@ -301,6 +309,10 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
 
   private <T extends HtmlElement> T getSingleElement(String tagName, Class<T> expectedClass) throws WebParsingError {
     return HtmlUnit.getSingleElementByTag(node, tagName, expectedClass);
+  }
+
+  protected <T extends HtmlElement> T findElementById(String id, Class<T> expectedClass) throws WebParsingError {
+    return HtmlUnit.findElementById(node, id, expectedClass);
   }
 
   protected <T extends HtmlElement> T getElementById(String id, Class<T> expectedClass) throws WebParsingError {
