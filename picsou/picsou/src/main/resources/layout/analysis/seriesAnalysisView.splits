@@ -51,7 +51,7 @@
           </row>
 
           <column weightY="8" name="charts" opaque="true" background="block.inner.bg.secondary"
-                  border="line(block.inner.border)">
+                  border="${analysis.charts.border}">
             <grid>
               <label gridPos="(0,0)" ref="balanceChartLabel" autoHideSource="balanceChart" weightX="1"
                      styleClass="chartLabel"/>

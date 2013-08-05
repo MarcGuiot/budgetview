@@ -23,7 +23,7 @@
     <ui name="budgetAreaSelectionPanel" class="org.designup.picsou.gui.components.tabs.VerticalTabPanelUI"
         innerBorderColor="categorization.budgetAreaSelector.border"/>
     <style selector="#budgetAreaSelectionPanel" ui="budgetAreaSelectionPanel"
-           background="block.inner.bg.secondary"/>
+           background="categorization.transactionDetails.bg"/>
 
     <style selector="button.showTransactionCreation"
            font="-,plain,11"
@@ -55,7 +55,8 @@
             <row autoHideSource="customFilterMessage" border="empty(10,0,10,0)">
               <panel ref="customFilterMessage"/>
             </row>
-            <scrollPane viewportBackground="#FFFFFF" marginBottom="0" weightY="100">
+            <scrollPane viewportBackground="#FFFFFF" border="line(transaction.border)"
+                        marginBottom="0" weightY="100">
               <table ref="transactionsToCategorize" rowHeight="20"/>
             </scrollPane>
 
@@ -83,8 +84,8 @@
           <column styleClass="innerBlock">
 
             <column weightY="0.1" minimumSize="(200,100)"
-                   opaque="true" background="block.inner.bg.secondary"
-                   border="line(block.inner.border)">
+                   opaque="true" background="categorization.transactionDetails.bg"
+                   border="line(categorization.transactionDetails.border)">
               <panel ref="transactionDetails" margin="5"/>
             </column>
 
@@ -99,13 +100,13 @@
               </card>
 
               <card name="reconciliation">
-                <panel ref="reconciliationPanel"/>
+                <panel ref="reconciliationPanel" border="${categorization.reconciliationPanel.border}"/>
               </card>
 
               <card name="series">
 
-                <row weightX="0.1" name="seriesPanel">
-                  <column border="matte(1,1,1,0,#BBBBBB)" ref="budgetAreaSelectionPanel" weightX="0.1">
+                <row weightX="0.1" name="seriesPanel" border="line(categorization.transactionDetails.border)">
+                  <column ref="budgetAreaSelectionPanel" weightX="0.1">
                     <repeat ref="budgetAreaToggles" layout="column" gridWrapLimit="4" margin="5" marginRight="0">
                       <toggleButton ref="budgetAreaToggle" styleClass="budgetAreaSelector" anchor="left"/>
                     </repeat>

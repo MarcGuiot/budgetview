@@ -69,9 +69,9 @@ public class OtherBankSynchroChecker extends SynchroChecker {
     return MessageDialogChecker.open(window.getButton("update").triggerClick());
   }
 
-  public MessageAndDetailsDialogChecker checkConnectionException() {
+  public SynchroErrorDialogChecker checkConnectionException() {
     window.getComboBox().select("Connection error");
-    return MessageAndDetailsDialogChecker.init(window.getButton("update").triggerClick());
+    return SynchroErrorDialogChecker.init(window.getButton("update").triggerClick());
   }
 
   public OtherBankSynchroChecker clearErrors() {

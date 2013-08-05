@@ -815,9 +815,9 @@ table.field-value td.value {
 #home div#text h1 {
   font-family: helvetica, arial, sans-serif;
   color: #333;
-  font-size: 38px;
+  font-size: 24pt;
   letter-spacing: -1px;
-  line-height: 1.1em;
+  line-height: 1.2em;
   margin: 0px 0px 20px;
   padding: 0px;
   text-align: center;
@@ -827,18 +827,12 @@ table.field-value td.value {
   vertical-align: middle;
 }
 
-#home div#text img#smiley {
-  margin-right: -60px;
-  margin-bottom: -20px;
-  margin-left: 10px;
-}
-
 #home div#text h2 {
   color: #707070;
   font-family: georgia, arial, sans-serif;
   font-size: 18px;
   font-weight: normal;
-  line-height: 1.1em;
+  line-height: 1.2em;
   text-align: center;
   margin: 0px 0px 15px;
   padding: 0px;
@@ -875,11 +869,15 @@ table.field-value td.value {
 }
 
 #home #videoBorder {
-  width: 560px;
+  width: 520px;
   height: 400px;
   border: none;
   margin-left: auto;
   margin-right: auto;
+}
+
+#home #videoBorder img {
+  margin-left: -20px;
 }
 
 #home .intro {
@@ -903,6 +901,7 @@ table.field-value td.value {
 
 #home #zoom table h2 {
   margin-top:0px;
+  margin-bottom:0px;
 }
 
 #home table.image-and-text {
@@ -964,6 +963,14 @@ table.field-value td.value {
   margin-top: 5px;
   margin-bottom: 10px;
 }
+
+#home div#presentation p,
+#home div#presentation li {
+  font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+  font-size: 1.1em;
+  line-height: 1.44em;
+}
+
 
 /*=== SHOW/HIDE ===*/
 

@@ -6,6 +6,7 @@ import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.exceptions.SplitsException;
+import org.globsframework.gui.splits.parameters.ConfiguredPropertiesService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,10 +16,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PropertySetter {
 
   private static PropertySetterCache setterCache = new PropertySetterCache();
+
+  private static Pattern CONFIGURED_PROPERTY_FORMAT = Pattern.compile("\\$\\{([A-z0-9.]+)}");
 
   public static void process(Object component,
                              SplitProperties properties,
@@ -65,7 +70,7 @@ public class PropertySetter {
     });
   }
 
-  private static void invokeSetter(final Object object, final String property, final String value, SplitsContext context) {
+  private static void invokeSetter(final Object object, final String property, final String value, final SplitsContext context) {
     final Class objectClass = object.getClass();
     final Method setter = setterCache.findSetter(objectClass, property);
     if (setter == null) {
@@ -73,7 +78,7 @@ public class PropertySetter {
                                 "' found for class " + objectClass.getSimpleName() +
                                 " (target value: '" + value + "')");
     }
-    Class<?> targetClass = setter.getParameterTypes()[0];
+    final Class<?> targetClass = setter.getParameterTypes()[0];
     if (targetClass == Color.class) {
       if (Colors.isHexaString(value)) {
         invokeSetter(object, setter, Colors.toColor(value), property, value, objectClass);
@@ -89,9 +94,25 @@ public class PropertySetter {
       }
     }
     else {
-      Object targetValue = TypeConverter.getValue(targetClass, property, value, objectClass, context);
-      invokeSetter(object, setter, targetValue, property, value, objectClass);
+      Matcher matcher = CONFIGURED_PROPERTY_FORMAT.matcher(value);
+      if (matcher.matches()) {
+        String propertyKey = matcher.group(1);
+        ConfiguredPropertiesService propertiesService = context.getService(ConfiguredPropertiesService.class);
+        propertiesService.bind(propertyKey, new ConfiguredPropertiesService.Functor() {
+          public void apply(String configuredValue) {
+            convertAndSet(object, property, configuredValue, context, objectClass, setter, targetClass);
+          }
+        });
+      }
+      else {
+        convertAndSet(object, property, value, context, objectClass, setter, targetClass);
+      }
     }
+  }
+
+  private static void convertAndSet(Object object, String property, String value, SplitsContext context, Class objectClass, Method setter, Class<?> targetClass) {
+    Object targetValue = TypeConverter.getValue(targetClass, property, value, objectClass, context);
+    invokeSetter(object, setter, targetValue, property, value, objectClass);
   }
 
   private static void invokeSetter(Object object, Method setter, Object targetValue,

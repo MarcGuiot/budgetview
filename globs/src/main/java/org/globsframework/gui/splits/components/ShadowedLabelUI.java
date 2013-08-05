@@ -39,7 +39,11 @@ public class ShadowedLabelUI extends BasicLabelUI {
   private Direction direction = Direction.SOUTHEAST;
   private Color shadowColor = Color.BLACK;
 
-  public void setDirection(Direction direction) {
+  public void setShadowDirection(String direction) {
+    setShadowDirection(Direction.parse(direction));
+  }
+
+  public void setShadowDirection(Direction direction) {
     this.direction = direction;
   }
 

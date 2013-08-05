@@ -137,33 +137,4 @@ public class SplitsUtils {
     }
     return value;
   }
-
-  public static <T> T instantiate(String className, Class<T> targetClass) {
-    Class<?> actualClass;
-    try {
-      actualClass = Class.forName(className);
-    }
-    catch (ClassNotFoundException e) {
-      throw new ItemNotFound("Cannot find class '" + className + "'");
-    }
-
-    if (!targetClass.isAssignableFrom(actualClass)) {
-      throw new SplitsException("Class '" + className + "' should be a subclass of '" + targetClass.getSimpleName() + "'");
-    }
-
-    Constructor<?> constructor;
-    try {
-      constructor = actualClass.getConstructor();
-    }
-    catch (NoSuchMethodException e) {
-      throw new SplitsException("Class " + actualClass.getName() + " must have a public default constructor");
-    }
-
-    try {
-      return (T)constructor.newInstance();
-    }
-    catch (Exception e) {
-      throw new RuntimeException("Could not instantiate '" + className + "'", e);
-    }
-  }
 }

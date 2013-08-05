@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 
 public class MessageAndDetailsDialog {
   private PicsouDialog dialog;
-  private JButton copyButton;
   private SplitsBuilder builder;
 
   public MessageAndDetailsDialog(String titleKey,
@@ -25,19 +24,12 @@ public class MessageAndDetailsDialog {
 
     builder.add("title", new JLabel(Lang.get(titleKey)));
     builder.add("message", new JEditorPane("text/html", Lang.get(messageKey, messageArgs)));
-
-    JTextArea textArea = new JTextArea();
-    textArea.setText(details);
-    textArea.setCaretPosition(0);
-    textArea.setEditable(false);
-    builder.add("details", textArea);
-
-    copyButton = new JButton(new AbstractAction(Lang.get("exception.copy")) {
+    builder.add("details", GuiUtils.createReadOnlyTextArea(details));
+    builder.add("copy", new JButton(new AbstractAction(Lang.get("exception.copy")) {
       public void actionPerformed(ActionEvent e) {
         GuiUtils.copyTextToClipboard(details);
       }
-    });
-    builder.add("copy", copyButton);
+    }));
 
     dialog = PicsouDialog.create(owner, true, directory);
     dialog.addPanelWithButton(builder.<JPanel>load(), new CloseDialogAction(dialog));

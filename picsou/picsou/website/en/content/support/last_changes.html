@@ -4,11 +4,19 @@
 
   <div class="light-block full-separators">
 
-  <h2>version 3.06 <span class="date">April 5, 2013</span></h2>
+  <h2>version 3.07 <span class="date">April 29, 2013</span></h2>
+  <p>This version contains minor fixes and evolutions:</p>
   <ul>
-      <li>The Android companion to BudgetView is now available on
-          <a href="https://play.google.com/store/apps/details?id=com.budgetview.android">Google Play</a>.
-      </li>
+      <li>You can now delete accounts and envelopes through the right-click pop-up menus.</li>
+      <li>The application now accepts non-standard OFX files where the account positions use a "--100.00" format
+          (with two minus signs... go figure!)</li>
+      <li>The application now accepts OFX files containing transactions but no account. </li>
+      <li>Fixed a problem which caused the application to remain in the background after quitting under Mac.</li>
+      <li>Reinforced the protection against data corruption when using several instances of BudgetView with
+          the same data directory. Please note however that this use case is still not supported, and should
+          be avoided whenever possible.</li>
+      <li>Fixed an error when updating the current date when the application remains open for a few days in a row.</li>
+      <li>Fixed an error that could lead the application to use much more memory than usual.</li>
   </ul>
   <p><b>To upgrade BudgetView</b>, you just have to launch it, wait for a few seconds, and follow
       the instructions that will appear on the screen. If you don't have BudgetView yet,
@@ -17,6 +25,14 @@
          href="http://www.mybudgetview.com/download"
          class="highlighted">download it now!</a>
   </p>
+
+
+  <h2>version 3.06 <span class="date">April 5, 2013</span></h2>
+  <ul>
+      <li>The Android companion to BudgetView is now available on
+          <a href="https://play.google.com/store/apps/details?id=com.budgetview.android">Google Play</a>.
+      </li>
+  </ul>
   <p>And as always, please do not hesitate to write us at
       <a href="mailto:support@mybudgetview.com" class="highlighted">support@mybudgetview.com</a>
       what you think about this release, and how we can make BudgetView even better.</p>

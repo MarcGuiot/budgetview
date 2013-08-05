@@ -29,10 +29,10 @@
     <timeoutErr>true</timeoutErr>
   </splash>
   <messages>
-    <startupErr>Une erreur est survenue au demarage. Nous sommes desole pour ce desagrement. Pouvez vous nous contacter via notre support : http://www.mybudgetview.fr/support</startupErr>
-    <bundledJreErr>This application was configured to use a bundled Java Runtime Environment but the runtime is missing or corrupted.</bundledJreErr>
-    <jreVersionErr>Java n&apos;a pas ete trouve, pouvez vous l&apos;installer depuis l&apos;addresse http://java.com/download et lancer de nouveau BudgetView</jreVersionErr>
+    <startupErr>Une erreur est survenue au d?marrage. Nous vous invitons ? nous contacter ? l&apos;adresse : support@mybudgetview.fr</startupErr>
+    <bundledJreErr>Cette application a ?t? configur?e pour ?tre install?e avec sa propre version de Java, mais celui-ci est absent ou corrompu.</bundledJreErr>
+    <jreVersionErr>Java n&apos;a pas ete trouv? sur votre ordinateur. Vous pouvez l&apos;installer depuis l&apos;addresse http://java.com/download et lancer de nouveau BudgetView</jreVersionErr>
     <launcherErr>The registry refers to a nonexistent Java Runtime Environment installation or the runtime is corrupted.</launcherErr>
-    <instanceAlreadyExistsMsg>BudgetView ne semble pas avoir ete installe correctement. Pouvez vous le desinstaller et installer de nouveau budgetview (vos donnes ne seront pas detruites)</instanceAlreadyExistsMsg>
+    <instanceAlreadyExistsMsg>BudgetView ne semble pas avoir ete install? correctement. Nous vous invitons ? desinstaller puis r?installer de nouveau l&apos;application (vos donn?es ne seront pas effac?es)</instanceAlreadyExistsMsg>
   </messages>
 </launch4jConfig>

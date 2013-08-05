@@ -5,12 +5,12 @@ import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.bank.connectors.SynchroMonitor;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.components.ProgressPanel;
-import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.importer.ImportController;
 import org.designup.picsou.gui.importer.components.RealAccountImporter;
+import org.designup.picsou.gui.importer.components.SynchroErrorDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobList;
@@ -189,8 +189,8 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       }
       StringWriter builder = new StringWriter();
       if (currentConnector != null) {
-        builder.append("version: ").append(Long.toString(PicsouApplication.JAR_VERSION));
         builder.append("bank: ").append(currentConnector.getLabel()).append("\n");
+        builder.append("version: ").append(Long.toString(PicsouApplication.JAR_VERSION)).append("\n");
         builder.append("location: ").append(currentConnector.getCurrentLocation()).append("\n");
       }
       else {
@@ -199,9 +199,9 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       builder.append("exception:\n");
       exception.printStackTrace(new PrintWriter(builder));
       String details = builder.toString();
-      MessageAndDetailsDialog messageDialog =
-        new MessageAndDetailsDialog("synchro.exception.title", "synchro.exception.message", details,
-                                    dialog, localDirectory);
+
+      SynchroErrorDialog messageDialog =
+        new SynchroErrorDialog(details, dialog, localDirectory);
       messageDialog.show();
     }
 

@@ -279,7 +279,10 @@ public class LaBanquePostaleConnector extends WebBankConnector {
   }
 
   private void parseAccounts(WebPage accountsPage, String tableId, boolean savings, List<AccountEntry> entries) throws WebParsingError {
-    WebTable accountTable = accountsPage.getTableById(tableId);
+    WebTable accountTable = accountsPage.findTableById(tableId);
+    if (accountTable == null) {
+      return;
+    }
     List<WebTableRow> rows = accountTable.getRowsWithoutHeaderAndFooters();
     for (WebTableRow row : rows) {
       String name = row.getCell(0).asText();

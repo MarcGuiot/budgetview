@@ -13,15 +13,18 @@ import static org.globsframework.model.FieldValue.value;
 
 public enum ColorTheme implements GlobConstantContainer {
 
-  STANDARD(1, "colors/color.properties", "standard.png"),
-  CLASSIC_BLUE(2, "colors/color_classic_blue.properties", "classic_blue.png"),
-  BLUE(3, "colors/color_blue.properties", "blue.png"),
-  BLACK(4, "colors/color_black.properties", "black.png"),
-  PURPLE(5, "colors/color_purple.properties", "purple.png"),
-  GREEN(6, "colors/color_green.properties", "green.png");
+  STANDARD(1, "colors/color.properties", "themes/theme_classic.properties", "standard.png"),
+  CLASSIC_BLUE(2, "colors/color_classic_blue.properties", "themes/theme_classic.properties", "classic_blue.png"),
+  BLUE(3, "colors/color_blue.properties", "themes/theme_classic.properties", "blue.png"),
+  BLACK(4, "colors/color_black.properties", "themes/theme_classic.properties", "black.png"),
+  PURPLE(5, "colors/color_purple.properties", "themes/theme_classic.properties", "purple.png"),
+  GREEN(6, "colors/color_green.properties", "themes/theme_classic.properties", "green.png"),
+  GREY_FLAT(7, "colors/color_grey_flat.properties", "themes/theme_flat.properties", "flat_grey.png"),
+  BLUE_FLAT(8, "colors/color_blue_flat.properties", "themes/theme_flat.properties", "flat_blue.png");
 
   private final int id;
-  private final String filePath;
+  private final String colorFilePath;
+  private String themeFilePath;
   private final String imagePath;
 
   public static GlobType TYPE;
@@ -29,9 +32,10 @@ public enum ColorTheme implements GlobConstantContainer {
   @Key
   public static IntegerField ID;
 
-  private ColorTheme(int id, String filePath, String imagePath) {
+  private ColorTheme(int id, String colorFilePath, String themeFilePath, String imagePath) {
     this.id = id;
-    this.filePath = filePath;
+    this.colorFilePath = colorFilePath;
+    this.themeFilePath = themeFilePath;
     this.imagePath = imagePath;
   }
 
@@ -48,8 +52,12 @@ public enum ColorTheme implements GlobConstantContainer {
     return id;
   }
 
-  public String getFilePath() {
-    return filePath;
+  public String getColorFilePath() {
+    return colorFilePath;
+  }
+
+  public String getThemeFilePath() {
+    return themeFilePath;
   }
 
   public String getImagePath() {
@@ -75,6 +83,10 @@ public enum ColorTheme implements GlobConstantContainer {
         return PURPLE;
       case 6:
         return GREEN;
+      case 7:
+        return GREY_FLAT;
+      case 8:
+        return BLUE_FLAT;
     }
     throw new InvalidParameter("Unexpected value: " + id);
   }

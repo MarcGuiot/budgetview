@@ -4,11 +4,21 @@
 
   <div class="light-block full-separators">
 
-  <h2>version 3.06 <span class="date">5 avril 2013</span></h2>
+  <h2>version 3.07 <span class="date">26 juin 2013</span></h2>
+  <p>Cette version comporte quelques évolutions et corrections mineures :</p>
   <ul>
-      <li>L'application mobile Android est maintenant disponible sur
-          <a href="https://play.google.com/store/apps/details?id=com.budgetview.android&hl=fr">Google Play</a>.</li>
-      <li>Correction d'une erreur survenant dans le téléchargement direct de relevés auprès de la Caisse d'Epargne</li>
+      <li>Accès aux fonctions de suppression de comptes ou enveloppes à partir des menus de bouton droit (celles-ci
+          n'étaient auparavant disponibles qu'à travers la fenêtre d'édition)</li>
+      <li>L'application accepte désormais les fichiers OFX non-standard dans lequel le solde utilise un format
+          du type "--100.00" (deux signes moins)</li>
+      <li>L'application accepte les fichiers OFX qui comportent des opérations mais aucun compte. </li>
+      <li>Correction d'un blocage survenant par moments sur Mac au moment de quitter l'application.</li>
+      <li>Protection contre la corruption de données lorsque plusieurs applications BudgetView accèdent
+          simultanément au même répertoire de données. Veuillez noter toutefois que ce cas d'utilisation
+          n'est pas supporté, et doit être évité autant que possible.</li>
+      <li>Correction d'une erreur de mise à jour de la date courante dans le logiciel,
+          dans certains cas où celui-ci reste ouvert sur plusieurs jours.</li>
+      <li>Correction d'une erreur pouvant conduire à une utilisation d'une quantité de mémoire vive anormale.</li>
   </ul>
   <p><b>Pour profiter de ces évolutions</b>, il vous suffit de relancer BudgetView, attendre
       quelques secondes, puis suivre les instructions qui s'affichent.
@@ -19,6 +29,13 @@
   <p>Et comme d'habitude, n'hésitez pas à nous écrire à l'adressse
       <a href="mailto:support@mybudgetview.fr" class="highlighted">support@mybudgetview.fr</a>
       pour nous faire part de vos commentaires sur cette nouvelle version.</p>
+
+  <h2>version 3.06 <span class="date">5 juin 2013</span></h2>
+  <ul>
+      <li>L'application mobile Android est maintenant disponible sur
+          <a href="https://play.google.com/store/apps/details?id=com.budgetview.android&hl=fr">Google Play</a>.</li>
+      <li>Correction d'une erreur survenant dans le téléchargement direct de relevés auprès de la Caisse d'Epargne</li>
+  </ul>
 
   <h2>version 3.05 <span class="date">26 mai 2013</span></h2>
   <ul>

@@ -14,7 +14,7 @@
            iconTextGap="2"/>
 
     <style selector="button#accountPosition"
-           font="-,bold,14" foreground="block.inner.link.big"/>
+           font="-,bold,16" foreground="block.inner.link.big"/>
 
     <style selector="toggleButton#selectAccount"
            weightX="0" cursor="hand"
@@ -29,7 +29,7 @@
 
     <style selector="#accountPanel" opaque="true" background="block.inner.bg"/>
 
-    <style selector=".summaryFooter" marginTop="6"/>
+    <style selector=".summaryFooter" marginTop="6" border="${accountPanel.summaryFooter.border}"/>
 
     <style selector=".summaryFooter label" fill="none" anchor="center"/>
 

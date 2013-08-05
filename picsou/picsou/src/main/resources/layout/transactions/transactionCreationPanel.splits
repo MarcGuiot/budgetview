@@ -6,8 +6,8 @@
     <style selector="checkBox.formElement" foreground="block.outer.text" />
     <style selector="radioButton" foreground="block.outer.text" opaque="false" font="-,plain,10"/>
 
-    <style selector=".transactionCreation" opaque="true" border="line(block.inner.border)"
-           background="block.inner.bg.secondary"/>
+    <style selector=".transactionCreation" opaque="true" border="line(transactionCreation.border)"
+           background="transactionCreation.bg"/>
   </styles>
 
   <column styleClass="transactionCreation">

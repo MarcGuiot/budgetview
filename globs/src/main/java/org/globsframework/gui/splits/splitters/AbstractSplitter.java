@@ -21,7 +21,7 @@ public abstract class AbstractSplitter implements Splitter {
   private final Splitter[] subSplitters;
   protected final SplitProperties properties;
   private static final String[] DEFAULT_EXCLUDES =
-    {"ref", "styleClass", "autoHideSource", "gridPos", "opaque", "borderPos",
+    {"ref", "styleClass", "autoHideSource", "gridPos", "borderPos",
      "fill", "anchor", "weightX", "weightY",
      "margin", "marginTop", "marginBottom", "marginLeft", "marginRight"};
 
@@ -35,7 +35,7 @@ public abstract class AbstractSplitter implements Splitter {
     setGridPos(splitComponent.componentConstraints);
     overrideStretch(splitComponent.componentConstraints);
     Component component = splitComponent.componentConstraints.getComponent();
-    setOpacity(component);
+//    setOpacity(component);
     if (addMargin) {
       addMargin(splitComponent.componentConstraints);
     }
