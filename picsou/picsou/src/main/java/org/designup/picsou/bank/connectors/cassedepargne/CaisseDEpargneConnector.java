@@ -274,6 +274,9 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
             WebSelect comptes = currentPage.getSelectById("MM_TELECHARGE_OPERATIONS_m_ExDDLListeComptes");
             List<String> accounts = comptes.getEntryNames();
             for (String account : accounts) {
+              if (account.toLowerCase().contains(("Encours CB").toLowerCase())){
+                continue;
+              }
               int i = account.indexOf(" - ");
               String number = account;
               String name = account;

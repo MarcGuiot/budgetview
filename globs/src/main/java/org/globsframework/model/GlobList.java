@@ -168,7 +168,7 @@ public class GlobList extends ArrayList<Glob> {
   }
 
   public List<Key> getKeyList() {
-    List<Key> result = new ArrayList<Key>();
+    List<Key> result = new ArrayList<Key>(size());
     for (Glob glob : this) {
       result.add(glob.getKey());
     }

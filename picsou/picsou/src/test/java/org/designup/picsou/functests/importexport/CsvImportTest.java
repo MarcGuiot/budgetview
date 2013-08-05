@@ -497,6 +497,31 @@ public class CsvImportTest extends SpecificBankTestCase {
       .cancel();
   }
 
+  public void testWithOneSemicolonAtEnd() throws Exception {
+    String fileName = saveFile(
+      "Date de l\u0092opération;Date de valeur;Libellé de l\u0092opération;Debit;Credit;\n" +
+      "02/08/2013;02/08/2013;ABONNEMENT CPTS INTERNET OFFERT ;;+ 1,35;\n");
+    ImportDialogChecker importDialog = operations.openImportDialog()
+      .setFilePath(fileName);
+
+    importDialog.acceptCsvFile()
+      .checkContains("Date de l\u0092opération", "Date de valeur", "Libellé de l\u0092opération", "Debit", "Credit")
+      .setAsLabel("Libellé de l\u0092opération")
+      .setAsBankDate("Date de valeur")
+      .setAsUserDate("Date de l\u0092opération")
+      .validate()
+      .setAccountName("imported")
+      .setMainAccount()
+      .selectBank("Other")
+      .setPosition(100)
+      .selectDateFormat("Day/Month/Year")
+      .completeImport();
+
+    transactions.initAmountContent()
+      .add("02/08/2013", "ABONNEMENT CPTS INTERNET OFFERT", 1.35, "To categorize", 101.35, 101.35, "imported")
+      .check();
+  }
+
   public void testMultipleDescription() throws Exception {
     String fileName =
       saveFile(
