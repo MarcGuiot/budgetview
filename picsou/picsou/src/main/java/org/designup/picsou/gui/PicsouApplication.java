@@ -34,6 +34,7 @@ import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.font.FontLocator;
+import org.globsframework.gui.splits.parameters.ConfiguredPropertiesService;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.Dates;
@@ -310,6 +311,7 @@ public class PicsouApplication {
     wrapper.add(OpenRequestManager.class, openRequestManager);
     wrapper.add(ApplicationLAF.initUiService());
     wrapper.add(ApplicationLAF.initLayoutService());
+    wrapper.add(ConfiguredPropertiesService.class, new ConfiguredPropertiesService());
     wrapper.add(new TimeService());
     wrapper.add(new UpgradeService(directory));
     wrapper.add(DescriptionService.class, new PicsouDescriptionService());
