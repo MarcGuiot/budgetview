@@ -61,7 +61,7 @@ public class LabelComponent extends DefaultComponent<JLabel> {
                                "should be one of: " +
                                Arrays.toString(ShadowedLabelUI.Direction.values()).toLowerCase() + context.dump());
       }
-      ui.setShadowDirection(direction);
+      ui.setShadowTypedDirection(direction);
     }
   }
 
