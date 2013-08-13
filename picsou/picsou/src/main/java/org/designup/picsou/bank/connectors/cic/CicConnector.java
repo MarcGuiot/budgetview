@@ -99,11 +99,12 @@ public class CicConnector extends WebBankConnector {
             }
 
             WebPage downloadPage = browser.load(DOWNLOAD_PAGE_ADDRESS);
-            WebForm downloadForm = downloadPage.getFormByName("CMFormTelechargement");
-            WebTable accountTable = downloadForm.getTableWithNamedInput("compte");
+            WebForm downloadForm = downloadPage.getFormById("P:F");
+            WebTable accountTable = downloadForm.getTableById("account-table");
             WebTableColumn column = accountTable.getColumn(1);
             for (WebTableCell cell : column) {
               AccountLabel accountLabels = new AccountLabel(cell.asText());
+              System.out.println("CicConnector$ConnectAction.run: account=" + accountLabels);
               createOrUpdateRealAccount(accountLabels.accountName, accountLabels.accountNumber, null, null, BANK_ID);
             }
             doImport();
@@ -122,20 +123,20 @@ public class CicConnector extends WebBankConnector {
 
   public void downloadFile() throws Exception {
     WebPage downloadPage = browser.getCurrentPage();
-    WebForm downloadForm = downloadPage.getFormByName("CMFormTelechargement");
+    WebForm downloadForm = downloadPage.getFormById("P:F");
 
-    downloadForm.getRadioButtonByValue("OFX").select();
+    downloadForm.getRadioButtonById("ofx:DataEntry").select();
 
-    WebTable accountTable = downloadForm.getTableWithNamedInput("compte");
-    WebTableColumn column = accountTable.getColumn(0).removeLastCells(1);
-    for (WebTableCell cell : column) {
-      String siteAccountName = cell.getEnclosingRow().getCell(1).asText();
+    WebTable accountTable = downloadForm.getTableById("account-table");
+    for (WebTableRow row : accountTable.getAllRows()) {
+      String siteAccountName = row.getCell(1).asText();
       boolean toImport = isToImport(siteAccountName);
-      cell.getCheckBox().setChecked(toImport);
+      System.out.println("CicConnector.downloadFile: " + siteAccountName + " ==> " + toImport);
+      row.getCell(0).getCheckBox().setChecked(toImport);
     }
 
     notifyDownloadInProgress();
-    Download download = downloadForm.submitByNameAndDownload("submit");
+    Download download = downloadForm.submitByNameAndDownload("_FID_DoDownload");
     String fileContent = download.readAsOfx();
     for (WebTableCell cell : accountTable.getColumn(1)) {
       for (Glob realAccount : accounts) {
@@ -144,7 +145,7 @@ public class CicConnector extends WebBankConnector {
         }
       }
     }
-  }
+  } 
 
   public String getCode() {
     return userAndPasswordPanel.getUser();

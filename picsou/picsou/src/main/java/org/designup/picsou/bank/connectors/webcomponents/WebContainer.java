@@ -208,7 +208,11 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   }
 
   public WebCheckBox getCheckBox() throws WebParsingError {
-    return new WebCheckBox(browser, getSingleElement("input", HtmlInput.class));
+    return new WebCheckBox(browser, (HtmlInput)getSingleElement("input", new WebFilter() {
+      public boolean matches(HtmlElement element) {
+        return "checkbox".equalsIgnoreCase(element.getAttribute("type"));
+      }
+    }));
   }
 
   public WebCheckBox getCheckBoxById(String id) throws WebParsingError {
@@ -305,6 +309,10 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
 
   public WebImageMap getImageMapById(String id) throws WebParsingError {
     return new WebImageMap(browser, getElementById(id, HtmlMap.class));
+  }
+
+  private <T extends HtmlElement> T getSingleElement(String tagName, WebFilter filter) throws WebParsingError {
+    return HtmlUnit.getSingleElement(node, tagName, filter);
   }
 
   private <T extends HtmlElement> T getSingleElement(String tagName, Class<T> expectedClass) throws WebParsingError {
