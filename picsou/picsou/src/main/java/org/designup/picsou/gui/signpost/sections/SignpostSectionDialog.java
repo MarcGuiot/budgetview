@@ -21,6 +21,7 @@ public class SignpostSectionDialog {
   private GlobRepository repository;
   private Directory directory;
   private PicsouDialog dialog;
+  private GlobsPanelBuilder builder;
 
   public SignpostSectionDialog(GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -30,13 +31,14 @@ public class SignpostSectionDialog {
   public void show(SignpostSection completedSection) {
     PicsouDialog dialog = createDialog(completedSection);
     dialog.showCentered();
+    builder.dispose();
   }
 
   private PicsouDialog createDialog(SignpostSection completedSection) {
 
     dialog = PicsouDialog.create(directory.get(JFrame.class), true, directory);
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/signpost/signpostSectionDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/signpost/signpostSectionDialog.splits",
                                                       repository, directory);
 
     builder.add("title", new JLabel(completedSection.getCompletionTitle())).getComponent();

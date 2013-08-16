@@ -88,16 +88,16 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .reconcile();
 
     categorization.initContent()
+      .add("12/05/2012", "Groceries / Misc", "AUCHAN", -50.00)
       .add("15/05/2012", "", "CARREFOUR", -100.00)
       .add("15/05/2012", "", "[R] FNAC", -100.00)
       .add("12/04/2012", "", "FNAC PAIEMENTS", -75.00)
-      .add("12/05/2012", "Groceries / Misc", "VELIZY AUCHAN", -50.00)
       .add("12/05/2012", "Food", "VELIZY AUCHAN", -25.00)
       .check();
 
-    categorization.selectTableRow(3);
+    categorization.selectTableRow(0);
     transactionDetails
-      .checkLabel("VELIZY AUCHAN")
+      .checkLabel("AUCHAN")
       .checkNote("A comment...");
 
     // Reconciled operations remain reconciled after new import
@@ -106,12 +106,12 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2012/05/20", -75.00, "VELIZY AUCHAN")
       .loadInAccount("Account 1");
     categorization.initContent()
+      .add("12/05/2012", "Groceries / Misc", "AUCHAN", -50.00)
       .add("15/05/2012", "", "CARREFOUR", -100.00)
       .add("20/05/2012", "", "[R] FNAC", -100.00)
       .add("12/04/2012", "", "FNAC PAIEMENTS", -75.00)
-      .add("12/05/2012", "Groceries / Misc", "VELIZY AUCHAN", -50.00)
       .add("12/05/2012", "Food", "VELIZY AUCHAN", -25.00)
-      .add("20/05/2012", "", "VELIZY AUCHAN", -75.00)
+      .add("20/05/2012", "Food", "VELIZY AUCHAN", -75.00)
       .check();
   }
 
@@ -432,12 +432,12 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     transactionDetails.split("-50", "split 1");
     transactionDetails.split("-40", "split 2");
 
-    categorization.reconcile("[R] SPLIT 1", "split 1 : ONE SPLITTED OP");
-    categorization.reconcile("[R] SPLIT 2", "split 2 : ONE SPLITTED OP");
+    categorization.reconcile("[R] SPLIT 1", "ONE SPLITTED OP split 1");
+    categorization.reconcile("[R] SPLIT 2", "ONE SPLITTED OP split 2");
     transactions.initAmountContent()
       .add("10/05/2012", "ONE SPLITTED OP", -10.00, "To categorize", 900.00, 900.00, "Main")
-      .add("10/05/2012", "split 2 : ONE SPLITTED OP", -40.00, "To categorize", 910.00, 910.00, "Main")
-      .add("10/05/2012", "split 1 : ONE SPLITTED OP", -50.00, "To categorize", 950.00, 950.00, "Main")
+      .add("10/05/2012", "ONE SPLITTED OP", -40.00, "To categorize", 910.00, 910.00, "Main")
+      .add("10/05/2012", "ONE SPLITTED OP", -50.00, "To categorize", 950.00, 950.00, "Main")
       .check();
   }
 

@@ -214,6 +214,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
 
   private <T extends ComponentHolder> T store(T component) {
     componentHolders.add(component);
+    addDisposable(component);
     return component;
   }
 

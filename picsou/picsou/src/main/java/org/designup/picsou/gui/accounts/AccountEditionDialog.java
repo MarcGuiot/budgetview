@@ -167,7 +167,6 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
                                              value(Account.POSITION_WITH_PENDING, accountInfo != null ? accountInfo.get(CurrentAccountInfo.POSITION) : null),
                                              value(Account.POSITION_DATE, accountInfo != null ? accountInfo.get(CurrentAccountInfo.POSITION_DATE) : null));
     doShow(newAccount, true);
-    builder.dispose();
   }
 
   private void doShow(Glob localAccount, boolean creation) {

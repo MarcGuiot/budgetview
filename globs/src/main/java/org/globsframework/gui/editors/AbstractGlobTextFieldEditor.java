@@ -30,5 +30,6 @@ public abstract class AbstractGlobTextFieldEditor<PARENT extends AbstractGlobTex
     for (ActionListener listener : textComponent.getActionListeners()) {
       textComponent.removeActionListener(listener);
     }
+    textComponent.setUI(null);
   }
 }

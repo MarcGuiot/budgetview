@@ -154,8 +154,10 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
     currentPage.getTextInputById("MM_TELECHARGE_OPERATIONS_m_DateFin_txtDate")
       .setText(extractDay(to));
 
+    waitJavaScript(500);
+
     currentPage.getSelectById("MM_TELECHARGE_OPERATIONS_ddlChoixLogiciel")
-      .selectByValue("0");
+      .selectContain("ofx");
     waitJavaScript(1500);
     currentPage = browser.retry(currentPage, new WebBrowser.Function1Arg<WebAnchor, WebPage>() {
       public WebAnchor call(WebPage webPage) throws Exception {

@@ -62,6 +62,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
@@ -288,7 +289,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
                                                      GlobsPanelBuilder builder,
                                                      TransactionRendererColors colors,
                                                      Comparator<Glob> transactionComparator,
-                                                     LabelCustomizer extraLabelCustomizer,
+                                                     LabelCustomizer extraSeriesLabelCustomizer,
                                                      GlobRepository repository,
                                                      Directory directory) {
 
@@ -300,8 +301,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
       .addColumn(Lang.get("date"), new TransactionDateStringifier(TransactionComparator.DESCENDING_SPLIT_AFTER),
                  fontSize(9))
       .addColumn(Lang.get("series"), new CompactSeriesStringifier(directory),
-                 chain(extraLabelCustomizer, tooltip(SeriesDescriptionStringifier.transactionSeries(), repository)))
-      .addColumn(Lang.get("label"), descriptionService.getStringifier(Transaction.LABEL),
+                 chain(extraSeriesLabelCustomizer, tooltip(SeriesDescriptionStringifier.transactionSeries(), repository)))
+      .addColumn(Lang.get("label"), new CategorizationTransationStringifier(descriptionService.getStringifier(Transaction.LABEL)),
                  chain(BOLD, new ReconciliationCustomizer(directory), autoTooltip()))
       .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT),
                  LabelCustomizers.chain(ALIGN_RIGHT, new TransactionAmountCustomizer(colors)));
@@ -489,6 +490,27 @@ public class CategorizationView extends View implements TableView, Filterable, C
   public void colorsChanged(ColorLocator colorLocator) {
     envelopeSeriesLabelForegroundColor = colorLocator.get("categorization.changed.envelope.fg");
     envelopeSeriesLabelBackgroundColor = colorLocator.get("categorization.changed.envelope.bg");
+  }
+
+  private static class CategorizationTransationStringifier implements GlobStringifier {
+    private GlobStringifier stringifier;
+
+    public CategorizationTransationStringifier(GlobStringifier transactionStringifier) {
+      this.stringifier = transactionStringifier;
+    }
+
+    public String toString(Glob glob, GlobRepository repository) {
+      if (Strings.isNotEmpty(glob.get(Transaction.NOTE))){
+      return stringifier.toString(glob, repository) + " " + glob.get(Transaction.NOTE);
+      }
+      else {
+        return stringifier.toString(glob, repository);
+      }
+    }
+
+    public Comparator<Glob> getComparator(GlobRepository repository) {
+      return stringifier.getComparator(repository);
+    }
   }
 
   public class SpecialCategorizationRepeatFactory implements RepeatComponentFactory<SpecialCategorizationPanel> {

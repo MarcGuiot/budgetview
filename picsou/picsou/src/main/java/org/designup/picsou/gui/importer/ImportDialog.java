@@ -13,6 +13,7 @@ import org.designup.picsou.triggers.AutomaticSeriesBudgetTrigger;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.SingleComponentLayout;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
@@ -86,6 +87,11 @@ public class ImportDialog implements RealAccountImporter {
       Glob bank = Account.getBank(defaultAccount, localRepository);
       localDirectory.get(SelectionService.class).select(bank);
     }
+    dialog.registerDisposable(new Disposable() {
+      public void dispose() {
+        ImportDialog.this.dispose();
+      }
+    });
   }
 
   private void initMainPanel(ImportStepPanel stepPanel) {
@@ -174,7 +180,6 @@ public class ImportDialog implements RealAccountImporter {
           frame.removeWindowListener(this);
           dialog.pack();
           dialog.showCentered();
-          dispose();
         }
       });
       final JDialog dialog = new JDialog(frame);
@@ -182,6 +187,11 @@ public class ImportDialog implements RealAccountImporter {
         public void run() {
           while (!dialog.isVisible()) {
             SwingUtilities.invokeLater(this);
+            try {
+              Thread.sleep(200);
+            }
+            catch (InterruptedException e) {
+            }
           }
           dialog.setVisible(false);
         }
@@ -194,7 +204,6 @@ public class ImportDialog implements RealAccountImporter {
       dialog.pack();
       currentPanel.requestFocus();
       dialog.showCentered();
-      dispose();
     }
   }
 
@@ -207,7 +216,6 @@ public class ImportDialog implements RealAccountImporter {
     fileSelectionPanel.dispose();
     previewPanel.dispose();
     completionPanel.dispose();
-    dialog.dispose();
   }
 
   public void showLastImportedMonthAndClose(Set<Integer> months) {

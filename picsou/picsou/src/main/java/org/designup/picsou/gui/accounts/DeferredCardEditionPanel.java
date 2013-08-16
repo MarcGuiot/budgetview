@@ -5,13 +5,14 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobComboEditor;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class DeferredCardEditionPanel {
+public class DeferredCardEditionPanel implements Disposable {
 
   private GlobRepository repository;
   private Directory directory;
@@ -21,6 +22,7 @@ public class DeferredCardEditionPanel {
   private GlobComboEditor deferredMonthShift;
 
   private JPanel panel;
+  private GlobsPanelBuilder builder;
 
   public DeferredCardEditionPanel(GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -35,9 +37,9 @@ public class DeferredCardEditionPanel {
   }
 
   private JPanel createPanel() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(),
-                                                      "/layout/accounts/deferredCardEditionPanel.splits",
-                                                      repository, directory);
+    builder = new GlobsPanelBuilder(getClass(),
+                                    "/layout/accounts/deferredCardEditionPanel.splits",
+                                    repository, directory);
     deferredDay = builder.addComboEditor("deferredDay", Account.DEFERRED_DAY);
     deferredDebitDay = builder.addComboEditor("deferredDebitDay", Account.DEFERRED_DEBIT_DAY);
     deferredMonthShift =
@@ -52,6 +54,10 @@ public class DeferredCardEditionPanel {
     deferredDay.getComponent().setVisible(visible);
     deferredDebitDay.getComponent().setVisible(visible);
     deferredMonthShift.getComponent().setVisible(visible);
+  }
+
+  public void dispose() {
+    builder.dispose();
   }
 
   private class MonthShiftRenderer extends DefaultListCellRenderer {

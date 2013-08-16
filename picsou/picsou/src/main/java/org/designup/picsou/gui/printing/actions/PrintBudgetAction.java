@@ -12,8 +12,6 @@ import java.util.SortedSet;
 
 public class PrintBudgetAction extends MultiSelectionAction {
 
-  private PrintBudgetDialog dialog;
-
   public PrintBudgetAction(GlobRepository repository, Directory directory) {
     super(Month.TYPE, repository, directory);
   }
@@ -23,9 +21,7 @@ public class PrintBudgetAction extends MultiSelectionAction {
   }
 
   protected void processClick(GlobList months, GlobRepository repository, Directory directory) {
-    if (dialog == null) {
-      dialog = new PrintBudgetDialog(repository, directory);
-    }
+    PrintBudgetDialog dialog = new PrintBudgetDialog(repository, directory);
     SortedSet<Integer> selectedMonths = months.getSortedSet(Month.ID);
     dialog.show(selectedMonths);
   }

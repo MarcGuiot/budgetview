@@ -78,6 +78,24 @@ public class WebSelect extends WebComponent<HtmlSelect> {
       throw new WebParsingError(this, "More than one selected value: " + result);
     }
     return result.get(0);
-
   }
+
+  public WebPage selectContain(String text) throws WebParsingError {
+    for (HtmlOption option : node.getOptions()) {
+      boolean selected = option.asText().trim().toLowerCase().contains(text.toLowerCase());
+      if (selected) {
+        Page page = option.setSelected(true);
+        browser.setCurrentPage(page);
+        return browser.getCurrentPage();
+      }
+      else if (option.isSelected()) {
+        option.setSelected(false);
+      }
+    }
+    throw new WebParsingError(this,
+                              "No option with text '" + text + "' " +
+                              "for combo: " + node.getAttribute("id") +
+                              " - actual content: " + getEntryNames());
+  }
+
 }

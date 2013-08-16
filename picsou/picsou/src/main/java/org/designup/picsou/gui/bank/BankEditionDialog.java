@@ -41,6 +41,7 @@ public class BankEditionDialog {
 
   private Glob currentBank;
   private Key currentBankKey;
+  private GlobsPanelBuilder builder;
 
   public BankEditionDialog(Window owner, GlobRepository parentRepository, Directory directory) {
     this.localRepository =
@@ -62,9 +63,8 @@ public class BankEditionDialog {
     dialog = PicsouDialog.create(owner, true, localDirectory);
     OkAction okAction = new OkAction();
 
-    final GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/bank/bankEditionDialog.splits",
-                            localRepository, localDirectory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/bank/bankEditionDialog.splits",
+                          localRepository, localDirectory);
 
     title = new JLabel();
     builder.add("title", title);
@@ -126,7 +126,6 @@ public class BankEditionDialog {
     });
 
     GuiUtils.showCentered(dialog);
-
     return currentBankKey;
   }
 

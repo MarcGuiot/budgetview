@@ -60,6 +60,7 @@ public class UserSelectionDialog {
   private String show() {
     dialog.pack();
     GuiUtils.showCentered(dialog);
+    builder.dispose();
     return result;
   }
 
