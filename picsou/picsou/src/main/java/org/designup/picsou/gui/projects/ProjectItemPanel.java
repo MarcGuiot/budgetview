@@ -6,7 +6,7 @@ import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.MonthSlider;
 import org.designup.picsou.gui.components.PopupGlobFunctor;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
-import org.designup.picsou.gui.components.images.ImageLabel;
+import org.designup.picsou.gui.components.images.GlobImageLabelView;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.description.stringifiers.MonthFieldListStringifier;
 import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
@@ -38,7 +38,6 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
 
 public class ProjectItemPanel implements Disposable {
 
@@ -52,6 +51,7 @@ public class ProjectItemPanel implements Disposable {
   private JPanel editionPanel;
   private DisposableGroup disposables = new DisposableGroup();
   private GlobTextEditor nameField;
+  private JTextField amountEditorField;
 
   public ProjectItemPanel(Glob item, GlobRepository parentRepository, Directory directory) {
     this.itemKey = item.getKey();
@@ -94,7 +94,9 @@ public class ProjectItemPanel implements Disposable {
     builder.add("itemButton", itemButton);
     disposables.add(itemButton);
 
-    ImageLabel imageLabel = new ImageLabel(itemKey, ProjectItem.IMAGE_PATH, parentRepository, directory, true);
+    GlobImageLabelView imageLabel = GlobImageLabelView.init(ProjectItem.IMAGE_PATH, parentRepository, directory)
+      .setAutoHide(true)
+      .forceKeySelection(itemKey);
     builder.add("imageLabel", imageLabel.getLabel());
 
     GlobLabelView monthLabel = GlobLabelView.init(ProjectItem.TYPE, parentRepository, directory,
@@ -149,8 +151,11 @@ public class ProjectItemPanel implements Disposable {
     builder.add("nameField", nameField);
     disposables.add(nameField);
 
-    ImageLabel imageLabel = new ImageLabel(itemKey, ProjectItem.IMAGE_PATH, localRepository, directory, false);
+    GlobImageLabelView imageLabel =
+      GlobImageLabelView.init(ProjectItem.IMAGE_PATH, localRepository, directory)
+      .forceKeySelection(itemKey);
     builder.add("imageLabel", imageLabel.getLabel());
+    builder.add("imageActions", imageLabel.getPopupButton(Lang.get("projectView.item.edition.imageActions")));
 
     MonthSlider monthButton = new MonthSlider(itemKey, ProjectItem.MONTH, localRepository, directory);
     builder.add("monthEditor", monthButton);
@@ -162,6 +167,7 @@ public class ProjectItemPanel implements Disposable {
         .update(false, false);
     builder.add("amountEditor", amountEditor.getPanel());
     disposables.add(amountEditor);
+    amountEditorField = amountEditor.getNumericEditor().getComponent();
 
     GlobTextEditor urlField = GlobTextEditor.init(ProjectItem.URL, localRepository, directory)
       .forceSelection(itemKey);
@@ -178,10 +184,6 @@ public class ProjectItemPanel implements Disposable {
     JPopupButton actionsPopup = new JPopupButton(Lang.get("projectView.item.edition.actions"), actionsMenu);
     builder.add("actions", actionsPopup);
 
-    JPopupMenu imageMenu = new JPopupMenu();
-    imageMenu.add(new BrowseImageAction());
-    JPopupButton imageActions = new JPopupButton(Lang.get("projectView.item.edition.imageActions"), imageMenu);
-    builder.add("imageActions", imageActions);
 
     builder.add("validate", new ValidateAction());
     builder.add("cancel", new CancelAction());
@@ -207,6 +209,16 @@ public class ProjectItemPanel implements Disposable {
     }
     localRepository.rollback();
     showPanel(editionPanel);
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        if (Strings.isNullOrEmpty(nameField.getComponent().getText())) {
+          GuiUtils.selectAndRequestFocus(nameField.getComponent());
+        }
+        else {
+          GuiUtils.selectAndRequestFocus(amountEditorField);
+        }
+      }
+    });
   }
 
   private boolean check() {
@@ -280,24 +292,6 @@ public class ProjectItemPanel implements Disposable {
       String url = list.getFirst().get(ProjectItem.URL);
       if (Strings.isNotEmpty(url)) {
         directory.get(BrowsingService.class).launchBrowser(url);
-      }
-    }
-  }
-
-  private class BrowseImageAction extends AbstractAction {
-    private BrowseImageAction() {
-      super(Lang.get("projectView.item.edition.image.browse"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      JFileChooser chooser = new JFileChooser();
-      chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-      int returnVal = chooser.showOpenDialog(directory.get(JFrame.class));
-      if (returnVal == JFileChooser.APPROVE_OPTION) {
-        File file = chooser.getSelectedFile();
-        if (file.exists()) {
-          localRepository.update(itemKey, ProjectItem.IMAGE_PATH, file.getAbsolutePath());
-        }
       }
     }
   }

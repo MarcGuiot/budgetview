@@ -2,6 +2,7 @@ package org.designup.picsou.gui.projects;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
+import org.designup.picsou.gui.components.images.GlobImageLabelView;
 import org.designup.picsou.gui.model.ProjectStat;
 import org.designup.picsou.gui.projects.actions.DeleteProjectAction;
 import org.designup.picsou.gui.projects.components.ProjectNameEditor;
@@ -20,7 +21,6 @@ import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
@@ -90,6 +90,18 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     projectNameEditor = new ProjectNameEditor(factory, repository, directory);
     builder.add("projectNameEditor", projectNameEditor.getPanel());
 
+    GlobImageLabelView imageLabel = GlobImageLabelView.init(Project.IMAGE_PATH, repository, directory);
+    builder.add("imageLabel", imageLabel.getLabel());
+    builder.add("imageActions", imageLabel.getPopupButton(Lang.get("projectView.item.edition.imageActions")));
+
+    totalActual = builder.addLabel("totalActual", ProjectStat.ACTUAL_AMOUNT);
+    totalPlanned = builder.addLabel("totalPlanned", ProjectStat.PLANNED_AMOUNT);
+
+    gauge =
+      SimpleGaugeView.init(ProjectStat.ACTUAL_AMOUNT, ProjectStat.PLANNED_AMOUNT, repository, directory)
+       .setAutoHideIfEmpty(true);
+    builder.add("gauge", gauge.getComponent());
+
     repeat = builder.addRepeat("items",
                                ProjectItem.TYPE,
                                GlobMatchers.NONE,
@@ -97,12 +109,6 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
                                new ProjectItemRepeatFactory());
 
     builder.add("addItem", new AddItemAction());
-
-    totalActual = builder.addLabel("totalActual", ProjectStat.ACTUAL_AMOUNT);
-    totalPlanned = builder.addLabel("totalPlanned", ProjectStat.PLANNED_AMOUNT);
-
-    gauge = SimpleGaugeView.init(ProjectStat.ACTUAL_AMOUNT, ProjectStat.PLANNED_AMOUNT, repository, directory);
-    builder.add("gauge", gauge.getComponent());
 
     parentBuilder.add("projectEditionView", builder);
   }

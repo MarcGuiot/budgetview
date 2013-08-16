@@ -40,6 +40,12 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
+  public ProjectEditionChecker checkProjectGaugeHidden() {
+    assertFalse(getPanel().getPanel("gauge").isVisible());
+    assertFalse(getPanel().getPanel("gaugePanel").isVisible());
+    return this;
+  }
+
   public ProjectEditionChecker checkProjectGauge(double actual, double planned) {
 
     assertThat(getPanel().getTextBox("totalActual").textEquals(Formatting.toString(actual)));

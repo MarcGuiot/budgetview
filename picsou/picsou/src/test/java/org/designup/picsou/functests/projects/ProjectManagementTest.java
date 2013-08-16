@@ -26,7 +26,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     projects.create();
     currentProject
-      .checkProjectGauge(0.00, 0.00)
+      .checkProjectGaugeHidden()
       .setName("My project")
       .checkItemCount(0);
     currentProject.addItem()

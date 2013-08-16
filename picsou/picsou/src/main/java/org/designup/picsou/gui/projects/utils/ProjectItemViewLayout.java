@@ -159,7 +159,7 @@ public class ProjectItemViewLayout implements LayoutManager {
       gaugeTop = firstRowBottom - gaugeSize.height;
       actualLabelLeft = gaugeLeft - SPACE - actualLabelWidth;
       actualLabelTop = firstRowBottom - actualLabelSize.height;
-      monthLabelLeft = actualLabelLeft - SPACE - monthLabelSize.width;
+      monthLabelLeft = gaugeLeft - SPACE - actualLabelSize.width - SPACE - monthLabelSize.width;
       monthLabelTop = firstRowBottom - monthLabelSize.height;
       itemButtonMaxWidth = monthLabelLeft - itemButtonLeft;
       imageLabelLeft = left + IMAGE_LEFT_MARGIN;

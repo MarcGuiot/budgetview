@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector="label.totalAmount" font="-,bold,14" foreground="#222" marginRight="5"
+    <style selector="label.totalAmount" font="-,plain,11" foreground="projectView.item.view.label" marginRight="5"
            anchor="center" fill="none"/>
 
     <style selector="button.addItem"
@@ -15,18 +15,20 @@
            font="-,plain,12" fill="none" anchor="west" marginLeft="10"/>
   </styles>
 
-  <column opaque="false">
+  <column border="empty(5)">
 
-    <row opaque="false">
-      <component ref="projectNameEditor"/>
-    </row>
-
-    <row marginTop="10" marginBottom="10" opaque="false">
-      <label text="$projectEdition.total.actual" styleClass="formLabel"/>
-      <label ref="totalActual" styleClass="totalAmount"/>
-      <component ref="gauge" styleClass="totalGauge"/>
-      <label ref="totalPlanned" styleClass="totalAmount"/>
-      <label text="$projectEdition.total.planned" styleClass="formLabelRight"/>
+    <row marginBottom="10" weightY="0.1">
+      <label ref="imageLabel" marginRight="10" minimumSize="(170,120)" preferredSize="(170,120)" fill="both"/>
+      <column>
+        <component ref="projectNameEditor"/>
+        <row name="gaugePanel" opaque="false" autoHideSource="gauge" border="empty(10,0,10,0)">
+          <component ref="gauge" styleClass="totalGauge"/>
+          <label ref="totalActual" styleClass="totalAmount"/>
+          <label text=" / " styleClass="totalAmount" marginLeft="5" marginRight="5"/>
+          <label ref="totalPlanned" styleClass="totalAmount"/>
+        </row>
+        <filler fill="vertical"/>
+      </column>
     </row>
 
     <column styleClass="blockScrollBorder" border="matte(1,0,0,0,projectView.border)" weightY="100.0">
@@ -40,7 +42,6 @@
         </column>
       </scrollPane>
     </column>
-
 
   </column>
 

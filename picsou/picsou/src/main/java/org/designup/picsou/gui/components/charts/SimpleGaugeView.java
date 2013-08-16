@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.components.charts;
 
+import com.budgetview.shared.utils.Amounts;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -14,6 +15,7 @@ public class SimpleGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> 
   private DoubleField actualValueField;
   private DoubleField targetValueField;
   private Gauge gauge = new Gauge();
+  private boolean autoHideIfEmpty;
 
   public static SimpleGaugeView init(DoubleField actualValueField, DoubleField targetValueField,
                                      GlobRepository repository, Directory directory) {
@@ -26,6 +28,12 @@ public class SimpleGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> 
     this.actualValueField = actualValueField;
     this.targetValueField = targetValueField;
     repository.addChangeListener(this);
+  }
+
+  public SimpleGaugeView setAutoHideIfEmpty(boolean autoHide) {
+    autoHideIfEmpty = autoHide;
+    update();
+    return this;
   }
 
   public void setKey(Key key) {
@@ -55,11 +63,11 @@ public class SimpleGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> 
       return;
     }
     Glob glob = repository.find(key);
-    if (glob == null) {
-      gauge.getModel().setValues((double)0, (double)0);
-    }
-    else {
-      gauge.getModel().setValues(glob.get(actualValueField, 0.00), glob.get(targetValueField, 0.00));
+    double actual = glob != null ? glob.get(actualValueField, 0.00) : 0.00;
+    double target = glob != null ? glob.get(targetValueField, 0.00) : 0.00;
+    gauge.getModel().setValues(actual, target);
+    if (autoHideIfEmpty) {
+      gauge.setVisible(Amounts.isNotZero(actual) && Amounts.isNotZero(target));
     }
   }
 }

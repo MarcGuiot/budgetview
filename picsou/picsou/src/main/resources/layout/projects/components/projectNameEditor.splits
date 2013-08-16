@@ -7,9 +7,9 @@
            foreground="projectView.nameButton"
            fill="none" anchor="left" weightX="100"
            font="-,bold,16" cursor="hand"
-           icon="downArrow(10,18,8,8,block.inner.arrow.idle)"
-           rolloverIcon="downArrow(10,18,8,8,block.inner.arrow.rollover)"
-           pressedIcon="downArrow(10,18,8,8,block.inner.arrow.pressed)"
+           icon="downArrow(14,18,12,12,block.inner.arrow.idle)"
+           rolloverIcon="downArrow(14,18,12,12,block.inner.arrow.rollover)"
+           pressedIcon="downArrow(14,18,12,12,block.inner.arrow.pressed)"
            horizontalAlignment="left"
            horizontalTextPosition="right"
            iconTextGap="4"/>
