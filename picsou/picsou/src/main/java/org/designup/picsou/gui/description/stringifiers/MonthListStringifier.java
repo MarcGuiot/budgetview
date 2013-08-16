@@ -49,7 +49,8 @@ public class MonthListStringifier implements GlobListStringifier {
       return "";
     }
     if (monthIds.size() == 1) {
-      return Month.getFullLabel(monthIds.iterator().next());
+      Integer monthId = monthIds.iterator().next();
+      return rangeFormatter.monthRangeInYear(monthId, monthId, Month.toYear(monthId));
     }
 
     int[] months = getSortedMonths(monthIds);

@@ -36,6 +36,7 @@ import org.designup.picsou.gui.notifications.NotificationsFlagView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.preferences.dev.DevOptionsAction;
 import org.designup.picsou.gui.printing.actions.PrintBudgetAction;
+import org.designup.picsou.gui.projects.ProjectEditionView;
 import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodBudgetAreaTrigger;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
@@ -114,6 +115,7 @@ public class MainPanel {
   private TransactionView transactionView;
   private SeriesAnalysisView seriesAnalysisView;
   private CategorizationView categorizationView;
+  private ProjectEditionView projectEditionView;
   private SignpostView signpostView;
   private Action threadsAction;
   private EditMobileAccountAction editMobileAccountAction;
@@ -152,10 +154,14 @@ public class MainPanel {
     categorizationView = new CategorizationView(repository, directory);
     timeView = new TimeView(repository, directory);
 
+    ReplicationGlobRepository replicationGlobRepository =
+      new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodBudgetAreaStat.TYPE);
+    projectEditionView = new ProjectEditionView(repository, directory);
+
     BudgetToggle budgetToggle = new BudgetToggle(repository);
     budgetToggle.registerComponents(builder);
 
-    directory.add(new NavigationService(transactionView, categorizationView, budgetToggle, repository, directory));
+    directory.add(new NavigationService(transactionView, categorizationView, projectEditionView, budgetToggle, repository, directory));
 
     importFileAction = ImportFileAction.initForMenu(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
@@ -174,9 +180,6 @@ public class MainPanel {
     threadsAction = new SendStackTracesAction(repository, directory);
 
     LicenseInfoView licenseInfoView = new LicenseInfoView(repository, directory);
-
-    ReplicationGlobRepository replicationGlobRepository =
-      new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodBudgetAreaStat.TYPE);
 
     PeriodSeriesStatUpdater.init(replicationGlobRepository, directory);
     PeriodBudgetAreaTrigger.init(replicationGlobRepository);
@@ -197,6 +200,7 @@ public class MainPanel {
       seriesAnalysisView,
       new SavingsView(replicationGlobRepository, directory),
       new SummaryView(repository, directory),
+      projectEditionView,
       new FeedbackView(repository, directory),
       signpostView,
       licenseInfoView,

@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.series;
 
-import org.designup.picsou.gui.projects.ProjectEditionDialog;
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Project;
 import org.globsframework.model.*;
@@ -12,15 +12,15 @@ public class SeriesEditor {
 
   private SeriesEditionDialog seriesEditionDialog;
   private SeriesAmountEditionDialog seriesAmountEditionDialog;
-  private ProjectEditionDialog projectEditionDialog;
   private GlobRepository repository;
   private Integer lastSelectedSubSeriesId;
+  private NavigationService navigationService;
 
   public SeriesEditor(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.seriesEditionDialog = new SeriesEditionDialog(repository, directory);
     this.seriesAmountEditionDialog = new SeriesAmountEditionDialog(repository, directory, seriesEditionDialog);
-    this.projectEditionDialog = new ProjectEditionDialog(repository, directory);
+    this.navigationService = directory.get(NavigationService.class);
   }
 
   public Key showNewSeries(GlobList transactions, GlobList months, BudgetArea budgetArea, FieldValue... forcedValues) {
@@ -32,7 +32,7 @@ public class SeriesEditor {
   public void showSeries(Glob series, Set<Integer> selectedMonthIds) {
     Glob project = Project.findProject(series, repository);
     if (project != null) {
-      projectEditionDialog.show(project.getKey());
+      navigationService.gotoProject(project.getKey());
       lastSelectedSubSeriesId = null;
     }
     else {
@@ -44,7 +44,7 @@ public class SeriesEditor {
   public void showAmount(Glob series, Set<Integer> selectedMonthIds) {
     Glob project = Project.findProject(series, repository);
     if (project != null) {
-      projectEditionDialog.show(project.getKey());
+      navigationService.gotoProject(project.getKey());
     }
     else {
       seriesAmountEditionDialog.show(series, selectedMonthIds);
@@ -53,7 +53,7 @@ public class SeriesEditor {
   }
 
   public void showNewProject() {
-    projectEditionDialog.showNewProject();
+    navigationService.gotoNewProject();
   }
 
   public Integer getLastSelectedSubSeriesId() {

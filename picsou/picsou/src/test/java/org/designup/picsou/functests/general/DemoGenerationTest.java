@@ -322,11 +322,11 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     //======== "HOUSE RENOVATION" PROJECT ===========
 
-    budgetView.extras.createProject()
+    budgetView.extras.createProject();
+    currentProject
       .setName(project("house"))
-      .setItem(0, "First", firstMonth, -900.00)
-      .addItem(1, "Second", secondMonth, -600.00)
-      .validate();
+      .addItem(0, "First", firstMonth, -900.00)
+      .addItem(1, "Second", secondMonth, -600.00);
 
     //======== "TRIP" PROJECT ===========
 
@@ -334,13 +334,13 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     int holidaysMonth2 = Month.next(thirdMonth, 3);
     int holidaysMonth3 = Month.next(thirdMonth, 4);
     timeline.selectMonth(Month.toString(holidaysMonth3));
-    budgetView.extras.createProject()
+    budgetView.extras.createProject();
+    currentProject
       .setName(project("trip"))
-      .setItem(0, "Accomodation reservation", holidaysMonth1, -600.00)
+      .addItem(0, "Accomodation reservation", holidaysMonth1, -600.00)
       .addItem(1, "Flight tickets", holidaysMonth1, -450.00)
       .addItem(2, "Equipment", holidaysMonth2, -400.00)
-      .addItem(3, "Accomodation", holidaysMonth3, -1000.00)
-      .validate();
+      .addItem(3, "Accomodation", holidaysMonth3, -1000.00);
 
     //======== PROVISIONS ===========
 

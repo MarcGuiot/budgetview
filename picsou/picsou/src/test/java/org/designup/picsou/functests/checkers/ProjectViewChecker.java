@@ -14,12 +14,12 @@ public class ProjectViewChecker extends ViewChecker {
     super(mainWindow);
   }
 
-  public ProjectEditionChecker create() {
-    return ProjectEditionChecker.open(getPanel().getButton("createProject"));
+  public void create() {
+    getPanel().getButton("createProject").click();
   }
 
-  public ProjectEditionChecker edit(String projectName) {
-    return ProjectEditionChecker.open(getChart().triggerClick(projectName));
+  public void select(String projectName) {
+    getChart().click(projectName, false);
   }
 
   public void selectMonth(int monthId) {

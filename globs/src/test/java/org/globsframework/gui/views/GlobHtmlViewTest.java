@@ -7,6 +7,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;
 import org.uispec4j.TextBox;
 
+import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
@@ -41,4 +42,19 @@ public class GlobHtmlViewTest extends GlobTextViewTestCase {
     textBox.clickOnHyperlink("globs");
     assertEquals("click", builder.toString());
   }
+
+  public void testAutoHideWithEmptyHtml() throws Exception {
+    AbstractGlobTextView view = initView(repository, DummyObject.NAME)
+      .setAutoHideIfEmpty(true)
+      .forceSelection(glob1.getKey());
+
+    repository.update(glob1.getKey(), DummyObject.NAME, "");
+
+    JEditorPane editor = (JEditorPane)view.getComponent();
+    assertFalse(editor.isVisible());
+
+    repository.update(glob1.getKey(), DummyObject.NAME, "name1");
+    assertTrue(editor.isVisible());
+  }
+
 }

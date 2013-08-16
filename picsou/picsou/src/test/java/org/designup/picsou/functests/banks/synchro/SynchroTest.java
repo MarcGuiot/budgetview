@@ -104,7 +104,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     transactionCreation.show().selectAccount("secondary")
-      .shouldUpdatePosition().setNotToBeReconcile().create(23, "new op", 90);
+      .shouldUpdatePosition().setNotToBeReconciled().create(23, "new op", 90);
 
     savingsAccounts.checkPosition("secondary", 100);
 

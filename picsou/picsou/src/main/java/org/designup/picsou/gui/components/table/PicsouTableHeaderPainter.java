@@ -46,10 +46,10 @@ public class PicsouTableHeaderPainter implements CellPainter, ColorChangeListene
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    lightColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_LIGHT);
-    mediumColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_MEDIUM);
-    darkColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_DARK);
-    borderColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_BORDER);
+    lightColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_STD_LIGHT);
+    mediumColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_STD_MEDIUM);
+    darkColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_STD_DARK);
+    borderColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_STD_BORDER);
 
     filteredLightColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_FILTERED_LIGHT);
     filteredMediumColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_FILTERED_MEDIUM);

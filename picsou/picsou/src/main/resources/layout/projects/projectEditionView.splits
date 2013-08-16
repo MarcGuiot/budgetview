@@ -1,0 +1,47 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.totalAmount" font="-,bold,14" foreground="#222" marginRight="5"
+           anchor="center" fill="none"/>
+
+    <style selector="button.addItem"
+           ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"
+           fill="none" anchor="west" marginLeft="10" tooltipText="$projectEdition.addItem.tooltip"/>
+
+    <style selector="button.plus"
+           ui="hyperlinkButtonWithoutUnderline" foreground="dialog.block.add"
+           text="$projectEdition.add" tooltipText="$projectEdition.addItem.tooltip"
+           font="-,plain,12" fill="none" anchor="west" marginLeft="10"/>
+  </styles>
+
+  <column opaque="false">
+
+    <row opaque="false">
+      <component ref="projectNameEditor"/>
+    </row>
+
+    <row marginTop="10" marginBottom="10" opaque="false">
+      <label text="$projectEdition.total.actual" styleClass="formLabel"/>
+      <label ref="totalActual" styleClass="totalAmount"/>
+      <component ref="gauge" styleClass="totalGauge"/>
+      <label ref="totalPlanned" styleClass="totalAmount"/>
+      <label text="$projectEdition.total.planned" styleClass="formLabelRight"/>
+    </row>
+
+    <column styleClass="blockScrollBorder" border="matte(1,0,0,0,projectView.border)" weightY="100.0">
+      <scrollPane forceVerticalScroll="true">
+        <column>
+          <repeat ref="items" layout="column" marginTop="5" marginBottom="0">
+            <panel ref="projectItemPanel" border="matte(0,0,1,0,projectView.item.border)"/>
+          </repeat>
+          <button action="addItem" styleClass="plus"/>
+          <filler fill="vertical"/>
+        </column>
+      </scrollPane>
+    </column>
+
+
+  </column>
+
+</splits>

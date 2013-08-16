@@ -1,5 +1,6 @@
 package org.globsframework.gui.views;
 
+import org.globsframework.gui.splits.utils.HtmlUtils;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.GlobRepository;
@@ -32,6 +33,10 @@ public class GlobHtmlView extends AbstractGlobTextView<GlobHtmlView> {
 
   public void addHyperlinkListener(HyperlinkListener listener) {
     editorPane.addHyperlinkListener(listener);
+  }
+
+  protected boolean isTextEmpty(String text) {
+    return super.isTextEmpty(HtmlUtils.cleanup(text));
   }
 
   public JEditorPane getComponent() {

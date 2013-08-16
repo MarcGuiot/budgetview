@@ -4,19 +4,23 @@
   <styles>
     <style selector="toggleButton"
            weightX="0" fill="none" anchor="center"
-           minimumSize="(21,21)" preferredSize="(21,21)"
+           minimumSize="(26,14)" preferredSize="(26,14)"
            text="" opaque="false" borderPainted="false"
            cursor="hand"/>
+    <ui name="plusMinusToggle" class="org.designup.picsou.gui.components.ui.PlusMinusToggleUI"
+        bgColor="#e0e0e0"
+        fgColor="#ffffff"
+        bgBorderColor="#808080"
+        fgBorderColor="#000000"
+        selectedTextColor="#000000"
+        rolloverTextColor="#0000FF"
+        unselectedTextColor="#888888"
+      />
   </styles>
 
   <row opaque="false">
-    <toggleButton ref="positiveAmount" weightX="0"
-                  icon="amount_sign_plus_unselected.png" selectedIcon="amount_sign_plus.png"/>
-
-    <toggleButton ref="negativeAmount" weightX="0"
-                  icon="amount_sign_minus_unselected.png" selectedIcon="amount_sign_minus.png"/>
-
-    <textField ref="amountEditor" columns="6" marginLeft="3"/>
+    <toggleButton ref="signToggle" weightX="0" ui="plusMinusToggle"/>
+    <textField ref="amountEditionField" columns="6" marginLeft="3"/>
   </row>
 
 </splits>

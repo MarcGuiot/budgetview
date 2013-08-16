@@ -194,12 +194,12 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     }
   }
 
-  public Glob findOrCreate(Key key, FieldValue... defaultValues) throws MissingInfo {
+  public Glob findOrCreate(Key key, FieldValue... valuesForCreate) throws MissingInfo {
     if (managedTypes.contains(key.getGlobType())) {
-      return super.findOrCreate(key, defaultValues);
+      return super.findOrCreate(key, valuesForCreate);
     }
     else {
-      return originalRepository.findOrCreate(key, defaultValues);
+      return originalRepository.findOrCreate(key, valuesForCreate);
     }
   }
 

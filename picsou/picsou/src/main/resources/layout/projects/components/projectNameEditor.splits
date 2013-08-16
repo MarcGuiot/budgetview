@@ -1,0 +1,35 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="button#projectNameButton"
+           ui="hyperlinkButtonWithoutUnderline"
+           foreground="projectView.nameButton"
+           fill="none" anchor="left" weightX="100"
+           font="-,bold,16" cursor="hand"
+           icon="downArrow(10,18,8,8,block.inner.arrow.idle)"
+           rolloverIcon="downArrow(10,18,8,8,block.inner.arrow.rollover)"
+           pressedIcon="downArrow(10,18,8,8,block.inner.arrow.pressed)"
+           horizontalAlignment="left"
+           horizontalTextPosition="right"
+           iconTextGap="4"/>
+  </styles>
+
+  <cards ref="projectNameCards">
+    <card name="readonly">
+      <row>
+        <button ref="projectNameButton"/>
+        <filler fill="horizontal"/>
+      </row>
+    </card>
+    <card name="edit">
+      <row>
+        <textField ref="projectNameField" anchor="right" weightX="100"/>
+        <button action="validate" styleClass="hyperlink" font="-,plain,10"
+                fill="none" marginLeft="10" anchor="left"/>
+        <button action="cancel" styleClass="hyperlink" font="-,plain,10"
+                fill="none" marginLeft="10" anchor="left"/>
+      </row>
+    </card>
+  </cards>
+</splits>

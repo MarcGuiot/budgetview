@@ -18,10 +18,10 @@ public class ProjectItemComparator implements Comparator<Glob> {
       return 1;
     }
 
-    int monthDiff = Utils.compare(item1.get(ProjectItem.MONTH), item2.get(ProjectItem.MONTH));
-    if (monthDiff != 0) {
-      return monthDiff;
-    }
+//    int monthDiff = Utils.compare(item1.get(ProjectItem.MONTH), item2.get(ProjectItem.MONTH));
+//    if (monthDiff != 0) {
+//      return monthDiff;
+//    }
 
     return item1.get(ProjectItem.ID) - item2.get(ProjectItem.ID);
   }

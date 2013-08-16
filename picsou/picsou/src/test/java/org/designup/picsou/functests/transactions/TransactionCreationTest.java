@@ -125,38 +125,38 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .checkNoErrorMessage()
       .createAndCheckErrorMessage("You must enter an amount")
       .checkNegativeAmountsSelected()
-      .setAmount(10.00)
+      .setAmountText("10.00")
       .createAndCheckErrorMessage("You must enter a day");
     categorization.checkTableIsEmpty();
 
     transactionCreation
-      .checkAmount(10.00)
+      .checkAmount(-10.00)
       .setDay(0)
       .createAndCheckErrorMessage("The day must be between 1 and 31");
     categorization.checkTableIsEmpty();
 
     timeline.selectMonth("2008/09");
     transactionCreation
-      .checkAmount(10.00)
+      .checkAmount(-10.00)
       .setDay(31)
       .createAndCheckErrorMessage("The day must be between 1 and 30");
     categorization.checkTableIsEmpty();
 
     transactionCreation
-      .checkAmount(10.00)
+      .checkAmount(-10.00)
       .setDay(3)
       .createAndCheckErrorMessage("You must enter a label");
     categorization.checkTableIsEmpty();
 
     transactionCreation
-      .checkAmount(10.00)
+      .checkAmount(-10.00)
       .checkDay(3)
       .setLabel("a transaction")
       .create()
       .checkNoErrorMessage();
 
     categorization.checkTable(new Object[][]{
-      {"03/09/2008", "", "A TRANSACTION", 10.00},
+      {"03/09/2008", "", "A TRANSACTION", -10.00},
     });
 
     categorization.checkSelectedTableRow("A TRANSACTION");

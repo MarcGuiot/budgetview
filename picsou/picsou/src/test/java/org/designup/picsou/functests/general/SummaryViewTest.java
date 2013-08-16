@@ -27,8 +27,6 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
       .checkEndOfMonthValue(4000.00)
       .checkRange(201012, 201107)
       .checkSelected(201101);
-
-    summary.checkTuningHelp("Tuning your budget");
   }
 
   public void testScrolling() throws Exception {
@@ -39,6 +37,8 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/28", 3000.00, "WorldCo")
       .addTransaction("2010/09/28", 3000.00, "WorldCo")
       .load();
+
+    fail("RM: à mettre à jour après avoir finalisé la vue d'accueil");
 
     checkRange(201010, 201110);
 

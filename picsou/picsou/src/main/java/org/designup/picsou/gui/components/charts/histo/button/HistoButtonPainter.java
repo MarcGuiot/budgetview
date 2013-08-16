@@ -36,7 +36,7 @@ public class HistoButtonPainter implements HistoPainter {
 
     for (HistoButtonBlock block : dataset.getBlocks()) {
       Rectangle rectangle = metrics.buttonRectangle(block);
-      boolean isRolloverOnBlock = rollover.isOnObject(block.key);
+      boolean isRolloverOnBlock = rollover.isOnObject(block.key) || block.selected;
 
       g2.setClip(rectangle.x, rectangle.y, rectangle.width + 1, rectangle.height + 1);
 

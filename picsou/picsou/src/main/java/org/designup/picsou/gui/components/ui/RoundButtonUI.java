@@ -1,5 +1,7 @@
 package org.designup.picsou.gui.components.ui;
 
+import org.globsframework.gui.splits.utils.GuiUtils;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
@@ -105,54 +107,6 @@ public class RoundButtonUI extends BasicButtonUI {
       return button.getRolloverIcon();
     }
     return button.getIcon();
-  }
-
-  public void setTopColor(Color topColor) {
-    this.topColor = topColor;
-  }
-
-  public void setBottomColor(Color bottomColor) {
-    this.bottomColor = bottomColor;
-  }
-
-  public void setInnerBorderTopColor(Color innerBorderTopColor) {
-    this.innerBorderTopColor = innerBorderTopColor;
-  }
-
-  public void setInnerBorderBottomColor(Color innerBorderBottomColor) {
-    this.innerBorderBottomColor = innerBorderBottomColor;
-  }
-
-  public void setOuterBorderTopColor(Color outerBorderTopColor) {
-    this.outerBorderTopColor = outerBorderTopColor;
-  }
-
-  public void setOuterBorderBottomColor(Color outerBorderBottomColor) {
-    this.outerBorderBottomColor = outerBorderBottomColor;
-  }
-
-  public void setPressedTopColor(Color pressedTopColor) {
-    this.pressedTopColor = pressedTopColor;
-  }
-
-  public void setPressedBottomColor(Color pressedBottomColor) {
-    this.pressedBottomColor = pressedBottomColor;
-  }
-
-  public void setPressedInnerBorderTopColor(Color pressedInnerBorderTopColor) {
-    this.pressedInnerBorderTopColor = pressedInnerBorderTopColor;
-  }
-
-  public void setPressedInnerBorderBottomColor(Color pressedInnerBorderBottomColor) {
-    this.pressedInnerBorderBottomColor = pressedInnerBorderBottomColor;
-  }
-
-  public void setPressedOuterBorderTopColor(Color pressedOuterBorderTopColor) {
-    this.pressedOuterBorderTopColor = pressedOuterBorderTopColor;
-  }
-
-  public void setPressedOuterBorderBottomColor(Color pressedOuterBorderBottomColor) {
-    this.pressedOuterBorderBottomColor = pressedOuterBorderBottomColor;
   }
 
   public Dimension getMaximumSize(JComponent c) {

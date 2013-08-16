@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.components;
 
-import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobNumericEditor;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -15,11 +15,10 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class AmountEditor {
+public class AmountEditor implements Disposable {
   private NumericEditor numericEditor;
   private boolean positiveMode = true;
-  private JToggleButton positiveToggle = new JToggleButton(new RadioAction(Lang.get("amount.positive"), true));
-  private JToggleButton negativeToggle = new JToggleButton(new RadioAction(Lang.get("amount.negative"), false));
+  private JToggleButton signToggle = new JToggleButton(new RadioAction()); // Selected = Plus
   private boolean updateInProgress = false;
   private boolean preferredPositive;
   private JPanel panel;
@@ -31,13 +30,6 @@ public class AmountEditor {
       .setAbsoluteValue(true)
       .setValueForNull(valueForNull)
       .setNotifyOnKeyPressed(notifyOnKeyPressed);
-
-    ButtonGroup group = new ButtonGroup();
-    group.add(positiveToggle);
-    group.add(negativeToggle);
-
-    positiveToggle.doClick(0);
-
     createPanel(repository, directory);
   }
 
@@ -50,9 +42,10 @@ public class AmountEditor {
                                                       "/layout/general/amountEditor.splits",
                                                       repository, directory);
 
-    builder.add("positiveAmount", positiveToggle);
-    builder.add("negativeAmount", negativeToggle);
-    builder.add("amountEditor", numericEditor);
+    builder.add("signToggle", signToggle);
+    builder.add("amountEditionField", numericEditor);
+    signToggle.setSelected(false);
+    positiveMode = false;
 
     panel = builder.load();
   }
@@ -62,8 +55,7 @@ public class AmountEditor {
       updateInProgress = true;
       this.preferredPositive = preferredPositive;
       update(numericEditor.getConvertedDisplayedValue());
-      positiveToggle.setVisible(!hideRadio);
-      negativeToggle.setVisible(!hideRadio);
+      signToggle.setVisible(!hideRadio);
     }
     finally {
       updateInProgress = false;
@@ -75,16 +67,10 @@ public class AmountEditor {
     return positiveMode ? value : -value;
   }
 
-  private void updateRadios(boolean positive) {
-    if (positive == positiveToggle.isSelected()) {
-      return;
-    }
+  private void updateToggle(boolean positive) {
     this.positiveMode = positive;
-    if (positive) {
-      positiveToggle.doClick(0);
-    }
-    else {
-      negativeToggle.doClick(0);
+    if (positive != signToggle.isSelected()) {
+      this.signToggle.doClick(0);
     }
   }
 
@@ -116,16 +102,13 @@ public class AmountEditor {
 
   public void setEnabled(boolean enabled) {
     numericEditor.setEditable(enabled);
-    positiveToggle.setEnabled(enabled);
-    negativeToggle.setEnabled(enabled);
-  }
-
-  public void setPositiveAmounts() {
-    positiveToggle.doClick();
+    signToggle.setEnabled(enabled);
   }
 
   public void setNegativeAmounts() {
-    negativeToggle.doClick();
+    if (signToggle.isSelected()) {
+      signToggle.doClick();
+    }
   }
 
   public void dispose() {
@@ -142,8 +125,7 @@ public class AmountEditor {
       final JTextField textField = numericEditor.getComponent();
       textField.addPropertyChangeListener("enabled", new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent evt) {
-          positiveToggle.setEnabled(textField.isEnabled());
-          negativeToggle.setEnabled(textField.isEnabled());
+          signToggle.setEnabled(textField.isEnabled());
         }
       });
     }
@@ -167,7 +149,7 @@ public class AmountEditor {
       boolean positive = (amount > 0) || ((amount == 0) && preferredPositive);
       updateInProgress = true;
       try {
-        updateRadios(positive);
+        updateToggle(positive);
       }
       finally {
         updateInProgress = false;
@@ -176,16 +158,8 @@ public class AmountEditor {
   }
 
   private class RadioAction extends AbstractAction {
-
-    private boolean positive;
-
-    private RadioAction(String name, boolean positive) {
-      super(name);
-      this.positive = positive;
-    }
-
     public void actionPerformed(ActionEvent e) {
-      positiveMode = positive;
+      positiveMode = signToggle.isSelected();
       if (!updateInProgress) {
         numericEditor.apply();
       }

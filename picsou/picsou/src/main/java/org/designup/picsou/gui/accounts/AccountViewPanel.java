@@ -6,7 +6,7 @@ import org.designup.picsou.gui.accounts.chart.AccountPositionsChartView;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.utils.GotoAccountWebsiteAction;
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.components.PopupMouseAdapter;
+import org.designup.picsou.gui.components.PopupGlobFunctor;
 import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
@@ -210,9 +210,10 @@ public abstract class AccountViewPanel {
 
   private GlobButtonView createEditAccountButton(Glob account, final GlobRepository repository,
                                                  final Directory directory) {
-    GlobButtonView buttonView = GlobButtonView.init(Account.NAME, repository, directory, GlobListFunctor.NO_OP);
+    PopupGlobFunctor functor = new PopupGlobFunctor(new AccountPopupFactory(account));
+    GlobButtonView buttonView = GlobButtonView.init(Account.NAME, repository, directory, functor);
     buttonView.forceSelection(account.getKey());
-    buttonView.getComponent().addMouseListener(new PopupMouseAdapter(new AccountPopupFactory(account)));
+    functor.setComponent(buttonView.getComponent());
     return buttonView;
   }
 

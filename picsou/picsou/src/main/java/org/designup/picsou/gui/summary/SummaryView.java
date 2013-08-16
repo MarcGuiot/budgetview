@@ -1,12 +1,13 @@
 package org.designup.picsou.gui.summary;
 
+import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
 import org.designup.picsou.gui.accounts.chart.SavingsAccountsChartView;
 import org.designup.picsou.gui.card.ImportPanel;
-import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.help.actions.HelpAction;
 import org.designup.picsou.gui.projects.ProjectChartView;
+import org.designup.picsou.gui.projects.ProjectEditionView;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.utils.Lang;
@@ -16,8 +17,8 @@ import org.globsframework.utils.directory.Directory;
 
 public class SummaryView extends View {
 
-  public static final int MONTHS_BACK = 3;
-  public static final int MONTHS_FORWARD = 9;
+  public static final int MONTHS_BACK = 2;
+  public static final int MONTHS_FORWARD = 6;
 
   public SummaryView(GlobRepository repository, Directory directory) {
     super(repository, directory);

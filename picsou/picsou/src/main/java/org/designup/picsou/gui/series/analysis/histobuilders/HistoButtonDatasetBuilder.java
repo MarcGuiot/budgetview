@@ -21,8 +21,8 @@ public class HistoButtonDatasetBuilder extends HistoDatasetBuilder {
                       isCurrentMonth(monthId), isFutureMonth(monthId), isSelectedMonth);
   }
 
-  public void addButton(int minId, int maxId, String label, Key key, String tooltip) {
-    dataset.addButton(minId, maxId, label, key, tooltip);
+  public void addButton(int minId, int maxId, String label, Key key, String tooltip, boolean selected) {
+    dataset.addButton(minId, maxId, label, key, tooltip, selected);
   }
 
   public HistoButtonDataset get() {

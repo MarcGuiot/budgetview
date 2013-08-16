@@ -37,11 +37,13 @@
     <!-- Back/forward buttons -->
     <ui name="backArrow" class="org.designup.picsou.gui.components.ui.ArrowButtonUI"
         rotation="180" doubleArrow="false"
-        rolloverColor="views.backforward.rollover" pressedColor="views.backforward.pressed" disabledColor="views.backforward.disabled"
+        rolloverColor="views.backforward.rollover" pressedColor="views.backforward.pressed"
+        disabledColor="views.backforward.disabled"
         size="(16,12)"/>
     <ui name="forwardArrow" class="org.designup.picsou.gui.components.ui.ArrowButtonUI"
         rotation="0" doubleArrow="false"
-        rolloverColor="views.backforward.rollover" pressedColor="views.backforward.pressed" disabledColor="views.backforward.disabled"
+        rolloverColor="views.backforward.rollover" pressedColor="views.backforward.pressed"
+        disabledColor="views.backforward.disabled"
         size="(16,12)"/>
     <style selector="button.backforward"
            minimumSize="(20,16)" preferredSize="(16,12)" foreground="views.backforward.normal"
@@ -117,30 +119,45 @@
 
         <card name="home">
           <column>
-            <horizontalSplit weightY="2" styleClass="mainDivider">
-              <column weightX="6">
-                <label text="$summaryView.title" styleClass="blockTitle"/>
-                <column styleClass="block">
-                  <column styleClass="innerBlock"
-                          opaque="true" background="block.inner.bg"
-                          border="line(block.inner.border)" marginTop="10" weightY="100">
-                    <cards ref="signpostCard" weightY="100">
-                      <card name="signposts">
-                        <panel ref="signpostView"/>
-                      </card>
-                      <card name="summary">
-                        <panel ref="summaryView"/>
-                      </card>
-                    </cards>
-                    <column weightY="0.1">
-                      <panel ref="licenseInfo"/>
+            <cards ref="signpostCard" weightY="100">
+              <card name="signposts">
+                <column>
+                  <label text="$summaryView.title" styleClass="blockTitle"/>
+                  <column styleClass="block">
+                    <column styleClass="innerBlock"
+                            opaque="true" background="block.inner.bg"
+                            border="line(block.inner.border)" marginTop="10" weightY="100">
+                      <panel ref="signpostView"/>
                     </column>
                   </column>
-                  <panel ref="feedbackView" weightY="0"/>
                 </column>
-              </column>
+              </card>
+              <card name="summary">
+                <horizontalSplit weightY="2" styleClass="mainDivider">
+                  <column weightX="6">
+                    <label text="$summaryView.title" styleClass="blockTitle"/>
+                    <column styleClass="block">
+                      <column styleClass="innerBlock" weightY="100">
+                        <panel ref="summaryView"/>
+                      </column>
+                      <panel ref="feedbackView" weightY="0"/>
+                    </column>
+                  </column>
+                  <column weightX="6">
+                    <label text="$projectView.title" styleClass="blockTitle"/>
+                    <column styleClass="block">
+                      <column styleClass="innerBlock">
+                        <panel ref="projectEditionView"/>
+                      </column>
+                    </column>
+                  </column>
+                </horizontalSplit>
+              </card>
+            </cards>
 
-            </horizontalSplit>
+            <column weightY="0.1" autoHideSource="licenseInfo">
+              <panel ref="licenseInfo" marginTop="10"/>
+            </column>
 
           </column>
         </card>

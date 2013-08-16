@@ -89,7 +89,7 @@ public class HistoButtonChartChecker extends HistoChartChecker {
     };
   }
 
-  private void click(String label, boolean rightClick) {
+  public void click(String label, boolean rightClick) {
     HistoSelectionManager selectionManager = getChart().getSelectionManager();
     HistoButtonBlock block = getBlock(label);
     selectionManager.updateRollover(block.minIndex, Collections.singleton(block.key), false, rightClick);

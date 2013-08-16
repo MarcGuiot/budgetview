@@ -18,12 +18,18 @@ public class SelectionService {
 
   public void addListener(final GlobSelectionListener listener, GlobType type, GlobType... types) {
     for (GlobType globType : Utils.list(type, types)) {
+      if (listenersByType.get(globType).contains(listener)) {
+        throw new InvalidParameter(listener + " already registered");
+      }
       listenersByType.put(globType, listener);
     }
   }
 
   public void addListener(final GlobSelectionListener listener, GlobType[] types) {
     for (GlobType globType : types) {
+      if (listenersByType.get(globType).contains(listener)) {
+        throw new InvalidParameter(listener + " already registered");
+      }
       listenersByType.put(globType, listener);
     }
   }

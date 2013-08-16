@@ -19,6 +19,6 @@ public interface RepeatCellBuilder {
 
   CardHandler addCardHandler(String handlerName);
 
-  void addDisposeListener(Disposable dispose);
+  void addDisposeListener(Disposable disposable);
 
 }

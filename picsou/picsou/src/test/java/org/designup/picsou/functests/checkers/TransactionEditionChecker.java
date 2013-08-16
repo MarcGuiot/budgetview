@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.components.AmountEditorChecker;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
@@ -109,19 +110,24 @@ public class TransactionEditionChecker extends GuiChecker {
     return this;
   }
 
-  public TransactionEditionChecker checkAmount(String amount) {
-    assertThat(dialog.getInputTextBox("amountEditor").textEquals(amount));
+  public TransactionEditionChecker checkAmount(double amount) {
+    AmountEditorChecker.init(dialog, "amountEditor").checkAmount(amount);
     return this;
   }
 
-  public TransactionEditionChecker setAmount(String amount) {
-    dialog.getInputTextBox("amountEditor").setText(amount);
+  public TransactionEditionChecker setAmount(double amount) {
+    AmountEditorChecker.init(dialog, "amountEditor").set(amount);
+    return this;
+  }
+
+  public TransactionEditionChecker clearAmount() {
+    AmountEditorChecker.init(dialog, "amountEditor").clear();
     return this;
   }
 
   public TransactionEditionChecker validateAndCheckAmountError(String errorMessage) {
     dialog.getButton("OK").click();
-    checkTipVisible(dialog, dialog.getInputTextBox("amountEditor"), errorMessage);
+    checkTipVisible(dialog, dialog.getInputTextBox("amountEditionField"), errorMessage);
     assertTrue(dialog.isVisible());
     return this;
   }

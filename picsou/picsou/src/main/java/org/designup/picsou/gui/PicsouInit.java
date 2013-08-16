@@ -21,6 +21,7 @@ import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.designup.picsou.triggers.*;
+import org.designup.picsou.triggers.projects.*;
 import org.designup.picsou.triggers.savings.SavingsUpdateSeriesMirrorTrigger;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobModel;
@@ -37,9 +38,7 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import picsou.AwtExceptionHandler;
 
-import javax.swing.*;
 import java.util.*;
-import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -114,6 +113,13 @@ public class PicsouInit {
     repository.addTrigger(new SavingsDateActiveBudgetTrigger());
     repository.addTrigger(new UpdateActiveBudgetTrigger());
     repository.addTrigger(new ConfigUpgradeTrigger(directory));
+    repository.addTrigger(new ProjectToSeriesTrigger());
+    repository.addTrigger(new ProjectToItemTrigger());
+    repository.addTrigger(new ProjectToStatTrigger());
+    repository.addTrigger(new ProjectItemToStatTrigger());
+    repository.addTrigger(new ProjectItemToSeriesBudgetTrigger());
+    repository.addTrigger(new ProjectItemToSubSeriesTrigger());
+    repository.addTrigger(new ProjectItemToProjectStatTrigger());
     repository.addTrigger(new SeriesRenameTrigger());
     repository.addTrigger(new AccountDeleteTrigger());
     repository.addTrigger(new SeriesDeletionTrigger());
@@ -140,8 +146,8 @@ public class PicsouInit {
     repository.addTrigger(new BudgetStatTrigger());
     repository.addTrigger(new SavingsBudgetStatTrigger());
     repository.addTrigger(new SubSeriesStatTrigger());
-    repository.addTrigger(new ProjectStatTrigger());
-//    repository.addTrigger(new ReconciliationDetectionTrigger());
+    repository.addTrigger(new SeriesStatToProjectStatTrigger());
+    repository.addTrigger(new SubSeriesStatToProjectItemStatTrigger());
     repository.addTrigger(new DateFormatTrigger(directory));
   }
 

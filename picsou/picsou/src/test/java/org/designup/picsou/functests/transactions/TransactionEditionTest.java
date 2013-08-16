@@ -198,7 +198,7 @@ public class TransactionEditionTest extends LoggedInFunctionalTestCase {
       .checkDateAndAmountShown()
       .setDay("12")
       .setMonth(200807)
-      .setAmount("20.00")
+      .setAmount(-20.00)
       .validate();
 
     categorization.checkTable(new Object[][]{
@@ -211,9 +211,9 @@ public class TransactionEditionTest extends LoggedInFunctionalTestCase {
       .validateAndCheckDayError("You must enter a value between 1 and 31")
       .setDay("15")
       .checkNoTipShown()
-      .setAmount("")
+      .clearAmount()
       .validateAndCheckAmountError("You must enter an amount")
-      .setAmount("15")
+      .setAmount(-15)
       .validate();
 
     categorization.checkTable(new Object[][]{
@@ -325,8 +325,8 @@ public class TransactionEditionTest extends LoggedInFunctionalTestCase {
       .checkDay("15")
       .setDay("13")
       .setMonth(200807)
-      .checkAmount("50.00")
-      .setAmount("20.00")
+      .checkAmount(-50.00)
+      .setAmount(-20.00)
       .validate();
 
     transactions.initAmountContent()

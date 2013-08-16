@@ -354,7 +354,6 @@
            opaque="true" font="-,plain,12"
            foreground="gauge.detail.fg" background="block.inner.bg" highlightedBackgroundColor="gauge.detail.bg.highlighted"
            fill="horizontal" anchor="center" preferredSize="(40,22)" weightX="10"
-           marginLeft="6" marginRight="6"
            borderColor="gauge.detail.border" rolloverBorderColor="gauge.detail.border.rollover"
            emptyColorTop="gauge.detail.empty.top" emptyColorBottom="gauge.detail.empty.bottom"
            filledColorTop="gauge.detail.filled.top" filledColorBottom="gauge.detail.filled.bottom"

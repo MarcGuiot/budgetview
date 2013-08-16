@@ -40,7 +40,7 @@ public class ContextualRepeatCellBuilder implements RepeatCellBuilder {
     return DefaultCardHandler.init(panel);
   }
 
-  public void addDisposeListener(Disposable listener) {
-    repeatContext.addDisposable(listener);
+  public void addDisposeListener(Disposable disposable) {
+    repeatContext.addDisposable(disposable);
   }
 }

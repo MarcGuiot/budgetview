@@ -43,6 +43,7 @@
            font="-,plain,11"/>
 
     <style selector="#gauge" weightX="100"/>
+    <style selector=".detailGauge" marginLeft="6" marginRight="6"/>
 
     <style selector="#total label" marginBottom="0"/>
 

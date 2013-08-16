@@ -5,6 +5,7 @@ import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.description.stringifiers.MonthFieldListStringifier;
+import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -62,7 +63,7 @@ public class DateAndAmountPanel {
 
     builder.addButton("month",
                       Transaction.TYPE,
-                      new MonthFieldListStringifier(Transaction.MONTH),
+                      new MonthFieldListStringifier(Transaction.MONTH, MonthRangeFormatter.STANDARD),
                       new EditMonthCallback());
 
     panel = builder.load();

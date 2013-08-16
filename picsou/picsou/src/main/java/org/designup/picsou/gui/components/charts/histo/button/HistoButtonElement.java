@@ -8,13 +8,15 @@ public class HistoButtonElement implements Comparable<HistoButtonElement> {
   public final String label;
   public final Key key;
   public final String tooltip;
+  public final boolean selected;
 
-  public HistoButtonElement(int minId, int maxId, String label, Key key, String tooltip) {
+  public HistoButtonElement(int minId, int maxId, String label, Key key, String tooltip, boolean selected) {
     this.minId = minId;
     this.maxId = maxId;
     this.label = label;
     this.key = key;
     this.tooltip = tooltip;
+    this.selected = selected;
   }
 
   public int compareTo(HistoButtonElement other) {
@@ -35,5 +37,4 @@ public class HistoButtonElement implements Comparable<HistoButtonElement> {
 
     return key.toString().compareTo(other.key.toString());
   }
-
 }

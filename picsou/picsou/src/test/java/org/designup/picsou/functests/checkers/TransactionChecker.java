@@ -453,15 +453,15 @@ public class TransactionChecker extends ViewChecker {
                                              .triggerClick());
   }
 
-  public ProjectEditionChecker editProject(int... rowIndices) {
+  public void editProject(int... rowIndices) {
     if (rowIndices.length == 0) {
       Assert.fail("At least one index must be provided");
     }
     getTable().selectRows(rowIndices);
-    return ProjectEditionChecker.open(PopupMenuInterceptor
-                                        .run(getTable().triggerRightClick(rowIndices[0], 0))
-                                        .getSubMenu(Lang.get("transaction.editSeries"))
-                                        .triggerClick());
+    PopupMenuInterceptor
+      .run(getTable().triggerRightClick(rowIndices[0], 0))
+      .getSubMenu(Lang.get("transaction.editSeries"))
+      .click();
   }
 
   public void checkEditSeriesDisabled(int... rowIndices) {

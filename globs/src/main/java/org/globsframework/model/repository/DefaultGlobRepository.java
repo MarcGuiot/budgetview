@@ -736,17 +736,17 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     }
   }
 
-  public String toString() {
-    StringWriter writer = new StringWriter();
-    GlobList globs = getAll();
-    Collections.sort(globs, new Comparator<Glob>() {
-      public int compare(Glob glob1, Glob glob2) {
-        return glob1.getKey().toString().compareTo(glob2.getKey().toString());
-      }
-    });
-    XmlGlobWriter.write(globs, this, writer);
-    return writer.toString();
-  }
+//  public String toString() {
+//    StringWriter writer = new StringWriter();
+//    GlobList globs = getAll();
+//    Collections.sort(globs, new Comparator<Glob>() {
+//      public int compare(Glob glob1, Glob glob2) {
+//        return glob1.getKey().toString().compareTo(glob2.getKey().toString());
+//      }
+//    });
+//    XmlGlobWriter.write(globs, this, writer);
+//    return writer.toString();
+//  }
 
   private class ChangeSetExecutor implements ChangeSetVisitor {
     public void visitCreation(Key key, FieldValues values) {

@@ -90,8 +90,8 @@ public class GlobRepositoryDecorator implements GlobRepository {
     return getRepository().create(key, values);
   }
 
-  public Glob findOrCreate(Key key, FieldValue... defaultValues) throws MissingInfo {
-    return getRepository().findOrCreate(key, defaultValues);
+  public Glob findOrCreate(Key key, FieldValue... valuesForCreate) throws MissingInfo {
+    return getRepository().findOrCreate(key, valuesForCreate);
   }
 
   public boolean contains(Key key) {

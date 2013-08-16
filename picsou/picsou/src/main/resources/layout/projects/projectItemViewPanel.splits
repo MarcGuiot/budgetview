@@ -1,0 +1,33 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="button#itemButton"
+           ui="hyperlinkButtonWithoutUnderline"
+           foreground="projectView.item.view.itemButton"
+           anchor="left" weightX="100"
+           font="-,plain,14" cursor="hand"
+           icon="downArrow(10,18,8,8,block.inner.arrow.idle)"
+           rolloverIcon="downArrow(10,18,8,8,block.inner.arrow.rollover)"
+           pressedIcon="downArrow(10,18,8,8,block.inner.arrow.pressed)"
+           horizontalAlignment="left"
+           horizontalTextPosition="right"
+           iconTextGap="2"/>
+
+    <style selector=".itemLabel"
+           font="-,plain,11" foreground="projectView.item.view.label"/>
+  </styles>
+
+  <column name="projectItemViewPanel"
+          layout="org.designup.picsou.gui.projects.utils.ProjectItemViewLayout"
+          border="empty(5)" opaque="true" background="block.inner.bg">
+    <button ref="itemButton" font="-,bold,13"/>
+    <label ref="monthLabel" styleClass="itemLabel"/>
+    <label ref="actualLabel" styleClass="itemLabel"/>
+    <component ref="itemGauge" styleClass="detailGauge" preferredSize="(30,14)"/>
+    <label ref="plannedLabel" styleClass="itemLabel"/>
+    <button action="modify" ui="hyperlinkButton" font="-,plain,11"/>
+    <label ref="imageLabel" preferredSize="(100,70)"/>
+    <button ref="link" ui="hyperlinkButton" font="-,plain,10"/>
+    <htmlEditorPane ref="description" editable="false" border="none" font="-,plain,10"/>
+  </column>
+</splits>

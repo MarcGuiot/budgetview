@@ -15,20 +15,22 @@ public class SimpleGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> 
   private DoubleField targetValueField;
   private Gauge gauge = new Gauge();
 
-  public static SimpleGaugeView init(Key key,
-                                     DoubleField actualValueField, DoubleField targetValueField,
+  public static SimpleGaugeView init(DoubleField actualValueField, DoubleField targetValueField,
                                      GlobRepository repository, Directory directory) {
-    return new SimpleGaugeView(key, actualValueField, targetValueField, repository, directory);
+    return new SimpleGaugeView(actualValueField, targetValueField, repository, directory);
   }
 
-  private SimpleGaugeView(Key key,
-                          DoubleField actualValueField, DoubleField targetValueField,
+  private SimpleGaugeView(DoubleField actualValueField, DoubleField targetValueField,
                           GlobRepository repository, Directory directory) {
-    super(key.getGlobType(), repository, directory);
-    this.key = key;
+    super(actualValueField.getGlobType(), repository, directory);
     this.actualValueField = actualValueField;
     this.targetValueField = targetValueField;
     repository.addChangeListener(this);
+  }
+
+  public void setKey(Key key) {
+    this.key = key;
+    update();
   }
 
   public Gauge getComponent() {

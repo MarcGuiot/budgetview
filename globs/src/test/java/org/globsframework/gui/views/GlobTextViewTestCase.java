@@ -162,6 +162,20 @@ public abstract class GlobTextViewTestCase extends GuiComponentTestCase {
     assertFalse(textBox.isVisible());
   }
 
+  public void testAutoHideWithForcedKey() throws Exception {
+    repository.update(glob1.getKey(), DummyObject.NAME, null);
+
+    AbstractGlobTextView view = initView(repository, DummyObject.NAME)
+      .setAutoHideIfEmpty(true)
+      .forceSelection(glob1.getKey());
+    textBox = createComponent(view);
+
+    assertFalse(textBox.isVisible());
+
+    repository.update(glob1.getKey(), DummyObject.NAME, "name1");
+    assertTrue(textBox.isVisible());
+  }
+
   public void testAutoHideWithMatcher() throws Exception {
     textBox = init(repository, false, false, stringifier, new GlobListMatcher() {
       public boolean matches(GlobList list, GlobRepository repository) {

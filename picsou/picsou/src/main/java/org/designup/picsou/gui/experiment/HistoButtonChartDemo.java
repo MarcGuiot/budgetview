@@ -38,10 +38,10 @@ public class HistoButtonChartDemo {
     dataset.addColumn(201112, "D", "tooltip", "2011", false, true, false);
     dataset.addColumn(201201, "J", "tooltip", "2012", false, true, false);
 
-    dataset.addButton(201006, 201105, "button1", Key.create(Project.TYPE, 1), "tooltip 1");
-    dataset.addButton(201102, 201104, "button2", Key.create(Project.TYPE, 2), "tooltip 2");
-    dataset.addButton(201108, 201110, "button3", Key.create(Project.TYPE, 3), "tooltip 3");
-    dataset.addButton(201106, 201110, "button4", Key.create(Project.TYPE, 4), "tooltip 4");
+    dataset.addButton(201006, 201105, "button1", Key.create(Project.TYPE, 1), "tooltip 1", false);
+    dataset.addButton(201102, 201104, "button2", Key.create(Project.TYPE, 2), "tooltip 2", false);
+    dataset.addButton(201108, 201110, "button3", Key.create(Project.TYPE, 3), "tooltip 3", false);
+    dataset.addButton(201106, 201110, "button4", Key.create(Project.TYPE, 4), "tooltip 4", false);
 
     Directory directory = new DefaultDirectory();
     directory.add(ApplicationColors.createColorService());

@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
+import org.designup.picsou.functests.checkers.components.AmountEditorChecker;
 import org.uispec4j.ItemNotFoundException;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
@@ -11,6 +12,7 @@ import javax.swing.*;
 
 public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> extends GuiChecker {
   protected final Window dialog;
+  private AmountEditorChecker amountEditor;
 
   SeriesAmountEditionChecker(Window dialog) {
     this.dialog = dialog;
@@ -30,22 +32,15 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
     return (T)this;
   }
 
-  public T checkAmountIsDisabled() {
-    assertFalse(getAmountTextBox().isEnabled());
-    assertFalse(dialog.getToggleButton("positiveAmount").isEnabled());
-    assertFalse(dialog.getToggleButton("negativeAmount").isEnabled());
-    return (T)this;
-  }
-
   public T checkAmountIsSelected() {
-    JTextField textEditor = (JTextField)dialog.getInputTextBox("amountEditor").getAwtComponent();
+    JTextField textEditor = (JTextField)dialog.getInputTextBox("amountEditionField").getAwtComponent();
     Assert.assertEquals(textEditor.getText(), textEditor.getSelectedText());
     return (T)this;
   }
 
   public TextBox getAmountTextBox() {
     try {
-      return dialog.getInputTextBox("amountEditor");
+      return dialog.getInputTextBox("amountEditionField");
     }
     catch (ItemNotFoundException e) {
       throw new AssertionFailedError("Amount editor not displayed");
@@ -58,12 +53,12 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
 
   public T checkAmountEditionEnabled() {
     checkComponentVisible(dialog, JEditorPane.class, "disabledMessage", false);
-    checkComponentVisible(dialog, JTextField.class, "amountEditor", true);
+    checkComponentVisible(dialog, JTextField.class, "amountEditionField", true);
     return (T)this;
   }
 
   public T checkAmountEditionDisabled(String message) {
-    checkComponentVisible(dialog, JTextField.class, "amountEditor", false);
+    checkComponentVisible(dialog, JTextField.class, "amountEditionField", false);
     assertThat(dialog.getTextBox("disabledMessage").textEquals(message));
     return (T)this;
   }
@@ -79,28 +74,27 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
   }
 
   public T selectPositiveAmounts() {
-    dialog.getToggleButton("positiveAmount").click();
+    AmountEditorChecker.init(dialog, "amountEditor").selectPlus();
     return (T)this;
   }
 
   public T checkPositiveAmountsSelected() {
-    assertThat(dialog.getToggleButton("positiveAmount").isSelected());
+    AmountEditorChecker.init(dialog, "amountEditor").checkPlusSelected();
     return (T)this;
   }
 
   public T selectNegativeAmounts() {
-    dialog.getToggleButton("negativeAmount").click();
+    AmountEditorChecker.init(dialog, "amountEditor").selectMinus();
     return (T)this;
   }
 
   public T checkNegativeAmountsSelected() {
-    assertThat(dialog.getToggleButton("negativeAmount").isSelected());
+    AmountEditorChecker.init(dialog, "amountEditor").checkMinusSelected();
     return (T)this;
   }
 
   public T checkAmountTogglesAreNotVisible() {
-    assertFalse(dialog.getToggleButton("negativeAmount").isVisible());
-    assertFalse(dialog.getToggleButton("positiveAmount").isVisible());
+    AmountEditorChecker.init(dialog, "amountEditor").checkSignSelectorHidden();
     return (T)this;
   }
 

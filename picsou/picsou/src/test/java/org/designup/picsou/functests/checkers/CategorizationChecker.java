@@ -340,13 +340,12 @@ public class CategorizationChecker extends ViewChecker {
     return getPanel().getButton("editSeries");
   }
 
-  public Button getCreateProjectButton() {
-    return getPanel().getButton(Lang.get("projectView.create"));
+  public void createProject() {
+    getPanel().getButton(Lang.get("projectView.create")).click();
   }
 
-  public ProjectEditionChecker editProject(String seriesLabel) {
-    Button button = getPanel().getPanel("seriesCard").getButton("editSeries:" + seriesLabel);
-    return ProjectEditionChecker.open(button);
+  public void editProject(String seriesLabel) {
+    getPanel().getPanel("seriesCard").getButton("editSeries:" + seriesLabel).click();
   }
 
   public CategorizationChecker checkTable(Object[][] content) {

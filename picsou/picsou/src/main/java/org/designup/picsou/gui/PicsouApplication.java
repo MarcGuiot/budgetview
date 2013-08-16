@@ -12,6 +12,7 @@ import org.designup.picsou.client.http.MD5PasswordBasedEncryptor;
 import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.designup.picsou.client.http.RedirectPasswordBasedEncryptor;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.components.images.FileStorageService;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
@@ -325,6 +326,7 @@ public class PicsouApplication {
     wrapper.add(new BankPluginService());
     wrapper.add(new BankSynchroService());
     wrapper.add(PrinterService.class, new DefaultPrinterService());
+    wrapper.add(new FileStorageService());
   }
 
   protected void preinitDirectory(Directory directory) {

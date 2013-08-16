@@ -40,12 +40,6 @@ public class HelpTest extends LoggedInFunctionalTestCase {
       .close();
   }
 
-  public void testAccessToWebsite() throws Exception {
-    String url = Lang.get("site.url");
-    operations.checkGotoWebsite(url);
-    feedbackView.checkWebsiteLinksTo(url);
-  }
-
   public void testSendLogs() throws Exception {
 
     String text = new Date().toString();

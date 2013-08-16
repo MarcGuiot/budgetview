@@ -6,14 +6,9 @@ import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.checkers.PreferencesChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.ColorTheme;
-import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.Dates;
 import org.uispec4j.assertion.UISpecAssert;
 
@@ -222,14 +217,12 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
-    projects.create()
+    projects.create();
+    currentProject
       .setName("MyProject")
-      .setItemName(0, "Reservation")
-      .setItemDate(0, 200809)
-      .setItemAmount(0, -200.00)
+      .addItem(0, "Reservation", 200809, -200.00)
       .addItem(1, "Travel", 200810, -100.00)
-      .addItem(2, "Hotel", 200810, -500.00)
-      .validate();
+      .addItem(2, "Hotel", 200810, -500.00);
 
     projects.checkProjectList("MyProject");
     projects.checkProject("MyProject", 200809, 200810, 800.00);
@@ -246,11 +239,14 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     projects.checkProjectList("MyProject");
     projects.checkProject("MyProject", 200809, 200810, 800.00);
-    projects.edit("MyProject")
-      .checkItems("Reservation | September 2008 | -200.00\n" +
-                  "Travel | October 2008 | -100.00\n" +
-                  "Hotel | October 2008 | -500.00")
-      .cancel();
+
+    projects.select("MyProject");
+
+    currentProject
+      .checkProjectGauge(0.00, -800.00)
+      .checkItems("Reservation | Sep 2008 | 0.00 | -200.00\n" +
+                  "Travel | Oct 2008 | 0.00 | -100.00\n" +
+                  "Hotel | Oct 2008 | 0.00 | -500.00");
 
     timeline.selectMonth("2008/09");
     budgetView.extras.checkSeries("MyProject", 0, -200.00);

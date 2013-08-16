@@ -18,7 +18,7 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
   Glob create(Key key, FieldValue... values)
     throws ItemAlreadyExists;
 
-  Glob findOrCreate(Key key, FieldValue... defaultValues)
+  Glob findOrCreate(Key key, FieldValue... valuesForCreate)
     throws MissingInfo;
 
   void update(Key key, Field field, Object newValue)

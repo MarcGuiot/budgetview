@@ -4,7 +4,6 @@ import org.globsframework.gui.ComponentHolder;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -116,12 +115,16 @@ public abstract class AbstractGlobTextView<T extends AbstractGlobTextView>
 
     String text = stringifier.toString(filteredSelection, repository);
     if (autoHideIfEmpty) {
-      component.setVisible(Strings.isNotEmpty(text));
+      component.setVisible(!isTextEmpty(text));
     }
 
     doUpdate(text);
 
     postTextUpdate(filteredSelection, repository);
+  }
+
+  protected boolean isTextEmpty(String text) {
+    return Strings.isNullOrEmpty(text);
   }
 
   protected GlobList getFilteredSelection() {

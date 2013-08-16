@@ -11,6 +11,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
@@ -55,7 +56,11 @@ public abstract class HistoChartUpdater implements GlobSelectionListener, Dispos
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        update(true);
+        for (GlobType type : Utils.list(selectionType, types)) {
+          if (changedTypes.contains(type)) {
+            update(true);
+          }
+        }
       }
     };
     repository.addChangeListener(changeSetListener);

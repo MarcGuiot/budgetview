@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.components.AmountEditorChecker;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 
@@ -17,21 +18,19 @@ public class TransactionCreationChecker extends ViewChecker {
 
   public TransactionCreationChecker setAmount(double amount) {
     checkShowing();
-    TextBox textBox = getPanel().getInputTextBox("amountEditor");
-    if (amount < 0) {
-      getPanel().getToggleButton("negativeAmount").click();
-    }
-    else {
-      getPanel().getToggleButton("positiveAmount").click();
-    }
-    textBox.setText(toString(Math.abs(amount)), false);
-    textBox.focusLost();
+    AmountEditorChecker.init(getPanel(), "amountEditor").set(amount);
+    return this;
+  }
+
+  public TransactionCreationChecker setAmountText(String amount) {
+    checkShowing();
+    AmountEditorChecker.init(getPanel(), "amountEditor").setText(amount);
     return this;
   }
 
   public TransactionCreationChecker enterAmountWithoutValidating(double amount) {
     checkShowing();
-    TextBox textBox = getPanel().getInputTextBox("amountEditor");
+    TextBox textBox = getPanel().getInputTextBox("amountEditionField");
     textBox.setText(toString(amount), false);
     return this;
   }
@@ -52,19 +51,17 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public TransactionCreationChecker checkAmount(double amount) {
-    assertThat(getPanel().getInputTextBox("amountEditor").textEquals(toString(amount)));
+    AmountEditorChecker.init(getPanel(), "amountEditor").checkAmount(amount);
     return this;
   }
 
   public TransactionCreationChecker checkPositiveAmountsSelected() {
-    assertThat(getPanel().getToggleButton("positiveAmount").isSelected());
-    assertFalse(getPanel().getToggleButton("negativeAmount").isSelected());
+    AmountEditorChecker.init(getPanel(), "amountEditor").checkPlusSelected();
     return this;
   }
 
   public TransactionCreationChecker checkNegativeAmountsSelected() {
-    assertThat(getPanel().getToggleButton("negativeAmount").isSelected());
-    assertFalse(getPanel().getToggleButton("positiveAmount").isSelected());
+    AmountEditorChecker.init(getPanel(), "amountEditor").checkMinusSelected();
     return this;
   }
 
@@ -149,7 +146,7 @@ public class TransactionCreationChecker extends ViewChecker {
     return this;
   }
 
-  public TransactionCreationChecker setNotToBeReconcile(){
+  public TransactionCreationChecker setNotToBeReconciled(){
     getPanel().getCheckBox("shouldBeReconciled").unselect();
     assertFalse(getPanel().getCheckBox("shouldBeReconciled").isSelected());
     return this;
@@ -160,7 +157,7 @@ public class TransactionCreationChecker extends ViewChecker {
     return this;
   }
 
-  public TransactionCreationChecker setToBeReconcile(){
+  public TransactionCreationChecker setToBeReconciled(){
     getPanel().getCheckBox("shouldBeReconciled").select();
     assertTrue(getPanel().getCheckBox("shouldBeReconciled").isSelected());
     return this;
@@ -180,13 +177,13 @@ public class TransactionCreationChecker extends ViewChecker {
     return create(true);
   }
 
-  private TransactionCreationChecker create(boolean toReconciled) {
+  private TransactionCreationChecker create(boolean toReconcile) {
     checkShowing();
-    if (toReconciled){
-      setToBeReconcile();
+    if (toReconcile){
+      setToBeReconciled();
     }
     else {
-      setNotToBeReconcile();
+      setNotToBeReconciled();
     }
     Panel panel = getPanel();
     panel.getButton("Create").click();
@@ -217,7 +214,7 @@ public class TransactionCreationChecker extends ViewChecker {
   }
 
   public TransactionCreationChecker checkFieldsAreEmpty() {
-    assertThat(getPanel().getInputTextBox("amountEditor").textIsEmpty());
+    assertThat(getPanel().getInputTextBox("amountEditionField").textIsEmpty());
     assertThat(getPanel().getInputTextBox("day").textIsEmpty());
     assertThat(getPanel().getInputTextBox("label").textIsEmpty());
     return this;

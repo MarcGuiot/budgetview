@@ -136,6 +136,12 @@ public class GuiUtils {
     }
   }
 
+  public static Dimension maxSize(Component component, String maxString) {
+    FontMetrics fontMetrics = component.getFontMetrics(component.getFont());
+    return new Dimension(Math.max(fontMetrics.stringWidth(maxString), component.getPreferredSize().width),
+                         fontMetrics.getHeight());
+  }
+
   public static interface ComponentMatcher {
     boolean matches(Component component);
   }
@@ -277,10 +283,10 @@ public class GuiUtils {
     }
 
     Dimension windowSize = window.getSize();
-    if (windowSize.width > maxSize.width){
+    if (windowSize.width > maxSize.width) {
       windowSize.width = maxSize.width;
     }
-    if (windowSize.height > maxSize.height){
+    if (windowSize.height > maxSize.height) {
       windowSize.height = maxSize.height;
     }
     window.setBounds(origin.x + parentSize.width / 2 - windowSize.width / 2,
@@ -456,7 +462,7 @@ public class GuiUtils {
     }
     return "";
   }
-  
+
   public static boolean isRightClick(MouseEvent event) {
     int modifiers = event.getModifiers();
     return (modifiers & MouseEvent.BUTTON3_MASK) != 0;

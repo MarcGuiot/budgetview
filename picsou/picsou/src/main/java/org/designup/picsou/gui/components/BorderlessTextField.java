@@ -6,10 +6,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 public class BorderlessTextField {
   private JTextField textField;
@@ -22,7 +19,7 @@ public class BorderlessTextField {
 
   public BorderlessTextField(JTextField textField) {
     this.textField = textField;
-    defaultBorder = textField.getBorder();
+    this.defaultBorder = textField.getBorder();
     registerListeners(textField);
     update();
   }

@@ -1,4 +1,4 @@
-package org.designup.picsou.triggers;
+package org.designup.picsou.triggers.projects;
 
 import org.designup.picsou.model.Project;
 import org.designup.picsou.model.ProjectItem;
@@ -7,7 +7,8 @@ import org.globsframework.model.*;
 
 import static org.globsframework.model.FieldValue.value;
 
-public class ProjectItemTrigger extends AbstractChangeSetListener {
+public class ProjectItemToSubSeriesTrigger extends AbstractChangeSetListener {
+
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(ProjectItem.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
@@ -44,7 +45,6 @@ public class ProjectItemTrigger extends AbstractChangeSetListener {
       repository.create(SubSeries.TYPE,
                         value(SubSeries.SERIES, project.get(Project.SERIES)),
                         value(SubSeries.NAME, projectItemValues.get(ProjectItem.LABEL)));
-    repository.update(projectItemKey,
-                      value(ProjectItem.SUB_SERIES, subSeries.get(SubSeries.ID)));
+    repository.update(projectItemKey, ProjectItem.SUB_SERIES, subSeries.get(SubSeries.ID));
   }
 }

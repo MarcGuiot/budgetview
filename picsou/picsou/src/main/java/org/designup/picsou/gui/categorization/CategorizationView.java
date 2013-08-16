@@ -177,11 +177,10 @@ public class CategorizationView extends View implements TableView, Filterable, C
                              transactionComparator,
                              new OnChangeLabelCustomizer(fontSize(9)),
                              repository, directory);
+    headerPainter = PicsouTableHeaderPainter.install(transactionTable, directory);
     final CategorizationTableActions actions = new CategorizationTableActions(transactionTable.getCopySelectionAction(Lang.get("copy")),
                                                                               repository, directory);
     transactionTable.setPopupFactory(actions);
-
-    headerPainter = PicsouTableHeaderPainter.install(transactionTable, directory);
 
     transactionCreation = new TransactionCreationPanel(repository, directory, parentDirectory);
     transactionCreation.registerComponents(builder);

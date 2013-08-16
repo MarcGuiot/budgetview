@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.upgrade;
 
 import com.budgetview.shared.utils.Amounts;
-import org.designup.picsou.bank.connectors.AbstractBankConnector;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
 import org.designup.picsou.gui.license.LicenseService;
@@ -9,7 +8,7 @@ import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AccountInitialPositionTrigger;
 import org.designup.picsou.triggers.PositionTrigger;
-import org.designup.picsou.triggers.ProjectItemTrigger;
+import org.designup.picsou.triggers.projects.ProjectItemToSubSeriesTrigger;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.Field;
@@ -250,7 +249,7 @@ public class UpgradeTrigger implements ChangeSetListener {
 
   private void createMissingSubSeriesForProjectItems(GlobRepository repository) {
     for (Glob projectItem : repository.getAll(ProjectItem.TYPE, isNull(ProjectItem.SUB_SERIES))) {
-      ProjectItemTrigger.createSubSeries(projectItem.getKey(), projectItem, repository);
+      ProjectItemToSubSeriesTrigger.createSubSeries(projectItem.getKey(), projectItem, repository);
     }
   }
 

@@ -32,6 +32,7 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
   private GlobStringifier stringifier;
   private ListCellRenderer renderer;
   private Comparator<Glob> comparator;
+  private boolean completed = false;
 
   private GlobSelectionHandler selectionHandler = new DefaultGlobSelectionHandler();
 
@@ -108,8 +109,6 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
     return repository;
   }
 
-
-
   public interface GlobSelectionHandler {
     void processSelection(GlobList selection);
   }
@@ -156,13 +155,16 @@ public class GlobListView extends AbstractGlobComponentHolder<GlobListView> impl
   }
 
   public JList getComponent() {
-    complete();
-    jList.setName(name != null ? name : type.getName());
-    jList.setModel(model);
-    jList.setCellRenderer(renderer);
-    registerSelectionListener();
-    if (updateWithIncomingSelections) {
-      selectionService.addListener(this, type);
+    if (!completed) {
+      complete();
+      jList.setName(name != null ? name : type.getName());
+      jList.setModel(model);
+      jList.setCellRenderer(renderer);
+      registerSelectionListener();
+      if (updateWithIncomingSelections) {
+        selectionService.addListener(this, type);
+      }
+      completed = true;
     }
     return jList;
   }

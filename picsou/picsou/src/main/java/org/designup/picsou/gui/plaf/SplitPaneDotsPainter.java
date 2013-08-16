@@ -18,6 +18,10 @@ public class SplitPaneDotsPainter implements Painter {
     Color brighter = bright.brighter();
     Color dark = color.darker();
 
+    if (splitPane.isOpaque()) {
+      g.fillRect(rect.x, rect.y, rect.width, rect.height);
+    }
+
     int middleX = rect.x + rect.width / 2;
     int middleY = rect.y + rect.height / 2;
 

@@ -4,6 +4,7 @@ import org.designup.picsou.gui.budget.BudgetToggle;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.gui.model.Card;
+import org.designup.picsou.gui.projects.ProjectEditionView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Account;
 import org.globsframework.gui.GlobSelection;
@@ -26,6 +27,7 @@ public class NavigationService implements GlobSelectionListener {
   private SelectionService selectionService;
   private TransactionView transactionView;
   private CategorizationView categorizationView;
+  private ProjectEditionView projectEditionView;
   private BudgetToggle budgetToggle;
   private GlobRepository repository;
 
@@ -35,11 +37,13 @@ public class NavigationService implements GlobSelectionListener {
 
   public NavigationService(TransactionView transactionView,
                            CategorizationView categorizationView,
+                           ProjectEditionView projectEditionView,
                            BudgetToggle budgetToggle,
                            GlobRepository repository,
                            Directory directory) {
     this.transactionView = transactionView;
     this.categorizationView = categorizationView;
+    this.projectEditionView = projectEditionView;
     this.budgetToggle = budgetToggle;
     this.repository = repository;
     this.selectionService = directory.get(SelectionService.class);
@@ -135,6 +139,19 @@ public class NavigationService implements GlobSelectionListener {
   public void gotoAnalysisForSeries(Glob series) {
     selectionService.select(series);
     gotoCard(Card.ANALYSIS);
+  }
+
+  public void gotoProject(Key projectKey) {
+    Glob project = repository.find(projectKey);
+    if (project != null) {
+      selectionService.select(project);
+    }
+    gotoCard(Card.HOME);
+  }
+
+  public void gotoNewProject() {
+    projectEditionView.createProject();
+    gotoCard(Card.HOME);
   }
 
   public void highlightTransactionCreation() {

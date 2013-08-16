@@ -394,11 +394,11 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/08");
 
-    projects.create()
+    projects.create();
+    currentProject
       .setName("My Project")
-      .setItem(0, "Item 0", 200808, -10.00)
-      .addItem(1, "Item 1", 200808, -10.00)
-      .validate();
+      .addItem(0, "Item 0", 200808, -10.00)
+      .addItem(1, "Item 1", 200808, -10.00);
 
     budgetView.extras.checkCarryOverDisabled("My Project");
   }

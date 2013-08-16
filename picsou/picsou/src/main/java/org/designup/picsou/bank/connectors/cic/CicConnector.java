@@ -104,7 +104,6 @@ public class CicConnector extends WebBankConnector {
             WebTableColumn column = accountTable.getColumn(1);
             for (WebTableCell cell : column) {
               AccountLabel accountLabels = new AccountLabel(cell.asText());
-              System.out.println("CicConnector$ConnectAction.run: account=" + accountLabels);
               createOrUpdateRealAccount(accountLabels.accountName, accountLabels.accountNumber, null, null, BANK_ID);
             }
             doImport();
@@ -131,7 +130,6 @@ public class CicConnector extends WebBankConnector {
     for (WebTableRow row : accountTable.getAllRows()) {
       String siteAccountName = row.getCell(1).asText();
       boolean toImport = isToImport(siteAccountName);
-      System.out.println("CicConnector.downloadFile: " + siteAccountName + " ==> " + toImport);
       row.getCell(0).getCheckBox().setChecked(toImport);
     }
 
@@ -145,7 +143,7 @@ public class CicConnector extends WebBankConnector {
         }
       }
     }
-  } 
+  }
 
   public String getCode() {
     return userAndPasswordPanel.getUser();

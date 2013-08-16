@@ -12,6 +12,7 @@ import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.tips.DetailsTip;
 import org.designup.picsou.gui.description.stringifiers.MonthFieldListStringifier;
+import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.gui.help.actions.HelpAction;
 import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
@@ -126,7 +127,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
     builder.addButton("month",
                       Transaction.TYPE,
-                      new MonthFieldListStringifier(Transaction.MONTH),
+                      new MonthFieldListStringifier(Transaction.MONTH, MonthRangeFormatter.STANDARD),
                       new EditMonthCallback())
       .forceSelection(PROTOTYPE_TRANSACTION_KEY);
 

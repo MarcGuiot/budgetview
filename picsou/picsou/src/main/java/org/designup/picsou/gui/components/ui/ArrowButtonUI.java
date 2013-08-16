@@ -4,8 +4,9 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import static java.awt.geom.AffineTransform.getTranslateInstance;
 import java.awt.geom.GeneralPath;
+
+import static java.awt.geom.AffineTransform.getTranslateInstance;
 
 public class ArrowButtonUI extends BasicButtonUI {
 

@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.projects;
 
+import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
-import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
 import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.designup.picsou.gui.components.charts.histo.button.HistoButtonColors;
@@ -15,17 +15,17 @@ import org.designup.picsou.gui.series.analysis.histobuilders.HistoButtonDatasetB
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartRangeListener;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartUpdater;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Project;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.utils.TypeChangeSetListener;
-import org.globsframework.utils.collections.Range;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.collections.Range;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -38,15 +38,14 @@ public class ProjectChartView extends View {
   private HistoChart histoChart;
   private HistoChartRange range;
   private HistoButtonColors colors;
-  private ProjectEditionDialog editionDialog;
-  private JEditorPane message;
   private FontMetrics buttonFontMetrics;
 
   public ProjectChartView(final HistoChartRange range, final GlobRepository repository, final Directory directory) {
     super(repository, directory);
     this.range = range;
     this.histoChart = new HistoChart(new HistoChartConfig(true, false, true, false, true, true, false, true, true, true), new HistoChartColors(directory));
-    this.updater = new HistoChartUpdater(repository, directory, Month.TYPE, Month.ID, Project.TYPE, ProjectItem.TYPE) {
+    this.updater = new HistoChartUpdater(repository, directory,
+                                         Month.TYPE, Month.ID, Project.TYPE, ProjectStat.TYPE) {
       protected void update(Integer currentMonthId, boolean resetPosition) {
         updateChart(currentMonthId, resetPosition);
       }
@@ -54,7 +53,14 @@ public class ProjectChartView extends View {
     this.histoChart.addListener(new HistoChartListenerAdapter() {
       public void processClick(HistoSelection selection, Set<Key> objectKeys) {
         if (objectKeys.size() == 1) {
-          getEditionDialog().show(objectKeys.iterator().next());
+          Glob project = repository.find(objectKeys.iterator().next());
+          if (project != null) {
+            selectionService.select(project);
+          }
+          else {
+            selectionService.clear(Project.TYPE);
+          }
+          updateChart();
           return;
         }
 
@@ -71,10 +77,7 @@ public class ProjectChartView extends View {
     });
     this.range.addListener(new HistoChartRangeListener() {
       public void rangeUpdated() {
-        Integer currentMonthId = updater.getCurrentMonthId();
-        if (currentMonthId != null) {
-          updateChart(currentMonthId, false);
-        }
+        updateChart();
       }
     });
     this.colors = new HistoButtonColors(
@@ -94,6 +97,13 @@ public class ProjectChartView extends View {
     buttonFontMetrics = histoChart.getFontMetrics(buttonFont);
   }
 
+  private void updateChart() {
+    Integer currentMonthId = updater.getCurrentMonthId();
+    if (currentMonthId != null) {
+      updateChart(currentMonthId, false);
+    }
+  }
+
   private void updateChart(Integer currentMonthId, boolean resetPosition) {
     if (resetPosition) {
       range.reset();
@@ -103,12 +113,17 @@ public class ProjectChartView extends View {
     for (Integer monthId : range.getMonthIds(currentMonthId)) {
       dataset.addColumn(monthId, Utils.equal(monthId, currentMonthId));
     }
+    GlobList selectedProjects = selectionService.getSelection(Project.TYPE);
     for (Glob project : repository.getAll(Project.TYPE)) {
       Range<Integer> range = Project.getMonthRange(project, repository);
       if (range == null) {
         continue;
       }
-      dataset.addButton(range.getMin(), range.getMax(), project.get(Project.NAME), project.getKey(), getTooltip(project));
+      dataset.addButton(range.getMin(), range.getMax(),
+                        project.get(Project.NAME),
+                        project.getKey(),
+                        getTooltip(project),
+                        selectedProjects.contains(project));
     }
 
     histoChart.update(new HistoButtonPainter(dataset.get(), buttonFontMetrics, colors));
@@ -118,32 +133,6 @@ public class ProjectChartView extends View {
     builder.add("projectChart", histoChart);
 
     builder.add("createProject", new CreateProjectAction(directory));
-
-    message = GuiUtils.createReadOnlyHtmlComponent(Lang.get("projectView.hint"));
-    builder.add("projectHint", message);
-    registerMessageUpdater();
-  }
-
-  private ProjectEditionDialog getEditionDialog() {
-    if (editionDialog == null) {
-      this.editionDialog = new ProjectEditionDialog(repository, directory);
-    }
-    return editionDialog;
-  }
-
-  private void registerMessageUpdater() {
-    repository.addChangeListener(new TypeChangeSetListener(Project.TYPE, SignpostStatus.TYPE) {
-      protected void update(GlobRepository repository) {
-        updateMessage();
-      }
-    });
-    updateMessage();
-  }
-
-  private void updateMessage() {
-    boolean shouldShow = !repository.contains(Project.TYPE) && SignpostStatus.isInitialGuidanceCompleted(repository);
-    message.setVisible(shouldShow);
-    GuiUtils.revalidate(message);
   }
 
   private String getTooltip(Glob project) {

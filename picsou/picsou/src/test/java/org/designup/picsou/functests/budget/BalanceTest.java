@@ -33,7 +33,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2009/05");
     transactionCreation
       .show()
-      .setToBeReconcile()
+      .setToBeReconciled()
       .shouldUpdatePosition()
       .selectAccount("Manual")
       .setAmount(-10)

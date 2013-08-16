@@ -28,6 +28,8 @@ public interface ChangeSet {
 
   int getChangeCount(GlobType type);
 
+  Set<Key> getChanged(GlobType type);
+
   Set<Key> getCreated(GlobType type);
 
   Set<Key> getUpdated(GlobType type);
