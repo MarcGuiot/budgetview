@@ -52,6 +52,7 @@ public class ImportController implements RealAccountImporter {
   private List<AccountWithFile> realAccountWithImport = new ArrayList<AccountWithFile>();
   private GlobList realAccountWithoutImport = new GlobList();
   private boolean isSynchro = true;
+  private int countPush;
 
   public ImportController(ImportDialog importDialog,
                           GlobRepository repository, LocalGlobRepository localRepository,
@@ -69,6 +70,7 @@ public class ImportController implements RealAccountImporter {
   private void initOpenRequestManager(Directory directory) {
     openRequestManager = directory.get(OpenRequestManager.class);
     openRequestManager.pushCallback(new InImportOpenStep1Callback());
+    countPush++;
   }
 
   public void doImport() {
@@ -199,6 +201,7 @@ public class ImportController implements RealAccountImporter {
 
   public void commitAndClose(Set<Integer> months) {
     openRequestManager.popCallback();
+    countPush--;
     localRepository.commitChanges(true);
     importDialog.showLastImportedMonthAndClose(months);
   }
@@ -233,7 +236,10 @@ public class ImportController implements RealAccountImporter {
   }
 
   public void complete() {
-    openRequestManager.popCallback();
+    while (countPush > 0){
+      openRequestManager.popCallback();
+      countPush--;
+    }
   }
 
   private List<File> getInitialFiles() {

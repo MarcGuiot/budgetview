@@ -7,6 +7,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class ExitAction extends AbstractAction {
@@ -43,5 +44,11 @@ public class ExitAction extends AbstractAction {
     frame.setVisible(false);
     frame.dispose();
     windowManager.shutdown();
+    Window[] windows = JWindow.getWindows();
+    for (Window window : windows) {
+      if (window != null){
+        window.dispose();
+      }
+    }
   }
 }

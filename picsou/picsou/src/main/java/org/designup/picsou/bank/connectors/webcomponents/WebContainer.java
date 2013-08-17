@@ -312,7 +312,7 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   }
 
   private <T extends HtmlElement> T getSingleElement(String tagName, WebFilter filter) throws WebParsingError {
-    return HtmlUnit.getSingleElement(node, tagName, filter);
+    return HtmlUnit.<T>getSingleElement(node, tagName, filter);
   }
 
   private <T extends HtmlElement> T getSingleElement(String tagName, Class<T> expectedClass) throws WebParsingError {

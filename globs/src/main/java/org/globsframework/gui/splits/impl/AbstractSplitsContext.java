@@ -161,6 +161,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     for (Disposable listener : disposables.values()) {
       listener.dispose();
     }
+    disposables.clear();
   }
 
   public void addAutoHide(Component targetComponent, String sourceComponentName) {
@@ -255,6 +256,13 @@ public abstract class AbstractSplitsContext implements SplitsContext {
           setVisible(false);
         }
       };
+    }
+  }
+
+  protected void finalize() throws Throwable {
+    super.finalize();
+    if (!disposables.isEmpty()){
+      System.out.println("AbstractSplitsContext.finalize not finalalized ." + resourceFile);
     }
   }
 }

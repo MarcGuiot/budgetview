@@ -212,10 +212,19 @@ public class ImportDialog implements RealAccountImporter {
   }
 
   private void dispose() {
+    importSynchroPanel.dispose();
     importAccountsPanel.dispose();
     fileSelectionPanel.dispose();
     previewPanel.dispose();
     completionPanel.dispose();
+    controller.complete();
+    KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
+    importAccountsPanel = null;
+    fileSelectionPanel = null;
+    previewPanel = null;
+    completionPanel = null;
+    controller = null;
+    importSynchroPanel = null;
   }
 
   public void showLastImportedMonthAndClose(Set<Integer> months) {

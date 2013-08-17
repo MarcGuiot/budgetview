@@ -22,6 +22,7 @@ import org.designup.picsou.gui.utils.DaySelection;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
@@ -37,7 +38,7 @@ import javax.swing.*;
 import java.util.List;
 import java.util.Set;
 
-public class HistoChartBuilder {
+public class HistoChartBuilder implements Disposable {
   private HistoChart histoChart;
   private JLabel histoChartLabel;
   private HistoDiffLegendPanel histoChartLegend;
@@ -85,6 +86,7 @@ public class HistoChartBuilder {
 
     histoChartLabel = new JLabel();
     histoChartLegend = new HistoDiffLegendPanel(repository, directory);
+    disposables.add(histoChartLegend);
 
     initColors(directory);
   }

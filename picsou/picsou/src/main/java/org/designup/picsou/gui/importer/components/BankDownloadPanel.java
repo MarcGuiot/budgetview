@@ -227,6 +227,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
   }
 
   public void dispose() {
+    System.out.println("BankDownloadPanel.dispose");
     builder.dispose();
     bankChooser.dispose();
     manualAccountsPanel.dispose();
