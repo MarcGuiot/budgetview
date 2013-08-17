@@ -1,11 +1,8 @@
 package org.globsframework.gui.editors;
 
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.utils.AbstractGlobComponentHolder;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.model.*;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -13,14 +10,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.util.Set;
 
-public class GlobSliderEditor extends AbstractGlobComponentHolder<GlobSliderEditor>
-  implements ChangeSetListener, GlobSelectionListener {
+public class GlobSliderEditor extends AbstractGlobFieldEditor<GlobSliderEditor> {
 
   private DoubleField field;
-  private GlobList currentGlobs = new GlobList();
   private GlobSliderAdapter adapter;
   private JSlider slider;
-  private boolean isAdjusting;
 
   public static GlobSliderEditor init(DoubleField field, GlobRepository repository, Directory directory, GlobSliderAdapter adapter) {
     return new GlobSliderEditor(field, repository, directory, adapter);
@@ -41,9 +35,6 @@ public class GlobSliderEditor extends AbstractGlobComponentHolder<GlobSliderEdit
     });
 
     adapter.init(slider);
-
-    repository.addChangeListener(this);
-    selectionService.addListener(this, type);
   }
 
   public JSlider getComponent() {
@@ -51,33 +42,11 @@ public class GlobSliderEditor extends AbstractGlobComponentHolder<GlobSliderEdit
   }
 
   public void dispose() {
-    repository.removeChangeListener(this);
-    selectionService.removeListener(this);
+    super.dispose();
     slider = null;
   }
 
-  public void selectionUpdated(GlobSelection selection) {
-    this.currentGlobs = selection.getAll(type);
-    updateSliderFromGlobs();
-  }
-
-  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (isAdjusting || !changeSet.containsChanges(type)) {
-      return;
-    }
-
-    currentGlobs.keepExistingGlobsOnly(repository);
-    updateSliderFromGlobs();
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(type)) {
-      currentGlobs.keepExistingGlobsOnly(repository);
-      updateSliderFromGlobs();
-    }
-  }
-
-  private void updateSliderFromGlobs() {
+  protected void updateFromGlobs() {
     if (isAdjusting) {
       return;
     }
