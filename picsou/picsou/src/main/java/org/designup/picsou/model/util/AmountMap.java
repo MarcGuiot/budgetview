@@ -38,7 +38,21 @@ public class AmountMap {
     return value != null ? amounts.get(id) : defaultValue;
   }
 
-  public Set<Map.Entry<Integer,Double>> entrySet() {
+  public Set<Map.Entry<Integer, Double>> entrySet() {
     return amounts.entrySet();
+  }
+
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    boolean first = true;
+    for (Map.Entry<Integer, Double> entry : amounts.entrySet()) {
+      if (!first) {
+        builder.append(',');
+      }
+      builder.append(entry.getKey())
+        .append(":")
+        .append(entry.getValue());
+    }
+    return builder.toString();
   }
 }

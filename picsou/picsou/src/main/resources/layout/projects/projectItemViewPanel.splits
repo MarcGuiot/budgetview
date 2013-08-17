@@ -4,8 +4,8 @@
     <style selector="button#itemButton"
            ui="hyperlinkButtonWithoutUnderline"
            foreground="projectView.item.view.itemButton"
-           anchor="left" weightX="100"
-           font="-,plain,14" cursor="hand"
+           fill="none" anchor="left" weightX="100"
+           font="-,bold,13" cursor="hand"
            icon="downArrow(10,18,8,8,block.inner.arrow.idle)"
            rolloverIcon="downArrow(10,18,8,8,block.inner.arrow.rollover)"
            pressedIcon="downArrow(10,18,8,8,block.inner.arrow.pressed)"
@@ -15,17 +15,26 @@
 
     <style selector=".itemLabel"
            font="-,plain,11" foreground="projectView.item.view.label"/>
+
+    <ui name="amountLinkUI" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        underline="false" useNormalColorWhenDisabled="false" autoHideEnabled="false"
+        disabledColor="block.item.link.inactive"/>
+    <style selector="button#actualAmount" ui="amountLinkUI"
+           foreground="block.amount.actual.link" font="-,plain,11"/>
+    <style selector="button#plannedAmount" ui="amountLinkUI"
+           foreground="block.amount.planned.link" font="-,bold,11"/>
   </styles>
 
   <column name="projectItemViewPanel"
           layout="org.designup.picsou.gui.projects.utils.ProjectItemViewLayout"
           border="empty(5)" opaque="true" background="block.inner.bg">
-    <button ref="itemButton" font="-,bold,13"/>
+    <button ref="itemButton"/>
     <label ref="monthLabel" styleClass="itemLabel"/>
-    <label ref="actualLabel" styleClass="itemLabel"/>
     <component ref="itemGauge" styleClass="detailGauge" preferredSize="(30,14)"/>
-    <label ref="plannedLabel" styleClass="itemLabel"/>
-    <button action="modify" ui="hyperlinkButton" font="-,plain,11"/>
+    <button ref="actualAmount" styleClass="amountButton"/>
+    <label name="slashLabel" text="/" styleClass="itemLabel"/>
+    <button ref="plannedAmount" styleClass="amountButton"/>
+    <button action="modify" styleClass="editIcon"/>
     <label ref="imageLabel" preferredSize="(100,70)"/>
     <button ref="link" ui="hyperlinkButton" font="-,plain,10"/>
     <htmlEditorPane ref="description" editable="false" border="none" font="-,plain,10"/>

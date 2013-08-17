@@ -134,7 +134,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testProjectDeletionWithNoAssignedTransactions() throws Exception {
+  public void testDeletingAProjectWithNoAssignedTransactions() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2010/12/01")
       .addTransaction("2010/12/01", 1000.00, "Income")
@@ -166,7 +166,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkDoesNotContainSeries("My project");
   }
 
-  public void testProjectDeletionWithAssignedTransactions() throws Exception {
+  public void testDeletingAProjectWithAssignedTransactions() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2010/12/01")
       .addTransaction("2010/12/01", 1000.00, "Income")
@@ -571,7 +571,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     timeline.checkSelection("2011/01");
   }
 
-  public void testEditProjectTransaction() throws Exception {
+  public void testEditingProjectTransactionsNavigatesToTheProject() throws Exception {
     operations.hideSignposts();
 
     OfxBuilder.init(this)
@@ -586,11 +586,13 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .setName("Trip")
       .addItem(0, "Booking", 201011, -200.00);
 
+    projects.create();
+    currentProject
+      .setName("Another project")
+      .addItem(0, "Another item", 201011, -200.00);
+
     timeline.selectMonth("2010/11");
     categorization.setExtra("RESA", "Trip");
-
-    // TODO Unselect
-    System.out.println("ProjectManagementTest.testEditProjectTransaction: TODO Unselect");
 
     views.selectData();
     transactions.initContent()
@@ -602,5 +604,61 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     views.checkHomeSelected();
     currentProject
       .checkName("Trip");
+  }
+
+  public void testNavigatingToItemTransactions() throws Exception {
+    operations.hideSignposts();
+    operations.openPreferences().setFutureMonthsCount(3).validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/12/30")
+      .addTransaction("2010/11/01", 1000.00, "Income")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/11/15", -100.00, "Resa 1")
+      .addTransaction("2010/12/10", -100.00, "Resa 2")
+      .addTransaction("2010/12/15", -250.00, "Sheraton")
+      .load();
+
+    projects.create();
+    currentProject
+      .setName("Trip")
+      .addItem(0, "Booking", 201011, -250.00)
+      .addItem(1, "Hotel", 201012, -200.00);
+
+    categorization.setExtra("RESA 1", "Trip", "Booking");
+    categorization.setExtra("RESA 2", "Trip", "Booking");
+    categorization.setExtra("Sheraton", "Trip", "Hotel");
+
+    views.selectHome();
+    currentProject
+      .checkItems("Booking | Nov 2010 | -200.00 | -250.00\n" +
+                  "Hotel | Dec 2010 | -250.00 | -200.00");
+
+    timeline.selectMonth("2011/01");
+
+    currentProject.view(0).showTransactionsThroughActual();
+    views.checkDataSelected();
+    timeline.checkSelection("2010/11", "2010/12");
+    transactions.initContent()
+      .add("10/12/2010", TransactionType.PRELEVEMENT, "RESA 2", "", -100.00, "Trip / Booking")
+      .add("15/11/2010", TransactionType.PRELEVEMENT, "RESA 1", "", -100.00, "Trip / Booking")
+      .check();
+
+    views.selectHome();
+    currentProject.view(1).showTransactionsThroughActual();
+    views.checkDataSelected();
+    transactions.initContent()
+      .add("15/12/2010", TransactionType.PRELEVEMENT, "SHERATON", "", -250.00, "Trip / Hotel")
+      .check();
+
+    timeline.selectMonth("2010/12");
+    views.selectHome();
+    currentProject.view(0).showTransactionsThroughMenu();
+    views.checkDataSelected();
+    timeline.checkSelection("2010/11", "2010/12");
+    transactions.initContent()
+      .add("10/12/2010", TransactionType.PRELEVEMENT, "RESA 2", "", -100.00, "Trip / Booking")
+      .add("15/11/2010", TransactionType.PRELEVEMENT, "RESA 1", "", -100.00, "Trip / Booking")
+      .check();
   }
 }

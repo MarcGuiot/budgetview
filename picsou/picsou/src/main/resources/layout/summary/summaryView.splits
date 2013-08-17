@@ -2,8 +2,8 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector="label.graphTitle" font="-,bold,15" weightY="0.1"
-           foreground="summary.graph.title" anchor="southwest" marginTop="6" marginLeft="10"/>
+    <style selector="label.graphTitle" font="-,bold,14" weightY="0.1"
+           foreground="summary.graph.title" anchor="southwest" marginTop="10" marginLeft="10"/>
     <style selector="label.graphSubTitle" font="-,plain,11" weightY="0.1"
            foreground="summary.graph.subtitle" anchor="southeast" marginTop="2"/>
     <style selector="button.create" ui="hyperlinkButtonWithoutUnderline" weightY="0.1"

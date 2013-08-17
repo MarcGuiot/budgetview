@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.projects;
 
 import org.designup.picsou.gui.browsing.BrowsingService;
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.MonthSlider;
@@ -15,6 +16,7 @@ import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.ProjectItem;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobMultiLineTextEditor;
@@ -31,6 +33,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
+import org.globsframework.model.utils.GlobListActionAdapter;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -83,9 +86,13 @@ public class ProjectItemPanel implements Disposable {
                                                       parentRepository, directory);
 
     ModifyAction modifyAction = new ModifyAction();
+    ShowTransactionsAction showTransactionsAction = new ShowTransactionsAction();
 
     JPopupMenu itemPopup = new JPopupMenu();
     itemPopup.add(modifyAction);
+    itemPopup.addSeparator();
+    itemPopup.add(showTransactionsAction);
+    itemPopup.addSeparator();
     itemPopup.add(new DeleteItemAction(itemKey));
     PopupGlobFunctor functor = new PopupGlobFunctor(itemPopup);
     GlobButtonView itemButton = GlobButtonView.init(ProjectItem.LABEL, parentRepository, directory, functor)
@@ -107,21 +114,23 @@ public class ProjectItemPanel implements Disposable {
 
     Key itemStatKey = Key.create(ProjectItemStat.TYPE, itemKey.get(ProjectItem.ID));
 
-    GlobLabelView actualLabel = GlobLabelView.init(ProjectItemStat.ACTUAL_AMOUNT, parentRepository, directory)
+    GlobButtonView actualAmount = GlobButtonView.init(ProjectItemStat.ACTUAL_AMOUNT, parentRepository, directory,
+                                                      new GlobListActionAdapter(showTransactionsAction))
       .forceSelection(itemStatKey);
-    builder.add("actualLabel", actualLabel);
-    disposables.add(actualLabel);
+    builder.add("actualAmount", actualAmount);
+    disposables.add(actualAmount);
+
+    GlobButtonView plannedAmount = GlobButtonView.init(ProjectItem.PLANNED_AMOUNT, parentRepository, directory,
+                                                       new GlobListActionAdapter(modifyAction))
+      .forceSelection(itemKey);
+    builder.add("plannedAmount", plannedAmount);
+    disposables.add(plannedAmount);
 
     SimpleGaugeView itemGauge = SimpleGaugeView.init(ProjectItemStat.ACTUAL_AMOUNT, ProjectItemStat.PLANNED_AMOUNT,
                                                      parentRepository, directory);
     itemGauge.setKey(itemStatKey);
     builder.add("itemGauge", itemGauge.getComponent());
     disposables.add(itemGauge);
-
-    GlobLabelView plannedLabel = GlobLabelView.init(ProjectItem.PLANNED_AMOUNT, parentRepository, directory)
-      .forceSelection(itemKey);
-    builder.add("plannedLabel", plannedLabel);
-    disposables.add(plannedLabel);
 
     builder.add("handler", new HyperlinkHandler(directory));
 
@@ -146,14 +155,17 @@ public class ProjectItemPanel implements Disposable {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectItemEditionPanel.splits",
                                                       localRepository, directory);
 
+    ValidateAction validate = new ValidateAction();
+
     nameField = GlobTextEditor.init(ProjectItem.LABEL, localRepository, directory)
-      .forceSelection(itemKey);
+      .forceSelection(itemKey)
+      .setValidationAction(validate);
     builder.add("nameField", nameField);
     disposables.add(nameField);
 
     GlobImageLabelView imageLabel =
       GlobImageLabelView.init(ProjectItem.IMAGE_PATH, localRepository, directory)
-      .forceKeySelection(itemKey);
+        .forceKeySelection(itemKey);
     builder.add("imageLabel", imageLabel.getLabel());
     builder.add("imageActions", imageLabel.getPopupButton(Lang.get("projectView.item.edition.imageActions")));
 
@@ -164,6 +176,7 @@ public class ProjectItemPanel implements Disposable {
     AmountEditor amountEditor =
       new AmountEditor(ProjectItem.PLANNED_AMOUNT, localRepository, directory, false, null)
         .forceSelection(itemKey)
+        .addAction(validate)
         .update(false, false);
     builder.add("amountEditor", amountEditor.getPanel());
     disposables.add(amountEditor);
@@ -184,8 +197,7 @@ public class ProjectItemPanel implements Disposable {
     JPopupButton actionsPopup = new JPopupButton(Lang.get("projectView.item.edition.actions"), actionsMenu);
     builder.add("actions", actionsPopup);
 
-
-    builder.add("validate", new ValidateAction());
+    builder.add("validate", validate);
     builder.add("cancel", new CancelAction());
 
     builder.add("handler", new HyperlinkHandler(directory));
@@ -292,6 +304,21 @@ public class ProjectItemPanel implements Disposable {
       String url = list.getFirst().get(ProjectItem.URL);
       if (Strings.isNotEmpty(url)) {
         directory.get(BrowsingService.class).launchBrowser(url);
+      }
+    }
+  }
+
+  private class ShowTransactionsAction extends AbstractAction {
+    private ShowTransactionsAction() {
+      super(Lang.get("projectView.item.edition.actions.showTransactions"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      Glob projectItem = parentRepository.get(itemKey);
+      Glob subSeries = parentRepository.findLinkTarget(projectItem, ProjectItem.SUB_SERIES);
+      if (subSeries != null) {
+        GlobList transactions = parentRepository.findLinkedTo(subSeries, Transaction.SUB_SERIES);
+        directory.get(NavigationService.class).gotoData(transactions);
       }
     }
   }

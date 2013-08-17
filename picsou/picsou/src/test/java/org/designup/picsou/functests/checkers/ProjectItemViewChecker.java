@@ -2,9 +2,8 @@ package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.functests.checkers.components.GaugeChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
-import org.designup.picsou.functests.checkers.components.PopupChecker;
-import org.uispec4j.*;
-import org.uispec4j.interception.PopupMenuInterceptor;
+import org.uispec4j.Button;
+import org.uispec4j.Panel;
 
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
@@ -18,8 +17,8 @@ public class ProjectItemViewChecker extends GuiChecker {
   public void checkValues(String label, String month, double actual, double planned) {
     assertThat(panel.getButton("itemButton").textEquals(label));
     assertThat(panel.getTextBox("monthLabel").textEquals(month));
-    assertThat(panel.getTextBox("actualLabel").textEquals(toString(actual)));
-    assertThat(panel.getTextBox("plannedLabel").textEquals(toString(planned)));
+    assertThat(panel.getButton("actualAmount").textEquals(toString(actual)));
+    assertThat(panel.getButton("plannedAmount").textEquals(toString(planned)));
     checkGauge(actual, planned);
   }
 
@@ -29,23 +28,34 @@ public class ProjectItemViewChecker extends GuiChecker {
     gauge.checkTargetValue(planned);
   }
 
+  public void showTransactionsThroughActual() {
+    panel.getButton("actualAmount").click();
+  }
+
+  public void showTransactionsThroughMenu() {
+    getItemButton().click("Show transactions");
+  }
+
   void write(StringBuilder builder) {
     builder.append(panel.getButton("itemButton").getLabel());
     builder.append(" | ");
     builder.append(panel.getTextBox("monthLabel").getText());
     builder.append(" | ");
-    builder.append(panel.getTextBox("actualLabel").getText());
+    builder.append(panel.getButton("actualAmount").getLabel());
     builder.append(" | ");
-    builder.append(panel.getTextBox("plannedLabel").getText());
+    builder.append(panel.getButton("plannedAmount").getLabel());
   }
 
   public void delete() {
-    final Button itemButton = panel.getButton("itemButton");
-    PopupButton button = new PopupButton(itemButton);
-    button.click("Delete");
+    getItemButton().click("Delete");
   }
 
   public void modify() {
     panel.getButton("modify").click();
+  }
+
+  private PopupButton getItemButton() {
+    final Button itemButton = panel.getButton("itemButton");
+    return new PopupButton(itemButton);
   }
 }

@@ -4,9 +4,9 @@ import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.GaugeChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.model.BudgetArea;
-import org.uispec4j.*;
 import org.uispec4j.Panel;
+import org.uispec4j.TextBox;
+import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 
@@ -76,7 +76,6 @@ public class ProjectEditionChecker extends ViewChecker {
     Assert.assertEquals(expected.trim(), getContent());
     return this;
   }
-
 
   public ProjectEditionChecker setItem(int index, String name, int monthId, double amount) {
     edit(index)
@@ -158,25 +157,8 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
-  /**
-   * @deprecated
-   */
-  public ProjectEditionChecker checkProjectItemMessage(int index, String expectedMessage) {
-    fail("tbd"); // TODO
-    return this;
-  }
-
   public ProjectEditionChecker checkNoErrorTipDisplayed() {
     super.checkNoTipVisible(getPanel());
-    return this;
-  }
-
-  /**
-   * @deprecated
-   */
-  public ProjectEditionChecker validateAndCheckOpen() {
-    getPanel().getButton("OK").click();
-    assertThat(getPanel().isVisible());
     return this;
   }
 
@@ -211,12 +193,6 @@ public class ProjectEditionChecker extends ViewChecker {
       panel = mainWindow.getPanel("projectEditionView");
     }
     return panel;
-  }
-
-  public ProjectEditionChecker checkEditing(int index) {
-    Panel itemPanel = getItemPanel(index);
-    UISpecAssert.assertThat(itemPanel.containsUIComponent(Panel.class, "projectItemEditionPanel"));
-    return this;
   }
 
   public ProjectItemEditionChecker edit(int index) {

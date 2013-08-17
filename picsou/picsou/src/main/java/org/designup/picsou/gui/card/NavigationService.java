@@ -7,6 +7,9 @@ import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.projects.ProjectEditionView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.util.ClosedMonthRange;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -14,11 +17,10 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 public class NavigationService implements GlobSelectionListener {
 
@@ -101,6 +103,23 @@ public class NavigationService implements GlobSelectionListener {
   }
 
   public void gotoData(GlobList transactions) {
+    if (transactions.isEmpty()) {
+      return;
+    }
+    SortedSet<Integer> transactionMonthIds = transactions.getSortedSet(Transaction.MONTH);
+    SortedSet<Integer> selectedMonthIds = selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID);
+    if (Collections.disjoint(transactionMonthIds, selectedMonthIds)) {
+      ClosedMonthRange range = new ClosedMonthRange(transactionMonthIds.first(), transactionMonthIds.last());
+      GlobList months = repository.getAll(Month.TYPE, GlobMatchers.fieldIn(Month.ID, range.asList()));
+      selectionService.select(months, Month.TYPE);
+    }
+    else if (!selectedMonthIds.containsAll(transactionMonthIds)) {
+      List<Integer> monthIds = new ArrayList<Integer>();
+      monthIds.addAll(selectedMonthIds);
+      monthIds.addAll(transactionMonthIds);
+      GlobList months = repository.getAll(Month.TYPE, GlobMatchers.fieldIn(Month.ID, monthIds));
+      selectionService.select(months, Month.TYPE);
+    }
     transactionView.setTransactionsFilter(transactions);
     select(Card.DATA, false);
   }

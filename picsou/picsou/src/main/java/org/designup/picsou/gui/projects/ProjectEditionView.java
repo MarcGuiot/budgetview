@@ -38,6 +38,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
 
   private GlobRepeat repeat;
   private ProjectNameEditor projectNameEditor;
+  private JPanel panel = new JPanel();
 
   private SimpleGaugeView gauge;
   private GlobLabelView totalActual;

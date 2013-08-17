@@ -211,8 +211,9 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
   public void testProjects() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount("001111", 1000.00, "2008/08/01")
+      .addBankAccount("001111", 1000.00, "2008/08/30")
       .addTransaction("2008/08/01", 1000.00, "Income")
+      .addTransaction("2008/08/15", -150.00, "Resa")
       .load();
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
@@ -220,41 +221,44 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     projects.create();
     currentProject
       .setName("MyProject")
-      .addItem(0, "Reservation", 200809, -200.00)
+      .addItem(0, "Booking", 200808, -200.00)
       .addItem(1, "Travel", 200810, -100.00)
       .addItem(2, "Hotel", 200810, -500.00);
 
-    projects.checkProjectList("MyProject");
-    projects.checkProject("MyProject", 200809, 200810, 800.00);
+    categorization.selectTransaction("RESA")
+      .selectExtras().selectSubSeries("MyProject", "Booking");
 
-    timeline.selectMonth("2008/09");
-    budgetView.extras.checkSeries("MyProject", 0, -200.00);
-    budgetView.getSummary().checkEndPosition(800.00);
+    projects.checkProjectList("MyProject");
+    projects.checkProject("MyProject", 200808, 200810, 800.00);
+    currentProject.checkProjectGauge(-150.00, -800.00);
+
+    timeline.selectMonth("2008/08");
+    budgetView.extras.checkSeries("MyProject", -150.00, -200.00);
+    budgetView.getSummary().checkEndPosition(950.00);
 
     timeline.selectMonth("2008/10");
     budgetView.extras.checkSeries("MyProject", 0, -600.00);
-    budgetView.getSummary().checkEndPosition(200.00);
+    budgetView.getSummary().checkEndPosition(350.00);
 
     restartApplication();
 
     projects.checkProjectList("MyProject");
-    projects.checkProject("MyProject", 200809, 200810, 800.00);
+    projects.checkProject("MyProject", 200808, 200810, 800.00);
 
     projects.select("MyProject");
-
     currentProject
-      .checkProjectGauge(0.00, -800.00)
-      .checkItems("Reservation | Sep 2008 | 0.00 | -200.00\n" +
+      .checkProjectGauge(-150.00, -800.00)
+      .checkItems("Booking | Aug 2008 | -150.00 | -200.00\n" +
                   "Travel | Oct 2008 | 0.00 | -100.00\n" +
                   "Hotel | Oct 2008 | 0.00 | -500.00");
 
-    timeline.selectMonth("2008/09");
-    budgetView.extras.checkSeries("MyProject", 0, -200.00);
-    budgetView.getSummary().checkEndPosition(800.00);
+    timeline.selectMonth("2008/08");
+    budgetView.extras.checkSeries("MyProject", -150.00, -200.00);
+    budgetView.getSummary().checkEndPosition(950.00);
 
     timeline.selectMonth("2008/10");
     budgetView.extras.checkSeries("MyProject", 0, -600.00);
-    budgetView.getSummary().checkEndPosition(200.00);
+    budgetView.getSummary().checkEndPosition(350.00);
   }
 
   public void testRestartAfterCurrentMonthChanged() throws Exception {

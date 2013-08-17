@@ -39,7 +39,10 @@ public class ProjectItemViewLayout implements LayoutManager {
     private static final int IMAGE_LEFT_MARGIN = 20;
     private static final int IMAGE_RIGHT_MARGIN = 10;
     private static final int SPACE = 5;
-    private static int GAUGE_WIDTH = 40;
+
+    private static final String MAX_AMOUNT_STRING = "-0.000.00";
+
+    private static int GAUGE_WIDTH = 60;
     private static int GAUGE_HEIGHT = 15;
 
     private final int top;
@@ -48,21 +51,23 @@ public class ProjectItemViewLayout implements LayoutManager {
 
     private Dimension itemButtonSize;
     private int itemButtonLeft;
-    private int itemButtonMaxWidth;
     private int itemButtonTop;
     private Dimension monthLabelSize;
     private int monthLabelLeft;
     private int monthLabelTop;
-    private Dimension actualLabelSize;
-    private int actualLabelWidth;
-    private int actualLabelLeft;
-    private int actualLabelTop;
+    private Dimension actualAmountSize;
+    private int actualAmountRealWidth;
+    private int actualAmountLeft;
+    private int actualAmountTop;
+    private Dimension slashLabelSize;
+    private int slashLabelLeft;
+    private int slashLabelTop;
     private Dimension gaugeSize;
     private int gaugeLeft;
     private int gaugeTop;
-    private Dimension plannedLabelSize;
-    private int plannedLabelLeft;
-    private int plannedLabelTop;
+    private Dimension plannedAmountSize;
+    private int plannedAmountLeft;
+    private int plannedAmountTop;
     private Dimension modifyButtonSize;
     private int modifyButtonLeft;
     private int modifyButtonTop;
@@ -96,26 +101,33 @@ public class ProjectItemViewLayout implements LayoutManager {
           throw new InvalidParameter("Unexpected component with no name: " + component);
         }
         if (component.getName().equals("itemButton")) {
+          JButton button = (JButton)component;
           FontMetrics fontMetrics = component.getFontMetrics(component.getFont());
-          itemButtonSize = component.getPreferredSize();
-          itemButtonSize.height = fontMetrics.getAscent() + fontMetrics.getDescent();
+          itemButtonSize = new Dimension();
+          itemButtonSize.width = button.getIcon().getIconWidth() + button.getIconTextGap() + fontMetrics.stringWidth(button.getText());
           firstRowBottom = top + fontMetrics.getAscent();
+          itemButtonSize.height = fontMetrics.getAscent() + fontMetrics.getDescent();
         }
         else if (component.getName().equals("monthLabel")) {
           monthLabelSize = GuiUtils.maxSize(component, "Aaaaa 2013");
         }
-        else if (component.getName().equals("actualLabel")) {
-          actualLabelSize = GuiUtils.maxSize(component, "000.000.00");
-          actualLabelWidth = component.getPreferredSize().width;
+        else if (component.getName().equals("actualAmount")) {
+          actualAmountSize = GuiUtils.maxSize(component, MAX_AMOUNT_STRING);
+          FontMetrics fontMetrics = component.getFontMetrics(component.getFont());
+          JButton button = (JButton)component;
+          actualAmountRealWidth = fontMetrics.stringWidth(button.getText());
         }
         else if (component.getName().equals("itemGauge")) {
           gaugeSize = new Dimension(GAUGE_WIDTH, GAUGE_HEIGHT);
         }
-        else if (component.getName().equals("plannedLabel")) {
-          plannedLabelSize = GuiUtils.maxSize(component, "000.000.00");
+        else if (component.getName().equals("plannedAmount")) {
+          plannedAmountSize = GuiUtils.maxSize(component, MAX_AMOUNT_STRING);
+        }
+        else if (component.getName().equals("slashLabel")) {
+          slashLabelSize = component.getPreferredSize();
         }
         else if (component.getName().equals("modify")) {
-          modifyButtonSize = GuiUtils.maxSize(component, "Modify");
+          modifyButtonSize = component.getPreferredSize();
         }
         else if (component.getName().equals("imageLabel")) {
           JLabel label = (JLabel)component;
@@ -153,21 +165,23 @@ public class ProjectItemViewLayout implements LayoutManager {
       itemButtonTop = firstRowBottom - itemButtonSize.height;
       modifyButtonLeft = right - modifyButtonSize.width;
       modifyButtonTop = firstRowBottom - modifyButtonSize.height;
-      plannedLabelLeft = modifyButtonLeft - SPACE - plannedLabelSize.width;
-      plannedLabelTop = firstRowBottom - plannedLabelSize.height;
-      gaugeLeft = plannedLabelLeft - SPACE - gaugeSize.width;
+      plannedAmountLeft = modifyButtonLeft - SPACE - plannedAmountSize.width;
+      plannedAmountTop = firstRowBottom - plannedAmountSize.height;
+      slashLabelLeft = plannedAmountLeft - SPACE - slashLabelSize.width;
+      slashLabelTop = firstRowBottom - slashLabelSize.height;
+      actualAmountLeft = slashLabelLeft - SPACE - actualAmountRealWidth;
+      actualAmountTop = firstRowBottom - actualAmountSize.height;
+      gaugeLeft = slashLabelLeft - SPACE - actualAmountSize.width - SPACE - gaugeSize.width;
       gaugeTop = firstRowBottom - gaugeSize.height;
-      actualLabelLeft = gaugeLeft - SPACE - actualLabelWidth;
-      actualLabelTop = firstRowBottom - actualLabelSize.height;
-      monthLabelLeft = gaugeLeft - SPACE - actualLabelSize.width - SPACE - monthLabelSize.width;
+      monthLabelLeft = gaugeLeft - SPACE - monthLabelSize.width;
       monthLabelTop = firstRowBottom - monthLabelSize.height;
-      itemButtonMaxWidth = monthLabelLeft - itemButtonLeft;
       imageLabelLeft = left + IMAGE_LEFT_MARGIN;
       imageLabelTop = firstRowBottom + imageVerticalMargin;
       linkLeft = imageLabelLeft + imageLabelSize.width + imageRightMargin;
       linkTop = firstRowBottom + linkVerticalMargin;
       descriptionLeft = linkLeft;
       descriptionTop = linkTop + linkSize.height + linkVerticalMargin;
+
     }
 
     public int getHeight() {
@@ -181,23 +195,27 @@ public class ProjectItemViewLayout implements LayoutManager {
       for (Component component : parent.getComponents()) {
         if (component.getName().equals("itemButton")) {
           component.setBounds(itemButtonLeft, itemButtonTop,
-                              itemButtonMaxWidth, itemButtonSize.height);
+                              itemButtonSize.width, itemButtonSize.height);
         }
         else if (component.getName().equals("monthLabel")) {
           component.setBounds(monthLabelLeft, monthLabelTop,
                               monthLabelSize.width, monthLabelSize.height);
         }
-        else if (component.getName().equals("actualLabel")) {
-          component.setBounds(actualLabelLeft, actualLabelTop,
-                              actualLabelSize.width, actualLabelSize.height);
+        else if (component.getName().equals("actualAmount")) {
+          component.setBounds(actualAmountLeft, actualAmountTop,
+                              actualAmountSize.width, actualAmountSize.height);
+        }
+        else if (component.getName().equals("slashLabel")) {
+          component.setBounds(slashLabelLeft, slashLabelTop,
+                              slashLabelSize.width, slashLabelSize.height);
         }
         else if (component.getName().equals("itemGauge")) {
           component.setBounds(gaugeLeft, gaugeTop,
                               gaugeSize.width, gaugeSize.height);
         }
-        else if (component.getName().equals("plannedLabel")) {
-          component.setBounds(plannedLabelLeft, plannedLabelTop,
-                              plannedLabelSize.width, plannedLabelSize.height);
+        else if (component.getName().equals("plannedAmount")) {
+          component.setBounds(plannedAmountLeft, plannedAmountTop,
+                              plannedAmountSize.width, plannedAmountSize.height);
         }
         else if (component.getName().equals("modify")) {
           component.setBounds(modifyButtonLeft, modifyButtonTop,

@@ -18,7 +18,7 @@
 
     <style selector="#seriesName" ui="hyperlinkButtonWithoutUnderline"
            fill="none" anchor="right"
-           horizontalAlignment="right"
+           horizontalAlignment="right" iconTextGap="4"
            icon="empty(10,18)"
            rolloverIcon="downArrow(10,18,8,8,block.inner.edit.rollover)"
            pressedIcon="downArrow(10,18,8,8,block.inner.edit.pressed)"/>

@@ -96,8 +96,9 @@ public class AmountEditor implements Disposable {
     return this;
   }
 
-  public void addAction(Action action) {
+  public AmountEditor addAction(Action action) {
     numericEditor.getComponent().addActionListener(action);
+    return this;
   }
 
   public void setEnabled(boolean enabled) {
