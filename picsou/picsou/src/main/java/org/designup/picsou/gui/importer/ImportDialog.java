@@ -218,7 +218,6 @@ public class ImportDialog implements RealAccountImporter {
     previewPanel.dispose();
     completionPanel.dispose();
     controller.complete();
-    KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
     importAccountsPanel = null;
     fileSelectionPanel = null;
     previewPanel = null;

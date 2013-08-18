@@ -8,13 +8,15 @@ import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import java.awt.*;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ColorService implements ColorLocator {
 
   public static final String DEFAULT_COLOR_SET = "DEFAULT_COLOR_SET";
 
-  private List<ColorChangeListener> listeners = new ArrayList<ColorChangeListener>();
+  private Set<ColorChangeListener> listeners = new HashSet<ColorChangeListener>();
   private ColorSet currentSet;
   private List<ColorSet> colorSets = new ArrayList<ColorSet>();
   private List<ColorCreationListener> colorCreationListeners = new ArrayList<ColorCreationListener>();

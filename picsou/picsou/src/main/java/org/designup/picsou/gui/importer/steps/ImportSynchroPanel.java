@@ -127,7 +127,10 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
   }
 
   public void dispose() {
-    builder.dispose();
+    if (builder != null){
+      builder.dispose();
+      builder = null;
+    }
   }
 
   private class Monitor implements SynchroMonitor {

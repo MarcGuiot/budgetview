@@ -429,6 +429,7 @@ public class OperationChecker {
   }
 
   public void requestExit() {
+    System.setProperty("realExit", "false");
     getFileMenu().getSubMenu(Lang.get("exit")).click();
   }
 
@@ -437,6 +438,7 @@ public class OperationChecker {
   }
 
   public UserEvaluationDialogChecker exitWithUserEvaluation() {
+    System.setProperty("realExit", "false");
     return UserEvaluationDialogChecker.open(getFileMenu().getSubMenu(Lang.get("exit")).triggerClick());
   }
 

@@ -258,11 +258,4 @@ public abstract class AbstractSplitsContext implements SplitsContext {
       };
     }
   }
-
-  protected void finalize() throws Throwable {
-    super.finalize();
-    if (!disposables.isEmpty()){
-      System.out.println("AbstractSplitsContext.finalize not finalalized ." + resourceFile);
-    }
-  }
 }
