@@ -39,7 +39,8 @@ public class Project {
   @DefaultBoolean(true)
   public static BooleanField ACTIVE;
 
-  public static StringField IMAGE_PATH;
+  @Target(Picture.class)
+  public static LinkField PICTURE;
 
   public static UniqueIndex SERIES_INDEX;
 
@@ -87,7 +88,7 @@ public class Project {
       output.writeUtf8String(fieldValues.get(Project.NAME));
       output.writeInteger(fieldValues.get(Project.SERIES));
       output.writeBoolean(fieldValues.get(Project.ACTIVE));
-      output.writeUtf8String(fieldValues.get(Project.IMAGE_PATH));
+      output.writeInteger(fieldValues.get(Project.PICTURE));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -105,7 +106,7 @@ public class Project {
       fieldSetter.set(Project.NAME, input.readUtf8String());
       fieldSetter.set(Project.SERIES, input.readInteger());
       fieldSetter.set(Project.ACTIVE, input.readBoolean());
-      fieldSetter.set(Project.IMAGE_PATH, input.readUtf8String());
+      fieldSetter.set(Project.PICTURE, input.readInteger());
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {

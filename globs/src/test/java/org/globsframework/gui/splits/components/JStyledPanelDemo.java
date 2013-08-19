@@ -22,6 +22,6 @@ public class JStyledPanelDemo {
     label.setForeground(Color.BLUE);
     panel.add(label);
 
-    GuiUtils.show(panel);
+    GuiUtils.showCentered(panel);
   }
 }

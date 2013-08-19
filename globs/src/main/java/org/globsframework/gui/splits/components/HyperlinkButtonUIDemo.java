@@ -22,7 +22,7 @@ public class HyperlinkButtonUIDemo {
         .getPanel();
     panel.setOpaque(true);
     panel.setBackground(Color.WHITE);
-    GuiUtils.show(panel);
+    GuiUtils.showCentered(panel);
   }
 
   private static JButton createButton(int horizontalTextPosition) {

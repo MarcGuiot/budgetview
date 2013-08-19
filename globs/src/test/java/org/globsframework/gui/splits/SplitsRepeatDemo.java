@@ -38,7 +38,7 @@ public class SplitsRepeatDemo {
                       "</splits>");
 
     JPanel panel = builder.load();
-    GuiUtils.show(panel);
+    GuiUtils.showCentered(panel);
   }
 
   private static java.util.List<String> getItems(String item) {

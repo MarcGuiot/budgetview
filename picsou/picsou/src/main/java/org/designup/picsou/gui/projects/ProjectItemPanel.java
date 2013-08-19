@@ -3,7 +3,6 @@ package org.designup.picsou.gui.projects;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.AmountEditor;
-import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.MonthSlider;
 import org.designup.picsou.gui.components.PopupGlobFunctor;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
@@ -13,7 +12,10 @@ import org.designup.picsou.gui.description.stringifiers.MonthFieldListStringifie
 import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.ProjectItemStat;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.CurrentMonth;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.ProjectItem;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobMultiLineTextEditor;
@@ -26,7 +28,6 @@ import org.globsframework.gui.utils.GlobBooleanNodeStyleUpdater;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobHtmlView;
 import org.globsframework.gui.views.GlobLabelView;
-import org.globsframework.gui.views.GlobToggleView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -41,8 +42,6 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class ProjectItemPanel implements Disposable {
 
@@ -109,9 +108,10 @@ public class ProjectItemPanel implements Disposable {
                                       parentRepository);
     disposables.add(styleUpdater);
 
-    GlobImageLabelView imageLabel = GlobImageLabelView.init(ProjectItem.IMAGE_PATH, parentRepository, directory)
-      .setAutoHide(true)
-      .forceKeySelection(itemKey);
+    GlobImageLabelView imageLabel =
+      GlobImageLabelView.init(ProjectItem.PICTURE, ProjectEditionView.MAX_PICTURE_SIZE, parentRepository, directory)
+        .setAutoHide(true)
+        .forceKeySelection(itemKey);
     builder.add("imageLabel", imageLabel.getLabel());
 
     GlobLabelView monthLabel = GlobLabelView.init(ProjectItem.TYPE, parentRepository, directory,
@@ -184,7 +184,7 @@ public class ProjectItemPanel implements Disposable {
     disposables.add(nameField);
 
     GlobImageLabelView imageLabel =
-      GlobImageLabelView.init(ProjectItem.IMAGE_PATH, localRepository, directory)
+      GlobImageLabelView.init(ProjectItem.PICTURE, ProjectEditionView.MAX_PICTURE_SIZE, localRepository, directory)
         .forceKeySelection(itemKey);
     builder.add("imageLabel", imageLabel.getLabel());
     builder.add("imageActions", imageLabel.getPopupButton(Lang.get("projectView.item.edition.imageActions")));

@@ -15,7 +15,7 @@ public class RoundedRectIconDemo {
         .getPanel();
     panel.setOpaque(true);
     panel.setBackground(Color.WHITE);
-    GuiUtils.show(panel);
+    GuiUtils.showCentered(panel);
   }
 
   private static JLabel createIcon() {

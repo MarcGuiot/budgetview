@@ -17,6 +17,6 @@ public class JRoundedPanelTest {
     mainPanel.add(panel, BorderLayout.CENTER);
     mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     mainPanel.setPreferredSize(new Dimension(500, 400));
-    GuiUtils.show(mainPanel);
+    GuiUtils.showCentered(mainPanel);
   }
 }

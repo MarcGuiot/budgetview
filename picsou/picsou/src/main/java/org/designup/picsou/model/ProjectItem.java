@@ -42,7 +42,8 @@ public class ProjectItem {
   @Target(SubSeries.class)
   public static LinkField SUB_SERIES;
 
-  public static StringField IMAGE_PATH;
+  @Target(Picture.class)
+  public static LinkField PICTURE;
 
   public static StringField URL;
 
@@ -74,7 +75,7 @@ public class ProjectItem {
       output.writeDouble(fieldValues.get(ProjectItem.PLANNED_AMOUNT));
       output.writeBoolean(fieldValues.get(ProjectItem.ACTIVE));
       output.writeInteger(fieldValues.get(ProjectItem.SUB_SERIES));
-      output.writeUtf8String(fieldValues.get(ProjectItem.IMAGE_PATH));
+      output.writeInteger(fieldValues.get(ProjectItem.PICTURE));
       output.writeUtf8String(fieldValues.get(ProjectItem.URL));
       output.writeUtf8String(fieldValues.get(ProjectItem.DESCRIPTION));
       return serializedByteArrayOutput.toByteArray();
@@ -100,7 +101,7 @@ public class ProjectItem {
       fieldSetter.set(ProjectItem.PLANNED_AMOUNT, input.readDouble());
       fieldSetter.set(ProjectItem.ACTIVE, input.readBoolean());
       fieldSetter.set(ProjectItem.SUB_SERIES, input.readInteger());
-      fieldSetter.set(ProjectItem.IMAGE_PATH, input.readUtf8String());
+      fieldSetter.set(ProjectItem.PICTURE, input.readInteger());
       fieldSetter.set(ProjectItem.URL, input.readUtf8String());
       fieldSetter.set(ProjectItem.DESCRIPTION, input.readUtf8String());
     }
@@ -113,7 +114,7 @@ public class ProjectItem {
       fieldSetter.set(ProjectItem.PLANNED_AMOUNT, input.readDouble());
       fieldSetter.set(ProjectItem.ACTIVE, true);
       fieldSetter.set(ProjectItem.SUB_SERIES, input.readInteger());
-      fieldSetter.set(ProjectItem.IMAGE_PATH, null);
+      fieldSetter.set(ProjectItem.PICTURE, null);
       fieldSetter.set(ProjectItem.URL, null);
       fieldSetter.set(ProjectItem.DESCRIPTION, null);
     }
@@ -126,7 +127,7 @@ public class ProjectItem {
       fieldSetter.set(ProjectItem.PLANNED_AMOUNT, input.readDouble());
       fieldSetter.set(ProjectItem.ACTIVE, true);
       fieldSetter.set(ProjectItem.SUB_SERIES, null);
-      fieldSetter.set(ProjectItem.IMAGE_PATH, null);
+      fieldSetter.set(ProjectItem.PICTURE, null);
       fieldSetter.set(ProjectItem.URL, null);
       fieldSetter.set(ProjectItem.DESCRIPTION, null);
     }

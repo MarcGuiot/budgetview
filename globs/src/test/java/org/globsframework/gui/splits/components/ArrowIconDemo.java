@@ -1,7 +1,5 @@
 package org.globsframework.gui.splits.components;
 
-import org.globsframework.gui.splits.layout.Anchor;
-import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 
@@ -20,7 +18,7 @@ public class ArrowIconDemo {
         .getPanel();
     panel.setOpaque(true);
     panel.setBackground(Color.WHITE);
-    GuiUtils.show(panel);
+    GuiUtils.showCentered(panel);
   }
 
   private static JLabel createArrow(ArrowIcon.Orientation orientation) {

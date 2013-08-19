@@ -203,6 +203,6 @@ public class WrappedColumnLayout implements LayoutManager {
     for (int i = 0; i < 11; i++) {
       panel.add(new JLabel("some info " + i));
     }
-    GuiUtils.show(panel);
+    GuiUtils.showCentered(panel);
   }
 }

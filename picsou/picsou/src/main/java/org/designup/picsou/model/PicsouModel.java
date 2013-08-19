@@ -46,7 +46,8 @@ public class PicsouModel {
                           CsvType.CSV_TYPE,
                           AccountPositionMode.TYPE,
                           AccountPositionError.TYPE,
-                          Synchro.TYPE
+                          Synchro.TYPE,
+                          Picture.TYPE
                           )
       .get();
 

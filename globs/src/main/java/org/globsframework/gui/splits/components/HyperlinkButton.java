@@ -124,6 +124,6 @@ public class HyperlinkButton extends JButton {
     JPanel panel = GridBagBuilder.init().add(component1, 0, 0, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER).getPanel();
     panel.setOpaque(true);
     panel.setBackground(Color.CYAN);
-    GuiUtils.show(panel);
+    GuiUtils.showCentered(panel);
   }
 }

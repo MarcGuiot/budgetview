@@ -127,8 +127,8 @@ public class NotificationFlagUI extends BasicButtonUI {
     button.setText("6");
     button.setUI(new NotificationFlagUI());
 
-    GuiUtils.show(GridBagBuilder.init()
-                    .add(button, 0, 0, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER)
-                    .getPanel());
+    GuiUtils.showCentered(GridBagBuilder.init()
+                            .add(button, 0, 0, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER)
+                            .getPanel());
   }
 }

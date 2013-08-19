@@ -1,58 +1,67 @@
 package org.designup.picsou.gui.components.images;
 
-import com.jidesoft.swing.ResizableMouseInputAdapter;
 import org.designup.picsou.gui.components.JPopupButton;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
+import org.designup.picsou.model.Picture;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.*;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidFormat;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 
 public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListener, Disposable {
 
-  private final StringField field;
+  private final LinkField link;
   private Key currentKey;
+  private final Dimension maxSavedSize;
   private boolean autoHide;
   private boolean forcedSelection;
 
   private final GlobRepository repository;
   private Directory directory;
-  private FileStorageService fileStorageService;
   private final SelectionService selectionService;
 
   private final JLabel label = new JLabel();
   private JPopupMenu popupMenu;
   private JPopupButton popupButton;
+  private GlobImageLabelView.PasteImageAction pasteImagesAction;
   private GlobImageLabelView.BrowseImageAction browseImagesAction;
 
-  public static GlobImageLabelView init(StringField field, GlobRepository repository, Directory directory) {
-    return new GlobImageLabelView(field, repository, directory);
+  public static GlobImageLabelView init(LinkField link, Dimension maxSavedSize, GlobRepository repository, Directory directory) {
+    return new GlobImageLabelView(link, maxSavedSize, repository, directory);
   }
 
-  private GlobImageLabelView(StringField field, GlobRepository repository, Directory directory) {
-    this.field = field;
+  private GlobImageLabelView(LinkField link, Dimension maxSavedSize, GlobRepository repository, Directory directory) {
+    this.link = link;
+    this.maxSavedSize = maxSavedSize;
     this.repository = repository;
     this.directory = directory;
-    this.fileStorageService = directory.get(FileStorageService.class);
     this.selectionService = directory.get(SelectionService.class);
 
+    this.pasteImagesAction = new PasteImageAction();
     this.browseImagesAction = new BrowseImageAction();
     setKey(null);
 
     popupMenu = new JPopupMenu();
+    popupMenu.add(pasteImagesAction);
     popupMenu.add(browseImagesAction);
 
     label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -65,7 +74,7 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
     });
 
     repository.addChangeListener(this);
-    selectionService.addListener(this, field.getGlobType());
+    selectionService.addListener(this, link.getGlobType());
     updateIcon();
   }
 
@@ -86,6 +95,7 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
 
   private void setKey(Key key) {
     this.currentKey = key;
+    this.pasteImagesAction.update();
     this.browseImagesAction.update();
   }
 
@@ -94,19 +104,19 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    GlobList all = selection.getAll(field.getGlobType());
+    GlobList all = selection.getAll(link.getGlobType());
     setKey(all.size() == 1 ? all.getFirst().getKey() : null);
     updateIcon();
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (currentKey != null && changeSet.containsChanges(currentKey, field)) {
+    if (currentKey != null && changeSet.containsChanges(currentKey, link)) {
       updateIcon();
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(field.getGlobType())) {
+    if (changedTypes.contains(link.getGlobType())) {
       updateIcon();
     }
   }
@@ -119,19 +129,15 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
       return;
     }
 
-    final String iconPath = glob.get(field);
-    if (Strings.isNullOrEmpty(iconPath)) {
+    Icon icon = Picture.getIcon(glob, link, repository, label.getSize());
+    if (icon == null) {
       label.setIcon(null);
       label.setVisible(!autoHide);
       return;
     }
 
     label.setVisible(true);
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        label.setIcon(fileStorageService.getIcon(iconPath, label.getSize()));
-      }
-    });
+    label.setIcon(icon);
   }
 
   public void dispose() {
@@ -164,7 +170,45 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
       if (returnVal == JFileChooser.APPROVE_OPTION) {
         File file = chooser.getSelectedFile();
         if (file.exists()) {
-          repository.update(currentKey, field, file.getAbsolutePath());
+          try {
+            Picture.setIcon(currentKey, link, repository, file.getAbsolutePath(), maxSavedSize);
+          }
+          catch (InvalidFormat invalidFormat) {
+            MessageDialog.show("imageLabel.error.title",
+                               MessageType.ERROR, directory,
+                               "imageLabel.error.invalidFormat");
+          }
+        }
+      }
+    }
+  }
+
+  private class PasteImageAction extends AbstractAction {
+    private PasteImageAction() {
+      super(Lang.get("imageLabel.actions.paste"));
+    }
+
+    public void update() {
+      setEnabled(currentKey != null);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+      DataFlavor flavor = DataFlavor.imageFlavor;
+      if (clipboard.isDataFlavorAvailable(flavor)) {
+        try {
+          Image image = (Image) clipboard.getData(flavor);
+          Picture.setIcon(currentKey, link, repository, image, maxSavedSize);
+        }
+        catch (UnsupportedFlavorException exception) {
+          MessageDialog.show("imageLabel.error.title",
+                             MessageType.ERROR, directory,
+                             "imageLabel.error.invalidFormat");
+        }
+        catch (IOException exception) {
+          MessageDialog.show("imageLabel.error.title",
+                             MessageType.ERROR, directory,
+                             "imageLabel.error.invalidFormat");
         }
       }
     }

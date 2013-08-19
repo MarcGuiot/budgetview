@@ -26,6 +26,7 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
@@ -35,6 +36,8 @@ import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 public class ProjectEditionView extends View implements GlobSelectionListener {
 
   private Key currentProjectKey;
+
+  public static Dimension MAX_PICTURE_SIZE = new Dimension(200, 200);
 
   private GlobRepeat repeat;
   private ProjectNameEditor projectNameEditor;
@@ -94,7 +97,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     builder.addToggleEditor("activeToggle", Project.ACTIVE);
     builder.add("modify", modify);
 
-    GlobImageLabelView imageLabel = GlobImageLabelView.init(Project.IMAGE_PATH, repository, directory);
+    GlobImageLabelView imageLabel = GlobImageLabelView.init(Project.PICTURE, MAX_PICTURE_SIZE, repository, directory);
     builder.add("imageLabel", imageLabel.getLabel());
     builder.add("imageActions", imageLabel.getPopupButton(Lang.get("projectView.item.edition.imageActions")));
 

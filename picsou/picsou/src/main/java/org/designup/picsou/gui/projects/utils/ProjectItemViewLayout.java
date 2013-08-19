@@ -53,6 +53,7 @@ public class ProjectItemViewLayout implements LayoutManager {
     private Dimension itemButtonSize;
     private int itemButtonLeft;
     private int itemButtonTop;
+    private int itemButtonWidth;
     private Dimension monthLabelSize;
     private int monthLabelLeft;
     private int monthLabelTop;
@@ -188,6 +189,7 @@ public class ProjectItemViewLayout implements LayoutManager {
       linkTop = firstRowBottom + linkVerticalMargin;
       descriptionLeft = linkLeft;
       descriptionTop = linkTop + linkSize.height + linkVerticalMargin;
+      itemButtonWidth = Math.min(itemButtonSize.width, monthLabelLeft - SPACE - left);
     }
 
     public int getHeight() {
@@ -201,7 +203,7 @@ public class ProjectItemViewLayout implements LayoutManager {
       for (Component component : parent.getComponents()) {
         if (component.getName().equals("itemButton")) {
           component.setBounds(itemButtonLeft, itemButtonTop,
-                              itemButtonSize.width, itemButtonSize.height);
+                              itemButtonWidth, itemButtonSize.height);
         }
         else if (component.getName().equals("monthLabel")) {
           component.setBounds(monthLabelLeft, monthLabelTop,

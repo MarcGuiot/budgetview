@@ -46,5 +46,6 @@ public class SerializationManager {
     BankEntity.TYPE.updateProperty(SERIALIZATION_PROPERTY, new BankEntity.Serializer());
     AccountPositionError.TYPE.updateProperty(SERIALIZATION_PROPERTY, new AccountPositionError.Serializer());
     Synchro.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Synchro.Serializer());
+    Picture.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Picture.Serializer());
   }
 }

@@ -3,7 +3,6 @@ package org.designup.picsou.gui.components.charts.pie;
 import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -123,6 +122,6 @@ public class PieChartPainter extends JPanel {
     painter.setSize(200, 200);
     painter.setValues(new double[]{0.2, 0.4, 0.3, 0.1});
     painter.setLabels(new String[]{"Un peu de blah blah", "un plus court", "court", "vraiment bien long"});
-    GuiUtils.show(painter);
+    GuiUtils.showCentered(painter);
   }
 }

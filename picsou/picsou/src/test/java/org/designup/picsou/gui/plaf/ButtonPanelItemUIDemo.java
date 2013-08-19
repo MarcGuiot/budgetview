@@ -42,7 +42,7 @@ public class ButtonPanelItemUIDemo {
     builder.add("down", new MyAction("Down"));
 
     JPanel panel = builder.load();
-    GuiUtils.show(panel);
+    GuiUtils.showCentered(panel);
   }
 
   private static class MyAction extends AbstractAction {

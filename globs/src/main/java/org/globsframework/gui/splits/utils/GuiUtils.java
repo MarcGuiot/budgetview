@@ -241,10 +241,11 @@ public class GuiUtils {
     return null;
   }
 
-  public static void show(JPanel panel) {
+  public static void showCentered(JPanel panel) {
     JFrame frame = new JFrame();
     frame.setContentPane(panel);
     frame.pack();
+    center(frame);
     frame.setVisible(true);
   }
 
@@ -252,7 +253,7 @@ public class GuiUtils {
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout());
     panel.add(component, BorderLayout.CENTER);
-    show(panel);
+    showCentered(panel);
   }
 
   /**
