@@ -52,13 +52,13 @@ public class SeriesStatSummaryTrigger implements ChangeSetListener {
 
     Double observed;
     Double planned;
-    if (values.contains(SeriesStat.AMOUNT) && values.contains(SeriesStat.PLANNED_AMOUNT)) {
-      observed = values.get(SeriesStat.AMOUNT);
+    if (values.contains(SeriesStat.ACTUAL_AMOUNT) && values.contains(SeriesStat.PLANNED_AMOUNT)) {
+      observed = values.get(SeriesStat.ACTUAL_AMOUNT);
       planned = values.get(SeriesStat.PLANNED_AMOUNT);
     }
     else {
       Glob stat = repository.get(key);
-      observed = stat.get(SeriesStat.AMOUNT);
+      observed = stat.get(SeriesStat.ACTUAL_AMOUNT);
       planned = stat.get(SeriesStat.PLANNED_AMOUNT);      
     }
     Double value;

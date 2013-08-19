@@ -24,7 +24,7 @@ public class SeriesStat {
   @Key @Target(Month.class)
   public static LinkField MONTH;
 
-  public static DoubleField AMOUNT;
+  public static DoubleField ACTUAL_AMOUNT;
 
   public static DoubleField PLANNED_AMOUNT;
 

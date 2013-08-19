@@ -99,6 +99,18 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
     updateIcon();
   }
 
+  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+    if (currentKey != null && changeSet.containsChanges(currentKey, field)) {
+      updateIcon();
+    }
+  }
+
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    if (changedTypes.contains(field.getGlobType())) {
+      updateIcon();
+    }
+  }
+
   private void updateIcon() {
     Glob glob = repository.find(currentKey);
     if (glob == null) {
@@ -120,18 +132,6 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
         label.setIcon(fileStorageService.getIcon(iconPath, label.getSize()));
       }
     });
-  }
-
-  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (currentKey != null && changeSet.containsChanges(currentKey, field)) {
-      updateIcon();
-    }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(field.getGlobType())) {
-      updateIcon();
-    }
   }
 
   public void dispose() {

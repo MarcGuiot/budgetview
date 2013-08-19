@@ -482,7 +482,7 @@ public class SeriesEditionDialog {
         Glob budget = SeriesBudget.findOrCreate(seriesId, entry.getKey(), localRepository);
         localRepository.update(budget.getKey(),
                                value(SeriesBudget.ACTIVE, true),
-                               value(SeriesBudget.OBSERVED_AMOUNT, entry.getValue()));
+                               value(SeriesBudget.ACTUAL_AMOUNT, entry.getValue()));
       }
     }
     finally {
@@ -795,7 +795,7 @@ public class SeriesEditionDialog {
               if (budget.get(SeriesBudget.MONTH) > currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
                 repository.update(budget.getKey(),
                                   value(SeriesBudget.PLANNED_AMOUNT, 0.0),
-                                  value(SeriesBudget.OBSERVED_AMOUNT, null));
+                                  value(SeriesBudget.ACTUAL_AMOUNT, null));
               }
             }
           }

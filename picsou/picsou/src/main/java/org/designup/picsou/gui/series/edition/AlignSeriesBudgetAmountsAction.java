@@ -41,7 +41,7 @@ public class AlignSeriesBudgetAmountsAction extends MultiSelectionAction {
   }
 
   private void updateLabel() {
-    Set<Double> amounts = seriesBudgets.getValueSet(SeriesBudget.OBSERVED_AMOUNT);
+    Set<Double> amounts = seriesBudgets.getValueSet(SeriesBudget.ACTUAL_AMOUNT);
     if (amounts.size() != 1) {
       getActualAmountLabel().setText(Lang.get("seriesAmountEdition.alignValue.actual"));
       return;
@@ -58,7 +58,7 @@ public class AlignSeriesBudgetAmountsAction extends MultiSelectionAction {
     try {
       double lastValue = 0.00;
       for (Glob seriesBudget : seriesBudgets.sort(SeriesBudget.MONTH)) {
-        Double newValue = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT);
+        Double newValue = seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT);
         if (newValue == null) {
           newValue = lastValue;
         }

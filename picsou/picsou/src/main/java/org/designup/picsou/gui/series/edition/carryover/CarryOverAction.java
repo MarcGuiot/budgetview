@@ -92,7 +92,7 @@ public class CarryOverAction
       return;
     }
 
-    double actual = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT, 0.00);
+    double actual = seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT, 0.00);
     double planned = seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0.00);
     if (Amounts.equal(planned, actual)) {
       setDisabled();
@@ -143,19 +143,19 @@ public class CarryOverAction
 
     Glob series = repository.find(seriesKey);
     Glob seriesBudget = SeriesBudget.find(seriesId, currentMonth, repository);
-    double actual = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT, 0.00);
+    double actual = seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT, 0.00);
     double planned = seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0.00);
 
     Glob nextMonthBudget = SeriesBudget.findOrCreate(seriesId, Month.next(currentMonth), repository);
     double nextMonthPlanned = nextMonthBudget == null ? 0.00 : nextMonthBudget.get(SeriesBudget.PLANNED_AMOUNT, 0.00);
-    double nextMonthActual = nextMonthBudget == null ? 0.00 : nextMonthBudget.get(SeriesBudget.OBSERVED_AMOUNT, 0.00);
+    double nextMonthActual = nextMonthBudget == null ? 0.00 : nextMonthBudget.get(SeriesBudget.ACTUAL_AMOUNT, 0.00);
 
     CarryOverComputer computer = new CarryOverComputer(currentMonth, actual, planned);
     int month = Month.next(currentMonth);
     while (computer.hasNext() && repository.contains(Key.create(Month.TYPE, month))) {
       Glob nextSeriesBudget = SeriesBudget.find(seriesId, month, repository);
       double nextPlanned = nextSeriesBudget == null ? 0.00 : nextSeriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0.00);
-      double nextActual = nextSeriesBudget == null ? 0.00 : nextSeriesBudget.get(SeriesBudget.OBSERVED_AMOUNT, 0.00);
+      double nextActual = nextSeriesBudget == null ? 0.00 : nextSeriesBudget.get(SeriesBudget.ACTUAL_AMOUNT, 0.00);
       computer.next(nextActual, nextPlanned);
       month = Month.next(month);
     }

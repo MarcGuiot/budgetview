@@ -138,7 +138,7 @@ public class BudgetValuesUpdater {
                                 value(SeriesValues.SERIES_ENTITY, seriesId),
                                 value(SeriesValues.MONTH, seriesStat.get(SeriesStat.MONTH)),
                                 value(SeriesValues.BUDGET_AREA, series.get(Series.BUDGET_AREA)),
-                                value(SeriesValues.AMOUNT, seriesStat.get(SeriesStat.AMOUNT)),
+                                value(SeriesValues.AMOUNT, seriesStat.get(SeriesStat.ACTUAL_AMOUNT)),
                                 value(SeriesValues.PLANNED_AMOUNT, seriesStat.get(SeriesStat.PLANNED_AMOUNT)),
                                 value(SeriesValues.OVERRUN_AMOUNT, seriesStat.get(SeriesStat.OVERRUN_AMOUNT)),
                                 value(SeriesValues.REMAINING_AMOUNT, seriesStat.get(SeriesStat.REMAINING_AMOUNT)));

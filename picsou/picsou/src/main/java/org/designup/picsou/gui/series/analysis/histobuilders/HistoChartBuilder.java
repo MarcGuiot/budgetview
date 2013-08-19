@@ -151,6 +151,7 @@ public class HistoChartBuilder {
       "histo.account.daily.current.annotation",
       "histo.account.inner.label.positive",
       "histo.account.inner.label.negative",
+      "histo.account.inner.label.line",
       "histo.account.inner.rollover.day",
       "histo.account.inner.selected.day",
       directory
@@ -323,7 +324,7 @@ public class HistoChartBuilder {
         Glob stat = repository.find(SeriesStat.createKey(seriesId, monthId));
         if (stat != null) {
           totalPlanned += stat.get(SeriesStat.PLANNED_AMOUNT, 0.00);
-          totalActual += stat.get(SeriesStat.AMOUNT, 0.00);
+          totalActual += stat.get(SeriesStat.ACTUAL_AMOUNT, 0.00);
         }
       }
       builder.add(monthId, totalPlanned, totalActual, monthId == selectedMonthId);
@@ -360,7 +361,7 @@ public class HistoChartBuilder {
       for (Integer subSeriesId : subSeriesIds) {
         Glob stat = repository.find(SubSeriesStat.createKey(subSeriesId, monthId));
         if (stat != null) {
-          actual += stat.get(SubSeriesStat.AMOUNT, 0.00);
+          actual += stat.get(SubSeriesStat.ACTUAL_AMOUNT, 0.00);
         }
       }
       builder.add(monthId, actual, monthId == selectedMonthId);
@@ -447,7 +448,7 @@ public class HistoChartBuilder {
         continue;
       }
       Double planned = adjust(seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0.), multiplier);
-      Double actual = adjust(seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT), multiplier);
+      Double actual = adjust(seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT), multiplier);
       builder.add(monthId, planned, actual, selectedMonths.contains(monthId));
     }
 

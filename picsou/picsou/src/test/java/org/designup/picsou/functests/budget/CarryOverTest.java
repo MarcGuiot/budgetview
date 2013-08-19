@@ -566,7 +566,7 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
     categorization
       .selectTransaction("VIRT ING")
       .selectSavings()
-      .checkActiveSeries("To account ING")
+      .checkSeriesIsActive("To account ING")
       .selectSeries("To account ING");
 
     budgetView.savings.checkSeries("To account ING", 200.00, 400.00);

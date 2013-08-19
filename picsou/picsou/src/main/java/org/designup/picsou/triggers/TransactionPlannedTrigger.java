@@ -162,7 +162,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         continue;
       }
 
-      Double observedAmount = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT);
+      Double observedAmount = seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT);
       if (Amounts.isNullOrZero(seriesBudget.get(SeriesBudget.PLANNED_AMOUNT)) || !seriesBudget.isTrue(SeriesBudget.ACTIVE)) {
         repository.delete(transactions);
       }
@@ -215,7 +215,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
 
       TheoricalPlanned[] theoricalPlanneds =
         getTheoricalPlanned(series, repository, monthId, seriesBudget.get(SeriesBudget.PLANNED_AMOUNT));
-      Double observedAmount = Utils.zeroIfNull(seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT));
+      Double observedAmount = Utils.zeroIfNull(seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT));
       for (TheoricalPlanned theoricalPlanned : theoricalPlanneds) {
         Double wantedAmount = theoricalPlanned.amountForPeriod;
         double diff = wantedAmount - observedAmount;
@@ -281,7 +281,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
     if (seriesStat == null) { // il n'y a pas d'operations.
       return null;
     }
-    return seriesStat.get(SeriesStat.AMOUNT);
+    return seriesStat.get(SeriesStat.ACTUAL_AMOUNT);
   }
 
   static class TheoricalPlanned {

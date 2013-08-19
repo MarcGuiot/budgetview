@@ -7,6 +7,7 @@ import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.model.util.ClosedMonthRange;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -40,6 +41,9 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
         projectIds.add(previousValues.get(ProjectItem.PROJECT));
       }
     });
+    for (Key projectKey : changeSet.getUpdated(Project.ACTIVE)) {
+      projectIds.add(projectKey.get(Project.ID));
+    }
     return projectIds;
   }
 
@@ -58,43 +62,52 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
     if (months.isEmpty()) {
       repository.update(seriesKey, Series.FIRST_MONTH, null);
       repository.update(seriesKey, Series.LAST_MONTH, null);
+      for (Glob seriesBudget : repository.getAll(SeriesBudget.TYPE, linkedTo(seriesKey, SeriesBudget.SERIES))) {
+        Double actualAmount = seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT, 0.00);
+        repository.update(seriesBudget.getKey(),
+                          value(SeriesBudget.PLANNED_AMOUNT, 0.00),
+                          value(SeriesBudget.ACTIVE, Amounts.isNotZero(actualAmount)));
+      }
       return;
     }
 
     ClosedMonthRange range = new ClosedMonthRange(months.first(), months.last());
+
+    // 1. Create all SeriesBudget
     for (Integer monthId : range.asList()) {
       SeriesBudget.findOrCreate(seriesId, monthId, repository);
     }
 
+    // 2. Reset all SeriesBudget planned amount to 0.00
     for (Glob seriesBudget : repository.getAll(SeriesBudget.TYPE, linkedTo(seriesKey, SeriesBudget.SERIES))) {
-      Double actualAmount = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT, 0.00);
+      boolean hasActual = Amounts.isNotZero(seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT, 0.00));
       if (range.contains(seriesBudget.get(SeriesBudget.MONTH))) {
         repository.update(seriesBudget.getKey(),
                           value(SeriesBudget.PLANNED_AMOUNT, 0.00),
-                          value(SeriesBudget.ACTIVE, true));
+                          value(SeriesBudget.ACTIVE, hasActual));
+      }
+      else if (!hasActual) {
+        repository.delete(seriesBudget.getKey());
       }
       else {
-        if (Amounts.isNearZero(actualAmount)) {
-          repository.delete(seriesBudget.getKey());
-        }
-        else {
-          repository.update(seriesBudget.getKey(),
-                            value(SeriesBudget.PLANNED_AMOUNT, 0.00),
-                            value(SeriesBudget.ACTIVE, true));
-        }
+        repository.update(seriesBudget.getKey(),
+                          value(SeriesBudget.PLANNED_AMOUNT, 0.00),
+                          value(SeriesBudget.ACTIVE, hasActual));
       }
     }
 
-    for (Glob item : projectItems) {
-      Double itemAmount = item.get(ProjectItem.PLANNED_AMOUNT, 0.0);
-
-      Integer monthId = item.get(ProjectItem.MONTH);
-
-      Glob seriesBudget = SeriesBudget.find(seriesId, monthId, repository);
-      repository.update(seriesBudget.getKey(),
-                        value(SeriesBudget.PLANNED_AMOUNT,
-                              seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0) + itemAmount),
-                        value(SeriesBudget.ACTIVE, true));
+    // 3. Set all SeriesBudget planned amounts according to the active items
+    if (project.isTrue(Project.ACTIVE)) {
+      for (Glob item : projectItems) {
+        if (item.isTrue(ProjectItem.ACTIVE)) {
+          Integer monthId = item.get(ProjectItem.MONTH);
+          Glob seriesBudget = SeriesBudget.find(seriesId, monthId, repository);
+          double planned = seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0) + item.get(ProjectItem.PLANNED_AMOUNT, 0.0);
+          repository.update(seriesBudget.getKey(),
+                            value(SeriesBudget.PLANNED_AMOUNT, planned),
+                            value(SeriesBudget.ACTIVE, true));
+        }
+      }
     }
 
     repository.update(seriesKey, Series.FIRST_MONTH, range.getMin());

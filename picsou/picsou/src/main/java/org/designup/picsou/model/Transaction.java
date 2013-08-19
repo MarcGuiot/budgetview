@@ -158,10 +158,6 @@ public class Transaction {
     return transaction.isTrue(SPLIT);
   }
 
-  public static boolean isSplit(Glob transaction) {
-    return isSplitSource(transaction) || isSplitPart(transaction);
-  }
-
   public static double subtract(double initialValue, double amount) {
     return Math.rint(Math.signum(initialValue) * (Math.abs(initialValue) - Math.abs(amount)) * 100.0) / 100.0;
   }
@@ -228,11 +224,6 @@ public class Transaction {
     }
   }
 
-  static public boolean isPositionTransactionBeforeOrEqual(Glob transaction, int month, int day) {
-    return (transaction.get(POSITION_MONTH) < month || (transaction.get(POSITION_MONTH) == month &&
-                                                        transaction.get(POSITION_DAY) <= day));
-  }
-
   public static boolean isCategorized(Glob transaction) {
     return (transaction != null) && !Utils.equal(Series.UNCATEGORIZED_SERIES_ID, transaction.get(SERIES));
   }
@@ -270,11 +261,6 @@ public class Transaction {
                or(GlobMatchers.fieldStrictlyLessThan(Transaction.POSITION_MONTH, monthId),
                   and(fieldEquals(Transaction.POSITION_MONTH, monthId),
                       fieldLessOrEqual(Transaction.POSITION_DAY, day))));
-  }
-
-  public static boolean canBeSetToReconcile(Glob transaction) {
-    Boolean status = transaction.get(TO_RECONCILE);
-    return (status == null) || (Boolean.TRUE.equals(status));
   }
 
   public static class Serializer implements PicsouGlobSerializer {
@@ -326,7 +312,6 @@ public class Transaction {
       output.writeInteger(fieldValues.get(Transaction.IMPORT));
       output.writeBoolean(fieldValues.get(Transaction.RECONCILIATION_ANNOTATION_SET));
       output.writeBoolean(fieldValues.get(Transaction.TO_RECONCILE));
-//      output.writeBoolean(fieldValues.get(Transaction.MANUAL_CREATION));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -401,7 +386,6 @@ public class Transaction {
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
       fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, input.readBoolean());
       fieldSetter.set(Transaction.TO_RECONCILE, input.readBoolean());
-//      fieldSetter.set(Transaction.MANUAL_CREATION, input.readBoolean());
     }
 
     private void deserializeDataV9(FieldSetter fieldSetter, byte[] data) {

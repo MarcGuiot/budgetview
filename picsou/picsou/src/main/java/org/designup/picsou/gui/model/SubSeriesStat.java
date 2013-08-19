@@ -20,7 +20,7 @@ public class SubSeriesStat {
   public static LinkField MONTH;
 
   @DefaultDouble(0.00)
-  public static DoubleField AMOUNT;
+  public static DoubleField ACTUAL_AMOUNT;
 
   static {
     GlobTypeLoader.init(SubSeriesStat.class);

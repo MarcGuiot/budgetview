@@ -4,11 +4,8 @@ import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import com.budgetview.shared.utils.Amounts;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.utils.Utils;
-
-import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
 
@@ -48,7 +45,7 @@ public class AutomaticSeriesBudgetTrigger extends AbstractChangeSetListener {
                           value(SeriesBudget.PLANNED_AMOUNT, Utils.zeroIfNull(previousAmount)));
         Double currentAmount = previousAmount;
         if (seriesBudget.get(SeriesBudget.MONTH) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
-          previousAmount = seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT);
+          previousAmount = seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT);
           if (previousAmount == null) {
             previousAmount = 0.00;
           }

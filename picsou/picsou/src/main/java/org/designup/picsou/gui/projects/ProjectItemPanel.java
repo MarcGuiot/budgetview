@@ -13,20 +13,20 @@ import org.designup.picsou.gui.description.stringifiers.MonthFieldListStringifie
 import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.ProjectItemStat;
-import org.designup.picsou.model.CurrentMonth;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.ProjectItem;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobMultiLineTextEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.utils.GlobBooleanNodeStyleUpdater;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobHtmlView;
 import org.globsframework.gui.views.GlobLabelView;
+import org.globsframework.gui.views.GlobToggleView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -41,6 +41,8 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class ProjectItemPanel implements Disposable {
 
@@ -98,8 +100,14 @@ public class ProjectItemPanel implements Disposable {
     GlobButtonView itemButton = GlobButtonView.init(ProjectItem.LABEL, parentRepository, directory, functor)
       .forceSelection(itemKey);
     functor.setComponent(itemButton.getComponent());
-    builder.add("itemButton", itemButton);
+    SplitsNode<JButton> itemButtonNode = builder.add("itemButton", itemButton.getComponent());
     disposables.add(itemButton);
+
+    GlobBooleanNodeStyleUpdater styleUpdater =
+      new GlobBooleanNodeStyleUpdater(ProjectItem.ACTIVE, itemButtonNode,
+                                      "activeProjectItem", "inactiveProjectItem",
+                                      parentRepository);
+    disposables.add(styleUpdater);
 
     GlobImageLabelView imageLabel = GlobImageLabelView.init(ProjectItem.IMAGE_PATH, parentRepository, directory)
       .setAutoHide(true)
@@ -123,14 +131,23 @@ public class ProjectItemPanel implements Disposable {
     GlobButtonView plannedAmount = GlobButtonView.init(ProjectItem.PLANNED_AMOUNT, parentRepository, directory,
                                                        new GlobListActionAdapter(modifyAction))
       .forceSelection(itemKey);
-    builder.add("plannedAmount", plannedAmount);
+    SplitsNode<JButton> plannedAmountNode = builder.add("plannedAmount", plannedAmount.getComponent());
     disposables.add(plannedAmount);
+
+    GlobBooleanNodeStyleUpdater plannedAmountUpdater =
+      new GlobBooleanNodeStyleUpdater(ProjectItem.ACTIVE, plannedAmountNode,
+                                      "activeItemAmount", "inactiveItemAmount",
+                                      parentRepository);
+    disposables.add(plannedAmountUpdater);
 
     SimpleGaugeView itemGauge = SimpleGaugeView.init(ProjectItemStat.ACTUAL_AMOUNT, ProjectItemStat.PLANNED_AMOUNT,
                                                      parentRepository, directory);
     itemGauge.setKey(itemStatKey);
     builder.add("itemGauge", itemGauge.getComponent());
     disposables.add(itemGauge);
+
+    builder.addToggleEditor("activeToggle", ProjectItem.ACTIVE)
+      .forceSelection(itemKey);
 
     builder.add("handler", new HyperlinkHandler(directory));
 
@@ -149,6 +166,9 @@ public class ProjectItemPanel implements Disposable {
     builder.add("modify", modifyAction);
 
     viewPanel = builder.load();
+
+    styleUpdater.setKey(itemKey);
+    plannedAmountUpdater.setKey(itemKey);
   }
 
   private void createEditionPanel() {
@@ -191,11 +211,6 @@ public class ProjectItemPanel implements Disposable {
       .forceSelection(itemKey);
     builder.add("descriptionField", descriptionField);
     disposables.add(descriptionField);
-
-    JPopupMenu actionsMenu = new JPopupMenu();
-    actionsMenu.add(new DeleteItemAction(itemKey));
-    JPopupButton actionsPopup = new JPopupButton(Lang.get("projectView.item.edition.actions"), actionsMenu);
-    builder.add("actions", actionsPopup);
 
     builder.add("validate", validate);
     builder.add("cancel", new CancelAction());

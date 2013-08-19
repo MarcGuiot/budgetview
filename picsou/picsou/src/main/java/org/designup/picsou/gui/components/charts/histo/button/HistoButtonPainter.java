@@ -36,22 +36,24 @@ public class HistoButtonPainter implements HistoPainter {
 
     for (HistoButtonBlock block : dataset.getBlocks()) {
       Rectangle rectangle = metrics.buttonRectangle(block);
-      boolean isRolloverOnBlock = rollover.isOnObject(block.key) || block.selected;
+      boolean isRolloverOnBlock = rollover.isOnObject(block.key);
 
       g2.setClip(rectangle.x, rectangle.y, rectangle.width + 1, rectangle.height + 1);
 
-      g2.setPaint(new GradientPaint(0, rectangle.y, colors.getBgTopColor(isRolloverOnBlock),
-                                    0, rectangle.y + rectangle.height, colors.getBgBottomColor(isRolloverOnBlock)));
+      g2.setPaint(new GradientPaint(0, rectangle.y,
+                                    colors.getBgTopColor(block.enabled, block.selected, isRolloverOnBlock),
+                                    0, rectangle.y + rectangle.height,
+                                    colors.getBgBottomColor(block.enabled, block.selected, isRolloverOnBlock)));
       g2.fillRoundRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height, ARC_WIDTH, ARC_HEIGHT);
 
-      g2.setColor(colors.getBorderColor(isRolloverOnBlock));
+      g2.setColor(colors.getBorderColor(block.enabled, block.selected, isRolloverOnBlock));
       g2.drawRoundRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height, ARC_WIDTH, ARC_HEIGHT);
 
       if (metrics.canDrawLabels()) {
         g2.setClip(rectangle.x, rectangle.y, rectangle.width - 2, rectangle.height);
         g2.setColor(colors.getLabelShadowColor());
         g2.drawString(block.label, metrics.labelX(block) + 1, metrics.labelY(block) + 1);
-        g2.setColor(colors.getLabelColor(isRolloverOnBlock));
+        g2.setColor(colors.getLabelColor(block.enabled, block.selected, isRolloverOnBlock));
         g2.drawString(block.label, metrics.labelX(block), metrics.labelY(block));
       }
 

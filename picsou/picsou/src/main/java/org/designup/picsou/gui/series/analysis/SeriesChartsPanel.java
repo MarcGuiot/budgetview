@@ -379,7 +379,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
                                              and(fieldIn(SeriesStat.MONTH, selectedMonthIds),
                                                  not(fieldEquals(SeriesStat.SERIES, Series.UNCATEGORIZED_SERIES_ID))))) {
       if (!Series.isSavingToExternal(repository.findLinkTarget(seriesStat, SeriesStat.SERIES))) {
-        categorized += Math.abs(seriesStat.get(SeriesStat.AMOUNT, 0.00));
+        categorized += Math.abs(seriesStat.get(SeriesStat.ACTUAL_AMOUNT, 0.00));
       }
     }
     dataset.add(Lang.get("seriesAnalysis.chart.balance.uncategorized.categorized"),
@@ -518,7 +518,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       double amount = 0;
       for (Integer monthId : selectedMonthIds) {
         Glob stat = repository.find(SubSeriesStat.createKey(subSeriesId, monthId));
-        amount += stat != null ? stat.get(SubSeriesStat.AMOUNT) : 0;
+        amount += stat != null ? stat.get(SubSeriesStat.ACTUAL_AMOUNT) : 0;
       }
       if (amount != 0) {
         StackChartDataset targetDataset = amount > 0 ? incomeDataset : expensesDataset;
@@ -538,7 +538,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     double totalForSeries = 0;
     for (Integer monthId : selectedMonthIds) {
       Glob stat = repository.find(SeriesStat.createKey(seriesId, monthId));
-      Double amount = (stat != null ? stat.get(SeriesStat.AMOUNT) : new Double(0.00));
+      Double amount = (stat != null ? stat.get(SeriesStat.ACTUAL_AMOUNT) : new Double(0.00));
       if (amount != null) {
         totalForSeries += amount;
       }

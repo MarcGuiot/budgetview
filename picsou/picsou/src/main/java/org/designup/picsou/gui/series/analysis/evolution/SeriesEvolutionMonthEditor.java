@@ -103,7 +103,7 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
     Glob subSeries = repository.get(Key.create(SubSeries.TYPE, itemId));
     Glob series = repository.get(Key.create(Series.TYPE, subSeries.get(SubSeries.SERIES)));
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-    Double value = subSeriesStat.get(SubSeriesStat.AMOUNT);
+    Double value = subSeriesStat.get(SubSeriesStat.ACTUAL_AMOUNT);
     return format(value, budgetArea);
   }
 

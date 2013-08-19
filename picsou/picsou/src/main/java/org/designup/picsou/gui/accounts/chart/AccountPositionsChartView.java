@@ -46,6 +46,7 @@ public class AccountPositionsChartView extends PositionsChartView {
       "accountView.histo.account.daily.current.annotation",
       "accountView.histo.account.inner.label.positive",
       "accountView.histo.account.inner.label.negative",
+      "accountView.histo.account.inner.label.line",
       "accountView.histo.account.inner.rollover.day",
       "accountView.histo.account.inner.selected.day",
       directory

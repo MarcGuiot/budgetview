@@ -46,7 +46,7 @@ public class UpdateMirrorSeriesBudgetChangeSetVisitor implements ChangeSetVisito
       }
       values.safeApply(new FieldValues.Functor() {
         public void process(Field field, Object value) throws Exception {
-          if (field.equals(SeriesBudget.OBSERVED_AMOUNT) || field.equals(SeriesBudget.SERIES)) {
+          if (field.equals(SeriesBudget.ACTUAL_AMOUNT) || field.equals(SeriesBudget.SERIES)) {
             return;
           }
           if (field.equals(SeriesBudget.PLANNED_AMOUNT)) {

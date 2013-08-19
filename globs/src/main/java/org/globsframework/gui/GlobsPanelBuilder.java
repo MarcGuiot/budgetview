@@ -75,6 +75,11 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     return boxView;
   }
 
+  public GlobToggleEditor addToggleEditor(String name, BooleanField field) {
+    GlobToggleEditor toggleEditor = store(GlobToggleEditor.init(field, repository, directory));
+    toggleEditor.setName(name);
+    return toggleEditor;
+  }
 
   public GlobTextEditor addEditor(String name, StringField field) {
     final GlobTextEditor editor = addEditor(field);

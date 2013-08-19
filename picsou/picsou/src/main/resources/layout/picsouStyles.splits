@@ -243,6 +243,9 @@
     <style selector=".innerBlock"  foreground="block.inner.item"/>
     <style selector="label.alignActualAmount" foreground="block.inner.item" font="-,plain,12" marginLeft="5"/>
 
+    <style selector=".secondaryInnerBlock" opaque="true" background="block.inner.bg.secondary" border="line(block.inner.border)"/>
+
+
     <style selector="button.amountLink" ui="hyperlinkButtonWithoutUnderline"
            fill="none" anchor="right" horizontalAlignment="right"
            foreground="block.amount.link" font="-,bold,11"/>

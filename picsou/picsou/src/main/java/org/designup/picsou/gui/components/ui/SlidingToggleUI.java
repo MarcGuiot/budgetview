@@ -13,10 +13,10 @@ import static java.awt.geom.AffineTransform.getTranslateInstance;
 
 public abstract class SlidingToggleUI extends BasicToggleButtonUI {
 
-  private Color bgColor = Colors.toColor("F0F0F0");
-  private Color fgColor = Color.WHITE;
+  private Color unselectedBgColor = Colors.toColor("F0F0F0");
+  private Color selectedBgColor = Color.WHITE;
   private Color bgBorderColor = Colors.toColor("808080");
-  private Color fgBorderColor = Color.BLACK;
+  private Color selectedBorderColor = Color.BLACK;
 
   private Color selectedTextColor = Color.BLACK;
   private Color rolloverTextColor = Color.RED;
@@ -26,7 +26,9 @@ public abstract class SlidingToggleUI extends BasicToggleButtonUI {
     super.installDefaults(button);
     button.setRolloverEnabled(true);
     button.setOpaque(false);
+    button.setBorder(null);
     button.setBorderPainted(false);
+    button.setText("");
     button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
   }
 
@@ -58,15 +60,15 @@ public abstract class SlidingToggleUI extends BasicToggleButtonUI {
     g2.setStroke(new BasicStroke(1.0f));
     boolean selected = button.isSelected();
 
-    g2.setColor(bgColor);
+    g2.setColor(unselectedBgColor);
     g2.fill(shape);
     g2.setColor(bgBorderColor);
     g2.draw(shape);
 
     int xOffset = selected ? 0 : width - (width / 2);
-    g2.setColor(fgColor);
+    g2.setColor(selectedBgColor);
     g2.fillOval(xOffset, 0, width / 2, height);
-    g2.setColor(fgBorderColor);
+    g2.setColor(selectedBorderColor);
     g2.drawOval(xOffset, 0, width / 2, height);
 
     g2.setColor(selected ? selectedTextColor : unselectedTextColor);
@@ -95,31 +97,31 @@ public abstract class SlidingToggleUI extends BasicToggleButtonUI {
     return shape;
   }
 
-  public void setBgBorderColor(Color bgBorderColor) {
-    this.bgBorderColor = bgBorderColor;
+  public void setSelectedBgColor(Color fgColor) {
+    this.selectedBgColor = fgColor;
   }
 
-  public void setBgColor(Color bgColor) {
-    this.bgColor = bgColor;
-  }
-
-  public void setFgBorderColor(Color fgBorderColor) {
-    this.fgBorderColor = fgBorderColor;
-  }
-
-  public void setFgColor(Color fgColor) {
-    this.fgColor = fgColor;
-  }
-
-  public void setRolloverTextColor(Color rolloverTextColor) {
-    this.rolloverTextColor = rolloverTextColor;
+  public void setSelectedBorderColor(Color fgBorderColor) {
+    this.selectedBorderColor = fgBorderColor;
   }
 
   public void setSelectedTextColor(Color selectedTextColor) {
     this.selectedTextColor = selectedTextColor;
   }
 
+  public void setUnselectedBgColor(Color bgColor) {
+    this.unselectedBgColor = bgColor;
+  }
+
+  public void setUnselectedBorderColor(Color bgBorderColor) {
+    this.bgBorderColor = bgBorderColor;
+  }
+
   public void setUnselectedTextColor(Color unselectedTextColor) {
     this.unselectedTextColor = unselectedTextColor;
+  }
+
+  public void setRolloverTextColor(Color rolloverTextColor) {
+    this.rolloverTextColor = rolloverTextColor;
   }
 }

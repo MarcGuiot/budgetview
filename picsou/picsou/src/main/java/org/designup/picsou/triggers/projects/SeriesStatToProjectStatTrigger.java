@@ -6,7 +6,6 @@ import org.designup.picsou.model.Project;
 import org.designup.picsou.model.Series;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -50,7 +49,7 @@ public class SeriesStatToProjectStatTrigger implements ChangeSetListener {
     double actual = 0;
     for (Glob seriesStat : repository.getAll(SeriesStat.TYPE,
                                              fieldEquals(SeriesStat.SERIES, project.get(Project.SERIES)))) {
-      Double statActual = seriesStat.get(SeriesStat.AMOUNT);
+      Double statActual = seriesStat.get(SeriesStat.ACTUAL_AMOUNT);
       if (statActual != null) {
         actual += statActual;
       }

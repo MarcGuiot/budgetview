@@ -4,17 +4,15 @@
   <styles>
     <style selector="toggleButton"
            weightX="0" fill="none" anchor="center"
-           minimumSize="(26,14)" preferredSize="(26,14)"
-           text="" opaque="false" borderPainted="false"
-           cursor="hand"/>
+           minimumSize="(26,14)" preferredSize="(26,14)"/>
     <ui name="plusMinusToggle" class="org.designup.picsou.gui.components.ui.PlusMinusToggleUI"
-        bgColor="#e0e0e0"
-        fgColor="#ffffff"
-        bgBorderColor="#808080"
-        fgBorderColor="#000000"
-        selectedTextColor="#000000"
-        rolloverTextColor="#0000FF"
-        unselectedTextColor="#888888"
+        selectedBgColor="amountEditor.plusMinus.selected.bg"
+        selectedBorderColor="amountEditor.plusMinus.selected.border"
+        selectedTextColor="amountEditor.plusMinus.selected.text"
+        unselectedBgColor="amountEditor.plusMinus.unselected.bg"
+        unselectedBorderColor="amountEditor.plusMinus.unselected.border"
+        unselectedTextColor="amountEditor.plusMinus.unselected.text"
+        rolloverTextColor="amountEditor.plusMinus.text.rollover"
       />
   </styles>
 

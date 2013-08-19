@@ -12,6 +12,8 @@
            horizontalAlignment="left"
            horizontalTextPosition="right"
            iconTextGap="2"/>
+    <style id="activeProjectItem" selector="x" foreground="projectView.item.view.itemButton"/>
+    <style id="inactiveProjectItem" selector="x" foreground="projectView.item.view.itemButton.disabled"/>
 
     <style selector=".itemLabel"
            font="-,plain,11" foreground="projectView.item.view.label"/>
@@ -23,17 +25,33 @@
            foreground="block.amount.actual.link" font="-,plain,11"/>
     <style selector="button#plannedAmount" ui="amountLinkUI"
            foreground="block.amount.planned.link" font="-,bold,11"/>
+    <style id="activeItemAmount" selector="x" foreground="block.amount.planned.link"/>
+    <style id="inactiveItemAmount" selector="x" foreground="projectView.item.view.itemButton.disabled"/>
+
+    <ui name="onOffToggle" class="org.designup.picsou.gui.components.ui.OnOffToggleUI"
+        selectedBgColor="projectView.onoff.selected.bg"
+        selectedBorderColor="projectView.onoff.selected.border"
+        selectedTextColor="projectView.onoff.selected.text"
+        unselectedBgColor="projectView.onoff.unselected.bg"
+        unselectedBorderColor="projectView.onoff.unselected.border"
+        unselectedTextColor="projectView.onoff.unselected.text"
+        rolloverTextColor="projectView.onoff.text.rollover"
+      />
+    <style selector="toggleButton#activeToggle" ui="onOffToggle"
+           weightX="0" fill="none" anchor="center"
+           minimumSize="(26,14)" preferredSize="(26,14)"/>
   </styles>
 
   <column name="projectItemViewPanel"
           layout="org.designup.picsou.gui.projects.utils.ProjectItemViewLayout"
-          border="empty(5)" opaque="true" background="block.inner.bg">
+          opaque="true" background="projectView.item.bg.view">
     <button ref="itemButton"/>
     <label ref="monthLabel" styleClass="itemLabel"/>
     <component ref="itemGauge" styleClass="detailGauge" preferredSize="(30,14)"/>
     <button ref="actualAmount" styleClass="amountButton"/>
     <label name="slashLabel" text="/" styleClass="itemLabel"/>
     <button ref="plannedAmount" styleClass="amountButton"/>
+    <toggleButton ref="activeToggle"/>
     <button action="modify" styleClass="editIcon"/>
     <label ref="imageLabel" preferredSize="(100,70)"/>
     <button ref="link" ui="hyperlinkButton" font="-,plain,10"/>

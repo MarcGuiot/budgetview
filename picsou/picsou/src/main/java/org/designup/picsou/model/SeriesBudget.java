@@ -51,7 +51,7 @@ public class SeriesBudget {
   public static DoubleField PLANNED_AMOUNT;
 
   @DoublePrecision(4)
-  public static DoubleField OBSERVED_AMOUNT;
+  public static DoubleField ACTUAL_AMOUNT;
 
   @DefaultInteger(1)
   @Required
@@ -105,7 +105,7 @@ public class SeriesBudget {
       output.writeDouble(fieldValues.get(SeriesBudget.PLANNED_AMOUNT));
       output.writeInteger(fieldValues.get(SeriesBudget.DAY));
       output.writeBoolean(fieldValues.get(SeriesBudget.ACTIVE));
-      output.writeDouble(fieldValues.get(SeriesBudget.OBSERVED_AMOUNT));
+      output.writeDouble(fieldValues.get(SeriesBudget.ACTUAL_AMOUNT));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -125,7 +125,7 @@ public class SeriesBudget {
       fieldSetter.set(SeriesBudget.PLANNED_AMOUNT, input.readDouble());
       fieldSetter.set(SeriesBudget.DAY, input.readInteger());
       fieldSetter.set(SeriesBudget.ACTIVE, input.readBoolean());
-      fieldSetter.set(SeriesBudget.OBSERVED_AMOUNT, null);
+      fieldSetter.set(SeriesBudget.ACTUAL_AMOUNT, null);
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -135,7 +135,7 @@ public class SeriesBudget {
       fieldSetter.set(SeriesBudget.PLANNED_AMOUNT, input.readDouble());
       fieldSetter.set(SeriesBudget.DAY, input.readInteger());
       fieldSetter.set(SeriesBudget.ACTIVE, input.readBoolean());
-      fieldSetter.set(SeriesBudget.OBSERVED_AMOUNT, input.readDouble());
+      fieldSetter.set(SeriesBudget.ACTUAL_AMOUNT, input.readDouble());
     }
 
     public int getWriteVersion() {

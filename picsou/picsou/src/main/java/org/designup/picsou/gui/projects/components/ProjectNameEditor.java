@@ -7,13 +7,13 @@ import org.designup.picsou.model.Project;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobTextEditor;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.utils.GlobBooleanNodeStyleUpdater;
 import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.views.GlobButtonView;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.Strings;
@@ -35,6 +35,7 @@ public class ProjectNameEditor {
   private GlobTextEditor nameField;
   private GlobButtonView projectNameButton;
   private Key currentProjectKey;
+  private GlobBooleanNodeStyleUpdater styleUpdater;
 
   public ProjectNameEditor(PopupMenuFactory menuFactory, GlobRepository parentRepository, Directory directory) {
     this.menuFactory = menuFactory;
@@ -63,6 +64,7 @@ public class ProjectNameEditor {
     else {
       cards.show("readonly");
     }
+    styleUpdater.setKey(currentProjectKey);
   }
 
   public void edit() {
@@ -81,8 +83,12 @@ public class ProjectNameEditor {
 
     PopupGlobFunctor functor = new PopupGlobFunctor(menuFactory);
     projectNameButton = GlobButtonView.init(Project.NAME, parentRepository, directory, functor);
-    builder.add("projectNameButton", projectNameButton);
+    SplitsNode<JButton> projectNameNode = builder.add("projectNameButton", projectNameButton.getComponent());
     functor.setComponent(projectNameButton.getComponent());
+
+    this.styleUpdater = new GlobBooleanNodeStyleUpdater(Project.ACTIVE, projectNameNode,
+                                                    "activeProject", "inactiveProject",
+                                                    parentRepository);
 
     nameField = builder.addEditor("projectNameField", Project.NAME);
     ValidateAction validate = new ValidateAction();

@@ -65,8 +65,8 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
       "          _series='100' _transactionType='5' id='" + plannedTransaction[0] + "' type='transaction' _createdBySeries='false'/>" +
       "");
     listener.assertLastChangesEqual(SeriesBudget.TYPE,
-                                    "<update _observedAmount='(null)' id='" + budgetId[1] + "'" +
-                                    "        observedAmount='-40.0' type='seriesBudget'/>");
+                                    "<update _actualAmount='(null)' id='" + budgetId[1] + "'" +
+                                    "        actualAmount='-40.0' type='seriesBudget'/>");
     plannedTransaction = getPlannedTransaction();
 
     repository.update(transactionKey, value(Transaction.BUDGET_MONTH, 200809));
@@ -220,11 +220,11 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     Integer[] budget = getBudgetId(ENVELOPPE_SERIES_ID);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update _observedAmount='-900.0' id='" + budget[1] + "' observedAmount='-1500.0' type='seriesBudget'/>");
+      "<update _actualAmount='-900.0' id='" + budget[1] + "' actualAmount='-1500.0' type='seriesBudget'/>");
     repository.update(Key.create(Transaction.TYPE, 3), Transaction.AMOUNT, -30.);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update _observedAmount='-1500.0' id='" + budget[1] + "' observedAmount='-930.0' type='seriesBudget'/>");
+      "<update _actualAmount='-1500.0' id='" + budget[1] + "' actualAmount='-930.0' type='seriesBudget'/>");
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <update _amount='-600.0' amount='-30.0' id='3' type='transaction'/>" +
@@ -235,7 +235,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     repository.update(Key.create(Transaction.TYPE, 3), Transaction.AMOUNT, -200.);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update _observedAmount='-930.0' id='" + budget[1] + "' observedAmount='-1100.0' type='seriesBudget'/>");
+      "<update _actualAmount='-930.0' id='" + budget[1] + "' actualAmount='-1100.0' type='seriesBudget'/>");
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <delete _account='-1' _amount='-70.0' _bankDay='18' _bankMonth='200808' _mirror='false'\n" +
@@ -261,12 +261,12 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     Integer[] budget = getBudgetId(INCOME_SERIES_ID);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update _observedAmount='(null)' id='" + budget[1] + "' observedAmount='2200.0' type='seriesBudget'/>");
+      "<update _actualAmount='(null)' id='" + budget[1] + "' actualAmount='2200.0' type='seriesBudget'/>");
 
     repository.update(Key.create(Transaction.TYPE, 103), Transaction.AMOUNT, 1900.);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update _observedAmount='2200.0' id='" + budget[1] + "' observedAmount='1900.0' type='seriesBudget'/>");
+      "<update _actualAmount='2200.0' id='" + budget[1] + "' actualAmount='1900.0' type='seriesBudget'/>");
     Integer[] transaction = getPlannedTransaction(INCOME_SERIES_ID);
     listener.assertLastChangesEqual(
       Transaction.TYPE,
@@ -280,7 +280,7 @@ public class TransactionPlannedTriggerTest extends PicsouTriggerTestCase {
     repository.update(Key.create(Transaction.TYPE, 103), Transaction.AMOUNT, 2300.);
     listener.assertLastChangesEqual(
       SeriesBudget.TYPE,
-      "<update observedAmount='2300.0' id='" + budget[1] + "' _observedAmount='1900.0' type='seriesBudget'/>");
+      "<update actualAmount='2300.0' id='" + budget[1] + "' _actualAmount='1900.0' type='seriesBudget'/>");
     listener.assertLastChangesEqual(
       Transaction.TYPE,
       "  <update _amount='1900.0' amount='2300.0' id='103' type='transaction'/>\n" +

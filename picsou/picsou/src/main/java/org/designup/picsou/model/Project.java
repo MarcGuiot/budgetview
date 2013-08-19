@@ -86,6 +86,7 @@ public class Project {
       SerializedOutput output = serializedByteArrayOutput.getOutput();
       output.writeUtf8String(fieldValues.get(Project.NAME));
       output.writeInteger(fieldValues.get(Project.SERIES));
+      output.writeBoolean(fieldValues.get(Project.ACTIVE));
       output.writeUtf8String(fieldValues.get(Project.IMAGE_PATH));
       return serializedByteArrayOutput.toByteArray();
     }
@@ -103,6 +104,7 @@ public class Project {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(Project.NAME, input.readUtf8String());
       fieldSetter.set(Project.SERIES, input.readInteger());
+      fieldSetter.set(Project.ACTIVE, input.readBoolean());
       fieldSetter.set(Project.IMAGE_PATH, input.readUtf8String());
     }
 

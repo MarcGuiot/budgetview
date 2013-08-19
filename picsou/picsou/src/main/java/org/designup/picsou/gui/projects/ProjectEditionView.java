@@ -38,7 +38,6 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
 
   private GlobRepeat repeat;
   private ProjectNameEditor projectNameEditor;
-  private JPanel panel = new JPanel();
 
   private SimpleGaugeView gauge;
   private GlobLabelView totalActual;
@@ -80,16 +79,20 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectEditionView.splits",
                                                       repository, directory);
 
+    final ModifyNameAction modify = new ModifyNameAction();
     PopupMenuFactory factory = new PopupMenuFactory() {
       public JPopupMenu createPopup() {
         JPopupMenu menu = new JPopupMenu();
-        menu.add(new EditNameAction());
+        menu.add(modify);
         menu.add(new DeleteProjectAction(repository, directory));
         return menu;
       }
     };
     projectNameEditor = new ProjectNameEditor(factory, repository, directory);
     builder.add("projectNameEditor", projectNameEditor.getPanel());
+
+    builder.addToggleEditor("activeToggle", Project.ACTIVE);
+    builder.add("modify", modify);
 
     GlobImageLabelView imageLabel = GlobImageLabelView.init(Project.IMAGE_PATH, repository, directory);
     builder.add("imageLabel", imageLabel.getLabel());
@@ -114,8 +117,8 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     parentBuilder.add("projectEditionView", builder);
   }
 
-  private class EditNameAction extends AbstractAction {
-    private EditNameAction() {
+  private class ModifyNameAction extends AbstractAction {
+    private ModifyNameAction() {
       super(Lang.get("rename"));
     }
 

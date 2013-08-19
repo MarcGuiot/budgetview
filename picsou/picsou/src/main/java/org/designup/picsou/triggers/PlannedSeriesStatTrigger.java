@@ -108,7 +108,7 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
 
   private Pair<Double, Double> computeRemainingAndOverrun(FieldValues seriesBudget, Glob seriesStat, Boolean isActive) {
     Double plannedAmount = isActive ? seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0) : 0.00;
-    Double obervedAmount = Amounts.zeroIfNull(seriesStat.get(SeriesStat.AMOUNT));
+    Double obervedAmount = Amounts.zeroIfNull(seriesStat.get(SeriesStat.ACTUAL_AMOUNT));
     double remaining = 0;
     double overrun = 0;
 

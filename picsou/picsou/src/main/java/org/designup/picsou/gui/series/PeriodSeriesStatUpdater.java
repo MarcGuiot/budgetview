@@ -141,7 +141,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       Glob periodStat =
         repository.findOrCreate(Key.create(PeriodSeriesStat.TYPE, seriesStat.get(SeriesStat.SERIES)));
       double amount = periodStat.get(PeriodSeriesStat.AMOUNT) +
-                      Utils.zeroIfNull(seriesStat.get(SeriesStat.AMOUNT));
+                      Utils.zeroIfNull(seriesStat.get(SeriesStat.ACTUAL_AMOUNT));
       Double plannedAmount;
       if (periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT) == null && seriesStat.get(SeriesStat.PLANNED_AMOUNT) == null) {
         plannedAmount = null;
@@ -209,7 +209,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     }
 
     for (Glob stat : activeStats) {
-      hasObservedAmount |= Amounts.isNotZero(stat.get(SeriesStat.AMOUNT));
+      hasObservedAmount |= Amounts.isNotZero(stat.get(SeriesStat.ACTUAL_AMOUNT));
       hasPlannedAmountToSet |= Amounts.isUnset(stat.get(SeriesStat.PLANNED_AMOUNT));
       if (hasObservedAmount && hasPlannedAmountToSet) {
         return true;

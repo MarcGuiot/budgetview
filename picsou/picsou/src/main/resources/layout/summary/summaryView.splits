@@ -9,27 +9,26 @@
     <style selector="button.create" ui="hyperlinkButtonWithoutUnderline" weightY="0.1"
            foreground="block.item.link" font="-,plain,12" anchor="southeast"
            icon="arrow_right_blue.png" rolloverIcon="arrow_right_blue_rollover.png" fill="none"/>
-    <style selector="component.chart" weightY="10" marginTop="5" marginLeft="10" opaque="true"
+    <style selector="component.chart" marginTop="5" marginLeft="10" opaque="true"
            background="block.inner.bg.secondary"/>
   </styles>
 
-  <grid opaque="true" background="block.inner.bg.secondary" border="line(block.inner.border)">
+  <grid styleClass="secondaryInnerBlock">
     <label gridPos="(0,0)" text="$summaryView.projects.title" styleClass="graphTitle"/>
     <button gridPos="(1,0)" action="createProject" styleClass="create" tooltipText="$projectView.create.tooltip"/>
 
-    <component gridPos="(0,1,2,1)" ref="projectChart" styleClass="chart"/>
+    <component gridPos="(0,1,2,1)" ref="projectChart" styleClass="chart" weightY="8"/>
     <label gridPos="(2,1)" icon="rightArrow(12,50,10,40,summary.project.arrow)" weightX="0.01" marginLeft="4"/>
 
     <label gridPos="(0,2)" text="$summaryView.mainAccounts.title" styleClass="graphTitle"/>
     <label gridPos="(1,2)" text="$summaryView.mainAccounts.subtitle" styleClass="graphSubTitle"/>
 
-    <component gridPos="(0,3,2,1)" ref="mainAccountsHistoChart" styleClass="chart"/>
+    <component gridPos="(0,3,2,1)" ref="mainAccountsHistoChart" styleClass="chart" weightY="10"/>
 
     <label gridPos="(0,4)" text="$summaryView.savingsAccounts.title" styleClass="graphTitle"/>
     <label gridPos="(1,4)" text="$summaryView.savingsAccounts.subtitle" styleClass="graphSubTitle"/>
 
-    <component gridPos="(0,5,2,1)" ref="savingsHistoChart" styleClass="chart" marginBottom="10"/>
+    <component gridPos="(0,5,2,1)" ref="savingsHistoChart" styleClass="chart" weightY="6" marginBottom="10"/>
   </grid>
-
 
 </splits>

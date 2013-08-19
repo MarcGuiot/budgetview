@@ -90,6 +90,10 @@ public class ProjectChartView extends View {
       "histo.button.rollover.bg.bottom",
       "histo.button.rollover.label",
       "histo.button.rollover.border",
+      "histo.button.disabled.bg.top",
+      "histo.button.disabled.bg.bottom",
+      "histo.button.disabled.label",
+      "histo.button.disabled.border",
       directory
     );
 
@@ -123,7 +127,8 @@ public class ProjectChartView extends View {
                         project.get(Project.NAME),
                         project.getKey(),
                         getTooltip(project),
-                        selectedProjects.contains(project));
+                        selectedProjects.contains(project),
+                        project.isTrue(Project.ACTIVE));
     }
 
     histoChart.update(new HistoButtonPainter(dataset.get(), buttonFontMetrics, colors));

@@ -330,7 +330,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
     }
 
     public void addValues(Glob seriesStat, int currentMonthId) {
-      double seriesAmount = Utils.zeroIfNull(seriesStat.get(SeriesStat.AMOUNT));
+      double seriesAmount = Utils.zeroIfNull(seriesStat.get(SeriesStat.ACTUAL_AMOUNT));
       double seriesPlannedAmount = Utils.zeroIfNull(seriesStat.get(SeriesStat.PLANNED_AMOUNT));
       double seriesRemainingAmount = Utils.zeroIfNull(seriesStat.get(SeriesStat.REMAINING_AMOUNT));
       double serisOverrunAmount = Utils.zeroIfNull(seriesStat.get(SeriesStat.OVERRUN_AMOUNT));

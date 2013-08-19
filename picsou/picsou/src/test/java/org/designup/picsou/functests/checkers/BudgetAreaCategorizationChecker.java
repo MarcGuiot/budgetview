@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import org.designup.picsou.model.BudgetArea;
 import org.uispec4j.*;
@@ -115,12 +116,12 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public BudgetAreaCategorizationChecker checkActiveSeries(String seriesName) {
+  public BudgetAreaCategorizationChecker checkSeriesIsActive(String seriesName) {
     assertThat(panel.getRadioButton(seriesName).foregroundEquals("000000"));
     return this;
   }
 
-  public BudgetAreaCategorizationChecker checkNonActiveSeries(String seriesName) {
+  public BudgetAreaCategorizationChecker checkSeriesIsInactive(String seriesName) {
     assertThat(panel.getRadioButton(seriesName).foregroundEquals(DISABLED_SERIES_COLOR));
     return this;
   }
@@ -203,6 +204,16 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     for (String subName : subSeriesNames) {
       assertFalse("subSeries unexpectedly found with name: " + subName,
                  seriesPanel.containsUIComponent(RadioButton.class, subName));
+    }
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkSeriesContainsNoSubSeries(String seriesName) {
+    RadioButton seriesRadio = panel.getRadioButton(seriesName);
+    Panel subSeriesPanel = seriesRadio.getContainer("seriesBlock").getPanel("subSeriesRepeat");
+    int count = subSeriesPanel.getSwingComponents(JRadioButton.class).length;
+    if (count > 0) {
+      Assert.fail("Unexpected subSeries content: " + subSeriesPanel.getDescription());
     }
     return this;
   }

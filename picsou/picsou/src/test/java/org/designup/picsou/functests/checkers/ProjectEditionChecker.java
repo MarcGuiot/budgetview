@@ -4,11 +4,9 @@ import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.GaugeChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.gui.description.Formatting;
+import org.uispec4j.*;
 import org.uispec4j.Panel;
-import org.uispec4j.TextBox;
-import org.uispec4j.Trigger;
 import org.uispec4j.Window;
-import org.uispec4j.assertion.UISpecAssert;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,6 +36,32 @@ public class ProjectEditionChecker extends ViewChecker {
   public ProjectEditionChecker checkName(String text) {
     assertThat(getPanel().getButton("projectNameButton").textEquals(text));
     return this;
+  }
+
+  public ProjectEditionChecker checkProjectNameMessage(String expectedMessage) {
+    Panel editor = getPanel().getPanel("projectNameEditor");
+    TextBox nameField = editor.getTextBox("projectNameField");
+    assertThat(nameField.isVisible());
+    editor.getButton("Validate").click();
+    checkTipVisible(getPanel(), nameField, expectedMessage);
+    assertThat(editor.getButton("Validate").isVisible());
+    return this;
+  }
+
+  public void setActive() {
+    ToggleButton toggle = getActiveToggle();
+    assertThat(toggle.isEnabled());
+    toggle.click();
+  }
+
+  public void setInactive() {
+    ToggleButton toggle = getActiveToggle();
+    assertThat(toggle.isEnabled());
+    toggle.click();
+  }
+
+  private ToggleButton getActiveToggle() {
+    return getPanel().getPanel("projectPanel").getToggleButton("activeToggle");
   }
 
   public ProjectEditionChecker checkProjectGaugeHidden() {
@@ -147,28 +171,18 @@ public class ProjectEditionChecker extends ViewChecker {
     return labels.toArray(new String[labels.size()]);
   }
 
-  public ProjectEditionChecker checkProjectNameMessage(String expectedMessage) {
-    Panel editor = getPanel().getPanel("projectNameEditor");
-    TextBox nameField = editor.getTextBox("projectNameField");
-    assertThat(nameField.isVisible());
-    editor.getButton("Validate").click();
-    checkTipVisible(getPanel(), nameField, expectedMessage);
-    assertThat(editor.getButton("Validate").isVisible());
-    return this;
-  }
-
   public ProjectEditionChecker checkNoErrorTipDisplayed() {
     super.checkNoTipVisible(getPanel());
     return this;
   }
 
   public void delete() throws Exception {
-    getDelete().run();
+    getDeleteTrigger().run();
     System.out.println("ProjectEditionChecker.delete: TODO: check unselect");
   }
 
   public void deleteWithConfirmation(String title, String message) {
-    ConfirmationDialogChecker.open(getDelete())
+    ConfirmationDialogChecker.open(getDeleteTrigger())
       .checkTitle(title)
       .checkMessageContains(message)
       .validate("Delete project");
@@ -176,13 +190,13 @@ public class ProjectEditionChecker extends ViewChecker {
   }
 
   public void openDeleteAndNavigate() {
-    ConfirmationDialogChecker.open(getDelete())
+    ConfirmationDialogChecker.open(getDeleteTrigger())
       .clickOnHyperlink("see these operations")
       .checkHidden();
     System.out.println("ProjectEditionChecker.deleteWithConfirmation: TODO: check unselect");
   }
 
-  private Trigger getDelete() {
+  private Trigger getDeleteTrigger() {
     final org.uispec4j.Button itemButton = getPanel().getButton("nameButton");
     PopupButton button = new PopupButton(itemButton);
     return button.triggerClick("Delete");

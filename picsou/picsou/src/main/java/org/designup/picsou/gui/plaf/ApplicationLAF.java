@@ -25,6 +25,7 @@ public class ApplicationLAF {
   private static final String BUTTON_PANEL_UI = org() + "designup.picsou.gui.plaf.ButtonPanelItemUI";
   private static final String ARROW_BUTTON_UI = org() + "designup.picsou.gui.components.ui.ArrowButtonUI";
   private static final String PLUS_MINUS_TOGGLE_UI = org() + "designup.picsou.gui.components.ui.PlusMinusToggleUI";
+  private static final String ON_OFF_TOGGLE_UI = org() + "designup.picsou.gui.components.ui.OnOffToggleUI";
   private static final String ROUND_BUTTON_UI = org() + "designup.picsou.gui.components.ui.RoundButtonUI";
   private static final String FLAT_SCROLLBAR_UI = org() + "designup.picsou.gui.components.ui.FlatScrollbarUI";
   private static final String NOTIFICATION_FLAG_UI = org() + "designup.picsou.gui.components.ui.NotificationFlagUI";
@@ -56,6 +57,7 @@ public class ApplicationLAF {
     uiService.registerClass(BUTTON_PANEL_UI, ButtonPanelItemUI.class);
     uiService.registerClass(ARROW_BUTTON_UI, ArrowButtonUI.class);
     uiService.registerClass(PLUS_MINUS_TOGGLE_UI, PlusMinusToggleUI.class);
+    uiService.registerClass(ON_OFF_TOGGLE_UI, OnOffToggleUI.class);
     uiService.registerClass(VERTICAL_TAB_TOGGLE_UI, VerticalTabToggleUI.class);
     uiService.registerClass(VERTICAL_TAB_PANEL_UI, VerticalTabPanelUI.class);
     uiService.registerClass(NOTIFICATION_FLAG_UI, NotificationFlagUI.class);

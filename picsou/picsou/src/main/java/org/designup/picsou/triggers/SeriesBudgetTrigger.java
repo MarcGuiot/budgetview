@@ -1,7 +1,6 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.model.*;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import org.globsframework.utils.collections.Pair;
@@ -98,7 +97,7 @@ public class SeriesBudgetTrigger extends AbstractChangeSetListener {
         }
         else {
           if (!active) {
-            if (seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT) != null
+            if (seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT) != null
                 && seriesBudget.get(SeriesBudget.MONTH) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
               active = true;
             }
@@ -107,7 +106,7 @@ public class SeriesBudgetTrigger extends AbstractChangeSetListener {
                             value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
                             value(SeriesBudget.ACTIVE, active));
           if (BudgetArea.EXTRAS.getId().equals(series.get(Series.BUDGET_AREA))) {
-            repository.update(seriesBudget.getKey(), SeriesBudget.PLANNED_AMOUNT, seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT));
+            repository.update(seriesBudget.getKey(), SeriesBudget.PLANNED_AMOUNT, seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT));
           }
           else if ((series.get(Series.PROFILE_TYPE).equals(ProfileType.IRREGULAR.getId()) &&
                     seriesBudget.get(SeriesBudget.MONTH) > currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))) {

@@ -398,7 +398,7 @@ public class UpgradeTrigger implements ChangeSetListener {
             else if (field == SeriesBudget.SERIES) {
               builder.setValue(SeriesBudget.SERIES, mirorSeriesId);
             }
-            else if (field != SeriesBudget.OBSERVED_AMOUNT && field != SeriesBudget.ID) {
+            else if (field != SeriesBudget.ACTUAL_AMOUNT && field != SeriesBudget.ID) {
               builder.setValue(field, budget.getValue(field));
             }
           }
@@ -661,7 +661,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     Set<Integer> seriesIds = repository.getAll(Project.TYPE).getValueSet(Project.SERIES);
     for (Glob seriesBudget : repository.getAll(SeriesBudget.TYPE, GlobMatchers.fieldIn(SeriesBudget.SERIES, seriesIds))) {
       if (!seriesBudget.isTrue(SeriesBudget.ACTIVE) &&
-          Amounts.isNotZero(seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT))) {
+          Amounts.isNotZero(seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT))) {
         repository.update(seriesBudget.getKey(), SeriesBudget.ACTIVE, true);
       }
     }

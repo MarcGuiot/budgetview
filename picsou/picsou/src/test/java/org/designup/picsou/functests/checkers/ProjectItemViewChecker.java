@@ -4,6 +4,7 @@ import org.designup.picsou.functests.checkers.components.GaugeChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
+import org.uispec4j.ToggleButton;
 
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
@@ -34,6 +35,22 @@ public class ProjectItemViewChecker extends GuiChecker {
 
   public void showTransactionsThroughMenu() {
     getItemButton().click("Show transactions");
+  }
+
+  public void setActive() {
+    ToggleButton toggle = getActiveToggle();
+    assertThat(toggle.isEnabled());
+    toggle.click();
+  }
+
+  public void setInactive() {
+    ToggleButton toggle = getActiveToggle();
+    assertThat(toggle.isEnabled());
+    toggle.click();
+  }
+
+  private ToggleButton getActiveToggle() {
+    return panel.getToggleButton("activeToggle");
   }
 
   void write(StringBuilder builder) {

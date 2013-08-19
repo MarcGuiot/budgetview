@@ -255,7 +255,7 @@ public class SeriesEvolutionTableView extends View {
         Glob seriesStat = repository.find(SeriesStat.createKey(wrapper.get(SeriesWrapper.ITEM_ID), monthId));
         if ((seriesStat != null) &&
             (Amounts.isNotZero(seriesStat.get(SeriesStat.PLANNED_AMOUNT))
-             || Amounts.isNotZero(seriesStat.get(SeriesStat.AMOUNT)))) {
+             || Amounts.isNotZero(seriesStat.get(SeriesStat.ACTUAL_AMOUNT)))) {
           return true;
         }
       }

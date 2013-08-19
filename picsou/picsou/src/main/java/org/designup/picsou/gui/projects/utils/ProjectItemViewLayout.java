@@ -35,6 +35,7 @@ public class ProjectItemViewLayout implements LayoutManager {
 
   private static class Metrics {
 
+    private static final int PADDING = 5;
     private static final int VERTICAL_MARGIN = 5;
     private static final int IMAGE_LEFT_MARGIN = 20;
     private static final int IMAGE_RIGHT_MARGIN = 10;
@@ -68,6 +69,9 @@ public class ProjectItemViewLayout implements LayoutManager {
     private Dimension plannedAmountSize;
     private int plannedAmountLeft;
     private int plannedAmountTop;
+    private Dimension activeToggleSize;
+    private int activeToggleLeft;
+    private int activeToggleTop;
     private Dimension modifyButtonSize;
     private int modifyButtonLeft;
     private int modifyButtonTop;
@@ -88,10 +92,10 @@ public class ProjectItemViewLayout implements LayoutManager {
 
     public Metrics(Container target) {
       Insets insets = target.getInsets();
-      top = insets.top;
-      left = insets.left;
-      right = target.getWidth() - insets.right;
-      insetsHeight = insets.top + insets.bottom;
+      top = insets.top + PADDING;
+      left = insets.left + PADDING;
+      right = target.getWidth() - insets.right - PADDING;
+      insetsHeight = insets.top + insets.bottom + 2 * PADDING;
       init(target);
     }
 
@@ -113,9 +117,7 @@ public class ProjectItemViewLayout implements LayoutManager {
         }
         else if (component.getName().equals("actualAmount")) {
           actualAmountSize = GuiUtils.maxSize(component, MAX_AMOUNT_STRING);
-          FontMetrics fontMetrics = component.getFontMetrics(component.getFont());
-          JButton button = (JButton)component;
-          actualAmountRealWidth = fontMetrics.stringWidth(button.getText());
+          actualAmountRealWidth = component.getPreferredSize().width;
         }
         else if (component.getName().equals("itemGauge")) {
           gaugeSize = new Dimension(GAUGE_WIDTH, GAUGE_HEIGHT);
@@ -125,6 +127,9 @@ public class ProjectItemViewLayout implements LayoutManager {
         }
         else if (component.getName().equals("slashLabel")) {
           slashLabelSize = component.getPreferredSize();
+        }
+        else if (component.getName().equals("activeToggle")) {
+          activeToggleSize = component.getPreferredSize();
         }
         else if (component.getName().equals("modify")) {
           modifyButtonSize = component.getPreferredSize();
@@ -165,7 +170,9 @@ public class ProjectItemViewLayout implements LayoutManager {
       itemButtonTop = firstRowBottom - itemButtonSize.height;
       modifyButtonLeft = right - modifyButtonSize.width;
       modifyButtonTop = firstRowBottom - modifyButtonSize.height;
-      plannedAmountLeft = modifyButtonLeft - SPACE - plannedAmountSize.width;
+      activeToggleLeft = modifyButtonLeft - SPACE - activeToggleSize.width;
+      activeToggleTop = firstRowBottom - activeToggleSize.height;
+      plannedAmountLeft = activeToggleLeft - SPACE - plannedAmountSize.width;
       plannedAmountTop = firstRowBottom - plannedAmountSize.height;
       slashLabelLeft = plannedAmountLeft - SPACE - slashLabelSize.width;
       slashLabelTop = firstRowBottom - slashLabelSize.height;
@@ -181,7 +188,6 @@ public class ProjectItemViewLayout implements LayoutManager {
       linkTop = firstRowBottom + linkVerticalMargin;
       descriptionLeft = linkLeft;
       descriptionTop = linkTop + linkSize.height + linkVerticalMargin;
-
     }
 
     public int getHeight() {
@@ -203,7 +209,7 @@ public class ProjectItemViewLayout implements LayoutManager {
         }
         else if (component.getName().equals("actualAmount")) {
           component.setBounds(actualAmountLeft, actualAmountTop,
-                              actualAmountSize.width, actualAmountSize.height);
+                              actualAmountRealWidth, actualAmountSize.height);
         }
         else if (component.getName().equals("slashLabel")) {
           component.setBounds(slashLabelLeft, slashLabelTop,
@@ -216,6 +222,10 @@ public class ProjectItemViewLayout implements LayoutManager {
         else if (component.getName().equals("plannedAmount")) {
           component.setBounds(plannedAmountLeft, plannedAmountTop,
                               plannedAmountSize.width, plannedAmountSize.height);
+        }
+        else if (component.getName().equals("activeToggle")) {
+          component.setBounds(activeToggleLeft, activeToggleTop,
+                              activeToggleSize.width, activeToggleSize.height);
         }
         else if (component.getName().equals("modify")) {
           component.setBounds(modifyButtonLeft, modifyButtonTop,

@@ -126,7 +126,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         if (values.contains(SeriesBudget.PLANNED_AMOUNT)
             || values.contains(SeriesBudget.ACTIVE)
-            || values.contains(SeriesBudget.OBSERVED_AMOUNT)) {
+            || values.contains(SeriesBudget.ACTUAL_AMOUNT)) {
           addFromSeriesBudget(key, repository, lastTransactionMonthId, seriesToReCompute, monthCount);
         }
       }
@@ -479,7 +479,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     if (Amounts.isNearZero(Amounts.zeroIfNull(budget.get(SeriesBudget.PLANNED_AMOUNT)))) {
       return false;
     }
-    double v = Amounts.zeroIfNull(budget.get(SeriesBudget.OBSERVED_AMOUNT)) / (budget.get(SeriesBudget.PLANNED_AMOUNT));
+    double v = Amounts.zeroIfNull(budget.get(SeriesBudget.ACTUAL_AMOUNT)) / (budget.get(SeriesBudget.PLANNED_AMOUNT));
     return Math.abs(v) > 0.90;
   }
 }

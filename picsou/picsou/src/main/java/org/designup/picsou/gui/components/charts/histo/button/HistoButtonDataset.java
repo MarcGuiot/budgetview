@@ -33,8 +33,8 @@ public class HistoButtonDataset extends AbstractHistoDataset<HistoDatasetElement
     resetBlocks();
   }
 
-  public void addButton(int minId, int maxId, String label, Key key, String tooltip, boolean selected) {
-    HistoButtonElement element = new HistoButtonElement(minId, maxId, label, key, tooltip, selected);
+  public void addButton(int minId, int maxId, String label, Key key, String tooltip, boolean selected, boolean enabled) {
+    HistoButtonElement element = new HistoButtonElement(minId, maxId, label, key, tooltip, selected, enabled);
     buttonElements.add(element);
     keyMap.put(key, element);
     resetBlocks();
@@ -101,7 +101,7 @@ public class HistoButtonDataset extends AbstractHistoDataset<HistoDatasetElement
         if (row >= rowCount) {
           rowCount = row + 1;
         }
-        return new HistoButtonBlock(minIndex, maxIndex, row, truncatedMin, truncatedMax, element.label, element.key, element.selected);
+        return new HistoButtonBlock(minIndex, maxIndex, row, truncatedMin, truncatedMax, element.label, element.key, element.selected, element.enabled);
       }
     }
     throw new InvalidState("Cannot find empty space for element: " + element.label);

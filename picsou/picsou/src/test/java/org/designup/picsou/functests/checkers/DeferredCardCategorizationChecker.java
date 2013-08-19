@@ -30,7 +30,7 @@ public class DeferredCardCategorizationChecker extends SpecialCaseCategorization
   }
 
   public DeferredCardCategorizationChecker checkActiveSeries(String seriesName) {
-    budgetAreaChecker.checkActiveSeries(seriesName);
+    budgetAreaChecker.checkSeriesIsActive(seriesName);
     return this;
   }
 

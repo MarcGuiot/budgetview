@@ -13,6 +13,9 @@
            horizontalAlignment="left"
            horizontalTextPosition="right"
            iconTextGap="4"/>
+    <style id="activeProject" selector="x" foreground="projectView.nameButton"/>
+    <style id="inactiveProject" selector="x" foreground="projectView.nameButton.disabled"/>
+
   </styles>
 
   <cards ref="projectNameCards">

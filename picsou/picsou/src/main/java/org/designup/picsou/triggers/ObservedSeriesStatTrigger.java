@@ -111,20 +111,20 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
   }
 
   private void updateStat(Glob stat, Double transactionAmount, int multiplier, GlobRepository repository) {
-    double newValue = Utils.zeroIfNull(stat.get(SeriesStat.AMOUNT)) + multiplier * transactionAmount;
+    double newValue = Utils.zeroIfNull(stat.get(SeriesStat.ACTUAL_AMOUNT)) + multiplier * transactionAmount;
     if (Amounts.isNearZero(newValue)) {
       IsTransactionPresent transactionPresent = new IsTransactionPresent(stat);
       repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, stat.get(SeriesStat.SERIES))
         .saveApply(transactionPresent, repository);
       if (transactionPresent.found) {
-        repository.update(stat.getKey(), SeriesStat.AMOUNT, 0.);
+        repository.update(stat.getKey(), SeriesStat.ACTUAL_AMOUNT, 0.);
       }
       else {
-        repository.update(stat.getKey(), SeriesStat.AMOUNT, null);
+        repository.update(stat.getKey(), SeriesStat.ACTUAL_AMOUNT, null);
       }
     }
     else {
-      repository.update(stat.getKey(), SeriesStat.AMOUNT, newValue);
+      repository.update(stat.getKey(), SeriesStat.ACTUAL_AMOUNT, newValue);
     }
   }
 

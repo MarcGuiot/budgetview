@@ -90,12 +90,12 @@ public class SubSeriesStatTrigger implements ChangeSetListener {
     Glob stat = repository.find(SubSeriesStat.createKey(subSeriesId, budgetMonth));
 
     if (stat != null) {
-      double newValue = stat.get(SubSeriesStat.AMOUNT) - transactionAmount;
+      double newValue = stat.get(SubSeriesStat.ACTUAL_AMOUNT) - transactionAmount;
       if (Amounts.isNearZero(newValue)) {
         repository.delete(stat.getKey());
       }
       else {
-        repository.update(stat.getKey(), SubSeriesStat.AMOUNT, newValue);
+        repository.update(stat.getKey(), SubSeriesStat.ACTUAL_AMOUNT, newValue);
       }
     }
   }
@@ -122,7 +122,7 @@ public class SubSeriesStatTrigger implements ChangeSetListener {
     Glob stat = repository.findOrCreate(SubSeriesStat.createKey(subSeriesId,
                                                                 transaction.get(Transaction.BUDGET_MONTH)));
 
-    repository.update(stat.getKey(), SubSeriesStat.AMOUNT,
-                      stat.get(SubSeriesStat.AMOUNT) + transaction.get(Transaction.AMOUNT));
+    repository.update(stat.getKey(), SubSeriesStat.ACTUAL_AMOUNT,
+                      stat.get(SubSeriesStat.ACTUAL_AMOUNT) + transaction.get(Transaction.AMOUNT));
   }
 }

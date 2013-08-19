@@ -17,6 +17,7 @@ public class HistoDailyColors implements Disposable {
   private String currentDayAnnotationKey;
   private String positiveInnerLabelKey;
   private String negativeInnerLabelKey;
+  private String innerLabelLineKey;
   private String rolloverDayKey;
   private String selectedDayKey;
   private final Directory directory;
@@ -28,12 +29,14 @@ public class HistoDailyColors implements Disposable {
   private Color rolloverDayColor;
   private Color selectedDayColor;
   private HistoDailyColors.ColorUpdater colorUpdater;
+  private Color innerLabelLineColor;
 
   public HistoDailyColors(HistoLineColors line,
                           String currentDayKey,
                           String currentDayAnnotationKey,
                           String positiveInnerLabelKey,
                           String negativeInnerLabelKey,
+                          String innerLabelLineKey,
                           String rolloverDayKey,
                           String selectedDayKey,
                           Directory directory) {
@@ -42,6 +45,7 @@ public class HistoDailyColors implements Disposable {
     this.currentDayAnnotationKey = currentDayAnnotationKey;
     this.positiveInnerLabelKey = positiveInnerLabelKey;
     this.negativeInnerLabelKey = negativeInnerLabelKey;
+    this.innerLabelLineKey = innerLabelLineKey;
     this.rolloverDayKey = rolloverDayKey;
     this.selectedDayKey = selectedDayKey;
     this.directory = directory;
@@ -61,6 +65,7 @@ public class HistoDailyColors implements Disposable {
       currentDayAnnotationColor = colorLocator.get(currentDayAnnotationKey);
       positiveInnerLabelColor = colorLocator.get(positiveInnerLabelKey);
       negativeInnerLabelColor = colorLocator.get(negativeInnerLabelKey);
+      innerLabelLineColor = colorLocator.get(innerLabelLineKey);
       rolloverDayColor = colorLocator.get(rolloverDayKey);
       selectedDayColor = colorLocator.get(selectedDayKey);
     }
@@ -76,6 +81,10 @@ public class HistoDailyColors implements Disposable {
 
   public Color getInnerLabelColor(double value) {
     return value >= 0 ? positiveInnerLabelColor : negativeInnerLabelColor;
+  }
+
+  public Color getInnerLabelLineColor() {
+    return innerLabelLineColor;
   }
 
   public Color getSelectedDayColor() {

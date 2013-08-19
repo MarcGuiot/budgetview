@@ -158,6 +158,7 @@ public class HistoDailyPainter implements HistoPainter {
     g2.setColor(colors.getInnerLabelColor(minValue));
     g2.drawString(text, metrics.innerLabelX(monthIndex, minX, text), metrics.innerLabelY());
 
+    g2.setColor(colors.getInnerLabelLineColor());
     g2.drawLine(metrics.innerLabelLineX(monthIndex, minX, text),
                 metrics.innerLabelLineY(),
                 minX,

@@ -13,14 +13,32 @@
            ui="hyperlinkButtonWithoutUnderline" foreground="dialog.block.add"
            text="$projectEdition.add" tooltipText="$projectEdition.addItem.tooltip"
            font="-,plain,12" fill="none" anchor="west" marginLeft="10"/>
+
+    <ui name="onOffToggle" class="org.designup.picsou.gui.components.ui.OnOffToggleUI"
+        selectedBgColor="projectView.onoff.selected.bg"
+        selectedBorderColor="projectView.onoff.selected.border"
+        selectedTextColor="projectView.onoff.selected.text"
+        unselectedBgColor="projectView.onoff.unselected.bg"
+        unselectedBorderColor="projectView.onoff.unselected.border"
+        unselectedTextColor="projectView.onoff.unselected.text"
+        rolloverTextColor="projectView.onoff.text.rollover"
+      />
+    <style selector="toggleButton#activeToggle" ui="onOffToggle"
+           weightX="0" fill="none" anchor="center"
+           minimumSize="(26,14)" preferredSize="(26,14)"/>
   </styles>
 
-  <column border="empty(5)">
+  <column styleClass="secondaryInnerBlock">
 
-    <row marginBottom="10" weightY="0.1">
+    <row name="projectPanel" margin="10" weightY="0.1">
       <label ref="imageLabel" marginRight="10" minimumSize="(170,120)" preferredSize="(170,120)" fill="both"/>
       <column>
-        <component ref="projectNameEditor"/>
+        <row>
+          <component ref="projectNameEditor"/>
+          <filler fill="horizontal" weightX="0.1"/>
+          <toggleButton ref="activeToggle"/>
+          <button action="modify" styleClass="editIcon"/>
+        </row>
         <row name="gaugePanel" opaque="false" autoHideSource="gauge" border="empty(10,0,10,0)">
           <component ref="gauge" styleClass="totalGauge"/>
           <label ref="totalActual" styleClass="totalAmount"/>
@@ -31,7 +49,8 @@
       </column>
     </row>
 
-    <column styleClass="blockScrollBorder" border="matte(1,0,0,0,projectView.border)" weightY="100.0">
+    <column styleClass="blockScrollBorder" border="matte(1,1,1,1,projectView.border)" weightY="100.0"
+            margin="10" marginTop="0">
       <scrollPane forceVerticalScroll="true">
         <column>
           <repeat ref="items" layout="column" marginTop="5" marginBottom="0">

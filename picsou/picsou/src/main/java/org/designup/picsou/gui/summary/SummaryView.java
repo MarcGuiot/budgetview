@@ -7,7 +7,6 @@ import org.designup.picsou.gui.accounts.chart.SavingsAccountsChartView;
 import org.designup.picsou.gui.card.ImportPanel;
 import org.designup.picsou.gui.help.actions.HelpAction;
 import org.designup.picsou.gui.projects.ProjectChartView;
-import org.designup.picsou.gui.projects.ProjectEditionView;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.utils.Lang;
@@ -39,7 +38,7 @@ public class SummaryView extends View {
 
     MainDailyPositionsChartView mainDailyPositions =
       new MainDailyPositionsChartView(range,
-                                      getChartConfigWithoutLabels(true),
+                                      getMainAccountsChartConfig(),
                                       "mainAccountsHistoChart",
                                       repository, directory, "daily");
     mainDailyPositions.registerComponents(builder);
@@ -48,14 +47,18 @@ public class SummaryView extends View {
 
     SavingsAccountsChartView savingsAccounts =
       new SavingsAccountsChartView(range,
-                                   getChartConfigWithoutLabels(false),
+                                   getSavingsAccountsChartConfig(),
                                    repository, directory);
     savingsAccounts.registerComponents(builder);
 
     parentBuilder.add("summaryView", builder);
   }
 
-  public static HistoChartConfig getChartConfigWithoutLabels(boolean drawInnerAnnotations) {
-    return new HistoChartConfig(false, false, false, true, true, true, drawInnerAnnotations, true, true, true);
+  public static HistoChartConfig getMainAccountsChartConfig() {
+    return new HistoChartConfig(true, false, true, true, true, true, true, true, true, true);
+  }
+
+  public static HistoChartConfig getSavingsAccountsChartConfig() {
+    return new HistoChartConfig(false, false, false, true, true, true, false, true, true, true);
   }
 }

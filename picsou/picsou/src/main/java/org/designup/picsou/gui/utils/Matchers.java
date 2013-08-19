@@ -8,7 +8,6 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Utils;
 
 import java.util.*;
 
@@ -255,7 +254,7 @@ public class Matchers {
       for (Integer monthId : selectedMonthIds) {
         Glob seriesBudget = SeriesBudget.find(series.get(Series.ID), monthId, repository);
         if ((seriesBudget != null)) {
-          if (Amounts.isNotZero(seriesBudget.get(SeriesBudget.OBSERVED_AMOUNT))) {
+          if (Amounts.isNotZero(seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT))) {
             return true;
           }
           if (monthsInScope && seriesBudget.isTrue(SeriesBudget.ACTIVE)) {

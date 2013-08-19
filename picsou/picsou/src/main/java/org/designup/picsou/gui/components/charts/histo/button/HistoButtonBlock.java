@@ -11,10 +11,11 @@ public class HistoButtonBlock {
   public final String label;
   public final Key key;
   public final boolean selected;
+  public final boolean enabled;
 
   public HistoButtonBlock(int minIndex, int maxIndex, int row,
                           boolean truncatedMin, boolean truncatedMax,
-                          String label, Key key, boolean selected) {
+                          String label, Key key, boolean selected, boolean enabled) {
     this.minIndex = minIndex;
     this.maxIndex = maxIndex;
     this.row = row;
@@ -23,5 +24,6 @@ public class HistoButtonBlock {
     this.label = label;
     this.key = key;
     this.selected = selected;
+    this.enabled = enabled;
   }
 }

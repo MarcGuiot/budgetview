@@ -698,7 +698,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("OP 200803");
     categorization.selectVariable()
       .checkContainsSeries("before200804")
-      .checkNonActiveSeries("range")
+      .checkSeriesIsInactive("range")
       .checkDoesNotContainSeries("after200804", "only200804");
 
     categorization.selectTransaction("OP 200804");
@@ -709,7 +709,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("OP 200805");
     categorization.selectVariable()
       .checkContainsSeries("after200804")
-      .checkNonActiveSeries("range")
+      .checkSeriesIsInactive("range")
       .checkDoesNotContainSeries("before200804", "only200804");
 
     categorization.selectTransaction("OP 200806");
@@ -1260,22 +1260,22 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization
       .selectTransactions("1_Auchan")
       .selectVariable()
-      .checkNonActiveSeries("Courses 2")
-      .checkActiveSeries("Courses 1")
+      .checkSeriesIsInactive("Courses 2")
+      .checkSeriesIsActive("Courses 1")
       .selectSeries("Courses 1");
 
     categorization
       .selectTransactions("2_Auchan")
       .selectVariable()
-      .checkNonActiveSeries("Courses 1")
-      .checkActiveSeries("Courses 2");
+      .checkSeriesIsInactive("Courses 1")
+      .checkSeriesIsActive("Courses 2");
 
     categorization
       .selectTransactions("1_Auchan", "2_Auchan")
       .checkSelectedTableRows(0, 1)
       .selectVariable()
-      .checkActiveSeries("Courses 1")
-      .checkActiveSeries("Courses 2");
+      .checkSeriesIsActive("Courses 1")
+      .checkSeriesIsActive("Courses 2");
   }
 
   public void testDoNotFilterValidMonthIfMonthIsUncheckedButWithAlreadyCategorizedOperations() throws Exception {

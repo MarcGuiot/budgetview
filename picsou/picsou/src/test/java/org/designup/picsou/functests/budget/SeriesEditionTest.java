@@ -1317,7 +1317,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTableRow(1)
       .selectRecurring()
-      .checkNonActiveSeries("Telephone")
+      .checkSeriesIsInactive("Telephone")
       .selectSeries("Telephone");
 
     timeline.selectMonth("2008/06");
