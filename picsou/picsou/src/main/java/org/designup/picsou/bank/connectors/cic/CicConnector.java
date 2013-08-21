@@ -143,7 +143,7 @@ public class CicConnector extends WebBankConnector {
         }
       }
     }
-  }
+  } 
 
   public String getCode() {
     return userAndPasswordPanel.getUser();

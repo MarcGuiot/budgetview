@@ -35,4 +35,9 @@ public class GlobTextEditor extends AbstractGlobTextEditor<JTextField, GlobTextE
       }
     });
   }
+
+  public void dispose() {
+    textComponent.removeActionListener(validationAction);
+    super.dispose();
+  }
 }

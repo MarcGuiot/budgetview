@@ -27,6 +27,8 @@ import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Log;
+import org.globsframework.utils.Ref;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidFormat;
@@ -137,9 +139,10 @@ public class CsvImporterDialog {
         try {
           separator = CsvReader.findSeparator(firstLine);
 
-          GlobType type = createGlobType(firstLine, separator);
+          Ref<Boolean> ignoreLastEmptyEntry = new Ref<Boolean>(false);
+          GlobType type = createGlobType(firstLine, separator, ignoreLastEmptyEntry);
 
-          if (type != null && parseLineGlobs(reader, type, separator)) {
+          if (type != null && parseLineGlobs(reader, type, separator, ignoreLastEmptyEntry.get())) {
 
             List<Field> fields = Arrays.asList(type.getFields()).subList(1, type.getFieldCount());
             for (Field field : fields) {
@@ -150,7 +153,7 @@ public class CsvImporterDialog {
             return;
           }
         }
-        catch (ItemAlreadyExists exists){
+        catch (ItemAlreadyExists exists) {
         }
         catch (InvalidCsvFileFormat format) {
           lastError = format;
@@ -158,7 +161,7 @@ public class CsvImporterDialog {
         ignoreFirstLine++;
       }
       else {
-        if (lastError != null){
+        if (lastError != null) {
           throw lastError;
         }
         return;
@@ -166,8 +169,9 @@ public class CsvImporterDialog {
     }
   }
 
-  private boolean parseLineGlobs(BufferedReader reader, GlobType type, CsvSeparator separator) throws IOException {
-    List<String> elements = CsvReader.parseLine(readSkipEmpty(reader), separator);
+  private boolean parseLineGlobs(BufferedReader reader, GlobType type,
+                                 CsvSeparator separator, boolean ignoreLastEmptyEntry) throws IOException {
+    List<String> elements = split(reader, separator, ignoreLastEmptyEntry);
     int expectedCount = type.getFieldCount() - 1;
     while (elements != null) {
       if (Math.abs(elements.size() - expectedCount) > 2) {
@@ -181,9 +185,22 @@ public class CsvImporterDialog {
         i++;
       }
       globs.add(globBuilder.get());
-      elements = CsvReader.parseLine(readSkipEmpty(reader), separator);
+      elements = split(reader, separator, ignoreLastEmptyEntry);
     }
     return true;
+  }
+
+  private List<String> split(BufferedReader reader, CsvSeparator separator, boolean ignoreLastEmptyEntry) throws IOException {
+    List<String> elements = CsvReader.parseLine(readSkipEmpty(reader), separator);
+    if (ignoreLastEmptyEntry) {
+      if (elements != null && elements.size() > 1) {
+        String remove = elements.remove(elements.size() - 1);
+        if (Strings.isNotEmpty(remove)) {
+          Log.write("Le Csv ne semble pas correct : " + elements + " le dernier element devrait etre vide");
+        }
+      }
+    }
+    return elements;
   }
 
   private String readSkipEmpty(BufferedReader reader) throws IOException {
@@ -194,15 +211,23 @@ public class CsvImporterDialog {
     return line;
   }
 
-  private GlobType createGlobType(String firstLine, CsvSeparator separator) {
+  private GlobType createGlobType(String firstLine, CsvSeparator separator, Ref<Boolean> ignoreLastEmptyEntry) {
     GlobTypeBuilder typeBuilder = GlobTypeBuilder.init("CSV");
     typeBuilder.addIntegerKey("ID");
     List<String> elements = CsvReader.parseLine(firstLine, separator);
-    for (String element : elements) {
+    int added = 0;
+    for (int i = 0; i < elements.size(); i++) {
+      String element = elements.get(i);
       if (Strings.isNullOrEmpty(element)) {
-        return null;
+        if (added > 3 && elements.size() - 1 == i) {
+          ignoreLastEmptyEntry.set(true);
+        }
+        else {
+          return null;
+        }
       }
       else {
+        added++;
         typeBuilder.addStringField(element);
       }
     }
@@ -324,7 +349,7 @@ public class CsvImporterDialog {
         }
         else {
           CsvReader.TextType tmp = CsvReader.getTextType(glob.get(field));
-          if (tmp != textType){
+          if (tmp != textType) {
             textType = null;
           }
           break;

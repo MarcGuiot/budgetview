@@ -101,6 +101,8 @@ public class LicenseActivationDialog {
 
     dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction());
 
+    dialog.setCloseAction(new CloseAction());
+
     Boolean isConnected = user.isTrue(User.CONNECTED);
     connectionMessage.setVisible(!isConnected);
     askForNewCodeMessage.setVisible(isConnected);
@@ -201,6 +203,7 @@ public class LicenseActivationDialog {
     mailEditor.getComponent().requestFocus();
     dialog.showCentered();
     builder.dispose();
+    progressPanel.stop();
   }
 
   public void showExpiration() {

@@ -24,6 +24,7 @@ public class BankAccountGroupsPanel {
   private final boolean showWebSiteLink;
   private Repeat<BankAccountGroup> synchroAccountsRepeat;
   private JComponent component;
+  private GlobsPanelBuilder builder;
 
   public BankAccountGroupsPanel(boolean showWebSiteLink, GlobRepository repository, Directory directory) {
     this.showWebSiteLink = showWebSiteLink;
@@ -33,9 +34,9 @@ public class BankAccountGroupsPanel {
   }
 
   private void createPanel() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(),
-                                                      "/layout/importexport/components/bankAccountGroupsPanel.splits",
-                                                      repository, directory);
+    builder = new GlobsPanelBuilder(getClass(),
+                                    "/layout/importexport/components/bankAccountGroupsPanel.splits",
+                                    repository, directory);
 
     synchroAccountsRepeat =
       builder.addRepeat("accountGroups", Collections.<BankAccountGroup>emptyList(), new SynchroAccountRepeatFactory());
@@ -49,6 +50,10 @@ public class BankAccountGroupsPanel {
 
   public void update(List<BankAccountGroup> accountGroups) {
     synchroAccountsRepeat.set(accountGroups);
+  }
+
+  public void dispose() {
+    builder.dispose();
   }
 
   private class SynchroAccountRepeatFactory implements RepeatComponentFactory<BankAccountGroup> {

@@ -16,14 +16,12 @@ import java.util.Set;
 
 public class EditTransactionAction extends MultiSelectionAction {
 
-  private EditTransactionDialog dialog;
-
   public EditTransactionAction(GlobRepository repository, Directory directory) {
     super(Transaction.TYPE, repository, directory);
   }
 
   protected String getLabel(GlobList selection) {
-    return selection.size() > 1 ? Lang.get("transaction.edition.action.multi")  : Lang.get("transaction.edition.action.single");
+    return selection.size() > 1 ? Lang.get("transaction.edition.action.multi") : Lang.get("transaction.edition.action.single");
   }
 
   protected void processClick(GlobList transactions, GlobRepository repository, Directory directory) {
@@ -42,10 +40,8 @@ public class EditTransactionAction extends MultiSelectionAction {
       set.addAll(repository.findLinkedTo(transaction, Transaction.NOT_IMPORTED_TRANSACTION));
     }
 
-    if (dialog == null) {
-      dialog = new EditTransactionDialog(repository, directory);
-    }
-    
+    EditTransactionDialog dialog = new EditTransactionDialog(repository, directory);
+
     GlobList toModify = new GlobList();
     toModify.addAll(set);
     dialog.show(toModify);

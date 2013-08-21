@@ -164,7 +164,6 @@ public class LaBanquePostaleConnector extends WebBankConnector {
   }
 
   public void reset() {
-    System.out.println("LaBanquePostaleConnector.reset: ");
     keyboardLabel.setIcon(null);
     passwordField.setText(null);
     initLogin();

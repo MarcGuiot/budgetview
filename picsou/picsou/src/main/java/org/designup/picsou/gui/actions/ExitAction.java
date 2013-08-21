@@ -5,8 +5,10 @@ import org.designup.picsou.gui.feedback.UserEvaluationDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
+import sun.awt.AppContext;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class ExitAction extends AbstractAction {
@@ -43,5 +45,8 @@ public class ExitAction extends AbstractAction {
     frame.setVisible(false);
     frame.dispose();
     windowManager.shutdown();
+    if (System.getProperty("realExit", "true").equalsIgnoreCase("true")){
+      System.exit(0);
+    }
   }
 }

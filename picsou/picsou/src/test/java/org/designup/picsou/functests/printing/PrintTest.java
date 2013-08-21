@@ -293,6 +293,7 @@ public class PrintTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth(201202);
     operations.print()
       .checkOptions("February 2012", "Year 2012")
+      .selectCurrentYear()
       .checkCurrentYearSelected()
       .print();
 

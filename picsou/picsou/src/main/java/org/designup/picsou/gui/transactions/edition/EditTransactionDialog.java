@@ -10,6 +10,7 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobTextEditor;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobHtmlView;
 import org.globsframework.model.Glob;
@@ -53,7 +54,7 @@ public class EditTransactionDialog {
     dialog = PicsouDialog.create(owner, true, localDirectory);
     OkAction okAction = new OkAction();
 
-    GlobsPanelBuilder builder =
+    final GlobsPanelBuilder builder =
       new GlobsPanelBuilder(getClass(), "/layout/transactions/editTransactionDialog.splits",
                             localRepository, localDirectory);
 
@@ -94,6 +95,11 @@ public class EditTransactionDialog {
       }
     }, Transaction.TYPE);
 
+    dialog.registerDisposable(new Disposable() {
+      public void dispose() {
+        builder.dispose();
+      }
+    });
     dialog.addPanelWithButtons(builder.<JPanel>load(), okAction, new CancelAction());
     dialog.pack();
   }

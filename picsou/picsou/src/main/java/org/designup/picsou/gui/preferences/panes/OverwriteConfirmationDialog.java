@@ -17,9 +17,10 @@ public class OverwriteConfirmationDialog {
   private final PicsouDialog dialog;
   private Boolean overwrite = false;
   private JRadioButton overwriteRadio;
+  private final GlobsPanelBuilder builder;
 
   public OverwriteConfirmationDialog(Window owner, GlobRepository repository, Directory directory) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(PreferencesDialog.class,
+    builder = new GlobsPanelBuilder(PreferencesDialog.class,
                                                       "/layout/general/preferences/overwriteConfirmationDialog.splits",
                                                       repository, directory);
 
@@ -40,6 +41,7 @@ public class OverwriteConfirmationDialog {
 
   public void show() {
     dialog.showCentered();
+    builder.dispose();
   }
 
   public boolean wasCancelled() {

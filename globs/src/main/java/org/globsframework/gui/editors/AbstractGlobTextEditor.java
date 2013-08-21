@@ -239,6 +239,9 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     for (FocusListener listener : textComponent.getFocusListeners()) {
       textComponent.removeFocusListener(listener);
     }
+    if (keyPressedListener != null){
+      textComponent.getDocument().removeDocumentListener(keyPressedListener);
+    }
   }
 
   public boolean isAdjusting() {

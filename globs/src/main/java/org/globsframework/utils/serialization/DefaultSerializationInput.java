@@ -356,7 +356,7 @@ public class DefaultSerializationInput implements SerializedInput {
       while (readed != length) {
         int readSize = inputStream.read(bytes, readed, length - readed);
         if (readSize == -1) {
-          throw new InvalidData("Missing data in buffer expected " + length + " but was " + readed);
+          throw new EOFIOFailure("Missing data in buffer expected " + length + " but was " + readed);
         }
         readed += readSize;
       }

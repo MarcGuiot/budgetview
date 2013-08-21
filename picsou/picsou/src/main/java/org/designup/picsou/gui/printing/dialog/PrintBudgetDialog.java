@@ -28,6 +28,7 @@ public class PrintBudgetDialog {
   private PrintBudgetDialog.CurrentYearAction currentYearAction;
   private SortedSet<Integer> selectedMonths;
   private Integer currentMonth;
+  private GlobsPanelBuilder builder;
 
   public PrintBudgetDialog(GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -43,12 +44,13 @@ public class PrintBudgetDialog {
     this.currentYearAction.update(currentMonth);
 
     this.dialog.showCentered();
+    builder.dispose();
   }
 
   private void initDialog() {
     dialog = PicsouDialog.create(directory.get(JFrame.class), true, directory);
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/printing/printBudgetDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/printing/printBudgetDialog.splits",
                                                       repository, directory);
 
     currentMonthAction = new CurrentMonthAction();

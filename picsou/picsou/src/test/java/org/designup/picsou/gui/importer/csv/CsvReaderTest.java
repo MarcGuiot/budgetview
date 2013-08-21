@@ -38,6 +38,7 @@ public class CsvReaderTest extends TestCase {
     checkIsANumber("34.3");
     checkIsANumber("4.3");
     checkIsANumber("4.3");
+    checkIsANumber("+ 4,3");
     checkIsANumber("3 4345");
     checkIsNotANumber("3sT r");
     checkIsNotANumber("sT 34r");

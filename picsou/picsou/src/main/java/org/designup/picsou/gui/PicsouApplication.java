@@ -11,7 +11,8 @@ import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.client.http.MD5PasswordBasedEncryptor;
 import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.designup.picsou.client.http.RedirectPasswordBasedEncryptor;
-import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
@@ -30,7 +31,6 @@ import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
-import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.font.FontLocator;
@@ -57,8 +57,8 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "3.07";
-  public static Long JAR_VERSION = 121L; // not final for test
+  public static final String APPLICATION_VERSION = "3.09";
+  public static Long JAR_VERSION = 124L; // not final for test
   public static final Long BANK_CONFIG_VERSION = 7L;
 
   public static final String APPNAME = "budgetview";
@@ -196,7 +196,7 @@ public class PicsouApplication {
     JDialog dialog = new JDialog((Frame)null, true);
     dialog.setSize(900, 700);
     dialog.getContentPane()
-    .add(new JTextArea(out.toString()));
+      .add(new JTextArea(out.toString()));
     dialog.setVisible(true);
   }
 
@@ -216,21 +216,8 @@ public class PicsouApplication {
   }
 
   private void showMultipleInstanceError(String message) {
-    SplitsBuilder builder = SplitsBuilder.init(directory)
-      .setSource(getClass(), "/layout/utils/messageDialog.splits");
-
-    builder.add("title", new JLabel(Lang.get("init.dialog.lock.title")));
-    JEditorPane editorPane = new JEditorPane("text/html", Lang.get("init.dialog.lock.content", message));
-    builder.add("message", editorPane);
-
-    PicsouDialog dialog = PicsouDialog.create(null, directory);
-    dialog.addPanelWithButtons(builder.<JPanel>load(), new AbstractAction(Lang.get("close")) {
-      public void actionPerformed(ActionEvent e) {
-        System.exit(1);
-      }
-    }, null);
-    dialog.pack();
-    dialog.showCentered();
+    MessageDialog.show("init.dialog.lock.title", MessageType.ERROR, null, directory, "init.dialog.lock.content", message);
+    System.exit(1);
   }
 
   public static String[] parseLanguage(String... args) {
@@ -311,7 +298,7 @@ public class PicsouApplication {
     wrapper.add(OpenRequestManager.class, openRequestManager);
     wrapper.add(ApplicationLAF.initUiService());
     wrapper.add(ApplicationLAF.initLayoutService());
-    wrapper.add(new ConfiguredPropertiesService());
+    wrapper.add(ConfiguredPropertiesService.class, new ConfiguredPropertiesService());
     wrapper.add(new TimeService());
     wrapper.add(new UpgradeService(directory));
     wrapper.add(DescriptionService.class, new PicsouDescriptionService());

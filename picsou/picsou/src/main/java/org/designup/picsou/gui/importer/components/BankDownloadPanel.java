@@ -50,6 +50,8 @@ public class BankDownloadPanel implements GlobSelectionListener {
   private JPanel synchroPanel;
   private Integer bankId;
   private GlobsPanelBuilder builder;
+  private BankAccountGroupsPanel synchroAccountsPanel;
+  private BankAccountGroupsPanel manualAccountsPanel;
 
   public BankDownloadPanel(Window parent,
                            ImportController controller,
@@ -77,7 +79,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
 
     selectionCards = builder.addCardHandler("selectionCards");
 
-    BankAccountGroupsPanel synchroAccountsPanel = new BankAccountGroupsPanel(false, repository, directory);
+    synchroAccountsPanel = new BankAccountGroupsPanel(false, repository, directory);
     builder.add("synchroAccountsPanel", synchroAccountsPanel.getComponent());
     builder.add("startSynchro", new AbstractAction(Lang.get("import.synchroSelection.synchro.button")) {
       public void actionPerformed(ActionEvent event) {
@@ -85,7 +87,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
       }
     });
 
-    BankAccountGroupsPanel manualAccountsPanel = new BankAccountGroupsPanel(true, repository, directory);
+    manualAccountsPanel = new BankAccountGroupsPanel(true, repository, directory);
     builder.add("manualAccountsPanel", manualAccountsPanel.getComponent());
     builder.add("showBankDownload", new AbstractAction(Lang.get("import.synchroSelection.bankSelection.button")) {
       public void actionPerformed(ActionEvent event) {
@@ -227,6 +229,8 @@ public class BankDownloadPanel implements GlobSelectionListener {
   public void dispose() {
     builder.dispose();
     bankChooser.dispose();
+    manualAccountsPanel.dispose();
+    synchroAccountsPanel.dispose();
   }
 
   private class GotoTransactionCreationFunctor implements Runnable {

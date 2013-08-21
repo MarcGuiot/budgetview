@@ -8,7 +8,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 
-public class HistoDiffLegendPanel {
+public class HistoDiffLegendPanel implements Disposable {
 
   private GlobRepository repository;
   private Directory directory;
@@ -16,6 +16,7 @@ public class HistoDiffLegendPanel {
   private JPanel panel = new JPanel();
   private JLabel lineLabel = new JLabel();
   private JLabel fillLabel = new JLabel();
+  private GlobsPanelBuilder builder;
 
   public HistoDiffLegendPanel(GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -24,7 +25,7 @@ public class HistoDiffLegendPanel {
   }
 
   public void createPanel() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/components/charts/histoDiffLegendPanel.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/components/charts/histoDiffLegendPanel.splits",
                                                       repository, directory);
 
     builder.add("legendPanel", panel);
@@ -50,6 +51,10 @@ public class HistoDiffLegendPanel {
 
   public void hide() {
     panel.setVisible(false);
+  }
+
+  public void dispose() {
+    builder.dispose();
   }
 
   private class LineIcon implements Icon {

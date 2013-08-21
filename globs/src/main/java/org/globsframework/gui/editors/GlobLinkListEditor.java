@@ -64,7 +64,10 @@ public class GlobLinkListEditor extends AbstractGlobComponentHolder implements G
   }
 
   public void dispose() {
-    globListView.dispose();
-    selectionService.removeListener(this);
+    if (globListView != null) {
+      globListView.dispose();
+      selectionService.removeListener(this);
+      globListView = null;
+    }
   }
 }

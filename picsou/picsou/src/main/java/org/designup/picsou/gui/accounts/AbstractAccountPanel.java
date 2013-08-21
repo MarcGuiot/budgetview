@@ -18,6 +18,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
@@ -116,6 +117,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     warningMessage.setVisible(false);
 
     deferredPanel = new DeferredCardEditionPanel(localRepository, localDirectory);
+    builder.addDisposable(deferredPanel);
     builder.add("deferredPanel", deferredPanel.getPanel());
 
     positionEditor = builder.addEditor("position", positionField)

@@ -126,6 +126,13 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
     bankLabel.setIcon(currentConnector.getIcon());
   }
 
+  public void dispose() {
+    if (builder != null){
+      builder.dispose();
+      builder = null;
+    }
+  }
+
   private class Monitor implements SynchroMonitor {
     public void initialConnection() {
       if (closed) {

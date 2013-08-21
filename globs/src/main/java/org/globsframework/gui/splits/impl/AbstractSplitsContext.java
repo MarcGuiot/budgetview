@@ -163,6 +163,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     for (Disposable listener : disposables.values()) {
       listener.dispose();
     }
+    disposables.clear();
   }
 
   public void addAutoHide(Component targetComponent, String sourceComponentName) {

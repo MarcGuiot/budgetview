@@ -22,6 +22,7 @@ public class DeleteTransactionDialog {
   private GlobRepository repository;
   private Directory directory;
   private JCheckBox updateAccountCheckBox;
+  private GlobsPanelBuilder builder;
 
   public DeleteTransactionDialog(GlobList transactions,
                                  GlobRepository repository,
@@ -36,9 +37,8 @@ public class DeleteTransactionDialog {
     dialog = PicsouDialog.create(owner, true, directory);
     OkAction okAction = new OkAction();
 
-    GlobsPanelBuilder builder =
-      new GlobsPanelBuilder(getClass(), "/layout/transactions/deleteTransactionDialog.splits",
-                            repository, directory);
+    builder = new GlobsPanelBuilder(getClass(), "/layout/transactions/deleteTransactionDialog.splits",
+                          repository, directory);
 
     JEditorPane editorPane = new JEditorPane("text/html", Lang.get(getContentKey(transactions)));
 
@@ -54,6 +54,7 @@ public class DeleteTransactionDialog {
 
   public final void show() {
     dialog.showCentered();
+    builder.dispose();
   }
 
   private static String getContentKey(GlobList transactions) {

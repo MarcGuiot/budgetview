@@ -278,7 +278,9 @@ public class PicsouDialog extends JDialog {
   public void setAutoFocusOnOpen(final JTextField editor) {
     addWindowListener(new WindowAdapter() {
       public void windowOpened(WindowEvent e) {
-        GuiUtils.selectAndRequestFocus(editor);
+        if (colorUpdater != null){
+          GuiUtils.selectAndRequestFocus(editor);
+        }
       }
     });
   }

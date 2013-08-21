@@ -64,7 +64,7 @@ public class Download {
   }
 
   private WebResponse getWebResponse(String message) throws WebCommandFailed {
-    Log.write("download " + message);
+//    Log.write("download " + message);
     DownloadAttachmentHandler downloadAttachmentHandler = new DownloadAttachmentHandler();
     browser.getClient().setAttachmentHandler(downloadAttachmentHandler);
 

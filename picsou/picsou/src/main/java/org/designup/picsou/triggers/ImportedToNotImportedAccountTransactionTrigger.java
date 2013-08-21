@@ -44,7 +44,7 @@ public class ImportedToNotImportedAccountTransactionTrigger extends AbstractChan
               repository.delete(mirrorKey);
             }
           }
-          createMirrorTransactionIfNeeded(key, values, transaction, repository);
+          createMirrorTransactionIfNeeded(key, transaction, repository);
         }
         else {
           if (mirrorTransactionId != null) {
@@ -83,7 +83,7 @@ public class ImportedToNotImportedAccountTransactionTrigger extends AbstractChan
               }
             }
             else {
-              createMirrorTransactionIfNeeded(key, values, transaction, repository);
+              createMirrorTransactionIfNeeded(key, transaction, repository);
             }
           }
         }
@@ -99,8 +99,8 @@ public class ImportedToNotImportedAccountTransactionTrigger extends AbstractChan
     });
   }
 
-  private void createMirrorTransactionIfNeeded(Key key, FieldValuesWithPrevious values, Glob transaction, GlobRepository repository) {
-    Integer newSeriesId = values.get(Transaction.SERIES);
+  private void createMirrorTransactionIfNeeded(Key key, Glob transaction, GlobRepository repository) {
+    Integer newSeriesId = transaction.get(Transaction.SERIES);
     if (newSeriesId != null) {
       Glob series = repository.find(Key.create(Series.TYPE, newSeriesId));
       Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);

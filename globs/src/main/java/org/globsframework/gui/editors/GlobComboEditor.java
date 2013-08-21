@@ -144,8 +144,11 @@ public class GlobComboEditor
   }
 
   public void dispose() {
-    repository.addChangeListener(this);
-    combo = null;
+    if (combo != null){
+      repository.removeChangeListener(this);
+      selectionService.removeListener(this);
+      combo = null;
+    }
   }
 
   public GlobComboEditor setRenderer(ListCellRenderer renderer) {

@@ -227,8 +227,11 @@ public class GlobLinkComboEditor
   }
 
   public void dispose() {
-    repository.removeChangeListener(this);
-    selectionService.removeListener(this);
-    globComboView.dispose();
+    if (globComboView != null) {
+      repository.removeChangeListener(this);
+      selectionService.removeListener(this);
+      globComboView.dispose();
+      globComboView = null;
+    }
   }
 }

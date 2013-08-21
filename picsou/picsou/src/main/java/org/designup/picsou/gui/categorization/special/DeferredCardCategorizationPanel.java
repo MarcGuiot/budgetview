@@ -28,6 +28,7 @@ public class DeferredCardCategorizationPanel implements SpecialCategorizationPan
   private Directory directory;
   private JEditorPane message;
   private GlobRepeat repeat;
+  private String currentMsg = null;
 
   public DeferredCardCategorizationPanel() {
   }
@@ -101,16 +102,23 @@ public class DeferredCardCategorizationPanel implements SpecialCategorizationPan
   private void updateDisplay() {
     if (repository.contains(Series.TYPE, Matchers.deferredCardSeries())) {
       if (repeat.isEmpty()) {
-        message.setText(Lang.get("categorization.specialCases.deferredCard.invalidSelection"));
+        updateMessage("categorization.specialCases.deferredCard.invalidSelection");
       }
       else {
         controller.setShown(true);
-        message.setText(Lang.get("categorization.specialCases.deferredCard.select"));
+        updateMessage("categorization.specialCases.deferredCard.select");
       }
     }
     else {
-      message.setText(Lang.get("categorization.specialCases.deferredCard.noaccount"));
+      updateMessage("categorization.specialCases.deferredCard.noaccount");
     }
-    GuiUtils.revalidate(message);
+  }
+
+  private void updateMessage(String key) {
+    if (!key.equals(currentMsg)) {
+      currentMsg = key;
+      message.setText(Lang.get(key));
+      GuiUtils.revalidate(message);
+    }
   }
 }
