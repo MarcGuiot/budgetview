@@ -2,9 +2,6 @@
 
   <styles>
 
-    <ui name="wave" class="org.designup.picsou.gui.plaf.WavePanelUI"
-        topColor="wave.panel.top" bottomColor="wave.panel.bottom" waveColor="wave.panel.wave"/>
-
     <ui name="scrollPaneUI"
         class="org.designup.picsou.gui.components.ui.FlatScrollbarUI"
         color="scrollBar.idle" rolloverColor="scrollBar.rollover" background="scrollBar.bg"/>
@@ -243,8 +240,11 @@
     <style selector=".innerBlock"  foreground="block.inner.item"/>
     <style selector="label.alignActualAmount" foreground="block.inner.item" font="-,plain,12" marginLeft="5"/>
 
-    <style selector=".secondaryInnerBlock" opaque="true" background="block.inner.bg.secondary" border="line(block.inner.border)"/>
-
+    <style selector=".secondaryInnerBlock" opaque="true" background="block.inner.secondary.bg" border="line(block.inner.border)"/>
+    <style selector="label.secondarySectionTitle" font="-,bold,14" weightY="0.1"
+           foreground="block.inner.secondary.section.title" anchor="southwest" marginTop="10" marginLeft="10"/>
+    <style selector="label.secondarySectionSubtitle" font="-,plain,11" weightY="0.1"
+           foreground="block.inner.secondary.section.subtitle" anchor="southeast" marginTop="2"/>
 
     <style selector="button.amountLink" ui="hyperlinkButtonWithoutUnderline"
            fill="none" anchor="right" horizontalAlignment="right"
@@ -355,7 +355,7 @@
 
     <style selector=".detailGauge"
            opaque="true" font="-,plain,12"
-           foreground="gauge.detail.fg" background="block.inner.bg" highlightedBackgroundColor="gauge.detail.bg.highlighted"
+           foreground="gauge.detail.fg" background="block.inner.bg"
            fill="horizontal" anchor="center" preferredSize="(40,22)" weightX="10"
            borderColor="gauge.detail.border" rolloverBorderColor="gauge.detail.border.rollover"
            emptyColorTop="gauge.detail.empty.top" emptyColorBottom="gauge.detail.empty.bottom"
@@ -363,7 +363,9 @@
            overrunColorTop="gauge.detail.overrun.top" overrunColorBottom="gauge.detail.overrun.bottom"
            overrunErrorColorTop="gauge.detail.warning.top" overrunErrorColorBottom="gauge.detail.warning.bottom"
            rolloverLabelColor="gauge.detail.label.rollover" labelShadowColor="gauge.detail.label.shadow"
-           inactiveLabelColor="gauge.detail.label.inactive" highlightedLabelColor="gauge.detail.label.highlighted"
+           inactiveLabelColor="gauge.detail.label.inactive"
+           highlightedBackgroundColor="gauge.detail.bg.highlighted"
+           highlightedLabelColor="gauge.detail.label.highlighted"
             />
 
     <!-- Selection toggles -->

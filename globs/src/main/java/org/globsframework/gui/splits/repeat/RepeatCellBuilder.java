@@ -4,6 +4,8 @@ import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.DefaultCardHandler;
+import org.globsframework.gui.splits.utils.OnLoadListener;
+import org.globsframework.utils.Functor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,4 +23,5 @@ public interface RepeatCellBuilder {
 
   void addDisposeListener(Disposable disposable);
 
+  void addOnLoadListener(OnLoadListener listener);
 }

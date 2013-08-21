@@ -3,6 +3,7 @@
   <styles>
     <style selector="label.field" weightX="0.1" anchor="right" marginRight="5"/>
     <style selector="component#amountEditor" marginRight="8"/>
+    <style selector="button#actionsButton" fill="none" anchor="center"/>
     <style selector="scrollPane htmlEditorPane" margin="2"/>
     <style selector="button.validation" ui="hyperlinkButton" font="-,plain,11" foreground="hyperlink"
            anchor="right" marginLeft="5" weightX="0.1"/>

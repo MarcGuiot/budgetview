@@ -12,12 +12,10 @@ import org.designup.picsou.gui.description.stringifiers.MonthFieldListStringifie
 import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.ProjectItemStat;
-import org.designup.picsou.model.CurrentMonth;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.ProjectItem;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.actions.ToggleBooleanAction;
 import org.globsframework.gui.editors.GlobMultiLineTextEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsNode;
@@ -88,9 +86,15 @@ public class ProjectItemPanel implements Disposable {
 
     ModifyAction modifyAction = new ModifyAction();
     ShowTransactionsAction showTransactionsAction = new ShowTransactionsAction();
+    final ToggleBooleanAction activateAction = new ToggleBooleanAction(itemKey, ProjectItem.ACTIVE,
+                                                                       Lang.get("projectEdition.setActive.textForTrue"),
+                                                                       Lang.get("projectEdition.setActive.textForFalse"),
+                                                                       parentRepository);
+    disposables.add(activateAction);
 
     JPopupMenu itemPopup = new JPopupMenu();
     itemPopup.add(modifyAction);
+    itemPopup.add(activateAction);
     itemPopup.addSeparator();
     itemPopup.add(showTransactionsAction);
     itemPopup.addSeparator();
@@ -109,7 +113,7 @@ public class ProjectItemPanel implements Disposable {
     disposables.add(styleUpdater);
 
     GlobImageLabelView imageLabel =
-      GlobImageLabelView.init(ProjectItem.PICTURE, ProjectEditionView.MAX_PICTURE_SIZE, parentRepository, directory)
+      GlobImageLabelView.init(ProjectItem.PICTURE, ProjectView.MAX_PICTURE_SIZE, parentRepository, directory)
         .setAutoHide(true)
         .forceKeySelection(itemKey);
     builder.add("imageLabel", imageLabel.getLabel());
@@ -184,7 +188,7 @@ public class ProjectItemPanel implements Disposable {
     disposables.add(nameField);
 
     GlobImageLabelView imageLabel =
-      GlobImageLabelView.init(ProjectItem.PICTURE, ProjectEditionView.MAX_PICTURE_SIZE, localRepository, directory)
+      GlobImageLabelView.init(ProjectItem.PICTURE, ProjectView.MAX_PICTURE_SIZE, localRepository, directory)
         .forceKeySelection(itemKey);
     builder.add("imageLabel", imageLabel.getLabel());
     builder.add("imageActions", imageLabel.getPopupButton(Lang.get("projectView.item.edition.imageActions")));

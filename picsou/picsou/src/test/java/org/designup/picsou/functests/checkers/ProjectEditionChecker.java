@@ -101,15 +101,6 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
-  public ProjectEditionChecker setItem(int index, String name, int monthId, double amount) {
-    edit(index)
-      .setLabel(name)
-      .setMonth(monthId)
-      .setAmount(amount)
-      .validate();
-    return this;
-  }
-
   public ProjectEditionChecker deleteItem(int index) {
     view(index).delete();
     return this;
@@ -178,7 +169,6 @@ public class ProjectEditionChecker extends ViewChecker {
 
   public void delete() throws Exception {
     getDeleteTrigger().run();
-    System.out.println("ProjectEditionChecker.delete: TODO: check unselect");
   }
 
   public void deleteWithConfirmation(String title, String message) {
@@ -186,14 +176,12 @@ public class ProjectEditionChecker extends ViewChecker {
       .checkTitle(title)
       .checkMessageContains(message)
       .validate("Delete project");
-    System.out.println("ProjectEditionChecker.deleteWithConfirmation: TODO: check unselect");
   }
 
   public void openDeleteAndNavigate() {
     ConfirmationDialogChecker.open(getDeleteTrigger())
       .clickOnHyperlink("see these operations")
       .checkHidden();
-    System.out.println("ProjectEditionChecker.deleteWithConfirmation: TODO: check unselect");
   }
 
   private Trigger getDeleteTrigger() {
@@ -225,5 +213,9 @@ public class ProjectEditionChecker extends ViewChecker {
   private Panel getItemPanel(int index) {
     Component[] panels = getPanel().getSwingComponents(JPanel.class, "projectItemPanel");
     return new Panel((JPanel)panels[index]);
+  }
+
+  public void backToList() {
+    getPanel().getButton("backToList").click();
   }
 }

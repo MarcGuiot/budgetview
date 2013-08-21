@@ -2,7 +2,6 @@ package org.designup.picsou.model;
 
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import com.sun.image.codec.jpeg.ImageFormatException;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Required;
@@ -70,12 +69,19 @@ public class Picture {
   }
 
   public static Icon getIcon(Glob glob, LinkField link, GlobRepository repository, Dimension maxSize) {
+    if ((maxSize.width == 0) || (maxSize.height == 0)) {
+      return null;
+    }
     Glob picture = repository.findLinkTarget(glob, link);
     if (picture == null) {
       return null;
     }
 
-    ImageIcon imageIcon = new ImageIcon(picture.get(IMAGE_DATA));
+    byte[] imageData = picture.get(IMAGE_DATA);
+    if (imageData == null) {
+      return null;
+    }
+    ImageIcon imageIcon = new ImageIcon(imageData);
     return new ImageIcon(resize(imageIcon.getImage(), maxSize));
   }
 

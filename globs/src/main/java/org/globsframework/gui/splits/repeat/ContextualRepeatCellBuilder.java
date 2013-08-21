@@ -5,6 +5,7 @@ import org.globsframework.gui.splits.impl.DefaultSplitsNode;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.DefaultCardHandler;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.splits.utils.OnLoadListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,5 +43,9 @@ public class ContextualRepeatCellBuilder implements RepeatCellBuilder {
 
   public void addDisposeListener(Disposable disposable) {
     repeatContext.addDisposable(disposable);
+  }
+
+  public void addOnLoadListener(OnLoadListener listener) {
+    repeatContext.addOnLoadListener(listener);
   }
 }

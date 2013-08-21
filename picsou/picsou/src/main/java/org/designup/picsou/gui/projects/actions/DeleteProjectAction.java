@@ -22,6 +22,11 @@ import java.util.TreeSet;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class DeleteProjectAction extends MultiSelectionAction {
+
+  public DeleteProjectAction(Key projectKey, GlobRepository repository, Directory directory) {
+    super(projectKey, Project.TYPE, repository, directory);
+  }
+
   public DeleteProjectAction(GlobRepository repository, Directory directory) {
     super(Project.TYPE, repository, directory);
   }

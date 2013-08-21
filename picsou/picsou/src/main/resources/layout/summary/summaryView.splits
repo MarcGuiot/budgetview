@@ -2,31 +2,27 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector="label.graphTitle" font="-,bold,14" weightY="0.1"
-           foreground="summary.graph.title" anchor="southwest" marginTop="10" marginLeft="10"/>
-    <style selector="label.graphSubTitle" font="-,plain,11" weightY="0.1"
-           foreground="summary.graph.subtitle" anchor="southeast" marginTop="2"/>
     <style selector="button.create" ui="hyperlinkButtonWithoutUnderline" weightY="0.1"
            foreground="block.item.link" font="-,plain,12" anchor="southeast"
            icon="arrow_right_blue.png" rolloverIcon="arrow_right_blue_rollover.png" fill="none"/>
     <style selector="component.chart" marginTop="5" marginLeft="10" opaque="true"
-           background="block.inner.bg.secondary"/>
+           background="block.inner.secondary.bg"/>
   </styles>
 
   <grid styleClass="secondaryInnerBlock">
-    <label gridPos="(0,0)" text="$summaryView.projects.title" styleClass="graphTitle"/>
+    <label gridPos="(0,0)" text="$summaryView.projects.title" styleClass="secondarySectionTitle"/>
     <button gridPos="(1,0)" action="createProject" styleClass="create" tooltipText="$projectView.create.tooltip"/>
 
     <component gridPos="(0,1,2,1)" ref="projectChart" styleClass="chart" weightY="8"/>
     <label gridPos="(2,1)" icon="rightArrow(12,50,10,40,summary.project.arrow)" weightX="0.01" marginLeft="4"/>
 
-    <label gridPos="(0,2)" text="$summaryView.mainAccounts.title" styleClass="graphTitle"/>
-    <label gridPos="(1,2)" text="$summaryView.mainAccounts.subtitle" styleClass="graphSubTitle"/>
+    <label gridPos="(0,2)" text="$summaryView.mainAccounts.title" styleClass="secondarySectionTitle"/>
+    <label gridPos="(1,2)" text="$summaryView.mainAccounts.subtitle" styleClass="secondarySectionSubtitle"/>
 
     <component gridPos="(0,3,2,1)" ref="mainAccountsHistoChart" styleClass="chart" weightY="10"/>
 
-    <label gridPos="(0,4)" text="$summaryView.savingsAccounts.title" styleClass="graphTitle"/>
-    <label gridPos="(1,4)" text="$summaryView.savingsAccounts.subtitle" styleClass="graphSubTitle"/>
+    <label gridPos="(0,4)" text="$summaryView.savingsAccounts.title" styleClass="secondarySectionTitle"/>
+    <label gridPos="(1,4)" text="$summaryView.savingsAccounts.subtitle" styleClass="secondarySectionSubtitle"/>
 
     <component gridPos="(0,5,2,1)" ref="savingsHistoChart" styleClass="chart" weightY="6" marginBottom="10"/>
   </grid>

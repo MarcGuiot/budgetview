@@ -3,6 +3,7 @@ package org.globsframework.gui.splits.repeat;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.impl.AbstractSplitsContext;
 import org.globsframework.gui.splits.styles.StyleContext;
+import org.globsframework.utils.Functor;
 import org.globsframework.utils.directory.Directory;
 
 public class RepeatContext extends AbstractSplitsContext {

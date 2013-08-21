@@ -6,6 +6,7 @@ import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.repeat.RepeatHandler;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.splits.utils.OnLoadListener;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import javax.swing.*;
@@ -25,6 +26,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
   private Map<JLabel, String> labelForAssociations = new HashMap<JLabel, String>();
   private Map<Disposable, Disposable> disposables = new HashMap<Disposable, Disposable>();
   private Map<String, HyperlinkListener> hyperlinkListenersByName = new HashMap<String, HyperlinkListener>();
+  private java.util.List<OnLoadListener> onLoadListeners;
 
   public void addComponent(String id, SplitsNode<Component> component) {
     if (componentsByName.containsKey(id)) {
@@ -188,6 +190,11 @@ public abstract class AbstractSplitsContext implements SplitsContext {
       }
       label.setLabelFor(targetComponent.getComponent());
     }
+    if (onLoadListeners != null) {
+      for (OnLoadListener listener : onLoadListeners) {
+        listener.processLoad();
+      }
+    }
   }
 
   public RepeatHandler getRepeat(String name) {
@@ -203,6 +210,13 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     if (previous != null){
       previous.dispose();
     }
+  }
+
+  public void addOnLoadListener(OnLoadListener listener) {
+    if (onLoadListeners == null) {
+      onLoadListeners = new ArrayList<OnLoadListener>();
+    }
+    onLoadListeners.add(listener);
   }
 
   protected static class AutoHideListener {

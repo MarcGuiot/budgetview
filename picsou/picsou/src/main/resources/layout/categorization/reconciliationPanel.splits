@@ -9,7 +9,7 @@
   </styles>
 
   <column name="reconciliationPanel">
-    <column border="line(block.inner.border)" opaque="true" background="block.inner.bg.secondary">
+    <column border="line(block.inner.border)" opaque="true" background="block.inner.secondary.bg">
     <column margin="15">
       <label text="$reconciliation.title" styleClass="title"/>
       <htmlEditorPane text="$reconciliation.reconcile.message"/>

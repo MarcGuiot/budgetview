@@ -26,8 +26,8 @@ import org.designup.picsou.gui.help.actions.SendLogsAction;
 import org.designup.picsou.gui.license.LicenseExpirationAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
-import org.designup.picsou.gui.mobile.EditMobileAccountAction;
 import org.designup.picsou.gui.mobile.DumpMobileXmlAction;
+import org.designup.picsou.gui.mobile.EditMobileAccountAction;
 import org.designup.picsou.gui.mobile.SendMobileDataAction;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
@@ -36,7 +36,7 @@ import org.designup.picsou.gui.notifications.NotificationsFlagView;
 import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.preferences.dev.DevOptionsAction;
 import org.designup.picsou.gui.printing.actions.PrintBudgetAction;
-import org.designup.picsou.gui.projects.ProjectEditionView;
+import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodBudgetAreaTrigger;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
@@ -64,7 +64,10 @@ import org.designup.picsou.gui.utils.DataCheckerAction;
 import org.designup.picsou.gui.utils.DumpDataAction;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.dev.*;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.AccountType;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.SignpostStatus;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -115,7 +118,7 @@ public class MainPanel {
   private TransactionView transactionView;
   private SeriesAnalysisView seriesAnalysisView;
   private CategorizationView categorizationView;
-  private ProjectEditionView projectEditionView;
+  private ProjectView projectView;
   private SignpostView signpostView;
   private Action threadsAction;
   private EditMobileAccountAction editMobileAccountAction;
@@ -156,12 +159,12 @@ public class MainPanel {
 
     ReplicationGlobRepository replicationGlobRepository =
       new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodBudgetAreaStat.TYPE);
-    projectEditionView = new ProjectEditionView(repository, directory);
+    projectView = new ProjectView(repository, directory);
 
     BudgetToggle budgetToggle = new BudgetToggle(repository);
     budgetToggle.registerComponents(builder);
 
-    directory.add(new NavigationService(transactionView, categorizationView, projectEditionView, budgetToggle, repository, directory));
+    directory.add(new NavigationService(transactionView, categorizationView, projectView, budgetToggle, repository, directory));
 
     importFileAction = ImportFileAction.initForMenu(Lang.get("import"), repository, directory);
     exportFileAction = new ExportFileAction(repository, directory);
@@ -200,7 +203,7 @@ public class MainPanel {
       seriesAnalysisView,
       new SavingsView(replicationGlobRepository, directory),
       new SummaryView(repository, directory),
-      projectEditionView,
+      projectView,
       new FeedbackView(repository, directory),
       signpostView,
       licenseInfoView,

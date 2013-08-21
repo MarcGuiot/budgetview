@@ -9,6 +9,8 @@ import org.globsframework.model.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class ProjectItemToProjectStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     final Set<Integer> projectIds = new HashSet<Integer>();
@@ -42,11 +44,37 @@ public class ProjectItemToProjectStatTrigger implements ChangeSetListener {
   }
 
   private void updateProject(Glob project, GlobRepository repository) {
+
+    GlobList items = repository.findLinkedTo(project, ProjectItem.PROJECT);
+
     double totalPlanned = 0.00;
-    for (Glob item : repository.findLinkedTo(project, ProjectItem.PROJECT)) {
+    for (Glob item : items) {
       totalPlanned += item.get(ProjectItem.PLANNED_AMOUNT);
     }
     Key projectStatKey = Key.create(ProjectStat.TYPE, project.get(Project.ID));
     repository.update(projectStatKey, ProjectStat.PLANNED_AMOUNT, totalPlanned);
+
+    Integer firstMonth = null;
+    Integer lastMonth = null;
+    for (Glob item : items) {
+      Integer month = item.get(ProjectItem.MONTH);
+      if (month == null) {
+        continue;
+      }
+      if ((firstMonth == null) || (lastMonth == null)) {
+        firstMonth = month;
+        lastMonth = month;
+        continue;
+      }
+      if (month < firstMonth) {
+        firstMonth = month;
+      }
+      if (month > lastMonth) {
+        lastMonth = month;
+      }
+    }
+    repository.update(projectStatKey,
+                      value(ProjectStat.FIRST_MONTH, firstMonth),
+                      value(ProjectStat.LAST_MONTH, lastMonth));
   }
 }

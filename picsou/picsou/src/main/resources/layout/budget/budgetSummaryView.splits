@@ -43,8 +43,8 @@
 
   <column border="empty(10,10,10,10)">
 
-    <panel opaque="true" weightY="100" background="block.inner.bg.secondary" border="line(block.inner.border)">
-      <component ref="chart" minimumSize="(100,100)" background="block.inner.bg.secondary" margin="5"/>
+    <panel opaque="true" weightY="100" background="block.inner.secondary.bg" border="line(block.inner.border)">
+      <component ref="chart" minimumSize="(100,100)" background="block.inner.secondary.bg" margin="5"/>
     </panel>
 
     <row marginTop="4" styleClass="subRow">

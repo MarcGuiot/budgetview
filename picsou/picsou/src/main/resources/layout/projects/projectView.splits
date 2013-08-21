@@ -1,0 +1,14 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <column styleClass="projectView">
+    <cards ref="cards">
+      <card name="list">
+        <panel ref="projectListView"/>
+      </card>
+      <card name="edit">
+        <panel ref="projectEditionView"/>
+      </card>
+    </cards>
+  </column>
+
+</splits>

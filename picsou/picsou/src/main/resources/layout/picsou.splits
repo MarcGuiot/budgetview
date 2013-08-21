@@ -1,8 +1,10 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/picsouStyles.splits"/>
+  <styleImport file="/layout/mainStyles.splits"/>
 
   <styles>
+
     <ui name="masterViewSelector" class="org.globsframework.gui.splits.components.StyledToggleButtonUI"
         topColor="views.selector.top" bottomColor="views.selector.bottom"
         borderColor="views.selector.border" borderWidth="1" cornerRadius="10"/>
@@ -147,7 +149,7 @@
                     <label text="$projectView.title" styleClass="blockTitle"/>
                     <column styleClass="block">
                       <column styleClass="innerBlock">
-                        <panel ref="projectEditionView"/>
+                        <panel ref="projectView"/>
                       </column>
                     </column>
                   </column>

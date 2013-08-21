@@ -5,6 +5,7 @@ import java.awt.*;
 public class ScrollableFlowLayout extends FlowLayout {
 
   public ScrollableFlowLayout() {
+    super(FlowLayout.LEFT);
   }
 
   public ScrollableFlowLayout(int align) {

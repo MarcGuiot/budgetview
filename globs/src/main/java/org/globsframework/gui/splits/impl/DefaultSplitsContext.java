@@ -1,5 +1,6 @@
 package org.globsframework.gui.splits.impl;
 
+import org.globsframework.utils.Functor;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.gui.splits.styles.StyleContext;
 

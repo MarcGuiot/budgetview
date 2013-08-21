@@ -14,7 +14,7 @@
     <column styleClass="innerDialog">
       <label name="title" text="$userEvaluation.title" styleClass="title"/>
 
-      <column styleClass="innerBlockBackground" background="block.inner.bg.secondary">
+      <column styleClass="innerBlockBackground" background="block.inner.secondary.bg">
 
         <column margin="10">
           <label text="$userEvaluation.message" styleClass="formLabelTop"/>

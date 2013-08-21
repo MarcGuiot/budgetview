@@ -8,6 +8,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.components.EmptyIcon;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.LinkField;
@@ -129,15 +130,15 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
       return;
     }
 
-    Icon icon = Picture.getIcon(glob, link, repository, label.getSize());
+    Icon icon = Picture.getIcon(glob, link, repository, label.getPreferredSize());
     if (icon == null) {
-      label.setIcon(null);
+      label.setIcon(autoHide ? null : new EmptyIcon(label.getSize()));
       label.setVisible(!autoHide);
       return;
     }
 
-    label.setVisible(true);
     label.setIcon(icon);
+    label.setVisible(true);
   }
 
   public void dispose() {

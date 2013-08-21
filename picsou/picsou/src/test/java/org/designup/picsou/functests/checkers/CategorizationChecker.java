@@ -23,6 +23,8 @@ import javax.swing.AbstractButton;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
@@ -391,6 +393,21 @@ public class CategorizationChecker extends ViewChecker {
 
   public CategorizationChecker checkSelectedTableRows(int... rows) {
     assertTrue(getTable().rowsAreSelected(rows));
+    return this;
+  }
+
+  public CategorizationChecker checkSelectedTableRows(String... labels) {
+    SortedSet<Integer> rows = new TreeSet<Integer>();
+    for (String label : labels) {
+      int index = getTable().getRowIndex(2, label);
+      rows.add(index);
+    }
+    int[] array = new int[rows.size()];
+    int index = 0;
+    for (Integer row : rows) {
+      array[index++] = row;
+    }
+    checkSelectedTableRows(array);
     return this;
   }
 

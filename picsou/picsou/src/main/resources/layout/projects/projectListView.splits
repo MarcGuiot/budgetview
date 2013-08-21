@@ -1,0 +1,46 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label#name" fill="none" anchor="center"/>
+
+    <style selector="#projectButton"
+           preferredSize="(110,125)" font="-,plain,10"
+           foreground="projectView.list.item.details"
+           background="projectView.list.item.bg"
+           disabledBackground="projectView.list.item.bg.disabled"
+           borderColor="projectView.list.item.bg.border"
+           disabledBorderColor="projectView.list.item.bg.border.disabled"
+           rolloverBorderColor="projectView.list.item.bg.border.rollover"
+           gaugeBorderColor="gauge.detail.border"
+           gaugeEmptyColorTop="gauge.detail.empty.top"
+           gaugeEmptyColorBottom="gauge.detail.empty.bottom"
+           gaugeFilledColorTop="gauge.detail.filled.top"
+           gaugeFilledColorBottom="gauge.detail.filled.bottom"
+           gaugeOverrunColorTop="gauge.detail.overrun.top"
+           gaugeOverrunColorBottom="gauge.detail.overrun.bottom"
+           gaugeOverrunErrorColorTop="gauge.detail.warning.top"
+           gaugeOverrunErrorColorBottom="gauge.detail.warning.bottom"/>
+
+    <style id="activeProjectName" selector="x"
+           foreground="projectView.list.item.name"/>
+    <style id="inactiveProjectName" selector="x"
+           foreground="projectView.list.item.name.disabled"/>
+
+  </styles>
+
+  <column styleClass="secondaryInnerBlock">
+
+    <label text="$projectListView.currentProjects" styleClass="secondarySectionTitle"/>
+    <repeat ref="currentProjects" layout="wrappedRow">
+      <column name="projectBlock" marginTop="10">
+        <button ref="projectButton"/>
+        <label ref="name"/>
+      </column>
+    </repeat>
+
+    <filler fill="vertical"/>
+
+  </column>
+
+</splits>

@@ -36,9 +36,10 @@ public class SimpleGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> 
     return this;
   }
 
-  public void setKey(Key key) {
+  public SimpleGaugeView setKey(Key key) {
     this.key = key;
     update();
+    return this;
   }
 
   public Gauge getComponent() {
@@ -67,7 +68,7 @@ public class SimpleGaugeView extends AbstractGlobComponentHolder<GlobGaugeView> 
     double target = glob != null ? glob.get(targetValueField, 0.00) : 0.00;
     gauge.getModel().setValues(actual, target);
     if (autoHideIfEmpty) {
-      gauge.setVisible(Amounts.isNotZero(actual) && Amounts.isNotZero(target));
+      gauge.setVisible(Amounts.isNotZero(actual) || Amounts.isNotZero(target));
     }
   }
 }

@@ -35,34 +35,35 @@ public class GlobBooleanNodeStyleUpdater implements ChangeSetListener, Disposabl
     repository.addChangeListener(this);
   }
 
-  public void setKey(Key key) {
-    this.currentKey = key;
-    updateStyle();
-  }
-
-  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if ((currentKey != null) && changeSet.containsChanges(currentKey, field)) {
-      updateStyle();
-    }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(field.getGlobType())) {
-      updateStyle();
-    }
-  }
-
-  public void dispose() {
-    repository.removeChangeListener(this);
-  }
-
-  private void updateStyle() {
+  public void update() {
     if (currentKey == null) {
       return;
     }
     Glob project = repository.find(currentKey);
     if (project != null) {
-      splitsNode.applyStyle(project.isTrue(field) ? styleForTrue : styleForFalse);
+      String styleName = project.isTrue(field) ? styleForTrue : styleForFalse;
+      splitsNode.applyStyle(styleName);
     }
+  }
+
+  public void setKey(Key key) {
+    this.currentKey = key;
+    update();
+  }
+
+  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+    if ((currentKey != null) && changeSet.containsChanges(currentKey, field)) {
+      update();
+    }
+  }
+
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    if (changedTypes.contains(field.getGlobType())) {
+      update();
+    }
+  }
+
+  public void dispose() {
+    repository.removeChangeListener(this);
   }
 }

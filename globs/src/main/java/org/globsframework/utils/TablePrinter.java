@@ -32,8 +32,6 @@ public class TablePrinter {
       if (rows.isEmpty()) {
         return;
       }
-      header = new Object[rows.get(0).length];
-      Arrays.fill(header, "");
     }
     print(header, rows, printer);
   }
@@ -55,16 +53,25 @@ public class TablePrinter {
   }
 
   public static void print(Object[] headerRow, List<Object[]> rows, PrintWriter printer) {
-    int[] sizes = new int[headerRow.length];
+    List<Object[]> aggregated = new ArrayList<Object[]>();
+    if (headerRow != null) {
+      aggregated.add(headerRow);
+    }
+    aggregated.addAll(rows);
+    if (aggregated.isEmpty()) {
+      return;
+    }
+
+    Object[] firstRow = aggregated.get(0);
+    int[] sizes = new int[firstRow.length];
     Arrays.fill(sizes, 0);
 
     for (Object[] row : rows) {
-      if (row.length > headerRow.length) {
-        throw new InvalidParameter("Row larger than the header row: " + Arrays.toString(row));
+      if (row.length > firstRow.length) {
+        throw new InvalidParameter("Row larger than the first row: " + Arrays.toString(row));
       }
     }
 
-    updateSizes(headerRow, sizes);
     for (Object[] row : rows) {
       updateSizes(row, sizes);
     }
@@ -73,8 +80,6 @@ public class TablePrinter {
     for (Object[] row : rows) {
       strings.add(toString(row, sizes));
     }
-
-    printer.println(toString(headerRow, sizes));
     for (String string : Utils.sort(strings)) {
       printer.println(string);
     }

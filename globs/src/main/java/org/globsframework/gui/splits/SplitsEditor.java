@@ -25,11 +25,6 @@ public class SplitsEditor {
     JFrame frame =
       SplitsBuilder.init(builder.getDirectory())
         .setSource(SplitsEditor.class, "/splits/splitsEditor.splits")
-        .add("reload", new AbstractAction("Reload") {
-          public void actionPerformed(ActionEvent e) {
-            builder.load();
-          }
-        })
         .add("colorEditor", new ColorServiceEditor(colorService).getBuilder())
         .load();
 
@@ -43,10 +38,6 @@ public class SplitsEditor {
     JFrame frame =
       SplitsBuilder.init(directory)
         .setSource(SplitsEditor.class, "/splits/splitsEditor.splits")
-        .add("reload", new AbstractAction("Reload") {
-          public void actionPerformed(ActionEvent e) {
-          }
-        })
         .add("colorEditor", new ColorServiceEditor(colorService).getBuilder())
         .load();
 

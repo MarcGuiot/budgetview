@@ -218,7 +218,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("MyProject")
       .addItem(0, "Booking", 200808, -200.00)
@@ -228,8 +228,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("RESA")
       .selectExtras().selectSubSeries("MyProject", "Booking");
 
-    projects.checkProjectList("MyProject");
-    projects.checkProject("MyProject", 200808, 200810, 800.00);
+    projectChart.checkProjectList("MyProject");
+    projectChart.checkProject("MyProject", 200808, 200810, 800.00);
     currentProject.checkProjectGauge(-150.00, -800.00);
 
     timeline.selectMonth("2008/08");
@@ -242,10 +242,10 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     restartApplication();
 
-    projects.checkProjectList("MyProject");
-    projects.checkProject("MyProject", 200808, 200810, 800.00);
+    projectChart.checkProjectList("MyProject");
+    projectChart.checkProject("MyProject", 200808, 200810, 800.00);
 
-    projects.select("MyProject");
+    projectChart.select("MyProject");
     currentProject
       .checkProjectGauge(-150.00, -800.00)
       .checkItems("Booking | Aug 2008 | -150.00 | -200.00\n" +
