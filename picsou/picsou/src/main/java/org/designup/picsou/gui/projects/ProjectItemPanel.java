@@ -7,11 +7,13 @@ import org.designup.picsou.gui.components.MonthSlider;
 import org.designup.picsou.gui.components.PopupGlobFunctor;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
 import org.designup.picsou.gui.components.images.GlobImageLabelView;
+import org.designup.picsou.gui.components.images.IconFactory;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.description.stringifiers.MonthFieldListStringifier;
 import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.ProjectItemStat;
+import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -42,6 +44,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class ProjectItemPanel implements Disposable {
+
+  private static Dimension DEFAULT_ICON_SIZE = new Dimension(ProjectView.MAX_PICTURE_SIZE.width - 1,
+                                                             ProjectView.MAX_PICTURE_SIZE.height - 1);
 
   private final Key itemKey;
   private final GlobRepository parentRepository;
@@ -115,6 +120,7 @@ public class ProjectItemPanel implements Disposable {
     GlobImageLabelView imageLabel =
       GlobImageLabelView.init(ProjectItem.PICTURE, ProjectView.MAX_PICTURE_SIZE, parentRepository, directory)
         .setAutoHide(true)
+        .setDefaultIconFactory(createDefaultIconFactory(builder))
         .forceKeySelection(itemKey);
     builder.add("imageLabel", imageLabel.getLabel());
 
@@ -176,7 +182,7 @@ public class ProjectItemPanel implements Disposable {
   }
 
   private void createEditionPanel() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectItemEditionPanel.splits",
+    final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectItemEditionPanel.splits",
                                                       localRepository, directory);
 
     ValidateAction validate = new ValidateAction();
@@ -189,6 +195,7 @@ public class ProjectItemPanel implements Disposable {
 
     GlobImageLabelView imageLabel =
       GlobImageLabelView.init(ProjectItem.PICTURE, ProjectView.MAX_PICTURE_SIZE, localRepository, directory)
+        .setDefaultIconFactory(createDefaultIconFactory(builder))
         .forceKeySelection(itemKey);
     builder.add("imageLabel", imageLabel.getLabel());
     builder.add("imageActions", imageLabel.getPopupButton(Lang.get("projectView.item.edition.imageActions")));
@@ -222,6 +229,16 @@ public class ProjectItemPanel implements Disposable {
     builder.add("handler", new HyperlinkHandler(directory));
 
     editionPanel = builder.load();
+  }
+
+  private IconFactory createDefaultIconFactory(final GlobsPanelBuilder builder) {
+    return new IconFactory() {
+      public Icon createIcon(Dimension size) {
+        DefaultPictureIcon defaultIcon = new DefaultPictureIcon(size, directory);
+        builder.addDisposable(defaultIcon);
+        return defaultIcon;
+      }
+    };
   }
 
   private class ModifyAction extends AbstractAction {

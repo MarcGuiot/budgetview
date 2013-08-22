@@ -20,6 +20,7 @@ public class RoundedRectIcon implements Icon {
   }
 
   public void paintIcon(Component component, Graphics graphics, int i, int i2) {
+    graphics.fillRoundRect(0, 0, width - 1, height - 1, arcX, arcY);
     graphics.setColor(backgroundColor);
     graphics.fillRoundRect(0, 0, width - 1, height - 1, arcX, arcY);
     graphics.setColor(borderColor);

@@ -3,8 +3,10 @@ package org.designup.picsou.gui.projects;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
 import org.designup.picsou.gui.components.images.GlobImageLabelView;
+import org.designup.picsou.gui.components.images.IconFactory;
 import org.designup.picsou.gui.model.ProjectStat;
 import org.designup.picsou.gui.projects.actions.DeleteProjectAction;
+import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
 import org.designup.picsou.gui.projects.components.ProjectNameEditor;
 import org.designup.picsou.gui.projects.utils.ProjectItemComparator;
 import org.designup.picsou.gui.time.TimeService;
@@ -26,6 +28,7 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
@@ -76,7 +79,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectEditionView.splits",
+    final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectEditionView.splits",
                                                       repository, directory);
 
     final ModifyNameAction modify = new ModifyNameAction();
@@ -94,7 +97,15 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     builder.addToggleEditor("activeToggle", Project.ACTIVE);
     builder.add("modify", modify);
 
-    GlobImageLabelView imageLabel = GlobImageLabelView.init(Project.PICTURE, ProjectView.MAX_PICTURE_SIZE, repository, directory);
+    GlobImageLabelView imageLabel =
+      GlobImageLabelView.init(Project.PICTURE, ProjectView.MAX_PICTURE_SIZE, repository, directory)
+      .setDefaultIconFactory(new IconFactory() {
+        public Icon createIcon(Dimension size) {
+          DefaultPictureIcon defaultIcon = new DefaultPictureIcon(size, directory);
+          builder.addDisposable(defaultIcon);
+          return defaultIcon;
+        }
+      });
     builder.add("imageLabel", imageLabel.getLabel());
 
     totalActual = builder.addLabel("totalActual", ProjectStat.ACTUAL_AMOUNT);

@@ -26,6 +26,7 @@ public class ProjectButton extends JButton implements ChangeSetListener, Disposa
   private final Key projectKey;
   private final Key projectStatKey;
   private final GlobRepository repository;
+  private final Directory directory;
 
   private boolean active;
   private Icon icon;
@@ -38,8 +39,11 @@ public class ProjectButton extends JButton implements ChangeSetListener, Disposa
   private Color disabledBorderColor;
   private Color rolloverBorderColor;
 
+  private DefaultPictureIcon defaultIcon;
+
   public ProjectButton(final Key projectKey, final PopupMenuFactory factory, final GlobRepository repository, final Directory directory) {
     this.projectKey = projectKey;
+    this.directory = directory;
     this.projectStatKey = Key.create(ProjectStat.TYPE, projectKey.get(Project.ID));
     this.repository = repository;
     repository.addChangeListener(this);
@@ -96,10 +100,12 @@ public class ProjectButton extends JButton implements ChangeSetListener, Disposa
 
   public void dispose() {
     repository.removeChangeListener(this);
+    if (defaultIcon != null) {
+      defaultIcon.dispose();
+    }
   }
 
   private void updateComponents() {
-
     Glob project = repository.find(projectKey);
     active = project != null && project.isTrue(Project.ACTIVE);
 
@@ -126,7 +132,14 @@ public class ProjectButton extends JButton implements ChangeSetListener, Disposa
     int iconWidth = preferredSize.width - 1 - 10;
     int iconHeight = (int)(0.75 * (float)iconWidth);
     Glob project = repository.find(projectKey);
-    icon = Picture.getIcon(project, Project.PICTURE, repository, new Dimension(iconWidth, iconHeight));
+    Dimension iconSize = new Dimension(iconWidth, iconHeight);
+    icon = Picture.getIcon(project, Project.PICTURE, repository, iconSize);
+    if (icon == null) {
+      if (defaultIcon == null) {
+        defaultIcon = new DefaultPictureIcon(iconSize, directory);
+      }
+      icon = defaultIcon;
+    }
   }
 
   private void updatePlanned() {

@@ -3,12 +3,12 @@ package org.designup.picsou.gui.components.images;
 import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
+import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
 import org.designup.picsou.model.Picture;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.components.EmptyIcon;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.LinkField;
@@ -45,6 +45,7 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
   private JPopupButton popupButton;
   private GlobImageLabelView.PasteImageAction pasteImagesAction;
   private GlobImageLabelView.BrowseImageAction browseImagesAction;
+  private IconFactory defaultIconFactory = IconFactory.NULL_ICON_FACTORY;
 
   public static GlobImageLabelView init(LinkField link, Dimension maxSavedSize, GlobRepository repository, Directory directory) {
     return new GlobImageLabelView(link, maxSavedSize, repository, directory);
@@ -81,6 +82,11 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
 
   public GlobImageLabelView setAutoHide(boolean autoHide) {
     this.autoHide = autoHide;
+    return this;
+  }
+
+  public GlobImageLabelView setDefaultIconFactory(IconFactory factory) {
+    defaultIconFactory = factory;
     return this;
   }
 
@@ -132,7 +138,7 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
 
     Icon icon = Picture.getIcon(glob, link, repository, label.getPreferredSize());
     if (icon == null) {
-      label.setIcon(autoHide ? null : new EmptyIcon(label.getSize()));
+      label.setIcon(autoHide ? null : defaultIconFactory.createIcon(label.getPreferredSize()));
       label.setVisible(!autoHide);
       return;
     }
