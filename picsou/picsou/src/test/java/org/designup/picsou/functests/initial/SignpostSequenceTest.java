@@ -694,7 +694,8 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     checkNoSignpostVisible();
     if (checkData) {
       transactions.checkNotEmpty();
-      categorization.checkTableContains("WORLDCO");
+//      categorization.initContent().dumpCode();
+      categorization.checkTableContains("WORLDCO SALARY");
     }
     demoMessage.exit();
     demoMessage.checkHidden();
