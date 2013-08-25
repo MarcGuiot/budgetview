@@ -9,14 +9,10 @@ import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
-public class GlobBooleanNodeStyleUpdater implements ChangeSetListener, Disposable {
-  private BooleanField field;
+public class GlobBooleanNodeStyleUpdater extends AbstractGlobBooleanUpdater {
   private SplitsNode splitsNode;
   private String styleForTrue;
   private String styleForFalse;
-  private GlobRepository repository;
-
-  private Key currentKey;
 
   public static GlobBooleanNodeStyleUpdater init(BooleanField field, SplitsNode splitsNode,
                                                  String styleForTrue, String styleForFalse,
@@ -27,43 +23,14 @@ public class GlobBooleanNodeStyleUpdater implements ChangeSetListener, Disposabl
   public GlobBooleanNodeStyleUpdater(BooleanField field, SplitsNode splitsNode,
                                      String styleForTrue, String styleForFalse,
                                      GlobRepository repository) {
-    this.field = field;
+    super(field, repository);
     this.splitsNode = splitsNode;
     this.styleForTrue = styleForTrue;
     this.styleForFalse = styleForFalse;
-    this.repository = repository;
-    repository.addChangeListener(this);
   }
 
-  public void update() {
-    if (currentKey == null) {
-      return;
-    }
-    Glob project = repository.find(currentKey);
-    if (project != null) {
-      String styleName = project.isTrue(field) ? styleForTrue : styleForFalse;
-      splitsNode.applyStyle(styleName);
-    }
-  }
-
-  public void setKey(Key key) {
-    this.currentKey = key;
-    update();
-  }
-
-  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if ((currentKey != null) && changeSet.containsChanges(currentKey, field)) {
-      update();
-    }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(field.getGlobType())) {
-      update();
-    }
-  }
-
-  public void dispose() {
-    repository.removeChangeListener(this);
+  protected void doUpdate(boolean value) {
+    String styleName = value ? styleForTrue : styleForFalse;
+    splitsNode.applyStyle(styleName);
   }
 }

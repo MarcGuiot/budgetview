@@ -1,10 +1,13 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.functests.checkers.components.GaugeChecker;
+import org.designup.picsou.functests.checkers.components.MonthSliderChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.ToggleButton;
+
+import javax.swing.*;
 
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
@@ -17,7 +20,7 @@ public class ProjectItemViewChecker extends GuiChecker {
 
   public void checkValues(String label, String month, double actual, double planned) {
     assertThat(panel.getButton("itemButton").textEquals(label));
-    assertThat(panel.getTextBox("monthLabel").textEquals(month));
+    assertThat(panel.getPanel("monthSlider").getButton("month").textEquals(month));
     assertThat(panel.getButton("actualAmount").textEquals(toString(actual)));
     assertThat(panel.getButton("plannedAmount").textEquals(toString(planned)));
     checkGauge(actual, planned);
@@ -56,7 +59,7 @@ public class ProjectItemViewChecker extends GuiChecker {
   void write(StringBuilder builder) {
     builder.append(panel.getButton("itemButton").getLabel());
     builder.append(" | ");
-    builder.append(panel.getTextBox("monthLabel").getText());
+    builder.append(MonthSliderChecker.init(panel, "monthSlider").getText());
     builder.append(" | ");
     builder.append(panel.getButton("actualAmount").getLabel());
     builder.append(" | ");
@@ -69,6 +72,32 @@ public class ProjectItemViewChecker extends GuiChecker {
 
   public void modify() {
     panel.getButton("modify").click();
+  }
+
+  public ProjectItemViewChecker slideToPreviousMonth() {
+    MonthSliderChecker.init(panel, "monthSlider").previous();
+    return this;
+  }
+
+  public ProjectItemViewChecker slideToNextMonth() {
+    MonthSliderChecker.init(panel, "monthSlider").next();
+    return this;
+  }
+
+  public ProjectItemViewChecker checkCategorizationWarningNotShown() {
+    checkComponentVisible(panel, JLabel.class, "categorizationWarning", false);
+    return this;
+  }
+
+  public ProjectItemViewChecker checkCategorizationWarningShown(String message) {
+    checkComponentVisible(panel, JLabel.class, "categorizationWarning", true);
+    assertThat(panel.getTextBox("categorizationWarning").textEquals(message));
+    return this;
+  }
+
+  public ProjectItemViewChecker clickCategorizationWarning() {
+    panel.getButton("categorizationWarningAction").click();
+    return this;
   }
 
   private PopupButton getItemButton() {

@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.projects;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.components.MonthSlider;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
 import org.designup.picsou.gui.components.images.GlobImageLabelView;
 import org.designup.picsou.gui.components.images.IconFactory;
@@ -9,6 +10,7 @@ import org.designup.picsou.gui.projects.actions.DeleteProjectAction;
 import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
 import org.designup.picsou.gui.projects.components.ProjectNameEditor;
 import org.designup.picsou.gui.projects.utils.ProjectItemComparator;
+import org.designup.picsou.gui.projects.utils.ProjectPeriodSliderAdapter;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.model.ProjectItem;
@@ -45,6 +47,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
   private SimpleGaugeView gauge;
   private GlobLabelView totalActual;
   private GlobLabelView totalPlanned;
+  private MonthSlider monthSlider;
 
   public ProjectEditionView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -76,6 +79,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     totalActual.forceSelection(projectStatKey);
     totalPlanned.forceSelection(projectStatKey);
     gauge.setKey(projectStatKey);
+    monthSlider.setKey(projectStatKey);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -107,6 +111,9 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
         }
       });
     builder.add("imageLabel", imageLabel.getLabel());
+
+    monthSlider = new MonthSlider(new ProjectPeriodSliderAdapter(), repository, directory);
+    builder.add("monthSlider", monthSlider);
 
     totalActual = builder.addLabel("totalActual", ProjectStat.ACTUAL_AMOUNT);
     totalPlanned = builder.addLabel("totalPlanned", ProjectStat.PLANNED_AMOUNT);

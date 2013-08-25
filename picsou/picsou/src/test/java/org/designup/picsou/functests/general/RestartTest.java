@@ -248,9 +248,9 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     projectChart.select("MyProject");
     currentProject
       .checkProjectGauge(-150.00, -800.00)
-      .checkItems("Booking | Aug 2008 | -150.00 | -200.00\n" +
-                  "Travel | Oct 2008 | 0.00 | -100.00\n" +
-                  "Hotel | Oct 2008 | 0.00 | -500.00");
+      .checkItems("Booking | Aug | -150.00 | -200.00\n" +
+                  "Travel | Oct | 0.00 | -100.00\n" +
+                  "Hotel | Oct | 0.00 | -500.00");
 
     timeline.selectMonth("2008/08");
     budgetView.extras.checkSeries("MyProject", -150.00, -200.00);

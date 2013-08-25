@@ -175,8 +175,7 @@ public class Month {
     if (monthId == null) {
       return "";
     }
-    int month = toMonth(monthId);
-    return Lang.get("month." + toMonth(month) + ".long");
+    return Lang.get("month." + toMonth(monthId) + ".long");
   }
 
   public static String getFullMonthLabelWith4DigitYear(int monthId) {

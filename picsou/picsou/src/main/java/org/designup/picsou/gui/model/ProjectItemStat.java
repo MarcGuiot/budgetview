@@ -2,10 +2,8 @@ package org.designup.picsou.gui.model;
 
 import org.designup.picsou.model.ProjectItem;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.DefaultDouble;
-import org.globsframework.metamodel.annotations.DoublePrecision;
-import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.annotations.*;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
@@ -23,6 +21,9 @@ public class ProjectItemStat {
   @DefaultDouble(0.00)
   @DoublePrecision(4)
   public static DoubleField PLANNED_AMOUNT;
+
+  @DefaultBoolean(false)
+  public static BooleanField CATEGORIZATION_WARNING;
 
   static {
     GlobTypeLoader.init(ProjectItemStat.class);

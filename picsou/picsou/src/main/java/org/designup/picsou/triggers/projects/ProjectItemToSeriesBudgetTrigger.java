@@ -1,13 +1,13 @@
 package org.designup.picsou.triggers.projects;
 
 import com.budgetview.shared.utils.Amounts;
-import org.designup.picsou.model.Project;
-import org.designup.picsou.model.ProjectItem;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.gui.model.ProjectItemStat;
+import org.designup.picsou.gui.model.SubSeriesStat;
+import org.designup.picsou.model.*;
+import org.designup.picsou.model.util.AmountMap;
 import org.designup.picsou.model.util.ClosedMonthRange;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -56,31 +56,30 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
     Integer seriesId = project.get(Project.SERIES);
     Key seriesKey = project.getTargetKey(Project.SERIES);
 
+    // Gather months for the ProjectItems and Transactions associated to this project
     GlobList projectItems = repository.getAll(ProjectItem.TYPE, linkedTo(project, ProjectItem.PROJECT));
     SortedSet<Integer> months = new TreeSet<Integer>();
     months.addAll(projectItems.getValueSet(ProjectItem.MONTH));
+    GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId).getGlobs();
+    months.addAll(transactions.getValueSet(Transaction.BUDGET_MONTH));
     if (months.isEmpty()) {
       repository.update(seriesKey, Series.FIRST_MONTH, null);
       repository.update(seriesKey, Series.LAST_MONTH, null);
-      for (Glob seriesBudget : repository.getAll(SeriesBudget.TYPE, linkedTo(seriesKey, SeriesBudget.SERIES))) {
-        Double actualAmount = seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT, 0.00);
-        repository.update(seriesBudget.getKey(),
-                          value(SeriesBudget.PLANNED_AMOUNT, 0.00),
-                          value(SeriesBudget.ACTIVE, Amounts.isNotZero(actualAmount)));
-      }
       return;
     }
 
+    // Create missing SeriesBudget and set Series range
     ClosedMonthRange range = new ClosedMonthRange(months.first(), months.last());
-
-    // 1. Create all SeriesBudget
     for (Integer monthId : range.asList()) {
       SeriesBudget.findOrCreate(seriesId, monthId, repository);
     }
+    repository.update(seriesKey, Series.FIRST_MONTH, range.getMin());
+    repository.update(seriesKey, Series.LAST_MONTH, range.getMax());
 
-    // 2. Reset all SeriesBudget planned amount to 0.00
+    // Reset all SeriesBudget planned amount to 0.00 and compute total actual
     for (Glob seriesBudget : repository.getAll(SeriesBudget.TYPE, linkedTo(seriesKey, SeriesBudget.SERIES))) {
-      boolean hasActual = Amounts.isNotZero(seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT, 0.00));
+      Double actual = seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT, 0.00);
+      boolean hasActual = Amounts.isNotZero(actual);
       if (range.contains(seriesBudget.get(SeriesBudget.MONTH))) {
         repository.update(seriesBudget.getKey(),
                           value(SeriesBudget.PLANNED_AMOUNT, 0.00),
@@ -96,7 +95,7 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
       }
     }
 
-    // 3. Set all SeriesBudget planned amounts according to the active items
+    // Set all SeriesBudget planned amounts according to the active items
     if (project.isTrue(Project.ACTIVE)) {
       for (Glob item : projectItems) {
         if (item.isTrue(ProjectItem.ACTIVE)) {
@@ -109,8 +108,5 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
         }
       }
     }
-
-    repository.update(seriesKey, Series.FIRST_MONTH, range.getMin());
-    repository.update(seriesKey, Series.LAST_MONTH, range.getMax());
   }
 }

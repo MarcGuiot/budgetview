@@ -20,7 +20,10 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
+import java.awt.image.RescaleOp;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -55,6 +58,24 @@ public class Picture {
   public static void setIcon(org.globsframework.model.Key key, LinkField link, GlobRepository repository, String path, Dimension maxSize) throws InvalidFormat {
     byte[] bytes = getScaledImageAsBytes(path, maxSize);
     doSetLink(key, link, repository, bytes);
+  }
+
+  public static ImageIcon toGrayscale(ImageIcon imageIcon) {
+
+    BufferedImage bufferedImage = new BufferedImage(imageIcon.getIconWidth(),
+                                                    imageIcon.getIconHeight(),
+                                                    BufferedImage.TYPE_INT_RGB);
+    Graphics g = bufferedImage.createGraphics();
+    g.drawImage(imageIcon.getImage(), 0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), Color.WHITE, null);
+    g.dispose();
+    ColorConvertOp grayscale =
+      new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
+    grayscale.filter(bufferedImage, bufferedImage);
+
+    RescaleOp brighten = new RescaleOp(1.8f, 15, null);
+    brighten.filter(bufferedImage, bufferedImage);
+
+    return new ImageIcon(bufferedImage);
   }
 
   private static void doSetLink(org.globsframework.model.Key key, LinkField link, GlobRepository repository, byte[] bytes) {
@@ -129,6 +150,7 @@ public class Picture {
     Graphics g = bufferedImage.createGraphics();
     g.drawImage(icon.getImage(), 0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), Color.WHITE, null);
     g.dispose();
+
     return bufferedImage;
   }
 

@@ -18,6 +18,13 @@
     <style selector=".itemLabel"
            font="-,plain,11" foreground="projectView.item.view.label"/>
 
+    <style selector="#monthSlider"
+           font="-,plain,11" fixedWidth="true"
+           foreground="projectView.view.month.text"
+           iconColor="projectView.view.month.arrow"
+           rolloverIconColor="#0000FF"
+      />
+
     <ui name="amountLinkUI" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         underline="false" useNormalColorWhenDisabled="false" autoHideEnabled="false"
         disabledColor="block.item.link.inactive"/>
@@ -40,13 +47,22 @@
     <style selector="toggleButton#activeToggle" ui="onOffToggle"
            weightX="0" fill="none" anchor="center"
            minimumSize="(26,14)" preferredSize="(26,14)"/>
+
+    <style selector="#categorizationWarning"
+           font="-,plain,11" foreground="projectView.item.view.categorizationWarning.text"/>
+
+    <style selector=".categorizationWarningAction"
+           ui="hyperlinkButton"
+           font="-,plain,11" autoHideIfDisabled="true" foreground="projectView.item.view.categorizationWarning.link"/>
+
+    <style selector="#link"  ui="hyperlinkButton" font="-,plain,10" foreground="projectView.item.view.link"/>
   </styles>
 
   <column name="projectItemViewPanel"
           layout="org.designup.picsou.gui.projects.utils.ProjectItemViewLayout"
           opaque="true" background="projectView.item.bg.view">
     <button ref="itemButton"/>
-    <label ref="monthLabel" styleClass="itemLabel"/>
+    <component ref="monthSlider"/>
     <component ref="itemGauge" styleClass="detailGauge" preferredSize="(30,14)"/>
     <button ref="actualAmount" styleClass="amountButton"/>
     <label name="slashLabel" text="/" styleClass="itemLabel"/>
@@ -54,7 +70,9 @@
     <toggleButton ref="activeToggle"/>
     <button action="modify" styleClass="editIcon"/>
     <label ref="imageLabel" preferredSize="(100,70)"/>
-    <button ref="link" ui="hyperlinkButton" font="-,plain,10"/>
+    <label ref="categorizationWarning"/>
+    <button action="categorizationWarningAction" styleClass="categorizationWarningAction"/>
+    <button ref="link"/>
     <htmlEditorPane ref="description" editable="false" border="none" font="-,plain,10"/>
   </column>
 </splits>

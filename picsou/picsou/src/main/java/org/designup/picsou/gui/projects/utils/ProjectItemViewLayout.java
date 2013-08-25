@@ -54,9 +54,9 @@ public class ProjectItemViewLayout implements LayoutManager {
     private int itemButtonLeft;
     private int itemButtonTop;
     private int itemButtonWidth;
-    private Dimension monthLabelSize;
-    private int monthLabelLeft;
-    private int monthLabelTop;
+    private Dimension monthSliderSize;
+    private int monthSliderLeft;
+    private int monthSliderTop;
     private Dimension actualAmountSize;
     private int actualAmountRealWidth;
     private int actualAmountLeft;
@@ -90,6 +90,13 @@ public class ProjectItemViewLayout implements LayoutManager {
     private int descriptionTop;
     private int firstRowBottom;
     private final int insetsHeight;
+    private Dimension categorizationWarningSize;
+    private Dimension categorizationWarningActionSize;
+    private int categorizationWarningSpace;
+    private int categorizationWarningTop;
+    private int categorizationWarningLeft;
+    private int categorizationWarningActionTop;
+    private int categorizationWarningActionLeft;
 
     public Metrics(Container target) {
       Insets insets = target.getInsets();
@@ -113,8 +120,8 @@ public class ProjectItemViewLayout implements LayoutManager {
           firstRowBottom = top + fontMetrics.getAscent();
           itemButtonSize.height = fontMetrics.getAscent() + fontMetrics.getDescent();
         }
-        else if (component.getName().equals("monthLabel")) {
-          monthLabelSize = GuiUtils.maxSize(component, "Aaaaa 2013");
+        else if (component.getName().equals("monthSlider")) {
+          monthSliderSize = component.getPreferredSize();
         }
         else if (component.getName().equals("actualAmount")) {
           actualAmountSize = GuiUtils.maxSize(component, MAX_AMOUNT_STRING);
@@ -165,6 +172,27 @@ public class ProjectItemViewLayout implements LayoutManager {
             descriptionSize = new Dimension(0, 0);
           }
         }
+        else if (component.getName().equals("categorizationWarning")) {
+          if (component.isVisible()) {
+            categorizationWarningSize = component.getPreferredSize();
+            categorizationWarningSpace = VERTICAL_MARGIN;
+          }
+          else {
+            categorizationWarningSize = new Dimension(0,0);
+            categorizationWarningSpace = 0;
+          }
+        }
+        else if (component.getName().equals("categorizationWarningAction")) {
+          if (component.isVisible()) {
+            categorizationWarningActionSize = component.getPreferredSize();
+          }
+          else {
+            categorizationWarningActionSize = new Dimension(0,0);
+          }
+        }
+        else {
+          throw new InvalidParameter("Unexpected component found: " + component);
+        }
       }
 
       itemButtonLeft = left;
@@ -181,22 +209,26 @@ public class ProjectItemViewLayout implements LayoutManager {
       actualAmountTop = firstRowBottom - actualAmountSize.height;
       gaugeLeft = slashLabelLeft - SPACE - actualAmountSize.width - SPACE - gaugeSize.width;
       gaugeTop = firstRowBottom - gaugeSize.height;
-      monthLabelLeft = gaugeLeft - SPACE - monthLabelSize.width;
-      monthLabelTop = firstRowBottom - monthLabelSize.height;
+      monthSliderLeft = gaugeLeft - SPACE - monthSliderSize.width;
+      monthSliderTop = firstRowBottom - monthSliderSize.height;
       imageLabelLeft = left + IMAGE_LEFT_MARGIN;
       imageLabelTop = firstRowBottom + imageVerticalMargin;
+      categorizationWarningTop = firstRowBottom + categorizationWarningSpace;
+      categorizationWarningLeft= imageLabelLeft + imageLabelSize.width + imageRightMargin;
+      categorizationWarningActionTop = firstRowBottom + linkVerticalMargin;
+      categorizationWarningActionLeft = categorizationWarningLeft + categorizationWarningSize.width + SPACE;
       linkLeft = imageLabelLeft + imageLabelSize.width + imageRightMargin;
-      linkTop = firstRowBottom + linkVerticalMargin;
+      linkTop = categorizationWarningTop + categorizationWarningSize.height + linkVerticalMargin;
       descriptionLeft = linkLeft;
       descriptionTop = linkTop + linkSize.height + linkVerticalMargin;
-      itemButtonWidth = Math.min(itemButtonSize.width, monthLabelLeft - SPACE - left);
+      itemButtonWidth = Math.min(itemButtonSize.width, monthSliderLeft - SPACE - left);
     }
 
     public int getHeight() {
       return insetsHeight
              + itemButtonSize.height
              + Math.max(imageVerticalMargin + imageLabelSize.height,
-                        linkVerticalMargin + linkSize.height + linkVerticalMargin + descriptionSize.height);
+                        categorizationWarningSize.height + linkVerticalMargin + linkSize.height + linkVerticalMargin + descriptionSize.height);
     }
 
     public void layoutComponents(Container parent) {
@@ -205,9 +237,9 @@ public class ProjectItemViewLayout implements LayoutManager {
           component.setBounds(itemButtonLeft, itemButtonTop,
                               itemButtonWidth, itemButtonSize.height);
         }
-        else if (component.getName().equals("monthLabel")) {
-          component.setBounds(monthLabelLeft, monthLabelTop,
-                              monthLabelSize.width, monthLabelSize.height);
+        else if (component.getName().equals("monthSlider")) {
+          component.setBounds(monthSliderLeft, monthSliderTop,
+                              monthSliderSize.width, monthSliderSize.height);
         }
         else if (component.getName().equals("actualAmount")) {
           component.setBounds(actualAmountLeft, actualAmountTop,
@@ -236,6 +268,14 @@ public class ProjectItemViewLayout implements LayoutManager {
         else if (component.getName().equals("imageLabel")) {
           component.setBounds(imageLabelLeft, imageLabelTop,
                               imageLabelSize.width, imageLabelSize.height);
+        }
+        else if (component.getName().equals("categorizationWarning")) {
+          component.setBounds(categorizationWarningLeft, categorizationWarningTop,
+                              categorizationWarningSize.width, categorizationWarningSize.height);
+        }
+        else if (component.getName().equals("categorizationWarningAction")) {
+          component.setBounds(categorizationWarningActionLeft, categorizationWarningActionTop,
+                              categorizationWarningActionSize.width, categorizationWarningActionSize.height);
         }
         else if (component.getName().equals("link")) {
           component.setBounds(linkLeft, linkTop,

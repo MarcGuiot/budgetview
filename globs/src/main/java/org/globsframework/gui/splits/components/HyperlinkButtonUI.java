@@ -34,6 +34,7 @@ public class HyperlinkButtonUI extends BasicButtonUI {
     button.setRolloverEnabled(true);
     button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     button.setOpaque(false);
+    button.setBorder(null);
     initFontMetrics(button);
     updateVisibility(button);
   }

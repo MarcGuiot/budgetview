@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.GaugeChecker;
+import org.designup.picsou.functests.checkers.components.MonthSliderChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.gui.description.Formatting;
 import org.uispec4j.*;
@@ -190,11 +191,19 @@ public class ProjectEditionChecker extends ViewChecker {
     return button.triggerClick("Delete");
   }
 
-  private Panel getPanel() {
-    if (panel == null) {
-      panel = mainWindow.getPanel("projectEditionView");
-    }
-    return panel;
+  public ProjectEditionChecker setFirstMonth(int monthId) {
+    MonthSliderChecker.init(getProjectPanel(), "monthSlider").setMonth(monthId);
+    return this;
+  }
+
+  public ProjectEditionChecker slideToNextMonth() {
+    MonthSliderChecker.init(getProjectPanel(), "monthSlider").next();
+    return this;
+  }
+
+  public ProjectEditionChecker checkPeriod(String period) {
+    MonthSliderChecker.init(getProjectPanel(), "monthSlider").checkText(period);
+    return this;
   }
 
   public ProjectItemEditionChecker edit(int index) {
@@ -210,6 +219,17 @@ public class ProjectEditionChecker extends ViewChecker {
     return new ProjectItemViewChecker(getItemPanel(index));
   }
 
+  private Panel getPanel() {
+    if (panel == null) {
+      panel = mainWindow.getPanel("projectEditionView");
+    }
+    return panel;
+  }
+
+  private Panel getProjectPanel() {
+    return getPanel().getPanel("projectPanel");
+  }
+
   private Panel getItemPanel(int index) {
     Component[] panels = getPanel().getSwingComponents(JPanel.class, "projectItemPanel");
     return new Panel((JPanel)panels[index]);
@@ -217,5 +237,6 @@ public class ProjectEditionChecker extends ViewChecker {
 
   public void backToList() {
     getPanel().getButton("backToList").click();
+
   }
 }

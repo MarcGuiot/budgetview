@@ -1,0 +1,350 @@
+package org.designup.picsou.functests.projects;
+
+import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
+import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.TransactionType;
+
+public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
+
+  protected void setUp() throws Exception {
+    setCurrentMonth("2010/12");
+    super.setUp();
+  }
+
+  public void testMovingProjectItemsWhenThereAreAlreadyAssociatedTransactions() throws Exception {
+    operations.hideSignposts();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/01/10")
+      .addTransaction("2010/11/01", 1000.00, "Income")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/11/15", -50.00, "Resa")
+      .load();
+
+    projectChart.create();
+    currentProject
+      .setName("Trip")
+      .addItem(0, "Booking", 201011, -200.00)
+      .view(0)
+      .checkCategorizationWarningNotShown();
+
+    timeline.selectMonth("2010/11");
+    categorization.setExtra("RESA", "Trip", "Booking");
+    budgetView.extras
+      .checkTotalAmounts(-50.00, -200.00)
+      .checkSeries("Trip", -50.00, -200.00);
+
+    currentProject.view(0)
+      .checkCategorizationWarningNotShown();
+
+    projectChart.select("Trip");
+    currentProject.toggleAndEdit(0)
+      .setMonth(201012)
+      .validate();
+    currentProject.view(0)
+      .checkCategorizationWarningShown("Transactions from other months have been assigned to this item")
+      .clickCategorizationWarning();
+
+    views.checkDataSelected();
+    transactions.initContent()
+      .add("15/11/2010", TransactionType.PRELEVEMENT, "RESA", "", -50.00, "Trip / Booking")
+      .check();
+    timeline.checkSelection("2010/11");
+
+    timeline.selectMonth(201011);
+    budgetView.extras
+      .checkTotalAmounts(-50.00, 0.00)
+      .checkSeries("Trip", -50.00, 0.00);
+
+    timeline.selectMonth(201012);
+    budgetView.extras
+      .checkTotalAmounts(0.00, -200.00)
+      .checkSeries("Trip", 0.00, -200.00);
+
+    currentProject.view(0)
+      .checkCategorizationWarningShown("Transactions from other months have been assigned to this item")
+      .slideToPreviousMonth()
+      .checkCategorizationWarningNotShown();
+
+    timeline.selectMonth(201012);
+    budgetView.extras.checkSeriesNotPresent("Trip");
+
+    timeline.selectMonth(201011);
+    budgetView.extras
+      .checkTotalAmounts(-50.00, -200.00)
+      .checkSeries("Trip", -50.00, -200.00);
+  }
+
+  public void testSlidingTheWholeProject() throws Exception {
+    operations.hideSignposts();
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/01/10")
+      .addTransaction("2010/10/01", 1000.00, "Income")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/11/15", -100.00, "Resa")
+      .load();
+
+    projectChart.create();
+    currentProject
+      .setName("Trip")
+      .addItem(0, "Booking", 201012, -200.00)
+      .addItem(1, "Travel", 201102, -100.00)
+      .addItem(2, "Hotel", 201102, -400.00)
+    ;
+
+    // --- Slide to January - March 2011
+
+    views.selectHome();
+    projectChart.select("Trip");
+    currentProject
+      .setFirstMonth(201101)
+      .checkPeriod("January - March 2011")
+      .checkProjectGauge(0.00, -700.00)
+      .checkItems("Booking | Jan | 0.00 | -200.00\n" +
+                  "Travel | Mar | 0.00 | -100.00\n" +
+                  "Hotel | Mar | 0.00 | -400.00");
+
+    timeline.selectMonth(201012);
+    budgetView.extras
+      .checkTotalAmounts(0.00,  0.00)
+      .checkSeriesNotPresent("Trip");
+
+    timeline.selectMonth(201101);
+    budgetView.extras
+      .checkTotalAmounts(0.00,  -200.00)
+      .checkSeries("Trip", 0.00, -200.00);
+
+    timeline.selectMonth(201103);
+    budgetView.extras
+      .checkTotalAmounts(0.00,  -500.00)
+      .checkSeries("Trip", 0.00, -500.00);
+
+    // --- Slide to October - December 2010
+
+    currentProject
+      .setFirstMonth(201010)
+      .checkPeriod("October - December 2010")
+      .checkProjectGauge(0.00, -700.00)
+      .checkItems("Booking | Oct | 0.00 | -200.00\n" +
+                  "Travel | Dec | 0.00 | -100.00\n" +
+                  "Hotel | Dec | 0.00 | -400.00");
+
+    timeline.selectMonth("2010/12");
+    budgetView.extras
+      .checkTotalAmounts(0.00, -500.00)
+      .checkSeries("Trip", 0.00, -500.00);
+
+    timeline.selectMonth("2010/10");
+    budgetView.extras
+      .checkTotalAmounts(0.00, -200.00)
+      .checkSeries("Trip", 0.00, -200.00);
+
+    // --- Slide right to November 2010 - December 2011
+
+    currentProject
+      .slideToNextMonth()
+      .checkPeriod("November 2010 - January 2011")
+      .checkProjectGauge(0.00, -700.00)
+      .checkItems("Booking | Nov | 0.00 | -200.00\n" +
+                  "Travel | Jan | 0.00 | -100.00\n" +
+                  "Hotel | Jan | 0.00 | -400.00");
+
+    timeline.selectMonth("2010/12");
+    budgetView.extras
+      .checkTotalAmounts(0.00, 0.00)
+      .checkSeriesNotPresent("Trip");
+
+    timeline.selectMonth("2010/11");
+    budgetView.extras
+      .checkTotalAmounts(0.00, -200.00)
+      .checkSeries("Trip", 0.00, -200.00);
+  }
+
+  public void testSlidingTheProjectWhenTransactionsHaveAlreadyBeenAssigned() throws Exception {
+    operations.hideSignposts();
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
+    projectChart.create();
+    currentProject
+      .setName("Trip")
+      .addItem(0, "Booking", 201012, -200.00)
+      .addItem(1, "Travel", 201102, -100.00)
+      .addItem(2, "Hotel", 201102, -400.00)
+    ;
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2012/12/15")
+      .addTransaction("2010/10/01", 1000.00, "Income")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/12/15", -100.00, "Resa")
+      .load();
+
+    timeline.selectMonth("2010/12");
+    categorization.setExtra("RESA", "Trip", "Booking");
+
+    budgetView.extras
+      .checkTotalAmounts(-100.00, -200.00)
+      .checkSeries("Trip", -100.00, -200.00);
+
+    // --- Slide to January - March 2011
+
+    views.selectHome();
+    projectChart.select("Trip");
+    currentProject
+      .setFirstMonth(201101)
+      .checkPeriod("January - March 2011")
+      .checkProjectGauge(-100.00, -700.00)
+      .checkItems("Booking | Jan | -100.00 | -200.00\n" +
+                  "Travel | Mar | 0.00 | -100.00\n" +
+                  "Hotel | Mar | 0.00 | -400.00");
+    currentProject.view(0)
+      .checkCategorizationWarningShown("Transactions from other months have been assigned to this item");
+    currentProject.view(1)
+      .checkCategorizationWarningNotShown();
+
+    budgetView.extras
+      .checkTotalAmounts(-100.00,  0.00)
+      .checkSeries("Trip", -100.00, 0.00);
+
+    timeline.selectMonth(201101);
+    budgetView.extras
+      .checkTotalAmounts(0.00,  -200.00)
+      .checkSeries("Trip", 0.00, -200.00);
+
+    timeline.selectMonth(201103);
+    budgetView.extras
+      .checkTotalAmounts(0.00,  -500.00)
+      .checkSeries("Trip", 0.00, -500.00);
+
+    // --- Slide to October - December 2010
+
+    currentProject
+      .setFirstMonth(201010)
+      .checkPeriod("October - December 2010")
+      .checkProjectGauge(-100.00, -700.00)
+      .checkItems("Booking | Oct | -100.00 | -200.00\n" +
+                  "Travel | Dec | 0.00 | -100.00\n" +
+                  "Hotel | Dec | 0.00 | -400.00");
+    currentProject.view(0)
+      .checkCategorizationWarningShown("Transactions from other months have been assigned to this item");
+    currentProject.view(1)
+      .checkCategorizationWarningNotShown();
+
+    timeline.selectMonth("2010/12");
+    budgetView.extras
+      .checkTotalAmounts(-100.00, -500.00)
+      .checkSeries("Trip", -100.00, -500.00);
+
+    timeline.selectMonth("2010/10");
+    budgetView.extras
+      .checkTotalAmounts(0.00, -200.00)
+      .checkSeries("Trip", 0.00, -200.00);
+
+    // --- Slide right to November 2010 - January 2011
+
+    currentProject
+      .slideToNextMonth()
+      .checkPeriod("November 2010 - January 2011")
+      .checkProjectGauge(-100.00, -700.00)
+      .checkItems("Booking | Nov | -100.00 | -200.00\n" +
+                  "Travel | Jan | 0.00 | -100.00\n" +
+                  "Hotel | Jan | 0.00 | -400.00");
+    currentProject.view(0)
+      .checkCategorizationWarningShown("Transactions from other months have been assigned to this item");
+    currentProject.view(1)
+      .checkCategorizationWarningNotShown();
+
+    timeline.selectMonth("2010/12");
+    budgetView.extras
+      .checkTotalAmounts(-100.00, 0.00)
+      .checkSeries("Trip", -100.00, 0.00);
+
+    timeline.selectMonth("2010/11");
+    budgetView.extras
+      .checkTotalAmounts(0.00, -200.00)
+      .checkSeries("Trip", 0.00, -200.00);
+
+    // --- Slide right to December 2010 - February 2011
+
+    currentProject
+      .slideToNextMonth()
+      .checkPeriod("December 2010 - February 2011")
+      .checkProjectGauge(-100.00, -700.00)
+      .checkItems("Booking | Dec | -100.00 | -200.00\n" +
+                  "Travel | Feb | 0.00 | -100.00\n" +
+                  "Hotel | Feb | 0.00 | -400.00");
+    currentProject.view(0)
+      .checkCategorizationWarningNotShown();
+    currentProject.view(1)
+      .checkCategorizationWarningNotShown();
+
+    timeline.selectMonth("2010/12");
+    budgetView.extras
+      .checkTotalAmounts(-100.00, -200.00)
+      .checkSeries("Trip", -100.00, -200.00);
+
+    timeline.selectMonth("2010/11");
+    budgetView.extras
+      .checkTotalAmounts(0.00, -0.00)
+      .checkSeriesNotPresent("Trip");
+  }
+
+  public void testCategorizationWarningShownAndHiddenOnCategorization() throws Exception {
+    operations.hideSignposts();
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2012/12/15")
+      .addTransaction("2010/10/01", 1000.00, "Income")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/12/15", -100.00, "Air France")
+      .load();
+
+    projectChart.create();
+    currentProject
+      .setName("Trip")
+      .addItem(0, "Booking", 201012, -200.00)
+      .addItem(1, "Travel", 201102, -100.00)
+      .addItem(2, "Hotel", 201102, -400.00);
+    currentProject.view(0)
+      .checkCategorizationWarningNotShown();
+
+    timeline.selectMonth("2010/12");
+    categorization.setExtra("AIR FRANCE", "Trip", "Travel");
+
+    timeline.selectMonth(201012);
+    budgetView.extras
+      .checkTotalAmounts(-100.00, -200.00)
+      .checkSeries("Trip", -100.00, -200.00);
+
+    currentProject
+      .checkPeriod("December 2010 - February 2011")
+      .checkProjectGauge(-100.00, -700.00)
+      .checkItems("Booking | Dec | 0.00 | -200.00\n" +
+                  "Travel | Feb | -100.00 | -100.00\n" +
+                  "Hotel | Feb | 0.00 | -400.00");
+    currentProject.view(0)
+      .checkCategorizationWarningNotShown();
+    currentProject.view(1)
+      .checkCategorizationWarningShown("Transactions from other months have been assigned to this item")
+      .clickCategorizationWarning();
+
+    transactions.initContent()
+      .add("15/12/2010", TransactionType.PRELEVEMENT, "AIR FRANCE", "", -100.00, "Trip / Travel")
+      .check();
+    timeline.checkSelection("2010/12");
+
+    categorization.selectTransaction("AIR FRANCE").setUncategorized();
+
+    currentProject
+      .checkPeriod("December 2010 - February 2011")
+      .checkProjectGauge(0.00, -700.00)
+      .checkItems("Booking | Dec | 0.00 | -200.00\n" +
+                  "Travel | Feb | 0.00 | -100.00\n" +
+                  "Hotel | Feb | 0.00 | -400.00");
+    currentProject.view(1)
+      .checkCategorizationWarningNotShown();
+  }
+}

@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.functests.checkers.components.AmountEditorChecker;
+import org.designup.picsou.functests.checkers.components.MonthSliderChecker;
 import org.uispec4j.Panel;
 
 import javax.swing.*;
@@ -22,18 +23,12 @@ public class ProjectItemEditionChecker extends GuiChecker {
   }
 
   public ProjectItemEditionChecker setMonth(int monthId) {
-    MonthChooserChecker.selectMonth(panel.getButton("month").triggerClick(), monthId);
+    MonthSliderChecker.init(panel, "month").setMonth(monthId);
     return this;
   }
 
   public ProjectItemEditionChecker setAmount(double amount) {
     AmountEditorChecker.init(panel, "amountEditor").set(amount);
-    return this;
-  }
-
-  public ProjectItemEditionChecker validateAndCheckOpen() {
-    panel.getButton("validate").click();
-    assertTrue(enclosingPanel.containsSwingComponent(JPanel.class, "projectItemEditionPanel"));
     return this;
   }
 

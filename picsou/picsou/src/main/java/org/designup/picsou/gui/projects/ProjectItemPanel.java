@@ -5,12 +5,11 @@ import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.MonthSlider;
 import org.designup.picsou.gui.components.PopupGlobFunctor;
+import org.designup.picsou.gui.components.SingleMonthAdapter;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
 import org.designup.picsou.gui.components.images.GlobImageLabelView;
 import org.designup.picsou.gui.components.images.IconFactory;
 import org.designup.picsou.gui.components.tips.ErrorTip;
-import org.designup.picsou.gui.description.stringifiers.MonthFieldListStringifier;
-import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
@@ -24,10 +23,10 @@ import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.utils.AbstractGlobBooleanUpdater;
 import org.globsframework.gui.utils.GlobBooleanNodeStyleUpdater;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobHtmlView;
-import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -44,9 +43,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class ProjectItemPanel implements Disposable {
-
-  private static Dimension DEFAULT_ICON_SIZE = new Dimension(ProjectView.MAX_PICTURE_SIZE.width - 1,
-                                                             ProjectView.MAX_PICTURE_SIZE.height - 1);
 
   private final Key itemKey;
   private final GlobRepository parentRepository;
@@ -90,7 +86,7 @@ public class ProjectItemPanel implements Disposable {
                                                       parentRepository, directory);
 
     ModifyAction modifyAction = new ModifyAction();
-    ShowTransactionsAction showTransactionsAction = new ShowTransactionsAction();
+    ShowTransactionsAction showTransactionsAction = new ShowTransactionsAction("projectView.item.edition.actions.showTransactions");
     final ToggleBooleanAction activateAction = new ToggleBooleanAction(itemKey, ProjectItem.ACTIVE,
                                                                        Lang.get("projectEdition.setActive.textForTrue"),
                                                                        Lang.get("projectEdition.setActive.textForFalse"),
@@ -124,11 +120,10 @@ public class ProjectItemPanel implements Disposable {
         .forceKeySelection(itemKey);
     builder.add("imageLabel", imageLabel.getLabel());
 
-    GlobLabelView monthLabel = GlobLabelView.init(ProjectItem.TYPE, parentRepository, directory,
-                                                  new MonthFieldListStringifier(ProjectItem.MONTH, MonthRangeFormatter.COMPACT))
-      .forceSelection(itemKey);
-    builder.add("monthLabel", monthLabel);
-    disposables.add(monthLabel);
+    MonthSlider monthSlider = new MonthSlider(new SingleMonthAdapter(ProjectItem.MONTH), parentRepository, directory);
+    monthSlider.setKey(itemKey);
+    builder.add("monthSlider", monthSlider);
+    disposables.add(monthSlider);
 
     Key itemStatKey = Key.create(ProjectItemStat.TYPE, itemKey.get(ProjectItem.ID));
 
@@ -175,6 +170,15 @@ public class ProjectItemPanel implements Disposable {
 
     builder.add("modify", modifyAction);
 
+    JLabel categorizationWarning = new JLabel(Lang.get("projectView.item.categorizationWarning.message"));
+    builder.add("categorizationWarning", categorizationWarning);
+    Action categorizationWarningAction = new ShowTransactionsAction("projectView.item.categorizationWarning.show");
+    builder.add("categorizationWarningAction", categorizationWarningAction);
+    CategorizationWarningUpdater updater = new CategorizationWarningUpdater(itemStatKey,
+                                                                            categorizationWarning,
+                                                                            categorizationWarningAction);
+    disposables.add(updater);
+
     viewPanel = builder.load();
 
     styleUpdater.setKey(itemKey);
@@ -200,9 +204,10 @@ public class ProjectItemPanel implements Disposable {
     builder.add("imageLabel", imageLabel.getLabel());
     builder.add("imageActions", imageLabel.getPopupButton(Lang.get("projectView.item.edition.imageActions")));
 
-    MonthSlider monthButton = new MonthSlider(itemKey, ProjectItem.MONTH, localRepository, directory);
-    builder.add("monthEditor", monthButton);
-    disposables.add(monthButton);
+    MonthSlider monthSlider = new MonthSlider(new SingleMonthAdapter(ProjectItem.MONTH), localRepository, directory);
+    monthSlider.setKey(itemKey);
+    builder.add("monthEditor", monthSlider);
+    disposables.add(monthSlider);
 
     AmountEditor amountEditor =
       new AmountEditor(ProjectItem.PLANNED_AMOUNT, localRepository, directory, false, null)
@@ -345,8 +350,8 @@ public class ProjectItemPanel implements Disposable {
   }
 
   private class ShowTransactionsAction extends AbstractAction {
-    private ShowTransactionsAction() {
-      super(Lang.get("projectView.item.edition.actions.showTransactions"));
+    private ShowTransactionsAction(String messageKey) {
+      super(Lang.get(messageKey));
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -356,6 +361,24 @@ public class ProjectItemPanel implements Disposable {
         GlobList transactions = parentRepository.findLinkedTo(subSeries, Transaction.SUB_SERIES);
         directory.get(NavigationService.class).gotoData(transactions);
       }
+    }
+  }
+
+  private class CategorizationWarningUpdater extends AbstractGlobBooleanUpdater {
+
+    private JLabel label;
+    private Action action;
+
+    public CategorizationWarningUpdater(Key itemKey, JLabel label, Action categorizationWarningAction) {
+      super(ProjectItemStat.CATEGORIZATION_WARNING, parentRepository);
+      this.label = label;
+      this.action = categorizationWarningAction;
+      setKey(itemKey);
+    }
+
+    protected void doUpdate(boolean showWarning) {
+      label.setVisible(showWarning);
+      action.setEnabled(showWarning);
     }
   }
 }

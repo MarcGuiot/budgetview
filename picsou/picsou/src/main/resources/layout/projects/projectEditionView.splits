@@ -23,6 +23,15 @@
         unselectedTextColor="projectView.onoff.unselected.text"
         rolloverTextColor="projectView.onoff.text.rollover"
       />
+
+    <style selector="#monthSlider"
+           font="-,plain,11" fixedWidth="false"
+           marginLeft="10" marginRight="10"
+           foreground="projectView.view.month.text"
+           iconColor="projectView.view.month.arrow"
+           rolloverIconColor="#0000FF"
+      />
+
     <style selector="toggleButton#activeToggle" ui="onOffToggle"
            weightX="0" fill="none" anchor="center"
            minimumSize="(26,14)" preferredSize="(26,14)"/>
@@ -41,13 +50,14 @@
     <row name="projectPanel" margin="10" weightY="0.1" opaque="true" background="block.inner.bg" border="matte(1,1,1,1,projectView.border)">
       <label ref="imageLabel" margin="5" marginRight="10" minimumSize="(170,120)" preferredSize="(170,120)" fill="both"/>
       <column>
-        <row>
+        <row marginBottom="15">
           <component ref="projectNameEditor"/>
           <filler fill="horizontal" weightX="0.1"/>
           <toggleButton ref="activeToggle"/>
           <button action="modify" styleClass="editIcon"/>
         </row>
-        <row name="gaugePanel" opaque="false" autoHideSource="gauge" border="empty(10,0,10,0)">
+        <component ref="monthSlider" marginBottom="5"/>
+        <row name="gaugePanel" opaque="false" autoHideSource="gauge">
           <component ref="gauge" styleClass="totalGauge"/>
           <label ref="totalActual" styleClass="totalAmount"/>
           <label text=" / " styleClass="totalAmount" marginLeft="5" marginRight="5"/>

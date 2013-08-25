@@ -14,7 +14,7 @@
       <textField ref="nameField" gridPos="(0,0)"/>
 
       <label text="$projectView.item.edition.month" gridPos="(1,0)" styleClass="field"/>
-      <component ref="monthEditor" gridPos="(2,0)"/>
+      <component ref="monthEditor" gridPos="(2,0)" fill="none" anchor="left"/>
 
       <label text="$projectView.item.edition.planned" gridPos="(1,1)" styleClass="field"/>
       <component ref="amountEditor" gridPos="(2,1)" fill="horizontal"/>
