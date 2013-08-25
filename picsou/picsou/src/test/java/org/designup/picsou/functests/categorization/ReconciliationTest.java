@@ -63,9 +63,9 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .loadInAccount("Account 2");
     categorization.setNewVariable("VELIZY AUCHAN", "Food", 200.00);
     categorization.initContent()
-      .add("15/05/2012", "Groceries / Misc", "[R] AUCHAN", -50.00)
+      .add("12/05/2012", "Groceries / Misc", "[R] AUCHAN", -50.00)
       .add("15/05/2012", "", "CARREFOUR", -100.00)
-      .add("15/05/2012", "", "[R] FNAC", -100.00)
+      .add("01/05/2012", "", "[R] FNAC", -100.00)
       .add("12/04/2012", "", "FNAC PAIEMENTS", -75.00)
       .add("12/05/2012", "Food", "VELIZY AUCHAN", -50.00)
       .add("12/05/2012", "Food", "VELIZY AUCHAN", -25.00)
@@ -90,7 +90,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     categorization.initContent()
       .add("12/05/2012", "Groceries / Misc", "AUCHAN", -50.00)
       .add("15/05/2012", "", "CARREFOUR", -100.00)
-      .add("15/05/2012", "", "[R] FNAC", -100.00)
+      .add("01/05/2012", "", "[R] FNAC", -100.00)
       .add("12/04/2012", "", "FNAC PAIEMENTS", -75.00)
       .add("12/05/2012", "Food", "VELIZY AUCHAN", -25.00)
       .check();
@@ -108,7 +108,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     categorization.initContent()
       .add("12/05/2012", "Groceries / Misc", "AUCHAN", -50.00)
       .add("15/05/2012", "", "CARREFOUR", -100.00)
-      .add("20/05/2012", "", "[R] FNAC", -100.00)
+      .add("01/05/2012", "", "[R] FNAC", -100.00)
       .add("12/04/2012", "", "FNAC PAIEMENTS", -75.00)
       .add("12/05/2012", "Food", "VELIZY AUCHAN", -25.00)
       .add("20/05/2012", "Food", "VELIZY AUCHAN", -75.00)
@@ -222,8 +222,8 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkSummary(750.00, "2012/05/21");
 
     categorization.initContent()
-      .add("21/05/2012", "", "[R] AUCHAN 1", -50.00)
-      .add("21/05/2012", "", "[R] CHEQUE N° 12345", -100.00)
+      .add("20/05/2012", "", "[R] AUCHAN 1", -50.00)
+      .add("20/05/2012", "", "[R] CHEQUE N° 12345", -100.00)
       .add("21/05/2012", "", "CHEQUE N°00012345", -100.00)
       .add("01/05/2012", "", "VELIZY AUCHAN", -50.00)
       .check();
@@ -243,7 +243,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkSummary(850.00, "2012/05/21");
 
     categorization.initContent()
-      .add("21/05/2012", "", "[R] AUCHAN 1", -50.00)
+      .add("20/05/2012", "", "[R] AUCHAN 1", -50.00)
       .add("21/05/2012", "", "CHEQUE N°00012345", -100.00)
       .add("01/05/2012", "", "VELIZY AUCHAN", -50.00)
       .check();
@@ -301,15 +301,15 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .loadInAccount("Main");
 
     transactions.initAmountContent()
-      .add("11/05/2012", "AUCHAN 1", -50.00, "To categorize", 700.00, 700.00, "Main")
-      .add("11/05/2012", "CHEQUE N° 12345", -100.00, "To categorize", 750.00, 750.00, "Main")
       .add("11/05/2012", "AUCHAN 1", -50.00, "To categorize", 850.00, 850.00, "Main")
+      .add("10/05/2012", "AUCHAN 1", -50.00, "To categorize", 700.00, 700.00, "Main")
+      .add("10/05/2012", "CHEQUE N° 12345", -100.00, "To categorize", 750.00, 750.00, "Main")
       .add("10/05/2012", "CHEQUE N°0012345", -100.00, "To categorize", 900.00, 900.00, "Main")
       .check();
     categorization.initContent()
+      .add("10/05/2012", "", "[R] AUCHAN 1", -50.00)
       .add("11/05/2012", "", "AUCHAN 1", -50.00)
-      .add("11/05/2012", "", "[R] AUCHAN 1", -50.00)
-      .add("11/05/2012", "", "[R] CHEQUE N° 12345", -100.00)
+      .add("10/05/2012", "", "[R] CHEQUE N° 12345", -100.00)
       .add("10/05/2012", "", "CHEQUE N°0012345", -100.00)
       .check();
 
@@ -330,13 +330,13 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     transactions.initAmountContent()
       .add("11/05/2012", "AUCHAN 1", -50.00, "To categorize", 750.00, 750.00, "Main")
-      .add("11/05/2012", "CHEQUE N° 12345", -100.00, "To categorize", 800.00, 800.00, "Main")
       .add("10/05/2012", "CHEQUE N°0012345", -100.00, "To categorize", 900.00, 900.00, "Main")
+      .add("10/05/2012", "CHEQUE N° 12345", -100.00, "To categorize", 800.00, 800.00, "Main")
       .check();
 
     categorization.initContent()
       .add("11/05/2012", "", "AUCHAN 1", -50.00)
-      .add("11/05/2012", "", "CHEQUE N° 12345", -100.00)
+      .add("10/05/2012", "", "CHEQUE N° 12345", -100.00)
       .add("10/05/2012", "", "CHEQUE N°0012345", -100.00)
       .check();
 
@@ -351,7 +351,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     categorization.initContent()
       .add("11/05/2012", "", "AUCHAN 1", -50.00)
-      .add("11/05/2012", "", "CHEQUE N° 12345", -100.00)
+      .add("10/05/2012", "", "CHEQUE N° 12345", -100.00)
       .add("10/05/2012", "", "CHEQUE N°0012345", -100.00)
       .add("15/05/2012", "", "FNAC", -100.00)
       .check();
@@ -456,8 +456,8 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     transactions.initAmountContent()
       .add("20/05/2012", "OP 1", -50.00, "To categorize", 900.00, 900.00, "Main")
-      .add("14/05/2012", "OP 2", -40.00, "To categorize", 950.00, 950.00, "Main")
       .add("14/05/2012", "IMPORT OP 1", -10.00, "To categorize", 990.00, 990.00, "Main")
+      .add("12/05/2012", "OP 2", -40.00, "To categorize", 950.00, 950.00, "Main")
       .check();
 
     setCurrentDate("2012/05/22");
@@ -467,10 +467,10 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .loadInAccount("Main");
 
     transactions.initAmountContent()
-      .add("21/05/2012", "OP 2", -40.00, "To categorize", 890.00, 890.00, "Main")
-      .add("21/05/2012", "OP 1", -50.00, "To categorize", 930.00, 930.00, "Main")
       .add("21/05/2012", "IMPORT OP 3", -10.00, "To categorize", 980.00, 980.00, "Main")
+      .add("20/05/2012", "OP 1", -50.00, "To categorize", 930.00, 930.00, "Main")
       .add("14/05/2012", "IMPORT OP 1", -10.00, "To categorize", 990.00, 990.00, "Main")
+      .add("12/05/2012", "OP 2", -40.00, "To categorize", 890.00, 890.00, "Main")
       .check();
 
     setCurrentDate("2012/06/03");
@@ -480,9 +480,9 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .loadInAccount("Main");
 
     transactions.initAmountContent()
-      .add("02/06/2012", "OP 2", -40.00, "To categorize", 880.00, 880.00, "Main")
-      .add("02/06/2012", "OP 1", -50.00, "To categorize", 920.00, 920.00, "Main")
       .add("02/06/2012", "IMPORT OP 4", -10.00, "To categorize", 970.00, 970.00, "Main")
+      .add("20/05/2012", "OP 1", -50.00, "To categorize", 920.00, 920.00, "Main")
+      .add("12/05/2012", "OP 2", -40.00, "To categorize", 880.00, 880.00, "Main")
       .check();
   }
 
@@ -560,8 +560,8 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     operations.changeDate();
     transactions.initAmountContent()
       .add("20/05/2012", "OP 1", -50.00, "To categorize", 880.00, 880.00, "Main")
-      .add("13/05/2012", "OP 2", -40.00, "To categorize", 930.00, 930.00, "Main")
       .add("13/05/2012", "REAL OP 2", -20.00, "To categorize", 970.00, 970.00, "Main")
+      .add("12/05/2012", "OP 2", -40.00, "To categorize", 930.00, 930.00, "Main")
       .add("10/05/2012", "REAL OP 1", -10.00, "To categorize", 990.00, 990.00, "Main")
       .check();
 
@@ -576,9 +576,9 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .reconcile();
 
     transactions.initAmountContent()
-      .add("21/05/2012", "OP 2", -40.00, "To categorize", 880.00, 880.00, "Main")
       .add("21/05/2012", "REAL OP 3", -50.00, "To categorize", 920.00, 920.00, "Main")
       .add("13/05/2012", "REAL OP 2", -20.00, "To categorize", 970.00, 970.00, "Main")
+      .add("12/05/2012", "OP 2", -40.00, "To categorize", 880.00, 880.00, "Main")
       .add("10/05/2012", "REAL OP 1", -10.00, "To categorize", 990.00, 990.00, "Main")
       .check();
 
