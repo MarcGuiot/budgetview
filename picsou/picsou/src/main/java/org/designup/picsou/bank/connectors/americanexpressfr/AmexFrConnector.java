@@ -7,6 +7,7 @@ import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.utils.FilteringConnection;
 import org.designup.picsou.bank.connectors.webcomponents.*;
+import org.designup.picsou.bank.connectors.webcomponents.filters.WebFilters;
 import org.designup.picsou.bank.connectors.webcomponents.utils.*;
 import org.designup.picsou.exporter.ofx.OfxExporter;
 import org.designup.picsou.model.*;
@@ -123,7 +124,12 @@ public class AmexFrConnector extends WebBankConnector {
                 loadHomePage();
                 return null;
               }
-
+              WebAnchor anchor = browser.getCurrentPage()
+                .getAnchor(WebFilters.textContentContains("Détail de vos opérations"));
+              if (anchor == null){
+                return null;
+              }
+              anchor.click();
               doImport();
             }
             catch (final Exception e) {
@@ -138,11 +144,11 @@ public class AmexFrConnector extends WebBankConnector {
   public void downloadFile() throws Exception {
     notifyDownloadInProgress();
 
-    WebPage cardsPage = browser.getCurrentPage();
-    if (!cardsPage.containsTagWithId("a", "fr_myca_view_transactions")) {
-      return;
-    }
-    WebPage cardPage = cardsPage.getAnchorById("fr_myca_view_transactions").click();
+    WebPage cardPage = browser.getCurrentPage();
+//    if (!cardsPage.containsTagWithId("a", "fr_myca_view_transactions")) {
+//      return;
+//    }
+//    WebPage cardPage = cardsPage.getAnchorById("fr_myca_view_transactions").click();
     List<String> cardNames = cardPage.getSelectById("cardAccount").getEntryNames();
     if (cardNames.size() == 0) {
       throw new WebParsingError(cardPage.getSelectById("cardAccount"), "Found no accounts in select");
