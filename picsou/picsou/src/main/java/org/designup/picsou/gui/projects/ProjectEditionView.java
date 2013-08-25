@@ -9,6 +9,7 @@ import org.designup.picsou.gui.model.ProjectStat;
 import org.designup.picsou.gui.projects.actions.DeleteProjectAction;
 import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
 import org.designup.picsou.gui.projects.components.ProjectNameEditor;
+import org.designup.picsou.gui.projects.utils.ImageStatusUpdater;
 import org.designup.picsou.gui.projects.utils.ProjectItemComparator;
 import org.designup.picsou.gui.projects.utils.ProjectPeriodSliderAdapter;
 import org.designup.picsou.gui.time.TimeService;
@@ -48,6 +49,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
   private GlobLabelView totalActual;
   private GlobLabelView totalPlanned;
   private MonthSlider monthSlider;
+  private ImageStatusUpdater imageStatusUpdater;
 
   public ProjectEditionView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -80,6 +82,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     totalPlanned.forceSelection(projectStatKey);
     gauge.setKey(projectStatKey);
     monthSlider.setKey(projectStatKey);
+    imageStatusUpdater.setKey(currentProjectKey);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -111,6 +114,8 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
         }
       });
     builder.add("imageLabel", imageLabel.getLabel());
+
+    imageStatusUpdater = new ImageStatusUpdater(Project.ACTIVE, imageLabel, repository);
 
     monthSlider = new MonthSlider(new ProjectPeriodSliderAdapter(), repository, directory);
     builder.add("monthSlider", monthSlider);

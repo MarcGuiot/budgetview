@@ -72,8 +72,8 @@ public class Picture {
       new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
     grayscale.filter(bufferedImage, bufferedImage);
 
-    RescaleOp brighten = new RescaleOp(1.8f, 15, null);
-    brighten.filter(bufferedImage, bufferedImage);
+//    RescaleOp brighten = new RescaleOp(1.8f, 15, null);
+//    brighten.filter(bufferedImage, bufferedImage);
 
     return new ImageIcon(bufferedImage);
   }
@@ -89,7 +89,7 @@ public class Picture {
     }
   }
 
-  public static Icon getIcon(Glob glob, LinkField link, GlobRepository repository, Dimension maxSize) {
+  public static ImageIcon getIcon(Glob glob, LinkField link, GlobRepository repository, Dimension maxSize) {
     if ((maxSize.width == 0) || (maxSize.height == 0)) {
       return null;
     }
@@ -143,7 +143,7 @@ public class Picture {
     return byteArrayOut.toByteArray();
   }
 
-  private static BufferedImage toBufferedImage(ImageIcon icon) {
+  public static BufferedImage toBufferedImage(ImageIcon icon) {
     BufferedImage bufferedImage = new BufferedImage(icon.getIconWidth(),
                                                     icon.getIconHeight(),
                                                     BufferedImage.TYPE_INT_RGB);
@@ -152,6 +152,24 @@ public class Picture {
     g.dispose();
 
     return bufferedImage;
+  }
+
+  public static ImageIcon toImageIcon(Icon icon) {
+    if (icon instanceof ImageIcon) {
+      return (ImageIcon)icon;
+    }
+    else {
+      int w = icon.getIconWidth();
+      int h = icon.getIconHeight();
+      GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+      GraphicsDevice gd = ge.getDefaultScreenDevice();
+      GraphicsConfiguration gc = gd.getDefaultConfiguration();
+      BufferedImage image = gc.createCompatibleImage(w, h);
+      Graphics2D g = image.createGraphics();
+      icon.paintIcon(null, g, 0, 0);
+      g.dispose();
+      return new ImageIcon(image);
+    }
   }
 
   private static Image resize(Image image, Dimension maxSize) {

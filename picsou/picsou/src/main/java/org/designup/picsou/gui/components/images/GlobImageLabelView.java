@@ -3,7 +3,6 @@ package org.designup.picsou.gui.components.images;
 import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
-import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
 import org.designup.picsou.model.Picture;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -35,6 +34,7 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
   private final Dimension maxSavedSize;
   private boolean autoHide;
   private boolean forcedSelection;
+  private boolean enabled = true;
 
   private final GlobRepository repository;
   private Directory directory;
@@ -86,8 +86,13 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
   }
 
   public GlobImageLabelView setDefaultIconFactory(IconFactory factory) {
-    defaultIconFactory = factory;
+    this.defaultIconFactory = factory;
     return this;
+  }
+
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
+    updateIcon();
   }
 
   public GlobImageLabelView forceKeySelection(Key key) {
@@ -136,11 +141,15 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
       return;
     }
 
-    Icon icon = Picture.getIcon(glob, link, repository, label.getPreferredSize());
+    ImageIcon icon = Picture.getIcon(glob, link, repository, label.getPreferredSize());
     if (icon == null) {
       label.setIcon(autoHide ? null : defaultIconFactory.createIcon(label.getPreferredSize()));
       label.setVisible(!autoHide);
       return;
+    }
+
+    if (!enabled) {
+      icon = Picture.toGrayscale(icon);
     }
 
     label.setIcon(icon);
@@ -204,7 +213,7 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
       DataFlavor flavor = DataFlavor.imageFlavor;
       if (clipboard.isDataFlavorAvailable(flavor)) {
         try {
-          Image image = (Image) clipboard.getData(flavor);
+          Image image = (Image)clipboard.getData(flavor);
           Picture.setIcon(currentKey, link, repository, image, maxSavedSize);
         }
         catch (UnsupportedFlavorException exception) {

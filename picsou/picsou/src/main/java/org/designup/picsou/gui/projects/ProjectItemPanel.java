@@ -13,6 +13,7 @@ import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
+import org.designup.picsou.gui.projects.utils.ImageStatusUpdater;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -106,7 +107,6 @@ public class ProjectItemPanel implements Disposable {
     functor.setComponent(itemButton.getComponent());
     SplitsNode<JButton> itemButtonNode = builder.add("itemButton", itemButton.getComponent());
     disposables.add(itemButton);
-
     GlobBooleanNodeStyleUpdater styleUpdater =
       new GlobBooleanNodeStyleUpdater(ProjectItem.ACTIVE, itemButtonNode,
                                       "activeProjectItem", "inactiveProjectItem",
@@ -119,6 +119,7 @@ public class ProjectItemPanel implements Disposable {
         .setDefaultIconFactory(createDefaultIconFactory(builder))
         .forceKeySelection(itemKey);
     builder.add("imageLabel", imageLabel.getLabel());
+    disposables.add(new ImageStatusUpdater(itemKey, ProjectItem.ACTIVE, imageLabel, parentRepository));
 
     MonthSlider monthSlider = new MonthSlider(new SingleMonthAdapter(ProjectItem.MONTH), parentRepository, directory);
     monthSlider.setKey(itemKey);

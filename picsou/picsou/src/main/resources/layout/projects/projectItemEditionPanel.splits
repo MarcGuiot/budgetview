@@ -3,7 +3,9 @@
   <styles>
     <style selector="label.field" weightX="0.1" anchor="right" marginRight="5"/>
     <style selector="component#amountEditor" marginRight="8"/>
-    <style selector="button#actionsButton" fill="none" anchor="center"/>
+    <style selector="button.actionsButton" fill="none" anchor="center"/>
+    <style selector="label#imageLabel" preferredSize="(100,70)"
+           fill="none" anchor="center" margin="4"/>
     <style selector="scrollPane htmlEditorPane" margin="2"/>
     <style selector="button.validation" ui="hyperlinkButton" font="-,plain,11" foreground="hyperlink"
            anchor="right" marginLeft="5" weightX="0.1"/>
@@ -26,8 +28,7 @@
         <textArea ref="descriptionField" editable="true"/>
       </scrollPane>
 
-      <label ref="imageLabel" gridPos="(0,1,1,3)" preferredSize="(100,70)"
-             border="matte(1,1,1,1,projectView.item.link.border)" fill="both" margin="4" background="#FFFFFF"/>
+      <label ref="imageLabel" gridPos="(0,1,1,3)"/>
       <button ref="imageActions" gridPos="(0,4)" styleClass="actionsButton"/>
 
       <button action="cancel" gridPos="(3,4)" styleClass="validation"/>

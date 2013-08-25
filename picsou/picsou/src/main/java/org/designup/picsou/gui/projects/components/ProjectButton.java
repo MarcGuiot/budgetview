@@ -13,7 +13,6 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.KeyChangeListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -29,7 +28,7 @@ public class ProjectButton extends JButton implements ChangeSetListener, Disposa
   private final Directory directory;
 
   private boolean active;
-  private Icon icon;
+  private ImageIcon icon;
   private Gauge gauge;
   private String planned = "";
   private Integer monthId;
@@ -138,7 +137,10 @@ public class ProjectButton extends JButton implements ChangeSetListener, Disposa
       if (defaultIcon == null) {
         defaultIcon = new DefaultPictureIcon(iconSize, directory);
       }
-      icon = defaultIcon;
+      icon = Picture.toImageIcon(defaultIcon);
+    }
+    if ((project != null) && !project.isTrue(Project.ACTIVE)) {
+      icon = Picture.toGrayscale(icon);
     }
   }
 
