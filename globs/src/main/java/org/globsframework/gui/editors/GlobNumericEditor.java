@@ -17,7 +17,7 @@ import java.awt.event.ActionListener;
 import java.util.Date;
 
 public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEditor> {
-  private boolean absoluteValueMode = false;
+  private boolean positiveNumbersOnly = false;
   private Object valueForNull = null;
 
   public static GlobNumericEditor init(Field field, GlobRepository repository, Directory directory) {
@@ -37,16 +37,16 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
     return valueForNull;
   }
 
-  public GlobNumericEditor setAbsoluteValue(boolean value) {
-    this.absoluteValueMode = value;
+  public GlobNumericEditor setPositiveNumbersOnly(boolean value) {
+    this.positiveNumbersOnly = value;
     return this;
   }
 
   protected boolean checkValue(String text) {
     if ("-".equals(text)) {
-      return !absoluteValueMode;
+      return !positiveNumbersOnly;
     }
-    if (absoluteValueMode && text.startsWith("-")) {
+    if (positiveNumbersOnly && text.startsWith("-")) {
       return false;
     }
     if ("".equals(text)) {
@@ -73,7 +73,7 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
     if (text == null) {
       return "";
     }
-    if (absoluteValueMode && text.startsWith("-")) {
+    if (positiveNumbersOnly && text.startsWith("-")) {
       return text.substring(1);
     }
     return text;

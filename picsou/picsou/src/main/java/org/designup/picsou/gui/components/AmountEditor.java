@@ -27,7 +27,7 @@ public class AmountEditor implements Disposable {
                       boolean notifyOnKeyPressed, Double valueForNull) {
     numericEditor = new NumericEditor(field, repository, directory);
     numericEditor
-      .setAbsoluteValue(true)
+      .setPositiveNumbersOnly(true)
       .setValueForNull(valueForNull)
       .setNotifyOnKeyPressed(notifyOnKeyPressed);
     createPanel(repository, directory);

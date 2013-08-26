@@ -5,8 +5,8 @@ import org.designup.picsou.functests.checkers.components.GaugeChecker;
 import org.designup.picsou.functests.checkers.components.MonthSliderChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.gui.description.Formatting;
-import org.uispec4j.*;
 import org.uispec4j.Panel;
+import org.uispec4j.*;
 import org.uispec4j.Window;
 
 import javax.swing.*;
@@ -112,12 +112,20 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
-  public ProjectEditionChecker addItem(int index, String label, int month, double amount) {
+  public ProjectEditionChecker addItem(int index, String label, int firstMonth, double amount) {
+    return addItem(index, label, firstMonth, amount, 1);
+  }
+
+  public ProjectEditionChecker addItem(int index, String label, int firstMonth, double amount, int numberOfMonths) {
     addItem();
-    edit(index)
+    ProjectItemEditionChecker projectItemEditionChecker = edit(index)
       .setLabel(label)
-      .setMonth(month)
-      .setAmount(amount)
+      .setMonth(firstMonth)
+      .setAmount(amount);
+    if (numberOfMonths != 1) {
+      projectItemEditionChecker.setMonthCount(numberOfMonths);
+    }
+    projectItemEditionChecker
       .validate();
     return this;
   }

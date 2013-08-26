@@ -14,11 +14,15 @@ import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
 import org.designup.picsou.gui.projects.utils.ImageStatusUpdater;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.CurrentMonth;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.ProjectItem;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.actions.ToggleBooleanAction;
 import org.globsframework.gui.editors.GlobMultiLineTextEditor;
+import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.utils.Disposable;
@@ -56,6 +60,7 @@ public class ProjectItemPanel implements Disposable {
   private DisposableGroup disposables = new DisposableGroup();
   private GlobTextEditor nameField;
   private JTextField amountEditorField;
+  private GlobNumericEditor monthCountEditor;
 
   public ProjectItemPanel(Glob item, GlobRepository parentRepository, Directory directory) {
     this.itemKey = item.getKey();
@@ -134,9 +139,9 @@ public class ProjectItemPanel implements Disposable {
     builder.add("actualAmount", actualAmount);
     disposables.add(actualAmount);
 
-    GlobButtonView plannedAmount = GlobButtonView.init(ProjectItem.PLANNED_AMOUNT, parentRepository, directory,
+    GlobButtonView plannedAmount = GlobButtonView.init(ProjectItemStat.PLANNED_AMOUNT, parentRepository, directory,
                                                        new GlobListActionAdapter(modifyAction))
-      .forceSelection(itemKey);
+      .forceSelection(itemStatKey);
     SplitsNode<JButton> plannedAmountNode = builder.add("plannedAmount", plannedAmount.getComponent());
     disposables.add(plannedAmount);
 
@@ -188,7 +193,7 @@ public class ProjectItemPanel implements Disposable {
 
   private void createEditionPanel() {
     final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectItemEditionPanel.splits",
-                                                      localRepository, directory);
+                                                            localRepository, directory);
 
     ValidateAction validate = new ValidateAction();
 
@@ -205,7 +210,11 @@ public class ProjectItemPanel implements Disposable {
     builder.add("imageLabel", imageLabel.getLabel());
     builder.add("imageActions", imageLabel.getPopupButton(Lang.get("projectView.item.edition.imageActions")));
 
-    MonthSlider monthSlider = new MonthSlider(new SingleMonthAdapter(ProjectItem.MONTH), localRepository, directory);
+    MonthSlider monthSlider = new MonthSlider(new SingleMonthAdapter(ProjectItem.MONTH) {
+      public String convertToString(Integer monthId) {
+        return Month.getFullMonthLabelWith4DigitYear(monthId);
+      }
+    }, localRepository, directory);
     monthSlider.setKey(itemKey);
     builder.add("monthEditor", monthSlider);
     disposables.add(monthSlider);
@@ -218,6 +227,13 @@ public class ProjectItemPanel implements Disposable {
     builder.add("amountEditor", amountEditor.getPanel());
     disposables.add(amountEditor);
     amountEditorField = amountEditor.getNumericEditor().getComponent();
+
+    monthCountEditor = GlobNumericEditor.init(ProjectItem.MONTH_COUNT, localRepository, directory)
+      .setPositiveNumbersOnly(true)
+      .forceSelection(itemKey)
+      .setValidationAction(validate);
+    builder.add("monthCountEditor", monthCountEditor);
+    disposables.add(monthCountEditor);
 
     GlobTextEditor urlField = GlobTextEditor.init(ProjectItem.URL, localRepository, directory)
       .forceSelection(itemKey);
@@ -282,6 +298,17 @@ public class ProjectItemPanel implements Disposable {
                         Lang.get("projectEdition.error.noItemName"),
                         directory);
       GuiUtils.selectAndRequestFocus(nameField);
+      return false;
+    }
+
+    Glob projectItem = localRepository.get(itemKey);
+    Integer count = projectItem.get(ProjectItem.MONTH_COUNT);
+    if (count == null || count < 1) {
+      JTextField monthCountField = monthCountEditor.getComponent();
+      ErrorTip.showLeft(monthCountField,
+                        Lang.get("projectEdition.error.invalidMonthCount"),
+                        directory);
+      GuiUtils.selectAndRequestFocus(monthCountField);
       return false;
     }
 

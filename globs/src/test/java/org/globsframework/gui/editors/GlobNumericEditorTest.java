@@ -107,7 +107,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
   public void testAbsoluteValueMode() throws Exception {
     JTextField textField =
       GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
-        .setAbsoluteValue(true)
+        .setPositiveNumbersOnly(true)
         .getComponent();
     selectionService.select(glob);
     TextBox textBox = new TextBox(textField);
@@ -232,7 +232,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
       GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
         .setNotifyOnKeyPressed(true)
         .setValueForNull(0.0)
-        .setAbsoluteValue(true)
+        .setPositiveNumbersOnly(true)
         .getComponent();
     TextBox textBox = new TextBox(textField);
 

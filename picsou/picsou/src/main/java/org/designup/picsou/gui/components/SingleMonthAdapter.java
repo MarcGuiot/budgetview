@@ -30,7 +30,7 @@ public class SingleMonthAdapter implements MonthSliderAdapter {
         maxMonthId = monthId;
       }
     }
-    return Month.getShortMonthLabel(maxMonthId);
+    return convertToString(maxMonthId);
   }
 
   public int getCurrentMonth(Glob glob, GlobRepository repository) {

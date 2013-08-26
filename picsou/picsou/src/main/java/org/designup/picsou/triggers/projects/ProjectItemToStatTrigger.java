@@ -18,13 +18,14 @@ public class ProjectItemToStatTrigger implements ChangeSetListener {
         repository.create(ProjectItemStat.TYPE,
                           value(ProjectItemStat.PROJECT_ITEM, key.get(ProjectItem.ID)),
                           value(ProjectItemStat.ACTUAL_AMOUNT, 0.00),
-                          value(ProjectItemStat.PLANNED_AMOUNT, values.get(ProjectItem.PLANNED_AMOUNT, 0.00)));
+                          value(ProjectItemStat.PLANNED_AMOUNT, ProjectItem.getTotalPlannedAmount(values)));
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(ProjectItem.PLANNED_AMOUNT)) {
+        if (values.contains(ProjectItem.PLANNED_AMOUNT) || values.contains(ProjectItem.MONTH_COUNT)) {
+          Glob item = repository.get(key);
           repository.update(Key.create(ProjectItemStat.TYPE, key.get(ProjectItem.ID)),
-                            value(ProjectItemStat.PLANNED_AMOUNT, values.get(ProjectItem.PLANNED_AMOUNT, 0.00)));
+                            value(ProjectItemStat.PLANNED_AMOUNT, ProjectItem.getTotalPlannedAmount(item)));
         }
       }
 
@@ -41,7 +42,7 @@ public class ProjectItemToStatTrigger implements ChangeSetListener {
         Key statKey = Key.create(ProjectItemStat.TYPE, projectItem.get(ProjectItem.ID));
         repository.findOrCreate(statKey);
         repository.update(statKey,
-                          value(ProjectItemStat.PLANNED_AMOUNT, projectItem.get(ProjectItem.PLANNED_AMOUNT, 0.00)));
+                          value(ProjectItemStat.PLANNED_AMOUNT, ProjectItem.getTotalPlannedAmount(projectItem)));
       }
     }
   }

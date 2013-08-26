@@ -13,6 +13,7 @@ import org.designup.picsou.gui.projects.utils.ImageStatusUpdater;
 import org.designup.picsou.gui.projects.utils.ProjectItemComparator;
 import org.designup.picsou.gui.projects.utils.ProjectPeriodSliderAdapter;
 import org.designup.picsou.gui.time.TimeService;
+import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.model.ProjectItem;
 import org.designup.picsou.utils.Lang;
@@ -170,36 +171,30 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
-      createItem();
+      repository.startChangeSet();
+      Glob item = null;
+      try {
+        item = repository.create(ProjectItem.TYPE,
+                                      value(ProjectItem.LABEL, ""),
+                                      value(ProjectItem.MONTH, getCurrentMonth()),
+                                      value(ProjectItem.PROJECT, currentProjectKey.get(Project.ID)));
+      }
+      finally {
+        repository.completeChangeSet();
+      }
+      if (item == null) {
+        throw new InvalidState("Item creation failed");
+      }
+      item.getKey();
     }
   }
 
-  private Key createItem() {
-    repository.startChangeSet();
-    Glob item = null;
-    try {
-      item = repository.create(ProjectItem.TYPE,
-                                    value(ProjectItem.LABEL, ""),
-                                    value(ProjectItem.MONTH, getLastMonth()),
-                                    value(ProjectItem.PROJECT, currentProjectKey.get(Project.ID)));
-    }
-    finally {
-      repository.completeChangeSet();
-    }
-    if (item == null) {
-      throw new InvalidState("Item creation failed");
-    }
-    return item.getKey();
-  }
-
-  private Integer getLastMonth() {
-    GlobList existingItems =
-      repository.getAll(ProjectItem.TYPE,
-                        linkedTo(currentProjectKey, ProjectItem.PROJECT));
-    if (existingItems.isEmpty()) {
+  private Integer getCurrentMonth() {
+    GlobList selection = selectionService.getSelection(Month.TYPE);
+    if (selection.isEmpty()) {
       return directory.get(TimeService.class).getCurrentMonthId();
     }
-    return existingItems.getSortedSet(ProjectItem.MONTH).last();
+    return selection.getSortedSet(Month.ID).last();
   }
 
   private class BackToListAction extends AbstractAction {

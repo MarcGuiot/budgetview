@@ -1,6 +1,7 @@
 package org.designup.picsou.model;
 
 import com.budgetview.shared.utils.PicsouGlobSerializer;
+import org.designup.picsou.gui.model.ProjectStat;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.annotations.Key;
@@ -18,8 +19,6 @@ import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
-
-import java.util.SortedSet;
 
 public class Project {
   public static GlobType TYPE;
@@ -64,12 +63,16 @@ public class Project {
   }
 
   public static Range<Integer> getMonthRange(Glob project, GlobRepository repository) {
-    GlobList items = repository.findLinkedTo(project, ProjectItem.PROJECT);
-    SortedSet<Integer> months = items.getSortedSet(ProjectItem.MONTH);
-    if (months.isEmpty()) {
+    Glob stat = repository.find(org.globsframework.model.Key.create(ProjectStat.TYPE, project.get(Project.ID)));
+    if (stat == null) {
       return null;
     }
-    return new Range<Integer>(months.first(), months.last());
+    Integer firstMonth = stat.get(ProjectStat.FIRST_MONTH);
+    Integer lastMonth = stat.get(ProjectStat.LAST_MONTH);
+    if (firstMonth == null || lastMonth == null) {
+      return null;
+    }
+    return new Range<Integer>(firstMonth, lastMonth);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

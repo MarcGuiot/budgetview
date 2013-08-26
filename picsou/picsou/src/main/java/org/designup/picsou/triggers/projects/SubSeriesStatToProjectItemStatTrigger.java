@@ -67,7 +67,7 @@ public class SubSeriesStatToProjectItemStatTrigger implements ChangeSetListener 
     Glob subSeries = repository.get(Key.create(SubSeries.TYPE, projectItem.get(ProjectItem.SUB_SERIES)));
     boolean warning = false;
     for (Glob subSeriesStat : repository.findLinkedTo(subSeries, SubSeriesStat.SUB_SERIES)) {
-      if (!Utils.equal(subSeriesStat.get(SubSeriesStat.MONTH), projectItem.get(ProjectItem.MONTH))
+      if (!monthInProjectItemRange(subSeriesStat.get(SubSeriesStat.MONTH), projectItem)
           && Amounts.isNotZero(subSeriesStat.get(SubSeriesStat.ACTUAL_AMOUNT))) {
         warning = true;
       }
@@ -75,5 +75,17 @@ public class SubSeriesStatToProjectItemStatTrigger implements ChangeSetListener 
     repository.update(Key.create(ProjectItemStat.TYPE, projectItemId),
                       ProjectItemStat.CATEGORIZATION_WARNING,
                       warning);
+  }
+
+  private boolean monthInProjectItemRange(Integer monthId, Glob projectItem) {
+    Integer firstMonth = projectItem.get(ProjectItem.MONTH);
+    if (firstMonth == null) {
+      return false;
+    }
+    if (monthId < firstMonth) {
+      return false;
+    }
+    Integer lastMonth = ProjectItem.getLastMonth(projectItem);
+    return monthId <= lastMonth;
   }
 }

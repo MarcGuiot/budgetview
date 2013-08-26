@@ -7,6 +7,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     setCurrentMonth("2010/12");
     super.setUp();
+    operations.hideSignposts();
   }
 
   public void testDisablingProjectElements() throws Exception {
@@ -17,7 +18,6 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
       .load();
 
     operations.openPreferences().setFutureMonthsCount(3).validate();
-    operations.hideSignposts();
 
     projectChart.create();
     currentProject
@@ -118,7 +118,6 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
       .load();
 
     operations.openPreferences().setFutureMonthsCount(3).validate();
-    operations.hideSignposts();
 
     projectChart.create();
     currentProject

@@ -32,7 +32,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     currentProject.addItem()
       .edit(0)
       .setLabel("Reservation")
-      .setMonth(201101)
+      .checkMonth("January 2011")
       .setAmount(-200.00)
       .validate();
     currentProject

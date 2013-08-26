@@ -1,13 +1,9 @@
 package org.designup.picsou.triggers.projects;
 
 import com.budgetview.shared.utils.Amounts;
-import org.designup.picsou.gui.model.ProjectItemStat;
-import org.designup.picsou.gui.model.SubSeriesStat;
 import org.designup.picsou.model.*;
-import org.designup.picsou.model.util.AmountMap;
 import org.designup.picsou.model.util.ClosedMonthRange;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -59,6 +55,14 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
     // Gather months for the ProjectItems and Transactions associated to this project
     GlobList projectItems = repository.getAll(ProjectItem.TYPE, linkedTo(project, ProjectItem.PROJECT));
     SortedSet<Integer> months = new TreeSet<Integer>();
+    for (Glob item : projectItems) {
+      Integer firstItemMonth = item.get(ProjectItem.MONTH);
+      months.add(firstItemMonth);
+      Integer monthCount = item.get(ProjectItem.MONTH_COUNT);
+      if (monthCount != 1) {
+        months.add(Month.offset(firstItemMonth, monthCount - 1));
+      }
+    }
     months.addAll(projectItems.getValueSet(ProjectItem.MONTH));
     GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId).getGlobs();
     months.addAll(transactions.getValueSet(Transaction.BUDGET_MONTH));
@@ -99,12 +103,15 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
     if (project.isTrue(Project.ACTIVE)) {
       for (Glob item : projectItems) {
         if (item.isTrue(ProjectItem.ACTIVE)) {
-          Integer monthId = item.get(ProjectItem.MONTH);
-          Glob seriesBudget = SeriesBudget.find(seriesId, monthId, repository);
-          double planned = seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0) + item.get(ProjectItem.PLANNED_AMOUNT, 0.0);
-          repository.update(seriesBudget.getKey(),
-                            value(SeriesBudget.PLANNED_AMOUNT, planned),
-                            value(SeriesBudget.ACTIVE, true));
+          Integer firstMonthId = item.get(ProjectItem.MONTH);
+          Integer lastMonthId = ProjectItem.getLastMonth(item);
+          for (int monthId = firstMonthId; monthId <= lastMonthId; monthId = Month.next(monthId)) {
+            Glob seriesBudget = SeriesBudget.find(seriesId, monthId, repository);
+            double planned = seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0) + item.get(ProjectItem.PLANNED_AMOUNT, 0.0);
+            repository.update(seriesBudget.getKey(),
+                              value(SeriesBudget.PLANNED_AMOUNT, planned),
+                              value(SeriesBudget.ACTIVE, true));
+          }
         }
       }
     }

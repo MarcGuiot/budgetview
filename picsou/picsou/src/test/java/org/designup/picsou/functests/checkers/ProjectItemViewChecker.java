@@ -89,9 +89,9 @@ public class ProjectItemViewChecker extends GuiChecker {
     return this;
   }
 
-  public ProjectItemViewChecker checkCategorizationWarningShown(String message) {
+  public ProjectItemViewChecker checkCategorizationWarningShown() {
     checkComponentVisible(panel, JLabel.class, "categorizationWarning", true);
-    assertThat(panel.getTextBox("categorizationWarning").textEquals(message));
+    assertThat(panel.getTextBox("categorizationWarning").textEquals("Transactions from other months have been assigned to this item"));
     return this;
   }
 

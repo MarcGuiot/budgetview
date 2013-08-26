@@ -49,7 +49,7 @@ public class ProjectItemToProjectStatTrigger implements ChangeSetListener {
 
     double totalPlanned = 0.00;
     for (Glob item : items) {
-      totalPlanned += item.get(ProjectItem.PLANNED_AMOUNT);
+      totalPlanned += ProjectItem.getTotalPlannedAmount(item);
     }
     Key projectStatKey = Key.create(ProjectStat.TYPE, project.get(Project.ID));
     repository.update(projectStatKey, ProjectStat.PLANNED_AMOUNT, totalPlanned);
@@ -57,20 +57,21 @@ public class ProjectItemToProjectStatTrigger implements ChangeSetListener {
     Integer firstMonth = null;
     Integer lastMonth = null;
     for (Glob item : items) {
-      Integer month = item.get(ProjectItem.MONTH);
-      if (month == null) {
+      Integer firstItemMonth = item.get(ProjectItem.MONTH);
+      if (firstItemMonth == null) {
         continue;
       }
+      Integer lastItemMonth = ProjectItem.getLastMonth(item);
       if ((firstMonth == null) || (lastMonth == null)) {
-        firstMonth = month;
-        lastMonth = month;
+        firstMonth = firstItemMonth;
+        lastMonth = lastItemMonth;
         continue;
       }
-      if (month < firstMonth) {
-        firstMonth = month;
+      if (firstItemMonth < firstMonth) {
+        firstMonth = firstItemMonth;
       }
-      if (month > lastMonth) {
-        lastMonth = month;
+      if (lastItemMonth > lastMonth) {
+        lastMonth = lastItemMonth;
       }
     }
     repository.update(projectStatKey,

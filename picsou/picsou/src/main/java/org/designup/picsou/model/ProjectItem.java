@@ -33,8 +33,13 @@ public class ProjectItem {
   public static IntegerField MONTH;
 
   @DefaultDouble(0.00)
+  @Required
   @DoublePrecision(4)
   public static DoubleField PLANNED_AMOUNT;
+
+  @Required
+  @DefaultInteger(1)
+  public static IntegerField MONTH_COUNT;
 
   @DefaultBoolean(true)
   public static BooleanField ACTIVE;
@@ -56,6 +61,23 @@ public class ProjectItem {
     loader.defineUniqueIndex(SUB_SERIES_INDEX, SUB_SERIES);
   }
 
+  public static Double getTotalPlannedAmount(FieldValues projectItem) {
+    if (projectItem == null) {
+      return null;
+    }
+
+    Double planned = projectItem.get(ProjectItem.PLANNED_AMOUNT);
+    Integer monthCount = projectItem.get(ProjectItem.MONTH_COUNT);
+    if (planned == null || monthCount == null) {
+      return 0.00;
+    }
+    return planned * monthCount;
+  }
+
+  public static int getLastMonth(Glob item) {
+    return Month.offset(item.get(MONTH), item.get(MONTH_COUNT) - 1);
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
@@ -73,6 +95,7 @@ public class ProjectItem {
       output.writeUtf8String(fieldValues.get(ProjectItem.LABEL));
       output.writeInteger(fieldValues.get(ProjectItem.MONTH));
       output.writeDouble(fieldValues.get(ProjectItem.PLANNED_AMOUNT));
+      output.writeInteger(fieldValues.get(ProjectItem.MONTH_COUNT));
       output.writeBoolean(fieldValues.get(ProjectItem.ACTIVE));
       output.writeInteger(fieldValues.get(ProjectItem.SUB_SERIES));
       output.writeInteger(fieldValues.get(ProjectItem.PICTURE));
@@ -99,6 +122,7 @@ public class ProjectItem {
       fieldSetter.set(ProjectItem.LABEL, input.readUtf8String());
       fieldSetter.set(ProjectItem.MONTH, input.readInteger());
       fieldSetter.set(ProjectItem.PLANNED_AMOUNT, input.readDouble());
+      fieldSetter.set(ProjectItem.MONTH_COUNT, input.readInteger());
       fieldSetter.set(ProjectItem.ACTIVE, input.readBoolean());
       fieldSetter.set(ProjectItem.SUB_SERIES, input.readInteger());
       fieldSetter.set(ProjectItem.PICTURE, input.readInteger());
@@ -112,6 +136,7 @@ public class ProjectItem {
       fieldSetter.set(ProjectItem.LABEL, input.readUtf8String());
       fieldSetter.set(ProjectItem.MONTH, input.readInteger());
       fieldSetter.set(ProjectItem.PLANNED_AMOUNT, input.readDouble());
+      fieldSetter.set(ProjectItem.MONTH_COUNT, 1);
       fieldSetter.set(ProjectItem.ACTIVE, true);
       fieldSetter.set(ProjectItem.SUB_SERIES, input.readInteger());
       fieldSetter.set(ProjectItem.PICTURE, null);
@@ -125,6 +150,7 @@ public class ProjectItem {
       fieldSetter.set(ProjectItem.LABEL, input.readUtf8String());
       fieldSetter.set(ProjectItem.MONTH, input.readInteger());
       fieldSetter.set(ProjectItem.PLANNED_AMOUNT, input.readDouble());
+      fieldSetter.set(ProjectItem.MONTH_COUNT, 1);
       fieldSetter.set(ProjectItem.ACTIVE, true);
       fieldSetter.set(ProjectItem.SUB_SERIES, null);
       fieldSetter.set(ProjectItem.PICTURE, null);

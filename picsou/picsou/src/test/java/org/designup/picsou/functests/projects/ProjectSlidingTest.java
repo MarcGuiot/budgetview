@@ -9,11 +9,10 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     setCurrentMonth("2010/12");
     super.setUp();
+    operations.hideSignposts();
   }
 
   public void testMovingProjectItemsWhenThereAreAlreadyAssociatedTransactions() throws Exception {
-    operations.hideSignposts();
-
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2010/01/10")
       .addTransaction("2010/11/01", 1000.00, "Income")
@@ -42,7 +41,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .setMonth(201012)
       .validate();
     currentProject.view(0)
-      .checkCategorizationWarningShown("Transactions from other months have been assigned to this item")
+      .checkCategorizationWarningShown()
       .clickCategorizationWarning();
 
     views.checkDataSelected();
@@ -62,7 +61,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .checkSeries("Trip", 0.00, -200.00);
 
     currentProject.view(0)
-      .checkCategorizationWarningShown("Transactions from other months have been assigned to this item")
+      .checkCategorizationWarningShown()
       .slideToPreviousMonth()
       .checkCategorizationWarningNotShown();
 
@@ -76,7 +75,6 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSlidingTheWholeProject() throws Exception {
-    operations.hideSignposts();
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     OfxBuilder.init(this)
@@ -91,8 +89,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .setName("Trip")
       .addItem(0, "Booking", 201012, -200.00)
       .addItem(1, "Travel", 201102, -100.00)
-      .addItem(2, "Hotel", 201102, -400.00)
-    ;
+      .addItem(2, "Hotel", 201102, -400.00);
 
     // --- Slide to January - March 2011
 
@@ -162,8 +159,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .checkSeries("Trip", 0.00, -200.00);
   }
 
-  public void testSlidingTheProjectWhenTransactionsHaveAlreadyBeenAssigned() throws Exception {
-    operations.hideSignposts();
+  public void testSlidingTheWholeProjectWhenTransactionsHaveAlreadyBeenAssigned() throws Exception {
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     projectChart.create();
@@ -200,7 +196,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
                   "Travel | Mar | 0.00 | -100.00\n" +
                   "Hotel | Mar | 0.00 | -400.00");
     currentProject.view(0)
-      .checkCategorizationWarningShown("Transactions from other months have been assigned to this item");
+      .checkCategorizationWarningShown();
     currentProject.view(1)
       .checkCategorizationWarningNotShown();
 
@@ -228,7 +224,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
                   "Travel | Dec | 0.00 | -100.00\n" +
                   "Hotel | Dec | 0.00 | -400.00");
     currentProject.view(0)
-      .checkCategorizationWarningShown("Transactions from other months have been assigned to this item");
+      .checkCategorizationWarningShown();
     currentProject.view(1)
       .checkCategorizationWarningNotShown();
 
@@ -252,7 +248,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
                   "Travel | Jan | 0.00 | -100.00\n" +
                   "Hotel | Jan | 0.00 | -400.00");
     currentProject.view(0)
-      .checkCategorizationWarningShown("Transactions from other months have been assigned to this item");
+      .checkCategorizationWarningShown();
     currentProject.view(1)
       .checkCategorizationWarningNotShown();
 
@@ -292,7 +288,6 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCategorizationWarningShownAndHiddenOnCategorization() throws Exception {
-    operations.hideSignposts();
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     OfxBuilder.init(this)
@@ -328,7 +323,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
     currentProject.view(0)
       .checkCategorizationWarningNotShown();
     currentProject.view(1)
-      .checkCategorizationWarningShown("Transactions from other months have been assigned to this item")
+      .checkCategorizationWarningShown()
       .clickCategorizationWarning();
 
     transactions.initContent()
@@ -345,6 +340,38 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
                   "Travel | Feb | 0.00 | -100.00\n" +
                   "Hotel | Feb | 0.00 | -400.00");
     currentProject.view(1)
+      .checkCategorizationWarningNotShown();
+  }
+
+  public void testCategorizationWarningTakesMultiMonthItemsIntoAccountDuringSliding() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/12/15")
+      .addTransaction("2010/10/01", 1000.00, "Income")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/12/15", -200.00, "FNAC")
+      .load();
+
+    projectChart.create();
+    currentProject
+      .setName("Camera")
+      .addItem(0, "Camera Body", 201011, -300.00, 3)
+      .addItem(1, "Lens", 201012, -100.00);
+    categorization.setExtra("FNAC", "Camera", "Camera Body");
+    budgetView.extras.checkSeries("Camera", -200.00, -400.00);
+    currentProject.view(0).checkCategorizationWarningNotShown();
+
+    currentProject.view(0)
+      .slideToNextMonth()
+      .checkCategorizationWarningNotShown();
+
+    currentProject.view(0)
+      .slideToNextMonth()
+      .checkCategorizationWarningShown();
+
+    currentProject.view(0)
+      .slideToPreviousMonth()
       .checkCategorizationWarningNotShown();
   }
 }
