@@ -47,9 +47,9 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .setAmount(200.00)
       .checkMonth("December 2010")
       .checkNoFromAccountSelected("Select the source account")
-      .checkFromAccounts("Select the source account,External account,Main accounts")
+      .checkFromAccounts("Select the source account","External account","Main accounts","Savings account")
       .checkNoToAccountSelected("Select the target account")
-      .checkToAccounts("Select the source account,External account,Main accounts")
+      .checkToAccounts("Select the target account","External account","Main accounts","Savings account")
       .checkSavingsMessageHidden()
       .setFromAccount("Savings account")
       .checkSavingsMessageShown()
@@ -62,7 +62,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     timeline.checkSelection("2010/12");
     budgetView.extras.checkSeries("Trip", 0.00, 0.00);
     fail("[Pour Marc] on veut un montant positif sur la série d'épargne ci-dessous");
-    budgetView.savings.checkSeries("Transfer", 0.00, -200.00);
+    budgetView.savings.checkSeries("Transfer", 0.00, 200.00);
     categorization.selectTransaction("Transfer 1").selectSavings()
       .checkContainsSeries("Transfer")
       .checkSeriesIsActive("Transfer")
@@ -85,7 +85,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     projects.select("Trip");
     budgetView.extras.checkSeries("Trip", 0.00, 0.00);
     fail("[Pour Marc] on veut un montant positif sur la série d'épargne ci-dessous");
-    budgetView.savings.checkSeries("Transfer", 0.00, -200.00);
+    budgetView.savings.checkSeries("Transfer", 0.00, 200.00);
     categorization.selectTransaction("Transfer 1").selectSavings()
       .checkContainsSeries("Transfer")
       .checkSeriesIsActive("Transfer")
@@ -151,7 +151,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     timeline.checkSelection("2010/12");
     budgetView.extras.checkSeries("Trip", 0.00, 0.00);
     fail("[Pour Marc] on veut un montant positif sur la série d'épargne ci-dessous");
-    budgetView.savings.checkSeries("Transfer", 0.00, -200.00);
+    budgetView.savings.checkSeries("Transfer", 0.00, 200.00);
     categorization.selectTransaction("Transfer 1").selectSavings()
       .checkContainsSeries("Transfer")
       .checkSeriesIsActive("Transfer")
