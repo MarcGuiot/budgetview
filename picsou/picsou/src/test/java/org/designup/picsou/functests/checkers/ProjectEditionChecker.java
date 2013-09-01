@@ -5,6 +5,7 @@ import org.designup.picsou.functests.checkers.components.GaugeChecker;
 import org.designup.picsou.functests.checkers.components.MonthSliderChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.utils.Lang;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
 import org.uispec4j.Window;
@@ -107,8 +108,13 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
-  public ProjectEditionChecker addItem() {
-    getPanel().getButton("addItem").click();
+  public ProjectEditionChecker addExpenseItem() {
+    PopupButton.init(getPanel(), "addItem").click(Lang.get("projectEdition.addItem.expense"));
+    return this;
+  }
+
+  public ProjectEditionChecker addTransferItem() {
+    PopupButton.init(getPanel(), "addItem").click(Lang.get("projectEdition.addItem.transfer"));
     return this;
   }
 
@@ -117,8 +123,8 @@ public class ProjectEditionChecker extends ViewChecker {
   }
 
   public ProjectEditionChecker addItem(int index, String label, int firstMonth, double amount, int numberOfMonths) {
-    addItem();
-    ProjectItemEditionChecker projectItemEditionChecker = edit(index)
+    addExpenseItem();
+    ProjectItemEditionChecker projectItemEditionChecker = editExpense(index)
       .setLabel(label)
       .setMonth(firstMonth)
       .setAmount(amount);
@@ -214,13 +220,17 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
-  public ProjectItemEditionChecker edit(int index) {
-    return new ProjectItemEditionChecker(getItemPanel(index));
+  public ProjectItemExpenseEditionChecker editExpense(int index) {
+    return new ProjectItemExpenseEditionChecker(getItemPanel(index));
   }
 
-  public ProjectItemEditionChecker toggleAndEdit(int index) {
+  public ProjectItemTransferEditionChecker editTransfer(int index) {
+    return new ProjectItemTransferEditionChecker(getItemPanel(index));
+  }
+
+  public ProjectItemExpenseEditionChecker toggleAndEditExpense(int index) {
     view(index).modify();
-    return edit(index);
+    return editExpense(index);
   }
 
   public ProjectItemViewChecker view(int index) {

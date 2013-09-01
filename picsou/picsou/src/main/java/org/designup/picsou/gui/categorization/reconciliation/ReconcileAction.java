@@ -55,7 +55,7 @@ public class ReconcileAction extends AbstractAction implements GlobSelectionList
                           FieldValue.value(Transaction.SUB_SERIES, toReconcile.get(Transaction.SUB_SERIES)),
                           FieldValue.value(Transaction.LABEL, toReconcile.get(Transaction.LABEL)));
       }
-      repository.delete(toReconcile.getKey());
+      repository.delete(toReconcile);
       toReconcile = null;
       targetTransaction = null;
       update();

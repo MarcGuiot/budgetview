@@ -1,0 +1,49 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.field" weightX="0.1" anchor="right" marginRight="5"/>
+    <style selector="component#amountEditor" marginRight="5"/>
+    <style selector="button.actionsButton" fill="none" anchor="center"/>
+    <style selector="label#imageLabel" preferredSize="(100,70)"
+           fill="none" anchor="center" margin="4"/>
+    <style selector="scrollPane htmlEditorPane" margin="2"/>
+    <style selector="button.validation" ui="hyperlinkButton" font="-,plain,11" foreground="hyperlink"
+           anchor="right" marginLeft="5" weightX="0.1"/>
+  </styles>
+
+  <panel name="projectItemEditionPanel" opaque="true" background="projectView.item.bg.edition">
+    <column border="empty(10)" opaque="true" background="block.inner.bg">
+      <textField ref="nameField"/>
+
+      <row marginTop="5">
+        <label text="$projectView.item.edition.month" styleClass="field"/>
+        <component ref="monthEditor" fill="none" anchor="left"/>
+        <filler fill="horizontal"/>
+      </row>
+
+      <row marginTop="5">
+        <component ref="amountEditor" weightX="2"/>
+        <label text="$projectView.item.edition.perMonthDuring" styleClass="field"/>
+        <component ref="monthCountEditor" weightX="1"/>
+        <label text="$projectView.item.edition.perMonthDuringMonths" styleClass="field"/>
+      </row>
+
+      <row>
+        <comboBox ref="fromAccount"/>
+      </row>
+
+      <row>
+        <comboBox ref="toAccount"/>
+      </row>
+
+      <label ref="savingsMessage"/>
+
+      <row marginTop="5">
+        <filler fill="horizontal"/>
+        <button action="cancel" styleClass="validation" marginRight="10"/>
+        <button action="validate" styleClass="validation"/>
+      </row>
+
+    </column>
+  </panel>
+</splits>

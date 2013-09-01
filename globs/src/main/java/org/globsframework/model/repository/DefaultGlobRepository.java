@@ -404,6 +404,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     }
   }
 
+  public void delete(Glob glob) throws ItemNotFound, OperationDenied {
+    delete(glob.getKey());
+  }
+
   public void delete(Key key) throws ItemNotFound, OperationDenied {
     MutableGlob glob = getGlobForUpdate(key);
     GlobType type = glob.getType();

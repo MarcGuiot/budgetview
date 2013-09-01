@@ -179,7 +179,7 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
     repository.update(glob2.getKey(), DummyObject.NAME, "cc");
     assertThat(textBox.textEquals("..."));
 
-    repository.delete(glob2.getKey());
+    repository.delete(glob2);
     assertThat(textBox.textEquals("aa"));
 
     textBox.setText("bb");
@@ -188,7 +188,7 @@ public abstract class AbstractGlobTextEditorTestCase extends GuiComponentTestCas
     repository.update(glob1.getKey(), DummyObject.NAME, "dd");
     assertThat(textBox.textEquals("dd"));
     
-    repository.delete(glob1.getKey());
+    repository.delete(glob1);
     assertThat(textBox.textEquals(""));
     assertFalse(textBox.isEnabled());
   }

@@ -94,7 +94,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
                             lastTransactionMonthId, monthCount);
                 }
                 if (!smallDiff && seriesShape != null && lastTransactionMonthId.equals(seriesShape.get(SeriesShape.LAST_MONTH))) {
-                  repository.delete(seriesShape.getKey());
+                  repository.delete(seriesShape);
                 }
               }
             }
@@ -172,7 +172,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
           repository.startChangeSet();
 
           if (!transactionGlobFunctor.hasData()) {
-            repository.delete(seriesShape.getKey());
+            repository.delete(seriesShape);
           }
           else {
             transactionGlobFunctor.updateForSingleOp();
@@ -206,7 +206,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
       }
       // la series doit etre supprimé, elle sera recreer si besoin par le add
       if (!smallDiff && seriesShape != null && lastTransactionMonthId.equals(seriesShape.get(SeriesShape.LAST_MONTH))) {
-        repository.delete(seriesShape.getKey());
+        repository.delete(seriesShape);
       }
     }
     else {

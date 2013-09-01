@@ -29,8 +29,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkProjectGaugeHidden()
       .setName("My project")
       .checkItemCount(0);
-    currentProject.addItem()
-      .edit(0)
+    currentProject.addExpenseItem()
+      .editExpense(0)
       .setLabel("Reservation")
       .checkMonth("January 2011")
       .setAmount(-200.00)
@@ -51,6 +51,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     budgetView.extras.checkSeries("My project", 0, -200.00);
     budgetView.getSummary().checkEndPosition(1700.00);
 
+    views.selectHome();
     projects.select("My project");
     currentProject
       .addItem(1, "Travel", 201102, -100.00)
@@ -109,7 +110,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     currentProject
       .checkItems("Reservation | Jan | -100.00 | -200.00\n" +
                   "Hotel | Feb | 0.00 | -500.00")
-      .toggleAndEdit(1)
+      .toggleAndEditExpense(1)
       .setAmount(-50.00)
       .validate();
     currentProject
@@ -238,8 +239,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkNoErrorTipDisplayed();
 
     currentProject
-      .addItem()
-      .edit(0)
+      .addExpenseItem()
+      .editExpense(0)
       .setMonth(201101)
       .setAmount(-200.00)
       .validateAndCheckNameTip("You must provide a name for this item")
@@ -259,8 +260,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("My project")
-      .addItem()
-      .edit(0)
+      .addExpenseItem()
+      .editExpense(0)
       .cancel();
     currentProject.checkItemCount(0);
   }
@@ -283,7 +284,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     categorization.selectExtras().checkSeriesContainsSubSeries("My project", "Item 1", "Item 2");
 
     projectChart.select("My project");
-    currentProject.toggleAndEdit(0)
+    currentProject.toggleAndEditExpense(0)
       .setLabel("NewItem1")
       .validate();
 
@@ -319,6 +320,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     categorization.setExtra("EUROPCAR", "My project", "Travel");
     categorization.setExtra("SHERATON", "My project", "Accomodation");
 
+    views.selectHome();
     projectChart.select("My project");
     currentProject
       .checkItems("Travel | Dec | -250.00 | -300.00\n" +
@@ -468,7 +470,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     projectChart.select("Past Project");
     currentProject
-      .toggleAndEdit(0)
+      .toggleAndEditExpense(0)
       .setMonth(201109)
       .validate();
     projectChart.checkProjectList("Current Project");

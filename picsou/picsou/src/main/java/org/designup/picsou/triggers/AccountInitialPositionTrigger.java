@@ -176,7 +176,7 @@ public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
     else {
       Glob closeTransaction = repository.findLinkTarget(account, Account.CLOSED_TRANSACTION);
       if (closeTransaction != null) {
-        repository.delete(closeTransaction.getKey());
+        repository.delete(closeTransaction);
       }
     }
   }

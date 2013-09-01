@@ -27,6 +27,14 @@ public class FieldValuesBuilder {
     return builder;
   }
 
+  public static FieldValuesBuilder init(FieldValues values) {
+    FieldValuesBuilder builder = new FieldValuesBuilder();
+    for (FieldValue value : values.toArray()) {
+      builder.setValue(value.getField(), value.getValue());
+    }
+    return builder;
+  }
+
   public static FieldValuesBuilder init(FieldValue... values) {
     FieldValuesBuilder builder = new FieldValuesBuilder();
     for (FieldValue value : values) {

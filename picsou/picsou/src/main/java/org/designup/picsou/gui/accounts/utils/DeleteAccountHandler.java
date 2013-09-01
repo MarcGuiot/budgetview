@@ -44,7 +44,7 @@ public class DeleteAccountHandler {
                                                               Lang.get(getMessageKey()),
                                                               owner, localDirectory) {
       protected void processOk() {
-        localRepository.delete(currentAccount.getKey());
+        localRepository.delete(currentAccount);
         localRepository.commitChanges(false);
         if (closeOwnerOnConfirmation) {
           owner.setVisible(false);

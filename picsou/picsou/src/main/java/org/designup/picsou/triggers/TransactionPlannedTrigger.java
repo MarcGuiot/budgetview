@@ -249,7 +249,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         }
         else {
           if (existing != null) {
-            repository.delete(existing.getKey());
+            repository.delete(existing);
           }
         }
       }

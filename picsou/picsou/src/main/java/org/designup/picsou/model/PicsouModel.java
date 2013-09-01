@@ -38,6 +38,7 @@ public class PicsouModel {
                           SeriesOrder.TYPE,
                           Project.TYPE,
                           ProjectItem.TYPE,
+                          ProjectTransfer.TYPE,
                           RealAccount.TYPE,
                           NumericDateType.TYPE,
                           TextDateType.TYPE,

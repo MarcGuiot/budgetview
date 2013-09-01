@@ -8,7 +8,6 @@ import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.utils.AutoDispose;
 import org.globsframework.gui.splits.utils.Disposable;
-import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -33,8 +32,8 @@ public class ErrorTip implements Disposable, ColorChangeListener {
     return show(component, text, directory, TipPosition.TOP_LEFT);
   }
 
-  public static ErrorTip showRight(JComponent component, String text, Directory directory) {
-    return show(component, text, directory, TipPosition.TOP_RIGHT);
+  public static ErrorTip showLeft(JComboBox component, String text, Directory directory) {
+    return show(component, text, directory, TipPosition.TOP_LEFT);
   }
 
   public static ErrorTip show(JComponent component, String text, Directory directory, TipPosition position) {
@@ -44,6 +43,12 @@ public class ErrorTip implements Disposable, ColorChangeListener {
   public static ErrorTip show(JTextField textField, String text, Directory directory, TipPosition position) {
     ErrorTip errorTip = new ErrorTip(textField, text, directory, position);
     AutoDispose.registerTextEdition(textField, errorTip);
+    return errorTip;
+  }
+
+  public static ErrorTip show(JComboBox combo, String text, Directory directory, TipPosition position) {
+    ErrorTip errorTip = new ErrorTip(combo, text, directory, position);
+    AutoDispose.registerComboSelection(combo, errorTip);
     return errorTip;
   }
 

@@ -66,16 +66,19 @@ public class TablePrinter {
     int[] sizes = new int[firstRow.length];
     Arrays.fill(sizes, 0);
 
-    for (Object[] row : rows) {
+    for (Object[] row : aggregated) {
       if (row.length > firstRow.length) {
         throw new InvalidParameter("Row larger than the first row: " + Arrays.toString(row));
       }
     }
 
-    for (Object[] row : rows) {
+    for (Object[] row : aggregated) {
       updateSizes(row, sizes);
     }
 
+    if (headerRow != null) {
+      printer.println(toString(headerRow, sizes));
+    }
     List<String> strings = new ArrayList<String>();
     for (Object[] row : rows) {
       strings.add(toString(row, sizes));

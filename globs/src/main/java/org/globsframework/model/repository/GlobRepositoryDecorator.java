@@ -118,6 +118,10 @@ public class GlobRepositoryDecorator implements GlobRepository {
     getRepository().setTarget(source, link, target);
   }
 
+  public void delete(Glob glob) throws ItemNotFound, OperationDenied {
+    getRepository().delete(glob);
+  }
+
   public void delete(Key key) throws ItemNotFound, OperationDenied {
     getRepository().delete(key);
   }

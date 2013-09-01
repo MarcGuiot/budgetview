@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.projects;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.MonthSlider;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
 import org.designup.picsou.gui.components.images.GlobImageLabelView;
@@ -9,13 +10,12 @@ import org.designup.picsou.gui.model.ProjectStat;
 import org.designup.picsou.gui.projects.actions.DeleteProjectAction;
 import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
 import org.designup.picsou.gui.projects.components.ProjectNameEditor;
+import org.designup.picsou.gui.projects.itemedition.ProjectItemPanelFactory;
 import org.designup.picsou.gui.projects.utils.ImageStatusUpdater;
 import org.designup.picsou.gui.projects.utils.ProjectItemComparator;
 import org.designup.picsou.gui.projects.utils.ProjectPeriodSliderAdapter;
 import org.designup.picsou.gui.time.TimeService;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Project;
-import org.designup.picsou.model.ProjectItem;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -29,7 +29,6 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.InvalidState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -88,7 +87,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
     final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectEditionView.splits",
-                                                      repository, directory);
+                                                            repository, directory);
 
     final ModifyNameAction modify = new ModifyNameAction();
     PopupMenuFactory factory = new PopupMenuFactory() {
@@ -107,13 +106,13 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
 
     GlobImageLabelView imageLabel =
       GlobImageLabelView.init(Project.PICTURE, ProjectView.MAX_PICTURE_SIZE, repository, directory)
-      .setDefaultIconFactory(new IconFactory() {
-        public Icon createIcon(Dimension size) {
-          DefaultPictureIcon defaultIcon = new DefaultPictureIcon(size, directory);
-          builder.addDisposable(defaultIcon);
-          return defaultIcon;
-        }
-      });
+        .setDefaultIconFactory(new IconFactory() {
+          public Icon createIcon(Dimension size) {
+            DefaultPictureIcon defaultIcon = new DefaultPictureIcon(size, directory);
+            builder.addDisposable(defaultIcon);
+            return defaultIcon;
+          }
+        });
     builder.add("imageLabel", imageLabel.getLabel());
 
     imageStatusUpdater = new ImageStatusUpdater(Project.ACTIVE, imageLabel, repository);
@@ -126,7 +125,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
 
     gauge =
       SimpleGaugeView.init(ProjectStat.ACTUAL_AMOUNT, ProjectStat.PLANNED_AMOUNT, repository, directory)
-       .setAutoHideIfEmpty(true);
+        .setAutoHideIfEmpty(true);
     builder.add("gauge", gauge.getComponent());
 
     repeat = builder.addRepeat("items",
@@ -135,7 +134,10 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
                                new ProjectItemComparator(),
                                new ProjectItemRepeatFactory());
 
-    builder.add("addItem", new AddItemAction());
+    JPopupMenu menu = new JPopupMenu();
+    menu.add(new AddItemAction("projectEdition.addItem.expense", ProjectItemType.EXPENSE));
+    menu.add(new AddItemAction("projectEdition.addItem.transfer", ProjectItemType.TRANSFER));
+    builder.add("addItem", new JPopupButton(Lang.get("projectEdition.addItem"), menu));
 
     builder.add("backToList", new BackToListAction());
 
@@ -158,34 +160,44 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
   }
 
   private class ProjectItemRepeatFactory implements RepeatComponentFactory<Glob> {
+
+    ProjectItemPanelFactory itemPanelFactory;
+
+    private ProjectItemRepeatFactory() {
+      itemPanelFactory = new ProjectItemPanelFactory(repository, directory);
+    }
+
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob item) {
-      ProjectItemPanel itemPanel = new ProjectItemPanel(item, repository, directory);
+      ProjectItemPanel itemPanel = itemPanelFactory.create(item);
       cellBuilder.add("projectItemPanel", itemPanel.getPanel());
       cellBuilder.addDisposeListener(itemPanel);
     }
   }
 
   private class AddItemAction extends AbstractAction {
-    private AddItemAction() {
-      super(Lang.get("projectEdition.addItem"));
+    private ProjectItemType itemType;
+
+    private AddItemAction(String labelKey, ProjectItemType itemType) {
+      super(Lang.get(labelKey));
+      this.itemType = itemType;
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
       repository.startChangeSet();
-      Glob item = null;
       try {
-        item = repository.create(ProjectItem.TYPE,
-                                      value(ProjectItem.LABEL, ""),
+        String defaultLabel = itemType == ProjectItemType.TRANSFER ? Lang.get("projectView.item.transfer.defaultName") : "";
+        Glob item = repository.create(ProjectItem.TYPE,
+                                      value(ProjectItem.ITEM_TYPE, itemType.getId()),
+                                      value(ProjectItem.LABEL, defaultLabel),
                                       value(ProjectItem.MONTH, getCurrentMonth()),
                                       value(ProjectItem.PROJECT, currentProjectKey.get(Project.ID)));
+        if (ProjectItemType.TRANSFER.equals(itemType)) {
+          repository.create(ProjectTransfer.TYPE, value(ProjectTransfer.PROJECT_ITEM, item.get(ProjectItem.ID)));
+        }
       }
       finally {
         repository.completeChangeSet();
       }
-      if (item == null) {
-        throw new InvalidState("Item creation failed");
-      }
-      item.getKey();
     }
   }
 

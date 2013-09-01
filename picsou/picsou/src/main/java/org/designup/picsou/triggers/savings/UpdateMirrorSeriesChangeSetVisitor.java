@@ -1,6 +1,9 @@
 package org.designup.picsou.triggers.savings;
 
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.GlobIdGenerator;
@@ -65,19 +68,15 @@ public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
   }
 
   private GlobList uncategorize(final Integer seriesId) {
-//    Glob series = localRepository.find(Key.create(Series.TYPE, seriesId));
-//    Glob targetAccount = localRepository.findLinkTarget(series, Series.TARGET_ACCOUNT);
     GlobList transactions = localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES,
                                                         seriesId)
       .getGlobs().filterSelf(GlobMatchers.and(GlobMatchers.isFalse(Transaction.PLANNED),
                                               GlobMatchers.isFalse(Transaction.CREATED_BY_SERIES)),
                              localRepository);
     for (Glob transaction : transactions) {
-//      if (!isSame(targetAccount, transaction)) {
-        localRepository.update(transaction.getKey(),
-                               FieldValue.value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                               FieldValue.value(Transaction.SUB_SERIES, null));
-//      }
+      localRepository.update(transaction.getKey(),
+                             FieldValue.value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                             FieldValue.value(Transaction.SUB_SERIES, null));
     }
     return transactions;
   }

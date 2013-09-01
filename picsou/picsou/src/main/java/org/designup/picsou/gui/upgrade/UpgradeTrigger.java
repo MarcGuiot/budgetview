@@ -119,9 +119,6 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (currentJarVersion < 90) {
       fixHiddenProjectSeriesBudget(repository);
     }
-    if (currentJarVersion < 91) {
-      updateManualCreationFlag(repository);
-    }
     if (currentJarVersion < 93) {
       createMissingSubSeriesForProjectItems(repository);
       updateOpenCloseAccount(repository);
@@ -138,6 +135,9 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (currentJarVersion < 117){
       updateOpenCloseAccount(repository);
       deleteDuplicateSynchro(repository);
+    }
+    if (currentJarVersion < 125) {
+      updateProjetItemSeries(repository);
     }
 
     UserPreferences.initMobilePassword(repository, false);
@@ -667,13 +667,14 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
   }
 
-  private void updateManualCreationFlag(GlobRepository repository) {
-//    for (Glob transaction : repository.getAll(Transaction.TYPE)) {
-//      Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-//      boolean manuallyCreated = (account != null) && Account.isManualUpdateAccount(account);
-//      if (manuallyCreated) {
-//        repository.update(transaction.getKey(), Transaction.MANUAL_CREATION, true);
-//      }
-//    }
+  private void updateProjetItemSeries(GlobRepository repository) {
+    for (Glob projectItem : repository.getAll(ProjectItem.TYPE)) {
+      if (projectItem.get(ProjectItem.SERIES) == null) {
+        Glob project = repository.findLinkTarget(projectItem, ProjectItem.PROJECT);
+        if (project != null) {
+          repository.update(projectItem.getKey(), ProjectItem.SERIES, project.get(Project.SERIES));
+        }
+      }
+    }
   }
 }

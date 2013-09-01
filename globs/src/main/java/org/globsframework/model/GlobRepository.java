@@ -29,6 +29,9 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
   void setTarget(Key source, Link link, Key target)
     throws ItemNotFound;
 
+  void delete(Glob glob)
+    throws ItemNotFound, OperationDenied;
+
   void delete(Key key)
     throws ItemNotFound, OperationDenied;
 

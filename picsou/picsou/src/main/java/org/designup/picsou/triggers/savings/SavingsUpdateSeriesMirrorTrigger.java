@@ -86,7 +86,7 @@ public class SavingsUpdateSeriesMirrorTrigger extends DefaultChangeSetListener {
           Glob budget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirrorSeriesId)
             .findByIndex(SeriesBudget.MONTH, previousValues.get(SeriesBudget.MONTH)).getGlobs().getFirst();
           if (budget != null) {
-            repository.delete(budget.getKey());
+            repository.delete(budget);
           }
         }
       }

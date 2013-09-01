@@ -18,7 +18,7 @@ import java.beans.PropertyChangeListener;
 public class AmountEditor implements Disposable {
   private NumericEditor numericEditor;
   private boolean positiveMode = true;
-  private JToggleButton signToggle = new JToggleButton(new RadioAction()); // Selected = Plus
+  private JToggleButton signToggle = new JToggleButton(new ToggleAction()); // Selected = Plus
   private boolean updateInProgress = false;
   private boolean preferredPositive;
   private JPanel panel;
@@ -158,7 +158,7 @@ public class AmountEditor implements Disposable {
     }
   }
 
-  private class RadioAction extends AbstractAction {
+  private class ToggleAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
       positiveMode = signToggle.isSelected();
       if (!updateInProgress) {

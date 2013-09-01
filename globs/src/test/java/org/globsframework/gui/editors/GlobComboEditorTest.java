@@ -136,7 +136,7 @@ public class GlobComboEditorTest extends GuiComponentTestCase {
     ComboBox combo = initEditorForKey1();
     assertThat(combo.selectionEquals("3"));
 
-    repository.delete(glob1.getKey());
+    repository.delete(glob1);
     assertFalse(combo.isEnabled());
     assertTrue(combo.selectionEquals(null));
 

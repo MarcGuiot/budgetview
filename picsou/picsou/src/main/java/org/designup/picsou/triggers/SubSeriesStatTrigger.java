@@ -92,7 +92,7 @@ public class SubSeriesStatTrigger implements ChangeSetListener {
     if (stat != null) {
       double newValue = stat.get(SubSeriesStat.ACTUAL_AMOUNT) - transactionAmount;
       if (Amounts.isNearZero(newValue)) {
-        repository.delete(stat.getKey());
+        repository.delete(stat);
       }
       else {
         repository.update(stat.getKey(), SubSeriesStat.ACTUAL_AMOUNT, newValue);

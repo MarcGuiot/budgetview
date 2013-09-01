@@ -150,7 +150,7 @@ public class DataCheckingService {
             report.append("Savings series with both imported account has null in it's account : ")
               .append(series.get(Series.NAME))
               .append("\n");
-            repository.delete(series.getKey());
+            repository.delete(series);
             try {
               repository.delete(Key.create(Series.TYPE, series.get(Series.MIRROR_SERIES)));
             }
@@ -346,7 +346,7 @@ public class DataCheckingService {
             .append(budget.get(SeriesBudget.SERIES))
             .append("\n");
         }
-        repository.delete(budget.getKey());
+        repository.delete(budget);
       }
     }
   }

@@ -62,7 +62,7 @@ public class TransactionFilter {
       }
       for (Glob importedTransaction : importedTransactions) {
         if (!transactions.containsKey(importedTransaction.getKey())) {
-          targetRepository.delete(importedTransaction.getKey());
+          targetRepository.delete(importedTransaction);
         }
       }
     }

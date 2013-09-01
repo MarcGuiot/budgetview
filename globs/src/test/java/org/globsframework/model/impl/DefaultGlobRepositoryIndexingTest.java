@@ -30,7 +30,7 @@ public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTest
     assertEquals(1, findIDByNameIndex("obj3"));
     repository.update(obj3.getKey(), DummyObject.NAME, "obj4");
     assertEquals(2, findIDByNameIndex("obj4"));
-    repository.delete(obj3.getKey());
+    repository.delete(obj3);
     assertTrue(repository.findByIndex(DummyObject.NAME_INDEX, "obj4").isEmpty());
 
     repository.create(DummyObject.TYPE,
@@ -49,7 +49,7 @@ public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTest
     repository.update(obj1.getKey(), DummyObject.DATE, Dates.parse("2003/01/01"));
     assertEquals(2, findIDByDateIndex("2001/01/01").get(0).intValue());
     assertEquals(1, findIDByDateIndex("2003/01/01").get(0).intValue());
-    repository.delete(obj3.getKey());
+    repository.delete(obj3);
     assertTrue(repository.findByIndex(DummyObject.DATE_INDEX, Dates.parse("2001/01/01")).isEmpty());
 
     repository.create(DummyObject.TYPE,

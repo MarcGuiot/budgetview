@@ -48,7 +48,7 @@ public class DeleteBankAction extends SingleSelectionAction {
           try {
             repository.startChangeSet();
             repository.delete(BankEntity.TYPE, linkedTo(bank, BankEntity.BANK));
-            repository.delete(bank.getKey());
+            repository.delete(bank);
           }
           finally {
             repository.completeChangeSet();

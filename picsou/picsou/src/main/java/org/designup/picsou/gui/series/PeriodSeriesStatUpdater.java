@@ -13,6 +13,7 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
@@ -51,10 +52,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       selectedMonths.removeAll(changeSet.getDeleted(Month.TYPE));
       updateSelection();
     }
-    else if (changeSet.containsChanges(SeriesStat.TYPE)) {
-      updateSelection();
-    }
-    else if (changeSet.containsChanges(CurrentMonth.KEY)) {
+    else if (changeSet.containsChanges(SeriesStat.TYPE) || changeSet.containsChanges(CurrentMonth.KEY)) {
       updateSelection();
     }
   }
@@ -141,7 +139,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       Glob periodStat =
         repository.findOrCreate(Key.create(PeriodSeriesStat.TYPE, seriesStat.get(SeriesStat.SERIES)));
       double amount = periodStat.get(PeriodSeriesStat.AMOUNT) +
-                      Utils.zeroIfNull(seriesStat.get(SeriesStat.ACTUAL_AMOUNT));
+                        Utils.zeroIfNull(seriesStat.get(SeriesStat.ACTUAL_AMOUNT));
       Double plannedAmount;
       if (periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT) == null && seriesStat.get(SeriesStat.PLANNED_AMOUNT) == null) {
         plannedAmount = null;

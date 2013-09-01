@@ -74,7 +74,7 @@
           <repeat ref="items" layout="column" marginTop="5" marginBottom="0">
             <panel ref="projectItemPanel" border="matte(0,0,1,0,projectView.item.border)"/>
           </repeat>
-          <button action="addItem" styleClass="plus"/>
+          <button ref="addItem" styleClass="plus"/>
           <filler fill="vertical"/>
         </column>
       </scrollPane>

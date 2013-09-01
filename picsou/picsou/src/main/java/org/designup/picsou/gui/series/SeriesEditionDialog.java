@@ -160,10 +160,7 @@ public class SeriesEditionDialog {
 
     builder.addMultiLineEditor("descriptionField", Series.DESCRIPTION).setNotifyOnKeyPressed(true);
 
-    accountFilter = and(not(fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)),
-                        or(fieldEquals(Account.ID, Account.MAIN_SUMMARY_ACCOUNT_ID),
-                           not(fieldEquals(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()))),
-                        not(fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID)));
+    accountFilter = createAccountFilter();
 
     fromAccountsCombo = GlobLinkComboEditor.init(Series.FROM_ACCOUNT, localRepository, localDirectory)
       .setShowEmptyOption(false)
@@ -275,6 +272,13 @@ public class SeriesEditionDialog {
     deleteButton.setOpaque(false);
     deleteButton.setName("deleteSingleSeries");
     dialog.addPanelWithButtons(panel, okAction, new CancelAction(), deleteButton);
+  }
+
+  public static GlobMatcher createAccountFilter() {
+    return and(not(fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)),
+                        or(fieldEquals(Account.ID, Account.MAIN_SUMMARY_ACCOUNT_ID),
+                           not(fieldEquals(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()))),
+                        not(fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID)));
   }
 
   private boolean isValidSeries(Glob series) {

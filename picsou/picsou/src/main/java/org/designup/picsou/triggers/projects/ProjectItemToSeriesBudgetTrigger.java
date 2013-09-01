@@ -4,6 +4,7 @@ import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.ClosedMonthRange;
 import org.globsframework.model.*;
+import org.globsframework.utils.Utils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -49,21 +50,28 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
       return;
     }
 
-    Integer seriesId = project.get(Project.SERIES);
-    Key seriesKey = project.getTargetKey(Project.SERIES);
+    Set<Integer> seriesIds =
+      repository.getAll(ProjectItem.TYPE, linkedTo(project, ProjectItem.PROJECT))
+        .getValueSet(ProjectItem.SERIES);
+    for (Integer seriesId : seriesIds) {
+      updateSeries(project, seriesId, repository);
+    }
+  }
+
+  private void updateSeries(Glob project, Integer seriesId, GlobRepository repository) {
+    Key seriesKey = Key.create(Series.TYPE, seriesId);
 
     // Gather months for the ProjectItems and Transactions associated to this project
-    GlobList projectItems = repository.getAll(ProjectItem.TYPE, linkedTo(project, ProjectItem.PROJECT));
+    GlobList projectItems = repository.getAll(ProjectItem.TYPE, linkedTo(seriesKey, ProjectItem.SERIES));
     SortedSet<Integer> months = new TreeSet<Integer>();
     for (Glob item : projectItems) {
       Integer firstItemMonth = item.get(ProjectItem.MONTH);
       months.add(firstItemMonth);
-      Integer monthCount = item.get(ProjectItem.MONTH_COUNT);
-      if (monthCount != 1) {
-        months.add(Month.offset(firstItemMonth, monthCount - 1));
+      Integer lastItemMonth = ProjectItem.getLastMonth(item);
+      if (!Utils.equal(firstItemMonth, lastItemMonth)) {
+        months.add(lastItemMonth);
       }
     }
-    months.addAll(projectItems.getValueSet(ProjectItem.MONTH));
     GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId).getGlobs();
     months.addAll(transactions.getValueSet(Transaction.BUDGET_MONTH));
     if (months.isEmpty()) {
@@ -90,7 +98,7 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
                           value(SeriesBudget.ACTIVE, hasActual));
       }
       else if (!hasActual) {
-        repository.delete(seriesBudget.getKey());
+        repository.delete(seriesBudget);
       }
       else {
         repository.update(seriesBudget.getKey(),
@@ -107,7 +115,7 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
           Integer lastMonthId = ProjectItem.getLastMonth(item);
           for (int monthId = firstMonthId; monthId <= lastMonthId; monthId = Month.next(monthId)) {
             Glob seriesBudget = SeriesBudget.find(seriesId, monthId, repository);
-            double planned = seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0) + item.get(ProjectItem.PLANNED_AMOUNT, 0.0);
+            double planned = seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0) + getPlanned(item, repository);
             repository.update(seriesBudget.getKey(),
                               value(SeriesBudget.PLANNED_AMOUNT, planned),
                               value(SeriesBudget.ACTIVE, true));
@@ -115,5 +123,15 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
         }
       }
     }
+  }
+
+  private Double getPlanned(Glob item, GlobRepository repository) {
+    if (ProjectItemType.TRANSFER.equals(ProjectItemType.get(item))) {
+      Glob transfer = ProjectTransfer.getTransferFromItem(item, repository);
+      if (!ProjectTransfer.isSavings(transfer, repository)) {
+        return 0.00;
+      }
+    }
+    return item.get(ProjectItem.PLANNED_AMOUNT, 0.0);
   }
 }

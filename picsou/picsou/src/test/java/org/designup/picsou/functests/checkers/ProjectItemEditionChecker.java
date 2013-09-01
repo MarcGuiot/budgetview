@@ -1,57 +1,56 @@
 package org.designup.picsou.functests.checkers;
 
-import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.functests.checkers.components.AmountEditorChecker;
 import org.designup.picsou.functests.checkers.components.MonthSliderChecker;
-import org.designup.picsou.gui.description.Formatting;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
+import org.uispec4j.UIComponent;
 
 import javax.swing.*;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
-public class ProjectItemEditionChecker extends GuiChecker {
-  private Panel panel;
-  private Panel enclosingPanel;
+public abstract class ProjectItemEditionChecker<T extends ProjectItemEditionChecker> extends GuiChecker {
+  protected Panel panel;
+  protected Panel enclosingPanel;
 
   public ProjectItemEditionChecker(Panel enclosingPanel) {
     this.enclosingPanel = enclosingPanel;
     this.panel = enclosingPanel.getPanel("projectItemEditionPanel");
   }
 
-  public ProjectItemEditionChecker setLabel(String name) {
+  public T setLabel(String name) {
     TextBox textBox = panel.getInputTextBox("nameField");
     textBox.setText(name, false);
     textBox.focusLost();
-    return this;
+    return (T)this;
   }
 
-  public ProjectItemEditionChecker setMonth(int monthId) {
+  public T checkLabel(String label) {
+    assertThat(panel.getInputTextBox("nameField").textEquals(label));
+    return (T)this;
+  }
+
+  public T setMonth(int monthId) {
     MonthSliderChecker.init(panel, "month").setMonth(monthId);
-    return this;
+    return (T)this;
   }
 
-  public ProjectItemEditionChecker checkMonth(String text) {
+  public T checkMonth(String text) {
     MonthSliderChecker.init(panel, "month").checkText(text);
-    return this;
+    return (T)this;
   }
 
-  public ProjectItemEditionChecker setAmount(double amount) {
-    AmountEditorChecker.init(panel, "amountEditor").set(amount);
-    return this;
-  }
-
-  public ProjectItemEditionChecker setMonthCount(int numberOfMonths) {
+  public T setMonthCount(int numberOfMonths) {
     TextBox textBox = panel.getInputTextBox("monthCountEditor");
     textBox.setText(Integer.toString(numberOfMonths), false);
     textBox.focusLost();
-    return this;
+    return (T)this;
   }
 
-  public ProjectItemEditionChecker checkMonthCount(int numberOfMonths) {
+  public T checkMonthCount(int numberOfMonths) {
     assertThat(panel.getInputTextBox("monthCountEditor").textEquals(Integer.toString(numberOfMonths)));
-    return this;
+    return (T)this;
   }
 
   public void validate() {
@@ -59,23 +58,25 @@ public class ProjectItemEditionChecker extends GuiChecker {
     assertFalse(enclosingPanel.containsSwingComponent(JPanel.class, "projectItemEditionPanel"));
   }
 
-  public ProjectItemEditionChecker validateAndCheckNameTip(String message) {
-    panel.getButton("validate").click();
-    assertTrue(enclosingPanel.containsSwingComponent(JPanel.class, "projectItemEditionPanel"));
-    checkTipVisible(enclosingPanel, panel.getInputTextBox("nameField"), message);
-    return this;
+  public T validateAndCheckNameTip(String message) {
+    doValidateAndCheckError(message, panel.getInputTextBox("nameField"));
+    return (T)this;
   }
 
-  public ProjectItemEditionChecker validateAndCheckMonthCountTip(String message) {
-    panel.getButton("validate").click();
-    assertTrue(enclosingPanel.containsSwingComponent(JPanel.class, "projectItemEditionPanel"));
-    checkTipVisible(enclosingPanel, panel.getInputTextBox("monthCountEditor"), message);
-    return this;
+  public T validateAndCheckMonthCountTip(String message) {
+    doValidateAndCheckError(message, panel.getInputTextBox("monthCountEditor"));
+    return (T)this;
   }
 
-  public ProjectItemEditionChecker checkNoTipShown() {
+  protected void doValidateAndCheckError(String message, UIComponent component) {
+    panel.getButton("validate").click();
+    assertTrue(enclosingPanel.containsSwingComponent(JPanel.class, "projectItemEditionPanel"));
+    checkTipVisible(enclosingPanel, component, message);
+  }
+
+  public T checkNoTipShown() {
     checkNoTipVisible(enclosingPanel);
-    return this;
+    return (T)this;
   }
 
   public void cancel() {

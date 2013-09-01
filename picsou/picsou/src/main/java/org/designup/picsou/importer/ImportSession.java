@@ -157,7 +157,7 @@ public class ImportSession {
                                      RealAccount.POSITION, account.get(RealAccount.POSITION));
             }
           }
-          importRepository.delete(account.getKey());
+          importRepository.delete(account);
         }
         accountIds.add(synchronizedAccount);
         importRepository.getAll(ImportedTransaction.TYPE)

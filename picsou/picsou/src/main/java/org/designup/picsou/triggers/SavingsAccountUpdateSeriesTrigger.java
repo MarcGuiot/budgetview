@@ -4,7 +4,6 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesBudgetChangeSetVisitor;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
@@ -13,8 +12,6 @@ import org.globsframework.model.utils.GlobMatchers;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
-import java.util.Set;
-
 public class SavingsAccountUpdateSeriesTrigger extends AbstractChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Account.TYPE, new ChangeSetVisitor() {
@@ -22,7 +19,7 @@ public class SavingsAccountUpdateSeriesTrigger extends AbstractChangeSetListener
         if (AccountType.SAVINGS.getId().equals(values.get(Account.ACCOUNT_TYPE))) {
           if (values.get(Account.ID) != Account.SAVINGS_SUMMARY_ACCOUNT_ID
               && values.get(Account.ID) != Account.EXTERNAL_ACCOUNT_ID) {
-            createSerie(repository, values);
+            createSeries(repository, values);
           }
         }
       }
@@ -30,7 +27,7 @@ public class SavingsAccountUpdateSeriesTrigger extends AbstractChangeSetListener
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         if (values.contains(Account.ACCOUNT_TYPE) &&
             AccountType.SAVINGS.getId().equals(values.get(Account.ACCOUNT_TYPE))) {
-          createSerie(repository, repository.get(key));
+          createSeries(repository, repository.get(key));
         }
         else if (values.contains(Account.IS_IMPORTED_ACCOUNT)) {
           deleteCreatedBySeries(key, repository);
@@ -63,11 +60,9 @@ public class SavingsAccountUpdateSeriesTrigger extends AbstractChangeSetListener
     finally {
       repository.completeChangeSet();
     }
-
   }
 
-
-  void createMirrorSeriesOnChange(Key key, GlobRepository repository) {
+  private void createMirrorSeriesOnChange(Key key, GlobRepository repository) {
     final LocalGlobRepository localRepository =
       LocalGlobRepositoryBuilder.init(repository)
         .copy(Account.TYPE, AccountType.TYPE, BudgetArea.TYPE, Month.TYPE, CurrentMonth.TYPE,
@@ -125,7 +120,7 @@ public class SavingsAccountUpdateSeriesTrigger extends AbstractChangeSetListener
     repository.apply(currentChanges);
   }
 
-  private void createSerie(GlobRepository repository, FieldValues values) {
+  private void createSeries(GlobRepository repository, FieldValues values) {
     GlobList globList = repository.getAll(Series.TYPE,
                                           and(
                                             fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()),

@@ -216,7 +216,7 @@ public class SplitTransactionDialog {
     try {
       localRepository.startChangeSet();
       if (amount == null) {
-        localRepository.delete(splittedTransaction.getKey());
+        localRepository.delete(splittedTransaction);
         splittedTransaction = null;
       }
       else {
@@ -416,7 +416,7 @@ public class SplitTransactionDialog {
           Glob source = repository.findLinkTarget(transaction, Transaction.SPLIT_SOURCE);
           repository.startChangeSet();
           try {
-            repository.delete(transaction.getKey());
+            repository.delete(transaction);
             repository.update(source.getKey(), Transaction.SPLIT,
                               repository.findLinkedTo(source, Transaction.SPLIT_SOURCE).isEmpty());
           }

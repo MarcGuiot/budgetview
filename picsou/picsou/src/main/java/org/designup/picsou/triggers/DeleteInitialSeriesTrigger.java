@@ -24,7 +24,7 @@ public class DeleteInitialSeriesTrigger extends DefaultChangeSetListener {
             for (Glob series : list) {
               if (repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
                 .getGlobs().isEmpty()) {
-                repository.delete(series.getKey());
+                repository.delete(series);
               }
             }
             return;

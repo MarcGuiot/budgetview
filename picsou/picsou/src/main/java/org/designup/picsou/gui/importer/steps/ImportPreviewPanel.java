@@ -362,7 +362,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
     for (Glob realAccount : sessionRepository.getAll(RealAccount.TYPE)) {
       if (RealAccount.areStrictlyEquivalent(selectedRealAccount, realAccount) &&
           Utils.equal(selectedRealAccount.get(RealAccount.ACCOUNT), realAccount.get(RealAccount.ACCOUNT))) {
-        sessionRepository.delete(realAccount.getKey());
+        sessionRepository.delete(realAccount);
         return;
       }
     }

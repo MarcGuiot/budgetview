@@ -35,7 +35,7 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
     categorization.setExtra("FNAC", "Camera", "Camera Body");
     budgetView.extras.checkSeries("Camera", -200.00, -280.00);
 
-    currentProject.toggleAndEdit(0)
+    currentProject.toggleAndEditExpense(0)
       .setAmount(-150.00)
       .setMonthCount(5)
       .validate();
@@ -53,13 +53,13 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Camera")
-      .addItem()
-      .edit(0)
+      .addExpenseItem()
+      .editExpense(0)
       .setLabel("Body")
       .setAmount(-100.00)
       .setMonthCount(0);
     currentProject
-      .edit(0)
+      .editExpense(0)
       .validateAndCheckMonthCountTip("You must set a duration of at least one month")
       .setMonthCount(5)
       .checkNoTipShown()
@@ -71,7 +71,7 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
       .checkItems("Body | Dec | 0.00 | -500.00");
 
     currentProject
-      .toggleAndEdit(0)
+      .toggleAndEditExpense(0)
       .setMonthCount(-8)
       .validateAndCheckMonthCountTip("You must set a duration of at least one month")
       .setMonthCount(8)

@@ -116,7 +116,7 @@ public class SeriesBudgetTrigger extends AbstractChangeSetListener {
       }
     }
     for (Glob seriesBudget : monthWithBudget.values()) {
-      repository.delete(seriesBudget.getKey());
+      repository.delete(seriesBudget);
     }
 
     if (series.isTrue(Series.IS_AUTOMATIC)) {

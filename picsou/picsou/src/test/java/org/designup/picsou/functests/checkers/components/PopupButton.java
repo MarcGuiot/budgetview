@@ -3,19 +3,20 @@ package org.designup.picsou.functests.checkers.components;
 import junit.framework.Assert;
 import org.uispec4j.Button;
 import org.uispec4j.MenuItem;
-import org.uispec4j.Mouse;
-import org.uispec4j.Trigger;
-import org.uispec4j.assertion.Assertion;
-import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.Panel;
 import org.uispec4j.interception.PopupMenuInterceptor;
 
 import java.awt.*;
 
-import static org.uispec4j.assertion.UISpecAssert.*;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class PopupButton extends PopupChecker {
 
   private Button button;
+
+  public static PopupButton init(Panel enclosingPanel, String buttonName) {
+    return new PopupButton(enclosingPanel.getButton(buttonName));
+  }
 
   public PopupButton(Button button) {
     this.button = button;

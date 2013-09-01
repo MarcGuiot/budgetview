@@ -130,7 +130,7 @@ public class DeleteTransactionDialog {
         if (account != null && toDelete.get(Transaction.ID).equals(account.get(Account.TRANSACTION_ID))) {
           repository.update(account.getKey(), Account.TRANSACTION_ID, null);
         }
-        repository.delete(toDelete.getKey());
+        repository.delete(toDelete);
       }
     }
     finally {

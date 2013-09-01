@@ -37,7 +37,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .checkCategorizationWarningNotShown();
 
     projectChart.select("Trip");
-    currentProject.toggleAndEdit(0)
+    currentProject.toggleAndEditExpense(0)
       .setMonth(201012)
       .validate();
     currentProject.view(0)

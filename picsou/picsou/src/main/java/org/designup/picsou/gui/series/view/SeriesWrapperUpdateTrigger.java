@@ -56,7 +56,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
         if (values.contains(Series.BUDGET_AREA)) {
           Glob wrapper = SeriesWrapper.find(repository, SeriesWrapperType.SERIES, key.get(Series.ID));
           if (wrapper != null) {
-            repository.delete(wrapper.getKey());
+            repository.delete(wrapper);
             GlobList subSeries = repository.findLinkedTo(repository.get(key), SubSeries.SERIES);
             for (Glob sub : subSeries) {
               repository.delete(SeriesWrapper.findAll(repository, SeriesWrapperType.SUB_SERIES, sub.get(SubSeries.ID)));

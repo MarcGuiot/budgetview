@@ -1,8 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
-import org.uispec4j.TextBox;
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
+import org.uispec4j.*;
+
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
 
@@ -42,7 +41,15 @@ public class SlaValidationDialogChecker extends GuiChecker {
   }
 
   public SlaValidationDialogChecker acceptTerms() {
-    dialog.getCheckBox().select();
+    try {
+      dialog.getCheckBox().select();
+    }
+    catch (ItemNotFoundException e) {
+      throw new ItemNotFoundException("Unexpected dialog: " + dialog.getDescription(), e);
+    }
+    catch (ComponentAmbiguityException e) {
+      throw new RuntimeException(e);
+    }
     return this;
   }
 

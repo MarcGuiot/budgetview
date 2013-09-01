@@ -142,7 +142,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     repository.update(glob2.getKey(), DummyObject.VALUE, 5.0);
     assertThat(textBox.textIsEmpty());
 
-    repository.delete(glob2.getKey());
+    repository.delete(glob2);
     assertThat(textBox.textEquals("1.1"));
 
     textBox.setText("3.3");
@@ -151,7 +151,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     repository.update(glob1.getKey(), DummyObject.VALUE, 4.4);
     assertThat(textBox.textEquals("4.4"));
 
-    repository.delete(glob1.getKey());
+    repository.delete(glob1);
     assertThat(textBox.textIsEmpty());
     assertFalse(textBox.isEnabled());
   }

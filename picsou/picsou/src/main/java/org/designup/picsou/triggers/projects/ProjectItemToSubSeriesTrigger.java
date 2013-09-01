@@ -1,9 +1,6 @@
 package org.designup.picsou.triggers.projects;
 
-import org.designup.picsou.model.Project;
-import org.designup.picsou.model.ProjectItem;
-import org.designup.picsou.model.SubSeries;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.globsframework.model.*;
 
 import static org.globsframework.model.FieldValue.value;
@@ -14,14 +11,17 @@ public class ProjectItemToSubSeriesTrigger extends AbstractChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(ProjectItem.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        if (values.isTrue(ProjectItem.ACTIVE)) {
+        if (values.isTrue(ProjectItem.ACTIVE) && ProjectItem.usesSubSeries(values)) {
           createSubSeries(key, values, repository);
         }
       }
 
       public void visitUpdate(Key itemKey, FieldValuesWithPrevious values) throws Exception {
+        Glob item = repository.get(itemKey);
+        if (!ProjectItem.usesSubSeries(item)) {
+          return;
+        }
         if (values.contains(ProjectItem.ACTIVE)) {
-          Glob item = repository.get(itemKey);
           if (values.isTrue(ProjectItem.ACTIVE) && item.get(ProjectItem.SUB_SERIES) == null) {
             createSubSeries(itemKey, item, repository);
           }

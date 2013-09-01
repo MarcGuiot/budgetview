@@ -47,5 +47,6 @@ public class SerializationManager {
     AccountPositionError.TYPE.updateProperty(SERIALIZATION_PROPERTY, new AccountPositionError.Serializer());
     Synchro.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Synchro.Serializer());
     Picture.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Picture.Serializer());
+    ProjectTransfer.TYPE.updateProperty(SERIALIZATION_PROPERTY, new ProjectTransfer.Serializer());
   }
 }

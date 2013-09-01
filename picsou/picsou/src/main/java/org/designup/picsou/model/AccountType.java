@@ -7,6 +7,8 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import static org.globsframework.model.FieldValue.value;
+
+import org.globsframework.model.Glob;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.Strings;
@@ -44,6 +46,17 @@ public enum AccountType implements GlobConstantContainer {
 
   public String getName() {
     return Strings.toNiceLowerCase(name);
+  }
+
+  public static AccountType get(Glob account) {
+    if (account == null) {
+      return null;
+    }
+    Integer accountType = account.get(Account.ACCOUNT_TYPE);
+    if (accountType == null) {
+      return null;
+    }
+    return get(accountType);
   }
 
   public static AccountType get(int id) {

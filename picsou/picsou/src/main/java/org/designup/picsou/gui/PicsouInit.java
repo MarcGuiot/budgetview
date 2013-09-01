@@ -108,18 +108,21 @@ public class PicsouInit {
     repository.addTrigger(new MonthTrigger(directory));
     repository.addTrigger(new AccountInitialPositionTrigger());
     repository.addTrigger(new DeleteInitialSeriesTrigger());
-    repository.addTrigger(new SavingsAccountUpdateSeriesTrigger());
-    repository.addTrigger(new SavingsUpdateSeriesMirrorTrigger());
-    repository.addTrigger(new SavingsDateActiveBudgetTrigger());
-    repository.addTrigger(new UpdateActiveBudgetTrigger());
-    repository.addTrigger(new ConfigUpgradeTrigger(directory));
     repository.addTrigger(new ProjectToSeriesTrigger());
     repository.addTrigger(new ProjectToItemTrigger());
+    repository.addTrigger(new ProjectItemToSeriesTrigger());
+    repository.addTrigger(new ProjectTransferToSeriesTrigger());
+    repository.addTrigger(new ProjectTransferDeletionTrigger());
     repository.addTrigger(new ProjectToStatTrigger());
     repository.addTrigger(new ProjectItemToStatTrigger());
     repository.addTrigger(new ProjectItemToSeriesBudgetTrigger());
     repository.addTrigger(new ProjectItemToSubSeriesTrigger());
     repository.addTrigger(new ProjectItemToProjectStatTrigger());
+    repository.addTrigger(new SavingsAccountUpdateSeriesTrigger());
+    repository.addTrigger(new SavingsUpdateSeriesMirrorTrigger());
+    repository.addTrigger(new SavingsDateActiveBudgetTrigger());
+    repository.addTrigger(new UpdateActiveBudgetTrigger());
+    repository.addTrigger(new ConfigUpgradeTrigger(directory));
     repository.addTrigger(new SeriesRenameTrigger());
     repository.addTrigger(new AccountDeleteTrigger());
     repository.addTrigger(new SeriesDeletionTrigger());
@@ -147,7 +150,9 @@ public class PicsouInit {
     repository.addTrigger(new SavingsBudgetStatTrigger());
     repository.addTrigger(new SubSeriesStatTrigger());
     repository.addTrigger(new SeriesStatToProjectStatTrigger());
+    repository.addTrigger(new SeriesStatToProjectItemStatTrigger());
     repository.addTrigger(new SubSeriesStatToProjectItemStatTrigger());
+    repository.addTrigger(new ProjectCategorizationWarningTrigger());
     repository.addTrigger(new DateFormatTrigger(directory));
   }
 

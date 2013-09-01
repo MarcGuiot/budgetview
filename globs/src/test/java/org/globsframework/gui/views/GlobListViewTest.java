@@ -308,7 +308,7 @@ public class GlobListViewTest extends GuiComponentTestCase {
     view.select(glob1);
     assertTrue(listBox.selectionEquals("name1"));
 
-    repository.delete(glob2.getKey());
+    repository.delete(glob2);
 
     Glob newGlob2 = repository.create(DummyObject.TYPE, value(DummyObject.NAME, "name2"));
     view.select(newGlob2);

@@ -3,6 +3,7 @@ package org.designup.picsou.triggers.projects;
 import org.designup.picsou.gui.model.ProjectStat;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.model.ProjectItem;
+import org.designup.picsou.model.ProjectItemType;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 
@@ -10,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class ProjectItemToProjectStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
@@ -44,19 +46,25 @@ public class ProjectItemToProjectStatTrigger implements ChangeSetListener {
   }
 
   private void updateProject(Glob project, GlobRepository repository) {
+    Key projectStatKey = Key.create(ProjectStat.TYPE, project.get(Project.ID));
+    updatePlannedAmount(project, projectStatKey, repository);
+    updateFirstAndLastMonth(project, projectStatKey, repository);
+  }
 
-    GlobList items = repository.findLinkedTo(project, ProjectItem.PROJECT);
-
+  private void updatePlannedAmount(Glob project, Key projectStatKey, GlobRepository repository) {
     double totalPlanned = 0.00;
-    for (Glob item : items) {
+    for (Glob item : repository.getAll(ProjectItem.TYPE,
+                                       and(linkedTo(project, ProjectItem.PROJECT),
+                                           not(fieldEquals(ProjectItem.ITEM_TYPE, ProjectItemType.TRANSFER.getId()))))) {
       totalPlanned += ProjectItem.getTotalPlannedAmount(item);
     }
-    Key projectStatKey = Key.create(ProjectStat.TYPE, project.get(Project.ID));
     repository.update(projectStatKey, ProjectStat.PLANNED_AMOUNT, totalPlanned);
+  }
 
+  private void updateFirstAndLastMonth(Glob project, Key projectStatKey, GlobRepository repository) {
     Integer firstMonth = null;
     Integer lastMonth = null;
-    for (Glob item : items) {
+    for (Glob item : repository.findLinkedTo(project, ProjectItem.PROJECT)) {
       Integer firstItemMonth = item.get(ProjectItem.MONTH);
       if (firstItemMonth == null) {
         continue;
