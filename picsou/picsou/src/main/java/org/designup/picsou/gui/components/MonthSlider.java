@@ -4,11 +4,13 @@ import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.globsframework.gui.splits.components.ArrowIcon;
+import org.globsframework.gui.splits.components.EmptyIcon;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -47,12 +49,14 @@ public class MonthSlider extends JPanel implements Disposable, ChangeSetListener
     initArrowButton(previous);
     this.previousButtonIcon = new ArrowIcon(10, 10, ArrowIcon.Orientation.LEFT);
     this.previous.setIcon(previousButtonIcon);
+    this.previous.setDisabledIcon(new EmptyIcon(10, 10));
     this.previousButtonRolloverIcon = new ArrowIcon(10, 10, ArrowIcon.Orientation.LEFT);
     this.previous.setRolloverIcon(previousButtonRolloverIcon);
 
     initArrowButton(next);
     this.nextButtonIcon = new ArrowIcon(10, 10, ArrowIcon.Orientation.RIGHT);
     this.next.setIcon(nextButtonIcon);
+    this.next.setDisabledIcon(new EmptyIcon(10, 10));
     this.nextButtonRolloverIcon = new ArrowIcon(10, 10, ArrowIcon.Orientation.RIGHT);
     this.next.setRolloverIcon(nextButtonRolloverIcon);
 
@@ -117,9 +121,9 @@ public class MonthSlider extends JPanel implements Disposable, ChangeSetListener
 
   private void updateLabel() {
     Glob glob = repository.find(key);
-    setButtonsEnabled(glob != null);
     String month = adapter.getText(glob, repository);
     label.setText(month);
+    setButtonsEnabled(glob != null && Strings.isNotEmpty(month));
   }
 
   private void setButtonsEnabled(boolean enabled) {

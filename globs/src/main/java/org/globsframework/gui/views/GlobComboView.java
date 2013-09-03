@@ -87,7 +87,7 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
 
   public GlobComboView setName(String name) {
     this.name = name;
-    if (jComboBox != null){
+    if (jComboBox != null) {
       jComboBox.setName(name);
     }
     return this;
@@ -181,7 +181,7 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
     else {
       Glob glob = (Glob)jComboBox.getSelectedItem();
       model.model.setFilter(matcher, true);
-      if (glob != null && matcher.matches(glob, repository)){
+      if (glob != null && matcher.matches(glob, repository)) {
         jComboBox.setSelectedItem(glob);
       }
       if ((glob == null || !matcher.matches(glob, repository)) && model.model.size() != 0) {
@@ -273,6 +273,10 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
 
     public void updateSorting() {
       model.sort(comparator);
+    }
+
+    public int indexOf(Glob glob) {
+      return model.indexOf(glob);
     }
   }
 

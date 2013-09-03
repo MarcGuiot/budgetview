@@ -113,16 +113,11 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
-  public ProjectEditionChecker addTransferItem() {
-    PopupButton.init(getPanel(), "addItem").click(Lang.get("projectEdition.addItem.transfer"));
-    return this;
+  public ProjectEditionChecker addExpenseItem(int index, String label, int firstMonth, double amount) {
+    return addExpenseItem(index, label, firstMonth, amount, 1);
   }
 
-  public ProjectEditionChecker addItem(int index, String label, int firstMonth, double amount) {
-    return addItem(index, label, firstMonth, amount, 1);
-  }
-
-  public ProjectEditionChecker addItem(int index, String label, int firstMonth, double amount, int numberOfMonths) {
+  public ProjectEditionChecker addExpenseItem(int index, String label, int firstMonth, double amount, int numberOfMonths) {
     addExpenseItem();
     ProjectItemEditionChecker projectItemEditionChecker = editExpense(index)
       .setLabel(label)
@@ -132,6 +127,22 @@ public class ProjectEditionChecker extends ViewChecker {
       projectItemEditionChecker.setMonthCount(numberOfMonths);
     }
     projectItemEditionChecker
+      .validate();
+    return this;
+  }
+
+  public ProjectEditionChecker addTransferItem() {
+    PopupButton.init(getPanel(), "addItem").click(Lang.get("projectEdition.addItem.transfer"));
+    return this;
+  }
+
+  public ProjectEditionChecker addTransferItem(int index, String label, double amount, String fromAccount, String toAccount) {
+    addTransferItem();
+    editTransfer(index)
+      .setLabel(label)
+      .setAmount(amount)
+      .setFromAccount(fromAccount)
+      .setToAccount(toAccount)
       .validate();
     return this;
   }
@@ -220,17 +231,27 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
+  public ProjectEditionChecker checkPeriodHidden() {
+    MonthSliderChecker.init(getProjectPanel(), "monthSlider").checkHidden();
+    return this;
+  }
+
   public ProjectItemExpenseEditionChecker editExpense(int index) {
     return new ProjectItemExpenseEditionChecker(getItemPanel(index));
+  }
+
+  public ProjectItemExpenseEditionChecker toggleAndEditExpense(int index) {
+    view(index).modify();
+    return editExpense(index);
   }
 
   public ProjectItemTransferEditionChecker editTransfer(int index) {
     return new ProjectItemTransferEditionChecker(getItemPanel(index));
   }
 
-  public ProjectItemExpenseEditionChecker toggleAndEditExpense(int index) {
+  public ProjectItemTransferEditionChecker toggleAndEditTransfer(int index) {
     view(index).modify();
-    return editExpense(index);
+    return editTransfer(index);
   }
 
   public ProjectItemViewChecker view(int index) {

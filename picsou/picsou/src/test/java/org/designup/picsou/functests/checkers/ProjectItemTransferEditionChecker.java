@@ -28,6 +28,11 @@ public class ProjectItemTransferEditionChecker extends ProjectItemEditionChecker
     return this;
   }
 
+  public ProjectItemTransferEditionChecker checkFromAccount(String accountName) {
+    assertThat(panel.getComboBox("fromAccount").selectionEquals(accountName));
+    return this;
+  }
+
   public ProjectItemTransferEditionChecker checkFromAccounts(String... accountNames) {
     assertThat(panel.getComboBox("fromAccount").contentEquals(accountNames));
     return this;
@@ -43,6 +48,10 @@ public class ProjectItemTransferEditionChecker extends ProjectItemEditionChecker
     return this;
   }
 
+  public ProjectItemTransferEditionChecker checkToAccount(String accountName) {
+    assertThat(panel.getComboBox("toAccount").selectionEquals(accountName));
+    return this;
+  }
   public ProjectItemTransferEditionChecker checkToAccounts(String... accountNames) {
     assertThat(panel.getComboBox("toAccount").contentEquals(accountNames));
     return this;
@@ -71,5 +80,11 @@ public class ProjectItemTransferEditionChecker extends ProjectItemEditionChecker
   public ProjectItemTransferEditionChecker validateAndCheckToAccountError(String message) {
     doValidateAndCheckError(message, panel.getComboBox("toAccount"));
     return this;
+  }
+
+  public ConfirmationDialogChecker validateAndCheckConfirmation() {
+    ConfirmationDialogChecker confirmation = ConfirmationDialogChecker.open(panel.getButton("validate").triggerClick());
+    assertTrue(enclosingPanel.containsSwingComponent(JPanel.class, "projectItemEditionPanel"));
+    return confirmation;
   }
 }

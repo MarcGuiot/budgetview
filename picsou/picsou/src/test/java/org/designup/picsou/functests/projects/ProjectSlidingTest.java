@@ -23,7 +23,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Trip")
-      .addItem(0, "Booking", 201011, -200.00)
+      .addExpenseItem(0, "Booking", 201011, -200.00)
       .view(0)
       .checkCategorizationWarningNotShown();
 
@@ -87,9 +87,9 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Trip")
-      .addItem(0, "Booking", 201012, -200.00)
-      .addItem(1, "Travel", 201102, -100.00)
-      .addItem(2, "Hotel", 201102, -400.00);
+      .addExpenseItem(0, "Booking", 201012, -200.00)
+      .addExpenseItem(1, "Travel", 201102, -100.00)
+      .addExpenseItem(2, "Hotel", 201102, -400.00);
 
     // --- Slide to January - March 2011
 
@@ -165,9 +165,9 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Trip")
-      .addItem(0, "Booking", 201012, -200.00)
-      .addItem(1, "Travel", 201102, -100.00)
-      .addItem(2, "Hotel", 201102, -400.00)
+      .addExpenseItem(0, "Booking", 201012, -200.00)
+      .addExpenseItem(1, "Travel", 201102, -100.00)
+      .addExpenseItem(2, "Hotel", 201102, -400.00)
     ;
 
     OfxBuilder.init(this)
@@ -300,9 +300,9 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Trip")
-      .addItem(0, "Booking", 201012, -200.00)
-      .addItem(1, "Travel", 201102, -100.00)
-      .addItem(2, "Hotel", 201102, -400.00);
+      .addExpenseItem(0, "Booking", 201012, -200.00)
+      .addExpenseItem(1, "Travel", 201102, -100.00)
+      .addExpenseItem(2, "Hotel", 201102, -400.00);
     currentProject.view(0)
       .checkCategorizationWarningNotShown();
 
@@ -356,8 +356,8 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Camera")
-      .addItem(0, "Camera Body", 201011, -300.00, 3)
-      .addItem(1, "Lens", 201012, -100.00);
+      .addExpenseItem(0, "Camera Body", 201011, -300.00, 3)
+      .addExpenseItem(1, "Lens", 201012, -100.00);
     categorization.setExtra("FNAC", "Camera", "Camera Body");
     budgetView.extras.checkSeries("Camera", -200.00, -400.00);
     currentProject.view(0).checkCategorizationWarningNotShown();

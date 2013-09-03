@@ -5,11 +5,13 @@ import org.designup.picsou.gui.components.images.GlobImageLabelView;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.model.ProjectItem;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobMultiLineTextEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -59,6 +61,21 @@ public class ProjectItemExpensePanel extends ProjectItemEditionPanel {
     builder.add("handler", new HyperlinkHandler(directory));
 
     return builder.load();
+  }
+
+  protected GlobList getAssignedTransactions(Glob projectItem, GlobRepository repository) {
+    GlobList transactions = GlobList.EMPTY;
+    Glob subSeries = repository.findLinkTarget(projectItem, ProjectItem.SUB_SERIES);
+    if (subSeries != null) {
+      transactions = repository.findLinkedTo(subSeries, Transaction.SUB_SERIES);
+    }
+    else {
+      Glob series = repository.findLinkTarget(projectItem, ProjectItem.SERIES);
+      if (series != null) {
+        transactions = repository.findLinkedTo(series, Transaction.SERIES);
+      }
+    }
+    return transactions;
   }
 
   protected boolean isNewItem(Glob item) {

@@ -54,13 +54,13 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     projects.select("My project");
     currentProject
-      .addItem(1, "Travel", 201102, -100.00)
+      .addExpenseItem(1, "Travel", 201102, -100.00)
       .checkItemCount(2)
       .checkProjectGauge(0.00, -300.00)
       .checkItem(1, "Travel", "Feb", 0.00, -100.00);
 
     currentProject
-      .addItem(2, "Hotel", 201102, -500.00)
+      .addExpenseItem(2, "Hotel", 201102, -500.00)
       .checkItemCount(3)
       .checkItems("Reservation | Jan | 0.00 | -200.00\n" +
                   "Travel | Feb | 0.00 | -100.00\n" +
@@ -148,8 +148,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("My project")
-      .addItem(0, "Reservation", 201101, -200.00)
-      .addItem(1, "Hotel", 201101, -300.00)
+      .addExpenseItem(0, "Reservation", 201101, -200.00)
+      .addExpenseItem(1, "Hotel", 201101, -300.00)
       .backToList();
     projects.checkProjects("| My project | Jan | -500.00 | on |");
 
@@ -183,8 +183,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("My project")
-      .addItem(0, "Reservation", 201101, -200.00)
-      .addItem(1, "Hotel", 201101, -500.00);
+      .addExpenseItem(0, "Reservation", 201101, -200.00)
+      .addExpenseItem(1, "Hotel", 201101, -500.00);
 
     OfxBuilder.init(this)
       .addBankAccount("001111", 800.00, "2011/01/10")
@@ -277,8 +277,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("My project")
-      .addItem(0, "Item 1", 201101, 100.00)
-      .addItem(1, "Item 2", 201101, 100.00);
+      .addExpenseItem(0, "Item 1", 201101, 100.00)
+      .addExpenseItem(1, "Item 2", 201101, 100.00);
 
     categorization.selectTransaction("Income");
     categorization.selectExtras().checkSeriesContainsSubSeries("My project", "Item 1", "Item 2");
@@ -305,8 +305,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("My project")
-      .addItem(0, "Travel", 201212, -300.00)
-      .addItem(1, "Accomodation", 201212, -500.00)
+      .addExpenseItem(0, "Travel", 201212, -300.00)
+      .addExpenseItem(1, "Accomodation", 201212, -500.00)
       .checkItems("Travel | Dec | 0.00 | -300.00\n" +
                   "Accomodation | Dec | 0.00 | -500.00")
       .checkItemGauge(0, 0.00, -300.00)
@@ -325,7 +325,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     currentProject
       .checkItems("Travel | Dec | -250.00 | -300.00\n" +
                   "Accomodation | Dec | -550.00 | -500.00")
-      .addItem(2, "Other", 201301, -100.00)
+      .addExpenseItem(2, "Other", 201301, -100.00)
       .checkItems("Travel | Dec | -250.00 | -300.00\n" +
                   "Accomodation | Dec | -550.00 | -500.00\n" +
                   "Other | Jan | 0.00 | -100.00")
@@ -348,8 +348,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("My project")
-      .addItem(0, "Travel", 201212, -300.00)
-      .addItem(1, "Accomodation", 201212, -500.00);
+      .addExpenseItem(0, "Travel", 201212, -300.00)
+      .addExpenseItem(1, "Accomodation", 201212, -500.00);
 
     categorization.selectTransaction("SNCF");
     categorization.selectExtras().checkSeriesContainsSubSeries("My project", "Travel", "Accomodation");
@@ -382,8 +382,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     views.checkHomeSelected();
     currentProject
       .setName("Past Project")
-      .addItem(0, "Reservation", 201101, -100.00)
-      .addItem(1, "Hotel", 201102, -500.00)
+      .addExpenseItem(0, "Reservation", 201101, -100.00)
+      .addExpenseItem(1, "Hotel", 201102, -500.00)
       .backToList();
 
     views.selectBudget();
@@ -440,19 +440,19 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Past Project")
-      .addItem(0, "Reservation", 201007, -100.00)
-      .addItem(1, "Hotel", 201008, -500.00);
+      .addExpenseItem(0, "Reservation", 201007, -100.00)
+      .addExpenseItem(1, "Hotel", 201008, -500.00);
 
     projectChart.create();
     currentProject
       .setName("Current Project")
-      .addItem(0, "Reservation", 201101, -100.00)
-      .addItem(1, "Hotel", 201102, -500.00);
+      .addExpenseItem(0, "Reservation", 201101, -100.00)
+      .addExpenseItem(1, "Hotel", 201102, -500.00);
 
     projectChart.create();
     currentProject
       .setName("Next Project")
-      .addItem(0, "Reservation", 201105, -100.00);
+      .addExpenseItem(0, "Reservation", 201105, -100.00);
 
     projectChart.checkProjectList("Current Project", "Next Project");
 
@@ -494,7 +494,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     categorization.selectExtras().createProject();
     currentProject
       .setName("My project")
-      .addItem(0, "Trip", 201101, -150.00);
+      .addExpenseItem(0, "Trip", 201101, -150.00);
 
     views.checkHomeSelected();
     projectChart.checkProjectList("My project");
@@ -516,7 +516,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("My project")
-      .addItem(0, "Bonus", 201101, 1000.00);
+      .addExpenseItem(0, "Bonus", 201101, 1000.00);
 
     projectChart.checkProjectList("My project");
     projectChart.select("My project");
@@ -538,7 +538,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("My project")
-      .addItem(0, "Reservation", 201012, -200.00);
+      .addExpenseItem(0, "Reservation", 201012, -200.00);
 
     projectChart.selectMonth(201101);
     timeline.checkSelection("2011/01");
@@ -557,12 +557,12 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Trip")
-      .addItem(0, "Booking", 201011, -200.00);
+      .addExpenseItem(0, "Booking", 201011, -200.00);
 
     projectChart.create();
     currentProject
       .setName("Another project")
-      .addItem(0, "Another item", 201011, -200.00);
+      .addExpenseItem(0, "Another item", 201011, -200.00);
 
     timeline.selectMonth("2010/11");
     categorization.setExtra("RESA", "Trip");
@@ -595,8 +595,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Trip")
-      .addItem(0, "Booking", 201011, -250.00)
-      .addItem(1, "Hotel", 201012, -200.00);
+      .addExpenseItem(0, "Booking", 201011, -250.00)
+      .addExpenseItem(1, "Hotel", 201012, -200.00);
 
     categorization.setExtra("RESA 1", "Trip", "Booking");
     categorization.setExtra("RESA 2", "Trip", "Booking");

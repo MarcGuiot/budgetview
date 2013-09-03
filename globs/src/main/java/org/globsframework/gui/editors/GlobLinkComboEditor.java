@@ -69,6 +69,7 @@ public class GlobLinkComboEditor
       if (glob != null) {
         select(new GlobList(glob));
       }
+      return;
     }
 
     if (currentKey == null || !changeSet.containsChanges(currentKey)) {
@@ -84,6 +85,7 @@ public class GlobLinkComboEditor
 
     Glob target = repository.findLinkTarget(source, link);
     setTarget(target);
+
     globComboView.setEnabled(forcedEnabled);
   }
 

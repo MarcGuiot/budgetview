@@ -121,7 +121,7 @@ public class SeriesEditionDialog {
           return;
         }
         if (changeSet.containsChanges(currentSeries.getKey())) {
-          FieldValues previousValue = changeSet.getPreviousValue(currentSeries.getKey());
+          FieldValues previousValue = changeSet.getPreviousValues(currentSeries.getKey());
           if (previousValue.contains(Series.IS_AUTOMATIC)) {
             isAutomatic = currentSeries.get(Series.IS_AUTOMATIC);
           }

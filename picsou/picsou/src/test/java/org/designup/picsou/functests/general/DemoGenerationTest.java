@@ -325,8 +325,8 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     budgetView.extras.createProject();
     currentProject
       .setName(project("house"))
-      .addItem(0, "First", firstMonth, -900.00)
-      .addItem(1, "Second", secondMonth, -600.00);
+      .addExpenseItem(0, "First", firstMonth, -900.00)
+      .addExpenseItem(1, "Second", secondMonth, -600.00);
 
     //======== "TRIP" PROJECT ===========
 
@@ -337,10 +337,10 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     budgetView.extras.createProject();
     currentProject
       .setName(project("trip"))
-      .addItem(0, "Accomodation reservation", holidaysMonth1, -600.00)
-      .addItem(1, "Flight tickets", holidaysMonth1, -450.00)
-      .addItem(2, "Equipment", holidaysMonth2, -400.00)
-      .addItem(3, "Accomodation", holidaysMonth3, -1000.00);
+      .addExpenseItem(0, "Accomodation reservation", holidaysMonth1, -600.00)
+      .addExpenseItem(1, "Flight tickets", holidaysMonth1, -450.00)
+      .addExpenseItem(2, "Equipment", holidaysMonth2, -400.00)
+      .addExpenseItem(3, "Accomodation", holidaysMonth3, -1000.00);
 
     //======== PROVISIONS ===========
 

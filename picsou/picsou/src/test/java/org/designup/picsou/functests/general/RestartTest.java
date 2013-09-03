@@ -221,9 +221,9 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("MyProject")
-      .addItem(0, "Booking", 200808, -200.00)
-      .addItem(1, "Travel", 200810, -100.00)
-      .addItem(2, "Hotel", 200810, -500.00);
+      .addExpenseItem(0, "Booking", 200808, -200.00)
+      .addExpenseItem(1, "Travel", 200810, -100.00)
+      .addExpenseItem(2, "Hotel", 200810, -500.00);
 
     categorization.selectTransaction("RESA")
       .selectExtras().selectSubSeries("MyProject", "Booking");

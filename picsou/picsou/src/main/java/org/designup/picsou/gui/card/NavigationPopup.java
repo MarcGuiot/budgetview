@@ -117,11 +117,11 @@ public class NavigationPopup {
 
   private void initBudgetAreasPopup(JPopupMenu popup, SortedSet<Integer> monthIds, Set<Key> objectKeys) {
     addShowTransactionActions(popup, monthIds,
-                              Matchers.transactionsForBudgetAreas(GlobUtils.getIntegerValues(objectKeys, BudgetArea.ID)));
+                              Matchers.transactionsForBudgetAreas(GlobUtils.getValues(objectKeys, BudgetArea.ID)));
   }
 
   private void initSeriesPopup(JPopupMenu popup, SortedSet<Integer> monthIds, Set<Key> objectKeys) {
-    Set<Integer> seriesIds = GlobUtils.getIntegerValues(objectKeys, Series.ID);
+    Set<Integer> seriesIds = GlobUtils.getValues(objectKeys, Series.ID);
     GlobMatcher matcher = Matchers.transactionsForSeries(seriesIds);
     addShowInCategorization(popup, monthIds, matcher);
     popup.add(new ShowSeriesTransactionsInAccountViewAction(seriesIds, localDirectory));

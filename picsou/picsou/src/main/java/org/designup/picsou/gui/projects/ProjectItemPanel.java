@@ -9,10 +9,7 @@ import org.designup.picsou.gui.components.charts.SimpleGaugeView;
 import org.designup.picsou.gui.components.images.GlobImageLabelView;
 import org.designup.picsou.gui.components.images.IconFactory;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.ProjectItemStat;
-import org.designup.picsou.gui.model.ProjectStat;
-import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
 import org.designup.picsou.gui.projects.utils.ImageStatusUpdater;
 import org.designup.picsou.model.*;
@@ -31,18 +28,18 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobListActionAdapter;
 import org.globsframework.model.utils.GlobListFunctor;
-import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Functor;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 public abstract class ProjectItemPanel implements Disposable {
 
@@ -54,6 +51,7 @@ public abstract class ProjectItemPanel implements Disposable {
   private JPanel enclosingPanel;
   private JPanel viewPanel;
   private JPanel editionPanel;
+  protected java.util.List<Functor> onCommitFunctors = new ArrayList<Functor>();
 
   public ProjectItemPanel(Glob item, GlobRepository parentRepository, Directory directory) {
     this.itemKey = item.getKey();
@@ -216,7 +214,10 @@ public abstract class ProjectItemPanel implements Disposable {
     if (editionPanel == null) {
       editionPanel = createEditionPanel();
     }
-    localRepository.rollback();
+    else {
+      localRepository.rollback();
+    }
+    onCommitFunctors.clear();
     showPanel(editionPanel);
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
@@ -230,12 +231,27 @@ public abstract class ProjectItemPanel implements Disposable {
       super(Lang.get("projectView.item.edition.validate"));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent event) {
       if (!check()) {
         return;
       }
 
+      parentRepository.startChangeSet();
+      try {
       localRepository.commitChanges(false);
+        for (Functor onCommitFunctor : onCommitFunctors) {
+          try {
+            onCommitFunctor.run();
+          }
+          catch (Exception e) {
+            throw new RuntimeException(e);
+          }
+        }
+      }
+      finally {
+        parentRepository.completeChangeSet();
+      }
+
       showPanel(viewPanel);
     }
   }
@@ -295,20 +311,12 @@ public abstract class ProjectItemPanel implements Disposable {
 
     public void actionPerformed(ActionEvent e) {
       Glob projectItem = parentRepository.get(itemKey);
-      GlobList transactions = GlobList.EMPTY;
-      Glob subSeries = parentRepository.findLinkTarget(projectItem, ProjectItem.SUB_SERIES);
-      if (subSeries != null) {
-        transactions = parentRepository.findLinkedTo(subSeries, Transaction.SUB_SERIES);
-      }
-      else {
-        Glob series = parentRepository.findLinkTarget(projectItem, ProjectItem.SERIES);
-        if (series != null) {
-          transactions = parentRepository.findLinkedTo(series, Transaction.SERIES);
-        }
-      }
+      GlobList transactions = getAssignedTransactions(projectItem, ProjectItemPanel.this.parentRepository);
       directory.get(NavigationService.class).gotoData(transactions);
     }
   }
+
+  protected abstract GlobList getAssignedTransactions(Glob projectItem, GlobRepository repository);
 
   private class CategorizationWarningUpdater extends AbstractGlobBooleanUpdater {
 

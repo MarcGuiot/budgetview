@@ -5,7 +5,6 @@ import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.model.SubSeriesStat;
 import org.designup.picsou.model.ProjectItem;
-import org.designup.picsou.model.ProjectItemType;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SubSeries;
 import org.globsframework.metamodel.GlobType;
@@ -27,11 +26,11 @@ public class ProjectCategorizationWarningTrigger implements ChangeSetListener {
     }
 
     final Set<Integer> modifiedProjectItemIds = new HashSet<Integer>();
-    Set<Integer> subSeriesIds = GlobUtils.getIntegerValues(changeSet.getChanged(SubSeriesStat.TYPE), SubSeriesStat.SUB_SERIES);
+    Set<Integer> subSeriesIds = GlobUtils.getValues(changeSet.getChanged(SubSeriesStat.TYPE), SubSeriesStat.SUB_SERIES);
     for (Glob item : repository.getAll(ProjectItem.TYPE, fieldIn(ProjectItem.SUB_SERIES, subSeriesIds))) {
       modifiedProjectItemIds.add(item.get(ProjectItem.ID));
     }
-    Set<Integer> seriesIds = GlobUtils.getIntegerValues(changeSet.getChanged(SeriesStat.TYPE), SeriesStat.SERIES);
+    Set<Integer> seriesIds = GlobUtils.getValues(changeSet.getChanged(SeriesStat.TYPE), SeriesStat.SERIES);
     for (Glob item : repository.getAll(ProjectItem.TYPE, fieldIn(ProjectItem.SERIES, seriesIds))) {
       modifiedProjectItemIds.add(item.get(ProjectItem.ID));
     }
@@ -67,11 +66,13 @@ public class ProjectCategorizationWarningTrigger implements ChangeSetListener {
       }
     }
     else {
-      Glob series = repository.get(Key.create(Series.TYPE, projectItem.get(ProjectItem.SERIES)));
-      for (Glob seriesStat : repository.findLinkedTo(series, SeriesStat.SERIES)) {
-        if (!monthInProjectItemRange(seriesStat.get(SeriesStat.MONTH), projectItem)
-            && Amounts.isNotZero(seriesStat.get(SeriesStat.ACTUAL_AMOUNT))) {
-          warning = true;
+      Glob series = repository.find(Key.create(Series.TYPE, projectItem.get(ProjectItem.SERIES)));
+      if (series != null) {
+        for (Glob seriesStat : repository.findLinkedTo(series, SeriesStat.SERIES)) {
+          if (!monthInProjectItemRange(seriesStat.get(SeriesStat.MONTH), projectItem)
+              && Amounts.isNotZero(seriesStat.get(SeriesStat.ACTUAL_AMOUNT))) {
+            warning = true;
+          }
         }
       }
     }

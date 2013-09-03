@@ -6,7 +6,6 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.DefaultChangeSetListener;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.GlobUtils;
 
 import java.util.Set;
@@ -20,7 +19,7 @@ public class SubSeriesDeletionTrigger extends DefaultChangeSetListener {
     }
 
     Set<Integer> subSeriesIds =
-      GlobUtils.getIntegerValues(changeSet.getDeleted(SubSeries.TYPE), SubSeries.ID);
+      GlobUtils.getValues(changeSet.getDeleted(SubSeries.TYPE), SubSeries.ID);
     if (subSeriesIds.isEmpty()) {
       return;
     }

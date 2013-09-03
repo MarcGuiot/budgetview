@@ -22,9 +22,9 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Trip")
-      .addItem(0, "Reservation", 201012, -200.00)
-      .addItem(1, "Equipment", 201012, -100.00)
-      .addItem(2, "Hotel", 201101, -500.00);
+      .addExpenseItem(0, "Reservation", 201012, -200.00)
+      .addExpenseItem(1, "Equipment", 201012, -100.00)
+      .addExpenseItem(2, "Hotel", 201101, -500.00);
 
     budgetView.extras.checkSeries("Trip", 0.00, -300.00);
     categorization.selectTransaction("Expense 1").selectExtras()
@@ -122,9 +122,9 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Trip")
-      .addItem(0, "Reservation", 201012, -200.00)
-      .addItem(1, "Equipment", 201012, -100.00)
-      .addItem(2, "Hotel", 201101, -500.00);
+      .addExpenseItem(0, "Reservation", 201012, -200.00)
+      .addExpenseItem(1, "Equipment", 201012, -100.00)
+      .addExpenseItem(2, "Hotel", 201101, -500.00);
 
     categorization.setExtra("RESA", "Trip", "Reservation");
 

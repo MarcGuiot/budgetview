@@ -111,8 +111,7 @@ public class BalloonTipTesting {
 
   private static Component[] getBalloonTipComponents(Container panel) {
     ComponentFinder finder = new ComponentFinder(panel, new Panel(panel));
-    return finder.getComponents(and(fromClass(BalloonTip.class),
-                                                        visible(true)));
+    return finder.getComponents(and(fromClass(BalloonTip.class), visible(true)));
   }
 
   public static void checkSingleBalloonVisible(Panel enclosingPanel) {

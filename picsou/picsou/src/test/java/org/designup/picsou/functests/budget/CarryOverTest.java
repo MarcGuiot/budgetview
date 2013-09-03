@@ -397,8 +397,8 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("My Project")
-      .addItem(0, "Item 0", 200808, -10.00)
-      .addItem(1, "Item 1", 200808, -10.00);
+      .addExpenseItem(0, "Item 0", 200808, -10.00)
+      .addExpenseItem(1, "Item 1", 200808, -10.00);
 
     budgetView.extras.checkCarryOverDisabled("My Project");
   }

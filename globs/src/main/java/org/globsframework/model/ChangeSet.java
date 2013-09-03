@@ -44,7 +44,7 @@ public interface ChangeSet {
 
   boolean isDeleted(Key key);
 
-  FieldValues getPreviousValue(Key key);
+  FieldValues getPreviousValues(Key key);
 
   void visit(ChangeSetVisitor visitor) throws Exception;
 

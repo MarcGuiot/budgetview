@@ -13,10 +13,13 @@ import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Functor;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ProjectItemEditionPanel extends ProjectItemPanel {
   protected GlobTextEditor nameField;

@@ -23,8 +23,8 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Camera")
-      .addItem(0, "Camera Body", 201012, -80.00, 10)
-      .addItem(1, "Lens", 201012, -200.00);
+      .addExpenseItem(0, "Camera Body", 201012, -80.00, 10)
+      .addExpenseItem(1, "Lens", 201012, -200.00);
     projectChart.checkProject("Camera", 201012, 201109, 1000.00);
     currentProject
       .checkPeriod("December 2010 - September 2011")

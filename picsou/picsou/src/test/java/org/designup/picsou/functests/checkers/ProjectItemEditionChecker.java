@@ -55,6 +55,7 @@ public abstract class ProjectItemEditionChecker<T extends ProjectItemEditionChec
 
   public void validate() {
     panel.getButton("validate").click();
+    checkNoTipVisible(enclosingPanel);
     assertFalse(enclosingPanel.containsSwingComponent(JPanel.class, "projectItemEditionPanel"));
   }
 

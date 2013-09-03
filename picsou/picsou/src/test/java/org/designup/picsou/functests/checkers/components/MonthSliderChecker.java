@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers.components;
 import org.designup.picsou.functests.checkers.MonthChooserChecker;
 import org.uispec4j.Panel;
 
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class MonthSliderChecker {
@@ -38,5 +39,11 @@ public class MonthSliderChecker {
   public MonthSliderChecker next() {
     panel.getButton("next").click();
     return this;
+  }
+
+  public void checkHidden() {
+    assertFalse(panel.getButton("previous").isEnabled());
+    assertFalse(panel.getButton("month").isEnabled());
+    assertFalse(panel.getButton("next").isEnabled());
   }
 }

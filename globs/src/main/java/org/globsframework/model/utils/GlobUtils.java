@@ -70,7 +70,7 @@ public class GlobUtils {
     return result;
   }
 
-  public static Set<Integer> getIntegerValues(Collection<Key> keys, IntegerField field) {
+  public static Set<Integer> getValues(Collection<Key> keys, IntegerField field) {
     Set<Integer> result = new HashSet<Integer>();
     for (Key key : keys) {
       result.add(key.get(field));

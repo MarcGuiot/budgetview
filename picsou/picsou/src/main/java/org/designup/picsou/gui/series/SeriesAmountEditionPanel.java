@@ -106,7 +106,7 @@ public class SeriesAmountEditionPanel {
 
         if ((currentSeries != null) && changeSet.containsChanges(currentSeries)
             && repository.find(currentSeries) != null) {
-          FieldValues previousValue = changeSet.getPreviousValue(currentSeries);
+          FieldValues previousValue = changeSet.getPreviousValues(currentSeries);
           if (previousValue.contains(Series.FROM_ACCOUNT) || previousValue.contains(Series.TO_ACCOUNT)) {
             updatePositiveOrNegativeRadio();
           }
