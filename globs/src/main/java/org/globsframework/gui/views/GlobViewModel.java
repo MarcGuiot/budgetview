@@ -305,5 +305,32 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
   public String toString() {
     return "GlobModel(" + type.getName() + "): " + globs;
   }
+
+  public static class NullListener implements GlobViewModel.Listener {
+    public void globInserted(int index) {
+    }
+
+    public void globUpdated(int index) {
+    }
+
+    public void globRemoved(int index) {
+    }
+
+    public void globMoved(int previousIndex, int newIndex) {
+    }
+
+    public void globListPreReset() {
+    }
+
+    public void globListReset() {
+    }
+
+    public void startUpdate() {
+    }
+
+    public void updateComplete() {
+    }
+  }
+
 }
 
