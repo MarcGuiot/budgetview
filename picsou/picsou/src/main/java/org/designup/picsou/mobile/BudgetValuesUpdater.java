@@ -53,6 +53,8 @@ public class BudgetValuesUpdater {
     this.targetRepository = targetRepository;
     this.currentMonthId = CurrentMonth.getCurrentMonth(sourceRepository);
     this.selectedMonths = new Integer[]{
+      Month.previous(Month.previous(Month.previous(currentMonthId))),
+      Month.previous(Month.previous(currentMonthId)),
       Month.previous(currentMonthId),
       currentMonthId,
       Month.next(currentMonthId)

@@ -47,7 +47,15 @@ public class CurrentMonth {
   }
 
   public static Integer getLastTransactionMonth(GlobRepository repository) {
-    return repository.get(CurrentMonth.KEY).get(LAST_TRANSACTION_MONTH);
+    Glob currentMonth = repository.get(CurrentMonth.KEY);
+    Glob month = repository.findLinkTarget(currentMonth, LAST_TRANSACTION_MONTH);
+    if (month == null) {
+      month = repository.findLinkTarget(currentMonth, CURRENT_MONTH);
+    }
+    if (month == null) {
+      month = repository.getAll(Month.TYPE).getFirst();
+    }
+    return month.get(Month.ID);
   }
 
   public static Integer getLastTransactionDay(GlobRepository repository) {

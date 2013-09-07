@@ -12,7 +12,9 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(6).validate();
   }
 
-  /** @deprecated  TODO */
+  /**
+   * @deprecated TODO
+   */
   public void test_POUR_MARC() throws Exception {
     createMainAccount("Main account 1");
     createSavingsAccount("Savings account 1");
@@ -24,11 +26,8 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     currentProject.checkProjectGauge(0.00, 0.00);
     currentProject.checkPeriod("December 2010");
 
-    openApplication();
-
-    System.out.println("ProjectTransferTest.test:\n\n\n\n");
     currentProject.toggleAndEditTransfer(0)
-    .checkFromAccount("Savings account 1");
+      .checkFromAccount("Savings account 1");
   }
 
   public void testWithSavings() throws Exception {
@@ -82,6 +81,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     timeline.checkSelection("2010/12");
     budgetView.extras.checkSeries("Trip", 0.00, 0.00);
     budgetView.savings.checkSeries("Transfer", 0.00, -200.00);
+
     categorization.selectTransaction("Transfer 1").selectSavings()
       .checkContainsSeries("Transfer")
       .checkSeriesIsActive("Transfer")
@@ -276,22 +276,22 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .add("01/12/2010", TransactionType.PRELEVEMENT, "TRANSFER FROM SAVINGS ACCOUNT 1", "", -100.00, "Transfer")
       .check();
 
-    views.selectHome();
-    currentProject
-      .editTransfer(0)
-      .checkFromAccount("Savings account 1")
-      .setFromAccount("Savings account 2")
-      .validateAndCheckConfirmation()
-      .checkMessageContains("Operations were assigned to one of the accounts")
-      .cancel();
-    currentProject
-      .editTransfer(0)
-      .checkFromAccount("Savings account 1");
-
-    views.selectData();
-    transactions.initContent()
-      .add("01/12/2010", TransactionType.PRELEVEMENT, "TRANSFER FROM SAVINGS ACCOUNT 1", "", -100.00, "Transfer")
-      .check();
+//    views.selectHome();
+//    currentProject
+//      .editTransfer(0)
+//      .checkFromAccount("Savings account 1")
+//      .setFromAccount("Savings account 2")
+//      .validateAndCheckConfirmation()
+//      .checkMessageContains("Operations were assigned to one of the accounts")
+//      .cancel();
+//    currentProject
+//      .editTransfer(0)
+//      .checkFromAccount("Savings account 1");
+//
+//    views.selectData();
+//    transactions.initContent()
+//      .add("01/12/2010", TransactionType.PRELEVEMENT, "TRANSFER FROM SAVINGS ACCOUNT 1", "", -100.00, "Transfer")
+//      .check();
 
     views.selectHome();
     currentProject

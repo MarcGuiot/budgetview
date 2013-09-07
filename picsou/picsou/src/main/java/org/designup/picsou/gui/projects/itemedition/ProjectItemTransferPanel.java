@@ -125,7 +125,6 @@ public class ProjectItemTransferPanel extends ProjectItemEditionPanel {
 
     Set<Integer> discardedAccountIds = new HashSet<Integer>();
     ChangeSet changeSet = localRepository.getCurrentChanges();
-    System.out.println("ProjectItemTransferPanel.check: " + changeSet);
     Integer previousFromAccountId;
     if (changeSet.containsChanges(projectTransferKey, ProjectTransfer.FROM_ACCOUNT)) {
       previousFromAccountId = changeSet.getPreviousValues(projectTransferKey).get(ProjectTransfer.FROM_ACCOUNT);
@@ -153,7 +152,6 @@ public class ProjectItemTransferPanel extends ProjectItemEditionPanel {
         new ConfirmUncategorizeDialog(projectTransferKey, previousFromAccountId, previousToAccountId);
       confirmation.show();
       if (confirmation.cancelled) {
-        System.out.println("ProjectItemTransferPanel.check: delete");
         return false;
       }
     }
@@ -215,7 +213,6 @@ public class ProjectItemTransferPanel extends ProjectItemEditionPanel {
       onCommitFunctors.add(new Functor() {
         public void run() throws Exception {
           GlobList transactions = getTransactions();
-          System.out.println("ProjectItemTransferPanel$ConfirmUncategorizeDialog.run: " + transactions);
           for (Glob transaction : transactions) {
             parentRepository.update(transaction.getKey(),
                                     value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),

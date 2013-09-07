@@ -124,16 +124,10 @@ public class DailyAccountPositionComputer {
   private Double getDailyValues(int monthId, GlobList transactions, Double previousLastValue, int maxDay,
                                 Double[] minValues, DoubleField positionField) {
     Double lastValue = previousLastValue;
-    Double[] lastValues = new Double[maxDay];
+//    Double[] lastValues = new Double[maxDay];
     for (Glob transaction : transactions) {
       int day = transaction.get(Transaction.POSITION_DAY) - 1;
-      lastValues[day] = transaction.get(positionField);
-      if (minValues[day] == null) {
-        minValues[day] = transaction.get(positionField);
-      }
-      else {
-        minValues[day] = Math.min(transaction.get(positionField, Double.MAX_VALUE), minValues[day]);
-      }
+      minValues[day] = transaction.get(positionField);
     }
 
     for (int i = 0; i < minValues.length; i++) {
@@ -141,7 +135,7 @@ public class DailyAccountPositionComputer {
         minValues[i] = lastValue;
       }
       else {
-        lastValue = lastValues[i];
+        lastValue = minValues[i];
       }
     }
 
@@ -150,7 +144,9 @@ public class DailyAccountPositionComputer {
       if (stat != null) {
         lastValue = stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION, 0.);
         for (int i = 0; i < minValues.length; i++) {
-          minValues[i] = lastValue;
+          if (minValues[i] == null){
+            minValues[i] = lastValue;
+          }
         }
       }
     }

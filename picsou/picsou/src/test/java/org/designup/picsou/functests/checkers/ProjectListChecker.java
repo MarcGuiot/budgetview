@@ -19,12 +19,20 @@ public class ProjectListChecker extends ViewChecker {
     super(mainWindow);
   }
 
+  public void checkNoCurrentProjects() {
+    checkProjects("", "currentProjects");
+  }
+
   public void checkCurrentProjects(String expected) {
     checkProjects(expected, "currentProjects");
   }
 
   public void dumpCurrentProjects() {
     System.out.println("ProjectListChecker.dumpCurrentProjects: \n" + dump("currentProjects"));
+  }
+
+  public void checkNoPastProjects() {
+    checkProjects("", "pastProjects");
   }
 
   public void checkPastProjects(String expected) {

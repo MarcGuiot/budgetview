@@ -4,6 +4,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
 import org.globsframework.gui.views.GlobComboView;
+import org.globsframework.gui.views.GlobViewModel;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
@@ -27,6 +28,7 @@ public class GlobLinkComboEditor
   private boolean forcedEnabled = true;
   private Key forcedSelectionKey = null;
   private boolean completed = false;
+  private JComboBox component;
 
   public static GlobLinkComboEditor init(final Link link, final GlobRepository repository, Directory directory) {
     return new GlobLinkComboEditor(link, repository, directory);
@@ -54,21 +56,28 @@ public class GlobLinkComboEditor
               repository.setTarget(currentKey, link, glob != null ? glob.getKey() : null);
             }
           }
-        });
+        })
+    .setListener(new GlobLinkListener());
 
     repository.addChangeListener(this);
 
     updateSelection();
   }
 
-  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+  Runnable action = null;
+
+  public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     if (forcedSelectionKey != null &&
         currentKey == null &&
         changeSet.containsChanges(link.getSourceType())) {
-      Glob glob = repository.find(forcedSelectionKey);
-      if (glob != null) {
-        select(new GlobList(glob));
-      }
+      action = new Runnable() {
+        public void run() {
+          Glob glob = repository.find(forcedSelectionKey);
+          if (glob != null) {
+            select(new GlobList(glob));
+          }
+        }
+      };
       return;
     }
 
@@ -76,31 +85,39 @@ public class GlobLinkComboEditor
       return;
     }
 
-    Glob source = repository.find(currentKey);
-    if (source == null) {
-      setTarget(null);
-      globComboView.setEnabled(false);
-      return;
-    }
+    action = new Runnable() {
+      public void run() {
+        Glob source = repository.find(currentKey);
+        if (source == null) {
+          setTarget(null);
+          globComboView.setEnabled(false);
+          return;
+        }
 
-    Glob target = repository.findLinkTarget(source, link);
-    setTarget(target);
+        Glob target = repository.findLinkTarget(source, link);
+        setTarget(target);
 
-    globComboView.setEnabled(forcedEnabled);
+        globComboView.setEnabled(forcedEnabled);
+      }
+    };
   }
 
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+  public void globsReset(final GlobRepository repository, Set<GlobType> changedTypes) {
     if (!changedTypes.contains(link.getSourceType())) {
       return;
     }
-    if (forcedSelectionKey != null) {
-      Glob glob = repository.find(forcedSelectionKey);
-      if (glob != null) {
-        select(new GlobList(glob));
-        return;
+    action = new Runnable() {
+      public void run() {
+        if (forcedSelectionKey != null) {
+          Glob glob = repository.find(forcedSelectionKey);
+          if (glob != null) {
+            select(new GlobList(glob));
+            return;
+          }
+        }
+        select(GlobList.EMPTY);
       }
-    }
-    select(GlobList.EMPTY);
+    };
   }
 
   private void setTarget(Glob target) {
@@ -211,7 +228,12 @@ public class GlobLinkComboEditor
     if (!completed) {
       updateSelection();
     }
-    return globComboView.getComponent();
+    if (component == null){
+      component = globComboView.getComponent();
+      // listener must be registered after the one from globComboView
+//      repository.addChangeListener(this);
+    }
+    return component;
   }
 
   private void updateSelection() {
@@ -234,6 +256,46 @@ public class GlobLinkComboEditor
       selectionService.removeListener(this);
       globComboView.dispose();
       globComboView = null;
+    }
+  }
+
+  private class GlobLinkListener implements GlobViewModel.Listener {
+
+    public void globInserted(int index) {
+      runAction();
+    }
+
+    public void globUpdated(int index) {
+      runAction();
+    }
+
+    public void globRemoved(int index) {
+      runAction();
+    }
+
+    public void globMoved(int previousIndex, int newIndex) {
+      runAction();
+    }
+
+    public void globListPreReset() {
+    }
+
+    public void globListReset() {
+      runAction();
+    }
+
+    public void startUpdate() {
+    }
+
+    public void updateComplete() {
+    }
+  }
+
+  private void runAction() {
+    if (action != null) {
+      Runnable tmp = action;
+      action = null;
+      tmp.run();
     }
   }
 }

@@ -13,7 +13,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCreatingAProject() throws Exception {
-    setCurrentMonth("2011/12");
+    setCurrentMonth("2011/01");
     operations.changeDate();
     OfxBuilder.init(this)
       .addBankAccount("001111", 1900, "2011/01/01")
@@ -46,6 +46,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projects.checkCurrentProjects(
       "| My project | Jan | -200.00 | on |"
     );
+    projects.checkNoPastProjects();
 
     timeline.selectMonth("2011/01");
     budgetView.extras.checkSeries("My project", 0, -200.00);

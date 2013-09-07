@@ -7,6 +7,8 @@ import org.globsframework.metamodel.DummyObjectWithLinks;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.Key;
+import org.globsframework.model.repository.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.ReverseGlobFieldComparator;
@@ -368,5 +370,26 @@ public class GlobLinkComboEditorTest extends GuiComponentTestCase {
     assertTrue(combo.contentEquals("", "dummyObject2[id=1]", "dummyObject2[id=2]"));
     assertTrue(combo.selectionEquals("dummyObject2[id=2]"));
 
+  }
+
+  public void testSelectionIsKeeppedAfterReset() throws Exception {
+    repository =
+      checker.parse("<dummyObject id='1' name='name1' link='2'/>" +
+                    "<dummyObject id='2' name='name2' link='1'/>" +
+                    "<dummyObject id='3' name='name3'/>");
+    repository.addChangeListener(changeListener);
+    Glob glob1 = repository.get(key1);
+    Glob glob2 = repository.get(key2);
+
+    LocalGlobRepository localGlobRepository = LocalGlobRepositoryBuilder.init(repository)
+      .copy(DummyObject.TYPE).get();
+    GlobLinkComboEditor editor = GlobLinkComboEditor.init(DummyObject.LINK, localGlobRepository, directory)
+      .forceSelection(glob2.getKey());
+    ComboBox combo = new ComboBox(editor.getComponent());
+
+    selectionService.select(glob1);
+    assertTrue(combo.selectionEquals("name1"));
+    localGlobRepository.rollback();
+    assertTrue(combo.selectionEquals("name1"));
   }
 }

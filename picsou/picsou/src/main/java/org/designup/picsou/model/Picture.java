@@ -45,12 +45,12 @@ public class Picture {
   public static void setIcon(org.globsframework.model.Key key, LinkField link, GlobRepository repository, Image image, Dimension maxSize) throws InvalidFormat {
     byte[] bytes = getScaledImageAsBytes(image, maxSize);
 
-    try {
-      ImageIO.write(toBufferedImage(new ImageIcon(bytes)), "png", new File("/Users/rmedina/Desktop/bv_saved_picture.jpg"));
-    }
-    catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+//    try {
+//      ImageIO.write(toBufferedImage(new ImageIcon(bytes)), "png", new File("/Users/rmedina/Desktop/bv_saved_picture.jpg"));
+//    }
+//    catch (IOException e) {
+//      throw new RuntimeException(e);
+//    }
 
     doSetLink(key, link, repository, bytes);
   }

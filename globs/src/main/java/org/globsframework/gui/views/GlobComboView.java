@@ -31,6 +31,7 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
   private String name;
   private String emptyOptionLabel = "";
   private GlobMatcher matcher;
+  private GlobViewModel.Listener listener = new GlobViewModel.NullListener();
 
   public static GlobComboView init(GlobType type, GlobRepository globRepository, Directory directory) {
     return new GlobComboView(type, globRepository, directory);
@@ -47,6 +48,11 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
 
   public GlobComboView setRenderer(GlobStringifier stringifier) {
     return setRenderer(new StringListCellRenderer(stringifier, repository), stringifier.getComparator(repository));
+  }
+
+  public GlobComboView setListener(GlobViewModel.Listener listener) {
+    this.listener = listener;
+    return this;
   }
 
   public GlobComboView setRenderer(ListCellRenderer renderer, Comparator<Glob> comparator) {
@@ -202,26 +208,32 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
     public Model() {
       model = new GlobViewModel(type, repository, comparator, showEmptyOption, new GlobViewModel.Listener() {
         public void globInserted(int index) {
+            listener.globInserted(index);
           fireIntervalAdded(this, index, index);
         }
 
         public void globUpdated(int index) {
+            listener.globUpdated(index);
           fireContentsChanged(this, index, index);
         }
 
         public void globRemoved(int index) {
+            listener.globRemoved(index);
           fireIntervalRemoved(this, index, index);
         }
 
         public void globMoved(int previousIndex, int newIndex) {
+          listener.globMoved(previousIndex, newIndex);
           globRemoved(previousIndex);
           globInserted(newIndex);
         }
 
         public void globListPreReset() {
+          listener.globListPreReset();
         }
 
         public void globListReset() {
+          listener.globListReset();
           fireContentsChanged(this, 0, model != null ? model.size() : 0);
           if (model != null) {
             if (((selected == null) || (model.indexOf(selected) < 0)) && (model.size() > 0)) {
@@ -231,9 +243,11 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
         }
 
         public void startUpdate() {
+          listener.startUpdate();
         }
 
         public void updateComplete() {
+          listener.updateComplete();
         }
       });
       if (matcher != null) {

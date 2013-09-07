@@ -57,7 +57,7 @@
           <button action="modify" styleClass="editIcon"/>
         </row>
         <component ref="monthSlider" marginBottom="5"/>
-        <row name="gaugePanel" opaque="false" autoHideSource="gauge">
+        <row ref="gaugePanel" opaque="false" autoHideSource="gauge">
           <component ref="gauge" styleClass="totalGauge"/>
           <label ref="totalActual" styleClass="totalAmount"/>
           <label text=" / " styleClass="totalAmount" marginLeft="5" marginRight="5"/>
