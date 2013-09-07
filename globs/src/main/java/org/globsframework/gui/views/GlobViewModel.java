@@ -173,7 +173,7 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
   }
 
   public void refresh() {
-    for (Iterator<Glob> iter = globs.iterator(); iter.hasNext();) {
+    for (Iterator<Glob> iter = globs.iterator(); iter.hasNext(); ) {
       Glob glob = iter.next();
       if (!glob.exists()) {
         iter.remove();
@@ -205,24 +205,24 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
       Glob glob = repository.get(key);
       boolean matches = matcher.matches(glob, repository);
       int previousIndex = globs.firstIndexOf(new GlobKeyMatcher(key), repository);
-      if (previousIndex >= 0) {
+      boolean wasPresent = previousIndex >= 0;
+      if (wasPresent && !matches) {
         globs.remove(previousIndex);
-        if (matches) {
-          int newIndex = globs.add(repository.get(key));
-          if (newIndex == previousIndex) {
-            listener.globUpdated(newIndex);
-          }
-          else {
-            listener.globMoved(previousIndex, newIndex);
-          }
-        }
-        else {
-          listener.globRemoved(previousIndex);
-        }
+        listener.globRemoved(previousIndex);
       }
-      else if (matches) {
+      else if (!wasPresent && matches) {
         int newIndex = globs.add(glob);
         listener.globInserted(newIndex);
+      }
+      else if (wasPresent) {
+        globs.remove(previousIndex);
+        int newIndex = globs.add(repository.get(key));
+        if (newIndex == previousIndex) {
+          listener.globUpdated(newIndex);
+        }
+        else {
+          listener.globMoved(previousIndex, newIndex);
+        }
       }
     }
 

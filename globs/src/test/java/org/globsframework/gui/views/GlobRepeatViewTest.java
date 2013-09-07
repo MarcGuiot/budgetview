@@ -3,18 +3,18 @@ package org.globsframework.gui.views;
 import org.globsframework.gui.ComponentHolder;
 import org.globsframework.gui.utils.GuiComponentTestCase;
 import org.globsframework.metamodel.DummyObject;
-import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.GlobRepositoryBuilder;
-import org.globsframework.model.KeyBuilder;
+import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFieldComparator;
+import org.globsframework.model.utils.KeyChangeListener;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.directory.Directory;
 import org.uispec4j.Panel;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class GlobRepeatViewTest extends GuiComponentTestCase {
   private StringBuilder disposeLogger;
@@ -29,44 +29,86 @@ public class GlobRepeatViewTest extends GuiComponentTestCase {
     create(1, "a");
 
     Panel panel = initComponent();
-
-    assertTrue(panel.getSwingComponents(JLabel.class).length == 1);
-    assertThat(panel.getTextBox().textEquals("a - 1"));
+    checkComponents(panel, "a - 1");
   }
 
   public void testCreation() throws Exception {
     Panel panel = initComponent();
 
-    assertTrue(panel.getSwingComponents(JLabel.class).length == 0);
+    checkNoComponents(panel);
 
     create(2, "b");
-    assertTrue(panel.getSwingComponents(JLabel.class).length == 1);
-    assertThat(panel.getTextBox().textEquals("b - 2"));
-    assertTrue(Strings.isNullOrEmpty(disposeLogger.toString()));
+    checkComponents(panel, "b - 2");
+    checkNoDispose();
 
     create(1, "a");
-    Component[] labels = panel.getSwingComponents(JLabel.class);
-    assertTrue(labels.length == 2);
-    assertEquals("a - 1", ((JLabel)labels[0]).getText());
-    assertEquals("b - 2", ((JLabel)labels[1]).getText());
-    assertTrue(Strings.isNullOrEmpty(disposeLogger.toString()));
+    checkComponents(panel, "a - 1", "b - 2");
+    checkNoDispose();
 
     repository.delete(KeyBuilder.newKey(DummyObject.TYPE, 1));
-    assertEquals("a;", disposeLogger.toString());
-    disposeLogger = new StringBuilder();
-
-    assertTrue(panel.getSwingComponents(JLabel.class).length == 1);
-    assertThat(panel.getTextBox().textEquals("b - 2"));
-    assertTrue(Strings.isNullOrEmpty(disposeLogger.toString()));
+    checkComponents(panel, "b - 2");
+    checkDisposeAndClear("a;");
 
     repository.delete(KeyBuilder.newKey(DummyObject.TYPE, 2));
-    assertEquals("b;", disposeLogger.toString());
+    checkDisposeAndClear("b;");
+    checkComponents(panel);
+  }
+
+  public void testWithComparatorAndFieldUpdates() throws Exception {
+    Panel panel = initComponent();
+    checkNoComponents(panel);
+
+    create(1, null);
+    checkComponents(panel, "null - 1");
+    checkNoDispose();
+
+    update(1, "b");
+    checkComponents(panel, "b - 1");
+    checkNoDispose();
+
+    create(2, null);
+    checkComponents(panel, "null - 2", "b - 1");
+    checkNoDispose();
+
+    update(2, "a");
+    checkComponents(panel, "a - 2", "b - 1");
+    checkNoDispose();
+
+    update(2, "c");
+    checkComponents(panel, "b - 1", "c - 2");
+    checkNoDispose();
+  }
+
+  private void checkDisposeAndClear(String expected) {
+    assertEquals(expected, disposeLogger.toString());
+    disposeLogger = new StringBuilder();
+  }
+
+  private void checkNoDispose() {
+    assertTrue(Strings.isNullOrEmpty(disposeLogger.toString()));
+  }
+
+  private void checkNoComponents(Panel panel) {
+    checkComponents(panel);
+  }
+
+  private void checkComponents(Panel panel, String... expected) {
+    Component[] labels = panel.getSwingComponents(JLabel.class);
+    String[] actual = new String[labels.length];
+    for (int i = 0; i < labels.length; i++) {
+      actual[i] = ((JLabel)labels[i]).getText();
+    }
+    TestUtils.assertEquals(expected, actual);
   }
 
   private void create(int id, String name) {
     repository.create(DummyObject.TYPE,
                       value(DummyObject.ID, id),
                       value(DummyObject.NAME, name));
+  }
+
+  private void update(int id, String name) {
+    repository.update(Key.create(DummyObject.TYPE, id), DummyObject.NAME, name);
   }
 
   private Panel initComponent() {
@@ -82,12 +124,32 @@ public class GlobRepeatViewTest extends GuiComponentTestCase {
   }
 
   private class DummyComponentHolder implements ComponentHolder {
-    String name;
-    private final Glob glob;
+    private Key key;
+    private String name;
+    private JLabel label = new JLabel();
+    private final ChangeSetListener changeListener;
 
     public DummyComponentHolder(Glob glob) {
-      this.glob = glob;
-      name = glob.get(DummyObject.NAME);
+      this.key = glob.getKey();
+      this.name = glob.get(DummyObject.NAME);
+      this.label.setName(name);
+      this.changeListener = new KeyChangeListener(key) {
+        protected void update() {
+          doUpdate();
+        }
+      };
+      repository.addChangeListener(changeListener);
+      doUpdate();
+    }
+
+    private void doUpdate() {
+      Glob glob = repository.find(key);
+      if (glob == null) {
+        label.setText("");
+      }
+      else {
+        label.setText(glob.get(DummyObject.NAME) + " - " + glob.get(DummyObject.ID));
+      }
     }
 
     public ComponentHolder setName(String name) {
@@ -96,11 +158,12 @@ public class GlobRepeatViewTest extends GuiComponentTestCase {
     }
 
     public JComponent getComponent() {
-      return new JLabel(glob.get(DummyObject.NAME) + " - " + glob.get(DummyObject.ID));
+      return label;
     }
 
     public void dispose() {
       disposeLogger.append(name).append(";");
+      repository.removeChangeListener(changeListener);
     }
   }
 }

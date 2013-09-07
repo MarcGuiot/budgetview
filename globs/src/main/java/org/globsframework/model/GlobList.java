@@ -237,7 +237,7 @@ public class GlobList extends ArrayList<Glob> {
     SortedSet<Integer> result = new TreeSet<Integer>();
     for (FieldValues values : this) {
       Integer e = values.get(field);
-      if (e != null){
+      if (e != null) {
         result.add(e);
       }
       else {
@@ -265,7 +265,7 @@ public class GlobList extends ArrayList<Glob> {
     SortedSet<String> result = new TreeSet<String>();
     for (FieldValues values : this) {
       String e = values.get(field);
-      if (e != null){
+      if (e != null) {
         result.add(e);
       }
       else {
@@ -326,7 +326,9 @@ public class GlobList extends ArrayList<Glob> {
   public Set<GlobType> getTypes() {
     Set<GlobType> types = new HashSet<GlobType>();
     for (Glob glob : this) {
-      types.add(glob.getType());
+      if (glob != null) {
+        types.add(glob.getType());
+      }
     }
     return types;
   }
