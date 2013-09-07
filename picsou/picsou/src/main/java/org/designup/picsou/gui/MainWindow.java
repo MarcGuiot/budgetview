@@ -506,6 +506,7 @@ public class MainWindow implements WindowManager {
             }
             catch (Exception e) {
               feedbackLoadingData.displayErrorText(e.getMessage());
+              logout();
               return;
             }
             mainPanel.show();
@@ -545,6 +546,7 @@ public class MainWindow implements WindowManager {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
             feedbackLoadingData.displayErrorText(e.getMessage());
+            logout();
           }
         });
         e.printStackTrace();
@@ -562,6 +564,7 @@ public class MainWindow implements WindowManager {
               public void run() {
                 JTextArea textArea = new JTextArea(stringWriter.toString());
                 GuiUtils.show(textArea);
+                logout();
               }
             });
           }

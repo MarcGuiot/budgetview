@@ -20,6 +20,9 @@ exclude   picsou.^ExceptionHandler and
           org.xml*.^* and
           org.xml*.^* *(*) and
           org.xml*.^* * and
+          com.steadystate*.^* and
+          com.steadystate*.^* *(*) and
+          com.steadystate*.^* * and
           com.gargoylesoftware*.^* and
           com.gargoylesoftware*.^* *(*) and
           com.gargoylesoftware*.^* * and
