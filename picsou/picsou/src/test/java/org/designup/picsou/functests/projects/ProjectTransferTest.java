@@ -103,7 +103,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .checkToAccount("Main accounts")
       .cancel();
     currentProject.backToList();
-    projects.checkProjects("| Trip | Dec | 0.00 | on |");
+    projects.checkCurrentProjects("| Trip | Dec | 0.00 | on |");
 
     projects.select("Trip");
     budgetView.extras.checkSeries("Trip", 0.00, 0.00);

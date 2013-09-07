@@ -1,10 +1,7 @@
 package org.designup.picsou.gui.components.images;
 
 import org.designup.picsou.gui.components.JPopupButton;
-import org.designup.picsou.gui.components.dialogs.MessageDialog;
-import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.model.Picture;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -13,38 +10,28 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.InvalidFormat;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.IOException;
 import java.util.Set;
 
 public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListener, Disposable {
 
   private final LinkField link;
   private Key currentKey;
-  private final Dimension maxSavedSize;
   private boolean autoHide;
   private boolean forcedSelection;
   private boolean enabled = true;
 
   private final GlobRepository repository;
-  private Directory directory;
   private final SelectionService selectionService;
 
   private final JLabel label = new JLabel();
+  private GlobImageActions actions;
   private JPopupMenu popupMenu;
   private JPopupButton popupButton;
-  private GlobImageLabelView.PasteImageAction pasteImagesAction;
-  private GlobImageLabelView.BrowseImageAction browseImagesAction;
   private IconFactory defaultIconFactory = IconFactory.NULL_ICON_FACTORY;
 
   public static GlobImageLabelView init(LinkField link, Dimension maxSavedSize, GlobRepository repository, Directory directory) {
@@ -53,18 +40,14 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
 
   private GlobImageLabelView(LinkField link, Dimension maxSavedSize, GlobRepository repository, Directory directory) {
     this.link = link;
-    this.maxSavedSize = maxSavedSize;
     this.repository = repository;
-    this.directory = directory;
     this.selectionService = directory.get(SelectionService.class);
 
-    this.pasteImagesAction = new PasteImageAction();
-    this.browseImagesAction = new BrowseImageAction();
+    actions = new GlobImageActions(null, link, repository, directory, maxSavedSize);
     setKey(null);
 
     popupMenu = new JPopupMenu();
-    popupMenu.add(pasteImagesAction);
-    popupMenu.add(browseImagesAction);
+    actions.add(popupMenu);
 
     label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     label.addMouseListener(new MouseAdapter() {
@@ -107,8 +90,7 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
 
   private void setKey(Key key) {
     this.currentKey = key;
-    this.pasteImagesAction.update();
-    this.browseImagesAction.update();
+    this.actions.setKey(key);
   }
 
   public JLabel getLabel() {
@@ -156,10 +138,6 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
     label.setVisible(true);
   }
 
-  public void dispose() {
-    repository.removeChangeListener(this);
-  }
-
   public JPopupButton getPopupButton(String text) {
     if (popupButton == null) {
       popupButton = new JPopupButton(text, popupMenu);
@@ -170,64 +148,7 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
     return popupButton;
   }
 
-  private class BrowseImageAction extends AbstractAction {
-    private BrowseImageAction() {
-      super(Lang.get("imageLabel.actions.browse"));
-    }
-
-    public void update() {
-      setEnabled(currentKey != null);
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      JFileChooser chooser = new JFileChooser();
-      chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-      int returnVal = chooser.showOpenDialog(directory.get(JFrame.class));
-      if (returnVal == JFileChooser.APPROVE_OPTION) {
-        File file = chooser.getSelectedFile();
-        if (file.exists()) {
-          try {
-            Picture.setIcon(currentKey, link, repository, file.getAbsolutePath(), maxSavedSize);
-          }
-          catch (InvalidFormat invalidFormat) {
-            MessageDialog.show("imageLabel.error.title",
-                               MessageType.ERROR, directory,
-                               "imageLabel.error.invalidFormat");
-          }
-        }
-      }
-    }
+  public void dispose() {
+    repository.removeChangeListener(this);
   }
-
-  private class PasteImageAction extends AbstractAction {
-    private PasteImageAction() {
-      super(Lang.get("imageLabel.actions.paste"));
-    }
-
-    public void update() {
-      setEnabled(currentKey != null);
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-      DataFlavor flavor = DataFlavor.imageFlavor;
-      if (clipboard.isDataFlavorAvailable(flavor)) {
-        try {
-          Image image = (Image)clipboard.getData(flavor);
-          Picture.setIcon(currentKey, link, repository, image, maxSavedSize);
-        }
-        catch (UnsupportedFlavorException exception) {
-          MessageDialog.show("imageLabel.error.title",
-                             MessageType.ERROR, directory,
-                             "imageLabel.error.invalidFormat");
-        }
-        catch (IOException exception) {
-          MessageDialog.show("imageLabel.error.title",
-                             MessageType.ERROR, directory,
-                             "imageLabel.error.invalidFormat");
-        }
-      }
-    }
-  }
-
 }

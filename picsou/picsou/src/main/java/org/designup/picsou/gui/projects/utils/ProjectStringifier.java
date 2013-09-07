@@ -14,6 +14,6 @@ public class ProjectStringifier implements GlobStringifier {
   }
 
   public Comparator<Glob> getComparator(GlobRepository repository) {
-    return new ProjectComparator(repository);
+    return ProjectComparator.current(repository);
   }
 }

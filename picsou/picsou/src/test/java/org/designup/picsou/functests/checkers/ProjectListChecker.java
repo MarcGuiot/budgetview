@@ -19,8 +19,25 @@ public class ProjectListChecker extends ViewChecker {
     super(mainWindow);
   }
 
-  public void checkProjects(String expected) {
-    UIComponent[] blocks = getPanel().getUIComponents(Panel.class, "projectBlock");
+  public void checkCurrentProjects(String expected) {
+    checkProjects(expected, "currentProjects");
+  }
+
+  public void dumpCurrentProjects() {
+    System.out.println("ProjectListChecker.dumpCurrentProjects: \n" + dump("currentProjects"));
+  }
+
+  public void checkPastProjects(String expected) {
+    checkProjects(expected, "pastProjects");
+  }
+
+  private void checkProjects(String expected, String repeatName) {
+    TablePrinter printer = dump(repeatName);
+    Assert.assertEquals(expected, printer.toString().trim());
+  }
+
+  private TablePrinter dump(String repeatName) {
+    UIComponent[] blocks = getPanel().getPanel(repeatName).getUIComponents(Panel.class, "projectBlock");
     TablePrinter printer = new TablePrinter();
     for (UIComponent block : blocks) {
       Panel projectPanel = (Panel)block;
@@ -31,7 +48,7 @@ public class ProjectListChecker extends ViewChecker {
                      projectButton.getPlanned(),
                      projectButton.isActive() ? "on" : "off");
     }
-    Assert.assertEquals(expected, printer.toString().trim());
+    return printer;
   }
 
   public void checkListShown() {

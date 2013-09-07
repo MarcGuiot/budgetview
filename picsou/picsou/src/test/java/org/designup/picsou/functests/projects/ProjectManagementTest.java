@@ -43,7 +43,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.checkProjectList("My project");
     projectChart.checkProject("My project", 201101, 201101, 200.00);
     currentProject.backToList();
-    projects.checkProjects(
+    projects.checkCurrentProjects(
       "| My project | Jan | -200.00 | on |"
     );
 
@@ -70,7 +70,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.checkProjectList("My project");
     projectChart.checkProject("My project", 201101, 201102, 800.00);
     currentProject.backToList();
-    projects.checkProjects(
+    projects.checkCurrentProjects(
       "| My project | Jan | -800.00 | on |"
     );
     budgetView.extras.checkSeries("My project", 0, -200.00);
@@ -151,7 +151,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addExpenseItem(0, "Reservation", 201101, -200.00)
       .addExpenseItem(1, "Hotel", 201101, -300.00)
       .backToList();
-    projects.checkProjects("| My project | Jan | -500.00 | on |");
+    projects.checkCurrentProjects("| My project | Jan | -500.00 | on |");
 
     timeline.selectMonth(201101);
     budgetView.extras.checkSeries("My project", 0.00, -500.00);
@@ -420,65 +420,6 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
                   "Hotel | Feb | 0.00 | -500.00");
   }
 
-  public void testShowsOnlyProjectsInDisplayedTimeSpan() throws Exception {
-
-    fail("RM - en cours");
-
-    operations.hideSignposts();
-    operations.openPreferences().setFutureMonthsCount(6).validate();
-
-    OfxBuilder.init(this)
-      .addBankAccount("001111", 1000.00, "2010/01/10")
-      .addTransaction("2010/01/01", 1000.00, "Income")
-      .addTransaction("2010/02/01", 1000.00, "Income")
-      .addTransaction("2010/03/01", 1000.00, "Income")
-      .addTransaction("2011/01/05", 100.00, "Resa")
-      .load();
-
-    timeline.selectMonth(201101);
-
-    projectChart.create();
-    currentProject
-      .setName("Past Project")
-      .addExpenseItem(0, "Reservation", 201007, -100.00)
-      .addExpenseItem(1, "Hotel", 201008, -500.00);
-
-    projectChart.create();
-    currentProject
-      .setName("Current Project")
-      .addExpenseItem(0, "Reservation", 201101, -100.00)
-      .addExpenseItem(1, "Hotel", 201102, -500.00);
-
-    projectChart.create();
-    currentProject
-      .setName("Next Project")
-      .addExpenseItem(0, "Reservation", 201105, -100.00);
-
-    projectChart.checkProjectList("Current Project", "Next Project");
-
-    timeline.selectMonth(201103);
-    projectChart.checkProjectList("Current Project", "Next Project");
-
-    timeline.selectMonth(201102);
-    projectChart.checkProjectList("Current Project", "Next Project");
-
-    timeline.selectMonth(201106);
-    projectChart.checkProjectList("Current Project", "Next Project");
-
-    timeline.selectMonth(201004);
-    projectChart.checkProjectList("Past Project");
-
-    projectChart.select("Past Project");
-    currentProject
-      .toggleAndEditExpense(0)
-      .setMonth(201109)
-      .validate();
-    projectChart.checkProjectList("Current Project");
-
-    timeline.selectMonths(201006, 201105);
-    projectChart.checkProjectList("Past Project", "Current Project", "Next Project");
-  }
-
   public void testCanCreateProjectsFromTheCategorizationView() throws Exception {
 
     operations.hideSignposts();
@@ -634,5 +575,4 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .add("15/11/2010", TransactionType.PRELEVEMENT, "RESA 1", "", -100.00, "Trip / Booking")
       .check();
   }
-
 }

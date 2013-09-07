@@ -46,7 +46,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     currentProject.backToList();
-    projects.checkProjects("| Trip | Dec | -800.00 | off |");
+    projects.checkCurrentProjects("| Trip | Dec | -800.00 | off |");
     projects.select("Trip");
     currentProject.setActive();
     budgetView.extras.checkSeries("Trip", 0.00, -300.00);
@@ -57,7 +57,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     currentProject.backToList();
-    projects.checkProjects("| Trip | Dec | -800.00 | on |");
+    projects.checkCurrentProjects("| Trip | Dec | -800.00 | on |");
     projects.select("Trip");
 
     currentProject.view(0).setInactive();
