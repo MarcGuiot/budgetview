@@ -196,7 +196,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
         Glob item = repository.create(ProjectItem.TYPE,
                                       value(ProjectItem.ITEM_TYPE, itemType.getId()),
                                       value(ProjectItem.LABEL, defaultLabel),
-                                      value(ProjectItem.MONTH, getCurrentMonth()),
+                                      value(ProjectItem.FIRST_MONTH, getCurrentMonth()),
                                       value(ProjectItem.PROJECT, currentProjectKey.get(Project.ID)));
         if (ProjectItemType.TRANSFER.equals(itemType)) {
           repository.create(ProjectTransfer.TYPE, value(ProjectTransfer.PROJECT_ITEM, item.get(ProjectItem.ID)));

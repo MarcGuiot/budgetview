@@ -61,7 +61,6 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     currentProject.backToList();
 
-    fail("[Pour Marc] on voudrait afficher les projets en cours par ordre de date de début croissante - cf repeats de ProjectListView");
     projects.checkCurrentProjects(
       "| Current Empty |     | 0.00    | on |\n" +
       "| Current Oct   | Oct | -400.00 | on |\n" +
@@ -69,8 +68,8 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
     );
 
     projects.checkPastProjects(
-      "| Past Oct | Oct | -800.00 | on |\n" +
-      "| Past Aug | Aug | -800.00 | on |"
+      "| Past Oct | Oct | -400.00 | on |\n" +
+      "| Past Aug | Aug | -400.00 | on |"
     );
   }
 

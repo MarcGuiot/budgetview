@@ -50,8 +50,8 @@ public class ProjectPeriodSliderAdapter implements MonthSliderAdapter {
     repository.startChangeSet();
     try {
       for (Glob item : repository.findLinkedTo(project, ProjectItem.PROJECT)) {
-        int newMonth = Month.offset(item.get(ProjectItem.MONTH), delta);
-        repository.update(item.getKey(), ProjectItem.MONTH, newMonth);
+        int newMonth = Month.offset(item.get(ProjectItem.FIRST_MONTH), delta);
+        repository.update(item.getKey(), ProjectItem.FIRST_MONTH, newMonth);
       }
     }
     finally {

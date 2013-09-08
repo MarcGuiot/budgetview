@@ -48,5 +48,6 @@ public class SerializationManager {
     Synchro.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Synchro.Serializer());
     Picture.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Picture.Serializer());
     ProjectTransfer.TYPE.updateProperty(SERIALIZATION_PROPERTY, new ProjectTransfer.Serializer());
+    ProjectItemAmount.TYPE.updateProperty(SERIALIZATION_PROPERTY, new ProjectItemAmount.Serializer());
   }
 }

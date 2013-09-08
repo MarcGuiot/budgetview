@@ -46,7 +46,7 @@ public class DumpDataAction extends AbstractAction {
       repository.getAll(SeriesBudget.TYPE,
                         and(fieldEquals(SeriesBudget.SERIES, Series.UNCATEGORIZED_SERIES_ID)));
 
-    TablePrinter table = new TablePrinter();
+    TablePrinter table = new TablePrinter(true);
     for (Glob budget : budgets) {
       Glob series = repository.findLinkTarget(budget, SeriesBudget.SERIES);
       table.addRow(

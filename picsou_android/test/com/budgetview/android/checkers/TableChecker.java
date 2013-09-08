@@ -11,7 +11,7 @@ public abstract class TableChecker {
 
   private final String title;
   private final View view;
-  protected TablePrinter expected = new TablePrinter();
+  protected TablePrinter expected = new TablePrinter(true);
 
   public TableChecker(String title, View view) {
     this.title = title;
@@ -19,7 +19,7 @@ public abstract class TableChecker {
   }
 
   public void check() {
-    TablePrinter actual = new TablePrinter();
+    TablePrinter actual = new TablePrinter(true);
     ViewParser.parse(view, getParser(actual));
     String actualText = actual.toString();
     if (!expected.toString().isEmpty() && Strings.isNullOrEmpty(actualText)) {

@@ -14,8 +14,8 @@ import java.awt.print.Paper;
 import java.util.List;
 
 public class TransactionPrintChecker {
-  private TablePrinter expected = new TablePrinter();
-  private TablePrinter actual = new TablePrinter();
+  private TablePrinter expected = new TablePrinter(true);
+  private TablePrinter actual = new TablePrinter(true);
 
   public TransactionPrintChecker(PrintableReport report) {
     if (!(report instanceof TransactionsReport)) {

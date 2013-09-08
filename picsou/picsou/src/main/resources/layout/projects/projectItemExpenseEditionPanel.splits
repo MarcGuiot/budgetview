@@ -15,17 +15,12 @@
     <grid border="empty(10)" opaque="true" background="block.inner.bg">
       <textField ref="nameField" gridPos="(0,0,5,1)"/>
 
+      <panel gridPos="(1,2,4,1)" marginTop="5" ref="itemAmountEditor"/>
+
       <row gridPos="(1,1,4,1)" marginTop="5">
         <label text="$projectView.item.edition.month" styleClass="field"/>
         <component ref="monthEditor" gridPos="(2,1)" fill="none" anchor="left"/>
         <filler fill="horizontal"/>
-      </row>
-
-      <row gridPos="(1,2,4,1)" marginTop="5">
-        <component ref="amountEditor" weightX="2"/>
-        <label text="$projectView.item.edition.perMonthDuring" styleClass="field"/>
-        <component ref="monthCountEditor" weightX="1"/>
-        <label text="$projectView.item.edition.perMonthDuringMonths" styleClass="field"/>
       </row>
 
       <label text="$projectView.item.edition.link" gridPos="(1,3)" styleClass="field"/>

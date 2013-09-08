@@ -103,21 +103,14 @@ public class ProjectListView extends View {
   private class CurrentProjectsMatcher implements GlobMatcher {
     public boolean matches(Glob stat, GlobRepository repository) {
       Integer lastMonth = stat.get(ProjectStat.LAST_MONTH);
-      if (lastMonth == null) {
-        return true;
-      }
-      return lastMonth >= CurrentMonth.getCurrentMonth(repository);
+      return lastMonth == null || lastMonth >= CurrentMonth.getCurrentMonth(repository);
     }
   }
 
   private class PastProjectsMatcher implements GlobMatcher {
-
     public boolean matches(Glob stat, GlobRepository repository) {
       Integer lastMonth = stat.get(ProjectStat.LAST_MONTH);
-      if (lastMonth == null) {
-        return false;
-      }
-      return lastMonth < CurrentMonth.getCurrentMonth(repository);
+      return lastMonth != null && lastMonth < CurrentMonth.getCurrentMonth(repository);
     }
   }
 }

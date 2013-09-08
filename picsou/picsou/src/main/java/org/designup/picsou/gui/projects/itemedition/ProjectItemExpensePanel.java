@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.projects.itemedition;
 
-import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.images.GlobImageLabelView;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.projects.ProjectView;
@@ -28,15 +27,7 @@ public class ProjectItemExpensePanel extends ProjectItemEditionPanel {
     final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectItemExpenseEditionPanel.splits",
                                                             localRepository, directory);
 
-    addCommonComponents(builder);
-
-    AmountEditor amountEditor = new AmountEditor(ProjectItem.PLANNED_AMOUNT, localRepository, directory, false, null)
-      .forceSelection(itemKey)
-      .addAction(validate)
-      .update(false, false);
-    builder.add("amountEditor", amountEditor.getPanel());
-    disposables.add(amountEditor);
-    amountEditorField = amountEditor.getNumericEditor().getComponent();
+    addCommonComponents(builder, false);
 
     GlobImageLabelView imageLabel =
       GlobImageLabelView.init(ProjectItem.PICTURE, ProjectView.MAX_PICTURE_SIZE, localRepository, directory)

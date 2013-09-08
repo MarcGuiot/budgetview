@@ -15,28 +15,21 @@
     <column border="empty(10)" opaque="true" background="block.inner.bg">
       <textField ref="nameField"/>
 
+      <row marginTop="10" marginBottom="10">
+        <comboBox ref="fromAccount"/>
+        <label icon="rightArrow(10,10,10,10,#999999)" fill="horizontal" anchor="center" border="empty(5)"/>
+        <comboBox ref="toAccount"/>
+      </row>
+
+      <label ref="savingsMessage"/>
+
       <row marginTop="5">
         <label text="$projectView.item.edition.month" styleClass="field"/>
         <component ref="monthEditor" fill="none" anchor="left"/>
         <filler fill="horizontal"/>
       </row>
 
-      <row marginTop="5">
-        <component ref="amountEditor" weightX="2"/>
-        <label text="$projectView.item.edition.perMonthDuring" styleClass="field"/>
-        <component ref="monthCountEditor" weightX="1"/>
-        <label text="$projectView.item.edition.perMonthDuringMonths" styleClass="field"/>
-      </row>
-
-      <row>
-        <comboBox ref="fromAccount"/>
-      </row>
-
-      <row>
-        <comboBox ref="toAccount"/>
-      </row>
-
-      <label ref="savingsMessage"/>
+      <panel ref="itemAmountEditor" marginTop="5"/>
 
       <row marginTop="5">
         <filler fill="horizontal"/>

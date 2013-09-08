@@ -13,6 +13,8 @@ import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
 import org.designup.picsou.gui.projects.utils.ImageStatusUpdater;
 import org.designup.picsou.model.*;
+import org.designup.picsou.triggers.projects.ProjectItemToAmountGlobalTrigger;
+import org.designup.picsou.triggers.projects.ProjectItemToAmountLocalTrigger;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.actions.ToggleBooleanAction;
@@ -45,7 +47,7 @@ public abstract class ProjectItemPanel implements Disposable {
 
   protected final Key itemKey;
   protected final GlobRepository parentRepository;
-  protected final LocalGlobRepository localRepository;
+  protected LocalGlobRepository localRepository;
   protected final Directory directory;
   protected DisposableGroup disposables = new DisposableGroup();
   private JPanel enclosingPanel;
@@ -56,10 +58,6 @@ public abstract class ProjectItemPanel implements Disposable {
   public ProjectItemPanel(Glob item, GlobRepository parentRepository, Directory directory) {
     this.itemKey = item.getKey();
     this.parentRepository = parentRepository;
-    this.localRepository =
-      LocalGlobRepositoryBuilder.init(parentRepository)
-        .copy(ProjectItem.TYPE, ProjectTransfer.TYPE, Month.TYPE, CurrentMonth.TYPE, Account.TYPE)
-        .get();
     this.directory = directory;
 
     this.enclosingPanel = new JPanel(new BorderLayout());
@@ -125,7 +123,7 @@ public abstract class ProjectItemPanel implements Disposable {
     builder.add("imageLabel", imageLabel.getLabel());
     disposables.add(new ImageStatusUpdater(itemKey, ProjectItem.ACTIVE, imageLabel, parentRepository));
 
-    MonthSlider monthSlider = new MonthSlider(new SingleMonthAdapter(ProjectItem.MONTH), parentRepository, directory);
+    MonthSlider monthSlider = new MonthSlider(new SingleMonthAdapter(ProjectItem.FIRST_MONTH), parentRepository, directory);
     monthSlider.setKey(itemKey);
     builder.add("monthSlider", monthSlider);
     disposables.add(monthSlider);
@@ -167,7 +165,7 @@ public abstract class ProjectItemPanel implements Disposable {
     builder.add("link", link);
     disposables.add(link);
 
-    GlobHtmlView description = GlobHtmlView.init(ProjectItem.DESCRIPTION, localRepository, directory)
+    GlobHtmlView description = GlobHtmlView.init(ProjectItem.DESCRIPTION, parentRepository, directory)
       .setAutoHideIfEmpty(true)
       .forceSelection(itemKey);
     builder.add("description", description);
@@ -211,8 +209,13 @@ public abstract class ProjectItemPanel implements Disposable {
   }
 
   private void showEditPanel() {
-    if (editionPanel == null) {
-      editionPanel = createEditionPanel();
+    if (localRepository == null || editionPanel == null) {
+      this.localRepository =
+        LocalGlobRepositoryBuilder.init(parentRepository)
+          .copy(ProjectItem.TYPE, ProjectTransfer.TYPE, ProjectItemAmount.TYPE, Month.TYPE, CurrentMonth.TYPE, Account.TYPE)
+          .get();
+      this.localRepository.addTrigger(new ProjectItemToAmountLocalTrigger());
+      this.editionPanel = createEditionPanel();
     }
     else {
       localRepository.rollback();

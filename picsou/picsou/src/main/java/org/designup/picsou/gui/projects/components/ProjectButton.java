@@ -85,6 +85,9 @@ public class ProjectButton extends JButton implements ChangeSetListener, Disposa
         }
       }
     });
+
+    setPreferredSize(new Dimension(110,125));
+    updateComponents();
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -232,5 +235,9 @@ public class ProjectButton extends JButton implements ChangeSetListener, Disposa
 
   public void setGaugeOverrunErrorColorBottom(Color color) {
     gauge.setOverrunErrorColorBottom(color);
+  }
+
+  public String toString() {
+    return "ProjectButton(" + projectKey + " - month:" + monthId + " - planned:" + planned + ")";
   }
 }

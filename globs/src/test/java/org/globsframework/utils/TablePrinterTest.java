@@ -11,7 +11,7 @@ public class TablePrinterTest extends TestCase {
   private StringWriter writer = new StringWriter();
 
   public void testStandardUsage() throws Exception {
-    TablePrinter table = new TablePrinter();
+    TablePrinter table = new TablePrinter(true);
     table.setHeader("t1", "t2", "t3");
     table.addRow("Value 1", 22.0, "Item 3");
     table.addRow(1.1111, "v2", "33");
@@ -22,7 +22,7 @@ public class TablePrinterTest extends TestCase {
   }
 
   public void testNoHeader() throws Exception {
-    TablePrinter table = new TablePrinter();
+    TablePrinter table = new TablePrinter(true);
     table.addRow("Value 1", 22.0, "Item 3");
     assertEquals("|         |       |        |\n" +
                  "| Value 1 | 22.00 | Item 3 |\n",
@@ -35,7 +35,7 @@ public class TablePrinterTest extends TestCase {
                          new Object[]{"first value", "second value"},
                          new Object[]{"a", "b"}
                        ),
-                       new PrintWriter(writer));
+                       true, new PrintWriter(writer));
 
     assertEquals("| Title 1     | Title 2      |" + Strings.LINE_SEPARATOR +
                  "| a           | b            |" + Strings.LINE_SEPARATOR +
@@ -50,7 +50,7 @@ public class TablePrinterTest extends TestCase {
                            new Object[]{"first value", "second value",},
                            new Object[]{"a", "b", "c"}
                          ),
-                         new PrintWriter(writer));
+                         true, new PrintWriter(writer));
     }
     catch (InvalidParameter e) {
       assertEquals("Row larger than the header row: [a, b, c]", e.getMessage());

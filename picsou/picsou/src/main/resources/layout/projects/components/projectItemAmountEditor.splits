@@ -1,0 +1,30 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+  </styles>
+
+  <column name="projectItemAmountEditor" opaque="false">
+
+    <row ref="singleAmountPanel">
+      <component ref="amountEditor" weightX="2"/>
+      <label text="$projectView.item.edition.perMonthDuring" styleClass="field"/>
+      <component ref="monthCountEditor" weightX="1"/>
+      <label text="$projectView.item.edition.perMonthDuringMonths" styleClass="field"/>
+      <button action="toggleMonthAmounts" name="switchToMonthEditor"/>
+    </row>
+
+    <column ref="monthEditorPanel">
+      <row>
+        <label text="$projectView.item.edition.tableMonthCount" styleClass="field"/>
+        <component ref="tableMonthCountEditor"/>
+        <filler fill="horizontal"/>
+      </row>
+      <row>
+        <table ref="monthAmountsTable" preferredSize="(200,100)"/>
+        <component ref="monthAmountEditor"/>
+      </row>
+      <button action="toggleMonthAmounts" name="switchToSingleAmount"/>
+    </column>
+  </column>
+</splits>

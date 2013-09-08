@@ -145,7 +145,7 @@ public class HistoChartChecker extends AbstractHistoChecker<HistoChartChecker> {
   }
 
   private TablePrinter createPrinter() {
-    TablePrinter printer = new TablePrinter();
+    TablePrinter printer = new TablePrinter(true);
     printer.setHeader("Year", "Month", "Actual", "Planned", "Selected");
     return printer;
   }

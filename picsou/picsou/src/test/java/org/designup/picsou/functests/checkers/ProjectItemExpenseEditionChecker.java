@@ -8,8 +8,18 @@ public class ProjectItemExpenseEditionChecker extends ProjectItemEditionChecker<
     super(panel);
   }
 
+  public ProjectItemExpenseEditionChecker setMonthAmount(double amount) {
+    AmountEditorChecker.init(panel, "monthAmountEditor").set(amount);
+    return this;
+  }
+
   public ProjectItemEditionChecker setAmount(double amount) {
     AmountEditorChecker.init(panel, "amountEditor").set(amount);
+    return this;
+  }
+
+  public ProjectItemEditionChecker checkAmount(double amount) {
+    AmountEditorChecker.init(panel, "amountEditor").checkAmount(amount);
     return this;
   }
 }
