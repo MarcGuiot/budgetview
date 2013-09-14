@@ -35,6 +35,7 @@ public class ProjectItemViewLayout implements LayoutManager {
 
   private static class Metrics {
 
+    private static final int MARGIN_TOP = 3;
     private static final int PADDING = 5;
     private static final int VERTICAL_MARGIN = 5;
     private static final int IMAGE_LEFT_MARGIN = 20;
@@ -100,7 +101,7 @@ public class ProjectItemViewLayout implements LayoutManager {
 
     public Metrics(Container target) {
       Insets insets = target.getInsets();
-      top = insets.top + PADDING;
+      top = insets.top + PADDING + MARGIN_TOP;
       left = insets.left + PADDING;
       right = target.getWidth() - insets.right - PADDING;
       insetsHeight = insets.top + insets.bottom + 2 * PADDING;

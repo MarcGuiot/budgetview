@@ -49,6 +49,28 @@ public class ProjectView extends View implements GlobSelectionListener, ChangeSe
     update();
   }
 
+  public void createProject() {
+    repository.create(Project.TYPE).getKey();
+  }
+
+  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+    if (changeSet.containsChanges(Project.TYPE)) {
+      Set<Key> created = changeSet.getCreated(Project.TYPE);
+      if (created.size() > 0) {
+        selectionService.select(repository.get(created.iterator().next()));
+      }
+      else {
+        switchToListIfNeeded();
+      }
+    }
+  }
+
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    if (changedTypes.contains(Project.TYPE)) {
+      switchToListIfNeeded();
+    }
+  }
+
   private void update() {
     currentKeys = selectionService.getSelection(Project.TYPE).getKeySet();
     if (currentKeys.size() == 1) {
@@ -56,30 +78,6 @@ public class ProjectView extends View implements GlobSelectionListener, ChangeSe
     }
     else {
       cards.show("list");
-    }
-  }
-
-  public void createProject() {
-    repository.startChangeSet();
-    Key projectKey;
-    try {
-      projectKey = repository.create(Project.TYPE).getKey();
-    }
-    finally {
-      repository.completeChangeSet();
-    }
-    selectionService.select(repository.get(projectKey));
-  }
-
-  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(Project.TYPE)) {
-      switchToListIfNeeded();
-    }
-  }
-
-  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(Project.TYPE)) {
-      switchToListIfNeeded();
     }
   }
 

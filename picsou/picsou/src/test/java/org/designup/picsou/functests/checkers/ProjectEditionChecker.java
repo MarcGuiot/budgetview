@@ -76,6 +76,18 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
+  public ProjectEditionChecker checkProjectButtonsHidden() {
+    assertFalse(getPanel().getToggleButton("activeToggle").isVisible());
+    assertFalse(getPanel().getButton("modify").isVisible());
+    return this;
+  }
+
+  public ProjectEditionChecker checkProjectButtonsShown() {
+    assertTrue(getPanel().getToggleButton("activeToggle").isVisible());
+    assertTrue(getPanel().getButton("modify").isVisible());
+    return this;
+  }
+
   public ProjectEditionChecker checkProjectGauge(double actual, double planned) {
 
     assertThat(getPanel().getTextBox("totalActual").textEquals(Formatting.toString(actual)));
@@ -113,7 +125,7 @@ public class ProjectEditionChecker extends ViewChecker {
   }
 
   public ProjectEditionChecker addExpenseItem() {
-    PopupButton.init(getPanel(), "addItem").click(Lang.get("projectEdition.addItem.expense"));
+    getPanel().getButton("addExpenseItem").click();
     return this;
   }
 
@@ -136,7 +148,7 @@ public class ProjectEditionChecker extends ViewChecker {
   }
 
   public ProjectEditionChecker addTransferItem() {
-    PopupButton.init(getPanel(), "addItem").click(Lang.get("projectEdition.addItem.transfer"));
+    getPanel().getButton("addTransferItem").click();
     return this;
   }
 

@@ -33,7 +33,7 @@
           <label text="$projectView.item.edition.link" styleClass="field"/>
           <textField ref="urlField"/>
         </row>
-        <scrollPane forceVerticalScroll="true" minimumSize="(120,70)" preferredSize="(120,70)">
+        <scrollPane forceVerticalScroll="true" minimumSize="(120,40)" preferredSize="(120,40)">
           <textArea ref="descriptionField" editable="true"/>
         </scrollPane>
       </column>

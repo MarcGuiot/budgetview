@@ -21,6 +21,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.editors.GlobToggleEditor;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.utils.GlobRepeat;
@@ -30,6 +31,7 @@ import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -52,6 +54,9 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
   private GlobLabelView totalPlanned;
   private MonthSlider monthSlider;
   private ImageStatusUpdater imageStatusUpdater;
+  private GlobToggleEditor activationToggle;
+  private ModifyNameAction modifyAction;
+  private JPanel addItemPanel = new JPanel();
 
   public ProjectEditionView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -91,20 +96,27 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectEditionView.splits",
                                                             repository, directory);
 
-    final ModifyNameAction modify = new ModifyNameAction();
+    modifyAction = new ModifyNameAction();
     PopupMenuFactory factory = new PopupMenuFactory() {
       public JPopupMenu createPopup() {
         JPopupMenu menu = new JPopupMenu();
-        menu.add(modify);
+        menu.add(modifyAction);
         menu.add(new DeleteProjectAction(repository, directory));
         return menu;
       }
     };
+
+    activationToggle = builder.addToggleEditor("activeToggle", Project.ACTIVE);
+    builder.add("modify", modifyAction);
+
     projectNameEditor = new ProjectNameEditor(factory, repository, directory);
     builder.add("projectNameEditor", projectNameEditor.getPanel());
-
-    builder.addToggleEditor("activeToggle", Project.ACTIVE);
-    builder.add("modify", modify);
+    projectNameEditor.setListener(new ProjectNameEditor.Listener() {
+      public void processEditShown(boolean shown) {
+        activationToggle.getComponent().setVisible(!shown);
+        addItemPanel.setVisible(!shown);
+      }
+    });
 
     GlobImageLabelView imageLabel =
       GlobImageLabelView.init(Project.PICTURE, ProjectView.MAX_PICTURE_SIZE, repository, directory)
@@ -142,10 +154,9 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
       }
     });
 
-    JPopupMenu menu = new JPopupMenu();
-    menu.add(new AddItemAction("projectEdition.addItem.expense", ProjectItemType.EXPENSE));
-    menu.add(new AddItemAction("projectEdition.addItem.transfer", ProjectItemType.TRANSFER));
-    builder.add("addItem", new JPopupButton(Lang.get("projectEdition.addItem"), menu));
+    builder.add("addItemPanel", addItemPanel);
+    builder.add("addExpenseItem", new JButton(new AddItemAction("projectEdition.addItem.expense", ProjectItemType.EXPENSE)));
+    builder.add("addTransferItem", new JButton(new AddItemAction("projectEdition.addItem.transfer", ProjectItemType.TRANSFER)));
 
     builder.add("backToList", new BackToListAction());
     builder.add("createProject", new CreateProjectAction(directory));
