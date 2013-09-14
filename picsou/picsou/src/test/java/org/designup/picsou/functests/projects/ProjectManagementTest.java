@@ -641,4 +641,46 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .add("15/11/2010", TransactionType.PRELEVEMENT, "RESA 1", "", -100.00, "Trip / Booking")
       .check();
   }
+
+  public void testItemsAreAddedWithTheLastMonthAsDefault() throws Exception {
+    operations.hideSignposts();
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/12/30")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/12/10", -100.00, "Resa")
+      .load();
+
+    projects.create();
+    currentProject
+      .setName("My project")
+      .addExpenseItem()
+      .editExpense(0)
+      .setLabel("Item 1")
+      .checkMonth("Dec 2010")
+      .setMonth(201101)
+      .setAmount(-250.00)
+      .validate();
+    currentProject
+      .addExpenseItem()
+      .editExpense(1)
+      .setLabel("Item 2")
+      .checkMonth("Jan 2011")
+      .setMonth(201102)
+      .setMonthCount(3)
+      .setAmount(-60.00)
+      .validate();
+    currentProject
+      .addExpenseItem()
+      .editExpense(2)
+      .setLabel("Item 3")
+      .checkMonth("Feb 2011")
+      .setAmount(-150.00)
+      .validate();
+
+    currentProject.checkItems("Item 1 | Jan | 0.00 | -250.00\n" +
+                              "Item 2 | Feb | 0.00 | -180.00\n" +
+                              "Item 3 | Feb | 0.00 | -150.00");
+  }
 }

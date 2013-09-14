@@ -210,7 +210,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
         Glob item = repository.create(ProjectItem.TYPE,
                                       value(ProjectItem.ITEM_TYPE, itemType.getId()),
                                       value(ProjectItem.LABEL, defaultLabel),
-                                      value(ProjectItem.FIRST_MONTH, getCurrentMonth()),
+                                      value(ProjectItem.FIRST_MONTH, getNewItemMonth()),
                                       value(ProjectItem.PROJECT, currentProjectKey.get(Project.ID)));
         if (ProjectItemType.TRANSFER.equals(itemType)) {
           repository.create(ProjectTransfer.TYPE, value(ProjectTransfer.PROJECT_ITEM, item.get(ProjectItem.ID)));
@@ -222,12 +222,17 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     }
   }
 
-  private Integer getCurrentMonth() {
-    GlobList selection = selectionService.getSelection(Month.TYPE);
-    if (selection.isEmpty()) {
-      return directory.get(TimeService.class).getCurrentMonthId();
+  private Integer getNewItemMonth() {
+    GlobList items = repository.findLinkedTo(repository.find(currentProjectKey), ProjectItem.PROJECT);
+    if (items.isEmpty()) {
+      GlobList selection = selectionService.getSelection(Month.TYPE);
+      if (selection.isEmpty()) {
+        return directory.get(TimeService.class).getCurrentMonthId();
+      }
+      return selection.getSortedSet(Month.ID).last();
     }
-    return selection.getSortedSet(Month.ID).last();
+
+    return items.getSortedSet(ProjectItem.FIRST_MONTH).last();
   }
 
   private class BackToListAction extends AbstractAction {
