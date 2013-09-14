@@ -45,6 +45,28 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
+  public ProjectEditionChecker editName() {
+    getPanel().getPanel("projectPanel").getButton("modify").click();
+    return this;
+  }
+
+  public ProjectEditionChecker clearName() {
+    getPanel().getPanel("projectNameEditor").getInputTextBox("projectNameField").setText("", false);
+    return this;
+  }
+
+  public ProjectEditionChecker checkNameEditionInProgress(String name) {
+    Panel editor = getPanel().getPanel("projectNameEditor");
+    assertThat(editor.isVisible());
+    assertThat(editor.getInputTextBox("projectNameField").textEquals(name));
+    return this;
+  }
+
+  public ProjectEditionChecker checkNoEditionInProgress() {
+    checkComponentVisible(getPanel(), JTextField.class, "projectNameField", false);
+    return this;
+  }
+
   public ProjectEditionChecker checkProjectNameMessage(String expectedMessage) {
     Panel editor = getPanel().getPanel("projectNameEditor");
     TextBox nameField = editor.getTextBox("projectNameField");
@@ -52,6 +74,11 @@ public class ProjectEditionChecker extends ViewChecker {
     editor.getButton("Validate").click();
     checkTipVisible(getPanel(), nameField, expectedMessage);
     assertThat(editor.getButton("Validate").isVisible());
+    return this;
+  }
+
+  public ProjectEditionChecker cancelNameEdition() {
+    getPanel().getPanel("projectNameEditor").getButton("cancel").click();
     return this;
   }
 

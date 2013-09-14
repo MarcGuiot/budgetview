@@ -141,7 +141,14 @@ public class ProjectNameEditor {
     }
 
     public void actionPerformed(ActionEvent e) {
-      localRepository.rollback();
+      if ((currentProjectKey != null) && Strings.isNullOrEmpty(localRepository.get(currentProjectKey).get(Project.NAME))) {
+        localRepository.delete(currentProjectKey);
+        localRepository.commitChanges(false);
+        currentProjectKey = null;
+      }
+      else {
+        localRepository.rollback();
+      }
       showReadonly();
     }
   }

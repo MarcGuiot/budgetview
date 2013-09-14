@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.projects;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.MonthSlider;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
 import org.designup.picsou.gui.components.images.GlobImageLabelView;
@@ -162,6 +161,8 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     builder.add("createProject", new CreateProjectAction(directory));
 
     parentBuilder.add("projectEditionView", builder);
+
+    updateSelection();
   }
 
   private class ModifyNameAction extends AbstractAction {
@@ -235,6 +236,13 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+      Glob project = repository.get(currentProjectKey);
+      if (Strings.isNullOrEmpty(project.get(Project.NAME)) &&
+          repository.findLinkedTo(project, ProjectItem.PROJECT).isEmpty()) {
+        currentProjectKey = null;
+        updateSelection();
+        repository.delete(project);
+      }
       selectionService.clear(Project.TYPE);
     }
   }

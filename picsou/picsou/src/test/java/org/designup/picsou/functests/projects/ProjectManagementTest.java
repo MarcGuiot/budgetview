@@ -257,6 +257,69 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.checkProject("My project", 201101, 201101, 200.00);
   }
 
+  public void testCancellingANewlyCreatedProjectDeletesIt() throws Exception {
+    operations.hideSignposts();
+
+    projects.create();
+    currentProject
+      .cancelNameEdition();
+    projects
+      .checkListShown()
+      .checkNoProjectShown();
+
+    operations.undo();
+    projects.checkEditionShown();
+    currentProject
+      .checkNameEditionInProgress("")
+      .backToList();
+
+    projects
+      .checkListShown()
+      .checkNoProjectShown();
+
+    operations.undo();
+    projects.checkEditionShown();
+    currentProject
+      .checkNameEditionInProgress("")
+      .setName("New Project")
+      .backToList();
+
+    projects
+      .checkListShown()
+      .checkCurrentProjects("| New Project |  | 0.00 | on |");
+  }
+
+  public void testProjectWithItemsNotDeletedWhenCancellingEmptyName() throws Exception {
+    operations.hideSignposts();
+
+    projects.create();
+    currentProject
+      .setName("My project")
+      .addExpenseItem(0, "Item 1", 201212, -300.00)
+      .backToList();
+
+    projects.checkCurrentProjects("| My project | Dec | -300.00 | on |");
+
+    projects.select("My project");
+    currentProject.editName()
+      .clearName()
+      .cancelNameEdition();
+
+    currentProject
+      .checkName("My project")
+      .backToList();
+    projects.checkCurrentProjects("| My project | Dec | -300.00 | on |");
+
+    projects.select("My project");
+    currentProject.editName()
+      .clearName()
+      .backToList();
+    projects.checkCurrentProjects("| My project | Dec | -300.00 | on |");
+
+    projects.select("My project");
+    currentProject.checkNoEditionInProgress();
+  }
+
   public void testCancellingANewlyCreatedItemDeletesIt() throws Exception {
     operations.hideSignposts();
 
