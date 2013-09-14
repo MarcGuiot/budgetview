@@ -33,6 +33,9 @@
 
     <scrollPane forceVerticalScroll="true" border="none">
       <column>
+
+        <button action="createProject" fill="none" anchor="center" margin="10"/>
+
         <label text="$projectListView.currentProjects" styleClass="secondarySectionTitle"/>
         <repeat ref="currentProjects" layout="wrappedRow">
           <column name="projectBlock" marginTop="10">

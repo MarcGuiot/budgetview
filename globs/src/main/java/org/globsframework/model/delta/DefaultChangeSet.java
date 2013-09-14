@@ -228,6 +228,15 @@ public class DefaultChangeSet implements MutableChangeSet {
     return false;
   }
 
+  public boolean containsDeletions(GlobType type) {
+    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.get(type).values()) {
+      if (deltaGlob.isDeleted()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public boolean containsUpdates(Field field) {
     for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.get(field.getGlobType()).values()) {
       if (deltaGlob.isUpdated(field)) {

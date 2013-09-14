@@ -19,7 +19,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(3).validate();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("Trip")
       .addExpenseItem(0, "Reservation", 201012, -200.00)
@@ -119,7 +119,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(3).validate();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("Trip")
       .addExpenseItem(0, "Reservation", 201012, -200.00)

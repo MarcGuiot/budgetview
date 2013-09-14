@@ -24,15 +24,17 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(6).validate();
     operations.hideSignposts();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .checkProjectGaugeHidden()
+      .checkProjectButtonsHidden()
       .setName("My project")
+      .checkProjectButtonsShown()
       .checkItemCount(0);
     currentProject.addExpenseItem()
       .editExpense(0)
       .setLabel("Reservation")
-      .checkMonth("January 2011")
+      .checkMonth("Jan 2011")
       .setAmount(-200.00)
       .validate();
     currentProject
@@ -146,7 +148,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(6).validate();
     operations.hideSignposts();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("My project")
       .addExpenseItem(0, "Reservation", 201101, -200.00)
@@ -181,7 +183,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(6).validate();
     operations.hideSignposts();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("My project")
       .addExpenseItem(0, "Reservation", 201101, -200.00)
@@ -233,7 +235,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     operations.hideSignposts();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .checkProjectNameMessage("You must provide a name for this project")
       .setName("My project")
@@ -255,10 +257,73 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.checkProject("My project", 201101, 201101, 200.00);
   }
 
+  public void testCancellingANewlyCreatedProjectDeletesIt() throws Exception {
+    operations.hideSignposts();
+
+    projects.create();
+    currentProject
+      .cancelNameEdition();
+    projects
+      .checkListShown()
+      .checkNoProjectShown();
+
+    operations.undo();
+    projects.checkEditionShown();
+    currentProject
+      .checkNameEditionInProgress("")
+      .backToList();
+
+    projects
+      .checkListShown()
+      .checkNoProjectShown();
+
+    operations.undo();
+    projects.checkEditionShown();
+    currentProject
+      .checkNameEditionInProgress("")
+      .setName("New Project")
+      .backToList();
+
+    projects
+      .checkListShown()
+      .checkCurrentProjects("| New Project |  | 0.00 | on |");
+  }
+
+  public void testProjectWithItemsNotDeletedWhenCancellingEmptyName() throws Exception {
+    operations.hideSignposts();
+
+    projects.create();
+    currentProject
+      .setName("My project")
+      .addExpenseItem(0, "Item 1", 201212, -300.00)
+      .backToList();
+
+    projects.checkCurrentProjects("| My project | Dec | -300.00 | on |");
+
+    projects.select("My project");
+    currentProject.editName()
+      .clearName()
+      .cancelNameEdition();
+
+    currentProject
+      .checkName("My project")
+      .backToList();
+    projects.checkCurrentProjects("| My project | Dec | -300.00 | on |");
+
+    projects.select("My project");
+    currentProject.editName()
+      .clearName()
+      .backToList();
+    projects.checkCurrentProjects("| My project | Dec | -300.00 | on |");
+
+    projects.select("My project");
+    currentProject.checkNoEditionInProgress();
+  }
+
   public void testCancellingANewlyCreatedItemDeletesIt() throws Exception {
     operations.hideSignposts();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("My project")
       .addExpenseItem()
@@ -275,7 +340,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2011/01/01", 1000.00, "Income")
       .load();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("My project")
       .addExpenseItem(0, "Item 1", 201101, 100.00)
@@ -303,7 +368,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2012/12/15", -550.00, "Sheraton")
       .load();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("My project")
       .addExpenseItem(0, "Travel", 201212, -300.00)
@@ -346,7 +411,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2012/12/15", -550.00, "Sheraton")
       .load();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("My project")
       .addExpenseItem(0, "Travel", 201212, -300.00)
@@ -455,7 +520,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2011/01/05", 100.00, "Resa")
       .load();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("My project")
       .addExpenseItem(0, "Bonus", 201101, 1000.00);
@@ -477,7 +542,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/01", 1000.00, "Income")
       .load();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("My project")
       .addExpenseItem(0, "Reservation", 201012, -200.00);
@@ -496,13 +561,13 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/11/15", -100.00, "Resa")
       .load();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("Trip")
       .addExpenseItem(0, "Booking", 201011, -200.00);
 
-    projectChart.create();
     currentProject
+      .create()
       .setName("Another project")
       .addExpenseItem(0, "Another item", 201011, -200.00);
 
@@ -534,7 +599,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/15", -250.00, "Sheraton")
       .load();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("Trip")
       .addExpenseItem(0, "Booking", 201011, -250.00)

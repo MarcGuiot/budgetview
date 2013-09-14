@@ -25,6 +25,11 @@ public class ProjectEditionChecker extends ViewChecker {
     super(mainWindow);
   }
 
+  public ProjectEditionChecker create() {
+    getPanel().getButton("createProject").click();
+    return this;
+  }
+
   public ProjectEditionChecker checkTitle(String text) {
     assertThat(getPanel().getTextBox("title").textEquals(text));
     return this;
@@ -40,6 +45,28 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
+  public ProjectEditionChecker editName() {
+    getPanel().getPanel("projectPanel").getButton("modify").click();
+    return this;
+  }
+
+  public ProjectEditionChecker clearName() {
+    getPanel().getPanel("projectNameEditor").getInputTextBox("projectNameField").setText("", false);
+    return this;
+  }
+
+  public ProjectEditionChecker checkNameEditionInProgress(String name) {
+    Panel editor = getPanel().getPanel("projectNameEditor");
+    assertThat(editor.isVisible());
+    assertThat(editor.getInputTextBox("projectNameField").textEquals(name));
+    return this;
+  }
+
+  public ProjectEditionChecker checkNoEditionInProgress() {
+    checkComponentVisible(getPanel(), JTextField.class, "projectNameField", false);
+    return this;
+  }
+
   public ProjectEditionChecker checkProjectNameMessage(String expectedMessage) {
     Panel editor = getPanel().getPanel("projectNameEditor");
     TextBox nameField = editor.getTextBox("projectNameField");
@@ -47,6 +74,11 @@ public class ProjectEditionChecker extends ViewChecker {
     editor.getButton("Validate").click();
     checkTipVisible(getPanel(), nameField, expectedMessage);
     assertThat(editor.getButton("Validate").isVisible());
+    return this;
+  }
+
+  public ProjectEditionChecker cancelNameEdition() {
+    getPanel().getPanel("projectNameEditor").getButton("cancel").click();
     return this;
   }
 
@@ -68,6 +100,18 @@ public class ProjectEditionChecker extends ViewChecker {
 
   public ProjectEditionChecker checkProjectGaugeHidden() {
     assertFalse(getPanel().getPanel("gaugePanel").isVisible());
+    return this;
+  }
+
+  public ProjectEditionChecker checkProjectButtonsHidden() {
+    assertFalse(getPanel().getToggleButton("activeToggle").isVisible());
+    assertFalse(getPanel().getButton("modify").isVisible());
+    return this;
+  }
+
+  public ProjectEditionChecker checkProjectButtonsShown() {
+    assertTrue(getPanel().getToggleButton("activeToggle").isVisible());
+    assertTrue(getPanel().getButton("modify").isVisible());
     return this;
   }
 
@@ -108,7 +152,7 @@ public class ProjectEditionChecker extends ViewChecker {
   }
 
   public ProjectEditionChecker addExpenseItem() {
-    PopupButton.init(getPanel(), "addItem").click(Lang.get("projectEdition.addItem.expense"));
+    getPanel().getButton("addExpenseItem").click();
     return this;
   }
 
@@ -131,7 +175,7 @@ public class ProjectEditionChecker extends ViewChecker {
   }
 
   public ProjectEditionChecker addTransferItem() {
-    PopupButton.init(getPanel(), "addItem").click(Lang.get("projectEdition.addItem.transfer"));
+    getPanel().getButton("addTransferItem").click();
     return this;
   }
 

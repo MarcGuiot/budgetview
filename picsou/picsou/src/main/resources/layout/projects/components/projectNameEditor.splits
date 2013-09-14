@@ -28,10 +28,8 @@
     <card name="edit">
       <row>
         <textField ref="projectNameField" anchor="right" weightX="100"/>
-        <button action="validate" styleClass="hyperlink" font="-,plain,10"
-                fill="none" marginLeft="10" anchor="left"/>
-        <button action="cancel" styleClass="hyperlink" font="-,plain,10"
-                fill="none" marginLeft="10" anchor="left"/>
+        <button action="cancel" styleClass="smallButton" marginLeft="10"/>
+        <button action="validate" styleClass="smallButton" marginLeft="10"/>
       </row>
     </card>
   </cards>

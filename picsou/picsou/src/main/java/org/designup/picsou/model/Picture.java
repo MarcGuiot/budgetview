@@ -44,14 +44,6 @@ public class Picture {
 
   public static void setIcon(org.globsframework.model.Key key, LinkField link, GlobRepository repository, Image image, Dimension maxSize) throws InvalidFormat {
     byte[] bytes = getScaledImageAsBytes(image, maxSize);
-
-//    try {
-//      ImageIO.write(toBufferedImage(new ImageIcon(bytes)), "png", new File("/Users/rmedina/Desktop/bv_saved_picture.jpg"));
-//    }
-//    catch (IOException e) {
-//      throw new RuntimeException(e);
-//    }
-
     doSetLink(key, link, repository, bytes);
   }
 
@@ -71,10 +63,6 @@ public class Picture {
     ColorConvertOp grayscale =
       new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
     grayscale.filter(bufferedImage, bufferedImage);
-
-//    RescaleOp brighten = new RescaleOp(1.8f, 15, null);
-//    brighten.filter(bufferedImage, bufferedImage);
-
     return new ImageIcon(bufferedImage);
   }
 

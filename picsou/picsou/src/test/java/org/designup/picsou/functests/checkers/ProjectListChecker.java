@@ -19,6 +19,10 @@ public class ProjectListChecker extends ViewChecker {
     super(mainWindow);
   }
 
+  public void create() {
+    getPanel().getButton("createProject").click();
+  }
+
   public void checkNoCurrentProjects() {
     checkProjects("", "currentProjects");
   }
@@ -44,8 +48,8 @@ public class ProjectListChecker extends ViewChecker {
     Assert.assertEquals(expected, printer.toString().trim());
   }
 
-  private TablePrinter dump(String repeatName) {
-    UIComponent[] blocks = getPanel().getPanel(repeatName).getUIComponents(Panel.class, "projectBlock");
+  private TablePrinter dump(String containerName) {
+    UIComponent[] blocks = getPanel().getPanel(containerName).getUIComponents(Panel.class, "projectBlock");
     TablePrinter printer = new TablePrinter();
     for (UIComponent block : blocks) {
       Panel projectPanel = (Panel)block;
@@ -59,8 +63,9 @@ public class ProjectListChecker extends ViewChecker {
     return printer;
   }
 
-  public void checkListShown() {
+  public ProjectListChecker checkListShown() {
     UISpecAssert.assertThat(getProjectViewPanel().containsUIComponent(Panel.class, "projectListView"));
+    return this;
   }
 
   public void checkEditionShown() {
@@ -77,17 +82,17 @@ public class ProjectListChecker extends ViewChecker {
 
   public void checkNoProjectShown() {
     checkListShown();
-    UIComponent[] blocks = getPanel().getUIComponents(Panel.class, "projectBlock");
-    if (blocks.length > 0) {
-      Assert.fail(blocks.length + "projects unexpectedly shown: " + Arrays.toString(blocks));
-    }
+    checkNoCurrentProjects();
+    checkNoPastProjects();
   }
 
   private Panel getPanel() {
     return getProjectViewPanel().getPanel("projectListView");
   }
+
   private Panel getProjectViewPanel() {
     if (projectViewPanel == null) {
+      views.selectHome();
       projectViewPanel = mainWindow.getPanel("projectView");
     }
     return projectViewPanel;

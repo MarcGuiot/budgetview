@@ -13,6 +13,8 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Set;
@@ -55,6 +57,12 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
         if (!popupMenu.isShowing()) {
           popupMenu.show(label, e.getX(), e.getY());
         }
+      }
+    });
+
+    label.addComponentListener(new ComponentAdapter() {
+      public void componentResized(ComponentEvent e) {
+        updateIcon();
       }
     });
 
@@ -118,15 +126,13 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
   private void updateIcon() {
     Glob glob = repository.find(currentKey);
     if (glob == null) {
-      label.setIcon(null);
-      label.setVisible(!autoHide);
+      setDefaultIcon();
       return;
     }
 
     ImageIcon icon = Picture.getIcon(glob, link, repository, label.getPreferredSize());
     if (icon == null) {
-      label.setIcon(autoHide ? null : defaultIconFactory.createIcon(label.getPreferredSize()));
-      label.setVisible(!autoHide);
+      setDefaultIcon();
       return;
     }
 
@@ -136,6 +142,11 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
 
     label.setIcon(icon);
     label.setVisible(true);
+  }
+
+  private void setDefaultIcon() {
+    label.setIcon(autoHide ? null : defaultIconFactory.createIcon(label.getPreferredSize()));
+    label.setVisible(!autoHide);
   }
 
   public JPopupButton getPopupButton(String text) {

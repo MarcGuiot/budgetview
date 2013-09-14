@@ -13,7 +13,6 @@ import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
 import org.designup.picsou.gui.projects.utils.ImageStatusUpdater;
 import org.designup.picsou.model.*;
-import org.designup.picsou.triggers.projects.ProjectItemToAmountGlobalTrigger;
 import org.designup.picsou.triggers.projects.ProjectItemToAmountLocalTrigger;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -239,7 +238,7 @@ public abstract class ProjectItemPanel implements Disposable {
 
       parentRepository.startChangeSet();
       try {
-      localRepository.commitChanges(false);
+        localRepository.commitChanges(false);
         for (Functor onCommitFunctor : onCommitFunctors) {
           try {
             onCommitFunctor.run();

@@ -22,6 +22,7 @@ C org.globsframework.gui.splits.components.StyledPanelUI
 C org.globsframework.gui.splits.components.StyledToggleButtonUI
 C org.globsframework.gui.splits.components.ShadowedLabelUI
 C org.globsframework.gui.splits.components.HyperlinkButtonUI
+C org.designup.picsou.gui.components.ui.CustomButtonUI
 C org.designup.picsou.gui.components.RoundButtonUI
 C org.designup.picsou.gui.plaf.SplitPaneDotsPainter
 C com.jidesoft.plaf.aqua.AquaJideUtils

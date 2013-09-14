@@ -5,10 +5,6 @@
     <style selector="label.totalAmount" font="-,plain,11" foreground="projectView.item.view.label" marginRight="5"
            anchor="center" fill="none"/>
 
-    <style selector="button.addItem"
-           ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"
-           fill="none" anchor="west" marginLeft="10" tooltipText="$projectEdition.addItem.tooltip"/>
-
     <style selector="button.plus"
            ui="hyperlinkButtonWithoutUnderline" foreground="dialog.block.add"
            text="$projectEdition.add" tooltipText="$projectEdition.addItem.tooltip"
@@ -36,25 +32,39 @@
            weightX="0" fill="none" anchor="center"
            minimumSize="(26,14)" preferredSize="(26,14)"/>
 
-    <style selector="button.backButton"
-           marginLeft="10" marginBottom="5" fill="none" anchor="left"
-           ui="hyperlinkButtonWithoutUnderline" foreground="hyperlink"
-           font="-,plain,12"
-           icon="leftArrow(10,14,8,8, #222222)"
-           rolloverIcon="leftArrow(10,14,8,8, #0000FF)"/>
+    <style selector="button.navigation" ui="hyperlinkButtonWithoutUnderline"
+           foreground="block.item.link" font="-,plain,12" marginTop="10" fill="none" anchor="southeast"/>
+
+    <style selector="button#backToList"
+           marginLeft="10" anchor="left"
+           icon="leftArrow(10,14,8,8,block.item.link)"
+           rolloverIcon="leftArrow(10,14,8,8,block.item.link)"/>
+
+    <style selector="button#createProject" marginRight="10" anchor="right"/>
+    <style selector=".addItemLabel" foreground="block.footer.button" marginRight="5"/>
+    <style selector="button.smallButton" marginLeft="5" marginRight="5"/>
 
   </styles>
 
   <column styleClass="secondaryInnerBlock">
 
-    <row name="projectPanel" margin="10" weightY="0.1" opaque="true" background="block.inner.bg" border="matte(1,1,1,1,projectView.border)">
-      <label ref="imageLabel" margin="5" marginRight="10" minimumSize="(170,120)" preferredSize="(170,120)" fill="both"/>
+    <row>
+      <button action="backToList" name="backToList" styleClass="navigation"/>
+      <filler fill="horizontal"/>
+      <button action="createProject" name="createProject" styleClass="navigation"
+              tooltipText="$projectView.create.tooltip"/>
+    </row>
+
+    <row name="projectPanel" margin="10" marginTop="5" weightY="0.1" opaque="true" background="block.inner.bg"
+         border="matte(1,1,1,1,projectView.border)">
+      <label ref="imageLabel" margin="5" marginRight="10" minimumSize="(170,120)" preferredSize="(170,120)"
+             fill="both"/>
       <column>
         <row marginBottom="15">
           <component ref="projectNameEditor"/>
           <filler fill="horizontal" weightX="0.1"/>
           <toggleButton ref="activeToggle"/>
-          <button action="modify" styleClass="editIcon"/>
+          <button action="modify" styleClass="editIcon" autoHideSource="activeToggle"/>
         </row>
         <component ref="monthSlider" marginBottom="5"/>
         <row ref="gaugePanel" opaque="false" autoHideSource="gauge">
@@ -71,16 +81,19 @@
             margin="10" marginTop="0">
       <scrollPane forceVerticalScroll="true">
         <column>
-          <repeat ref="items" layout="column" marginTop="5" marginBottom="0">
+          <repeat ref="items" layout="column">
             <panel ref="projectItemPanel" border="matte(0,0,1,0,projectView.item.border)"/>
           </repeat>
-          <button ref="addItem" styleClass="plus"/>
+          <row ref="addItemPanel" marginTop="10">
+            <filler fill="horizontal"/>
+            <label text="$projectEdition.addItem" styleClass="addItemLabel"/>
+            <button ref="addExpenseItem" styleClass="smallButton"/>
+            <button ref="addTransferItem" styleClass="smallButton"/>
+          </row>
           <filler fill="vertical"/>
         </column>
       </scrollPane>
     </column>
-
-    <button action="backToList" styleClass="backButton"/>
 
   </column>
 

@@ -23,12 +23,6 @@
 
       <label ref="savingsMessage"/>
 
-      <row marginTop="5">
-        <label text="$projectView.item.edition.month" styleClass="field"/>
-        <component ref="monthEditor" fill="none" anchor="left"/>
-        <filler fill="horizontal"/>
-      </row>
-
       <panel ref="itemAmountEditor" marginTop="5"/>
 
       <row marginTop="5">

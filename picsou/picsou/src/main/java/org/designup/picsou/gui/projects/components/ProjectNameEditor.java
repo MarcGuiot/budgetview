@@ -13,7 +13,9 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.GlobBooleanNodeStyleUpdater;
 import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.views.GlobButtonView;
-import org.globsframework.model.*;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.Strings;
@@ -36,6 +38,11 @@ public class ProjectNameEditor {
   private GlobButtonView projectNameButton;
   private Key currentProjectKey;
   private GlobBooleanNodeStyleUpdater styleUpdater;
+  private Listener listener;
+
+  public interface Listener {
+    void processEditShown(boolean shown);
+  }
 
   public ProjectNameEditor(PopupMenuFactory menuFactory, GlobRepository parentRepository, Directory directory) {
     this.menuFactory = menuFactory;
@@ -54,24 +61,28 @@ public class ProjectNameEditor {
     return panel;
   }
 
-  public void setCurrentProject(Key currentProjectKey) {
-    this.currentProjectKey = currentProjectKey;
+  public void setCurrentProject(Key projectKey) {
+    this.currentProjectKey = projectKey;
     projectNameButton.forceSelection(currentProjectKey);
     nameField.forceSelection(currentProjectKey);
     if ((currentProjectKey != null) && Strings.isNullOrEmpty(parentRepository.get(currentProjectKey).get(Project.NAME))) {
       edit();
     }
     else {
-      cards.show("readonly");
+      showReadonly();
     }
     styleUpdater.setKey(currentProjectKey);
+  }
+
+  public void setListener(Listener listener) {
+    this.listener = listener;
   }
 
   public void edit() {
     localRepository.reset(new GlobList(parentRepository.get(currentProjectKey)), Project.TYPE);
     projectNameButton.forceSelection(currentProjectKey);
     nameField.forceSelection(currentProjectKey);
-    cards.show("edit");
+    showEdit();
     GuiUtils.selectAndRequestFocus(nameField.getComponent());
   }
 
@@ -87,15 +98,14 @@ public class ProjectNameEditor {
     functor.setComponent(projectNameButton.getComponent());
 
     this.styleUpdater = new GlobBooleanNodeStyleUpdater(Project.ACTIVE, projectNameNode,
-                                                    "activeProject", "inactiveProject",
-                                                    parentRepository);
+                                                        "activeProject", "inactiveProject",
+                                                        parentRepository);
 
     nameField = builder.addEditor("projectNameField", Project.NAME);
     ValidateAction validate = new ValidateAction();
     builder.add("validate", validate);
     nameField.setValidationAction(validate);
     builder.add("cancel", new CancelEditionAction());
-
     cards.show("readonly");
 
     panel = builder.load();
@@ -120,18 +130,47 @@ public class ProjectNameEditor {
         return;
       }
       localRepository.commitChanges(false);
-      cards.show("readonly");
+      showReadonly();
     }
   }
 
   protected class CancelEditionAction extends AbstractAction {
+
     public CancelEditionAction() {
       super(Lang.get("cancel"));
     }
 
     public void actionPerformed(ActionEvent e) {
-      localRepository.rollback();
-      cards.show("readonly");
+      if ((currentProjectKey != null) && Strings.isNullOrEmpty(localRepository.get(currentProjectKey).get(Project.NAME))) {
+        localRepository.delete(currentProjectKey);
+        localRepository.commitChanges(false);
+        currentProjectKey = null;
+      }
+      else {
+        localRepository.rollback();
+      }
+      showReadonly();
+    }
+  }
+
+  private void showEdit() {
+    cards.show("edit");
+    notifyEditShown(true);
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        GuiUtils.selectAndRequestFocus(nameField.getComponent());
+      }
+    });
+  }
+
+  private void showReadonly() {
+    cards.show("readonly");
+    notifyEditShown(false);
+  }
+
+  private void notifyEditShown(boolean shown) {
+    if (listener != null) {
+      listener.processEditShown(shown);
     }
   }
 }
