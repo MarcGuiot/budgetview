@@ -47,6 +47,21 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
                   "Lens | Dec | 0.00 | -200.00");
     categorization.setExtra("FNAC", "Camera", "Camera Body");
     budgetView.extras.checkSeries("Camera", -200.00, -350.00);
+
+    timeline.selectMonth(201101);
+    budgetView.extras.checkSeries("Camera", 0.00, -150.00);
+
+    timeline.selectMonth(201102);
+    budgetView.extras.checkSeries("Camera", 0.00, -150.00);
+
+    timeline.selectMonth(201103);
+    budgetView.extras.checkSeries("Camera", 0.00, -150.00);
+
+    timeline.selectMonth(201104);
+    budgetView.extras.checkSeries("Camera", 0.00, -150.00);
+
+    timeline.selectMonth(201105);
+    budgetView.extras.checkNoSeriesShown();
   }
 
   public void testCannotEnterZeroOrNegativeNumbersAsMonthCount() throws Exception {

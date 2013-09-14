@@ -55,10 +55,10 @@ public class SendMailServlet extends HttpServlet {
       content = content.trim();
       mailFrom = mailFrom.trim();
       if (mailTo.equals(ConfigService.SUPPORT_EMAIL)) {
-        mailer.sendToSupport(Mailer.Mailbox.SUPPORT, mailFrom, title, content);
+        mailer.sendToUs(Mailer.Mailbox.SUPPORT, mailFrom, title, content);
       }
       else if (mailTo.equals(ConfigService.ADMIN_EMAIL)) {
-        mailer.sendToSupport(Mailer.Mailbox.ADMIN, mailFrom, title, content);
+        mailer.sendToUs(Mailer.Mailbox.ADMIN, mailFrom, title, content);
       }
       resp.setStatus(HttpServletResponse.SC_OK);
     }

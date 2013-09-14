@@ -10,7 +10,7 @@ public class LocalServer {
     System.setProperty(NewUserServlet.PAYPAL_CONFIRM_URL_PROPERTY, "http://www.sandbox.paypal.com/fr/cgi-bin/webscr");
 
     LicenseServer server = new LicenseServer();
-    server.setMailPort(5000);
+//    server.setMailPort(5000);
     server.usePort(8443, 8080);
     server.setDatabaseUrl("jdbc:hsqldb:.");
     server.init();

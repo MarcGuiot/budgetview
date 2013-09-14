@@ -65,7 +65,7 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
     GlobList projectItems = repository.getAll(ProjectItem.TYPE, linkedTo(seriesKey, ProjectItem.SERIES));
     SortedSet<Integer> months = new TreeSet<Integer>();
     for (Glob item : projectItems) {
-      Integer firstItemMonth = item.get(ProjectItem.MONTH);
+      Integer firstItemMonth = item.get(ProjectItem.FIRST_MONTH);
       months.add(firstItemMonth);
       Integer lastItemMonth = ProjectItem.getLastMonth(item);
       if (!Utils.equal(firstItemMonth, lastItemMonth)) {
@@ -111,11 +111,11 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
     if (project.isTrue(Project.ACTIVE)) {
       for (Glob item : projectItems) {
         if (item.isTrue(ProjectItem.ACTIVE)) {
-          Integer firstMonthId = item.get(ProjectItem.MONTH);
+          Integer firstMonthId = item.get(ProjectItem.FIRST_MONTH);
           Integer lastMonthId = ProjectItem.getLastMonth(item);
           for (int monthId = firstMonthId; monthId <= lastMonthId; monthId = Month.next(monthId)) {
             Glob seriesBudget = SeriesBudget.find(seriesId, monthId, repository);
-            double planned = seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0) + getPlanned(item, repository);
+            double planned = seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0) + getPlanned(item, monthId, repository);
             repository.update(seriesBudget.getKey(),
                               value(SeriesBudget.PLANNED_AMOUNT, planned),
                               value(SeriesBudget.ACTIVE, true));
@@ -125,13 +125,13 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
     }
   }
 
-  private Double getPlanned(Glob item, GlobRepository repository) {
+  private Double getPlanned(Glob item, int monthId, GlobRepository repository) {
     if (ProjectItemType.TRANSFER.equals(ProjectItemType.get(item))) {
       Glob transfer = ProjectTransfer.getTransferFromItem(item, repository);
       if (!ProjectTransfer.isSavings(transfer, repository)) {
         return 0.00;
       }
     }
-    return item.get(ProjectItem.PLANNED_AMOUNT, 0.0);
+    return ProjectItem.getAmount(item, monthId, repository);
   }
 }

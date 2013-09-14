@@ -12,24 +12,6 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(6).validate();
   }
 
-  /**
-   * @deprecated TODO
-   */
-  public void test_POUR_MARC() throws Exception {
-    createMainAccount("Main account 1");
-    createSavingsAccount("Savings account 1");
-
-    projectChart.create();
-    currentProject
-      .setName("Trip")
-      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
-    currentProject.checkProjectGauge(0.00, 0.00);
-    currentProject.checkPeriod("December 2010");
-
-    currentProject.toggleAndEditTransfer(0)
-      .checkFromAccount("Savings account 1");
-  }
-
   public void testWithSavings() throws Exception {
 
     mainAccounts.createNewAccount()
@@ -103,7 +85,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .checkToAccount("Main accounts")
       .cancel();
     currentProject.backToList();
-    projects.checkProjects("| Trip | Dec | 0.00 | on |");
+    projects.checkCurrentProjects("| Trip | Dec | 0.00 | on |");
 
     projects.select("Trip");
     budgetView.extras.checkSeries("Trip", 0.00, 0.00);
@@ -276,27 +258,26 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .add("01/12/2010", TransactionType.PRELEVEMENT, "TRANSFER FROM SAVINGS ACCOUNT 1", "", -100.00, "Transfer")
       .check();
 
-//    views.selectHome();
-//    currentProject
-//      .editTransfer(0)
-//      .checkFromAccount("Savings account 1")
-//      .setFromAccount("Savings account 2")
-//      .validateAndCheckConfirmation()
-//      .checkMessageContains("Operations were assigned to one of the accounts")
-//      .cancel();
-//    currentProject
-//      .editTransfer(0)
-//      .checkFromAccount("Savings account 1");
-//
-//    views.selectData();
-//    transactions.initContent()
-//      .add("01/12/2010", TransactionType.PRELEVEMENT, "TRANSFER FROM SAVINGS ACCOUNT 1", "", -100.00, "Transfer")
-//      .check();
+    views.selectHome();
+    currentProject
+      .editTransfer(0)
+      .checkFromAccount("Savings account 2")
+      .validateAndCheckConfirmation()
+      .checkMessageContains("Operations were assigned to one of the accounts")
+      .cancel();
+    currentProject
+      .editTransfer(0)
+      .checkFromAccount("Savings account 2");
+
+    views.selectData();
+    transactions.initContent()
+      .add("01/12/2010", TransactionType.PRELEVEMENT, "TRANSFER FROM SAVINGS ACCOUNT 1", "", -100.00, "Transfer")
+      .check();
 
     views.selectHome();
     currentProject
       .editTransfer(0)
-      .setFromAccount("Savings account 2")
+      .checkFromAccount("Savings account 2")
       .validateAndCheckConfirmation()
       .validate();
 
@@ -312,7 +293,87 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNavigatingToTransactions() throws Exception {
-    fail("[Regis] on navigue vers series, même quand pas de subseries, sans oublier les opérations sur chaque compte du virement");
+    createMainAccount("Main account 1");
+    createSavingsAccount("Savings account 1");
+    createSavingsAccount("Savings account 2");
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/12/15")
+      .addTransaction("2010/12/01", 100.00, "Transfer to savings account 1")
+      .addTransaction("2010/12/10", 100.00, "Other 1")
+      .addTransaction("2010/12/15", 100.00, "Other 2")
+      .loadInAccount("Main account 1");
+
+    projectChart.create();
+    currentProject.setName("My Project")
+      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
+
+    categorization.setSavings("TRANSFER FROM SAVINGS ACCOUNT 1", "Transfer");
+    categorization.setSavings("TRANSFER TO SAVINGS ACCOUNT 1", "Transfer");
+
+    views.selectData();
+    transactions.initContent()
+      .add("15/12/2010", TransactionType.VIREMENT, "OTHER 2", "", 100.00)
+      .add("10/12/2010", TransactionType.VIREMENT, "OTHER 1", "", 100.00)
+      .add("01/12/2010", TransactionType.PRELEVEMENT, "TRANSFER FROM SAVINGS ACCOUNT 2", "", -100.00)
+      .add("01/12/2010", TransactionType.VIREMENT, "AN OPERATION", "", 1000.00)
+      .add("01/12/2010", TransactionType.PRELEVEMENT, "TRANSFER FROM SAVINGS ACCOUNT 1", "", -100.00, "Transfer")
+      .add("01/12/2010", TransactionType.VIREMENT, "AN OPERATION", "", 1000.00)
+      .add("01/12/2010", TransactionType.VIREMENT, "TRANSFER TO SAVINGS ACCOUNT 1", "", 100.00, "Transfer")
+      .add("01/12/2010", TransactionType.VIREMENT, "TRANSFER 1", "", 100.00)
+      .add("01/12/2010", TransactionType.VIREMENT, "INCOME", "", 1000.00)
+      .check();
+
+    views.selectHome();
+    currentProject.view(0).showTransactionsThroughActual();
+
+    views.checkDataSelected();
+    transactions.initContent()
+      .add("01/12/2010", TransactionType.PRELEVEMENT, "TRANSFER FROM SAVINGS ACCOUNT 1", "", -100.00, "Transfer")
+      .add("01/12/2010", TransactionType.VIREMENT, "TRANSFER TO SAVINGS ACCOUNT 1", "", 100.00, "Transfer")
+      .check();
+  }
+
+  public void testUsingMonthAmounts() throws Exception {
+
+    createMainAccount("Main account 1");
+    createSavingsAccount("Savings account 1");
+
+    projectChart.create();
+    currentProject
+      .setName("Trip")
+      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
+    currentProject.checkProjectGauge(0.00, 0.00);
+    currentProject.checkPeriod("December 2010");
+
+    budgetView.extras.checkSeries("Trip", 0.00, 0.00);
+    budgetView.savings.checkSeries("Transfer", 0.00, -200.00);
+
+    currentProject
+      .toggleAndEditTransfer(0)
+      .setFromAccount("Main accounts")
+      .setToAccount("Savings account 1")
+      .editMonths()
+      .setTableMonthCount(3)
+      .checkMonthAmounts("| Dec 2010 | 200.00 |\n" +
+                         "| Jan 2011 | 0.00   |\n" +
+                         "| Feb 2011 | 0.00   |")
+      .setMonthAmount(0, 70.00)
+      .setMonthAmount(1, 20.00)
+      .setMonthAmount(2, 10.00)
+      .checkMonthAmounts("| Dec 2010 | 70.00 |\n" +
+                         "| Jan 2011 | 20.00 |\n" +
+                         "| Feb 2011 | 10.00 |")
+      .validate();
+
+    timeline.selectMonth(201012);
+    budgetView.savings.checkSeries("Transfer", 0.00, 70.00);
+
+    timeline.selectMonth(201101);
+    budgetView.savings.checkSeries("Transfer", 0.00, 20.00);
+
+    timeline.selectMonth(201102);
+    budgetView.savings.checkSeries("Transfer", 0.00, 10.00);
   }
 
   private void createMainAccount(String mainAccountName) {

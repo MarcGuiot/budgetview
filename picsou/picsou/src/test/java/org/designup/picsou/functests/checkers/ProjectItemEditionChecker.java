@@ -1,8 +1,11 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.AmountEditorChecker;
 import org.designup.picsou.functests.checkers.components.MonthSliderChecker;
+import org.globsframework.utils.TablePrinter;
 import org.uispec4j.Panel;
+import org.uispec4j.Table;
 import org.uispec4j.TextBox;
 import org.uispec4j.UIComponent;
 
@@ -32,12 +35,12 @@ public abstract class ProjectItemEditionChecker<T extends ProjectItemEditionChec
   }
 
   public T setMonth(int monthId) {
-    MonthSliderChecker.init(panel, "month").setMonth(monthId);
+    MonthSliderChecker.init(panel, "monthEditor").setMonth(monthId);
     return (T)this;
   }
 
   public T checkMonth(String text) {
-    MonthSliderChecker.init(panel, "month").checkText(text);
+    MonthSliderChecker.init(panel, "monthEditor").checkText(text);
     return (T)this;
   }
 
@@ -50,6 +53,73 @@ public abstract class ProjectItemEditionChecker<T extends ProjectItemEditionChec
 
   public T checkMonthCount(int numberOfMonths) {
     assertThat(panel.getInputTextBox("monthCountEditor").textEquals(Integer.toString(numberOfMonths)));
+    return (T)this;
+  }
+
+  public T editMonths() {
+    panel.getButton("switchToMonthEditor").click();
+    return (T)this;
+  }
+
+  public T checkShowsMonthEditor() {
+    checkComponentVisible(panel, JPanel.class, "monthEditorPanel", true);
+    return (T)this;
+  }
+
+  public T useSingleAmount() {
+    panel.getButton("switchToSingleAmount").click();
+    return (T)this;
+  }
+
+  public T checkShowsSingleAmount() {
+    checkComponentVisible(panel, JPanel.class, "singleAmountPanel", true);
+    return (T)this;
+  }
+
+  public T selectRow(int row) {
+    Table table = panel.getTable("monthAmountsTable");
+    table.selectRow(row);
+    return (T)this;
+  }
+
+  public T selectRows(int... rows) {
+    Table table = panel.getTable("monthAmountsTable");
+    table.selectRows(rows);
+    return (T)this;
+  }
+
+  public T checkMonthAmount(double amount) {
+    AmountEditorChecker.init(panel, "monthAmountEditor").checkAmount(amount);
+    return (T)this;
+  }
+
+  public T setMonthAmount(Integer row, double amount) {
+    selectRow(row);
+    setMonthAmount(amount);
+    return (T)this;
+  }
+
+  public abstract T setMonthAmount(double amount);
+
+  public T checkMonthAmounts(String expected) {
+    Table table = panel.getTable("monthAmountsTable");
+    TablePrinter printer = new TablePrinter();
+    for (int row = 0; row < table.getRowCount(); row++) {
+      String month = table.getContentAt(row, 0).toString();
+      String amount = table.getContentAt(row, 1).toString();
+      printer.addRow(month, amount);
+    }
+    Assert.assertEquals(expected.trim(), printer.toString().trim());
+    return (T)this;
+  }
+
+  public T setTableMonthCount(int count) {
+    panel.getInputTextBox("tableMonthCountEditor").setText(Integer.toString(count));
+    return (T)this;
+  }
+
+  public T checkTableMonthCount(int count) {
+    assertThat(panel.getInputTextBox("tableMonthCountEditor").textEquals(Integer.toString(count)));
     return (T)this;
   }
 

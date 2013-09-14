@@ -12,7 +12,7 @@ public class LicenseServerChecker {
   public LicenseServerChecker(String databaseUrl, int port) throws IOException {
     server = new LicenseServer();
     server.usePort(null, port);
-    server.setMailPort(2500);
+    server.setMailPort("localhost", 2500);
     server.setDatabaseUrl(databaseUrl);
   }
 

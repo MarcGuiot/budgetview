@@ -102,12 +102,10 @@ public class FeedbackDialog {
                                                   getMessageText(),
                                                   new ConfigService.Listener() {
                                                     public void sent(String mail, String title, String content) {
-                                                      System.out.println("FeedbackDialog$SendAction.sent: ");
                                                       showConfirmation();
                                                     }
 
                                                     public void sendFailed(String mail, String title, String content) {
-                                                      System.out.println("FeedbackDialog$SendAction.sendFailed: ");
                                                       showFailure();
                                                     }
                                                   });

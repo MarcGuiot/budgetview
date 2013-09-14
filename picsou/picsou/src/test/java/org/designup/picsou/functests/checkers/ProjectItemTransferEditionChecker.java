@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.AmountEditorChecker;
 import org.designup.picsou.gui.description.Formatting;
 import org.uispec4j.Panel;
@@ -13,8 +14,21 @@ public class ProjectItemTransferEditionChecker extends ProjectItemEditionChecker
     super(panel);
   }
 
+  public ProjectItemTransferEditionChecker setMonthAmount(double amount) {
+    if (amount < 0) {
+      Assert.fail("Amount should be positive");
+    }
+    panel.getInputTextBox("monthAmountEditor").setText(Formatting.toString(amount));
+    return this;
+  }
+
   public ProjectItemTransferEditionChecker setAmount(double amount) {
     panel.getInputTextBox("amountEditor").setText(Formatting.toString(amount));
+    return this;
+  }
+
+  public ProjectItemTransferEditionChecker checkAmount(double amount) {
+    assertThat(panel.getInputTextBox("amountEditor").textEquals(Formatting.toString(amount)));
     return this;
   }
 

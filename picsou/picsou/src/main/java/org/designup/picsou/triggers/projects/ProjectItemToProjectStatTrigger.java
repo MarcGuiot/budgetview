@@ -56,7 +56,7 @@ public class ProjectItemToProjectStatTrigger implements ChangeSetListener {
     for (Glob item : repository.getAll(ProjectItem.TYPE,
                                        and(linkedTo(project, ProjectItem.PROJECT),
                                            not(fieldEquals(ProjectItem.ITEM_TYPE, ProjectItemType.TRANSFER.getId()))))) {
-      totalPlanned += ProjectItem.getTotalPlannedAmount(item);
+      totalPlanned += ProjectItem.getTotalPlannedAmount(item, repository);
     }
     repository.update(projectStatKey, ProjectStat.PLANNED_AMOUNT, totalPlanned);
   }
@@ -65,7 +65,7 @@ public class ProjectItemToProjectStatTrigger implements ChangeSetListener {
     Integer firstMonth = null;
     Integer lastMonth = null;
     for (Glob item : repository.findLinkedTo(project, ProjectItem.PROJECT)) {
-      Integer firstItemMonth = item.get(ProjectItem.MONTH);
+      Integer firstItemMonth = item.get(ProjectItem.FIRST_MONTH);
       if (firstItemMonth == null) {
         continue;
       }

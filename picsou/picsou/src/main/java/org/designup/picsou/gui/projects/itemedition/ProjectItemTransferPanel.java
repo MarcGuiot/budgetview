@@ -9,7 +9,6 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
-import org.globsframework.gui.editors.GlobNumericEditor;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatcher;
@@ -41,15 +40,7 @@ public class ProjectItemTransferPanel extends ProjectItemEditionPanel {
 
     Key projectTransferKey = Key.create(ProjectTransfer.TYPE, itemKey.get(ProjectItem.ID));
 
-    addCommonComponents(builder);
-
-    GlobNumericEditor amountEditor = GlobNumericEditor.init(ProjectItem.PLANNED_AMOUNT, localRepository, directory)
-      .setValidationAction(validate)
-      .setPositiveNumbersOnly(true)
-      .forceSelection(itemKey);
-    amountEditorField = amountEditor.getComponent();
-    builder.add("amountEditor", amountEditorField);
-    disposables.add(amountEditor);
+    addCommonComponents(builder, true);
 
     GlobMatcher accountFilter = SeriesEditionDialog.createAccountFilter();
 
@@ -125,7 +116,6 @@ public class ProjectItemTransferPanel extends ProjectItemEditionPanel {
 
     Set<Integer> discardedAccountIds = new HashSet<Integer>();
     ChangeSet changeSet = localRepository.getCurrentChanges();
-    System.out.println("ProjectItemTransferPanel.check: " + changeSet);
     Integer previousFromAccountId;
     if (changeSet.containsChanges(projectTransferKey, ProjectTransfer.FROM_ACCOUNT)) {
       previousFromAccountId = changeSet.getPreviousValues(projectTransferKey).get(ProjectTransfer.FROM_ACCOUNT);
@@ -153,7 +143,6 @@ public class ProjectItemTransferPanel extends ProjectItemEditionPanel {
         new ConfirmUncategorizeDialog(projectTransferKey, previousFromAccountId, previousToAccountId);
       confirmation.show();
       if (confirmation.cancelled) {
-        System.out.println("ProjectItemTransferPanel.check: delete");
         return false;
       }
     }
@@ -200,8 +189,8 @@ public class ProjectItemTransferPanel extends ProjectItemEditionPanel {
 
     protected void processCustomLink(String href) {
       GlobList transactions = getTransactions();
-      processCancel();
       dispose();
+      processCancel();
       directory.get(NavigationService.class).gotoData(transactions);
     }
 
@@ -215,7 +204,6 @@ public class ProjectItemTransferPanel extends ProjectItemEditionPanel {
       onCommitFunctors.add(new Functor() {
         public void run() throws Exception {
           GlobList transactions = getTransactions();
-          System.out.println("ProjectItemTransferPanel$ConfirmUncategorizeDialog.run: " + transactions);
           for (Glob transaction : transactions) {
             parentRepository.update(transaction.getKey(),
                                     value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
@@ -227,9 +215,6 @@ public class ProjectItemTransferPanel extends ProjectItemEditionPanel {
 
     protected void processCancel() {
       cancelled = true;
-      localRepository.update(projectTransferKey,
-                             value(ProjectTransfer.FROM_ACCOUNT, previousFromAccountId),
-                             value(ProjectTransfer.TO_ACCOUNT, previousToAccountId));
     }
   }
 

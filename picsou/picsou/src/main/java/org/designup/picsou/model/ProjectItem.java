@@ -1,6 +1,7 @@
 package org.designup.picsou.model;
 
 import com.budgetview.shared.utils.PicsouGlobSerializer;
+import org.designup.picsou.model.util.ClosedMonthRange;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.annotations.Key;
@@ -32,7 +33,10 @@ public class ProjectItem {
   public static StringField LABEL;
 
   @Target(Month.class)
-  public static IntegerField MONTH;
+  public static IntegerField FIRST_MONTH;
+
+  @DefaultBoolean(true)
+  public static BooleanField USE_SAME_AMOUNTS;
 
   @DefaultDouble(0.00)
   @DoublePrecision(4)
@@ -67,21 +71,45 @@ public class ProjectItem {
     loader.defineUniqueIndex(SUB_SERIES_INDEX, SUB_SERIES);
   }
 
-  public static Double getTotalPlannedAmount(FieldValues projectItem) {
+  public static Double getTotalPlannedAmount(FieldValues projectItem, GlobRepository repository) {
     if (projectItem == null) {
       return null;
     }
 
-    Double planned = projectItem.get(ProjectItem.PLANNED_AMOUNT);
-    Integer monthCount = projectItem.get(ProjectItem.MONTH_COUNT);
-    if (planned == null || monthCount == null) {
-      return 0.00;
+    if (projectItem.isTrue(USE_SAME_AMOUNTS)) {
+      Double planned = projectItem.get(ProjectItem.PLANNED_AMOUNT);
+      Integer monthCount = projectItem.get(ProjectItem.MONTH_COUNT);
+      if (planned == null || monthCount == null) {
+        return 0.00;
+      }
+      return planned * monthCount;
     }
-    return planned * monthCount;
+
+    return repository.findByIndex(ProjectItemAmount.PROJECT_ITEM_INDEX, ProjectItemAmount.PROJECT_ITEM, projectItem.get(ID))
+      .getGlobs()
+      .getSum(ProjectItemAmount.PLANNED_AMOUNT);
+  }
+
+  public static Double getAmount(Glob item, int monthId, GlobRepository repository) {
+    if (item.isTrue(USE_SAME_AMOUNTS)) {
+      return item.get(PLANNED_AMOUNT, 0.00);
+    }
+    Glob monthAmount = repository.find(org.globsframework.model.Key.create(ProjectItemAmount.PROJECT_ITEM, item.get(ID),
+                                                                           ProjectItemAmount.MONTH, monthId));
+    return monthAmount != null ? monthAmount.get(ProjectItemAmount.PLANNED_AMOUNT) : 0.00;
+  }
+
+  public static ClosedMonthRange getMonthRange(FieldValues values) {
+    Integer firstMonth = values.get(ProjectItem.FIRST_MONTH);
+    Integer monthCount = values.get(ProjectItem.MONTH_COUNT);
+    if ((firstMonth == null) || (monthCount == null)) {
+      return null;
+    }
+    return new ClosedMonthRange(firstMonth, getLastMonth(values));
   }
 
   public static int getLastMonth(FieldValues itemValues) {
-    return Month.offset(itemValues.get(MONTH), itemValues.get(MONTH_COUNT) - 1);
+    return Month.offset(itemValues.get(FIRST_MONTH), itemValues.get(MONTH_COUNT) - 1);
   }
 
   public static boolean usesSeries(FieldValues itemValues) {
@@ -107,7 +135,8 @@ public class ProjectItem {
       output.writeInteger(fieldValues.get(ProjectItem.PROJECT));
       output.writeInteger(fieldValues.get(ProjectItem.ITEM_TYPE));
       output.writeUtf8String(fieldValues.get(ProjectItem.LABEL));
-      output.writeInteger(fieldValues.get(ProjectItem.MONTH));
+      output.writeInteger(fieldValues.get(ProjectItem.FIRST_MONTH));
+      output.writeBoolean(fieldValues.get(ProjectItem.USE_SAME_AMOUNTS));
       output.writeDouble(fieldValues.get(ProjectItem.PLANNED_AMOUNT));
       output.writeInteger(fieldValues.get(ProjectItem.MONTH_COUNT));
       output.writeBoolean(fieldValues.get(ProjectItem.ACTIVE));
@@ -136,7 +165,8 @@ public class ProjectItem {
       fieldSetter.set(ProjectItem.PROJECT, input.readInteger());
       fieldSetter.set(ProjectItem.ITEM_TYPE, input.readInteger());
       fieldSetter.set(ProjectItem.LABEL, input.readUtf8String());
-      fieldSetter.set(ProjectItem.MONTH, input.readInteger());
+      fieldSetter.set(ProjectItem.FIRST_MONTH, input.readInteger());
+      fieldSetter.set(ProjectItem.USE_SAME_AMOUNTS, input.readBoolean());
       fieldSetter.set(ProjectItem.PLANNED_AMOUNT, input.readDouble());
       fieldSetter.set(ProjectItem.MONTH_COUNT, input.readInteger());
       fieldSetter.set(ProjectItem.ACTIVE, input.readBoolean());
@@ -152,7 +182,8 @@ public class ProjectItem {
       fieldSetter.set(ProjectItem.PROJECT, input.readInteger());
       fieldSetter.set(ProjectItem.ITEM_TYPE, ProjectItemType.EXPENSE.getId());
       fieldSetter.set(ProjectItem.LABEL, input.readUtf8String());
-      fieldSetter.set(ProjectItem.MONTH, input.readInteger());
+      fieldSetter.set(ProjectItem.FIRST_MONTH, input.readInteger());
+      fieldSetter.set(ProjectItem.USE_SAME_AMOUNTS, true);
       fieldSetter.set(ProjectItem.PLANNED_AMOUNT, input.readDouble());
       fieldSetter.set(ProjectItem.MONTH_COUNT, 1);
       fieldSetter.set(ProjectItem.ACTIVE, true);
@@ -168,7 +199,8 @@ public class ProjectItem {
       fieldSetter.set(ProjectItem.PROJECT, input.readInteger());
       fieldSetter.set(ProjectItem.ITEM_TYPE, ProjectItemType.EXPENSE.getId());
       fieldSetter.set(ProjectItem.LABEL, input.readUtf8String());
-      fieldSetter.set(ProjectItem.MONTH, input.readInteger());
+      fieldSetter.set(ProjectItem.FIRST_MONTH, input.readInteger());
+      fieldSetter.set(ProjectItem.USE_SAME_AMOUNTS, true);
       fieldSetter.set(ProjectItem.PLANNED_AMOUNT, input.readDouble());
       fieldSetter.set(ProjectItem.MONTH_COUNT, 1);
       fieldSetter.set(ProjectItem.ACTIVE, true);

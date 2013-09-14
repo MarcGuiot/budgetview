@@ -37,7 +37,8 @@ public class LicenseServer {
   private Server jetty;
   private Integer sslPort = null;
   private Integer port = null;
-  private int mailPort = 25;
+  private String mailHost = "ns0.ovh.net";
+  private int mailPort = 587;
   private String databaseUrl = JDBC_HSQLDB;
   private String databaseUser = "sa";
   private String databasePassword = "";
@@ -99,7 +100,8 @@ public class LicenseServer {
   private static void initLogger() throws IOException {
   }
 
-  public void setMailPort(int mailPort) {
+  public void setMailPort(String mailHost, int mailPort) {
+    this.mailHost = mailHost;
     this.mailPort = mailPort;
   }
 
@@ -185,7 +187,7 @@ public class LicenseServer {
     Directory directory = new DefaultDirectory();
     Mailer mailer = new Mailer();
     directory.add(mailer);
-    mailer.setPort(mailPort);
+    mailer.setPort(mailHost, mailPort);
     SqlService sqlService = new JdbcSqlService(databaseUrl, databaseUser, databasePassword);
     directory.add(SqlService.class, sqlService);
     directory.add(new VersionService());

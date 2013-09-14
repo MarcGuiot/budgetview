@@ -48,7 +48,8 @@ public class PicsouModel {
                           AccountPositionMode.TYPE,
                           AccountPositionError.TYPE,
                           Synchro.TYPE,
-                          Picture.TYPE
+                          Picture.TYPE,
+                          ProjectItemAmount.TYPE
                           )
       .get();
 

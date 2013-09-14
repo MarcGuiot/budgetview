@@ -47,8 +47,8 @@ public class DeleteMobileUserServlet extends AbstractHttpServlet {
       else {
         if (!Files.deleteWithSubtree(dir)){
           logger.info("Directory found " + dir.getAbsolutePath() + " : " + mail + " but unable to delete it");
-          mailer.sendToSupport(Mailer.Mailbox.ADMIN, mail, "can not delete directory",
-                               "delete the directory '" + dir.getAbsolutePath() + "'");
+          mailer.sendToUs(Mailer.Mailbox.ADMIN, mail, "can not delete directory",
+                          "delete the directory '" + dir.getAbsolutePath() + "'");
         } else {
           logger.info("Directory found " + dir.getAbsolutePath() + " : " + mail + " and deleted.");
         }

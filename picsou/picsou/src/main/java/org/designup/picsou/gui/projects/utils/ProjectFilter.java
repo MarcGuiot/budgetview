@@ -28,7 +28,7 @@ public class ProjectFilter implements GlobMatcher {
 
     Integer lastItemMonth =
       repository.getAll(ProjectItem.TYPE, linkedTo(project.getKey(), ProjectItem.PROJECT))
-        .getSortedSet(ProjectItem.MONTH)
+        .getSortedSet(ProjectItem.FIRST_MONTH)
         .last();
 
     return (lastItemMonth >= currentMonth) || (lastItemMonth >= firstMonth);

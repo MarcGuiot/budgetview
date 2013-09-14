@@ -34,7 +34,7 @@ public class ProjectCategorizationWarningTrigger implements ChangeSetListener {
     for (Glob item : repository.getAll(ProjectItem.TYPE, fieldIn(ProjectItem.SERIES, seriesIds))) {
       modifiedProjectItemIds.add(item.get(ProjectItem.ID));
     }
-    for (Key key : changeSet.getUpdated(ProjectItem.MONTH)) {
+    for (Key key : changeSet.getUpdated(ProjectItem.FIRST_MONTH)) {
       modifiedProjectItemIds.add(key.get(ProjectItem.ID));
     }
     for (Key key : changeSet.getUpdated(ProjectItem.MONTH_COUNT)) {
@@ -83,7 +83,7 @@ public class ProjectCategorizationWarningTrigger implements ChangeSetListener {
   }
 
   private boolean monthInProjectItemRange(Integer monthId, Glob projectItem) {
-    Integer firstMonth = projectItem.get(ProjectItem.MONTH);
+    Integer firstMonth = projectItem.get(ProjectItem.FIRST_MONTH);
     if (firstMonth == null) {
       return false;
     }

@@ -45,10 +45,9 @@ public class SlaValidationDialogChecker extends GuiChecker {
       dialog.getCheckBox().select();
     }
     catch (ItemNotFoundException e) {
-      throw new ItemNotFoundException("Unexpected dialog: " + dialog.getDescription(), e);
-    }
-    catch (ComponentAmbiguityException e) {
-      throw new RuntimeException(e);
+      throw new ItemNotFoundException(
+        "Unexpected dialog: " + dialog.getDescription() + "\n" +
+        "=> An exception is probably thrown on application startup. Try to start the application manually to check that.", e);
     }
     return this;
   }

@@ -67,7 +67,7 @@ public class CreateMobileUserServlet extends HttpServlet {
         else {
           String content = "Can not create dir " + dir.getAbsolutePath();
           logger.error(content + " : " + mail);
-          mailer.sendToSupport(Mailer.Mailbox.ADMIN, mail, "Error fs", content);
+          mailer.sendToUs(Mailer.Mailbox.ADMIN, mail, "Error fs", content);
           httpServletResponse.sendRedirect(baseUrl + "/mobile/internal-error");
         }
       }

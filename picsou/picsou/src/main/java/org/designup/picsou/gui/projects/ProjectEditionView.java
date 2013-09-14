@@ -23,6 +23,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.utils.GlobRepeat;
+import org.globsframework.gui.utils.GlobRepeatListener;
 import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
@@ -123,9 +124,10 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     totalActual = builder.addLabel("totalActual", ProjectStat.ACTUAL_AMOUNT);
     totalPlanned = builder.addLabel("totalPlanned", ProjectStat.PLANNED_AMOUNT);
 
+    final JPanel gaugePanel = new JPanel();
+    builder.add("gaugePanel", gaugePanel);
     gauge =
-      SimpleGaugeView.init(ProjectStat.ACTUAL_AMOUNT, ProjectStat.PLANNED_AMOUNT, repository, directory)
-        .setAutoHideIfEmpty(true);
+      SimpleGaugeView.init(ProjectStat.ACTUAL_AMOUNT, ProjectStat.PLANNED_AMOUNT, repository, directory);
     builder.add("gauge", gauge.getComponent());
 
     repeat = builder.addRepeat("items",
@@ -133,6 +135,11 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
                                GlobMatchers.NONE,
                                new ProjectItemComparator(),
                                new ProjectItemRepeatFactory());
+    repeat.addListener(new GlobRepeatListener() {
+      public void listChanged(GlobList currentList) {
+        gaugePanel.setVisible(!currentList.isEmpty());
+      }
+    });
 
     JPopupMenu menu = new JPopupMenu();
     menu.add(new AddItemAction("projectEdition.addItem.expense", ProjectItemType.EXPENSE));
@@ -189,7 +196,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
         Glob item = repository.create(ProjectItem.TYPE,
                                       value(ProjectItem.ITEM_TYPE, itemType.getId()),
                                       value(ProjectItem.LABEL, defaultLabel),
-                                      value(ProjectItem.MONTH, getCurrentMonth()),
+                                      value(ProjectItem.FIRST_MONTH, getCurrentMonth()),
                                       value(ProjectItem.PROJECT, currentProjectKey.get(Project.ID)));
         if (ProjectItemType.TRANSFER.equals(itemType)) {
           repository.create(ProjectTransfer.TYPE, value(ProjectTransfer.PROJECT_ITEM, item.get(ProjectItem.ID)));

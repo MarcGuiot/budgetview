@@ -99,8 +99,7 @@ public abstract class ConfirmationDialog {
   private AbstractAction createOkAction() {
     ok = new AbstractAction(getOkButtonText()) {
       public void actionPerformed(ActionEvent e) {
-        dialog.setVisible(false);
-        builder.dispose();
+        dispose();
         processOk();
       }
     };
@@ -111,8 +110,7 @@ public abstract class ConfirmationDialog {
   protected AbstractAction createCancelAction() {
     cancel = new AbstractAction(getCancelButtonText()) {
       public void actionPerformed(ActionEvent e) {
-        dialog.setVisible(false);
-        builder.dispose();
+        dispose();
         processCancel();
       }
     };

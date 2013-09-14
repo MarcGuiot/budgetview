@@ -2,8 +2,10 @@ package org.designup.picsou.gui.projects.components;
 
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
+import org.designup.picsou.gui.components.images.GlobImageActions;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.ProjectStat;
+import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Picture;
 import org.designup.picsou.model.Project;
@@ -83,6 +85,9 @@ public class ProjectButton extends JButton implements ChangeSetListener, Disposa
         }
       }
     });
+
+    setPreferredSize(new Dimension(110,125));
+    updateComponents();
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -230,5 +235,9 @@ public class ProjectButton extends JButton implements ChangeSetListener, Disposa
 
   public void setGaugeOverrunErrorColorBottom(Color color) {
     gauge.setOverrunErrorColorBottom(color);
+  }
+
+  public String toString() {
+    return "ProjectButton(" + projectKey + " - month:" + monthId + " - planned:" + planned + ")";
   }
 }

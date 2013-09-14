@@ -67,7 +67,6 @@ public class ProjectEditionChecker extends ViewChecker {
   }
 
   public ProjectEditionChecker checkProjectGaugeHidden() {
-    assertFalse(getPanel().getPanel("gauge").isVisible());
     assertFalse(getPanel().getPanel("gaugePanel").isVisible());
     return this;
   }

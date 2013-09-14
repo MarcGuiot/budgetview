@@ -62,7 +62,7 @@ public class SeriesTablePageChecker {
   }
 
   private String toString(List<String[]> rows) {
-    TablePrinter printer = new TablePrinter();
+    TablePrinter printer = new TablePrinter(true);
     boolean first = true;
     for (String[] row : rows) {
       if (first) {

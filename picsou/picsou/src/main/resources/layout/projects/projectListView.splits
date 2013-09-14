@@ -31,10 +31,17 @@
 
   <column styleClass="secondaryInnerBlock">
 
-    <scrollPane forceVerticalScroll="true">
+    <scrollPane forceVerticalScroll="true" border="none">
       <column>
         <label text="$projectListView.currentProjects" styleClass="secondarySectionTitle"/>
         <repeat ref="currentProjects" layout="wrappedRow">
+          <column name="projectBlock" marginTop="10">
+            <button ref="projectButton"/>
+            <label ref="name"/>
+          </column>
+        </repeat>
+        <label text="$projectListView.pastProjects" styleClass="secondarySectionTitle"/>
+        <repeat ref="pastProjects" layout="wrappedRow">
           <column name="projectBlock" marginTop="10">
             <button ref="projectButton"/>
             <label ref="name"/>

@@ -3,9 +3,11 @@ package org.designup.picsou.triggers.projects;
 import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.model.ProjectItem;
+import org.designup.picsou.model.ProjectItemAmount;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
@@ -13,19 +15,27 @@ import static org.globsframework.model.FieldValue.value;
 public class ProjectItemToStatTrigger implements ChangeSetListener {
 
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
+    if (!changeSet.containsChanges(ProjectItem.TYPE) && !changeSet.containsChanges(ProjectItemAmount.TYPE)) {
+      return;
+    }
+
+    final Set<Integer> changedItemIds = new HashSet<Integer>();
     changeSet.safeVisit(ProjectItem.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         repository.create(ProjectItemStat.TYPE,
                           value(ProjectItemStat.PROJECT_ITEM, key.get(ProjectItem.ID)),
                           value(ProjectItemStat.ACTUAL_AMOUNT, 0.00),
-                          value(ProjectItemStat.PLANNED_AMOUNT, ProjectItem.getTotalPlannedAmount(values)));
+                          value(ProjectItemStat.PLANNED_AMOUNT, ProjectItem.getTotalPlannedAmount(values, repository)));
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(ProjectItem.PLANNED_AMOUNT) || values.contains(ProjectItem.MONTH_COUNT)) {
+        if (values.contains(ProjectItem.PLANNED_AMOUNT) ||
+            values.contains(ProjectItem.MONTH_COUNT) ||
+            values.contains(ProjectItem.USE_SAME_AMOUNTS)) {
+          changedItemIds.add(key.get(ProjectItem.ID));
           Glob item = repository.get(key);
           repository.update(Key.create(ProjectItemStat.TYPE, key.get(ProjectItem.ID)),
-                            value(ProjectItemStat.PLANNED_AMOUNT, ProjectItem.getTotalPlannedAmount(item)));
+                            value(ProjectItemStat.PLANNED_AMOUNT, ProjectItem.getTotalPlannedAmount(item, repository)));
         }
       }
 
@@ -33,17 +43,31 @@ public class ProjectItemToStatTrigger implements ChangeSetListener {
         repository.delete(Key.create(ProjectItemStat.TYPE, key.get(ProjectItem.ID)));
       }
     });
+
+    for (Key amountKey : changeSet.getCreatedOrUpdated(ProjectItemAmount.TYPE)) {
+      changedItemIds.add(amountKey.get(ProjectItemAmount.PROJECT_ITEM));
+    }
+    for (Integer itemId : changedItemIds) {
+      Glob item = repository.find(Key.create(ProjectItem.TYPE, itemId));
+      if (item != null) {
+        updateStatForItem(item, repository);
+      }
+    }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(Project.TYPE) || changedTypes.contains(ProjectItem.TYPE)) {
+    if (changedTypes.contains(Project.TYPE) || changedTypes.contains(ProjectItem.TYPE) || changedTypes.contains(ProjectItemAmount.TYPE)) {
       repository.deleteAll(ProjectItemStat.TYPE);
       for (Glob projectItem : repository.getAll(ProjectItem.TYPE)) {
-        Key statKey = Key.create(ProjectItemStat.TYPE, projectItem.get(ProjectItem.ID));
-        repository.findOrCreate(statKey);
-        repository.update(statKey,
-                          value(ProjectItemStat.PLANNED_AMOUNT, ProjectItem.getTotalPlannedAmount(projectItem)));
+        updateStatForItem(projectItem, repository);
       }
     }
+  }
+
+  private void updateStatForItem(Glob projectItem, GlobRepository repository) {
+    Key statKey = Key.create(ProjectItemStat.TYPE, projectItem.get(ProjectItem.ID));
+    repository.findOrCreate(statKey);
+    repository.update(statKey,
+                      value(ProjectItemStat.PLANNED_AMOUNT, ProjectItem.getTotalPlannedAmount(projectItem, repository)));
   }
 }

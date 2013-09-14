@@ -22,7 +22,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.*;
 
-import static org.globsframework.utils.Utils.beginRemove;
 import static org.globsframework.utils.Utils.sort;
 
 public class GlobPrinter {
@@ -66,7 +65,7 @@ public class GlobPrinter {
       rows.add(new Object[]{field.getName(), glob.getValue(field)});
     }
 
-    TablePrinter.print(new String[]{"Field", "Value"}, rows, printer);
+    TablePrinter.print(new String[]{"Field", "Value"}, rows, true, printer);
 
     printer.println();
     printer.flush();
@@ -126,7 +125,7 @@ public class GlobPrinter {
       rows.add(createRow(type, glob));
     }
 
-    TablePrinter.print(headerRow, rows, printer);
+    TablePrinter.print(headerRow, rows, true, printer);
 
     printer.println();
     printer.flush();
