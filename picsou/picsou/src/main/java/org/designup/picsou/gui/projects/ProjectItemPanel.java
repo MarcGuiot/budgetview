@@ -134,7 +134,6 @@ public abstract class ProjectItemPanel implements Disposable {
                                                       new GlobListActionAdapter(showTransactionsAction))
       .forceSelection(itemStatKey);
     builder.add("actualAmount", actualAmount);
-    disposables.add(actualAmount);
 
     GlobButtonView plannedAmount = GlobButtonView.init(ProjectItemStat.PLANNED_AMOUNT, parentRepository, directory,
                                                        new GlobListActionAdapter(modifyAction))
@@ -163,7 +162,6 @@ public abstract class ProjectItemPanel implements Disposable {
       .setAutoHideIfEmpty(true)
       .forceSelection(itemKey);
     builder.add("link", link);
-    disposables.add(link);
 
     GlobHtmlView description = GlobHtmlView.init(ProjectItem.DESCRIPTION, parentRepository, directory)
       .setAutoHideIfEmpty(true)

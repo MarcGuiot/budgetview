@@ -208,7 +208,7 @@ public abstract class AbstractSplitsContext implements SplitsContext {
 
   public void addDisposable(Disposable listener) {
     Disposable previous = this.disposables.put(listener, listener);
-    if (previous != null){
+    if (previous != null && previous != listener){
       previous.dispose();
     }
   }

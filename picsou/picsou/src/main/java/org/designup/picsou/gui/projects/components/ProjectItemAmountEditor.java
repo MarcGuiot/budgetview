@@ -79,7 +79,6 @@ public class ProjectItemAmountEditor implements Disposable {
       createMonthEditor()
         .setValidationAction(validate);
     builder.add("monthCountEditor", monthCountEditor);
-    disposables.add(monthCountEditor);
 
     GlobNumericEditor tableMonthCountEditor = createMonthEditor();
     builder.add("tableMonthCountEditor", tableMonthCountEditor);
@@ -161,6 +160,7 @@ public class ProjectItemAmountEditor implements Disposable {
   }
 
   private class ModeSelector extends KeyChangeListener implements Disposable {
+    JPanel current = null;
     protected ModeSelector() {
       super(itemKey);
       repository.addChangeListener(this);
@@ -172,18 +172,23 @@ public class ProjectItemAmountEditor implements Disposable {
         return;
       }
 
-      panel.removeAll();
+      JPanel previous = current;
       if (item.isTrue(ProjectItem.USE_SAME_AMOUNTS)) {
-        panel.add(singleAmountPanel);
+        current = singleAmountPanel;
       }
       else {
-        panel.add(monthEditorPanel);
+        current = monthEditorPanel;
       }
-      GuiUtils.revalidate(panel);
+      if (previous != current){
+        panel.removeAll();
+        panel.add(current);
+        GuiUtils.revalidate(panel);
+      }
     }
 
     public void dispose() {
       repository.removeChangeListener(this);
+      current = null;
     }
   }
 }

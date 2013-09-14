@@ -34,7 +34,6 @@ public abstract class ProjectItemEditionPanel extends ProjectItemPanel {
       .forceSelection(itemKey)
       .setValidationAction(validate);
     builder.add("nameField", nameField);
-    disposables.add(nameField);
 
     MonthSlider monthSlider = new MonthSlider(new SingleMonthAdapter(ProjectItem.FIRST_MONTH) {
       public String convertToString(Integer monthId) {

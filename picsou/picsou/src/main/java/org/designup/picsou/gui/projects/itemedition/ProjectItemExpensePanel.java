@@ -39,12 +39,10 @@ public class ProjectItemExpensePanel extends ProjectItemEditionPanel {
     GlobTextEditor urlField = GlobTextEditor.init(ProjectItem.URL, localRepository, directory)
       .forceSelection(itemKey);
     builder.add("urlField", urlField);
-    disposables.add(urlField);
 
     GlobMultiLineTextEditor descriptionField = GlobMultiLineTextEditor.init(ProjectItem.DESCRIPTION, localRepository, directory)
       .forceSelection(itemKey);
     builder.add("descriptionField", descriptionField);
-    disposables.add(descriptionField);
 
     builder.add("validate", validate);
     builder.add("cancel", new CancelAction());
