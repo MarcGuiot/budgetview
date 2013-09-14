@@ -14,10 +14,6 @@ public class ProjectViewChecker extends ViewChecker {
     super(mainWindow);
   }
 
-  public void create() {
-    getPanel().getButton("createProject").click();
-  }
-
   public void select(String projectName) {
     getChart().click(projectName, false);
   }

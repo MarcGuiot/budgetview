@@ -19,9 +19,13 @@ public class CategorizationTableChecker extends TableChecker {
   }
 
   public void dumpCode() {
-    StringBuilder builder = new StringBuilder();
-
     Table table = getTable();
+    String code = getCode(table);
+    Assert.fail("Add this:\n" + code);
+  }
+
+  public static String getCode(Table table) {
+    StringBuilder builder = new StringBuilder();
     for (int row = 0; row < table.getRowCount(); row++) {
       builder
         .append("  .add(\"")
@@ -35,7 +39,7 @@ public class CategorizationTableChecker extends TableChecker {
         .append(")\n");
     }
     builder.append("  .check();");
-    Assert.fail("Add this:\n" + builder.toString());
+    return builder.toString();
   }
 
   protected Table getTable() {

@@ -23,7 +23,7 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/15", -200.00, "FNAC")
       .load();
 
-    projectChart.create();
+    projects.create();
     ProjectItemEditionChecker itemEdition = currentProject
       .setName("MyProject")
       .addExpenseItem()
@@ -92,7 +92,7 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/15", -200.00, "FNAC")
       .load();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("MyProject")
       .addExpenseItem()
@@ -188,7 +188,7 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/15", -200.00, "FNAC")
       .load();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("MyProject")
       .addExpenseItem()

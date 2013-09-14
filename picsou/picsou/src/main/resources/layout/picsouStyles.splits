@@ -194,8 +194,8 @@
 
     <ui name="basicButtonUI" class="javax.swing.plaf.basic.BasicButtonUI"/>
 
-
     <!-- Dialog components -->
+
     <ui name="showHideButtonUI" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         underline="false" rolloverColor="hyperlink"/>
     <style selector="button.showHide"  ui="showHideButtonUI"
@@ -290,7 +290,20 @@
         borderWidth="1" cornerRadius="6"/>
     <style selector=".highlightedPanel"  ui="highlightedPanel"/>
 
+    <!-- Custom rounded buttons -->
+    <ui name="customButtonSmallUI" class="org.designup.picsou.gui.components.ui.CustomButtonUI"
+        borderColor="customButton.small.border"
+        topColor="customButton.small.bg.top"
+        bottomColor="customButton.small.bg.bottom"
+        rolloverTextColor="customButton.small.text.rollover"
+        pressedTextColor="customButton.small.text.pressed"
+        disabledTextColor="customButton.small.text.disabled"/>
+    <style selector="button.smallButton" ui="customButtonSmallUI"
+           font="-,plain,11" foreground="customButton.small.text" weightX="0.01" fill="none" anchor="center"/>
+
+
     <!-- Icon buttons -->
+
     <style selector=".iconButtonGroup" opaque="false" marginTop="5" weightY="0"/>
 
     <ui name="standardIconButton" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"

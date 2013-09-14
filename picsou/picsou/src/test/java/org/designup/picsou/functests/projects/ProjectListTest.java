@@ -31,30 +31,30 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(3).validate();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("Past Aug")
       .addExpenseItem(0, "Item1", 201008, -200.00)
       .addExpenseItem(1, "Item2", 201010, -200.00);
 
-    projectChart.create();
     currentProject
+      .create()
       .setName("Current Jan")
       .addExpenseItem(0, "Item1", 201101, -200.00)
       .addExpenseItem(1, "Item2", 201102, -200.00);
 
-    projectChart.create();
     currentProject
+      .create()
       .setName("Current Empty");
 
-    projectChart.create();
     currentProject
+      .create()
       .setName("Past Oct")
       .addExpenseItem(0, "Item1", 201010, -200.00)
       .addExpenseItem(1, "Item2", 201011, -200.00);
 
-    projectChart.create();
     currentProject
+      .create()
       .setName("Current Oct")
       .addExpenseItem(0, "Item1", 201010, -200.00)
       .addExpenseItem(1, "Item2", 201012, -200.00);
@@ -89,20 +89,20 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth(201101);
 
-    projectChart.create();
     currentProject
+      .create()
       .setName("Past Project")
       .addExpenseItem(0, "Reservation", 201007, -100.00)
       .addExpenseItem(1, "Hotel", 201008, -500.00);
 
-    projectChart.create();
     currentProject
+      .create()
       .setName("Current Project")
       .addExpenseItem(0, "Reservation", 201101, -100.00)
       .addExpenseItem(1, "Hotel", 201102, -500.00);
 
-    projectChart.create();
     currentProject
+      .create()
       .setName("Next Project")
       .addExpenseItem(0, "Reservation", 201105, -100.00);
 

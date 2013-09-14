@@ -394,7 +394,7 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/08");
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("My Project")
       .addExpenseItem(0, "Item 0", 200808, -10.00)

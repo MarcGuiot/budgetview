@@ -36,15 +36,6 @@ public abstract class ProjectItemEditionPanel extends ProjectItemPanel {
     builder.add("nameField", nameField);
     disposables.add(nameField);
 
-    MonthSlider monthSlider = new MonthSlider(new SingleMonthAdapter(ProjectItem.FIRST_MONTH) {
-      public String convertToString(Integer monthId) {
-        return Month.getFullMonthLabelWith4DigitYear(monthId);
-      }
-    }, localRepository, directory);
-    monthSlider.setKey(itemKey);
-    builder.add("monthEditor", monthSlider);
-    disposables.add(monthSlider);
-
     itemAmountEditor = new ProjectItemAmountEditor(itemKey, forcePositiveAmounts, validate, localRepository, directory);
     builder.add("itemAmountEditor", itemAmountEditor.getPanel());
     disposables.add(itemAmountEditor);

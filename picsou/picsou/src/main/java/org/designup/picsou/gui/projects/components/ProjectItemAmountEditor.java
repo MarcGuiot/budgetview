@@ -1,8 +1,11 @@
 package org.designup.picsou.gui.projects.components;
 
 import org.designup.picsou.gui.components.AmountEditor;
+import org.designup.picsou.gui.components.MonthSlider;
+import org.designup.picsou.gui.components.SingleMonthAdapter;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.description.stringifiers.MonthYearStringifier;
+import org.designup.picsou.model.Month;
 import org.designup.picsou.model.ProjectItem;
 import org.designup.picsou.model.ProjectItemAmount;
 import org.designup.picsou.utils.Lang;
@@ -55,6 +58,9 @@ public class ProjectItemAmountEditor implements Disposable {
 
     builder.add("singleAmountPanel", singleAmountPanel);
     builder.add("monthEditorPanel", monthEditorPanel);
+
+    addMonthSlider(builder, "monthEditor1");
+    addMonthSlider(builder, "monthEditor2");
 
     if (forcePositiveAmounts) {
       GlobNumericEditor amountEditor = GlobNumericEditor.init(ProjectItem.PLANNED_AMOUNT, repository, localDirectory)
@@ -122,6 +128,17 @@ public class ProjectItemAmountEditor implements Disposable {
     ModeSelector modeSelector = new ModeSelector();
     disposables.add(modeSelector);
     modeSelector.update();
+  }
+
+  private void addMonthSlider(GlobsPanelBuilder builder, String ref) {
+    MonthSlider monthSlider = new MonthSlider(new SingleMonthAdapter(ProjectItem.FIRST_MONTH) {
+      public String convertToString(Integer monthId) {
+        return Month.getShortMonthLabelWithYear(monthId);
+      }
+    }, repository, localDirectory);
+    monthSlider.setKey(itemKey);
+    builder.add(ref, monthSlider);
+    disposables.add(monthSlider);
   }
 
   private GlobNumericEditor createMonthEditor() {

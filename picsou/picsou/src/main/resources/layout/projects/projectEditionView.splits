@@ -36,19 +36,31 @@
            weightX="0" fill="none" anchor="center"
            minimumSize="(26,14)" preferredSize="(26,14)"/>
 
-    <style selector="button.backButton"
-           marginLeft="10" marginBottom="5" fill="none" anchor="left"
-           ui="hyperlinkButtonWithoutUnderline" foreground="hyperlink"
-           font="-,plain,12"
-           icon="leftArrow(10,14,8,8, #222222)"
-           rolloverIcon="leftArrow(10,14,8,8, #0000FF)"/>
+    <style selector="button.navigation" ui="hyperlinkButtonWithoutUnderline"
+           foreground="block.item.link" font="-,plain,12"  marginTop="10" fill="none" anchor="southeast"/>
+
+    <style selector="button#backToList"
+           marginLeft="10" anchor="left"
+           icon="leftArrow(10,14,8,8,block.item.link)"
+           rolloverIcon="leftArrow(10,14,8,8,block.item.link)"/>
+
+    <style selector="button#createProject"
+           marginRight="10" anchor="right"/>
 
   </styles>
 
   <column styleClass="secondaryInnerBlock">
 
-    <row name="projectPanel" margin="10" weightY="0.1" opaque="true" background="block.inner.bg" border="matte(1,1,1,1,projectView.border)">
-      <label ref="imageLabel" margin="5" marginRight="10" minimumSize="(170,120)" preferredSize="(170,120)" fill="both"/>
+    <row>
+      <button action="backToList" name="backToList" styleClass="navigation"/>
+      <filler fill="horizontal"/>
+      <button action="createProject" name="createProject" styleClass="navigation" tooltipText="$projectView.create.tooltip"/>
+    </row>
+
+    <row name="projectPanel" margin="10" marginTop="5" weightY="0.1" opaque="true" background="block.inner.bg"
+         border="matte(1,1,1,1,projectView.border)">
+      <label ref="imageLabel" margin="5" marginRight="10" minimumSize="(170,120)" preferredSize="(170,120)"
+             fill="both"/>
       <column>
         <row marginBottom="15">
           <component ref="projectNameEditor"/>
@@ -79,8 +91,6 @@
         </column>
       </scrollPane>
     </column>
-
-    <button action="backToList" styleClass="backButton"/>
 
   </column>
 

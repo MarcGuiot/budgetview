@@ -17,7 +17,7 @@ import org.globsframework.utils.directory.Directory;
 public class SummaryView extends View {
 
   public static final int MONTHS_BACK = 2;
-  public static final int MONTHS_FORWARD = 6;
+  public static final int MONTHS_FORWARD = 7;
 
   public SummaryView(GlobRepository repository, Directory directory) {
     super(repository, directory);

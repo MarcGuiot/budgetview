@@ -7,6 +7,7 @@ import org.designup.picsou.gui.components.charts.SimpleGaugeView;
 import org.designup.picsou.gui.components.images.GlobImageLabelView;
 import org.designup.picsou.gui.components.images.IconFactory;
 import org.designup.picsou.gui.model.ProjectStat;
+import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.projects.actions.DeleteProjectAction;
 import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
 import org.designup.picsou.gui.projects.components.ProjectNameEditor;
@@ -147,6 +148,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     builder.add("addItem", new JPopupButton(Lang.get("projectEdition.addItem"), menu));
 
     builder.add("backToList", new BackToListAction());
+    builder.add("createProject", new CreateProjectAction(directory));
 
     parentBuilder.add("projectEditionView", builder);
   }

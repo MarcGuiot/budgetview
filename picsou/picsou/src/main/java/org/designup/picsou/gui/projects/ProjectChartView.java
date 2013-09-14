@@ -136,8 +136,6 @@ public class ProjectChartView extends View {
 
   public void registerComponents(GlobsPanelBuilder builder) {
     builder.add("projectChart", histoChart);
-
-    builder.add("createProject", new CreateProjectAction(directory));
   }
 
   private String getTooltip(Glob project) {

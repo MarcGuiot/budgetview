@@ -368,7 +368,12 @@ public class CategorizationChecker extends ViewChecker {
   }
 
   public CategorizationChecker checkTableContains(String label) {
-    assertTrue(getTable().containsRow(2, label));
+    Table table = getTable();
+    if (!table.containsRow(2, label).isTrue()) {
+      Assert.fail("Could not find row with: " + label +
+                  "\nActual content:\n" +
+                  CategorizationTableChecker.getCode(table));
+    }
     return this;
   }
 

@@ -20,7 +20,7 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/15", -200.00, "FNAC")
       .load();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("Camera")
       .addExpenseItem(0, "Camera Body", 201012, -80.00, 10)
@@ -65,7 +65,7 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCannotEnterZeroOrNegativeNumbersAsMonthCount() throws Exception {
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("Camera")
       .addExpenseItem()

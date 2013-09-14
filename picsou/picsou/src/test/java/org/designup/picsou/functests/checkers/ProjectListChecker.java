@@ -19,6 +19,10 @@ public class ProjectListChecker extends ViewChecker {
     super(mainWindow);
   }
 
+  public void create() {
+    getPanel().getButton("createProject").click();
+  }
+
   public void checkNoCurrentProjects() {
     checkProjects("", "currentProjects");
   }
@@ -88,6 +92,7 @@ public class ProjectListChecker extends ViewChecker {
   }
   private Panel getProjectViewPanel() {
     if (projectViewPanel == null) {
+      views.selectHome();
       projectViewPanel = mainWindow.getPanel("projectView");
     }
     return projectViewPanel;

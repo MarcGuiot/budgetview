@@ -3,6 +3,7 @@ package org.designup.picsou.gui.projects;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.images.GlobImageActions;
 import org.designup.picsou.gui.model.ProjectStat;
+import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.projects.actions.DeleteProjectAction;
 import org.designup.picsou.gui.projects.components.ProjectButton;
 import org.designup.picsou.model.CurrentMonth;
@@ -36,11 +37,13 @@ public class ProjectListView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectListView.splits",
                                                       repository, directory);
 
+    builder.add("createProject", new CreateProjectAction(directory));
     ProjectComponentFactory componentFactory = new ProjectComponentFactory();
     builder.addRepeat("currentProjects", ProjectStat.TYPE,
                       new CurrentProjectsMatcher(), GlobComparators.ascending(ProjectStat.FIRST_MONTH), componentFactory);
     builder.addRepeat("pastProjects", ProjectStat.TYPE,
                       new PastProjectsMatcher(), GlobComparators.descending(ProjectStat.LAST_MONTH), componentFactory);
+
     parentBuilder.add("projectListView", builder.load());
   }
 

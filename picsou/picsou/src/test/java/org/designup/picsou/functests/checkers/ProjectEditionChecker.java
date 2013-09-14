@@ -25,6 +25,11 @@ public class ProjectEditionChecker extends ViewChecker {
     super(mainWindow);
   }
 
+  public ProjectEditionChecker create() {
+    getPanel().getButton("createProject").click();
+    return this;
+  }
+
   public ProjectEditionChecker checkTitle(String text) {
     assertThat(getPanel().getTextBox("title").textEquals(text));
     return this;

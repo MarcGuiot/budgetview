@@ -218,7 +218,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setName("MyProject")
       .addExpenseItem(0, "Booking", 200808, -200.00)
