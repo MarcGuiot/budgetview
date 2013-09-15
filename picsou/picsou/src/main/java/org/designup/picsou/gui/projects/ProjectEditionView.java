@@ -23,6 +23,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobToggleEditor;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.utils.GlobRepeatListener;
 import org.globsframework.gui.utils.PopupMenuFactory;
@@ -36,6 +37,8 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
@@ -56,6 +59,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
   private GlobToggleEditor activationToggle;
   private ModifyNameAction modifyAction;
   private JPanel addItemPanel = new JPanel();
+  private Map<Key, ProjectItemPanel> itemPanels = new HashMap<Key, ProjectItemPanel>();
 
   public ProjectEditionView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -66,8 +70,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
         if (changedTypes.contains(Project.TYPE)) {
-          currentProjectKey = null;
-          updateSelection();
+          updateSelection(null, null);
         }
       }
     });
@@ -75,11 +78,13 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
 
   public void selectionUpdated(GlobSelection selection) {
     GlobList projects = selection.getAll(Project.TYPE);
-    currentProjectKey = projects.size() == 1 ? projects.getFirst().getKey() : null;
-    updateSelection();
+    updateSelection(projects.size() == 1 ? projects.getFirst().getKey() : null,
+                    selection.getAll(ProjectItem.TYPE).getKeySet());
   }
 
-  private void updateSelection() {
+  private void updateSelection(Key projectKey, Set<Key> projectItemKeys) {
+    this.currentProjectKey = projectKey;
+
     projectNameEditor.setCurrentProject(currentProjectKey);
     repeat.setFilter(linkedTo(currentProjectKey, ProjectItem.PROJECT));
 
@@ -89,6 +94,15 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     gauge.setKey(projectStatKey);
     monthSlider.setKey(projectStatKey);
     imageStatusUpdater.setKey(currentProjectKey);
+
+    if (projectItemKeys != null) {
+      for (Key itemKey : projectItemKeys) {
+        ProjectItemPanel itemPanel = itemPanels.get(itemKey);
+        if (itemPanel != null) {
+          itemPanel.edit();
+        }
+      }
+    }
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -162,7 +176,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
 
     parentBuilder.add("projectEditionView", builder);
 
-    updateSelection();
+    updateSelection(null, null);
   }
 
   private class ModifyNameAction extends AbstractAction {
@@ -177,7 +191,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
 
   public void show(Key projectKey) {
     currentProjectKey = projectKey;
-    updateSelection();
+    updateSelection(projectKey, null);
   }
 
   private class ProjectItemRepeatFactory implements RepeatComponentFactory<Glob> {
@@ -191,6 +205,13 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob item) {
       ProjectItemPanel itemPanel = itemPanelFactory.create(item);
       cellBuilder.add("projectItemPanel", itemPanel.getPanel());
+
+      itemPanels.put(item.getKey(), itemPanel);
+      cellBuilder.addDisposeListener(new Disposable() {
+        public void dispose() {
+          itemPanels.remove(item.getKey());
+        }
+      });
       cellBuilder.addDisposeListener(itemPanel);
     }
   }
@@ -244,8 +265,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
       Glob project = repository.get(currentProjectKey);
       if (Strings.isNullOrEmpty(project.get(Project.NAME)) &&
           repository.findLinkedTo(project, ProjectItem.PROJECT).isEmpty()) {
-        currentProjectKey = null;
-        updateSelection();
+        updateSelection(null, null);
         repository.delete(project);
       }
       selectionService.clear(Project.TYPE);

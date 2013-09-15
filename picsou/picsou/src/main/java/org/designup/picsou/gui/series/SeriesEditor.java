@@ -3,6 +3,7 @@ package org.designup.picsou.gui.series;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Project;
+import org.designup.picsou.model.ProjectItem;
 import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 
@@ -32,23 +33,38 @@ public class SeriesEditor {
   public void showSeries(Glob series, Set<Integer> selectedMonthIds) {
     Glob project = Project.findProject(series, repository);
     if (project != null) {
-      navigationService.gotoProject(project.getKey());
+      navigationService.gotoProject(project);
       lastSelectedSubSeriesId = null;
+      return;
     }
-    else {
-      seriesEditionDialog.show(series, selectedMonthIds);
-      lastSelectedSubSeriesId = seriesEditionDialog.getLastSelectedSubSeriesId();
+
+    Glob projectItem = ProjectItem.findProjectItem(series, repository);
+    if (projectItem != null) {
+      navigationService.gotoProjectItem(projectItem);
+      lastSelectedSubSeriesId = null;
+      return;
     }
+
+    seriesEditionDialog.show(series, selectedMonthIds);
+    lastSelectedSubSeriesId = seriesEditionDialog.getLastSelectedSubSeriesId();
   }
 
   public void showAmount(Glob series, Set<Integer> selectedMonthIds) {
     Glob project = Project.findProject(series, repository);
     if (project != null) {
-      navigationService.gotoProject(project.getKey());
+      navigationService.gotoProject(project);
+      lastSelectedSubSeriesId = null;
+      return;
     }
-    else {
-      seriesAmountEditionDialog.show(series, selectedMonthIds);
+
+    Glob projectItem = ProjectItem.findProjectItem(series, repository);
+    if (projectItem != null) {
+      navigationService.gotoProjectItem(projectItem);
+      lastSelectedSubSeriesId = null;
+      return;
     }
+
+    seriesAmountEditionDialog.show(series, selectedMonthIds);
     lastSelectedSubSeriesId = null;
   }
 

@@ -52,6 +52,7 @@ public abstract class ProjectItemPanel implements Disposable {
   private JPanel enclosingPanel;
   private JPanel viewPanel;
   private JPanel editionPanel;
+  private boolean isEditing;
   protected java.util.List<Functor> onCommitFunctors = new ArrayList<Functor>();
 
   public ProjectItemPanel(Glob item, GlobRepository parentRepository, Directory directory) {
@@ -65,7 +66,18 @@ public abstract class ProjectItemPanel implements Disposable {
       showEditPanel();
     }
     else {
-      showPanel(viewPanel);
+      showViewPanel();
+    }
+  }
+
+  private void showViewPanel() {
+    isEditing = false;
+    showPanel(viewPanel);
+  }
+
+  public void edit() {
+    if (!isEditing) {
+      showEditPanel();
     }
   }
 
@@ -206,6 +218,7 @@ public abstract class ProjectItemPanel implements Disposable {
   }
 
   private void showEditPanel() {
+    isEditing = true;
     if (localRepository == null || editionPanel == null) {
       this.localRepository =
         LocalGlobRepositoryBuilder.init(parentRepository)
@@ -252,7 +265,7 @@ public abstract class ProjectItemPanel implements Disposable {
         parentRepository.completeChangeSet();
       }
 
-      showPanel(viewPanel);
+      showViewPanel();
     }
   }
 
@@ -262,7 +275,7 @@ public abstract class ProjectItemPanel implements Disposable {
     }
 
     public void actionPerformed(ActionEvent e) {
-      showPanel(viewPanel);
+      showViewPanel();
       localRepository.rollback();
       Glob item = parentRepository.get(itemKey);
       if (Strings.isNullOrEmpty(item.get(ProjectItem.LABEL))) {

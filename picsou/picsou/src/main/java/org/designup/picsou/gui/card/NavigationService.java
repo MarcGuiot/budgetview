@@ -7,13 +7,13 @@ import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.projects.ProjectEditionView;
 import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.gui.transactions.TransactionView;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.ClosedMonthRange;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.utils.DefaultGlobSelection;
+import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -161,10 +161,21 @@ public class NavigationService implements GlobSelectionListener {
     gotoCard(Card.ANALYSIS);
   }
 
-  public void gotoProject(Key projectKey) {
-    Glob project = repository.find(projectKey);
+  public void gotoProject(Glob project) {
     if (project != null) {
       selectionService.select(project);
+    }
+    gotoCard(Card.HOME);
+  }
+
+  public void gotoProjectItem(Glob projectItem) {
+    Glob project = repository.get(Key.create(Project.TYPE, projectItem.get(ProjectItem.PROJECT)));
+    if (project != null) {
+      selectionService.select(
+        GlobSelectionBuilder.init()
+          .add(project)
+          .add(projectItem)
+          .get());
     }
     gotoCard(Card.HOME);
   }

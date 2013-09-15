@@ -100,6 +100,52 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkSeriesNotPresent("Transfer");
   }
 
+  public void testNavigatingFromSeries() throws Exception {
+
+    createMainAccount("Main account");
+    createSavingsAccount("Savings account");
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/12/01")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/12/01", 100.00, "Transfer 1")
+      .loadInAccount("Main account");
+
+    OfxBuilder.init(this)
+      .addBankAccount("002222", 10000.00, "2010/12/01")
+      .addTransaction("2010/12/01", 1000.00, "Blah")
+      .loadInAccount("Savings account");
+
+    projects.create();
+    currentProject
+      .setName("Trip")
+      .addExpenseItem(0, "Item 1", 201012, -100.00)
+      .addTransferItem(1, "Transfer", 200.00, "Savings account", "Main accounts");
+
+    views.selectData();
+    currentProject.backToList();
+
+    views.selectBudget();
+    budgetView.savings.editProjectSeries("Transfer");
+    views.checkHomeSelected();
+    currentProject
+      .checkName("Trip")
+      .editTransfer(1)
+      .checkLabel("Transfer")
+      .cancel();
+
+    currentProject.backToList();
+
+    views.selectBudget();
+    budgetView.savings.editPlannedAmountForProject("Transfer");
+    views.checkHomeSelected();
+    currentProject
+      .checkName("Trip")
+      .editTransfer(1)
+      .checkLabel("Transfer")
+      .cancel();
+  }
+
   public void testMustSelectDifferentFromAndToAccounts() throws Exception {
     mainAccounts.createNewAccount()
       .setName("Main Account 1")

@@ -9,7 +9,9 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.index.UniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -118,6 +120,20 @@ public class ProjectItem {
 
   public static boolean usesSubSeries(FieldValues itemValues) {
     return !Utils.equal(ProjectItemType.TRANSFER.getId(), itemValues.get(ITEM_TYPE));
+  }
+
+  public static Glob findProjectItem(Glob series, GlobRepository repository) {
+    if (series == null) {
+      return null;
+    }
+    GlobList items = repository.getAll(ProjectItem.TYPE, GlobMatchers.linkedTo(series, ProjectItem.SERIES));
+    if (items.isEmpty()) {
+      return null;
+    }
+    if (items.size() > 1) {
+      throw new UnexpectedApplicationState("More than 1 project for series " + series + " : " + items);
+    }
+    return items.getFirst();
   }
 
   public static class Serializer implements PicsouGlobSerializer {
