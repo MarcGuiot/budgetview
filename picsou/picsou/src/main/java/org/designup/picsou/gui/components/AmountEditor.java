@@ -22,18 +22,24 @@ public class AmountEditor implements Disposable {
   private boolean updateInProgress = false;
   private boolean preferredPositive;
   private JPanel panel;
+  private GlobRepository repository;
+  private Directory directory;
 
   public AmountEditor(DoubleField field, GlobRepository repository, Directory directory,
                       boolean notifyOnKeyPressed, Double valueForNull) {
+    this.repository = repository;
+    this.directory = directory;
     numericEditor = new NumericEditor(field, repository, directory);
     numericEditor
       .setPositiveNumbersOnly(true)
       .setValueForNull(valueForNull)
       .setNotifyOnKeyPressed(notifyOnKeyPressed);
-    createPanel(repository, directory);
   }
 
   public JPanel getPanel() {
+    if (panel == null){
+      createPanel(repository, directory);
+    }
     return panel;
   }
 
@@ -97,7 +103,7 @@ public class AmountEditor implements Disposable {
   }
 
   public AmountEditor addAction(Action action) {
-    numericEditor.getComponent().addActionListener(action);
+    numericEditor.setValidationAction(action);
     return this;
   }
 
