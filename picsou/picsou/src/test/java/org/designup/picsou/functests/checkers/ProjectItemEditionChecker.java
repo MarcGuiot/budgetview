@@ -44,10 +44,23 @@ public abstract class ProjectItemEditionChecker<T extends ProjectItemEditionChec
     return (T)this;
   }
 
+  public T switchToSeveralMonths() {
+    panel.getButton("switchToSeveralMonths").click();
+    return (T)this;
+  }
+
   public T setMonthCount(int numberOfMonths) {
     TextBox textBox = panel.getInputTextBox("monthCountEditor");
     textBox.setText(Integer.toString(numberOfMonths), false);
     textBox.focusLost();
+    return (T)this;
+  }
+
+  public T enterMonthCount(String chars) {
+    TextBox textBox = panel.getInputTextBox("monthCountEditor");
+    for (char c : chars.toCharArray()) {
+      textBox.setText(Character.toString(c), false);
+    }
     return (T)this;
   }
 
@@ -56,7 +69,12 @@ public abstract class ProjectItemEditionChecker<T extends ProjectItemEditionChec
     return (T)this;
   }
 
-  public T editMonths() {
+  public T validateMonthCount() {
+    panel.getInputTextBox("monthCountEditor").focusLost();
+    return (T)this;
+  }
+
+  public T switchToMonthEditor() {
     panel.getButton("switchToMonthEditor").click();
     return (T)this;
   }
@@ -66,8 +84,13 @@ public abstract class ProjectItemEditionChecker<T extends ProjectItemEditionChec
     return (T)this;
   }
 
-  public T useSingleAmount() {
-    panel.getButton("switchToSingleAmount").click();
+  public T revertToSingleAmount() {
+    panel.getButton("revertToSingleAmount").click();
+    return (T)this;
+  }
+
+  public T checkShowsSingleMonth() {
+    checkComponentVisible(panel, JPanel.class, "singleMonthPanel", true);
     return (T)this;
   }
 

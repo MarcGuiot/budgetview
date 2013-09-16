@@ -27,6 +27,7 @@
     </card>
     <card name="edit">
       <row>
+        <label text="$projectEdition.name" styleClass="field"/>
         <textField ref="projectNameField" anchor="right" weightX="100"/>
         <button action="cancel" styleClass="smallButton" marginLeft="10"/>
         <button action="validate" styleClass="smallButton" marginLeft="10"/>

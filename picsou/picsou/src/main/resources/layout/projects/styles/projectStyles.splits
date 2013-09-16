@@ -1,0 +1,10 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+  <styles>
+    <style selector=".firstItemBlock" border="empty(10,5,0,5)"/>
+    <style selector=".itemBlock" border="matte(1,0,0,0,projectView.item.line)"
+           marginTop="5" marginLeft="5" marginRight="5"/>
+    <style selector=".lastItemBlock" border="matte(1,0,0,0,projectView.item.line)"
+           marginTop="5" marginLeft="5" marginRight="5" marginBottom="10"/>
+    <style selector=".lastItemBlock button" marginTop="5"/>
+  </styles>
+</splits>

@@ -399,7 +399,8 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .toggleAndEditTransfer(0)
       .setFromAccount("Main accounts")
       .setToAccount("Savings account 1")
-      .editMonths()
+      .switchToSeveralMonths()
+      .switchToMonthEditor()
       .setTableMonthCount(3)
       .checkMonthAmounts("| Dec 2010 | 200.00 |\n" +
                          "| Jan 2011 | 0.00   |\n" +

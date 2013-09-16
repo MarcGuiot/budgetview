@@ -9,35 +9,47 @@
 
   <column name="projectItemAmountEditor" opaque="false">
 
-    <column ref="singleAmountPanel" fill="horizontal">
-      <row>
-        <label text="$projectView.item.edition.month" styleClass="field"/>
-        <component ref="monthEditor1" name="monthEditor" styleClass="monthEditor"/>
-        <label text=", "/>
-        <component ref="amountEditor" weightX="200" marginRight="4" fill="horizontal"/>
-        <label text="$projectView.item.edition.perMonthDuring" styleClass="field"/>
-        <textField ref="monthCountEditor" styleClass="monthCount" weightX="100" fill="horizontal"/>
-        <label text="$projectView.item.edition.perMonthDuringMonths" styleClass="field"/>
-      </row>
-      <button action="toggleMonthAmounts" name="switchToMonthEditor" styleClass="smallButton"/>
-    </column>
+    <row ref="singleMonthPanel" border="empty(5,0,5,0)">
+      <label text="$projectView.item.edition.singleMonth" styleClass="field"/>
+      <component ref="monthEditor1" name="monthEditor" styleClass="monthEditor"/>
+      <label text=", "/>
+      <component ref="amountEditor1" name="amountEditor" weightX="200" marginRight="4" fill="horizontal"/>
+      <button action="switchToSeveralMonths" name="switchToSeveralMonths" styleClass="smallButton"/>
+    </row>
 
-    <column ref="monthEditorPanel">
+    <column ref="singleAmountPanel" border="empty(5,0,5,0)">
       <row>
         <label text="$projectView.item.edition.month" styleClass="field"/>
         <component ref="monthEditor2" name="monthEditor" styleClass="monthEditor"/>
         <label text=", "/>
+        <component ref="amountEditor2" name="amountEditor" weightX="200" marginRight="4" fill="horizontal"/>
+        <label text="$projectView.item.edition.perMonthDuring" styleClass="field"/>
+        <textField ref="monthCountEditor" styleClass="monthCount" weightX="100" fill="horizontal"/>
+        <label text="$projectView.item.edition.perMonthDuringMonths" styleClass="field"/>
+      </row>
+      <button action="switchToMonthEditor" name="switchToMonthEditor" styleClass="smallButton"/>
+    </column>
+
+    <column ref="monthEditorPanel" border="empty(5,0,5,0)">
+      <row>
+        <label text="$projectView.item.edition.month" styleClass="field"/>
+        <component ref="monthEditor3" name="monthEditor" styleClass="monthEditor"/>
+        <label text=", "/>
         <label text="$projectView.item.edition.tableMonthCount.for" styleClass="field"/>
         <textField ref="tableMonthCountEditor" styleClass="monthCount" weightX="100"/>
         <label text="$projectView.item.edition.tableMonthCount.months" styleClass="field"/>
+        <filler fill="horizontal"/>
       </row>
       <row>
-        <scrollPane forceVerticalScroll="true" preferredSize="(150,150)" minimumSize="(150,150)">
+        <filler fill="horizontal"/>
+        <scrollPane forceVerticalScroll="true" preferredSize="(110,150)" minimumSize="(110,150)">
           <table ref="monthAmountsTable"/>
         </scrollPane>
+        <label icon="rightArrow(12,50,10,40,#E0E0E0)" margin="5"/>
         <component ref="monthAmountEditor" marginLeft="10"/>
+        <filler fill="horizontal"/>
       </row>
-      <button action="toggleMonthAmounts" name="switchToSingleAmount" styleClass="smallButton" marginBottom="10"/>
+      <button action="revertToSingleAmount" name="revertToSingleAmount" styleClass="smallButton"/>
     </column>
   </column>
 </splits>

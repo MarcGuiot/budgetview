@@ -668,6 +668,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .setLabel("Item 2")
       .checkMonth("Jan 2011")
       .setMonth(201102)
+      .switchToSeveralMonths()
       .setMonthCount(3)
       .setAmount(-60.00)
       .validate();

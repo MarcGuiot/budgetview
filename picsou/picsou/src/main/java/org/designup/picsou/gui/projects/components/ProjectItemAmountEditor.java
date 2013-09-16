@@ -17,6 +17,7 @@ import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -25,8 +26,11 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.KeyChangeListener;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.UnexpectedValue;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.util.Set;
 
 public class ProjectItemAmountEditor implements Disposable {
   private Key itemKey;
@@ -35,12 +39,35 @@ public class ProjectItemAmountEditor implements Disposable {
   private final GlobRepository repository;
   private final Directory localDirectory;
 
+  private Mode currentMode = null;
+
   private DisposableGroup disposables = new DisposableGroup();
+  private JTextField singleAmountEditor;
+  private JTextField singleMonthAmountEditor;
   protected JTextField monthAmountEditorField;
   protected GlobNumericEditor monthCountEditor;
   private JPanel panel;
+  private JPanel singleMonthPanel = new JPanel();
   private JPanel singleAmountPanel = new JPanel();
   private JPanel monthEditorPanel = new JPanel();
+  private JPanel currentPanel;
+  private GlobTableView monthTableView;
+
+  private enum Mode {
+    SINGLE_MONTH,
+    SAME_AMOUNT,
+    MONTH_EDITOR;
+
+    public static Mode get(Glob item) {
+      boolean useSameAmounts = item.isTrue(ProjectItem.USE_SAME_AMOUNTS);
+      if (!useSameAmounts) {
+        return MONTH_EDITOR;
+      }
+      Integer monthCount = item.get(ProjectItem.MONTH_COUNT);
+      boolean severalMonths = (monthCount != null) && (monthCount != 1);
+      return severalMonths ? SAME_AMOUNT : SINGLE_MONTH;
+    }
+  }
 
   public ProjectItemAmountEditor(Key itemKey, boolean forcePositiveAmounts, Action validate, GlobRepository repository, Directory directory) {
     this.itemKey = itemKey;
@@ -56,30 +83,16 @@ public class ProjectItemAmountEditor implements Disposable {
     final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/components/projectItemAmountEditor.splits",
                                                             repository, localDirectory);
 
+    builder.add("singleMonthPanel", singleMonthPanel);
     builder.add("singleAmountPanel", singleAmountPanel);
     builder.add("monthEditorPanel", monthEditorPanel);
 
     addMonthSlider(builder, "monthEditor1");
     addMonthSlider(builder, "monthEditor2");
+    addMonthSlider(builder, "monthEditor3");
 
-    if (forcePositiveAmounts) {
-      GlobNumericEditor amountEditor = GlobNumericEditor.init(ProjectItem.PLANNED_AMOUNT, repository, localDirectory)
-        .setValidationAction(validate)
-        .setPositiveNumbersOnly(true)
-        .forceSelection(itemKey);
-      monthAmountEditorField = amountEditor.getComponent();
-      builder.add("amountEditor", monthAmountEditorField);
-      disposables.add(amountEditor);
-    }
-    else {
-      AmountEditor amountEditor = new AmountEditor(ProjectItem.PLANNED_AMOUNT, repository, localDirectory, false, null)
-        .forceSelection(itemKey)
-        .addAction(validate)
-        .update(false, false);
-      builder.add("amountEditor", amountEditor.getPanel());
-      disposables.add(amountEditor);
-      monthAmountEditorField = amountEditor.getNumericEditor().getComponent();
-    }
+    singleMonthAmountEditor = addAmountEditor(builder, "amountEditor1");
+    singleAmountEditor = addAmountEditor(builder, "amountEditor2");
 
     monthCountEditor =
       createMonthEditor()
@@ -90,43 +103,78 @@ public class ProjectItemAmountEditor implements Disposable {
     builder.add("tableMonthCountEditor", tableMonthCountEditor);
     disposables.add(tableMonthCountEditor);
 
-    GlobTableView tableView =
-      GlobTableView.init(ProjectItemAmount.TYPE, repository,
-                         GlobComparators.ascending(ProjectItemAmount.MONTH), localDirectory)
-        .setFilter(GlobMatchers.fieldEquals(ProjectItemAmount.PROJECT_ITEM, itemKey.get(ProjectItem.ID)))
-        .addColumn(Lang.get("month"), new MonthYearStringifier(ProjectItemAmount.MONTH))
-        .addColumn(ProjectItemAmount.PLANNED_AMOUNT);
-    builder.add("monthAmountsTable", tableView.getComponent());
+    monthTableView = GlobTableView.init(ProjectItemAmount.TYPE, repository,
+                                        GlobComparators.ascending(ProjectItemAmount.MONTH), localDirectory)
+      .setFilter(GlobMatchers.fieldEquals(ProjectItemAmount.PROJECT_ITEM, itemKey.get(ProjectItem.ID)))
+      .addColumn(Lang.get("month"), new MonthYearStringifier(ProjectItemAmount.MONTH))
+      .addColumn(ProjectItemAmount.PLANNED_AMOUNT);
+    builder.add("monthAmountsTable", monthTableView.getComponent());
 
-    if (forcePositiveAmounts) {
-      GlobNumericEditor amountEditor = GlobNumericEditor.init(ProjectItemAmount.PLANNED_AMOUNT, repository, localDirectory)
-        .setPositiveNumbersOnly(true)
-        .setNotifyOnKeyPressed(true);
-      monthAmountEditorField = amountEditor.getComponent();
-      builder.add("monthAmountEditor", monthAmountEditorField);
-      disposables.add(amountEditor);
-    }
-    else {
-      AmountEditor amountEditor = new AmountEditor(ProjectItemAmount.PLANNED_AMOUNT, repository, localDirectory, false, null)
-        .update(false, false);
-      monthAmountEditorField = amountEditor.getNumericEditor().getComponent();
-      builder.add("monthAmountEditor", amountEditor.getPanel());
-      disposables.add(amountEditor);
-    }
+    monthAmountEditorField = createMonthAmountEditor(builder);
 
     ToggleBooleanAction toggleMonthAmounts =
       new ToggleBooleanAction(itemKey,
                               ProjectItem.USE_SAME_AMOUNTS,
                               Lang.get("projectView.item.edition.switchToMonthEditor"),
-                              Lang.get("projectView.item.edition.switchToSingleAmount"),
+                              Lang.get("projectView.item.edition.revertToSingleAmount"),
                               repository);
     builder.add("toggleMonthAmounts", toggleMonthAmounts);
 
+    builder.add("switchToSeveralMonths", new SwitchToSeveralMonthsAction());
+    builder.add("switchToMonthEditor", new SwitchToMonthEditorAction());
+    builder.add("revertToSingleAmount", new RevertToSingleAmountAction());
+
     panel = builder.load();
+
+    FullSingleComponentLayout layout = new FullSingleComponentLayout(panel);
+    panel.setLayout(layout);
 
     ModeSelector modeSelector = new ModeSelector();
     disposables.add(modeSelector);
     modeSelector.update();
+  }
+
+  private JTextField addAmountEditor(GlobsPanelBuilder builder, String componentName) {
+    JTextField editorField;
+    if (forcePositiveAmounts) {
+      GlobNumericEditor amountEditor = GlobNumericEditor.init(ProjectItem.PLANNED_AMOUNT, repository, localDirectory)
+        .setValidationAction(validate)
+        .setPositiveNumbersOnly(true)
+        .forceSelection(itemKey);
+      editorField = amountEditor.getComponent();
+      builder.add(componentName, editorField);
+      disposables.add(amountEditor);
+    }
+    else {
+      AmountEditor amountEditor = new AmountEditor(ProjectItem.PLANNED_AMOUNT, repository, localDirectory, false, null)
+        .forceSelection(itemKey)
+        .addAction(validate)
+        .update(false, false);
+      builder.add(componentName, amountEditor.getPanel());
+      disposables.add(amountEditor);
+      editorField = amountEditor.getNumericEditor().getComponent();
+    }
+    return editorField;
+  }
+
+  private JTextField createMonthAmountEditor(GlobsPanelBuilder builder) {
+    JTextField editorField;
+    if (forcePositiveAmounts) {
+      GlobNumericEditor amountEditor = GlobNumericEditor.init(ProjectItemAmount.PLANNED_AMOUNT, repository, localDirectory)
+        .setPositiveNumbersOnly(true)
+        .setNotifyOnKeyPressed(true);
+      editorField = amountEditor.getComponent();
+      builder.add("monthAmountEditor", editorField);
+      disposables.add(amountEditor);
+    }
+    else {
+      AmountEditor amountEditor = new AmountEditor(ProjectItemAmount.PLANNED_AMOUNT, repository, localDirectory, true, null)
+        .update(false, false);
+      editorField = amountEditor.getNumericEditor().getComponent();
+      builder.add("monthAmountEditor", amountEditor.getPanel());
+      disposables.add(amountEditor);
+    }
+    return editorField;
   }
 
   private void addMonthSlider(GlobsPanelBuilder builder, String ref) {
@@ -154,8 +202,43 @@ public class ProjectItemAmountEditor implements Disposable {
     return panel;
   }
 
+  private void setMode(Mode newMode) {
+    JPanel previous = currentPanel;
+    switch (newMode) {
+      case SINGLE_MONTH:
+        currentPanel = singleMonthPanel;
+        break;
+      case SAME_AMOUNT:
+        currentPanel = singleAmountPanel;
+        break;
+      case MONTH_EDITOR:
+        currentPanel = monthEditorPanel;
+        break;
+      default:
+        throw new UnexpectedValue(newMode);
+    }
+    if (previous != currentPanel) {
+      currentMode = newMode;
+      panel.removeAll();
+      panel.add(currentPanel);
+      GuiUtils.revalidate(panel);
+    }
+  }
+
   public void requestFocus() {
-    GuiUtils.selectAndRequestFocus(monthAmountEditorField);
+    if (currentMode != null) {
+      switch (currentMode) {
+        case SINGLE_MONTH:
+          GuiUtils.selectAndRequestFocus(singleMonthAmountEditor);
+          break;
+        case SAME_AMOUNT:
+          GuiUtils.selectAndRequestFocus(singleAmountEditor);
+          break;
+        case MONTH_EDITOR:
+          GuiUtils.selectAndRequestFocus(monthAmountEditorField);
+          break;
+      }
+    }
   }
 
   public void dispose() {
@@ -177,10 +260,17 @@ public class ProjectItemAmountEditor implements Disposable {
   }
 
   private class ModeSelector extends KeyChangeListener implements Disposable {
-    JPanel current = null;
+
     protected ModeSelector() {
       super(itemKey);
       repository.addChangeListener(this);
+    }
+
+    public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      if (itemKey != null && changedTypes.contains(itemKey.getGlobType())) {
+        ProjectItemAmountEditor.this.currentMode = null;
+      }
+      super.globsReset(repository, changedTypes);
     }
 
     protected void update() {
@@ -189,23 +279,56 @@ public class ProjectItemAmountEditor implements Disposable {
         return;
       }
 
-      JPanel previous = current;
-      if (item.isTrue(ProjectItem.USE_SAME_AMOUNTS)) {
-        current = singleAmountPanel;
-      }
-      else {
-        current = monthEditorPanel;
-      }
-      if (previous != current){
-        panel.removeAll();
-        panel.add(current);
-        GuiUtils.revalidate(panel);
-      }
+      Mode newMode = Mode.get(item);
+      setMode(newMode);
     }
 
     public void dispose() {
       repository.removeChangeListener(this);
-      current = null;
     }
   }
+
+  private class SwitchToSeveralMonthsAction extends AbstractAction {
+    private SwitchToSeveralMonthsAction() {
+      super(Lang.get("projectView.item.edition.switchToSeveralMonths"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      setMode(Mode.SAME_AMOUNT);
+      requestFocus();
+    }
+  }
+
+  private class SwitchToMonthEditorAction extends AbstractAction {
+
+    private SwitchToMonthEditorAction() {
+      super(Lang.get("projectView.item.edition.switchToMonthEditor"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      repository.startChangeSet();
+      try {
+        repository.update(itemKey, ProjectItem.USE_SAME_AMOUNTS, false);
+        setMode(Mode.MONTH_EDITOR);
+      }
+      finally {
+        repository.completeChangeSet();
+      }
+      monthTableView.selectFirst();
+      requestFocus();
+    }
+  }
+
+  private class RevertToSingleAmountAction extends AbstractAction {
+
+    private RevertToSingleAmountAction() {
+      super(Lang.get("projectView.item.edition.revertToSingleAmount"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      setMode(Mode.SAME_AMOUNT);
+      repository.update(itemKey, ProjectItem.USE_SAME_AMOUNTS, true);
+    }
+  }
+
 }

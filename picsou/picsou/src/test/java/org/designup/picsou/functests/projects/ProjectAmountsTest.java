@@ -30,9 +30,10 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
       .editExpense(0)
       .setLabel("Item 1")
       .setMonth(201012)
-      .checkShowsSingleAmount()
+      .checkShowsSingleMonth()
       .setAmount(-50.00)
-      .editMonths()
+      .switchToSeveralMonths()
+      .switchToMonthEditor()
       .checkShowsMonthEditor();
     itemEdition
       .checkMonthAmounts("| Dec 2010 | -50.00 |")
@@ -71,7 +72,9 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
     budgetView.extras.checkSeries("MyProject", 0.00, -10.00);
 
     currentProject.toggleAndEditExpense(0)
-      .useSingleAmount()
+      .checkShowsMonthEditor()
+      .revertToSingleAmount()
+      .checkShowsSingleAmount()
       .checkAmount(-70.00)
       .checkMonthCount(3)
       .validate();
@@ -99,7 +102,8 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
       .editExpense(0)
       .setLabel("Item 1")
       .setMonth(201012)
-      .editMonths()
+      .switchToSeveralMonths()
+      .switchToMonthEditor()
       .setTableMonthCount(3)
       .setMonthAmount(0, -70.00)
       .setMonthAmount(1, -20.00)
@@ -195,7 +199,8 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
       .editExpense(0)
       .setLabel("Item 1")
       .setMonth(201012)
-      .editMonths()
+      .switchToSeveralMonths()
+      .switchToMonthEditor()
       .setTableMonthCount(3)
       .setMonthAmount(0, -70.00)
       .setMonthAmount(1, -20.00)

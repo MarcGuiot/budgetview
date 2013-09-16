@@ -111,7 +111,9 @@ public class ProjectItem {
   }
 
   public static int getLastMonth(FieldValues itemValues) {
-    return Month.offset(itemValues.get(FIRST_MONTH), itemValues.get(MONTH_COUNT) - 1);
+    Integer monthCount = itemValues.get(MONTH_COUNT);
+    int offset = monthCount != null & monthCount > 1 ? monthCount - 1 : 0;
+    return Month.offset(itemValues.get(FIRST_MONTH), offset);
   }
 
   public static boolean usesSeries(FieldValues itemValues) {

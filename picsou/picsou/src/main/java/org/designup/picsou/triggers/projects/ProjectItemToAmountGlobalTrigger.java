@@ -17,6 +17,12 @@ public class ProjectItemToAmountGlobalTrigger implements ChangeSetListener {
         Glob item = repository.get(key);
         Integer projectItemId = item.get(ProjectItem.ID);
 
+        if (values.contains(ProjectItem.USE_SAME_AMOUNTS) || values.contains(ProjectItem.MONTH_COUNT)) {
+          if (item.get(ProjectItem.MONTH_COUNT) == 1) {
+            repository.update(key, ProjectItem.USE_SAME_AMOUNTS, true);
+          }
+        }
+
         if (!item.isTrue(ProjectItem.USE_SAME_AMOUNTS) &&
             (values.contains(ProjectItem.FIRST_MONTH) || values.contains(ProjectItem.MONTH_COUNT))) {
           ProjectItemToAmountLocalTrigger.updateAmountsForPeriod(item, projectItemId, repository);

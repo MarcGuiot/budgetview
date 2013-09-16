@@ -5,11 +5,6 @@
     <style selector="label.totalAmount" font="-,plain,11" foreground="projectView.item.view.label" marginRight="5"
            anchor="center" fill="none"/>
 
-    <style selector="button.plus"
-           ui="hyperlinkButtonWithoutUnderline" foreground="dialog.block.add"
-           text="$projectEdition.add" tooltipText="$projectEdition.addItem.tooltip"
-           font="-,plain,12" fill="none" anchor="west" marginLeft="10"/>
-
     <ui name="onOffToggle" class="org.designup.picsou.gui.components.ui.OnOffToggleUI"
         selectedBgColor="projectView.onoff.selected.bg"
         selectedBorderColor="projectView.onoff.selected.border"

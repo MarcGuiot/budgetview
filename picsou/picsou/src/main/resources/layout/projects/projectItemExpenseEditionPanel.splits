@@ -1,27 +1,26 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
   <styleImport file="/layout/picsouStyles.splits"/>
+  <styleImport file="/layout/projects/styles/projectStyles.splits"/>
+
   <styles>
-    <style selector="label.field" weightX="0.1" anchor="right" marginRight="5"/>
-    <style selector="component#amountEditor" marginRight="5"/>
     <style selector="button.actionsButton" fill="none" anchor="center"/>
     <style selector="label#imageLabel" preferredSize="(100,70)" minimumSize="(100,70)"
            fill="none" anchor="center" margin="4"/>
     <style selector="scrollPane htmlEditorPane" margin="2"/>
-    <style selector="button.validation" ui="hyperlinkButton" font="-,plain,11" foreground="hyperlink"
-           anchor="right" marginLeft="5" weightX="0.1"/>
   </styles>
 
   <column name="projectItemEditionPanel" opaque="true" background="projectView.item.bg.edition">
 
-    <row weightX="0.1" marginTop="10" marginLeft="10" marginRight="10">
-      <textField ref="nameField" gridPos="(0,0,4,1)" weightX="100" marginRight="5"/>
-      <button action="cancel" styleClass="smallButton" marginRight="5"/>
-      <button action="validate" styleClass="smallButton"/>
+    <row styleClass="firstItemBlock">
+      <label text="$projectView.item.edition.label" styleClass="formLabel"/>
+      <textField ref="nameField" weightX="100" marginRight="5"/>
     </row>
 
-    <panel ref="itemAmountEditor" marginTop="10" fill="both"/>
+    <row styleClass="itemBlock">
+      <panel ref="itemAmountEditor"/>
+    </row>
 
-    <row margin="10">
+    <row styleClass="itemBlock">
       <column marginRight="10" minimumSize="(120,150)" preferredSize="(120,150)" weightX="1">
         <label ref="imageLabel"/>
         <button ref="imageActions" styleClass="actionsButton"/>
@@ -37,6 +36,12 @@
           <textArea ref="descriptionField" editable="true"/>
         </scrollPane>
       </column>
+    </row>
+
+    <row styleClass="lastItemBlock">
+      <filler fill="horizontal"/>
+      <button action="cancel" styleClass="smallButton" marginRight="5"/>
+      <button action="validate" styleClass="smallButton"/>
     </row>
   </column>
 </splits>

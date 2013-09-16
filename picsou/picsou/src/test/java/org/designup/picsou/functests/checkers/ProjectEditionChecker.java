@@ -167,7 +167,9 @@ public class ProjectEditionChecker extends ViewChecker {
       .setMonth(firstMonth)
       .setAmount(amount);
     if (numberOfMonths != 1) {
-      projectItemEditionChecker.setMonthCount(numberOfMonths);
+      projectItemEditionChecker
+        .switchToSeveralMonths()
+        .setMonthCount(numberOfMonths);
     }
     projectItemEditionChecker
       .validate();

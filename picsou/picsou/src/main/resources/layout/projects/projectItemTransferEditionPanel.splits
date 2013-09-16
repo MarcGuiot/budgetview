@@ -1,36 +1,30 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
   <styleImport file="/layout/picsouStyles.splits"/>
-  <styles>
-    <style selector="label.field" weightX="0.1" anchor="right" marginRight="5"/>
-    <style selector="component#amountEditor" marginRight="5"/>
-    <style selector="button.actionsButton" fill="none" anchor="center"/>
-    <style selector="label#imageLabel" preferredSize="(100,70)"
-           fill="none" anchor="center" margin="4"/>
-    <style selector="scrollPane htmlEditorPane" margin="2"/>
-    <style selector="button.validation" ui="hyperlinkButton" font="-,plain,11" foreground="hyperlink"
-           anchor="right" marginLeft="5" weightX="0.1"/>
-  </styles>
+  <styleImport file="/layout/projects/styles/projectStyles.splits"/>
 
-  <panel name="projectItemEditionPanel" opaque="true" background="projectView.item.bg.edition">
-    <column border="empty(10)" opaque="true" background="block.inner.bg">
-      <textField ref="nameField"/>
+  <column name="projectItemEditionPanel" opaque="true" background="projectView.item.bg.edition">
+    <row styleClass="firstItemBlock">
+      <label text="$projectView.item.edition.label" styleClass="formLabel"/>
+      <textField ref="nameField" weightX="100" marginRight="5"/>
+    </row>
 
-      <row marginTop="10" marginBottom="10">
-        <comboBox ref="fromAccount"/>
-        <label icon="rightArrow(10,10,10,10,#999999)" fill="horizontal" anchor="center" border="empty(5)"/>
-        <comboBox ref="toAccount"/>
-      </row>
+    <row styleClass="itemBlock">
+      <comboBox ref="fromAccount" marginTop="5"/>
+      <label icon="rightArrow(10,10,10,10,#999999)" fill="horizontal" anchor="center" border="empty(5)" marginTop="5"/>
+      <comboBox ref="toAccount" marginTop="5"/>
+    </row>
 
-      <label ref="savingsMessage"/>
+    <label ref="savingsMessage" fill="none" anchor="center"/>
 
-      <panel ref="itemAmountEditor" marginTop="5"/>
+    <row styleClass="itemBlock">
+      <panel ref="itemAmountEditor"/>
+    </row>
 
-      <row marginTop="5">
-        <filler fill="horizontal"/>
-        <button action="cancel" styleClass="validation" marginRight="10"/>
-        <button action="validate" styleClass="validation"/>
-      </row>
+    <row styleClass="lastItemBlock">
+      <filler fill="horizontal"/>
+      <button action="cancel" styleClass="smallButton" marginRight="5"/>
+      <button action="validate" styleClass="smallButton"/>
+    </row>
 
-    </column>
-  </panel>
+  </column>
 </splits>

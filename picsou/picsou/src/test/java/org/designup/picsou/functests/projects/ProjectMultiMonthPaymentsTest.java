@@ -72,6 +72,7 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
       .editExpense(0)
       .setLabel("Body")
       .setAmount(-100.00)
+      .switchToSeveralMonths()
       .setMonthCount(0);
     currentProject
       .editExpense(0)
@@ -87,9 +88,9 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
 
     currentProject
       .toggleAndEditExpense(0)
-      .setMonthCount(-8)
-      .validateAndCheckMonthCountTip("You must set a duration of at least one month")
-      .setMonthCount(8)
+      .enterMonthCount("-8")
+      .checkMonthCount(8)
+      .validateMonthCount()
       .checkNoTipShown()
       .validate();
 
