@@ -30,6 +30,7 @@ public class GlobImageActions {
 
   private PasteImageAction pasteImagesAction = new PasteImageAction();
   private BrowseImageAction browseImagesAction = new BrowseImageAction();
+  private ClearImageAction clearImageAction = new ClearImageAction();
 
   public GlobImageActions(Key currentKey, LinkField link, GlobRepository repository, Directory directory, Dimension maxSavedSize) {
     this.currentKey = currentKey;
@@ -42,16 +43,17 @@ public class GlobImageActions {
   public void add(JPopupMenu popupMenu) {
     popupMenu.add(pasteImagesAction);
     popupMenu.add(browseImagesAction);
+    popupMenu.add(clearImageAction);
   }
 
   public void setKey(Key key) {
     this.currentKey = key;
     this.pasteImagesAction.update();
     this.browseImagesAction.update();
+    this.clearImageAction.update();
   }
 
   private class BrowseImageAction extends AbstractAction {
-
     private BrowseImageAction() {
       super(Lang.get("imageLabel.actions.browse"));
     }
@@ -92,22 +94,41 @@ public class GlobImageActions {
     public void actionPerformed(ActionEvent e) {
       Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
       DataFlavor flavor = DataFlavor.imageFlavor;
-      if (clipboard.isDataFlavorAvailable(flavor)) {
-        try {
-          Image image = (Image)clipboard.getData(flavor);
-          Picture.setIcon(currentKey, link, repository, image, maxSavedSize);
-        }
-        catch (UnsupportedFlavorException exception) {
-          MessageDialog.show("imageLabel.error.title",
-                             MessageType.ERROR, directory,
-                             "imageLabel.error.invalidFormat");
-        }
-        catch (IOException exception) {
-          MessageDialog.show("imageLabel.error.title",
-                             MessageType.ERROR, directory,
-                             "imageLabel.error.invalidFormat");
-        }
+      if (!clipboard.isDataFlavorAvailable(flavor)) {
+        MessageDialog.show("imageLabel.actions.paste.empty.title",
+                           MessageType.INFO, directory,
+                           "imageLabel.actions.paste.empty.message");
+        return;
       }
+
+      try {
+        Image image = (Image)clipboard.getData(flavor);
+        Picture.setIcon(currentKey, link, repository, image, maxSavedSize);
+      }
+      catch (UnsupportedFlavorException exception) {
+        MessageDialog.show("imageLabel.error.title",
+                           MessageType.ERROR, directory,
+                           "imageLabel.error.invalidFormat");
+      }
+      catch (IOException exception) {
+        MessageDialog.show("imageLabel.error.title",
+                           MessageType.ERROR, directory,
+                           "imageLabel.error.invalidFormat");
+      }
+    }
+  }
+
+  private class ClearImageAction extends AbstractAction {
+    private ClearImageAction() {
+      super(Lang.get("imageLabel.actions.clear"));
+    }
+
+    public void update() {
+      setEnabled(currentKey != null);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      repository.setTarget(currentKey, link, null);
     }
   }
 }

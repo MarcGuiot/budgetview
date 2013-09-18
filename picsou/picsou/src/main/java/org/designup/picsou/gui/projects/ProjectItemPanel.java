@@ -229,7 +229,8 @@ public abstract class ProjectItemPanel implements Disposable {
     if (localRepository == null || editionPanel == null) {
       this.localRepository =
         LocalGlobRepositoryBuilder.init(parentRepository)
-          .copy(ProjectItem.TYPE, ProjectTransfer.TYPE, ProjectItemAmount.TYPE, Month.TYPE, CurrentMonth.TYPE, Account.TYPE)
+          .copy(ProjectItem.TYPE, ProjectTransfer.TYPE, ProjectItemAmount.TYPE, Month.TYPE,
+                CurrentMonth.TYPE, Account.TYPE, Picture.TYPE)
           .get();
       this.localRepository.addTrigger(new ProjectItemToAmountLocalTrigger());
       this.editionPanel = createEditionPanel();

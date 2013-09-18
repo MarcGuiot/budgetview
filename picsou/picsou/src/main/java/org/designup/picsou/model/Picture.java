@@ -11,6 +11,7 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.utils.exceptions.InvalidFormat;
+import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.OperationFailed;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -78,17 +79,22 @@ public class Picture {
   }
 
   public static ImageIcon getIcon(Glob glob, LinkField link, GlobRepository repository, Dimension maxSize) {
-    if ((maxSize.width == 0) || (maxSize.height == 0)) {
+    if ((glob == null) || (maxSize.width == 0) || (maxSize.height == 0)) {
       return null;
     }
     Glob picture = repository.findLinkTarget(glob, link);
     if (picture == null) {
+      Integer pictureId = glob.get(link);
+      if (pictureId != null) {
+        throw new ItemNotFound("Could not find picture '" + pictureId + "' for: " + glob);
+      }
       return null;
     }
 
     byte[] imageData = picture.get(IMAGE_DATA);
     if (imageData == null) {
-      return null;
+      Integer pictureId = glob.get(link);
+      throw new ItemNotFound("No image data found for picture '" + pictureId + "' for: " + glob);
     }
     ImageIcon imageIcon = new ImageIcon(imageData);
     return new ImageIcon(resize(imageIcon.getImage(), maxSize));

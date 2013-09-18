@@ -146,7 +146,7 @@ public class ProjectItemViewLayout implements LayoutManager {
         }
         else if (component.getName().equals("imageLabel")) {
           JLabel label = (JLabel)component;
-          if (component.isVisible() && label.getIcon() != null) {
+          if (label.getIcon() != null) {
             imageLabelSize = component.getPreferredSize();
             imageRightMargin = IMAGE_RIGHT_MARGIN;
             imageVerticalMargin = VERTICAL_MARGIN;
