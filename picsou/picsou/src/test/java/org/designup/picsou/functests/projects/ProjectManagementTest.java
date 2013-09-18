@@ -684,4 +684,30 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
                               "Item 2 | Feb | 0.00 | -180.00\n" +
                               "Item 3 | Feb | 0.00 | -150.00");
   }
+
+  public void testURLsAreTruncatedAfter50Chars() throws Exception {
+    operations.hideSignposts();
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/12/30")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/12/10", -100.00, "Resa")
+      .load();
+
+    projects.create();
+    currentProject
+      .setName("My project")
+      .addExpenseItem()
+      .editExpense(0)
+      .setLabel("Item 1")
+      .checkMonth("Dec 2010")
+      .setAmount(-250.00)
+      .setURL("123456789-123456789-123456789-123456789-123456789-123456789")
+      .validate();
+
+    currentProject.view(0)
+      .checkURL("123456789-123456789-123456789-123456789-1234567...",
+                "123456789-123456789-123456789-123456789-123456789-123456789");
+  }
 }

@@ -7,13 +7,24 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.utils.GlobListFieldStringifier;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.utils.Strings;
 
 import java.text.DecimalFormat;
+import java.util.Comparator;
 
 public class GlobListStringifiers {
 
   public static GlobListStringifier fieldValue(Field field, String textForEmptySelection, String textForMultiSelection) {
     return new GlobListFieldStringifier(field, textForEmptySelection, textForMultiSelection);
+  }
+
+  public static GlobListStringifier maxWidth(final GlobListStringifier stringifier, final int maxWidth) {
+    return new GlobListStringifier() {
+      public String toString(GlobList list, GlobRepository repository) {
+        String string = stringifier.toString(list, repository);
+        return Strings.cut(string, maxWidth);
+      }
+    };
   }
 
   public static GlobListStringifier singularOrPlural(final String emptyText,

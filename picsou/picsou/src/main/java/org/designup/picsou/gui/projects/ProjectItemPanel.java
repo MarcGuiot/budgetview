@@ -29,6 +29,8 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.format.GlobListStringifiers;
+import org.globsframework.model.format.GlobStringifiers;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobListActionAdapter;
@@ -41,6 +43,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+
+import static org.globsframework.model.format.GlobListStringifiers.fieldValue;
+import static org.globsframework.model.format.GlobListStringifiers.maxWidth;
 
 public abstract class ProjectItemPanel implements Disposable {
 
@@ -169,7 +174,9 @@ public abstract class ProjectItemPanel implements Disposable {
 
     builder.add("handler", new HyperlinkHandler(directory));
 
-    GlobButtonView link = GlobButtonView.init(ProjectItem.URL, parentRepository, directory, new GotoUrlFunctor())
+    GlobButtonView link = GlobButtonView.init(ProjectItem.TYPE, parentRepository, directory,
+                                              maxWidth(fieldValue(ProjectItem.URL, "", ""), 50),
+                                              new GotoUrlFunctor())
       .setAutoHideIfEmpty(true)
       .forceSelection(itemKey);
     builder.add("link", link);

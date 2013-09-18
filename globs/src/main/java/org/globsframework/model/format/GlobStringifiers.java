@@ -11,6 +11,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.utils.AbstractGlobFieldStringifier;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.format.utils.EmptyGlobStringifier;
+import org.globsframework.utils.Strings;
 
 import java.util.Comparator;
 import java.security.InvalidParameterException;
@@ -42,6 +43,19 @@ public class GlobStringifiers {
     return new AbstractGlobFieldStringifier<LongField, Long>(field) {
       protected String valueToString(Long value) {
         return value.toString();
+      }
+    };
+  }
+
+  public static GlobStringifier maxWidth(final GlobStringifier stringifier, final int maxWidth) {
+    return new GlobStringifier() {
+      public String toString(Glob glob, GlobRepository repository) {
+        String string = stringifier.toString(glob, repository);
+        return Strings.cut(string, maxWidth);
+      }
+
+      public Comparator<Glob> getComparator(GlobRepository repository) {
+        return stringifier.getComparator(repository);
       }
     };
   }

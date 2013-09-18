@@ -100,6 +100,13 @@ public class ProjectItemViewChecker extends GuiChecker {
     return this;
   }
 
+  public ProjectItemViewChecker checkURL(String text, String browsedUrl) {
+    Button linkButton = panel.getButton("link");
+    assertThat(linkButton.textEquals(text));
+    BrowsingChecker.checkDisplay(linkButton, browsedUrl);
+    return this;
+  }
+
   private PopupButton getItemButton() {
     final Button itemButton = panel.getButton("itemButton");
     return new PopupButton(itemButton);

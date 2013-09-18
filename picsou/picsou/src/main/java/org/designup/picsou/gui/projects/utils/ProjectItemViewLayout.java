@@ -85,6 +85,7 @@ public class ProjectItemViewLayout implements LayoutManager {
     private Dimension linkSize;
     private int linkLeft;
     private int linkTop = 0;
+    private int linkWidth;
     private int linkVerticalMargin = 0;
     private Dimension descriptionSize;
     private int descriptionLeft;
@@ -220,6 +221,7 @@ public class ProjectItemViewLayout implements LayoutManager {
       categorizationWarningActionLeft = categorizationWarningLeft + categorizationWarningSize.width + SPACE;
       linkLeft = imageLabelLeft + imageLabelSize.width + imageRightMargin;
       linkTop = categorizationWarningTop + categorizationWarningSize.height + linkVerticalMargin;
+      linkWidth = right - SPACE;
       descriptionLeft = linkLeft;
       descriptionTop = linkTop + linkSize.height + linkVerticalMargin;
       itemButtonWidth = Math.min(itemButtonSize.width, monthSliderLeft - SPACE - left);
@@ -279,8 +281,7 @@ public class ProjectItemViewLayout implements LayoutManager {
                               categorizationWarningActionSize.width, categorizationWarningActionSize.height);
         }
         else if (component.getName().equals("link")) {
-          component.setBounds(linkLeft, linkTop,
-                              linkSize.width, linkSize.height);
+          component.setBounds(linkLeft, linkTop, linkWidth, linkSize.height);
         }
         else if (component.getName().equals("description")) {
           component.setBounds(descriptionLeft, descriptionTop,
