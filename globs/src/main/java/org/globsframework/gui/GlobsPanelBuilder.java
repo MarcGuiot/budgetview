@@ -274,10 +274,12 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     }
 
     public void startUpdate() {
+      inUpdate = true;
       repeat.startUpdate();
     }
 
     public void updateComplete() {
+      inUpdate = false;
       repeat.updateComplete();
       notifyListeners();
     }

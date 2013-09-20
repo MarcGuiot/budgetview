@@ -164,7 +164,9 @@ public class GlobNumericEditor extends AbstractGlobTextFieldEditor<GlobNumericEd
         }
         finally {
           setAdjusting(false);
-//          apply();
+          if (isNotifiedOnKeyPressed()){
+            apply();
+          }
         }
       }
 
