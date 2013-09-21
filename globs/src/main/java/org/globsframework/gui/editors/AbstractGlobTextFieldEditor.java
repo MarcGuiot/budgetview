@@ -17,12 +17,16 @@ public abstract class AbstractGlobTextFieldEditor<PARENT extends AbstractGlobTex
   }
 
   public PARENT setValidationAction(Action action) {
+    if (validationAction != null){
+      textComponent.removeActionListener(validationAction);
+    }
     this.validationAction = action;
+    textComponent.addActionListener(validationAction);
     return (PARENT)this;
   }
 
   protected void registerActions() {
-    textComponent.addActionListener(validationAction);
+//    textComponent.addActionListener(validationAction);
   }
 
   public void dispose() {
