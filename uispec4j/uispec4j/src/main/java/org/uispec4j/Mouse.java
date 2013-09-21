@@ -33,6 +33,20 @@ public class Mouse {
   }
 
   /**
+   * Right-clicks in the center of a UIComponent.
+   */
+  public static void rightClick(UIComponent uiComponent) {
+    rightClick(uiComponent, Modifier.NONE);
+  }
+
+  /**
+   * Right-clicks in the center of a UIComponent.
+   */
+  public static void rightClick(UIComponent uiComponent, Key.Modifier keyModifier) {
+    Mouse.doClickInRectangle(uiComponent, uiComponent.getAwtComponent().getBounds(), true, keyModifier);
+  }
+
+  /**
    * Clicks in the center of a UIComponent.
    */
   public static void click(UIComponent uiComponent, Key.Modifier keyModifier) {

@@ -20,6 +20,7 @@ public class ProjectView extends View implements GlobSelectionListener, ChangeSe
 
   private CardHandler cards;
   private Set<Key> currentKeys = Collections.EMPTY_SET;
+  private ProjectListView projectListView;
 
   public ProjectView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -31,11 +32,14 @@ public class ProjectView extends View implements GlobSelectionListener, ChangeSe
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectView.splits",
                                                       repository, directory);
 
+    ProjectCreationView projectCreationView = new ProjectCreationView(repository, directory);
+    projectCreationView.registerComponents(builder);
+
+    projectListView = new ProjectListView(repository, directory);
+    projectListView.registerComponents(builder);
+    
     ProjectEditionView projectEditionView = new ProjectEditionView(repository, directory);
     projectEditionView.registerComponents(builder);
-
-    ProjectListView projectListView = new ProjectListView(repository, directory);
-    projectListView.registerComponents(builder);
 
     cards = builder.addCardHandler("cards");
 
@@ -72,6 +76,10 @@ public class ProjectView extends View implements GlobSelectionListener, ChangeSe
   }
 
   private void update() {
+    if (!repository.contains(Project.TYPE)) {
+      cards.show("empty");
+      return;
+    }
     currentKeys = selectionService.getSelection(Project.TYPE).getKeySet();
     if (currentKeys.size() == 1) {
       cards.show("edit");
@@ -92,5 +100,10 @@ public class ProjectView extends View implements GlobSelectionListener, ChangeSe
     if (projects.isEmpty()) {
       cards.show("list");
     }
+  }
+
+  public void reset() {
+    projectListView.reset();
+    update();
   }
 }

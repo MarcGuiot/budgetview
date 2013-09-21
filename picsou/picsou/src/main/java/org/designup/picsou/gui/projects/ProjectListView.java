@@ -15,19 +15,25 @@ import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.OnLoadListener;
+import org.globsframework.gui.splits.utils.ToggleVisibilityAction;
 import org.globsframework.gui.utils.GlobBooleanNodeStyleUpdater;
+import org.globsframework.gui.utils.GlobRepeat;
 import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.views.GlobLabelView;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
+import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobComparators;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.util.Set;
 
 public class ProjectListView extends View {
+
+  private ToggleVisibilityAction togglePastProjectsAction;
 
   protected ProjectListView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -44,7 +50,17 @@ public class ProjectListView extends View {
     builder.addRepeat("pastProjects", ProjectStat.TYPE,
                       new PastProjectsMatcher(), GlobComparators.descending(ProjectStat.LAST_MONTH), componentFactory);
 
+    JPanel pastProjectsPanel = new JPanel();
+    builder.add("pastProjectsPanel", pastProjectsPanel);
+    togglePastProjectsAction = new ToggleVisibilityAction(pastProjectsPanel, Lang.get("hide"), Lang.get("show"));
+    togglePastProjectsAction.setParentName("projectListView");
+    builder.add("togglePastProjects", togglePastProjectsAction);
+
     parentBuilder.add("projectListView", builder.load());
+  }
+
+  public void reset() {
+    togglePastProjectsAction.setHidden();
   }
 
   private class ProjectComponentFactory implements RepeatComponentFactory<Glob> {

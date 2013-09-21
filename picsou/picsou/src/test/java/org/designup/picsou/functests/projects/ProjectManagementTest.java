@@ -163,7 +163,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     projectChart.select("My project");
     currentProject.delete();
-    projects.checkListShown();
+    projects.checkListPageShown();
     projects.checkNoProjectShown();
     projectChart.checkNoProjectShown();
     budgetView.extras.checkNoSeriesShown();
@@ -264,7 +264,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     currentProject
       .cancelNameEdition();
     projects
-      .checkListShown()
+      .checkListPageShown()
       .checkNoProjectShown();
 
     operations.undo();
@@ -274,8 +274,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .backToList();
 
     projects
-      .checkListShown()
-      .checkNoProjectShown();
+      .checkCreationPageShown();
 
     operations.undo();
     projects.checkEditionShown();
@@ -285,7 +284,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .backToList();
 
     projects
-      .checkListShown()
+      .checkListPageShown()
       .checkCurrentProjects("| New Project |  | 0.00 | on |");
   }
 

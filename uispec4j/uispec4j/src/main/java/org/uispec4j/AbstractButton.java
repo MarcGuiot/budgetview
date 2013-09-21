@@ -79,4 +79,12 @@ public abstract class AbstractButton extends AbstractSwingUIComponent implements
       }
     };
   }
+
+  public Trigger triggerRightClick() {
+    return new Trigger() {
+      public void run() {
+        Mouse.rightClick(AbstractButton.this);
+      }
+    };
+  }
 }

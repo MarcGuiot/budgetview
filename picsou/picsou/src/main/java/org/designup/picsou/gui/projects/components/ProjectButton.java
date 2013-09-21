@@ -75,7 +75,7 @@ public class ProjectButton extends JButton implements ChangeSetListener, Disposa
     });
 
     addMouseListener(new MouseAdapter() {
-      public void mousePressed(MouseEvent e) {
+      public void mouseReleased(MouseEvent e) {
         if (!GuiUtils.isRightClick(e)) {
           return;
         }

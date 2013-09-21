@@ -36,20 +36,34 @@
 
         <button action="createProject" fill="none" anchor="center" margin="10"/>
 
-        <label text="$projectListView.currentProjects" styleClass="secondarySectionTitle"/>
-        <repeat ref="currentProjects" layout="wrappedRow">
+        <label text="$projectListView.currentProjects"
+               name="currentProjectsSectionTitle"
+               autoHideSource="currentProjects"
+               styleClass="secondarySectionTitle"/>
+        <repeat ref="currentProjects" layout="wrappedRow" autoHideIfEmpty="true">
           <column name="projectBlock" marginTop="10">
             <button ref="projectButton"/>
             <label ref="name"/>
           </column>
         </repeat>
-        <label text="$projectListView.pastProjects" styleClass="secondarySectionTitle"/>
-        <repeat ref="pastProjects" layout="wrappedRow">
-          <column name="projectBlock" marginTop="10">
-            <button ref="projectButton"/>
-            <label ref="name"/>
-          </column>
-        </repeat>
+
+        <row border="empty(25,0,0,0)" autoHideSource="pastProjects" weightX="0.01">
+          <label text="$projectListView.pastProjects"
+                 name="pastProjectsSectionTitle"
+                 styleClass="secondarySectionTitle"
+                 autoHideSource="pastProjects"
+                 anchor="center"/>
+          <button action="togglePastProjects" styleClass="smallButton" marginTop="10" marginLeft="10" anchor="center"/>
+          <filler fill="horizontal"/>
+        </row>
+        <panel ref="pastProjectsPanel" opaque="false">
+          <repeat ref="pastProjects" layout="wrappedRow" autoHideIfEmpty="true">
+            <column name="projectBlock" marginTop="10">
+              <button ref="projectButton"/>
+              <label ref="name"/>
+            </column>
+          </repeat>
+        </panel>
         <filler fill="vertical"/>
       </column>
     </scrollPane>

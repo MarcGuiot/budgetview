@@ -2,6 +2,9 @@
 
   <column styleClass="projectView">
     <cards ref="cards">
+      <card name="empty">
+        <panel ref="projectCreationView"/>
+      </card>
       <card name="list">
         <panel ref="projectListView"/>
       </card>

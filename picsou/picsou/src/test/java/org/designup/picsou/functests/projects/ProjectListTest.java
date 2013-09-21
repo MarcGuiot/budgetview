@@ -2,9 +2,6 @@ package org.designup.picsou.functests.projects;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.model.ProjectStat;
-import org.globsframework.model.Glob;
-import org.globsframework.model.utils.GlobComparators;
 
 public class ProjectListTest extends LoggedInFunctionalTestCase {
 
@@ -31,35 +28,60 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(3).validate();
 
+    projects.checkCreationPageShown();
+
     projects.create();
     currentProject
       .setName("Past Aug")
       .addExpenseItem(0, "Item1", 201008, -200.00)
-      .addExpenseItem(1, "Item2", 201010, -200.00);
+      .addExpenseItem(1, "Item2", 201010, -200.00)
+      .backToList();
 
+    projects
+      .checkListPageShown()
+      .checkCurrentProjectsSectionHidden()
+      .checkPastProjectsSectionCollapsed()
+      .expandPastProjectsSection()
+      .checkPastProjectsSectionExpanded();
+
+    projects.create();
     currentProject
-      .create()
       .setName("Current Jan")
       .addExpenseItem(0, "Item1", 201101, -200.00)
-      .addExpenseItem(1, "Item2", 201102, -200.00);
+      .addExpenseItem(1, "Item2", 201102, -200.00)
+      .backToList();
 
-    currentProject
-      .create()
-      .setName("Current Empty");
+    projects.checkCurrentProjectsSectionShown();
+    projects.checkPastProjectsSectionExpanded();
 
+    projects.create();
     currentProject
-      .create()
+      .setName("Current Empty")
+      .backToList();
+
+    projects.checkCurrentProjectsSectionShown();
+    projects.checkPastProjectsSectionExpanded();
+
+    projects.create();
+    currentProject
       .setName("Past Oct")
       .addExpenseItem(0, "Item1", 201010, -200.00)
-      .addExpenseItem(1, "Item2", 201011, -200.00);
+      .addExpenseItem(1, "Item2", 201011, -200.00)
+      .backToList();
 
+    projects
+      .checkPastProjectsSectionExpanded()
+      .collapsePastProjectsSection()
+      .checkPastProjectsSectionCollapsed()
+      .expandPastProjectsSection()
+      .checkPastProjectsSectionExpanded();
+
+    projects.create();
     currentProject
-      .create()
       .setName("Current Oct")
       .addExpenseItem(0, "Item1", 201010, -200.00)
-      .addExpenseItem(1, "Item2", 201012, -200.00);
-
-    currentProject.backToList();
+      .addExpenseItem(1, "Item2", 201012, -200.00)
+      .backToList();
 
     projects.checkCurrentProjects(
       "| Current Empty |     | 0.00    | on |\n" +
@@ -71,6 +93,49 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
       "| Past Oct | Oct | -400.00 | on |\n" +
       "| Past Aug | Aug | -400.00 | on |"
     );
+  }
+
+  public void testCurrentAndPastSectionsAreHiddenWhenProjectsAreDeleted() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/12/01")
+      .addTransaction("2010/08/01", 1000.00, "Income")
+      .addTransaction("2010/09/01", 1000.00, "Income")
+      .addTransaction("2010/10/01", 1000.00, "Income")
+      .addTransaction("2010/11/01", 1000.00, "Income")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/12/01", 100.00, "Expense 1")
+      .load();
+
+    operations.openPreferences().setFutureMonthsCount(3).validate();
+
+    projects.create();
+    currentProject
+      .setName("Past Aug")
+      .addExpenseItem(0, "Item1", 201008, -200.00)
+      .addExpenseItem(1, "Item2", 201010, -200.00)
+      .backToList();
+
+    projects.expandPastProjectsSection();
+
+    projects.create();
+    currentProject
+      .setName("Current Jan")
+      .addExpenseItem(0, "Item1", 201101, -200.00)
+      .addExpenseItem(1, "Item2", 201102, -200.00)
+      .backToList();
+
+    projects.checkCurrentProjectsSectionShown();
+    projects.checkPastProjectsSectionExpanded();
+
+    projects.delete("Current Jan");
+    projects.checkCurrentProjectsSectionHidden();
+    projects.checkPastProjectsSectionExpanded();
+
+    projects.delete("Past Aug");
+    projects.checkCurrentProjectsSectionHidden();
+    projects.checkPastProjectsSectionHidden();
   }
 
   public void testShowsOnlyProjectsInDisplayedTimeSpan() throws Exception {

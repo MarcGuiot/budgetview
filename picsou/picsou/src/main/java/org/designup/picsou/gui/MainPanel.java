@@ -245,6 +245,7 @@ public class MainPanel {
     directory.get(UndoRedoService.class).reset();
     directory.get(HelpService.class).reset();
     signpostView.reset();
+    projectView.reset();
 
     windowManager.setPanel(panel);
     seriesAnalysisView.reset();

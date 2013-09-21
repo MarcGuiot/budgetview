@@ -1,0 +1,22 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.image" anchor="center" margin="20"/>
+    <style selector="textArea" margin="10"/>
+    <style selector="button" margin="10" fill="none" anchor="center"/>
+  </styles>
+
+  <column name="projectCreationView" styleClass="secondaryInnerBlock">
+
+    <scrollPane forceVerticalScroll="true" border="none">
+      <column>
+        <textArea text="$projectCreation.intro" styleClass="multiLineLabel"/>
+        <label icon="project_samples.png" styleClass="image"/>
+        <textArea text="$projectCreation.create" styleClass="multiLineLabel"/>
+        <button action="createProject"/>
+      </column>
+    </scrollPane>
+  </column>
+
+</splits>
