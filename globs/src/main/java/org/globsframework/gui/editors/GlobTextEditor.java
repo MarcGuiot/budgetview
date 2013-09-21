@@ -9,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GlobTextEditor extends AbstractGlobTextEditor<JTextField, GlobTextEditor> {
+
+  private GlobTextEditor.ApplyActionListener applyActionListener;
+
   public static GlobTextEditor init(StringField field, GlobRepository repository, Directory directory) {
     return new GlobTextEditor(field, repository, directory, new JTextField());
   }
@@ -20,24 +23,38 @@ public class GlobTextEditor extends AbstractGlobTextEditor<JTextField, GlobTextE
   }
 
   protected void registerActions() {
-    textComponent.addActionListener(validationAction);
+//    textComponent.addActionListener(validationAction);
   }
 
   public GlobTextEditor setValidationAction(Action action) {
+    if (this.validationAction != null){
+      textComponent.removeActionListener(validationAction);
+    }
     this.validationAction = action;
+    textComponent.addActionListener(validationAction);
     return this;
   }
   
   protected void registerActionListener() {
-    textComponent.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        apply();
-      }
-    });
+    if (applyActionListener == null){
+      applyActionListener = new ApplyActionListener();
+      textComponent.addActionListener(applyActionListener);
+    }
   }
 
   public void dispose() {
-    textComponent.removeActionListener(validationAction);
+    if (validationAction != null){
+      textComponent.removeActionListener(validationAction);
+    }
+    if (applyActionListener != null) {
+      textComponent.removeActionListener(applyActionListener);
+    }
     super.dispose();
+  }
+
+  private class ApplyActionListener implements ActionListener {
+    public void actionPerformed(ActionEvent e) {
+      apply();
+    }
   }
 }

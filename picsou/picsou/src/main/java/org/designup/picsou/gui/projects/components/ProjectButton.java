@@ -2,10 +2,8 @@ package org.designup.picsou.gui.projects.components;
 
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
-import org.designup.picsou.gui.components.images.GlobImageActions;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.ProjectStat;
-import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Picture;
 import org.designup.picsou.model.Project;
@@ -15,6 +13,7 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.utils.collections.Range;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -69,7 +68,22 @@ public class ProjectButton extends JButton implements ChangeSetListener, Disposa
       public void actionPerformed(ActionEvent e) {
         Glob project = repository.find(projectKey);
         if (project != null) {
-          directory.get(SelectionService.class).select(project);
+          SelectionService selectionService = directory.get(SelectionService.class);
+          selectionService.select(project);
+          Range<Integer> range = Project.getMonthRange(project, repository);
+          Glob currentMonth = selectionService.getSelection(Month.TYPE).getFirst();
+          if (currentMonth == null || !range.contains(currentMonth.get(Month.ID))) {
+            int current = range.getMin();
+            Glob month = null;
+            int max = repository.getAll(Month.TYPE).getSortedSet(Month.ID).last();
+            while (current <= range.getMax() && month == null && current < max) {
+              month = repository.find(Key.create(Month.TYPE, current));
+              current = Month.next(current);
+            }
+            if (month != null) {
+              selectionService.select(month);
+            }
+          }
         }
       }
     });
@@ -86,7 +100,7 @@ public class ProjectButton extends JButton implements ChangeSetListener, Disposa
       }
     });
 
-    setPreferredSize(new Dimension(110,125));
+    setPreferredSize(new Dimension(110, 125));
     updateComponents();
   }
 

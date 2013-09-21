@@ -93,6 +93,15 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
       "| Past Oct | Oct | -400.00 | on |\n" +
       "| Past Aug | Aug | -400.00 | on |"
     );
+
+    projects.select("Current Jan");
+    timeline.checkSelection("2011/01");
+    currentProject.backToList();
+
+    projects.select("Past Oct");
+    timeline.checkSelection("2010/10");
+    currentProject.backToList();
+
   }
 
   public void testCurrentAndPastSectionsAreHiddenWhenProjectsAreDeleted() throws Exception {
