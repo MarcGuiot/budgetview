@@ -1903,4 +1903,15 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkPosition("epargne", 400.);
 
   }
+
+  public void testChangeAmountOfEmptyAccount() throws Exception {
+    savingsAccounts.createSavingsAccount("epargne", 100.);
+
+    savingsAccounts.editPosition("epargne")
+      .setAmount(250.)
+      .validate();
+
+    savingsAccounts.checkPosition("epargne", 250.);
+
+  }
 }

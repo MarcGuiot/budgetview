@@ -30,7 +30,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
   public static void main(String[] args) throws Exception {
 
-    DEFAULT_LOCALE = Locale.FRANCE;// getLocale();
+    DEFAULT_LOCALE = getLocale();
     Lang.setLocale(DEFAULT_LOCALE);
 
     System.setProperty("uispec4j.test.library", "junit");

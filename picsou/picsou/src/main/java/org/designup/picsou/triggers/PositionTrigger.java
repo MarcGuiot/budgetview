@@ -9,7 +9,10 @@ import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.collections.MapOfMaps;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
 
@@ -244,8 +247,12 @@ public class PositionTrigger implements ChangeSetListener {
           for (int i = 0; i < transactions.length; i++) {
             Glob transaction = transactions[i];
             if (transaction.get(Transaction.ID).equals(trnId)) {
-              repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, account.get(Account.PAST_POSITION));
-              updateFirstTransactionFromPivotPosition(transactions, i, repository, account);
+              if (transaction.get(Transaction.TRANSACTION_TYPE) == TransactionType.OPEN_ACCOUNT_EVENT.getId()){
+                repository.update(transaction.getKey(), Transaction.AMOUNT, account.get(Account.PAST_POSITION));
+              }else {
+                repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, account.get(Account.PAST_POSITION));
+                updateFirstTransactionFromPivotPosition(transactions, i, repository, account);
+              }
               break;
             }
           }
