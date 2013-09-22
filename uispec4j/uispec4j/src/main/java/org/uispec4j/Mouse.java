@@ -47,6 +47,17 @@ public class Mouse {
   }
 
   /**
+   * Trigger that right-clicks in the center of a UIComponent.
+   */
+  public static Trigger triggerRightClick(final UIComponent uiComponent) {
+    return new Trigger() {
+      public void run() throws Exception {
+        Mouse.rightClick(uiComponent);
+      }
+    };
+  }
+
+  /**
    * Clicks in the center of a UIComponent.
    */
   public static void click(UIComponent uiComponent, Key.Modifier keyModifier) {

@@ -40,6 +40,13 @@ public class ProjectItemToSeriesTrigger implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    // Everything is serialized, no need to recompute
+    if (changedTypes.contains(ProjectItem.TYPE)) {
+      for (Glob item : repository.getAll(ProjectItem.TYPE)) {
+        if (item.get(ProjectItem.SERIES) == null) {
+          Glob project = repository.findLinkTarget(item, ProjectItem.PROJECT);
+          repository.update(item.getKey(), ProjectItem.SERIES, project.get(Project.SERIES));
+        }
+      }
+    }
   }
 }

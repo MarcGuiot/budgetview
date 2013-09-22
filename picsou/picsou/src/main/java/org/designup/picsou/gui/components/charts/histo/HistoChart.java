@@ -260,7 +260,7 @@ public class HistoChart extends JPanel implements Disposable {
 
     Integer columnIndex = metrics.getColumnAt(x);
     Set<Key> objectKeys = painter.getObjectKeysAt(x, y);
-    selectionManager.updateRollover(columnIndex, objectKeys, dragging, rightClick);
+    selectionManager.updateRollover(columnIndex, objectKeys, dragging, rightClick, new Point(x, y));
 
     repaint();
   }
@@ -275,7 +275,7 @@ public class HistoChart extends JPanel implements Disposable {
 
       public void mousePressed(MouseEvent e) {
         if (clickable() && isEnabled() && e.getClickCount() == 1) {
-          selectionManager.startClick(GuiUtils.isRightClick(e));
+          selectionManager.startClick(GuiUtils.isRightClick(e), new Point(e.getX(), e.getY()));
         }
       }
 

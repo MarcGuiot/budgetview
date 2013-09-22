@@ -36,17 +36,21 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
   private JPopupButton popupButton;
   private IconFactory defaultIconFactory = IconFactory.NULL_ICON_FACTORY;
 
-  public static GlobImageLabelView init(LinkField link, Dimension maxSavedSize, GlobRepository repository, Directory directory) {
-    return new GlobImageLabelView(link, maxSavedSize, repository, directory);
+  public static GlobImageLabelView init(Key key, LinkField link, Dimension maxSavedSize, GlobRepository repository, Directory directory) {
+    return new GlobImageLabelView(key, link, maxSavedSize, repository, directory);
   }
 
-  private GlobImageLabelView(LinkField link, Dimension maxSavedSize, GlobRepository repository, Directory directory) {
+  public static GlobImageLabelView init(LinkField link, Dimension maxSavedSize, GlobRepository repository, Directory directory) {
+    return new GlobImageLabelView(null, link, maxSavedSize, repository, directory);
+  }
+
+  private GlobImageLabelView(Key key, LinkField link, Dimension maxSavedSize, GlobRepository repository, Directory directory) {
     this.link = link;
     this.repository = repository;
     this.selectionService = directory.get(SelectionService.class);
 
-    actions = new GlobImageActions(null, link, repository, directory, maxSavedSize);
-    setKey(null);
+    actions = new GlobImageActions(key, link, repository, directory, maxSavedSize);
+    setKey(key);
 
     popupMenu = new JPopupMenu();
     actions.add(popupMenu);
@@ -67,7 +71,14 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
     });
 
     repository.addChangeListener(this);
-    selectionService.addListener(this, link.getGlobType());
+    if (key != null) {
+      forcedSelection = true;
+      currentKey = key;
+    }
+    else {
+      forcedSelection = false;
+      selectionService.addListener(this, link.getGlobType());
+    }
     updateIcon();
   }
 
@@ -78,6 +89,7 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
 
   public GlobImageLabelView setDefaultIconFactory(IconFactory factory) {
     this.defaultIconFactory = factory;
+    updateIcon();
     return this;
   }
 
@@ -126,13 +138,15 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
   private void updateIcon() {
     Glob glob = repository.find(currentKey);
     if (glob == null) {
-      setDefaultIcon();
+      setDefaultIcon(true);
       return;
     }
 
-    ImageIcon icon = Picture.getIcon(glob, link, repository, label.getPreferredSize());
+    Dimension size = label.getPreferredSize();
+    boolean noSize = ((size.height == 0) || (size.width == 0));
+    ImageIcon icon = Picture.getIcon(glob, link, repository, size);
     if (icon == null) {
-      setDefaultIcon();
+      setDefaultIcon(!noSize);
       return;
     }
 
@@ -144,9 +158,9 @@ public class GlobImageLabelView implements ChangeSetListener, GlobSelectionListe
     label.setVisible(true);
   }
 
-  private void setDefaultIcon() {
-    label.setIcon(autoHide ? null : defaultIconFactory.createIcon(label.getPreferredSize()));
-    label.setVisible(!autoHide);
+  private void setDefaultIcon(boolean autoHideIfNeeded) {
+    label.setIcon(defaultIconFactory.createIcon(label.getPreferredSize()));
+    label.setVisible(!autoHideIfNeeded || !autoHide);
   }
 
   public JPopupButton getPopupButton(String text) {

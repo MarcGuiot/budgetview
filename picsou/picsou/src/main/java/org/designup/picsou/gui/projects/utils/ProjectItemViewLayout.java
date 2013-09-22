@@ -96,6 +96,7 @@ public class ProjectItemViewLayout implements LayoutManager {
     private Dimension categorizationWarningActionSize;
     private int categorizationWarningSpace;
     private int categorizationWarningTop;
+    private int categorizationWarningBottom;
     private int categorizationWarningLeft;
     private int categorizationWarningActionTop;
     private int categorizationWarningActionLeft;
@@ -146,7 +147,7 @@ public class ProjectItemViewLayout implements LayoutManager {
         }
         else if (component.getName().equals("imageLabel")) {
           JLabel label = (JLabel)component;
-          if (label.getIcon() != null) {
+          if (label.isVisible() && label.getIcon() != null) {
             imageLabelSize = component.getPreferredSize();
             imageRightMargin = IMAGE_RIGHT_MARGIN;
             imageVerticalMargin = VERTICAL_MARGIN;
@@ -180,7 +181,7 @@ public class ProjectItemViewLayout implements LayoutManager {
             categorizationWarningSpace = VERTICAL_MARGIN;
           }
           else {
-            categorizationWarningSize = new Dimension(0,0);
+            categorizationWarningSize = new Dimension(0, 0);
             categorizationWarningSpace = 0;
           }
         }
@@ -189,7 +190,7 @@ public class ProjectItemViewLayout implements LayoutManager {
             categorizationWarningActionSize = component.getPreferredSize();
           }
           else {
-            categorizationWarningActionSize = new Dimension(0,0);
+            categorizationWarningActionSize = new Dimension(0, 0);
           }
         }
         else {
@@ -215,9 +216,10 @@ public class ProjectItemViewLayout implements LayoutManager {
       monthSliderTop = firstRowBottom - monthSliderSize.height;
       imageLabelLeft = left + IMAGE_LEFT_MARGIN;
       imageLabelTop = firstRowBottom + imageVerticalMargin;
-      categorizationWarningTop = firstRowBottom + categorizationWarningSpace;
-      categorizationWarningLeft= imageLabelLeft + imageLabelSize.width + imageRightMargin;
-      categorizationWarningActionTop = firstRowBottom + linkVerticalMargin;
+      categorizationWarningBottom = categorizationWarningSpace != 0 ? firstRowBottom + categorizationWarningSpace + categorizationWarningSize.height : firstRowBottom;
+      categorizationWarningTop = categorizationWarningBottom - categorizationWarningSize.height;
+      categorizationWarningLeft = imageLabelLeft + imageLabelSize.width + imageRightMargin;
+      categorizationWarningActionTop = categorizationWarningBottom - categorizationWarningActionSize.height;
       categorizationWarningActionLeft = categorizationWarningLeft + categorizationWarningSize.width + SPACE;
       linkLeft = imageLabelLeft + imageLabelSize.width + imageRightMargin;
       linkTop = categorizationWarningTop + categorizationWarningSize.height + linkVerticalMargin;

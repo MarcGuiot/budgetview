@@ -5,6 +5,7 @@ import org.designup.picsou.gui.components.charts.histo.HistoRollover;
 import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.globsframework.model.Key;
 
+import java.awt.*;
 import java.util.Set;
 
 public class HistoChartListenerAdapter implements HistoChartListener {
@@ -14,7 +15,7 @@ public class HistoChartListenerAdapter implements HistoChartListener {
   public void processDoubleClick(Integer columnIndex, Set<Key> objectKeys) {
   }
 
-  public void processRightClick(HistoSelection selection, Set<Key> objectKeys) {
+  public void processRightClick(HistoSelection selection, Set<Key> objectKeys, Point mouseLocation) {
   }
 
   public void scroll(int count) {

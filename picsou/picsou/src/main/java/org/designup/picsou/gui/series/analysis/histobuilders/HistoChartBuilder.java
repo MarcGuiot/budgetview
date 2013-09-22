@@ -35,6 +35,7 @@ import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 import java.util.Set;
 
@@ -75,7 +76,7 @@ public class HistoChartBuilder implements Disposable {
         parentSelectionService.select(months, Month.TYPE);
       }
 
-      public void processRightClick(HistoSelection selection, Set<Key> objectKeys) {
+      public void processRightClick(HistoSelection selection, Set<Key> objectKeys, Point mouseLocation) {
         popup.show(selection.getColumnIds(), objectKeys);
       }
 

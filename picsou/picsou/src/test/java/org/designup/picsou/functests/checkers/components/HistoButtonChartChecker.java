@@ -11,6 +11,7 @@ import org.globsframework.utils.Utils;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -92,8 +93,8 @@ public class HistoButtonChartChecker extends HistoChartChecker {
   public void click(String label, boolean rightClick) {
     HistoSelectionManager selectionManager = getChart().getSelectionManager();
     HistoButtonBlock block = getBlock(label);
-    selectionManager.updateRollover(block.minIndex, Collections.singleton(block.key), false, rightClick);
-    selectionManager.startClick(rightClick);
+    selectionManager.updateRollover(block.minIndex, Collections.singleton(block.key), false, rightClick, new Point(0, 0));
+    selectionManager.startClick(rightClick, new Point(0,0));
   }
 
   public void init() {

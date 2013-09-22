@@ -4,11 +4,16 @@ import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.GaugeChecker;
 import org.designup.picsou.functests.checkers.components.MonthSliderChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
+import org.designup.picsou.functests.checkers.components.PopupChecker;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.utils.Lang;
-import org.uispec4j.Panel;
+import org.uispec4j.MenuItem;
 import org.uispec4j.*;
+import org.uispec4j.Panel;
 import org.uispec4j.Window;
+import org.uispec4j.interception.FileChooserHandler;
+import org.uispec4j.interception.PopupMenuInterceptor;
+import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,6 +84,22 @@ public class ProjectEditionChecker extends ViewChecker {
 
   public ProjectEditionChecker cancelNameEdition() {
     getPanel().getPanel("projectNameEditor").getButton("cancel").click();
+    return this;
+  }
+
+  public ProjectEditionChecker setImage(String path) {
+    PopupChecker checker = new PopupChecker() {
+      protected MenuItem openMenu() {
+        TextBox imageLabel = getPanel().getTextBox("imageLabel");
+        return PopupMenuInterceptor.run(Mouse.triggerRightClick(imageLabel));
+      }
+    };
+    WindowInterceptor
+      .init(checker.triggerClick(Lang.get("imageLabel.actions.browse")))
+      .process(FileChooserHandler.init()
+                 .assertAcceptsFilesOnly()
+                 .select(path))
+      .run();
     return this;
   }
 
@@ -178,6 +199,18 @@ public class ProjectEditionChecker extends ViewChecker {
 
   public ProjectEditionChecker addTransferItem() {
     getPanel().getButton("addTransferItem").click();
+    return this;
+  }
+
+  public ProjectEditionChecker addTransferItem(int index, String label, int monthId, double amount, String fromAccount, String toAccount) {
+    addTransferItem();
+    editTransfer(index)
+      .setLabel(label)
+      .setAmount(amount)
+      .setMonth(monthId)
+      .setFromAccount(fromAccount)
+      .setToAccount(toAccount)
+      .validate();
     return this;
   }
 

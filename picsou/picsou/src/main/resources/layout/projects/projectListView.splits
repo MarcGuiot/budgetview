@@ -27,6 +27,11 @@
     <style id="inactiveProjectName" selector="x"
            foreground="projectView.list.item.name.disabled"/>
 
+    <style selector=".section" border="matte(1,0,1,0,#EEEEEE)" opaque="true" background="block.inner.secondary.bg"
+           margin="10"/>
+    <style selector=".section label" marginTop="5" marginBottom="5"/>
+    <style selector=".section button" marginTop="5" marginBottom="5"/>
+
   </styles>
 
   <column styleClass="secondaryInnerBlock">
@@ -34,12 +39,14 @@
     <scrollPane forceVerticalScroll="true" border="none">
       <column>
 
-        <button action="createProject" fill="none" anchor="center" margin="10"/>
+        <button action="createProject" fill="none" anchor="center" margin="10" marginTop="20"/>
 
-        <label text="$projectListView.currentProjects"
-               name="currentProjectsSectionTitle"
-               autoHideSource="currentProjects"
-               styleClass="secondarySectionTitle"/>
+        <column styleClass="section" autoHideSource="currentProjects">
+          <label text="$projectListView.currentProjects"
+                 name="currentProjectsSectionTitle"
+                 autoHideSource="currentProjects"
+                 styleClass="secondarySectionTitle"/>
+        </column>
         <repeat ref="currentProjects" layout="wrappedRow" autoHideIfEmpty="true">
           <column name="projectBlock" marginTop="10">
             <button ref="projectButton"/>
@@ -47,7 +54,7 @@
           </column>
         </repeat>
 
-        <row border="empty(25,0,0,0)" autoHideSource="pastProjects" weightX="0.01">
+        <row styleClass="section" autoHideSource="pastProjects" marginTop="15" weightX="0.01">
           <label text="$projectListView.pastProjects"
                  name="pastProjectsSectionTitle"
                  styleClass="secondarySectionTitle"

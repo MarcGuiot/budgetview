@@ -7,6 +7,7 @@ import org.globsframework.model.Key;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
+import java.awt.*;
 import java.util.*;
 
 public class HistoSelectionManager implements Disposable {
@@ -44,7 +45,7 @@ public class HistoSelectionManager implements Disposable {
     }
   }
 
-  public void updateRollover(Integer columnIndex, Set<Key> objectKeys, boolean dragging, boolean rightClick) {
+  public void updateRollover(Integer columnIndex, Set<Key> objectKeys, boolean dragging, boolean rightClick, Point mousePoint) {
     boolean rolloverChanged = false;
     boolean expandSelection = false;
 
@@ -65,23 +66,23 @@ public class HistoSelectionManager implements Disposable {
       }
     }
     if (expandSelection) {
-      addRolloverColumnToSelection(rightClick);
+      addRolloverColumnToSelection(rightClick, mousePoint);
     }
   }
 
-  public void startClick(boolean rightClick) {
+  public void startClick(boolean rightClick, Point mouseLocation) {
     columnSelectionMinIndex = null;
     columnSelectionMaxIndex = null;
 
     if ((rollover.columnIndex >= 0) && (rollover.columnIndex < dataset.size())) {
-      addRolloverColumnToSelection(rightClick);
+      addRolloverColumnToSelection(rightClick, mouseLocation);
     }
     else {
-      notifyClick(rightClick);
+      notifyClick(rightClick, mouseLocation);
     }
   }
 
-  private void notifyClick(boolean isRightClick) {
+  private void notifyClick(boolean isRightClick, Point mouseLocation) {
     if ((columnSelectionMinIndex == null) || (columnSelectionMaxIndex == null)) {
       return;
     }
@@ -100,7 +101,7 @@ public class HistoSelectionManager implements Disposable {
     Set<Key> objectKeys = rollover.getObjectKeys();
     for (HistoChartListener listener : listeners) {
       if (isRightClick) {
-        listener.processRightClick(selection, objectKeys);
+        listener.processRightClick(selection, objectKeys, mouseLocation);
       }
       else {
         listener.processClick(selection, objectKeys);
@@ -118,7 +119,7 @@ public class HistoSelectionManager implements Disposable {
     }
   }
 
-  public void addRolloverColumnToSelection(boolean rightClick) {
+  public void addRolloverColumnToSelection(boolean rightClick, Point mousePoint) {
     boolean selectionChanged = false;
     if ((columnSelectionMinIndex == null) || (rollover.columnIndex < columnSelectionMinIndex)) {
       columnSelectionMinIndex = rollover.columnIndex;
@@ -129,7 +130,7 @@ public class HistoSelectionManager implements Disposable {
       selectionChanged = true;
     }
     if (selectionChanged) {
-      notifyClick(rightClick);
+      notifyClick(rightClick, mousePoint);
     }
   }
 

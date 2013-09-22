@@ -132,10 +132,9 @@ public abstract class ProjectItemPanel implements Disposable {
     disposables.add(styleUpdater);
 
     GlobImageLabelView imageLabel =
-      GlobImageLabelView.init(ProjectItem.PICTURE, ProjectView.MAX_PICTURE_SIZE, parentRepository, directory)
+      GlobImageLabelView.init(itemKey, ProjectItem.PICTURE, ProjectView.MAX_PICTURE_SIZE, parentRepository, directory)
         .setAutoHide(true)
-        .setDefaultIconFactory(createDefaultIconFactory(builder))
-        .forceKeySelection(itemKey);
+        .setDefaultIconFactory(createDefaultIconFactory(builder));
     builder.add("imageLabel", imageLabel.getLabel());
     disposables.add(new ImageStatusUpdater(itemKey, ProjectItem.ACTIVE, imageLabel, parentRepository));
 

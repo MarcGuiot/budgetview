@@ -10,7 +10,7 @@ import org.designup.picsou.gui.components.charts.histo.button.HistoButtonPainter
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.ProjectStat;
-import org.designup.picsou.gui.projects.actions.CreateProjectAction;
+import org.designup.picsou.gui.projects.components.ProjectPopupMenuFactory;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoButtonDatasetBuilder;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartRangeListener;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartUpdater;
@@ -19,6 +19,8 @@ import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.GlobSelection;
+import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -39,6 +41,7 @@ public class ProjectChartView extends View {
   private HistoChartRange range;
   private HistoButtonColors colors;
   private FontMetrics buttonFontMetrics;
+  private final ProjectPopupMenuFactory popupMenuFactory;
 
   public ProjectChartView(final HistoChartRange range, final GlobRepository repository, final Directory directory) {
     super(repository, directory);
@@ -50,6 +53,8 @@ public class ProjectChartView extends View {
         updateChart(currentMonthId, resetPosition);
       }
     };
+    this.popupMenuFactory = new ProjectPopupMenuFactory(repository, directory);
+    this.popupMenuFactory.setShowMainActionsOnly(true);
     this.histoChart.addListener(new HistoChartListenerAdapter() {
       public void processClick(HistoSelection selection, Set<Key> objectKeys) {
         if (objectKeys.size() == 1) {
@@ -69,6 +74,22 @@ public class ProjectChartView extends View {
           months.add(repository.get(Key.create(Month.TYPE, monthId)));
         }
         selectionService.select(months, Month.TYPE);
+      }
+
+      public void processRightClick(HistoSelection selection, Set<Key> objectKeys, final Point mouseLocation) {
+        processClick(selection, objectKeys);
+        if (objectKeys.size() == 1) {
+          Key projectKey = objectKeys.iterator().next();
+          popupMenuFactory.updateSelection(projectKey);
+          SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+              JPopupMenu menu = popupMenuFactory.createPopup();
+              if (!menu.isShowing()) {
+                menu.show(histoChart, mouseLocation.x, mouseLocation.y);
+              }
+            }
+          });
+        }
       }
 
       public void scroll(int count) {

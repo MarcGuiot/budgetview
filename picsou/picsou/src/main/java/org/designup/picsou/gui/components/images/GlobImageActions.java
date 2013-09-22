@@ -33,11 +33,11 @@ public class GlobImageActions {
   private ClearImageAction clearImageAction = new ClearImageAction();
 
   public GlobImageActions(Key currentKey, LinkField link, GlobRepository repository, Directory directory, Dimension maxSavedSize) {
-    this.currentKey = currentKey;
     this.link = link;
     this.repository = repository;
     this.directory = directory;
     this.maxSavedSize = maxSavedSize;
+    setKey(currentKey);
   }
 
   public void add(JPopupMenu popupMenu) {

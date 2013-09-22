@@ -44,6 +44,13 @@ public abstract class MultiSelectionAction extends AbstractAction implements Glo
     update();
   }
 
+  public void setKey(Key key) {
+    if (forcedKey == null) {
+      selectionService.removeListener(this);
+    }
+    this.forcedKey = key;
+  }
+
   public void dispose() {
     if (forcedKey == null) {
       selectionService.removeListener(this);

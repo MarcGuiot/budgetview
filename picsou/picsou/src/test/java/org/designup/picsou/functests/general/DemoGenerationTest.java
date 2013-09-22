@@ -28,8 +28,27 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
   private static Locale DEFAULT_LOCALE = new Locale("__", "", "");
 
+  public static void main(String[] args) throws Exception {
+
+    DEFAULT_LOCALE = Locale.FRANCE;// getLocale();
+    Lang.setLocale(DEFAULT_LOCALE);
+
+    System.setProperty("uispec4j.test.library", "junit");
+
+    DemoGenerationTest test = createTest();
+    test.test();
+    test.tearDown();
+
+    DemoGenerationTest test2 = createTest();
+    test2.testCreateNextMonthFile();
+    test2.tearDown();
+
+    System.exit(0);
+  }
+
   protected void setUp() throws Exception {
     Locale.setDefault(DEFAULT_LOCALE);
+    System.out.println("Locale for demo: " + DEFAULT_LOCALE);
 
     thirdMonth = Month.getMonthId(new Date());
     secondMonth = Month.previous(thirdMonth);
@@ -55,24 +74,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   private static Locale getLocale() {
     String lang = System.getProperty("LANG", LANG); // sert dans le picsou/pom.xml
     return lang.equalsIgnoreCase("fr") ? Locale.FRANCE : Locale.ENGLISH;
-  }
-
-  public static void main(String[] args) throws Exception {
-
-    DEFAULT_LOCALE = getLocale();
-    Lang.setLocale(DEFAULT_LOCALE);
-
-    System.setProperty("uispec4j.test.library", "junit");
-
-    DemoGenerationTest test = createTest();
-    test.test();
-    test.tearDown();
-
-    DemoGenerationTest test2 = createTest();
-    test2.testCreateNextMonthFile();
-    test2.tearDown();
-
-    System.exit(0);
   }
 
   private static DemoGenerationTest createTest() throws Exception {
@@ -324,9 +325,10 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     budgetView.extras.createProject();
     currentProject
-      .setName(project("house"))
-      .addExpenseItem(0, "First", firstMonth, -900.00)
-      .addExpenseItem(1, "Second", secondMonth, -600.00);
+      .setName(project("kitchen"))
+      .setImage(imagePath("kitchen.jpg"))
+      .addExpenseItem(0, project("kitchen.furniture"), firstMonth, -900.00)
+      .addExpenseItem(1, project("kitchen.oven"), secondMonth, -600.00);
 
     //======== "TRIP" PROJECT ===========
 
@@ -335,12 +337,15 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     int holidaysMonth3 = Month.next(thirdMonth, 4);
     timeline.selectMonth(Month.toString(holidaysMonth3));
     budgetView.extras.createProject();
+
     currentProject
-      .setName(project("trip"))
-      .addExpenseItem(0, "Accomodation reservation", holidaysMonth1, -600.00)
-      .addExpenseItem(1, "Flight tickets", holidaysMonth1, -450.00)
-      .addExpenseItem(2, "Equipment", holidaysMonth2, -400.00)
-      .addExpenseItem(3, "Accomodation", holidaysMonth3, -1000.00);
+      .setName(project("rome"))
+      .setImage(imagePath("rome.jpg"))
+      .addExpenseItem(0, project("rome.accomodation.booking"), holidaysMonth1, -600.00)
+      .addExpenseItem(1, project("rome.flight"), holidaysMonth1, -450.00)
+      .addExpenseItem(2, project("rome.food"), holidaysMonth2, -550.00)
+      .addExpenseItem(3, project("rome.accomodation"), holidaysMonth3, -1000.00)
+      .addTransferItem(4, project("rome.transfer"), holidaysMonth1, 300.00, account("savings"), mainAccounts());
 
     //======== PROVISIONS ===========
 
@@ -398,7 +403,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       File out = new File(outputFile);
       out.delete();
       operations.backup(out.getAbsoluteFile().getAbsolutePath());
-      System.out.println("DemoGenerationTest.test : snapshot generated in " + out.getAbsoluteFile().getAbsolutePath());
+      System.out.println("Snapshot generated in " + out.getAbsoluteFile().getAbsolutePath());
     }
 
     String backupPath = new File(SNAPSHOT_PATH).getAbsolutePath();
@@ -504,6 +509,10 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
   private String project(String keySuffix) {
     return Lang.get("demo.project." + keySuffix);
+  }
+
+  private String imagePath(String fileName) {
+    return "picsou/picsou/src/test/resources/images/" +  fileName;
   }
 
   private String mainAccounts() {

@@ -9,6 +9,7 @@ import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartUpdater;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.model.SeriesBudget;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -32,7 +33,8 @@ public class SeriesAmountChartPanel {
     });
     histoChartBuilder.setSnapToScale(true);
     updater = new HistoChartUpdater(repository, directory,
-                                    SeriesBudget.TYPE, SeriesBudget.MONTH,
+                                    SeriesBudget.TYPE,
+                                    SeriesBudget.MONTH,
                                     SeriesBudget.TYPE) {
       protected void update(Integer monthId, boolean resetPosition) {
         if (currentSeriesId != null) {

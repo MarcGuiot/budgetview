@@ -5,15 +5,14 @@ import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.AbstractHistoChecker;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoSelectionManager;
-import org.designup.picsou.gui.components.charts.histo.button.HistoButtonBlock;
 import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyDataset;
 import org.designup.picsou.model.Day;
 import org.globsframework.model.Key;
 import org.globsframework.utils.Utils;
 import org.uispec4j.Mouse;
 import org.uispec4j.Panel;
-import org.uispec4j.interception.toolkit.Empty;
 
+import java.awt.*;
 import java.util.Collections;
 
 public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
@@ -71,8 +70,8 @@ public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
     int monthIndex = dataset.getIndex(monthId);
     HistoChart chart = getChart();
     HistoSelectionManager selectionManager = chart.getSelectionManager();
-    selectionManager.updateRollover(monthIndex, Collections.singleton(Key.create(Day.MONTH, monthId, Day.DAY, day - 1)), false, false);
-    selectionManager.startClick(false);
+    selectionManager.updateRollover(monthIndex, Collections.singleton(Key.create(Day.MONTH, monthId, Day.DAY, day - 1)), false, false, new Point(0, 0));
+    selectionManager.startClick(false, new Point(0,0));
   }
 
   public HistoDailyChecker checkValue(int monthId, int dayId, double expectedValue) {

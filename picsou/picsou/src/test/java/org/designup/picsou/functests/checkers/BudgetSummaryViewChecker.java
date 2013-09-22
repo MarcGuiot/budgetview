@@ -11,6 +11,7 @@ import org.uispec4j.Window;
 
 import javax.swing.*;
 
+import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -55,7 +56,7 @@ public class BudgetSummaryViewChecker extends ViewChecker {
     int columnIndex = chart.getDataset().getIndex(monthId);
     Set<Key> keys = new HashSet<Key>();
     keys.add(Key.create(Day.MONTH, monthId, Day.DAY, day));
-    selectionManager.updateRollover(columnIndex >= 0 ? columnIndex : null, keys, false, false);
+    selectionManager.updateRollover(columnIndex >= 0 ? columnIndex : null, keys, false, false, new Point(0,0));
     return this;
   }
 

@@ -1,23 +1,22 @@
 package org.globsframework.gui.actions;
 
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.BooleanField;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
-import org.globsframework.model.utils.KeyChangeListener;
+import org.globsframework.model.*;
+import org.globsframework.utils.Utils;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Set;
 
-public class ToggleBooleanAction extends AbstractAction implements Disposable {
+public class ToggleBooleanAction extends AbstractAction implements ChangeSetListener, Disposable {
 
-  private final Key key;
+  private Key key;
   private final BooleanField field;
   private final String textForTrue;
   private final String textForFalse;
   private final GlobRepository repository;
-  private KeyChangeListener changeListener;
 
   public ToggleBooleanAction(Key key, BooleanField field,
                              String textForTrue, String textForFalse,
@@ -27,21 +26,30 @@ public class ToggleBooleanAction extends AbstractAction implements Disposable {
     this.textForTrue = textForTrue;
     this.textForFalse = textForFalse;
     this.repository = repository;
-    this.changeListener = new KeyChangeListener(key) {
-      protected void update() {
-        doUpdate();
-      }
-    };
-    repository.addChangeListener(changeListener);
+    repository.addChangeListener(this);
     doUpdate();
   }
 
-  public void dispose() {
-    repository.removeChangeListener(changeListener);
-    changeListener = null;
+  public void setKey(Key newKey) {
+    if (!Utils.equal(this.key, newKey)) {
+      this.key = newKey;
+      doUpdate();
+    }
   }
 
-  private void doUpdate() {
+  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+    if (key != null && changeSet.containsChanges(key)) {
+      doUpdate();
+    }
+  }
+
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    if (key != null && changedTypes.contains(key.getGlobType())) {
+      doUpdate();
+    }
+  }
+
+  public void doUpdate() {
     Glob glob = repository.find(key);
     setEnabled(glob != null);
     if (glob != null) {
@@ -52,10 +60,18 @@ public class ToggleBooleanAction extends AbstractAction implements Disposable {
     }
   }
 
+  public void setEnabled(boolean newValue) {
+    super.setEnabled(newValue);
+  }
+
   public void actionPerformed(ActionEvent e) {
     Glob glob = repository.find(key);
     if (glob != null) {
       repository.update(key, field, !glob.isTrue(field));
     }
+  }
+
+  public void dispose() {
+    repository.removeChangeListener(this);
   }
 }
