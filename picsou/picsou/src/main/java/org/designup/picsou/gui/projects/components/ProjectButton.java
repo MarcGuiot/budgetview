@@ -71,6 +71,9 @@ public class ProjectButton extends JButton implements ChangeSetListener, Disposa
           SelectionService selectionService = directory.get(SelectionService.class);
           selectionService.select(project);
           Range<Integer> range = Project.getMonthRange(project, repository);
+          if (range == null) {
+            return;
+          }
           Glob currentMonth = selectionService.getSelection(Month.TYPE).getFirst();
           if (currentMonth == null || !range.contains(currentMonth.get(Month.ID))) {
             int current = range.getMin();
