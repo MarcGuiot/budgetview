@@ -11,22 +11,25 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.FieldSetter;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class ProjectItemAmount {
   public static GlobType TYPE;
 
   @Key
-  @Target(Project.class)
+  public static IntegerField ID;
+
+  @Target(ProjectItem.class)
   public static LinkField PROJECT_ITEM;
 
-  @Key
   @Target(Month.class)
   public static IntegerField MONTH;
 
@@ -39,6 +42,34 @@ public class ProjectItemAmount {
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(ProjectItemAmount.class, "projectItemAmount");
     loader.defineMultiFieldUniqueIndex(PROJECT_ITEM_INDEX, PROJECT_ITEM, MONTH);
+  }
+
+  public static Glob findOrCreate(Integer projectItemId, Integer monthId, GlobRepository repository) {
+    Glob existing = findUnique(projectItemId, monthId, repository);
+    if (existing != null) {
+      return existing;
+    }
+    return repository.create(TYPE,
+                             value(PROJECT_ITEM, projectItemId),
+                             value(MONTH, monthId));
+  }
+
+  public static Glob findUnique(Integer projectItemId, Integer monthId, GlobRepository repository) {
+    GlobList all = getAll(projectItemId, monthId, repository);
+    if (all.isEmpty()) {
+      return null;
+    }
+    if (all.size() > 1) {
+      throw new InvalidState("There should be only one item amount per projectItem and month - actual: " + all);
+    }
+    return all.getFirst();
+  }
+
+  public static GlobList getAll(Integer projectItemId, Integer monthId, GlobRepository repository) {
+    return repository
+      .findByIndex(PROJECT_ITEM_INDEX, PROJECT_ITEM, projectItemId)
+      .findByIndex(MONTH, monthId)
+      .getGlobs();
   }
 
   public static class Serializer implements PicsouGlobSerializer {

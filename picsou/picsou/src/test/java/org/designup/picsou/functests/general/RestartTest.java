@@ -8,7 +8,9 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.ColorTheme;
+import org.designup.picsou.model.ProjectItemAmount;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Dates;
 import org.uispec4j.assertion.UISpecAssert;
 
@@ -259,6 +261,80 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/10");
     budgetView.extras.checkSeries("MyProject", 0, -600.00);
     budgetView.getSummary().checkEndPosition(350.00);
+  }
+
+  public void testProjectsWithMultiMonthTransfers() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(12).validate();
+
+    mainAccounts.createNewAccount()
+      .setName("Main account 1")
+      .selectBank("CIC")
+      .setAsMain()
+      .validate();
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2008/12/01")
+      .addTransaction("2008/11/01", 1000.00, "Income")
+      .addTransaction("2008/12/01", 1000.00, "Income")
+      .addTransaction("2008/12/01", 100.00, "Transfer 1")
+      .loadInAccount("Main account 1");
+
+    mainAccounts.createNewAccount()
+      .setName("Savings account 1")
+      .selectBank("CIC")
+      .setAsSavings()
+      .validate();
+    OfxBuilder.init(this)
+      .addBankAccount("00222", 1000.00, "2008/12/01")
+      .addTransaction("2008/12/01", -100.00, "Transfer 1")
+      .loadInAccount("Savings account 1");
+
+    projects.create();
+    currentProject
+      .setName("Trip")
+      .addTransferItem()
+      .editTransfer(0)
+      .setLabel("Transfer")
+      .setFromAccount("Savings account 1")
+      .setToAccount("Main accounts")
+      .switchToSeveralMonths()
+      .switchToMonthEditor()
+      .setMonth(200901)
+      .setTableMonthCount(3)
+      .setMonthAmount(0, 100.00)
+      .setMonthAmount(1, 200.00)
+      .setMonthAmount(2, 300.00)
+      .validate();
+    currentProject
+      .addExpenseItem(1, "Expense", 200901, -300.00);
+
+    restartApplication();
+
+    views.selectHome();
+    projects.select("Trip");
+    currentProject.checkProjectGauge(0.00, -300.00);
+    currentProject.checkPeriod("January - March 2009");
+
+    timeline.selectMonth(200901);
+    budgetView.extras.checkSeries("Trip", 0.00, -300.00);
+    budgetView.savings.checkSeries("Transfer", 0.00, -100.00);
+
+    currentProject
+      .toggleAndEditTransfer(0)
+      .checkMonthAmounts("| Jan 2009 | 100.00 |\n" +
+                         "| Feb 2009 | 200.00 |\n" +
+                         "| Mar 2009 | 300.00 |")
+      .validate();
+
+    timeline.selectMonth(200901);
+    budgetView.savings.checkSeries("Transfer", 0.00, -100.00);
+
+    timeline.selectMonth(200902);
+    budgetView.savings.checkSeries("Transfer", 0.00, -200.00);
+
+    timeline.selectMonth(200903);
+    budgetView.savings.checkSeries("Transfer", 0.00, -300.00);
+
   }
 
   public void testRestartAfterCurrentMonthChanged() throws Exception {

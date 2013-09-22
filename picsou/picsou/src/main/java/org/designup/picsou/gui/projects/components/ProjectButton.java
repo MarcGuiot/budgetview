@@ -10,6 +10,7 @@ import org.designup.picsou.model.Project;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -69,24 +70,25 @@ public class ProjectButton extends JButton implements ChangeSetListener, Disposa
         Glob project = repository.find(projectKey);
         if (project != null) {
           SelectionService selectionService = directory.get(SelectionService.class);
-          selectionService.select(project);
+          GlobSelectionBuilder selectionBuilder = GlobSelectionBuilder.init();
+          selectionBuilder.add(project);
           Range<Integer> range = Project.getMonthRange(project, repository);
-          if (range == null) {
-            return;
-          }
-          Glob currentMonth = selectionService.getSelection(Month.TYPE).getFirst();
-          if (currentMonth == null || !range.contains(currentMonth.get(Month.ID))) {
-            int current = range.getMin();
-            Glob month = null;
-            int max = repository.getAll(Month.TYPE).getSortedSet(Month.ID).last();
-            while (current <= range.getMax() && month == null && current < max) {
-              month = repository.find(Key.create(Month.TYPE, current));
-              current = Month.next(current);
+          if (range != null) {
+            Glob currentMonth = selectionService.getSelection(Month.TYPE).getFirst();
+            if (currentMonth == null || !range.contains(currentMonth.get(Month.ID))) {
+              int current = range.getMin();
+              Glob month = null;
+              int max = repository.getAll(Month.TYPE).getSortedSet(Month.ID).last();
+              while (current <= range.getMax() && month == null && current < max) {
+                month = repository.find(Key.create(Month.TYPE, current));
+                current = Month.next(current);
+              }
+              if (month != null) {
+                selectionBuilder.add(month);
+              }
             }
-            if (month != null) {
-              selectionService.select(month);
-            }
           }
+          selectionService.select(selectionBuilder.get());
         }
       }
     });

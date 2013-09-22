@@ -136,4 +136,8 @@ public class FieldValuesBuilder {
   public int size() {
     return values.size();
   }
+
+  public String toString() {
+    return values.toString();
+  }
 }

@@ -45,7 +45,8 @@ public class ProjectItemToStatTrigger implements ChangeSetListener {
     });
 
     for (Key amountKey : changeSet.getCreatedOrUpdated(ProjectItemAmount.TYPE)) {
-      changedItemIds.add(amountKey.get(ProjectItemAmount.PROJECT_ITEM));
+      Glob itemAmount = repository.get(amountKey);
+      changedItemIds.add(itemAmount.get(ProjectItemAmount.PROJECT_ITEM));
     }
     for (Integer itemId : changedItemIds) {
       Glob item = repository.find(Key.create(ProjectItem.TYPE, itemId));

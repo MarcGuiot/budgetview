@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.model.ColorTheme;
 import org.designup.picsou.utils.Lang;
+import org.uispec4j.ComboBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.FileChooserHandler;
@@ -18,7 +19,9 @@ public class PreferencesChecker extends GuiChecker {
   }
 
   public PreferencesChecker setFutureMonthsCount(int month) {
-    window.getComboBox("futureMonth").select(Integer.toString(month));
+    ComboBox futureMonthCombo = window.getComboBox("futureMonth");
+    UISpecAssert.assertThat(futureMonthCombo.contains(Integer.toString(month)));
+    futureMonthCombo.select(Integer.toString(month));
     assertThat(window.getComboBox("futureMonth").selectionEquals(Integer.toString(month)));
     return this;
   }

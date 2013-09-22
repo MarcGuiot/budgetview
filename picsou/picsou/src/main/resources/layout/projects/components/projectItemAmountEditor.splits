@@ -41,13 +41,13 @@
         <filler fill="horizontal"/>
       </row>
       <row>
-        <filler fill="horizontal"/>
-        <scrollPane forceVerticalScroll="true" preferredSize="(110,150)" minimumSize="(110,150)">
-          <table ref="monthAmountsTable"/>
+        <filler fill="horizontal" weightX="1"/>
+        <scrollPane forceVerticalScroll="true" preferredSize="(110,150)" minimumSize="(110,150)" weightX="2">
+          <table ref="monthAmountsTable" weightX="4"/>
         </scrollPane>
-        <label icon="rightArrow(12,50,10,40,#E0E0E0)" margin="5"/>
-        <component ref="monthAmountEditor" marginLeft="10"/>
-        <filler fill="horizontal"/>
+        <label icon="rightArrow(12,50,10,40,#E0E0E0)" margin="5" weightX="0.01"/>
+        <component ref="monthAmountEditor" preferredSize="(70,20)" minimumSize="(70,20)" marginLeft="10" weightX="3"/>
+        <filler fill="horizontal" weightX="3"/>
       </row>
       <button action="revertToSingleAmount" name="revertToSingleAmount" styleClass="smallButton"/>
     </column>

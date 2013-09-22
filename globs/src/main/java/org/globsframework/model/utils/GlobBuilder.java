@@ -198,4 +198,8 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter, FieldValue
   public FieldValue[] toArray() {
     return fieldValuesBuilder.get().toArray();
   }
+
+  public String toString() {
+    return fieldValuesBuilder.toString();
+  }
 }

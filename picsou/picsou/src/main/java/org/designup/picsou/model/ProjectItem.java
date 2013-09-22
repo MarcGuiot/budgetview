@@ -96,8 +96,7 @@ public class ProjectItem {
     if (item.isTrue(USE_SAME_AMOUNTS)) {
       return item.get(PLANNED_AMOUNT, 0.00);
     }
-    Glob monthAmount = repository.find(org.globsframework.model.Key.create(ProjectItemAmount.PROJECT_ITEM, item.get(ID),
-                                                                           ProjectItemAmount.MONTH, monthId));
+    Glob monthAmount = ProjectItemAmount.findUnique(item.get(ID), monthId, repository);
     return monthAmount != null ? monthAmount.get(ProjectItemAmount.PLANNED_AMOUNT) : 0.00;
   }
 

@@ -74,8 +74,7 @@ public class ProjectItemToAmountLocalTrigger implements ChangeSetListener {
     }
     Double amount = values.get(ProjectItem.PLANNED_AMOUNT);
     for (Integer monthId : monthRange) {
-      Glob itemAmount = repository.findOrCreate(Key.create(ProjectItemAmount.PROJECT_ITEM, key.get(ProjectItem.ID),
-                                                           ProjectItemAmount.MONTH, monthId));
+      Glob itemAmount = ProjectItemAmount.findOrCreate(key.get(ProjectItem.ID), monthId, repository);
       repository.update(itemAmount.getKey(), ProjectItemAmount.PLANNED_AMOUNT, amount);
     }
   }

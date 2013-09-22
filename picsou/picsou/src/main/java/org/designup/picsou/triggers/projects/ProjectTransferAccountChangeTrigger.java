@@ -2,9 +2,11 @@ package org.designup.picsou.triggers.projects;
 
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.ProjectItem;
+import org.designup.picsou.model.ProjectItemAmount;
 import org.designup.picsou.model.ProjectTransfer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobUtils;
 
 import java.util.HashSet;
