@@ -34,13 +34,13 @@ public class DummyObject {
   public static LinkField LINK2;
 
 
-  public static UniqueIndex NAME_INDEX;
+//  public static UniqueIndex NAME_INDEX;
   public static NotUniqueIndex DATE_INDEX;
 
 
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(DummyObject.class);
-    loader.defineUniqueIndex(NAME_INDEX, NAME);
+//    loader.defineUniqueIndex(NAME_INDEX, NAME);
     loader.defineNonUniqueIndex(DATE_INDEX, DATE);
   }
 }

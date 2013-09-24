@@ -3,6 +3,7 @@ package org.globsframework.model.indexing.indices;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.indexing.IndexedTable;
 
 import java.util.HashMap;
@@ -32,7 +33,18 @@ public class DefaultUniqueIndex implements IndexedTable {
   }
 
   public void add(Glob glob) {
-    index.put(glob.getValue(field), glob);
+    Glob put = index.put(glob.getValue(field), glob);
+    if (put != null) {
+      index.put(glob.getValue(field), put);
+      throw new RuntimeException("Should be an unique index\n" +
+                                 "- value: " + glob.getValue(field) + "\n" +
+                                 "- field: " + field.getName() + "\n" +
+                                 "- type: " + field.getGlobType() + "\n" +
+                                 "- new: \n " +
+                                 GlobPrinter.toString(glob) + "\n" +
+                                 "- old: \n " +
+                                 GlobPrinter.toString(put));
+    }
   }
 
   public GlobList findByIndex(Object value) {

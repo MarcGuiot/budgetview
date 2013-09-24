@@ -120,6 +120,7 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
     Glob oldGlob = indexedGlob.put(value, glob);
     if (oldGlob != null) {
       throw new RuntimeException("Should be an unique index\n" +
+                                 "- field: " + field.getName() + "\n" +
                                  "- type: " + field.getGlobType() + "\n" +
                                  "- new: \n " +
                                  GlobPrinter.toString(glob) + "\n" +
