@@ -87,8 +87,6 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
 
   public void testChangingTheMonthRangePreservesTheValues() throws Exception {
 
-    fail("Pour Marc 8^)");
-
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     OfxBuilder.init(this)

@@ -4,6 +4,7 @@ import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObjectIndex;
 import org.globsframework.metamodel.Field;
 import static org.globsframework.model.FieldValue.value;
+
 import org.globsframework.model.*;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
@@ -16,56 +17,57 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTestCase {
+
   public void testUniqueIndex() throws Exception {
-    init("<dummyObject id='1' name='obj1'/>" +
-         "<dummyObject id='2' name='obj3'/>");
-    assertTrue(repository.findByIndex(DummyObject.NAME_INDEX, "obj2").isEmpty());
+    init("<dummyObjectIndex id='1' uniqueName='obj1' name='a'/>" +
+         "<dummyObjectIndex id='2' uniqueName='obj3' name='b'/>");
+    assertTrue(repository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "obj2").isEmpty());
     assertEquals(1, findIDByNameIndex("obj1"));
     assertEquals(2, findIDByNameIndex("obj3"));
     Glob obj1 = findGlobByNameIndex("obj1");
     Glob obj3 = findGlobByNameIndex("obj3");
-    repository.update(obj1.getKey(), DummyObject.NAME, "obj3");
-    repository.update(obj3.getKey(), DummyObject.NAME, "obj1");
+    repository.update(obj1.getKey(), DummyObjectIndex.UNIQUE_NAME, "obj3");
+    repository.update(obj3.getKey(), DummyObjectIndex.UNIQUE_NAME, "obj1");
     assertEquals(2, findIDByNameIndex("obj1"));
     assertEquals(1, findIDByNameIndex("obj3"));
-    repository.update(obj3.getKey(), DummyObject.NAME, "obj4");
+    repository.update(obj3.getKey(), DummyObjectIndex.UNIQUE_NAME, "obj4");
     assertEquals(2, findIDByNameIndex("obj4"));
     repository.delete(obj3);
-    assertTrue(repository.findByIndex(DummyObject.NAME_INDEX, "obj4").isEmpty());
+    assertTrue(repository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "obj4").isEmpty());
 
-    repository.create(DummyObject.TYPE,
-                      value(DummyObject.ID, 3),
-                      value(DummyObject.NAME, "obj5"));
+    repository.create(DummyObjectIndex.TYPE,
+                      value(DummyObjectIndex.ID, 3),
+                      value(DummyObjectIndex.UNIQUE_NAME, "obj5"));
     assertEquals(3, findIDByNameIndex("obj5"));
   }
 
   public void testNotUniqueIndex() throws Exception {
-    init("<dummyObject id='1' name='obj1' date = '2001/01/01'/>" +
-         "<dummyObject id='2' name='obj3' date = '2001/01/01'/>");
-    assertTrue(repository.findByIndex(DummyObject.DATE_INDEX, Dates.parse("2002/01/01")).isEmpty());
+    init("<dummyObjectIndex id='1' uniqueName='obj1' date = '2001/01/01' name='a'/>" +
+         "<dummyObjectIndex id='2' uniqueName='obj3' date = '2001/01/01' name='b'/>");
+    assertTrue(repository.findByIndex(DummyObjectIndex.DATE_INDEX, Dates.parse("2002/01/01")).isEmpty());
     TestUtils.assertSetEquals(Arrays.asList(1, 2), findIDByDateIndex("2001/01/01"));
     Glob obj1 = findGlobByNameIndex("obj1");
     Glob obj3 = findGlobByNameIndex("obj3");
-    repository.update(obj1.getKey(), DummyObject.DATE, Dates.parse("2003/01/01"));
+    repository.update(obj1.getKey(), DummyObjectIndex.DATE, Dates.parse("2003/01/01"));
     assertEquals(2, findIDByDateIndex("2001/01/01").get(0).intValue());
     assertEquals(1, findIDByDateIndex("2003/01/01").get(0).intValue());
     repository.delete(obj3);
-    assertTrue(repository.findByIndex(DummyObject.DATE_INDEX, Dates.parse("2001/01/01")).isEmpty());
+    assertTrue(repository.findByIndex(DummyObjectIndex.DATE_INDEX, Dates.parse("2001/01/01")).isEmpty());
 
-    repository.create(DummyObject.TYPE,
-                      value(DummyObject.ID, 3),
-                      value(DummyObject.NAME, "obj5"),
-                      value(DummyObject.DATE, Dates.parse("2004/01/01")));
+    repository.create(DummyObjectIndex.TYPE,
+                      value(DummyObjectIndex.ID, 3),
+                      value(DummyObjectIndex.NAME, "obj5"),
+                      value(DummyObjectIndex.DATE, Dates.parse("2004/01/01")));
     assertEquals(Arrays.asList(3), findIDByDateIndex("2004/01/01"));
   }
 
 
   public void testMultifieldUniqueIndex() throws Exception {
-    init("<dummyObjectIndex id='1' value1='2' value2='3' name='a' />" +
-         "<dummyObjectIndex id='2' value1='2' value2='3' name='b' />" +
-         "<dummyObjectIndex id='3' value1='2' value2='4' name='a' />" +
-         "<dummyObjectIndex id='4' value1='2' value2='5' name='a' />" +
-         "<dummyObjectIndex id='5' value1='3' value2='3' name='aaa' />");
+    init("<dummyObjectIndex id='1' value1='2' value2='3' name='a' uniqueName='a'/>" +
+         "<dummyObjectIndex id='2' value1='2' value2='3' name='b' uniqueName='b'/>" +
+         "<dummyObjectIndex id='3' value1='2' value2='4' name='a' uniqueName='c'/>" +
+         "<dummyObjectIndex id='4' value1='2' value2='5' name='a' uniqueName='d'/>" +
+         "<dummyObjectIndex id='5' value1='3' value2='3' name='aaa' uniqueName='e'/>");
     checkId(1).of(2, 3, "a");
     checkId(1, 2).of(2, 3);
     checkId().of(2, 3, "c");
@@ -86,28 +88,29 @@ public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTest
   }
 
   public void testUniqueIndexWithDeleteCreate() throws Exception {
-    init("<dummyObject id='3' name='obj1'/>" +
-         "<dummyObject id='4' name='obj3'/>");
-    Glob glob3 = repository.get(Key.create(DummyObject.TYPE, 4));
-    Glob glob4 = repository.get(Key.create(DummyObject.TYPE, 3));
+    init("<dummyObjectIndex id='3' uniqueName='obj1' name='a'/>" +
+         "<dummyObjectIndex id='4' uniqueName='obj3' name='b'/>");
+    Glob glob3 = repository.get(Key.create(DummyObjectIndex.TYPE, 4));
+    Glob glob4 = repository.get(Key.create(DummyObjectIndex.TYPE, 3));
     LocalGlobRepositoryBuilder builder = LocalGlobRepositoryBuilder.init(repository);
-    builder.copy(DummyObject.TYPE);
+    builder.copy(DummyObjectIndex.TYPE);
     LocalGlobRepository localGlobRepository = builder.get();
-    localGlobRepository.create(Key.create(DummyObject.TYPE, 5),
-                               FieldValue.value(DummyObject.NAME, "obj1"));
-    localGlobRepository.create(Key.create(DummyObject.TYPE, 1),
-                               FieldValue.value(DummyObject.NAME, "obj3"));
-    localGlobRepository.update(glob3.getKey(), DummyObject.NAME, "obj2");
-    localGlobRepository.update(glob4.getKey(), DummyObject.NAME, "obj4");
+    localGlobRepository.update(glob4.getKey(), DummyObjectIndex.NAME, "obj4");
+    localGlobRepository.create(Key.create(DummyObjectIndex.TYPE, 5),
+                               FieldValue.value(DummyObjectIndex.NAME, "obj1"), FieldValue.value(DummyObjectIndex.UNIQUE_NAME, "a"));
+    localGlobRepository.update(glob3.getKey(), DummyObjectIndex.NAME, "obj2");
+    localGlobRepository.create(Key.create(DummyObjectIndex.TYPE, 1),
+                               FieldValue.value(DummyObjectIndex.NAME, "obj3"));
+
     localGlobRepository.commitChanges(true);
   }
 
   public void testMultiFieldNotUniqueIndex() throws Exception {
-    init("<dummyObjectIndex id='1' value1='2' value2='3' name='a' />" +
-         "<dummyObjectIndex id='2' value1='2' value2='3' name='b' />" +
-         "<dummyObjectIndex id='3' value1='2' value2='4' name='a' />" +
-         "<dummyObjectIndex id='4' value1='2' value2='5' name='a' />" +
-         "<dummyObjectIndex id='5' value1='3' value2='3' name='aaa' />");
+    init("<dummyObjectIndex id='1' value1='2' value2='3' name='a' uniqueName='a'/>" +
+         "<dummyObjectIndex id='2' value1='2' value2='3' name='b' uniqueName='b'/>" +
+         "<dummyObjectIndex id='3' value1='2' value2='4' name='a' uniqueName='c'/>" +
+         "<dummyObjectIndex id='4' value1='2' value2='5' name='a' uniqueName='d'/>" +
+         "<dummyObjectIndex id='5' value1='3' value2='3' name='aaa' uniqueName='e'/>");
     checkIdUnique(1, 2).of(2, 3);
     checkIdUnique(1, 2, 3, 4).of(2);
     change(2, 2, 4, "b");
@@ -118,6 +121,29 @@ public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTest
     checkIdUnique(1, 2, 3, 4, 5).of(2);
     checkIdUnique(5).of(2, 1);
   }
+
+
+  public void testVisitWithIndex() throws Exception {
+    init("<dummyObjectIndex id='1' value1='2' value2='3' name='a' uniqueName='a'/>" +
+         "<dummyObjectIndex id='2' value1='2' value2='3' name='b'  uniqueName='b'/>" +
+         "<dummyObjectIndex id='3' value1='2' value2='4' name='a'  uniqueName='c'/>" +
+         "<dummyObjectIndex id='4' value1='2' value2='5' name='a'  uniqueName='d'/>" +
+         "<dummyObjectIndex id='5' value1='3' value2='3' name='aaa'  uniqueName='e'/>");
+    LocalGlobRepository localGlobRepository = LocalGlobRepositoryBuilder
+      .init(repository).copy(DummyObjectIndex.TYPE).get();
+    localGlobRepository.startChangeSet();
+    localGlobRepository.delete(localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "e"));
+    localGlobRepository.delete(localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "b"));
+    Key a = localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "a").getFirst().getKey();
+    localGlobRepository.update(a,
+                      FieldValue.value(DummyObjectIndex.UNIQUE_NAME, "b"));
+    localGlobRepository.create(DummyObjectIndex.TYPE, FieldValue.value(DummyObjectIndex.UNIQUE_NAME, "a"),
+                      FieldValue.value(DummyObjectIndex.NAME, "q"));
+    localGlobRepository.create(DummyObjectIndex.TYPE, FieldValue.value(DummyObjectIndex.UNIQUE_NAME, "e"));
+    localGlobRepository.completeChangeSet();
+    localGlobRepository.commitChanges(true);
+  }
+
 
   private void create(int id, int value1, int value2, String name) {
     repository.create(DummyObjectIndex.TYPE,
@@ -233,24 +259,24 @@ public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTest
   }
 
   private int findIDByNameIndex(String value) {
-    return findGlobByNameIndex(value).get(DummyObject.ID);
+    return findGlobByNameIndex(value).get(DummyObjectIndex.ID);
   }
 
   private Glob findGlobByNameIndex(String value) {
-    return repository.findByIndex(DummyObject.NAME_INDEX, value).get(0);
+    return repository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, value).get(0);
   }
 
   private List<Integer> findIDByDateIndex(String value) {
     List<Integer> val = new ArrayList<Integer>();
     GlobList globByDateIndex = findGlobByDateIndex(value);
     for (Glob glob : globByDateIndex) {
-      val.add(glob.get(DummyObject.ID));
+      val.add(glob.get(DummyObjectIndex.ID));
     }
     return val;
   }
 
   private GlobList findGlobByDateIndex(String value) {
-    return repository.findByIndex(DummyObject.DATE_INDEX, Dates.parse(value));
+    return repository.findByIndex(DummyObjectIndex.DATE_INDEX, Dates.parse(value));
   }
 
 }

@@ -6,7 +6,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.metamodel.index.UniqueIndex;
+import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
@@ -64,13 +64,13 @@ public class ProjectItem {
 
   public static StringField DESCRIPTION;
 
-  public static UniqueIndex SERIES_INDEX;
-  public static UniqueIndex SUB_SERIES_INDEX;
+  public static NotUniqueIndex SERIES_INDEX;
+  public static NotUniqueIndex SUB_SERIES_INDEX;
 
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(ProjectItem.class, "projectItem");
-    loader.defineUniqueIndex(SERIES_INDEX, SERIES);
-    loader.defineUniqueIndex(SUB_SERIES_INDEX, SUB_SERIES);
+    loader.defineNonUniqueIndex(SERIES_INDEX, SERIES);
+    loader.defineNonUniqueIndex(SUB_SERIES_INDEX, SUB_SERIES);
   }
 
   public static Double getTotalPlannedAmount(FieldValues projectItem, GlobRepository repository) {

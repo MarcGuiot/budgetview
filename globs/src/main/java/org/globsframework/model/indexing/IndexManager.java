@@ -47,7 +47,8 @@ public class IndexManager {
       Collection<Index> indices = type.getIndices();
       if (!indices.isEmpty()) {
         for (Index index : indices) {
-          updateGlobTypeToIndexTables(type, getAssociatedTable(index));
+          //register in globTypeToIndex
+          getAssociatedTable(index);
         }
       }
       Collection<MultiFieldIndex> multiFieldIndices = type.getMultiFieldIndices();

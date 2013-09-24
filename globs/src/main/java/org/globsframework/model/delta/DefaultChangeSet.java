@@ -66,9 +66,13 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public void visit(ChangeSetVisitor visitor) throws Exception {
-    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.values()) {
-      deltaGlob.visit(visitor);
-    }
+//    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.values()) {
+//      deltaGlob.visit(visitor);
+//    }
+    Collection<DefaultDeltaGlob> values = deltaGlobsByKey.values();
+    visit(visitor, values, DeltaState.DELETED);
+    visit(visitor, values, DeltaState.UPDATED);
+    visit(visitor, values, DeltaState.CREATED);
   }
 
   public void safeVisit(ChangeSetVisitor visitor) {
@@ -84,8 +88,20 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public void visit(GlobType type, ChangeSetVisitor visitor) throws Exception {
-    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.get(type).values()) {
-      deltaGlob.visit(visitor);
+//    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.get(type).values()) {
+//      deltaGlob.visit(visitor);
+//    }
+    Collection<DefaultDeltaGlob> values = deltaGlobsByKey.get(type).values();
+    visit(visitor, values, DeltaState.DELETED);
+    visit(visitor, values, DeltaState.UPDATED);
+    visit(visitor, values, DeltaState.CREATED);
+  }
+
+  private void visit(ChangeSetVisitor visitor, Collection<DefaultDeltaGlob> globs, DeltaState state) throws Exception {
+    for (DefaultDeltaGlob deltaGlob : globs) {
+      if (deltaGlob.getState() == state){
+        deltaGlob.visit(visitor);
+      }
     }
   }
 
