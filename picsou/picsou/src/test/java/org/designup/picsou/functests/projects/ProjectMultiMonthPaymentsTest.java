@@ -10,7 +10,7 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
     operations.hideSignposts();
   }
 
-  public void testMultiMonthPayments() throws Exception {
+  public void testMultiMonthPaymentsWithSameAmounts() throws Exception {
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     OfxBuilder.init(this)
@@ -100,5 +100,4 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
       .checkItem(0, "Body", "Dec", 0.00, -800.00)
       .checkItems("Body | Dec | 0.00 | -800.00");
   }
-
 }

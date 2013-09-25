@@ -415,12 +415,24 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth(201012);
     budgetView.savings.checkSeries("Transfer", 0.00, 70.00);
-
     timeline.selectMonth(201101);
     budgetView.savings.checkSeries("Transfer", 0.00, 20.00);
-
     timeline.selectMonth(201102);
     budgetView.savings.checkSeries("Transfer", 0.00, 10.00);
+
+    currentProject
+      .toggleAndEditTransfer(0)
+      .setMonthAmount(0, 80.00)
+      .setMonthAmount(1, 30.00)
+      .setMonthAmount(2, 20.00)
+      .validate();
+
+    timeline.selectMonth(201012);
+    budgetView.savings.checkSeries("Transfer", 0.00, 80.00);
+    timeline.selectMonth(201101);
+    budgetView.savings.checkSeries("Transfer", 0.00, 30.00);
+    timeline.selectMonth(201102);
+    budgetView.savings.checkSeries("Transfer", 0.00, 20.00);
   }
 
   private void createMainAccount(String mainAccountName) {
