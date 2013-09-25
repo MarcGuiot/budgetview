@@ -41,6 +41,29 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
     for (Key projectKey : changeSet.getUpdated(Project.ACTIVE)) {
       projectIds.add(projectKey.get(Project.ID));
     }
+    changeSet.safeVisit(ProjectItemAmount.TYPE, new ChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+        Glob projectItem = repository.find(Key.create(ProjectItem.TYPE, values.get(ProjectItemAmount.PROJECT_ITEM)));
+        if (projectItem != null) {
+          projectIds.add(projectItem.get(ProjectItem.PROJECT));
+        }
+      }
+
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+        Glob projectItemAmount = repository.get(key);
+        Glob projectItem = repository.find(Key.create(ProjectItem.TYPE, projectItemAmount.get(ProjectItemAmount.PROJECT_ITEM)));
+        if (projectItem != null) {
+          projectIds.add(projectItem.get(ProjectItem.PROJECT));
+        }
+      }
+
+      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+        Glob projectItem = repository.find(Key.create(ProjectItem.TYPE, previousValues.get(ProjectItemAmount.PROJECT_ITEM)));
+        if (projectItem != null) {
+          projectIds.add(projectItem.get(ProjectItem.PROJECT));
+        }
+      }
+    });
     return projectIds;
   }
 
