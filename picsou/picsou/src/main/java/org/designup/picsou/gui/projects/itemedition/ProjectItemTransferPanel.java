@@ -30,8 +30,8 @@ public class ProjectItemTransferPanel extends ProjectItemEditionPanel {
   private GlobLinkComboEditor fromAccountCombo;
   private GlobLinkComboEditor toAccountCombo;
 
-  public ProjectItemTransferPanel(Glob item, GlobRepository parentRepository, Directory directory) {
-    super(item, parentRepository, directory);
+  public ProjectItemTransferPanel(Glob item, JScrollPane scrollPane, GlobRepository parentRepository, Directory directory) {
+    super(item, scrollPane, parentRepository, directory);
   }
 
   protected JPanel createEditionPanel() {

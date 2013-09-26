@@ -60,6 +60,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
   private ModifyNameAction modifyAction;
   private JPanel addItemPanel = new JPanel();
   private Map<Key, ProjectItemPanel> itemPanels = new HashMap<Key, ProjectItemPanel>();
+  private JScrollPane scrollPane;
 
   public ProjectEditionView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -118,6 +119,9 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
         return menu;
       }
     };
+
+    scrollPane = new JScrollPane();
+    builder.add("scroller", scrollPane);
 
     activationToggle = builder.addToggleEditor("activeToggle", Project.ACTIVE);
     builder.add("modify", modifyAction);
@@ -199,7 +203,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     ProjectItemPanelFactory itemPanelFactory;
 
     private ProjectItemRepeatFactory() {
-      itemPanelFactory = new ProjectItemPanelFactory(repository, directory);
+      itemPanelFactory = new ProjectItemPanelFactory(scrollPane, repository, directory);
     }
 
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob item) {
