@@ -178,7 +178,7 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
     catch (RuntimeException e) {
       try {
         currentPage = browser.updateCurrentPage();
-        WebSpan error = currentPage.getSpanById("MM_LblMessagePopinErro");
+        WebSpan error = currentPage.getSpanById("MM_LblMessagePopinError");
         notifyInfo(account.get(RealAccount.NAME) + " : " + error.asText());
         return currentPage;
       }
