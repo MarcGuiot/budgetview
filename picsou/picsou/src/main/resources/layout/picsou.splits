@@ -69,7 +69,7 @@
     <column name="mainWindowHeader" background="header.bg" opaque="${mainWindowHeader.header.opaque}" weightY="0.1">
       <horizontalBoxes marginTop="5" marginLeft="15" marginRight="15" marginBottom="10">
         <row>
-          <column weightX="0.1" preferredSize="(280,26)">
+          <column weightX="0.1" preferredSize="(285,26)">
             <row weightY="1" anchor="left" fill="horizontal" marginBottom="2">
               <button name="backView" action="backView" styleClass="backforward" tooltipText="$back"/>
               <button name="forwardView" action="forwardView" styleClass="backforward" tooltipText="$forward"/>
@@ -81,7 +81,7 @@
                      shadowColor="views.title.shadow" anchor="south" marginBottom="2"/>
               <filler fill="horizontal"/>
             </row>
-            <row weightY="1" preferredSize="(280,26)">
+            <row weightY="1" preferredSize="(285,26)">
               <repeat ref="viewToggles" layout="row">
                 <toggleButton ref="toggle" styleClass="masterViewSelector" marginBottom="2"/>
               </repeat>
