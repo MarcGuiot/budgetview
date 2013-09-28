@@ -738,7 +738,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     currentProject.checkItems("Fourth | Dec | 0.00 | -100.00\n" +
                               "Fifth | Dec | 0.00 | -200.00\n" +
                               "Second | Jan | 0.00 | -100.00\n" +
-                              "Third | Feb | 0.00 | -100.00\n" +
-                              "First | Feb | 0.00 | -100.00");
+                              "First | Feb | 0.00 | -100.00\n" +
+                              "Third | Feb | 0.00 | -100.00");
   }
 }

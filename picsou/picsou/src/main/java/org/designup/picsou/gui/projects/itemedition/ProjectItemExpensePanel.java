@@ -19,8 +19,8 @@ import javax.swing.*;
 
 public class ProjectItemExpensePanel extends ProjectItemEditionPanel {
 
-  public ProjectItemExpensePanel(Glob item, GlobRepository parentRepository, Directory directory) {
-    super(item, parentRepository, directory);
+  public ProjectItemExpensePanel(Glob item, JScrollPane scrollPane, GlobRepository parentRepository, Directory directory) {
+    super(item, scrollPane, parentRepository, directory);
   }
 
   protected JPanel createEditionPanel() {

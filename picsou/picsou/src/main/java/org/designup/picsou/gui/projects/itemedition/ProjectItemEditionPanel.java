@@ -23,8 +23,8 @@ public abstract class ProjectItemEditionPanel extends ProjectItemPanel {
   protected ValidateAction validate;
   private ProjectItemAmountEditor itemAmountEditor;
 
-  public ProjectItemEditionPanel(Glob item, GlobRepository parentRepository, Directory directory) {
-    super(item, parentRepository, directory);
+  public ProjectItemEditionPanel(Glob item, JScrollPane scrollPane, GlobRepository parentRepository, Directory directory) {
+    super(item, scrollPane, parentRepository, directory);
   }
 
   protected void addCommonComponents(GlobsPanelBuilder builder, boolean forcePositiveAmounts) {

@@ -41,7 +41,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 import static org.globsframework.model.format.GlobListStringifiers.fieldValue;
@@ -59,8 +59,10 @@ public abstract class ProjectItemPanel implements Disposable {
   private JPanel editionPanel;
   private boolean isEditing;
   protected java.util.List<Functor> onCommitFunctors = new ArrayList<Functor>();
+  private JScrollPane scrollPane;
 
-  public ProjectItemPanel(Glob item, GlobRepository parentRepository, Directory directory) {
+  public ProjectItemPanel(Glob item, final JScrollPane scrollPane, GlobRepository parentRepository, Directory directory) {
+    this.scrollPane = scrollPane;
     this.itemKey = item.getKey();
     this.parentRepository = parentRepository;
     this.directory = directory;
@@ -94,7 +96,7 @@ public abstract class ProjectItemPanel implements Disposable {
 
   protected abstract boolean check();
 
-  private void showPanel(JPanel panel) {
+  private void showPanel(final JPanel panel) {
     this.enclosingPanel.removeAll();
     this.enclosingPanel.add(panel, BorderLayout.CENTER);
     GuiUtils.revalidate(enclosingPanel);
@@ -233,6 +235,11 @@ public abstract class ProjectItemPanel implements Disposable {
           .get();
       this.localRepository.addTrigger(new ProjectItemToAmountLocalTrigger());
       this.editionPanel = createEditionPanel();
+      this.editionPanel.addHierarchyListener(new HierarchyListener() {
+        public void hierarchyChanged(HierarchyEvent e) {
+          SwingUtilities.invokeLater(new SetVisible(editionPanel, scrollPane));
+        }
+      });
     }
     else {
       localRepository.rollback();
@@ -353,6 +360,31 @@ public abstract class ProjectItemPanel implements Disposable {
     protected void doUpdate(boolean showWarning) {
       label.setVisible(showWarning);
       action.setEnabled(showWarning);
+    }
+  }
+
+  private static class SetVisible implements Runnable {
+    private Component panelToEdit;
+    private final JScrollPane scrollPane;
+
+    public SetVisible(Component panelToEdit, JScrollPane scrollPane) {
+      this.panelToEdit = panelToEdit;
+      this.scrollPane = scrollPane;
+    }
+
+    public void run() {
+        scrollPane.getViewport().scrollRectToVisible(getBounds(panelToEdit, scrollPane));
+    }
+
+    private Rectangle getBounds(Component enclosingPanel, JScrollPane scrollPane) {
+      Rectangle rectangle = enclosingPanel.getBounds();
+      Container parent = enclosingPanel.getParent();
+      while (parent != null && parent != scrollPane){
+        rectangle.x += parent.getX();
+        rectangle.y += parent.getY();
+        parent = parent.getParent();
+      }
+      return rectangle;
     }
   }
 }

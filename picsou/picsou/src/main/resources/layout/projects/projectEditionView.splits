@@ -73,8 +73,8 @@
     </row>
 
     <column styleClass="blockScrollBorder" border="matte(1,1,1,1,projectView.border)" weightY="100.0"
-            margin="10" marginTop="0" marginBottom="5">
-      <scrollPane forceVerticalScroll="true">
+            margin="10" marginTop="0">
+      <scrollPane forceVerticalScroll="true" ref="scroller">
         <column>
           <repeat ref="items" layout="column">
             <panel ref="projectItemPanel" border="matte(0,0,1,0,projectView.item.border)"/>

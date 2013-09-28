@@ -39,6 +39,7 @@ exclude   picsou.^ExceptionHandler and
           org.designup.picsou.gui.components.charts.* set*(*) and
           org.designup.picsou.gui.components.charts.* get*(*) and
           org.designup.picsou.gui.projects.components.* get*(*) and
+          org.designup.picsou.gui.projects.components.* set*(*) and
           org.globsframework.gui.utils.ShowHideButton set*(*);
 
 /*
