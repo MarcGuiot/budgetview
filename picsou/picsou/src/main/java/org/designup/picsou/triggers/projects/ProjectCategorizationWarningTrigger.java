@@ -56,12 +56,14 @@ public class ProjectCategorizationWarningTrigger implements ChangeSetListener {
   private void checkCategorizationWarning(Glob projectItem, GlobRepository repository) {
     boolean warning = false;
 
-    if (ProjectItem.usesSubSeries(projectItem) && projectItem.get(ProjectItem.SUB_SERIES) != null) {
-      Glob subSeries = repository.get(Key.create(SubSeries.TYPE, projectItem.get(ProjectItem.SUB_SERIES)));
-      for (Glob subSeriesStat : repository.findLinkedTo(subSeries, SubSeriesStat.SUB_SERIES)) {
-        if (!monthInProjectItemRange(subSeriesStat.get(SubSeriesStat.MONTH), projectItem)
-            && Amounts.isNotZero(subSeriesStat.get(SubSeriesStat.ACTUAL_AMOUNT))) {
-          warning = true;
+    if (ProjectItem.usesSubSeries(projectItem)) {
+      if (projectItem.get(ProjectItem.SUB_SERIES) != null) {
+        Glob subSeries = repository.get(Key.create(SubSeries.TYPE, projectItem.get(ProjectItem.SUB_SERIES)));
+        for (Glob subSeriesStat : repository.findLinkedTo(subSeries, SubSeriesStat.SUB_SERIES)) {
+          if (!monthInProjectItemRange(subSeriesStat.get(SubSeriesStat.MONTH), projectItem)
+              && Amounts.isNotZero(subSeriesStat.get(SubSeriesStat.ACTUAL_AMOUNT))) {
+            warning = true;
+          }
         }
       }
     }

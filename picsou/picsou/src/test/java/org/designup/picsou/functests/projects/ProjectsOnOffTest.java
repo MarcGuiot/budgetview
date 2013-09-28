@@ -183,4 +183,28 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
       .checkSeriesIsActive("Trip")
       .checkSeriesContainsSubSeries("Reservation", "Equipment", "Hotel");
   }
+
+  public void testDisablingItemsDoesNotConfuseTheCategorizationWarning() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/12/01")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/12/01", -200.00, "Resa")
+      .load();
+
+    operations.openPreferences().setFutureMonthsCount(3).validate();
+
+    projects.create();
+    currentProject
+      .setName("Trip")
+      .addExpenseItem(0, "Reservation", 201012, -200.00)
+      .addExpenseItem(1, "Equipment", 201012, -100.00)
+      .addExpenseItem(2, "Hotel", 201101, -500.00);
+
+    categorization.setExtra("RESA", "Trip", "Reservation");
+
+    currentProject
+      .view(2)
+      .setInactive()
+      .checkCategorizationWarningNotShown();
+  }
 }

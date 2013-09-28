@@ -47,8 +47,8 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
   }
 
   protected void setUp() throws Exception {
-    Locale.setDefault(DEFAULT_LOCALE);
-    System.out.println("Locale for demo: " + DEFAULT_LOCALE);
+    Locale.setDefault(Locale.FRANCE);
+    System.out.println("Locale for demo: " + Locale.getDefault());
 
     thirdMonth = Month.getMonthId(new Date());
     secondMonth = Month.previous(thirdMonth);
@@ -73,7 +73,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
   private static Locale getLocale() {
     String lang = System.getProperty("LANG", LANG); // sert dans le picsou/pom.xml
-    return lang.equalsIgnoreCase("fr") ? Locale.FRANCE : Locale.ENGLISH;
+    return lang.toLowerCase().contains("fr") ? Locale.FRANCE : Locale.ENGLISH;
   }
 
   private static DemoGenerationTest createTest() throws Exception {
@@ -176,6 +176,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
         // EXTRAS
       .addTransaction(second(28), -680.50, transaction("plumber"))
+      .addTransaction(third(14), -200.00, transaction("booking"))
         // SAVINGS
       .addTransaction(first(5), -200.00, transaction("savings"))
       .addTransaction(second(3), -200.00, transaction("savings"))
@@ -341,11 +342,14 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     currentProject
       .setName(project("rome"))
       .setImage(imagePath("rome.jpg"))
-      .addExpenseItem(0, project("rome.accomodation.booking"), holidaysMonth1, -600.00)
+      .addExpenseItem(0, project("rome.accomodation.booking"), thirdMonth, -200.00)
       .addExpenseItem(1, project("rome.flight"), holidaysMonth1, -450.00)
       .addExpenseItem(2, project("rome.food"), holidaysMonth2, -550.00)
-      .addExpenseItem(3, project("rome.accomodation"), holidaysMonth3, -1000.00)
+      .addExpenseItem(3, project("rome.accomodation"), holidaysMonth3, -1200.00)
       .addTransferItem(4, project("rome.transfer"), holidaysMonth1, 300.00, account("savings"), mainAccounts());
+    currentProject.sortItems();
+
+    categorization.setExtra(transaction("booking"), project("rome"), project("rome.accomodation.booking"));
 
     //======== PROVISIONS ===========
 

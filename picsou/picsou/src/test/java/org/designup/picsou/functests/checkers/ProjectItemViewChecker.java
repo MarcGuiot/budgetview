@@ -42,16 +42,18 @@ public class ProjectItemViewChecker extends GuiChecker {
     getItemButton().click("Show transactions");
   }
 
-  public void setActive() {
+  public ProjectItemViewChecker setActive() {
     ToggleButton toggle = getActiveToggle();
     assertThat(toggle.isEnabled());
     toggle.click();
+    return this;
   }
 
-  public void setInactive() {
+  public ProjectItemViewChecker setInactive() {
     ToggleButton toggle = getActiveToggle();
     assertThat(toggle.isEnabled());
     toggle.click();
+    return this;
   }
 
   private ToggleButton getActiveToggle() {
