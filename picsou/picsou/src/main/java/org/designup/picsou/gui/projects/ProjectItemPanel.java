@@ -6,6 +6,7 @@ import org.designup.picsou.gui.components.MonthSlider;
 import org.designup.picsou.gui.components.PopupGlobFunctor;
 import org.designup.picsou.gui.components.SingleMonthAdapter;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
+import org.designup.picsou.gui.components.images.GlobImageActions;
 import org.designup.picsou.gui.components.images.GlobImageLabelView;
 import org.designup.picsou.gui.components.images.IconFactory;
 import org.designup.picsou.gui.description.AmountStringifier;
@@ -89,6 +90,8 @@ public abstract class ProjectItemPanel implements Disposable {
 
   protected abstract boolean isNewItem(Glob item);
 
+  protected abstract boolean usesImages();
+
   protected abstract JPanel createEditionPanel();
 
   protected abstract void initEditionFocus();
@@ -118,6 +121,11 @@ public abstract class ProjectItemPanel implements Disposable {
     itemPopup.add(activateAction);
     itemPopup.addSeparator();
     itemPopup.add(showTransactionsAction);
+    if (usesImages()) {
+      itemPopup.addSeparator();
+      GlobImageActions imageActions = new GlobImageActions(itemKey, ProjectItem.PICTURE, parentRepository, directory, ProjectView.MAX_PICTURE_SIZE);
+      imageActions.add(itemPopup);
+    }
     itemPopup.addSeparator();
     itemPopup.add(new DeleteItemAction(itemKey));
     PopupGlobFunctor functor = new PopupGlobFunctor(itemPopup);

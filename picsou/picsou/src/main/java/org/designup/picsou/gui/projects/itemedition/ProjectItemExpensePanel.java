@@ -70,4 +70,8 @@ public class ProjectItemExpensePanel extends ProjectItemEditionPanel {
   protected boolean isNewItem(Glob item) {
     return Strings.isNullOrEmpty(item.get(ProjectItem.LABEL));
   }
+
+  protected boolean usesImages() {
+    return true;
+  }
 }

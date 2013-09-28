@@ -79,6 +79,10 @@ public class ProjectItemTransferPanel extends ProjectItemEditionPanel {
            projectTransfer.get(ProjectTransfer.TO_ACCOUNT) == null;
   }
 
+  protected boolean usesImages() {
+    return false;
+  }
+
   protected boolean check() {
     if (!super.check()) {
       return false;

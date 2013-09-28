@@ -124,7 +124,7 @@ public class GlobImageActions {
     }
 
     public void update() {
-      setEnabled(currentKey != null && repository.get(currentKey).get(link) != null);
+      setEnabled(currentKey != null);
     }
 
     public void actionPerformed(ActionEvent e) {

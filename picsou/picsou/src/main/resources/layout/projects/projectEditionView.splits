@@ -92,7 +92,7 @@
 
     <row margin="10" marginTop="0" marginBottom="5">
       <filler fill="horizontal"/>
-      <button ref="displayActions" styleClass="actionsButton"/>
+      <button ref="displayActions" styleClass="actionsButton" foreground="block.item.link"/>
     </row>
 
   </column>
