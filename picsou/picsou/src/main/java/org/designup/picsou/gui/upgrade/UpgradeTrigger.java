@@ -139,6 +139,9 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (currentJarVersion < 125) {
       updateProjetItemSeries(repository);
     }
+    if (currentJarVersion < 126) {
+      updateProjetItemSequence(repository);
+    }
 
     UserPreferences.initMobilePassword(repository, false);
 
@@ -675,6 +678,12 @@ public class UpgradeTrigger implements ChangeSetListener {
           repository.update(projectItem.getKey(), ProjectItem.SERIES, project.get(Project.SERIES));
         }
       }
+    }
+  }
+
+  private void updateProjetItemSequence(GlobRepository repository) {
+    for (Glob project : repository.getAll(Project.TYPE)) {
+      Project.sortItems(project, repository);
     }
   }
 }

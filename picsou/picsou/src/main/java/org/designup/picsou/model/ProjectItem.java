@@ -64,6 +64,8 @@ public class ProjectItem {
 
   public static StringField DESCRIPTION;
 
+  public static IntegerField SEQUENCE_NUMBER;
+
   public static NotUniqueIndex SERIES_INDEX;
   public static NotUniqueIndex SUB_SERIES_INDEX;
 
@@ -139,7 +141,7 @@ public class ProjectItem {
 
   public static class Serializer implements PicsouGlobSerializer {
     public int getWriteVersion() {
-      return 3;
+      return 4;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -162,11 +164,15 @@ public class ProjectItem {
       output.writeInteger(fieldValues.get(ProjectItem.PICTURE));
       output.writeUtf8String(fieldValues.get(ProjectItem.URL));
       output.writeUtf8String(fieldValues.get(ProjectItem.DESCRIPTION));
+      output.writeInteger(fieldValues.get(ProjectItem.SEQUENCE_NUMBER));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 3) {
+      if (version == 4) {
+        deserializeDataV4(fieldSetter, data);
+      }
+      else if (version == 3) {
         deserializeDataV3(fieldSetter, data);
       }
       else if (version == 2) {
@@ -175,6 +181,24 @@ public class ProjectItem {
       else if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+    }
+
+    private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(ProjectItem.PROJECT, input.readInteger());
+      fieldSetter.set(ProjectItem.ITEM_TYPE, input.readInteger());
+      fieldSetter.set(ProjectItem.LABEL, input.readUtf8String());
+      fieldSetter.set(ProjectItem.FIRST_MONTH, input.readInteger());
+      fieldSetter.set(ProjectItem.USE_SAME_AMOUNTS, input.readBoolean());
+      fieldSetter.set(ProjectItem.PLANNED_AMOUNT, input.readDouble());
+      fieldSetter.set(ProjectItem.MONTH_COUNT, input.readInteger());
+      fieldSetter.set(ProjectItem.ACTIVE, input.readBoolean());
+      fieldSetter.set(ProjectItem.SERIES, input.readInteger());
+      fieldSetter.set(ProjectItem.SUB_SERIES, input.readInteger());
+      fieldSetter.set(ProjectItem.PICTURE, input.readInteger());
+      fieldSetter.set(ProjectItem.URL, input.readUtf8String());
+      fieldSetter.set(ProjectItem.DESCRIPTION, input.readUtf8String());
+      fieldSetter.set(ProjectItem.SEQUENCE_NUMBER, input.readInteger());
     }
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
@@ -192,6 +216,7 @@ public class ProjectItem {
       fieldSetter.set(ProjectItem.PICTURE, input.readInteger());
       fieldSetter.set(ProjectItem.URL, input.readUtf8String());
       fieldSetter.set(ProjectItem.DESCRIPTION, input.readUtf8String());
+      fieldSetter.set(ProjectItem.SEQUENCE_NUMBER, 0);
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -209,6 +234,7 @@ public class ProjectItem {
       fieldSetter.set(ProjectItem.PICTURE, null);
       fieldSetter.set(ProjectItem.URL, null);
       fieldSetter.set(ProjectItem.DESCRIPTION, null);
+      fieldSetter.set(ProjectItem.SEQUENCE_NUMBER, 0);
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
@@ -226,6 +252,7 @@ public class ProjectItem {
       fieldSetter.set(ProjectItem.PICTURE, null);
       fieldSetter.set(ProjectItem.URL, null);
       fieldSetter.set(ProjectItem.DESCRIPTION, null);
+      fieldSetter.set(ProjectItem.SEQUENCE_NUMBER, 0);
     }
   }
 }

@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.projects;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.MonthSlider;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
 import org.designup.picsou.gui.components.images.GlobImageLabelView;
@@ -8,6 +9,7 @@ import org.designup.picsou.gui.components.images.IconFactory;
 import org.designup.picsou.gui.model.ProjectStat;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.projects.actions.DeleteProjectAction;
+import org.designup.picsou.gui.projects.actions.SortProjectItemsAction;
 import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
 import org.designup.picsou.gui.projects.components.ProjectNameEditor;
 import org.designup.picsou.gui.projects.itemedition.ProjectItemPanelFactory;
@@ -40,8 +42,10 @@ import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 
 import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
 public class ProjectEditionView extends View implements GlobSelectionListener {
@@ -174,6 +178,11 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     builder.add("backToList", new BackToListAction());
     builder.add("createProject", new CreateProjectAction(directory));
 
+    JPopupMenu displayActionsPopup = new JPopupMenu();
+    displayActionsPopup.add(new SortProjectItemsAction(repository, directory));
+    JPopupButton displayActionsButton = new JPopupButton(Lang.get("projectEdition.itemsActions"), displayActionsPopup);
+    builder.add("displayActions", displayActionsButton);
+
     parentBuilder.add("projectEditionView", builder);
 
     updateSelection(null, null);
@@ -228,11 +237,13 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
       repository.startChangeSet();
       try {
         String defaultLabel = itemType == ProjectItemType.TRANSFER ? Lang.get("projectView.item.transfer.defaultName") : "";
+        Integer projectId = currentProjectKey.get(Project.ID);
         Glob item = repository.create(ProjectItem.TYPE,
                                       value(ProjectItem.ITEM_TYPE, itemType.getId()),
                                       value(ProjectItem.LABEL, defaultLabel),
                                       value(ProjectItem.FIRST_MONTH, getNewItemMonth()),
-                                      value(ProjectItem.PROJECT, currentProjectKey.get(Project.ID)));
+                                      value(ProjectItem.PROJECT, projectId),
+                                      value(ProjectItem.SEQUENCE_NUMBER, getNextSequenceNumber(projectId)));
         if (ProjectItemType.TRANSFER.equals(itemType)) {
           repository.create(ProjectTransfer.TYPE, value(ProjectTransfer.PROJECT_ITEM, item.get(ProjectItem.ID)));
         }
@@ -241,6 +252,15 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
         repository.completeChangeSet();
       }
     }
+  }
+
+  private Integer getNextSequenceNumber(Integer projectId) {
+    SortedSet<Integer> numbers = repository.getAll(ProjectItem.TYPE, fieldEquals(ProjectItem.PROJECT, projectId))
+      .getSortedSet(ProjectItem.SEQUENCE_NUMBER);
+    if (numbers.isEmpty()) {
+      return 0;
+    }
+    return numbers.last() + 1;
   }
 
   private Integer getNewItemMonth() {

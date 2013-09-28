@@ -75,6 +75,14 @@ public class Project {
     return new Range<Integer>(firstMonth, lastMonth);
   }
 
+  public static void sortItems(Glob project, GlobRepository repository) {
+    GlobList items = repository.findLinkedTo(project, ProjectItem.PROJECT).sort(ProjectItem.FIRST_MONTH);
+    int sequenceNumber = 0;
+    for (Glob item : items) {
+      repository.update(item.getKey(), ProjectItem.SEQUENCE_NUMBER, sequenceNumber++);
+    }
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {

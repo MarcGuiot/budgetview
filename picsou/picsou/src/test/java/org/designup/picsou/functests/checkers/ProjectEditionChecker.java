@@ -356,4 +356,8 @@ public class ProjectEditionChecker extends ViewChecker {
     getPanel().getButton("backToList").click();
 
   }
+
+  public void sortItems() {
+    PopupButton.init(getPanel(), "displayActions").click(Lang.get("projectEdition.sortItems"));
+  }
 }

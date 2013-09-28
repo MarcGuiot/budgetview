@@ -73,7 +73,7 @@
     </row>
 
     <column styleClass="blockScrollBorder" border="matte(1,1,1,1,projectView.border)" weightY="100.0"
-            margin="10" marginTop="0">
+            margin="10" marginTop="0" marginBottom="5">
       <scrollPane forceVerticalScroll="true">
         <column>
           <repeat ref="items" layout="column">
@@ -89,6 +89,11 @@
         </column>
       </scrollPane>
     </column>
+
+    <row margin="10" marginTop="0" marginBottom="5">
+      <filler fill="horizontal"/>
+      <button ref="displayActions" styleClass="actionsButton"/>
+    </row>
 
   </column>
 

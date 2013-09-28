@@ -709,4 +709,36 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkURL("123456789-123456789-123456789-123456789-1234567...",
                 "123456789-123456789-123456789-123456789-123456789-123456789");
   }
+
+  public void testSortingProjetItems() throws Exception {
+    operations.hideSignposts();
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/12/30")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/12/10", -100.00, "Resa")
+      .load();
+
+    projects.create();
+    currentProject
+      .setName("My project")
+      .addExpenseItem(0, "First", 201102, -100.00)
+      .addExpenseItem(1, "Second", 201101, -100.00)
+      .addExpenseItem(2, "Third", 201102, -100.00)
+      .addExpenseItem(3, "Fourth", 201012, -100.00)
+      .addExpenseItem(4, "Fifth", 201012, -200.00);
+    currentProject.checkItems("First | Feb | 0.00 | -100.00\n" +
+                              "Second | Jan | 0.00 | -100.00\n" +
+                              "Third | Feb | 0.00 | -100.00\n" +
+                              "Fourth | Dec | 0.00 | -100.00\n" +
+                              "Fifth | Dec | 0.00 | -200.00");
+
+    currentProject.sortItems();
+    currentProject.checkItems("Fourth | Dec | 0.00 | -100.00\n" +
+                              "Fifth | Dec | 0.00 | -200.00\n" +
+                              "Second | Jan | 0.00 | -100.00\n" +
+                              "Third | Feb | 0.00 | -100.00\n" +
+                              "First | Feb | 0.00 | -100.00");
+  }
 }
