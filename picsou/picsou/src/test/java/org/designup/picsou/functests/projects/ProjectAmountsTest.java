@@ -36,26 +36,26 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
       .switchToMonthEditor()
       .checkShowsMonthEditor();
     itemEdition
-      .checkMonthAmounts("| Dec 2010 | -50.00 |")
+      .checkMonthAmounts("| Dec 2010 | 50.00 |")
       .setMonthAmount(0, -70.00)
       .checkTableMonthCount(1);
     itemEdition
       .setTableMonthCount(3)
-      .checkMonthAmounts("| Dec 2010 | -70.00 |\n" +
-                         "| Jan 2011 | 0.00   |\n" +
-                         "| Feb 2011 | 0.00   |");
+      .checkMonthAmounts("| Dec 2010 | 70.00 |\n" +
+                         "| Jan 2011 | 0.00  |\n" +
+                         "| Feb 2011 | 0.00  |");
     itemEdition
       .selectRows(1,2)
       .setMonthAmount(-10.00)
-      .checkMonthAmounts("| Dec 2010 | -70.00 |\n" +
-                         "| Jan 2011 | -10.00 |\n" +
-                         "| Feb 2011 | -10.00 |");
+      .checkMonthAmounts("| Dec 2010 | 70.00 |\n" +
+                         "| Jan 2011 | 10.00 |\n" +
+                         "| Feb 2011 | 10.00 |");
     itemEdition
       .selectRow(1)
       .setMonthAmount(-20.00)
-      .checkMonthAmounts("| Dec 2010 | -70.00 |\n" +
-                         "| Jan 2011 | -20.00 |\n" +
-                         "| Feb 2011 | -10.00 |")
+      .checkMonthAmounts("| Dec 2010 | 70.00 |\n" +
+                         "| Jan 2011 | 20.00 |\n" +
+                         "| Feb 2011 | 10.00 |")
       .validate();
 
     currentProject.checkProjectGauge(0.00, -100.00);
@@ -70,6 +70,17 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth(201102);
     budgetView.extras.checkSeries("MyProject", 0.00, -10.00);
+
+    currentProject
+      .toggleAndEditExpense(0)
+      .setMonthAmount(1, +20.00)
+      .checkMonthAmounts("| Dec 2010 | 70.00  |\n" +
+                         "| Jan 2011 | +20.00 |\n" +
+                         "| Feb 2011 | 10.00  |")
+      .validate();
+
+    timeline.selectMonth(201101);
+    budgetView.extras.checkSeries("MyProject", 0.00, +20.00);
 
     currentProject.toggleAndEditExpense(0)
       .checkShowsMonthEditor()
@@ -109,9 +120,9 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
       .setMonthAmount(0, -70.00)
       .setMonthAmount(1, -20.00)
       .setMonthAmount(2, -10.00)
-      .checkMonthAmounts("| Dec 2010 | -70.00 |\n" +
-                         "| Jan 2011 | -20.00 |\n" +
-                         "| Feb 2011 | -10.00 |")
+      .checkMonthAmounts("| Dec 2010 | 70.00 |\n" +
+                         "| Jan 2011 | 20.00 |\n" +
+                         "| Feb 2011 | 10.00 |")
       .validate();
 
     currentProject
@@ -122,9 +133,9 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
 
     currentProject.toggleAndEditExpense(0)
       .setMonth(201101)
-      .checkMonthAmounts("| Jan 2011 | -70.00 |\n" +
-                         "| Feb 2011 | -20.00 |\n" +
-                         "| Mar 2011 | -10.00 |")
+      .checkMonthAmounts("| Jan 2011 | 70.00 |\n" +
+                         "| Feb 2011 | 20.00 |\n" +
+                         "| Mar 2011 | 10.00 |")
       .validate();
 
     currentProject
@@ -148,11 +159,11 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
     currentProject.toggleAndEditExpense(0)
       .setTableMonthCount(5)
       .setMonthAmount(3, -25.00)
-      .checkMonthAmounts("| Jan 2011 | -70.00 |\n" +
-                         "| Feb 2011 | -20.00 |\n" +
-                         "| Mar 2011 | -10.00 |\n" +
-                         "| Apr 2011 | -25.00 |\n" +
-                         "| May 2011 | 0.00   |")
+      .checkMonthAmounts("| Jan 2011 | 70.00 |\n" +
+                         "| Feb 2011 | 20.00 |\n" +
+                         "| Mar 2011 | 10.00 |\n" +
+                         "| Apr 2011 | 25.00 |\n" +
+                         "| May 2011 | 0.00  |")
       .validate();
 
     currentProject
@@ -206,9 +217,9 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
       .setMonthAmount(0, -70.00)
       .setMonthAmount(1, -20.00)
       .setMonthAmount(2, -10.00)
-      .checkMonthAmounts("| Dec 2010 | -70.00 |\n" +
-                         "| Jan 2011 | -20.00 |\n" +
-                         "| Feb 2011 | -10.00 |")
+      .checkMonthAmounts("| Dec 2010 | 70.00 |\n" +
+                         "| Jan 2011 | 20.00 |\n" +
+                         "| Feb 2011 | 10.00 |")
       .validate();
 
     currentProject

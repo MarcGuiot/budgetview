@@ -46,7 +46,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.checkProject("My project", 201101, 201101, 200.00);
     currentProject.backToList();
     projects.checkCurrentProjects(
-      "| My project | Jan | -200.00 | on |"
+      "| My project | Jan | 200.00 | on |"
     );
     projects.checkNoPastProjects();
 
@@ -65,16 +65,16 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     currentProject
       .addExpenseItem(2, "Hotel", 201102, -500.00)
       .checkItemCount(3)
-      .checkItems("Reservation | Jan | 0.00 | -200.00\n" +
-                  "Travel | Feb | 0.00 | -100.00\n" +
-                  "Hotel | Feb | 0.00 | -500.00")
+      .checkItems("| Reservation | Jan | 0.00 | 200.00 |\n" +
+                  "| Travel      | Feb | 0.00 | 100.00 |\n" +
+                  "| Hotel       | Feb | 0.00 | 500.00 |")
       .checkProjectGauge(0.00, -800.00);
 
     projectChart.checkProjectList("My project");
     projectChart.checkProject("My project", 201101, 201102, 800.00);
     currentProject.backToList();
     projects.checkCurrentProjects(
-      "| My project | Jan | -800.00 | on |"
+      "| My project | Jan | 800.00 | on |"
     );
     budgetView.extras.checkSeries("My project", 0, -200.00);
     budgetView.getSummary().checkEndPosition(1700.00);
@@ -91,9 +91,9 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     projectChart.select("My project");
     currentProject
-      .checkItems("Reservation | Jan | 0.00 | -200.00\n" +
-                  "Travel | Feb | 0.00 | -100.00\n" +
-                  "Hotel | Feb | 0.00 | -500.00")
+      .checkItems("| Reservation | Jan | 0.00 | 200.00 |\n" +
+                  "| Travel      | Feb | 0.00 | 100.00 |\n" +
+                  "| Hotel       | Feb | 0.00 | 500.00 |")
       .deleteItem(1)
       .checkProjectGauge(0.00, -700.00);
 
@@ -111,16 +111,16 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     projectChart.select("My project");
     currentProject
-      .checkItems("Reservation | Jan | -100.00 | -200.00\n" +
-                  "Hotel | Feb | 0.00 | -500.00")
+      .checkItems("| Reservation | Jan | 100.00 | 200.00 |\n" +
+                  "| Hotel       | Feb | 0.00   | 500.00 |")
       .toggleAndEditExpense(1)
       .setAmount(-50.00)
       .validate();
     currentProject
-      .checkItems("Reservation | Jan | -100.00 | -200.00\n" +
-                  "Hotel | Feb | 0.00 | -50.00")
+      .checkItems("| Reservation | Jan | 100.00 | 200.00 |\n" +
+                  "| Hotel       | Feb | 0.00   | 50.00  |")
       .deleteItem(1)
-      .checkItems("Reservation | Jan | -100.00 | -200.00")
+      .checkItems("| Reservation | Jan | 100.00 | 200.00 |")
       .checkProjectGauge(-100.00, -200.00);
 
     timeline.selectMonth("2011/01");
@@ -154,7 +154,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addExpenseItem(0, "Reservation", 201101, -200.00)
       .addExpenseItem(1, "Hotel", 201101, -300.00)
       .backToList();
-    projects.checkCurrentProjects("| My project | Jan | -500.00 | on |");
+    projects.checkCurrentProjects("| My project | Jan | 500.00 | on |");
 
     timeline.selectMonth(201101);
     budgetView.extras.checkSeries("My project", 0.00, -500.00);
@@ -297,7 +297,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addExpenseItem(0, "Item 1", 201212, -300.00)
       .backToList();
 
-    projects.checkCurrentProjects("| My project | Dec | -300.00 | on |");
+    projects.checkCurrentProjects("| My project | Dec | 300.00 | on |");
 
     projects.select("My project");
     currentProject.editName()
@@ -307,13 +307,13 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     currentProject
       .checkName("My project")
       .backToList();
-    projects.checkCurrentProjects("| My project | Dec | -300.00 | on |");
+    projects.checkCurrentProjects("| My project | Dec | 300.00 | on |");
 
     projects.select("My project");
     currentProject.editName()
       .clearName()
       .backToList();
-    projects.checkCurrentProjects("| My project | Dec | -300.00 | on |");
+    projects.checkCurrentProjects("| My project | Dec | 300.00 | on |");
 
     projects.select("My project");
     currentProject.checkNoEditionInProgress();
@@ -372,8 +372,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .setName("My project")
       .addExpenseItem(0, "Travel", 201212, -300.00)
       .addExpenseItem(1, "Accomodation", 201212, -500.00)
-      .checkItems("Travel | Dec | 0.00 | -300.00\n" +
-                  "Accomodation | Dec | 0.00 | -500.00")
+      .checkItems("| Travel       | Dec | 0.00 | 300.00 |\n" +
+                  "| Accomodation | Dec | 0.00 | 500.00 |")
       .checkItemGauge(0, 0.00, -300.00)
       .checkItemGauge(1, 0.00, -500.00)
       .checkProjectGauge(0.00, -800.00);
@@ -388,12 +388,12 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     projectChart.select("My project");
     currentProject
-      .checkItems("Travel | Dec | -250.00 | -300.00\n" +
-                  "Accomodation | Dec | -550.00 | -500.00")
+      .checkItems("| Travel       | Dec | 250.00 | 300.00 |\n" +
+                  "| Accomodation | Dec | 550.00 | 500.00 |")
       .addExpenseItem(2, "Other", 201301, -100.00)
-      .checkItems("Travel | Dec | -250.00 | -300.00\n" +
-                  "Accomodation | Dec | -550.00 | -500.00\n" +
-                  "Other | Jan | 0.00 | -100.00")
+      .checkItems("| Travel       | Dec | 250.00 | 300.00 |\n" +
+                  "| Accomodation | Dec | 550.00 | 500.00 |\n" +
+                  "| Other        | Jan | 0.00   | 100.00 |")
       .checkItemGauge(0, -250.00, -300.00)
       .checkItemGauge(1, -550.00, -500.00)
       .checkItemGauge(2, 0.00, -100.00)
@@ -425,8 +425,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     projectChart.select("My project");
     currentProject
-      .checkItems("Travel | Dec | -250.00 | -300.00\n" +
-                  "Accomodation | Dec | -550.00 | -500.00")
+      .checkItems("| Travel       | Dec | 250.00 | 300.00 |\n" +
+                  "| Accomodation | Dec | 550.00 | 500.00 |")
       .deleteItem(0);
 
     categorization.selectTransaction("EUROPCAR").getExtras().checkSeriesIsSelected("My project");
@@ -457,8 +457,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projects.checkEditionShown();
     currentProject
       .checkName("Past Project")
-      .checkItems("Reservation | Jan | 0.00 | -100.00\n" +
-                  "Hotel | Feb | 0.00 | -500.00")
+      .checkItems("| Reservation | Jan | 0.00 | 100.00 |\n" +
+                  "| Hotel       | Feb | 0.00 | 500.00 |")
       .backToList();
 
     views.selectBudget();
@@ -467,8 +467,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projects.checkEditionShown();
     currentProject
       .checkName("Past Project")
-      .checkItems("Reservation | Jan | 0.00 | -100.00\n" +
-                  "Hotel | Feb | 0.00 | -500.00")
+      .checkItems("| Reservation | Jan | 0.00 | 100.00 |\n" +
+                  "| Hotel       | Feb | 0.00 | 500.00 |")
       .backToList();
 
     timeline.selectAll();
@@ -481,8 +481,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projects.checkEditionShown();
     currentProject
       .checkName("Past Project")
-      .checkItems("Reservation | Jan | 0.00 | -100.00\n" +
-                  "Hotel | Feb | 0.00 | -500.00");
+      .checkItems("| Reservation | Jan | 0.00 | 100.00 |\n" +
+                  "| Hotel       | Feb | 0.00 | 500.00 |");
   }
 
   public void testCanCreateProjectsFromTheCategorizationView() throws Exception {
@@ -506,7 +506,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.checkProjectList("My project");
     projectChart.select("My project");
     currentProject
-      .checkItems("Trip | Jan | 0.00 | -150.00");
+      .checkItems("| Trip | Jan | 0.00 | 150.00 |");
   }
 
   public void testManagesProjectsWithPositiveAmounts() throws Exception {
@@ -610,8 +610,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     currentProject
-      .checkItems("Booking | Nov | -200.00 | -250.00\n" +
-                  "Hotel | Dec | -250.00 | -200.00");
+      .checkItems("| Booking | Nov | 200.00 | 250.00 |\n" +
+                  "| Hotel   | Dec | 250.00 | 200.00 |");
 
     timeline.selectMonth("2011/01");
 
@@ -679,9 +679,9 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .setAmount(-150.00)
       .validate();
 
-    currentProject.checkItems("Item 1 | Jan | 0.00 | -250.00\n" +
-                              "Item 2 | Feb | 0.00 | -180.00\n" +
-                              "Item 3 | Feb | 0.00 | -150.00");
+    currentProject.checkItems("| Item 1 | Jan | 0.00 | 250.00 |\n" +
+                              "| Item 2 | Feb | 0.00 | 180.00 |\n" +
+                              "| Item 3 | Feb | 0.00 | 150.00 |");
   }
 
   public void testURLsAreTruncatedAfter50Chars() throws Exception {
@@ -728,17 +728,17 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addExpenseItem(2, "Third", 201102, -100.00)
       .addExpenseItem(3, "Fourth", 201012, -100.00)
       .addExpenseItem(4, "Fifth", 201012, -200.00);
-    currentProject.checkItems("First | Feb | 0.00 | -100.00\n" +
-                              "Second | Jan | 0.00 | -100.00\n" +
-                              "Third | Feb | 0.00 | -100.00\n" +
-                              "Fourth | Dec | 0.00 | -100.00\n" +
-                              "Fifth | Dec | 0.00 | -200.00");
+    currentProject.checkItems("| First  | Feb | 0.00 | 100.00 |\n" +
+                              "| Second | Jan | 0.00 | 100.00 |\n" +
+                              "| Third  | Feb | 0.00 | 100.00 |\n" +
+                              "| Fourth | Dec | 0.00 | 100.00 |\n" +
+                              "| Fifth  | Dec | 0.00 | 200.00 |");
 
     currentProject.sortItems();
-    currentProject.checkItems("Fourth | Dec | 0.00 | -100.00\n" +
-                              "Fifth | Dec | 0.00 | -200.00\n" +
-                              "Second | Jan | 0.00 | -100.00\n" +
-                              "First | Feb | 0.00 | -100.00\n" +
-                              "Third | Feb | 0.00 | -100.00");
+    currentProject.checkItems("| Fourth | Dec | 0.00 | 100.00 |\n" +
+                              "| Fifth  | Dec | 0.00 | 200.00 |\n" +
+                              "| Second | Jan | 0.00 | 100.00 |\n" +
+                              "| First  | Feb | 0.00 | 100.00 |\n" +
+                              "| Third  | Feb | 0.00 | 100.00 |");
   }
 }

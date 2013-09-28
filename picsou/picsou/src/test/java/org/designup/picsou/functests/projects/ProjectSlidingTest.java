@@ -99,9 +99,9 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .setFirstMonth(201101)
       .checkPeriod("January - March 2011")
       .checkProjectGauge(0.00, -700.00)
-      .checkItems("Booking | Jan | 0.00 | -200.00\n" +
-                  "Travel | Mar | 0.00 | -100.00\n" +
-                  "Hotel | Mar | 0.00 | -400.00");
+      .checkItems("| Booking | Jan | 0.00 | 200.00 |\n" +
+                  "| Travel  | Mar | 0.00 | 100.00 |\n" +
+                  "| Hotel   | Mar | 0.00 | 400.00 |");
 
     timeline.selectMonth(201012);
     budgetView.extras
@@ -124,9 +124,9 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .setFirstMonth(201010)
       .checkPeriod("October - December 2010")
       .checkProjectGauge(0.00, -700.00)
-      .checkItems("Booking | Oct | 0.00 | -200.00\n" +
-                  "Travel | Dec | 0.00 | -100.00\n" +
-                  "Hotel | Dec | 0.00 | -400.00");
+      .checkItems("| Booking | Oct | 0.00 | 200.00 |\n" +
+                  "| Travel  | Dec | 0.00 | 100.00 |\n" +
+                  "| Hotel   | Dec | 0.00 | 400.00 |");
 
     timeline.selectMonth("2010/12");
     budgetView.extras
@@ -144,9 +144,9 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .slideToNextMonth()
       .checkPeriod("November 2010 - January 2011")
       .checkProjectGauge(0.00, -700.00)
-      .checkItems("Booking | Nov | 0.00 | -200.00\n" +
-                  "Travel | Jan | 0.00 | -100.00\n" +
-                  "Hotel | Jan | 0.00 | -400.00");
+      .checkItems("| Booking | Nov | 0.00 | 200.00 |\n" +
+                  "| Travel  | Jan | 0.00 | 100.00 |\n" +
+                  "| Hotel   | Jan | 0.00 | 400.00 |");
 
     timeline.selectMonth("2010/12");
     budgetView.extras
@@ -192,9 +192,9 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .setFirstMonth(201101)
       .checkPeriod("January - March 2011")
       .checkProjectGauge(-100.00, -700.00)
-      .checkItems("Booking | Jan | -100.00 | -200.00\n" +
-                  "Travel | Mar | 0.00 | -100.00\n" +
-                  "Hotel | Mar | 0.00 | -400.00");
+      .checkItems("| Booking | Jan | 100.00 | 200.00 |\n" +
+                  "| Travel  | Mar | 0.00   | 100.00 |\n" +
+                  "| Hotel   | Mar | 0.00   | 400.00 |");
     currentProject.view(0)
       .checkCategorizationWarningShown();
     currentProject.view(1)
@@ -220,9 +220,9 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .setFirstMonth(201010)
       .checkPeriod("October - December 2010")
       .checkProjectGauge(-100.00, -700.00)
-      .checkItems("Booking | Oct | -100.00 | -200.00\n" +
-                  "Travel | Dec | 0.00 | -100.00\n" +
-                  "Hotel | Dec | 0.00 | -400.00");
+      .checkItems("| Booking | Oct | 100.00 | 200.00 |\n" +
+                  "| Travel  | Dec | 0.00   | 100.00 |\n" +
+                  "| Hotel   | Dec | 0.00   | 400.00 |");
     currentProject.view(0)
       .checkCategorizationWarningShown();
     currentProject.view(1)
@@ -244,9 +244,9 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .slideToNextMonth()
       .checkPeriod("November 2010 - January 2011")
       .checkProjectGauge(-100.00, -700.00)
-      .checkItems("Booking | Nov | -100.00 | -200.00\n" +
-                  "Travel | Jan | 0.00 | -100.00\n" +
-                  "Hotel | Jan | 0.00 | -400.00");
+      .checkItems("| Booking | Nov | 100.00 | 200.00 |\n" +
+                  "| Travel  | Jan | 0.00   | 100.00 |\n" +
+                  "| Hotel   | Jan | 0.00   | 400.00 |");
     currentProject.view(0)
       .checkCategorizationWarningShown();
     currentProject.view(1)
@@ -268,9 +268,9 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .slideToNextMonth()
       .checkPeriod("December 2010 - February 2011")
       .checkProjectGauge(-100.00, -700.00)
-      .checkItems("Booking | Dec | -100.00 | -200.00\n" +
-                  "Travel | Feb | 0.00 | -100.00\n" +
-                  "Hotel | Feb | 0.00 | -400.00");
+      .checkItems("| Booking | Dec | 100.00 | 200.00 |\n" +
+                  "| Travel  | Feb | 0.00   | 100.00 |\n" +
+                  "| Hotel   | Feb | 0.00   | 400.00 |");
     currentProject.view(0)
       .checkCategorizationWarningNotShown();
     currentProject.view(1)
@@ -317,9 +317,9 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
     currentProject
       .checkPeriod("December 2010 - February 2011")
       .checkProjectGauge(-100.00, -700.00)
-      .checkItems("Booking | Dec | 0.00 | -200.00\n" +
-                  "Travel | Feb | -100.00 | -100.00\n" +
-                  "Hotel | Feb | 0.00 | -400.00");
+      .checkItems("| Booking | Dec | 0.00   | 200.00 |\n" +
+                  "| Travel  | Feb | 100.00 | 100.00 |\n" +
+                  "| Hotel   | Feb | 0.00   | 400.00 |");
     currentProject.view(0)
       .checkCategorizationWarningNotShown();
     currentProject.view(1)
@@ -336,9 +336,9 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
     currentProject
       .checkPeriod("December 2010 - February 2011")
       .checkProjectGauge(0.00, -700.00)
-      .checkItems("Booking | Dec | 0.00 | -200.00\n" +
-                  "Travel | Feb | 0.00 | -100.00\n" +
-                  "Hotel | Feb | 0.00 | -400.00");
+      .checkItems("| Booking | Dec | 0.00 | 200.00 |\n" +
+                  "| Travel  | Feb | 0.00 | 100.00 |\n" +
+                  "| Hotel   | Feb | 0.00 | 400.00 |");
     currentProject.view(1)
       .checkCategorizationWarningNotShown();
   }

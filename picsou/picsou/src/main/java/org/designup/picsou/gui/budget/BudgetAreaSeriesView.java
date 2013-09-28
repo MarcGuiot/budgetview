@@ -11,7 +11,7 @@ import org.designup.picsou.gui.components.charts.*;
 import org.designup.picsou.gui.components.highlighting.HighlightUpdater;
 import org.designup.picsou.gui.components.tips.ShowDetailsTipAction;
 import org.designup.picsou.gui.components.utils.BlankAction;
-import org.designup.picsou.gui.description.stringifiers.ForcedPlusGlobListStringifier;
+import org.designup.picsou.gui.description.AmountStringifier;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
@@ -37,7 +37,6 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.GlobUtils;
@@ -401,37 +400,33 @@ public class BudgetAreaSeriesView extends View {
       cellBuilder.addDisposeListener(amountButtonView);
       return node;
     }
+  }
 
-    private GlobListStringifier getStringifier(final DoubleField field) {
-      ForcedPlusGlobListStringifier plusGlobListStringifier =
-        new ForcedPlusGlobListStringifier(budgetArea,
-                                          GlobListStringifiers.sum(field, decimalFormat, !budgetArea.isIncome()));
-      return new UnsetGlobListStringifier(field, plusGlobListStringifier);
+  private GlobListStringifier getStringifier(DoubleField field) {
+    return new UnsetGlobListStringifier(field, AmountStringifier.getForList(field, budgetArea));
+  }
+
+  private static class UnsetGlobListStringifier implements GlobListStringifier {
+    private final DoubleField field;
+    private GlobListStringifier stringifier;
+
+    public UnsetGlobListStringifier(DoubleField field, GlobListStringifier stringifier) {
+      this.field = field;
+      this.stringifier = stringifier;
     }
 
-    private class UnsetGlobListStringifier implements GlobListStringifier {
-      private final DoubleField field;
-      private ForcedPlusGlobListStringifier stringifier;
-
-      public UnsetGlobListStringifier(DoubleField field, ForcedPlusGlobListStringifier stringifier) {
-        this.field = field;
-        this.stringifier = stringifier;
-      }
-
-      public String toString(GlobList periodStatList, GlobRepository repository) {
-        for (Glob periodStat : periodStatList) {
-          if (!periodStat.isTrue(PeriodSeriesStat.ACTIVE)) {
-            return "-";
-          }
+    public String toString(GlobList periodStatList, GlobRepository repository) {
+      for (Glob periodStat : periodStatList) {
+        if (!periodStat.isTrue(PeriodSeriesStat.ACTIVE)) {
+          return "-";
         }
-        for (Glob periodStat : periodStatList) {
-          if (periodStat.get(field) == null) {
-            return Lang.get("gauge.plannetUnset");
-          }
-        }
-        return stringifier.toString(periodStatList, repository);
       }
+      for (Glob periodStat : periodStatList) {
+        if (periodStat.get(field) == null) {
+          return Lang.get("gauge.plannetUnset");
+        }
+      }
+      return stringifier.toString(periodStatList, repository);
     }
-
   }
 }

@@ -38,6 +38,13 @@ public abstract class GuiChecker {
     return prefix + format.format(value);
   }
 
+  protected String toExpenseString(double value) {
+    if (value > 0) {
+      return "+" + toString(Math.abs(value));
+    }
+    return format.format(Math.abs(value));
+  }
+
   protected String toString(int monthId, int dayId) {
     return monthId + Formatting.TWO_DIGIT_INTEGER_FORMAT.format(dayId);
   }

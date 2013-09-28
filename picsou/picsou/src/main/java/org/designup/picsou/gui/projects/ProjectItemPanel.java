@@ -8,6 +8,7 @@ import org.designup.picsou.gui.components.SingleMonthAdapter;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
 import org.designup.picsou.gui.components.images.GlobImageLabelView;
 import org.designup.picsou.gui.components.images.IconFactory;
+import org.designup.picsou.gui.description.AmountStringifier;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
@@ -29,8 +30,6 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobListStringifiers;
-import org.globsframework.model.format.GlobStringifiers;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobListActionAdapter;
@@ -147,12 +146,14 @@ public abstract class ProjectItemPanel implements Disposable {
 
     Key itemStatKey = Key.create(ProjectItemStat.TYPE, itemKey.get(ProjectItem.ID));
 
-    GlobButtonView actualAmount = GlobButtonView.init(ProjectItemStat.ACTUAL_AMOUNT, parentRepository, directory,
+    GlobButtonView actualAmount = GlobButtonView.init(ProjectItemStat.TYPE, parentRepository, directory,
+                                                      AmountStringifier.getForList(ProjectItemStat.ACTUAL_AMOUNT, BudgetArea.EXTRAS),
                                                       new GlobListActionAdapter(showTransactionsAction))
       .forceSelection(itemStatKey);
     builder.add("actualAmount", actualAmount);
 
-    GlobButtonView plannedAmount = GlobButtonView.init(ProjectItemStat.PLANNED_AMOUNT, parentRepository, directory,
+    GlobButtonView plannedAmount = GlobButtonView.init(ProjectItemStat.TYPE, parentRepository, directory,
+                                                       AmountStringifier.getForList(ProjectItemStat.PLANNED_AMOUNT, BudgetArea.EXTRAS),
                                                        new GlobListActionAdapter(modifyAction))
       .forceSelection(itemStatKey);
     SplitsNode<JButton> plannedAmountNode = builder.add("plannedAmount", plannedAmount.getComponent());

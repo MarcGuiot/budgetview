@@ -6,6 +6,7 @@ import org.designup.picsou.gui.components.MonthSlider;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
 import org.designup.picsou.gui.components.images.GlobImageLabelView;
 import org.designup.picsou.gui.components.images.IconFactory;
+import org.designup.picsou.gui.description.AmountStringifier;
 import org.designup.picsou.gui.model.ProjectStat;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.projects.actions.DeleteProjectAction;
@@ -155,8 +156,8 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     monthSlider = new MonthSlider(new ProjectPeriodSliderAdapter(), repository, directory);
     builder.add("monthSlider", monthSlider);
 
-    totalActual = builder.addLabel("totalActual", ProjectStat.ACTUAL_AMOUNT);
-    totalPlanned = builder.addLabel("totalPlanned", ProjectStat.PLANNED_AMOUNT);
+    totalActual = builder.addLabel("totalActual", ProjectStat.TYPE, AmountStringifier.getForList(ProjectStat.ACTUAL_AMOUNT, BudgetArea.EXTRAS));
+    totalPlanned = builder.addLabel("totalPlanned", ProjectStat.TYPE, AmountStringifier.getForList(ProjectStat.PLANNED_AMOUNT, BudgetArea.EXTRAS));
 
     final JPanel gaugePanel = new JPanel();
     builder.add("gaugePanel", gaugePanel);

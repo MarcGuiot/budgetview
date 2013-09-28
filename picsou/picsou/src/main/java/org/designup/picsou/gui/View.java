@@ -18,7 +18,6 @@ public abstract class View {
   protected DescriptionService descriptionService;
   protected SelectionService selectionService;
   protected FontLocator fontLocator;
-  protected DecimalFormat decimalFormat;
 
   protected View(GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -27,7 +26,6 @@ public abstract class View {
     this.descriptionService = directory.get(DescriptionService.class);
     this.selectionService = directory.get(SelectionService.class);
     this.fontLocator = directory.get(FontLocator.class);
-    this.decimalFormat = Formatting.DECIMAL_FORMAT;
   }
 
   public abstract void registerComponents(GlobsPanelBuilder builder);

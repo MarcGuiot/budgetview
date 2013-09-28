@@ -84,14 +84,14 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
       .backToList();
 
     projects.checkCurrentProjects(
-      "| Current Empty |     | 0.00    | on |\n" +
-      "| Current Oct   | Oct | -400.00 | on |\n" +
-      "| Current Jan   | Jan | -400.00 | on |"
+      "| Current Empty |     | 0.00   | on |\n" +
+      "| Current Oct   | Oct | 400.00 | on |\n" +
+      "| Current Jan   | Jan | 400.00 | on |"
     );
 
     projects.checkPastProjects(
-      "| Past Oct | Oct | -400.00 | on |\n" +
-      "| Past Aug | Aug | -400.00 | on |"
+      "| Past Oct | Oct | 400.00 | on |\n" +
+      "| Past Aug | Aug | 400.00 | on |"
     );
 
     projects.select("Current Jan");

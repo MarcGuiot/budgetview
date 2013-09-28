@@ -29,8 +29,8 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
     currentProject
       .checkPeriod("December 2010 - September 2011")
       .checkProjectGauge(0.00, -1000.00)
-      .checkItems("Camera Body | Dec | 0.00 | -800.00\n" +
-                  "Lens | Dec | 0.00 | -200.00");
+      .checkItems("| Camera Body | Dec | 0.00 | 800.00 |\n" +
+                  "| Lens        | Dec | 0.00 | 200.00 |");
 
     categorization.setExtra("FNAC", "Camera", "Camera Body");
     budgetView.extras.checkSeries("Camera", -200.00, -280.00);
@@ -43,8 +43,8 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
     currentProject
       .checkPeriod("December 2010 - April 2011")
       .checkProjectGauge(-200.00, -950.00)
-      .checkItems("Camera Body | Dec | -200.00 | -750.00\n" +
-                  "Lens | Dec | 0.00 | -200.00");
+      .checkItems("| Camera Body | Dec | 200.00 | 750.00 |\n" +
+                  "| Lens        | Dec | 0.00   | 200.00 |");
     categorization.setExtra("FNAC", "Camera", "Camera Body");
     budgetView.extras.checkSeries("Camera", -200.00, -350.00);
 
@@ -84,7 +84,7 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
     currentProject
       .checkPeriod("December 2010 - April 2011")
       .checkProjectGauge(0.00, -500.00)
-      .checkItems("Body | Dec | 0.00 | -500.00");
+      .checkItems("| Body | Dec | 0.00 | 500.00 |");
 
     currentProject
       .toggleAndEditExpense(0)
@@ -98,6 +98,6 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
       .checkPeriod("December 2010 - July 2011")
       .checkProjectGauge(0.00, -800.00)
       .checkItem(0, "Body", "Dec", 0.00, -800.00)
-      .checkItems("Body | Dec | 0.00 | -800.00");
+      .checkItems("| Body | Dec | 0.00 | 800.00 |");
   }
 }

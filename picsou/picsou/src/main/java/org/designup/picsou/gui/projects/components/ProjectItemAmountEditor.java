@@ -4,7 +4,9 @@ import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.MonthSlider;
 import org.designup.picsou.gui.components.SingleMonthAdapter;
 import org.designup.picsou.gui.components.tips.ErrorTip;
+import org.designup.picsou.gui.description.AmountStringifier;
 import org.designup.picsou.gui.description.stringifiers.MonthYearStringifier;
+import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.ProjectItem;
 import org.designup.picsou.model.ProjectItemAmount;
@@ -106,8 +108,15 @@ public class ProjectItemAmountEditor implements Disposable {
     monthTableView = GlobTableView.init(ProjectItemAmount.TYPE, repository,
                                         GlobComparators.ascending(ProjectItemAmount.MONTH), localDirectory)
       .setFilter(GlobMatchers.fieldEquals(ProjectItemAmount.PROJECT_ITEM, itemKey.get(ProjectItem.ID)))
-      .addColumn(Lang.get("month"), new MonthYearStringifier(ProjectItemAmount.MONTH))
-      .addColumn(ProjectItemAmount.PLANNED_AMOUNT);
+      .addColumn(Lang.get("month"), new MonthYearStringifier(ProjectItemAmount.MONTH));
+    if (forcePositiveAmounts) {
+      monthTableView
+        .addColumn(Lang.get("planned"), ProjectItemAmount.PLANNED_AMOUNT);
+    }
+    else {
+      monthTableView
+        .addColumn(Lang.get("planned"), AmountStringifier.getForSingle(ProjectItemAmount.PLANNED_AMOUNT, BudgetArea.EXTRAS));
+    }
     builder.add("monthAmountsTable", monthTableView.getComponent());
 
     monthAmountEditorField = createMonthAmountEditor(builder);

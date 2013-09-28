@@ -3,6 +3,8 @@ package org.designup.picsou.functests.checkers;
 import org.designup.picsou.functests.checkers.components.GaugeChecker;
 import org.designup.picsou.functests.checkers.components.MonthSliderChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
+import org.designup.picsou.model.BudgetArea;
+import org.globsframework.utils.TablePrinter;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.ToggleButton;
@@ -21,8 +23,8 @@ public class ProjectItemViewChecker extends GuiChecker {
   public void checkValues(String label, String month, double actual, double planned) {
     assertThat(panel.getButton("itemButton").textEquals(label));
     assertThat(panel.getPanel("monthSlider").getButton("month").textEquals(month));
-    assertThat(panel.getButton("actualAmount").textEquals(toString(actual)));
-    assertThat(panel.getButton("plannedAmount").textEquals(toString(planned)));
+    assertThat(panel.getButton("actualAmount").textEquals(toExpenseString(actual)));
+    assertThat(panel.getButton("plannedAmount").textEquals(toExpenseString(planned)));
     checkGauge(actual, planned);
   }
 
@@ -56,14 +58,11 @@ public class ProjectItemViewChecker extends GuiChecker {
     return panel.getToggleButton("activeToggle");
   }
 
-  void write(StringBuilder builder) {
-    builder.append(panel.getButton("itemButton").getLabel());
-    builder.append(" | ");
-    builder.append(MonthSliderChecker.init(panel, "monthSlider").getText());
-    builder.append(" | ");
-    builder.append(panel.getButton("actualAmount").getLabel());
-    builder.append(" | ");
-    builder.append(panel.getButton("plannedAmount").getLabel());
+  void write(TablePrinter printer) {
+    printer.addRow(panel.getButton("itemButton").getLabel(),
+                   MonthSliderChecker.init(panel, "monthSlider").getText(),
+                   panel.getButton("actualAmount").getLabel(),
+                   panel.getButton("plannedAmount").getLabel());
   }
 
   public void delete() {

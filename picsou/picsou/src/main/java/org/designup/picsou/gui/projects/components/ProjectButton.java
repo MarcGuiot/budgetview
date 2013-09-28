@@ -4,6 +4,7 @@ import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.ProjectStat;
+import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Picture;
 import org.designup.picsou.model.Project;
@@ -170,7 +171,7 @@ public class ProjectButton extends JButton implements ChangeSetListener, Disposa
 
   private void updatePlanned() {
     Glob stat = repository.find(projectStatKey);
-    planned = stat == null ? "" : Formatting.toString(stat.get(ProjectStat.PLANNED_AMOUNT));
+    planned = stat == null ? "" : Formatting.toString(stat.get(ProjectStat.PLANNED_AMOUNT), BudgetArea.EXTRAS);
   }
 
   public Icon getIcon() {

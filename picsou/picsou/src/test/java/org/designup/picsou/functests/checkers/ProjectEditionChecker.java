@@ -6,7 +6,9 @@ import org.designup.picsou.functests.checkers.components.MonthSliderChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.functests.checkers.components.PopupChecker;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.utils.TablePrinter;
 import org.uispec4j.MenuItem;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
@@ -138,8 +140,8 @@ public class ProjectEditionChecker extends ViewChecker {
 
   public ProjectEditionChecker checkProjectGauge(double actual, double planned) {
 
-    assertThat(getPanel().getTextBox("totalActual").textEquals(Formatting.toString(actual)));
-    assertThat(getPanel().getTextBox("totalPlanned").textEquals(Formatting.toString(planned)));
+    assertThat(getPanel().getTextBox("totalActual").textEquals(Formatting.toString(actual, BudgetArea.EXTRAS)));
+    assertThat(getPanel().getTextBox("totalPlanned").textEquals(Formatting.toString(planned, BudgetArea.EXTRAS)));
 
     GaugeChecker gauge = new GaugeChecker(getPanel(), "gauge");
     gauge.checkActualValue(actual);
@@ -232,13 +234,12 @@ public class ProjectEditionChecker extends ViewChecker {
 
   private String getContent() {
     checkNoEditedItems();
-    StringBuilder builder = new StringBuilder();
+    TablePrinter printer = new TablePrinter();
     Component[] panels = getPanel().getSwingComponents(JPanel.class, "projectItemPanel");
     for (int i = 0; i < panels.length; i++) {
-      view(i).write(builder);
-      builder.append("\n");
+      view(i).write(printer);
     }
-    return builder.toString().trim();
+    return printer.toString().trim();
   }
 
   private void checkNoEditedItems() {
