@@ -889,6 +889,10 @@ table.field-value td.value {
   color: #FF9230;
 }
 
+#home #presentation #projects {
+  margin-left: -20px;
+}
+
 #home #zoom h2.zoom-title {
   text-align: center;
   color: #333;

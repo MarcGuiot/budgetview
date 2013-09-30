@@ -17,13 +17,13 @@ Modifications souhaitées pour le logiciel BudgetView (id = 50969)
 
 Bonjour,
 
-J'ai le plaisir de vous informer qu'une nouvelle version de BudgetView est disponible. Il agit de la version 3.07, dont les liens directs de téléchargement sont les suivants :
+J'ai le plaisir de vous informer qu'une nouvelle version de BudgetView est disponible. Il agit de la version 3.10, dont les liens directs de téléchargement sont les suivants :
 
-- Windows : http://www.mybudgetview.fr/files/app/BudgetView-3.07-fr-Setup.exe
+- Windows : http://www.mybudgetview.fr/files/app/BudgetView-3.10-fr-Setup.exe
 
-- Mac : http://www.mybudgetview.fr/files/app/BudgetView-3.07-fr.dmg
+- Mac : http://www.mybudgetview.fr/files/app/BudgetView-3.10-fr.dmg
 
-- Linux : http://www.mybudgetview.fr/files/app/budgetview-3.07-fr.tar.gz
+- Linux : http://www.mybudgetview.fr/files/app/budgetview-3.10-fr.tar.gz
 
 L'historique des modifications est visible sur cette page : 
 
@@ -77,13 +77,13 @@ J'ai le plaisir de vous informer qu'une nouvelle version est disponible pour le 
 
  http://www.jetelecharge.com/Bureautique/6452.php
 
-La nouvelle version porte le numéro 3.07, et le fichier d'installation correspondant est disponible à l'adresse suivante :
+La nouvelle version porte le numéro 3.10, et le fichier d'installation correspondant est disponible à l'adresse suivante :
 
-- Windows : http://www.mybudgetview.fr/files/app/BudgetView-3.07-fr-Setup.exe
+- Windows : http://www.mybudgetview.fr/files/app/BudgetView-3.10-fr-Setup.exe
 
-- Mac : http://www.mybudgetview.fr/files/app/BudgetView-3.07-fr.dmg
+- Mac : http://www.mybudgetview.fr/files/app/BudgetView-3.10-fr.dmg
 
-- Linux : http://www.mybudgetview.fr/files/app/budgetview-3.07-fr.tar.gz
+- Linux : http://www.mybudgetview.fr/files/app/budgetview-3.10-fr.tar.gz
 
 L'historique des modifications est visible sur cette page :
 
@@ -109,17 +109,17 @@ Régis.
 
 3. Message :
 
-Nom et version : BudgetView 3.07
+Nom et version : BudgetView 3.10
 
 Adresse (directe) de téléchargement : 
 
-http://www.mybudgetview.fr/files/app/BudgetView-3.07-fr-Setup.exe
+http://www.mybudgetview.fr/files/app/BudgetView-3.10-fr-Setup.exe
 
 Email : regis@mybudgetview.fr
 
 Bonjour,
 
-La version 3.07 de BudgetView est disponible. Les derniers changements sont décrits sur cette page :
+La version 3.10 de BudgetView est disponible. Les derniers changements sont décrits sur cette page :
 
   http://www.mybudgetview.fr/support/derniers-changements
 
@@ -147,9 +147,9 @@ http://www.mybudgetview.fr
 
 2. Mettre à jour la version et les liens :
 
-- Windows : http://www.mybudgetview.fr/files/app/BudgetView-3.07-fr-Setup.exe
+- Windows : http://www.mybudgetview.fr/files/app/BudgetView-3.10-fr-Setup.exe
 
-- Mac : http://www.mybudgetview.fr/files/app/BudgetView-3.07-fr.dmg
+- Mac : http://www.mybudgetview.fr/files/app/BudgetView-3.10-fr.dmg
 
 !!! Attention à la catégorie Multimedia / Audio
 
@@ -168,8 +168,8 @@ http://www.mybudgetview.fr
 
 2. Mettre à jour la version et les liens :
 
-- Windows : http://www.mybudgetview.fr/files/app/BudgetView-3.07-fr-Setup.exe
+- Windows : http://www.mybudgetview.fr/files/app/BudgetView-3.10-fr-Setup.exe
 
-- Mac : http://www.mybudgetview.fr/files/app/BudgetView-3.07-fr.dmg
+- Mac : http://www.mybudgetview.fr/files/app/BudgetView-3.10-fr.dmg
 
 !!! Attention à la catégorie Multimedia / Audio
