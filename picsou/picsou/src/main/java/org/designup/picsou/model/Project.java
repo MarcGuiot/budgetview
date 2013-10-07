@@ -12,7 +12,6 @@ import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.index.UniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobComparators;
 import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.collections.Range;
