@@ -59,6 +59,9 @@ public class ProjectItemToSubSeriesTrigger extends AbstractChangeSetListener {
   }
 
   public static void createSubSeries(Key projectItemKey, FieldValues projectItemValues, GlobRepository repository) {
+    if (!ProjectItem.usesSubSeries(projectItemValues)) {
+      return;
+    }
     Integer projectId = projectItemValues.get(ProjectItem.PROJECT);
     Glob project = repository.get(Key.create(Project.TYPE, projectId));
     Glob subSeries =

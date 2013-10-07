@@ -120,7 +120,6 @@ public class UpgradeTrigger implements ChangeSetListener {
       fixHiddenProjectSeriesBudget(repository);
     }
     if (currentJarVersion < 93) {
-      createMissingSubSeriesForProjectItems(repository);
       updateOpenCloseAccount(repository);
     }
 
@@ -141,6 +140,9 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
     if (currentJarVersion < 126) {
       updateProjetItemSequence(repository);
+    }
+    if (currentJarVersion < 127) {
+      createMissingSubSeriesForProjectItems(repository);
     }
 
     UserPreferences.initMobilePassword(repository, false);

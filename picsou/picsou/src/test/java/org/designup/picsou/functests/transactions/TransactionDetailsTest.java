@@ -260,5 +260,11 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTableRow(1);
     transactionDetails.checkNote("common");
+
+    categorization.initContent()
+      .add("18/06/2008", "", "BURGER KING", -10.50)
+      .add("18/06/2008", "", "MCDO", -10.50)
+      .add("18/06/2008", "", "QUICK", -10.10)
+      .check();
   }
 }
