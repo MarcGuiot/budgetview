@@ -86,10 +86,32 @@ public class CicConnector extends WebBankConnector {
       userAndPasswordPanel.setFieldsEnabled(false);
       directory.get(ExecutorService.class).submit(new Runnable() {
         public void run() {
+          WebForm idForm = null;
           try {
             WebPage homePage = browser.getCurrentPage();
-            WebForm idForm = homePage.getFormByName("ident");
-            idForm.getTextInputById("e_identifiant").setText(userAndPasswordPanel.getUser());
+            idForm = browser.retry(homePage, new WebBrowser.Function1Arg<WebForm, WebPage>() {
+              public WebForm call(WebPage webPage) throws Exception {
+                return webPage.getFormByName("ident");
+              }
+            });
+          }
+          catch (final Exception e) {
+            SwingUtilities.invokeLater(new Runnable() {
+              public void run() {
+                notifyErrorFound("L'identification n'est pas possible pour le moment. " +
+                                 "Nous vous recommandons de vous rendre sur le site du CIC avec votre navigateur " +
+                                 "internet pour vérifier que vous arrivez bien à vous y connecter, " +
+                                 "puis d'essayer à nouveau à partir de BudgetView.");
+              }
+            });
+          }
+
+          if (idForm == null) {
+            return;
+          }
+
+          try {
+          idForm.getTextInputById("e_identifiant").setText(userAndPasswordPanel.getUser());
             idForm.getPasswordInputById("e_mdp").setText(userAndPasswordPanel.getPassword());
             WebPage loggedInPage = idForm.submit();
             if (!loggedInPage.containsAnchorWithHRef("/cic/fr/identification/deconnexion/deconnexion.cgi")) {

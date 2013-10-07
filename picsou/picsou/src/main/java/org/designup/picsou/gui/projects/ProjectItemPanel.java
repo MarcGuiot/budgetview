@@ -382,13 +382,13 @@ public abstract class ProjectItemPanel implements Disposable {
     }
 
     public void run() {
-        scrollPane.getViewport().scrollRectToVisible(getBounds(panelToEdit, scrollPane));
+      scrollPane.getViewport().scrollRectToVisible(getBounds(panelToEdit, scrollPane));
     }
 
     private Rectangle getBounds(Component enclosingPanel, JScrollPane scrollPane) {
       Rectangle rectangle = enclosingPanel.getBounds();
       Container parent = enclosingPanel.getParent();
-      while (parent != null && parent != scrollPane){
+      while (parent != null && parent != scrollPane) {
         rectangle.x += parent.getX();
         rectangle.y += parent.getY();
         parent = parent.getParent();

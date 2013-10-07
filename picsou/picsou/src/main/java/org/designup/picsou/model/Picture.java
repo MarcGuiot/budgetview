@@ -1,7 +1,6 @@
 package org.designup.picsou.model;
 
 import com.budgetview.shared.utils.PicsouGlobSerializer;
-import com.sun.image.codec.jpeg.ImageFormatException;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Required;
@@ -24,7 +23,6 @@ import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
-import java.awt.image.RescaleOp;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -113,7 +111,7 @@ public class Picture {
     catch (IOException e) {
       throw new OperationFailed(e);
     }
-    catch (ImageFormatException e) {
+    catch (Exception e) {
       throw new InvalidFormat(e);
     }
     return byteArrayOut.toByteArray();
@@ -131,7 +129,7 @@ public class Picture {
     catch (IOException e) {
       throw new OperationFailed(e);
     }
-    catch (ImageFormatException e) {
+    catch (Exception e) {
       throw new InvalidFormat(e);
     }
     return byteArrayOut.toByteArray();
