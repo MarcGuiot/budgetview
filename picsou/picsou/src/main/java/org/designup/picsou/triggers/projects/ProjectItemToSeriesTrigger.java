@@ -9,6 +9,8 @@ import org.globsframework.utils.Utils;
 
 import java.util.Set;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class ProjectItemToSeriesTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(ProjectItem.TYPE, new ChangeSetVisitor() {
@@ -20,6 +22,19 @@ public class ProjectItemToSeriesTrigger implements ChangeSetListener {
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         if (values.contains(ProjectItem.ITEM_TYPE)) {
           throw new UnsupportedOperationException("Not managed");
+        }
+        Glob item = repository.get(key);
+        if (values.contains(ProjectItem.LABEL) && ProjectItem.usesSeries(item)) {
+          Glob series = repository.findLinkTarget(repository.get(key), ProjectItem.SERIES);
+          if (series != null) {
+            repository.update(series.getKey(),
+                              value(Series.NAME, values.get(ProjectItem.LABEL)));
+            Glob mirror = repository.findLinkTarget(series, Series.MIRROR_SERIES);
+            if (mirror != null) {
+              repository.update(mirror.getKey(),
+                                value(Series.NAME, values.get(ProjectItem.LABEL)));
+            }
+          }
         }
       }
 

@@ -100,7 +100,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkSeriesNotPresent("Transfer");
   }
 
-  public void testNavigatingFromSeries() throws Exception {
+  public void testNavigatingFromSeriesAndRenaming() throws Exception {
 
     createMainAccount("Main account");
     createSavingsAccount("Savings account");
@@ -143,7 +143,13 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .checkName("Trip")
       .editTransfer(1)
       .checkLabel("Transfer")
-      .cancel();
+      .setLabel("Project transfer")
+      .validate();
+
+    views.selectBudget();
+    budgetView.savings.checkSeriesList("From account Savings account",
+                                       "Project transfer",
+                                       "To account Savings account");
   }
 
   public void testMustSelectDifferentFromAndToAccounts() throws Exception {
