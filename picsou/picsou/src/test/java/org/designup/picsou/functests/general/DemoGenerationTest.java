@@ -349,7 +349,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addTransferItem(4, project("rome.transfer"), holidaysMonth1, 300.00, account("savings"), mainAccounts());
     currentProject.sortItems();
 
-    categorization.setExtra(transaction("booking"), project("rome"), project("rome.accomodation.booking"));
+    categorization.setExtra(transaction("booking"), project("rome.accomodation.booking"));
 
     //======== PROVISIONS ===========
 
