@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -204,7 +205,13 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
   }
 
   private void updatePasswordField() throws WebParsingError {
-    passwordField.setText(browser.getCurrentPage().getPasswordInputByName("ch2").getValue());
+    WebPasswordInput ch2 = browser.retry(new Callable<WebPasswordInput>() {
+      public WebPasswordInput call() throws Exception {
+        return browser.getCurrentPage().getPasswordInputByName("ch2");
+      }
+    });
+
+    passwordField.setText(ch2.getValue());
   }
 
   public void panelShown() {
