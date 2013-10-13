@@ -25,10 +25,8 @@ class BnpKeyboardPanel extends JPanel {
   public void paint(Graphics g) {
     g.clearRect(0, 0, getWidth(), getHeight());
     if (image == null) {
-      g.setColor(getForeground());
+      g.setColor(getBackground());
       g.fillRect(0, 0, getWidth(), getHeight());
-      g.setColor(getForeground().darker());
-      g.drawRect(0, 0, getWidth(), getHeight());
       return;
     }
 
@@ -57,19 +55,23 @@ class BnpKeyboardPanel extends JPanel {
     }
 
     public void mouseReleased(MouseEvent e) {
-      coordinateListener.click(lastX, lastY);
+      if (lastY != -1 && lastX != -1){
+        coordinateListener.click(lastX, lastY);
+      }
     }
 
     public void mouseDragged(MouseEvent e) {
     }
 
     public void mouseMoved(MouseEvent e) {
-      int x = (divider * e.getX()) / (image.getWidth() + 1);
-      int y = (divider * e.getY()) / (image.getHeight() + 1);
-      if ((x != lastX || y != lastY)) {
-        lastX = x;
-        lastY = y;
-        coordinateListener.enter(x, y);
+      if (image != null) {
+        int x = (divider * e.getX()) / (image.getWidth() + 1);
+        int y = (divider * e.getY()) / (image.getHeight() + 1);
+        if ((x != lastX || y != lastY)) {
+          lastX = x;
+          lastY = y;
+          coordinateListener.enter(x, y);
+        }
       }
     }
   }
