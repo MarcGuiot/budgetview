@@ -389,6 +389,8 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
 
   public void reset() {
     try {
+      grill.setImage(null, BnpKeyboardPanel.CoordinateListener.NULL);
+      grill.repaint();
       updatePasswordField();
       initLogin();
     }
