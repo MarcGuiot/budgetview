@@ -176,6 +176,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
                   }).asAnchor();
                   if (anchor != null) {
                     anchor.click();
+                    browser.waitForBackgroundJavaScript(1000);
                     updatePasswordField();
                   }
                 }
@@ -207,6 +208,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
   private void updatePasswordField() throws WebParsingError {
     WebPasswordInput ch2 = browser.retry(new Callable<WebPasswordInput>() {
       public WebPasswordInput call() throws Exception {
+        browser.setToTopLevelWindow();
         return browser.getCurrentPage().getPasswordInputByName("ch2");
       }
     });

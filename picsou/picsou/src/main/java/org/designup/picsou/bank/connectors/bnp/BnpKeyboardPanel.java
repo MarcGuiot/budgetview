@@ -57,8 +57,10 @@ class BnpKeyboardPanel extends JPanel {
     }
 
     public void mouseReleased(MouseEvent e) {
-      if (lastY != -1 && lastX != -1){
-        coordinateListener.click(lastX, lastY);
+      int x = (divider * e.getX()) / (image.getWidth() + 1);
+      int y = (divider * e.getY()) / (image.getHeight() + 1);
+      if (x >= 0 && x < divider && y >= 0 && y < divider) {
+        coordinateListener.click(x, y);
       }
     }
 
