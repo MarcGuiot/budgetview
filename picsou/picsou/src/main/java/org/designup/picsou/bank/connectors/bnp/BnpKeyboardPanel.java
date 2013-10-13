@@ -24,14 +24,12 @@ class BnpKeyboardPanel extends JPanel {
 
   public void paint(Graphics g) {
     g.clearRect(0, 0, getWidth(), getHeight());
+    g.setColor(getBackground());
+    g.fillRect(0, 0, getWidth(), getHeight());
     if (image == null) {
-      g.setColor(getBackground());
-      g.fillRect(0, 0, getWidth(), getHeight());
       return;
     }
 
-    g.setColor(getBackground());
-    g.fillRect(0, 0, getWidth(), getHeight());
     g.drawImage(image, 0, 0, new NullImageObserver());
   }
 
@@ -55,8 +53,10 @@ class BnpKeyboardPanel extends JPanel {
     }
 
     public void mouseReleased(MouseEvent e) {
-      if (lastY != -1 && lastX != -1){
-        coordinateListener.click(lastX, lastY);
+      int x = (divider * e.getX()) / (image.getWidth() + 1);
+      int y = (divider * e.getY()) / (image.getHeight() + 1);
+      if (x >= 0 && x < divider && y >= 0 && y < divider) {
+        coordinateListener.click(x, y);
       }
     }
 
