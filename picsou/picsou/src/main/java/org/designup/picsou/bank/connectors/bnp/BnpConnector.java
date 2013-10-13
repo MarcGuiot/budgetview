@@ -181,10 +181,10 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
                   }
                 }
                 catch (WebCommandFailed failed) {
-                    notifyErrorFound(failed);
+                  notifyErrorFound(failed);
                 }
                 catch (WebParsingError error) {
-                    notifyErrorFound(error);
+                  notifyErrorFound(error);
                 }
               }
             });
