@@ -157,7 +157,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
               }
 
               public void click(int x, int y) {
-                int key = y * 5 + x;
+                int key = y * 5 + x + 1;
                 final String k;
                 if (key < 10){
                   k = "0" + key;
@@ -166,13 +166,17 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
                   k = "" + key;
                 }
                 try {
-                  id.findFirst(new WebFilter() {
+                  WebAnchor anchor = id.findFirst(new WebFilter() {
                     public boolean matches(HtmlElement element) {
+                      String ondblclick = element.getAttribute("ondblclick");
                       return element.getTagName().equals(HtmlAnchor.TAG_NAME) &&
-                        element.getAttribute("ondblclick").contains(k);
+                             (ondblclick != null && ondblclick.contains(k));
                     }
-                  }).asAnchor().click();
+                  }).asAnchor();
+                  if (anchor != null) {
+                    anchor.click();
                     updatePasswordField();
+                  }
                 }
                 catch (WebCommandFailed failed) {
                     notifyErrorFound(failed);
