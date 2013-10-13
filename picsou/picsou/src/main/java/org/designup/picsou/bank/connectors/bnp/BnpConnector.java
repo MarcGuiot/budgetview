@@ -2,23 +2,39 @@ package org.designup.picsou.bank.connectors.bnp;
 
 import com.gargoylesoftware.htmlunit.HttpWebConnection;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.WebResponse;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.javascript.host.Event;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
 import org.designup.picsou.bank.connectors.webcomponents.*;
+import org.designup.picsou.bank.connectors.webcomponents.filters.WebFilter;
 import org.designup.picsou.bank.connectors.webcomponents.utils.*;
 import org.designup.picsou.model.RealAccount;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,7 +59,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
   private JTextField codeField;
   private JTextField passwordField;
   private JLabel keyboardLabel;
-  private ImageMapper imageMapper = new ImageMapper();
+  private BnpKeyboardPanel grill;
   private List<AccountEntry> accountEntries;
 
   public static void main(String[] args) throws IOException {
@@ -85,6 +101,9 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
     clearCodeAction.setEnabled(false);
     loginAction.setEnabled(false);
 
+    grill = new BnpKeyboardPanel(5);
+    builder.add("grill", grill);
+
     initLogin();
     addToBeDisposed(new Disposable() {
       public void dispose() {
@@ -103,17 +122,66 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
             notifyInitialConnection();
             WebPage loginPage = loadPage(INDEX);
 
-            imageMapper.install(loginPage.getImageMapByName("MapGril"), keyboardLabel)
-              .addListener(new ImageMapper.Listener() {
-                public void imageClicked() {
-                  try {
-                    updatePasswordField();
-                  }
-                  catch (WebParsingError e) {
-                    notifyErrorFound(e);
-                  }
+            final WebPanel id = loginPage.getPanelById("secret-nbr-keyboard");
+            String style = id.getAttributeValue("style"); //background-image: url("/NSImgGrille?timestamp=1381585729451");
+            int i = style.indexOf("background-image: url(");
+            if (i < 0) {
+              notifyErrorFound(new WebParsingError(id, "background-image: url( not found in " + style));
+              return;
+            }
+
+            String imageUrl = style.substring(i + "background-image: url(\"".length(), style.lastIndexOf(");") - 1);
+
+            final HtmlPage page = browser.getCurrentHtmlPage();
+            final WebClient webclient = page.getWebClient();
+
+            final URL url = page.getFullyQualifiedUrl(imageUrl);
+            final WebRequest request = new WebRequest(url);
+            request.setAdditionalHeader("Referer", page.getWebResponse().getWebRequest().getUrl().toExternalForm());
+            WebResponse response = webclient.loadWebResponse(request);
+            final ImageInputStream iis = ImageIO.createImageInputStream(response.getContentAsStream());
+            final Iterator<ImageReader> iter = ImageIO.getImageReaders(iis);
+            if (!iter.hasNext()) {
+              notifyErrorFound(new WebParsingError(id, "Fail to download grille " + style));
+              return;
+            }
+            ImageReader imageReader = iter.next();
+            imageReader.setInput(iis);
+            BufferedImage image = imageReader.read(0);
+            iis.close();
+            imageReader.dispose();
+
+            grill.setSize(image.getWidth(), image.getHeight());
+            grill.setImage(image, new BnpKeyboardPanel.CoordinateListener() {
+              public void enter(int x, int y) {
+              }
+
+              public void click(int x, int y) {
+                int key = y * 5 + x;
+                final String k;
+                if (key < 10){
+                  k = "0" + key;
                 }
-              });
+                else {
+                  k = "" + key;
+                }
+                try {
+                  id.findFirst(new WebFilter() {
+                    public boolean matches(HtmlElement element) {
+                      return element.getTagName().equals(HtmlAnchor.TAG_NAME) &&
+                        element.getAttribute("ondblclick").contains(k);
+                    }
+                  }).asAnchor().click();
+                    updatePasswordField();
+                }
+                catch (WebCommandFailed failed) {
+                    notifyErrorFound(failed);
+                }
+                catch (WebParsingError error) {
+                    notifyErrorFound(error);
+                }
+              }
+            });
 
             notifyWaitingForUser();
 

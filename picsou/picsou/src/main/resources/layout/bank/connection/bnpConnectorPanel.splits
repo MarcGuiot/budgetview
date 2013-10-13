@@ -15,7 +15,9 @@
       <row>
         <filler fill="horizontal"/>
         <grid>
-          <label ref="keyboardLabel" gridPos="(0,0,1,4)" marginRight="10"/>
+          <panel ref="grill" gridPos="(0,0,1,4)"
+                 minimumSize="(136,136)" maximumSize="(136,136)"
+                 preferredSize="(136,136)" size="(136,136)"/>
           <textField ref="password" gridPos="(1,0)" marginBottom="4"/>
           <button action="clearCode" gridPos="(1,1)" text="Effacer" fill="none"
                   styleClass="hyperlink" font="-,plain,10" anchor="right"/>

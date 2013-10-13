@@ -1,8 +1,5 @@
 package org.designup.picsou.bank.connectors.sg;
 
-import com.gargoylesoftware.htmlunit.html.HtmlInput;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import org.designup.picsou.bank.connectors.webcomponents.WebImage;
 import org.designup.picsou.bank.connectors.webcomponents.WebMap;
 import org.designup.picsou.bank.connectors.webcomponents.WebPanel;
@@ -33,14 +30,14 @@ class SgKeyboardPanel extends JPanel {
     g.clearRect(0, 0, getWidth(), getHeight());
     if (image == null) {
       g.setColor(getForeground());
-      g.fillRect(0,0,getWidth(), getHeight());
+      g.fillRect(0, 0, getWidth(), getHeight());
       g.setColor(getForeground().darker());
-      g.drawRect(0,0,getWidth(), getHeight());
+      g.drawRect(0, 0, getWidth(), getHeight());
       return;
     }
 
     g.setColor(getBackground());
-    g.fillRect(0,0,getWidth(), getHeight());
+    g.fillRect(0, 0, getWidth(), getHeight());
     g.drawImage(image, 0, 0, new NullImageObserver());
     if (motionListener.drawKeyBorder) {
       g.drawImage(motionListener.imageSurlignage,

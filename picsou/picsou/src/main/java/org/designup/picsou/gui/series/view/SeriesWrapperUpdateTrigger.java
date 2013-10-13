@@ -43,7 +43,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
         else {
           if (repository.findByIndex(SeriesWrapper.INDEX, SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId())
             .findByIndex(SeriesWrapper.ITEM_ID, seriesId)
-            .findByIndex(SeriesWrapper.PARENT, null).getGlobs().isEmpty()) {
+            .findByIndex(SeriesWrapper.PARENT, budgetAreaWrapper.get(SeriesWrapper.ID)).getGlobs().isEmpty()) {
             repository.create(SeriesWrapper.TYPE,
                               value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
                               value(SeriesWrapper.ITEM_ID, seriesId),
@@ -105,7 +105,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
         else {
           if (repository.findByIndex(SeriesWrapper.INDEX, SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId())
             .findByIndex(SeriesWrapper.ITEM_ID, key.get(SubSeries.ID))
-            .findByIndex(SeriesWrapper.PARENT, parentSeriesWrapper.get(SeriesWrapper.ID)).getGlobs().isEmpty()){
+            .findByIndex(SeriesWrapper.PARENT, parentSeriesWrapper.get(SeriesWrapper.ID)).getGlobs().isEmpty()) {
             repository.create(SeriesWrapper.TYPE,
                               value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
                               value(SeriesWrapper.ITEM_ID, key.get(SubSeries.ID)),
