@@ -86,9 +86,27 @@ public class CicConnector extends WebBankConnector {
       userAndPasswordPanel.setFieldsEnabled(false);
       directory.get(ExecutorService.class).submit(new Runnable() {
         public void run() {
+
+          WebPage homePage = browser.getCurrentPage();
+          if (isLoggedIn(homePage)) {
+            try {
+              homePage = browser.load(INDEX + "/cic/fr/identification/deconnexion/deconnexion.cgi");
+            }
+            catch (Exception e) {
+              SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                  notifyErrorFound("Impossible de se déconnecter pour initialiser l'identification. " +
+                                   "Nous vous recommandons de vous rendre sur le site du CIC avec votre navigateur " +
+                                   "internet pour vérifier que vous arrivez bien à vous y connecter, " +
+                                   "puis d'essayer à nouveau à partir de BudgetView.");
+                }
+              });
+              return;
+            }
+          }
+
           WebForm idForm = null;
           try {
-            WebPage homePage = browser.getCurrentPage();
             idForm = browser.retry(homePage, new WebBrowser.Function1Arg<WebForm, WebPage>() {
               public WebForm call(WebPage webPage) throws Exception {
                 return webPage.getFormByName("ident");
@@ -111,10 +129,10 @@ public class CicConnector extends WebBankConnector {
           }
 
           try {
-          idForm.getTextInputById("e_identifiant").setText(userAndPasswordPanel.getUser());
+            idForm.getTextInputById("e_identifiant").setText(userAndPasswordPanel.getUser());
             idForm.getPasswordInputById("e_mdp").setText(userAndPasswordPanel.getPassword());
             WebPage loggedInPage = idForm.submit();
-            if (!loggedInPage.containsAnchorWithHRef("/cic/fr/identification/deconnexion/deconnexion.cgi")) {
+            if (!isLoggedIn(loggedInPage)) {
               notifyIdentificationFailed();
               loadHomePage();
               return;
@@ -142,6 +160,10 @@ public class CicConnector extends WebBankConnector {
     }
   }
 
+  private boolean isLoggedIn(WebPage loggedInPage) {
+    return loggedInPage.containsAnchorWithHRef("/cic/fr/identification/deconnexion/deconnexion.cgi");
+  }
+
   public void downloadFile() throws Exception {
     WebPage downloadPage = browser.getCurrentPage();
     WebForm downloadForm = downloadPage.getFormById("P:F");
@@ -165,7 +187,7 @@ public class CicConnector extends WebBankConnector {
         }
       }
     }
-  } 
+  }
 
   public String getCode() {
     return userAndPasswordPanel.getUser();
