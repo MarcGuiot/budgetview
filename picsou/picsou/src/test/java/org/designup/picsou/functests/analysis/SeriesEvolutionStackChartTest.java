@@ -843,4 +843,33 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.checkSelected("Mary's");
 
   }
+
+  public void testMirrorSavingsSeriesAreNotShown() throws Exception {
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/12", -95.00, "Virement")
+      .load();
+
+    savingsAccounts.createNewAccount()
+      .setName("Livret")
+      .selectBank("ING Direct")
+      .setAccountNumber("333")
+      .setPosition(10.00)
+      .validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount("333", 20, "2008/07/12")
+      .addTransaction("2008/07/12", +95.00, "Virt livret")
+      .loadInAccount("Livret");
+
+    categorization.setSavings("Virement", "To account Livret");
+    categorization.setSavings("Virt livret", "To account Livret");
+
+    seriesAnalysis.seriesChart.getSingleDataset()
+      .checkSize(1)
+      .checkValue("To account Livret", 95.00);
+
+    seriesAnalysis.seriesChart.select("To account Livret");
+    seriesAnalysis.checkSelected("To account Livret");
+  }
 }

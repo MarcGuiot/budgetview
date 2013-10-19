@@ -322,7 +322,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       Double amount = getTotalAmountForSelectedPeriod(seriesId);
       if (amount != null && amount < 0) {
         Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-        if (!BudgetArea.OTHER.getId().equals(series.get(Series.BUDGET_AREA))) {
+        if (SeriesWrapper.shouldCreateWrapperForSeries(series)) {
           String name = series.get(Series.NAME);
           dataset.add(name, -amount, series.getKey());
         }
@@ -341,7 +341,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     for (Integer seriesId : stats.getValueSet(SeriesStat.SERIES)) {
       Glob series = repository.get(Key.create(Series.TYPE, seriesId));
       if (budgetAreas.contains(BudgetArea.get(series.get(Series.BUDGET_AREA)))
-          && !Series.isSavingToExternal(series)) {
+          && SeriesWrapper.shouldCreateWrapperForSeries(series)) {
         double amount = getTotalAmountForSelectedPeriod(seriesId);
         StackChartDataset targetDataset = amount >= 0 ? incomeDataset : expensesDataset;
         targetDataset.add(series.get(Series.NAME),

@@ -413,6 +413,7 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker<SeriesAnalysis
         }
         builder.append(")\n");
       }
+      builder.append("  .check();\n");
       Assert.fail("Write this:\n" + builder.toString());
     }
 

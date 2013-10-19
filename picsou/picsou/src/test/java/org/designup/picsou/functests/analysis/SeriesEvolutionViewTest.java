@@ -2,7 +2,11 @@ package org.designup.picsou.functests.analysis;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.series.view.SeriesWrapper;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.model.format.GlobPrinter;
 
 import java.awt.*;
 
@@ -763,10 +767,18 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     seriesAnalysis.toggleTable();
     seriesAnalysis.expandAll();
-    seriesAnalysis.checkRowLabels(
-      "Main accounts", "Balance", "Savings accounts", "To categorize", "Income", "Recurring", "Variable", "Extras",
-      "Savings", "To account Livret", "To account Livret"
-    );
+    seriesAnalysis.initContent()
+      .add("Main accounts", "", "", "", "", "", "", "", "")
+      .add("Balance", "", "-95.00", "", "", "", "", "", "")
+      .add("Savings accounts", "", "105.00", "105.00", "105.00", "105.00", "105.00", "105.00", "105.00")
+      .add("To categorize", "", "", "", "", "", "", "", "")
+      .add("Income", "", "", "", "", "", "", "", "")
+      .add("Recurring", "", "", "", "", "", "", "", "")
+      .add("Variable", "", "", "", "", "", "", "", "")
+      .add("Extras", "", "", "", "", "", "", "", "")
+      .add("Savings", "", "95.00", "", "", "", "", "", "")
+      .add("To account Livret", "", "95.00", "", "", "", "", "", "")
+      .check();
   }
 
   public void testBreadcrumbs() throws Exception {

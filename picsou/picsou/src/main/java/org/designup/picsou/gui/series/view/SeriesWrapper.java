@@ -11,10 +11,12 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.exceptions.ItemAmbiguity;
@@ -22,7 +24,6 @@ import org.globsframework.utils.exceptions.ItemAmbiguity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public class SeriesWrapper {
   public static GlobType TYPE;
@@ -215,5 +216,23 @@ public class SeriesWrapper {
         return "summary";
     }
     throw new InvalidState("Unexpected type found for:\n" + GlobPrinter.toString(wrapper));
+  }
+
+  public static boolean shouldCreateWrapperForSeries(FieldValues seriesValues) {
+    Integer budgetAreaId = seriesValues.get(Series.BUDGET_AREA);
+    if (BudgetArea.OTHER.getId().equals(budgetAreaId)) {
+      return false;
+    }
+
+    if (BudgetArea.SAVINGS.getId().equals(budgetAreaId) &&
+        !Utils.equal(seriesValues.get(Series.TARGET_ACCOUNT), Account.MAIN_SUMMARY_ACCOUNT_ID)) {
+      return false;
+    }
+
+    Integer seriesId = seriesValues.get(Series.ID);
+    return !seriesId.equals(Series.UNCATEGORIZED_SERIES_ID) &&
+           !seriesId.equals(Series.ACCOUNT_SERIES_ID) &&
+           !Series.isSavingToExternal(seriesValues) &&
+           !seriesValues.isTrue(Series.IS_MIRROR);
   }
 }

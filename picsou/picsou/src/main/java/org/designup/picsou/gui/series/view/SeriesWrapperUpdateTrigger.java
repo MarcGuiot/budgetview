@@ -19,18 +19,11 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        Integer seriesId = key.get(Series.ID);
-        if (seriesId.equals(Series.UNCATEGORIZED_SERIES_ID) ||
-            Series.isSavingToExternal(values) ||
-            seriesId.equals(Series.ACCOUNT_SERIES_ID)) {
+        if (!SeriesWrapper.shouldCreateWrapperForSeries(values)) {
           return;
         }
 
         Integer budgetAreaId = values.get(Series.BUDGET_AREA);
-        if (BudgetArea.OTHER.getId().equals(budgetAreaId)) {
-          return;
-        }
-
         Glob budgetAreaWrapper =
           repository.findByIndex(SeriesWrapper.INDEX, SeriesWrapper.ITEM_TYPE, SeriesWrapperType.BUDGET_AREA.getId())
             .findByIndex(SeriesWrapper.ITEM_ID, budgetAreaId)
@@ -41,6 +34,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
           Log.write("Bug : missing parent : " + budgetAreaId);
         }
         else {
+          Integer seriesId = key.get(Series.ID);
           if (repository.findByIndex(SeriesWrapper.INDEX, SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId())
             .findByIndex(SeriesWrapper.ITEM_ID, seriesId)
             .findByIndex(SeriesWrapper.PARENT, budgetAreaWrapper.get(SeriesWrapper.ID)).getGlobs().isEmpty()) {
@@ -167,13 +161,11 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
       }
 
       for (Glob series : repository.getAll(Series.TYPE)) {
-        Integer budgetAreaId = series.get(Series.BUDGET_AREA);
-        if (BudgetArea.UNCATEGORIZED.getId().equals(budgetAreaId) ||
-            BudgetArea.OTHER.getId().equals(budgetAreaId) ||
-            Series.isSavingToExternal(series)) {
+        if (!SeriesWrapper.shouldCreateWrapperForSeries(series)) {
           continue;
         }
 
+        Integer budgetAreaId = series.get(Series.BUDGET_AREA);
         Integer budgetAreaWrapperId = budgetAreaIds.get(budgetAreaId);
         if (budgetAreaWrapperId != null) {
           repository.create(SeriesWrapper.TYPE,
