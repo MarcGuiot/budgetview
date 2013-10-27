@@ -27,7 +27,9 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.actions.ToggleBooleanAction;
 import org.globsframework.gui.splits.font.FontLocator;
+import org.globsframework.gui.utils.AbstractGlobBooleanUpdater;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
@@ -124,6 +126,8 @@ public class TransactionView extends View implements Filterable {
     tablePopup.add(showPlannedTransactionsCheckbox);
     tablePopup.add(view.getCopyTableAction(Lang.get("copyTable")));
     tablePopup.add(new PrintTransactionsAction(view, repository, directory));
+    tablePopup.addSeparator();
+    tablePopup.add(new ShowTransactionsGraphAction(repository));
     builder.add("actionsMenu", new JPopupButton(Lang.get("budgetView.actions"), tablePopup));
 
     builder.addLabel("sum", Transaction.TYPE,
@@ -135,9 +139,11 @@ public class TransactionView extends View implements Filterable {
                                             new SelectionHistoChartRange(repository, directory),
                                             repository, directory);
     accountChart.registerComponents(builder);
+    installTransactionGraphUpdater(accountChart);
 
     GlobLabelView legend = builder.addLabel("accountChartLegend", Account.TYPE, new LegendStringifier(directory));
     selectionService.addListener(legend, Month.TYPE);
+
 
     parentBuilder.add("transactionView", builder);
   }
@@ -326,5 +332,22 @@ public class TransactionView extends View implements Filterable {
         }
       }
     }
+  }
+
+  private class ShowTransactionsGraphAction extends ToggleBooleanAction {
+    public ShowTransactionsGraphAction(GlobRepository repository) {
+      super(UserPreferences.KEY, UserPreferences.SHOW_TRANSACTION_GRAPH,
+            Lang.get("transactionView.hideGraph"), Lang.get("transactionView.showGraph"), repository);
+    }
+  }
+
+  private void installTransactionGraphUpdater(final SelectedAccountPositionsChartView accountChart) {
+    AbstractGlobBooleanUpdater updater = new AbstractGlobBooleanUpdater(UserPreferences.SHOW_TRANSACTION_GRAPH, repository) {
+      protected void doUpdate(boolean visible) {
+        accountChart.getChart().setVisible(visible);
+      }
+    };
+    updater.setKey(UserPreferences.KEY);
+    updater.update();
   }
 }

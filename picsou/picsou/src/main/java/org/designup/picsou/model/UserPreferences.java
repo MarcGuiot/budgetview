@@ -104,8 +104,10 @@ public class UserPreferences {
   public static LinkField TEXT_DATE_TYPE;
 
   public static StringField MAIL_FOR_MOBILE;
-
   public static StringField PASSWORD_FOR_MOBILE;
+
+  @DefaultBoolean(false)
+  public static BooleanField SHOW_TRANSACTION_GRAPH;
 
   static {
     GlobTypeLoader.init(UserPreferences.class, "userPreferences");
@@ -131,7 +133,7 @@ public class UserPreferences {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 16;
+      return 17;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -174,11 +176,15 @@ public class UserPreferences {
       outputStream.writeBoolean(values.get(RECONCILIATION_FILTERING_TIP_SHOWN));
       outputStream.writeUtf8String(values.get(MAIL_FOR_MOBILE));
       outputStream.writeUtf8String(values.get(PASSWORD_FOR_MOBILE));
+      outputStream.writeBoolean(values.get(SHOW_TRANSACTION_GRAPH));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 16) {
+      if (version == 17) {
+        deserializeDataV17(fieldSetter, data);
+      }
+      else if (version == 16) {
         deserializeDataV16(fieldSetter, data);
       }
       else if (version == 15) {
@@ -228,6 +234,44 @@ public class UserPreferences {
       }
     }
 
+    private void deserializeDataV17(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(LAST_BACKUP_RESTORE_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
+      fieldSetter.set(REGISTERED_USER, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
+      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_SAVINGS, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_EXTRA, input.readInteger());
+      fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, input.readBoolean());
+      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, input.readInteger());
+      fieldSetter.set(MONTH_FOR_PLANNED, input.readInteger());
+      fieldSetter.set(MULTIPLE_PLANNED, input.readBoolean());
+      fieldSetter.set(SHOW_RECONCILIATION, input.readBoolean());
+      fieldSetter.set(EXIT_COUNT, input.readInteger());
+      fieldSetter.set(EVALUATION_SHOWN, input.readBoolean());
+      fieldSetter.set(TRANSACTION_POS1, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS2, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS3, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS4, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS5, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS6, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS7, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS8, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS9, input.readInteger());
+      fieldSetter.set(COLOR_THEME, input.readInteger());
+      fieldSetter.set(NUMERIC_DATE_TYPE, input.readInteger());
+      fieldSetter.set(TEXT_DATE_TYPE, input.readInteger());
+      fieldSetter.set(RECONCILIATION_FILTERING_TIP_SHOWN, input.readBoolean());
+      fieldSetter.set(MAIL_FOR_MOBILE, input.readUtf8String());
+      fieldSetter.set(PASSWORD_FOR_MOBILE, input.readUtf8String());
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, input.readBoolean());
+    }
+
     private void deserializeDataV16(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readUtf8String());
@@ -263,6 +307,7 @@ public class UserPreferences {
       fieldSetter.set(RECONCILIATION_FILTERING_TIP_SHOWN, input.readBoolean());
       fieldSetter.set(MAIL_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(PASSWORD_FOR_MOBILE, input.readUtf8String());
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
     }
 
     private void deserializeDataV15(FieldSetter fieldSetter, byte[] data) {
@@ -298,6 +343,7 @@ public class UserPreferences {
       fieldSetter.set(NUMERIC_DATE_TYPE, input.readInteger());
       fieldSetter.set(TEXT_DATE_TYPE, input.readInteger());
       fieldSetter.set(RECONCILIATION_FILTERING_TIP_SHOWN, input.readBoolean());
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
     }
 
     private void deserializeDataV14(FieldSetter fieldSetter, byte[] data) {
@@ -332,6 +378,8 @@ public class UserPreferences {
       fieldSetter.set(COLOR_THEME, input.readInteger());
       fieldSetter.set(NUMERIC_DATE_TYPE, input.readInteger());
       fieldSetter.set(TEXT_DATE_TYPE, input.readInteger());
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, false);
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
     }
 
     private void deserializeDataV13(FieldSetter fieldSetter, byte[] data) {
@@ -364,6 +412,7 @@ public class UserPreferences {
       fieldSetter.set(TRANSACTION_POS8, input.readInteger());
       fieldSetter.set(TRANSACTION_POS9, input.readInteger());
       fieldSetter.set(COLOR_THEME, input.readInteger());
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
     }
 
     private void deserializeDataV12(FieldSetter fieldSetter, byte[] data) {
@@ -395,6 +444,7 @@ public class UserPreferences {
       fieldSetter.set(TRANSACTION_POS7, input.readInteger());
       fieldSetter.set(TRANSACTION_POS8, input.readInteger());
       fieldSetter.set(TRANSACTION_POS9, input.readInteger());
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
     }
 
     private void deserializeDataV11(FieldSetter fieldSetter, byte[] data) {
@@ -425,6 +475,7 @@ public class UserPreferences {
       fieldSetter.set(TRANSACTION_POS7, input.readInteger());
       fieldSetter.set(TRANSACTION_POS8, input.readInteger());
       fieldSetter.set(TRANSACTION_POS9, input.readInteger());
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
     }
 
     private void deserializeDataV10(FieldSetter fieldSetter, byte[] data) {
@@ -446,6 +497,7 @@ public class UserPreferences {
       fieldSetter.set(MULTIPLE_PLANNED, input.readBoolean());
       fieldSetter.set(SHOW_RECONCILIATION, input.readBoolean());
       fieldSetter.set(EXIT_COUNT, 0);
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
     }
 
     private void deserializeDataV9(FieldSetter fieldSetter, byte[] data) {
@@ -466,6 +518,7 @@ public class UserPreferences {
       fieldSetter.set(MONTH_FOR_PLANNED, input.readInteger());
       fieldSetter.set(MULTIPLE_PLANNED, input.readBoolean());
       fieldSetter.set(EXIT_COUNT, 0);
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
     }
 
     private void deserializeDataV8(FieldSetter fieldSetter, byte[] data) {
@@ -486,6 +539,7 @@ public class UserPreferences {
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
       fieldSetter.set(MULTIPLE_PLANNED, false);
       fieldSetter.set(EXIT_COUNT, 0);
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
     }
 
     private void deserializeDataV7(FieldSetter fieldSetter, byte[] data) {
@@ -510,6 +564,7 @@ public class UserPreferences {
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
       fieldSetter.set(MULTIPLE_PLANNED, false);
       fieldSetter.set(EXIT_COUNT, 0);
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
     }
 
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
@@ -529,6 +584,7 @@ public class UserPreferences {
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
       fieldSetter.set(MULTIPLE_PLANNED, false);
       fieldSetter.set(EXIT_COUNT, 0);
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
     }
 
     private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
@@ -547,6 +603,7 @@ public class UserPreferences {
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
       fieldSetter.set(MULTIPLE_PLANNED, false);
       fieldSetter.set(EXIT_COUNT, 0);
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
     }
 
     private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
@@ -564,6 +621,7 @@ public class UserPreferences {
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
       fieldSetter.set(MULTIPLE_PLANNED, false);
       fieldSetter.set(EXIT_COUNT, 0);
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
     }
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
@@ -580,6 +638,7 @@ public class UserPreferences {
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
       fieldSetter.set(MULTIPLE_PLANNED, false);
       fieldSetter.set(EXIT_COUNT, 0);
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -594,6 +653,7 @@ public class UserPreferences {
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
       fieldSetter.set(MULTIPLE_PLANNED, false);
       fieldSetter.set(EXIT_COUNT, 0);
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
@@ -607,6 +667,7 @@ public class UserPreferences {
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
       fieldSetter.set(MULTIPLE_PLANNED, false);
       fieldSetter.set(EXIT_COUNT, 0);
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
     }
   }
 

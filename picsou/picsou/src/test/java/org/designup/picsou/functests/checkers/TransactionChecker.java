@@ -404,6 +404,26 @@ public class TransactionChecker extends ViewChecker {
     return new HistoDailyChecker(panel, "accountChart");
   }
 
+  public TransactionChecker checkGraphShown() {
+    checkComponentVisible(mainWindow, JPanel.class, "accountChart", true);
+    return this;
+  }
+
+  public TransactionChecker checkGraphHidden() {
+    checkComponentVisible(mainWindow, JPanel.class, "accountChart", false);
+    return this;
+  }
+
+  public TransactionChecker showGraph() {
+    openActionPopup().click(Lang.get("transactionView.showGraph"));
+    return this;
+  }
+
+  public TransactionChecker hideGraph() {
+    openActionPopup().click(Lang.get("transactionView.hideGraph"));
+    return this;
+  }
+
   public TransactionChecker sortByBankDate() {
     getTable()
       .getHeader()

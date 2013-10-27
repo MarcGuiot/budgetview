@@ -200,6 +200,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .add("08/05/2006", "TRANSACTION 1C", -200.00, "To categorize", 500.00, 11500.00, "Account n. 1")
       .add("02/05/2006", "TRANSACTION 1B", -400.00, "To categorize", 700.00, 11700.00, "Account n. 1")
       .check();
+    transactions.showGraph();
     transactions.checkGraph("Main accounts - may 2006")
       .checkRange(200605, 200605)
       .checkCurrentDay(200605, 8)

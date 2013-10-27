@@ -524,11 +524,17 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testChart() throws Exception {
+
+    transactions.checkGraphHidden();
+
+    transactions.showGraph();
     transactions.checkGraph("Main accounts - may 2006")
       .checkValue(200605, 1, 330.00)
       .checkValue(200605, 2, 130.00)
       .checkValue(200605, 3, 100.00)
       .checkValue(200605, 6, 0.00);
+
+    transactions.checkGraphShown();
 
     transactions.select("PEAGE");
     transactions.checkGraph("Main accounts - may 2006")
@@ -536,5 +542,8 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .checkSelected(200605, 3)
       .checkNotSelected(200605, 4)
       .click(200605, 6);
+
+    transactions.hideGraph();
+    transactions.checkGraphHidden();
   }
 }
