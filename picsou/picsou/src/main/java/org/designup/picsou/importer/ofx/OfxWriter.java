@@ -225,7 +225,7 @@ public class OfxWriter {
                                                Integer transactionId,
                                                String label) {
     write("          <STMTTRN>\n" +
-          "            <TRNTYPE>DEBIT\n" +
+          "            <TRNTYPE>"+ (amount <= 0 ? "DEBIT" : "CREDIT") + "\n" +
           "            <DTPOSTED>" + stringifiedBankDate + "\n" +
           "            <DTUSER>" + stringifiedUserDate + "\n" +
           "            <TRNAMT>" + Formats.DEFAULT_DECIMAL_FORMAT.format(amount) + "\n" +
