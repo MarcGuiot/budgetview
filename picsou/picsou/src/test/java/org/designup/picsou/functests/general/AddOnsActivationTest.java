@@ -3,7 +3,7 @@ package org.designup.picsou.functests.general;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
-public class FreeToPaidVersionTest extends LoggedInFunctionalTestCase {
+public class AddOnsActivationTest extends LoggedInFunctionalTestCase {
 
   public void setUp() throws Exception {
     setNotRegistered();
@@ -20,8 +20,9 @@ public class FreeToPaidVersionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2013/11/01", 1000.00, "Income")
       .addTransaction("2013/11/01", 100.00, "Expense 1")
       .load();
-
     views.selectHome();
+
+    // === FREE VERSION ===
 
     operations.checkFileMenu(
       "Import",
@@ -38,10 +39,17 @@ public class FreeToPaidVersionTest extends LoggedInFunctionalTestCase {
     budgetView.extras.checkAvailableActions("Add", "Disable month filtering");
     categorization.selectTransaction("EXPENSE 1");
     categorization.selectExtras().checkProjectCreationHidden();
+    operations.openPreferences()
+      .checkDataPathModificationHidden()
+      .cancel();
+
+    // === ENABLE ADD-ONS ===
 
     operations.enableAddOns();
-    views.selectHome();
 
+    // === ADD-ONS ENABLED ===
+
+    views.selectHome();
     operations.checkFileMenu(
       "Import",
       "Export",
@@ -62,5 +70,8 @@ public class FreeToPaidVersionTest extends LoggedInFunctionalTestCase {
     projectChart.checkVisible();
     budgetView.extras.checkAvailableActions("Add", "Add project", "Disable month filtering");
     categorization.getExtras().checkProjectCreationVisible();
+    operations.openPreferences()
+      .checkDataPathModificationShown()
+      .cancel();
   }
 }

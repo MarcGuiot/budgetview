@@ -17,6 +17,7 @@ public class StorageDirChangeTest extends LoggedInFunctionalTestCase {
     setDeleteLocalPrevayler(true);
     super.setUp();
     setDeleteLocalPrevayler(false);
+    operations.enableAddOns();
   }
 
   public void testChangeDirectory() throws Exception {

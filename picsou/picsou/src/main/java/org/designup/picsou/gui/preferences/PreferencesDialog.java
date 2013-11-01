@@ -4,10 +4,7 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.preferences.panes.ColorsPane;
 import org.designup.picsou.gui.preferences.panes.ParametersPane;
 import org.designup.picsou.gui.preferences.panes.StorageDirPane;
-import org.designup.picsou.model.ColorTheme;
-import org.designup.picsou.model.NumericDateType;
-import org.designup.picsou.model.TextDateType;
-import org.designup.picsou.model.UserPreferences;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
@@ -55,7 +52,7 @@ public class PreferencesDialog {
 
   private static LocalGlobRepository createLocalRepository(GlobRepository parentRepository) {
     return LocalGlobRepositoryBuilder.init(parentRepository)
-      .copy(UserPreferences.TYPE, ColorTheme.TYPE, NumericDateType.TYPE, TextDateType.TYPE)
+      .copy(User.TYPE, UserPreferences.TYPE, ColorTheme.TYPE, NumericDateType.TYPE, TextDateType.TYPE)
       .get();
   }
 

@@ -4,10 +4,13 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.model.ColorTheme;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.ComboBox;
+import org.uispec4j.TabGroup;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.FileChooserHandler;
 import org.uispec4j.interception.WindowInterceptor;
+
+import javax.swing.*;
 
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
@@ -73,6 +76,20 @@ public class PreferencesChecker extends GuiChecker {
 
   public PreferencesChecker setLang(String langKey) {
     window.getComboBox("lang").select(Lang.get("lang." + langKey));
+    return this;
+  }
+
+  public PreferencesChecker checkDataPathModificationHidden() {
+    TabGroup tabs = window.getTabGroup();
+    tabs.selectTab(Lang.get("preferences.tab.storage"));
+    checkComponentVisible(tabs.getSelectedTab(), JPanel.class, "storageDirChangePanel", false);
+    return this;
+  }
+
+  public PreferencesChecker checkDataPathModificationShown() {
+    TabGroup tabs = window.getTabGroup();
+    tabs.selectTab(Lang.get("preferences.tab.storage"));
+    checkComponentVisible(tabs.getSelectedTab(), JPanel.class, "storageDirChangePanel", true);
     return this;
   }
 

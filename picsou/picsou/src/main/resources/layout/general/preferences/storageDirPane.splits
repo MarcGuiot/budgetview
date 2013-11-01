@@ -8,18 +8,20 @@
 
     <label ref="storageDir" font="-,bold,10" marginLeft="10" marginTop="15"/>
 
-    <label text="$data.path.prefs.change" marginTop="15"/>
+    <column ref="storageDirChangePanel">
+      <label text="$data.path.prefs.change" marginTop="15"/>
 
-    <row marginTop="5">
-      <filler fill="horizontal"/>
-      <button action="revertToDefault" marginRight="10"/>
-      <button action="browseStorageDir"/>
-      <filler fill="horizontal"/>
-    </row>
+      <row marginTop="5">
+        <filler fill="horizontal"/>
+        <button action="revertToDefault" marginRight="10"/>
+        <button action="browseStorageDir"/>
+        <filler fill="horizontal"/>
+      </row>
 
-    <htmlEditorPane ref="updateMessage" border="empty(15,0,0,0)"/>
+      <htmlEditorPane ref="updateMessage" border="empty(15,0,0,0)"/>
 
-    <htmlEditorPane text="$data.path.sharing.warning" marginTop="10"/>
+      <htmlEditorPane text="$data.path.sharing.warning" marginTop="10"/>
+    </column>
 
     <filler fill="vertical"/>
   </column>

@@ -2,6 +2,8 @@ package org.designup.picsou.gui.preferences.panes;
 
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
+import org.designup.picsou.gui.license.AddOnStatusListener;
+import org.designup.picsou.gui.license.AddOnStatusVisibilityUpdater;
 import org.designup.picsou.gui.preferences.PreferencesDialog;
 import org.designup.picsou.gui.preferences.PreferencesPane;
 import org.designup.picsou.gui.preferences.PreferencesResult;
@@ -44,6 +46,10 @@ public class StorageDirPane implements PreferencesPane {
 
     storageDirMessage = new JLabel();
     builder.add("storageDirMessage", storageDirMessage);
+
+    JPanel storageDirChangePanel = new JPanel();
+    builder.add("storageDirChangePanel", storageDirChangePanel);
+    AddOnStatusVisibilityUpdater.install(repository, storageDirChangePanel);
 
     builder.add("storageDir", storageDir);
     builder.add("browseStorageDir", new BrowseDataPath());
