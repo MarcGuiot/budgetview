@@ -35,7 +35,6 @@ public class LicenseActivationDialog {
 
   private JEditorPane connectionMessage = new JEditorPane();
   private JEditorPane askForNewCodeMessage = new JEditorPane();
-  private JLabel expirationLabel = new JLabel();
   private ProgressPanel progressPanel = new ProgressPanel();
   private ActivateAction activateAction = new ActivateAction();
   private Integer activationState;
@@ -96,8 +95,6 @@ public class LicenseActivationDialog {
     connectionMessage.setText(Lang.get("license.connect"));
     builder.add("connectionMessage", connectionMessage);
     builder.add("connectionState", progressPanel);
-
-    builder.add("expirationLabel", expirationLabel);
 
     dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction());
 
@@ -194,7 +191,6 @@ public class LicenseActivationDialog {
   }
 
   public void show(boolean expiration) {
-    expirationLabel.setVisible(expiration);
     localRepository.rollback();
     localRepository.update(User.KEY, User.ACTIVATION_CODE, null);
     localRepository.update(User.KEY, User.SIGNATURE, null);
