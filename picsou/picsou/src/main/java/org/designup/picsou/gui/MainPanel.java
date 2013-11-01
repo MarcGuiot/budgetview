@@ -23,6 +23,7 @@ import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.help.actions.GotoSupportAction;
 import org.designup.picsou.gui.help.actions.GotoWebsiteAction;
 import org.designup.picsou.gui.help.actions.SendLogsAction;
+import org.designup.picsou.gui.license.AddOnStatusListener;
 import org.designup.picsou.gui.license.LicenseExpirationAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
@@ -122,6 +123,7 @@ public class MainPanel {
   private SignpostView signpostView;
   private Action threadsAction;
   private EditMobileAccountAction editMobileAccountAction;
+  private PrintBudgetAction printBudgetAction;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -179,6 +181,7 @@ public class MainPanel {
     logoutAction = new LogoutAction(logoutService);
     setPasswordAction = new SetPasswordAction(repository, directory);
     deleteUserAction = new DeleteUserAction(this, repository, directory);
+    printBudgetAction = new PrintBudgetAction(replicationGlobRepository, directory);
     editMobileAccountAction = new EditMobileAccountAction(repository, directory);
     threadsAction = new SendStackTracesAction(repository, directory);
 
@@ -267,7 +270,7 @@ public class MainPanel {
   public void createMenuBar(final PicsouFrame frame, ReplicationGlobRepository replicationGlobRepository, Directory directory) {
     menuBar = new JMenuBar();
 
-    menuBar.add(createFileMenu(replicationGlobRepository));
+    menuBar.add(createFileMenu());
     menuBar.add(createEditMenu(frame, directory));
     menuBar.add(createViewMenu(directory));
 
@@ -278,35 +281,7 @@ public class MainPanel {
     menuBar.add(createHelpMenu(directory));
   }
 
-  private JMenu createFileMenu(ReplicationGlobRepository replicationGlobRepository) {
-    JMenu menu = new JMenu(Lang.get("menuBar.file"));
-    menu.add(importFileAction);
-    menu.add(exportFileAction);
-    menu.addSeparator();
-    menu.add(backupAction);
-    menu.add(restoreActionFileAction);
-    menu.add(restoreSnapshotMenuAction);
-    // A Restaurer - ne fonctionne plus sur Mac
-    // MRJAdapter.setPreferencesEnabled(true);
-    // MRJAdapter.addPreferencesListener(preferencesAction);
-
-    menu.addSeparator();
-    menu.add(preferencesAction);
-
-    menu.addSeparator();
-    menu.add(registerAction);
-    menu.add(setPasswordAction);
-    menu.add(logoutAction);
-    menu.add(deleteUserAction);
-
-    menu.addSeparator();
-    menu.add(new PrintBudgetAction(replicationGlobRepository, directory));
-
-//    Utils.beginRemove();
-    menu.addSeparator();
-    menu.add(editMobileAccountAction);
-    menu.add(new SendMobileDataAction(repository, directory));
-//    Utils.endRemove();
+  private JMenu createFileMenu() {
 
     if (Gui.useMacOSMenu()) {
       if (exitActionWhitoutUserEvaluation != null) {
@@ -315,10 +290,46 @@ public class MainPanel {
       }
       MRJAdapter.addQuitApplicationListener(exitAction);
     }
-    else {
-      menu.addSeparator();
-      menu.add(exitAction);
-    }
+
+    final JMenu menu = new JMenu(Lang.get("menuBar.file"));
+    AddOnStatusListener.install(repository, new AddOnStatusListener() {
+      protected void statusChanged(boolean addOnActivated) {
+        menu.removeAll();
+        menu.add(importFileAction);
+        menu.add(exportFileAction);
+        menu.addSeparator();
+        menu.add(backupAction);
+        menu.add(restoreActionFileAction);
+        menu.add(restoreSnapshotMenuAction);
+        // A Restaurer - ne fonctionne plus sur Mac
+        // MRJAdapter.setPreferencesEnabled(true);
+        // MRJAdapter.addPreferencesListener(preferencesAction);
+
+        menu.addSeparator();
+        menu.add(preferencesAction);
+
+        menu.addSeparator();
+        menu.add(registerAction);
+
+        if (addOnActivated) {
+          menu.add(setPasswordAction);
+          menu.add(logoutAction);
+          menu.add(deleteUserAction);
+
+          menu.addSeparator();
+          menu.add(printBudgetAction);
+
+          menu.addSeparator();
+          menu.add(editMobileAccountAction);
+          menu.add(new SendMobileDataAction(repository, directory));
+        }
+
+        if (!Gui.useMacOSMenu()) {
+          menu.addSeparator();
+          menu.add(exitAction);
+        }
+      }
+    });
     return menu;
   }
 
@@ -349,6 +360,8 @@ public class MainPanel {
   private JMenu createDevMenu(final Directory directory) {
     JMenu devMenu = new JMenu("[Dev]");
     devMenu.add(new DevOptionsAction(repository, directory));
+    devMenu.add(new ToggleAddOnPurchased(true, repository));
+    devMenu.add(new ToggleAddOnPurchased(false, repository));
     devMenu.add(new DumpDataAction(repository));
     devMenu.add(new DataCheckerAction(repository, directory));
     devMenu.add(new ThrowExceptionAction());

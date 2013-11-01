@@ -76,6 +76,10 @@ public class ApplicationChecker extends GuiChecker {
     return window;
   }
 
+  public void enableAddOns() {
+    getOperations().enableAddOns();
+  }
+
   public PicsouApplication getApplication() {
     return application;
   }

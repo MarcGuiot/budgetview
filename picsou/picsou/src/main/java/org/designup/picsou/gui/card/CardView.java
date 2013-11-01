@@ -1,11 +1,12 @@
 package org.designup.picsou.gui.card;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.card.utils.NavigationAction;
 import org.designup.picsou.gui.card.utils.NavigationIcons;
 import org.designup.picsou.gui.help.HelpService;
+import org.designup.picsou.gui.license.AddOnStatusListener;
 import org.designup.picsou.gui.model.Card;
+import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.signpost.guides.GotoCategorizationSignpost;
 import org.designup.picsou.gui.signpost.guides.GotoDataSignpost;
 import org.designup.picsou.gui.signpost.guides.SkipAndGotoBudgetSignpost;
@@ -17,6 +18,7 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.model.GlobList;
@@ -32,7 +34,8 @@ public class CardView extends View implements GlobSelectionListener {
 
   private Card lastSelectedCard = NavigationService.INITIAL_CARD;
   private JToggleButton[] toggles = new JToggleButton[Card.values().length];
-  private static final Card[] CARDS = {Card.HOME, Card.BUDGET, Card.DATA, Card.CATEGORIZATION, Card.ANALYSIS};
+  private static final Card[] ALL_CARDS = {Card.HOME, Card.BUDGET, Card.DATA, Card.CATEGORIZATION, Card.ANALYSIS};
+  private static final Card[] FREE_CARDS = {Card.HOME, Card.BUDGET, Card.DATA, Card.CATEGORIZATION};
   private CardView.ViewHelpAction viewHelpAction;
   private Signpost categorizationCompletionSignpost;
 
@@ -49,7 +52,7 @@ public class CardView extends View implements GlobSelectionListener {
 
     final ButtonGroup masterGroup = new ButtonGroup();
     final ImageLocator images = directory.get(ImageLocator.class);
-    for (Card card : CARDS) {
+    for (Card card : ALL_CARDS) {
       JToggleButton toggle = new JToggleButton(new ToggleAction(card));
       toggle.setIcon(NavigationIcons.get(images, card));
       toggle.setRolloverEnabled(true);
@@ -75,9 +78,20 @@ public class CardView extends View implements GlobSelectionListener {
       }
     }
 
-    builder.addRepeat("viewToggles", Arrays.asList(CARDS), new RepeatComponentFactory<Card>() {
+    final Repeat<Card> repeat = builder.addRepeat("viewToggles", Arrays.asList(ALL_CARDS), new RepeatComponentFactory<Card>() {
       public void registerComponents(RepeatCellBuilder cellBuilder, Card card) {
         cellBuilder.add("toggle", toggles[card.getId()]);
+      }
+    });
+
+    AddOnStatusListener.install(repository, new AddOnStatusListener() {
+      protected void statusChanged(boolean addOnActivated) {
+        if (addOnActivated) {
+          repeat.set(Arrays.asList(ALL_CARDS));
+        }
+        else {
+          repeat.set(Arrays.asList(FREE_CARDS));
+        }
       }
     });
 

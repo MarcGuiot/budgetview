@@ -8,14 +8,12 @@ import java.awt.event.ActionListener;
 
 public class JPopupButton extends JButton {
 
-  public JPopupButton(String text, final PopupMenuFactory factory) {
-    super(text);
-    addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        JPopupMenu menu = factory.createPopup();
-        if (!menu.isShowing()) {
-          menu.show(JPopupButton.this, 0, JPopupButton.this.getHeight());
-        }
+  private PopupMenuFactory factory;
+
+  public JPopupButton(String text) {
+    this(text, new PopupMenuFactory() {
+      public JPopupMenu createPopup() {
+        return new JPopupMenu();
       }
     });
   }
@@ -26,5 +24,34 @@ public class JPopupButton extends JButton {
         return menu;
       }
     });
+  }
+
+  public JPopupButton(String text, final PopupMenuFactory factory) {
+    super(text);
+    this.factory = factory;
+    addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        JPopupMenu menu = createPopup();
+        if (!menu.isShowing()) {
+          menu.show(JPopupButton.this, 0, JPopupButton.this.getHeight());
+        }
+      }
+    });
+  }
+
+  private JPopupMenu createPopup() {
+    return factory.createPopup();
+  }
+
+  public void setPopupFactory(PopupMenuFactory factory) {
+    this.factory = factory;
+  }
+
+  public void setPopupMenu(final JPopupMenu menu) {
+    this.factory = new PopupMenuFactory() {
+      public JPopupMenu createPopup() {
+        return menu;
+      }
+    };
   }
 }

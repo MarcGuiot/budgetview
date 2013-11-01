@@ -3,7 +3,7 @@ package org.designup.picsou.gui.transactions;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.chart.SelectedAccountPositionsChartView;
 import org.designup.picsou.gui.accounts.utils.AccountFilter;
-import org.designup.picsou.gui.card.ImportPanel;
+import org.designup.picsou.gui.importer.ImportPanel;
 import org.designup.picsou.gui.card.utils.GotoCardAction;
 import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.filtering.FilterManager;

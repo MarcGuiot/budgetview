@@ -19,6 +19,7 @@ import org.designup.picsou.gui.description.stringifiers.SeriesDescriptionStringi
 import org.designup.picsou.gui.description.stringifiers.SeriesNameComparator;
 import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.license.AddOnStatusListener;
 import org.designup.picsou.gui.printing.actions.PrintTransactionsAction;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.series.SeriesEditor;
@@ -436,7 +437,15 @@ public class CategorizationView extends View implements TableView, Filterable, C
     JPanel groupForSeries = new JPanel();
     builder.add("groupCreateEditSeries", groupForSeries);
     builder.add("createSeries", new CreateSeriesAction(budgetArea));
-    builder.add("additionalAction", getAdditionalAction(budgetArea));
+    final Action additionalAction = getAdditionalAction(budgetArea);
+    builder.add("additionalAction", additionalAction);
+    if (budgetArea == BudgetArea.EXTRAS) {
+      AddOnStatusListener.install(repository, new AddOnStatusListener() {
+        protected void statusChanged(boolean addOnActivated) {
+          additionalAction.setEnabled(addOnActivated);
+        }
+      });
+    }
 
     parentBuilder.add(name, builder);
     return componentFactory;
@@ -499,8 +508,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
     }
 
     public String toString(Glob glob, GlobRepository repository) {
-      if (Strings.isNotEmpty(glob.get(Transaction.NOTE))){
-      return stringifier.toString(glob, repository) + " " + glob.get(Transaction.NOTE);
+      if (Strings.isNotEmpty(glob.get(Transaction.NOTE))) {
+        return stringifier.toString(glob, repository) + " " + glob.get(Transaction.NOTE);
       }
       else {
         return stringifier.toString(glob, repository);

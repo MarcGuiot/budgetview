@@ -12,6 +12,7 @@ import org.designup.picsou.gui.components.highlighting.HighlightUpdater;
 import org.designup.picsou.gui.components.tips.ShowDetailsTipAction;
 import org.designup.picsou.gui.components.utils.BlankAction;
 import org.designup.picsou.gui.description.AmountStringifier;
+import org.designup.picsou.gui.license.AddOnStatusListener;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
@@ -176,14 +177,20 @@ public class BudgetAreaSeriesView extends View {
     seriesRepeat =
       builder.addRepeat("seriesRepeat", new GlobList(), new SeriesRepeatComponentFactory(builder));
 
-    JPopupMenu menu = new JPopupMenu();
-    menu.add(seriesButtons.createSeriesAction());
-    if (budgetArea == BudgetArea.EXTRAS) {
-      menu.add(new CreateProjectAction(directory));
-    }
-    menu.addSeparator();
-    menu.add(createMonthFilteringButton());
-    builder.add("seriesActions", new JPopupButton(Lang.get("budgetView.actions"), menu));
+    final JPopupButton popupButton = new JPopupButton(Lang.get("budgetView.actions"));
+    builder.add("seriesActions", popupButton);
+    AddOnStatusListener.install(repository, new AddOnStatusListener() {
+      protected void statusChanged(boolean addOnActivated) {
+        JPopupMenu menu = new JPopupMenu();
+        menu.add(seriesButtons.createSeriesAction());
+        if (addOnActivated && (budgetArea == BudgetArea.EXTRAS)) {
+          menu.add(new CreateProjectAction(directory));
+        }
+        menu.addSeparator();
+        menu.add(createMonthFilteringButton());
+        popupButton.setPopupMenu(menu);
+      }
+    });
 
     parentBuilder.add(name, builder);
 

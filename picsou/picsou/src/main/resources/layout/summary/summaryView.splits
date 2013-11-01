@@ -7,10 +7,10 @@
   </styles>
 
   <grid styleClass="secondaryInnerBlock">
-    <label gridPos="(0,0)" text="$summaryView.projects.title" styleClass="secondarySectionTitle"/>
 
+    <label gridPos="(0,0)" text="$summaryView.projects.title" styleClass="secondarySectionTitle" autoHideSource="projectChart"/>
     <component gridPos="(0,1,2,1)" ref="projectChart" styleClass="chart" weightY="8"/>
-    <label gridPos="(2,1)" icon="rightArrow(12,50,10,40,summary.project.arrow)" weightX="0.01" marginLeft="4"/>
+    <label gridPos="(2,1)" icon="rightArrow(12,50,10,40,summary.project.arrow)" autoHideSource="projectChart" weightX="0.01" marginLeft="4"/>
 
     <label gridPos="(0,2)" text="$summaryView.mainAccounts.title" styleClass="secondarySectionTitle"/>
     <label gridPos="(1,2)" text="$summaryView.mainAccounts.subtitle" styleClass="secondarySectionSubtitle"/>

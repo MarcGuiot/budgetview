@@ -46,11 +46,6 @@ public class UpgradeTrigger implements ChangeSetListener {
 
     Glob userVersion = repository.get(UserVersionInformation.KEY);
 
-    Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
-    if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
-      repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
-                        LicenseService.getEndOfTrialPeriod());
-    }
 
     final Long currentJarVersion = userVersion.get(UserVersionInformation.CURRENT_JAR_VERSION);
     if (currentJarVersion.equals(PicsouApplication.JAR_VERSION)) {
@@ -101,15 +96,14 @@ public class UpgradeTrigger implements ChangeSetListener {
       updateTargetSavings(repository);
       createMirorSeries(repository, savingsSeriesToOp);
     }
-    if (currentJarVersion < 61) {
-      repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
-                        LicenseService.getEndOfTrialPeriod());
-    }
+
+    Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
     if (currentJarVersion < 65) {
       repository.update(userPreferences.getKey(),
                         value(UserPreferences.MONTH_FOR_PLANNED, 3),
                         value(UserPreferences.PERIOD_COUNT_FOR_PLANNED, 10));
     }
+
     if (currentJarVersion < 68) {
       correctSavingMirror(repository);
     }

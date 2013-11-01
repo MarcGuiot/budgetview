@@ -135,25 +135,27 @@
                 </column>
               </card>
               <card name="summary">
-                <horizontalSplit weightY="2" styleClass="mainDivider">
-                  <column weightX="6">
-                    <label text="$summaryView.title" styleClass="blockTitle"/>
-                    <column styleClass="block">
-                      <column styleClass="innerBlock" weightY="100">
-                        <panel ref="summaryView"/>
-                      </column>
-                      <panel ref="feedbackView" weightY="0"/>
-                    </column>
-                  </column>
-                  <column weightX="6">
-                    <label text="$projectView.title" styleClass="blockTitle"/>
-                    <column styleClass="block">
-                      <column styleClass="innerBlock">
-                        <panel ref="projectView"/>
+                <column>
+                  <horizontalSplit weightY="2" styleClass="mainDivider">
+                    <column weightX="6">
+                      <label text="$summaryView.title" styleClass="blockTitle"/>
+                      <column styleClass="block">
+                        <column styleClass="innerBlock" weightY="100">
+                          <panel ref="summaryView"/>
+                        </column>
+                        <panel ref="feedbackView" weightY="0"/>
                       </column>
                     </column>
-                  </column>
-                </horizontalSplit>
+                    <column weightX="6" autoHideSource="projectView">
+                      <label text="$projectView.title" styleClass="blockTitle"/>
+                      <column styleClass="block">
+                        <column styleClass="innerBlock">
+                          <panel ref="projectView"/>
+                        </column>
+                      </column>
+                    </column>
+                  </horizontalSplit>
+                </column>
               </card>
             </cards>
 

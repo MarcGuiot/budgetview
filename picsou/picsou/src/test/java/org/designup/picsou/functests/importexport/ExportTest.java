@@ -108,7 +108,7 @@ public class ExportTest extends LoggedInFunctionalTestCase {
       "            <NAME>MONOP'S\n" +
       "          </STMTTRN>\n" +
       "          <STMTTRN>\n" +
-      "            <TRNTYPE>DEBIT\n" +
+      "            <TRNTYPE>CREDIT\n" +
       "            <DTPOSTED>20080615\n" +
       "            <DTUSER>20080613\n" +
       "            <TRNAMT>1.00\n" +

@@ -37,7 +37,7 @@ public class MonthTrigger implements ChangeSetListener {
       });
     }
     if (changeSet.containsChanges(CurrentMonth.KEY)) {
-      updateMonth(repository, repository.get(UserPreferences.KEY).get(UserPreferences.FUTURE_MONTH_COUNT));
+      updateMonth(repository, repository.findOrCreate(UserPreferences.KEY).get(UserPreferences.FUTURE_MONTH_COUNT));
     }
   }
 

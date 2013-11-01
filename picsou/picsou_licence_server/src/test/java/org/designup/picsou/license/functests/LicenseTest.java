@@ -28,7 +28,7 @@ public class LicenseTest extends ConnectedTestCase {
   private PicsouApplication picsouApplication;
   private Window window;
   private LoginChecker login;
-  private LicenseMessageChecker licenseMessage;
+  private LicenseInfoChecker licenseInfo;
 
   private static final String MAIL = "alfred@free.fr";
   private static final String SECOND_PATH = "tmp/otherprevayler";
@@ -81,7 +81,7 @@ public class LicenseTest extends ConnectedTestCase {
       picsouApplication = application.getApplication();
     }
     login = new LoginChecker(window);
-    licenseMessage = new LicenseMessageChecker(window);
+    licenseInfo = new LicenseInfoChecker(window);
   }
 
   public void testConnectAtStartup() throws Exception {
@@ -131,10 +131,10 @@ public class LicenseTest extends ConnectedTestCase {
     login.logNewUser("user", "passw@rd");
 
     db.checkRepoIdIsUpdated(1L, Constraints.notEqual(RepoInfo.REPO_ID, repoId));
-    licenseMessage.checkHidden();
+    licenseInfo.checkHidden();
 
     LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed. An email was sent at " + MAIL + " with further information.");
-    licenseMessage.checkVisible("Activation failed. An email was sent");
+    licenseInfo.checkVisible("Activation failed. An email was sent");
     Email email = mailServer.checkReceivedMail(MAIL);
     email.checkContains("To prevent anyone else from using your code");
     String emailcontent = email.getContent();
@@ -302,7 +302,7 @@ public class LicenseTest extends ConnectedTestCase {
   }
 
   private void checkMessage(final String messageText) {
-    licenseMessage.checkVisible(messageText);
+    licenseInfo.checkVisible(messageText);
   }
 
   public void testRegisterAndReRegisterToOtherFailedAndSendAMail() throws Exception {
@@ -644,7 +644,7 @@ public class LicenseTest extends ConnectedTestCase {
   }
 
   private void checkDaysLeftMessage() {
-    licenseMessage.checkVisible("days left");
+    licenseInfo.checkVisible("days left");
   }
 
   private TextBox getMessageBox() {
@@ -656,7 +656,7 @@ public class LicenseTest extends ConnectedTestCase {
   }
 
   private void checkWithMailKilled() {
-    licenseMessage.checkVisible("Activation failed. An email was sent at " + MAIL + " with further information.");
+    licenseInfo.checkVisible("Activation failed. An email was sent at " + MAIL + " with further information.");
   }
 
   private void checkActivationFailed() {

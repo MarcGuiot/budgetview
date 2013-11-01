@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.card;
+package org.designup.picsou.gui.importer;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.actions.ImportFileAction;

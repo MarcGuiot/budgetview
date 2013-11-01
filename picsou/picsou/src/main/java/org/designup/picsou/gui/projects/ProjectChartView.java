@@ -9,6 +9,7 @@ import org.designup.picsou.gui.components.charts.histo.button.HistoButtonColors;
 import org.designup.picsou.gui.components.charts.histo.button.HistoButtonPainter;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.gui.license.AddOnStatusVisibilityUpdater;
 import org.designup.picsou.gui.model.ProjectStat;
 import org.designup.picsou.gui.projects.components.ProjectPopupMenuFactory;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoButtonDatasetBuilder;
@@ -120,6 +121,8 @@ public class ProjectChartView extends View {
 
     Font buttonFont = histoChart.getFont().deriveFont(BUTTON_FONT_SIZE);
     buttonFontMetrics = histoChart.getFontMetrics(buttonFont);
+
+    AddOnStatusVisibilityUpdater.install(repository, histoChart);
   }
 
   private void updateChart() {

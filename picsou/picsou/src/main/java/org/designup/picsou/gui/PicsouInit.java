@@ -317,12 +317,6 @@ public class PicsouInit {
                               value(UserVersionInformation.CURRENT_BANK_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
                               value(UserVersionInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION));
 
-      Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
-      if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
-        repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
-                          LicenseService.getEndOfTrialPeriod());
-      }
-
       repository.findOrCreate(CurrentMonth.KEY,
                               value(CurrentMonth.LAST_TRANSACTION_DAY, 0),
                               value(CurrentMonth.LAST_TRANSACTION_MONTH, 0),

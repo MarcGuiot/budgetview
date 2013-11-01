@@ -14,6 +14,14 @@ public class ProjectViewChecker extends ViewChecker {
     super(mainWindow);
   }
 
+  public void checkHidden() {
+    checkComponentVisible(mainWindow, JPanel.class, "projectChart", false);
+  }
+
+  public void checkVisible() {
+    checkComponentVisible(mainWindow, JPanel.class, "projectChart", true);
+  }
+
   public void select(String projectName) {
     getChart().click(projectName, false);
   }
