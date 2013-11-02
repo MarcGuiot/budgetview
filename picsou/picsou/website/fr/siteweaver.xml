@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site url="http://www.mybudgetview.fr" pagesDir="content">
+
+  <page file="index.html" title="BudgetView" shortTitle="Accueil"
+        template="template.html">
+
+    <page file="guide.html" title="News"/>
+
+  </page>
+
+  <copy baseDir="../resources">
+    <file path="css/styles.css"/>
+  </copy>
+
+  <copy>
+    <file path="files"/>
+  </copy>
+</site>

@@ -17,8 +17,6 @@ Environnement de test (Robolectric)
  * ensuite ajouter la dépendance projet "maps.jar" qui se trouve dans le repertoire Android, sous add-ons.
 - pour lancer les tests, il faut configurer IntelliJ de sorte que le répertoire courant soit picsou_android, dans lequel on trouve AndroidManifest.xml.
 
-
-
 Code
 - le main() de l'application est BudgetOverviewActivity.onStartup()
 
@@ -31,8 +29,3 @@ Utilisation
 Doc : reference
 - http://developer.android.com/guide/components/index.html
 - http://developer.android.com/reference/packages.html
-
-Prochaines étapes
-- Utiliser un autre format que le XML
-- Parser les données dans un thread
-- Verifier que le build de BV fonctionne toujours avec la nouvelle dependance picsou_shared

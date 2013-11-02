@@ -26,8 +26,6 @@
 
   <scm>
     <connection>scm:cvs:pserver:mguiot:@cvs.dev.java.net:/cvs:saxstack</connection>
-    <!--<developerConnection>scm:svn:https://somerepository.com/svn_repo/trunk</developerConnection>-->
-    <!--<url>http://somerepository.com/view.cvs</url>-->
   </scm>
 
   <dependencies>
