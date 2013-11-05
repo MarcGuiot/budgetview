@@ -25,4 +25,9 @@ public class AmexFrConnectorTest extends TestCase {
                                               "  </div>\n" +
                                               "</td>"));
   }
+
+  public void testAmountParsing() throws Exception {
+    assertEquals("40.00", AmexFrConnector.cleanUpAmount("  40, 00   EUR "));
+    assertEquals("1230.00", AmexFrConnector.cleanUpPosition("  Solde actuel  \n 1 230 ,  00 EUR "));
+  }
 }

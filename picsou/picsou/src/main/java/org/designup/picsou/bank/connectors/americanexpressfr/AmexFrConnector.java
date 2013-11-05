@@ -145,10 +145,6 @@ public class AmexFrConnector extends WebBankConnector {
     notifyDownloadInProgress();
 
     WebPage cardPage = browser.getCurrentPage();
-//    if (!cardsPage.containsTagWithId("a", "fr_myca_view_transactions")) {
-//      return;
-//    }
-//    WebPage cardPage = cardsPage.getAnchorById("fr_myca_view_transactions").click();
     List<String> cardNames = cardPage.getSelectById("cardAccount").getEntryNames();
     if (cardNames.size() == 0) {
       throw new WebParsingError(cardPage.getSelectById("cardAccount"), "Found no accounts in select");
@@ -284,7 +280,7 @@ public class AmexFrConnector extends WebBankConnector {
     if (text.trim().length() == 0) {
       return null;
     }
-    String amountText = text.replace(" EUR", "").replace(".", "").replace(",", ".");
+    String amountText = cleanUpAmount(text);
     try {
       return Double.parseDouble(amountText);
     }
@@ -293,17 +289,26 @@ public class AmexFrConnector extends WebBankConnector {
     }
   }
 
+  static String cleanUpAmount(String text) {
+    return text
+      .replaceAll("[\n\t ]+", "")
+      .replace("EUR", "")
+      .replace(".", "")
+      .replace(",", ".")
+      .trim();
+  }
+
   private String extractCurrentPosition(WebPage cardPage) throws WebParsingError {
     WebTableCell cell = cardPage.getTableById("summaryTable").getCellById("colOSBalance");
     if (!cell.getPanelByAttribute("div", "class", "summaryTitles").asText().contains("Solde actuel")) {
       throw new WebParsingError(cell, "Unexpected column title");
     }
-    return cell.asText()
-      .replace("Solde actuel", "")
-      .replace(" EUR", "")
-      .replace(".", "")
-      .replace(",", "")
-      .trim();
+    String text = cell.asText();
+    return cleanUpPosition(text);
+  }
+
+  static String cleanUpPosition(String text) {
+    return cleanUpAmount(text.replace("Solde actuel", ""));
   }
 
   private String extractCardNumber(String cardName) {
