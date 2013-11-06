@@ -10,7 +10,6 @@ import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.model.Synchro;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.utils.Disposable;
-import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -19,7 +18,6 @@ import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 import org.joda.time.DateTime;
 

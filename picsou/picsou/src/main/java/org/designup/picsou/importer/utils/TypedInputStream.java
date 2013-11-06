@@ -10,6 +10,7 @@ public class TypedInputStream {
   private boolean notUTF8;
   private static final String DEFAULT_ENCODING = "ISO-8859-15";
   private String fileName = "undef";
+  private boolean hasCR;
 
   public TypedInputStream(File file) throws IOException {
     stream = new RepeatableInputStream(new FileInputStream(file));
@@ -64,10 +65,14 @@ public class TypedInputStream {
   public Reader getBestProbableReader() {
     stream.reset();
     try {
-      if (notUTF8) {
-        return new InputStreamReader(stream, DEFAULT_ENCODING);
+      InputStream ignoreCR = stream;
+      if (isWindowsType()) {
+        ignoreCR = new RemoveCRInputStream();
       }
-      return new InputStreamReader(stream, "UTF-8");
+      if (notUTF8) {
+        return new InputStreamReader(ignoreCR, DEFAULT_ENCODING);
+      }
+      return new InputStreamReader(ignoreCR, "UTF-8");
     }
     catch (UnsupportedEncodingException e) {
       return new InputStreamReader(stream);
@@ -78,14 +83,54 @@ public class TypedInputStream {
     int byt;
     notUTF8 = false;
     UTF8Detector.Coder coder = UTF8Detector.first;
+    hasCR = false;
+    int newLineCount = 0;
     while ((byt = stream.read()) != -1) {
+      if (byt == '\r') {
+        hasCR = true;
+      }
+      if (byt == '\n') {
+        newLineCount++;
+      }
       coder = coder.push(byt);
       if (coder == UTF8Detector.undef) {
         notUTF8 = true;
         break;
       }
     }
-
+    while (byt != -1 && newLineCount < 10) {
+      byt = stream.read();
+      if (byt == '\r') {
+        hasCR = true;
+        break;
+      }
+      if (byt == '\n') {
+        newLineCount++;
+      }
+    }
     stream.reset();
+  }
+
+  public boolean isWindowsType() {
+    return hasCR;
+  }
+
+  private class RemoveCRInputStream extends InputStream {
+    boolean previousIsCR;
+
+    public int read() throws IOException {
+      int r = stream.read();
+      if (r == '\n') {
+        if (previousIsCR) {
+          previousIsCR = false;
+          return '\n';
+        }
+        else {
+          return ' ';
+        }
+      }
+      previousIsCR = r == '\r';
+      return r;
+    }
   }
 }

@@ -2,6 +2,7 @@ package org.designup.picsou.importer.utils;
 
 import junit.framework.TestCase;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -43,6 +44,15 @@ public class RepeatableInputStreamTest extends TestCase{
     repeatableInputStream.reset();
     InputStreamReader newStreamReader = new InputStreamReader(repeatableInputStream);
     assertTrue(newStreamReader.ready());
+  }
+
+  public void testWithCarriageReturn() throws Exception {
+    ByteArrayInputStream stream = new ByteArrayInputStream("some\nsdfsdf\nff\r\ndata\n".getBytes());
+    TypedInputStream typedInputStream = new TypedInputStream(stream);
+    typedInputStream.isWindowsType();
+    BufferedReader reader = new BufferedReader(typedInputStream.getBestProbableReader());
+    assertEquals("some sdfsdf ff", reader.readLine());
+    assertEquals("data ", reader.readLine());
   }
 
   private void checkContent(byte[] bigBuffer, RepeatableInputStream repeatableInputStream) throws IOException {
