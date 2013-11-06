@@ -1,6 +1,5 @@
 package org.globsframework.model.impl;
 
-import org.apache.wicket.util.parse.metapattern.IntegerGroup;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
