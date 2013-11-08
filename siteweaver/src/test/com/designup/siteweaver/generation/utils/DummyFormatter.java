@@ -1,12 +1,11 @@
 package com.designup.siteweaver.generation.utils;
 
-import com.designup.siteweaver.generation.Formatter;
 import com.designup.siteweaver.html.HtmlWriter;
 import com.designup.siteweaver.model.Page;
 
 import java.io.IOException;
 
-public class DummyFormatter implements Formatter {
+public class DummyFormatter implements DefaultFormatter {
   public void writeStart(HtmlWriter writer) throws IOException {
     writer.write("[");
   }

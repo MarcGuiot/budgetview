@@ -15,11 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class GeneratorTestCase extends TestCase {
+
   protected Page rootPage = new Page("root.html", "root", "root$");
-  private Map<String,Page> pages = new HashMap<String, Page>();
-  protected DummyFormatter formatter = new DummyFormatter();
   protected Site site;
   protected HtmlOutput output = new FileOutput("tmp/output");
+  private Map<String,Page> pages = new HashMap<String, Page>();
 
   protected abstract Generator getGenerator();
 
@@ -43,9 +43,13 @@ public abstract class GeneratorTestCase extends TestCase {
     return childPage;
   }
 
-  protected void checkOutput(String pagePath, String expectedOutput) throws IOException {
-    Page targetPage = pagePath.equals("") ? rootPage : pages.get(pagePath);
+  protected void checkOutput(String pageName, String expectedOutput) throws IOException {
+    Page targetPage = getPage(pageName);
     assertEquals(expectedOutput, generate(targetPage));
+  }
+
+  protected Page getPage(String pageName) {
+    return pageName.equals("") ? rootPage : pages.get(pageName);
   }
 
   protected void checkOutput(Page targetPage, String expectedOutput) throws IOException {

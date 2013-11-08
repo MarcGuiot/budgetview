@@ -4,9 +4,16 @@
   <page file="index.html" title="BudgetView" shortTitle="Accueil"
         template="template.html">
 
-    <page file="guide.html" title="News"/>
+    <page file="guide.html" title="Guide" shortTitle="Guide"/>
+
+    <page file="achat.html" title="Acheter BudgetView" shortTitle="Achat"/>
+
+    <page file="support.html" title="Support"/>
+
+    <page file="apropos.html" title="A propos"/>
 
   </page>
+
 
   <copy baseDir="../resources">
     <file path="css/styles.css"/>

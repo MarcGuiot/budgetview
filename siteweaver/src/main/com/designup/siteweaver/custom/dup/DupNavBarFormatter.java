@@ -1,13 +1,13 @@
 package com.designup.siteweaver.custom.dup;
 
-import com.designup.siteweaver.generation.AbstractFormatter;
+import com.designup.siteweaver.generation.utils.DefaultFormatter;
 import com.designup.siteweaver.html.HtmlTag;
 import com.designup.siteweaver.html.HtmlWriter;
 import com.designup.siteweaver.model.Page;
 
 import java.io.IOException;
 
-public class DupNavBarFormatter extends AbstractFormatter {
+public class DupNavBarFormatter implements DefaultFormatter {
 
   private String classAttr = "";
 

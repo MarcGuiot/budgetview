@@ -2,12 +2,11 @@ package com.designup.siteweaver.generation.generators;
 
 import com.designup.siteweaver.generation.Generator;
 import com.designup.siteweaver.generation.utils.GeneratorTestCase;
-import com.designup.siteweaver.model.Page;
 
-public class BaseGeneratorTest extends GeneratorTestCase {
+public class BaseTagGeneratorTest extends GeneratorTestCase {
 
   protected Generator getGenerator() {
-    return new BaseGenerator();
+    return new BaseTagGenerator();
   }
 
   public void test() throws Exception {

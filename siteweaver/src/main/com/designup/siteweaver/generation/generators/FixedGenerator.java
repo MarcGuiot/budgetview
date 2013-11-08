@@ -8,13 +8,16 @@ import com.designup.siteweaver.model.Site;
 
 import java.io.IOException;
 
-/**
- * Writes the base URL (the BASE tag) of the current page.
- */
-public class BaseGenerator implements Generator {
+public class FixedGenerator implements Generator {
+
+  private String outputString;
+
+  public FixedGenerator(String outputString) {
+    this.outputString = outputString;
+  }
 
   public void processPage(Site site, Page page, HtmlWriter writer, HtmlOutput htmlOutput)
     throws IOException {
-    writer.write(htmlOutput.getBaseUrl(site));
+    writer.write(outputString);
   }
 }

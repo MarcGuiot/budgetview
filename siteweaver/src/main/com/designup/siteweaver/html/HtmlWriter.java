@@ -50,7 +50,7 @@ public class HtmlWriter extends PrintWriter {
     }
   }
 
-  public HtmlWriter writeLink(String text, String url) throws IOException {
+  public HtmlWriter writeLink(String text, String url) {
     if ((url == null) && (text != null)) {
       return this;
     }

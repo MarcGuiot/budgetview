@@ -1,12 +1,13 @@
 package com.designup.siteweaver.generation.generators;
 
 import com.designup.siteweaver.generation.Generator;
+import com.designup.siteweaver.generation.utils.DummyFormatter;
 import com.designup.siteweaver.generation.utils.GeneratorTestCase;
 
-public class PathGeneratorTest extends GeneratorTestCase {
+public class BreadcrumbGeneratorTest extends GeneratorTestCase {
 
   protected Generator getGenerator() {
-    return new PathGenerator(formatter);
+    return new BreadcrumbGenerator(new DummyFormatter());
   }
 
   public void testAll() throws Exception {

@@ -9,37 +9,47 @@ import com.designup.siteweaver.model.Site;
 
 import java.io.IOException;
 
-public class NextInTourGenerator implements Generator {
+public class BookTourGenerator implements Generator {
   private Generator generator;
+  private Formatter formatter;
 
-  public NextInTourGenerator(HtmlTag tag) {
-    generator = getGenerator(tag);
+  public interface Formatter {
+    void writeStart(HtmlWriter writer);
+    void writePath(Page nextPage, HtmlWriter writer);
+    void writeLink(Page nextPage, HtmlWriter writer);
+    void writeTitle(Page nextPage, HtmlWriter writer);
+    void writeEnd(HtmlWriter writer);
+  }
+
+  public BookTourGenerator(HtmlTag tag, Formatter formatter) {
+    this.formatter = formatter;
+    this.generator = getGenerator(tag);
   }
 
   public void processPage(Site site, Page page, HtmlWriter writer, HtmlOutput output) throws IOException {
-    generator.processPage(site, page, writer, output);
+      generator.processPage(site, page, writer, output);
   }
 
   private Generator getGenerator(HtmlTag tag) {
-    String contentType = tag.getAttributeValue("output", "path");
+    String contentType = tag.getAttributeValue("output", "link");
     if (contentType.equalsIgnoreCase("path")) {
       return new OutputGenerator() {
-        protected void writeOutput(HtmlWriter output, Page nextPage) {
-          output.write(nextPage.getUrl());
+        protected void writeOutput(HtmlWriter writer, Page nextPage) {
+          formatter.writePath(nextPage, writer);
         }
       };
     }
     else if (contentType.equalsIgnoreCase("link")) {
       return new OutputGenerator() {
-        protected void writeOutput(HtmlWriter output, Page nextPage) throws IOException {
-          output.writeLink(nextPage.getTitle(), nextPage.getUrl());
+        protected void writeOutput(HtmlWriter writer, Page nextPage) throws IOException {
+          formatter.writeLink(nextPage, writer);
         }
       };
     }
     else if (contentType.equalsIgnoreCase("title")) {
       return new OutputGenerator() {
-        protected void writeOutput(HtmlWriter output, Page nextPage) {
-          output.write(nextPage.getTitle());
+        protected void writeOutput(HtmlWriter writer, Page nextPage) {
+          formatter.writeTitle(nextPage, writer);
         }
       };
     }
@@ -50,8 +60,12 @@ public class NextInTourGenerator implements Generator {
 
   private abstract class OutputGenerator implements Generator {
     public void processPage(Site site, Page page, HtmlWriter writer, HtmlOutput htmlOutput) throws IOException {
-      Page nextPage = page.getNextPageInDepthFirstTraversal();
-      writeOutput(writer, nextPage);
+      if (!BookMenuGenerator.isInMenu(page)) {
+        return;
+      }
+      formatter.writeStart(writer);
+      writeOutput(writer, page.getNextPageInDepthFirstTraversal());
+      formatter.writeEnd(writer);
     }
 
     protected abstract void writeOutput(HtmlWriter output, Page nextPage) throws IOException;

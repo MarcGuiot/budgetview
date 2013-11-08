@@ -44,6 +44,9 @@ public class Page {
     if (fileName.equals("index.html")) {
       return "/";
     }
+    if (fileName.endsWith("/index.html")) {
+      return "/" + fileName.replace("/index.html", "").replace("_", "-");
+    }
     return "/" + fileName.replace(".html", "").replace("_", "-");
   }
 
@@ -163,12 +166,12 @@ public class Page {
     keyValues.put(key, value);
   }
 
-  public boolean hasKey(String key, boolean inherited) {
-    boolean hasValue = keyValues.containsKey(key);
-    if (!hasValue && inherited && hasParentPage()) {
-      hasValue = parentPage.hasKey(key, inherited);
+  public boolean isTrue(String key, boolean defaultValue, boolean inherited) {
+    String value = getValueForKey(key, inherited);
+    if (value == null) {
+      return defaultValue;
     }
-    return hasValue;
+    return "true".equalsIgnoreCase(value);
   }
 
   public String getValueForKey(String key, boolean inherited) {
@@ -185,5 +188,35 @@ public class Page {
 
   public String[] getBorderBoxesFiles() {
     return borderBoxesFiles.toArray(new String[borderBoxesFiles.size()]);
+  }
+
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Page page = (Page)o;
+
+    if (!fileName.equals(page.fileName)) {
+      return false;
+    }
+    if (!shortTitle.equals(page.shortTitle)) {
+      return false;
+    }
+    if (!title.equals(page.title)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  public int hashCode() {
+    int result = title.hashCode();
+    result = 31 * result + shortTitle.hashCode();
+    result = 31 * result + fileName.hashCode();
+    return result;
   }
 }

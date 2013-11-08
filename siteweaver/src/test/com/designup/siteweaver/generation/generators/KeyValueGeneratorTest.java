@@ -10,15 +10,15 @@ import junit.framework.TestCase;
 import java.io.IOException;
 import java.io.StringWriter;
 
-public class ValueGeneratorTest extends TestCase {
+public class KeyValueGeneratorTest extends TestCase {
 
-  private ValueGenerator generator;
+  private KeyValueGenerator generator;
   protected HtmlOutput output = new FileOutput("tmp/output");
 
   public void setUp() {
     HtmlTag tag = new HtmlTag();
     tag.addAttribute("key", "name");
-    generator = new ValueGenerator(tag);
+    generator = new KeyValueGenerator(tag);
   }
 
   public void testKeyIsOnGivenTag() throws Exception {

@@ -1,11 +1,11 @@
-package com.designup.siteweaver.generation;
+package com.designup.siteweaver.generation.utils;
 
 import com.designup.siteweaver.html.HtmlWriter;
 import com.designup.siteweaver.model.Page;
 
 import java.io.IOException;
 
-public interface Formatter {
+public interface DefaultFormatter {
 
   public void writeStart(HtmlWriter writer) throws IOException;
 

@@ -76,7 +76,7 @@ public class SiteParserTest extends TestCase {
     assertEquals(0, page2.getSubPagesCount());
   }
 
-  public void testAnExceptionIsThrownIfNoPageIsSpecified() throws Exception {
+  public void testASiteMustHaveExactlyOneRootPage() throws Exception {
     try {
       parse(
         "<site inputDir='input' outputDir='output' localURL='local' remoteURL='remote'>" +
@@ -84,7 +84,21 @@ public class SiteParserTest extends TestCase {
       fail();
     }
     catch (XmlParsingException e) {
-      assertEquals("No 'page' tag found under 'site'", e.getMessage());
+      assertEquals("No <page> tag found under <site>", e.getMessage());
+    }
+    try {
+      parse(
+        "<site inputDir='input' outputDir='output' localURL='local' remoteURL='remote'>" +
+        "  <page title='Title1' file='file1.txt'/>" +
+        "  <page title='Title2' file='file2.txt'/>" +
+        "</site>");
+      fail();
+    }
+    catch (XmlParsingException e) {
+      assertEquals("Only one <page> can be defined under <site> - actual content:\n" +
+                   "  page / title=Title1\n" +
+                   "  page / title=Title2\n",
+                   e.getMessage());
     }
   }
 

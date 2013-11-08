@@ -17,19 +17,19 @@ public class DupGeneratorFactory implements GeneratorFactory {
       return new ContentGenerator();
     }
     else if (generatorType.equals("title")) {
-      return new TitleGenerator();
+      return new TitleGenerator(tag);
     }
     else if (generatorType.equals("base")) {
-      return new BaseGenerator();
+      return new BaseTagGenerator();
     }
     else if (generatorType.equals("pagedate")) {
       return new PageDateGenerator();
     }
     else if (generatorType.equals("boxes")) {
-      return new BorderBoxGenerator();
+      return new StaticBoxGenerator();
     }
     else if (generatorType.equals("value")) {
-      return new ValueGenerator(tag);
+      return new KeyValueGenerator(tag);
     }
     else if (generatorType.equals("filepath")) {
       return new FilePathGenerator();
@@ -38,16 +38,16 @@ public class DupGeneratorFactory implements GeneratorFactory {
       return new UrlGenerator(tag);
     }
     else if (generatorType.equals("path")) {
-      return new PathGenerator(new DupPathFormatter(tag));
+      return new BreadcrumbGenerator(new DupBreadcrumbFormatter(tag));
     }
     else if (generatorType.equals("navbar")) {
       return new NavBarGenerator(new DupNavBarFormatter(tag));
     }
     else if (generatorType.equals("nextintour")) {
-      return new NextInTourGenerator(tag);
+      return new BookTourGenerator(tag, new DupBookTourFormatter());
     }
     else if (generatorType.equals("menu")) {
-      return new MenuGenerator(new DupMenuFormatter());
+      return new BookMenuGenerator(new DupBookMenuFormatter());
     }
 
     throw new RuntimeException("Unknow generator type '" + generatorType + "'");

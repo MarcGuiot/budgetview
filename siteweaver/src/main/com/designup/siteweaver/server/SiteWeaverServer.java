@@ -20,7 +20,8 @@ public class SiteWeaverServer {
     server.setHandler(new PageHandler(configFilePath));
 
     server.start();
-    System.out.println("Listening on http://" + connector.getHost() + ":" + connector.getPort());
+    String url = "http://" + connector.getHost() + ":" + connector.getPort();
+    System.out.println("Listening on " + url + " (site content available at " + url + "/dump)");
     server.join();
   }
 }

@@ -1,12 +1,13 @@
 package com.designup.siteweaver.generation.generators;
 
 import com.designup.siteweaver.generation.Generator;
+import com.designup.siteweaver.generation.utils.DummyFormatter;
 import com.designup.siteweaver.generation.utils.GeneratorTestCase;
 
 public class NavBarGeneratorTest extends GeneratorTestCase {
 
   protected Generator getGenerator() {
-    return new NavBarGenerator(formatter);
+    return new NavBarGenerator(new DummyFormatter());
   }
 
   public void testAll() throws Exception {

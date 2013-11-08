@@ -5,9 +5,9 @@ import com.designup.siteweaver.generation.utils.GeneratorTestCase;
 
 import java.io.File;
 
-public class BorderBoxGeneratorTest extends GeneratorTestCase {
+public class StaticBoxGeneratorTest extends GeneratorTestCase {
   protected Generator getGenerator() {
-    return new BorderBoxGenerator();
+    return new StaticBoxGenerator();
   }
 
   public void testEmptyGeneration() throws Exception {

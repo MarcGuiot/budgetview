@@ -1,6 +1,6 @@
 package com.designup.siteweaver.generation.generators;
 
-import com.designup.siteweaver.generation.Formatter;
+import com.designup.siteweaver.generation.utils.DefaultFormatter;
 import com.designup.siteweaver.generation.Generator;
 import com.designup.siteweaver.html.HtmlWriter;
 import com.designup.siteweaver.html.output.HtmlOutput;
@@ -12,9 +12,9 @@ import java.util.Iterator;
 
 public class NavBarGenerator implements Generator {
 
-  private Formatter formatter;
+  private DefaultFormatter formatter;
 
-  public NavBarGenerator(Formatter associatedFormatter) {
+  public NavBarGenerator(DefaultFormatter associatedFormatter) {
     formatter = associatedFormatter;
   }
 

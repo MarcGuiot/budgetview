@@ -34,11 +34,23 @@ public class SiteParser {
   }
 
   private Page parseRootPage(Element siteElt) throws XmlParsingException {
-    NodeList pageElts = siteElt.getElementsByTagName("page");
-    Element pageElt = (Element)pageElts.item(0);
-    if (pageElt == null) {
-      throw new XmlParsingException("No 'page' tag found under 'site'");
+    NodeList pageElts = XmlDomParser.getChildrenWithName(siteElt, "page");
+    if (pageElts.getLength() > 1) {
+      StringBuilder builder = new StringBuilder();
+      builder.append("Only one <page> can be defined under <site> - actual content:\n");
+      for (int i = 0, max = pageElts.getLength(); i < max; i++) {
+        Element element = (Element)pageElts.item(i);
+        builder.append("  ")
+          .append(element.getTagName() + " / title=" + element.getAttribute("title"))
+          .append("\n");
+      }
+      throw new XmlParsingException(builder.toString());
     }
+    if (pageElts.getLength() == 0) {
+      throw new XmlParsingException("No <page> tag found under <site>");
+    }
+
+    Element pageElt = (Element)pageElts.item(0);
     Page page = createPage(pageElt);
     parseSubPages(pageElt, page);
     return page;

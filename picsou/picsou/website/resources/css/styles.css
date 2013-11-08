@@ -1,0 +1,14 @@
+body {
+  padding-top: 60px;
+  padding-bottom: 25px;
+  background-color: white;
+  font-family: Arial, sans-serif;
+  color: #333;
+  text-align: justify;
+  margin: 7px;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 850px;
+}

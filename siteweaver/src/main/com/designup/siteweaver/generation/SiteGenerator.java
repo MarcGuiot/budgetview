@@ -1,5 +1,6 @@
 package com.designup.siteweaver.generation;
 
+import com.designup.siteweaver.generation.generators.FileGenerator;
 import com.designup.siteweaver.html.output.HtmlOutput;
 import com.designup.siteweaver.model.CopySet;
 import com.designup.siteweaver.model.Page;

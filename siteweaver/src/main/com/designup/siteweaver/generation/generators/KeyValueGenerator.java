@@ -9,15 +9,16 @@ import com.designup.siteweaver.model.Site;
 
 import java.io.IOException;
 
-/**
- * Writes the value associated to a given key for the current page.
- */
-public class ValueGenerator implements Generator {
+public class KeyValueGenerator implements Generator {
+
+  public interface Formatter {
+
+  }
 
   private String key;
   private boolean inherited;
 
-  public ValueGenerator(HtmlTag tag) {
+  public KeyValueGenerator(HtmlTag tag) {
     if (tag.hasAttribute("key")) {
       key = tag.getAttributeValue("key");
     }

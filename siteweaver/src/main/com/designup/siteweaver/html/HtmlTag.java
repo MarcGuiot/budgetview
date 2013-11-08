@@ -28,6 +28,13 @@ public class HtmlTag {
     return attrsTable.get(attrName);
   }
 
+  public boolean isTrue(String attrName, boolean defaultValue) {
+    if (!attrsTable.containsKey(attrName)) {
+      return defaultValue;
+    }
+    return attrsTable.get(attrName).equalsIgnoreCase("true");
+  }
+
   public boolean isBooleanAttributeSet(String attrName) {
     String val = getAttributeValue(attrName, "");
     return (val.toLowerCase().equals("yes") || val.toLowerCase().equals("true"));

@@ -1,6 +1,9 @@
-package com.designup.siteweaver.generation;
+package com.designup.siteweaver.generation.generators;
 
 import com.designup.siteweaver.custom.dup.DupGeneratorFactory;
+import com.designup.siteweaver.generation.Generator;
+import com.designup.siteweaver.generation.GeneratorFactory;
+import com.designup.siteweaver.generation.generators.FixedGenerator;
 import com.designup.siteweaver.html.HtmlParser;
 import com.designup.siteweaver.html.HtmlTag;
 import com.designup.siteweaver.html.HtmlWriter;
