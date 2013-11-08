@@ -25,14 +25,14 @@ public class NextInTourGenerator implements Generator {
     if (contentType.equalsIgnoreCase("path")) {
       return new OutputGenerator() {
         protected void writeOutput(HtmlWriter output, Page nextPage) {
-          output.write(nextPage.getOutputFileName());
+          output.write(nextPage.getUrl());
         }
       };
     }
     else if (contentType.equalsIgnoreCase("link")) {
       return new OutputGenerator() {
         protected void writeOutput(HtmlWriter output, Page nextPage) throws IOException {
-          output.writeLink(nextPage.getTitle(), nextPage.getOutputFileName());
+          output.writeLink(nextPage.getTitle(), nextPage.getUrl());
         }
       };
     }

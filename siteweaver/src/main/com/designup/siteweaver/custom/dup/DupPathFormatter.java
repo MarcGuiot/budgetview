@@ -1,4 +1,4 @@
-package com.designup.siteweaver.dup;
+package com.designup.siteweaver.custom.dup;
 
 import com.designup.siteweaver.generation.AbstractFormatter;
 import com.designup.siteweaver.html.HtmlTag;
@@ -33,27 +33,27 @@ public class DupPathFormatter extends AbstractFormatter {
     hideLast = "yes".equalsIgnoreCase(tag.getAttributeValue("hideLast"));
   }
 
-  public void writeElement(Page page, Page target, HtmlWriter output)
+  public void writeElement(Page page, Page target, HtmlWriter writer)
     throws IOException {
 
     if (page != target) {
-      output.write("<a href=\"" + page.getFileName() + "\">");
+      writer.write("<a href=\"" + page.getFileName() + "\">");
     }
     if (color != null) {
-      output.write("<font color=\"" + color + "\">");
+      writer.write("<font color=\"" + color + "\">");
     }
     if ((page != target) || !hideLast) {
-      output.write(page.getShortTitle());
+      writer.write(page.getShortTitle());
     }
     if (color != null) {
-      output.write("</font>");
+      writer.write("</font>");
     }
     if (page != target) {
-      output.write("</a>");
+      writer.write("</a>");
     }
   }
 
-  public void writeSeparator(HtmlWriter output) throws IOException {
-    output.write(separator);
+  public void writeSeparator(HtmlWriter writer) throws IOException {
+    writer.write(separator);
   }
 }

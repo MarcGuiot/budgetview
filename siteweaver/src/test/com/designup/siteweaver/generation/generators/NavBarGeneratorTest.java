@@ -10,9 +10,9 @@ public class NavBarGeneratorTest extends GeneratorTestCase {
   }
 
   public void testAll() throws Exception {
-    checkOutput("", "[(p1),(p2),(p3)]");
-    checkOutput("p1", "[*#(p1),(p2),(p3)]");
-    checkOutput("p2", "[(p1),*#(p2),(p3)]");
-    checkOutput("p2_2", "[(p1),#(p2),(p3)]");
+    checkOutput("", "[*#(root),(p1),(p2),(p3)]");
+    checkOutput("p1", "[#(root),*#(p1),(p2),(p3)]");
+    checkOutput("p2", "[#(root),(p1),*#(p2),(p3)]");
+    checkOutput("p2_2", "[#(root),(p1),#(p2),(p3)]");
   }
 }

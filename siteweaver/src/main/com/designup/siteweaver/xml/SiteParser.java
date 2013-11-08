@@ -6,9 +6,9 @@ import com.designup.siteweaver.model.Site;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.Reader;
 
 public class SiteParser {
   public static Site parse(Reader configFileReader, String inputDir) throws Exception {

@@ -15,11 +15,11 @@ public class NextInTourGeneratorTest extends GeneratorTestCase {
 
   public void testPath() throws Exception {
     initGenerator("path");
-    checkOutput("", "p1.html");
-    checkOutput("p1", "p1_1.html");
-    checkOutput("p1_2_2", "p1_2_3.html");
-    checkOutput("p1_2_3", "p1_3.html");
-    checkOutput("p3_3_3", "root.html");
+    checkOutput("", "/p1");
+    checkOutput("p1", "/p1-1");
+    checkOutput("p1_2_2", "/p1-2-3");
+    checkOutput("p1_2_3", "/p1-3");
+    checkOutput("p3_3_3", "/root");
   }
 
   public void testTitle() throws Exception {
@@ -31,15 +31,15 @@ public class NextInTourGeneratorTest extends GeneratorTestCase {
     checkOutput("p3_3_3", "root");
   }
 
-  public void testTheOutputPathIsReturned() throws Exception {
+  public void testTheUrlIsReturned() throws Exception {
     initGenerator("path");
-    Page imagePage = new Page("image.jpg", "title", "shortTitle");
-    checkOutput(imagePage, "image.html");
+    Page imagePage = new Page("image.html", "title", "shortTitle");
+    checkOutput(imagePage, "/image");
   }
 
   public void testDefaultOutputTypeIsPath() throws Exception {
     initGenerator(null);
-    checkOutput("", "p1.html");
+    checkOutput("", "/p1");
   }
 
   private void initGenerator(String contentType) {

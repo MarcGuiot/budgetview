@@ -1,4 +1,4 @@
-package com.designup.siteweaver.dup;
+package com.designup.siteweaver.custom.dup;
 
 import com.designup.siteweaver.html.HtmlTag;
 import com.designup.siteweaver.html.HtmlWriter;

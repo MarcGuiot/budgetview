@@ -9,12 +9,6 @@ import com.designup.siteweaver.model.Site;
 
 import java.io.IOException;
 
-/**
- * Generator for navigation menus.
- * This generation browses the site model in a deep-first fashion and
- * drives the associated Formatter. The generated menu is determined by
- * the formatter.
- */
 public class MenuGenerator implements Generator {
 
   private Formatter formatter;
@@ -30,9 +24,6 @@ public class MenuGenerator implements Generator {
     formatter.writeEnd(writer);
   }
 
-  /**
-   * Browses the site model recursively to drive the associated Formatter.
-   */
   private void browsePage(Page page, Page target, int level, HtmlWriter output)
     throws IOException {
     if (level != 0) {

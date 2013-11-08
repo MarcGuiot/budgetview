@@ -18,22 +18,34 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.PrintWriter;
+import java.util.*;
 
 public class PageHandler extends AbstractHandler {
 
   private Site site;
   private Map<String, Page> pages = new HashMap<String, Page>();
   private List<ResourceHandler> resourceHandlerList = new ArrayList<ResourceHandler>();
+  private File configFilePath;
+  private long lastConfigFileUpdate;
 
   public PageHandler(File configFilePath) throws Exception {
+    this.configFilePath = configFilePath;
+    reload();
+  }
+
+  private void reload() throws Exception {
     this.site = SiteParser.parse(FileUtils.createEncodedReader(configFilePath.getAbsoluteFile()),
                                  configFilePath.getParent());
-    this.pages.clear();
-    loadPages();
+    this.lastConfigFileUpdate = configFilePath.lastModified();
+    reloadPages();
+    reloadHandlers();
+  }
+
+  private void reloadHandlers() throws Exception {
+    for (ResourceHandler handler : resourceHandlerList) {
+      handler.stop();
+    }
     for (CopySet copySet : site.getCopySets()) {
       ResourceHandler handler = new ResourceHandler();
       String inputDirectory = URIUtil.canonicalPath(new File(site.getInputDirectory(copySet.getBaseDir())).getAbsolutePath());
@@ -42,16 +54,13 @@ public class PageHandler extends AbstractHandler {
     }
   }
 
-  private void loadPages() {
+  private void reloadPages() {
+    this.pages.clear();
     loadPage(this.site.getRootPage());
   }
 
   private void loadPage(Page page) {
-    String fileName = page.getFileName();
-    if (!fileName.startsWith("/")) {
-      fileName = "/" + fileName;
-    }
-    pages.put(fileName, page);
+    pages.put(page.getUrl(), page);
     for (Page subPage : page.getSubPages()) {
       loadPage(subPage);
     }
@@ -60,6 +69,20 @@ public class PageHandler extends AbstractHandler {
   public void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch) throws IOException, ServletException {
 
     Request baseRequest = (request instanceof Request) ? (Request)request : HttpConnection.getCurrentConnection().getRequest();
+
+    if (configFilePath.lastModified() > lastConfigFileUpdate) {
+      try {
+        System.out.println("PageHandler.handle: reloading config file");
+        reload();
+      }
+      catch (Exception e) {
+        response.setContentType("text/html;charset=utf-8");
+        e.printStackTrace(new PrintWriter(response.getWriter()));
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        lastConfigFileUpdate = 0;
+        return;
+      }
+    }
 
     Page page = getPage(target);
     if (page != null) {
@@ -77,13 +100,31 @@ public class PageHandler extends AbstractHandler {
       }
     }
 
+
+    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    response.setContentType("text/html;charset=utf-8");
+    baseRequest.setHandled(true);
+    dumpPages(target, response.getWriter());
+
     System.out.println("SiteweaverServer$PageHandler.handle: could not find " + target);
   }
 
-  private Page getPage(String target) {
-    if ("/".equals(target)) {
-      target = "/index.html";
+  private void dumpPages(String target, PrintWriter writer) {
+    writer.write("<html>" +
+                 "<h2>Page not found</h2>\n" +
+                 "<p>No page found at <strong>"+ target +"</strong></p>\n");
+    writer.write("<h2>Actual ontent</h2>\n" +
+                 "<ul>\n");
+    SortedSet<String> urls = new TreeSet<String>();
+    urls.addAll(pages.keySet());
+    for (String url : urls) {
+      writer.write("<li><a href="+ url + ">" + url + "</a></li>\n");
     }
+    writer.write("</ul>\n" +
+                 "</html>");
+  }
+
+  private Page getPage(String target) {
     return pages.get(target);
   }
 

@@ -13,9 +13,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-/**
- * Writes the contents (the BODY part) of the current page.
- */
 public class ContentGenerator implements Generator {
 
   public void processPage(Site site, Page page, HtmlWriter writer, HtmlOutput htmlOutput)

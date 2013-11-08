@@ -2,6 +2,7 @@ package com.designup.siteweaver.generation.generators;
 
 import com.designup.siteweaver.generation.Generator;
 import com.designup.siteweaver.generation.utils.GeneratorTestCase;
+import com.designup.siteweaver.html.HtmlTag;
 
 import java.io.IOException;
 

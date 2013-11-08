@@ -10,9 +10,6 @@ import com.designup.siteweaver.model.Site;
 import java.io.IOException;
 import java.util.Iterator;
 
-/**
- * Writes a "Navigation Bar"
- */
 public class NavBarGenerator implements Generator {
 
   private Formatter formatter;
@@ -21,13 +18,14 @@ public class NavBarGenerator implements Generator {
     formatter = associatedFormatter;
   }
 
-  public void processPage(Site site, Page page, HtmlWriter writer, HtmlOutput htmlOutput)
+  public void processPage(Site site, Page currentPage, HtmlWriter writer, HtmlOutput htmlOutput)
     throws IOException {
     formatter.writeStart(writer);
-    for (Iterator<Page> iter = page.getRootPage().getSubPages().iterator();
-         iter.hasNext();) {
-      Page subPage = iter.next();
-      formatter.writeElement(subPage, page, writer);
+    formatter.writeElement(currentPage.getRootPage(), currentPage, writer);
+    formatter.writeSeparator(writer);
+    for (Iterator<Page> iter = currentPage.getRootPage().getSubPages().iterator(); iter.hasNext();) {
+      Page otherPage = iter.next();
+      formatter.writeElement(otherPage, currentPage, writer);
       if (iter.hasNext()) {
         formatter.writeSeparator(writer);
       }

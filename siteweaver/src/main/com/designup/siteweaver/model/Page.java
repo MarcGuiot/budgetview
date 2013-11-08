@@ -40,6 +40,13 @@ public class Page {
     return fileName.substring(0, fileName.lastIndexOf('.')) + ".html";
   }
 
+  public String getUrl() {
+    if (fileName.equals("index.html")) {
+      return "/";
+    }
+    return "/" + fileName.replace(".html", "").replace("_", "-");
+  }
+
   public String getTitle() {
     return title;
   }
@@ -71,14 +78,15 @@ public class Page {
     return templateGenerationEnabled;
   }
 
+  public boolean isRootPage() {
+    return parentPage == null;
+  }
+
   public boolean isDescendantOf(Page page) {
     if (page == this) {
       return true;
     }
-    if (parentPage != null) {
-      return parentPage.isDescendantOf(page);
-    }
-    return false;
+    return parentPage != null && parentPage.isDescendantOf(page);
   }
 
   public void addSubPage(Page page) {

@@ -1,15 +1,17 @@
 package com.designup.siteweaver.generation;
 
-import com.designup.siteweaver.dup.DupGeneratorFactory;
-import com.designup.siteweaver.html.output.HtmlOutput;
+import com.designup.siteweaver.custom.dup.DupGeneratorFactory;
 import com.designup.siteweaver.html.HtmlParser;
 import com.designup.siteweaver.html.HtmlTag;
 import com.designup.siteweaver.html.HtmlWriter;
+import com.designup.siteweaver.html.output.HtmlOutput;
 import com.designup.siteweaver.model.Page;
 import com.designup.siteweaver.model.Site;
 import com.designup.siteweaver.utils.FileUtils;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 

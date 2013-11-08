@@ -1,4 +1,4 @@
-package com.designup.siteweaver.dup;
+package com.designup.siteweaver.custom.dup;
 
 import com.designup.siteweaver.generation.AbstractFormatter;
 import com.designup.siteweaver.html.HtmlWriter;
@@ -11,7 +11,7 @@ public class DupMenuFormatter extends AbstractFormatter {
 
   private boolean headerWritten;
 
-  public void writeStart(HtmlWriter output) throws IOException {
+  public void writeStart(HtmlWriter writer) throws IOException {
     headerWritten = false;
   }
 
@@ -29,11 +29,11 @@ public class DupMenuFormatter extends AbstractFormatter {
     }
   }
 
-  public void writeEnd(HtmlWriter output) throws IOException {
+  public void writeEnd(HtmlWriter writer) throws IOException {
     if (!headerWritten) {
       return;
     }
-    output.write(
+    writer.write(
       "       </table>\n" +
       "     </div>\n" +
       "    </td>\n" +
@@ -47,7 +47,7 @@ public class DupMenuFormatter extends AbstractFormatter {
       "</table>");
   }
 
-  public void writeElement(Page page, Page target, HtmlWriter output)
+  public void writeElement(Page page, Page target, HtmlWriter writer)
     throws IOException {
 
     Page headerPage = findHeaderPage(target);
@@ -55,18 +55,18 @@ public class DupMenuFormatter extends AbstractFormatter {
       return;
     }
 
-    writeHeaderIfNeeded(output);
+    writeHeaderIfNeeded(writer);
 
     boolean isTarget = (page.equals(target));
     switch (computePageLevel(page, headerPage)) {
       case 1:
-        writeLevel1Element(page, isTarget, output);
+        writeLevel1Element(page, isTarget, writer);
         break;
       case 2:
-        writeLevel2Element(page, isTarget, output);
+        writeLevel2Element(page, isTarget, writer);
         break;
       case 3:
-        writeLevel3Element(page, isTarget, output);
+        writeLevel3Element(page, isTarget, writer);
         break;
       default: // skip page
     }
@@ -119,10 +119,10 @@ public class DupMenuFormatter extends AbstractFormatter {
   }
 
   private void writeFirstIntroSection(HtmlWriter output, boolean isTarget, Page page) {
-    writeRow(output, isTarget, "Introduction", page.getOutputFileName(), 0);
+    writeRow(output, isTarget, "Introduction", page.getUrl(), 0);
   }
 
-  private void writeRow(HtmlWriter output, boolean isTarget, String title, String fileName, int leftMargin) {
+  private void writeRow(HtmlWriter output, boolean isTarget, String title, String url, int leftMargin) {
     String indicator =
       isTarget ? "<img src='images/fastforward.gif' border='0' align='left' width='14' height='7'>" : "&nbsp;";
     output.write(
@@ -131,26 +131,26 @@ public class DupMenuFormatter extends AbstractFormatter {
       "    " + indicator +
       "  </td>\n" +
       "  <td width='1' style='background-repeat:repeat-y' background='images/dashed_line.gif'>\n" +
-      "  <td>" + getPageRef(title, fileName, isTarget, leftMargin) + "</td>\n" +
+      "  <td>" + getPageRef(title, url, isTarget, leftMargin) + "</td>\n" +
       "</tr>");
   }
 
   private void writeLevel2Element(Page page, boolean isTarget, HtmlWriter output) {
-    writeRow(output, isTarget, page.getShortTitle(), page.getOutputFileName(), 0);
+    writeRow(output, isTarget, page.getShortTitle(), page.getUrl(), 0);
   }
 
   private void writeLevel3Element(Page page, boolean isTarget, HtmlWriter output) {
-    writeRow(output, isTarget, page.getShortTitle(), page.getOutputFileName(), 10);
+    writeRow(output, isTarget, page.getShortTitle(), page.getUrl(), 10);
   }
 
-  private String getPageRef(String title, String fileName, boolean isTarget, int leftMargin) {
+  private String getPageRef(String title, String url, boolean isTarget, int leftMargin) {
     StringWriter output = new StringWriter();
     output.write("<p style='margin-left:" + leftMargin + "px;margin-top:0px;margin-bottom:0px'><font size=1>");
     if (isTarget) {
       output.write("<b>");
     }
     else {
-      output.write("<a href='" + fileName + "'>");
+      output.write("<a href='" + url + "'>");
     }
     output.write(title);
     if (isTarget) {

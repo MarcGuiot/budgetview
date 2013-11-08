@@ -1,15 +1,10 @@
-package com.designup.siteweaver.dup;
+package com.designup.siteweaver.custom.dup;
 
 import com.designup.siteweaver.generation.Generator;
 import com.designup.siteweaver.generation.GeneratorFactory;
 import com.designup.siteweaver.generation.generators.*;
 import com.designup.siteweaver.html.HtmlTag;
 
-/**
- * Factory dedicated to the creation of built-in generators.
- * (needs some work yet, to extract Design-up specific stuff and use
- * runtime class loading features)
- */
 public class DupGeneratorFactory implements GeneratorFactory {
 
   public Generator createGenerator(HtmlTag tag) {
@@ -22,7 +17,7 @@ public class DupGeneratorFactory implements GeneratorFactory {
       return new ContentGenerator();
     }
     else if (generatorType.equals("title")) {
-      return new TitleGenerator();  
+      return new TitleGenerator();
     }
     else if (generatorType.equals("base")) {
       return new BaseGenerator();
@@ -46,7 +41,7 @@ public class DupGeneratorFactory implements GeneratorFactory {
       return new PathGenerator(new DupPathFormatter(tag));
     }
     else if (generatorType.equals("navbar")) {
-      return new NavBarGenerator(new DupNavBarFormatter());
+      return new NavBarGenerator(new DupNavBarFormatter(tag));
     }
     else if (generatorType.equals("nextintour")) {
       return new NextInTourGenerator(tag);

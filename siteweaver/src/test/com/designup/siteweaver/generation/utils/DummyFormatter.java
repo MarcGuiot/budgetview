@@ -7,27 +7,27 @@ import com.designup.siteweaver.model.Page;
 import java.io.IOException;
 
 public class DummyFormatter implements Formatter {
-  public void writeStart(HtmlWriter output) throws IOException {
-    output.write("[");
+  public void writeStart(HtmlWriter writer) throws IOException {
+    writer.write("[");
   }
 
-  public void writeEnd(HtmlWriter output) throws IOException {
-    output.write("]");
+  public void writeEnd(HtmlWriter writer) throws IOException {
+    writer.write("]");
   }
 
-  public void writeSeparator(HtmlWriter output) throws IOException {
-    output.write(",");
+  public void writeSeparator(HtmlWriter writer) throws IOException {
+    writer.write(",");
   }
 
   public void writeElement(Page page, Page target,
-                           HtmlWriter output) throws IOException {
+                           HtmlWriter writer) throws IOException {
     if (page == target) {
-      output.write("*");
+      writer.write("*");
     }
     if (target.isDescendantOf(page)) {
-      output.write("#");
+      writer.write("#");
     }
-    output.write("(" + page.getTitle() + ")");
+    writer.write("(" + page.getTitle() + ")");
   }
 
 }
