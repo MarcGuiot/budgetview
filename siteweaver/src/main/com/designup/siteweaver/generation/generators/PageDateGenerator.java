@@ -21,7 +21,7 @@ public class PageDateGenerator implements Generator {
   public void processPage(Site site, Page page, HtmlWriter writer, HtmlOutput htmlOutput)
     throws IOException {
 
-    String inputFileName = site.getAbsoluteFileName(page);
+    String inputFileName = site.getInputFilePath(page);
     File pageFile = new File(inputFileName);
     Date date = new Date(pageFile.lastModified());
     writer.write(dateFormat.format(date));

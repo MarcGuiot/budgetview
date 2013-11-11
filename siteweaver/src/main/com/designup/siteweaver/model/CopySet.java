@@ -17,8 +17,9 @@ public class CopySet {
     return baseDir;
   }
 
-  public void add(String path) {
+  public CopySet add(String path) {
     this.paths.add(path);
+    return this;
   }
 
   public List<String> getPaths() {

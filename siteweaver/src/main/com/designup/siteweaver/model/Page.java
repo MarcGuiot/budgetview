@@ -6,7 +6,7 @@ public class Page {
 
   private String title;
   private String shortTitle;
-  private String fileName;
+  private String filePath;
   private Page parentPage;
   private String templateFile;
   private boolean templateGenerationEnabled = true;
@@ -14,12 +14,12 @@ public class Page {
   private Map<String, String> keyValues = new HashMap<String, String>();
   private List<String> borderBoxesFiles = new ArrayList<String>();
 
-  public Page(String fileName, String title, String shortTitle) {
-    this(fileName, title, shortTitle, null);
+  public Page(String filePath, String title, String shortTitle) {
+    this(filePath, title, shortTitle, null);
   }
 
-  public Page(String fileName, String title, String shortTitle, String templateFile) {
-    this.fileName = fileName;
+  public Page(String filePath, String title, String shortTitle, String templateFile) {
+    this.filePath = filePath;
     this.title = title;
     this.shortTitle = shortTitle;
     this.templateFile = templateFile;
@@ -29,25 +29,25 @@ public class Page {
     return shortTitle;
   }
 
-  public String getFileName() {
-    return fileName;
+  public String getFilePath() {
+    return filePath;
   }
 
-  public String getOutputFileName() {
-    if (fileName.endsWith(".html")) {
-      return fileName;
+  public String getOutputFilePath() {
+    if (filePath.endsWith(".html")) {
+      return filePath;
     }
-    return fileName.substring(0, fileName.lastIndexOf('.')) + ".html";
+    return filePath.substring(0, filePath.lastIndexOf('.')) + ".html";
   }
 
   public String getUrl() {
-    if (fileName.equals("index.html")) {
+    if (filePath.equals("index.html")) {
       return "/";
     }
-    if (fileName.endsWith("/index.html")) {
-      return "/" + fileName.replace("/index.html", "").replace("_", "-");
+    if (filePath.endsWith("/index.html")) {
+      return "/" + filePath.replace("/index.html", "").replace("_", "-");
     }
-    return "/" + fileName.replace(".html", "").replace("_", "-");
+    return "/" + filePath.replace(".html", "").replace("_", "-");
   }
 
   public String getTitle() {
@@ -58,12 +58,12 @@ public class Page {
     return shortTitle;
   }
 
-  public String getTemplateFile() {
+  public String getTemplateFilePath() {
     if (templateFile != null) {
       return templateFile;
     }
     if (parentPage != null) {
-      return parentPage.getTemplateFile();
+      return parentPage.getTemplateFilePath();
     }
     return null;
   }
@@ -151,7 +151,7 @@ public class Page {
   }
 
   private Page getNextSubPage(Page subPage) {
-    for (Iterator<Page> iter = subPages.iterator(); iter.hasNext();) {
+    for (Iterator<Page> iter = subPages.iterator(); iter.hasNext(); ) {
       if (iter.next() == subPage) {
         if (iter.hasNext()) {
           return iter.next();
@@ -200,7 +200,7 @@ public class Page {
 
     Page page = (Page)o;
 
-    if (!fileName.equals(page.fileName)) {
+    if (!filePath.equals(page.filePath)) {
       return false;
     }
     if (!shortTitle.equals(page.shortTitle)) {
@@ -216,7 +216,7 @@ public class Page {
   public int hashCode() {
     int result = title.hashCode();
     result = 31 * result + shortTitle.hashCode();
-    result = 31 * result + fileName.hashCode();
+    result = 31 * result + filePath.hashCode();
     return result;
   }
 }

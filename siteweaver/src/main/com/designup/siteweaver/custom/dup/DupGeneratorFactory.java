@@ -17,7 +17,7 @@ public class DupGeneratorFactory implements GeneratorFactory {
       return new ContentGenerator();
     }
     else if (generatorType.equals("title")) {
-      return new TitleGenerator(tag);
+      return new TitleGenerator(new DupTitleFormatter(tag));
     }
     else if (generatorType.equals("base")) {
       return new BaseTagGenerator();
@@ -43,10 +43,10 @@ public class DupGeneratorFactory implements GeneratorFactory {
     else if (generatorType.equals("navbar")) {
       return new NavBarGenerator(new DupNavBarFormatter(tag));
     }
-    else if (generatorType.equals("nextintour")) {
+    else if (generatorType.equals("booktour")) {
       return new BookTourGenerator(tag, new DupBookTourFormatter());
     }
-    else if (generatorType.equals("menu")) {
+    else if (generatorType.equals("bookmenu")) {
       return new BookMenuGenerator(new DupBookMenuFormatter());
     }
 

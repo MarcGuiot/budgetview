@@ -1,4 +1,4 @@
-package com.designup.siteweaver.server;
+package com.designup.siteweaver.server.utils;
 
 import com.designup.siteweaver.html.HtmlWriter;
 import com.designup.siteweaver.html.output.HtmlOutput;
@@ -7,22 +7,23 @@ import com.designup.siteweaver.model.Site;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.StringWriter;
 
-public class LocalOutput implements HtmlOutput {
+public class StringOutput implements HtmlOutput {
 
-  private PrintWriter writer;
-
-  public LocalOutput(PrintWriter writer) {
-    this.writer = writer;
-  }
+  private StringWriter writer;
 
   public HtmlWriter createWriter(Page page) throws IOException {
+    writer = new StringWriter();
     return new HtmlWriter(writer);
   }
 
+  public String getText() {
+    return writer.toString();
+  }
+
   public String getBaseUrl(Site site) {
-    return "http://localhost:8080";
+    return site.getUrl();
   }
 
   public void copyFile(File inputFile, String filePath) throws IOException {

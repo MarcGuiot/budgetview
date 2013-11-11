@@ -10,7 +10,7 @@ public class DupBookTourFormatter implements BookTourGenerator.Formatter {
   }
 
   public void writePath(Page nextPage, HtmlWriter writer) {
-    writer.write(nextPage.getFileName());
+    writer.write(nextPage.getFilePath());
   }
 
   public void writeLink(Page nextPage, HtmlWriter writer) {

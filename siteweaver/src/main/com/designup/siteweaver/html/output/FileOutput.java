@@ -23,7 +23,7 @@ public class FileOutput implements HtmlOutput {
   }
 
   public HtmlWriter createWriter(Page page) throws IOException {
-    File path = new File(outputDir, page.getOutputFileName());
+    File path = new File(outputDir, page.getOutputFilePath());
     File outputDir = new File(path.getParent());
     outputDir.mkdirs();
     return new HtmlWriter(FileUtils.createEncodedWriter(path.getAbsolutePath()));

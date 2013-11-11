@@ -1,11 +1,8 @@
 package com.designup.siteweaver.functests;
 
-import java.io.File;
-import java.io.FilenameFilter;
+public class FileCopyTest extends SiteGenerationTestCase {
 
-public class FileCopyTest extends SiteweaverTestCase {
-
-  protected void setUp() throws Exception {
+  public void setUp() throws Exception {
     super.setUp();
     dump("tpl.html", "tpl:[<gen type=\"filepath\">]");
   }

@@ -78,7 +78,7 @@ public class BookTourGeneratorTest extends GeneratorTestCase {
     }
 
     public void writePath(Page nextPage, HtmlWriter writer) {
-      writer.write(nextPage.getFileName());
+      writer.write(nextPage.getFilePath());
     }
 
     public void writeLink(Page nextPage, HtmlWriter writer) {

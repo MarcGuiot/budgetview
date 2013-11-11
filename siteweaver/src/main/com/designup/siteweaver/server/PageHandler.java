@@ -3,15 +3,18 @@ package com.designup.siteweaver.server;
 import com.designup.siteweaver.generation.SiteGenerator;
 import com.designup.siteweaver.model.CopySet;
 import com.designup.siteweaver.model.Page;
+import com.designup.siteweaver.model.PageFunctor;
 import com.designup.siteweaver.model.Site;
-import com.designup.siteweaver.utils.FileUtils;
+import com.designup.siteweaver.server.upload.FileAccess;
+import com.designup.siteweaver.server.upload.SiteUploader;
+import com.designup.siteweaver.server.utils.FileAccessHtmlLogger;
+import com.designup.siteweaver.server.utils.LocalOutput;
 import com.designup.siteweaver.xml.SiteParser;
 import org.mortbay.jetty.HttpConnection;
 import org.mortbay.jetty.Request;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.AbstractHandler;
 import org.mortbay.jetty.handler.ResourceHandler;
-import org.mortbay.util.URIUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,18 +32,19 @@ public class PageHandler extends AbstractHandler {
   private Site site;
   private Map<String, Page> pages = new HashMap<String, Page>();
   private List<ResourceHandler> resourceHandlerList = new ArrayList<ResourceHandler>();
-  private File configFilePath;
+  private File configFile;
+  private FileAccess fileAccess;
   private long lastConfigFileUpdate;
 
-  public PageHandler(File configFilePath) throws Exception {
-    this.configFilePath = configFilePath;
+  public PageHandler(File configFile, FileAccess fileAccess) throws Exception {
+    this.configFile = configFile;
+    this.fileAccess = fileAccess;
     reload();
   }
 
   private void reload() throws Exception {
-    this.site = SiteParser.parse(FileUtils.createEncodedReader(configFilePath.getAbsoluteFile()),
-                                 configFilePath.getParent());
-    this.lastConfigFileUpdate = configFilePath.lastModified();
+    this.site = SiteParser.parse(configFile);
+    this.lastConfigFileUpdate = configFile.lastModified();
     reloadPages();
     reloadHandlers();
   }
@@ -51,29 +55,26 @@ public class PageHandler extends AbstractHandler {
     }
     for (CopySet copySet : site.getCopySets()) {
       ResourceHandler handler = new ResourceHandler();
-      String inputDirectory = URIUtil.canonicalPath(new File(site.getInputDirectory(copySet.getBaseDir())).getAbsolutePath());
+      String inputDirectory = site.getInputDirectory(copySet);
       handler.setResourceBase(inputDirectory);
       resourceHandlerList.add(handler);
     }
   }
 
-  private void reloadPages() {
+  private void reloadPages() throws IOException {
     this.pages.clear();
-    loadPage(this.site.getRootPage());
-  }
-
-  private void loadPage(Page page) {
-    pages.put(page.getUrl(), page);
-    for (Page subPage : page.getSubPages()) {
-      loadPage(subPage);
-    }
+    this.site.processPages(new PageFunctor() {
+      public void process(Page page) throws Exception {
+        pages.put(page.getUrl(), page);
+      }
+    });
   }
 
   public void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch) throws IOException, ServletException {
 
     Request baseRequest = (request instanceof Request) ? (Request)request : HttpConnection.getCurrentConnection().getRequest();
 
-    if (configFilePath.lastModified() > lastConfigFileUpdate) {
+    if (configFile.lastModified() > lastConfigFileUpdate) {
       try {
         System.out.println("PageHandler.handle: reloading config file");
         reload();
@@ -87,7 +88,7 @@ public class PageHandler extends AbstractHandler {
       }
     }
 
-    if (target.equalsIgnoreCase("/dump")) {
+    if (target.equalsIgnoreCase("/!dump")) {
       response.setContentType("text/html;charset=utf-8");
       writeSite(response.getWriter());
       response.setStatus(HttpServletResponse.SC_OK);
@@ -95,10 +96,22 @@ public class PageHandler extends AbstractHandler {
       return;
     }
 
+    if (target.equalsIgnoreCase("/!diff")) {
+      upload(response, false, "Diff");
+      baseRequest.setHandled(true);
+      return;
+    }
+
+    if (target.equalsIgnoreCase("/!publish")) {
+      upload(response, true, "Publish");
+      baseRequest.setHandled(true);
+      return;
+    }
+
     Page page = getPage(target);
     if (page != null) {
       response.setContentType("text/html;charset=utf-8");
-      File file = new File(site.getAbsoluteFileName(page));
+      File file = new File(site.getInputFilePath(page));
       if (!file.exists()) {
         return404(target, response, baseRequest,
                   "No source found for page <strong><code>" + target + "</code></strong> " +
@@ -124,6 +137,30 @@ public class PageHandler extends AbstractHandler {
     System.out.println("SiteweaverServer$PageHandler.handle: could not find " + target);
   }
 
+  private void upload(HttpServletResponse response, boolean applyChanges, String title) throws IOException {
+    response.setContentType("text/html;charset=utf-8");
+
+    PrintWriter writer = response.getWriter();
+    writer.write("<html><body>" +
+                 "<h1>" + title + "</h1>");
+    FileAccessHtmlLogger logger = new FileAccessHtmlLogger(writer);
+    try {
+      fileAccess.setApplyChanges(applyChanges);
+      fileAccess.addListener(logger);
+      SiteUploader uploader = new SiteUploader(site, fileAccess);
+      uploader.run();
+      response.setStatus(HttpServletResponse.SC_OK);
+      logger.complete();
+      writer.write("</body></html>");
+    }
+    catch (IOException e) {
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    }
+    finally {
+      fileAccess.removeListener(logger);
+    }
+  }
+
   private void return404(String target, HttpServletResponse response, Request baseRequest, String message) throws IOException {
     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     response.setContentType("text/html;charset=utf-8");
@@ -143,7 +180,7 @@ public class PageHandler extends AbstractHandler {
     writer.write("<html>\n" +
                  "<div style=\"background:#F88;border:solid 1px #F00;color:#FFF;padding:15px;\">\n" +
                  "<h2>404 Page not found</h2>\n" +
-                 "<p>"+ message +"</p>\n" +
+                 "<p>" + message + "</p>\n" +
                  "</div>\n");
     writer.write("<h2>Actual content</h2>\n");
     writeRootPage(writer);

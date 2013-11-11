@@ -1,6 +1,6 @@
 package com.designup.siteweaver.functests;
 
-public class PagesGenerationTest extends SiteweaverTestCase {
+public class PagesGenerationTest extends SiteGenerationTestCase {
 
   public void testStandardCase() throws Exception {
     dump("tpl.html", "tpl:[<gen type=\"content\">]");
@@ -49,5 +49,22 @@ public class PagesGenerationTest extends SiteweaverTestCase {
       "<page file='root.jpg' title='Root' template='tpl.html'/>");
 
     checkOutput("root.html", "tpl:[root.jpg]");
+  }
+
+  public void testATemplateMustBeSetForTheRootPage() throws Exception {
+    dump("root.html", "<body>rootContent</body>");
+    dump("dir1/page1.html", "<body>page1Content</body>");
+    dump("dir1/page2.html", "<body>page2Content</body>");
+
+    try {
+      generateSite(
+        "<page file='root.html' title='Root'>" +
+        "  <page file='dir1/page1.html' title='Page1'/>" +
+        "  <page file='dir1/page2.html' title='Page2'/>" +
+        "</page>");
+    }
+    catch (Exception e) {
+      assertEquals("A template must be provided for the root page", e.getMessage());
+    }
   }
 }

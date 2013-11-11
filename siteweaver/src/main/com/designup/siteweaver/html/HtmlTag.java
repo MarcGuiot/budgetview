@@ -70,4 +70,14 @@ public class HtmlTag {
     String value = attrValue != null ? attrValue : defaultValue;
     outputString.append(" " + outputName + "=\"" + value + "\"");
   }
+
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("<" + name);
+    for (Map.Entry<String, String> entry : attrsTable.entrySet()) {
+      builder.append(" "+ entry.getKey() + "=\"" + entry.getValue() + "\"");
+    }
+    builder.append(">");
+    return builder.toString();
+  }
 }

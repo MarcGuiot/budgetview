@@ -1,16 +1,16 @@
 package com.designup.siteweaver.xml;
 
+import com.designup.siteweaver.functests.SiteweaverTestCase;
 import com.designup.siteweaver.model.CopySet;
 import com.designup.siteweaver.model.Page;
 import com.designup.siteweaver.model.Site;
 import com.designup.siteweaver.utils.ArrayUtils;
-import junit.framework.TestCase;
 
-import java.io.StringReader;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SiteParserTest extends TestCase {
+public class SiteParserTest extends SiteweaverTestCase {
   public void testStandardCase() throws Exception {
     Site site = parse(
       "<site url='remote'>" +
@@ -124,7 +124,7 @@ public class SiteParserTest extends TestCase {
   public void testFilesToCopy() throws Exception {
     Site site = parse(
       "<site url='remote'>" +
-      "  <page title='Title' file='file.txt'/>" +
+      "  <page title='Title' file='file.txt' template='template.html'/>" +
       "  <copy>" +
       "    <file path='dir/file1.txt'/>" +
       "    <dir  path='dir/subDir'/>" +
@@ -138,7 +138,7 @@ public class SiteParserTest extends TestCase {
   public void testFilesToCopyWithSeveralRootCopyNodes() throws Exception {
     Site site = parse(
       "<site url='remote'>" +
-      "  <page title='Title' file='file.txt'/>" +
+      "  <page title='Title' file='file.txt' template='template.html'/>" +
       "  <copy>" +
       "    <file path='dir/file1.txt'/>" +
       "  </copy>" +
@@ -166,8 +166,8 @@ public class SiteParserTest extends TestCase {
   }
 
   private Site parse(String xml) throws Exception {
-    final StringReader configFile = new StringReader(xml.replace('\'', '"'));
-    return SiteParser.parse(configFile, "input");
+    File configFile = dump("siteweaver.xml", xml);
+    return SiteParser.parse(configFile);
   }
 
   private String[] toList(List<CopySet> filesToCopy) {
@@ -190,8 +190,8 @@ public class SiteParserTest extends TestCase {
   private void checkPage(Page page, String title, String shortTitle, String file, String templateFile, boolean templateGenerationEnabled) {
     assertEquals(title, page.getTitle());
     assertEquals(shortTitle, page.getShortTitle());
-    assertEquals(file, page.getFileName());
-    assertEquals(templateFile, page.getTemplateFile());
+    assertEquals(file, page.getFilePath());
+    assertEquals(templateFile, page.getTemplateFilePath());
     assertEquals(templateGenerationEnabled, page.isTemplateGenerationEnabled());
   }
 }

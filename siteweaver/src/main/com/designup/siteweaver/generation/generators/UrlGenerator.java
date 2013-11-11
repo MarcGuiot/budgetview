@@ -17,7 +17,7 @@ public class UrlGenerator implements Generator {
   }
 
   public void processPage(Site site, Page page, HtmlWriter writer, HtmlOutput htmlOutput) throws IOException {
-    String url = htmlOutput.getBaseUrl(site) + "/" + page.getFileName();
+    String url = htmlOutput.getBaseUrl(site) + "/" + page.getFilePath();
     if (generateLink) {
       writer.write("<a href=&quote;");
       writer.write(url);

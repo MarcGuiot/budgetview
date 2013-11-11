@@ -18,8 +18,8 @@ public class ContentGenerator implements Generator {
   public void processPage(Site site, Page page, HtmlWriter writer, HtmlOutput htmlOutput)
     throws IOException {
 
-    String inputFileName = site.getAbsoluteFileName(page);
-    dumpFileContent(inputFileName, writer);
+    String inputFilePath = site.getInputFilePath(page);
+    dumpFileContent(inputFilePath, writer);
   }
 
   public static void dumpFileContent(String inputFileName, HtmlWriter output) throws IOException {

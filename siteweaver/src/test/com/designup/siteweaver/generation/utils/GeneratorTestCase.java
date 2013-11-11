@@ -16,7 +16,7 @@ import java.util.Map;
 
 public abstract class GeneratorTestCase extends TestCase {
 
-  protected Page rootPage = new Page("root.html", "root", "root$");
+  protected Page rootPage = new Page("root.html", "root", "root$", "template.html");
   protected Site site;
   protected HtmlOutput output = new FileOutput("tmp/output");
   private Map<String,Page> pages = new HashMap<String, Page>();
@@ -24,7 +24,7 @@ public abstract class GeneratorTestCase extends TestCase {
   protected abstract Generator getGenerator();
 
   public void setUp() {
-    site = new Site(rootPage, "tmp/input", "", "", "remote", new ArrayList<CopySet>());
+    site = new Site(new File("/siteweaver.xml"), rootPage, "tmp/input", "", "", "remote", new ArrayList<CopySet>());
     for (int i = 1; i < 4; i++) {
       Page lev1page = createPage("p" + i, rootPage);
       for (int j = 1; j < 4; j++) {

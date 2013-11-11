@@ -15,11 +15,15 @@ public class BookMenuGenerator implements Generator {
   private Formatter formatter;
 
   public interface Formatter {
+    void writeMenuStart(Page menuRootPage, HtmlWriter writer);
+
     void writeStart(HtmlWriter writer, int i);
 
     void writeElement(Page page, int depth, boolean active, HtmlWriter writer);
 
     void writeEnd(HtmlWriter writer, int i);
+
+    void writeMenuEnd(HtmlWriter writer);
   }
 
   public BookMenuGenerator(Formatter formatter) {
@@ -56,10 +60,12 @@ public class BookMenuGenerator implements Generator {
       return;
     }
 
+    formatter.writeMenuStart(root, writer);
     formatter.writeStart(writer, 0);
     formatter.writeElement(root, 0, currentPage.equals(root), writer);
     writeSubPages(root, currentPage, false, 0, writer);
     formatter.writeEnd(writer, 0);
+    formatter.writeMenuEnd(writer);
   }
 
   private void writeSubPages(Page pageInMenu, Page currentPage, boolean showStartEnd, int depth, HtmlWriter writer) {

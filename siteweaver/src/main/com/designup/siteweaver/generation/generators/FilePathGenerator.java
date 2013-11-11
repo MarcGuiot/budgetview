@@ -10,6 +10,6 @@ import java.io.IOException;
 
 public class FilePathGenerator implements Generator {
   public void processPage(Site site, Page page, HtmlWriter writer, HtmlOutput htmlOutput) throws IOException {
-    writer.write(page.getFileName());
+    writer.write(page.getFilePath());
   }
 }

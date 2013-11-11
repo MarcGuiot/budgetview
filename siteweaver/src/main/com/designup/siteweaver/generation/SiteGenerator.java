@@ -3,6 +3,7 @@ package com.designup.siteweaver.generation;
 import com.designup.siteweaver.generation.generators.FileGenerator;
 import com.designup.siteweaver.html.output.HtmlOutput;
 import com.designup.siteweaver.model.CopySet;
+import com.designup.siteweaver.model.FileFunctor;
 import com.designup.siteweaver.model.Page;
 import com.designup.siteweaver.model.Site;
 
@@ -48,8 +49,7 @@ public class SiteGenerator {
   }
 
   private void generatePage(Site site, Page page, HtmlOutput output) throws IOException {
-    FileGenerator fileGenerator =
-      getFileGenerator(site.getInputDirectory() + "/" + page.getTemplateFile());
+    FileGenerator fileGenerator = getFileGenerator(site.getTemplateFile(page).getPath());
     fileGenerator.generatePage(page, site, output);
   }
 
@@ -63,13 +63,11 @@ public class SiteGenerator {
     return newGenerator;
   }
 
-  private void copyFiles(Site currentSite, HtmlOutput output) throws IOException {
-    List<CopySet> copySetToProcess = currentSite.getCopySets();
-    for (CopySet copySet : copySetToProcess) {
-      for (String filePath : copySet.getPaths()) {
-        File inputFile = currentSite.getInputFilePath(copySet.getBaseDir(), filePath);
-        output.copyFile(inputFile, filePath);
+  private void copyFiles(Site currentSite, final HtmlOutput output) throws IOException {
+    currentSite.processFiles(new FileFunctor() {
+      public void process(File inputFile, String targetPath) throws IOException {
+        output.copyFile(inputFile, targetPath);
       }
-    }
+    });
   }
 }

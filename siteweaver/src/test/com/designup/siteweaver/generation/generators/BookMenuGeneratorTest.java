@@ -21,17 +21,20 @@ public class BookMenuGeneratorTest extends GeneratorTestCase {
   public void testShownForRoot() throws Exception {
     getPage("").addKeyWithValue(BookMenuGenerator.MENU_ROOT, "true");
     checkOutput("",
+                "(\n" +
                 "[\n" +
                 "root*\n" +
                 "p1\n" +
                 "p2\n" +
                 "p3\n" +
-                "]\n");
+                "]\n" +
+                ")\n");
   }
 
   public void testOnlyOneLevelBelowActiveIsExpanded() throws Exception {
     getPage("").addKeyWithValue(BookMenuGenerator.MENU_ROOT, "true");
     checkOutput("p2",
+                "(\n" +
                 "[\n" +
                 "root\n" +
                 "p1\n" +
@@ -42,32 +45,46 @@ public class BookMenuGeneratorTest extends GeneratorTestCase {
                 "  p2_3\n" +
                 "  ]\n" +
                 "p3\n" +
-                "]\n");
+                "]\n" +
+                ")\n");
   }
 
   public void testLocalTree() throws Exception {
     getPage("p2_1").addKeyWithValue(BookMenuGenerator.MENU_ROOT, "true");
     checkOutput("p2_1",
+                "(\n" +
                 "[\n" +
                 "p2_1*\n" +
                 "p2_1_1\n" +
                 "p2_1_2\n" +
                 "p2_1_3\n" +
-                "]\n");
+                "]\n" +
+                ")\n");
   }
 
   public void testLocalTreeWithSelectedLeaf() throws Exception {
     getPage("p2_1").addKeyWithValue(BookMenuGenerator.MENU_ROOT, "true");
     checkOutput("p2_1_2",
+                "(\n" +
                 "[\n" +
                 "p2_1\n" +
                 "p2_1_1\n" +
                 "p2_1_2*\n" +
                 "p2_1_3\n" +
-                "]\n");
+                "]\n" +
+                ")\n");
   }
 
   private class DummyMenuGenerator implements BookMenuGenerator.Formatter {
+
+    public void writeMenuStart(Page menuRootPage, HtmlWriter writer) {
+      writer.write("(\n");
+    }
+
+    public void writeMenuEnd(HtmlWriter writer) {
+      writer.write(")\n");
+    }
+
     public void writeStart(HtmlWriter writer, int depth) {
       writePadding(depth, writer);
       writer.write("[\n");

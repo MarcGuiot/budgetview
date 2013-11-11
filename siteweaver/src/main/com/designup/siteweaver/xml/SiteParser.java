@@ -3,29 +3,33 @@ package com.designup.siteweaver.xml;
 import com.designup.siteweaver.model.CopySet;
 import com.designup.siteweaver.model.Page;
 import com.designup.siteweaver.model.Site;
+import com.designup.siteweaver.utils.FileUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SiteParser {
-  public static Site parse(Reader configFileReader, String inputDir) throws Exception {
-    Element siteElt = XmlDomParser.parse(configFileReader, "site");
+  public static Site parse(File configFile) throws Exception {
+    Element siteElt = XmlDomParser.parse(FileUtils.createEncodedReader(configFile), "site");
     SiteParser parser = new SiteParser();
-    return parser.parseSite(siteElt,
+    return parser.parseSite(configFile,
+                            siteElt,
                             parser.parseRootPage(siteElt),
                             parser.parseFilesToCopy(siteElt),
-                            inputDir
-    );
+                            configFile.getParent());
   }
 
   private SiteParser() {
   }
 
-  private Site parseSite(Element siteElt, Page rootPage, List<CopySet> filesToCopy, String inputDir) throws XmlParsingException {
-    return new Site(rootPage,
+  private Site parseSite(File configFile, Element siteElt, Page rootPage, List<CopySet> filesToCopy, String inputDir) throws XmlParsingException {
+    return new Site(configFile,
+                    rootPage,
                     inputDir,
                     XmlDomParser.getOptionalAttribute(siteElt, "pagesDir", ""),
                     XmlDomParser.getOptionalAttribute(siteElt, "filesDir", ""),
