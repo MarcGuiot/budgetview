@@ -37,7 +37,7 @@ public class FileGenerator {
       tag = parser.findNextTag("gen", writer);
       String precedingString = writer.toString();
       if (precedingString.length() != 0) {
-        generators.add(new FixedGenerator(precedingString));
+        generators.add(new StaticTextGenerator(precedingString));
       }
       if (tag != null) {
         Generator generator = factory.createGenerator(tag);
@@ -49,9 +49,7 @@ public class FileGenerator {
     parser.close();
   }
 
-  public void generatePage(Page page, Site site, HtmlOutput output) throws IOException {
-    HtmlWriter writer = output.createWriter(page);
-    try {
+  public void generatePage(Page page, Site site, HtmlWriter writer, HtmlOutput output) throws IOException {
       if (page.isTemplateGenerationEnabled()) {
         for (Generator generator : generators) {
           generator.processPage(site, page, writer, output);
@@ -60,9 +58,5 @@ public class FileGenerator {
       else {
         FileUtils.copyFile(site.getInputFilePath(page), writer);
       }
-    }
-    finally {
-      writer.close();
-    }
   }
 }

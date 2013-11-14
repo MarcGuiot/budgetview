@@ -43,6 +43,21 @@ public class Site {
     return rootPage;
   }
 
+  public Page getPageForFile(String pageFilePath) {
+    return getPageForFile(rootPage,  pageFilePath);
+  }
+
+  private Page getPageForFile(Page page, String pageFilePath) {
+    if (page.getFilePath().equals(pageFilePath)) return page;
+    for (Page subPage : page.getSubPages()) {
+      Page subResult = getPageForFile(subPage, pageFilePath);
+      if (subResult != null) {
+        return subResult;
+      }
+    }
+    return null;
+  }
+
   public void processPages(PageFunctor functor) throws IOException {
     doProcessPages(rootPage, functor);
   }

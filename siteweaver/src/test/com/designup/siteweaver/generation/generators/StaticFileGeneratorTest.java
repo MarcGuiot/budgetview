@@ -5,9 +5,9 @@ import com.designup.siteweaver.generation.utils.GeneratorTestCase;
 
 import java.io.File;
 
-public class StaticBoxGeneratorTest extends GeneratorTestCase {
+public class StaticFileGeneratorTest extends GeneratorTestCase {
   protected Generator getGenerator() {
-    return new StaticBoxGenerator();
+    return new StaticFileGenerator();
   }
 
   public void testEmptyGeneration() throws Exception {

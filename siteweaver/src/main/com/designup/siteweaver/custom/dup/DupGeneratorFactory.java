@@ -14,7 +14,7 @@ public class DupGeneratorFactory implements GeneratorFactory {
 
     String generatorType = tag.getAttributeValue("type").toLowerCase();
     if (generatorType.equals("content")) {
-      return new ContentGenerator();
+      return new PageContentGenerator();
     }
     else if (generatorType.equals("title")) {
       return new TitleGenerator(new DupTitleFormatter(tag));
@@ -26,7 +26,7 @@ public class DupGeneratorFactory implements GeneratorFactory {
       return new PageDateGenerator();
     }
     else if (generatorType.equals("boxes")) {
-      return new StaticBoxGenerator();
+      return new StaticFileGenerator();
     }
     else if (generatorType.equals("value")) {
       return new KeyValueGenerator(tag);

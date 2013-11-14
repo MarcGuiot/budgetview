@@ -5,8 +5,8 @@ public class PagesGenerationTest extends SiteGenerationTestCase {
   public void testStandardCase() throws Exception {
     dump("tpl.html", "tpl:[<gen type=\"content\">]");
     dump("root.html", "<body>rootContent</body>");
-    dump("dir1/page1.html", "<body>page1Content</body>");
-    dump("dir1/page2.html", "<body>page2Content</body>");
+    dump("dir1/page1.html", "page1Content");
+    dump("dir1/page2.html", "page2Content");
 
     generateSite(
       "<page file='root.html' title='Root' template='tpl.html'>" +
@@ -23,9 +23,9 @@ public class PagesGenerationTest extends SiteGenerationTestCase {
     dump("tplA.html", "tplA:[<gen type=\"content\">]");
     dump("tplB.html", "tplB:[<gen type=\"content\">]");
     dump("root.html", "<body>rootContent</body>");
-    dump("dir1/page1.html", "<body>page1Content</body>");
-    dump("dir1/page11.html", "<body>page11Content</body>");
-    dump("dir1/page2.html", "<body>page2Content</body>");
+    dump("dir1/page1.html", "page1Content");
+    dump("dir1/page11.html", "page11Content");
+    dump("dir1/page2.html", "page2Content");
 
     generateSite(
       "<page file='root.html' title='Root' template='tplA.html'>" +

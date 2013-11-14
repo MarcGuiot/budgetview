@@ -1,8 +1,8 @@
 package com.designup.siteweaver.generation;
 
 import com.designup.siteweaver.generation.generators.FileGenerator;
+import com.designup.siteweaver.html.HtmlWriter;
 import com.designup.siteweaver.html.output.HtmlOutput;
-import com.designup.siteweaver.model.CopySet;
 import com.designup.siteweaver.model.FileFunctor;
 import com.designup.siteweaver.model.Page;
 import com.designup.siteweaver.model.Site;
@@ -10,7 +10,6 @@ import com.designup.siteweaver.model.Site;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,7 +49,14 @@ public class SiteGenerator {
 
   private void generatePage(Site site, Page page, HtmlOutput output) throws IOException {
     FileGenerator fileGenerator = getFileGenerator(site.getTemplateFile(page).getPath());
-    fileGenerator.generatePage(page, site, output);
+
+    HtmlWriter writer = output.createWriter(page);
+    try {
+      fileGenerator.generatePage(page, site, writer, output);
+    }
+    finally {
+      writer.close();
+    }
   }
 
   private FileGenerator getFileGenerator(String templateFile) throws IOException {

@@ -8,11 +8,11 @@ import com.designup.siteweaver.model.Site;
 
 import java.io.IOException;
 
-public class FixedGenerator implements Generator {
+public class StaticTextGenerator implements Generator {
 
   private String outputString;
 
-  public FixedGenerator(String outputString) {
+  public StaticTextGenerator(String outputString) {
     this.outputString = outputString;
   }
 

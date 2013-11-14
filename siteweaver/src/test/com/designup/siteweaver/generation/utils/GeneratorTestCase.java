@@ -68,11 +68,7 @@ public abstract class GeneratorTestCase extends TestCase {
     Writer writer = new FileWriter(file);
     writer.write(
       "<html>" +
-      "  <head>" +
-      "    <title>Contact</title>" +
-      "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">" +
-      "  </head>" +
-      "<body bgcolor=\"#FFFFFF\">" +
+      "<body>" +
       content +
       "</body>" +
       "</html>"
