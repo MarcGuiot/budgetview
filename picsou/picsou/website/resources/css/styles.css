@@ -51,6 +51,7 @@ div.navbar-default {
 div.container h1 {
   color: #000000;
   text-align: center;
+  margin-bottom: 30px;
 }
 
 div.container h3 {
@@ -116,10 +117,6 @@ div.container h3 {
 
 #home .large-screenshot {
   margin-left: -25px
-}
-
-#home #presentation #projects {
-  margin-left: -20px;
 }
 
 #home #zoom h2.zoom-title {
@@ -676,34 +673,19 @@ table.field-value td.value {
   margin-bottom: 0.2em;
 }
 
-/*=== HELP PAGE ===*/
-
-#showroom {
-  text-align: center;
-}
-
-p#close-showroom {
-  margin-top: 15px;
-  line-height: 1.5em;
-  font-size: 12pt;
-}
-
-p#close-showroom A {
-  font-weight: bold;
-}
-
 
 /*=== "SUPPORT" PAGE ===*/
 
-.support h1 {
-  font-size: 20pt;
+.support .content {
+  padding-right;
+  border-right: solid 1px #DDD;
 }
 
 .support h2 {
   font-size: 16pt;
 }
 
-.support div.light-block {
+.support #support-sidebar {
   padding-top: 20px;
 }
 
@@ -762,8 +744,8 @@ div#block-block-5 {
   margin-top: 0;
 }
 
-div#support-sidebar {
-  margin-top: 80px;
+div#support content {
+  border-left: solid 1px #CCC;
 }
 
 div#support-footer {
@@ -782,8 +764,12 @@ div#support-footer p {
 }
 
 .faq h1 {
-  border-top: solid 1px #EEE;
-  border-bottom: solid 1px #EEE;
+  font-size: 20pt;
+  margin-bottom: 40px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-top: solid 1px #DDD;
+  border-bottom: solid 1px #DDD;
 }
 
 #content .faq div.light-block {

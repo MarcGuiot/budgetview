@@ -2,6 +2,7 @@
 <site url="http://www.mybudgetview.fr" pagesDir="content">
 
   <page file="index.html" title="BudgetView" shortTitle="Accueil" template="template.html">
+    <key name="innerTemplate" value="standardPageTemplate.html"/>
     <key name="title.hide" value="true"/>
 
     <page file="guide.html" title="Bien gérer son budget familial" shortTitle="Guide"/>
@@ -15,21 +16,25 @@
     <page file="achat.html" title="Achetez BudgetView !" shortTitle="Achat"/>
 
     <page file="support.html" title="Aide &amp; Support" shortTitle="Support">
+      <key name="innerTemplate" value="supportPageTemplate.html"/>
 
       <page file="support/guides.html" title="Guides de démarrage">
-        <page file="support/guides/import.html" title="1. Importer vos relevés d'opérations"/>
+        <page file="support/guides/import.html" title="1. Importez vos relevés d'opérations"/>
         <page file="support/guides/categorisation.html" title="2. Catégorisez vos opérations"/>
         <page file="support/guides/budget.html" title="3. Finalisez votre budget"/>
       </page>
 
-      <page file="support/faq.html" title="Questions fréquentes">
+      <page file="support/derniers_changements.html" title="Derniers changements"/>
 
-        <page file="support/faq/general.html" title="Général">
+      <page file="support/faq.html" title="Questions fréquentes">
+        <key name="innerTemplate" value="faqPageTemplate.html"/>
+
+        <page file="support/faq/general.html" title="Questions générales">
           <page file="support/faq/general/entree_code_activation.html"
                 title="Comment enregistrer mon code d'activation ?"/>
           <page file="support/faq/general/installation_java.html"
                 title="Mon système me demande d'installer Java. Y a-t-il un risque à le faire ?"/>
-          <page file="support/faq/general/mises-a-jour.html"
+          <page file="support/faq/general/mises_a_jour.html"
                 title="Comment se font les mises à jour de BudgetView ?"/>
           <page file="support/faq/general/pourquoi_connexion.html"
                 title="Pourquoi BudgetView se connecte-t-il à Internet ?"/>
@@ -47,10 +52,10 @@
                 title="Peut-on déplacer le répertoire de données, par exemple pour utiliser un service de stockage en ligne tel que Dropbox ou Google Drive ?"/>
         </page>
 
-        <page file="support/faq/comptes.html" title="Comptes">
+        <page file="support/faq/comptes.html" title="Gestion des comptes">
           <page file="support/faq/comptes/utiliser_plusieurs_comptes.html"
                 title="Est-il possible d'utiliser plusieurs comptes ?"/>
-          <page file="support/faq/comptes/solde-a-zero.html"
+          <page file="support/faq/comptes/solde_a_zero.html"
                 title="Pourquoi le solde de mon compte est-il à zéro ?"/>
           <page file="support/faq/comptes/carte_debit_differe.html"
                 title="Comment traiter les cartes à débit différé ?"/>
@@ -60,7 +65,7 @@
                 title="Comment supprime-t-on une opération ?"/>
         </page>
 
-        <page file="support/faq/import.html" title="Import des relevés">
+        <page file="support/faq/import.html" title="Import des relevés bancaires">
           <page file="support/faq/import/banques_francaises_connexion_directe.html"
                 title="A quelles banques Françaises BudgetView se connecte-t-il directement ?"/>
           <page file="support/faq/import/banque_non_listee.html"
@@ -91,7 +96,7 @@
                 title="Avez-vous prévu une version iPhone / iPad ?"/>
         </page>
 
-      </page>
+        </page>
 
       <page file="apropos.html" title="A propos">
         <page file="apropos/presse.html" title="Presse et Blogs"/>
