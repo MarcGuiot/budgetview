@@ -9,6 +9,10 @@ body {
   margin: 7px;
 }
 
+div.centered {
+ text-align: center;
+}
+
 .container {
   max-width: 900px;
 }
@@ -720,7 +724,7 @@ p#close-showroom A {
   margin-bottom:10px;
 }
 
-table#guides-table tr.titles td {
+div#guides p {
   font-size: 11pt;
 }
 

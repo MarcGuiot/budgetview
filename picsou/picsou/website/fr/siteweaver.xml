@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site url="http://www.mybudgetview.fr" pagesDir="content">
 
-  <page file="index.html" title="BudgetView" shortTitle="Accueil"
-        template="template.html">
+  <page file="index.html" title="BudgetView" shortTitle="Accueil" template="template.html">
+    <key name="title.hide" value="true"/>
 
-    <page file="guide.html" title="Guide" shortTitle="Guide"/>
+    <page file="guide.html" title="Bien gérer son budget familial" shortTitle="Guide"/>
 
     <page file="telechargement.html" title="Téléchargez BudgetView !" shortTitle="Téléchargement">
       <page file="telechargement/windows.html" title="Téléchargez BudgetView pour Windows !"/>
@@ -12,20 +12,100 @@
       <page file="telechargement/linux.html" title="Téléchargez BudgetView pour Linux !"/>
     </page>
 
-    <page file="achat.html" title="Acheter BudgetView" shortTitle="Achat"/>
+    <page file="achat.html" title="Achetez BudgetView !" shortTitle="Achat"/>
 
-    <page file="support.html" title="Support"/>
+    <page file="support.html" title="Aide &amp; Support" shortTitle="Support">
 
-    <page file="apropos.html" title="A propos">
-      <page file="apropos/presse.html" title="Presse et Blogs"/>
-      <page file="apropos/mentions_legales.html" title="Mentions légales"/>
+      <page file="support/guides.html" title="Guides de démarrage">
+        <page file="support/guides/import.html" title="1. Importer vos relevés d'opérations"/>
+        <page file="support/guides/categorisation.html" title="2. Catégorisez vos opérations"/>
+        <page file="support/guides/budget.html" title="3. Finalisez votre budget"/>
+      </page>
+
+      <page file="support/faq.html" title="Questions fréquentes">
+
+        <page file="support/faq/general.html" title="Général">
+          <page file="support/faq/general/entree_code_activation.html"
+                title="Comment enregistrer mon code d'activation ?"/>
+          <page file="support/faq/general/installation_java.html"
+                title="Mon système me demande d'installer Java. Y a-t-il un risque à le faire ?"/>
+          <page file="support/faq/general/mises-a-jour.html"
+                title="Comment se font les mises à jour de BudgetView ?"/>
+          <page file="support/faq/general/pourquoi_connexion.html"
+                title="Pourquoi BudgetView se connecte-t-il à Internet ?"/>
+          <page file="support/faq/general/apres_periode_essai.html"
+                title="Que se passe-t-il après les 45 jours d'essai de BudgetView ?"/>
+          <page file="support/faq/general/utilisation_deux_ordinateurs.html"
+                title="Puis-je utiliser BudgetView sur deux ordinateurs ?"/>
+          <page file="support/faq/general/remplacant_money.html"
+                title="Est-il possible d'utiliser BudgetView comme remplaçant de Money ?"/>
+          <page file="support/faq/general/migrer_donnees_entre_ordinateurs.html"
+                title="Comment migrer mes données d'un ordinateur à un autre ?"/>
+          <page file="support/faq/general/emplacement_repertoire_donnees.html"
+                title="Où sont stockées les données et les traces de BudgetView sur ma machine ?"/>
+          <page file="support/faq/general/deplacement_repertoire_donnees.html"
+                title="Peut-on déplacer le répertoire de données, par exemple pour utiliser un service de stockage en ligne tel que Dropbox ou Google Drive ?"/>
+        </page>
+
+        <page file="support/faq/comptes.html" title="Comptes">
+          <page file="support/faq/comptes/utiliser_plusieurs_comptes.html"
+                title="Est-il possible d'utiliser plusieurs comptes ?"/>
+          <page file="support/faq/comptes/solde-a-zero.html"
+                title="Pourquoi le solde de mon compte est-il à zéro ?"/>
+          <page file="support/faq/comptes/carte_debit_differe.html"
+                title="Comment traiter les cartes à débit différé ?"/>
+          <page file="support/faq/comptes/multi_devises.html"
+                title="Est-il possible de gérer des comptes qui utilisent différentes devises ?"/>
+          <page file="support/faq/comptes/supprimer_operation.html"
+                title="Comment supprime-t-on une opération ?"/>
+        </page>
+
+        <page file="support/faq/import.html" title="Import des relevés">
+          <page file="support/faq/import/banques_francaises_connexion_directe.html"
+                title="A quelles banques Françaises BudgetView se connecte-t-il directement ?"/>
+          <page file="support/faq/import/banque_non_listee.html"
+                title="Comment faire lorsque ma banque n'est pas listée ?"/>
+          <page file="support/faq/import/banque_sans_export.html"
+                title="Que faire si ma banque ne fournit pas d'export des relevés ?"/>
+          <page file="support/faq/import/saisie_manuelle_operations.html"
+                title="Comment saisir mes propres opérations ?"/>
+          <page file="support/faq/import/import_csv.html"
+                title="Comment importer les fichiers au format CSV ?"/>
+          <page file="support/faq/import/pointage_operations.html"
+                title="Comment pointer les opérations ?"/>
+        </page>
+
+        <page file="support/faq/categorisation.html" title="Catégorisation des opérations">
+          <page file="support/faq/categorisation/virements_internes.html"
+                title="Comment classer les opérations de virement internes ?"/>
+          <page file="support/faq/categorisation/virements_epargne.html"
+                title="Comment classer les opérations de virement vers les comptes d'épargne ?"/>
+          <page file="support/faq/categorisation/ventiler_operation.html"
+                title="Comment ventiler une opération parmi plusieurs enveloppes ?"/>
+        </page>
+
+        <page file="support/faq/mobile.html" title="Utilisation sur smartphone et tablette">
+          <page file="support/faq/mobile/utilisation_android.html"
+                title="Comment utiliser l'application Android ?"/>
+          <page file="support/faq/mobile/version_iphone_ipad.html"
+                title="Avez-vous prévu une version iPhone / iPad ?"/>
+        </page>
+
+      </page>
+
+      <page file="apropos.html" title="A propos">
+        <page file="apropos/presse.html" title="Presse et Blogs"/>
+        <page file="apropos/mentions_legales.html" title="Mentions légales"/>
+      </page>
 
     </page>
-
   </page>
 
   <copy baseDir="../resources">
-    <file path="css/styles.css"/>
+    <file path=".htaccess"/>
+    <file path="css"/>
+    <file path="fonts"/>
+    <file path="js"/>
   </copy>
 
   <copy>
