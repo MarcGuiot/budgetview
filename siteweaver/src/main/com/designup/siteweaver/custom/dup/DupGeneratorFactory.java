@@ -16,6 +16,9 @@ public class DupGeneratorFactory implements GeneratorFactory {
     if (generatorType.equals("content")) {
       return new PageContentGenerator();
     }
+    if (generatorType.equals("innertemplate")) {
+      return new InnerTemplateGenerator();
+    }
     else if (generatorType.equals("title")) {
       return new TitleGenerator(new DupTitleFormatter(tag));
     }

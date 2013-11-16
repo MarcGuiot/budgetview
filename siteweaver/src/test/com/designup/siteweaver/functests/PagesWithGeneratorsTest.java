@@ -1,6 +1,5 @@
 package com.designup.siteweaver.functests;
 
-import com.designup.siteweaver.generation.SiteGenerator;
 import com.designup.siteweaver.model.Site;
 import com.designup.siteweaver.xml.SiteParser;
 
