@@ -22,8 +22,10 @@ public class TitleGenerator implements Generator {
   }
 
   public void processPage(Site site, Page page, HtmlWriter writer, HtmlOutput htmlOutput) throws IOException {
-    if (!page.isTrue("title.hide", false, false)) {
-      formatter.writeTitle(page, writer);
+    if (page.isTrue("title.hide", false, false)) {
+      return;
     }
+
+    formatter.writeTitle(page, writer);
   }
 }

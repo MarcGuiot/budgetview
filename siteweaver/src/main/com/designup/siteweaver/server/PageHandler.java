@@ -76,7 +76,6 @@ public class PageHandler extends AbstractHandler {
 
     if (configFile.lastModified() > lastConfigFileUpdate) {
       try {
-        System.out.println("PageHandler.handle: reloading config file");
         reload();
       }
       catch (Exception e) {

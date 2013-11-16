@@ -4,7 +4,7 @@ public class PagesGenerationTest extends SiteGenerationTestCase {
 
   public void testStandardCase() throws Exception {
     dump("tpl.html", "tpl:[<gen type=\"content\">]");
-    dump("root.html", "<body>rootContent</body>");
+    dump("root.html", "rootContent");
     dump("dir1/page1.html", "page1Content");
     dump("dir1/page2.html", "page2Content");
 
@@ -22,7 +22,7 @@ public class PagesGenerationTest extends SiteGenerationTestCase {
   public void testUsingSeveralTemplates() throws Exception {
     dump("tplA.html", "tplA:[<gen type=\"content\">]");
     dump("tplB.html", "tplB:[<gen type=\"content\">]");
-    dump("root.html", "<body>rootContent</body>");
+    dump("root.html", "rootContent");
     dump("dir1/page1.html", "page1Content");
     dump("dir1/page11.html", "page11Content");
     dump("dir1/page2.html", "page2Content");
@@ -52,9 +52,9 @@ public class PagesGenerationTest extends SiteGenerationTestCase {
   }
 
   public void testATemplateMustBeSetForTheRootPage() throws Exception {
-    dump("root.html", "<body>rootContent</body>");
-    dump("dir1/page1.html", "<body>page1Content</body>");
-    dump("dir1/page2.html", "<body>page2Content</body>");
+    dump("root.html", "rootContent");
+    dump("dir1/page1.html", "page1Content");
+    dump("dir1/page2.html", "page2Content");
 
     try {
       generateSite(

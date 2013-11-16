@@ -30,11 +30,13 @@ public class SiteWeaver {
 
     server.start();
     String url = "http://" + connector.getHost() + ":" + connector.getPort();
-    System.out.println("Listening on " + url + "\n" +
-                       "Available commands:\n" +
-                       "  /!dump\n" +
-                       "  /!diff\n" +
-                       "  /!publish\n");
+    System.out.println("Listening on " + url + "\n");
+    if (args.length > 1) {
+      System.out.println("Available commands:\n" +
+                         "  /!dump\n" +
+                         "  /!diff\n" +
+                         "  /!publish\n");
+    }
     server.join();
 
     getFileAccess(args).dispose();

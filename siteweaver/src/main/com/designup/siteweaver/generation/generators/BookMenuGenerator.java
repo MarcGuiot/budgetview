@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class BookMenuGenerator implements Generator {
 
-  public static final String MENU_ROOT = "menu.root";
+  public static final String MENU_ROOT = "bookmenu.root";
 
   private Formatter formatter;
 

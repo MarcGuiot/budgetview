@@ -8,7 +8,7 @@ import com.designup.siteweaver.html.HtmlTag;
 public class DupGeneratorFactory implements GeneratorFactory {
 
   public Generator createGenerator(HtmlTag tag) {
-    if (!tag.hasAttribute("type")) {
+    if (!tag.containsAttribute("type")) {
       throw new java.lang.IllegalArgumentException("Missing XML attribute 'type'");
     }
 
@@ -18,6 +18,9 @@ public class DupGeneratorFactory implements GeneratorFactory {
     }
     else if (generatorType.equals("title")) {
       return new TitleGenerator(new DupTitleFormatter(tag));
+    }
+    else if (generatorType.equals("h1")) {
+      return new TitleGenerator(new DupH1Formatter());
     }
     else if (generatorType.equals("base")) {
       return new BaseTagGenerator();
@@ -48,6 +51,9 @@ public class DupGeneratorFactory implements GeneratorFactory {
     }
     else if (generatorType.equals("bookmenu")) {
       return new BookMenuGenerator(new DupBookMenuFormatter());
+    }
+    else if (generatorType.equals("booktoc")) {
+      return new BookTOCGenerator(tag, new DupBookTOCFormatter());
     }
 
     throw new RuntimeException("Unknow generator type '" + generatorType + "'");

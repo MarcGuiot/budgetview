@@ -33,7 +33,7 @@ public class PagesWithGeneratorsTest extends SiteweaverTestCase {
 
     checkGeneratedPage(site, "page1.html",
                        "$Start\n" +
-                       "Page1\n" +
+                       "<title>Page1</title>\n\n" +
                        "End$");
 
   }

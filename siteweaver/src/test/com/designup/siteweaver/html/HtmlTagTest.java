@@ -9,8 +9,8 @@ public class HtmlTagTest extends TestCase {
     tag.setName("toto");
     tag.addAttribute("attr1", "value1");
     tag.addAttribute("attr2", "value2");
-    assertTrue(!tag.hasAttribute("titi"));
-    assertTrue(tag.hasAttribute("attr1"));
+    assertTrue(!tag.containsAttribute("titi"));
+    assertTrue(tag.containsAttribute("attr1"));
     assertTrue(tag.getAttributeValue("attr1").equals("value1"));
     assertTrue(tag.getAttributeValue("titi") == null);
   }

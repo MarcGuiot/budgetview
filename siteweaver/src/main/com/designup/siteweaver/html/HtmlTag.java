@@ -6,33 +6,43 @@ import java.util.Map;
 public class HtmlTag {
 
   private String name;
-  private Map<String, String> attrsTable = new HashMap<String, String>();
+  private Map<String, String> attributes = new HashMap<String, String>();
 
-  public void setName(String tagName) {
+  void setName(String tagName) {
     name = tagName.toLowerCase();
   }
 
-  public String getName() {
+  public String getTagName() {
     return name;
   }
 
   public void addAttribute(String attrName, String attrValue) {
-    attrsTable.put(attrName.toLowerCase(), attrValue);
+    attributes.put(attrName.toLowerCase(), attrValue);
   }
 
-  public boolean hasAttribute(String attrName) {
-    return attrsTable.containsKey(attrName);
+  public boolean containsAttribute(String attrName) {
+    return attributes.containsKey(attrName);
   }
 
   public String getAttributeValue(String attrName) {
-    return attrsTable.get(attrName);
+    return attributes.get(attrName);
+  }
+
+  public int getIntValue(String attrName) throws IllegalArgumentException {
+    String result = attributes.get(attrName);
+    try {
+      return Integer.parseInt(result);
+    }
+    catch (NumberFormatException e) {
+      throw new IllegalArgumentException("Attribute '" + attrName + "' must be an integer", e);
+    }
   }
 
   public boolean isTrue(String attrName, boolean defaultValue) {
-    if (!attrsTable.containsKey(attrName)) {
+    if (!attributes.containsKey(attrName)) {
       return defaultValue;
     }
-    return attrsTable.get(attrName).equalsIgnoreCase("true");
+    return attributes.get(attrName).equalsIgnoreCase("true");
   }
 
   public boolean isBooleanAttributeSet(String attrName) {
@@ -48,33 +58,10 @@ public class HtmlTag {
     return attributeValue;
   }
 
-  /**
-   * Adds a representation of a tag's attribute to a given string. The
-   * attribute is represented with an "name=value" format. Nothing is added
-   * if the attribute is not present in the tag.
-   */
-  public void addFormattedAttribute(String attrName,
-                                    String outputName,
-                                    StringBuffer outputString) {
-    String attrValue = getAttributeValue(attrName);
-    if (attrValue != null) {
-      outputString.append(" " + outputName + "=\"" + attrValue + "\"");
-    }
-  }
-
-  public void addFormattedAttribute(String attrName,
-                                    String outputName,
-                                    String defaultValue,
-                                    StringBuffer outputString) {
-    String attrValue = getAttributeValue(attrName);
-    String value = attrValue != null ? attrValue : defaultValue;
-    outputString.append(" " + outputName + "=\"" + value + "\"");
-  }
-
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("<" + name);
-    for (Map.Entry<String, String> entry : attrsTable.entrySet()) {
+    for (Map.Entry<String, String> entry : attributes.entrySet()) {
       builder.append(" "+ entry.getKey() + "=\"" + entry.getValue() + "\"");
     }
     builder.append(">");

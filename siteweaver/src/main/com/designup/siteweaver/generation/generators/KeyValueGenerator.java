@@ -19,11 +19,11 @@ public class KeyValueGenerator implements Generator {
   private boolean inherited;
 
   public KeyValueGenerator(HtmlTag tag) {
-    if (tag.hasAttribute("key")) {
+    if (tag.containsAttribute("key")) {
       key = tag.getAttributeValue("key");
     }
 
-    if (tag.hasAttribute("inherited")) {
+    if (tag.containsAttribute("inherited")) {
       inherited = tag.isBooleanAttributeSet("inherited");
     }
   }

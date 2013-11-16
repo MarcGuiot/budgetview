@@ -219,4 +219,17 @@ public class Page {
     result = 31 * result + filePath.hashCode();
     return result;
   }
+
+  public Page getPageForFile(String pageFilePath) {
+    if (getFilePath().equals(pageFilePath)) {
+      return this;
+    }
+    for (Page subPage : subPages) {
+      Page subResult = subPage.getPageForFile(pageFilePath);
+      if (subResult != null) {
+        return subResult;
+      }
+    }
+    return null;
+  }
 }

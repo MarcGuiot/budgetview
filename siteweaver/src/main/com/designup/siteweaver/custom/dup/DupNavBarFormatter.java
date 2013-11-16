@@ -12,7 +12,7 @@ public class DupNavBarFormatter implements DefaultFormatter {
   private String classAttr = "";
 
   public DupNavBarFormatter(HtmlTag tag) {
-    if (tag.hasAttribute("class")) {
+    if (tag.containsAttribute("class")) {
       classAttr = " class=\"" + tag.getAttributeValue("class") + "\"";
     }
   }

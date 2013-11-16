@@ -12,8 +12,8 @@ public class HtmlParserTest extends TestCase {
       "Salut<GEN NAME=\"toto\" ATTR1 =\n \"value 1\" \n > ... et le reste",
       "gen",
       "Salut");
-    assertTrue(tag.getName().equals("gen"));
-    assertTrue(tag.hasAttribute("attr1"));
+    assertTrue(tag.getTagName().equals("gen"));
+    assertTrue(tag.containsAttribute("attr1"));
     assertTrue(tag.getAttributeValue("attr1").equals("value 1"));
   }
 
