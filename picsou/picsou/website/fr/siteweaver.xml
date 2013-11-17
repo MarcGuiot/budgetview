@@ -30,16 +30,14 @@
         <key name="innerTemplate" value="templates/faqPageTemplate.html"/>
 
         <page file="support/faq/general.html" title="Questions générales">
-          <page file="support/faq/general/entree_code_activation.html"
-                title="Comment enregistrer mon code d'activation ?"/>
+          <page file="support/faq/general/activer_modules_additionnels.html"
+                title="Comment activer les modules additionnels ?"/>
           <page file="support/faq/general/installation_java.html"
                 title="Mon système me demande d'installer Java. Y a-t-il un risque à le faire ?"/>
           <page file="support/faq/general/mises_a_jour.html"
                 title="Comment se font les mises à jour de BudgetView ?"/>
           <page file="support/faq/general/pourquoi_connexion.html"
                 title="Pourquoi BudgetView se connecte-t-il à Internet ?"/>
-          <page file="support/faq/general/apres_periode_essai.html"
-                title="Que se passe-t-il après les 45 jours d'essai de BudgetView ?"/>
           <page file="support/faq/general/utilisation_deux_ordinateurs.html"
                 title="Puis-je utiliser BudgetView sur deux ordinateurs ?"/>
           <page file="support/faq/general/remplacant_money.html"
