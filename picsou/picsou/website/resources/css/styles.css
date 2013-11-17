@@ -9,19 +9,19 @@ body {
   margin: 7px;
 }
 
+button.btn {
+  color: #fff;
+  background-color: #EA792B;
+  border-color: #eea236;
+  font-size: 18px;
+}
+
 div.centered {
  text-align: center;
 }
 
 .container {
   max-width: 900px;
-}
-
-.container .jumbotron {
-  background-color: #FFF;
-  background: #FFF;
-  border: solid 1px #E0E0E0;
-  border-radius: 6px;
 }
 
 /* ========= Header & NavBar ========= */
@@ -100,23 +100,29 @@ div.container h3 {
   text-align: center;
 }
 
+#home #text .details {
+  margin-top: 15px;
+}
+
 #home #text .details a {
   font-weight: bold;
   color: #FFF;
 }
 
-#home #text .details {
+#home #text .details p {
   margin: 0;
   color: #DDD;
   font-size: 11pt;
 }
 
-#home h2.section-title {
-  color: #FF9230;
-}
-
 #home .large-screenshot {
   margin-left: -25px
+}
+
+#home hr {
+  border-color: #EEE;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 #home #zoom h2.zoom-title {
@@ -199,14 +205,24 @@ div.container h3 {
   line-height: 1.44em;
 }
 
-#home #steps-intro p {
+#home h2.version-title {
+  font-size: 24px;
+  font-weight: bold;
   border-top: solid 1px #CCC;
   border-bottom: solid 1px #CCC;
-  font-size: 20px;
   text-align: center;
   padding-top: 5px;
   padding-bottom: 5px;
 }
+
+#home h2#free-version {
+  background-color: #C5F3FC;
+}
+
+#home h2#add-ons {
+  background-color: #FFE0C2;
+}
+
 
 /*=== SHOW/HIDE ===*/
 
@@ -228,9 +244,14 @@ a.showLink:hover, a.hideLink:hover {
 
 /* ========== DOWNLOAD PAGE ========== */
 
-#download-platforms {
+.container #download-platforms {
+  background-color: #FFF;
+  background: #FFF;
+  border: solid 1px #E0E0E0;
+  border-radius: 6px;
   margin-top: 20px;
   margin-bottom: 20px;
+  border: solid 1px #CCC;
 }
 
 #download-platforms .platform {
@@ -284,6 +305,14 @@ table#download td.left {
 
 table#download td.right {
   padding-left: 0;
+}
+
+#download-details {
+  width:80%;
+  margin-left:auto;
+  margin-right:auto;
+  text-align:center;
+  color: #777;
 }
 
 .full-screenshot {
@@ -534,7 +563,7 @@ table.field-value td.value {
 }
 
 #close #close-trial {
-  margin-top: -10px;
+  margin-top: 5px;
   color: #AAA;
   font-size: 9pt;
 }
@@ -658,18 +687,19 @@ table.field-value td.value {
   margin-bottom: 0;
 }
 
-#home #feature-list {
+#home .feature-list {
   width: 90%;
   margin-left: auto;
   margin-right: auto;
 }
 
-#home #feature-list h2 {
-  font-size: 12pt;
+#home .feature-list h3 {
+  font-size: 16pt;
+  font-weight: bold;
   color: #333;
 }
 
-#home #feature-list table li {
+#home .feature-list table li {
   margin-bottom: 0.2em;
 }
 
@@ -759,10 +789,6 @@ div#support-footer p {
 
 /* ========= FAQ PAGES ========== */
 
-.faq {
-  border-bottom: solid 1px #CCC;
-}
-
 .faq h1 {
   font-size: 20pt;
   margin-bottom: 40px;
@@ -783,6 +809,7 @@ div#faq-footer {
   text-align: left;
   text-shadow: white 0 2px 0;
   color: #AAAAAA;
+  margin-top: 20px;
   margin-bottom: 20px;
   padding-top: 5px;
 }
@@ -810,6 +837,70 @@ div#changelog span.date {
   font-weight: normal;
   color: #888;
 }
+
+/* ========= GUIDE ========== */
+
+#modules-additionnels .jumbotron {
+  background-color: #FFF;
+  background: #FFF;
+  padding-left:10px;
+  padding-top:30px;
+  padding-bottom:10px;
+  margin-left: -40px;
+  margin-right: -40px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  text-align: center;
+}
+
+#modules-additionnels .jumbotron #text-side {
+  margin-top: 10px;
+}
+
+#modules-additionnels .jumbotron h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+
+#modules-additionnels .jumbotron p {
+  margin-top: 4px;
+  margin-bottom: 0px;
+}
+
+#modules-additionnels .jumbotron .list {
+  padding-left: 40px;
+  font-size: 18px;
+  text-align: left;
+  color: #666;
+}
+
+#modules-additionnels .jumbotron .list li {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  line-height: 1;
+}
+
+#modules-additionnels .jumbotron form {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+#modules-additionnels .jumbotron p.price {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #777;
+}
+
+#modules-additionnels .feature {
+  margin-top: 10px;
+}
+
+#modules-additionnels .feature h2 {
+  font-size: 24px;
+}
+
 
 /* ========= GUIDE ========== */
 

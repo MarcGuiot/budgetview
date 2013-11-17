@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site url="http://www.mybudgetview.fr" pagesDir="content">
 
-  <page file="index.html" title="BudgetView" shortTitle="Accueil" template="template.html">
-    <key name="innerTemplate" value="standardPageTemplate.html"/>
+  <page file="index.html" title="BudgetView" shortTitle="Accueil" template="templates/masterTemplate.html">
+    <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
     <key name="title.hide" value="true"/>
 
-    <page file="guide.html" title="Bien gérer son budget familial" shortTitle="Guide"/>
-
     <page file="telechargement.html" title="Téléchargez BudgetView !" shortTitle="Téléchargement">
-      <page file="telechargement/windows.html" title="Téléchargez BudgetView pour Windows !"/>
-      <page file="telechargement/macosx.html" title="Téléchargez BudgetView pour Mac !"/>
-      <page file="telechargement/linux.html" title="Téléchargez BudgetView pour Linux !"/>
+      <page file="telechargement/windows.html" title="Installez BudgetView sur votre PC Windows !"/>
+      <page file="telechargement/macosx.html" title="Installez BudgetView sur votre Mac !"/>
+      <page file="telechargement/linux.html" title="Installez BudgetView sur votre PC Linux !"/>
     </page>
 
-    <page file="achat.html" title="Achetez BudgetView !" shortTitle="Achat"/>
+    <page file="modules_additionnels.html" title="Modules additionnels">
+      <key name="title.hide" value="true"/>
+    </page>
 
     <page file="support.html" title="Aide &amp; Support" shortTitle="Support">
-      <key name="innerTemplate" value="supportPageTemplate.html"/>
+      <key name="innerTemplate" value="templates/supportPageTemplate.html"/>
 
       <page file="support/guides.html" title="Guides de démarrage">
         <page file="support/guides/import.html" title="1. Importez vos relevés d'opérations"/>
@@ -27,7 +27,7 @@
       <page file="support/derniers_changements.html" title="Derniers changements"/>
 
       <page file="support/faq.html" title="Questions fréquentes">
-        <key name="innerTemplate" value="faqPageTemplate.html"/>
+        <key name="innerTemplate" value="templates/faqPageTemplate.html"/>
 
         <page file="support/faq/general.html" title="Questions générales">
           <page file="support/faq/general/entree_code_activation.html"
@@ -96,7 +96,9 @@
                 title="Avez-vous prévu une version iPhone / iPad ?"/>
         </page>
 
-        </page>
+        <page file="support/guide.html" title="Bien gérer son budget familial" shortTitle="Guide"/>
+
+      </page>
 
       <page file="apropos.html" title="A propos">
         <page file="apropos/presse.html" title="Presse et Blogs"/>

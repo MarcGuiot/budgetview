@@ -5,13 +5,13 @@
         <div id="text" class="col-md-5">
             <h1>Réalisez vos projets<br/>sans passer dans le rouge&nbsp;!</h1>
 
-            <a href="/telechargement">
-                <img src="/files/images/front/try_button.png" alt="Essayez maintenant !" class="trial"
-                     alt="Essayez BudgetView" width="295" height="59">
-            </a>
-            <p class="details">Windows - Mac - Linux - Android</p>
-            <p class="details">Version de base <a href="/telechargement">100% gratuite</a></p>
-            <p class="details">Pack de <a href="/achat">modules additionnels</a> pour 14.90€</p>
+            <a href="/telechargement"><button type="button" class="btn btn-primary">Téléchargez maintenant !</button></a>
+
+            <div class="details">
+            <p>Windows - Mac - Linux - Android</p>
+            <p>Version de base <a href="/telechargement">100% gratuite</a></p>
+            <p>Pack de <a href="/achat">modules additionnels</a> pour 14.90€</p>
+            </div>
         </div>
 
         <div id="image" class="col-md-7">
@@ -81,10 +81,9 @@
     <h2 class="zoom-title">Préparez les projets qui vous tiennent à coeur !</h2>
     <div class="large-screenshot">
         <img id="projects" src="/files/images/front/home_projects.png"
-             alt="Préparation des projets dans le budget familial" height="448" width="966"/>
+             alt="Préparation des projets dans le budget familial" width="985" height="516"/>
     </div>
 </div>
-
 <div class="row">
     <div class="col-md-6">
         <h3 class="legend">Voyez dans le futur</h3>
@@ -111,12 +110,13 @@
     </table>
 </div>
 
+<hr/>
+
 <div class="row">
     <h2 class="zoom-title" style="margin-top:20px;">Votre budget en un coup d'oeil !</h2>
     <img id="dashboard" src="/files/images/front/budget_familial.png"
-         alt="Tableau de bord du budget familial" height="379" width="947">
+         alt="Tableau de bord du budget familial" height="361" width="992">
 </div>
-
 <div class="row">
     <div class="col-md-4">
         <h3 class="legend">Pilotez de près</h3>
@@ -130,6 +130,8 @@
     </div>
 </div>
 
+<hr/>
+
 <div id="import" class="row">
     <div class="col-md-6 centered">
         <img src="/files/images/front/import.png" alt="Récupérer automatiquement les relevés bancaires"
@@ -139,7 +141,7 @@
              width="255">
     </div>
     <div class="col-md-6">
-        <h3 class="section-title">Pas de saisies fastidieuses</h3>
+        <h3 class="legend">Pas de saisies fastidieuses</h3>
         <p> Importez directement vos relevés bancaires à partir du site internet de votre banque.
             BudgetView se connecte directement aux principales banques Françaises.</p>
         <p>Après deux ou trois sessions, BudgetView classe tout seul la plupart de vos opérations,
@@ -150,12 +152,13 @@
     </div>
 </div>
 
+<hr/>
 
 <table id="mobile" class="image-and-text" style="margin-top: 20px;width: 80%;">
     <tbody>
     <tr>
         <td class="left align-right" width="49%">
-            <h2 class="section-title">Emportez votre budget avec vous</h2>
+            <h3 class="legend">Emportez votre budget avec vous</h3>
             <p>Avec l'application BudgetView pour Android, vous pouvez visualiser votre budget
                 où que vous soyez.
             </p>
@@ -171,6 +174,8 @@
     </tbody>
 </table>
 
+<hr/>
+
 <div id="security" class="container">
     <div class="row">
         <div class="col-md-6">
@@ -178,7 +183,7 @@
                  alt="Confidentialité / Sécurité" height="119" width="162">
         </div>
         <div class="col-md-6">
-            <h2 class="section-title">Sûr et confidentiel</h2>
+            <h3 class="legend">Sûr et confidentiel</h3>
             <p>
                 Vos données personnelles ne sont pas envoyées sur Internet.
                 Vous les gardez sur votre ordinateur, et pouvez les crypter avec un mot de passe
@@ -197,11 +202,9 @@
     </div>
 </div>
 
-<div id="steps-intro">
-    <p>... et beaucoup de choses encore !</p>
-</div>
+<h2 id="free-version" class="version-title"> Une version de base 100% gratuite</h2>
 
-<div id="feature-list" class="container">
+<div class="feature-list container">
     <div class="row">
         <div class="col-md-6">
             <h3>Import de relevés</h3>
@@ -230,20 +233,20 @@
                 <li>Recherchez vos opérations par libellé.</li>
             </ul>
 
-            <h3>Comptes</h3>
+            <div class="centered">
+                <a href="/telechargement"><button type="button" class="btn btn-primary">Téléchargez maintenant !</button></a>
+            </div>
+
+        </div>
+        <div class="col-md-6">
+
+            <h3>Comptes bancaires</h3>
             <ul>
-                <li>Créez autant de comptes que vous le souhaitez.</li>
+                <li>Créez autant de comptes bancaires que vous le souhaitez.</li>
                 <li>Gérez vos comptes chèques et vos comptes d'épargne.</li>
                 <li>Gérez vos cartes à débit différé.</li>
             </ul>
 
-            <h3>Personnalisation</h3>
-            <ul>
-                <li>Choisissez le thème de couleurs que vous préférez.</li>
-                <li>Affichez l'application en Français ou en Anglais.</li>
-            </ul>
-        </div>
-        <div class="col-md-6">
             <h3>Budget</h3>
             <ul>
                 <li>Organisez votre budget sous forme d'enveloppes, organisées en postes de Revenus, Fixe, Variable,
@@ -261,10 +264,23 @@
                     Excel ou
                     Numbers.</li>
                 <li>Créez et restaurez des copies de sauvegarde de vos données.</li>
-                <li>Définissez l'endroit où vos données sont stockées, par exemple pour les placer sur un répertoire
-                    sauvegardé.</li>
-                <li>Imprimez votre budget et vos relevés d'opérations.</li>
+                <li>Imprimez vos relevés d'opérations.</li>
             </ul>
+
+            <h3>Personnalisation</h3>
+            <ul>
+                <li>Choisissez le thème de couleurs que vous préférez.</li>
+                <li>Affichez l'application en Français ou en Anglais.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<h2 id="add-ons" class="version-title">Un pack de modules additionnels à 12€/an pour aller plus loin</h2>
+
+<div class="feature-list container">
+    <div class="row">
+        <div class="col-md-6">
 
             <h3>Projets</h3>
             <ul>
@@ -277,6 +293,38 @@
                     à des copier/coller à partir d'autres logiciels, par exemple votre navigateur internet</li>
                 <li>Conservez des notes ou des liens sur les éléments des projets, et attribuez-leur des images</li>
             </ul>
+
+            <h3>Accès mobile Androïd</h3>
+            <ul>
+                <li>Visualisez votre budget sur votre mobile où que vous soyez.</li>
+            </ul>
+        </div>
+
+        <div class="col-md-6">
+
+            <h3>Sessions utilisateur</h3>
+            <ul>
+                <li>Créez plusieurs sessions utilisateur.</li>
+                <li>Protégez vos comptes par un mot de passe.</li>
+                <li>Vos données sont cryptées avec le mot de passe que vous avez choisi.</li>
+            </ul>
+
+            <h3>Vue analyse</h3>
+            <ul>
+                <li>Observez la répartition de vos dépenses et l'évolution de chaque enveloppe dans le temps.</li>
+                <li>Imprimez une synthèse de votre budget.</li>
+            </ul>
+
+            <h3>Gestion des données</h3>
+            <ul>
+                <li>Définissez l'endroit où vos données sont stockées, par exemple pour les placer sur un répertoire
+                    sauvegardé.</li>
+            </ul>
+
+            <div class="centered">
+                <a href="/modules-additionnels"><button type="button" class="btn btn-primary">En savoir plus</button></a>
+            </div>
+
         </div>
     </div>
 </div>
@@ -285,11 +333,7 @@
 
 <div id="close">
     <p>Alors, qu'attendez-vous ?</p>
-    <a href="/telechargement">
-        <img src="/files/images/front/try_button.png" alt="Essayez maintenant !" width="295" height="59">
-    </a>
-    <p id="close-trial">Essai 45 jours gratuit et anonyme</p>
-
+    <a href="/telechargement"><button type="button" class="btn btn-primary">Téléchargez maintenant !</button></a>
 </div>
 
 </div>
