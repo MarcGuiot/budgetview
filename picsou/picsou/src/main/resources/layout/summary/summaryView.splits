@@ -2,8 +2,9 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
-    <style selector="component.chart" marginTop="5" marginLeft="10" opaque="true"
+    <style selector="component.chart" marginTop="5" marginLeft="10" marginRight="5" opaque="true"
            background="block.inner.secondary.bg"/>
+    <style selector="label.secondarySectionSubtitle" marginRight="5"/>
   </styles>
 
   <grid styleClass="secondaryInnerBlock">

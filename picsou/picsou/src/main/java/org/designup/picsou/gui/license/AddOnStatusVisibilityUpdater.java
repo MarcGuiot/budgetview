@@ -18,4 +18,16 @@ public class AddOnStatusVisibilityUpdater {
       }
     });
   }
+
+  public static void installReversed(GlobRepository repository, final Component component) {
+    AddOnStatusListener.install(repository, new AddOnStatusListener() {
+      protected void statusChanged(boolean addOnActivated) {
+        component.setVisible(!addOnActivated);
+        Component parent = component.getParent();
+        if (parent != null && (parent instanceof JComponent)) {
+          GuiUtils.revalidate((JComponent)parent);
+        }
+      }
+    });
+  }
 }

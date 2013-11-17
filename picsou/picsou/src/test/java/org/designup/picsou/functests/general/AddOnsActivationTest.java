@@ -1,14 +1,18 @@
 package org.designup.picsou.functests.general;
 
+import org.designup.picsou.functests.checkers.AddOnsViewChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
 public class AddOnsActivationTest extends LoggedInFunctionalTestCase {
 
+  private AddOnsViewChecker addons;
+
   public void setUp() throws Exception {
     setNotRegistered();
     super.setUp();
     operations.disableAddOns();
+    addons = new AddOnsViewChecker(mainWindow);
   }
 
   public void test() throws Exception {
@@ -20,6 +24,7 @@ public class AddOnsActivationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2013/11/01", 1000.00, "Income")
       .addTransaction("2013/11/01", 100.00, "Expense 1")
       .load();
+    categorization.setNewIncome("INCOME", "Salary");
     views.selectHome();
 
     // === FREE VERSION ===
@@ -36,6 +41,14 @@ public class AddOnsActivationTest extends LoggedInFunctionalTestCase {
     );
     projects.checkHidden();
     projectChart.checkHidden();
+    addons.checkShown();
+    addons.checkButton("http://www.mybudgetview.com/add-ons");
+    budgetView.income.checkSeriesActions(
+      "Salary",
+      "Edit",
+      "Show operations",
+      "Carry over next month",
+      "Delete...");
     budgetView.extras.checkAvailableActions("Add", "Disable month filtering");
     categorization.selectTransaction("EXPENSE 1");
     categorization.selectExtras().checkProjectCreationHidden();
@@ -49,7 +62,6 @@ public class AddOnsActivationTest extends LoggedInFunctionalTestCase {
 
     // === ADD-ONS ENABLED ===
 
-    views.selectHome();
     operations.checkFileMenu(
       "Import",
       "Export",
@@ -66,6 +78,15 @@ public class AddOnsActivationTest extends LoggedInFunctionalTestCase {
       "publish data for mobile",
       "Exit"
     );
+    budgetView.income.checkSeriesActions(
+      "Salary",
+      "Edit",
+      "Show operations",
+      "See in Analysis view",
+      "Carry over next month",
+      "Delete...");
+    views.selectHome();
+    addons.checkHidden();
     projects.checkVisible();
     projectChart.checkVisible();
     budgetView.extras.checkAvailableActions("Add", "Add project", "Disable month filtering");

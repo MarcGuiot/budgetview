@@ -19,6 +19,7 @@ import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.feedback.FeedbackService;
 import org.designup.picsou.gui.feedback.FeedbackView;
 import org.designup.picsou.gui.feedback.actions.OpenFeedbackDialogAction;
+import org.designup.picsou.gui.general.AddonsView;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.help.actions.GotoSupportAction;
 import org.designup.picsou.gui.help.actions.GotoWebsiteAction;
@@ -206,6 +207,7 @@ public class MainPanel {
       seriesAnalysisView,
       new SavingsView(replicationGlobRepository, directory),
       new SummaryView(repository, directory),
+      new AddonsView(repository, directory),
       projectView,
       new FeedbackView(repository, directory),
       signpostView,

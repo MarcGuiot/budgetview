@@ -154,6 +154,14 @@
                         </column>
                       </column>
                     </column>
+                    <column weightX="2" autoHideSource="addonsView">
+                      <label text="$addons.title" styleClass="blockTitle"/>
+                      <column styleClass="block">
+                        <column styleClass="innerBlock">
+                          <panel ref="addonsView"/>
+                        </column>
+                      </column>
+                    </column>
                   </horizontalSplit>
                 </column>
               </card>

@@ -9,6 +9,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 
 public class User {
 
@@ -25,7 +26,7 @@ public class User {
   public static StringField ACTIVATION_CODE;
   public static BlobField SIGNATURE;
   public static IntegerField ACTIVATION_STATE;
-  
+
   @DefaultBoolean(false)
   public static BooleanField CONNECTED;
 
@@ -33,7 +34,7 @@ public class User {
 
   @DefaultBoolean(false)
   public static BooleanField IS_DEMO_USER;
-  
+
   @DefaultBoolean(false)
   public static BooleanField AUTO_LOGIN;
 
@@ -55,6 +56,11 @@ public class User {
   static {
     GlobTypeLoader.init(User.class);
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
+  }
+
+  public static boolean addOnsEnabled(GlobRepository repository) {
+    Glob user = repository.find(User.KEY);
+    return user != null && user.isTrue(IS_REGISTERED_USER);
   }
 
   public static boolean isDemoUser(Glob user) {

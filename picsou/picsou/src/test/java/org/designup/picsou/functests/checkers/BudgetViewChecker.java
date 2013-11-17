@@ -335,6 +335,10 @@ public class BudgetViewChecker extends ViewChecker {
       return new PopupButton(getPanel().getButton("seriesActions"));
     }
 
+    public void checkSeriesActions(String seriesName, String... actions) {
+      getSeriesPanel(seriesName).getSeriesButton().checkChoices(actions);
+    }
+
     public void gotoData(String seriesName) {
       getObservedAmountButton(seriesName).click();
     }
