@@ -2,7 +2,6 @@ package org.designup.picsou.gui.general;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.browsing.BrowsingAction;
-import org.designup.picsou.gui.help.actions.GotoWebsiteAction;
 import org.designup.picsou.gui.license.AddOnStatusVisibilityUpdater;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;

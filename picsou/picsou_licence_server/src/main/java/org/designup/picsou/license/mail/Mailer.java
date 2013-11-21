@@ -67,7 +67,7 @@ public class Mailer {
 
   public boolean sendToUs(Mailbox mailbox, String fromMail, String title, String content) {
     SendEmail supportEmailToSend =
-      new SendEmail(mailbox, title, "declared mail:'" + fromMail + "'\ncontent:\n" + content,
+      new SendEmail(mailbox, title, "From " + fromMail + ": " + content,
                     fromMail, mailbox.getEmail());
     if (supportEmailToSend.sent()) {
       return true;

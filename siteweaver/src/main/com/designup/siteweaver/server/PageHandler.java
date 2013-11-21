@@ -1,10 +1,7 @@
 package com.designup.siteweaver.server;
 
 import com.designup.siteweaver.generation.SiteGenerator;
-import com.designup.siteweaver.model.CopySet;
-import com.designup.siteweaver.model.Page;
-import com.designup.siteweaver.model.PageFunctor;
-import com.designup.siteweaver.model.Site;
+import com.designup.siteweaver.model.*;
 import com.designup.siteweaver.server.upload.FileAccess;
 import com.designup.siteweaver.server.upload.SiteUploader;
 import com.designup.siteweaver.server.utils.FileAccessHtmlLogger;
@@ -168,10 +165,13 @@ public class PageHandler extends AbstractHandler {
                  message);
   }
 
-  private void writeSite(PrintWriter writer) {
+  private void writeSite(final PrintWriter writer) {
     writer.write("<html>\n");
     writer.write("<h1>Site content</h1>\n");
     writeRootPage(writer);
+    writer.write("<hr/>");
+    writer.write("<h1>Files</h1>\n");
+    writeFiles(writer);
     writer.write("</html>");
   }
 
@@ -205,6 +205,21 @@ public class PageHandler extends AbstractHandler {
 
   private Page getPage(String target) {
     return pages.get(target);
+  }
+
+  private void writeFiles(final PrintWriter writer) {
+    try {
+      writer.write("<ul>\n");
+      site.processFiles(new FileFunctor() {
+        public void process(File inputFile, String targetPath) throws IOException {
+          writer.write("<li><a href=file://" + inputFile.getAbsolutePath() + ">" + inputFile.getPath() + "</a> ==> " + targetPath + "</li>\n");
+        }
+      });
+      writer.write("</ul>\n");
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   protected void doStart() throws Exception {

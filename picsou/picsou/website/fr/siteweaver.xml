@@ -111,9 +111,10 @@
     <file path="css"/>
     <file path="fonts"/>
     <file path="js"/>
+    <file path="files/images"/>
   </copy>
 
   <copy>
-    <file path="files"/>
+    <file path="files/images_fr"/>
   </copy>
 </site>

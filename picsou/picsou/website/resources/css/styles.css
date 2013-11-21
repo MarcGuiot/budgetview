@@ -66,7 +66,7 @@ div.container h3 {
 }
 
 #home .jumbotron {
-  background: url("/images/home_bg.jpg");
+  background: url("/files/images/front/home_bg.jpg");
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 10xp;
@@ -862,7 +862,7 @@ div#faq-footer A:hover {
 
 /* ========= GUIDE ========== */
 
-#modules-additionnels .jumbotron {
+#add-ons .jumbotron {
   background-color: #FFF;
   background: #FFF;
   padding-left:10px;
@@ -875,50 +875,50 @@ div#faq-footer A:hover {
   text-align: center;
 }
 
-#modules-additionnels .jumbotron #text-side {
+#add-ons .jumbotron #text-side {
   margin-top: 10px;
 }
 
-#modules-additionnels .jumbotron h1 {
+#add-ons .jumbotron h1 {
   font-size: 34px;
   font-weight: bold;
   margin-top: 0px;
   margin-bottom: 5px;
 }
 
-#modules-additionnels .jumbotron p {
+#add-ons .jumbotron p {
   margin: 0px;
 }
 
-#modules-additionnels .jumbotron .list {
+#add-ons .jumbotron .list {
   padding-left: 40px;
   font-size: 16px;
   text-align: left;
   color: #666;
 }
 
-#modules-additionnels .jumbotron .list li {
+#add-ons .jumbotron .list li {
   margin-top: 5px;
   margin-bottom: 5px;
   line-height: 1;
 }
 
-#modules-additionnels .jumbotron form {
+#add-ons .jumbotron form {
   margin-top: 20px;
   margin-bottom: 10px;
 }
 
-#modules-additionnels .jumbotron p.price {
+#add-ons .jumbotron p.price {
   margin-top: 10px;
   font-size: 16px;
   color: #777;
 }
 
-#modules-additionnels .feature {
+#add-ons .feature {
   padding-top: 40px;
 }
 
-#modules-additionnels .feature h2 {
+#add-ons .feature h2 {
   font-size: 24px;
 }
 
