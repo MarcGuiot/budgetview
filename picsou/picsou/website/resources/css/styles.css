@@ -235,14 +235,6 @@ div.container h3 {
   margin:0;
 }
 
-#home #free-version h2 {
-  background-color: #C5F3FC;
-}
-
-#home #add-ons h2 {
-  background-color: #FFE0C2;
-}
-
 
 /*=== SHOW/HIDE ===*/
 
@@ -442,41 +434,45 @@ table.field-value td.value {
 
 /* ========== BUY PAGE ========== */
 
-#buy table#intro {
-  width: 75%;
+#buy #intro {
   margin-top: 10px;
   margin-bottom: 0px;
   margin-left: auto;
   margin-right: auto;
+  background-color: #FFF;
 }
 
-#buy table#intro td {
+#buy #intro td {
   text-align: center;
   vertical-align: center;
 }
 
-#buy table#intro div#text {
+#buy #intro div#text {
   margin-top: 80px;
 }
 
-#buy table#intro div#text p {
+#buy #intro div#text p {
   margin-top: 10px;
   font-size: 18pt;
   line-height: 1.1em;
 }
 
-#buy table#notes h2 {
+#buy #intro form {
+  margin-top: 30px;
+}
+
+#buy #notes h2 {
   text-align: left;
   margin-top: 10px;
   margin-bottom: 0px;
   font-size: 14pt;
 }
 
-#buy table#notes h2 img {
+#buy #notes h2 img {
   vertical-align: middle;
 }
 
-#buy table#notes td p {
+#buy #notes td p {
   font-size: 10pt;
   margin-top: 10px;
   margin-bottom: 20px;

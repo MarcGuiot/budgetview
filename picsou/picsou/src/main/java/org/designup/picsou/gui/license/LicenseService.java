@@ -14,6 +14,31 @@ import java.util.Date;
 public class LicenseService {
 
   public static final int TRIAL_DURATION = 46;
+  public static final int TRIAL_SHOWN_DURATION = 20;
+
+  public static boolean trialInProgress(GlobRepository repository) {
+
+    Utils.beginRemove();
+    if ("true".equals(System.getProperty("license.disable"))) {
+      return false;
+    }
+    Utils.endRemove();
+
+    Glob user = repository.get(User.KEY);
+    return !user.isTrue(User.IS_REGISTERED_USER);
+  }
+
+  public static boolean trialExpired(GlobRepository repository) {
+    Utils.beginRemove();
+    if ("true".equals(System.getProperty("license.disable"))) {
+      return false;
+    }
+    Utils.endRemove();
+
+    Glob user = repository.get(User.KEY);
+    Date lastValidDay = repository.get(UserPreferences.KEY).get(UserPreferences.LAST_VALID_DAY);
+    return !user.isTrue(User.IS_REGISTERED_USER) && !TimeService.getToday().before(lastValidDay);
+  }
 
   public static Date getEndOfTrialPeriod() {
     return addTrialPeriod(TimeService.getToday());

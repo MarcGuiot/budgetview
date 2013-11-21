@@ -61,7 +61,6 @@ public class MobileTest extends ConnectedTestCase {
 
   public void testEmptyEmailMessage() throws Exception {
     String mail = "testEmpty@mybudgetview.fr";
-    application.enableAddOns();
     application.openMobileAccountDialog()
       .validateAndCheckEmailTip("You must enter your email address")
       .setEmailAndValidate(mail)
@@ -73,7 +72,6 @@ public class MobileTest extends ConnectedTestCase {
 
   public void testChangePassword() throws Exception {
     String mail = "testChangePassword@mybudgetview.fr";
-    application.enableAddOns();
     CreateMobileAccountChecker dialog = application.openMobileAccountDialog();
     String generatedPassword = dialog
       .setEmailWithoutValidating(mail)
@@ -209,9 +207,6 @@ public class MobileTest extends ConnectedTestCase {
   }
 
   private SharingConnection requestMobileAccount(String userMail, String requestedPassword) throws InterruptedException {
-
-    application.enableAddOns();
-
     CreateMobileAccountChecker dialog = application.openMobileAccountDialog();
     if (Strings.isNotEmpty(requestedPassword)) {
       dialog.setNewPassword(requestedPassword);

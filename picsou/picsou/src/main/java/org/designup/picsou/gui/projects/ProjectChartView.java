@@ -9,7 +9,6 @@ import org.designup.picsou.gui.components.charts.histo.button.HistoButtonColors;
 import org.designup.picsou.gui.components.charts.histo.button.HistoButtonPainter;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.license.AddOnStatusVisibilityUpdater;
 import org.designup.picsou.gui.model.ProjectStat;
 import org.designup.picsou.gui.projects.components.ProjectPopupMenuFactory;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoButtonDatasetBuilder;
@@ -20,8 +19,6 @@ import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobSelection;
-import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -121,8 +118,6 @@ public class ProjectChartView extends View {
 
     Font buttonFont = histoChart.getFont().deriveFont(BUTTON_FONT_SIZE);
     buttonFontMetrics = histoChart.getFontMetrics(buttonFont);
-
-    AddOnStatusVisibilityUpdater.install(repository, histoChart);
   }
 
   private void updateChart() {

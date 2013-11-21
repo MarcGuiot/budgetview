@@ -3,6 +3,7 @@ package org.designup.picsou.gui.license;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.startup.components.LogoutService;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
@@ -14,10 +15,12 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Millis;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Date;
 import java.util.Set;
 
 public class LicenseInfoView extends View {
@@ -82,6 +85,7 @@ public class LicenseInfoView extends View {
       return;
     }
 
+    long days = getDaysLeft(userPreferences);
     if (user.isTrue(User.IS_REGISTERED_USER)) {
       licenseMessage.setVisible(false);
       licenseMessage.setText("");
@@ -89,13 +93,13 @@ public class LicenseInfoView extends View {
     }
 
     Integer state = user.get(User.ACTIVATION_STATE);
-    if (user.get(User.EMAIL) == null && state == null) {
+    if (user.get(User.EMAIL) == null && state == null && (days > LicenseService.TRIAL_SHOWN_DURATION)) {
       licenseMessage.setVisible(false);
       licenseMessage.setText("");
       return;
     }
 
-    licenseMessage.setText(getMessage(user, state));
+    licenseMessage.setText(getTrialMessage(user, days, state));
     licenseMessage.setVisible(true);
   }
   
@@ -110,15 +114,42 @@ public class LicenseInfoView extends View {
     parentBuilder.add("licenseInfo", builder);
   }
 
-  private String getMessage(Glob user, Integer state) {
+  private String getTrialMessage(Glob user, long days, Integer state) {
     StringBuilder htmlText = new StringBuilder();
     htmlText.append("<html>");
-    htmlText.append(getRegisterMessage(user, state));
+    htmlText.append(getDaysLeftMessage(user, days, state));
+    htmlText.append(' ');
+    htmlText.append(getRegisterMessage(user, days, state));
     htmlText.append("</html>");
     return htmlText.toString();
   }
 
-  private String getRegisterMessage(Glob user, Integer state) {
+  private long getDaysLeft(Glob userPreferences) {
+    Date date = userPreferences.get(UserPreferences.LAST_VALID_DAY);
+    return (date.getTime() - TimeService.getToday().getTime()) / Millis.ONE_DAY;
+  }
+
+  private String getDaysLeftMessage(Glob user, long days, Integer state) {
+    if (days > 1) {
+      return Lang.get("license.info.day.count", days);
+    }
+    else if (days == 1) {
+      return Lang.get("license.info.one.day");
+    }
+    else if (days == 0) {
+      return Lang.get("license.info.last.day");
+    }
+    else if (licenseExpired(user, state)) {
+      return Lang.get("license.expiration.message");
+    }
+    return "";
+  }
+
+  private boolean licenseExpired(Glob user, Integer state) {
+    return user.get(User.EMAIL) == null || state == null;
+  }
+
+  private String getRegisterMessage(Glob user, long days, Integer state) {
     if (state == null) {
       return "";
     }
@@ -144,11 +175,21 @@ public class LicenseInfoView extends View {
       }
 
       case User.STARTUP_CHECK_KILL_USER: {
+        if (days < 0) {
         return Lang.get("license.registered.user.killed");
+      }
+        else {
+          return Lang.get("license.registered.user.killed.trial");
+        }
       }
 
       case User.STARTUP_CHECK_MAIL_SENT: {
+        if (days < 0) {
         return Lang.get("license.registered.user.killed.mail.sent");
+        }
+        else {
+          return Lang.get("license.registered.user.killed.trial.mail.sent");
+        }
       }
 
       case User.STARTUP_CHECK_JAR_VERSION: {

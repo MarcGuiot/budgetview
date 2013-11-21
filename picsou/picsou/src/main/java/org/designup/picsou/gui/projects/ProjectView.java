@@ -1,8 +1,6 @@
 package org.designup.picsou.gui.projects;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.license.AddOnStatusListener;
-import org.designup.picsou.gui.license.AddOnStatusVisibilityUpdater;
 import org.designup.picsou.model.Project;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -35,9 +33,7 @@ public class ProjectView extends View implements GlobSelectionListener, ChangeSe
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectView.splits",
                                                       repository, directory);
 
-    final JPanel panel = new JPanel();
-    builder.add("projectView", panel);
-    AddOnStatusVisibilityUpdater.install(repository, panel);
+    builder.add("projectView", new JPanel());
 
     ProjectCreationView projectCreationView = new ProjectCreationView(repository, directory);
     projectCreationView.registerComponents(builder);

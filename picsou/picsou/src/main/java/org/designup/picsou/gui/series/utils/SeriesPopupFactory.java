@@ -1,10 +1,8 @@
 package org.designup.picsou.gui.series.utils;
 
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.license.AddOnStatusListener;
 import org.designup.picsou.gui.series.edition.DeleteSeriesAction;
 import org.designup.picsou.gui.series.edition.carryover.CarryOverAction;
-import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.utils.PopupMenuFactory;
@@ -34,11 +32,6 @@ public class SeriesPopupFactory implements PopupMenuFactory, Disposable {
     this.repository = repository;
     this.directory = directory;
     this.carryOverAction = new CarryOverAction(series.getKey(), repository, directory);
-    AddOnStatusListener.install(repository, new AddOnStatusListener() {
-      protected void statusChanged(boolean addOnActivated) {
-        menu = null;
-      }
-    });
   }
 
   public JPopupMenu createPopup() {
@@ -55,13 +48,11 @@ public class SeriesPopupFactory implements PopupMenuFactory, Disposable {
           directory.get(NavigationService.class).gotoDataForSeries(series);
         }
       });
-      if (User.addOnsEnabled(repository)) {
         menu.add(new AbstractAction(Lang.get("series.goto.analysis")) {
           public void actionPerformed(ActionEvent actionEvent) {
             directory.get(NavigationService.class).gotoAnalysisForSeries(series);
           }
         });
-      }
       menu.addSeparator();
       menu.add(carryOverAction);
       menu.addSeparator();

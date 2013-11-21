@@ -1,16 +1,10 @@
 package org.designup.picsou.functests.importexport;
 
-import org.designup.picsou.functests.checkers.utils.ConfirmationHandler;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
-import org.uispec4j.Trigger;
-import org.uispec4j.Window;
-import org.uispec4j.interception.FileChooserHandler;
-import org.uispec4j.interception.WindowHandler;
-import org.uispec4j.interception.WindowInterceptor;
 
 public class ExportTest extends LoggedInFunctionalTestCase {
 

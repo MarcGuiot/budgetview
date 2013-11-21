@@ -306,12 +306,4 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     checkComponentVisible(panel, JEditorPane.class, "categorizationMessage", false);
     return this;
   }
-
-  public void checkProjectCreationVisible() {
-    checkComponentVisible(panel, JButton.class, "additionalAction", true);
-  }
-
-  public void checkProjectCreationHidden() {
-    checkComponentVisible(panel, JButton.class, "additionalAction", false);
-  }
 }

@@ -18,14 +18,6 @@ public class ProjectListChecker extends ViewChecker {
     super(mainWindow);
   }
 
-  public void checkHidden() {
-    checkComponentVisible(mainWindow, JPanel.class, "projectView", false);
-  }
-
-  public void checkVisible() {
-    checkComponentVisible(mainWindow, JPanel.class, "projectView", true);
-  }
-
   public void checkCreationPageShown() {
     checkComponentVisible(getProjectViewPanel(), JPanel.class, "projectCreationView", true);
   }

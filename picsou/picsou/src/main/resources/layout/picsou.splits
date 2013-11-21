@@ -135,7 +135,6 @@
                 </column>
               </card>
               <card name="summary">
-                <column>
                   <horizontalSplit weightY="2" styleClass="mainDivider">
                     <column weightX="6">
                       <label text="$summaryView.title" styleClass="blockTitle"/>
@@ -146,7 +145,7 @@
                         <panel ref="feedbackView" weightY="0"/>
                       </column>
                     </column>
-                    <column weightX="6" autoHideSource="projectView">
+                  <column weightX="6">
                       <label text="$projectView.title" styleClass="blockTitle"/>
                       <column styleClass="block">
                         <column styleClass="innerBlock">
@@ -154,16 +153,7 @@
                         </column>
                       </column>
                     </column>
-                    <column weightX="2" autoHideSource="addonsView">
-                      <label text="$addons.title" styleClass="blockTitle"/>
-                      <column styleClass="block">
-                        <column styleClass="innerBlock">
-                          <panel ref="addonsView"/>
-                        </column>
-                      </column>
-                    </column>
                   </horizontalSplit>
-                </column>
               </card>
             </cards>
 

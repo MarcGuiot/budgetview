@@ -37,7 +37,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public TransactionDetailsChecker transactionDetails;
   public TransactionCreationChecker transactionCreation;
   public LicenseActivationChecker license;
-  public LicenseInfoChecker licenseInfo;
+  public LicenseMessageChecker licenseMessage;
   public BudgetViewChecker budgetView;
   public SavingsViewChecker savingsView;
   public CategorizationChecker categorization;
@@ -173,6 +173,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     categorization = new CategorizationChecker(mainWindow);
     seriesAnalysis = new SeriesAnalysisChecker(mainWindow);
     license = new LicenseActivationChecker(mainWindow);
+    licenseMessage = new LicenseMessageChecker(mainWindow);
     newVersion = new NewVersionChecker(mainWindow);
     demoMessage = new DemoMessageChecker(mainWindow);
     importPanel = new ImportPanelChecker(mainWindow);
@@ -239,7 +240,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     categorization = null;
     seriesAnalysis = null;
     license = null;
-    licenseInfo = null;
+    licenseMessage = null;
     importPanel = null;
     notes = null;
     projectChart = null;

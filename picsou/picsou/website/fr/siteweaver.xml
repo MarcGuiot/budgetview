@@ -11,7 +11,7 @@
       <page file="telechargement/linux.html" title="Installez BudgetView sur votre PC Linux !"/>
     </page>
 
-    <page file="modules_additionnels.html" title="Modules additionnels">
+    <page file="achat.html" title="Achetez BudgetView !" shortTitle="Achat">
       <key name="title.hide" value="true"/>
     </page>
 
@@ -30,7 +30,7 @@
         <key name="innerTemplate" value="templates/faqPageTemplate.html"/>
 
         <page file="support/faq/general.html" title="Questions générales">
-          <page file="support/faq/general/activer_modules_additionnels.html"
+          <page file="support/faq/general/enregistrer_code_activation.html"
                 title="Comment activer les modules additionnels ?"/>
           <page file="support/faq/general/installation_java.html"
                 title="Mon système me demande d'installer Java. Y a-t-il un risque à le faire ?"/>

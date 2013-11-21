@@ -39,10 +39,6 @@ public class OperationChecker {
     this.window = window;
   }
 
-  public void checkFileMenu(String... items) {
-    assertThat(getFileMenu().contentEquals(items));
-  }
-
   public ImportDialogChecker openImportDialog() {
     return ImportDialogChecker.open(getImportMenu().triggerClick());
   }
@@ -424,7 +420,6 @@ public class OperationChecker {
   }
 
   public void logout() {
-    new OperationChecker(window).enableAddOns();
     window.getMenuBar().getMenu(Lang.get("file")).getSubMenu(Lang.get("gotoLogin")).click();
   }
 
@@ -718,13 +713,5 @@ public class OperationChecker {
 
   public MessageDialogChecker sendDataToServer() {
     return MessageDialogChecker.open(getFileMenu().getSubMenu(Lang.get("mobile.menu.send.data")).triggerClick());
-  }
-
-  public void enableAddOns() {
-    getDevMenu().getSubMenu("[Enable Add-ons]").click();
-  }
-
-  public void disableAddOns() {
-    getDevMenu().getSubMenu("[Disable Add-ons]").click();
   }
 }

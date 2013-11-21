@@ -19,7 +19,6 @@ import org.designup.picsou.gui.description.stringifiers.SeriesDescriptionStringi
 import org.designup.picsou.gui.description.stringifiers.SeriesNameComparator;
 import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.license.AddOnStatusListener;
 import org.designup.picsou.gui.printing.actions.PrintTransactionsAction;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.series.SeriesEditor;
@@ -437,15 +436,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
     JPanel groupForSeries = new JPanel();
     builder.add("groupCreateEditSeries", groupForSeries);
     builder.add("createSeries", new CreateSeriesAction(budgetArea));
-    final Action additionalAction = getAdditionalAction(budgetArea);
-    builder.add("additionalAction", additionalAction);
-    if (budgetArea == BudgetArea.EXTRAS) {
-      AddOnStatusListener.install(repository, new AddOnStatusListener() {
-        protected void statusChanged(boolean addOnActivated) {
-          additionalAction.setEnabled(addOnActivated);
-        }
-      });
-    }
+    builder.add("additionalAction", getAdditionalAction(budgetArea));
 
     parentBuilder.add(name, builder);
     return componentFactory;

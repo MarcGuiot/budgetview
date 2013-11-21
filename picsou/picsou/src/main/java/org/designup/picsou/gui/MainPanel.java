@@ -19,12 +19,10 @@ import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.feedback.FeedbackService;
 import org.designup.picsou.gui.feedback.FeedbackView;
 import org.designup.picsou.gui.feedback.actions.OpenFeedbackDialogAction;
-import org.designup.picsou.gui.general.AddonsView;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.help.actions.GotoSupportAction;
 import org.designup.picsou.gui.help.actions.GotoWebsiteAction;
 import org.designup.picsou.gui.help.actions.SendLogsAction;
-import org.designup.picsou.gui.license.AddOnStatusListener;
 import org.designup.picsou.gui.license.LicenseExpirationAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.license.RegisterLicenseAction;
@@ -207,7 +205,6 @@ public class MainPanel {
       seriesAnalysisView,
       new SavingsView(replicationGlobRepository, directory),
       new SummaryView(repository, directory),
-      new AddonsView(repository, directory),
       projectView,
       new FeedbackView(repository, directory),
       signpostView,
@@ -294,44 +291,37 @@ public class MainPanel {
     }
 
     final JMenu menu = new JMenu(Lang.get("menuBar.file"));
-    AddOnStatusListener.install(repository, new AddOnStatusListener() {
-      protected void statusChanged(boolean addOnActivated) {
-        menu.removeAll();
-        menu.add(importFileAction);
-        menu.add(exportFileAction);
-        menu.addSeparator();
-        menu.add(backupAction);
-        menu.add(restoreActionFileAction);
-        menu.add(restoreSnapshotMenuAction);
-        // A Restaurer - ne fonctionne plus sur Mac
-        // MRJAdapter.setPreferencesEnabled(true);
-        // MRJAdapter.addPreferencesListener(preferencesAction);
+    menu.add(importFileAction);
+    menu.add(exportFileAction);
+    menu.addSeparator();
+    menu.add(backupAction);
+    menu.add(restoreActionFileAction);
+    menu.add(restoreSnapshotMenuAction);
+    // A Restaurer - ne fonctionne plus sur Mac
+    // MRJAdapter.setPreferencesEnabled(true);
+    // MRJAdapter.addPreferencesListener(preferencesAction);
 
-        menu.addSeparator();
-        menu.add(preferencesAction);
+    menu.addSeparator();
+    menu.add(preferencesAction);
 
-        menu.addSeparator();
-        menu.add(registerAction);
+    menu.addSeparator();
+    menu.add(registerAction);
 
-        if (addOnActivated) {
-          menu.add(setPasswordAction);
-          menu.add(logoutAction);
-          menu.add(deleteUserAction);
+    menu.add(setPasswordAction);
+    menu.add(logoutAction);
+    menu.add(deleteUserAction);
 
-          menu.addSeparator();
-          menu.add(printBudgetAction);
+    menu.addSeparator();
+    menu.add(printBudgetAction);
 
-          menu.addSeparator();
-          menu.add(editMobileAccountAction);
-          menu.add(new SendMobileDataAction(repository, directory));
-        }
+    menu.addSeparator();
+    menu.add(editMobileAccountAction);
+    menu.add(new SendMobileDataAction(repository, directory));
 
-        if (!Gui.useMacOSMenu()) {
-          menu.addSeparator();
-          menu.add(exitAction);
-        }
-      }
-    });
+    if (!Gui.useMacOSMenu()) {
+      menu.addSeparator();
+      menu.add(exitAction);
+    }
     return menu;
   }
 
@@ -362,8 +352,6 @@ public class MainPanel {
   private JMenu createDevMenu(final Directory directory) {
     JMenu devMenu = new JMenu("[Dev]");
     devMenu.add(new DevOptionsAction(repository, directory));
-    devMenu.add(new ToggleAddOnPurchased(true, repository));
-    devMenu.add(new ToggleAddOnPurchased(false, repository));
     devMenu.add(new DumpDataAction(repository));
     devMenu.add(new DataCheckerAction(repository, directory));
     devMenu.add(new ThrowExceptionAction());
