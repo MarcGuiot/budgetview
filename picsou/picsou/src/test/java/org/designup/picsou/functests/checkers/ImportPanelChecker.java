@@ -18,19 +18,19 @@ public class ImportPanelChecker extends ViewChecker {
   }
 
   public ImportDialogChecker openImport() {
-    return ImportDialogChecker.open(getPanel().getButton("importButton").triggerClick());
+    return ImportDialogChecker.open(getPanel().getButton("importFile").triggerClick());
   }
 
   public ImportPanelChecker checkImportSignpostDisplayed(String message) {
     views.selectData();
-    checkSignpostVisible(mainWindow, getPanel().getButton("importButton"), message);
+    checkSignpostVisible(mainWindow, getPanel().getButton("importFile"), message);
     return this;
   }
 
   private Panel getPanel() {
     if (panel == null) {
       views.selectData();
-      panel = mainWindow.getPanel("importPanel");
+      panel = mainWindow.getPanel("mainWindowHeader");
     }
     return panel;
   }

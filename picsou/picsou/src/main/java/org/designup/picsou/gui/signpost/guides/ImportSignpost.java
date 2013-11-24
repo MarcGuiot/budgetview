@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.signpost.guides;
 
+import net.java.balloontip.BalloonTip;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
@@ -18,6 +19,7 @@ public class ImportSignpost extends Signpost implements ChangeSetListener {
 
   public ImportSignpost(GlobRepository repository, Directory directory) {
     super(SignpostStatus.IMPORT_STARTED, repository, directory);
+    setLocation(BalloonTip.Orientation.RIGHT_BELOW, BalloonTip.AttachLocation.SOUTHWEST);
   }
 
   protected void init() {

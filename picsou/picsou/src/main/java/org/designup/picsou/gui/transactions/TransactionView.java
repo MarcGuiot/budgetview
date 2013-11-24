@@ -3,7 +3,6 @@ package org.designup.picsou.gui.transactions;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.chart.SelectedAccountPositionsChartView;
 import org.designup.picsou.gui.accounts.utils.AccountFilter;
-import org.designup.picsou.gui.importer.ImportPanel;
 import org.designup.picsou.gui.card.utils.GotoCardAction;
 import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.filtering.FilterManager;
@@ -102,9 +101,6 @@ public class TransactionView extends View implements Filterable {
     AccountFilter.init(filterManager, repository, directory);
     addShowPlannedTransactionsCheckbox(builder);
     builder.add(view.getComponent());
-
-    ImportPanel importPanel = new ImportPanel(true, repository, directory);
-    importPanel.registerComponents(builder);
 
     builder.add("gotoCategorization", new GotoCardAction(Card.CATEGORIZATION, directory));
 

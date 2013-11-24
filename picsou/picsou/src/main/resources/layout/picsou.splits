@@ -89,7 +89,7 @@
               <button ref="notificationsFlag"/>
             </row>
           </column>
-          <row weightX="100" weightY="0.1" name="time" marginLeft="20" marginTop="0" marginRight="0">
+          <row weightX="100" weightY="0.1" name="time" marginLeft="20" marginTop="0" marginRight="20">
             <column>
               <filler fill="vertical"/>
               <button ref="prevPeriod" gridPos="(0,1)"
@@ -112,6 +112,8 @@
                       tooltipText="$timeView.tooltip.last"/>
             </column>
           </row>
+          <button ref="importFile" icon="header_import.png" styleClass="iconOnly"
+                  fill="none" anchor="center" marginTop="25" tooltipText="$import.tooltip"/>
         </row>
       </horizontalBoxes>
     </column>

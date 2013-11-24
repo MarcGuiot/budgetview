@@ -12,7 +12,6 @@
         <verticalSplit styleClass="blockDivider" opaque="false">
           <column weightY="10">
             <row>
-              <panel ref="importPanel" marginBottom="2" weightY="0.01"/>
               <filler fill="horizontal"/>
               <component ref="transactionSearch"/>
               <button ref="actionsMenu" styleClass="actionsButton" marginLeft="20"/>

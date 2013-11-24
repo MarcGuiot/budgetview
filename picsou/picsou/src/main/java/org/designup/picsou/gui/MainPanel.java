@@ -43,6 +43,7 @@ import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.analysis.SeriesAnalysisView;
 import org.designup.picsou.gui.signpost.SignpostView;
+import org.designup.picsou.gui.signpost.guides.ImportSignpost;
 import org.designup.picsou.gui.startup.components.DemoMessageView;
 import org.designup.picsou.gui.startup.components.LogoutService;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
@@ -168,6 +169,11 @@ public class MainPanel {
     directory.add(new NavigationService(transactionView, categorizationView, projectView, budgetToggle, repository, directory));
 
     importFileAction = ImportFileAction.initForMenu(Lang.get("import"), repository, directory);
+    JButton importFile = new JButton(importFileAction);
+    builder.add("importFile", importFile);
+    final ImportSignpost importSignpost = new ImportSignpost(repository, directory);
+    importSignpost.attach(importFile);
+
     exportFileAction = new ExportFileAction(repository, directory);
     openFeedbackAction = new OpenFeedbackDialogAction(Lang.get("feedback"), repository, directory);
     backupAction = new BackupAction(repository, directory);

@@ -39,12 +39,6 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     views.selectData();
     importPanel.checkImportSignpostDisplayed("Click here to import your operations");
 
-    views.selectCategorization();
-    checkNoSignpostVisible();
-
-    views.selectData();
-    importPanel.checkImportSignpostDisplayed("Click here to import your operations");
-
     importPanel.openImport().close();
     checkNoSignpostVisible();
 
