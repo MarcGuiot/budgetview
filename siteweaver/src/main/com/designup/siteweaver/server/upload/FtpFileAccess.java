@@ -8,7 +8,6 @@ import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class FtpFileAccess extends AbstractFileAccess {
@@ -26,7 +25,11 @@ public class FtpFileAccess extends AbstractFileAccess {
       ftp.disconnect();
       throw new IOException("Exception in connecting to FTP Server");
     }
-    ftp.login(user, password);
+    boolean loginAccepted = ftp.login(user, password);
+    if (!loginAccepted) {
+      ftp.disconnect();
+      throw new IOException("FTP login failed for server '" + hostname + "', user '" + user + "'");
+    }
     fileTree = new FileTree();
   }
 

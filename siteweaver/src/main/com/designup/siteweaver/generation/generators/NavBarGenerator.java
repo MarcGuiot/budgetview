@@ -25,6 +25,9 @@ public class NavBarGenerator implements Generator {
     formatter.writeSeparator(writer);
     for (Iterator<Page> iter = currentPage.getRootPage().getSubPages().iterator(); iter.hasNext();) {
       Page otherPage = iter.next();
+      if (otherPage.isTrue("navbar.hide", false, true)) {
+        continue;
+      }
       formatter.writeElement(otherPage, currentPage, writer);
       if (iter.hasNext()) {
         formatter.writeSeparator(writer);

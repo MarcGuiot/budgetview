@@ -16,12 +16,16 @@ button.btn {
   font-size: 18px;
 }
 
-div.centered {
+.centered {
  text-align: center;
 }
 
 .container {
   max-width: 900px;
+}
+
+a.highlighted {
+  border-bottom: 1px dashed #428BCA;
 }
 
 /* ========= Header & NavBar ========= */
@@ -221,18 +225,18 @@ div.container h3 {
 }
 
 #home .version-title {
-  padding-top: 55px;
+  padding-top: 15px;
 }
 
 #home .version-title h2 {
   font-size: 24px;
   font-weight: bold;
-  border-top: solid 1px #CCC;
-  border-bottom: solid 1px #CCC;
   text-align: center;
   padding-top: 5px;
   padding-bottom: 5px;
   margin:0;
+  background-color: #FF9230;
+  color: #FFF;
 }
 
 
@@ -245,10 +249,10 @@ a.showLink, a.hideLink {
   text-decoration: none;
   color: #36f;
   padding-left: 8px;
-  background: transparent url("/images/down.gif") no-repeat left;
+  background: transparent url("/files/images/front/down.gif") no-repeat left;
 }
 a.hideLink {
-  background: transparent url("/images/up.gif") no-repeat left;
+  background: transparent url("/files/images/front/up.gif") no-repeat left;
 }
 a.showLink:hover, a.hideLink:hover {
   border-bottom: 1px dotted #36f;
@@ -256,7 +260,13 @@ a.showLink:hover, a.hideLink:hover {
 
 /* ========== DOWNLOAD PAGE ========== */
 
-.container #download-platforms {
+#download-notices {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#download-platforms {
   background-color: #FFF;
   background: #FFF;
   border: solid 1px #E0E0E0;
@@ -298,24 +308,16 @@ a.showLink:hover, a.hideLink:hover {
   text-align: center;
 }
 
-#download {
-  width: 70%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 30px;
-  margin-bottom: 50px;
-}
-
-table#download td {
+#download td {
   text-align:center;
 }
 
-table#download td.left {
+#download td.left {
   vertical-align: middle;
   padding-right: 10px;
 }
 
-table#download td.right {
+#download td.right {
   padding-left: 0;
 }
 
@@ -325,6 +327,12 @@ table#download td.right {
   margin-right:auto;
   text-align:center;
   color: #777;
+}
+
+.platform-download #download {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .full-screenshot {
@@ -447,11 +455,11 @@ table.field-value td.value {
   vertical-align: center;
 }
 
-#buy #intro div#text {
+#buy #intro #text {
   margin-top: 80px;
 }
 
-#buy #intro div#text p {
+#buy #intro #text p {
   margin-top: 10px;
   font-size: 18pt;
   line-height: 1.1em;
@@ -470,14 +478,6 @@ table.field-value td.value {
 
 #buy #notes h2 img {
   vertical-align: middle;
-}
-
-#buy #notes td p {
-  font-size: 10pt;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  line-height: 1.3em;
-  color: #444;
 }
 
 /* ========== BUY OK/NOK PAGE ========== */
@@ -761,6 +761,7 @@ table#faq-menu td li {
 }
 
 div#support-breadcrumb {
+  margin-top: 30px;
   text-align: center;
   text-shadow: white 0 2px 0;
   color: #AAAAAA;
@@ -807,6 +808,7 @@ div#support-footer p {
 
 .faq h1 {
   font-size: 20pt;
+  margin-top: 10px;
   margin-bottom: 40px;
   padding-top: 5px;
   padding-bottom: 5px;
@@ -854,68 +856,6 @@ div#faq-footer A:hover {
   font-size: 10pt;
   font-weight: normal;
   color: #888;
-}
-
-/* ========= GUIDE ========== */
-
-#add-ons .jumbotron {
-  background-color: #FFF;
-  background: #FFF;
-  padding-left:10px;
-  padding-top:30px;
-  padding-bottom:10px;
-  margin-left: -40px;
-  margin-right: -40px;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  text-align: center;
-}
-
-#add-ons .jumbotron #text-side {
-  margin-top: 10px;
-}
-
-#add-ons .jumbotron h1 {
-  font-size: 34px;
-  font-weight: bold;
-  margin-top: 0px;
-  margin-bottom: 5px;
-}
-
-#add-ons .jumbotron p {
-  margin: 0px;
-}
-
-#add-ons .jumbotron .list {
-  padding-left: 40px;
-  font-size: 16px;
-  text-align: left;
-  color: #666;
-}
-
-#add-ons .jumbotron .list li {
-  margin-top: 5px;
-  margin-bottom: 5px;
-  line-height: 1;
-}
-
-#add-ons .jumbotron form {
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
-
-#add-ons .jumbotron p.price {
-  margin-top: 10px;
-  font-size: 16px;
-  color: #777;
-}
-
-#add-ons .feature {
-  padding-top: 40px;
-}
-
-#add-ons .feature h2 {
-  font-size: 24px;
 }
 
 

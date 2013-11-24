@@ -13,6 +13,10 @@
 
     <page file="achat.html" title="Achetez BudgetView !" shortTitle="Achat">
       <key name="title.hide" value="true"/>
+      <page file="achat/ok.html" title="Achat terminé">
+        <key name="title.hide" value="true"/>
+      </page>
+      <page file="achat/echec.html" title="Erreur"/>
     </page>
 
     <page file="support.html" title="Aide &amp; Support" shortTitle="Support">
@@ -31,7 +35,7 @@
 
         <page file="support/faq/general.html" title="Questions générales">
           <page file="support/faq/general/enregistrer_code_activation.html"
-                title="Comment activer les modules additionnels ?"/>
+                title="Comment entrer mon code d'activation?"/>
           <page file="support/faq/general/installation_java.html"
                 title="Mon système me demande d'installer Java. Y a-t-il un risque à le faire ?"/>
           <page file="support/faq/general/mises_a_jour.html"
@@ -94,20 +98,28 @@
                 title="Avez-vous prévu une version iPhone / iPad ?"/>
         </page>
 
-        <page file="support/guide.html" title="Bien gérer son budget familial" shortTitle="Guide"/>
+        <page file="support/guide_gestion_de_budget_familial.html" title="Bien gérer son budget familial" shortTitle="Guide">
+          <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
+        </page>
 
       </page>
 
-      <page file="apropos.html" title="A propos">
-        <page file="apropos/presse.html" title="Presse et Blogs"/>
-        <page file="apropos/mentions_legales.html" title="Mentions légales"/>
-      </page>
+    </page>
 
+    <page file="mobile.html" title="Mobile">
+      <key name="navbar.hide" value="true"/>
+      <page file="mobile/account_ok.html" title="Votre compte mobile est activé"/>
+      <page file="mobile/account_already_present.html" title="Ce compte mobile existe déjà"/>
+      <page file="mobile/internal_error.html" title="Ce compte mobile existe déjà"/>
+    </page>
+
+    <page file="apropos.html" title="A propos de BudgetView" shortTitle="A propos">
+      <page file="apropos/presse.html" title="Presse et Blogs"/>
+      <page file="apropos/mentions_legales.html" title="Mentions légales"/>
     </page>
   </page>
 
   <copy baseDir="../resources">
-    <file path=".htaccess"/>
     <file path="css"/>
     <file path="fonts"/>
     <file path="js"/>
@@ -115,6 +127,7 @@
   </copy>
 
   <copy>
+    <file path="files/app"/>
     <file path="files/images_fr"/>
   </copy>
 </site>

@@ -130,7 +130,7 @@ public class PageHandler extends AbstractHandler {
     return404(target, response, baseRequest,
               "No page found at URL <strong><code>" + target + "</code></strong>");
 
-    System.out.println("SiteweaverServer$PageHandler.handle: could not find " + target);
+    System.out.println("!! PageHandler: could not find " + target);
   }
 
   private void upload(HttpServletResponse response, boolean applyChanges, String title) throws IOException {
@@ -151,6 +151,7 @@ public class PageHandler extends AbstractHandler {
     }
     catch (IOException e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      System.out.println("PageHandler.upload: " + e.getMessage());
     }
     finally {
       fileAccess.removeListener(logger);

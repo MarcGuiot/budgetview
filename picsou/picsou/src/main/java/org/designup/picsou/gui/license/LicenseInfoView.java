@@ -126,6 +126,9 @@ public class LicenseInfoView extends View {
 
   private long getDaysLeft(Glob userPreferences) {
     Date date = userPreferences.get(UserPreferences.LAST_VALID_DAY);
+    if (date == null) {
+      date = new Date();
+    }
     return (date.getTime() - TimeService.getToday().getTime()) / Millis.ONE_DAY;
   }
 

@@ -11,16 +11,19 @@
       <page file="download/linux.html" title="Install BudgetView on your Linux PC."/>
     </page>
 
-    <page file="add_ons.html" title="Add-ons">
+    <page file="buy.html" title="Purchase BudgetView !" shortTitle="Buy">
       <key name="title.hide" value="true"/>
+      <page file="buy/ok.html" title="Purchase completed">
+        <key name="title.hide" value="true"/>
+      </page>
     </page>
 
     <page file="support.html" title="Help &amp; Support" shortTitle="Support">
       <key name="innerTemplate" value="templates/supportPageTemplate.html"/>
 
-      <page file="support/guides.html" title="Guides de démarrage">
+      <page file="support/guides.html" title="First steps ">
         <page file="support/guides/import.html" title="1. Import your bank transactions"/>
-        <page file="support/guides/categorisation.html" title="2. Categorize your transactions"/>
+        <page file="support/guides/categorization.html" title="2. Categorize your transactions"/>
         <page file="support/guides/budget.html" title="3. Finalize your budget"/>
       </page>
 
@@ -30,75 +33,89 @@
         <key name="innerTemplate" value="templates/faqPageTemplate.html"/>
 
         <page file="support/faq/general.html" title="General">
-          <page file="/support/faq/general/activation-code-registration"
+          <page file="support/faq/general/activation_code_registration.html"
                 title="How can I register my activation code?"/>
-          <page file="/support/faq/general/software-updates"
+          <page file="support/faq/general/software_updates.html"
                 title="How do I update BudgetView?"/>
-          <page file="/support/faq/general/why-connect-internet"
+          <page file="support/faq/general/why_connect_internet.html"
                 title="Why does BudgetView connect to the internet?"/>
-          <page file="/support/faq/general/use-on-several-computers"
+          <page file="support/faq/general/use_on_several_computers.html"
                 title="Can I use BudgetView on several computers?"/>
-          <page file="/support/faq/general/money-replacement"
+          <page file="support/faq/general/money_replacement.html"
                 title="Can I use BudgetView as a replacement for Microsoft Money?"/>
-          <page file="/support/faq/general/transferring-data-between-computers"
+          <page file="support/faq/general/transferring_data_between_computers.html"
                 title="How can I transfer my BudgetView data from one computer to another?"/>
         </page>
 
         <page file="support/faq/accounts.html" title="Accounts">
-          <page file="/support/faq/using-several-accounts"
+          <page file="support/faq/accounts/using_several_accounts.html"
                 title="Is it possible to use several accounts?"/>
-          <page file="/support/faq/account-balance-zero"
+          <page file="support/faq/accounts/account_balance_zero.html"
                 title="Why is my account balance zero?"/>
-          <page file="/support/faq/deferred-debit-cards"
+          <page file="support/faq/accounts/deferred_debit_cards.html"
                 title="How should I treat deferred debit cards?"/>
-          <page file="/support/faq/multi-currencies"
+          <page file="support/faq/accounts/multi_currencies.html"
                 title="Is it possible to manage accounts with different currencies?"/>
-          <page file="/support/faq/delete-transaction"
+          <page file="support/faq/accounts/delete_transaction.html"
                 title="How do I delete a transaction?"/>
         </page>
 
         <page file="support/faq/import.html" title="Importing transactions">
-          <page file="/support/faq/bank-not-listed"
+          <page file="support/faq/import/bank_not_listed.html"
                 title="What if my bank is not listed in BudgetView?"/>
-          <page file="/support/faq/bank-without-export"
+          <page file="support/faq/import/bank_without_export.html"
                 title="What if my bank does not offer any download?"/>
-          <page file="/support/faq/entering-transactions-manually"
+          <page file="support/faq/import/entering_transactions_manually.html"
                 title="Can I enter transactions manually?"/>
-          <page file="/support/faq/csv-import-guide"
+          <page file="support/faq/import/csv_import_guide.html"
                 title="How can I import CSV files, for instance the ones generates from Excel or Numbers?"/>
         </page>
 
         <page file="support/faq/categorization.html" title="Categorization">
-          <page file="/support/faq/internal-transfers"
+          <page file="support/faq/categorization/internal_transfers.html"
                 title="How should I categorize internal transfer transactions?"/>
-          <page file="/support/faq/savings-transfers"
+          <page file="support/faq/categorization/savings_transfers.html"
                 title="How do I manage transfers from/to savings accounts?"/>
-          <page file="/support/faq/splitting-transactions"
+          <page file="support/faq/categorization/splitting_transactions.html"
                 title="How to I split a transaction among several envelopes?"/>
         </page>
 
         <page file="support/faq/mobile.html" title="Using BudgetView on a smartphone or tablet">
-          <page file="/support/faq/iphone-ipad-android-version"
+          <page file="support/faq/mobile/iphone_ipad_android_version.html"
                 title="Do you plan an iPhone / iPad / Android app?"/>
         </page>
-
-        <page file="about.html" title="About BudgetView" shortTitle="About">
-          <page file="about/press.html" title="Press &amp; Blogs"/>
-          <page file="about/legal_mentions.html" title="Legal mentions"/>
-        </page>
       </page>
+
+      <page file="support/managing_a_family_budget_guide.html" title="Managing a family budget">
+        <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
+      </page>
+
     </page>
+
+    <page file="mobile.html" title="Mobile">
+      <key name="navbar.hide" value="true"/>
+      <page file="mobile/account_ok.html" title="Your mobile account is ready"/>
+      <page file="mobile/account_already_present.html" title="This account already exists"/>
+      <page file="mobile/internal_error.html" title="An error occured"/>
+      <page file="mobile/app_privacy_policy.html" title="BudgetView Mobile App Privacy Policy"/>
+    </page>
+
+    <page file="about.html" title="About BudgetView" shortTitle="About">
+      <page file="about/press.html" title="Press &amp; Blogs"/>
+      <page file="about/legal.html" title="Legal mentions"/>
+    </page>
+
   </page>
 
   <copy baseDir="../resources">
-    <file path=".htaccess"/>
     <file path="css"/>
     <file path="fonts"/>
     <file path="js"/>
-    <file path="images"/>
+    <file path="files/images"/>
   </copy>
 
   <copy>
     <file path="files/images_en"/>
+    <file path="files/app"/>
   </copy>
 </site>

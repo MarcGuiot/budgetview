@@ -44,9 +44,16 @@ public class SiteWeaver {
 
   private static FileAccess getFileAccess(String[] args) throws IOException {
     if (args.length > 1) {
-      return new FtpFileAccess(args[1], args[2], args[3], args[4]);
+      return new FtpFileAccess(args[1], normalizePath(args[2]), args[3], args[4]);
     }
     return new NoOpFileAccess();
+  }
+
+  private static String normalizePath(String arg) {
+    if ("/".equals(arg.trim())) {
+      return "";
+    }
+    return arg;
   }
 
   private static void checkUsage(String[] args) {
