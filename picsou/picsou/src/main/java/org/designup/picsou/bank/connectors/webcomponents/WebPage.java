@@ -32,4 +32,8 @@ public class WebPage extends WebContainer<HtmlElement> {
     }
     throw new WebParsingError(this, "Not an htmlPage: " + page);
   }
+
+  public HtmlPage getPage() {
+    return page;
+  }
 }

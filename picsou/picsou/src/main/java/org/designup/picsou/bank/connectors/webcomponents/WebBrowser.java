@@ -45,6 +45,9 @@ public class WebBrowser {
     webClient.setThrowExceptionOnScriptError(false);
     webClient.setCssEnabled(false);
     webClient.setJavaScriptEnabled(javascriptEnabled);
+//    webClient.getOptions().setThrowExceptionOnScriptError(false);
+//    webClient.getOptions().setCssEnabled(false);
+//    webClient.getOptions().setJavaScriptEnabled(javascriptEnabled);
     webClient.setCache(new Cache());
     webClient.setWebConnection(httpConnectionProvider.getHttpConnection(webClient));
     webClient.setAjaxController(new NicelyResynchronizingAjaxController());
@@ -53,6 +56,7 @@ public class WebBrowser {
 
   public void setTimeout(int timeout) {
     getClient().setTimeout(timeout);
+//    getClient().getOptions().setTimeout(timeout);
   }
 
   public WebPage load(String url) throws WebCommandFailed {

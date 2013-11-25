@@ -10,7 +10,7 @@ public class TypedInputStream {
   private boolean notUTF8;
   private static final String DEFAULT_ENCODING = "ISO-8859-15";
   private String fileName = "undef";
-  private boolean hasCR;
+  private boolean isWindows;
 
   public TypedInputStream(File file) throws IOException {
     stream = new RepeatableInputStream(new FileInputStream(file));
@@ -83,15 +83,17 @@ public class TypedInputStream {
     int byt;
     notUTF8 = false;
     UTF8Detector.Coder coder = UTF8Detector.first;
-    hasCR = false;
+    isWindows = false;
     int newLineCount = 0;
+    boolean previousIsCR = false;
     while ((byt = stream.read()) != -1) {
-      if (byt == '\r') {
-        hasCR = true;
-      }
       if (byt == '\n') {
         newLineCount++;
+        if (previousIsCR) {
+          isWindows = true;
+        }
       }
+      previousIsCR = byt == '\r';
       coder = coder.push(byt);
       if (coder == UTF8Detector.undef) {
         notUTF8 = true;
@@ -100,8 +102,8 @@ public class TypedInputStream {
     }
     while (byt != -1 && newLineCount < 10) {
       byt = stream.read();
-      if (byt == '\r') {
-        hasCR = true;
+      if (byt == '\r' && (byt = stream.read()) == '\n') {
+        isWindows = true;
         break;
       }
       if (byt == '\n') {
@@ -112,7 +114,7 @@ public class TypedInputStream {
   }
 
   public boolean isWindowsType() {
-    return hasCR;
+    return isWindows;
   }
 
   private class RemoveCRInputStream extends InputStream {

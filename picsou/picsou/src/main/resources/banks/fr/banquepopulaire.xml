@@ -6,7 +6,11 @@
       <bankEntity id="10807"/>
     </bank>
 
-    <transactionMatcher ofxName="FACTURETTE CB.*"
+      <!--<bank name="Banque Populaire" url="https://www.ibps.bpbfc.banquepopulaire.fr" id='200'>-->
+          <!--<bankEntity id=""/>-->
+      <!--</bank>-->
+
+      <transactionMatcher ofxName="FACTURETTE CB.*"
                         label="{MEMO.0}" originalLabel="{MEMO.0}"
                         transactionTypeName="credit_card"/>
 

@@ -182,7 +182,7 @@ public abstract class WebComponent<T extends HtmlElement> {
         return null;
       }
       if (node instanceof HtmlDivision) {
-        return new WebPanel(browser, ((HtmlDivision)node));
+        return new WebPanel(browser, node);
       }
       else {
         throw new WebParsingError(node, "not an anchor");
@@ -198,6 +198,18 @@ public abstract class WebComponent<T extends HtmlElement> {
       }
       else {
         throw new WebParsingError(node, "not an anchor");
+      }
+    }
+
+    public WebButton asButton() throws WebParsingError {
+      if (optional && node == null) {
+        return null;
+      }
+      if (node instanceof HtmlButton) {
+        return new WebButton(browser, ((HtmlButton)node));
+      }
+      else {
+        throw new WebParsingError(node, "not an button but " + node.getTagName());
       }
     }
   }
@@ -292,6 +304,19 @@ public abstract class WebComponent<T extends HtmlElement> {
       }
       return webSelects;
 
+    }
+
+    public List<WebTable> asTables() throws WebParsingError {
+      if (optional && nodes.isEmpty()) {
+        return null;
+      }
+      List<WebTable> webSelects = new ArrayList<WebTable>();
+      for (HtmlElement node : nodes) {
+        if (node instanceof HtmlTable) {
+          webSelects.add(new WebTable(browser, ((HtmlTable)node)));
+        }
+      }
+      return webSelects;
     }
 
     public HtmlNavigates parent() {

@@ -40,10 +40,4 @@ public class UTF8DetectorTest extends TestCase {
     }
     assertNotSame(UTF8Detector.undef, coder);
   }
-
-  public void testWithWindowsReturn() throws Exception {
-    byte[] bytes = "sss\nsdsd\n\rSome\rinfo".getBytes();
-    System.out.println("UTF8DetectorTest.testWithWindowsReturn " + new String(bytes));
-
-  }
 }

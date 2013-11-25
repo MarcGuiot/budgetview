@@ -348,11 +348,19 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
     return new HtmlNavigate(browser, HtmlUnit.findFirstHtmlElement(node, filter), true);
   }
 
+  public HtmlNavigate getFirst(WebFilter filter) throws WebParsingError {
+    return new HtmlNavigate(browser, HtmlUnit.getHtmlElement(node, filter), false);
+  }
+
   public HtmlNavigates findAll(WebFilter filter) throws WebParsingError {
     return new HtmlNavigates(browser, HtmlUnit.findAllHtmlElement(node, filter), true);
   }
 
   public boolean hasId(String id) {
     return node.hasHtmlElementWithId(id);
+  }
+
+  public WebListItem getListItemById(String id) throws WebParsingError {
+    return new WebListItem(browser, getElementById(id, HtmlListItem.class));
   }
 }

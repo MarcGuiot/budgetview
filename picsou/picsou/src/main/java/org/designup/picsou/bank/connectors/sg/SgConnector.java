@@ -33,8 +33,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -372,16 +370,6 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
     return null;
   }
 
-  private void setDate(HtmlElement fromDate, final int monthBack, final int dayback) {
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    Date today = new Date();
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(today);
-    calendar.add(Calendar.MONTH, monthBack);
-    calendar.add(Calendar.DAY_OF_MONTH, dayback);
-    ((HtmlInput)fromDate).setValueAttribute(dateFormat.format(calendar.getTime()));
-  }
-
   private <T> T getFirst(List<T> htmlElements, final String attribute) {
     if (htmlElements.size() == 0) {
       throw new RuntimeException("no " + attribute + " in :\n" + page.asXml());
@@ -435,10 +423,14 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
         HtmlElement toDate = getFirst(toDates, "dateau");
         String value = ((HtmlInput)toDate).getValueAttribute();
         if (Strings.isNullOrEmpty(value)) {
-          setDate(toDate, 0, -1);
+          final int dayback = -1;
+          String date = shiftDateddMMyyy(0, dayback);
+          ((HtmlInput)toDate).setValueAttribute(date);
         }
       }
-      setDate(fromDate, -3, 4);
+      final int monthBack = -3;
+      String date = shiftDateddMMyyy(monthBack, 4);
+      ((HtmlInput)fromDate).setValueAttribute(date);
     }
     else {
       Log.write("SG : can not find periode");
