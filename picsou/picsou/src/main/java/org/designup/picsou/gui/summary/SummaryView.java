@@ -55,6 +55,6 @@ public class SummaryView extends View {
   }
 
   public static HistoChartConfig getSavingsAccountsChartConfig() {
-    return new HistoChartConfig(false, false, false, true, true, true, false, true, true, true);
+    return new HistoChartConfig(false, false, true, true, true, true, false, true, true, true);
   }
 }
