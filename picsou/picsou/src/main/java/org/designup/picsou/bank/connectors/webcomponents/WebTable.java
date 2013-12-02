@@ -115,4 +115,8 @@ public class WebTable extends WebComponent<HtmlTable> {
   public HtmlTable getTable() {
     return node;
   }
+
+  public WebTableHeader getHeader() {
+    return new WebTableHeader(browser, node.getHeader());
+  }
 }

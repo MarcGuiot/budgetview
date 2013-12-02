@@ -6,6 +6,7 @@ import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.designup.picsou.bank.connectors.webcomponents.WebBrowser;
 import org.designup.picsou.bank.connectors.webcomponents.WebPage;
@@ -16,6 +17,9 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public abstract class WebBankConnector extends AbstractBankConnector {
@@ -72,6 +76,16 @@ public abstract class WebBankConnector extends AbstractBankConnector {
 
   public void stop() {
     browser.stop();
+  }
+
+  public String shiftDateddMMyyy(int monthBack, int dayback) {
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    Date today = new Date();
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(today);
+    calendar.add(Calendar.MONTH, monthBack);
+    calendar.add(Calendar.DAY_OF_MONTH, dayback);
+    return dateFormat.format(calendar.getTime());
   }
 
   private class ErrorAlertHandler implements AlertHandler {

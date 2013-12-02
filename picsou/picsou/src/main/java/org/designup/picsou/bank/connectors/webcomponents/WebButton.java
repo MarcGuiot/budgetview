@@ -14,4 +14,9 @@ public class WebButton extends WebComponent<HtmlButton> {
   public WebPage click() throws WebCommandFailed {
     return browser.doClick(node);
   }
+
+  public Download clickAndDownload() {
+    return new Download(browser, node);
+  }
+
 }
