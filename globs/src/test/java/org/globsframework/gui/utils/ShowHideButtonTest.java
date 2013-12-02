@@ -1,6 +1,7 @@
 package org.globsframework.gui.utils;
 
 import junit.framework.TestCase;
+import org.globsframework.gui.components.ShowHideButton;
 import org.uispec4j.Button;
 import org.uispec4j.assertion.UISpecAssert;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;

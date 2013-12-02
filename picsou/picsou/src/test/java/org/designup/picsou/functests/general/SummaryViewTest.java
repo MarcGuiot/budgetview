@@ -38,8 +38,6 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/09/28", 3000.00, "WorldCo")
       .load();
 
-    fail("RM: à mettre à jour après avoir finalisé la vue d'accueil");
-
     checkRange(201010, 201110);
 
     summary.getMainChart().scroll(-8);

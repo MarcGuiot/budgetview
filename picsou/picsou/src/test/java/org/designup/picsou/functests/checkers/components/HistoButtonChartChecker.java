@@ -19,6 +19,7 @@ import java.util.List;
 public class HistoButtonChartChecker extends HistoChartChecker {
   public HistoButtonChartChecker(Window window, String panelName, String chartName) {
     super(window, panelName, chartName);
+    getChart();
   }
 
   protected HistoButtonDataset getDataset() {
@@ -95,9 +96,5 @@ public class HistoButtonChartChecker extends HistoChartChecker {
     HistoButtonBlock block = getBlock(label);
     selectionManager.updateRollover(block.minIndex, Collections.singleton(block.key), false, rightClick, new Point(0, 0));
     selectionManager.startClick(rightClick, new Point(0,0));
-  }
-
-  public void init() {
-    getChart();
   }
 }

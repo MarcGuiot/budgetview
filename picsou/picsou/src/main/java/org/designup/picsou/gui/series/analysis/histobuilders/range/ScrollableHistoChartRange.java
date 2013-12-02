@@ -183,4 +183,8 @@ public class ScrollableHistoChartRange extends AbstractHistoChartRange {
       alignRight(lastMonth);
     }
   }
+
+  public String toString() {
+    return "scrollableRange(" + monthsBack + ", " + monthsLater + ") ==> "  + firstMonth + "-" + lastMonth;
+  }
 }

@@ -2,6 +2,7 @@ package org.designup.picsou.gui.projects;
 
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.browsing.BrowsingAction;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
 import org.designup.picsou.gui.components.charts.histo.HistoSelection;
@@ -9,7 +10,9 @@ import org.designup.picsou.gui.components.charts.histo.button.HistoButtonColors;
 import org.designup.picsou.gui.components.charts.histo.button.HistoButtonPainter;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.gui.help.actions.GotoWebsiteAction;
 import org.designup.picsou.gui.model.ProjectStat;
+import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.projects.components.ProjectPopupMenuFactory;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoButtonDatasetBuilder;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartRangeListener;
@@ -20,6 +23,11 @@ import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.SplitsLoader;
+import org.globsframework.gui.splits.SplitsNode;
+import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.utils.BooleanListener;
+import org.globsframework.gui.utils.TypePresenceListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -27,6 +35,7 @@ import org.globsframework.model.Key;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.collections.Range;
 import org.globsframework.utils.directory.Directory;
+import org.jdesktop.swingx.action.OpenBrowserAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,6 +49,8 @@ public class ProjectChartView extends View {
   private HistoButtonColors colors;
   private FontMetrics buttonFontMetrics;
   private final ProjectPopupMenuFactory popupMenuFactory;
+  private HistoChartRangeListener rangeListener;
+  private CardHandler cards;
 
   public ProjectChartView(final HistoChartRange range, final GlobRepository repository, final Directory directory) {
     super(repository, directory);
@@ -94,11 +105,12 @@ public class ProjectChartView extends View {
         range.scroll(count);
       }
     });
-    this.range.addListener(new HistoChartRangeListener() {
+    this.rangeListener = new HistoChartRangeListener() {
       public void rangeUpdated() {
         updateChart();
       }
-    });
+    };
+    this.range.addListener(rangeListener);
     this.colors = new HistoButtonColors(
       "histo.button.bg.top",
       "histo.button.bg.bottom",
@@ -118,6 +130,13 @@ public class ProjectChartView extends View {
 
     Font buttonFont = histoChart.getFont().deriveFont(BUTTON_FONT_SIZE);
     buttonFontMetrics = histoChart.getFontMetrics(buttonFont);
+  }
+
+  public void setRange(HistoChartRange newRange) {
+    this.range.removeListener(rangeListener);
+    this.range = newRange;
+    this.range.addListener(rangeListener);
+    updateChart();
   }
 
   private void updateChart() {
@@ -153,8 +172,34 @@ public class ProjectChartView extends View {
     histoChart.update(new HistoButtonPainter(dataset.get(), buttonFontMetrics, colors));
   }
 
-  public void registerComponents(GlobsPanelBuilder builder) {
+  public void registerComponents(GlobsPanelBuilder parentBuilder) {
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectChartView.splits",
+                                                      repository, directory);
+
+    cards = builder.addCardHandler("projectChartCards");
+
+    builder.add("createProject", new CreateProjectAction(directory));
+
+    builder.add("openProjectGuide", new BrowsingAction(Lang.get("projectView.creation.learnmore"), directory) {
+      protected String getUrl() {
+        return Lang.get("projectView.creation.site.url.projects");
+      }
+    });
+
     builder.add("projectChart", histoChart);
+
+
+    parentBuilder.add("projectChartPanel", builder);
+
+    parentBuilder.addLoader(new SplitsLoader() {
+      public void load(Component component, SplitsNode node) {
+        TypePresenceListener.install(Project.TYPE, repository, new BooleanListener() {
+          public void apply(boolean containsProjects) {
+            cards.show(containsProjects ? "chart" : "creation");
+          }
+        });
+      }
+    });
   }
 
   private String getTooltip(Glob project) {
@@ -167,5 +212,4 @@ public class ProjectChartView extends View {
     }
     return null;
   }
-
 }

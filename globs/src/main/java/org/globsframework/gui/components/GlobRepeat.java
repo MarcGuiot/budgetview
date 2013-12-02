@@ -1,4 +1,4 @@
-package org.globsframework.gui.utils;
+package org.globsframework.gui.components;
 
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.GlobList;

@@ -5,7 +5,6 @@ import org.designup.picsou.gui.categorization.actions.CategorizationTableActions
 import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.transactions.actions.EditTransactionAction;
 import org.designup.picsou.gui.utils.TableView;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -15,7 +14,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.layout.CardHandler;
-import org.globsframework.gui.utils.AutoHideOnSelectionPanel;
+import org.globsframework.gui.components.AutoHideOnSelectionPanel;
 import org.globsframework.gui.views.GlobHtmlView;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -33,7 +32,6 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.util.HashSet;

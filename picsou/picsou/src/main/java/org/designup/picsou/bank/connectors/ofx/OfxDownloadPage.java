@@ -7,14 +7,13 @@ import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.utils.Disposable;
-import org.globsframework.gui.utils.ShowHideButton;
+import org.globsframework.gui.components.ShowHideButton;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;

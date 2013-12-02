@@ -1,6 +1,7 @@
 package org.globsframework.gui.utils;
 
 import org.globsframework.gui.DummySelectionListener;
+import org.globsframework.gui.components.GlobSelectionToggle;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.model.Glob;
 import org.globsframework.model.repository.DefaultGlobRepository;

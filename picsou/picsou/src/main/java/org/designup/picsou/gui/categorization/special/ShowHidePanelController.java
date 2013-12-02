@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.categorization.special;
 
-import org.globsframework.gui.utils.ShowHideButton;
+import org.globsframework.gui.components.ShowHideButton;
 
 public class ShowHidePanelController implements SpecialCategorizationPanelController {
   private final ShowHideButton showHide;

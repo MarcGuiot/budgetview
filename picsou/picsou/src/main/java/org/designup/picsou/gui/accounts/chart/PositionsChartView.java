@@ -73,6 +73,11 @@ public abstract class PositionsChartView extends View implements HistoChartRange
     updater.update(false);
   }
 
+  public void setRange(HistoChartRange newRange) {
+    histoChartBuilder.setRange(newRange);
+    rangeUpdated();
+  }
+
   public void rangeUpdated() {
     Integer currentMonthId = updater.getCurrentMonthId();
     if (currentMonthId != null) {
@@ -132,5 +137,4 @@ public abstract class PositionsChartView extends View implements HistoChartRange
                              and(fieldEquals(Transaction.POSITION_MONTH, monthId),
                                  fieldEquals(Transaction.POSITION_DAY, day)));
   }
-
 }

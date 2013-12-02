@@ -1,6 +1,7 @@
 package org.globsframework.gui.utils;
 
 import org.globsframework.gui.DummySelectionListener;
+import org.globsframework.gui.components.GlobSelectablePanel;
 import org.globsframework.gui.splits.DummySplitsNode;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;

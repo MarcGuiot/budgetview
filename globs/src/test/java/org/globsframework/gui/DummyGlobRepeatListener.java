@@ -1,6 +1,6 @@
 package org.globsframework.gui;
 
-import org.globsframework.gui.utils.GlobRepeatListener;
+import org.globsframework.gui.components.GlobRepeatListener;
 import org.globsframework.model.GlobList;
 import org.globsframework.metamodel.DummyObject;
 
