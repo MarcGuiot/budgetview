@@ -21,7 +21,7 @@
     <button gridPos="(1,0)" ref="showProjectDetails" styleClass="hyperlink"/>
 
     <panel gridPos="(0,1,2,1)" ref="projectChartPanel" styleClass="chart" weightY="8"/>
-    <label gridPos="(2,1)" ref="projectArrow" weightX="0.01" marginLeft="4"/>
+    <label gridPos="(2,1)" ref="projectArrow" weightX="0.01" marginLeft="4" weightY="4"/>
 
     <label gridPos="(0,2)" text="$summaryView.mainAccounts.title" styleClass="secondarySectionTitle"/>
     <label gridPos="(1,2)" text="$summaryView.mainAccounts.subtitle" styleClass="secondarySectionSubtitle"/>
