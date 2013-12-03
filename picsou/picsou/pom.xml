@@ -360,7 +360,7 @@
                     </jar>
                     <delete dir="obfuscated"/>
                     <java fork="yes" jar="dev/Zelix/ZKM.jar">
-                      <jvmarg line="-Xmx512M"/>
+                      <jvmarg line="-Xmx1g"/>
                       <arg line="-de dev/Zelix/defaultExclude.txt dev/ant/zelix.txt"/>
                     </java>
                   </tasks>
