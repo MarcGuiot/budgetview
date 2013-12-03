@@ -27,6 +27,10 @@ public abstract class AbstractHistoChartRange implements HistoChartRange {
     listeners.add(listener);
   }
 
+  public void removeListener(HistoChartRangeListener listener) {
+    listeners.remove(listener);
+  }
+
   protected List<Integer> getMonths(Integer start, Integer end) {
     if ((start == null) || (end == null)) {
       return new ArrayList<Integer>();

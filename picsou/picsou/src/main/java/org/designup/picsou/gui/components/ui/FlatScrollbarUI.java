@@ -11,6 +11,9 @@ public class FlatScrollbarUI extends BasicScrollBarUI {
   private static final int THUMB_PADDING = 2;
   private static final int THUMB_WIDTH = 8;
 
+  private static final int MIN_HORIZONTAL_LENGTH = 25;
+  private static final int MIN_VERTICAL_LENGTH = 20;
+
   private Color color = Color.GRAY.brighter();
   private Color rolloverColor = Color.GRAY.darker();
   private Color background = Color.WHITE;
@@ -66,11 +69,11 @@ public class FlatScrollbarUI extends BasicScrollBarUI {
     int y = thumbBounds.y + THUMB_PADDING;
 
     int width = orientation == JScrollBar.VERTICAL ?
-                THUMB_WIDTH : thumbBounds.width - (THUMB_PADDING * 2);
+                THUMB_WIDTH : Math.max(thumbBounds.width - (THUMB_PADDING * 2), MIN_HORIZONTAL_LENGTH);
     width = Math.max(width, THUMB_WIDTH);
 
     int height = orientation == JScrollBar.VERTICAL ?
-                 thumbBounds.height - (THUMB_PADDING * 2) : THUMB_WIDTH;
+                 Math.max(thumbBounds.height - (THUMB_PADDING * 2), MIN_VERTICAL_LENGTH) : THUMB_WIDTH;
     height = Math.max(height, THUMB_WIDTH);
 
     Graphics2D graphics2D = (Graphics2D) g.create();

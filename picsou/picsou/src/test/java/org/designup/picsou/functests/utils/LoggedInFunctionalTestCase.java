@@ -47,7 +47,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public ImportPanelChecker importPanel;
   public NotesViewChecker notes;
   public BackupChecker backup;
-  public ProjectViewChecker projectChart;
+  public ProjectChartChecker projectChart;
   public ProjectListChecker projects;
   public ProjectEditionChecker currentProject;
   public SummaryViewChecker summary;
@@ -178,7 +178,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     demoMessage = new DemoMessageChecker(mainWindow);
     importPanel = new ImportPanelChecker(mainWindow);
     notes = new NotesViewChecker(operations, mainWindow);
-    projectChart = new ProjectViewChecker(mainWindow);
+    projectChart = new ProjectChartChecker(mainWindow);
     projects = new ProjectListChecker(mainWindow);
     currentProject = new ProjectEditionChecker(mainWindow);
     summary = new SummaryViewChecker(mainWindow);

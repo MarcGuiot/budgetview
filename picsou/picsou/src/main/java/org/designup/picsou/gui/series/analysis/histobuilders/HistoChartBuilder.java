@@ -67,29 +67,17 @@ public class HistoChartBuilder implements Disposable {
     this.histoChart = new HistoChart(config, colors);
     this.disposables.add(histoChart);
     final NavigationPopup popup = new NavigationPopup(histoChart, repository, directory, parentSelectionService);
-    this.histoChart.addListener(new HistoChartListenerAdapter() {
-      public void processClick(HistoSelection selection, Set<Key> objectKeys) {
-        GlobList months = new GlobList();
-        for (Integer monthId : selection.getColumnIds()) {
-          months.add(repository.get(Key.create(Month.TYPE, monthId)));
-        }
-        parentSelectionService.select(months, Month.TYPE);
-      }
-
-      public void processRightClick(HistoSelection selection, Set<Key> objectKeys, Point mouseLocation) {
-        popup.show(selection.getColumnIds(), objectKeys);
-      }
-
-      public void scroll(int count) {
-        range.scroll(count);
-      }
-    });
+    this.histoChart.addListener(new ChartListener(parentSelectionService, popup));
 
     histoChartLabel = new JLabel();
     histoChartLegend = new HistoDiffLegendPanel(repository, directory);
     disposables.add(histoChartLegend);
 
     initColors(directory);
+  }
+
+  public void setRange(HistoChartRange range) {
+    this.range = range;
   }
 
   public void addListener(HistoChartListener listener) {
@@ -489,5 +477,31 @@ public class HistoChartBuilder implements Disposable {
 
   private List<Integer> getMonthIdsToShow(Integer selectedMonthId) {
     return range.getMonthIds(selectedMonthId);
+  }
+
+  private class ChartListener extends HistoChartListenerAdapter {
+    private SelectionService parentSelectionService;
+    private final NavigationPopup popup;
+
+    public ChartListener(SelectionService parentSelectionService, NavigationPopup popup) {
+      this.parentSelectionService = parentSelectionService;
+      this.popup = popup;
+    }
+
+    public void processClick(HistoSelection selection, Set<Key> objectKeys) {
+      GlobList months = new GlobList();
+      for (Integer monthId : selection.getColumnIds()) {
+        months.add(repository.get(Key.create(Month.TYPE, monthId)));
+      }
+      parentSelectionService.select(months, Month.TYPE);
+    }
+
+    public void processRightClick(HistoSelection selection, Set<Key> objectKeys, Point mouseLocation) {
+      popup.show(selection.getColumnIds(), objectKeys);
+    }
+
+    public void scroll(int count) {
+      range.scroll(count);
+    }
   }
 }

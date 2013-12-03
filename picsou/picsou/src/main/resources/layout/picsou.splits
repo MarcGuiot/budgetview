@@ -53,6 +53,11 @@
     <style selector="button#backView" ui="backArrow"/>
     <style selector="button#forwardView" ui="forwardArrow" marginRight="10"/>
 
+    <style selector="button#hideProjectDetails"
+           ui="hyperlinkButtonWithoutUnderline" foreground="summary.navigation.link"
+           font="-,plain,12" icon="button_delete.png"
+           horizontalTextPosition="right" fill="none" anchor="right" marginRight="10" marginBottom="10"/>
+
     <!-- Notifications flag -->
     <ui name="notificationsFlagUI" class="org.designup.picsou.gui.components.ui.NotificationFlagUI"
         balloonColor="notifications.flag.balloon"
@@ -137,6 +142,7 @@
                 </column>
               </card>
               <card name="summary">
+                <column>
                   <horizontalSplit weightY="2" styleClass="mainDivider">
                     <column weightX="6">
                       <label text="$summaryView.title" styleClass="blockTitle"/>
@@ -147,15 +153,20 @@
                         <panel ref="feedbackView" weightY="0"/>
                       </column>
                     </column>
-                  <column weightX="6">
+                  <column weightX="6" autoHideSource="projectView">
                       <label text="$projectView.title" styleClass="blockTitle"/>
                       <column styleClass="block">
-                        <column styleClass="innerBlock">
+                        <column styleClass="innerBlock" weightY="100">
                           <panel ref="projectView"/>
                         </column>
+                        <row weightY="0">
+                          <filler fill="horizontal"/>
+                          <button ref="hideProjectDetails"/>
+                        </row>
                       </column>
                     </column>
                   </horizontalSplit>
+                </column>
               </card>
             </cards>
 

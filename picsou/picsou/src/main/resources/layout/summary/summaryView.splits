@@ -4,13 +4,24 @@
   <styles>
     <style selector="component.chart" marginTop="5" marginLeft="10" opaque="true"
            background="block.inner.secondary.bg"/>
+
+    <style id="arrowShown" selector="x" icon="rightArrow(12,50,10,40,summary.project.arrow)"/>
+    <style id="arrowHidden" selector="x" icon="empty(12,50)"/>
+
+    <style selector="button#showProjectDetails" ui="hyperlinkButtonWithoutUnderline"
+           foreground="block.item.link" font="-,plain,12" marginTop="10" marginLeft="10" anchor="right"
+           horizontalTextPosition="left" weightX="5"
+           icon="rightArrow(10,14,8,8,block.item.link)"
+           rolloverIcon="rightArrow(10,14,8,8,block.item.link)"/>
+
   </styles>
 
-  <grid styleClass="secondaryInnerBlock">
+  <grid name="summaryView" styleClass="secondaryInnerBlock">
     <label gridPos="(0,0)" text="$summaryView.projects.title" styleClass="secondarySectionTitle"/>
+    <button gridPos="(1,0)" ref="showProjectDetails" styleClass="hyperlink"/>
 
-    <component gridPos="(0,1,2,1)" ref="projectChart" styleClass="chart" weightY="8"/>
-    <label gridPos="(2,1)" icon="rightArrow(12,50,10,40,summary.project.arrow)" weightX="0.01" marginLeft="4"/>
+    <panel gridPos="(0,1,2,1)" ref="projectChartPanel" styleClass="chart" weightY="8"/>
+    <label gridPos="(2,1)" ref="projectArrow" weightX="0.01" marginLeft="4"/>
 
     <label gridPos="(0,2)" text="$summaryView.mainAccounts.title" styleClass="secondarySectionTitle"/>
     <label gridPos="(1,2)" text="$summaryView.mainAccounts.subtitle" styleClass="secondarySectionSubtitle"/>

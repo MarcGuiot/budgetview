@@ -14,10 +14,6 @@ public class ToggleVisibilityAction extends AbstractAction {
   private String hiddenLabel;
   private String parentName;
 
-  public ToggleVisibilityAction(JComponent component) {
-    this(component, null, null);
-  }
-
   public ToggleVisibilityAction(JComponent component, String shownLabel, String hiddenLabel) {
     this.component = component;
     this.shownLabel = shownLabel;

@@ -1,0 +1,31 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="label.image" anchor="center" margin="20"/>
+    <style selector="textArea" margin="10"/>
+    <style selector="button" margin="10" fill="none" anchor="center"/>
+  </styles>
+
+  <cards ref="projectChartCards">
+    <card name="chart">
+      <component ref="projectChart" background="block.inner.secondary.bg" opaque="true"/>
+    </card>
+    <card name="creation">
+      <column>
+        <row marginTop="5" marginLeft="50" opaque="true" background="block.inner.bg" border="line(block.inner.border)">
+          <filler fill="horizontal"/>
+          <column>
+            <filler fill="vertical"/>
+            <label text="$projectView.creation.text" foreground="projectView.create"/>
+            <button action="createProject" styleClass="smallButton" margin="15" font="-,bold,12" />
+            <button action="openProjectGuide" styleClass="hyperlink" font="-,plain,11"/>
+            <filler fill="vertical"/>
+          </column>
+          <filler fill="horizontal"/>
+        </row>
+      </column>
+    </card>
+  </cards>
+
+</splits>

@@ -30,7 +30,7 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     projects.checkCreationPageShown();
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("Past Aug")
       .addExpenseItem(0, "Item1", 201008, -200.00)
@@ -117,9 +117,11 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/01", 100.00, "Expense 1")
       .load();
 
+    views.selectHome();
+
     operations.openPreferences().setFutureMonthsCount(3).validate();
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("Past Aug")
       .addExpenseItem(0, "Item1", 201008, -200.00)
@@ -142,6 +144,7 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
     projects.checkCurrentProjectsSectionHidden();
     projects.checkPastProjectsSectionExpanded();
 
+    projects.checkDetailsShown();
     projects.delete("Past Aug");
     projects.checkCurrentProjectsSectionHidden();
     projects.checkPastProjectsSectionHidden();

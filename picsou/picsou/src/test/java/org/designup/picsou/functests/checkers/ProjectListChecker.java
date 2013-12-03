@@ -1,14 +1,20 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import junit.framework.AssertionFailedError;
 import org.designup.picsou.functests.checkers.components.PopupChecker;
 import org.designup.picsou.gui.projects.components.ProjectButton;
+import org.globsframework.gui.splits.components.ArrowIcon;
+import org.globsframework.gui.splits.components.EmptyIcon;
 import org.globsframework.utils.TablePrinter;
 import org.uispec4j.*;
+import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.PopupMenuInterceptor;
 
 import javax.swing.*;
+
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class ProjectListChecker extends ViewChecker {
 
@@ -22,13 +28,48 @@ public class ProjectListChecker extends ViewChecker {
     checkComponentVisible(getProjectViewPanel(), JPanel.class, "projectCreationView", true);
   }
 
+  public void checkDetailsShown() {
+    views.selectHome();
+    checkComponentVisible(mainWindow, JPanel.class, "projectView", true);
+    assertThat(new Assertion() {
+      public void check() {
+        JLabel label = (JLabel)mainWindow.getTextBox("projectArrow").getAwtComponent();
+        Icon icon = label.getIcon();
+        if (!(icon instanceof ArrowIcon)) {
+          throw new AssertionFailedError("Actual projectArrow icon: " + icon);
+        }
+      }
+    });
+  }
+
+  public void checkDetailsHidden() {
+    views.selectHome();
+    checkComponentVisible(mainWindow, JPanel.class, "projectView", false);
+    assertThat(new Assertion() {
+      public void check() {
+        JLabel label = (JLabel)mainWindow.getTextBox("projectArrow").getAwtComponent();
+        Icon icon = label.getIcon();
+        if (!(icon instanceof EmptyIcon)) {
+          throw new AssertionFailedError("Actual projectArrow icon: " + icon);
+        }
+      }
+    });
+  }
+
+  public void hideDetails() {
+    Button button = mainWindow.getButton("hideProjectDetails");
+    button.click();
+  }
+
   public ProjectListChecker checkListPageShown() {
     checkComponentVisible(getProjectViewPanel(), JPanel.class, "projectListView", true);
     return this;
   }
 
   public void create() {
-    getProjectViewPanel().getButton("createProject").click();
+    Panel projectView = getProjectViewPanel();
+    assertThat(projectView.isVisible());
+    projectView.getButton("createProject").click();
   }
 
   public void checkNoCurrentProjects() {
@@ -68,7 +109,7 @@ public class ProjectListChecker extends ViewChecker {
   }
 
   public void checkEditionShown() {
-    UISpecAssert.assertThat(getProjectViewPanel().containsUIComponent(Panel.class, "projectEditionView"));
+    assertThat(getProjectViewPanel().containsUIComponent(Panel.class, "projectEditionView"));
   }
 
   public void select(String projectName) {
@@ -76,7 +117,7 @@ public class ProjectListChecker extends ViewChecker {
       .getContainer("projectBlock")
       .getButton("projectButton")
       .click();
-    UISpecAssert.assertThat(getProjectViewPanel().containsUIComponent(Panel.class, "projectEditionView"));
+    assertThat(getProjectViewPanel().containsUIComponent(Panel.class, "projectEditionView"));
   }
 
   public void delete(final String projectName) {
@@ -141,14 +182,14 @@ public class ProjectListChecker extends ViewChecker {
 
   public ProjectListChecker expandPastProjectsSection() {
     Button toggle = getPanel().getButton("togglePastProjects");
-    UISpecAssert.assertThat(toggle.textEquals("Show"));
+    assertThat(toggle.textEquals("Show"));
     toggle.click();
     return this;
   }
 
   public ProjectListChecker collapsePastProjectsSection() {
     Button toggle = getPanel().getButton("togglePastProjects");
-    UISpecAssert.assertThat(toggle.textEquals("Hide"));
+    assertThat(toggle.textEquals("Hide"));
     toggle.click();
     return this;
   }

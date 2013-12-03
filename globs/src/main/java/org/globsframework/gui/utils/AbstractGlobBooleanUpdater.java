@@ -10,7 +10,6 @@ import java.util.Set;
 public abstract class AbstractGlobBooleanUpdater implements ChangeSetListener, Disposable {
   private BooleanField field;
   private GlobRepository repository;
-
   private Key currentKey;
 
   public AbstractGlobBooleanUpdater(BooleanField field, GlobRepository repository) {
@@ -25,9 +24,9 @@ public abstract class AbstractGlobBooleanUpdater implements ChangeSetListener, D
     if (currentKey == null) {
       return;
     }
-    Glob project = repository.find(currentKey);
-    if (project != null) {
-      boolean value = project.isTrue(field);
+    Glob glob = repository.find(currentKey);
+    if (glob != null) {
+      boolean value = glob.isTrue(field);
       doUpdate(value);
     }
   }

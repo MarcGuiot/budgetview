@@ -1,4 +1,4 @@
-package org.globsframework.gui.utils;
+package org.globsframework.gui.components;
 
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;

@@ -20,7 +20,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/11/15", -50.00, "Resa")
       .load();
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("Trip")
       .addExpenseItem(0, "Booking", 201011, -200.00)
@@ -84,7 +84,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/11/15", -100.00, "Resa")
       .load();
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("Trip")
       .addExpenseItem(0, "Booking", 201012, -200.00)
@@ -162,7 +162,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
   public void testSlidingTheWholeProjectWhenTransactionsHaveAlreadyBeenAssigned() throws Exception {
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("Trip")
       .addExpenseItem(0, "Booking", 201012, -200.00)
@@ -297,7 +297,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/15", -100.00, "Air France")
       .load();
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("Trip")
       .addExpenseItem(0, "Booking", 201012, -200.00)
@@ -353,7 +353,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/15", -200.00, "FNAC")
       .load();
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("Camera")
       .addExpenseItem(0, "Camera Body", 201011, -300.00, 3)

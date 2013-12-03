@@ -4,7 +4,7 @@ import org.globsframework.gui.splits.SplitsRepeatTest;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.utils.GlobRepeat;
+import org.globsframework.gui.components.GlobRepeat;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFieldComparator;

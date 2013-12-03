@@ -9,6 +9,8 @@ public interface HistoChartRange {
 
   void addListener(HistoChartRangeListener listener);
 
+  void removeListener(HistoChartRangeListener listener);
+
   void reset();
 
   List<Integer> getMonthIds(Integer selectedMonthId);

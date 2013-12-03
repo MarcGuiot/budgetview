@@ -1,13 +1,10 @@
-package org.globsframework.gui.utils;
-
-import org.globsframework.gui.splits.utils.GuiUtils;
+package org.globsframework.gui.components;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.*;
 
 public class ShowHideButton extends JButton {
   private JComponent component;

@@ -38,7 +38,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/01", 1000.00, "Blah")
       .loadInAccount("Savings account");
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("Trip")
       .addTransferItem()
@@ -116,7 +116,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/01", 1000.00, "Blah")
       .loadInAccount("Savings account");
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("Trip")
       .addExpenseItem(0, "Item 1", 201012, -100.00)
@@ -187,7 +187,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/01", 1000.00, "Blah")
       .loadInAccount("Savings Account 1");
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("Trip")
       .addTransferItem()
@@ -218,7 +218,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     createMainAccount("Main account 1");
     createSavingsAccount("Savings account 1");
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
@@ -240,7 +240,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     createMainAccount("Main account 1");
     createSavingsAccount("Savings account 1");
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
@@ -261,7 +261,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     createMainAccount("Main account 1");
     createSavingsAccount("Savings account 1");
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
@@ -287,7 +287,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     createSavingsAccount("Savings account 1");
     createSavingsAccount("Savings account 2");
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
@@ -356,7 +356,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/15", 100.00, "Other 2")
       .loadInAccount("Main account 1");
 
-    projects.create();
+    projectChart.create();
     currentProject.setName("My Project")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
 
@@ -391,7 +391,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     createMainAccount("Main account 1");
     createSavingsAccount("Savings account 1");
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
