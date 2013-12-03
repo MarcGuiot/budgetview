@@ -316,6 +316,7 @@ public class UserPreferences {
       fieldSetter.set(MAIL_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(PASSWORD_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, input.readBoolean());
+      fieldSetter.set(SHOW_PROJECT_DETAILS, true);
     }
 
     private void deserializeDataV16(FieldSetter fieldSetter, byte[] data) {
@@ -354,6 +355,7 @@ public class UserPreferences {
       fieldSetter.set(MAIL_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(PASSWORD_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
+      fieldSetter.set(SHOW_PROJECT_DETAILS, true);
     }
 
     private void deserializeDataV15(FieldSetter fieldSetter, byte[] data) {
@@ -390,6 +392,7 @@ public class UserPreferences {
       fieldSetter.set(TEXT_DATE_TYPE, input.readInteger());
       fieldSetter.set(RECONCILIATION_FILTERING_TIP_SHOWN, input.readBoolean());
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
+      fieldSetter.set(SHOW_PROJECT_DETAILS, true);
     }
 
     private void deserializeDataV14(FieldSetter fieldSetter, byte[] data) {
@@ -426,6 +429,7 @@ public class UserPreferences {
       fieldSetter.set(TEXT_DATE_TYPE, input.readInteger());
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, false);
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
+      fieldSetter.set(SHOW_PROJECT_DETAILS, true);
     }
 
     private void deserializeDataV13(FieldSetter fieldSetter, byte[] data) {

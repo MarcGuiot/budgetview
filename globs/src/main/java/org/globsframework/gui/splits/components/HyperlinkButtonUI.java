@@ -53,11 +53,14 @@ public class HyperlinkButtonUI extends BasicButtonUI {
         initFontMetrics(button);
       }
     };
-    button.addPropertyChangeListener(fontMetricsUpdater);
+    button.addPropertyChangeListener("font", fontMetricsUpdater);
+    button.addPropertyChangeListener("text", fontMetricsUpdater);
   }
 
   private void updateVisibility(AbstractButton button) {
-    button.setVisible(button.isEnabled() || !autoHideEnabled);
+    boolean visible = button.isEnabled() || !autoHideEnabled;
+    initFontMetrics(button);
+    button.setVisible(visible);
   }
 
   protected void uninstallListeners(AbstractButton button) {
@@ -135,7 +138,11 @@ public class HyperlinkButtonUI extends BasicButtonUI {
   private Icon getIcon(AbstractButton button) {
     ButtonModel model = button.getModel();
     if (!model.isEnabled()) {
-      return button.getDisabledIcon();
+      Icon disabledIcon = button.getDisabledIcon();
+      if (disabledIcon == null) {
+        return button.getIcon();
+      }
+      return disabledIcon;
     }
     else if (model.isRollover()) {
       Icon icon = button.getRolloverIcon();

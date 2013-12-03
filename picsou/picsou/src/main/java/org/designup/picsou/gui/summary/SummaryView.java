@@ -15,7 +15,6 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.actions.SetBooleanAction;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.BooleanFieldListener;
 import org.globsframework.gui.utils.BooleanListener;
 import org.globsframework.model.Glob;
@@ -97,14 +96,13 @@ public class SummaryView extends View {
     });
   }
 
-  private void updateShowProjectDetails(GlobRepository repository, JButton showProjectDetails) {
+  private void updateShowProjectDetails(GlobRepository repository, final JButton showProjectDetails) {
     boolean show = repository.contains(Project.TYPE);
     Glob prefs = repository.find(UserPreferences.KEY);
     if (prefs != null && prefs.isTrue(UserPreferences.SHOW_PROJECT_DETAILS)) {
       show = false;
     }
     showProjectDetails.setEnabled(show);
-    GuiUtils.revalidate(showProjectDetails);
   }
 
   public static HistoChartConfig getMainAccountsChartConfig() {
