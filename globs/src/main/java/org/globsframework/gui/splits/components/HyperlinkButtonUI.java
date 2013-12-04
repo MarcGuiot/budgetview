@@ -55,6 +55,7 @@ public class HyperlinkButtonUI extends BasicButtonUI {
     };
     button.addPropertyChangeListener("font", fontMetricsUpdater);
     button.addPropertyChangeListener("text", fontMetricsUpdater);
+    button.addPropertyChangeListener("icon", fontMetricsUpdater);
   }
 
   private void updateVisibility(AbstractButton button) {
