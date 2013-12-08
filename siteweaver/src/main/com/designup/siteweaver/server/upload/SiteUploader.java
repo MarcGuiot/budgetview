@@ -47,7 +47,6 @@ public class SiteUploader {
     site.processFiles(new FileFunctor() {
       public void process(File inputFile, String targetPath) throws IOException {
         if (".DS_Store".equals(inputFile.getName()) || site.ignoreTargetPath(targetPath)) {
-          System.out.println("SiteUploader.process: ignore " + targetPath);
           return;
         }
 

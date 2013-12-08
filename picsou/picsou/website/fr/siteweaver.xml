@@ -27,6 +27,7 @@
         <page file="support/guides/categorisation.html" title="2. Catégorisez vos opérations"/>
         <page file="support/guides/budget.html" title="3. Finalisez votre budget"/>
         <page file="support/guides/projets.html" title="4. Préparez vos projets"/>
+        <page file="support/guides/analyse.html" title="5. Analysez votre budget"/>
       </page>
 
       <page file="support/derniers_changements.html" title="Derniers changements"/>
@@ -129,7 +130,6 @@
 
   <copy>
     <file path="files/images_fr"/>
-    <ignore path="files/app"/>
   </copy>
 
   <ignore targetPath="files/app"/>
