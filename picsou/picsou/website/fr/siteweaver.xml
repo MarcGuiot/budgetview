@@ -128,7 +128,10 @@
   </copy>
 
   <copy>
-    <file path="files/app"/>
     <file path="files/images_fr"/>
+    <ignore path="files/app"/>
   </copy>
+
+  <ignore targetPath="files/app"/>
+
 </site>

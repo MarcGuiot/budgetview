@@ -5,29 +5,62 @@
 </div>
 
 <p>Cela fait apparaître la fenêtre d'import des relevés, dans laquelle vous devez commencer par
-  entrer le nom de votre banque (étape 1 ci-dessous)&nbsp;:</p>
+    entrer le nom de votre banque (étape 1 ci-dessous)&nbsp;:</p>
 
 <div class="image">
     <img src="/files/images_fr/support/guides/import_dialog.png"/>
 </div>
 
 <p>Sur la droite de la fenêtre (étape 2) apparaissent alors les différentes options de téléchargement disponibles
-  pour votre banque&nbsp;:</p>
+    pour votre banque&nbsp;:</p>
 <ul>
     <li>1. <b>Connexion directe</b> : BudgetView se connecte directement à votre banque pour récupérer le relevés</li>
     <li>2. <b>Téléchargement manuel</b> : vous vous rendez sur le site de votre banque à l'aide d'un navigateur
-      internet, et téléchargez vous-même vos relevés pour les importer ensuite dans BudgetView.</li>
+        internet, et téléchargez vous-même vos relevés pour les importer ensuite dans BudgetView.</li>
 </ul>
 
-<p>Si votre banque n'apparaît pas dans la liste, vous devez utiliser la méthode 2, qui fonctionne avec la
-  très grande majorité des banques.</p>
+<p>BudgetView fonctionne avec <a href="/support/faq/import/banques-francaises-connexion-directe">les principales banques Françaises</a>, mais aussi avec la plupart
+    des banques qui proposent un service de téléchargement en ligne. Si votre banque ne figure pas dans la liste
+    qui vous est proposée, sélectionnez la banque "Autre". BudgetView
+    fonctionnera normalement si vous utilisez la méthode 2 -
+    seuls les libellés de vos opérations seront peut-être moins lisibles.
+</p>
 
 <p>La méthode 2 est décrite plus en détail dans ce qui suit.</p>
 
 <h2>Import manuel des relevés</h2>
 
 <p>La plupart des banques proposent aujourd'hui sur leur site internet un moyen de
-    télécharger vos relevés d'opérations. La démarche typique est la suivante:</p>
+    télécharger vos relevés d'opérations sous forme de fichiers. BudgetView reconnaît les trois formats de fichiers les
+    plus couramment utilisés&nbsp;:</p>
+
+<table class="field-value">
+    <tr>
+        <td class="field">OFX</td>
+        <td class="value"><p>
+            <b>Format proposé pour des logiciels tels que Microsoft Money.</b>
+            Il est recommandé d'utiliser ce format, qui contient les informations de compte et de solde.
+        </p></td>
+    </tr>
+    <tr>
+        <td class="field">QIF</td>
+        <td class="value"><p>
+            <b>Format géré par le logiciel Quicken d'Intuit.</b> Il ne doit être utilisé qu'en absence
+            de fichiers OFX, car il ne contient pas d'informations sur le compte des opérations téléchargées, en
+            particulier les soldes de ces comptes.
+        </p></td>
+    </tr>
+    <tr>
+        <td class="field">CSV</td>
+        <td class="value"><p>
+            <b>Format habituellement utilisé par les tableurs tels que Microsoft Excel, Open Office ou Apple Numbers.</b>
+            Il ne doit être utilisé qu'en absence de fichiers OFX, car l'import de ces fichiers
+            ne permet pas d'obtenir les informations liées aux comptes des opérations téléchargées.
+        </p></td>
+    </tr>
+</table>
+
+<p>La démarche typique de téléchargement est la suivante:</p>
 
 <div class="centered">
     <div class="video">
@@ -89,92 +122,10 @@
     </tr>
 </table>
 
-<p>BudgetView fonctionne avec les principales banques Françaises, mais aussi avec la plupart
-    des banques qui proposent un service de téléchargement en ligne.</p>
-
-<p>Si votre banque ne figure pas dans la liste qui vous est proposée, sélectionnez la banque "Autre" - BudgetView
-    fonctionnera normalement, seuls les libellés de vos opérations seront peut-être moins lisibles. </p>
-
-<p>BudgetView reconnaît les trois formats de fichiers les plus couramment utilisés:</p>
-
-<table class="field-value">
-    <tr>
-        <td class="field">OFX</td>
-        <td class="value"><p>
-            Format proposé pour des logiciels tels que Microsoft Money.
-            Il est recommandé d'utiliser ce format, qui contient les informations de compte et de solde.
-        </p></td>
-    </tr>
-    <tr>
-        <td class="field">QIF</td>
-        <td class="value"><p>
-            Format géré par le logiciel Quicken d'Intuit. Il ne doit être utilisé qu'en absence
-            de fichiers OFX, car il ne contient pas d'informations sur le compte des opérations téléchargées, en
-            particulier les soldes de ces comptes.
-        </p></td>
-    </tr>
-    <tr>
-        <td class="field">CSV</td>
-        <td class="value"><p>
-            Format habituellement utilisé par les tableurs tels que Microsoft Excel, Open Office ou Apple Numbers.
-            Il ne doit être utilisé qu'en absence de fichiers OFX, car l'import de ces fichiers
-            ne permet pas d'obtenir les informations liées aux comptes des opérations téléchargées.
-        </p></td>
-    </tr>
-</table>
-
 <p>Dans un premier temps, vous pouvez vous contenter d'importer les opérations de vos comptes chèques. Vous pourrez
     récupérer vos autres comptes par la suite.</p>
 
 <p>Pour établir un budget réaliste, il est recommandé d'importer environ un ou deux mois complets de données.</p>
-
-<h2>Banques supportées</h2>
-
-<p>BudgetView est aujourd'hui utilisé avec des relevés des banques suivantes:</p>
-
-<table>
-    <tr>
-        <td>
-            <ul>
-                <li>BNP Paribas</li>
-                <li>Banque Accord</li>
-                <li>Banque Populaire</li>
-                <li>Banque Palatine</li>
-                <li>BforBank</li>
-                <li>Barclays</li>
-                <li>Boursorama</li>
-                <li>BRED - Banque Populaire</li>
-            </ul>
-        </td>
-        <td>
-            <ul>
-                <li>Caisse d'Epargne</li>
-                <li>CIC</li>
-                <li>Cortal Consors</li>
-                <li>Crédit Agricole</li>
-                <li>Crédit du Nord</li>
-                <li>Crédit Mutuel</li>
-                <li>Dexia</li>
-                <li>Groupama Banque</li>
-                <li>HSBC</li>
-            </ul>
-        </td>
-        <td>
-            <ul>
-                <li>ING Direct</li>
-                <li>Fortis</li>
-                <li>Fortuneo</li>
-                <li>La Poste</li>
-                <li>LCL</li>
-                <li>Monabanq</li>
-                <li>Société Générale</li>
-            </ul>
-        </td>
-    </tr>
-</table>
-
-<p>Cette liste n'est pas exhaustive. BudgetView peut parfaitement fonctionner avec les exports d'autres banques
-    Françaises ou étrangères, pourvu qu'elles proposent un export de vos relevés aux formats QIF et OFX.</p>
 
 <h2>Etape suivante</h2>
 

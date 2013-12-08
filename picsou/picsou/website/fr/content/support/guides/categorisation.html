@@ -1,20 +1,18 @@
-    <p>
-      Une fois vos opérations <a href="/support/guides/import">importées</a>, vous devez les répartir parmi différentes
-      "enveloppes" pour organiser votre budget. Suivez le guide ci-dessous pour en savoir plus.
-    </p>
+<p> Une fois vos opérations <a href="/support/guides/import">importées</a>, vous devez les répartir parmi différentes
+    "enveloppes" pour organiser votre budget.</p>
 
-    <h2>Les enveloppes</h2>
+<h2>Les enveloppes</h2>
 
-    <p>Une enveloppe est un ensemble d'opérations qui ont un lien logique entre elles. Par exemple, les différentes
-      échéances du crédit de votre véhicule sont toutes rattachées à une enveloppe "Crédit Auto" qui représente
-      ce crédit.</p>
+<p>Une enveloppe est un ensemble d'opérations qui ont un lien logique entre elles. Par exemple, les différentes
+    échéances du crédit de votre véhicule sont toutes rattachées à une enveloppe "Crédit Auto" qui représente
+    ce crédit.</p>
 
-    <p>La plupart des enveloppes décrivent une même opération qui se répète à intervalles réguliers - par exemple
-      une enveloppe "Téléphone Fixe" qui se répète tous les mois, ou une enveloppe "Electricité" qui revient tous les
-      deux mois.</p>
+<p>La plupart des enveloppes décrivent une même opération qui se répète à intervalles réguliers - par exemple
+    une enveloppe "Téléphone Fixe" qui se répète tous les mois, ou une enveloppe "Electricité" qui revient tous les
+    deux mois.</p>
 
-    <table class="calendar">
-      <tr class="months">
+<table class="calendar">
+    <tr class="months">
         <td class="name"></td>
         <td>Jan</td>
         <td>Fév</td>
@@ -22,8 +20,8 @@
         <td>Avr</td>
         <td>Mai</td>
         <td>Juin</td>
-      </tr>
-      <tr class="values">
+    </tr>
+    <tr class="values">
         <td class="name">Crédit Auto</td>
         <td>357.70</td>
         <td>357.70</td>
@@ -31,8 +29,8 @@
         <td>357.70</td>
         <td>357.70</td>
         <td>357.70</td>
-      </tr>
-      <tr class="values">
+    </tr>
+    <tr class="values">
         <td class="name">Electricité</td>
         <td>55.80</td>
         <td></td>
@@ -40,127 +38,139 @@
         <td></td>
         <td>55.80</td>
         <td></td>
-      </tr>
-    </table>
+    </tr>
+</table>
 
-    <p>D'autres enveloppes regroupent plusieurs opérations réalisées au cours d'un même mois - par exemple une enveloppe
-      "Courses" qui regroupe des achats effectués tout au long du mois, chez plusieurs marchands,
-      mais que l'on veut voir au final comme une enveloppe globale de dépenses.</p>
+<p>D'autres enveloppes regroupent plusieurs opérations réalisées au cours d'un même mois - par exemple une enveloppe
+    "Courses" qui regroupe des achats effectués tout au long du mois, chez plusieurs marchands,
+    mais que l'on veut voir au final comme une enveloppe globale de dépenses.</p>
+
+<p>Cette mécanique d'enveloppes est au coeur de l'approche BudgetView et vous permet&nbsp;:</p>
+<ul>
+    <li>de disposer d'une vision synthétique de votre budget en une seule page (vue Budget).</li>
+    <li>de disposer d'une estimation très fine de l'évolution du solde de vos comptes dans les mois à venir.</li>
+</ul>
+
+<p><b>NB</b>: Cette mécanique remplace en grande partie la mécanique de programmation d'opérations récurrentes
+    habituellement proposée par les autres logiciels.</p>
 
 
-    <h2>Création des enveloppes</h2>
+<h2>Catégorisation et création des enveloppes</h2>
 
+<p>BudgetView vous propose par défaut les enveloppes les plus couramment utilisées dans les
+    budgets familiaux. Vous pouvez cependant les modifer, supprimer, ou en ajouter de nouvelles pour décrire
+    finement votre propre budget.</p>
 
-    <p>BudgetView vous propose par défaut les enveloppes les plus couramment utilisées dans les
-      budgets familiaux. Vous pouvez supprimer ou renommer ces enveloppes, ou bien créer les vôtres.</p>
+<p>Pour cela, nous vous recommandons de partir de vos opérations existantes. En les classant une à une,
+    vous pourrez vous poser les bonnes questions pour former votre budget. Cette activité prend place dans la
+    vue "catégorisation", qui est représentée par l'icône suivante:</p>
 
-    <h2>Catégorisation</h2>
+<div class="image">
+    <img src="/files/images/app/icons/categorization.png" alt="Vue catégorisation" width="31" height="24"/>
+</div>
 
-    <p>Vous classez vos opérations dans la vue "catégorisation", qui est représentée par l'icône
-      suivante:</p>
+<p>Dans cette vue, BudgetView vous présente toutes les opérations
+    que vous devez classer. Vous devez sélectionner ces opérations, puis les affecter à des enveloppes parmi six
+    postes budgétaires distincts.</p>
 
-    <div class="images">
-      <img src="/files/images/app/icons/categorization.png" alt="Vue catégorisation" width="31"
-           height="24"/>
-    </div>
+<p>La vidéo ci-dessous illustre cette phase de catégorisation de vos opérations&nbsp;:</p>
 
-    <p>Dans cette vue, BudgetView vous présente toutes les opérations
-      que vous devez classer. Vous devez sélectionner ces opérations, puis les affecter à des enveloppes parmi six
-      postesbudgétaires distincts.</p>
-
-    <p>Certaines enveloppes ont été créées par l'assistant de création de enveloppes.
-      Lors de cette phase de catégorisation, vous devrez certainement en créer de nouvelles, pour définir plus
-      finement
-      votre budget.</p>
-
-    <div class="centered">
-      <div class="video">
+<div class="image">
+    <div class="video">
         <object width="560" height="420" style="background: #000">
-          <param name="movie" value="http://cdn.smugmug.com/ria/ShizVidz-2010102002.swf"/>
-          <param name="allowFullScreen" value="true"/>
-          <param name="flashVars"
-                 value="s=ZT0xJmk9MTA3MjkzNjQyMiZrPURxZ2NkJmE9MTQ0NTcyNzlfNFRwTUImdT1idWRnZXR2aWV3JnNlPTAmc289MCZoZGI9MCZzYj0wJmZzPTAmbD0wJg=="/>
-          <embed src="http://cdn.smugmug.com/ria/ShizVidz-2010102002.swf"
-                 flashVars="s=ZT0xJmk9MTA3MjkzNjQyMiZrPURxZ2NkJmE9MTQ0NTcyNzlfNFRwTUImdT1idWRnZXR2aWV3JnNlPTAmc289MCZoZGI9MCZzYj0wJmZzPTAmbD0wJg=="
-                 width="560" height="420" type="application/x-shockwave-flash" allowFullScreen="true"></embed>
+            <param name="movie" value="http://cdn.smugmug.com/ria/ShizVidz-2010102002.swf"/>
+            <param name="allowFullScreen" value="true"/>
+            <param name="flashVars"
+                   value="s=ZT0xJmk9MTA3MjkzNjQyMiZrPURxZ2NkJmE9MTQ0NTcyNzlfNFRwTUImdT1idWRnZXR2aWV3JnNlPTAmc289MCZoZGI9MCZzYj0wJmZzPTAmbD0wJg=="/>
+            <embed src="http://cdn.smugmug.com/ria/ShizVidz-2010102002.swf"
+                   flashVars="s=ZT0xJmk9MTA3MjkzNjQyMiZrPURxZ2NkJmE9MTQ0NTcyNzlfNFRwTUImdT1idWRnZXR2aWV3JnNlPTAmc289MCZoZGI9MCZzYj0wJmZzPTAmbD0wJg=="
+                   width="560" height="420" type="application/x-shockwave-flash" allowFullScreen="true"></embed>
         </object>
-      </div>
     </div>
+</div>
 
-    <h2>Postes Budgétaires</h2>
+<h2>Postes Budgétaires</h2>
 
-    <p>BudgetView organise les enveloppes en 5 postes budgétaires distincts:</p>
+<p>BudgetView organise les enveloppes en 5 postes budgétaires distincts:</p>
 
-    <table class="field-value" style="width: 80%">
-      <tr>
+<table class="field-value" style="width: 95%">
+    <tr>
         <td class="field">
-          Revenus
+            Revenus
         </td>
         <td class="value">
-          <p>Ce poste regroupe toutes vos sources de revenus, qu'elles soient régulières ou non.
-            Les types les plus courants de revenus sont les salaires, les revenus de professions libérales,
-            les droits d'auteur, mais aussi tous les revenus d'investissements.</p>
+            <p>Ce poste regroupe toutes vos sources de revenus, qu'elles soient régulières ou non.
+                Les types les plus courants de revenus sont les salaires, les revenus de professions libérales,
+                les droits d'auteur, mais aussi tous les revenus d'investissements.</p>
         </td>
-      </tr>
-      <tr>
+    </tr>
+    <tr>
         <td class="field">
-          Frais fixes
+            Frais fixes
         </td>
         <td class="value">
-          <p>Ce poste regroupe les opérations qui se répètent régulièrement - tous les mois, tous les six mois, tous les
-            ans, etc.
-            Les charges fixes les plus communes sont les loyers, les crédits, les abonnements, les impôts, les
-            assurances. On peut également considérer comme charge fixe un achat réglé en plusieurs fois.</p>
+            <p>Ce poste regroupe les opérations qui se répètent régulièrement - tous les mois, tous les six mois, tous
+                les
+                ans, etc.
+                Les charges fixes les plus communes sont les loyers, les crédits, les abonnements, les impôts, les
+                assurances. On peut également considérer comme charge fixe un achat réglé en plusieurs fois.</p>
         </td>
-      </tr>
-      <tr>
+    </tr>
+    <tr>
         <td class="field">
-          Frais variables
+            Frais variables
         </td>
         <td class="value">
-          <p>Ce poste regroupe les frais courants, organisés en enveloppes générales telles que les courses, la santé,
-            l'habillement, les loisirs.
-            Chaque mois, plusieurs opérations sont rattachées à ces enveloppes. Vous pouvez définir et suivre le montant
-            total affecté chaque mois à chacune de vos enveloppes.</p>
+            <p>Ce poste regroupe les frais courants, organisés en enveloppes générales telles que les courses, la santé,
+                l'habillement, les loisirs.
+                Chaque mois, plusieurs opérations sont rattachées à ces enveloppes. Vous pouvez définir et suivre le
+                montant
+                total affecté chaque mois à chacune de vos enveloppes.</p>
         </td>
-      </tr>
-      <tr>
+    </tr>
+    <tr>
         <td class="field">
-          Epargne
+            Epargne
         </td>
         <td class="value">
-          <p>Ce poste regroupe les différents retraits ou dépôts effectués sur vos comptes d'épargne.</p>
+            <p>Ce poste regroupe les différents retraits ou dépôts effectués sur vos comptes d'épargne.</p>
         </td>
-      </tr>
-      <tr>
+    </tr>
+    <tr>
         <td class="field">
-          "Extras"
+            "Extras"
         </td>
         <td class="value">
-          <p>Ce poste regroupe les opérations exceptionnelles du mois - des achats importants, des voyages, des
-            réparations exceptionnelles, etc.
-            Vous pouvez utiliser ce poste pour prévoir vos projets à l'avance - typiquement, vous pouvez créer une
-            enveloppe
-            "Achat TV" ou "Week-end à Etretat" dans l'un des mois à venir, pour anticiper les dépenses correspondantes
-            et
-            voir leur effet sur votre budget.</p>
+            <p>Ce poste regroupe les opérations exceptionnelles du mois - des achats importants, des voyages, des
+                réparations exceptionnelles, etc.
+                Vous pouvez utiliser ce poste pour prévoir vos projets à l'avance - typiquement, vous pouvez créer une
+                enveloppe
+                "Achat TV" ou "Week-end à Etretat" dans l'un des mois à venir, pour anticiper les dépenses
+                correspondantes
+                et
+                voir leur effet sur votre budget.</p>
         </td>
-      </tr>
-    </table>
+    </tr>
+</table>
 
-    <p>Une fois vos opérations catégorisées, vous pouvez vous rendre dans la vue Budget pour obtenir une vision
-      d'ensemble
-      de vos enveloppes, dans chaque poste budgétaire.</p>
+<p>Une fois vos opérations catégorisées, vous pouvez vous rendre dans la vue Budget pour obtenir une vision
+    d'ensemble
+    de vos enveloppes, dans chaque poste budgétaire.</p>
 
-    <h2>Cas particuliers</h2>
+<h2>Cas particuliers</h2>
 
-    <p>Si vous vous posez des questions sur des cas particuliers de catégorisation, consultez l'aide intégrée à l'outil
-      à partir de la vue Categorisation.</p>
+<p>Vous trouverez dans la section <a href="/support/faq">Questions fréquentes</a> des indications sur la façon
+    de gérer des cas spécifiques de catégorisation, notamment&nbsp;:</p>
+<ul>
+    <li>les <a href="/support/faq/categorisation/virements-internes">virements internes</a> entre vos comptes courants</li>
+    <li>les virements qui concernent vos <a href="/support/faq/categorisation/virements-epargne">comptes d'épargne</a></li>
+    <li>les opérations des <a href="/support/faq/comptes/carte-debit-differe">cartes à débit différé</a>.</li>
+</ul>
 
-    <h2>Etape suivante</h2>
+<h2>Etape suivante</h2>
 
-    <div class="summary">
-      <p>
+<div class="summary">
+    <p>
         Une fois vos opérations classées, vous devez
         <a href="/support/guides/budget" class="highlighted">finaliser votre budget</a>.</p>
-    </div>
+</div>
