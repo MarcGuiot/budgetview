@@ -14,6 +14,7 @@ public class Site {
   private String filesDir;
   private String remoteUrl;
   private List<CopySet> filesToCopy;
+  private List<String> targetPathsToIgnore;
   private File configFile;
 
   public Site(File configFile,
@@ -22,8 +23,10 @@ public class Site {
               String contentSubDir,
               String filesSubDir,
               String remoteUrl,
-              List<CopySet> filesToCopy) {
+              List<CopySet> filesToCopy,
+              List<String> targetPathsToIgnore) {
     this.configFile = configFile;
+    this.targetPathsToIgnore = targetPathsToIgnore;
     if (rootPage.getTemplateFilePath() == null) {
       throw new RuntimeException("A template must be provided for the root page");
     }
@@ -145,5 +148,14 @@ public class Site {
     return Math.max(getInputFile(page).lastModified(),
                     Math.max(configFile.lastModified(),
                              getTemplateFile(page).lastModified()));
+  }
+
+  public boolean ignoreTargetPath(String path) {
+    for (String targetPath : targetPathsToIgnore) {
+      if (path.startsWith(targetPath)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

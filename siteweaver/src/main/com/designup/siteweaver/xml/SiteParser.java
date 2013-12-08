@@ -8,8 +8,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,20 +19,22 @@ public class SiteParser {
                             siteElt,
                             parser.parseRootPage(siteElt),
                             parser.parseFilesToCopy(siteElt),
+                            parser.parseIgnorePaths(siteElt),
                             configFile.getParent());
   }
 
   private SiteParser() {
   }
 
-  private Site parseSite(File configFile, Element siteElt, Page rootPage, List<CopySet> filesToCopy, String inputDir) throws XmlParsingException {
+  private Site parseSite(File configFile, Element siteElt, Page rootPage, List<CopySet> filesToCopy, List<String> targetPathsToIgnore, String inputDir) throws XmlParsingException {
     return new Site(configFile,
                     rootPage,
                     inputDir,
                     XmlDomParser.getOptionalAttribute(siteElt, "pagesDir", ""),
                     XmlDomParser.getOptionalAttribute(siteElt, "filesDir", ""),
                     XmlDomParser.getMandatoryAttribute(siteElt, "url"),
-                    filesToCopy);
+                    filesToCopy,
+                    targetPathsToIgnore);
   }
 
   private Page parseRootPage(Element siteElt) throws XmlParsingException {
@@ -122,6 +122,20 @@ public class SiteParser {
       Element fileElt = (Element)fileNodes.item(j);
       result.add(XmlDomParser.getMandatoryAttribute(fileElt, "path"));
     }
+  }
+
+  private List<String> parseIgnorePaths(Element pageElt) throws XmlParsingException {
+    List<String> ignorePaths = new ArrayList<String>();
+    NodeList keyElts = XmlDomParser.getChildrenWithName(pageElt, "ignore");
+    for (int i = 0, max = keyElts.getLength(); i < max; i++) {
+      Element keyElt = (Element)keyElts.item(i);
+      String targetPath = XmlDomParser.getMandatoryAttribute(keyElt, "targetPath");
+      if (!targetPath.equals("/") && !targetPath.startsWith("/")) {
+        targetPath = "/" + targetPath;
+      }
+      ignorePaths.add(targetPath);
+    }
+    return ignorePaths;
   }
 
   private String convert(String text) {

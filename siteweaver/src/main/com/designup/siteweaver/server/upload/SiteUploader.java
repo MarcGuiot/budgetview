@@ -25,7 +25,9 @@ public class SiteUploader {
   public void run() throws IOException {
     final Map<String, FileHandle> remoteHandles = new HashMap<String, FileHandle>();
     for (FileHandle handle : access.listAllFiles()) {
-      remoteHandles.put(handle.path, handle);
+      if (!site.ignoreTargetPath(handle.path)) {
+        remoteHandles.put(handle.path, handle);
+      }
     }
     site.processPages(new PageFunctor() {
       public void process(Page page) throws Exception {
@@ -44,7 +46,8 @@ public class SiteUploader {
     });
     site.processFiles(new FileFunctor() {
       public void process(File inputFile, String targetPath) throws IOException {
-        if (".DS_Store".equals(inputFile.getName())) {
+        if (".DS_Store".equals(inputFile.getName()) || site.ignoreTargetPath(targetPath)) {
+          System.out.println("SiteUploader.process: ignore " + targetPath);
           return;
         }
 

@@ -93,13 +93,13 @@ public class PageHandler extends AbstractHandler {
     }
 
     if (target.equalsIgnoreCase("/!diff")) {
-      upload(response, false, "Diff");
+      diffAndUpload(response, false, "Diff");
       baseRequest.setHandled(true);
       return;
     }
 
     if (target.equalsIgnoreCase("/!publish")) {
-      upload(response, true, "Publish");
+      diffAndUpload(response, true, "Publish");
       baseRequest.setHandled(true);
       return;
     }
@@ -133,7 +133,7 @@ public class PageHandler extends AbstractHandler {
     System.out.println("!! PageHandler: could not find " + target);
   }
 
-  private void upload(HttpServletResponse response, boolean applyChanges, String title) throws IOException {
+  private void diffAndUpload(HttpServletResponse response, boolean applyChanges, String title) throws IOException {
     response.setContentType("text/html;charset=utf-8");
 
     PrintWriter writer = response.getWriter();
@@ -151,7 +151,9 @@ public class PageHandler extends AbstractHandler {
     }
     catch (IOException e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      System.out.println("PageHandler.upload: " + e.getMessage());
+      System.out.println("\n\nPageHandler.diffAndUpload: " + e.getMessage());
+      e.printStackTrace();
+      writer.write("Error: " + e.getMessage() + "</body></html>");
     }
     finally {
       fileAccess.removeListener(logger);

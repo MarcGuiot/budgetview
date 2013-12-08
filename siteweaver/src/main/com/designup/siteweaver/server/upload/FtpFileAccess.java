@@ -11,13 +11,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FtpFileAccess extends AbstractFileAccess {
+  private final String hostname;
+  private final String user;
+  private final String password;
   private String rootPath;
   private FTPClient ftp;
   private final String[] TEXT_EXTENSIONS = {".html", ".css", ".js", ".htaccess", ".txt"};
   private FileTree fileTree;
 
-  public FtpFileAccess(String hostname, String rootPath, String user, String password) throws IOException {
+  public FtpFileAccess(String hostname, String rootPath, String user, String password) {
+    this.hostname = hostname;
+    this.user = user;
+    this.password = password;
     this.rootPath = normalizeRootPath(rootPath);
+  }
+
+  private FTPClient getFTP() throws IOException {
+    if (ftp == null) {
+      initFTP();
+    }
+    return ftp;
+  }
+
+  public void initFTP() throws IOException {
     ftp = new FTPClient();
     ftp.connect(hostname);
     int reply = ftp.getReplyCode();
@@ -33,26 +49,19 @@ public class FtpFileAccess extends AbstractFileAccess {
     fileTree = new FileTree();
   }
 
-  private String normalizeRootPath(String rootPath) {
-    if (rootPath.length() == 0) {
-      return "";
-    }
-    if (!rootPath.startsWith("/")) {
-      return "/" + rootPath;
-    }
-    return rootPath;
-  }
-
   public List<FileHandle> listAllFiles() throws IOException {
+    System.out.print("Listing remote files");
     List<FileHandle> result = new ArrayList<FileHandle>();
     listDirectory(rootPath, 0, result);
+    System.out.println();
     return result;
   }
 
   private void listDirectory(String currentDir,
                              int level,
                              List<FileHandle> result) throws IOException {
-    FTPFile[] subFiles = ftp.listFiles(currentDir);
+    FTPFile[] subFiles = getFTP().listFiles(currentDir);
+    System.out.print(".");
     if (subFiles != null && subFiles.length > 0) {
       for (FTPFile subFile : subFiles) {
         String currentFileName = subFile.getName();
@@ -104,22 +113,26 @@ public class FtpFileAccess extends AbstractFileAccess {
     fileTree.apply(new FileTree.Functor() {
       public void createDirectory(String name) throws IOException {
         System.out.println("mkdir " + name);
+        FTPClient ftp = getFTP();
         ftp.makeDirectory(name);
         ftp.changeWorkingDirectory(name);
       }
 
       public void enterDirectory(String name) throws IOException {
         System.out.println("cd " + name);
+        FTPClient ftp = getFTP();
         ftp.changeWorkingDirectory(name);
       }
 
       public void gotoParentDirectory() throws IOException {
         System.out.println("cd ..");
+        FTPClient ftp = getFTP();
         ftp.changeToParentDirectory();
       }
 
       public void updateFile(String name, InputStream inputStream) throws IOException {
         System.out.println("upload " + name);
+        FTPClient ftp = getFTP();
         if (isTextField(name)) {
           ftp.setFileType(FTP.ASCII_FILE_TYPE);
         }
@@ -141,6 +154,7 @@ public class FtpFileAccess extends AbstractFileAccess {
 
       public void deleteFile(String name) throws IOException {
         System.out.println("delete " + name);
+        FTPClient ftp = getFTP();
         ftp.deleteFile(name);
       }
     });
@@ -149,9 +163,11 @@ public class FtpFileAccess extends AbstractFileAccess {
   }
 
   public void dispose() throws IOException {
-    ftp.logout();
-    ftp.disconnect();
-    ftp = null;
+    if (ftp != null) {
+      ftp.logout();
+      ftp.disconnect();
+      ftp = null;
+    }
   }
 
   private boolean isTextField(String fileName) {
@@ -161,5 +177,15 @@ public class FtpFileAccess extends AbstractFileAccess {
       }
     }
     return false;
+  }
+
+  private String normalizeRootPath(String rootPath) {
+    if (rootPath.length() == 0) {
+      return "";
+    }
+    if (!rootPath.startsWith("/")) {
+      return "/" + rootPath;
+    }
+    return rootPath;
   }
 }

@@ -24,7 +24,8 @@ public abstract class GeneratorTestCase extends TestCase {
   protected abstract Generator getGenerator();
 
   public void setUp() {
-    site = new Site(new File("/siteweaver.xml"), rootPage, "tmp/input", "", "", "remote", new ArrayList<CopySet>());
+    site = new Site(new File("/siteweaver.xml"), rootPage, "tmp/input", "", "", "remote",
+                    new ArrayList<CopySet>(), new ArrayList<String>());
     for (int i = 1; i < 4; i++) {
       Page lev1page = createPage("p" + i, rootPage);
       for (int j = 1; j < 4; j++) {

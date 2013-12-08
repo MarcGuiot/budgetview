@@ -247,6 +247,45 @@ public class SiteUploaderTest extends SiteweaverTestCase {
                 "complete\n");
   }
 
+  public void testCanExcludeDirs() throws Exception {
+    String descriptor =
+      "<site url='http://www.siteweaver.org' pagesDir='content'>" +
+      "  <page file='index.html' title='Home' template='template.html'>" +
+      "    <page file='page1.html' title='Page1'/>" +
+      "    <page file='page2.html' title='Page2'/>" +
+      "  </page>" +
+      "  <copy>" +
+      "    <file path='files'/>" +
+      "  </copy>" +
+      "  <ignore targetPath='files/subdir'/>" +
+      "  <ignore targetPath='other'/>" +
+      "</site>";
+    final Site site = createAndDumpSite("dir/siteweaver.xml", descriptor);
+
+    File template = dump("dir/template.html", "$<gen type=\"content\">");
+
+    dump("dir/files/file1.txt", "file1");
+    dump("dir/files/file1.txt", "file2");
+    dump("dir/files/subdir/file3.txt", "file3");
+    dump("dir/files/subdir/subsubdir/file4.txt", "file3");
+
+    DummyFileAccess fileAccess =
+      DummyFileAccess.init(template.lastModified())
+        .addPast("/index.html")
+        .addFuture("/page1.html")
+        .addPast("/page1/page1b.html")
+        .addPast("/other/otherPage.html")
+        .addFuture("/resources/other.jpg");
+
+    checkUpload(site, fileAccess,
+                "update text: /index.html ==> $=Home\n" +
+                "update text: /page2.html ==> $=Page2\n" +
+                "update file: /files/file1.txt ==> upload from /dir/files/file1.txt\n" +
+                "delete file: /resources/other.jpg\n" +
+                "delete file: /page1/page1b.html\n" +
+                "complete\n");
+  }
+
   private void checkUpload(Site site, DummyFileAccess fileAccess, String actionsLog) throws IOException {
     SiteUploader uploader = new SiteUploader(site, fileAccess);
     uploader.run();
