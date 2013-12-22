@@ -7,7 +7,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 public class SplitsEditor {
 
@@ -22,13 +21,12 @@ public class SplitsEditor {
     ColorService colorService = builder.getContext().getService(ColorService.class);
     colorService.autoUpdate(container);
 
-    JFrame frame =
+    JFrame splitsEditorFrame =
       SplitsBuilder.init(builder.getDirectory())
         .setSource(SplitsEditor.class, "/splits/splitsEditor.splits")
         .add("colorEditor", new ColorServiceEditor(colorService).getBuilder())
         .load();
-
-    GuiUtils.showCentered(frame);
+    GuiUtils.showCentered(splitsEditorFrame);
   }
 
   public static void show(Window window, Directory directory) {

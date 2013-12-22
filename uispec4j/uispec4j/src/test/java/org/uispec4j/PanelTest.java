@@ -1,11 +1,13 @@
 package org.uispec4j;
 
-import static org.uispec4j.DummySpinner.*;
+import junit.framework.AssertionFailedError;
 import org.uispec4j.finder.ComponentMatcher;
 import org.uispec4j.utils.UIComponentFactory;
 import org.uispec4j.xml.XmlAssert;
 
 import javax.swing.*;
+
+import static org.uispec4j.DummySpinner.*;
 
 public class PanelTest extends UIComponentTestCase {
 
@@ -49,6 +51,19 @@ public class PanelTest extends UIComponentTestCase {
     assertTrue(panel.containsLabel("Some text"));
     assertTrue(panel.containsLabel("text"));
     assertFalse(panel.containsLabel("unknown"));
+  }
+
+  public void testSize() throws Exception {
+    JPanel jPanel = new JPanel();
+    jPanel.setSize(400, 300);
+    Panel panel = new Panel(jPanel);
+    assertTrue(panel.sizeEquals(400, 300));
+    try {
+      panel.sizeEquals(450, 350).check();
+    }
+    catch (AssertionFailedError e) {
+      assertEquals("expected:(450,350) but was:(400,400)", e.getMessage());
+    }
   }
 
   public void testGetSpinnerThroughModel() throws Exception {

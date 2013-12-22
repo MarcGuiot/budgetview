@@ -307,7 +307,7 @@ public class GuiUtils {
                                 Math.min(preferredHeight, screenSize.height)));
   }
 
-  private static Dimension getMaxSize(Window frame) {
+  public static Dimension getMaxSize(Window frame) {
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     GraphicsConfiguration config = frame.getGraphicsConfiguration();
     Dimension availableScreenSize = toolkit.getScreenSize();

@@ -7,12 +7,12 @@ import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
 import org.designup.picsou.client.local.LocalClientTransport;
 import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.components.layoutconfig.LayoutConfigService;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.startup.AppPaths;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.server.ServerDirectory;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -59,11 +59,12 @@ public class MainWindowLauncher {
 
     boolean registered = isRegistered(user, password, serverAccess);
 
+    final PicsouFrame frame = new PicsouFrame(Lang.get("application"), directory);
+    directory.add(JFrame.class, frame);
     PicsouInit init = PicsouInit.init(serverAccess, directory, registered, false);
     init.loadUserData(user, false, false).load();
 
     Directory initDirectory = init.getDirectory();
-    final PicsouFrame frame = new PicsouFrame(Lang.get("application"), directory);
     MainPanel.init(init.getRepository(), initDirectory, new WindowManager() {
       public PicsouFrame getFrame() {
         return frame;
@@ -94,10 +95,9 @@ public class MainWindowLauncher {
         System.exit(1);
       }
     })
-      .show();
+      .prepareForDisplay();
 
-    GuiUtils.setSizeWithinScreen(frame, 1100, 800);
-    GuiUtils.showCentered(frame);
+    directory.get(LayoutConfigService.class).show(frame, init.getRepository());
 
     return directory;
   }

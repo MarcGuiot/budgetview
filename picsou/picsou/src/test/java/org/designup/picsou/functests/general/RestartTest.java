@@ -220,7 +220,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("MyProject")
       .addExpenseItem(0, "Booking", 200808, -200.00)
@@ -289,7 +289,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/12/01", -100.00, "Transfer 1")
       .loadInAccount("Savings account 1");
 
-    projects.create();
+    projectChart.create();
     currentProject
       .setName("Trip")
       .addTransferItem()

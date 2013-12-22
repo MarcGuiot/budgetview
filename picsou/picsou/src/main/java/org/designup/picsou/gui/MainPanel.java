@@ -15,6 +15,7 @@ import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.SendImportedFileAction;
+import org.designup.picsou.gui.components.layoutconfig.LayoutConfigService;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.feedback.FeedbackService;
 import org.designup.picsou.gui.feedback.FeedbackView;
@@ -93,7 +94,7 @@ import java.awt.event.KeyEvent;
 import static org.globsframework.model.utils.GlobMatchers.isFalse;
 
 public class MainPanel {
-  private PicsouFrame parent;
+  private PicsouFrame frame;
   private ImportFileAction importFileAction;
   private ExportFileAction exportFileAction;
   private OpenFeedbackDialogAction openFeedbackAction;
@@ -135,11 +136,11 @@ public class MainPanel {
     this.repository = repository;
     this.directory = directory;
     this.windowManager = windowManager;
-    this.parent = windowManager.getFrame();
-    directory.add(JFrame.class, parent);
+    this.frame = windowManager.getFrame();
     directory.add(new UndoRedoService(repository));
     directory.add(new HelpService(repository, directory));
     directory.add(new FeedbackService(repository, directory));
+    directory.add(new LayoutConfigService(repository, directory));
     LogoutService logoutService = new MainPanelLogoutService();
     directory.add(LogoutService.class, logoutService);
 
@@ -217,7 +218,7 @@ public class MainPanel {
       licenseInfoView,
       new NotificationsFlagView(repository, directory));
 
-    createMenuBar(parent, replicationGlobRepository, directory);
+    createMenuBar(frame, replicationGlobRepository, directory);
 
     builder.load();
   }
@@ -242,10 +243,10 @@ public class MainPanel {
     });
   }
 
-  public void show() {
+  public void prepareForDisplay() {
     ImportFileAction.registerToOpenRequestManager(Lang.get("import"), repository, directory);
 
-    parent.setJMenuBar(menuBar);
+    frame.setJMenuBar(menuBar);
     cardView.showInitialCard();
     transactionView.reset();
     categorizationView.reset();
@@ -261,7 +262,7 @@ public class MainPanel {
     selectLastMonthWithATransaction(repository, directory);
     timeView.centerToSelected();
 
-    SplitsEditor.show(builder, parent);
+    SplitsEditor.show(builder, frame);
 
     showInitialMessageIfNeeded();
   }
@@ -392,7 +393,7 @@ public class MainPanel {
     JMenu menu = new JMenu(Lang.get("menuBar.help"));
     menu.add(new AbstractAction(Lang.get("help.index")) {
       public void actionPerformed(ActionEvent e) {
-        directory.get(HelpService.class).show("index", parent);
+        directory.get(HelpService.class).show("index", frame);
       }
     });
     menu.add(cardView.getHelpAction());

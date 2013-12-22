@@ -4,6 +4,7 @@ import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
 import org.designup.picsou.gui.license.LicenseService;
+import org.designup.picsou.gui.utils.FrameSize;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AccountInitialPositionTrigger;
@@ -24,6 +25,7 @@ import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.*;
 import java.util.*;
 
 import static org.globsframework.model.FieldValue.value;
@@ -46,14 +48,9 @@ public class UpgradeTrigger implements ChangeSetListener {
 
     Glob userVersion = repository.get(UserVersionInformation.KEY);
 
-
     final Long currentJarVersion = userVersion.get(UserVersionInformation.CURRENT_JAR_VERSION);
     if (currentJarVersion.equals(PicsouApplication.JAR_VERSION)) {
       return;
-    }
-
-    if (currentJarVersion <= 9) {
-      upgradeFromV9(repository);
     }
 
     if (currentJarVersion < 10) {
@@ -138,6 +135,10 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (currentJarVersion < 127) {
       createMissingSubSeriesForProjectItems(repository);
     }
+
+    System.out.println("org.designup.picsou.gui.upgrade.UpgradeTrigger.globsReset: ");
+    FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
+    LayoutConfig.init(frameSize.screenSize, frameSize.targetFrameSize, repository);
 
     UserPreferences.initMobilePassword(repository, false);
 
@@ -457,49 +458,6 @@ public class UpgradeTrigger implements ChangeSetListener {
 
                            }
                          });
-  }
-
-  private void upgradeFromV9(GlobRepository repository) {
-    repository
-      .getAll(SeriesBudget.TYPE, isNull(SeriesBudget.DAY))
-      .safeApply(new GlobFunctor() {
-        public void run(Glob seriesBudget, GlobRepository repository) throws Exception {
-          final int lastDay = Month.getLastDayNumber(seriesBudget.get(SeriesBudget.MONTH));
-          repository.update(seriesBudget.getKey(), value(SeriesBudget.DAY, lastDay));
-        }
-      }, repository);
-
-    GlobUtils.updateIfExists(repository,
-                             Series.UNCATEGORIZED_SERIES,
-                             Series.NAME,
-                             Series.getUncategorizedName());
-
-    repository.update(Series.UNCATEGORIZED_SERIES, Series.IS_AUTOMATIC, false);
-
-    GlobList uncategorizedTransactions =
-      repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)
-        .getGlobs();
-
-    if (!uncategorizedTransactions.isEmpty()) {
-      final Integer lastMonthId = uncategorizedTransactions.getSortedSet(Transaction.MONTH).last();
-      repository
-        .getAll(SeriesBudget.TYPE,
-                and(fieldEquals(SeriesBudget.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                    fieldStrictlyGreaterThan(SeriesBudget.MONTH, lastMonthId)))
-        .safeApply(new GlobFunctor() {
-          public void run(Glob seriesBudget, GlobRepository repository) throws Exception {
-            repository.update(seriesBudget.getKey(), value(SeriesBudget.PLANNED_AMOUNT, 0.0));
-          }
-        }, repository);
-    }
-
-    GlobList globList = repository.getAll(Series.TYPE, fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
-    for (Glob glob : globList) {
-      if (glob.get(Series.TO_ACCOUNT) == null && glob.get(Series.FROM_ACCOUNT) == null) {
-        repository.update(glob.getKey(), Series.FROM_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID);
-      }
-    }
-    PicsouInit.createPersistentDataForNewUser(repository, directory);
   }
 
   private void migrateBankEntity(GlobRepository repository) {

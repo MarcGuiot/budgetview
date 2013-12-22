@@ -45,7 +45,7 @@ public class User {
   public static final int ACTIVATION_FAILED_HTTP_REQUEST = 5;
   public static final int ACTIVATION_FAILED_MAIL_UNKNOWN = 6;
   // On n'a pas envoyé au serveur les mail, signature et code d'activation alors que c'est un utilisateur
-  // enregistré (donc le a priori le repo a ete modifié manuellement)
+  // enregistré (donc a priori le repo a ete modifié manuellement)
   public static final int ACTIVATION_FAILED_MAIL_SENT = 8;
   public static final int ACTIVATION_FAILED_MAIL_NOT_SENT = 9;
   public static final int STARTUP_CHECK_KILL_USER = 10;
@@ -56,11 +56,6 @@ public class User {
   static {
     GlobTypeLoader.init(User.class);
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
-  }
-
-  public static boolean addOnsEnabled(GlobRepository repository) {
-    Glob user = repository.find(User.KEY);
-    return user != null && user.isTrue(IS_REGISTERED_USER);
   }
 
   public static boolean isDemoUser(Glob user) {

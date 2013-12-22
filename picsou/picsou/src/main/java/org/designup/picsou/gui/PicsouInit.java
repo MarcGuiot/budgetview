@@ -14,6 +14,7 @@ import org.designup.picsou.gui.series.view.SeriesWrapperUpdateTrigger;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.upgrade.ConfigUpgradeTrigger;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
+import org.designup.picsou.gui.utils.FrameSize;
 import org.designup.picsou.gui.utils.ShowDialogAndExitExceptionHandler;
 import org.designup.picsou.gui.utils.datacheck.DataCheckingService;
 import org.designup.picsou.importer.ImportService;
@@ -38,6 +39,7 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 import picsou.AwtExceptionHandler;
 
+import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -308,7 +310,7 @@ public class PicsouInit {
 
   }
 
-  public static void createPersistentDataForNewUser(GlobRepository repository, Directory directory) {
+  private void createPersistentDataForNewUser(GlobRepository repository, Directory directory) {
 
     repository.startChangeSet();
     try {
@@ -324,6 +326,9 @@ public class PicsouInit {
                           LicenseService.getEndOfTrialPeriod());
       }
 
+      FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
+      LayoutConfig.init(frameSize.screenSize, frameSize.targetFrameSize, repository);
+
       repository.findOrCreate(CurrentMonth.KEY,
                               value(CurrentMonth.LAST_TRANSACTION_DAY, 0),
                               value(CurrentMonth.LAST_TRANSACTION_MONTH, 0),
@@ -337,8 +342,7 @@ public class PicsouInit {
       repository.findOrCreate(Account.SAVINGS_SUMMARY_KEY,
                               value(Account.ACCOUNT_TYPE, AccountType.SAVINGS.getId()));
       repository.findOrCreate(Account.ALL_SUMMARY_KEY,
-                              value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId())
-      );
+                              value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()));
 
       DefaultSeriesFactory.run(repository, directory);
     }

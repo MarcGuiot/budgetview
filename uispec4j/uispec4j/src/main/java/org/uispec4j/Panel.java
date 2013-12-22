@@ -1,6 +1,7 @@
 package org.uispec4j;
 
 import org.uispec4j.assertion.Assertion;
+import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.assertion.testlibrairies.AssertAdapter;
 import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatcher;
@@ -34,7 +35,6 @@ import static org.uispec4j.finder.ComponentMatchers.*;
  * considered.
  *
  * @noinspection ReturnOfNull
- *
  * @see <a href="http://www.uispec4j.org/findingcomponents">Finding Components</a>
  */
 public class Panel extends AbstractUIComponent {
@@ -507,5 +507,16 @@ public class Panel extends AbstractUIComponent {
     return or(innerNameIdentity(componentName),
               innerNameSubstring(componentName),
               innerNameRegexp(componentName));
+  }
+
+  public Assertion sizeEquals(final int width, final int height) {
+    return new Assertion() {
+      public void check() {
+        Dimension size = container.getSize();
+        if ((size.width != width) || (size.height != height)) {
+          UISpecAssert.fail("expected:(" + width + "," + height + ") but was:(" + size.width + "," + size.height + ")");
+        }
+      }
+    };
   }
 }

@@ -17,6 +17,7 @@ import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
+import org.designup.picsou.gui.components.layoutconfig.LayoutConfigService;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.license.LicenseCheckerThread;
 import org.designup.picsou.gui.startup.LoginPanel;
@@ -221,6 +222,7 @@ public class MainWindow implements WindowManager {
 
   public void show() {
     loginPanel = new LoginPanel(this, directory);
+    directory.add(JFrame.class, frame);
     picsouInit = PicsouInit.init(serverAccess, directory, registered, badJarVersion);
     final GlobRepository repository = picsouInit.getRepository();
     mainPanel = MainPanel.init(repository, picsouInit.getDirectory(), this);
@@ -299,8 +301,8 @@ public class MainWindow implements WindowManager {
       setPanel(loginPanel.preparePanelForShow(localUsers));
     }
 
-    GuiUtils.setSizeWithinScreen(frame, 1100, 800);
-    GuiUtils.showCentered(frame);
+    directory.get(LayoutConfigService.class).show(frame, repository);
+
     licenseCheckerThread = LicenseCheckerThread.launch(directory, repository);
     synchronized (this) {
       initDone = true;
@@ -509,7 +511,7 @@ public class MainWindow implements WindowManager {
               logout();
               return;
             }
-            mainPanel.show();
+            mainPanel.prepareForDisplay();
             frame.setFocusTraversalPolicy(null);
           }
         });

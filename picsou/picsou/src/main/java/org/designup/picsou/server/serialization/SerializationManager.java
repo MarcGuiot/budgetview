@@ -49,5 +49,6 @@ public class SerializationManager {
     Picture.TYPE.updateProperty(SERIALIZATION_PROPERTY, new Picture.Serializer());
     ProjectTransfer.TYPE.updateProperty(SERIALIZATION_PROPERTY, new ProjectTransfer.Serializer());
     ProjectItemAmount.TYPE.updateProperty(SERIALIZATION_PROPERTY, new ProjectItemAmount.Serializer());
+    LayoutConfig.TYPE.updateProperty(SERIALIZATION_PROPERTY, new LayoutConfig.Serializer());
   }
 }
