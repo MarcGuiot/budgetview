@@ -143,8 +143,8 @@
               </card>
               <card name="summary">
                 <column>
-                  <horizontalSplit weightY="2" styleClass="mainDivider">
-                    <column weightX="6">
+                  <horizontalSplit ref="summaryProjectSplit" weightY="2" styleClass="mainDivider">
+                    <column>
                       <label text="$summaryView.title" styleClass="blockTitle"/>
                       <column styleClass="block">
                         <column styleClass="innerBlock" weightY="100">
@@ -153,7 +153,7 @@
                         <panel ref="feedbackView" weightY="0"/>
                       </column>
                     </column>
-                  <column weightX="6" autoHideSource="projectView">
+                    <column autoHideSource="projectView">
                       <label text="$projectView.title" styleClass="blockTitle"/>
                       <column styleClass="block">
                         <column styleClass="innerBlock" weightY="100">
@@ -197,7 +197,7 @@
         </card>
 
         <card name="data">
-          <horizontalSplit styleClass="mainDivider">
+          <horizontalSplit ref="accountTransactionSplit" styleClass="mainDivider">
             <column weightX="1" minimumSize="(300,200)" preferredSize="(300,700)">
               <panel ref="accountView"/>
             </column>

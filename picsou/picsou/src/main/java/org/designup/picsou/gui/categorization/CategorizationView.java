@@ -14,6 +14,7 @@ import org.designup.picsou.gui.components.filtering.FilterListener;
 import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;
+import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
 import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.stringifiers.SeriesDescriptionStringifier;
 import org.designup.picsou.gui.description.stringifiers.SeriesNameComparator;
@@ -280,6 +281,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
     ReconciliationWarningPanel reconciliationWarningPanel =
       new ReconciliationWarningPanel(this, repository, directory);
     builder.add("reconciliationWarningPanel", reconciliationWarningPanel.getPanel());
+
+    builder.add("categorizationSplit", SplitPaneConfig.create(directory, LayoutConfig.CATEGORIZATION_HORIZONTAL));
 
     return builder;
   }

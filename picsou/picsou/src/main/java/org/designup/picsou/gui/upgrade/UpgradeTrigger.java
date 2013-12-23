@@ -135,10 +135,10 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (currentJarVersion < 127) {
       createMissingSubSeriesForProjectItems(repository);
     }
-
-    System.out.println("org.designup.picsou.gui.upgrade.UpgradeTrigger.globsReset: ");
-    FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
-    LayoutConfig.init(frameSize.screenSize, frameSize.targetFrameSize, repository);
+    if (currentJarVersion < 131) {
+      FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
+      LayoutConfig.init(frameSize.screenSize, frameSize.targetFrameSize, repository);
+    }
 
     UserPreferences.initMobilePassword(repository, false);
 

@@ -24,6 +24,7 @@ import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.startup.SlaValidationDialog;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.undo.UndoRedoService;
+import org.designup.picsou.gui.utils.FrameSize;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
@@ -91,6 +92,7 @@ public class MainWindow implements WindowManager {
     Runtime.getRuntime().addShutdownHook(thread);
 
     this.frame = new PicsouFrame(Lang.get("application"), directory);
+    this.frame.setSize(FrameSize.init(frame).targetFrameSize);
 
     ConfigService configService = directory.get(ConfigService.class);
     ServerAccess.LocalInfo info;
@@ -301,7 +303,7 @@ public class MainWindow implements WindowManager {
       setPanel(loginPanel.preparePanelForShow(localUsers));
     }
 
-    directory.get(LayoutConfigService.class).show(frame, repository);
+    directory.get(LayoutConfigService.class).show(frame);
 
     licenseCheckerThread = LicenseCheckerThread.launch(directory, repository);
     synchronized (this) {

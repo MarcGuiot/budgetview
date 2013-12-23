@@ -9,26 +9,26 @@
 
   <column styleClass="main">
 
-    <horizontalSplit ref="horizontalSplitPane" styleClass="mainDivider">
+    <horizontalSplit ref="horizontalSplit" styleClass="mainDivider">
 
-      <verticalBoxes weightX="3">
+      <verticalBoxes weightX="1">
         <label text="$budgetSummaryView.title" styleClass="blockTitle" horizontalAlignment="center"/>
         <column styleClass="block" marginBottom="10" preferredSize="(200,200)">
           <panel ref="budgetSummaryView"/>
         </column>
 
-        <verticalSplit ref="firstVerticalSplitPane" weightY="10" alignmentX="0.5" styleClass="mainDivider">
-          <panel ref="incomeBudgetView" weightY="5"/>
-          <panel ref="savingsBudgetView" weightY="5"/>
+        <verticalSplit ref="verticalSplit1" weightY="10" alignmentX="0.5" styleClass="mainDivider">
+          <panel ref="incomeBudgetView"/>
+          <panel ref="savingsBudgetView"/>
         </verticalSplit>
       </verticalBoxes>
 
-      <verticalSplit ref="secondVerticalSplitPane" weightX="3" styleClass="mainDivider">
-        <panel ref="recurringBudgetView" weightY="7"/>
-        <panel ref="extrasBudgetView" weightY="3"/>
+      <verticalSplit ref="verticalSplit2" styleClass="mainDivider">
+        <panel ref="recurringBudgetView"/>
+        <panel ref="extrasBudgetView"/>
       </verticalSplit>
 
-      <verticalSplit ref="thirdVerticalSplitPane" weightX="3" styleClass="mainDivider">
+      <verticalSplit ref="verticalSplit3" styleClass="mainDivider">
         <panel ref="variableBudgetView"/>
       </verticalSplit>
     </horizontalSplit>

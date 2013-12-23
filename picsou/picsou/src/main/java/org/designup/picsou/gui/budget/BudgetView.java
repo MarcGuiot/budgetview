@@ -6,7 +6,9 @@ import org.designup.picsou.gui.budget.footers.BudgetAreaSeriesFooter;
 import org.designup.picsou.gui.budget.footers.EmptyBudgetAreaSeriesFooter;
 import org.designup.picsou.gui.budget.summary.BudgetSummaryView;
 import org.designup.picsou.gui.components.highlighting.HighlightingService;
+import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.LayoutConfig;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -37,10 +39,10 @@ public class BudgetView extends View {
     addBudgetAreaView("extrasBudgetView", BudgetArea.EXTRAS, builder);
     addBudgetAreaView("savingsBudgetView", BudgetArea.SAVINGS, builder);
 
-    builder.add("horizontalSplitPane", new JideSplitPane());
-    builder.add("firstVerticalSplitPane", new JideSplitPane());
-    builder.add("secondVerticalSplitPane", new JideSplitPane());
-    builder.add("thirdVerticalSplitPane", new JideSplitPane());
+    builder.add("horizontalSplit", SplitPaneConfig.create(directory, LayoutConfig.BUDGET_HORIZONTAL_1, LayoutConfig.BUDGET_HORIZONTAL_2));
+    builder.add("verticalSplit1", SplitPaneConfig.create(directory, LayoutConfig.BUDGET_VERTICAL_LEFT));
+    builder.add("verticalSplit2", SplitPaneConfig.create(directory, LayoutConfig.BUDGET_VERTICAL_CENTER));
+    builder.add("verticalSplit3", new JideSplitPane());
 
     parentBuilder.add("budgetView", builder);
 

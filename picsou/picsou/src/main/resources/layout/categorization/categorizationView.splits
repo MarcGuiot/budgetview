@@ -36,9 +36,9 @@
 
   <column styleClass="main">
 
-    <horizontalSplit weightY="10.0" styleClass="mainDivider" opaque="false">
+    <horizontalSplit weightY="10.0" ref="categorizationSplit" styleClass="mainDivider" opaque="false">
 
-      <column weightX="50" name="categorizationSelection">
+      <column name="categorizationSelection">
         <label text="$categorization.list.title" styleClass="blockTitle"/>
         <panel styleClass="block">
           <column styleClass="innerBlock">
@@ -77,7 +77,7 @@
         </panel>
       </column>
 
-      <column weightX="50">
+      <column>
         <label text="$categorization.details.title" styleClass="blockTitle"/>
         <panel styleClass="block">
 

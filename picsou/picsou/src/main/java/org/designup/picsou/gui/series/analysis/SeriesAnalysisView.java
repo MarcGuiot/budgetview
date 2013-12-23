@@ -3,9 +3,11 @@ package org.designup.picsou.gui.series.analysis;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.actions.SelectNextMonthAction;
 import org.designup.picsou.gui.actions.SelectPreviousMonthAction;
+import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
 import org.designup.picsou.gui.series.analysis.components.SeriesAnalysisBreadcrumb;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
+import org.designup.picsou.model.LayoutConfig;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SubSeries;
@@ -97,6 +99,8 @@ public class SeriesAnalysisView extends View {
 
     builder.add("previousMonth", new SelectPreviousMonthAction(repository, parentDirectory));
     builder.add("nextMonth", new SelectNextMonthAction(repository, parentDirectory));
+
+    builder.add("analysisTableSplit", SplitPaneConfig.create(directory, LayoutConfig.ANALYSIS_TABLE));
 
     return builder;
   }

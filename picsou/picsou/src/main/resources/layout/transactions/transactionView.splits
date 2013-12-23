@@ -9,8 +9,8 @@
       <column styleClass="innerBlock" margin="10" marginLeft="15" marginRight="15">
 
 
-        <verticalSplit styleClass="blockDivider" opaque="false">
-          <column weightY="10">
+        <verticalSplit ref="transactionChartSplit" styleClass="blockDivider" opaque="false">
+          <column>
             <row>
               <filler fill="horizontal"/>
               <component ref="transactionSearch"/>
@@ -34,7 +34,7 @@
             </row>
           </column>
 
-          <column weightY="3" opaque="true"
+          <column opaque="true"
                   background="block.inner.secondary.bg" border="line(block.inner.border)" autoHideSource="accountChart">
             <label ref="accountChartLegend" anchor="center" fill="none" font="-,plain,11"/>
             <panel ref="accountChart" margin="5" background="block.inner.secondary.bg"/>

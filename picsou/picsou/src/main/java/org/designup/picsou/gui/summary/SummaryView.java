@@ -4,10 +4,12 @@ import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
 import org.designup.picsou.gui.accounts.chart.SavingsAccountsChartView;
+import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
 import org.designup.picsou.gui.help.actions.HelpAction;
 import org.designup.picsou.gui.projects.ProjectChartView;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
+import org.designup.picsou.model.LayoutConfig;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
@@ -84,6 +86,8 @@ public class SummaryView extends View {
     });
 
     parentBuilder.add("summaryView", builder);
+
+    parentBuilder.add("summaryProjectSplit", SplitPaneConfig.create(directory, LayoutConfig.HOME_SUMMARY_PROJECTS));
 
     parentBuilder.addLoader(new SplitsLoader() {
       public void load(Component component, SplitsNode node) {

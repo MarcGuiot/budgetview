@@ -97,7 +97,7 @@ public class MainWindowLauncher {
     })
       .prepareForDisplay();
 
-    directory.get(LayoutConfigService.class).show(frame, init.getRepository());
+    directory.get(LayoutConfigService.class).show(frame);
 
     return directory;
   }

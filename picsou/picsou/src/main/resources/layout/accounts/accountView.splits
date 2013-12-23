@@ -4,7 +4,7 @@
 
   <column>
 
-    <verticalSplit styleClass="mainDivider">
+    <verticalSplit ref="accountSplit" styleClass="mainDivider">
 
       <column name="mainAccountView">
         <label text="$accountView.title.main" styleClass="blockTitle"/>
