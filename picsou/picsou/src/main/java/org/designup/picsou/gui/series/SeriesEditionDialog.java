@@ -486,7 +486,8 @@ public class SeriesEditionDialog {
         Glob budget = SeriesBudget.findOrCreate(seriesId, entry.getKey(), localRepository);
         localRepository.update(budget.getKey(),
                                value(SeriesBudget.ACTIVE, true),
-                               value(SeriesBudget.ACTUAL_AMOUNT, entry.getValue()));
+                               value(SeriesBudget.ACTUAL_AMOUNT, entry.getValue()),
+                               value(SeriesBudget.PLANNED_AMOUNT, entry.getValue()));
       }
     }
     finally {

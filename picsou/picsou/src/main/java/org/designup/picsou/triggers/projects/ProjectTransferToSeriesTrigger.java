@@ -14,7 +14,7 @@ public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
     changeSet.safeVisit(ProjectTransfer.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key projectTransferKey, FieldValues values) throws Exception {
         if (shouldCreateSavingsSeries(projectTransferKey, values, repository)) {
-          createSavingsSeries(projectTransferKey, values, repository);
+          createSavingsSeries(projectTransferKey, repository);
         }
       }
 
@@ -29,7 +29,7 @@ public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
         boolean isSavings = ProjectTransfer.isSavings(newTransferValues, repository);
         boolean wasSavings = ProjectTransfer.isSavings(previousTransferValues, repository);
         if (isSavings && !wasSavings) {
-          createSavingsSeries(projectTransferKey, newTransferValues, repository);
+          createSavingsSeries(projectTransferKey, repository);
         }
         else if (wasSavings && !isSavings) {
           deleteSavingsSeries(projectTransferKey, previousTransferValues, repository);
@@ -47,7 +47,7 @@ public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 
-  private void createSavingsSeries(Key projectTransferKey, FieldValues values, GlobRepository repository) {
+  private void createSavingsSeries(Key projectTransferKey, GlobRepository repository) {
     Glob projectTransfer = repository.get(projectTransferKey);
     Glob item = ProjectTransfer.getItemFromTransfer(projectTransferKey, repository);
     Integer firstMonth = item.get(ProjectItem.FIRST_MONTH);

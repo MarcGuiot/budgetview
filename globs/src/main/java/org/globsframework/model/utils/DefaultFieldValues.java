@@ -122,6 +122,10 @@ public class DefaultFieldValues extends AbstractFieldValues implements MutableFi
     });
   }
 
+  public void remove(Field field) {
+    values.remove(field);
+  }
+
   public boolean equals(Object o) {
     if (this == o) {
       return true;

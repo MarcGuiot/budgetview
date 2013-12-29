@@ -35,6 +35,10 @@ public class FieldValuesBuilder {
     return builder;
   }
 
+  public static FieldValuesBuilder initWithoutKeyFields(FieldValues values) {
+    return init(removeKeyFields(values));
+  }
+
   public static FieldValuesBuilder init(FieldValue... values) {
     FieldValuesBuilder builder = new FieldValuesBuilder();
     for (FieldValue value : values) {
@@ -111,6 +115,11 @@ public class FieldValuesBuilder {
     return this;
   }
 
+  public FieldValuesBuilder remove(Field field) {
+    values.remove(field);
+    return this;
+  }
+
   public MutableFieldValues get() {
     return values;
   }
@@ -127,7 +136,9 @@ public class FieldValuesBuilder {
     final FieldValuesBuilder builder = new FieldValuesBuilder();
     input.safeApply(new FieldValues.Functor() {
       public void process(Field field, Object value) throws Exception {
-        builder.setValue(field, value);
+        if (!field.isKeyField()) {
+          builder.setValue(field, value);
+        }
       }
     });
     return builder.get();

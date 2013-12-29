@@ -66,9 +66,6 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public void visit(ChangeSetVisitor visitor) throws Exception {
-//    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.values()) {
-//      deltaGlob.visit(visitor);
-//    }
     Collection<DefaultDeltaGlob> values = deltaGlobsByKey.values();
     visit(visitor, values, DeltaState.DELETED);
     visit(visitor, values, DeltaState.UPDATED);
@@ -88,9 +85,6 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public void visit(GlobType type, ChangeSetVisitor visitor) throws Exception {
-//    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.get(type).values()) {
-//      deltaGlob.visit(visitor);
-//    }
     Collection<DefaultDeltaGlob> values = deltaGlobsByKey.get(type).values();
     visit(visitor, values, DeltaState.DELETED);
     visit(visitor, values, DeltaState.UPDATED);

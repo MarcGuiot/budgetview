@@ -2,14 +2,17 @@ package org.designup.picsou.functests.projects;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.ProjectItem;
+import org.designup.picsou.model.ProjectTransfer;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.model.format.GlobPrinter;
 
 public class ProjectTransferTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     setCurrentMonth("2010/12");
     super.setUp();
     operations.hideSignposts();
-    operations.openPreferences().setFutureMonthsCount(6).validate();
+    operations.openPreferences().setFutureMonthsCount(12).validate();
   }
 
   public void testWithSavings() throws Exception {
@@ -439,6 +442,63 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkSeries("Transfer", 0.00, 30.00);
     timeline.selectMonth(201102);
     budgetView.savings.checkSeries("Transfer", 0.00, 20.00);
+  }
+
+  public void testDuplicatingAProjectWithMonthTransfers() throws Exception {
+    createMainAccount("Main account 1");
+    createSavingsAccount("Savings account 1");
+
+    projectChart.create();
+    currentProject
+      .setName("Trip")
+      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
+    currentProject.checkProjectGauge(0.00, 0.00);
+    currentProject.checkPeriod("December 2010");
+
+    currentProject
+      .toggleAndEditTransfer(0)
+      .setFromAccount("Main accounts")
+      .setToAccount("Savings account 1")
+      .switchToSeveralMonths()
+      .switchToMonthEditor()
+      .setTableMonthCount(3)
+      .setMonthAmount(0, 70.00)
+      .setMonthAmount(1, 20.00)
+      .setMonthAmount(2, 10.00)
+      .checkMonthAmounts("| Dec 2010 | 70.00 |\n" +
+                         "| Jan 2011 | 20.00 |\n" +
+                         "| Feb 2011 | 10.00 |")
+      .validate();
+    currentProject
+      .checkPeriod("December 2010 - February 2011")
+      .checkProjectGauge(0.00, 0.00)
+      .checkItems("| Transfer | Dec | 0.00 | +100.00 |");
+
+    currentProject.openDuplicate()
+      .setName("Copy")
+      .checkFirstMonth("December 2010")
+      .setFirstMonth(201106)
+      .validate();
+
+    currentProject
+      .checkName("Copy")
+      .checkPeriod("June - August 2011")
+      .checkProjectGauge(0, 0.00)
+      .checkItems("| Transfer | June | 0.00 | +100.00 |");
+
+    timeline.selectMonth(201012);
+    budgetView.savings.checkSeries("Transfer", 0.00, 70.00);
+    timeline.selectMonth(201101);
+    budgetView.savings.checkSeries("Transfer", 0.00, 20.00);
+    timeline.selectMonth(201102);
+    budgetView.savings.checkSeries("Transfer", 0.00, 10.00);
+
+    timeline.selectMonth(201106);
+    budgetView.savings.checkSeries("Transfer", 0.00, 70.00);
+    timeline.selectMonth(201107);
+    budgetView.savings.checkSeries("Transfer", 0.00, 20.00);
+    timeline.selectMonth(201108);
+    budgetView.savings.checkSeries("Transfer", 0.00, 10.00);
   }
 
   private void createMainAccount(String mainAccountName) {

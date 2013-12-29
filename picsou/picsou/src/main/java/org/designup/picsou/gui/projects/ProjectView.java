@@ -36,9 +36,6 @@ public class ProjectView extends View implements GlobSelectionListener, ChangeSe
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectView.splits",
                                                       repository, directory);
 
-    repository.addChangeListener(this);
-    selectionService.addListener(this, Project.TYPE);
-
     JPanel panel = new JPanel();
     builder.add("projectView", panel);
     BooleanFieldListener.installShowHide(panel,
@@ -66,6 +63,9 @@ public class ProjectView extends View implements GlobSelectionListener, ChangeSe
                                        Lang.get("summaryView.hideProjectDetails"),
                                        repository));
     parentBuilder.add("hideProjectDetails", hideProjectDetails);
+
+    repository.addChangeListener(this);
+    selectionService.addListener(this, Project.TYPE);
 
     update();
   }

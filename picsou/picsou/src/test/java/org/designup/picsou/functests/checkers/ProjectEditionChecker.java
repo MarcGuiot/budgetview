@@ -361,4 +361,16 @@ public class ProjectEditionChecker extends ViewChecker {
   public void sortItems() {
     PopupButton.init(getPanel(), "displayActions").click(Lang.get("projectEdition.sortItems"));
   }
+
+  public ProjectDuplicationDialogChecker openDuplicate() {
+    final org.uispec4j.Button itemButton = getPanel().getButton("nameButton");
+    PopupButton button = new PopupButton(itemButton);
+    return ProjectDuplicationDialogChecker.open(button.triggerClick(Lang.get("projectEdition.duplicate.menu")));
+  }
+
+  public void checkDuplicateDisabled() {
+    final org.uispec4j.Button itemButton = getPanel().getButton("nameButton");
+    PopupButton button = new PopupButton(itemButton);
+    button.checkItemDisabled(Lang.get("projectEdition.duplicate.menu"));
+  }
 }

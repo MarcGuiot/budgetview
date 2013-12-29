@@ -1,0 +1,67 @@
+<panel name="projectEditionView">
+    <button name="backToList" label="Back to the project list"/>
+    <button name="createProject" label="Add project"/>
+    <panel name="projectPanel">
+        <textBox name="imageLabel"/>
+        <panel name="projectNameEditor">
+            <panel name="readonly">
+                <button name="projectNameButton" label="Copy"/>
+            </panel>
+        </panel>
+        <toggleButton name="activeToggle"/>
+        <button name="modify"/>
+        <panel name="monthSlider">
+            <button name="previousMonth"/>
+            <button name="month" label="June - August 2011"/>
+            <button name="nextMonth"/>
+        </panel>
+        <panel name="gaugePanel">
+            <panel name="gauge"/>
+            <textBox name="totalActual" text="0.00"/>
+            <textBox text=" / "/>
+            <textBox name="totalPlanned" text="0.00"/>
+        </panel>
+    </panel>
+    <panel name="items">
+        <panel name="projectItemPanel">
+            <panel name="projectItemViewPanel">
+                <button name="itemButton" label="Transfer"/>
+                <panel name="monthSlider">
+                    <button name="previousMonth"/>
+                    <button name="month" label="June"/>
+                    <button name="nextMonth"/>
+                </panel>
+                <panel name="itemGauge"/>
+                <button name="actualAmount" label="0.00"/>
+                <textBox name="slashLabel" text="/"/>
+                <button name="plannedAmount" label="+100.00"/>
+                <toggleButton name="activeToggle"/>
+                <button name="modify"/>
+                <button name="link"/>
+            </panel>
+        </panel>
+        <panel name="projectItemPanel">
+            <panel name="projectItemViewPanel">
+                <button name="itemButton" label="Transfer"/>
+                <panel name="monthSlider">
+                    <button name="previousMonth"/>
+                    <button name="month" label="June"/>
+                    <button name="nextMonth"/>
+                </panel>
+                <panel name="itemGauge"/>
+                <button name="actualAmount" label="0.00"/>
+                <textBox name="slashLabel" text="/"/>
+                <button name="plannedAmount" label="+100.00"/>
+                <toggleButton name="activeToggle"/>
+                <button name="modify"/>
+                <button name="link"/>
+            </panel>
+        </panel>
+    </panel>
+    <panel name="addItemPanel">
+        <textBox text="Add:"/>
+        <button name="addExpenseItem" label="Expenses or income"/>
+        <button name="addTransferItem" label="Transfer between your accounts"/>
+    </panel>
+    <button name="displayActions" label="Display"/>
+</panel>

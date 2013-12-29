@@ -30,7 +30,7 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
   private int selectedMonth = -1;
   private int currentYear;
   private Directory directory;
-  private MonthRangeBound bound;
+  private MonthRangeBound bound = MonthRangeBound.NONE;
   private int yearLowerLimit;
   private int monthLowerLimit;
   private int yearUpperLimit;

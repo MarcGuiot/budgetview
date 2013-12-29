@@ -1,7 +1,7 @@
 package org.designup.picsou.model;
 
-import org.designup.picsou.gui.time.TimeService;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
+import org.designup.picsou.gui.time.TimeService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
@@ -17,6 +17,8 @@ import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
+
+import java.util.SortedSet;
 
 public class CurrentMonth {
 
@@ -78,7 +80,7 @@ public class CurrentMonth {
     Glob currentMonth = repository.find(CurrentMonth.KEY);
     return currentMonth != null && currentMonth.get(LAST_TRANSACTION_MONTH) == monthId;
   }
-  
+
   public static Integer getLastMonth(GlobRepository repository) {
     return repository.getAll(Month.TYPE).getSortedSet(Month.ID).last();
   }

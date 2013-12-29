@@ -1,10 +1,14 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.functests.checkers.components.HistoButtonChartChecker;
+import org.designup.picsou.functests.checkers.components.PopupButton;
+import org.designup.picsou.functests.checkers.components.PopupChecker;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
+import org.uispec4j.Table;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.interception.PopupMenuInterceptor;
 
 import javax.swing.*;
 
@@ -82,5 +86,18 @@ public class ProjectChartChecker extends ViewChecker {
       homePanel = mainWindow.getPanel("projectChartPanel");
     }
     return homePanel;
+  }
+
+  public ProjectDuplicationDialogChecker duplicate(String project) {
+    PopupChecker popup = openPopup(project);
+    return ProjectDuplicationDialogChecker.open(popup.triggerClick("Duplicate..."));
+  }
+
+  private PopupChecker openPopup(final String project) {
+    return new PopupChecker() {
+      protected org.uispec4j.MenuItem openMenu() {
+        return PopupMenuInterceptor.run(getChart().triggerRightClick(project));
+      }
+    };
   }
 }

@@ -10,6 +10,7 @@ import org.designup.picsou.gui.description.AmountStringifier;
 import org.designup.picsou.gui.model.ProjectStat;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.projects.actions.DeleteProjectAction;
+import org.designup.picsou.gui.projects.actions.DuplicateProjectAction;
 import org.designup.picsou.gui.projects.actions.SortProjectItemsAction;
 import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
 import org.designup.picsou.gui.projects.components.ProjectNameEditor;
@@ -120,6 +121,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
       public JPopupMenu createPopup() {
         JPopupMenu menu = new JPopupMenu();
         menu.add(modifyAction);
+        menu.add(new DuplicateProjectAction(repository, directory));
         menu.add(new DeleteProjectAction(repository, directory));
         return menu;
       }

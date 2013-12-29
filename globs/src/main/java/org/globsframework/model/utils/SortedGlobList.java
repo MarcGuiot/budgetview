@@ -47,6 +47,10 @@ public class SortedGlobList implements Iterable<Glob> {
     return list.iterator();
   }
 
+  public boolean contains(Glob glob) {
+    return list.contains(glob);
+  }
+
   public Glob get(int index) {
     return list.get(index);
   }
@@ -93,7 +97,9 @@ public class SortedGlobList implements Iterable<Glob> {
   }
 
   public void updateSorting() {
-    Collections.sort(list, comparator);
+    if (!list.isEmpty()) {
+      Collections.sort(list, comparator);
+    }
   }
 
   public String toString() {

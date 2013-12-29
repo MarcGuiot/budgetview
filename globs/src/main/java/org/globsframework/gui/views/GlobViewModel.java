@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.exceptions.ItemAlreadyExists;
 
 import java.util.Comparator;
 import java.util.HashSet;
@@ -196,6 +197,9 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
     public void visitCreation(Key key, FieldValues values) throws Exception {
       Glob glob = repository.get(key);
       if (matcher.matches(glob, repository)) {
+//        if (globs.contains(glob)) {
+//          throw new ItemAlreadyExists("Glob " + glob + " already present in " + globs);
+//        }
         int index = globs.add(glob);
         listener.globInserted(index);
       }

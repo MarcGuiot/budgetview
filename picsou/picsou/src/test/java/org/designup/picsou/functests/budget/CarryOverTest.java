@@ -392,9 +392,17 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .setFutureMonthsCount(2)
       .validate();
 
+    OfxBuilder.init(this)
+      .addBankAccount("0001234", 200.00, "2008/08/20")
+      .addTransaction("2008/08/01", -500.00, "WorldCo")
+      .addTransaction("2008/08/03", -100.00, "Auchan")
+      .load();
+    operations.hideSignposts();
+
     timeline.selectMonth("2008/08");
 
-    projects.create();
+    views.selectHome();
+    projectChart.create();
     currentProject
       .setName("My Project")
       .addExpenseItem(0, "Item 0", 200808, -10.00)

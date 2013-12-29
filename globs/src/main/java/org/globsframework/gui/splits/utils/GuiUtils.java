@@ -215,8 +215,8 @@ public class GuiUtils {
     });
   }
 
-  public static JFrame getEnclosingWindow(Component component) {
-    return (JFrame)getEnclosingComponent(component, new ComponentMatcher() {
+  public static Window getEnclosingWindow(Component component) {
+    return (Window)getEnclosingComponent(component, new ComponentMatcher() {
       public boolean matches(Component component) {
         return Window.class.isInstance(component);
       }
