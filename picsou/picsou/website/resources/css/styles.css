@@ -1,17 +1,21 @@
 body {
   padding-top: 60px;
   padding-bottom: 25px;
+  padding-left:0;
+  padding-right:0;
   background-color: white;
   font-family: Arial, sans-serif;
   color: #333;
   background: #FFF;
   text-align: justify;
   margin: 7px;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 button.btn {
   color: #fff;
-  background-color: #EA792B;
+  background-color: #F37A32;
   border-color: #eea236;
   font-size: 18px;
 }
@@ -69,48 +73,55 @@ div.container h3 {
   padding-top: 0;
 }
 
-#home .jumbotron {
-  background: url("/files/images/front/home_bg.jpg");
+#home #banner {
+  background: url("/files/images/front/home_banner.jpg");
+  -webkit-background-size: cover; /* For WebKit*/
+  -moz-background-size: cover;    /* Mozilla*/
+  -o-background-size: cover;      /* Opera*/
+  background-size: cover;         /* Generic*/
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 10xp;
   padding-right: 10xp;
   margin-top: 10px;
-  margin-left: -50px;
-  margin-right: -50px;
   margin-bottom: 10px;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 #home #text {
-  margin-top: 60px;
+  margin-top: 170px;
   margin-left: -20px;
   margin-right: -10px;
   text-align: center;
   padding: 0;
 }
 
-#home h2 {
-  text-align: center;
-}
-
-#home h3.legend {
-  margin-top: 5px;
-  color: #FF9230;
-}
-
 #home #text h1 {
   font-family: helvetica, arial, sans-serif;
   color: #FFF;
-  font-size: 24pt;
+  font-size: 30pt;
   letter-spacing: -1px;
   line-height: 1.2em;
-  margin: 0px 0px 20px;
+  margin: 0px 0px 5px;
   padding: 0px;
   text-align: center;
 }
 
-#home #text .details {
+#home #text h2 {
+  margin-top: 5px;
+  color: #FFF;
+  font-size: 12pt;
+  font-weight: normal;
+  line-height: 1.2em;
+}
+
+#home #text .download {
   margin-top: 15px;
+}
+
+#home #text .details {
+  margin-top: 8px;
 }
 
 #home #text .details a {
@@ -122,6 +133,15 @@ div.container h3 {
   margin: 0;
   color: #DDD;
   font-size: 11pt;
+}
+
+#home h2 {
+  text-align: center;
+}
+
+#home h3.legend {
+  margin-top: 5px;
+  color: #FF9230;
 }
 
 #home .large-screenshot {
@@ -223,22 +243,6 @@ div.container h3 {
   width: 80%;
   margin-top: 20px;
 }
-
-#home .version-title {
-  padding-top: 15px;
-}
-
-#home .version-title h2 {
-  font-size: 24px;
-  font-weight: bold;
-  text-align: center;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  margin:0;
-  background-color: #FF9230;
-  color: #FFF;
-}
-
 
 /*=== SHOW/HIDE ===*/
 
@@ -703,19 +707,36 @@ table.field-value td.value {
   margin-bottom: 0;
 }
 
-#home .feature-list {
+/*=== FEATURE LIST===*/
+
+.version-title {
+  padding-top: 15px;
+}
+
+.version-title h2 {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin:0;
+  background-color: #FF9230;
+  color: #FFF;
+}
+
+.feature-list {
   width: 90%;
   margin-left: auto;
   margin-right: auto;
 }
 
-#home .feature-list h3 {
+.feature-list h3 {
   font-size: 16pt;
   font-weight: bold;
   color: #333;
 }
 
-#home .feature-list table li {
+.feature-list table li {
   margin-bottom: 0.2em;
 }
 

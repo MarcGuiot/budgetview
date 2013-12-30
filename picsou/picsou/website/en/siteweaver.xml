@@ -2,10 +2,11 @@
 <site url="http://www.mybudgetview.com" pagesDir="content">
 
   <page file="index.html" title="BudgetView" shortTitle="Home" template="templates/masterTemplate.html">
-    <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
+    <key name="innerTemplate" value="templates/homePageTemplate.html"/>
     <key name="title.hide" value="true"/>
 
     <page file="download.html" title="Download BudgetView!" shortTitle="Download">
+      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
       <page file="download/windows.html" title="Install BudgetView on your Windows PC."/>
       <page file="download/macosx.html" title="Install BudgetView on your Mac."/>
       <page file="download/linux.html" title="Install BudgetView on your Linux PC."/>
@@ -13,6 +14,7 @@
 
     <page file="buy.html" title="Purchase BudgetView !" shortTitle="Buy">
       <key name="title.hide" value="true"/>
+      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
       <page file="buy/ok.html" title="Purchase completed">
         <key name="title.hide" value="true"/>
       </page>
@@ -93,6 +95,7 @@
     </page>
 
     <page file="mobile.html" title="Mobile">
+      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
       <key name="navbar.hide" value="true"/>
       <page file="mobile/account_ok.html" title="Your mobile account is ready"/>
       <page file="mobile/account_already_present.html" title="This account already exists"/>
@@ -101,6 +104,7 @@
     </page>
 
     <page file="about.html" title="About BudgetView" shortTitle="About">
+      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
       <page file="about/press.html" title="Press &amp; Blogs"/>
       <page file="about/legal.html" title="Legal mentions"/>
     </page>

@@ -2,10 +2,12 @@
 <site url="http://www.mybudgetview.fr" pagesDir="content">
 
   <page file="index.html" title="BudgetView" shortTitle="Accueil" template="templates/masterTemplate.html">
-    <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
+    <key name="innerTemplate" value="templates/homePageTemplate.html"/>
     <key name="title.hide" value="true"/>
 
     <page file="telechargement.html" title="Téléchargez BudgetView !" shortTitle="Téléchargement">
+      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
+
       <page file="telechargement/windows.html" title="Installez BudgetView sur votre PC Windows !"/>
       <page file="telechargement/macosx.html" title="Installez BudgetView sur votre Mac !"/>
       <page file="telechargement/linux.html" title="Installez BudgetView sur votre PC Linux !"/>
@@ -13,6 +15,8 @@
 
     <page file="achat.html" title="Achetez BudgetView !" shortTitle="Achat">
       <key name="title.hide" value="true"/>
+      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
+
       <page file="achat/ok.html" title="Achat terminé">
         <key name="title.hide" value="true"/>
       </page>
@@ -110,12 +114,15 @@
 
     <page file="mobile.html" title="Mobile">
       <key name="navbar.hide" value="true"/>
+      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
+
       <page file="mobile/account_ok.html" title="Votre compte mobile est activé"/>
       <page file="mobile/account_already_present.html" title="Ce compte mobile existe déjà"/>
       <page file="mobile/internal_error.html" title="Ce compte mobile existe déjà"/>
     </page>
 
     <page file="apropos.html" title="A propos de BudgetView" shortTitle="A propos">
+      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
       <page file="apropos/presse.html" title="Presse et Blogs"/>
       <page file="apropos/mentions_legales.html" title="Mentions légales"/>
     </page>
