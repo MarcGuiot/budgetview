@@ -2,7 +2,6 @@ package org.designup.picsou.functests.categorization;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.time.TimeService;
 
 public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
@@ -432,8 +431,8 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     transactionDetails.split("-50", "split 1");
     transactionDetails.split("-40", "split 2");
 
-    categorization.reconcile("[R] SPLIT 1", "ONE SPLITTED OP split 1");
-    categorization.reconcile("[R] SPLIT 2", "ONE SPLITTED OP split 2");
+    categorization.reconcile("[R] SPLIT 1", "ONE SPLITTED OP - split 1");
+    categorization.reconcile("[R] SPLIT 2", "ONE SPLITTED OP - split 2");
     transactions.initAmountContent()
       .add("10/05/2012", "ONE SPLITTED OP", -10.00, "To categorize", 900.00, 900.00, "Main")
       .add("10/05/2012", "ONE SPLITTED OP", -40.00, "To categorize", 910.00, 910.00, "Main")
@@ -564,7 +563,6 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .add("12/05/2012", "OP 2", -40.00, "To categorize", 930.00, 930.00, "Main")
       .add("10/05/2012", "REAL OP 1", -10.00, "To categorize", 990.00, 990.00, "Main")
       .check();
-
 
     views.selectCategorization();
     transactionCreation

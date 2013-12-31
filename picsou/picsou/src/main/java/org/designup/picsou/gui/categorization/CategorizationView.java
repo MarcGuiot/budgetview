@@ -28,6 +28,7 @@ import org.designup.picsou.gui.signpost.guides.*;
 import org.designup.picsou.gui.signpost.sections.SkipCategorizationPanel;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.columns.ReconciliationCustomizer;
+import org.designup.picsou.gui.transactions.columns.SplitTransactionCustomizer;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
@@ -304,8 +305,12 @@ public class CategorizationView extends View implements TableView, Filterable, C
                  fontSize(9))
       .addColumn(Lang.get("series"), new CompactSeriesStringifier(directory),
                  chain(extraSeriesLabelCustomizer, tooltip(SeriesDescriptionStringifier.transactionSeries(), repository)))
-      .addColumn(Lang.get("label"), new CategorizationTransationStringifier(descriptionService.getStringifier(Transaction.LABEL)),
-                 chain(BOLD, new ReconciliationCustomizer(directory), autoTooltip()))
+      .addColumn(Lang.get("label"),
+                 new CategorizationTransationStringifier(descriptionService.getStringifier(Transaction.LABEL)),
+                 chain(BOLD,
+                       new SplitTransactionCustomizer(directory),
+                       new ReconciliationCustomizer(directory),
+                       autoTooltip()))
       .addColumn(Lang.get("amount"), descriptionService.getStringifier(Transaction.AMOUNT),
                  LabelCustomizers.chain(ALIGN_RIGHT, new TransactionAmountCustomizer(colors)));
   }
@@ -501,12 +506,12 @@ public class CategorizationView extends View implements TableView, Filterable, C
       this.stringifier = transactionStringifier;
     }
 
-    public String toString(Glob glob, GlobRepository repository) {
-      if (Strings.isNotEmpty(glob.get(Transaction.NOTE))) {
-        return stringifier.toString(glob, repository) + " " + glob.get(Transaction.NOTE);
+    public String toString(Glob transaction, GlobRepository repository) {
+      if (Transaction.isSplitTransaction(transaction) && Strings.isNotEmpty(transaction.get(Transaction.NOTE))) {
+        return stringifier.toString(transaction, repository) + " - " + transaction.get(Transaction.NOTE);
       }
       else {
-        return stringifier.toString(glob, repository);
+        return stringifier.toString(transaction, repository);
       }
     }
 

@@ -150,6 +150,10 @@ public class Transaction {
     return transaction.get(BANK_MONTH) * 100 + transaction.get(BANK_DAY);
   }
 
+  public static boolean isSplitTransaction(Glob transaction) {
+    return isSplitPart(transaction) || isSplitSource(transaction);
+  }
+
   public static boolean isSplitPart(Glob transaction) {
     return transaction.get(SPLIT_SOURCE) != null;
   }

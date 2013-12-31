@@ -275,6 +275,7 @@ public class TransactionView extends View implements Filterable {
                  descriptionService.getStringifier(Transaction.LABEL),
                  LabelCustomizers.chain(LabelCustomizers.BOLD,
                                         new PlannedLabelCustomizer(rendererColors),
+                                        new SplitTransactionCustomizer(directory),
                                         new ReconciliationCustomizer(directory),
                                         LabelCustomizers.autoTooltip()))
       .addColumn(Lang.get("amount"),
