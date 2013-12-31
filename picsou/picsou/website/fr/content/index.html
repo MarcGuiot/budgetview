@@ -1,5 +1,14 @@
 <div id="home">
 
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/fr_FR/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
 <div id="banner">
     <div class="container">
         <div class="row">
@@ -33,6 +42,8 @@
     <div id="testimonials-block" class="row">
         <div id="testimonials">
 
+            <div class="fb-like" style="float: right;margin-left: 10px;" data-href="https://www.facebook.com/pages/BudgetView/111823858873970" data-layout="box_count" data-action="like" data-show-faces="false" data-share="false"></div>
+
             <p>"Apres une journée de recherche, je suis tombé sur LE logiciel que je cherchais
                 avec la trésorerie prévisionnelle au fil des mois, pouvoir anticiper les baisses
                 de revenus ou prévoir les vacances."</p>
@@ -40,6 +51,7 @@
             <a href="#" id="more-testimonials-show" class="showLink"
                onclick="showHide('more-testimonials');return false;">Voir
                 tous les témoignages</a>
+
 
             <div id="more-testimonials" class="more light-block">
 
@@ -86,8 +98,10 @@
 
 <div class="row">
     <h2 class="zoom-title" style="margin-top:20px;">Votre budget en un coup d'oeil !</h2>
+    <div class="large-screenshot">
     <img id="dashboard" src="/files/images_fr/front/budget_familial.png"
          alt="Tableau de bord du budget familial" height="361" width="992">
+    </div>
 </div>
 <div class="row">
     <div class="col-md-4">
