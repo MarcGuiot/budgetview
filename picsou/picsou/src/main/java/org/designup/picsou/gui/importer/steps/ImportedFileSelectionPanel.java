@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.importer.steps;
 
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.importer.ImportController;
@@ -81,6 +82,8 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
       }
     });
     builder.add("hyperlinkHandler", hyperlinkHandler);
+
+    builder.add("manualEntry", new ShowManualEntryAction());
 
     panel = builder.load();
   }
@@ -195,5 +198,18 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
 
   private void displayErrorMessage(String key, String... args) {
     this.showFileErrorMessage("<html><font color=red>" + Lang.get(key, args) + "</font></html>");
+  }
+
+  private class ShowManualEntryAction extends AbstractAction {
+
+    private ShowManualEntryAction() {
+      super(Lang.get("import.fileSelection.manualEntry.action"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      controller.complete();
+      controller.closeDialog();
+      localDirectory.get(NavigationService.class).highlightTransactionCreation();
+    }
   }
 }

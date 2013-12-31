@@ -15,9 +15,9 @@
 
       <panel ref="bankDownload" weightY="500" marginTop="10"/>
 
-      <column styleClass="separator" weightY="10" marginTop="15">
+      <column styleClass="separator" weightY="10" marginTop="10">
         <label icon="import_files.png" text="$import.fileSelection.file.title" styleClass="sectionTitle"
-               marginTop="20"/>
+               marginTop="15"/>
 
         <htmlEditorPane text="$import.fileSelection.file.message" styleClass="multiLineLabel"/>
 
@@ -33,7 +33,12 @@
         </panel>
       </column>
 
-      <filler fill="vertical"/>
+      <row styleClass="separator" border="matte(1,0,1,0,dialog.separator)" weightY="10" marginTop="15">
+        <label icon="import_manual.png" text="$import.fileSelection.manualEntry.title" styleClass="sectionTitle"
+               marginTop="10"/>
+        <filler fill="horizontal"/>
+        <button action="manualEntry" marginLeft="10"/>
+      </row>
 
       <button name="close" action="close" margin="10" marginRight="0" fill="none" anchor="right"/>
 
