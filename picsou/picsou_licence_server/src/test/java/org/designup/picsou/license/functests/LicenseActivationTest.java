@@ -10,9 +10,11 @@ import org.designup.picsou.license.ConnectedTestCase;
 import org.designup.picsou.license.DuplicateLine;
 import org.designup.picsou.license.checkers.DbChecker;
 import org.designup.picsou.license.checkers.Email;
+import org.designup.picsou.license.mail.Mailbox;
 import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.model.RepoInfo;
 import org.designup.picsou.license.servlet.RegisterServlet;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SqlConnection;
@@ -117,7 +119,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
   }
 
   public void testResendsActivationKeyIfCountDecreases() throws Exception {
-    String repoId = loggingAndRegisterFirstPicsou();
+    String repoId = loginAndRegisterFirstPicsou();
 
     exit();
     restartAppAndLogAndDispose();
@@ -223,15 +225,16 @@ public class LicenseActivationTest extends ConnectedTestCase {
     loginChecker.logNewUser("user", "passw@rd");
     LicenseActivationChecker activation = LicenseActivationChecker.open(window);
     activation
-      .enterLicenseAndValidate("titi@foo.org", "az")
+      .enterLicenseAndActivate("titi@foo.org", "az")
       .checkErrorMessage("Unknown email address")
       .checkActivationCodeIsEmptyAndMailIs("titi@foo.org");
     checkMessage("Unknown email address");
 
     db.registerMail("toto@zer", "1234");
     activation
-      .enterLicense("toto@zer", "1234")
-      .validate();
+      .enterLicenseAndActivate("toto@zer", "1234")
+      .checkActivationCompleted()
+      .complete();
     checkValidLicense(false);
   }
 
@@ -240,7 +243,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     LoginChecker login = new LoginChecker(window);
     login.logNewUser("user", "passw@rd");
     LicenseActivationChecker.open(window)
-      .enterLicenseAndValidate("titi@foo.org", "az")
+      .enterLicenseAndActivate("titi@foo.org", "az")
       .checkErrorMessage("Activation failed")
       .close();
     checkMessage("46 days left for trying BudgetView");
@@ -346,7 +349,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
   }
 
   public void testMailSentLater() throws Exception {
-    loggingAndRegisterFirstPicsou();
+    loginAndRegisterFirstPicsou();
     exit();
 
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
@@ -371,7 +374,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
   }
 
   public void testLicenseActivatesKey() throws Exception {
-    loggingAndRegisterFirstPicsou();
+    loginAndRegisterFirstPicsou();
     exit();
 
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
@@ -438,7 +441,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     licenseInfo.checkMessage("Your free trial period is over.");
   }
 
-  public void testActivationFailDuringTrial() throws Exception {
+  public void testActivationFailedDuringTrial() throws Exception {
     db.registerMail(MAIL, "4321");
     LoginChecker loginChecker = new LoginChecker(window);
     loginChecker.logNewUser("user", "passw@rd");
@@ -581,7 +584,6 @@ public class LicenseActivationTest extends ConnectedTestCase {
     startApplication(false);
     login.logExistingUser("user", "passw@rd", false);
     checkValidLicense(false);
-
   }
 
   private void checkLicenseExpired() {
@@ -630,7 +632,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     exit();
   }
 
-  private String loggingAndRegisterFirstPicsou() throws InterruptedException {
+  private String loginAndRegisterFirstPicsou() throws InterruptedException {
     String repoId = db.checkRepoIdIsUpdated(1L, null);
 
     login.logNewUser("user", "passw@rd");
@@ -684,6 +686,43 @@ public class LicenseActivationTest extends ConnectedTestCase {
     LicenseActivationChecker.enterLicense(window, email, code);
     OperationChecker operation = new OperationChecker(window);
     operation.openPreferences().setFutureMonthsCount(24).validate();
+  }
+
+  public void testSendConfirmationFeedback() throws Exception {
+    final String email = "alfred@free.fr";
+    db.registerMail(email, "1234");
+
+    LoginChecker loginChecker = new LoginChecker(window);
+    loginChecker.logNewUser("user", "passw@rd");
+
+    LicenseActivationChecker.open(window)
+      .enterLicenseAndActivate(email, "1234")
+      .checkActivationCompleted()
+      .enterAnswer(0, "My first answer")
+      .enterAnswer(2, "My third answer")
+      .complete();
+
+    mailServer.checkReceivedMail(Mailbox.SUPPORT.getEmail())
+      .checkContains(Lang.get("license.activation.feedback.question.0"))
+      .checkContains("My first answer")
+      .checkDoesNotContain(Lang.get("license.activation.feedback.question.1"))
+      .checkContains(Lang.get("license.activation.feedback.question.2"))
+      .checkContains("My third answer");
+  }
+
+  public void testConfirmationWithoutFeedback() throws Exception {
+    final String email = "alfred@free.fr";
+    db.registerMail(email, "1234");
+
+    LoginChecker loginChecker = new LoginChecker(window);
+    loginChecker.logNewUser("user", "passw@rd");
+
+    LicenseActivationChecker.open(window)
+      .enterLicenseAndActivate(email, "1234")
+      .checkActivationCompleted()
+      .complete();
+
+    mailServer.checkEmpty();
   }
 
   private void exit() {

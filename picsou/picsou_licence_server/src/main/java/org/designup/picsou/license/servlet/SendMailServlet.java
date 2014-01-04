@@ -3,6 +3,7 @@ package org.designup.picsou.license.servlet;
 import com.budgetview.shared.utils.ComCst;
 import org.apache.log4j.Logger;
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.license.mail.Mailbox;
 import org.designup.picsou.license.mail.Mailer;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
@@ -55,10 +56,10 @@ public class SendMailServlet extends HttpServlet {
       content = content.trim();
       mailFrom = mailFrom.trim();
       if (mailTo.equals(ConfigService.SUPPORT_EMAIL)) {
-        mailer.sendToUs(Mailer.Mailbox.SUPPORT, mailFrom, title, content);
+        mailer.sendToUs(Mailbox.SUPPORT, mailFrom, title, content);
       }
       else if (mailTo.equals(ConfigService.ADMIN_EMAIL)) {
-        mailer.sendToUs(Mailer.Mailbox.ADMIN, mailFrom, title, content);
+        mailer.sendToUs(Mailbox.ADMIN, mailFrom, title, content);
       }
       resp.setStatus(HttpServletResponse.SC_OK);
     }

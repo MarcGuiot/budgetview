@@ -36,7 +36,8 @@ public class LicenseActivationChecker extends GuiChecker {
         codeField.clear();
         codeField.appendText(code);
         window.getButton("Activate").click();
-        return window.getButton(Lang.get("close")).triggerClick();
+        checkCompletionShown(window);
+        return window.getButton(Lang.get("ok")).triggerClick();
       }
     });
   }
@@ -74,7 +75,7 @@ public class LicenseActivationChecker extends GuiChecker {
     return this;
   }
 
-  public LicenseActivationChecker enterLicenseAndValidate(final String mail, final String code) {
+  public LicenseActivationChecker enterLicenseAndActivate(final String mail, final String code) {
     enterLicense(mail, code);
     dialog.getButton("Activate").click();
     return this;
@@ -118,10 +119,15 @@ public class LicenseActivationChecker extends GuiChecker {
     dialog = null;
   }
 
+  public void complete() {
+    dialog.getButton(Lang.get("ok")).click();
+    assertFalse(dialog.isVisible());
+    dialog = null;
+  }
+
   public void validate() {
     dialog.getButton("Activate").click();
     assertThat(dialog.isVisible());
-//    checkComponentVisible(dialog, JEditorPane.class, "completionMessage", true);
     close();
   }
 
@@ -144,6 +150,20 @@ public class LicenseActivationChecker extends GuiChecker {
   public LicenseActivationChecker askForCode() throws Exception {
     Trigger trigger = dialog.getTextBox("messageSendNewCode").triggerClickOnHyperlink("Send a new code");
     trigger.run();
+    return this;
+  }
+
+  public LicenseActivationChecker checkActivationCompleted() {
+    checkCompletionShown(dialog);
+    return this;
+  }
+
+  private static void checkCompletionShown(Window window) {
+    UISpecAssert.waitUntil(window.containsUIComponent(TextBox.class, "answer0"), 10000);
+  }
+
+  public LicenseActivationChecker enterAnswer(int index, String comment) {
+    dialog.getInputTextBox("answer" + index).setText(comment);
     return this;
   }
 }

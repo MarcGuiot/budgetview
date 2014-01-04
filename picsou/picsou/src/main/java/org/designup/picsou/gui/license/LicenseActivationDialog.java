@@ -10,7 +10,6 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobTextEditor;
-import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.LocalGlobRepository;
@@ -40,7 +39,8 @@ public class LicenseActivationDialog {
   private Integer activationState;
   private GlobsPanelBuilder builder;
   private GlobTextEditor mailEditor;
-  private CardHandler cards;
+  private final LicenseConfirmationPanel confirmationPanel;
+  private final CloseAction closeAction;
 
   public LicenseActivationDialog(Window parent, GlobRepository repository, final Directory directory) {
     this.repository = repository;
@@ -52,13 +52,12 @@ public class LicenseActivationDialog {
         .copy(User.TYPE)
         .get();
 
+    confirmationPanel = new LicenseConfirmationPanel(localRepository, localDirectory);
     dialog = PicsouDialog.create(parent, directory);
 
     Glob user = localRepository.get(User.KEY);
     builder = new GlobsPanelBuilder(getClass(), "/layout/general/licenseActivationDialog.splits",
                                     localRepository, this.localDirectory);
-
-    cards = builder.addCardHandler("cards");
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog) {
       protected void processCustomLink(String href) {
@@ -96,9 +95,9 @@ public class LicenseActivationDialog {
     builder.add("connectionMessage", connectionMessage);
     builder.add("connectionState", progressPanel);
 
-    dialog.addPanelWithButton(builder.<JPanel>load(), new CloseAction());
-
-    dialog.setCloseAction(new CloseAction());
+    closeAction = new CloseAction();
+    dialog.addPanelWithButton(builder.<JPanel>load(), closeAction);
+    dialog.setCloseAction(closeAction);
 
     Boolean isConnected = user.isTrue(User.CONNECTED);
     connectionMessage.setVisible(!isConnected);
@@ -136,7 +135,7 @@ public class LicenseActivationDialog {
           activationState = user.get(User.ACTIVATION_STATE);
           if (activationState != null) {
             if (activationState == User.ACTIVATION_OK) {
-              cards.show("confirmation");
+              showConfirmation();
             }
             else if (activationState == User.ACTIVATION_FAILED_MAIL_SENT) {
               updateDialogState("license.activation.failed.mailSent", localRepository.get(User.KEY).get(User.EMAIL));
@@ -167,7 +166,6 @@ public class LicenseActivationDialog {
   }
 
   private boolean updateConnectionState(GlobRepository repository) {
-
     boolean isConnected = repository.get(User.KEY).isTrue(User.CONNECTED);
     if (!isConnected) {
       connectionMessage.setText(Lang.get("license.connect"));
@@ -190,7 +188,7 @@ public class LicenseActivationDialog {
     askForNewCodeMessage.setVisible(true);
   }
 
-  public void show(boolean expiration) {
+  public void show() {
     localRepository.rollback();
     localRepository.update(User.KEY, User.ACTIVATION_CODE, null);
     localRepository.update(User.KEY, User.SIGNATURE, null);
@@ -203,7 +201,7 @@ public class LicenseActivationDialog {
   }
 
   public void showExpiration() {
-    show(true);
+    show();
   }
 
   private class ActivateAction extends AbstractAction {
@@ -219,7 +217,7 @@ public class LicenseActivationDialog {
           localRepository.update(User.KEY, User.IS_REGISTERED_USER, true);
           localRepository.commitChanges(false);
           localDirectory.get(UndoRedoService.class).cleanUndo();
-          cards.show("Confirmation");
+          showConfirmation();
           return;
         }
         Utils.endRemove();
@@ -240,17 +238,25 @@ public class LicenseActivationDialog {
     }
   }
 
+  private void showConfirmation() {
+    confirmationPanel.install(dialog, localRepository.get(User.KEY).get(User.EMAIL), closeAction);
+  }
+
   private class CloseAction extends AbstractAction {
     public CloseAction() {
       super(Lang.get("close"));
     }
 
     public void actionPerformed(ActionEvent e) {
+      if (dialog == null) {
+        return;
+      }
       dialog.setVisible(false);
       repository.removeChangeListener(changeSetListener);
       changeSetListener = null;
       localRepository.dispose();
       localRepository = null;
+      dialog.dispose();
       dialog = null;
     }
   }

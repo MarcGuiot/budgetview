@@ -29,6 +29,15 @@ public class Email {
     return this;
   }
 
+  public Email checkDoesNotContain(String... textElements) {
+    for (String textElement : textElements) {
+      if (content.contains(textElement)) {
+        Assert.fail("Text '" + textElement + "' unexpectedly found. Actual content: \n" + content);
+      }
+    }
+    return this;
+  }
+
   public String getEnd(int charCount) {
     return content.substring(content.length() - charCount, content.length()).trim();
   }

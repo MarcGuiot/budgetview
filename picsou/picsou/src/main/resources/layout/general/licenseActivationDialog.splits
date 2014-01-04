@@ -6,51 +6,31 @@
     <column styleClass="innerDialog">
       <label name="title" text="$license.title" styleClass="title"/>
       <column styleClass="innerDialogBlock" margin="10" marginTop="5" weightY="100">
-        <column margin="10">
-
-          <cards ref="cards">
-            <card name="activation">
-              <row>
-                <label icon="activation_key.png" anchor="top" marginRight="10"/>
-                <column>
-                  <filler fill="vertical" weightY="50"/>
-                  <htmlEditorPane text="$license.acquisition" hyperlinkListener="hyperlinkHandler"
-                                  weightY="0.1" marginBottom="5"/>
-                  <grid marginLeft="10" marginRight="10">
-                    <label gridPos="(0,0)" text="$license.mail" styleClass="formLabel"/>
-                    <textField gridPos="(1,0)" ref="ref-mail"/>
-                    <label gridPos="(0,1)" text="$license.code" styleClass="formLabel"/>
-                    <textField gridPos="(1,1)" ref="ref-code"/>
-                    <button action="activateCode" gridPos="(2,0,1,2)" anchor="center"/>
-                  </grid>
-                  <htmlEditorPane ref="messageSendNewCode" hyperlinkListener="hyperlinkHandler" marginTop="5"
-                                  marginBottom="5"/>
-                  <row preferredSize="(100,30)" weightY="0.1" border="empty(5,0,10,0)">
-                    <htmlEditorPane ref="connectionMessage" styleClass="errorMessage" weightX="100"/>
-                    <filler fill="horizontal"/>
-                    <component ref="connectionState"
-                               preferredSize="(30,30)" minimumSize="(30,30)" weightX="0.1"/>
-                    <filler fill="horizontal"/>
-                  </row>
-                  <filler fill="vertical" weightY="100"/>
-                </column>
-              </row>
-            </card>
-
-            <card name="confirmation">
-              <column>
-                <filler fill="vertical" weightY="50"/>
-                <row>
-                  <label icon="status_completed.png" marginRight="10" anchor="top"/>
-                  <htmlEditorPane text="$license.activation.ok.content" name="completionMessage"/>
-                </row>
-                <filler fill="vertical" weightY="100"/>
-              </column>
-            </card>
-          </cards>
-
-
-        </column>
+        <row margin="10">
+          <label icon="activation_key.png" anchor="top" marginRight="10"/>
+          <column>
+            <filler fill="vertical" weightY="50"/>
+            <htmlEditorPane text="$license.acquisition" hyperlinkListener="hyperlinkHandler"
+                            weightY="0.1" marginBottom="5"/>
+            <grid marginLeft="10" marginRight="10">
+              <label gridPos="(0,0)" text="$license.mail" styleClass="formLabel"/>
+              <textField gridPos="(1,0)" ref="ref-mail"/>
+              <label gridPos="(0,1)" text="$license.code" styleClass="formLabel"/>
+              <textField gridPos="(1,1)" ref="ref-code"/>
+              <button action="activateCode" gridPos="(2,0,1,2)" anchor="center"/>
+            </grid>
+            <htmlEditorPane ref="messageSendNewCode" hyperlinkListener="hyperlinkHandler" marginTop="5"
+                            marginBottom="5"/>
+            <row preferredSize="(100,30)" weightY="0.1" border="empty(5,0,10,0)">
+              <htmlEditorPane ref="connectionMessage" styleClass="errorMessage" weightX="100"/>
+              <filler fill="horizontal"/>
+              <component ref="connectionState"
+                         preferredSize="(30,30)" minimumSize="(30,30)" weightX="0.1"/>
+              <filler fill="horizontal"/>
+            </row>
+            <filler fill="vertical" weightY="100"/>
+          </column>
+        </row>
       </column>
     </column>
   </panel>

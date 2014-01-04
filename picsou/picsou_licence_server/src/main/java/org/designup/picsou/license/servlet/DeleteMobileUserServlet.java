@@ -4,6 +4,7 @@ import com.budgetview.shared.utils.ComCst;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.license.mail.Mailbox;
 import org.designup.picsou.license.mail.Mailer;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
@@ -47,7 +48,7 @@ public class DeleteMobileUserServlet extends AbstractHttpServlet {
       else {
         if (!Files.deleteWithSubtree(dir)){
           logger.info("Directory found " + dir.getAbsolutePath() + " : " + mail + " but unable to delete it");
-          mailer.sendToUs(Mailer.Mailbox.ADMIN, mail, "can not delete directory",
+          mailer.sendToUs(Mailbox.ADMIN, mail, "can not delete directory",
                           "delete the directory '" + dir.getAbsolutePath() + "'");
         } else {
           logger.info("Directory found " + dir.getAbsolutePath() + " : " + mail + " and deleted.");

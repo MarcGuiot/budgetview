@@ -45,7 +45,7 @@ public class LicenseInfoView extends View {
         }
         else if (href.equals("activateKey")) {
           LicenseActivationDialog dialog = new LicenseActivationDialog(parent, repository, directory);
-          dialog.show(false);
+          dialog.show();
         }
         else if (href.equals("logout")) {
           directory.get(LogoutService.class).logout();

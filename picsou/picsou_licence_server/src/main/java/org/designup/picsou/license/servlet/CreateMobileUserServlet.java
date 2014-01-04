@@ -5,6 +5,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.designup.picsou.client.http.MD5PasswordBasedEncryptor;
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.license.mail.Mailbox;
 import org.designup.picsou.license.mail.Mailer;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
@@ -67,7 +68,7 @@ public class CreateMobileUserServlet extends HttpServlet {
         else {
           String content = "Can not create dir " + dir.getAbsolutePath();
           logger.error(content + " : " + mail);
-          mailer.sendToUs(Mailer.Mailbox.ADMIN, mail, "Error fs", content);
+          mailer.sendToUs(Mailbox.ADMIN, mail, "Error fs", content);
           httpServletResponse.sendRedirect(baseUrl + "/mobile/internal-error");
         }
       }

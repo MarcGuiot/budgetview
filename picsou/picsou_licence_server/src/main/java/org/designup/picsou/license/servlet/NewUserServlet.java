@@ -10,6 +10,7 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.log4j.Logger;
 import org.designup.picsou.license.generator.LicenseGenerator;
+import org.designup.picsou.license.mail.Mailbox;
 import org.designup.picsou.license.mail.Mailer;
 import org.designup.picsou.license.model.License;
 import org.globsframework.model.Glob;
@@ -211,7 +212,7 @@ public class NewUserServlet extends HttpServlet {
       db.commit();
       logger.info("NewUser : ok  for " + email + " code is " + code + " in " + lang);
       mailer.sendNewLicense(email, code, lang);
-      mailer.sendToUs(Mailer.Mailbox.ADMIN, email, "New User", " Licence code : " + code + "\nLang: " + lang);
+      mailer.sendToUs(Mailbox.ADMIN, email, "New User", " Licence code : " + code + "\nLang: " + lang);
       resp.setStatus(HttpServletResponse.SC_OK);
     }
     else {
@@ -232,7 +233,7 @@ public class NewUserServlet extends HttpServlet {
         String message = "NewUser : Receive different TransactionId for the same mail txId='" + transactionId +
                          "' previousTxId='" + previousTrId + "' for '" + email + "' lang " + lang;
         logger.error(message);
-        mailer.sendToUs(Mailer.Mailbox.ADMIN, email, "different TransactionId", message + "'. We should contact them to ask them for an other mail.");
+        mailer.sendToUs(Mailbox.ADMIN, email, "different TransactionId", message + "'. We should contact them to ask them for an other mail.");
       }
       mailer.sendNewLicense(email, code, lang);
       resp.setStatus(HttpServletResponse.SC_OK);

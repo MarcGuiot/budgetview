@@ -10,6 +10,7 @@ import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
 
@@ -27,7 +28,7 @@ public class PicsouDialog extends JDialog {
 
   public static boolean FORCE_NONMODAL = false;
   private static final Insets BUTTON_INSETS = new Insets(0, 10, 10, 10);
-  private List<Disposable> disposables = new ArrayList<Disposable>();
+  private DisposableGroup disposables = new DisposableGroup();
   private ColorService colorService;
   private static final int HORIZONTAL_BUTTON_MARGIN = GuiUtils.isMacOSX() ? 20 : 0;
   private Action closeAction;
@@ -149,14 +150,14 @@ public class PicsouDialog extends JDialog {
       colorUpdater.dispose();
     }
     colorUpdater = null;
-    for (Disposable disposable : disposables) {
-      disposable.dispose();
-    }
-    disposables.clear();
+    disposables.dispose();
     super.dispose();
   }
 
   public void setContentPane(Container contentPane) {
+    if (colorUpdater != null) {
+      colorUpdater.dispose();
+    }
     colorUpdater = new BackgroundColorUpdater("dialog.bg.bottom", contentPane);
     colorUpdater.install(colorService);
     super.setContentPane(contentPane);
@@ -223,7 +224,7 @@ public class PicsouDialog extends JDialog {
     init(directory);
   }
 
-  private void init(Directory directory) {    
+  private void init(Directory directory) {
     this.directory = directory;
     setTitle(Lang.get("application"));
     colorService = directory.get(ColorService.class);
@@ -278,7 +279,7 @@ public class PicsouDialog extends JDialog {
   public void setAutoFocusOnOpen(final JTextField editor) {
     addWindowListener(new WindowAdapter() {
       public void windowOpened(WindowEvent e) {
-        if (colorUpdater != null){
+        if (colorUpdater != null) {
           GuiUtils.selectAndRequestFocus(editor);
         }
       }
@@ -307,7 +308,7 @@ public class PicsouDialog extends JDialog {
     }
   }
 
-  public void registerDisposable(Disposable disposable){
+  public void registerDisposable(Disposable disposable) {
     this.disposables.add(disposable);
   }
 
