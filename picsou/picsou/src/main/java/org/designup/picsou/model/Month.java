@@ -17,6 +17,7 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Month {
 
@@ -243,28 +244,35 @@ public class Month {
     return monthIds;
   }
 
+  static Map<Integer, Integer> monthIdToLastDay = new ConcurrentHashMap<Integer, Integer>();
+
   public static int getLastDayNumber(int monthId) {
-    synchronized (CALENDAR) {
-      CALENDAR.setTime(toDate(monthId, 1));
-      return CALENDAR.getActualMaximum(Calendar.DAY_OF_MONTH);
+    Integer lastDay = monthIdToLastDay.get(monthId);
+    if (lastDay == null) {
+      synchronized (CALENDAR) {
+        CALENDAR.clear();
+        CALENDAR.set(toYear(monthId), toMonth(monthId) - 1, 1);
+        lastDay = CALENDAR.getActualMaximum(Calendar.DAY_OF_MONTH);
+      }
+      monthIdToLastDay.put(monthId, lastDay);
+      return lastDay;
+    }
+    else {
+      return lastDay;
     }
   }
 
   public static Date getLastDay(int monthId) {
     synchronized (CALENDAR) {
-      CALENDAR.setTime(toDate(monthId, 1));
-      CALENDAR.set(Calendar.DAY_OF_MONTH, CALENDAR.getActualMaximum(Calendar.DAY_OF_MONTH));
+      int lastDayNumber = getLastDayNumber(monthId);
+      CALENDAR.clear();
+      CALENDAR.set(toYear(monthId), toMonth(monthId) - 1, lastDayNumber);
       return CALENDAR.getTime();
     }
   }
 
   public static Integer getDay(Integer day, int monthId) {
-    return getDay(day, monthId, Calendar.getInstance());
-  }
-
-  public static Integer getDay(Integer day, int monthId, Calendar calendar) {
-    calendar.setTime(toDate(monthId, 1));
-    int lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+    int lastDay = getLastDayNumber(monthId);
     if (day == null || day <= 0 || day > lastDay) {
       return lastDay;
     }

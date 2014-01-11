@@ -6,7 +6,6 @@ import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 
-import java.util.Calendar;
 import java.util.Set;
 
 public class DeferredOperationTrigger extends DefaultChangeSetListener {
@@ -148,7 +147,7 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
         .findByIndex(DeferredCardDate.MONTH, month).getGlobs().getFirst();
       if (deferredCard != null) {
         Key deferredCardKey = deferredCard.getKey();
-        repository.update(deferredCardKey, DeferredCardDate.DAY, Month.getDay(day, month, Calendar.getInstance()));
+        repository.update(deferredCardKey, DeferredCardDate.DAY, Month.getDay(day, month));
       }
     }
   }

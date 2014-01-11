@@ -370,7 +370,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       }
     }
     if (seriesShape != null && seriesShape.get(SeriesShape.FIXED_DATE) != null) {
-      planned.declare(account, Month.getDay(seriesShape.get(SeriesShape.FIXED_DATE), monthId), amount);
+      planned.declare(account, Math.max(minDay, Month.getDay(seriesShape.get(SeriesShape.FIXED_DATE), monthId)), amount);
     }
     else {
       if (seriesShape == null
