@@ -62,6 +62,9 @@ public class PeriodSeriesStat {
   @DefaultBoolean(false)
   public static BooleanField ACTIVE;
 
+  @DefaultBoolean(true)
+  public static BooleanField VISIBLE;
+
   @DefaultBoolean(false)
   public static BooleanField TO_SET;
 
@@ -115,10 +118,6 @@ public class PeriodSeriesStat {
 
   public static Glob findOrCreateForSeries(Integer seriesId, GlobRepository repository) {
     return findOrCreate(seriesId, PeriodSeriesStatType.SERIES, repository);
-  }
-
-  public static Glob findOrCreateForGroup(Integer groupId, GlobRepository repository) {
-    return findOrCreate(groupId, PeriodSeriesStatType.SERIES_GROUP, repository);
   }
 
   public static Glob findOrCreate(Integer targetId, PeriodSeriesStatType type, GlobRepository repository) {

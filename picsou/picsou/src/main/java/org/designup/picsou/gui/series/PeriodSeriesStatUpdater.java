@@ -4,10 +4,7 @@ import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.PeriodSeriesStatType;
 import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.model.CurrentMonth;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SignpostStatus;
+import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -54,11 +51,9 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       updateSelection();
     }
     else if (changeSet.containsChanges(SeriesStat.TYPE) ||
+             changeSet.containsChanges(SeriesGroup.TYPE) ||
              changeSet.containsChanges(CurrentMonth.KEY)) {
       updateSelection();
-    }
-    else if (changeSet.containsUpdates(Series.GROUP)) {
-      updateSelectionForGroupsOnly(repository);
     }
   }
 
@@ -88,17 +83,6 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     localSelectionService.select(GlobSelectionBuilder.init()
                                    .add(seriesStats, PeriodSeriesStat.TYPE)
                                    .get());
-  }
-
-  private void updateSelectionForGroupsOnly(GlobRepository repository) {
-    repository.startChangeSet();
-    try {
-      resetGroupStats();
-      initGroups();
-    }
-    finally {
-      repository.completeChangeSet();
-    }
   }
 
   private void initEvolutionFields() {
@@ -155,6 +139,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
                   PeriodSeriesStat.PAST_OVERRUN,
                   PeriodSeriesStat.FUTURE_OVERRUN,
                   PeriodSeriesStat.ABS_SUM_AMOUNT);
+        builder.set(PeriodSeriesStat.VISIBLE, true);
         builder.set(PeriodSeriesStat.ACTIVE, groupStat.isTrue(PeriodSeriesStat.ACTIVE) || periodSeriesStat.isTrue(PeriodSeriesStat.ACTIVE));
 
         repository.update(groupStat.getKey(), builder.toArray());
@@ -176,14 +161,10 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       repository.create(PeriodSeriesStat.TYPE,
                         value(PeriodSeriesStat.TARGET_TYPE, PeriodSeriesStatType.SERIES.getId()),
                         value(PeriodSeriesStat.TARGET, series.get(Series.ID)),
+                        value(PeriodSeriesStat.VISIBLE, true),
                         value(PeriodSeriesStat.ACTIVE, false));
 
     }
-  }
-
-  private void resetGroupStats() {
-    repository.delete(PeriodSeriesStat.TYPE, fieldEquals(PeriodSeriesStat.TARGET_TYPE,
-                                                         PeriodSeriesStatType.SERIES_GROUP.getId()));
   }
 
   private static class PeriodSeriesStatFunctor implements GlobFunctor {
@@ -199,7 +180,12 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     }
 
     public void run(Glob seriesStat, GlobRepository remote) throws Exception {
-      Glob periodStat = PeriodSeriesStat.findOrCreateForSeries(seriesStat.get(SeriesStat.SERIES), repository);
+      Integer seriesId = seriesStat.get(SeriesStat.SERIES);
+      Glob series = remote.get(Key.create(Series.TYPE, seriesId));
+      Glob group = remote.findLinkTarget(series, Series.GROUP);
+      boolean visible = (group == null) || group.isTrue(SeriesGroup.EXPANDED);
+
+      Glob periodStat = PeriodSeriesStat.findOrCreateForSeries(seriesId, repository);
       double amount = periodStat.get(PeriodSeriesStat.AMOUNT) +
                       Utils.zeroIfNull(seriesStat.get(SeriesStat.ACTUAL_AMOUNT));
       Double plannedAmount;
@@ -235,6 +221,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
                         value(PeriodSeriesStat.ABS_SUM_AMOUNT,
                               Math.abs(plannedAmount == null ? 0 : plannedAmount) > Math.abs(amount) ?
                               Math.abs(plannedAmount == null ? 0 : plannedAmount) : Math.abs(amount)),
+                        value(PeriodSeriesStat.VISIBLE, visible),
                         value(PeriodSeriesStat.ACTIVE, isActive));
 
       stats.add(periodStat);

@@ -42,6 +42,11 @@ public class BudgetAreaStatFilter implements GlobMatcher {
   }
 
   public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
+
+    if (!periodSeriesStat.isTrue(PeriodSeriesStat.VISIBLE)) {
+      return false;
+    }
+
     if (PeriodSeriesStat.isForGroup(periodSeriesStat)) {
       Glob group = repository.get(Key.create(SeriesGroup.TYPE, periodSeriesStat.get(PeriodSeriesStat.TARGET)));
       Integer budgetAreaId = group.get(SeriesGroup.BUDGET_AREA);

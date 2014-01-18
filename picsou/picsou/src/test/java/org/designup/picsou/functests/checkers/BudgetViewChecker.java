@@ -504,6 +504,17 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
+    public void expandGroup(String groupName) {
+      getSeriesPanel(groupName).getSeriesButton()
+        .click(Lang.get("seriesGroup.menu.expand"));
+
+    }
+
+    public void collapseGroup(String groupName) {
+      getSeriesPanel(groupName).getSeriesButton()
+        .click(Lang.get("seriesGroup.menu.collapse"));
+    }
+
     public void deleteGroup(String groupName) {
       getSeriesPanel(groupName).getSeriesButton()
         .click(Lang.get("seriesGroup.menu.delete"));

@@ -35,8 +35,23 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
                                      "| Food      | 70.00 | 200.00 |\n" +
                                      "| Home      | 0.00  | 100.00 |\n" +
                                      "| Leisures  | 0.00  | 200.00 |\n");
+    budgetView.variable.checkTotalAmounts(-70.00, -500.00);
 
     timeline.selectMonth(201401);
+    budgetView.variable.checkContent("| Groceries | 80.00  | 300.00 |\n" +
+                                     "| Food      | 80.00  | 200.00 |\n" +
+                                     "| Home      | 0.00   | 100.00 |\n" +
+                                     "| Leisures  | 100.00 | 200.00 |\n");
+    budgetView.variable.checkTotalAmounts(-180.00, -500.00);
+
+    // -- Groups can be collapsed / expanded --
+
+    budgetView.variable.collapseGroup("Groceries");
+    budgetView.variable.checkContent("| Groceries | 80.00  | 300.00 |\n" +
+                                     "| Leisures  | 100.00 | 200.00 |\n");
+    budgetView.variable.checkTotalAmounts(-180.00, -500.00);
+
+    budgetView.variable.expandGroup("Groceries");
     budgetView.variable.checkContent("| Groceries | 80.00  | 300.00 |\n" +
                                      "| Food      | 80.00  | 200.00 |\n" +
                                      "| Home      | 0.00   | 100.00 |\n" +
@@ -102,8 +117,7 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
   }
 
   public void testATreeNodeIsAddedInTheAnalysisTableForEachGroup() throws Exception {
-    fail("tbd");
-    // + navigation
+    fail("tbd: vue analyse + navigation");
   }
 
   public void testGroupIsDeletedWhenLastSeriesIsRemoved() throws Exception {
@@ -112,5 +126,13 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
 
   public void testRenameGroup() throws Exception {
     fail("tbd");
+  }
+
+  public void testHightlightingCollapsedGroups() throws Exception {
+    fail("tbd");
+  }
+
+  public void testCommentForSubSeries() throws Exception {
+    fail("tbd: dans SED/subseries, reference aux groupes");
   }
 }
