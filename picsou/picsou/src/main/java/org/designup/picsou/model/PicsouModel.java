@@ -50,7 +50,8 @@ public class PicsouModel {
                           Synchro.TYPE,
                           Picture.TYPE,
                           ProjectItemAmount.TYPE,
-                          LayoutConfig.TYPE
+                          LayoutConfig.TYPE,
+                          SeriesGroup.TYPE
                           )
       .get();
 

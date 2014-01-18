@@ -145,6 +145,13 @@ public class NavigationService implements GlobSelectionListener {
     select(Card.DATA, false);
   }
 
+  public void gotoDataForSeriesGroup(Glob group) {
+    selectionService.clear(Account.TYPE);
+    Set<Integer> seriesIds = repository.findLinkedTo(group, Series.GROUP).getValueSet(Series.ID);
+    transactionView.setSeriesFilter(seriesIds);
+    select(Card.DATA, false);
+  }
+
   public void gotoDataForSeries(Set<Integer> seriesIds) {
     selectionService.clear(Account.TYPE);
     transactionView.setSeriesFilter(seriesIds);

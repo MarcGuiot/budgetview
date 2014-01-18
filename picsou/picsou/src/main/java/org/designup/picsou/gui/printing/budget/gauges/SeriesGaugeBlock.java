@@ -3,12 +3,15 @@ package org.designup.picsou.gui.printing.budget.gauges;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
+import org.designup.picsou.gui.model.PeriodSeriesStatType;
 import org.designup.picsou.gui.printing.PrintStyle;
 import org.designup.picsou.gui.printing.utils.PageBlock;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SeriesGroup;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.awt.*;
 
@@ -19,15 +22,15 @@ public class SeriesGaugeBlock implements PageBlock {
   private Glob periodStat;
   private BudgetGaugeContext context;
   private int sectionIndex;
-  private Glob series;
+  private GlobRepository repository;
   private BudgetArea budgetArea;
 
   public SeriesGaugeBlock(Glob periodStat, BudgetGaugeContext budgetGaugeContext, int sectionIndex, GlobRepository repository) {
     this.periodStat = periodStat;
     this.context = budgetGaugeContext;
     this.sectionIndex = sectionIndex;
-    this.series = repository.findLinkTarget(periodStat, PeriodSeriesStat.SERIES);
-    this.budgetArea = Series.getBudgetArea(series);
+    this.repository = repository;
+    this.budgetArea = PeriodSeriesStat.getBudgetArea(periodStat, repository);
   }
 
   public int getNeededHeight() {
@@ -39,7 +42,14 @@ public class SeriesGaugeBlock implements PageBlock {
   }
 
   public String getLabel() {
-    return series.get(Series.NAME);
+    Glob target = PeriodSeriesStat.findTarget(periodStat, repository);
+    switch (PeriodSeriesStatType.get(periodStat)) {
+      case SERIES:
+        return target.get(Series.NAME);
+      case SERIES_GROUP:
+        return target.get(SeriesGroup.NAME);
+    }
+    throw new InvalidParameter("Unexpected type for " + periodStat);
   }
 
   public String getActualAmount() {

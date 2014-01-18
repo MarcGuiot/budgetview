@@ -17,13 +17,13 @@ Modifications souhaitées pour le logiciel BudgetView (id = 50969)
 
 Bonjour,
 
-J'ai le plaisir de vous informer qu'une nouvelle version de BudgetView est disponible. Il agit de la version 3.12, dont les liens directs de téléchargement sont les suivants :
+J'ai le plaisir de vous informer qu'une nouvelle version de BudgetView est disponible. Il agit de la version 3.13, dont les liens directs de téléchargement sont les suivants :
 
-- Windows : http://www.mybudgetview.fr/files/app/BudgetView-3.12-fr-Setup.exe
+- Windows : http://www.mybudgetview.fr/files/app/BudgetView-3.13-fr-Setup.exe
 
-- Mac : http://www.mybudgetview.fr/files/app/BudgetView-3.12-fr.dmg
+- Mac : http://www.mybudgetview.fr/files/app/BudgetView-3.13-fr.dmg
 
-- Linux : http://www.mybudgetview.fr/files/app/budgetview-3.12-fr.tar.gz
+- Linux : http://www.mybudgetview.fr/files/app/budgetview-3.13-fr.tar.gz
 
 L'historique des modifications est visible sur cette page : 
 
@@ -77,13 +77,13 @@ J'ai le plaisir de vous informer qu'une nouvelle version est disponible pour le 
 
  http://www.jetelecharge.com/Bureautique/6452.php
 
-La nouvelle version porte le numéro 3.12, et le fichier d'installation correspondant est disponible à l'adresse suivante :
+La nouvelle version porte le numéro 3.13, et le fichier d'installation correspondant est disponible à l'adresse suivante :
 
-- Windows : http://www.mybudgetview.fr/files/app/BudgetView-3.12-fr-Setup.exe
+- Windows : http://www.mybudgetview.fr/files/app/BudgetView-3.13-fr-Setup.exe
 
-- Mac : http://www.mybudgetview.fr/files/app/BudgetView-3.12-fr.dmg
+- Mac : http://www.mybudgetview.fr/files/app/BudgetView-3.13-fr.dmg
 
-- Linux : http://www.mybudgetview.fr/files/app/budgetview-3.12-fr.tar.gz
+- Linux : http://www.mybudgetview.fr/files/app/budgetview-3.13-fr.tar.gz
 
 L'historique des modifications est visible sur cette page :
 
@@ -113,7 +113,7 @@ Régis.
 
 2. Mettre à jour la version et les liens :
 
-- Windows : http://www.mybudgetview.fr/files/app/BudgetView-3.12-fr-Setup.exe
+- Windows : http://www.mybudgetview.fr/files/app/BudgetView-3.13-fr-Setup.exe
 
 !!! Attention à la catégorie Multimedia / Audio
 
@@ -132,7 +132,7 @@ Régis.
 
 2. Mettre à jour la version et les liens :
 
-- Mac : http://www.mybudgetview.fr/files/app/BudgetView-3.12-fr.dmg
+- Mac : http://www.mybudgetview.fr/files/app/BudgetView-3.13-fr.dmg
 
 !!! Attention à la catégorie Multimedia / Audio
 
@@ -150,9 +150,9 @@ Commentaire pour gratuit-1350.html:
 
 Bonjour,
 
-J'ai le plaisir de vous informer qu'une nouvelle version de BudgetView est disponible. Il agit de la version 3.12, dont le lien direct de téléchargement est le suivant :
+J'ai le plaisir de vous informer qu'une nouvelle version de BudgetView est disponible. Il agit de la version 3.13, dont le lien direct de téléchargement est le suivant :
 
-- http://www.mybudgetview.fr/files/app/BudgetView-3.12-fr.dmg
+- http://www.mybudgetview.fr/files/app/BudgetView-3.13-fr.dmg
 
 L'historique des modifications est visible sur cette page : 
 

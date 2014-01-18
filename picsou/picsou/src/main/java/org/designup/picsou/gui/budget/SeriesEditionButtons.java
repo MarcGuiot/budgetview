@@ -1,8 +1,7 @@
 package org.designup.picsou.gui.budget;
 
-import org.designup.picsou.gui.budget.components.SeriesPopupButton;
+import org.designup.picsou.gui.budget.components.NameLabelPopupButton;
 import org.designup.picsou.gui.series.SeriesEditor;
-import org.designup.picsou.gui.series.edition.DeleteSeriesAction;
 import org.designup.picsou.gui.series.utils.SeriesPopupFactory;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
@@ -10,6 +9,8 @@ import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.utils.DisposablePopupMenuFactory;
+import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -56,10 +57,9 @@ public class SeriesEditionButtons {
     return buttonView;
   }
 
-  public SeriesPopupButton createSeriesPopupButton(Glob series) {
-    return new SeriesPopupButton(series,
-                                 editSeriesFunctor,
-                                 repository, directory);
+  public NameLabelPopupButton createSeriesPopupButton(Glob series) {
+    DisposablePopupMenuFactory popupFactory = new SeriesPopupFactory(series, editSeriesFunctor, repository, directory);
+    return new NameLabelPopupButton(series.getKey(), popupFactory, repository, directory);
   }
 
   public void setNames(String createButtonName) {

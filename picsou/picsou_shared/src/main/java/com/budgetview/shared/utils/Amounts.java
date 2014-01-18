@@ -5,6 +5,19 @@ import org.globsframework.utils.Utils;
 
 public class Amounts {
 
+  public static Double add(Double value1, Double value2) {
+    if ((value1 == null) && (value2 == null)) {
+      return null;
+    }
+    if (value1 == null) {
+      return value2;
+    }
+    if (value2 == null) {
+      return value1;
+    }
+    return value1 + value2;
+  }
+
   public static boolean sameSign(double value1, double value2) {
     return Math.signum(value1) == Math.signum(value2) || Amounts.isNearZero(value1) || Amounts.isNearZero(value2);
   }

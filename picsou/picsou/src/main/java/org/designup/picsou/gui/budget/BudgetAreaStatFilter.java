@@ -3,27 +3,22 @@ package org.designup.picsou.gui.budget;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.gui.utils.MonthMatcher;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesBudget;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.ReadOnlyGlobRepository;
+import org.designup.picsou.model.*;
+import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.utils.Utils;
 
 import java.util.Collections;
 import java.util.Set;
 
-public class BudgetAreaSeriesFilter implements GlobMatcher {
+public class BudgetAreaStatFilter implements GlobMatcher {
 
   private MonthMatcher seriesDateFilter;
   private boolean monthFilteringEnabled = true;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
   private BudgetArea budgetArea;
 
-  public BudgetAreaSeriesFilter(BudgetArea budgetArea) {
+  public BudgetAreaStatFilter(BudgetArea budgetArea) {
     this.budgetArea = budgetArea;
     if (budgetArea == BudgetArea.SAVINGS) {
       seriesDateFilter = Matchers.seriesDateSavingsAndAccountFilter(Account.MAIN_SUMMARY_ACCOUNT_ID);
@@ -47,7 +42,21 @@ public class BudgetAreaSeriesFilter implements GlobMatcher {
   }
 
   public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
-    Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
+    if (PeriodSeriesStat.isForGroup(periodSeriesStat)) {
+      Glob group = repository.get(Key.create(SeriesGroup.TYPE, periodSeriesStat.get(PeriodSeriesStat.TARGET)));
+      Integer budgetAreaId = group.get(SeriesGroup.BUDGET_AREA);
+      if (!monthFilteringEnabled) {
+        return budgetArea.getId().equals(budgetAreaId);
+      }
+      return Utils.equal(budgetAreaId, budgetArea.getId())
+                       && periodSeriesStat.get(PeriodSeriesStat.ACTIVE);
+    }
+
+    if (!PeriodSeriesStat.isForSeries(periodSeriesStat)) {
+      return false;
+    }
+
+    Glob series = repository.find(Key.create(Series.TYPE, periodSeriesStat.get(PeriodSeriesStat.TARGET)));
     if (series == null) {
       return false;
     }

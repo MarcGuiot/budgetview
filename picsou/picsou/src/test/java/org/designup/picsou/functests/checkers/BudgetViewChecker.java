@@ -9,6 +9,7 @@ import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.utils.TablePrinter;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.*;
 import org.uispec4j.Button;
@@ -466,6 +467,46 @@ public class BudgetViewChecker extends ViewChecker {
 
     public void checkCarryOverDisabled(String seriesName) {
       getSeriesPanel(seriesName).getSeriesButton().checkItemDisabled("Carry over next month");
+    }
+
+    public BudgetAreaChecker checkGroups(String series, String... labels) {
+      getSeriesPanel(series).getSeriesButton().getSubMenu("Add to group")
+        .checkChoices(labels);
+      return this;
+    }
+
+    public BudgetAreaChecker addToNewGroup(String series, String group) {
+      CreateSeriesGroupDialogChecker.open(getSeriesPanel(series).getSeriesButton()
+                                            .getSubMenu(Lang.get("seriesGroup.menu"))
+                                            .triggerClick(Lang.get("seriesGroup.menu.addToNew")))
+        .setName(group)
+        .validate();
+      return this;
+    }
+
+    public BudgetAreaChecker addToGroup(String series, String group) {
+      getSeriesPanel(series).getSeriesButton()
+        .getSubMenu(Lang.get("seriesGroup.menu"))
+        .click(group);
+      return this;
+    }
+
+    public BudgetAreaChecker checkContent(String expected) {
+      Panel seriesRepeat = getPanel().getPanel("seriesRepeat");
+      UIComponent[] seriesNames = seriesRepeat.getUIComponents(Button.class, "seriesName");
+      UIComponent[] actualAmounts = seriesRepeat.getUIComponents(Button.class, "observedSeriesAmount");
+      UIComponent[] plannedAmounts = seriesRepeat.getUIComponents(Button.class, "plannedSeriesAmount");
+      TablePrinter table = new TablePrinter();
+      for (int i = 0; i < seriesNames.length; i++) {
+        table.addRow(seriesNames[i].getLabel(), actualAmounts[i].getLabel(), plannedAmounts[i].getLabel());
+      }
+      Assert.assertEquals(expected, table.toString());
+      return this;
+    }
+
+    public void deleteGroup(String groupName) {
+      getSeriesPanel(groupName).getSeriesButton()
+        .click(Lang.get("seriesGroup.menu.delete"));
     }
   }
 
