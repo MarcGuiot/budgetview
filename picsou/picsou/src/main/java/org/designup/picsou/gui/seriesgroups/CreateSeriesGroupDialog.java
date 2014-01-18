@@ -24,14 +24,12 @@ import static org.globsframework.model.FieldValue.value;
 
 public class CreateSeriesGroupDialog {
 
-  private static GlobRepository parentRepository;
   private final Key seriesKey;
   private final BudgetArea budgetArea;
   private PicsouDialog dialog;
   private JTextField nameField;
 
   public static void show(Key seriesKey, GlobRepository repository, Directory directory) {
-    parentRepository = repository;
     CreateSeriesGroupDialog dialog = new CreateSeriesGroupDialog(seriesKey, repository, directory);
     dialog.doShow();
   }
@@ -40,11 +38,12 @@ public class CreateSeriesGroupDialog {
   private final Directory directory;
   private Key groupKey;
 
-  private CreateSeriesGroupDialog(Key seriesKey, GlobRepository repository, Directory directory) {
+  private CreateSeriesGroupDialog(Key seriesKey, GlobRepository parentRepository, Directory directory) {
     this.seriesKey = seriesKey;
-    this.budgetArea = Series.getBudgetArea(repository.get(seriesKey));
-    this.localRepository = LocalGlobRepositoryBuilder.init(repository)
+    this.budgetArea = Series.getBudgetArea(parentRepository.get(seriesKey));
+    this.localRepository = LocalGlobRepositoryBuilder.init(parentRepository)
       .copy(SeriesGroup.TYPE)
+      .copy(Series.TYPE)
       .get();
     this.directory = directory;
   }
@@ -84,14 +83,8 @@ public class CreateSeriesGroupDialog {
         ErrorTip.show(nameField, Lang.get("seriesGroup.creation.name.error"), directory, TipPosition.BOTTOM_LEFT);
         return;
       }
-      try {
-        parentRepository.startChangeSet();
-        localRepository.commitChanges(true);
-        parentRepository.update(seriesKey, Series.GROUP, groupKey.get(SeriesGroup.ID));
-      }
-      finally {
-        parentRepository.completeChangeSet();
-      }
+      localRepository.update(seriesKey, Series.GROUP, groupKey.get(SeriesGroup.ID));
+      localRepository.commitChanges(true);
       closeAndDispose();
     }
   }

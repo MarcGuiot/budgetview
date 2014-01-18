@@ -12,6 +12,7 @@ import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
@@ -222,7 +223,8 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
                               Math.abs(plannedAmount == null ? 0 : plannedAmount) > Math.abs(amount) ?
                               Math.abs(plannedAmount == null ? 0 : plannedAmount) : Math.abs(amount)),
                         value(PeriodSeriesStat.VISIBLE, visible),
-                        value(PeriodSeriesStat.ACTIVE, isActive));
+                        value(PeriodSeriesStat.ACTIVE, isActive),
+                        value(PeriodSeriesStat.TO_SET, false));
 
       stats.add(periodStat);
     }
@@ -238,9 +240,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       boolean value = PeriodSeriesStat.isForSeries(periodStat)
                       && !signpostCompleted
                       && isToUpdate(periodStat.get(PeriodSeriesStat.TARGET));
-      repository.update(periodStat.getKey(),
-                        PeriodSeriesStat.TO_SET,
-                        value);
+      repository.update(periodStat.getKey(), PeriodSeriesStat.TO_SET, value);
     }
   }
 

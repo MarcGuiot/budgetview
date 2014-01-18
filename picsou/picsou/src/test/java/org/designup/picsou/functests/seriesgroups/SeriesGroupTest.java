@@ -2,12 +2,15 @@ package org.designup.picsou.functests.seriesgroups;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.model.PeriodSeriesStat;
+import org.globsframework.model.format.GlobPrinter;
 
 public class SeriesGroupTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     setCurrentMonth("2014/01");
     super.setUp();
+    getOperations().openPreferences().setFutureMonthsCount(6).validate();
   }
 
   public void testAddAndDeleteGroup() throws Exception {
@@ -74,7 +77,44 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
   }
 
   public void testMonthLimits() throws Exception {
-    fail("tbd");
+    OfxBuilder.init(this)
+      .addTransaction("2013/12/12", -70.00, "Auchan")
+      .addTransaction("2008/24/10", -50.00, "Monoprix")
+      .addTransaction("2014/01/10", -80.00, "Auchan")
+      .addTransaction("2014/01/11", -30.00, "Lidl")
+      .addTransaction("2014/01/11", -100.00, "FNAC")
+      .load();
+
+    categorization.setNewVariable("AUCHAN", "Food", -200.00);
+    categorization.setNewVariable("MONOPRIX", "Home", -100.00);
+    categorization.setNewVariable("FNAC", "Leisures", -200.00);
+    budgetView.variable.addToNewGroup("Food", "Groceries");
+    budgetView.variable.addToGroup("Home", "Groceries");
+
+    timeline.selectMonth(201404);
+    budgetView.variable.editSeries("Food").setEndDate(201401).validate();
+    budgetView.variable.checkContent("| Leisures  | 0.00 | 200.00 |\n" +
+                                     "| Groceries | 0.00 | 100.00 |\n" +
+                                     "| Home      | 0.00 | 100.00 |\n");
+
+    budgetView.variable.editSeries("Home").setEndDate(201402).validate();
+    budgetView.variable.checkContent("| Leisures | 0.00 | 200.00 |\n");
+
+    timeline.selectMonth(201402);
+    budgetView.variable.checkContent("| Leisures  | 0.00 | 200.00 |\n" +
+                                     "| Groceries | 0.00 | 100.00 |\n" +
+                                     "| Home      | 0.00 | 100.00 |\n");
+
+    timeline.selectMonth(201401);
+    budgetView.variable.editSeries("Home")
+      .clearEndDate()
+      .setPropagationEnabled()
+      .validate();
+
+    timeline.selectMonth(201404);
+    budgetView.variable.checkContent("| Leisures  | 0.00 | 200.00 |\n" +
+                                     "| Groceries | 0.00 | 100.00 |\n" +
+                                     "| Home      | 0.00 | 100.00 |\n");
   }
 
   public void testGroupsAreSpecificToBudgetAreas() throws Exception {
@@ -100,12 +140,43 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkGroups("Electricity", "Home", "New group...");
   }
 
-  public void testCollapsingAndExpandingGroups() throws Exception {
-    fail("tbd");
-  }
-
   public void testMovingASeriesToAnotherGroupOrToNoGroup() throws Exception {
-    fail("tbd");
+    OfxBuilder.init(this)
+      .addTransaction("2013/12/12", -70.00, "Auchan")
+      .addTransaction("2008/24/10", -50.00, "Monoprix")
+      .addTransaction("2014/01/10", -80.00, "Auchan")
+      .addTransaction("2014/01/11", -30.00, "Lidl")
+      .addTransaction("2014/01/11", -100.00, "FNAC")
+      .load();
+
+    categorization.setNewVariable("AUCHAN", "Food", -200.00);
+    categorization.setNewVariable("MONOPRIX", "Home", -100.00);
+    categorization.setNewVariable("FNAC", "Leisures", -200.00);
+    budgetView.variable.addToNewGroup("Food", "Groceries");
+    budgetView.variable.addToGroup("Home", "Groceries");
+
+    timeline.selectMonth(201401);
+    budgetView.variable.checkContent("| Groceries | 80.00  | 300.00 |\n" +
+                                     "| Food      | 80.00  | 200.00 |\n" +
+                                     "| Home      | 0.00   | 100.00 |\n" +
+                                     "| Leisures  | 100.00 | 200.00 |\n");
+
+    budgetView.variable.addToNewGroup("Home", "Other");
+    budgetView.variable.checkContent("| Groceries | 80.00  | 200.00 |\n" +
+                                     "| Food      | 80.00  | 200.00 |\n" +
+                                     "| Leisures  | 100.00 | 200.00 |\n" +
+                                     "| Other     | 0.00   | 100.00 |\n" +
+                                     "| Home      | 0.00   | 100.00 |\n");
+
+    budgetView.variable.removeFromGroup("Home");
+    budgetView.variable.checkContent("| Groceries | 80.00  | 200.00 |\n" +
+                                     "| Food      | 80.00  | 200.00 |\n" +
+                                     "| Leisures  | 100.00 | 200.00 |\n" +
+                                     "| Home      | 0.00   | 100.00 |\n");
+
+    budgetView.variable.openDeleteSeries("Food").uncategorize();
+    budgetView.variable.checkContent("| Leisures | 100.00 | 200.00 |\n" +
+                                     "| Home     | 0.00   | 100.00 |\n");
   }
 
   public void testNavigationToTransactions() throws Exception {

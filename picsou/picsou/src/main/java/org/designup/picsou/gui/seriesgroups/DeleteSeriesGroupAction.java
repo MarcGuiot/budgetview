@@ -25,7 +25,6 @@ public class DeleteSeriesGroupAction extends AbstractAction {
       for (Glob series : repository.findLinkedTo(repository.get(seriesGroupKey), Series.GROUP)) {
         repository.update(series.getKey(), Series.GROUP, null);
       }
-      repository.delete(seriesGroupKey);
     }
     finally {
       repository.completeChangeSet();

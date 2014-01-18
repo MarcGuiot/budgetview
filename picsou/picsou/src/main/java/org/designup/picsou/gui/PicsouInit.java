@@ -160,6 +160,7 @@ public class PicsouInit {
     repository.addTrigger(new ProjectCategorizationWarningTrigger());
     repository.addTrigger(new DateFormatTrigger(directory));
     repository.addTrigger(new ProjectPicturesDelectionTrigger());
+    repository.addTrigger(new DeleteUnusedSeriesGroupTrigger());
   }
 
   public PreLoadData loadUserData(String user, boolean useDemoAccount, boolean autoLogin) {

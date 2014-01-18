@@ -42,7 +42,6 @@ public class BudgetAreaStatFilter implements GlobMatcher {
   }
 
   public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
-
     if (!periodSeriesStat.isTrue(PeriodSeriesStat.VISIBLE)) {
       return false;
     }
