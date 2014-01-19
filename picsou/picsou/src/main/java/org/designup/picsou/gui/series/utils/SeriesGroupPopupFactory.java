@@ -2,6 +2,7 @@ package org.designup.picsou.gui.series.utils;
 
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.seriesgroups.DeleteSeriesGroupAction;
+import org.designup.picsou.gui.seriesgroups.RenameSeriesGroupAction;
 import org.designup.picsou.gui.seriesgroups.SeriesGroupMenu;
 import org.designup.picsou.model.SeriesGroup;
 import org.designup.picsou.utils.Lang;
@@ -37,6 +38,7 @@ public class SeriesGroupPopupFactory implements DisposablePopupMenuFactory {
     if (menu == null) {
       menu = new JPopupMenu();
       menu.add(createExpandCollapseAction());
+      menu.add(new RenameSeriesGroupAction(seriesGroup.getKey(), repository, directory));
       menu.addSeparator();
       menu.add(new AbstractAction(Lang.get("series.goto.operations")) {
         public void actionPerformed(ActionEvent actionEvent) {

@@ -11,9 +11,9 @@ import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.TablePrinter;
 import org.globsframework.utils.TestUtils;
-import org.uispec4j.*;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
+import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 
@@ -223,7 +223,6 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
-
     protected String convert(double amount) {
       return BudgetViewChecker.this.convert(amount, budgetArea);
     }
@@ -271,6 +270,19 @@ public class BudgetViewChecker extends ViewChecker {
           Assert.fail("Series '" + expectedName + "' unexpectedly found. Actual series: " + actualNames);
         }
       }
+      return this;
+    }
+
+    public BudgetAreaChecker checkContent(String expected) {
+      Panel seriesRepeat = getPanel().getPanel("seriesRepeat");
+      UIComponent[] seriesNames = seriesRepeat.getUIComponents(Button.class, "seriesName");
+      UIComponent[] actualAmounts = seriesRepeat.getUIComponents(Button.class, "observedSeriesAmount");
+      UIComponent[] plannedAmounts = seriesRepeat.getUIComponents(Button.class, "plannedSeriesAmount");
+      TablePrinter table = new TablePrinter();
+      for (int i = 0; i < seriesNames.length; i++) {
+        table.addRow(seriesNames[i].getLabel(), actualAmounts[i].getLabel(), plannedAmounts[i].getLabel());
+      }
+      Assert.assertEquals(expected, table.toString());
       return this;
     }
 
@@ -475,10 +487,14 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
+    public SeriesGroupNameDialogChecker addToNewGroup(String series) {
+      return SeriesGroupNameDialogChecker.open(getSeriesPanel(series).getSeriesButton()
+                                                 .getSubMenu(Lang.get("seriesGroup.menu"))
+                                                 .triggerClick(Lang.get("seriesGroup.menu.addToNew")));
+    }
+
     public BudgetAreaChecker addToNewGroup(String series, String group) {
-      CreateSeriesGroupDialogChecker.open(getSeriesPanel(series).getSeriesButton()
-                                            .getSubMenu(Lang.get("seriesGroup.menu"))
-                                            .triggerClick(Lang.get("seriesGroup.menu.addToNew")))
+      addToNewGroup(series)
         .setName(group)
         .validate();
       return this;
@@ -491,19 +507,6 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
-    public BudgetAreaChecker checkContent(String expected) {
-      Panel seriesRepeat = getPanel().getPanel("seriesRepeat");
-      UIComponent[] seriesNames = seriesRepeat.getUIComponents(Button.class, "seriesName");
-      UIComponent[] actualAmounts = seriesRepeat.getUIComponents(Button.class, "observedSeriesAmount");
-      UIComponent[] plannedAmounts = seriesRepeat.getUIComponents(Button.class, "plannedSeriesAmount");
-      TablePrinter table = new TablePrinter();
-      for (int i = 0; i < seriesNames.length; i++) {
-        table.addRow(seriesNames[i].getLabel(), actualAmounts[i].getLabel(), plannedAmounts[i].getLabel());
-      }
-      Assert.assertEquals(expected, table.toString());
-      return this;
-    }
-
     public void expandGroup(String groupName) {
       getSeriesPanel(groupName).getSeriesButton()
         .click(Lang.get("seriesGroup.menu.expand"));
@@ -513,6 +516,11 @@ public class BudgetViewChecker extends ViewChecker {
     public void collapseGroup(String groupName) {
       getSeriesPanel(groupName).getSeriesButton()
         .click(Lang.get("seriesGroup.menu.collapse"));
+    }
+
+    public SeriesGroupNameDialogChecker renameGroup(String series) {
+      return SeriesGroupNameDialogChecker.open(getSeriesPanel(series).getSeriesButton()
+                                                 .triggerClick(Lang.get("seriesGroup.menu.rename")));
     }
 
     public void removeFromGroup(String series) {
@@ -590,7 +598,6 @@ public class BudgetViewChecker extends ViewChecker {
       return new Button((JButton)getComponent(OBSERVED_LABEL_OFFSET));
     }
 
-
     public Button getPlannedAmount() {
       return new Button((JButton)getComponent(PLANNED_LABEL_OFFSET));
     }
@@ -604,7 +611,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public void checkPlannedAmount(double amount) {
-      assertThat(getPlannedAmount().textEquals(convert(amount, budgetArea) ));
+      assertThat(getPlannedAmount().textEquals(convert(amount, budgetArea)));
     }
 
     public DeltaGaugeChecker getDeltaGauge() {
