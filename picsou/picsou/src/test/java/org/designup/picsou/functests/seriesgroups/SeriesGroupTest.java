@@ -3,6 +3,7 @@ package org.designup.picsou.functests.seriesgroups;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
+import org.designup.picsou.model.TransactionType;
 import org.globsframework.model.format.GlobPrinter;
 
 public class SeriesGroupTest extends LoggedInFunctionalTestCase {
@@ -180,7 +181,48 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNavigationToTransactions() throws Exception {
-    fail("tbd");
+    OfxBuilder.init(this)
+      .addTransaction("2013/12/12", -70.00, "Auchan")
+      .addTransaction("2013/12/20", -50.00, "Monoprix")
+      .addTransaction("2014/01/10", -80.00, "Auchan")
+      .addTransaction("2014/01/11", -30.00, "Lidl")
+      .addTransaction("2014/01/11", -100.00, "FNAC")
+      .load();
+
+    categorization.setNewVariable("AUCHAN", "Food", -200.00);
+    categorization.setNewVariable("MONOPRIX", "Home", -100.00);
+    categorization.setNewVariable("FNAC", "Leisures", -200.00);
+
+    timeline.selectMonths(201312, 201401);
+    budgetView.variable.addToNewGroup("Food", "Groceries");
+    budgetView.variable.addToGroup("Home", "Groceries");
+
+    views.selectBudget();
+    budgetView.variable.gotoData("Groceries");
+    views.checkDataSelected();
+    transactions.initContent()
+      .add("10/01/2014", TransactionType.PRELEVEMENT, "AUCHAN", "", -80.00, "Food")
+      .add("20/12/2013", TransactionType.PRELEVEMENT, "MONOPRIX", "", -50.00, "Home")
+      .add("12/12/2013", TransactionType.PRELEVEMENT, "AUCHAN", "", -70.00, "Food")
+      .check();
+
+    transactions.clearCurrentFilter();
+    transactions.initContent()
+      .add("11/01/2014", TransactionType.PRELEVEMENT, "FNAC", "", -100.00, "Leisures")
+      .add("11/01/2014", TransactionType.PRELEVEMENT, "LIDL", "", -30.00)
+      .add("10/01/2014", TransactionType.PRELEVEMENT, "AUCHAN", "", -80.00, "Food")
+      .add("20/12/2013", TransactionType.PRELEVEMENT, "MONOPRIX", "", -50.00, "Home")
+      .add("12/12/2013", TransactionType.PRELEVEMENT, "AUCHAN", "", -70.00, "Food")
+      .check();
+
+    views.selectBudget();
+    budgetView.variable.gotoDataThroughMenu("Groceries");
+    views.checkDataSelected();
+    transactions.initContent()
+      .add("10/01/2014", TransactionType.PRELEVEMENT, "AUCHAN", "", -80.00, "Food")
+      .add("20/12/2013", TransactionType.PRELEVEMENT, "MONOPRIX", "", -50.00, "Home")
+      .add("12/12/2013", TransactionType.PRELEVEMENT, "AUCHAN", "", -70.00, "Food")
+      .check();
   }
 
   public void testCannotCreateAGroupWithAnEmptyName() throws Exception {
@@ -205,5 +247,9 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
 
   public void testCommentForSubSeries() throws Exception {
     fail("tbd: dans SED/subseries, reference aux groupes");
+  }
+
+  public void testDeltaInBudgetView() throws Exception {
+    fail("tbd");
   }
 }

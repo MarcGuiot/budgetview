@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.series.utils;
 
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.seriesgroups.DeleteSeriesGroupAction;
 import org.designup.picsou.gui.seriesgroups.SeriesGroupMenu;
 import org.designup.picsou.model.SeriesGroup;
@@ -11,8 +12,10 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
+import sun.print.resources.serviceui_es;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 public class SeriesGroupPopupFactory implements DisposablePopupMenuFactory {
 
@@ -34,6 +37,13 @@ public class SeriesGroupPopupFactory implements DisposablePopupMenuFactory {
     if (menu == null) {
       menu = new JPopupMenu();
       menu.add(createExpandCollapseAction());
+      menu.addSeparator();
+      menu.add(new AbstractAction(Lang.get("series.goto.operations")) {
+        public void actionPerformed(ActionEvent actionEvent) {
+          directory.get(NavigationService.class).gotoDataForSeriesGroup(seriesGroup);
+        }
+      });
+      menu.addSeparator();
       menu.add(new DeleteSeriesGroupAction(seriesGroup.getKey(), repository));
     }
     return menu;
