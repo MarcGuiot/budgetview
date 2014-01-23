@@ -32,6 +32,7 @@ import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.splits.utils.GlobListener;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.metamodel.GlobType;
@@ -41,12 +42,14 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.GlobUtils;
+import org.globsframework.model.utils.KeyChangeListener;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.UnexpectedValue;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyListener;
 import java.util.*;
 import java.util.List;
 
@@ -69,6 +72,8 @@ public class BudgetAreaSeriesView extends View {
   private JMenuItem monthFilteringButton;
   private Collection<SeriesRepeatComponentFactory.SeriesButtonsUpdater> updaters =
     new ArrayList<SeriesRepeatComponentFactory.SeriesButtonsUpdater>();
+
+  public static final String IS_GROUP_ELEMENT_PROPERTY = "budgetAreaSeriesView.isGroupElement";
 
   public BudgetAreaSeriesView(String name,
                               final BudgetArea budgetArea,
@@ -248,7 +253,7 @@ public class BudgetAreaSeriesView extends View {
 
       final Glob target = PeriodSeriesStat.findTarget(periodSeriesStat, repository);
 
-      NameLabelPopupButton nameButton = getNameButton(periodSeriesStat, target);
+      NameLabelPopupButton nameButton = getNameButton(periodSeriesStat, target, cellBuilder);
       final SplitsNode<JButton> seriesName = cellBuilder.add("seriesName", nameButton.getComponent());
       cellBuilder.addDisposeListener(nameButton);
 
@@ -339,12 +344,23 @@ public class BudgetAreaSeriesView extends View {
       cellBuilder.addDisposeListener(deltaGaugeView);
     }
 
-    private NameLabelPopupButton getNameButton(Glob periodSeriesStat, Glob target) {
+    private NameLabelPopupButton getNameButton(Glob periodSeriesStat, Glob target, RepeatCellBuilder cellBuilder) {
       switch (PeriodSeriesStatType.get(periodSeriesStat)) {
         case SERIES:
-          return seriesButtons.createSeriesPopupButton(target);
+        {
+          final NameLabelPopupButton button = seriesButtons.createSeriesPopupButton(target);
+          Disposable disposable = GlobListener.install(target.getKey(), repository, new GlobListener.Functor() {
+            public void update(Glob series, GlobRepository repository) {
+              button.getComponent().putClientProperty(IS_GROUP_ELEMENT_PROPERTY, series != null && series.get(Series.GROUP) != null);
+            }
+          });
+          cellBuilder.addDisposeListener(disposable);
+          return button;
+        }
         case SERIES_GROUP:
+        {
           return seriesGroupButtons.createPopupButton(target);
+        }
       }
       throw new UnexpectedValue(periodSeriesStat);
     }

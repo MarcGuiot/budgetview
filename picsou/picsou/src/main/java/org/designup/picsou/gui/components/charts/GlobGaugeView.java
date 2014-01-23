@@ -244,7 +244,7 @@ public class GlobGaugeView extends AbstractGlobComponentHolder<GlobGaugeView>
       update();
     }
 
-    protected void update() {
+    public void update() {
       Glob glob = repository.find(key);
       if (glob == null) {
         gauge.setMaxValue(null);

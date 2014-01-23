@@ -134,7 +134,7 @@ public class GlobRepeatViewTest extends GuiComponentTestCase {
       this.name = glob.get(DummyObject.NAME);
       this.label.setName(name);
       this.changeListener = new KeyChangeListener(key) {
-        protected void update() {
+        public void update() {
           doUpdate();
         }
       };

@@ -269,7 +269,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
     });
 
     repository.addChangeListener(new KeyChangeListener(UserPreferences.KEY) {
-      protected void update() {
+      public void update() {
         transactionTable.setFilter(currentTableFilter);
       }
     });

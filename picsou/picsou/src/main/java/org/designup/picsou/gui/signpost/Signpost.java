@@ -86,7 +86,7 @@ public abstract class Signpost implements Disposable {
     }
 
     repository.addChangeListener(new KeyChangeListener(SignpostStatus.KEY) {
-      protected void update() {
+      public void update() {
         if (isShowing() && isCompleted()) {
           dispose();
         }

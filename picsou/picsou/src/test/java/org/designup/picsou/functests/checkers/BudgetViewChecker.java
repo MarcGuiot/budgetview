@@ -7,6 +7,7 @@ import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.gui.components.charts.DeltaGauge;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.gui.series.ui.SeriesPanelUI;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.TablePrinter;
@@ -18,6 +19,7 @@ import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 
 import javax.swing.*;
+import javax.swing.plaf.PanelUI;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -531,6 +533,18 @@ public class BudgetViewChecker extends ViewChecker {
     public void deleteGroup(String groupName) {
       getSeriesPanel(groupName).getSeriesButton()
         .click(Lang.get("seriesGroup.menu.delete"));
+    }
+
+    public void checkGroupItems(String... seriesNames) {
+      Panel panel = getPanel().getPanel("seriesRepeat");
+      JPanel jPanel = (JPanel)panel.getAwtComponent();
+      PanelUI ui = jPanel.getUI();
+      if (!(ui instanceof SeriesPanelUI)) {
+        Assert.fail("Unexpected panel UI: " + ui);
+      }
+
+      SeriesPanelUI seriesPanelUI = (SeriesPanelUI)ui;
+      TestUtils.assertEquals(seriesNames, seriesPanelUI.getGroupItemLabels(jPanel));
     }
   }
 

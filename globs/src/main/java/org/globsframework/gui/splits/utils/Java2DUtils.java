@@ -1,6 +1,8 @@
 package org.globsframework.gui.splits.utils;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
 
 public class Java2DUtils {
@@ -66,4 +68,11 @@ public class Java2DUtils {
     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
   }
 
+  public static void resize(GeneralPath shape, float targetWidth, float targetHeight) {
+    Rectangle initialRectangle = shape.getBounds();
+    float widthRatio = targetWidth / ((float)initialRectangle.width);
+    float heightRatio = targetHeight / (float)initialRectangle.height;
+    AffineTransform scaling = AffineTransform.getScaleInstance(widthRatio, heightRatio);
+    shape.transform(scaling);
+  }
 }

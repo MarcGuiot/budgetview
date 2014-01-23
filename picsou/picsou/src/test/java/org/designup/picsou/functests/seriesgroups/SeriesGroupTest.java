@@ -29,6 +29,12 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.checkGroups("Leisures", "New group...");
     budgetView.variable.addToNewGroup("Food", "Groceries");
+    budgetView.variable.checkContent("| Groceries | 80.00  | 200.00 |\n" +
+                                     "| Food      | 80.00  | 200.00 |\n" +
+                                     "| Leisures  | 100.00 | 200.00 |\n" +
+                                     "| Home      | 0.00   | 100.00 |\n");
+    budgetView.variable.checkGroupItems("Food");
+
     budgetView.variable.checkGroups("Leisures", "Groceries", "New group...");
     budgetView.variable.addToGroup("Home", "Groceries");
 
@@ -38,6 +44,7 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
                                      "| Home      | 0.00  | 100.00 |\n" +
                                      "| Leisures  | 0.00  | 200.00 |\n");
     budgetView.variable.checkTotalAmounts(-70.00, -500.00);
+    budgetView.variable.checkGroupItems("Food", "Home");
 
     timeline.selectMonth(201401);
     budgetView.variable.checkContent("| Groceries | 80.00  | 300.00 |\n" +
@@ -45,6 +52,7 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
                                      "| Home      | 0.00   | 100.00 |\n" +
                                      "| Leisures  | 100.00 | 200.00 |\n");
     budgetView.variable.checkTotalAmounts(-180.00, -500.00);
+    budgetView.variable.checkGroupItems("Food", "Home");
 
     // -- Groups can be collapsed / expanded --
 
@@ -52,12 +60,14 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkContent("| Groceries | 80.00  | 300.00 |\n" +
                                      "| Leisures  | 100.00 | 200.00 |\n");
     budgetView.variable.checkTotalAmounts(-180.00, -500.00);
+    budgetView.variable.checkGroupItems();
 
     budgetView.variable.expandGroup("Groceries");
     budgetView.variable.checkContent("| Groceries | 80.00  | 300.00 |\n" +
                                      "| Food      | 80.00  | 200.00 |\n" +
                                      "| Home      | 0.00   | 100.00 |\n" +
                                      "| Leisures  | 100.00 | 200.00 |\n");
+    budgetView.variable.checkGroupItems("Food", "Home");
 
     // -- Groups not shown in Categorization view --
 
@@ -291,6 +301,10 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
   }
 
   public void testPrinting() throws Exception {
+    fail("tbd");
+  }
+
+  public void testUndoOnDeletion() throws Exception {
     fail("tbd");
   }
 }

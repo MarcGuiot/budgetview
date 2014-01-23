@@ -1,10 +1,10 @@
 package org.globsframework.gui.splits.components;
 
+import org.globsframework.gui.splits.utils.Java2DUtils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.util.Arrays;
 
@@ -68,11 +68,7 @@ public class ArrowIcon implements Icon {
 
     GeneralPath shape = createTriangleShape(orientation);
 
-    Rectangle initialRectangle = shape.getBounds();
-    float widthRatio = ((float)arrowWidth) / ((float)initialRectangle.width);
-    float heightRatio = (float)arrowHeight / (float)initialRectangle.height;
-    AffineTransform scaling = AffineTransform.getScaleInstance(widthRatio, heightRatio);
-    shape.transform(scaling);
+    Java2DUtils.resize(shape, arrowWidth, arrowHeight);
 
     Rectangle bounds = shape.getBounds();
     int areaWidth = iconWidth - 1;
