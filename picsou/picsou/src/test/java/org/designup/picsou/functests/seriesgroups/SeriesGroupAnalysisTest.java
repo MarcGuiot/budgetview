@@ -2,10 +2,6 @@ package org.designup.picsou.functests.seriesgroups;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.gui.series.view.SeriesWrapper;
-import org.designup.picsou.model.Series;
-import org.globsframework.model.format.GlobPrinter;
 
 public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {

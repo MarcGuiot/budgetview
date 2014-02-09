@@ -312,14 +312,14 @@ public class BudgetAreaSeriesView extends View {
       if (PeriodSeriesStat.isForSeries(periodSeriesStat)) {
         gaugeView.setDescriptionSource(Key.create(Series.TYPE, periodSeriesStat.get(PeriodSeriesStat.TARGET)),
                                        Series.DESCRIPTION);
-
-        HighlightUpdater highlightUpdater = new HighlightUpdater(target.getKey(), directory) {
-          protected void setHighlighted(boolean highlighted) {
-            seriesName.applyStyle(highlighted ? "highlightedAmount" : "standardAmount");
-          }
-        };
-        cellBuilder.addDisposeListener(highlightUpdater);
       }
+
+      HighlightUpdater highlightUpdater = new HighlightUpdater(target.getKey(), directory) {
+        protected void setHighlighted(boolean highlighted) {
+          seriesName.applyStyle(highlighted ? "highlightedAmount" : "standardAmount");
+        }
+      };
+      cellBuilder.addDisposeListener(highlightUpdater);
 
       cellBuilder.add("gauge", gaugeView.getComponent());
       cellBuilder.addDisposeListener(gaugeView);

@@ -13,7 +13,7 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAddAndDeleteGroup() throws Exception {
-    OfxBuilder.init(this)
+      OfxBuilder.init(this)
       .addTransaction("2013/12/12", -70.00, "Auchan")
       .addTransaction("2008/24/10", -50.00, "Monoprix")
       .addTransaction("2014/01/10", -80.00, "Auchan")
@@ -313,7 +313,37 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
   }
 
   public void testHightlightingCollapsedGroups() throws Exception {
-    fail("tbd");
+    OfxBuilder.init(this)
+      .addTransaction("2014/01/09", -40.00, "Monoprix")
+      .addTransaction("2014/01/10", -80.00, "Auchan")
+      .addTransaction("2014/01/11", -30.00, "Lidl")
+      .addTransaction("2014/01/12", -100.00, "FNAC")
+      .addTransaction("2014/01/13", 1000.00, "WorldCo")
+      .load();
+
+    categorization.setNewIncome("WORLDCO", "Income");
+    categorization.setNewVariable("AUCHAN", "Food", -200.00);
+    categorization.setNewVariable("MONOPRIX", "Home", -100.00);
+    categorization.setNewVariable("FNAC", "Leisures", -200.00);
+
+    views.selectBudget();
+    budgetView.variable.addToNewGroup("Food", "Groceries");
+    budgetView.variable.addToGroup("Home", "Groceries");
+
+    budgetView.getSummary().rollover(201401, 11);
+    budgetView.variable.checkNotHighlighted("Groceries");
+    budgetView.variable.checkHighlighted("Food");
+
+    budgetView.variable.collapseGroup("Groceries");
+
+    budgetView.getSummary().rollover(201401, 11);
+    budgetView.variable.checkHighlighted("Groceries");
+
+    budgetView.variable.expandGroup("Groceries");
+
+    budgetView.getSummary().rollover(201401, 11);
+    budgetView.variable.checkNotHighlighted("Groceries");
+    budgetView.variable.checkHighlighted("Food");
   }
 
   public void testCommentForSubSeries() throws Exception {
