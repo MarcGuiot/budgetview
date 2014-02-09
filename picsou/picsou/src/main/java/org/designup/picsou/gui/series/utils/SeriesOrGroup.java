@@ -10,16 +10,29 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.UnexpectedValue;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class SeriesOrGroup {
   public final Integer id;
   public final SeriesType type;
+
+  public SeriesOrGroup(Glob target) {
+    this(getId(target), SeriesType.get(target));
+  }
+
+  private static Integer getId(Glob target) {
+    if (Series.TYPE.equals(target.getType())) {
+      return target.get(Series.ID);
+    }
+    if (SeriesGroup.TYPE.equals(target.getType())) {
+      return target.get(SeriesGroup.ID);
+    }
+    throw new InvalidParameter("Unexpected type: " + target);
+  }
 
   public SeriesOrGroup(Integer id, SeriesType type) {
     this.id = id;
@@ -125,5 +138,14 @@ public class SeriesOrGroup {
 
   public boolean isSeries() {
     return SeriesType.SERIES.equals(type);
+  }
+
+  public boolean isInGroup(GlobRepository repository) {
+    if (!type.equals(SeriesType.SERIES)) {
+      return false;
+    }
+
+    Glob series = repository.get(Key.create(Series.TYPE, id));
+    return series.get(Series.GROUP) != null;
   }
 }

@@ -50,8 +50,7 @@ public class BudgetGaugePages {
 
     MultiMap<Integer, Glob> map = new MultiMap<Integer, Glob>();
 
-    GlobList periodStats = repository.getAll(PeriodSeriesStat.TYPE, PeriodSeriesStat.seriesMatcher()).sort(new PeriodSeriesStatComparator(repository));
-    for (Glob periodStat : periodStats) {
+    for (Glob periodStat : repository.getAll(PeriodSeriesStat.TYPE)) {
       if (periodStat.isTrue(PeriodSeriesStat.ACTIVE)) {
         BudgetArea budgetArea = PeriodSeriesStat.getBudgetArea(periodStat, repository);
         map.put(budgetArea.getId(), periodStat);
@@ -74,6 +73,7 @@ public class BudgetGaugePages {
       filter.setSelectedMonthIds(selectedMonths);
       GlobList list = new GlobList(map.get(budgetArea.getId()));
       list.filterSelf(filter, repository);
+      list.sort(new PeriodSeriesStatComparator(repository));
       for (Glob periodStat : list) {
         addBlockToCurrentPage(new SeriesGaugeBlock(periodStat, budgetGaugeContext, currentSectionIndex++, repository));
       }

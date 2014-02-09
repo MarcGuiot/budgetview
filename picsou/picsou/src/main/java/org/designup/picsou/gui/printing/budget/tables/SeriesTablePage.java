@@ -29,7 +29,7 @@ public class SeriesTablePage extends PrintablePage {
     for (int col = 0; col < table.getColumnCount(); col++) {
       g2.setFont(style.getTextFont(table.isColumnSelected(col)));
       String label = table.getColumnTitle(col);
-      g2.drawString(label, metrics.tableTextX(label, col, Alignment.RIGHT), metrics.tableTextY(0));
+      g2.drawString(label, metrics.tableTextX(label, col, Alignment.RIGHT, false), metrics.tableTextY(0));
     }
     g2.drawLine(metrics.tableLeft(), metrics.tableRowBottom(0),
                 metrics.tableRight(), metrics.tableRowBottom(0));
@@ -48,7 +48,9 @@ public class SeriesTablePage extends PrintablePage {
       for (int col = 0; col < table.getColumnCount(); col++) {
         g2.setFont(style.getTextFont(table.isColumnSelected(col)));
         String value = row.getValue(col);
-        g2.drawString(value, metrics.tableTextX(value, col, Alignment.RIGHT), metrics.tableTextY(rowIndex));
+        g2.drawString(value,
+                      metrics.tableTextX(value, col, getAlignment(col), col == 0 && row.isInGroup()),
+                      metrics.tableTextY(rowIndex));
       }
       rowIndex++;
     }
@@ -60,6 +62,10 @@ public class SeriesTablePage extends PrintablePage {
     g2.drawLine(metrics.tableColumnLeft(2), metrics.tableTop(), metrics.tableColumnLeft(2), bottom);
 
     return PAGE_EXISTS;
+  }
+
+  private Alignment getAlignment(int col) {
+    return col == 0 ? Alignment.LEFT : Alignment.RIGHT;
   }
 
   public SeriesTable getSeriesTable() {

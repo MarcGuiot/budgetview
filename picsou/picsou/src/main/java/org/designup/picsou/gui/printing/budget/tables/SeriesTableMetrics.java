@@ -9,6 +9,9 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import java.awt.*;
 
 public class SeriesTableMetrics {
+
+  public static final int INNER_LABEL_SHIFT = 12;
+
   private FontMetrics tableFontMetrics;
 
   private int x0;
@@ -57,19 +60,20 @@ public class SeriesTableMetrics {
     return height;
   }
 
-  public int tableTextX(String text, int col, Alignment alignment) {
+  public int tableTextX(String text, int col, Alignment alignment, boolean inner) {
     int left = tableColumnLeft(col);
     int right = tableColumnLeft(col + 1);
+    int shift = inner ? INNER_LABEL_SHIFT : 0;
     switch (alignment) {
       case LEFT:
-        return left;
+        return left + shift;
 
       case CENTER:
         int columnWidth = right - left;
         return left + columnWidth / 2 - tableFontMetrics.stringWidth(text) / 2;
 
       case RIGHT:
-        return right - tableFontMetrics.stringWidth(text) - 1;
+        return right - tableFontMetrics.stringWidth(text) - 1 - shift;
     }
     throw new InvalidParameter("Unknown alignment: " + alignment);
   }

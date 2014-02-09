@@ -74,7 +74,7 @@ public class SeriesGaugeBlock implements PageBlock {
     g2.drawString(getPlannedAmount(), metrics.plannedAmountX(getPlannedAmount()), metrics.labelY);
 
     g2.setClip(0, 0, metrics.labelWidth, area.height);
-    g2.drawString(getLabel(), metrics.labelX, metrics.labelY);
+    g2.drawString(getLabel(), metrics.labelX(PeriodSeriesStat.isSeriesInGroup(periodStat, repository)), metrics.labelY);
 
     g2.setClip(0, 0, area.width, area.height);
     Gauge gauge = getGauge(style);

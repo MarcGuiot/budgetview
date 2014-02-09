@@ -148,23 +148,37 @@ public class PeriodSeriesStat {
 
   public static GlobMatcher seriesMatcher() {
     return new GlobMatcher() {
-      public boolean matches(Glob item, GlobRepository repository) {
-        return item != null &&
-               SeriesType.SERIES.getId().equals(item.get(PeriodSeriesStat.TARGET_TYPE));
+      public boolean matches(Glob stat, GlobRepository repository) {
+        return stat != null &&
+               SeriesType.SERIES.getId().equals(stat.get(PeriodSeriesStat.TARGET_TYPE));
       }
     };
   }
 
   public static GlobMatcher groupsMatcher() {
     return new GlobMatcher() {
-      public boolean matches(Glob item, GlobRepository repository) {
-        return item != null &&
-               SeriesType.SERIES_GROUP.getId().equals(item.get(PeriodSeriesStat.TARGET_TYPE));
+      public boolean matches(Glob stat, GlobRepository repository) {
+        return stat != null &&
+               SeriesType.SERIES_GROUP.getId().equals(stat.get(PeriodSeriesStat.TARGET_TYPE));
       }
     };
   }
 
   public static SeriesType getSeriesType(Glob periodSeriesStat) {
     return SeriesType.get(periodSeriesStat.get(TARGET_TYPE));
+  }
+
+  public static boolean isSeriesInGroup(Glob periodStat, GlobRepository repository) {
+    Glob target = findTarget(periodStat, repository);
+    if (target == null) {
+      return false;
+    }
+    switch (getSeriesType(periodStat)) {
+      case SERIES:
+        return target.get(Series.GROUP) != null;
+      case SERIES_GROUP:
+        return false;
+    }
+    throw new InvalidParameter("Unexpected type for " + periodStat);
   }
 }
