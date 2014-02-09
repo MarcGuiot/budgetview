@@ -351,6 +351,23 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDeltaIndicatorInBudgetView() throws Exception {
-    fail("tbd");
+    OfxBuilder.init(this)
+      .addTransaction("2014/01/09", -100.00, "Monoprix")
+      .addTransaction("2013/12/10", -150.00, "Auchan")
+      .addTransaction("2014/01/10", -200.00, "Auchan")
+      .load();
+
+    categorization.setNewVariable("AUCHAN", "Food", -200.00);
+    categorization.setNewVariable("MONOPRIX", "Home", -300.00);
+
+    views.selectBudget();
+    budgetView.variable.addToNewGroup("Food", "Groceries");
+    budgetView.variable.addToGroup("Home", "Groceries");
+
+    timeline.selectMonth(201312);
+    budgetView.variable.checkDeltaGauge("Groceries", null, -150.00, 1.00, "This envelope was not used in november 2013");
+
+    timeline.selectMonth(201401);
+    budgetView.variable.checkDeltaGauge("Groceries", -150.00, -500.00, 1.00, "The amount is increasing - it was 150.00 in december 2013");
   }
 }

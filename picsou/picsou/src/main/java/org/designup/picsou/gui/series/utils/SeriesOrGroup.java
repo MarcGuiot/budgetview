@@ -84,10 +84,14 @@ public class SeriesOrGroup {
     return SeriesStat.getAllMonths(id, type, repository);
   }
 
+  public static SeriesOrGroup getFromStat(Glob seriesStat) {
+    return new SeriesOrGroup(seriesStat.get(SeriesStat.TARGET), SeriesStat.getTargetType(seriesStat));
+  }
+
   public static Set<SeriesOrGroup> getAllFromSeriesStat(GlobList seriesStatList) {
     Set<SeriesOrGroup> result = new HashSet<SeriesOrGroup>();
     for (Glob seriesStat : seriesStatList) {
-      result.add(new SeriesOrGroup(seriesStat.get(SeriesStat.TARGET), SeriesStat.getTargetType(seriesStat)));
+      result.add(getFromStat(seriesStat));
     }
     return result;
   }

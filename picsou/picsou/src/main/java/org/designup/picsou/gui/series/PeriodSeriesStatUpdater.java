@@ -4,6 +4,7 @@ import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.series.utils.SeriesOrGroup;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -73,8 +74,8 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
                                isSeries()),
                            seriesStatFunctor);
       initToUpdateField();
-      initEvolutionFields();
       initGroups();
+      initEvolutionFields();
     }
     finally {
       repository.completeChangeSet();
@@ -104,13 +105,13 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
 
   private void initEvolutionFields(int previousMonth, int newMonth) {
     for (Glob stat : repository.findByIndex(SeriesStat.MONTH_INDEX, newMonth)) {
-      Integer seriesId = stat.get(SeriesStat.TARGET);
+      SeriesOrGroup seriesOrGroup = SeriesOrGroup.getFromStat(stat);
       Double newValue = stat.get(SeriesStat.SUMMARY_AMOUNT);
 
-      Glob previousStat = repository.find(SeriesStat.createKeyForSeries(seriesId, previousMonth));
+      Glob previousStat = repository.find(seriesOrGroup.createSeriesStatKey(previousMonth));
       Double previousValue = previousStat == null ? null : previousStat.get(SeriesStat.SUMMARY_AMOUNT);
 
-      Glob periodSeriesStat = PeriodSeriesStat.findOrCreateForSeries(seriesId, repository);
+      Glob periodSeriesStat = PeriodSeriesStat.findOrCreate(seriesOrGroup.id, seriesOrGroup.type, repository);
       repository.update(periodSeriesStat.getKey(),
                         value(PeriodSeriesStat.PREVIOUS_SUMMARY_AMOUNT, previousValue),
                         value(PeriodSeriesStat.PREVIOUS_SUMMARY_MONTH, previousMonth),
