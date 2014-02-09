@@ -623,24 +623,23 @@ public class CategorizationChecker extends ViewChecker {
     for (int index : indices) {
       selectTableRow(index);
       if (first) {
-        SeriesEditionDialogChecker editionDialogChecker = selectVariable()
+        SeriesEditionDialogChecker editionDialog = selectVariable()
           .createSeries()
           .setName(seriesName);
         if (amount != null) {
-          editionDialogChecker.selectAllMonths();
+          editionDialog.selectAllMonths();
           if (amount < 0) {
-            editionDialogChecker.selectNegativeAmounts();
-            editionDialogChecker.checkNegativeAmountsSelected();
+            editionDialog.selectNegativeAmounts();
+            editionDialog.checkNegativeAmountsSelected();
           }
           else {
-            editionDialogChecker.selectPositiveAmounts();
-            editionDialogChecker.checkPositiveAmountsSelected();
+            editionDialog.selectPositiveAmounts();
+            editionDialog.checkPositiveAmountsSelected();
           }
-          editionDialogChecker
+          editionDialog
             .setAmount(Math.abs(amount));
         }
-        editionDialogChecker
-          .validate();
+        editionDialog.validate();
         first = false;
       }
       else {

@@ -6,17 +6,18 @@ import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.Series;
 import org.globsframework.gui.splits.components.EmptyIcon;
-import org.globsframework.gui.views.GlobTableView;
-import org.globsframework.gui.splits.painters.PaintablePanel;
 import org.globsframework.gui.splits.components.HyperlinkButton;
-import org.globsframework.model.format.DescriptionService;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.gui.splits.painters.PaintablePanel;
+import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
@@ -32,7 +33,7 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
   private PaintablePanel rendererPanel;
   private HyperlinkButton editorButton;
   private PaintablePanel editorPanel;
-  
+
   protected int referenceMonthId;
   private static final String TEXT_FOR_WIDTH = "+888888.88";
 
@@ -40,7 +41,7 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
   private Font largeFont;
 
   private Icon noIcon = null;
-  private Icon subSeriesIcon = new EmptyIcon(5,5);
+  private Icon subSeriesIcon = new EmptyIcon(8, 5);
 
   public SeriesEvolutionEditor(int offset,
                                GlobTableView view,
@@ -66,7 +67,7 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
     editorPanel = initCellPanel(editorButton, true, new PaintablePanel());
   }
 
-  public int getWidth(){
+  public int getWidth() {
     return label.getFontMetrics(label.getFont()).stringWidth(TEXT_FOR_WIDTH);
   }
 
@@ -74,41 +75,54 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
     this.referenceMonthId = monthId;
   }
 
-  protected Component getComponent(Glob seriesWrapper, boolean edit) {
+  protected Component getComponent(Glob wrapper, boolean edit) {
 
-    Integer itemId = seriesWrapper.get(SeriesWrapper.ITEM_ID);
-    if (edit) {
+    Integer itemId = wrapper.get(SeriesWrapper.ITEM_ID);
+    if (SeriesWrapper.isSeries(wrapper) && edit) {
       currentSeries = repository.get(Key.create(Series.TYPE, itemId));
     }
+    else {
+      currentSeries = null;
+    }
 
-    String text = getText(seriesWrapper);
-    String description = getDescription(seriesWrapper);
+    String text = getText(wrapper);
+    String description = getDescription(wrapper);
 
-    switch (SeriesWrapperType.get(seriesWrapper)) {
+    switch (SeriesWrapperType.get(wrapper)) {
       case BUDGET_AREA:
         label.setFont(largeFont);
         label.setIcon(noIcon);
         label.setText(text);
         label.setToolTipText(description);
-        colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, label, labelPanel);
+        colors.setColors(wrapper, row, offset, referenceMonthId, isSelected, label, labelPanel);
         return labelPanel;
 
-      case SERIES:
+      case SERIES: {
         JButton button = edit ? editorButton : rendererButton;
         label.setFont(largeFont);
-        label.setIcon(noIcon);
         button.setText(text);
         button.setToolTipText(description);
         PaintablePanel panel = edit ? editorPanel : rendererPanel;
-        colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, button, panel);
+        colors.setColors(wrapper, row, offset, referenceMonthId, isSelected, button, panel);
+        panel.setBorder(getBorderForSeries(wrapper));
         return panel;
+      }
+
+      case SERIES_GROUP: {
+        label.setFont(smallFont);
+        label.setIcon(noIcon);
+        label.setText(text);
+        label.setToolTipText(description);
+        colors.setColors(wrapper, row, offset, referenceMonthId, isSelected, label, labelPanel);
+        return labelPanel;
+      }
 
       case SUB_SERIES:
         label.setFont(smallFont);
         label.setIcon(subSeriesIcon);
         label.setText(text);
         label.setToolTipText(description);
-        colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, label, labelPanel);
+        colors.setColors(wrapper, row, offset, referenceMonthId, isSelected, label, labelPanel);
         return labelPanel;
 
       case SUMMARY:
@@ -116,13 +130,15 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
         label.setIcon(noIcon);
         label.setText(text);
         label.setToolTipText(description);
-        colors.setColors(seriesWrapper, row, offset, referenceMonthId, isSelected, label, labelPanel);
+        colors.setColors(wrapper, row, offset, referenceMonthId, isSelected, label, labelPanel);
         return labelPanel;
 
       default:
-        throw new InvalidParameter("Unexpected type: " + SeriesWrapperType.get(seriesWrapper));
+        throw new InvalidParameter("Unexpected type: " + SeriesWrapperType.get(wrapper));
     }
   }
+
+  protected abstract Border getBorderForSeries(Glob wrapper);
 
   protected abstract String getDescription(Glob seriesWrapper);
 

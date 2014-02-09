@@ -2,7 +2,7 @@ package org.designup.picsou.gui.description;
 
 import junit.framework.TestCase;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.model.PeriodSeriesStatType;
+import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesGroup;
@@ -91,7 +91,7 @@ public class PeriodSeriesStatComparatorTest extends TestCase {
     seriesMap.put(name, series);
     Glob stat = repository.create(PeriodSeriesStat.TYPE,
                                   value(PeriodSeriesStat.TARGET, series.get(Series.ID)),
-                                  value(PeriodSeriesStat.TARGET_TYPE, PeriodSeriesStatType.SERIES.getId()),
+                                  value(PeriodSeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
                                   value(PeriodSeriesStat.ABS_SUM_AMOUNT, amount),
                                   value(PeriodSeriesStat.ACTIVE, active));
     return stat;
@@ -108,7 +108,7 @@ public class PeriodSeriesStatComparatorTest extends TestCase {
     groupMap.put(name, group);
     Glob stat = repository.create(PeriodSeriesStat.TYPE,
                                   value(PeriodSeriesStat.TARGET, group.get(SeriesGroup.ID)),
-                                  value(PeriodSeriesStat.TARGET_TYPE, PeriodSeriesStatType.SERIES_GROUP.getId()),
+                                  value(PeriodSeriesStat.TARGET_TYPE, SeriesType.SERIES_GROUP.getId()),
                                   value(PeriodSeriesStat.ABS_SUM_AMOUNT, amount),
                                   value(PeriodSeriesStat.ACTIVE, active));
 

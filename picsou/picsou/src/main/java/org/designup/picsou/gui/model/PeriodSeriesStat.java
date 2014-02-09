@@ -27,7 +27,7 @@ public class PeriodSeriesStat {
   public static IntegerField TARGET;
 
   @Key
-  @Target(PeriodSeriesStatType.class)
+  @Target(SeriesType.class)
   public static LinkField TARGET_TYPE;
 
   @DefaultDouble(0.0)
@@ -73,19 +73,19 @@ public class PeriodSeriesStat {
   }
 
   public static boolean isForSeries(Glob periodSeriesStat) {
-    return PeriodSeriesStatType.SERIES.equals(PeriodSeriesStatType.get(periodSeriesStat));
+    return SeriesType.SERIES.equals(getSeriesType(periodSeriesStat));
   }
 
   public static boolean isForGroup(Glob periodSeriesStat) {
-    return PeriodSeriesStatType.SERIES_GROUP.equals(PeriodSeriesStatType.get(periodSeriesStat));
+    return SeriesType.SERIES_GROUP.equals(getSeriesType(periodSeriesStat));
   }
 
   public static Glob findTarget(Glob periodStat, GlobRepository repository) {
     if (periodStat == null) {
       return null;
     }
-    PeriodSeriesStatType statType = PeriodSeriesStatType.get(periodStat);
-    return repository.find(statType.getTargetKey(periodStat));
+    SeriesType statType = getSeriesType(periodStat);
+    return repository.find(org.globsframework.model.Key.create(statType.getTargetType(), periodStat.get(TARGET)));
   }
 
   public static BudgetArea getBudgetArea(Glob periodStat, GlobRepository repository) {
@@ -93,7 +93,7 @@ public class PeriodSeriesStat {
     if (target == null) {
       return null;
     }
-    switch (PeriodSeriesStatType.get(periodStat)) {
+    switch (getSeriesType(periodStat)) {
       case SERIES:
         return Series.getBudgetArea(target);
       case SERIES_GROUP:
@@ -107,7 +107,7 @@ public class PeriodSeriesStat {
     if (target == null) {
       return null;
     }
-    switch (PeriodSeriesStatType.get(periodStat)) {
+    switch (getSeriesType(periodStat)) {
       case SERIES:
         return target.get(Series.NAME);
       case SERIES_GROUP:
@@ -117,10 +117,10 @@ public class PeriodSeriesStat {
   }
 
   public static Glob findOrCreateForSeries(Integer seriesId, GlobRepository repository) {
-    return findOrCreate(seriesId, PeriodSeriesStatType.SERIES, repository);
+    return findOrCreate(seriesId, SeriesType.SERIES, repository);
   }
 
-  public static Glob findOrCreate(Integer targetId, PeriodSeriesStatType type, GlobRepository repository) {
+  public static Glob findOrCreate(Integer targetId, SeriesType type, GlobRepository repository) {
     Glob existing = findUnique(targetId, type, repository);
     if (existing != null) {
       return existing;
@@ -130,7 +130,7 @@ public class PeriodSeriesStat {
                              value(TARGET_TYPE, type.getId()));
   }
 
-  public static Glob findUnique(Integer targetId, PeriodSeriesStatType targetType, GlobRepository repository) {
+  public static Glob findUnique(Integer targetId, SeriesType targetType, GlobRepository repository) {
     if (targetId == null) {
       return null;
     }
@@ -143,14 +143,14 @@ public class PeriodSeriesStat {
       return null;
     }
     Glob series = findTarget(periodSeriesStat, repository);
-    return findUnique(series.get(Series.GROUP), PeriodSeriesStatType.SERIES_GROUP, repository);
+    return findUnique(series.get(Series.GROUP), SeriesType.SERIES_GROUP, repository);
   }
 
   public static GlobMatcher seriesMatcher() {
     return new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
         return item != null &&
-               PeriodSeriesStatType.SERIES.getId().equals(item.get(PeriodSeriesStat.TARGET_TYPE));
+               SeriesType.SERIES.getId().equals(item.get(PeriodSeriesStat.TARGET_TYPE));
       }
     };
   }
@@ -159,8 +159,12 @@ public class PeriodSeriesStat {
     return new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
         return item != null &&
-               PeriodSeriesStatType.SERIES_GROUP.getId().equals(item.get(PeriodSeriesStat.TARGET_TYPE));
+               SeriesType.SERIES_GROUP.getId().equals(item.get(PeriodSeriesStat.TARGET_TYPE));
       }
     };
+  }
+
+  public static SeriesType getSeriesType(Glob periodSeriesStat) {
+    return SeriesType.get(periodSeriesStat.get(TARGET_TYPE));
   }
 }

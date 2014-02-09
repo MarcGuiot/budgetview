@@ -33,8 +33,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
@@ -154,6 +153,11 @@ public class SeriesEvolutionTableView extends View {
     menu.add(tableView.getCopyTableAction(Lang.get("copyTable"), 0));
     builder.add("actionsMenu", new JPopupButton(Lang.get("actions"), menu));
 
+    table.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "doExpand");
+    table.getActionMap().put("doExpand", new ExpandSelectionAction(expansionModel, repository, directory));
+    table.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "doCollapse");
+    table.getActionMap().put("doCollapse", new CollapseSelectionAction(expansionModel, repository, directory));
+
     parentSelectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         SortedSet<Integer> monthIds = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
@@ -252,7 +256,7 @@ public class SeriesEvolutionTableView extends View {
 
       for (int offset = -1; offset < -1 + monthColumnsCount; offset++) {
         int monthId = Month.offset(referenceMonthId, offset);
-        Glob seriesStat = repository.find(SeriesStat.createKey(wrapper.get(SeriesWrapper.ITEM_ID), monthId));
+        Glob seriesStat = repository.find(SeriesStat.createKeyForSeries(wrapper.get(SeriesWrapper.ITEM_ID), monthId));
         if ((seriesStat != null) &&
             (Amounts.isNotZero(seriesStat.get(SeriesStat.PLANNED_AMOUNT))
              || Amounts.isNotZero(seriesStat.get(SeriesStat.ACTUAL_AMOUNT)))) {

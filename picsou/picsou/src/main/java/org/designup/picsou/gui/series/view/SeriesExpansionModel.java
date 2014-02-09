@@ -26,6 +26,9 @@ public class SeriesExpansionModel extends TableExpansionModel {
           if (SeriesWrapper.isSeries(wrapper)) {
             setExpanded(repository.findLinkTarget(wrapper, SeriesWrapper.PARENT));
           }
+          else if (SeriesWrapper.isGroup(wrapper)) {
+            setExpanded(repository.findLinkTarget(wrapper, SeriesWrapper.PARENT));
+          }
           else if (SeriesWrapper.isSubSeries(wrapper)) {
             setExpanded(repository.findLinkTarget(wrapper, SeriesWrapper.PARENT));
           }
@@ -46,6 +49,7 @@ public class SeriesExpansionModel extends TableExpansionModel {
 
   public boolean isParent(Glob wrapper) {
     return ((wrapper.get(SeriesWrapper.PARENT) == null) ||
+            SeriesWrapperType.get(wrapper).equals(SeriesWrapperType.SERIES_GROUP) ||
             SeriesWrapperType.get(wrapper).equals(SeriesWrapperType.SERIES));
   }
 

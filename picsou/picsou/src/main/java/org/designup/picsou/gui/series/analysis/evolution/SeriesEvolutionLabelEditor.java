@@ -3,6 +3,7 @@ package org.designup.picsou.gui.series.analysis.evolution;
 import org.designup.picsou.gui.description.stringifiers.SeriesWrapperDescriptionStringifier;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.analysis.SeriesChartsColors;
+import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperStringifier;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
@@ -12,6 +13,7 @@ import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 
@@ -34,6 +36,10 @@ public class SeriesEvolutionLabelEditor extends SeriesEvolutionEditor {
 
   protected String getText(Glob seriesWrapper) {
     return stringifier.toString(seriesWrapper, repository);
+  }
+
+  protected Border getBorderForSeries(Glob wrapper) {
+    return SeriesWrapper.isGroupPart(wrapper, repository) ? BorderFactory.createEmptyBorder(0,5,0,0) : null;
   }
 
   protected String getDescription(Glob seriesWrapper) {

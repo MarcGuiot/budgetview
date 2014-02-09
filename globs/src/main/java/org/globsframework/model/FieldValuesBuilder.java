@@ -87,8 +87,30 @@ public class FieldValuesBuilder {
     return setValue(field, value);
   }
 
+  public void add(IntegerField field, Integer value) {
+    if (value == null) {
+      return;
+    }
+    Integer previous = values.get(field);
+    if (previous == null) {
+      previous = 0;
+    }
+    set(field, value + previous);
+  }
+
   public FieldValuesBuilder set(DoubleField field, Double value) {
     return setValue(field, value);
+  }
+
+  public void add(DoubleField field, Double value) {
+    if (value == null) {
+      return;
+    }
+    Double previous = values.get(field);
+    if (previous == null) {
+      previous = 0.00;
+    }
+    set(field, value + previous);
   }
 
   public FieldValuesBuilder set(TimeStampField field, Date value) {

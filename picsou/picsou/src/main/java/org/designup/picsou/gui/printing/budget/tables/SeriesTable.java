@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.printing.budget.tables;
 
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.gui.description.SeriesAndGroupsComparator;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.printing.utils.BudgetReportUtils;
 import org.designup.picsou.model.BudgetArea;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.designup.picsou.gui.model.SeriesStat.isForBudgetArea;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesTable {
@@ -32,19 +34,19 @@ public class SeriesTable {
     List<Integer> months = monthRange.asList();
     for (BudgetArea budgetArea : BudgetReportUtils.BUDGET_AREAS) {
       List<SeriesRow> rows = new ArrayList<SeriesRow>();
-      GlobList SeriesStatList =
+      GlobList seriesStatList =
         repository.getAll(SeriesStat.TYPE,
-                          and(linkTargetFieldEquals(SeriesStat.SERIES, Series.BUDGET_AREA, budgetArea.getId()),
+                          and(isForBudgetArea(budgetArea),
                               fieldIn(SeriesStat.MONTH, months),
                               isTrue(SeriesStat.ACTIVE),
                               isNotNull(SeriesStat.SUMMARY_AMOUNT),
                               not(fieldEquals(SeriesStat.SUMMARY_AMOUNT, 0.00))));
 
-      GlobList seriesList = SeriesStatList.getTargets(SeriesStat.SERIES, repository).sort(Series.NAME);
-      for (Glob series : seriesList) {
-        rows.add(new SeriesRow(series, months, budgetArea, repository));
+      GlobList targetList = SeriesStat.getTargets(seriesStatList, repository);
+      Collections.sort(targetList, new SeriesAndGroupsComparator(repository));
+      for (Glob target : targetList) {
+        rows.add(new SeriesRow(target, months, budgetArea, repository));
       }
-      Collections.sort(rows);
       for (List<SeriesRow> subList : Utils.split(rows, MAX_ROWS_PER_PAGE)) {
         result.add(new SeriesTable(subList, budgetArea, currentMonth, months));
       }
@@ -137,7 +139,7 @@ public class SeriesTable {
     }
 
     private Double getValueForMonth(int monthId) {
-      Glob stat = repository.find(SeriesStat.createKey(series.get(Series.ID), monthId));
+      Glob stat = repository.find(SeriesStat.createKeyForSeries(series.get(Series.ID), monthId));
       if (stat == null) {
         return null;
       }

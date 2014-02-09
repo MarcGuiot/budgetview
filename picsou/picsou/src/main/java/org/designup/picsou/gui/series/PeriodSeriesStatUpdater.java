@@ -2,7 +2,7 @@ package org.designup.picsou.gui.series;
 
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.model.PeriodSeriesStatType;
+import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
@@ -12,7 +12,6 @@ import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
@@ -21,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 
+import static org.designup.picsou.gui.model.SeriesStat.isSeries;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
@@ -69,7 +69,8 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     try {
       resetStats();
       repository.safeApply(SeriesStat.TYPE,
-                           fieldContained(SeriesStat.MONTH, selectedMonths.getValueSet(Month.ID)),
+                           and(fieldContained(SeriesStat.MONTH, selectedMonths.getValueSet(Month.ID)),
+                               isSeries()),
                            seriesStatFunctor);
       initToUpdateField();
       initEvolutionFields();
@@ -103,10 +104,10 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
 
   private void initEvolutionFields(int previousMonth, int newMonth) {
     for (Glob stat : repository.findByIndex(SeriesStat.MONTH_INDEX, newMonth)) {
-      Integer seriesId = stat.get(SeriesStat.SERIES);
+      Integer seriesId = stat.get(SeriesStat.TARGET);
       Double newValue = stat.get(SeriesStat.SUMMARY_AMOUNT);
 
-      Glob previousStat = repository.find(SeriesStat.createKey(seriesId, previousMonth));
+      Glob previousStat = repository.find(SeriesStat.createKeyForSeries(seriesId, previousMonth));
       Double previousValue = previousStat == null ? null : previousStat.get(SeriesStat.SUMMARY_AMOUNT);
 
       Glob periodSeriesStat = PeriodSeriesStat.findOrCreateForSeries(seriesId, repository);
@@ -120,15 +121,15 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
 
   private void initGroups() {
     for (Glob periodSeriesStat : repository.getAll(PeriodSeriesStat.TYPE,
-                                                   fieldEquals(PeriodSeriesStat.TARGET_TYPE, PeriodSeriesStatType.SERIES.getId()))) {
+                                                   fieldEquals(PeriodSeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()))) {
       Glob series = PeriodSeriesStat.findTarget(periodSeriesStat, repository);
       Integer groupId = series.get(Series.GROUP);
       if (groupId != null) {
-        Glob groupStat = PeriodSeriesStat.findUnique(groupId, PeriodSeriesStatType.SERIES_GROUP, repository);
+        Glob groupStat = PeriodSeriesStat.findUnique(groupId, SeriesType.SERIES_GROUP, repository);
         if (groupStat == null) {
           groupStat = repository.create(PeriodSeriesStat.TYPE,
                                         value(PeriodSeriesStat.TARGET, groupId),
-                                        value(PeriodSeriesStat.TARGET_TYPE, PeriodSeriesStatType.SERIES_GROUP.getId()));
+                                        value(PeriodSeriesStat.TARGET_TYPE, SeriesType.SERIES_GROUP.getId()));
         }
 
         FieldValuesBuilder builder = new FieldValuesBuilder();
@@ -160,7 +161,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     repository.deleteAll(PeriodSeriesStat.TYPE);
     for (Glob series : repository.getAll(Series.TYPE)) {
       repository.create(PeriodSeriesStat.TYPE,
-                        value(PeriodSeriesStat.TARGET_TYPE, PeriodSeriesStatType.SERIES.getId()),
+                        value(PeriodSeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
                         value(PeriodSeriesStat.TARGET, series.get(Series.ID)),
                         value(PeriodSeriesStat.VISIBLE, true),
                         value(PeriodSeriesStat.ACTIVE, false));
@@ -181,7 +182,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     }
 
     public void run(Glob seriesStat, GlobRepository remote) throws Exception {
-      Integer seriesId = seriesStat.get(SeriesStat.SERIES);
+      Integer seriesId = seriesStat.get(SeriesStat.TARGET);
       Glob series = remote.get(Key.create(Series.TYPE, seriesId));
       Glob group = remote.findLinkTarget(series, Series.GROUP);
       boolean visible = (group == null) || group.isTrue(SeriesGroup.EXPANDED);

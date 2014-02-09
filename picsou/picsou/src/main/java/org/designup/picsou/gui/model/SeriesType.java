@@ -14,7 +14,7 @@ import org.globsframework.utils.exceptions.InvalidData;
 
 import static org.globsframework.model.FieldValue.value;
 
-public enum PeriodSeriesStatType implements GlobConstantContainer {
+public enum SeriesType implements GlobConstantContainer {
   SERIES(0, Series.TYPE),
   SERIES_GROUP(1, SeriesGroup.TYPE);
 
@@ -27,10 +27,10 @@ public enum PeriodSeriesStatType implements GlobConstantContainer {
   private final GlobType targetType;
 
   static {
-    GlobTypeLoader.init(PeriodSeriesStatType.class, "periodSeriesStatType");
+    GlobTypeLoader.init(SeriesType.class, "seriesType");
   }
 
-  PeriodSeriesStatType(int id, GlobType targetType) {
+  SeriesType(int id, GlobType targetType) {
     this.id = id;
     this.targetType = targetType;
   }
@@ -44,22 +44,18 @@ public enum PeriodSeriesStatType implements GlobConstantContainer {
     return id;
   }
 
-  public org.globsframework.model.Key getTargetKey(Glob periodSeriesStat) {
-    return org.globsframework.model.Key.create(targetType, periodSeriesStat.get(PeriodSeriesStat.TARGET));
+  public GlobType getTargetType() {
+    return targetType;
   }
 
-  public static PeriodSeriesStatType get(Glob periodSeriesStat) {
-    return get(periodSeriesStat.get(PeriodSeriesStat.TARGET_TYPE));
-  }
-
-  public static PeriodSeriesStatType get(int id) {
+  public static SeriesType get(int id) {
     switch (id) {
       case 0:
         return SERIES;
       case 1:
         return SERIES_GROUP;
     }
-    throw new InvalidData(id + " not associated to any PeriodSeriesStatType enum value");
+    throw new InvalidData(id + " not associated to any SeriesType enum value");
   }
 }
 

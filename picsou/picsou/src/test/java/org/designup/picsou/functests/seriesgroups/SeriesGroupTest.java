@@ -281,11 +281,35 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
   }
 
   public void testPlannedButtonForGroupTriggersExpand() throws Exception {
-    fail("tbd");
-  }
+    OfxBuilder.init(this)
+      .addTransaction("2013/12/12", -70.00, "Auchan")
+      .addTransaction("2008/24/10", -50.00, "Monoprix")
+      .addTransaction("2014/01/10", -80.00, "Auchan")
+      .addTransaction("2014/01/11", -30.00, "Lidl")
+      .addTransaction("2014/01/11", -100.00, "FNAC")
+      .load();
 
-  public void testATreeNodeIsAddedInTheAnalysisTableForEachGroup() throws Exception {
-    fail("tbd: vue analyse + navigation");
+    categorization.setNewVariable("AUCHAN", "Food", -200.00);
+    categorization.setNewVariable("MONOPRIX", "Home", -100.00);
+    categorization.setNewVariable("FNAC", "Leisures", -200.00);
+
+    views.selectBudget();
+    budgetView.variable.addToNewGroup("Food", "Groceries");
+    budgetView.variable.addToGroup("Home", "Groceries");
+    budgetView.variable.checkContent("| Groceries | 80.00  | 300.00 |\n" +
+                                     "| Food      | 80.00  | 200.00 |\n" +
+                                     "| Home      | 0.00   | 100.00 |\n" +
+                                     "| Leisures  | 100.00 | 200.00 |\n");
+
+    budgetView.variable.clickPlanned("Groceries");
+    budgetView.variable.checkContent("| Groceries | 80.00  | 300.00 |\n" +
+                                     "| Leisures  | 100.00 | 200.00 |\n");
+
+    budgetView.variable.clickPlanned("Groceries");
+    budgetView.variable.checkContent("| Groceries | 80.00  | 300.00 |\n" +
+                                     "| Food      | 80.00  | 200.00 |\n" +
+                                     "| Home      | 0.00   | 100.00 |\n" +
+                                     "| Leisures  | 100.00 | 200.00 |\n");
   }
 
   public void testHightlightingCollapsedGroups() throws Exception {
@@ -297,14 +321,6 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDeltaIndicatorInBudgetView() throws Exception {
-    fail("tbd");
-  }
-
-  public void testPrinting() throws Exception {
-    fail("tbd");
-  }
-
-  public void testUndoOnDeletion() throws Exception {
     fail("tbd");
   }
 }

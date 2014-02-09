@@ -1,6 +1,7 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
@@ -16,11 +17,11 @@ public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetL
     changeSet.safeVisit(SeriesStat.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Integer currentMonthId = repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH);
-        Glob series = repository.find(Key.create(Series.TYPE, key.get(SeriesStat.SERIES)));
+        Glob series = repository.find(Key.create(Series.TYPE, key.get(SeriesStat.TARGET)));
         if (series == null) {
           return;
         }
-        Integer seriesId = values.get(SeriesStat.SERIES);
+        Integer seriesId = values.get(SeriesStat.TARGET);
         Integer statMonthId = values.get(SeriesStat.MONTH);
         Double amount = values.get(SeriesStat.ACTUAL_AMOUNT);
 
@@ -29,12 +30,12 @@ public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetL
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         Integer currentMonthId = repository.get(CurrentMonth.KEY).get(CurrentMonth.LAST_TRANSACTION_MONTH);
-        Glob series = repository.find(Key.create(Series.TYPE, key.get(SeriesStat.SERIES)));
+        Glob series = repository.find(Key.create(Series.TYPE, key.get(SeriesStat.TARGET)));
         if (series == null) {
           return;
         }
         Glob seriesStat = repository.get(key);
-        Integer seriesId = seriesStat.get(SeriesStat.SERIES);
+        Integer seriesId = seriesStat.get(SeriesStat.TARGET);
         Integer statMonthId = seriesStat.get(SeriesStat.MONTH);
         Double amount = seriesStat.get(SeriesStat.ACTUAL_AMOUNT);
         updateSeriesBudget(currentMonthId, series, seriesId, statMonthId, amount, repository);
@@ -73,14 +74,12 @@ public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetL
           }
           Integer seriesId = oneSeries.get(Series.ID);
           if (previousActiveMonth == null) {
-            Glob seriesStat = repository.findOrCreate(Key.create(SeriesStat.SERIES, oneSeries.get(Series.ID),
-                                                                 SeriesStat.MONTH, currentMonthId));
+            Glob seriesStat = SeriesStat.findOrCreateForSeries(oneSeries.get(Series.ID), currentMonthId, repository);
             Double amount = seriesStat.get(SeriesStat.ACTUAL_AMOUNT);
             updateSeriesBudget(currentMonthId, oneSeries, seriesId, currentMonthId, amount, repository);
           }
           else {
-            Glob seriesStat = repository.findOrCreate(Key.create(SeriesStat.SERIES, oneSeries.get(Series.ID),
-                                                                 SeriesStat.MONTH, previousActiveMonth));
+            Glob seriesStat = SeriesStat.findOrCreateForSeries(oneSeries.get(Series.ID), previousActiveMonth, repository);
             Double amount = seriesStat.get(SeriesStat.ACTUAL_AMOUNT);
             updateSeriesBudget(currentMonthId, oneSeries, seriesId, previousActiveMonth, amount, repository);
           }
@@ -114,8 +113,7 @@ public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetL
       for (Glob budget : seriesBudgets) {
         {
           Glob currentSeriesStat =
-            repository.findOrCreate(Key.create(SeriesStat.SERIES, seriesId,
-                                               SeriesStat.MONTH, budget.get(SeriesBudget.MONTH)));
+            SeriesStat.findOrCreateForSeries(seriesId, budget.get(SeriesBudget.MONTH), repository);
           if (firstMonthWithObserved == Integer.MAX_VALUE && Amounts.isNotZero(currentSeriesStat.get(SeriesStat.ACTUAL_AMOUNT))) {
             firstMonthWithObserved = budget.get(SeriesBudget.MONTH);
           }
@@ -128,7 +126,8 @@ public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetL
         }
       }
       if (previousMonth != null && firstMonthWithObserved < statMonthId) {
-        Glob previousStat = repository.findOrCreate(Key.create(SeriesStat.SERIES, seriesId,
+        Glob previousStat = repository.findOrCreate(Key.create(SeriesStat.TARGET, seriesId,
+                                                               SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId(),
                                                                SeriesStat.MONTH, previousMonth));
         // Si on a un changement de signe : ex on passe de -10 a 5 on propage le changement vers 5
         Double futureAmount;
@@ -173,7 +172,8 @@ public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetL
       }
 
       Glob currentSeriesStat =
-        repository.findOrCreate(Key.create(SeriesStat.SERIES, seriesId,
+        repository.findOrCreate(Key.create(SeriesStat.TARGET, seriesId,
+                                           SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId(),
                                            SeriesStat.MONTH, budget.get(SeriesBudget.MONTH)));
       if (firstMonthWithObserved == 0 && Amounts.isNotZero(currentSeriesStat.get(SeriesStat.ACTUAL_AMOUNT))) {
         firstMonthWithObserved = budget.get(SeriesBudget.MONTH);

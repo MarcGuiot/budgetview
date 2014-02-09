@@ -277,7 +277,7 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
   }
 
   Double computeObservedAmount(GlobRepository repository, int seriesId, int monthId) {
-    Glob seriesStat = repository.find(Key.create(SeriesStat.SERIES, seriesId, SeriesStat.MONTH, monthId));
+    Glob seriesStat = repository.find(Key.create(SeriesStat.TARGET, seriesId, SeriesStat.MONTH, monthId));
     if (seriesStat == null) { // il n'y a pas d'operations.
       return null;
     }

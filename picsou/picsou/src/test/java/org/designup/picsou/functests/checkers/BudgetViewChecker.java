@@ -520,6 +520,11 @@ public class BudgetViewChecker extends ViewChecker {
         .click(Lang.get("seriesGroup.menu.collapse"));
     }
 
+    public BudgetAreaChecker clickPlanned(String groupName) {
+      getSeriesPanel(groupName).getPlannedAmount().click();
+      return this;
+    }
+
     public SeriesGroupNameDialogChecker renameGroup(String series) {
       return SeriesGroupNameDialogChecker.open(getSeriesPanel(series).getSeriesButton()
                                                  .triggerClick(Lang.get("seriesGroup.menu.rename")));

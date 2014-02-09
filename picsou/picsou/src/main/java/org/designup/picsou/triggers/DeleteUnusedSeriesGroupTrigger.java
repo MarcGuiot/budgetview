@@ -27,6 +27,7 @@ public class DeleteUnusedSeriesGroupTrigger implements ChangeSetListener {
 
   private void deletePreviousGroupIfNeeded(Integer previousGroupId, GlobRepository repository) {
     if ((previousGroupId != null) &&
+        repository.contains(Key.create(SeriesGroup.TYPE, previousGroupId)) &&
         !repository.contains(Series.TYPE, fieldEquals(Series.GROUP, previousGroupId))) {
       repository.delete(Key.create(SeriesGroup.TYPE, previousGroupId));
     }

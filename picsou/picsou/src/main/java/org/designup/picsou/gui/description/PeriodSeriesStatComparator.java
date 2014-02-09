@@ -3,54 +3,21 @@ package org.designup.picsou.gui.description;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobTreeComparator;
 import org.globsframework.utils.Utils;
 
-import java.util.Comparator;
-
-public class PeriodSeriesStatComparator implements Comparator<Glob> {
+public class PeriodSeriesStatComparator extends GlobTreeComparator {
   private GlobRepository repository;
 
   public PeriodSeriesStatComparator(GlobRepository repository) {
     this.repository = repository;
   }
 
-  public int compare(Glob stat1, Glob stat2) {
-    if ((stat1 == null) && (stat2 == null)) {
-      return 0;
-    }
-    if (stat1 == null) {
-      return -1;
-    }
-    if (stat2 == null) {
-      return 1;
-    }
-
-    Glob parentStat1 = PeriodSeriesStat.findParentStat(stat1, repository);
-    Glob parentStat2 = PeriodSeriesStat.findParentStat(stat2, repository);
-
-    if ((parentStat1 != null) && (parentStat2 != null)) {
-      if (parentStat1.getKey().equals(parentStat2.getKey())) {
-        return doCompareFields(stat1, stat2);
-      }
-      return doCompareFields(parentStat1, parentStat2);
-    }
-    else if ((parentStat1 != null) && (parentStat2 == null)) {
-      if (parentStat1.getKey().equals(stat2.getKey())) {
-        return 1;
-      }
-      return doCompareFields(parentStat1, stat2);
-    }
-    else if ((parentStat1 == null) && (parentStat2 != null)) {
-      if (stat1.getKey().equals(parentStat2.getKey())) {
-        return -1;
-      }
-      return doCompareFields(stat1, parentStat2);
-    }
-
-    return doCompareFields(stat1, stat2);
+  protected Glob findParent(Glob glob) {
+    return PeriodSeriesStat.findParentStat(glob, repository);
   }
 
-  private int doCompareFields(Glob glob1, Glob glob2) {
+  protected int doCompareFields(Glob glob1, Glob glob2) {
     Boolean glob1Active = glob1.get(PeriodSeriesStat.ACTIVE);
     Boolean glob2Active = glob2.get(PeriodSeriesStat.ACTIVE);
     int activeResult = Utils.reverseCompare(glob1Active, glob2Active);

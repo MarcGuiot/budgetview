@@ -14,7 +14,6 @@ import org.designup.picsou.gui.components.utils.BlankAction;
 import org.designup.picsou.gui.description.AmountStringifier;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.model.PeriodSeriesStatType;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.savings.ToggleToSavingsAction;
 import org.designup.picsou.gui.series.SeriesEditor;
@@ -42,14 +41,12 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.GlobUtils;
-import org.globsframework.model.utils.KeyChangeListener;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.UnexpectedValue;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyListener;
 import java.util.*;
 import java.util.List;
 
@@ -259,7 +256,7 @@ public class BudgetAreaSeriesView extends View {
 
       final SplitsNode<JButton> observedAmountButton = addAmountButton("observedSeriesAmount", PeriodSeriesStat.AMOUNT, periodSeriesStat, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
-          switch (PeriodSeriesStatType.get(periodSeriesStat)) {
+          switch (PeriodSeriesStat.getSeriesType(periodSeriesStat)) {
             case SERIES:
               directory.get(NavigationService.class).gotoDataForSeries(target);
               break;
@@ -272,14 +269,13 @@ public class BudgetAreaSeriesView extends View {
 
       final SplitsNode<JButton> plannedAmountButton = addAmountButton("plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, periodSeriesStat, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
-          switch (PeriodSeriesStatType.get(periodSeriesStat)) {
+          switch (PeriodSeriesStat.getSeriesType(periodSeriesStat)) {
             case SERIES:
               SignpostStatus.setCompleted(SignpostStatus.SERIES_AMOUNT_SHOWN, repository);
               SeriesEditor.get(directory).showAmount(target, selectedMonthIds);
               break;
             case SERIES_GROUP:
-              // TODO
-              System.out.println("TBD");
+              repository.update(target.getKey(), SeriesGroup.EXPANDED, !target.isTrue(SeriesGroup.EXPANDED));
               break;
           }
         }
@@ -345,7 +341,7 @@ public class BudgetAreaSeriesView extends View {
     }
 
     private NameLabelPopupButton getNameButton(Glob periodSeriesStat, Glob target, RepeatCellBuilder cellBuilder) {
-      switch (PeriodSeriesStatType.get(periodSeriesStat)) {
+      switch (PeriodSeriesStat.getSeriesType(periodSeriesStat)) {
         case SERIES:
         {
           final NameLabelPopupButton button = seriesButtons.createSeriesPopupButton(target);

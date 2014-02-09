@@ -40,7 +40,6 @@ public class Series {
   public static LinkField PROFILE_TYPE;
 
   @Target(SeriesGroup.class)
-  @Required
   public static LinkField GROUP;
 
   @Target(Month.class)

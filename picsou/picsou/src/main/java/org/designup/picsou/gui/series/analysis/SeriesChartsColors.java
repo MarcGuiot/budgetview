@@ -114,7 +114,8 @@ public class SeriesChartsColors implements ColorChangeListener {
         break;
 
       case SERIES:
-        setSeriesColors(component, background, row, monthOffset, referenceMonthId, seriesWrapper.get(SeriesWrapper.ITEM_ID));
+      case SERIES_GROUP:
+        setSeriesColors(component, background, row, monthOffset, referenceMonthId, seriesWrapper);
         break;
 
       case SUB_SERIES:
@@ -173,8 +174,8 @@ public class SeriesChartsColors implements ColorChangeListener {
   }
 
   private void setSeriesColors(JComponent component, Paintable panel,
-                               Integer row, int monthOffset, int referenceMonthId, Integer itemId) {
-    Color foreground = component != null ? getSeriesForeground(referenceMonthId, itemId) : null;
+                               Integer row, int monthOffset, int referenceMonthId, Glob wrapper) {
+    Color foreground = component != null ? getSeriesForeground(referenceMonthId, wrapper) : null;
     setSeriesColors(component, panel, row, monthOffset, foreground);
   }
 
@@ -191,8 +192,8 @@ public class SeriesChartsColors implements ColorChangeListener {
     }
   }
 
-  private Color getSeriesForeground(int referenceMonthId, Integer itemId) {
-    final Glob seriesStat = parentRepository.find(SeriesStat.createKey(itemId, referenceMonthId));
+  private Color getSeriesForeground(int referenceMonthId, Glob wrapper) {
+    final Glob seriesStat = parentRepository.find(SeriesWrapper.createSeriesStatKey(wrapper, referenceMonthId));
     if (seriesStat == null) {
       return seriesText;
     }

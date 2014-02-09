@@ -28,6 +28,7 @@ public class SeriesPopupFactory implements DisposablePopupMenuFactory {
   private JPopupMenu menu;
   private SeriesGroupMenu seriesGroupMenu;
   private DisposableGroup disposables = new DisposableGroup();
+  private CarryOverAction carryOverAction;
 
   public SeriesPopupFactory(Glob series,
                             GlobListFunctor editSeriesFunctor, GlobRepository repository,
@@ -59,7 +60,7 @@ public class SeriesPopupFactory implements DisposablePopupMenuFactory {
       });
       menu.addSeparator();
 
-      CarryOverAction carryOverAction = new CarryOverAction(series.getKey(), repository, directory);
+      carryOverAction = new CarryOverAction(series.getKey(), repository, directory);
       disposables.add(carryOverAction);
       menu.add(carryOverAction);
 

@@ -32,7 +32,7 @@ public class SeriesStatToProjectStatTrigger implements ChangeSetListener {
   private void updateAll(Set<Key> modifiedStats, GlobRepository repository) {
     Set<Integer> seriesIds = new HashSet<Integer>();
     for (Key modifiedStat : modifiedStats) {
-      seriesIds.add(modifiedStat.get(SeriesStat.SERIES));
+      seriesIds.add(modifiedStat.get(SeriesStat.TARGET));
     }
     for (Integer seriesId : seriesIds) {
       Glob series = repository.find(Key.create(Series.TYPE, seriesId));
@@ -48,7 +48,7 @@ public class SeriesStatToProjectStatTrigger implements ChangeSetListener {
   private void update(Glob project, GlobRepository repository) {
     double actual = 0;
     for (Glob seriesStat : repository.getAll(SeriesStat.TYPE,
-                                             fieldEquals(SeriesStat.SERIES, project.get(Project.SERIES)))) {
+                                             fieldEquals(SeriesStat.TARGET, project.get(Project.SERIES)))) {
       Double statActual = seriesStat.get(SeriesStat.ACTUAL_AMOUNT);
       if (statActual != null) {
         actual += statActual;

@@ -3,7 +3,6 @@ package org.designup.picsou.gui.printing.budget.gauges;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.model.PeriodSeriesStatType;
 import org.designup.picsou.gui.printing.PrintStyle;
 import org.designup.picsou.gui.printing.utils.PageBlock;
 import org.designup.picsou.model.BudgetArea;
@@ -42,14 +41,7 @@ public class SeriesGaugeBlock implements PageBlock {
   }
 
   public String getLabel() {
-    Glob target = PeriodSeriesStat.findTarget(periodStat, repository);
-    switch (PeriodSeriesStatType.get(periodStat)) {
-      case SERIES:
-        return target.get(Series.NAME);
-      case SERIES_GROUP:
-        return target.get(SeriesGroup.NAME);
-    }
-    throw new InvalidParameter("Unexpected type for " + periodStat);
+    return PeriodSeriesStat.getName(periodStat, repository);
   }
 
   public String getActualAmount() {

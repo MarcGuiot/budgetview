@@ -11,10 +11,11 @@ import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum SeriesWrapperType implements GlobConstantContainer {
-  SERIES(1, 1),
-  SUB_SERIES(2, 2),
-  BUDGET_AREA(3, 0),
-  SUMMARY(4, 0);
+  SERIES(1),
+  SERIES_GROUP(2),
+  SUB_SERIES(3),
+  BUDGET_AREA(4),
+  SUMMARY(5);
 
   public static GlobType TYPE;
 
@@ -22,11 +23,9 @@ public enum SeriesWrapperType implements GlobConstantContainer {
   public static IntegerField ID;
 
   private int id;
-  private int level;
 
-  private SeriesWrapperType(int id, int level) {
+  private SeriesWrapperType(int id) {
     this.id = id;
-    this.level = level;
   }
 
   static {
@@ -39,10 +38,6 @@ public enum SeriesWrapperType implements GlobConstantContainer {
 
   public Integer getId() {
     return id;
-  }
-  
-  public int getLevel() {
-    return level;
   }
 
   public org.globsframework.model.Key getKey() {
@@ -58,10 +53,12 @@ public enum SeriesWrapperType implements GlobConstantContainer {
       case 1:
         return SERIES;
       case 2:
-        return SUB_SERIES;
+        return SERIES_GROUP;
       case 3:
-        return BUDGET_AREA;
+        return SUB_SERIES;
       case 4:
+        return BUDGET_AREA;
+      case 5:
         return SUMMARY;
     }
     throw new ItemNotFound(id + " is not associated to any SeriesWrapperType enum value");
