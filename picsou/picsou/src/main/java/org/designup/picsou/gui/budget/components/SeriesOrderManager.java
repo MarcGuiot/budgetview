@@ -1,9 +1,8 @@
 package org.designup.picsou.gui.budget.components;
 
-import org.designup.picsou.gui.description.DefaultPeriodSeriesStatComparator;
+import org.designup.picsou.gui.description.PeriodSeriesStatComparator;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesOrder;
 import org.designup.picsou.model.UserPreferences;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -16,8 +15,8 @@ import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
-import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobFieldComparator;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.comparators.InvertedComparator;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -44,7 +43,7 @@ public abstract class SeriesOrderManager implements ChangeSetListener {
     this.repository = repository;
     this.descriptionService = directory.get(DescriptionService.class);
     this.repository.addChangeListener(this);
-    this.defaultComparator = new DefaultPeriodSeriesStatComparator(repository);
+    this.defaultComparator = new PeriodSeriesStatComparator(repository);
   }
 
   public SeriesOrder getUserCurrentOrder() {
@@ -222,13 +221,9 @@ public abstract class SeriesOrderManager implements ChangeSetListener {
 
     public SeriesNameOrder(SeriesOrder order, SeriesOrder oppositeOrder, final SeriesOrderManager orderManager) {
       super(order, oppositeOrder, orderManager, false);
-      GlobStringifier stringifier = descriptionService.getStringifier(Series.TYPE);
-      final Comparator<Glob> seriesComparator = stringifier.getComparator(repository);
       globComparator = new Comparator<Glob>() {
         public int compare(Glob o1, Glob o2) {
-          Glob series1 = repository.findLinkTarget(o1, PeriodSeriesStat.SERIES);
-          Glob series2 = repository.findLinkTarget(o2, PeriodSeriesStat.SERIES);
-          return seriesComparator.compare(series1, series2);
+          return Utils.compare(PeriodSeriesStat.getName(o1, repository), PeriodSeriesStat.getName(o2, repository));
         }
       };
     }

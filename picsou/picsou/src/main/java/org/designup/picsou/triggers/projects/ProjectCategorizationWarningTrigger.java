@@ -30,7 +30,7 @@ public class ProjectCategorizationWarningTrigger implements ChangeSetListener {
     for (Glob item : repository.getAll(ProjectItem.TYPE, fieldIn(ProjectItem.SUB_SERIES, subSeriesIds))) {
       modifiedProjectItemIds.add(item.get(ProjectItem.ID));
     }
-    Set<Integer> seriesIds = GlobUtils.getValues(changeSet.getChanged(SeriesStat.TYPE), SeriesStat.SERIES);
+    Set<Integer> seriesIds = getChangedSeriesIds(changeSet);
     for (Glob item : repository.getAll(ProjectItem.TYPE, fieldIn(ProjectItem.SERIES, seriesIds))) {
       modifiedProjectItemIds.add(item.get(ProjectItem.ID));
     }
@@ -43,6 +43,17 @@ public class ProjectCategorizationWarningTrigger implements ChangeSetListener {
     for (Integer projectItemId : modifiedProjectItemIds) {
       checkCategorizationWarning(repository.get(Key.create(ProjectItem.TYPE, projectItemId)), repository);
     }
+  }
+
+  protected Set<Integer> getChangedSeriesIds(ChangeSet changeSet) {
+    Set<Key> changedKeys = changeSet.getChanged(SeriesStat.TYPE);
+    Set<Integer> result = new HashSet<Integer>();
+    for (Key key : changedKeys) {
+      if (SeriesStat.isForSeries(key)) {
+        result.add(key.get(SeriesStat.TARGET));
+      }
+    }
+    return result;
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
@@ -72,7 +83,7 @@ public class ProjectCategorizationWarningTrigger implements ChangeSetListener {
     else {
       Glob series = repository.find(Key.create(Series.TYPE, projectItem.get(ProjectItem.SERIES)));
       if (series != null) {
-        for (Glob seriesStat : repository.findLinkedTo(series, SeriesStat.SERIES)) {
+        for (Glob seriesStat : SeriesStat.getAllMonthsForSeries(series, repository)) {
           if (!monthInProjectItemRange(seriesStat.get(SeriesStat.MONTH), projectItem)
               && Amounts.isNotZero(seriesStat.get(SeriesStat.ACTUAL_AMOUNT))) {
             warning = true;

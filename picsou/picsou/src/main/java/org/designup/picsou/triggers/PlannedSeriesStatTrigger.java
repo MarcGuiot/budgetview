@@ -17,8 +17,7 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(SeriesBudget.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        Key seriesStatKey = createKey(values.get(SeriesBudget.SERIES),
-                                      values.get(SeriesBudget.MONTH));
+        Key seriesStatKey = SeriesStat.createKeyForSeries(values.get(SeriesBudget.SERIES), values.get(SeriesBudget.MONTH));
         Glob seriesStat = repository.findOrCreate(seriesStatKey);
 
         Boolean isActive = values.isTrue(SeriesBudget.ACTIVE);
@@ -37,8 +36,7 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        Key seriesStat = createKey(previousValues.get(SeriesBudget.SERIES),
-                                   previousValues.get(SeriesBudget.MONTH));
+        Key seriesStat = SeriesStat.createKeyForSeries(previousValues.get(SeriesBudget.SERIES), previousValues.get(SeriesBudget.MONTH));
         Glob glob = repository.find(seriesStat);
         if (glob != null) {
           repository.delete(seriesStat);
@@ -51,7 +49,7 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        Glob seriesBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, key.get(SeriesStat.SERIES))
+        Glob seriesBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, key.get(SeriesStat.TARGET))
           .findByIndex(SeriesBudget.MONTH, key.get(SeriesStat.MONTH)).getGlobs().getFirst();
         if (seriesBudget != null) {
           updateSeriesStat(repository, seriesBudget);
@@ -64,8 +62,7 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
   }
 
   private void updateSeriesStat(GlobRepository repository, final Glob seriesBudget) {
-    Key seriesStatKey = createKey(seriesBudget.get(SeriesBudget.SERIES),
-                                  seriesBudget.get(SeriesBudget.MONTH));
+    Key seriesStatKey = SeriesStat.createKeyForSeries(seriesBudget.get(SeriesBudget.SERIES), seriesBudget.get(SeriesBudget.MONTH));
     Glob seriesStat = repository.findOrCreate(seriesStatKey);
 
     Boolean isActive = seriesBudget.isTrue(SeriesBudget.ACTIVE);
@@ -85,14 +82,13 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     for (Glob month : repository.getAll(Month.TYPE)) {
       for (Glob series : repository.getAll(Series.TYPE)) {
-        repository.findOrCreate(createKey(series.get(Series.ID), month.get(Month.ID)));
+        repository.findOrCreate(SeriesStat.createKeyForSeries(series.get(Series.ID), month.get(Month.ID)));
       }
     }
     GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE);
 
     for (Glob seriesBudget : seriesBudgets) {
-      Key seriesStatKey = createKey(seriesBudget.get(SeriesBudget.SERIES),
-                                    seriesBudget.get(SeriesBudget.MONTH));
+      Key seriesStatKey = SeriesStat.createKeyForSeries(seriesBudget.get(SeriesBudget.SERIES), seriesBudget.get(SeriesBudget.MONTH));
       Glob seriesStat = repository.findOrCreate(seriesStatKey);
 
       Boolean isActive = seriesBudget.isTrue(SeriesBudget.ACTIVE);
@@ -132,10 +128,5 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
       overrun = obervedAmount;
     }
     return new Pair<Double, Double>(remaining, overrun);
-  }
-
-  private Key createKey(Integer seriesId, Integer monthId) {
-    return Key.create(SeriesStat.SERIES, seriesId,
-                      SeriesStat.MONTH, monthId);
   }
 }

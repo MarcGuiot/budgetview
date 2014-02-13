@@ -218,7 +218,7 @@ public class MainPanel {
       licenseInfoView,
       new NotificationsFlagView(repository, directory));
 
-    createMenuBar(frame, replicationGlobRepository, directory);
+    createMenuBar(frame, directory);
 
     builder.load();
   }
@@ -273,7 +273,7 @@ public class MainPanel {
     }
   }
 
-  public void createMenuBar(final PicsouFrame frame, ReplicationGlobRepository replicationGlobRepository, Directory directory) {
+  public void createMenuBar(final PicsouFrame frame, Directory directory) {
     menuBar = new JMenuBar();
 
     menuBar.add(createFileMenu());

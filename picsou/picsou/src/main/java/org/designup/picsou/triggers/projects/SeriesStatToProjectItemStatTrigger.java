@@ -1,6 +1,5 @@
 package org.designup.picsou.triggers.projects;
 
-import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.ProjectItem;
@@ -19,19 +18,19 @@ public class SeriesStatToProjectItemStatTrigger implements ChangeSetListener {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Glob seriesStat = repository.get(key);
         Double delta = seriesStat.get(SeriesStat.ACTUAL_AMOUNT, 0.00);
-        updateTargetStat(key.get(SeriesStat.SERIES), delta, repository);
+        updateTargetStat(key.get(SeriesStat.TARGET), delta, repository);
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         if (values.contains(SeriesStat.ACTUAL_AMOUNT)) {
           Double delta = values.get(SeriesStat.ACTUAL_AMOUNT, 0.00) - values.getPrevious(SeriesStat.ACTUAL_AMOUNT, 0.00);
-          updateTargetStat(key.get(SeriesStat.SERIES), delta, repository);
+          updateTargetStat(key.get(SeriesStat.TARGET), delta, repository);
         }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
         Double delta = -previousValues.get(SeriesStat.ACTUAL_AMOUNT, 0.00);
-        updateTargetStat(key.get(SeriesStat.SERIES), delta, repository);
+        updateTargetStat(key.get(SeriesStat.TARGET), delta, repository);
       }
     });
   }

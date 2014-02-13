@@ -1,15 +1,11 @@
 package org.designup.picsou.gui.components.highlighting;
 
-
-import net.sourceforge.htmlunit.corejs.javascript.Node;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
 import java.util.List;
 
 public abstract class HighlightUpdater implements GlobSelectionListener, Disposable {

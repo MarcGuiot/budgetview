@@ -4,24 +4,27 @@ import org.designup.picsou.gui.components.PopupGlobFunctor;
 import org.designup.picsou.gui.series.utils.SeriesPopupFactory;
 import org.designup.picsou.model.Series;
 import org.globsframework.gui.ComponentHolder;
+import org.globsframework.gui.utils.DisposablePopupMenuFactory;
+import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
-public class SeriesPopupButton implements ComponentHolder {
+public class NameLabelPopupButton implements ComponentHolder {
 
   private GlobButtonView buttonView;
-  private SeriesPopupFactory popupFactory;
+  private DisposablePopupMenuFactory popupFactory;
 
-  public SeriesPopupButton(Glob series, GlobListFunctor editSeriesFunctor, GlobRepository repository, Directory directory) {
-    popupFactory = new SeriesPopupFactory(series, editSeriesFunctor, repository, directory);
+  public NameLabelPopupButton(Key key, DisposablePopupMenuFactory popupMenuFactory, GlobRepository repository, Directory directory) {
+    this.popupFactory = popupMenuFactory;
     PopupGlobFunctor functor = new PopupGlobFunctor(popupFactory);
-    buttonView = GlobButtonView.init(Series.TYPE, repository, directory, functor)
-      .forceSelection(series.getKey());
+    buttonView = GlobButtonView.init(key.getGlobType(), repository, directory, functor)
+      .forceSelection(key);
     functor.setComponent(buttonView.getComponent());
   }
 

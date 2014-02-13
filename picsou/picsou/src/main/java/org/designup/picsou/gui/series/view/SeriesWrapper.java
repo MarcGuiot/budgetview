@@ -1,9 +1,8 @@
 package org.designup.picsou.gui.series.view;
 
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SubSeries;
+import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.model.SeriesType;
+import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
@@ -20,6 +19,7 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.exceptions.ItemAmbiguity;
+import org.globsframework.utils.exceptions.UnexpectedValue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,7 +55,6 @@ public class SeriesWrapper {
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(SeriesWrapper.class);
     loader.defineMultiFieldUniqueIndex(INDEX, ITEM_TYPE, ITEM_ID, PARENT);
-
   }
 
   public static Glob find(GlobRepository repository, SeriesWrapperType type, Integer itemId) {
@@ -75,6 +74,14 @@ public class SeriesWrapper {
     return SeriesWrapperType.SERIES.getId().equals(wrapper.get(SeriesWrapper.ITEM_TYPE));
   }
 
+  public static boolean isGroup(Glob wrapper) {
+    return SeriesWrapperType.SERIES_GROUP.getId().equals(wrapper.get(SeriesWrapper.ITEM_TYPE));
+  }
+
+  public static boolean isGroupPart(Glob wrapper, GlobRepository repository) {
+    return isSeries(wrapper) && isGroup(getParent(wrapper, repository));
+  }
+
   public static boolean isSubSeries(Glob wrapper) {
     return SeriesWrapperType.SUB_SERIES.getId().equals(wrapper.get(SeriesWrapper.ITEM_TYPE));
   }
@@ -84,8 +91,19 @@ public class SeriesWrapper {
   }
 
   public static Glob getSeries(Glob wrapper, GlobRepository repository) {
+    if (!SeriesWrapperType.SERIES.getId().equals(wrapper.get(ITEM_TYPE))) {
+      throw new UnexpectedValue("Unexpected type " + wrapper.get(ITEM_TYPE) + " for: " + wrapper);
+    }
     Integer id = wrapper.get(SeriesWrapper.ITEM_ID);
     return repository.find(org.globsframework.model.Key.create(Series.TYPE, id));
+  }
+
+  public static Glob getGroup(Glob wrapper, GlobRepository repository) {
+    if (!SeriesWrapperType.SERIES_GROUP.getId().equals(wrapper.get(ITEM_TYPE))) {
+      throw new UnexpectedValue("Unexpected type " + wrapper.get(ITEM_TYPE) + " for: " + wrapper);
+    }
+    Integer id = wrapper.get(SeriesWrapper.ITEM_ID);
+    return repository.find(org.globsframework.model.Key.create(SeriesGroup.TYPE, id));
   }
 
   public static Glob getSubSeries(Glob wrapper, GlobRepository repository) {
@@ -123,6 +141,8 @@ public class SeriesWrapper {
     switch (SeriesWrapperType.get(wrapper)) {
       case SERIES:
         return org.globsframework.model.Key.create(Series.TYPE, itemId);
+      case SERIES_GROUP:
+        return org.globsframework.model.Key.create(SeriesGroup.TYPE, itemId);
       case SUB_SERIES:
         return org.globsframework.model.Key.create(SubSeries.TYPE, itemId);
       case BUDGET_AREA:
@@ -141,12 +161,36 @@ public class SeriesWrapper {
     throw new InvalidParameter("Unexpected wrapper type for " + wrapper);
   }
 
+  public static BudgetArea getBudgetAreaForTarget(Glob wrapper, GlobRepository repository) {
+    switch (SeriesWrapperType.get(wrapper)) {
+      case SERIES:
+        Glob series = getSeries(wrapper, repository);
+        return BudgetArea.get(series.get(Series.BUDGET_AREA));
+      case SERIES_GROUP:
+        Glob group = getGroup(wrapper, repository);
+        return BudgetArea.get(group.get(SeriesGroup.BUDGET_AREA));
+      case BUDGET_AREA:
+        return getBudgetArea(wrapper);
+    }
+    throw new InvalidParameter("Cannot get budgetArea for wrapper: " + wrapper);
+  }
+
+
   public static Glob getWrapperForBudgetArea(BudgetArea budgetArea, GlobRepository repository) {
-    return findUnique(budgetArea.getId(), repository, SeriesWrapperType.BUDGET_AREA.getId());
+    Integer budgetAreaId = budgetArea.getId();
+    return getWrapperForBudgetArea(budgetAreaId, repository);
+  }
+
+  protected static Glob getWrapperForBudgetArea(Integer budgetAreaId, GlobRepository repository) {
+    return findUnique(budgetAreaId, repository, SeriesWrapperType.BUDGET_AREA.getId());
   }
 
   public static Glob getWrapperForSeries(Integer seriesId, GlobRepository repository) {
     return findUnique(seriesId, repository, SeriesWrapperType.SERIES.getId());
+  }
+
+  public static Glob getWrapperForSeriesGroup(Integer groupId, GlobRepository repository) {
+    return findUnique(groupId, repository, SeriesWrapperType.SERIES_GROUP.getId());
   }
 
   private static Glob findUnique(Integer itemId, GlobRepository repository, Integer id) {
@@ -177,21 +221,6 @@ public class SeriesWrapper {
     }
   }
 
-  public static Glob getWrapperForLevel(Glob wrapper, int level, GlobRepository repository) {
-    SeriesWrapperType type = SeriesWrapperType.get(wrapper);
-    if (level == type.getLevel()) {
-      return wrapper;
-    }
-    if (level < 0) {
-      throw new InvalidParameter("Level must be >= 0 but is " + level);
-    }
-    if (level > type.getLevel()) {
-      throw new InvalidParameter("Invalid level " + level + " requested for " + wrapper);
-    }
-    return getWrapperForLevel(getParent(wrapper, repository),
-                              level, repository);
-  }
-
   public static Glob getParent(Glob wrapper, GlobRepository repository) {
     return repository.findLinkTarget(wrapper, SeriesWrapper.PARENT);
   }
@@ -208,6 +237,8 @@ public class SeriesWrapper {
     switch (SeriesWrapperType.get(wrapper)) {
       case SERIES:
         return "series(" + getSeries(wrapper, repository).get(Series.NAME) + ")";
+      case SERIES_GROUP:
+        return "seriesGroup(" + getGroup(wrapper, repository).get(SeriesGroup.NAME) + ")";
       case SUB_SERIES:
         return "subSeries(" + getSubSeries(wrapper, repository).get(SubSeries.NAME) + ")";
       case BUDGET_AREA:
@@ -234,5 +265,21 @@ public class SeriesWrapper {
            !seriesId.equals(Series.ACCOUNT_SERIES_ID) &&
            !Series.isSavingToExternal(seriesValues) &&
            !seriesValues.isTrue(Series.IS_MIRROR);
+  }
+
+  public static org.globsframework.model.Key createSeriesStatKey(Glob wrapper, int monthId) {
+    return org.globsframework.model.Key.create(SeriesStat.TARGET_TYPE, getSeriesType(wrapper).getId(),
+                                               SeriesStat.TARGET, wrapper.get(ITEM_ID),
+                                               SeriesStat.MONTH, monthId);
+  }
+
+  public static SeriesType getSeriesType(Glob wrapper) {
+    switch (SeriesWrapperType.get(wrapper)) {
+      case SERIES:
+        return SeriesType.SERIES;
+      case SERIES_GROUP:
+        return SeriesType.SERIES_GROUP;
+    }
+    throw new InvalidParameter("Cannot convert type " + SeriesWrapperType.get(wrapper) + " for: " + wrapper);
   }
 }

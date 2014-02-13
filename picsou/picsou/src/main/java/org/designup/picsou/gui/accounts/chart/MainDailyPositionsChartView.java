@@ -11,9 +11,12 @@ import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.model.Day;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SeriesGroup;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.utils.GlobSelectionBuilder;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -70,8 +73,19 @@ public class MainDailyPositionsChartView extends PositionsChartView {
       }
 
       GlobList transactions = getTransactions(objectKeys.iterator().next(), repository);
-      GlobList series = transactions.getTargets(Transaction.SERIES, repository);
-      highlightingService.select(series, Series.TYPE);
+      GlobSelectionBuilder selection = new GlobSelectionBuilder();
+      selection.add(new GlobList(), Series.TYPE);
+      selection.add(new GlobList(), SeriesGroup.TYPE);
+      for (Glob series : transactions.getTargets(Transaction.SERIES, repository)) {
+        Glob group = repository.findLinkTarget(series, Series.GROUP);
+        if ((group != null) && !group.isTrue(SeriesGroup.EXPANDED)) {
+          selection.add(group);
+        }
+        else {
+          selection.add(series);
+        }
+      }
+      highlightingService.select(selection.get());
     }
 
     public void processDoubleClick(Integer columnIndex, Set<Key> objectKeys) {

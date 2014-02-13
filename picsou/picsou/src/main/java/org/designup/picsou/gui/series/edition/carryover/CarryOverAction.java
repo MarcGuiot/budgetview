@@ -40,9 +40,11 @@ public class CarryOverAction
     this.seriesId = seriesKey.get(Series.ID);
     this.repository = repository;
     this.directory = directory;
+
     repository.addChangeListener(this);
-    directory.get(SelectionService.class).addListener(this, Month.TYPE);
-    update();
+    SelectionService selectionService = directory.get(SelectionService.class);
+    selectionService.addListener(this, Month.TYPE);
+    doUpdateSelection(selectionService.getSelection(Month.TYPE));
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -61,7 +63,10 @@ public class CarryOverAction
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    GlobList months = selection.getAll(Month.TYPE);
+    doUpdateSelection(selection.getAll(Month.TYPE));
+  }
+
+  protected void doUpdateSelection(GlobList months) {
     currentMonth = months.size() == 1 ? months.getFirst().get(Month.ID) : null;
     update();
   }

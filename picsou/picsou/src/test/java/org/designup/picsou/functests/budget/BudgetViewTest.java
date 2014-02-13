@@ -805,7 +805,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .checkSeries("Leisures", 0.00, -100.00);
 
     budgetView.variable.editSeries("Leisures").setEndDate(200807).validate();
-
     budgetView.variable.checkSeriesList("Groceries");
 
     budgetView.variable

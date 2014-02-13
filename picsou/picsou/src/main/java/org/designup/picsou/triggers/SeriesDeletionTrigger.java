@@ -6,11 +6,13 @@ import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobMatchers;
+
+import static org.designup.picsou.gui.model.SeriesStat.linkedToSeries;
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
 public class SeriesDeletionTrigger extends DefaultChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
@@ -25,8 +27,7 @@ public class SeriesDeletionTrigger extends DefaultChangeSetListener {
     repository.startChangeSet();
     try {
       Integer seriesId = seriesKey.get(Series.ID);
-      repository.delete(SeriesStat.TYPE,
-                        GlobMatchers.linkedTo(seriesKey, SeriesStat.SERIES));
+      repository.delete(SeriesStat.TYPE, linkedToSeries(seriesKey));
 
       repository.delete(repository.findByIndex(SeriesBudget.SERIES_INDEX,
                                                SeriesBudget.SERIES, seriesId).getGlobs());
@@ -42,7 +43,7 @@ public class SeriesDeletionTrigger extends DefaultChangeSetListener {
         }, repository);
 
       repository.delete(SubSeries.TYPE,
-                        GlobMatchers.linkedTo(seriesKey, SubSeries.SERIES));
+                        linkedTo(seriesKey, SubSeries.SERIES));
     }
     finally {
       repository.completeChangeSet();

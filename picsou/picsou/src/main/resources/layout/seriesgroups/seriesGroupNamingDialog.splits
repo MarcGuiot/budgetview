@@ -1,0 +1,17 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+
+  <panel styleClass="dialog" preferredSize="(340,180)">
+    <column styleClass="innerDialog">
+      <label ref="title" styleClass="title"/>
+      <htmlEditorPane ref="message"/>
+      <row>
+        <label text="$seriesGroup.creation.name" styleClass="formLabel"/>
+        <textField ref="nameField"/>
+      </row>
+      <filler fill="vertical"/>
+    </column>
+  </panel>
+
+</splits>

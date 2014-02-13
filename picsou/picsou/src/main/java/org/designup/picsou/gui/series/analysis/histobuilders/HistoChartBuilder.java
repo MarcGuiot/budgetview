@@ -18,6 +18,7 @@ import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.model.SubSeriesStat;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
+import org.designup.picsou.gui.series.utils.SeriesOrGroup;
 import org.designup.picsou.gui.utils.DaySelection;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
@@ -300,19 +301,19 @@ public class HistoChartBuilder implements Disposable {
     builder.showBars(uncategorizedColors, "uncategorized");
   }
 
-  public void showSeriesHisto(Set<Integer> seriesIds, int selectedMonthId, boolean resetPosition) {
+  public void showSeriesHisto(Set<SeriesOrGroup> seriesOrGroups, int selectedMonthId, boolean resetPosition) {
     if (resetPosition) {
       range.reset();
     }
 
     HistoDiffDatasetBuilder builder = createDiffDataset("series");
-    builder.setKeys(GlobUtils.createKeys(Series.TYPE, seriesIds));
+    builder.setKeys(SeriesOrGroup.createKeys(seriesOrGroups));
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
       double totalActual = 0.00;
       double totalPlanned = 0.00;
-      for (Integer seriesId : seriesIds) {
-        Glob stat = repository.find(SeriesStat.createKey(seriesId, monthId));
+      for (SeriesOrGroup seriesOrGroup : seriesOrGroups) {
+        Glob stat = repository.find(seriesOrGroup.createSeriesStatKey(monthId));
         if (stat != null) {
           totalPlanned += stat.get(SeriesStat.PLANNED_AMOUNT, 0.00);
           totalActual += stat.get(SeriesStat.ACTUAL_AMOUNT, 0.00);
@@ -323,15 +324,13 @@ public class HistoChartBuilder implements Disposable {
 
     String messageKey;
     String messageArg;
-    if (seriesIds.size() == 1) {
+    if (seriesOrGroups.size() == 1) {
       messageKey = "series";
-      Integer firstSeriesId = seriesIds.iterator().next();
-      Glob series = repository.get(Key.create(Series.TYPE, firstSeriesId));
-      messageArg = series.get(Series.NAME);
+      messageArg = seriesOrGroups.iterator().next().getName(repository);
     }
     else {
       messageKey = "series.multi";
-      messageArg = Integer.toString(seriesIds.size());
+      messageArg = Integer.toString(seriesOrGroups.size());
     }
 
     builder.showDiff(incomeAndExpensesColors,

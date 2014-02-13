@@ -82,8 +82,36 @@ public abstract class PopupChecker {
     };
   }
 
-  private void close(MenuItem menu) {
+  public PopupChecker getSubMenu(String menuItem) {
+    MenuItem parentMenu = openMenu();
+    final MenuItem subMenu = parentMenu.getSubMenu(menuItem);
+    return new SubPopupChecker(parentMenu, subMenu);
+  }
+
+  protected void close(MenuItem menu) {
     Component awtComponent = menu.getAwtComponent();
     awtComponent.setVisible(false);
+  }
+
+  private class SubPopupChecker extends PopupChecker {
+    private MenuItem rootMenu;
+    private final MenuItem subMenu;
+
+    public SubPopupChecker(MenuItem rootMenu, MenuItem subMenu) {
+      this.rootMenu = rootMenu;
+      this.subMenu = subMenu;
+    }
+
+    protected MenuItem openMenu() {
+      return subMenu;
+    }
+
+    public PopupChecker getSubMenu(String menuItem) {
+      return new SubPopupChecker(rootMenu, subMenu.getSubMenu(menuItem));
+    }
+
+    protected void close(MenuItem menu) {
+      super.close(rootMenu);
+    }
   }
 }

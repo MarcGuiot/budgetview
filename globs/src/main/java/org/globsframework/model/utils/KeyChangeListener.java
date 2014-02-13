@@ -28,5 +28,5 @@ public abstract class KeyChangeListener implements ChangeSetListener {
     }
   }
 
-  protected abstract void update();
+  public abstract void update();
 }

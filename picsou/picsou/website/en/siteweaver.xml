@@ -122,4 +122,6 @@
     <file path="files/images_en"/>
     <file path="files/app"/>
   </copy>
+
+  <ignore targetPath="files/app"/>
 </site>

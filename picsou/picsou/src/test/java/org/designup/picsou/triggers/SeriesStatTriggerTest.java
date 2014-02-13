@@ -16,18 +16,18 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
     createMonth(200807);
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<create type='seriesStat' series='10' month='200807' overrunAmount='0.0'" +
+                                    "<create type='seriesStat' target='10' targetType='0' month='200807' overrunAmount='0.0'" +
                                     "        plannedAmount='150.0' remainingAmount='150.0' active='true'/>" +
-                                    "<create type='seriesStat' series='1' month='200807' overrunAmount='0.0'" +
+                                    "<create type='seriesStat' target='1' targetType='0' month='200807' overrunAmount='0.0'" +
                                     "        remainingAmount='0.0' active='true'/>");
     repository.startChangeSet();
     createTransaction(10, 10, 200807, 10.0);
     createTransaction(11, 1, 200807, -20.0);
     repository.completeChangeSet();
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<update type='seriesStat' series='10' month='200807' remainingAmount='140.0'" +
+                                    "<update type='seriesStat' target='10' targetType='0' month='200807' remainingAmount='140.0'" +
                                     "        actualAmount='10.0' _actualAmount='(null)' _remainingAmount='150.0'/>" +
-                                    "<update type='seriesStat' series='1' month='200807' _overrunAmount='0.0'" +
+                                    "<update type='seriesStat' target='1' targetType='0' month='200807' _overrunAmount='0.0'" +
                                     "        actualAmount='-20.0' _actualAmount='(null)' overrunAmount='-20.0'/>");
   }
 
@@ -47,11 +47,11 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
     listener.assertLastChangesEqual(
       SeriesStat.TYPE,
-      "<create type='seriesStat' series='10' month='200807'  overrunAmount='0.0'" +
+      "<create type='seriesStat' target='10' targetType='0' month='200807'  overrunAmount='0.0'" +
       "        actualAmount='-10.0' plannedAmount='-100.0' remainingAmount='-90.0' active='true'/>" +
-      "<create type='seriesStat' series='20' month='200807' overrunAmount='0.0'" +
+      "<create type='seriesStat' target='20' targetType='0' month='200807' overrunAmount='0.0'" +
       "        actualAmount='-20.0' plannedAmount='-100.0' remainingAmount='-80.0' active='true'/>" +
-      "<create type='seriesStat' series='1' month='200807' overrunAmount='-50.0'" +
+      "<create type='seriesStat' target='1' targetType='0' month='200807' overrunAmount='-50.0'" +
       "        actualAmount='-50.0' remainingAmount='0.0' active='true'/>");
 
     repository.startChangeSet();
@@ -61,9 +61,9 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     repository.completeChangeSet();
 
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<update type='seriesStat' series='1' month='200807' _overrunAmount='-50.0'" +
+                                    "<update type='seriesStat' target='1' targetType='0' month='200807' _overrunAmount='-50.0'" +
                                     "        _actualAmount='-50.0' actualAmount='-60.0' overrunAmount='-60.0'/>" +
-                                    "<delete type='seriesStat' series='20' month='200807' _overrunAmount='0.0'" +
+                                    "<delete type='seriesStat' target='20' targetType='0' month='200807' _overrunAmount='0.0'" +
                                     "        _actualAmount='-20.0' _plannedAmount='-100.0'  _remainingAmount='-80.0'" +
                                     "        _active='true'/>");
   }
@@ -74,7 +74,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     createTransaction(10, 10, 200807, 10.0);
     updateTransactionAmount(10, 5.0);
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<update type='seriesStat' series='10' month='200807' remainingAmount='145.0'" +
+                                    "<update type='seriesStat' target='10' targetType='0' month='200807' remainingAmount='145.0'" +
                                     "        actualAmount='5.0' _actualAmount='10.0' _remainingAmount='140.0'/>");
   }
 
@@ -88,9 +88,9 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     updateTransactionSeries(10, 20);
     repository.completeChangeSet();
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<update type='seriesStat' series='10' month='200807' _remainingAmount='140.0'" +
+                                    "<update type='seriesStat' target='10' targetType='0' month='200807' _remainingAmount='140.0'" +
                                     "        actualAmount='(null)' _actualAmount='10.0' remainingAmount='150.0'/>" +
-                                    "<update type='seriesStat' series='20' month='200807' _remainingAmount='50.0'" +
+                                    "<update type='seriesStat' target='20' targetType='0' month='200807' _remainingAmount='50.0'" +
                                     "        actualAmount='5.0' _actualAmount='(null)' remainingAmount='45.0'/>");
   }
 
@@ -105,9 +105,9 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
     repository.update(Key.create(Transaction.TYPE, 1), value(Transaction.BUDGET_MONTH, 200808));
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<update type='seriesStat' series='10' month='200808'  remainingAmount='70.0'" +
+                                    "<update type='seriesStat' target='10' targetType='0' month='200808'  remainingAmount='70.0'" +
                                     "        actualAmount='30.0' _actualAmount='20.0'  _remainingAmount='80.0'/>" +
-                                    "<update type='seriesStat' series='10' month='200807' _remainingAmount='90.0'" +
+                                    "<update type='seriesStat' target='10' targetType='0' month='200807' _remainingAmount='90.0'" +
                                     "        actualAmount='(null)' _actualAmount='10.0' remainingAmount='100.0'/>");
   }
 
@@ -137,17 +137,17 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
                   "");
     listener.assertLastChangesEqual(
       SeriesStat.TYPE,
-      "  <create actualAmount='200.0' month='200807' overrunAmount='0.0' plannedAmount='-500.0'\n" +
-      "          remainingAmount='-700.0' series='30' type='seriesStat' active='true'/>\n" +
-      "  <create actualAmount='-90.0' month='200807' overrunAmount='0.0' plannedAmount='-100.0'\n" +
-      "          remainingAmount='-10.0' series='10' type='seriesStat' active='true'/>" +
-      "  <create month='200807' overrunAmount='0.0' remainingAmount='0.0'" +
-      "          series='1' type='seriesStat' active='true'/>\n" +
-      "  <create month='200807' overrunAmount='0.0' plannedAmount='1000.0' remainingAmount='1000.0'" +
-      "          series='20' type='seriesStat' active='true'/>");
+      "  <create actualAmount='200.0' targetType='0' month='200807' overrunAmount='0.0' plannedAmount='-500.0'\n" +
+      "          remainingAmount='-700.0' target='30' type='seriesStat' active='true'/>\n" +
+      "  <create actualAmount='-90.0' targetType='0' month='200807' overrunAmount='0.0' plannedAmount='-100.0'\n" +
+      "          remainingAmount='-10.0' target='10' type='seriesStat' active='true'/>" +
+      "  <create type='seriesStat' target='1' targetType='0' month='200807' overrunAmount='0.0' remainingAmount='0.0'" +
+      "          active='true'/>\n" +
+      "  <create type='seriesStat' target='20' targetType='0' month='200807' overrunAmount='0.0' plannedAmount='1000.0' remainingAmount='1000.0'" +
+      "          active='true'/>");
     createTransaction(10, 20, 200807, 750.);
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<update _actualAmount='(null)' actualAmount='750.0' _remainingAmount='1000.0' month='200807' series='20'" +
+                                    "<update target='20' targetType='0' month='200807' _actualAmount='(null)' actualAmount='750.0' _remainingAmount='1000.0'" +
                                     "        type='seriesStat' remainingAmount='250.0'/>");
   }
 

@@ -1,23 +1,27 @@
 package org.designup.picsou.gui.printing.budget.tables;
 
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.gui.description.SeriesAndGroupsComparator;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.printing.utils.BudgetReportUtils;
+import org.designup.picsou.gui.series.utils.SeriesOrGroup;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
-import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.model.util.ClosedMonthRange;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.designup.picsou.gui.model.SeriesStat.isForBudgetArea;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesTable {
@@ -32,21 +36,21 @@ public class SeriesTable {
     List<Integer> months = monthRange.asList();
     for (BudgetArea budgetArea : BudgetReportUtils.BUDGET_AREAS) {
       List<SeriesRow> rows = new ArrayList<SeriesRow>();
-      GlobList SeriesStatList =
+      GlobList seriesStatList =
         repository.getAll(SeriesStat.TYPE,
-                          and(linkTargetFieldEquals(SeriesStat.SERIES, Series.BUDGET_AREA, budgetArea.getId()),
+                          and(isForBudgetArea(budgetArea),
                               fieldIn(SeriesStat.MONTH, months),
                               isTrue(SeriesStat.ACTIVE),
                               isNotNull(SeriesStat.SUMMARY_AMOUNT),
                               not(fieldEquals(SeriesStat.SUMMARY_AMOUNT, 0.00))));
 
-      GlobList seriesList = SeriesStatList.getTargets(SeriesStat.SERIES, repository).sort(Series.NAME);
-      for (Glob series : seriesList) {
-        rows.add(new SeriesRow(series, months, budgetArea, repository));
+      GlobList targetList = SeriesStat.getTargets(seriesStatList, repository);
+      Collections.sort(targetList, new SeriesAndGroupsComparator(repository));
+      for (Glob target : targetList) {
+        rows.add(new SeriesRow(new SeriesOrGroup(target), months, budgetArea, repository));
       }
-      Collections.sort(rows);
-      for (List<SeriesRow> subList : Utils.split(rows, MAX_ROWS_PER_PAGE)) {
-        result.add(new SeriesTable(subList, budgetArea, currentMonth, months));
+      for (List<SeriesRow> pageList : Utils.split(rows, MAX_ROWS_PER_PAGE)) {
+        result.add(new SeriesTable(pageList, budgetArea, currentMonth, months));
       }
     }
     return result;
@@ -96,14 +100,14 @@ public class SeriesTable {
   }
 
   public static class SeriesRow implements Comparable<SeriesRow> {
-    private Glob series;
+    private SeriesOrGroup seriesOrGroup;
     private List<Integer> months;
     private BudgetArea budgetArea;
     private GlobRepository repository;
     private Double total;
 
-    public SeriesRow(Glob series, List<Integer> months, BudgetArea budgetArea, GlobRepository repository) {
-      this.series = series;
+    public SeriesRow(SeriesOrGroup seriesOrGroup, List<Integer> months, BudgetArea budgetArea, GlobRepository repository) {
+      this.seriesOrGroup = seriesOrGroup;
       this.months = months;
       this.budgetArea = budgetArea;
       this.repository = repository;
@@ -123,7 +127,7 @@ public class SeriesTable {
 
     public String getValue(int column) {
       if (column == 0) {
-        return series.get(Series.NAME);
+        return seriesOrGroup.getName(repository);
       }
       if (column == 1) {
         return total != null ? Formatting.toString(total, budgetArea) : "";
@@ -137,11 +141,15 @@ public class SeriesTable {
     }
 
     private Double getValueForMonth(int monthId) {
-      Glob stat = repository.find(SeriesStat.createKey(series.get(Series.ID), monthId));
+      Glob stat = repository.find(seriesOrGroup.createSeriesStatKey(monthId));
       if (stat == null) {
         return null;
       }
       return stat.get(SeriesStat.SUMMARY_AMOUNT);
+    }
+
+    public boolean isInGroup() {
+      return seriesOrGroup.isInGroup(repository);
     }
 
     public int compareTo(SeriesRow other) {

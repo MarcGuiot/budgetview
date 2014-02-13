@@ -2,13 +2,12 @@ package org.designup.picsou.server.serialization;
 
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.designup.picsou.model.*;
-import org.designup.picsou.model.DeferredCardPeriod;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.properties.Property;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 public class SerializationManager {
   public static Property<GlobType, PicsouGlobSerializer> SERIALIZATION_PROPERTY;
@@ -50,5 +49,6 @@ public class SerializationManager {
     ProjectTransfer.TYPE.updateProperty(SERIALIZATION_PROPERTY, new ProjectTransfer.Serializer());
     ProjectItemAmount.TYPE.updateProperty(SERIALIZATION_PROPERTY, new ProjectItemAmount.Serializer());
     LayoutConfig.TYPE.updateProperty(SERIALIZATION_PROPERTY, new LayoutConfig.Serializer());
+    SeriesGroup.TYPE.updateProperty(SERIALIZATION_PROPERTY, new SeriesGroup.Serializer());
   }
 }

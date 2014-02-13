@@ -74,12 +74,12 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
           currentAmount = transaction.get(Transaction.AMOUNT);
         }
 
-        Glob previousStat = repository.find(SeriesStat.createKey(previousSeriesId, previousMonthId));
+        Glob previousStat = repository.find(SeriesStat.createKeyForSeries(previousSeriesId, previousMonthId));
         if (previousStat != null && (isPlanned == null || isPlanned)) {
           updateStat(previousStat, previousAmount, -1, repository);
         }
 
-        Glob currentStat = repository.findOrCreate(SeriesStat.createKey(currentSeriesId, currentMonthId));
+        Glob currentStat = repository.findOrCreate(SeriesStat.createKeyForSeries(currentSeriesId, currentMonthId));
         if ((isPlanned == null || !isPlanned)) {
           updateStat(currentStat, currentAmount, 1, repository);
         }
@@ -97,7 +97,7 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
       return;
     }
 
-    Glob stat = repository.findOrCreate(SeriesStat.createKey(seriesId, values.get(Transaction.BUDGET_MONTH)));
+    Glob stat = repository.findOrCreate(SeriesStat.createKeyForSeries(seriesId, values.get(Transaction.BUDGET_MONTH)));
     if (stat != null) {
       final Double transactionAmount = values.get(Transaction.AMOUNT);
       updateStat(stat, transactionAmount, multiplier, repository);
@@ -114,7 +114,7 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
     double newValue = Utils.zeroIfNull(stat.get(SeriesStat.ACTUAL_AMOUNT)) + multiplier * transactionAmount;
     if (Amounts.isNearZero(newValue)) {
       IsTransactionPresent transactionPresent = new IsTransactionPresent(stat);
-      repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, stat.get(SeriesStat.SERIES))
+      repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, stat.get(SeriesStat.TARGET))
         .saveApply(transactionPresent, repository);
       if (transactionPresent.found) {
         repository.update(stat.getKey(), SeriesStat.ACTUAL_AMOUNT, 0.);
@@ -138,7 +138,7 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
     GlobList allSeries = repository.getAll(Series.TYPE);
     for (Glob month : repository.getAll(Month.TYPE)) {
       for (Glob series : allSeries) {
-        repository.create(SeriesStat.createKey(series.get(Series.ID), month.get(Month.ID)));
+        repository.create(SeriesStat.createKeyForSeries(series.get(Series.ID), month.get(Month.ID)));
       }
     }
 

@@ -2,6 +2,7 @@ package org.designup.picsou.gui.series.view;
 
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SeriesGroup;
 import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
@@ -15,6 +16,7 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 
 public class SeriesWrapperStringifier extends AbstractGlobStringifier {
   private GlobStringifier seriesStringifier;
+  private final GlobStringifier seriesGroupStringifier;
   private GlobStringifier subSeriesStringifier;
   private GlobStringifier budgetAreaStringifier;
   private GlobRepository parentRepository;
@@ -24,6 +26,7 @@ public class SeriesWrapperStringifier extends AbstractGlobStringifier {
 
     DescriptionService descriptionService = directory.get(DescriptionService.class);
     seriesStringifier = descriptionService.getStringifier(Series.TYPE);
+    seriesGroupStringifier = descriptionService.getStringifier(SeriesGroup.TYPE);
     subSeriesStringifier = descriptionService.getStringifier(SubSeries.TYPE);
     budgetAreaStringifier = descriptionService.getStringifier(BudgetArea.TYPE);
   }
@@ -44,6 +47,13 @@ public class SeriesWrapperStringifier extends AbstractGlobStringifier {
           return "";
         }
         return seriesStringifier.toString(series, repository);
+
+      case SERIES_GROUP:
+        Glob seriesGroup = parentRepository.find(Key.create(SeriesGroup.TYPE, wrapper.get(SeriesWrapper.ITEM_ID)));
+        if (seriesGroup == null) {
+          return "";
+        }
+        return seriesGroupStringifier.toString(seriesGroup, repository);
 
       case SUB_SERIES:
         Glob subSeries = parentRepository.find(Key.create(SubSeries.TYPE, wrapper.get(SeriesWrapper.ITEM_ID)));

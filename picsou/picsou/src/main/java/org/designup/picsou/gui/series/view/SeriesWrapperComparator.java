@@ -4,6 +4,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.exceptions.UnexpectedValue;
 
 import java.util.Comparator;
 
@@ -27,11 +28,8 @@ public class SeriesWrapperComparator implements Comparator<Glob> {
       return 0;
     }
 
-    SeriesWrapperType type1 = SeriesWrapperType.get(wrapper1);
-    SeriesWrapperType type2 = SeriesWrapperType.get(wrapper2);
-
-    int level1 = type1.getLevel();
-    int level2 = type2.getLevel();
+    int level1 = getLevel(wrapper1);
+    int level2 = getLevel(wrapper2);
     if ((level1 == 0) && (level2 == 0)) {
       return compareTopLevel(wrapper1, wrapper2);
     }
@@ -60,6 +58,28 @@ public class SeriesWrapperComparator implements Comparator<Glob> {
         return compare(parent1, parent2);
       }
     }
+  }
+
+  protected int getLevel(Glob wrapper) {
+    SeriesWrapperType type = SeriesWrapperType.get(wrapper);
+    switch (type) {
+      case BUDGET_AREA:
+      case SUMMARY:
+        return 0;
+      case SERIES_GROUP:
+        return 1;
+      case SUB_SERIES:
+        return 3;
+      case SERIES:
+        Glob parent = SeriesWrapper.getParent(wrapper, localRepository);
+        if (SeriesWrapperType.get(parent).equals(SeriesWrapperType.BUDGET_AREA)) {
+          return 1;
+        }
+        else {
+          return 2;
+        }
+    }
+    throw new UnexpectedValue("Unexpected type " + type + " for " + wrapper);
   }
 
   private int compareTopLevel(Glob wrapper1, Glob wrapper2) {

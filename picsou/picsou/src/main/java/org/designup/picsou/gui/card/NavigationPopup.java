@@ -9,12 +9,10 @@ import org.designup.picsou.gui.transactions.actions.ShowAllTransactionsInAccount
 import org.designup.picsou.gui.transactions.actions.ShowSeriesTransactionsInAccountViewAction;
 import org.designup.picsou.gui.transactions.actions.ShowTransactionsInAccountViewAction;
 import org.designup.picsou.gui.utils.Matchers;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.*;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
@@ -25,6 +23,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -88,6 +87,9 @@ public class NavigationPopup {
     else if (type.equals(Series.TYPE)) {
       initSeriesPopup(popup, monthIds, objectKeys);
     }
+    if (type.equals(SeriesGroup.TYPE)) {
+      initSeriesGroupPopup(popup, monthIds, objectKeys);
+    }
     else if (type.equals(Transaction.TYPE)) {
       initTransactionsPopup(popup, monthIds, objectKeys);
     }
@@ -131,6 +133,18 @@ public class NavigationPopup {
       Key seriesKey = objectKeys.iterator().next();
       popup.add(new EditSeriesAction(seriesKey, monthIds, repository, localDirectory));
     }
+  }
+
+  private void initSeriesGroupPopup(JPopupMenu popup, SortedSet<Integer> monthIds, Set<Key> objectKeys) {
+    Set<Integer> seriesIds = new HashSet<Integer>();
+    for (Key groupKey : objectKeys) {
+      Glob group = repository.get(groupKey);
+      seriesIds.addAll(repository.findLinkedTo(group, Series.GROUP).getValueSet(Series.ID));
+    }
+    GlobUtils.getValues(objectKeys, SeriesGroup.ID);
+    GlobMatcher matcher = Matchers.transactionsForSeries(seriesIds);
+    addShowInCategorization(popup, monthIds, matcher);
+    popup.add(new ShowSeriesTransactionsInAccountViewAction(seriesIds, localDirectory));
   }
 
   private void initTransactionsPopup(JPopupMenu popup, SortedSet<Integer> monthIds, Set<Key> objectKeys) {

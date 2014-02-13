@@ -36,6 +36,10 @@ public class BudgetGaugeBlockMetrics {
     this.labelWidth = gaugeX - labelX - columnMargin;
   }
 
+  public int labelX(boolean shift) {
+    return shift ? labelX + 8 : labelX;
+  }
+
   public int actualAmountX(String amount) {
     return area.width - maxAmountWidth - amountsFontMetrics.stringWidth(amount) - PADDING;
   }

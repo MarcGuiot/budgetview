@@ -282,7 +282,7 @@ public class ProjectItemAmountEditor implements Disposable {
       super.globsReset(repository, changedTypes);
     }
 
-    protected void update() {
+    public void update() {
       Glob item = repository.find(itemKey);
       if (item == null) {
         return;

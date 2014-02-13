@@ -49,8 +49,7 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
   }
 
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob periodSeriesStat) {
-
-    final Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
+    final Glob series = PeriodSeriesStat.findTarget(periodSeriesStat, repository);
     String name = account.get(Account.NAME) + "." + seriesStringifier.toString(series, repository);
 
     final GlobButtonView seriesNameButton =
@@ -91,7 +90,7 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
                         PeriodSeriesStat.PLANNED_AMOUNT, PeriodSeriesStat.PAST_REMAINING, PeriodSeriesStat.FUTURE_REMAINING,
                         PeriodSeriesStat.PAST_OVERRUN, PeriodSeriesStat.FUTURE_OVERRUN,
                         PeriodSeriesStat.ACTIVE,
-                        GlobMatchers.fieldEquals(PeriodSeriesStat.SERIES, series.get(Series.ID)),
+                        GlobMatchers.fieldEquals(PeriodSeriesStat.TARGET, series.get(Series.ID)),
                         repository, directory) {
         protected double getValue(Glob glob, DoubleField field) {
           return multiplier * Math.abs(super.getValue(glob, field));
@@ -116,7 +115,7 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
     final GlobButtonView globButtonView =
       GlobButtonView.init(PeriodSeriesStat.TYPE, repository, directory, getStringifier(series, field), callback)
         .setName(name)
-        .setFilter(GlobMatchers.linkedTo(series, PeriodSeriesStat.SERIES));
+        .setFilter(PeriodSeriesStat.seriesMatcher());
     cellBuilder.add(buttonName, globButtonView.getComponent());
     cellBuilder.addDisposeListener(globButtonView);
   }

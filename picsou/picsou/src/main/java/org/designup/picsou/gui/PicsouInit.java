@@ -110,6 +110,7 @@ public class PicsouInit {
     repository.addTrigger(new MonthTrigger(directory));
     repository.addTrigger(new AccountInitialPositionTrigger());
     repository.addTrigger(new DeleteInitialSeriesTrigger());
+    repository.addTrigger(new DeleteUnusedSeriesGroupTrigger());
     repository.addTrigger(new ProjectTransferAccountChangeTrigger());
     repository.addTrigger(new ProjectToSeriesTrigger());
     repository.addTrigger(new ProjectToItemTrigger());
@@ -158,6 +159,7 @@ public class PicsouInit {
     repository.addTrigger(new SeriesStatToProjectItemStatTrigger());
     repository.addTrigger(new SubSeriesStatToProjectItemStatTrigger());
     repository.addTrigger(new ProjectCategorizationWarningTrigger());
+    repository.addTrigger(new SeriesStatForGroupsTrigger());
     repository.addTrigger(new DateFormatTrigger(directory));
     repository.addTrigger(new ProjectPicturesDelectionTrigger());
   }

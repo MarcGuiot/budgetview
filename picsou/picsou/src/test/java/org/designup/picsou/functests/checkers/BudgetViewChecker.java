@@ -7,16 +7,19 @@ import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.gui.components.charts.DeltaGauge;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.gui.series.ui.SeriesPanelUI;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.utils.TablePrinter;
 import org.globsframework.utils.TestUtils;
-import org.uispec4j.*;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
+import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 
 import javax.swing.*;
+import javax.swing.plaf.PanelUI;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -222,7 +225,6 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
-
     protected String convert(double amount) {
       return BudgetViewChecker.this.convert(amount, budgetArea);
     }
@@ -270,6 +272,19 @@ public class BudgetViewChecker extends ViewChecker {
           Assert.fail("Series '" + expectedName + "' unexpectedly found. Actual series: " + actualNames);
         }
       }
+      return this;
+    }
+
+    public BudgetAreaChecker checkContent(String expected) {
+      Panel seriesRepeat = getPanel().getPanel("seriesRepeat");
+      UIComponent[] seriesNames = seriesRepeat.getUIComponents(Button.class, "seriesName");
+      UIComponent[] actualAmounts = seriesRepeat.getUIComponents(Button.class, "observedSeriesAmount");
+      UIComponent[] plannedAmounts = seriesRepeat.getUIComponents(Button.class, "plannedSeriesAmount");
+      TablePrinter table = new TablePrinter();
+      for (int i = 0; i < seriesNames.length; i++) {
+        table.addRow(seriesNames[i].getLabel(), actualAmounts[i].getLabel(), plannedAmounts[i].getLabel());
+      }
+      Assert.assertEquals(expected, table.toString());
       return this;
     }
 
@@ -467,6 +482,75 @@ public class BudgetViewChecker extends ViewChecker {
     public void checkCarryOverDisabled(String seriesName) {
       getSeriesPanel(seriesName).getSeriesButton().checkItemDisabled("Carry over next month");
     }
+
+    public BudgetAreaChecker checkGroups(String series, String... labels) {
+      getSeriesPanel(series).getSeriesButton().getSubMenu("Add to group")
+        .checkChoices(labels);
+      return this;
+    }
+
+    public SeriesGroupNameDialogChecker addToNewGroup(String series) {
+      return SeriesGroupNameDialogChecker.open(getSeriesPanel(series).getSeriesButton()
+                                                 .getSubMenu(Lang.get("seriesGroup.menu"))
+                                                 .triggerClick(Lang.get("seriesGroup.menu.addToNew")));
+    }
+
+    public BudgetAreaChecker addToNewGroup(String series, String group) {
+      addToNewGroup(series)
+        .setName(group)
+        .validate();
+      return this;
+    }
+
+    public BudgetAreaChecker addToGroup(String series, String group) {
+      getSeriesPanel(series).getSeriesButton()
+        .getSubMenu(Lang.get("seriesGroup.menu"))
+        .click(group);
+      return this;
+    }
+
+    public void expandGroup(String groupName) {
+      getSeriesPanel(groupName).getSeriesButton()
+        .click(Lang.get("seriesGroup.menu.expand"));
+
+    }
+
+    public void collapseGroup(String groupName) {
+      getSeriesPanel(groupName).getSeriesButton()
+        .click(Lang.get("seriesGroup.menu.collapse"));
+    }
+
+    public BudgetAreaChecker clickPlanned(String groupName) {
+      getSeriesPanel(groupName).getPlannedAmount().click();
+      return this;
+    }
+
+    public SeriesGroupNameDialogChecker renameGroup(String series) {
+      return SeriesGroupNameDialogChecker.open(getSeriesPanel(series).getSeriesButton()
+                                                 .triggerClick(Lang.get("seriesGroup.menu.rename")));
+    }
+
+    public void removeFromGroup(String series) {
+      getSeriesPanel(series).getSeriesButton()
+        .click(Lang.get("seriesGroup.menu.removeFromGroup"));
+    }
+
+    public void deleteGroup(String groupName) {
+      getSeriesPanel(groupName).getSeriesButton()
+        .click(Lang.get("seriesGroup.menu.delete"));
+    }
+
+    public void checkGroupItems(String... seriesNames) {
+      Panel panel = getPanel().getPanel("seriesRepeat");
+      JPanel jPanel = (JPanel)panel.getAwtComponent();
+      PanelUI ui = jPanel.getUI();
+      if (!(ui instanceof SeriesPanelUI)) {
+        Assert.fail("Unexpected panel UI: " + ui);
+      }
+
+      SeriesPanelUI seriesPanelUI = (SeriesPanelUI)ui;
+      TestUtils.assertEquals(seriesNames, seriesPanelUI.getGroupItemLabels(jPanel));
+    }
   }
 
   public class ExtrasBudgetAreaChecker extends BudgetAreaChecker {
@@ -533,7 +617,6 @@ public class BudgetViewChecker extends ViewChecker {
       return new Button((JButton)getComponent(OBSERVED_LABEL_OFFSET));
     }
 
-
     public Button getPlannedAmount() {
       return new Button((JButton)getComponent(PLANNED_LABEL_OFFSET));
     }
@@ -547,7 +630,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public void checkPlannedAmount(double amount) {
-      assertThat(getPlannedAmount().textEquals(convert(amount, budgetArea) ));
+      assertThat(getPlannedAmount().textEquals(convert(amount, budgetArea)));
     }
 
     public DeltaGaugeChecker getDeltaGauge() {

@@ -7,8 +7,10 @@ import org.designup.picsou.gui.printing.PrintStyle;
 import org.designup.picsou.gui.printing.utils.PageBlock;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SeriesGroup;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.awt.*;
 
@@ -19,15 +21,15 @@ public class SeriesGaugeBlock implements PageBlock {
   private Glob periodStat;
   private BudgetGaugeContext context;
   private int sectionIndex;
-  private Glob series;
+  private GlobRepository repository;
   private BudgetArea budgetArea;
 
   public SeriesGaugeBlock(Glob periodStat, BudgetGaugeContext budgetGaugeContext, int sectionIndex, GlobRepository repository) {
     this.periodStat = periodStat;
     this.context = budgetGaugeContext;
     this.sectionIndex = sectionIndex;
-    this.series = repository.findLinkTarget(periodStat, PeriodSeriesStat.SERIES);
-    this.budgetArea = Series.getBudgetArea(series);
+    this.repository = repository;
+    this.budgetArea = PeriodSeriesStat.getBudgetArea(periodStat, repository);
   }
 
   public int getNeededHeight() {
@@ -39,7 +41,7 @@ public class SeriesGaugeBlock implements PageBlock {
   }
 
   public String getLabel() {
-    return series.get(Series.NAME);
+    return PeriodSeriesStat.getName(periodStat, repository);
   }
 
   public String getActualAmount() {
@@ -72,7 +74,7 @@ public class SeriesGaugeBlock implements PageBlock {
     g2.drawString(getPlannedAmount(), metrics.plannedAmountX(getPlannedAmount()), metrics.labelY);
 
     g2.setClip(0, 0, metrics.labelWidth, area.height);
-    g2.drawString(getLabel(), metrics.labelX, metrics.labelY);
+    g2.drawString(getLabel(), metrics.labelX(PeriodSeriesStat.isSeriesInGroup(periodStat, repository)), metrics.labelY);
 
     g2.setClip(0, 0, area.width, area.height);
     Gauge gauge = getGauge(style);

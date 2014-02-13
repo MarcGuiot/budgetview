@@ -2,7 +2,6 @@ package org.designup.picsou.gui.savings;
 
 import org.designup.picsou.gui.budget.SeriesEditionButtons;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.gui.utils.MonthMatcher;
 import org.designup.picsou.model.Account;
@@ -137,8 +136,12 @@ public class SavingsSeriesView implements Disposable {
 
   private class SavingsSeriesFilter implements GlobMatcher {
     public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
-      Glob series = repository.findLinkTarget(periodSeriesStat, PeriodSeriesStat.SERIES);
-      if (series == null){
+      if (!PeriodSeriesStat.isForSeries(periodSeriesStat)) {
+        return false;
+      }
+
+      Glob series = PeriodSeriesStat.findTarget(periodSeriesStat, repository);
+      if (series == null) {
         return false;
       }
       ReadOnlyGlobRepository.MultiFieldIndexed seriesBudgetIndex =

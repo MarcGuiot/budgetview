@@ -1,20 +1,20 @@
 package org.designup.picsou.gui.series.analysis.evolution;
 
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.model.BudgetStat;
-import org.designup.picsou.gui.model.SavingsBudgetStat;
-import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.gui.model.SubSeriesStat;
+import org.designup.picsou.gui.model.*;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.analysis.SeriesChartsColors;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SeriesGroup;
 import org.designup.picsou.model.SubSeries;
 import com.budgetview.shared.utils.Amounts;
 import org.globsframework.gui.views.GlobTableView;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
+import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -26,6 +26,7 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 
@@ -50,6 +51,9 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
       case SERIES:
         return getSeriesButtonText(itemId);
 
+      case SERIES_GROUP:
+        return getSeriesGroupButtonText(itemId);
+
       case SUMMARY:
         return getSummaryLabelText(seriesWrapper);
 
@@ -59,6 +63,10 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
       default:
         throw new InvalidParameter("Unexpected type: " + SeriesWrapperType.get(seriesWrapper));
     }
+  }
+
+  protected Border getBorderForSeries(Glob wrapper) {
+    return null;
   }
 
   protected String getDescription(Glob seriesWrapper) {
@@ -77,16 +85,25 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
   }
 
   private String getSeriesButtonText(Integer itemId) {
+    return getButtonText(itemId, SeriesType.SERIES, Series.TYPE, Series.BUDGET_AREA);
+  }
+
+  private String getSeriesGroupButtonText(Integer itemId) {
+    return getButtonText(itemId, SeriesType.SERIES_GROUP, SeriesGroup.TYPE, SeriesGroup.BUDGET_AREA);
+  }
+
+  private String getButtonText(Integer itemId, SeriesType seriesType, GlobType type, LinkField budgetAreaField) {
     Glob seriesStat = repository.find(KeyBuilder.init(SeriesStat.TYPE)
                                         .set(SeriesStat.MONTH, referenceMonthId)
-                                        .set(SeriesStat.SERIES, itemId)
+                                        .set(SeriesStat.TARGET_TYPE, seriesType.getId())
+                                        .set(SeriesStat.TARGET, itemId)
                                         .get());
     if (seriesStat == null) {
       return "";
     }
 
-    Glob series = repository.get(Key.create(Series.TYPE, itemId));
-    BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
+    Glob target = repository.get(Key.create(type, itemId));
+    BudgetArea budgetArea = BudgetArea.get(target.get(budgetAreaField));
     Double value = seriesStat.get(SeriesStat.SUMMARY_AMOUNT);
     return format(value, budgetArea);
   }
