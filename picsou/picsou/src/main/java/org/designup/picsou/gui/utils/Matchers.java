@@ -245,8 +245,14 @@ public class Matchers {
       if (firstMonth == null) {
         firstMonth = 0;
       }
+      else {
+        firstMonth = Month.previous(firstMonth);
+      }
       if (lastMonth == null) {
         lastMonth = Integer.MAX_VALUE;
+      }
+      else {
+        lastMonth = Month.next(lastMonth);
       }
 
       boolean monthsInScope = isMonthSelectionInSeriesScope(firstMonth, lastMonth);

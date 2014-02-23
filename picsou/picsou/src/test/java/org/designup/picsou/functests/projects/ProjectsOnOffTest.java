@@ -28,9 +28,10 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
 
     budgetView.extras.checkSeries("Trip", 0.00, -300.00);
     categorization.selectTransaction("Expense 1").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesIsActive("Trip")
-      .checkSeriesContainsSubSeries("Reservation", "Equipment", "Hotel");
+      .checkGroupContainsSeries("Trip", "Reservation", "Equipment", "Hotel")
+      .checkSeriesIsActive("Reservation")
+      .checkSeriesIsActive("Equipment")
+      .checkSeriesIsInactive("Hotel");
 
     timeline.selectMonth("2010/12");
     views.selectHome();
@@ -40,9 +41,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
     currentProject.checkProjectGauge(0.00, -800.00);
     budgetView.extras.checkNoSeriesShown();
     categorization.selectTransaction("Expense 1").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesIsInactive("Trip")
-      .checkSeriesContainsSubSeries("Reservation", "Equipment", "Hotel");
+      .checkContainsNoSeries();
 
     views.selectHome();
     currentProject.backToList();
@@ -51,9 +50,10 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
     currentProject.setActive();
     budgetView.extras.checkSeries("Trip", 0.00, -300.00);
     categorization.selectTransaction("Expense 1").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesIsActive("Trip")
-      .checkSeriesContainsSubSeries("Reservation", "Equipment", "Hotel");
+      .checkGroupContainsSeries("Trip", "Reservation", "Equipment", "Hotel")
+      .checkSeriesIsActive("Reservation")
+      .checkSeriesIsActive("Equipment")
+      .checkSeriesIsInactive("Hotel");
 
     views.selectHome();
     currentProject.backToList();
@@ -63,50 +63,48 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
     currentProject.view(0).setInactive();
     budgetView.extras.checkSeries("Trip", 0.00, -100.00);
     categorization.selectTransaction("Expense 1").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesContainsSubSeries("Equipment", "Hotel");
+      .checkGroupContainsSeries("Trip", "Equipment", "Hotel")
+      .checkSeriesIsActive("Equipment")
+      .checkSeriesIsInactive("Hotel");
 
     currentProject.view(1).setInactive();
     budgetView.extras.checkNoSeriesShown();
     categorization.selectTransaction("Expense 1").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesContainsSubSeries("Hotel");
+      .checkGroupContainsSeries("Trip", "Hotel")
+      .checkSeriesIsInactive("Hotel");
 
     currentProject.view(2).setInactive();
     budgetView.extras.checkNoSeriesShown();
     categorization.selectTransaction("Expense 1").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesIsInactive("Trip")
-      .checkSeriesContainsNoSubSeries("Trip");
+      .checkGroupNotShown("Trip");
 
     currentProject.view(1).setActive();
     currentProject.view(2).setActive();
     budgetView.extras.checkSeries("Trip", 0.00, -100.00);
     categorization.selectTransaction("Expense 1").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesIsActive("Trip")
-      .checkSeriesContainsSubSeries("Equipment", "Hotel");
+      .checkGroupContainsSeries("Trip", "Equipment", "Hotel")
+      .checkSeriesIsActive("Equipment")
+      .checkSeriesIsInactive("Hotel");
 
     currentProject.setInactive();
     budgetView.extras.checkNoSeriesShown();
     categorization.selectTransaction("Expense 1").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesIsInactive("Trip")
-      .checkSeriesContainsSubSeries("Equipment", "Hotel");
+      .checkContainsNoSeries();
 
     currentProject.setActive();
     budgetView.extras.checkSeries("Trip", 0.00, -100.00);
     categorization.selectTransaction("Expense 1").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesIsActive("Trip")
-      .checkSeriesContainsSubSeries("Equipment", "Hotel");
+      .checkGroupContainsSeries("Trip", "Equipment", "Hotel")
+      .checkSeriesIsActive("Equipment")
+      .checkSeriesIsInactive("Hotel");
 
     currentProject.view(0).setActive();
     budgetView.extras.checkSeries("Trip", 0.00, -300.00);
     categorization.selectTransaction("Expense 1").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesIsActive("Trip")
-      .checkSeriesContainsSubSeries("Reservation", "Equipment", "Hotel");
+      .checkGroupContainsSeries("Trip", "Reservation", "Equipment", "Hotel")
+      .checkSeriesIsActive("Reservation")
+      .checkSeriesIsActive("Equipment")
+      .checkSeriesIsInactive("Hotel");
   }
 
   public void testDisablingProjectElementsWithAssignedTransactions() throws Exception {
@@ -126,7 +124,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
       .addExpenseItem(1, "Equipment", 201012, -100.00)
       .addExpenseItem(2, "Hotel", 201101, -500.00);
 
-    categorization.setExtra("RESA", "Trip", "Reservation");
+    categorization.setExtra("RESA", "Reservation");
 
     timeline.selectMonth("2010/12");
 
@@ -136,52 +134,44 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
     currentProject.checkProjectGauge(-200.00, -800.00);
     budgetView.extras.checkSeries("Trip", -200.00, 0.00);
     categorization.selectTransaction("RESA").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesIsActive("Trip")
-      .checkSeriesContainsSubSeries("Reservation", "Equipment", "Hotel");
+      .checkGroupContainsSeries("Trip", "Reservation")
+      .checkSeriesIsActive("Reservation");
 
     currentProject.setActive();
     budgetView.extras.checkSeries("Trip", -200.00, -300.00);
     categorization.selectTransaction("RESA").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesIsActive("Trip")
-      .checkSeriesContainsSubSeries("Reservation", "Equipment", "Hotel");
+      .checkGroupContainsSeries("Trip", "Reservation", "Equipment", "Hotel")
+      .checkSeriesIsActive("Reservation");
 
     currentProject.view(0).setInactive();
     budgetView.extras.checkSeries("Trip", -200.00, -100.00);
     categorization.selectTransaction("RESA").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesIsActive("Trip")
-      .checkSeriesContainsSubSeries("Reservation", "Equipment", "Hotel");
+      .checkGroupContainsSeries("Trip", "Reservation", "Equipment", "Hotel")
+      .checkSeriesIsActive("Reservation");
 
     currentProject.view(1).setInactive();
     budgetView.extras.checkSeries("Trip", -200.00, 0.00);
     categorization.selectTransaction("RESA").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesIsActive("Trip")
-      .checkSeriesContainsSubSeries("Reservation", "Hotel")
-      .checkSeriesDoesNotContainSubSeries("Trip", "Equipment");
+      .checkGroupContainsSeries("Trip", "Reservation", "Hotel")
+      .checkSeriesIsActive("Reservation");
 
     currentProject.view(1).setActive();
     budgetView.extras.checkSeries("Trip", -200.00, -100.00);
     categorization.selectTransaction("RESA").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesIsActive("Trip")
-      .checkSeriesContainsSubSeries("Reservation", "Equipment", "Hotel");
+      .checkGroupContainsSeries("Trip", "Reservation", "Equipment", "Hotel")
+      .checkSeriesIsActive("Reservation");
 
     currentProject.setInactive();
     budgetView.extras.checkSeries("Trip", -200.00, 0.00);
     categorization.selectTransaction("RESA").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesIsActive("Trip")
-      .checkSeriesContainsSubSeries("Reservation", "Equipment", "Hotel");
+      .checkGroupContainsSeries("Trip", "Reservation")
+      .checkSeriesIsActive("Reservation");
 
     currentProject.setActive();
     budgetView.extras.checkSeries("Trip", -200.00, -100.00);
     categorization.selectTransaction("RESA").selectExtras()
-      .checkContainsSeries("Trip")
-      .checkSeriesIsActive("Trip")
-      .checkSeriesContainsSubSeries("Reservation", "Equipment", "Hotel");
+      .checkGroupContainsSeries("Trip", "Reservation", "Equipment", "Hotel")
+      .checkSeriesIsActive("Reservation");
   }
 
   public void testDisablingItemsDoesNotConfuseTheCategorizationWarning() throws Exception {
@@ -200,7 +190,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
       .addExpenseItem(1, "Equipment", 201012, -100.00)
       .addExpenseItem(2, "Hotel", 201101, -500.00);
 
-    categorization.setExtra("RESA", "Trip", "Reservation");
+    categorization.setExtra("RESA", "Reservation");
 
     currentProject
       .view(2)

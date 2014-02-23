@@ -12,7 +12,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.linkedTo;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener {
 
@@ -73,29 +73,33 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
       return;
     }
 
-    Set<Integer> seriesIds =
-      repository.getAll(ProjectItem.TYPE, linkedTo(project, ProjectItem.PROJECT))
-        .getValueSet(ProjectItem.SERIES);
-    for (Integer seriesId : seriesIds) {
-      updateSeries(project, seriesId, repository);
+    for (Glob item : repository.getAll(ProjectItem.TYPE, linkedTo(project, ProjectItem.PROJECT))) {
+      updateItem(project, item, repository);
     }
   }
 
-  private void updateSeries(Glob project, Integer seriesId, GlobRepository repository) {
+  private void updateItem(Glob project, Glob item, GlobRepository repository) {
+
+    Integer seriesId = item.get(ProjectItem.SERIES);
+    if (seriesId == null) {
+      return;
+    }
+
     Key seriesKey = Key.create(Series.TYPE, seriesId);
 
-    // Gather months for the ProjectItems and Transactions associated to this project
-    GlobList projectItems = repository.getAll(ProjectItem.TYPE, linkedTo(seriesKey, ProjectItem.SERIES));
+    GlobList transactions =
+      repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
+        .getGlobs()
+        .filterSelf(isFalse(Transaction.PLANNED), repository);
+
+    // Gather months for the transactions associated to this project item
     SortedSet<Integer> months = new TreeSet<Integer>();
-    for (Glob item : projectItems) {
-      Integer firstItemMonth = item.get(ProjectItem.FIRST_MONTH);
-      months.add(firstItemMonth);
-      Integer lastItemMonth = ProjectItem.getLastMonth(item);
-      if (!Utils.equal(firstItemMonth, lastItemMonth)) {
-        months.add(lastItemMonth);
-      }
+    Integer firstItemMonth = item.get(ProjectItem.FIRST_MONTH);
+    months.add(firstItemMonth);
+    Integer lastItemMonth = ProjectItem.getLastMonth(item);
+    if (!Utils.equal(firstItemMonth, lastItemMonth)) {
+      months.add(lastItemMonth);
     }
-    GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId).getGlobs();
     months.addAll(transactions.getValueSet(Transaction.BUDGET_MONTH));
     if (months.isEmpty()) {
       repository.update(seriesKey, Series.FIRST_MONTH, null);
@@ -131,19 +135,15 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
     }
 
     // Set all SeriesBudget planned amounts according to the active items
-    if (project.isTrue(Project.ACTIVE)) {
-      for (Glob item : projectItems) {
-        if (item.isTrue(ProjectItem.ACTIVE)) {
-          Integer firstMonthId = item.get(ProjectItem.FIRST_MONTH);
-          Integer lastMonthId = ProjectItem.getLastMonth(item);
-          for (int monthId = firstMonthId; monthId <= lastMonthId; monthId = Month.next(monthId)) {
-            Glob seriesBudget = SeriesBudget.find(seriesId, monthId, repository);
-            double planned = seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0) + getPlanned(item, monthId, repository);
-            repository.update(seriesBudget.getKey(),
-                              value(SeriesBudget.PLANNED_AMOUNT, planned),
-                              value(SeriesBudget.ACTIVE, true));
-          }
-        }
+    if (project.isTrue(Project.ACTIVE) && item.isTrue(ProjectItem.ACTIVE)) {
+      Integer firstMonthId = item.get(ProjectItem.FIRST_MONTH);
+      Integer lastMonthId = ProjectItem.getLastMonth(item);
+      for (int monthId = firstMonthId; monthId <= lastMonthId; monthId = Month.next(monthId)) {
+        Glob seriesBudget = SeriesBudget.find(seriesId, monthId, repository);
+        double planned = seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0) + getPlanned(item, monthId, repository);
+        repository.update(seriesBudget.getKey(),
+                          value(SeriesBudget.PLANNED_AMOUNT, planned),
+                          value(SeriesBudget.ACTIVE, true));
       }
     }
   }
@@ -151,7 +151,7 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
   private Double getPlanned(Glob item, int monthId, GlobRepository repository) {
     if (ProjectItemType.TRANSFER.equals(ProjectItemType.get(item))) {
       Glob transfer = ProjectTransfer.getTransferFromItem(item, repository);
-      if (!ProjectTransfer.isSavings(transfer, repository)) {
+      if (!ProjectTransfer.usesSavingsAccounts(transfer, repository)) {
         return 0.00;
       }
     }

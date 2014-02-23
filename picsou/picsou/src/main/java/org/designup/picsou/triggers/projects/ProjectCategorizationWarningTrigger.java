@@ -3,13 +3,10 @@ package org.designup.picsou.triggers.projects;
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.gui.model.SubSeriesStat;
 import org.designup.picsou.model.ProjectItem;
 import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SubSeries;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,16 +17,11 @@ public class ProjectCategorizationWarningTrigger implements ChangeSetListener {
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (!changeSet.containsChanges(ProjectItem.TYPE) &&
-        !changeSet.containsChanges(SubSeriesStat.TYPE) &&
         !changeSet.containsChanges(SeriesStat.TYPE)) {
       return;
     }
 
     final Set<Integer> modifiedProjectItemIds = new HashSet<Integer>();
-    Set<Integer> subSeriesIds = GlobUtils.getValues(changeSet.getChanged(SubSeriesStat.TYPE), SubSeriesStat.SUB_SERIES);
-    for (Glob item : repository.getAll(ProjectItem.TYPE, fieldIn(ProjectItem.SUB_SERIES, subSeriesIds))) {
-      modifiedProjectItemIds.add(item.get(ProjectItem.ID));
-    }
     Set<Integer> seriesIds = getChangedSeriesIds(changeSet);
     for (Glob item : repository.getAll(ProjectItem.TYPE, fieldIn(ProjectItem.SERIES, seriesIds))) {
       modifiedProjectItemIds.add(item.get(ProjectItem.ID));
@@ -67,21 +59,8 @@ public class ProjectCategorizationWarningTrigger implements ChangeSetListener {
   private void checkCategorizationWarning(Glob projectItem, GlobRepository repository) {
     boolean warning = false;
 
-    if (ProjectItem.usesSubSeries(projectItem)) {
-      if (projectItem.get(ProjectItem.SUB_SERIES) != null) {
-        Glob subSeries = repository.find(Key.create(SubSeries.TYPE, projectItem.get(ProjectItem.SUB_SERIES)));
-        if (subSeries != null) {
-          for (Glob subSeriesStat : repository.findLinkedTo(subSeries, SubSeriesStat.SUB_SERIES)) {
-            if (!monthInProjectItemRange(subSeriesStat.get(SubSeriesStat.MONTH), projectItem)
-                && Amounts.isNotZero(subSeriesStat.get(SubSeriesStat.ACTUAL_AMOUNT))) {
-              warning = true;
-            }
-          }
-        }
-      }
-    }
-    else {
-      Glob series = repository.find(Key.create(Series.TYPE, projectItem.get(ProjectItem.SERIES)));
+    if (projectItem.get(ProjectItem.SERIES) != null) {
+      Glob series = repository.findLinkTarget(projectItem, ProjectItem.SERIES);
       if (series != null) {
         for (Glob seriesStat : SeriesStat.getAllMonthsForSeries(series, repository)) {
           if (!monthInProjectItemRange(seriesStat.get(SeriesStat.MONTH), projectItem)

@@ -9,6 +9,7 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
@@ -54,6 +55,9 @@ public class ProjectItem {
   @Target(Series.class)
   public static LinkField SERIES;
 
+  /**
+   * @deprecated *
+   */
   @Target(SubSeries.class)
   public static LinkField SUB_SERIES;
 
@@ -67,12 +71,10 @@ public class ProjectItem {
   public static IntegerField SEQUENCE_NUMBER;
 
   public static NotUniqueIndex SERIES_INDEX;
-  public static NotUniqueIndex SUB_SERIES_INDEX;
 
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(ProjectItem.class, "projectItem");
     loader.defineNonUniqueIndex(SERIES_INDEX, SERIES);
-    loader.defineNonUniqueIndex(SUB_SERIES_INDEX, SUB_SERIES);
   }
 
   public static Double getTotalPlannedAmount(FieldValues projectItem, GlobRepository repository) {
@@ -117,11 +119,11 @@ public class ProjectItem {
     return Month.offset(itemValues.get(FIRST_MONTH), offset);
   }
 
-  public static boolean usesSeries(FieldValues itemValues) {
-    return !usesSubSeries(itemValues);
+  public static boolean usesSavingsSeries(FieldValues itemValues) {
+    return !usesExtrasSeries(itemValues);
   }
 
-  public static boolean usesSubSeries(FieldValues itemValues) {
+  public static boolean usesExtrasSeries(FieldValues itemValues) {
     return !Utils.equal(ProjectItemType.TRANSFER.getId(), itemValues.get(ITEM_TYPE));
   }
 
@@ -137,6 +139,10 @@ public class ProjectItem {
       throw new UnexpectedApplicationState("More than 1 project for series " + series + " : " + items);
     }
     return items.getFirst();
+  }
+
+  public static GlobList getItemsForSeries(Integer seriesId, GlobRepository repository) {
+    return repository.findByIndex(ProjectItem.SERIES_INDEX, seriesId);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

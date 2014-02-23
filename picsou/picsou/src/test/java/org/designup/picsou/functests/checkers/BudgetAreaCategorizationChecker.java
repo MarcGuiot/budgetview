@@ -306,4 +306,21 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     checkComponentVisible(panel, JEditorPane.class, "categorizationMessage", false);
     return this;
   }
+
+  public BudgetAreaCategorizationChecker checkGroupContainsSeries(String group, String... seriesNames) {
+    System.out.println("TBD: BudgetAreaCategorizationChecker.checkGroupContainsSeries");
+    checkContainsSeries(seriesNames);
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkGroupNotShown(String group) {
+    System.out.println("TBD: BudgetAreaCategorizationChecker.checkGroupContainsSeries");
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkGroupDoesNotContainSeries(String group, String... seriesNames) {
+    System.out.println("TBD: BudgetAreaCategorizationChecker.checkGroupDoesNotContainSeries");
+    checkDoesNotContainSeries(seriesNames);
+    return this;
+  }
 }

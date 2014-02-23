@@ -69,13 +69,6 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
                                      "| Leisures  | 100.00 | 200.00 |\n");
     budgetView.variable.checkGroupItems("Food", "Home");
 
-    // -- Groups not shown in Categorization view --
-
-    categorization.selectTransaction("AUCHAN")
-      .checkVariablePreSelected()
-      .getVariable()
-      .checkDoesNotContainSeries("Groceries");
-
     // -- Delete group --
 
     budgetView.variable.deleteGroup("Groceries");
@@ -85,10 +78,15 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkGroups("Leisures", "New group...");
   }
 
+  public void testGroupsAreShownInCategorizationView() throws Exception {
+    fail("tbd: review categorization.xxx.checkGroup()");
+  }
+
   public void testMonthLimits() throws Exception {
     OfxBuilder.init(this)
+      .addTransaction("2013/11/11", -60.00, "FNAC")
       .addTransaction("2013/12/12", -70.00, "Auchan")
-      .addTransaction("2008/24/10", -50.00, "Monoprix")
+      .addTransaction("2013/12/10", -50.00, "Monoprix")
       .addTransaction("2014/01/10", -80.00, "Auchan")
       .addTransaction("2014/01/11", -30.00, "Lidl")
       .addTransaction("2014/01/11", -100.00, "FNAC")
@@ -113,6 +111,13 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkContent("| Leisures  | 0.00 | 200.00 |\n" +
                                      "| Groceries | 0.00 | 100.00 |\n" +
                                      "| Home      | 0.00 | 100.00 |\n");
+
+    timeline.selectMonth(201401);
+    budgetView.variable.editSeries("Food").setStartDate(201312).validate();
+    budgetView.variable.editSeries("Home").setStartDate(201312).validate();
+
+    timeline.selectMonth(201311);
+    budgetView.variable.checkContent("| Leisures | 60.00 | 200.00 |\n");
 
     timeline.selectMonth(201401);
     budgetView.variable.editSeries("Home")
@@ -188,7 +193,7 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
                                      "| Home     | 0.00   | 100.00 |\n");
   }
 
-  public void testNavigationToTransactions() throws Exception {
+  public void testNavigatingToTransactions() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2013/12/12", -70.00, "Auchan")
       .addTransaction("2013/12/20", -50.00, "Monoprix")

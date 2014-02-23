@@ -431,9 +431,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
     builder.add("hideDescription", descriptionHandler.getHideAction());
 
     Matchers.CategorizationFilter filter = Matchers.seriesCategorizationFilter(budgetArea.getId());
-    SeriesChooserComponentFactory componentFactory = new SeriesChooserComponentFactory(budgetArea, invisibleRadio,
-                                                                                       repository,
-                                                                                       directory);
+    SeriesChooserComponentFactory componentFactory =
+      new SeriesChooserComponentFactory(budgetArea, invisibleRadio, repository, directory);
     GlobRepeat repeat = builder.addRepeat("seriesRepeat",
                                           Series.TYPE,
                                           filter,

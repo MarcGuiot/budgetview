@@ -3,7 +3,7 @@ package org.designup.picsou.gui.series.utils;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.seriesgroups.DeleteSeriesGroupAction;
 import org.designup.picsou.gui.seriesgroups.RenameSeriesGroupAction;
-import org.designup.picsou.gui.seriesgroups.SeriesGroupMenu;
+import org.designup.picsou.model.Project;
 import org.designup.picsou.model.SeriesGroup;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.actions.ToggleBooleanAction;
@@ -11,9 +11,7 @@ import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.gui.utils.DisposablePopupMenuFactory;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
-import sun.print.resources.serviceui_es;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -40,6 +38,14 @@ public class SeriesGroupPopupFactory implements DisposablePopupMenuFactory {
       menu.add(createExpandCollapseAction());
       menu.add(new RenameSeriesGroupAction(seriesGroup.getKey(), repository, directory));
       menu.addSeparator();
+      final Glob project = Project.findProjectForGroup(seriesGroup, repository);
+      if (project != null) {
+        menu.add(new AbstractAction(Lang.get("seriesGroup.goto.project")) {
+          public void actionPerformed(ActionEvent actionEvent) {
+            directory.get(NavigationService.class).gotoProject(project);
+          }
+        });
+      }
       menu.add(new AbstractAction(Lang.get("series.goto.operations")) {
         public void actionPerformed(ActionEvent actionEvent) {
           directory.get(NavigationService.class).gotoDataForSeriesGroup(seriesGroup);

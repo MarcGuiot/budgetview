@@ -293,8 +293,12 @@ public class BudgetViewChecker extends ViewChecker {
         getSeriesPanel(seriesName).getSeriesButton().triggerClick(Lang.get("series.edit")));
     }
 
-    public void editProjectSeries(String seriesName) {
+    public void editProjectForSeries(String seriesName) {
       getSeriesPanel(seriesName).getSeriesButton().click(Lang.get("series.edit"));
+    }
+
+    public void editProjectForGroup(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton().click(Lang.get("seriesGroup.goto.project"));
     }
 
     public SeriesAmountEditionDialogChecker editPlannedAmount(String seriesName) {
@@ -509,15 +513,16 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
-    public void expandGroup(String groupName) {
+    public BudgetAreaChecker expandGroup(String groupName) {
       getSeriesPanel(groupName).getSeriesButton()
         .click(Lang.get("seriesGroup.menu.expand"));
-
+      return this;
     }
 
-    public void collapseGroup(String groupName) {
+    public BudgetAreaChecker collapseGroup(String groupName) {
       getSeriesPanel(groupName).getSeriesButton()
         .click(Lang.get("seriesGroup.menu.collapse"));
+      return this;
     }
 
     public BudgetAreaChecker clickPlanned(String groupName) {

@@ -39,9 +39,9 @@ public class SeriesStatToProjectItemStatTrigger implements ChangeSetListener {
   }
 
   private void updateTargetStat(Integer seriesId, Double delta, GlobRepository repository) {
-    GlobList items = repository.findByIndex(ProjectItem.SERIES_INDEX, seriesId);
+    GlobList items = ProjectItem.getItemsForSeries(seriesId, repository);
     for (Glob projectItem : items) {
-      if (!ProjectItem.usesSeries(projectItem)) {
+      if (!ProjectItem.usesExtrasSeries(projectItem)) {
         continue;
       }
       Glob projectItemStat = repository.findOrCreate(Key.create(ProjectItemStat.TYPE, projectItem.get(ProjectItem.ID)));

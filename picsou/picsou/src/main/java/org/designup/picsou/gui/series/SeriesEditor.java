@@ -31,13 +31,6 @@ public class SeriesEditor {
   }
 
   public void showSeries(Glob series, Set<Integer> selectedMonthIds) {
-    Glob project = Project.findProject(series, repository);
-    if (project != null) {
-      navigationService.gotoProject(project);
-      lastSelectedSubSeriesId = null;
-      return;
-    }
-
     Glob projectItem = ProjectItem.findProjectItem(series, repository);
     if (projectItem != null) {
       navigationService.gotoProjectItem(projectItem);
@@ -50,13 +43,6 @@ public class SeriesEditor {
   }
 
   public void showAmount(Glob series, Set<Integer> selectedMonthIds) {
-    Glob project = Project.findProject(series, repository);
-    if (project != null) {
-      navigationService.gotoProject(project);
-      lastSelectedSubSeriesId = null;
-      return;
-    }
-
     Glob projectItem = ProjectItem.findProjectItem(series, repository);
     if (projectItem != null) {
       navigationService.gotoProjectItem(projectItem);

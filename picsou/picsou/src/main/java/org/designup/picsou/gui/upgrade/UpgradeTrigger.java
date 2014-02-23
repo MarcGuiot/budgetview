@@ -3,13 +3,12 @@ package org.designup.picsou.gui.upgrade;
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
-import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.utils.FrameSize;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AccountInitialPositionTrigger;
 import org.designup.picsou.triggers.PositionTrigger;
-import org.designup.picsou.triggers.projects.ProjectItemToSubSeriesTrigger;
+import org.designup.picsou.triggers.projects.ProjectItemToSeriesTrigger;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.Field;
@@ -20,7 +19,6 @@ import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
@@ -127,13 +125,15 @@ public class UpgradeTrigger implements ChangeSetListener {
       deleteDuplicateSynchro(repository);
     }
     if (currentJarVersion < 125) {
+      // TODO:
       updateProjetItemSeries(repository);
     }
     if (currentJarVersion < 126) {
       updateProjetItemSequence(repository);
     }
     if (currentJarVersion < 127) {
-      createMissingSubSeriesForProjectItems(repository);
+      // TODO:
+      createMissingSeriesForProjectItems(repository);
     }
     if (currentJarVersion < 131) {
       FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
@@ -247,9 +247,9 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
   }
 
-  private void createMissingSubSeriesForProjectItems(GlobRepository repository) {
-    for (Glob projectItem : repository.getAll(ProjectItem.TYPE, isNull(ProjectItem.SUB_SERIES))) {
-      ProjectItemToSubSeriesTrigger.createSubSeries(projectItem.getKey(), projectItem, repository);
+  private void createMissingSeriesForProjectItems(GlobRepository repository) {
+    for (Glob projectItem : repository.getAll(ProjectItem.TYPE, isNull(ProjectItem.SERIES))) {
+      ProjectItemToSeriesTrigger.createSeries(projectItem.getKey(), projectItem, repository);
     }
   }
 
@@ -615,7 +615,10 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   private void fixHiddenProjectSeriesBudget(GlobRepository repository) {
-    Set<Integer> seriesIds = repository.getAll(Project.TYPE).getValueSet(Project.SERIES);
+    Set<Integer> seriesIds = new HashSet<Integer>();
+    for (Glob project : repository.getAll(Project.TYPE)) {
+      seriesIds.addAll(repository.findLinkedTo(project, ProjectItem.PROJECT).getValueSet(ProjectItem.SERIES));
+    }
     for (Glob seriesBudget : repository.getAll(SeriesBudget.TYPE, GlobMatchers.fieldIn(SeriesBudget.SERIES, seriesIds))) {
       if (!seriesBudget.isTrue(SeriesBudget.ACTIVE) &&
           Amounts.isNotZero(seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT))) {
@@ -625,14 +628,15 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   private void updateProjetItemSeries(GlobRepository repository) {
-    for (Glob projectItem : repository.getAll(ProjectItem.TYPE)) {
-      if (projectItem.get(ProjectItem.SERIES) == null) {
-        Glob project = repository.findLinkTarget(projectItem, ProjectItem.PROJECT);
-        if (project != null) {
-          repository.update(projectItem.getKey(), ProjectItem.SERIES, project.get(Project.SERIES));
-        }
-      }
-    }
+// TODO:
+//    for (Glob projectItem : repository.getAll(ProjectItem.TYPE)) {
+//      if (projectItem.get(ProjectItem.SERIES) == null) {
+//        Glob project = repository.findLinkTarget(projectItem, ProjectItem.PROJECT);
+//        if (project != null) {
+//          repository.update(projectItem.getKey(), ProjectItem.SERIES, project.get(Project.SERIES_GROUP));
+//        }
+//      }
+//    }
   }
 
   private void updateProjetItemSequence(GlobRepository repository) {

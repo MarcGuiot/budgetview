@@ -32,7 +32,7 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
       .checkItems("| Camera Body | Dec | 0.00 | 800.00 |\n" +
                   "| Lens        | Dec | 0.00 | 200.00 |");
 
-    categorization.setExtra("FNAC", "Camera", "Camera Body");
+    categorization.setExtra("FNAC", "Camera Body");
     budgetView.extras.checkSeries("Camera", -200.00, -280.00);
 
     currentProject.toggleAndEditExpense(0)
@@ -45,7 +45,7 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
       .checkProjectGauge(-200.00, -950.00)
       .checkItems("| Camera Body | Dec | 200.00 | 750.00 |\n" +
                   "| Lens        | Dec | 0.00   | 200.00 |");
-    categorization.setExtra("FNAC", "Camera", "Camera Body");
+    categorization.setExtra("FNAC", "Camera Body");
     budgetView.extras.checkSeries("Camera", -200.00, -350.00);
 
     timeline.selectMonth(201101);

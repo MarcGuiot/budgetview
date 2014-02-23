@@ -109,7 +109,6 @@ public class DuplicateProjectDialog {
           .set(ProjectItem.PROJECT, newProject.get(Project.ID))
           .set(ProjectItem.FIRST_MONTH, Month.offset(item.get(ProjectItem.FIRST_MONTH), offset))
           .remove(ProjectItem.SERIES)
-          .remove(ProjectItem.SUB_SERIES)
           .get();
 
         Glob newItem = repository.create(ProjectItem.TYPE, values.toArray());

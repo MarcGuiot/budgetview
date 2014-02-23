@@ -28,7 +28,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .checkCategorizationWarningNotShown();
 
     timeline.selectMonth("2010/11");
-    categorization.setExtra("RESA", "Trip", "Booking");
+    categorization.setExtra("RESA", "Booking");
     budgetView.extras
       .checkTotalAmounts(-50.00, -200.00)
       .checkSeries("Trip", -50.00, -200.00);
@@ -46,7 +46,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
 
     views.checkDataSelected();
     transactions.initContent()
-      .add("15/11/2010", TransactionType.PRELEVEMENT, "RESA", "", -50.00, "Trip / Booking")
+      .add("15/11/2010", TransactionType.PRELEVEMENT, "RESA", "", -50.00, "Booking")
       .check();
     timeline.checkSelection("2010/11");
 
@@ -178,7 +178,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .load();
 
     timeline.selectMonth("2010/12");
-    categorization.setExtra("RESA", "Trip", "Booking");
+    categorization.setExtra("RESA", "Booking");
 
     budgetView.extras
       .checkTotalAmounts(-100.00, -200.00)
@@ -301,13 +301,13 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
     currentProject
       .setName("Trip")
       .addExpenseItem(0, "Booking", 201012, -200.00)
-      .addExpenseItem(1, "Travel", 201102, -100.00)
+      .addExpenseItem(1, "Travel", 201101, -100.00)
       .addExpenseItem(2, "Hotel", 201102, -400.00);
     currentProject.view(0)
       .checkCategorizationWarningNotShown();
 
     timeline.selectMonth("2010/12");
-    categorization.setExtra("AIR FRANCE", "Trip", "Travel");
+    categorization.setExtra("AIR FRANCE", "Travel");
 
     timeline.selectMonth(201012);
     budgetView.extras
@@ -318,7 +318,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .checkPeriod("December 2010 - February 2011")
       .checkProjectGauge(-100.00, -700.00)
       .checkItems("| Booking | Dec | 0.00   | 200.00 |\n" +
-                  "| Travel  | Feb | 100.00 | 100.00 |\n" +
+                  "| Travel  | Jan | 100.00 | 100.00 |\n" +
                   "| Hotel   | Feb | 0.00   | 400.00 |");
     currentProject.view(0)
       .checkCategorizationWarningNotShown();
@@ -327,7 +327,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .clickCategorizationWarning();
 
     transactions.initContent()
-      .add("15/12/2010", TransactionType.PRELEVEMENT, "AIR FRANCE", "", -100.00, "Trip / Travel")
+      .add("15/12/2010", TransactionType.PRELEVEMENT, "AIR FRANCE", "", -100.00, "Travel")
       .check();
     timeline.checkSelection("2010/12");
 
@@ -337,7 +337,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .checkPeriod("December 2010 - February 2011")
       .checkProjectGauge(0.00, -700.00)
       .checkItems("| Booking | Dec | 0.00 | 200.00 |\n" +
-                  "| Travel  | Feb | 0.00 | 100.00 |\n" +
+                  "| Travel  | Jan | 0.00 | 100.00 |\n" +
                   "| Hotel   | Feb | 0.00 | 400.00 |");
     currentProject.view(1)
       .checkCategorizationWarningNotShown();
@@ -358,7 +358,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .setName("Camera")
       .addExpenseItem(0, "Camera Body", 201011, -300.00, 3)
       .addExpenseItem(1, "Lens", 201012, -100.00);
-    categorization.setExtra("FNAC", "Camera", "Camera Body");
+    categorization.setExtra("FNAC", "Camera Body");
     budgetView.extras.checkSeries("Camera", -200.00, -400.00);
     currentProject.view(0).checkCategorizationWarningNotShown();
 
