@@ -387,7 +387,7 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkCarryOverDisabled("Salary");
   }
 
-  public void testNotShownForProjects() throws Exception {
+  public void testNotShownForProjectGroups() throws Exception {
     operations.openPreferences()
       .setFutureMonthsCount(2)
       .validate();

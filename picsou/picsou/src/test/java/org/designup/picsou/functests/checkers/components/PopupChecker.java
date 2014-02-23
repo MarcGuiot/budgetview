@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers.components;
 import junit.framework.Assert;
 import org.uispec4j.MenuItem;
 import org.uispec4j.Trigger;
+import org.uispec4j.assertion.UISpecAssert;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +23,12 @@ public abstract class PopupChecker {
   public void checkChoices(String... actions) {
     MenuItem menu = openMenu();
     menu.contentEquals(actions).check();
+    close(menu);
+  }
+
+  public void checkItemNotPresent(String action) {
+    MenuItem menu = openMenu();
+    UISpecAssert.assertFalse(menu.contains(action));
     close(menu);
   }
 

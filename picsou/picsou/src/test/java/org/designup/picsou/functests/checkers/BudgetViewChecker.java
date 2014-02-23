@@ -484,7 +484,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public void checkCarryOverDisabled(String seriesName) {
-      getSeriesPanel(seriesName).getSeriesButton().checkItemDisabled("Carry over next month");
+      getSeriesPanel(seriesName).getSeriesButton().checkItemNotPresent("Carry over next month");
     }
 
     public BudgetAreaChecker checkGroups(String series, String... labels) {
