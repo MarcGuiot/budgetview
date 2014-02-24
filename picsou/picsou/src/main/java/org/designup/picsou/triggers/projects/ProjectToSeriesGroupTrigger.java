@@ -7,7 +7,7 @@ import org.globsframework.model.utils.DefaultChangeSetVisitor;
 
 import java.util.Set;
 
-import static org.designup.picsou.model.ProjectItemType.isExtra;
+import static org.designup.picsou.model.ProjectItemType.isExpenses;
 import static org.globsframework.model.FieldValue.value;
 
 public class ProjectToSeriesGroupTrigger extends AbstractChangeSetListener {
@@ -50,21 +50,26 @@ public class ProjectToSeriesGroupTrigger extends AbstractChangeSetListener {
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(Project.TYPE) || changedTypes.contains(ProjectItem.TYPE)) {
-      for (Glob project : repository.getAll(ProjectItem.TYPE, isExtra()).getTargets(ProjectItem.PROJECT, repository)) {
-        if (repository.findLinkTarget(project, Project.SERIES_GROUP) == null) {
-          createGroup(project, repository);
-        }
+      createGroupsForProjects(repository);
+    }
+  }
+
+  public  static void createGroupsForProjects(GlobRepository repository) {
+    for (Glob project : repository.getAll(ProjectItem.TYPE, isExpenses()).getTargets(ProjectItem.PROJECT, repository)) {
+      if (repository.findLinkTarget(project, Project.SERIES_GROUP) == null) {
+        createGroup(project, repository);
       }
     }
   }
 
-  public Glob createGroup(Glob project, GlobRepository repository) {
+  public static Glob createGroup(Glob project, GlobRepository repository) {
     Glob group;
     group = repository.create(SeriesGroup.TYPE,
                               value(SeriesGroup.BUDGET_AREA, BudgetArea.EXTRAS.getId()),
                               value(SeriesGroup.NAME, project.get(Project.NAME)),
                               value(SeriesGroup.EXPANDED, false));
-    repository.update(project.getKey(), value(Project.SERIES_GROUP, group.get(SeriesGroup.ID)));
+    repository.update(project.getKey(),
+                      value(Project.SERIES_GROUP, group.get(SeriesGroup.ID)));
     return group;
   }
 }

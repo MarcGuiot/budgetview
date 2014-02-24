@@ -44,7 +44,6 @@ import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
@@ -250,7 +249,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
                                       value(ProjectItem.LABEL, defaultLabel),
                                       value(ProjectItem.FIRST_MONTH, getNewItemMonth()),
                                       value(ProjectItem.PROJECT, projectId),
-                                      value(ProjectItem.SEQUENCE_NUMBER, getNextSequenceNumber(projectId)));
+                                      value(ProjectItem.SEQUENCE_NUMBER, ProjectItem.getNextSequenceNumber(projectId, ProjectEditionView.this.repository)));
         if (ProjectItemType.TRANSFER.equals(itemType)) {
           repository.create(ProjectTransfer.TYPE, value(ProjectTransfer.PROJECT_ITEM, item.get(ProjectItem.ID)));
         }
@@ -259,15 +258,6 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
         repository.completeChangeSet();
       }
     }
-  }
-
-  private Integer getNextSequenceNumber(Integer projectId) {
-    SortedSet<Integer> numbers = repository.getAll(ProjectItem.TYPE, fieldEquals(ProjectItem.PROJECT, projectId))
-      .getSortedSet(ProjectItem.SEQUENCE_NUMBER);
-    if (numbers.isEmpty()) {
-      return 0;
-    }
-    return numbers.last() + 1;
   }
 
   private Integer getNewItemMonth() {

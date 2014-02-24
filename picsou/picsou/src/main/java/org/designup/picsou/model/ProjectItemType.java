@@ -57,10 +57,18 @@ public enum ProjectItemType implements GlobConstantContainer {
     return id;
   }
 
-  public static GlobMatcher isExtra() {
+  public static GlobMatcher isExpenses() {
     return new GlobMatcher() {
       public boolean matches(Glob item, GlobRepository repository) {
         return item != null && Utils.equal(EXPENSE.id, item.get(ProjectItem.ITEM_TYPE));
+      }
+    };
+  }
+
+  public static GlobMatcher isTransfer() {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return item != null && Utils.equal(TRANSFER.id, item.get(ProjectItem.ITEM_TYPE));
       }
     };
   }

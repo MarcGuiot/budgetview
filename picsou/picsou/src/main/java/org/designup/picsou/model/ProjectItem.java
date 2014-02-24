@@ -18,6 +18,10 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
+import java.util.SortedSet;
+
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+
 public class ProjectItem {
   public static GlobType TYPE;
 
@@ -143,6 +147,15 @@ public class ProjectItem {
 
   public static GlobList getItemsForSeries(Integer seriesId, GlobRepository repository) {
     return repository.findByIndex(ProjectItem.SERIES_INDEX, seriesId);
+  }
+
+  public static Integer getNextSequenceNumber(Integer projectId, GlobRepository repository) {
+    SortedSet<Integer> numbers = repository.getAll(TYPE, fieldEquals(PROJECT, projectId))
+      .getSortedSet(SEQUENCE_NUMBER);
+    if (numbers.isEmpty()) {
+      return 0;
+    }
+    return numbers.last() + 1;
   }
 
   public static class Serializer implements PicsouGlobSerializer {

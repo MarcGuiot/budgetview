@@ -2,11 +2,14 @@ package org.designup.picsou.triggers.projects;
 
 import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.model.ProjectItem;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 
 import java.util.Set;
+
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesStatToProjectItemStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
@@ -41,9 +44,6 @@ public class SeriesStatToProjectItemStatTrigger implements ChangeSetListener {
   private void updateTargetStat(Integer seriesId, Double delta, GlobRepository repository) {
     GlobList items = ProjectItem.getItemsForSeries(seriesId, repository);
     for (Glob projectItem : items) {
-      if (!ProjectItem.usesExtrasSeries(projectItem)) {
-        continue;
-      }
       Glob projectItemStat = repository.findOrCreate(Key.create(ProjectItemStat.TYPE, projectItem.get(ProjectItem.ID)));
       Double actual = projectItemStat.get(ProjectItemStat.ACTUAL_AMOUNT);
       double newValue = actual + delta;

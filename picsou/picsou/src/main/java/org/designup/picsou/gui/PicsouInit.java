@@ -168,8 +168,7 @@ public class PicsouInit {
 
   public void partialReset() {
     GlobList additionalGlobToInsert = additionalGlobToAdd(PicsouInit.this.repository);
-    Collection<GlobType> globTypeCollection = PicsouGuiModel.getUserSpecificType();
-    repository.reset(GlobList.EMPTY, globTypeCollection.toArray(new GlobType[globTypeCollection.size()]));
+    repository.reset(GlobList.EMPTY, PicsouGuiModel.getUserSpecificTypes());
     Set<GlobType> types = additionalGlobToInsert.getTypes();
     repository.reset(additionalGlobToInsert, types.toArray(new GlobType[types.size()]));
   }
@@ -187,9 +186,8 @@ public class PicsouInit {
       this.useDemoAccount = useDemoAccount;
       this.autoLogin = autoLogin;
       changeSet = new DefaultChangeSet();
-      Collection<GlobType> globTypeCollection = PicsouGuiModel.getUserSpecificType();
-      typesToReplace = globTypeCollection.toArray(new GlobType[globTypeCollection.size()]);
-      idGenerator.reset(globTypeCollection);
+      typesToReplace = PicsouGuiModel.getUserSpecificTypes();
+      idGenerator.reset(Arrays.asList(typesToReplace));
 
       userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {
         public void update(IntegerField field, Integer lastAllocatedId) {

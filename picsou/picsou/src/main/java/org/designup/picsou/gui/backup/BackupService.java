@@ -10,8 +10,8 @@ import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.model.CurrentMonth;
-import org.designup.picsou.model.User;
 import org.designup.picsou.model.SignpostStatus;
+import org.designup.picsou.model.User;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.persistence.direct.ReadOnlyAccountDataManager;
 import org.globsframework.metamodel.GlobModel;
@@ -24,8 +24,8 @@ import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.repository.DefaultGlobIdGenerator;
 import org.globsframework.utils.Files;
-import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 
@@ -125,25 +125,25 @@ public class BackupService {
 
     try {
       repository.startChangeSet();
-      Collection<GlobType> globTypeCollection = PicsouGuiModel.getUserSpecificType();
-      repository.reset(GlobList.EMPTY, globTypeCollection.toArray(new GlobType[globTypeCollection.size()]));
-    } catch (Exception e){
-      Log.write("Erreur while clearing data (ignored)", e);
-    } finally {
+      repository.reset(GlobList.EMPTY, PicsouGuiModel.getUserSpecificTypes());
+    }
+    catch (Exception e) {
+      Log.write("Error while clearing data (ignored)", e);
+    }
+    finally {
       repository.completeChangeSet();
     }
 
     try {
       repository.startChangeSet();
       repository.addTriggerAtFirst(upgradeTrigger);
-
-      Collection<GlobType> globTypeCollection = PicsouGuiModel.getUserSpecificType();
-      repository.reset(userData, globTypeCollection.toArray(new GlobType[globTypeCollection.size()]));
+      repository.reset(userData, PicsouGuiModel.getUserSpecificTypes());
     }
     finally {
       repository.completeChangeSet();
     }
     repository.removeTrigger(upgradeTrigger);
+
     repository.startChangeSet();
     try {
       upgradeTrigger.postProcessing(repository);
@@ -158,15 +158,15 @@ public class BackupService {
     return Status.OK;
   }
 
-  public boolean rename(String newName, char[] passwd, final char[] previousPasswd){
+  public boolean rename(String newName, char[] passwd, final char[] previousPasswd) {
     return serverAccess.rename(newName, passwd, previousPasswd);
   }
 
-  public List<ServerAccess.SnapshotInfo> getSnapshotInfos(){
+  public List<ServerAccess.SnapshotInfo> getSnapshotInfos() {
     return serverAccess.getSnapshotInfos();
   }
 
-  public MapOfMaps<String, Integer, SerializableGlobType> restore(ServerAccess.SnapshotInfo snapshotInfo){
+  public MapOfMaps<String, Integer, SerializableGlobType> restore(ServerAccess.SnapshotInfo snapshotInfo) {
     return serverAccess.getSnapshotData(snapshotInfo, new BackupIdUpdater());
   }
 

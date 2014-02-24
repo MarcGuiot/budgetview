@@ -6,7 +6,7 @@ import org.globsframework.model.Key;
 
 import static org.globsframework.model.FieldValue.value;
 
-public class SeriesBudgetUpdateTransactionTriggerTest extends PicsouTriggerTestCase {
+public class SeriesBudgetBindTransactionsToItemTriggerTest extends PicsouTriggerTestCase {
 
   public void testChangeSeriesBudgetAmountUpdatePlannedTransaction() throws Exception {
     createEnveloppeSeries();

@@ -36,6 +36,7 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
         if (transaction.isTrue(Transaction.PLANNED) || Transaction.isOpenCloseAccount(transaction)) {
           return;
         }
+
         Integer previousSeriesId;
         Integer currentSeriesId;
         if (values.contains(Transaction.SERIES)) {
@@ -117,7 +118,7 @@ public class ObservedSeriesStatTrigger implements ChangeSetListener {
       repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, stat.get(SeriesStat.TARGET))
         .saveApply(transactionPresent, repository);
       if (transactionPresent.found) {
-        repository.update(stat.getKey(), SeriesStat.ACTUAL_AMOUNT, 0.);
+        repository.update(stat.getKey(), SeriesStat.ACTUAL_AMOUNT, 0.00);
       }
       else {
         repository.update(stat.getKey(), SeriesStat.ACTUAL_AMOUNT, null);

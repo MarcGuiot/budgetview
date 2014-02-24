@@ -17,7 +17,7 @@ public class ProjectItemToSeriesTrigger implements ChangeSetListener {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Glob project = repository.find(Key.create(Project.TYPE, values.get(ProjectItem.PROJECT)));
         boolean active = project.isTrue(Project.ACTIVE) && values.isTrue(ProjectItem.ACTIVE);
-        if (active && ProjectItem.usesExtrasSeries(values)) {
+        if (active && ProjectItem.usesExtrasSeries(values) && values.get(ProjectItem.SERIES) == null) {
           createSeries(key, values, repository);
         }
       }
@@ -81,19 +81,28 @@ public class ProjectItemToSeriesTrigger implements ChangeSetListener {
     }
   }
 
-  public static void createSeries(Key projectItemKey, FieldValues projectItemValues, GlobRepository repository) {
+  public static Glob createSeries(Glob projectItem, GlobRepository repository) {
+    return createSeries(projectItem.getKey(), projectItem, repository);
+  }
+
+  public static Glob createSeries(Key projectItemKey, FieldValues projectItemValues, GlobRepository repository) {
     if (!ProjectItem.usesExtrasSeries(projectItemValues)) {
-      return;
+      return null;
     }
     Integer projectId = projectItemValues.get(ProjectItem.PROJECT);
     Glob project = repository.get(Key.create(Project.TYPE, projectId));
+    Integer firstMonth = projectItemValues.get(ProjectItem.FIRST_MONTH);
+    Integer lastMonth = ProjectItem.getLastMonth(projectItemValues);
     Glob series =
       repository.create(Series.TYPE,
                         value(Series.GROUP, project.get(Project.SERIES_GROUP)),
                         value(Series.BUDGET_AREA, BudgetArea.EXTRAS.getId()),
                         value(Series.NAME, projectItemValues.get(ProjectItem.LABEL)),
-                        value(Series.IS_AUTOMATIC, false));
+                        value(Series.IS_AUTOMATIC, false),
+                        value(Series.FIRST_MONTH, firstMonth),
+                        value(Series.LAST_MONTH, lastMonth));
     repository.update(projectItemKey, ProjectItem.SERIES, series.get(Series.ID));
+    return series;
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
