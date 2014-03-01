@@ -160,7 +160,7 @@ public class Project {
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(Project.NAME, input.readUtf8String());
-      fieldSetter.set(Project.SERIES_GROUP, input.readInteger());
+      fieldSetter.set(Project.SERIES, input.readInteger());
       input.readDouble(); // Project.TOTAL_AMOUNT not used anymore;
     }
   }

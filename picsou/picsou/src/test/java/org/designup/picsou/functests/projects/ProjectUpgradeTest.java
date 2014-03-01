@@ -39,6 +39,9 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
                               "| Virement Rome   | Mar | 0.00    | +500.00 |\n" +
                               "| Provisions Rome | Jan | +100.00 | +150.00 |\n" +
                               "| Other           | Feb | 70.00   | 0.00    |");
+    currentProject.view(0).checkCategorizationWarningNotShown();
+    currentProject.view(1).checkCategorizationWarningShown();
+    currentProject.view(2).checkCategorizationWarningNotShown();
 
     categorization.initContent()
       .add("15/01/2014", "Voyage", "AIR FRANCE", -30.00)
@@ -83,33 +86,6 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
                                     "| Vers le compte Livret | 0.00 | 0.00    |\n");
   }
 
-  private void printProjectGlobs(int projectId) {
-    GlobList list = new GlobList();
-    list.add(repository.get(Key.create(Project.TYPE, projectId)));
-    GlobList items = repository.getAll(ProjectItem.TYPE, fieldEquals(ProjectItem.PROJECT, projectId));
-    list.addAll(items);
-    Set<Integer> seriesIds = new HashSet<Integer>();
-    for (Glob item : items) {
-      Glob series = repository.findLinkTarget(item, ProjectItem.SERIES);
-      seriesIds.add(series.get(Series.ID));
-      list.add(series);
-      if (series.get(Series.MIRROR_SERIES) != null) {
-        Glob mirror = repository.findLinkTarget(series, Series.MIRROR_SERIES);
-        list.add(mirror);
-        seriesIds.add(mirror.get(Series.ID));
-      }
-    }
-    list.addAll(repository.getAll(Transaction.TYPE,
-                                  GlobMatchers.and(fieldIn(Transaction.SERIES, seriesIds),
-                                                   isFalse(Transaction.PLANNED))));
-    list.addAll(repository.getAll(SeriesStat.TYPE,
-                                  GlobMatchers.and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
-                                                   fieldIn(SeriesStat.TARGET, seriesIds),
-                                                   fieldIn(SeriesStat.MONTH, 201402, 201403))));
-
-    GlobPrinter.print(list);
-  }
-
   public void testSeveralTransactionsAssignedToRootProjectSeries() throws Exception {
     operations.restore("picsou/picsou/src/test/resources/testbackups/upgrade_jar131_projects_multi_root.budgetview");
     projects.checkCurrentProjects("| Voyage Rome | Jan | 1080.00 | on |");
@@ -150,6 +126,42 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
   }
 
   public void testOlderVersion() throws Exception {
-    fail("tbd - version pré-été 2013, par ex 2.33");
+    operations.restore("picsou/picsou/src/test/resources/testbackups/upgrade_jar96_projects.budgetview");
+    projects.checkCurrentProjects("| Voyage Rome | Jan | 500.00 | on |");
+    projects.select("Voyage Rome");
+    currentProject.checkItems("| Voyage 1   | Jan | 30.00  | 150.00 |\n" +
+                              "| Voyage 2   | Feb | 150.00 | 150.00 |\n" +
+                              "| Hotel      | Mar | 0.00   | 200.00 |\n" +
+                              "| Equipement | Feb | 100.00 | 0.00   |\n" +
+                              "| Other      | Feb | 100.00 | 0.00   |\n");
+    currentProject.view(2).checkCategorizationWarningNotShown();
+    currentProject.view(3).checkCategorizationWarningShown();
+
+    categorization.initContent()
+      .add("15/01/2014", "Voyage 1", "AIR FRANCE", -30.00)
+      .add("13/02/2014", "Voyage 2", "AIR FRANCE", -150.00)
+      .add("08/02/2014", "Courses", "AUCHAN", -450.00)
+      .add("18/01/2014", "Equipement", "DECATHLON", -30.00)
+      .add("12/02/2014", "Other", "FNAC", -100.00)
+      .add("12/02/2014", "Equipement", "LE VIEUX CAMPEUR", -70.00)
+      .add("05/02/2014", "Salaire", "WORLDCO", 2000.00)
+      .check();
+
+    budgetView.extras.expandGroup("Voyage Rome");
+
+    timeline.selectMonth(201401);
+    budgetView.extras.checkContent("| Voyage Rome | 60.00 | 150.00 |\n" +
+                                   "| Voyage 1    | 30.00 | 150.00 |\n" +
+                                   "| Equipement  | 30.00 | 0.00   |\n");
+
+    timeline.selectMonth(201402);
+    budgetView.extras.checkContent("| Voyage Rome | 320.00 | 150.00 |\n" +
+                                   "| Voyage 2    | 150.00 | 150.00 |\n" +
+                                   "| Other       | 100.00 | 0.00   |\n" +
+                                   "| Equipement  | 70.00  | 0.00   |\n");
+
+    timeline.selectMonth(201403);
+    budgetView.extras.checkContent("| Voyage Rome | 0.00 | 200.00 |\n" +
+                                   "| Hotel       | 0.00 | 200.00 |\n");
   }
 }

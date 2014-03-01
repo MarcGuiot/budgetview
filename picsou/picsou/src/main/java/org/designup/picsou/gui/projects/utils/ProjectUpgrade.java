@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.projects.utils;
 
-import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.model.*;
@@ -12,6 +11,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobFieldsComparator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,14 +31,19 @@ public class ProjectUpgrade {
 
     for (Glob item : repository.getAll(ProjectItem.TYPE, isExpenses())) {
       Integer seriesId = item.get(ProjectItem.SERIES);
+      if (seriesId == null) {
+        Glob project = repository.findLinkTarget(item, ProjectItem.PROJECT);
+        seriesId = project.get(Project.SERIES);
+      }
       Integer subSeriesId = item.get(ProjectItem.SUB_SERIES);
       GlobList transactions = repository.getAll(Transaction.TYPE,
                                                 and(fieldEquals(Transaction.SERIES, seriesId),
                                                     fieldEquals(Transaction.SUB_SERIES, subSeriesId),
                                                     isFalse(Transaction.PLANNED)));
       Glob series = ProjectItemToSeriesTrigger.createSeries(item, repository);
-      repository.update(item.getKey(), ProjectItem.SERIES, series.get(Series.ID));
-      functors.add(new BindTransactionsToSeries(series, transactions));
+      if (!transactions.isEmpty()) {
+        functors.add(new BindTransactionsToSeries(series, transactions));
+      }
       clearSubSeries(repository, transactions);
     }
     for (Glob item : repository.getAll(ProjectItem.TYPE, isTransfer())) {
@@ -73,6 +78,7 @@ public class ProjectUpgrade {
         }
       }
     }
+    functors.add(new UpdateSequenceNumbers());
   }
 
   private void clearActualStats(final Glob series) {
@@ -133,19 +139,6 @@ public class ProjectUpgrade {
     }
   }
 
-  private class UpdateItem implements Functor {
-    private Glob item;
-
-    private UpdateItem(Glob item) {
-      this.item = item;
-    }
-
-    public void apply(GlobRepository repository) {
-      repository.update(Key.create(ProjectItemStat.TYPE, item.get(ProjectItem.ID)),
-                        ProjectItemStat.ACTUAL_AMOUNT, 0.00);
-    }
-  }
-
   private class CreateMiscProjectItem implements Functor {
     private final Glob project;
     private final GlobList transactions;
@@ -188,6 +181,21 @@ public class ProjectUpgrade {
 
       for (Glob transaction : transactions) {
         repository.update(transaction.getKey(), Transaction.SERIES, newSeries.get(Series.ID));
+      }
+    }
+  }
+
+  private class UpdateSequenceNumbers implements Functor {
+    public void apply(GlobRepository repository) {
+      for (Glob project : repository.getAll(Project.TYPE)) {
+        GlobList items = repository.getAll(ProjectItem.TYPE, linkedTo(project, ProjectItem.PROJECT));
+        if (items.containsValue(ProjectItem.SEQUENCE_NUMBER, null)) {
+          items.sort(new GlobFieldsComparator(ProjectItem.FIRST_MONTH, true, ProjectItem.LABEL, true));
+          int index = 0;
+          for (Glob item : items) {
+            repository.update(item.getKey(), ProjectItem.SEQUENCE_NUMBER, index++);
+          }
+        }
       }
     }
   }
