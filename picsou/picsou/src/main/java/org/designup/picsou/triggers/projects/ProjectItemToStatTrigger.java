@@ -23,7 +23,6 @@ public class ProjectItemToStatTrigger implements ChangeSetListener {
     changeSet.safeVisit(ProjectItem.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         repository.findOrCreate(Key.create(ProjectItemStat.TYPE, key.get(ProjectItem.ID)),
-                                value(ProjectItemStat.ACTUAL_AMOUNT, 0.00),
                                 value(ProjectItemStat.PLANNED_AMOUNT, ProjectItem.getTotalPlannedAmount(values, repository)));
       }
 

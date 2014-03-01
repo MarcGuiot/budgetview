@@ -112,7 +112,7 @@ public class Project {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 2;
+      return 3;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {

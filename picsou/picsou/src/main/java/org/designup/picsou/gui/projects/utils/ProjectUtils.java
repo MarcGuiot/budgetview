@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.projects.utils;
 
+import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.model.Project;
@@ -11,6 +12,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.HashSet;
@@ -39,10 +41,15 @@ public class ProjectUtils {
     list.addAll(repository.getAll(Transaction.TYPE,
                                   GlobMatchers.and(fieldIn(Transaction.SERIES, seriesIds),
                                                    isFalse(Transaction.PLANNED))));
+    list.addAll(repository.getAll(ProjectItemStat.TYPE,
+                                  GlobMatchers.and(fieldIn(ProjectItemStat.PROJECT_ITEM, items.getValues(ProjectItem.ID)))));
+
     list.addAll(repository.getAll(SeriesStat.TYPE,
                                   GlobMatchers.and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
-                                                   fieldIn(SeriesStat.TARGET, seriesIds),
-                                                   fieldIn(SeriesStat.MONTH, 201402, 201403))));
+                                                   fieldIn(SeriesStat.TARGET, seriesIds)))
+                  .sort(new GlobFieldsComparator(SeriesStat.TARGET_TYPE, true,
+                                                 SeriesStat.TARGET, true,
+                                                 SeriesStat.MONTH, true)));
 
     GlobPrinter.print(list);
   }

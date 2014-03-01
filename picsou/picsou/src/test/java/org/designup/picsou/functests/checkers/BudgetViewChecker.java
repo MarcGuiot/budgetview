@@ -16,6 +16,7 @@ import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 
 import javax.swing.*;
@@ -255,23 +256,31 @@ public class BudgetViewChecker extends ViewChecker {
       return actualNames;
     }
 
-    public BudgetAreaChecker checkSeriesPresent(String... expectedNames) {
-      List<String> actualNames = getActualNamesList();
-      for (String expectedName : expectedNames) {
-        if (!actualNames.contains(expectedName)) {
-          Assert.fail("Series '" + expectedName + "' not found. Actual series: " + actualNames);
+    public BudgetAreaChecker checkSeriesPresent(final String... expectedNames) {
+      UISpecAssert.assertThat(new Assertion() {
+        public void check() {
+          List<String> actualNames = getActualNamesList();
+          for (String expectedName : expectedNames) {
+            if (!actualNames.contains(expectedName)) {
+              Assert.fail("Series '" + expectedName + "' not found. Actual series: " + actualNames);
+            }
+          }
         }
-      }
+      });
       return this;
     }
 
-    public BudgetAreaChecker checkSeriesNotPresent(String... seriesNames) {
-      List<String> actualNames = getActualNamesList();
-      for (String expectedName : seriesNames) {
-        if (actualNames.contains(expectedName)) {
-          Assert.fail("Series '" + expectedName + "' unexpectedly found. Actual series: " + actualNames);
+    public BudgetAreaChecker checkSeriesNotPresent(final String... seriesNames) {
+      UISpecAssert.assertThat(new Assertion() {
+        public void check() {
+          List<String> actualNames = getActualNamesList();
+          for (String expectedName : seriesNames) {
+            if (actualNames.contains(expectedName)) {
+              Assert.fail("Series '" + expectedName + "' unexpectedly found. Actual series: " + actualNames);
+            }
+          }
         }
-      }
+      });
       return this;
     }
 

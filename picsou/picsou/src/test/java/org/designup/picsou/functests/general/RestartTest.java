@@ -6,6 +6,7 @@ import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.checkers.PreferencesChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.projects.utils.ProjectUtils;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.ColorTheme;
 import org.designup.picsou.model.ProjectItemAmount;
@@ -228,7 +229,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .addExpenseItem(2, "Hotel", 200810, -500.00);
 
     categorization.selectTransaction("RESA")
-      .selectExtras().selectSubSeries("MyProject", "Booking");
+      .selectExtras().selectSeries("Booking");
 
     projectChart.checkProjectList("MyProject");
     projectChart.checkProject("MyProject", 200808, 200810, 800.00);
