@@ -86,7 +86,7 @@ public class SeriesBudgetTrigger extends AbstractChangeSetListener {
             value(SeriesBudget.SERIES, seriesId),
             value(SeriesBudget.PLANNED_AMOUNT, getInitialAmount(series, active)),
             value(SeriesBudget.MONTH, monthId),
-            value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
+            value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId)),
             value(SeriesBudget.ACTIVE, active)};
           if (existingSeriesBudget != null) {
             repository.create(existingSeriesBudget.getKey(), values);
@@ -103,7 +103,7 @@ public class SeriesBudgetTrigger extends AbstractChangeSetListener {
             }
           }
           repository.update(seriesBudget.getKey(),
-                            value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId, calendar)),
+                            value(SeriesBudget.DAY, Month.getDay(series.get(Series.DAY), monthId)),
                             value(SeriesBudget.ACTIVE, active));
 //          if (BudgetArea.EXTRAS.getId().equals(series.get(Series.BUDGET_AREA))) {
 //            repository.update(seriesBudget.getKey(), SeriesBudget.PLANNED_AMOUNT, seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT));
