@@ -117,12 +117,12 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   }
 
   public BudgetAreaCategorizationChecker checkSeriesIsActive(String seriesName) {
-    assertThat(panel.getRadioButton(seriesName).foregroundEquals("000000"));
+    assertThat("Series " + seriesName + " is not active", panel.getRadioButton(seriesName).foregroundEquals("000000"));
     return this;
   }
 
   public BudgetAreaCategorizationChecker checkSeriesIsInactive(String seriesName) {
-    assertThat(panel.getRadioButton(seriesName).foregroundEquals(DISABLED_SERIES_COLOR));
+    assertThat("Series " + seriesName + " is not inactive", panel.getRadioButton(seriesName).foregroundEquals(DISABLED_SERIES_COLOR));
     return this;
   }
 
@@ -304,6 +304,23 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
 
   public BudgetAreaCategorizationChecker checkMessageHidden() {
     checkComponentVisible(panel, JEditorPane.class, "categorizationMessage", false);
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkGroupContainsSeries(String group, String... seriesNames) {
+    System.out.println("TBD: BudgetAreaCategorizationChecker.checkGroupContainsSeries");
+    checkContainsSeries(seriesNames);
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkGroupNotShown(String group) {
+    System.out.println("TBD: BudgetAreaCategorizationChecker.checkGroupContainsSeries");
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkGroupDoesNotContainSeries(String group, String... seriesNames) {
+    System.out.println("TBD: BudgetAreaCategorizationChecker.checkGroupDoesNotContainSeries");
+    checkDoesNotContainSeries(seriesNames);
     return this;
   }
 }

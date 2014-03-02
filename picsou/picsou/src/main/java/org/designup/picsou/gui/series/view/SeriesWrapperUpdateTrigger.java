@@ -25,10 +25,12 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Glob budgetAreaWrapper =
           SeriesWrapper.getWrapperForBudgetArea(values.get(SeriesGroup.BUDGET_AREA), repository);
-        repository.create(SeriesWrapper.TYPE,
-                          value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES_GROUP.getId()),
-                          value(SeriesWrapper.ITEM_ID, key.get(SeriesGroup.ID)),
-                          value(SeriesWrapper.PARENT, budgetAreaWrapper.get(SeriesWrapper.ID)));
+        if (SeriesWrapper.find(repository, SeriesWrapperType.SERIES_GROUP, key.get(SeriesGroup.ID)) == null) {
+          repository.create(SeriesWrapper.TYPE,
+                            value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES_GROUP.getId()),
+                            value(SeriesWrapper.ITEM_ID, key.get(SeriesGroup.ID)),
+                            value(SeriesWrapper.PARENT, budgetAreaWrapper.get(SeriesWrapper.ID)));
+        }
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {

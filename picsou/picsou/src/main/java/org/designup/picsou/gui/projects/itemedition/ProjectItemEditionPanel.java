@@ -1,11 +1,8 @@
 package org.designup.picsou.gui.projects.itemedition;
 
-import org.designup.picsou.gui.components.MonthSlider;
-import org.designup.picsou.gui.components.SingleMonthAdapter;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.projects.ProjectItemPanel;
 import org.designup.picsou.gui.projects.components.ProjectItemAmountEditor;
-import org.designup.picsou.model.Month;
 import org.designup.picsou.model.ProjectItem;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;

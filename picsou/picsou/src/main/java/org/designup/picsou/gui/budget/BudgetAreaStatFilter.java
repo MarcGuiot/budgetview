@@ -24,7 +24,7 @@ public class BudgetAreaStatFilter implements GlobMatcher {
       seriesDateFilter = Matchers.seriesDateSavings();
     }
     else {
-      seriesDateFilter = Matchers.seriesActiveInPeriod(budgetArea.getId(), true, false);
+      seriesDateFilter = Matchers.seriesActiveInPeriod(budgetArea.getId(), true, false, false);
     }
   }
 

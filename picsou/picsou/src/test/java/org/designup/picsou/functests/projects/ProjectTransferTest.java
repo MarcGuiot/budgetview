@@ -4,6 +4,7 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.ProjectItem;
 import org.designup.picsou.model.ProjectTransfer;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.model.format.GlobPrinter;
 
@@ -64,7 +65,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     currentProject.checkPeriod("December 2010");
 
     timeline.checkSelection("2010/12");
-    budgetView.extras.checkSeries("Trip", 0.00, 0.00);
+    budgetView.extras.checkSeriesNotPresent("Trip");
     budgetView.savings.checkSeries("Transfer", 0.00, -200.00);
 
     categorization.selectTransaction("Transfer 1").selectSavings()
@@ -74,7 +75,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     currentProject.view(0).setInactive();
     currentProject.checkProjectGauge(0.00, 0.00);
-    budgetView.extras.checkSeries("Trip", 0.00, 0.00);
+    budgetView.extras.checkSeriesNotPresent("Trip");
     budgetView.savings.checkSeriesNotPresent("Transfer");
     categorization.selectTransaction("Transfer 1").selectSavings()
       .checkContainsSeries("Transfer")
@@ -91,7 +92,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     projects.checkCurrentProjects("| Trip | Dec | 0.00 | on |");
 
     projects.select("Trip");
-    budgetView.extras.checkSeries("Trip", 0.00, 0.00);
+    budgetView.extras.checkSeriesNotPresent("Trip");
     budgetView.savings.checkSeries("Transfer", 0.00, -200.00);
     categorization.selectTransaction("Transfer 1").selectSavings()
       .checkContainsSeries("Transfer")
@@ -129,7 +130,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     currentProject.backToList();
 
     views.selectBudget();
-    budgetView.savings.editProjectSeries("Transfer");
+    budgetView.savings.editProjectForSeries("Transfer");
     views.checkHomeSelected();
     currentProject
       .checkName("Trip")
@@ -150,7 +151,9 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.savings.checkSeriesList("Project transfer");
+    budgetView.savings.checkSeriesList("From account Savings account",
+                                       "Project Transfer",
+                                       "To account Savings account");
   }
 
   public void testMustSelectDifferentFromAndToAccounts() throws Exception {
@@ -206,10 +209,10 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.checkSelection("2010/12");
-    budgetView.extras.checkSeries("Trip", 0.00, 0.00);
+    budgetView.extras.checkNoSeriesShown();
     budgetView.savings.checkSeries("Transfer", 0.00, -200.00);
     categorization.selectTransaction("Transfer 1").selectSavings()
-      .checkContainsSeries("Transfer")
+      .checkGroupContainsSeries("Trip", "Transfer")
       .checkSeriesIsActive("Transfer")
       .checkSeriesContainsNoSubSeries("Transfer");
   }
@@ -257,7 +260,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     currentProject.checkPeriodHidden();
   }
 
-  public void testSwitchingTheFromAnToAccountsInvertsTheSavingsSeriesSign() throws Exception {
+  public void testSwitchingTheFromAndToAccountsInvertsTheSavingsSeriesSign() throws Exception {
 
     createMainAccount("Main account 1");
     createSavingsAccount("Savings account 1");
@@ -269,7 +272,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     currentProject.checkProjectGauge(0.00, 0.00);
     currentProject.checkPeriod("December 2010");
 
-    budgetView.extras.checkSeries("Trip", 0.00, 0.00);
+    budgetView.extras.checkNoSeriesShown();
     budgetView.savings.checkSeries("Transfer", 0.00, -200.00);
 
     currentProject
@@ -278,7 +281,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .setToAccount("Savings account 1")
       .validate();
 
-    budgetView.extras.checkSeries("Trip", 0.00, 0.00);
+    budgetView.extras.checkNoSeriesShown();
     budgetView.savings.checkSeries("Transfer", 0.00, 200.00);
   }
 
@@ -399,7 +402,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     currentProject.checkProjectGauge(0.00, 0.00);
     currentProject.checkPeriod("December 2010");
 
-    budgetView.extras.checkSeries("Trip", 0.00, 0.00);
+    budgetView.extras.checkNoSeriesShown();
     budgetView.savings.checkSeries("Transfer", 0.00, -200.00);
 
     currentProject

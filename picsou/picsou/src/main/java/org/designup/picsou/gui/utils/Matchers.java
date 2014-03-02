@@ -107,8 +107,8 @@ public class Matchers {
     };
   }
 
-  public static MonthMatcher seriesActiveInPeriod(final Integer budgetAreaId, boolean showOnlyForActiveMonths, boolean showOnlyIfAvailableOnAllMonths) {
-    return new SeriesFirstEndDateFilter(showOnlyForActiveMonths, showOnlyIfAvailableOnAllMonths) {
+  public static MonthMatcher seriesActiveInPeriod(final Integer budgetAreaId, boolean showOnlyForActiveMonths, boolean showOnlyIfAvailableOnAllMonths, boolean showOnPreviousAndNextMonth) {
+    return new SeriesFirstEndDateFilter(showOnlyForActiveMonths, showOnlyIfAvailableOnAllMonths, showOnPreviousAndNextMonth) {
       protected boolean isEligible(Glob series, GlobRepository repository) {
         return budgetAreaId.equals(series.get(Series.BUDGET_AREA));
       }
@@ -116,7 +116,7 @@ public class Matchers {
   }
 
   public static MonthMatcher seriesDateSavings() {
-    return new SeriesFirstEndDateFilter(true, false) {
+    return new SeriesFirstEndDateFilter(true, false, false) {
       protected boolean isEligible(Glob series, GlobRepository repository) {
         if (series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
           Glob target = repository.findLinkTarget(series, Series.TARGET_ACCOUNT);
@@ -128,7 +128,7 @@ public class Matchers {
   }
 
   public static MonthMatcher seriesDateSavingsAndAccountFilter(final Integer accountId) {
-    return new SeriesFirstEndDateFilter(true, false) {
+    return new SeriesFirstEndDateFilter(true, false, false) {
       protected boolean isEligible(Glob series, GlobRepository repository) {
         if (series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
           return series.get(Series.TARGET_ACCOUNT).equals(accountId);
@@ -156,7 +156,7 @@ public class Matchers {
     private MonthMatcher filter;
 
     public CategorizationFilter(final Integer budgetAreaId) {
-      filter = seriesActiveInPeriod(budgetAreaId, false, true);
+      filter = seriesActiveInPeriod(budgetAreaId, false, true, true);
     }
 
     public boolean matches(Glob series, GlobRepository repository) {
@@ -235,12 +235,14 @@ public class Matchers {
   public static abstract class SeriesFirstEndDateFilter implements MonthMatcher {
     private boolean showOnlyForActiveMonths;
     private boolean showOnlyIfAvailableOnAllMonths;
+    private boolean showOnPreviousAndNextMonth;
     private Set<Integer> selectedMonthIds = Collections.emptySet();
     private Set<Integer> expandedMonthIds = Collections.emptySet();
 
-    private SeriesFirstEndDateFilter(boolean showOnlyForActiveMonths, boolean showOnlyIfAvailableOnAllMonths) {
+    private SeriesFirstEndDateFilter(boolean showOnlyForActiveMonths, boolean showOnlyIfAvailableOnAllMonths, boolean showOnPreviousAndNextMonth) {
       this.showOnlyForActiveMonths = showOnlyForActiveMonths;
       this.showOnlyIfAvailableOnAllMonths = showOnlyIfAvailableOnAllMonths;
+      this.showOnPreviousAndNextMonth = showOnPreviousAndNextMonth;
     }
 
     public void filterMonths(Set<Integer> monthIds) {
@@ -264,8 +266,14 @@ public class Matchers {
       if (firstMonth == null) {
         firstMonth = 0;
       }
+      else if (showOnPreviousAndNextMonth) {
+        firstMonth = Month.previous(firstMonth);
+      }
       if (lastMonth == null) {
         lastMonth = Integer.MAX_VALUE;
+      }
+      else if (showOnPreviousAndNextMonth) {
+        lastMonth = Month.next(lastMonth);
       }
 
       boolean monthsInScope = isMonthSelectionInSeriesScope(firstMonth, lastMonth);

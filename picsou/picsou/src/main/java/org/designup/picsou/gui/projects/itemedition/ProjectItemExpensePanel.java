@@ -12,10 +12,13 @@ import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class ProjectItemExpensePanel extends ProjectItemEditionPanel {
 
@@ -53,18 +56,13 @@ public class ProjectItemExpensePanel extends ProjectItemEditionPanel {
   }
 
   protected GlobList getAssignedTransactions(Glob projectItem, GlobRepository repository) {
-    GlobList transactions = GlobList.EMPTY;
-    Glob subSeries = repository.findLinkTarget(projectItem, ProjectItem.SUB_SERIES);
-    if (subSeries != null) {
-      transactions = repository.findLinkedTo(subSeries, Transaction.SUB_SERIES);
+    Glob series = repository.findLinkTarget(projectItem, ProjectItem.SERIES);
+    if (series != null) {
+      return repository.getAll(Transaction.TYPE,
+                               and(linkedTo(series, Transaction.SERIES),
+                                   isFalse(Transaction.PLANNED)));
     }
-    else {
-      Glob series = repository.findLinkTarget(projectItem, ProjectItem.SERIES);
-      if (series != null) {
-        transactions = repository.findLinkedTo(series, Transaction.SERIES);
-      }
-    }
-    return transactions;
+    return GlobList.EMPTY;
   }
 
   protected boolean isNewItem(Glob item) {

@@ -13,7 +13,9 @@ public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(ProjectTransfer.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key projectTransferKey, FieldValues values) throws Exception {
-        if (shouldCreateSavingsSeries(projectTransferKey, values, repository)) {
+        Glob item = ProjectTransfer.getItemFromTransfer(projectTransferKey, repository);
+        if (Utils.equal(ProjectItemType.get(item), ProjectItemType.TRANSFER) &&
+            ProjectTransfer.usesSavingsAccounts(values, repository)) {
           createSavingsSeries(projectTransferKey, repository);
         }
       }
@@ -26,8 +28,8 @@ public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
         FieldValues previousTransferValues = FieldValuesBuilder.init(transfer.toArray())
           .set(values.getPreviousValues())
           .get();
-        boolean isSavings = ProjectTransfer.isSavings(newTransferValues, repository);
-        boolean wasSavings = ProjectTransfer.isSavings(previousTransferValues, repository);
+        boolean isSavings = ProjectTransfer.usesSavingsAccounts(newTransferValues, repository);
+        boolean wasSavings = ProjectTransfer.usesSavingsAccounts(previousTransferValues, repository);
         if (isSavings && !wasSavings) {
           createSavingsSeries(projectTransferKey, repository);
         }
@@ -64,7 +66,6 @@ public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
                                     value(Series.FIRST_MONTH, firstMonth),
                                     value(Series.LAST_MONTH, lastMonth));
     repository.update(item.getKey(), ProjectItem.SERIES, series.get(Series.ID));
-    repository.update(item.getKey(), ProjectItem.SUB_SERIES, null);
   }
 
   private void updateSavingsSeries(Key projectTransferKey, FieldValues values, GlobRepository repository) {
@@ -81,13 +82,6 @@ public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
     repository.delete(seriesKey);
 
     Glob item = repository.find(Key.create(ProjectItem.TYPE, key.get(ProjectTransfer.PROJECT_ITEM)));
-    Glob project = repository.findLinkTarget(item, ProjectItem.PROJECT);
-    repository.update(item.getKey(), ProjectItem.SERIES, project.get(Project.SERIES));
-  }
-
-  private boolean shouldCreateSavingsSeries(Key projectTransferKey, FieldValues transferValues, GlobRepository repository) {
-    Glob item = ProjectTransfer.getItemFromTransfer(projectTransferKey, repository);
-    return Utils.equal(ProjectItemType.get(item), ProjectItemType.TRANSFER) &&
-           ProjectTransfer.isSavings(transferValues, repository);
+    ProjectItemToSeriesTrigger.createSeries(item.getKey(), item, repository);
   }
 }

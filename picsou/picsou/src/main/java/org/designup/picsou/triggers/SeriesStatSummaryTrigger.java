@@ -47,8 +47,8 @@ public class SeriesStatSummaryTrigger implements ChangeSetListener {
     }
   }
 
-  private void update(GlobRepository repository, Key key, FieldValues values, int referenceMonth) {
-    Integer month = key.get(SeriesStat.MONTH);
+  private void update(GlobRepository repository, Key statKey, FieldValues values, int referenceMonth) {
+    Integer month = statKey.get(SeriesStat.MONTH);
 
     Double observed;
     Double planned;
@@ -57,7 +57,7 @@ public class SeriesStatSummaryTrigger implements ChangeSetListener {
       planned = values.get(SeriesStat.PLANNED_AMOUNT);
     }
     else {
-      Glob stat = repository.get(key);
+      Glob stat = repository.get(statKey);
       observed = stat.get(SeriesStat.ACTUAL_AMOUNT);
       planned = stat.get(SeriesStat.PLANNED_AMOUNT);      
     }
@@ -66,13 +66,13 @@ public class SeriesStatSummaryTrigger implements ChangeSetListener {
       value = planned;
     }
     else if (month == referenceMonth) {
-      BudgetArea budgetArea = SeriesStat.getBudgetArea(key, repository);
+      BudgetArea budgetArea = SeriesStat.getBudgetArea(statKey, repository);
       value = Amounts.max(Utils.zeroIfNull(observed), planned, budgetArea.isIncome());
     }
     else {
       value = observed;
     }
-    repository.update(key, SeriesStat.SUMMARY_AMOUNT, value);
+    repository.update(statKey, SeriesStat.SUMMARY_AMOUNT, value);
   }
 
   private Integer findReferenceMonth(GlobRepository repository) {

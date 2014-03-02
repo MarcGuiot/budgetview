@@ -232,6 +232,11 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
+  public ProjectEditionChecker cancelExpenseEdition(int i) {
+    editExpense(i).cancel();
+    return this;
+  }
+
   private String getContent() {
     checkNoEditedItems();
     TablePrinter printer = new TablePrinter();

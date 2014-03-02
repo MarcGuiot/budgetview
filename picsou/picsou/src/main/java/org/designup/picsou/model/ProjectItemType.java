@@ -6,8 +6,10 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidData;
 
@@ -55,4 +57,19 @@ public enum ProjectItemType implements GlobConstantContainer {
     return id;
   }
 
+  public static GlobMatcher isExpenses() {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return item != null && Utils.equal(EXPENSE.id, item.get(ProjectItem.ITEM_TYPE));
+      }
+    };
+  }
+
+  public static GlobMatcher isTransfer() {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return item != null && Utils.equal(TRANSFER.id, item.get(ProjectItem.ITEM_TYPE));
+      }
+    };
+  }
 }

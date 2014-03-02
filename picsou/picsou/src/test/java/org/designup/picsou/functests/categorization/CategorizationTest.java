@@ -694,8 +694,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTransaction("OP 200801");
     categorization.selectVariable()
-      .checkContainsSeries("before200804")
-      .checkDoesNotContainSeries("only200804", "after200804", "range");
+      .checkContainsSeries("before200804", "range")
+      .checkSeriesIsInactive("range")
+      .checkDoesNotContainSeries("only200804", "after200804");
 
     categorization.selectTransaction("OP 200802");
     categorization.selectVariable()
@@ -704,41 +705,53 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTransaction("OP 200803");
     categorization.selectVariable()
-      .checkContainsSeries("before200804")
+      .checkContainsSeries("before200804", "after200804", "only200804")
+      .checkSeriesIsActive("before200804")
       .checkSeriesIsInactive("range")
-      .checkDoesNotContainSeries("after200804", "only200804");
+      .checkSeriesIsInactive("after200804")
+      .checkSeriesIsInactive("only200804");
 
     categorization.selectTransaction("OP 200804");
     categorization.selectVariable()
       .checkContainsSeries("before200804", "after200804", "only200804")
+      .checkSeriesIsActive("after200804")
+      .checkSeriesIsActive("only200804")
       .checkDoesNotContainSeries("range");
 
     categorization.selectTransaction("OP 200805");
     categorization.selectVariable()
-      .checkContainsSeries("after200804")
+      .checkContainsSeries("after200804", "before200804", "only200804")
+      .checkSeriesIsActive("after200804")
       .checkSeriesIsInactive("range")
-      .checkDoesNotContainSeries("before200804", "only200804");
+      .checkSeriesIsInactive("before200804");
 
     categorization.selectTransaction("OP 200806");
     categorization.selectVariable()
       .checkContainsSeries("after200804", "range")
+      .checkSeriesIsActive("after200804")
       .checkDoesNotContainSeries("before200804", "only200804");
 
     categorization.selectTransaction("OP 200807");
     categorization.selectVariable()
-      .checkContainsSeries("after200804")
-      .checkDoesNotContainSeries("before200804", "only200804", "range");
+      .checkContainsSeries("after200804", "range")
+      .checkSeriesIsActive("after200804")
+      .checkSeriesIsInactive("range")
+      .checkDoesNotContainSeries("before200804", "only200804");
 
     // -- Multi selection --
 
     categorization.selectTransactions("OP 200806", "OP 200807");
     categorization.selectVariable()
-      .checkContainsSeries("after200804")
-      .checkDoesNotContainSeries("before200804", "only200804", "range");
+      .checkContainsSeries("after200804", "range")
+      .checkSeriesIsActive("after200804")
+      .checkSeriesIsActive("range")
+      .checkDoesNotContainSeries("before200804", "only200804");
 
     categorization.selectTransactions("OP 200806", "OP 200805");
     categorization.selectVariable()
       .checkContainsSeries("after200804", "range")
+      .checkSeriesIsActive("after200804")
+      .checkSeriesIsActive("range")
       .checkDoesNotContainSeries("before200804", "only200804");
   }
 
@@ -1206,7 +1219,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRows(0)
       .selectVariable().createSeries()
       .setName("Courses")
-      .setEndDate(200805)
+      .setEndDate(200804)
       .validate();
 
     timeline.selectAll();
@@ -1237,6 +1250,14 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectVariable()
       .editSeries("Courses")
       .setEndDate(200805)
+      .validate();
+    categorization.getVariable().checkSeriesIsInactive("Courses");
+
+    categorization
+      .selectTableRow(0)
+      .selectVariable()
+      .editSeries("Courses")
+      .setEndDate(200804)
       .validate();
     categorization.getVariable().checkDoesNotContainSeries("Courses");
   }

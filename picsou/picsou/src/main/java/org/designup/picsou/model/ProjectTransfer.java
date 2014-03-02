@@ -41,7 +41,7 @@ public class ProjectTransfer {
                                                               transferValues.get(PROJECT_ITEM)));
   }
 
-  public static boolean isSavings(FieldValues transferValues, GlobRepository repository) {
+  public static boolean usesSavingsAccounts(FieldValues transferValues, GlobRepository repository) {
     AccountType fromType = getAccountType(transferValues, repository, FROM_ACCOUNT);
     AccountType toType = getAccountType(transferValues, repository, TO_ACCOUNT);
     return (fromType == AccountType.SAVINGS) || (toType == AccountType.SAVINGS);

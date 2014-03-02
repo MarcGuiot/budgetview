@@ -2,6 +2,11 @@ package org.designup.picsou.functests.projects;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.model.ProjectItem;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SeriesGroup;
+import org.globsframework.model.format.GlobPrinter;
 
 public class ProjectDuplicationTest extends LoggedInFunctionalTestCase {
 
@@ -33,7 +38,7 @@ public class ProjectDuplicationTest extends LoggedInFunctionalTestCase {
                   "| Bag         | Jan | 0.00 | 100.00 |");
 
     timeline.selectMonth(201012);
-    categorization.setExtra("FNAC", "Camera", "Camera Body");
+    categorization.setExtra("FNAC", "Camera Body");
     budgetView.extras.checkSeries("Camera", -200.00, -280.00);
 
     views.selectHome();
@@ -59,17 +64,37 @@ public class ProjectDuplicationTest extends LoggedInFunctionalTestCase {
     budgetView.extras.checkSeries("Camera", 0.00, -80.00);
     timeline.selectMonth(201104);
     budgetView.extras.checkSeries("Camera", 0.00, -80.00);
-    budgetView.extras.checkSeriesList("Camera");
+    budgetView.extras
+      .checkSeriesList("Camera")
+      .expandGroup("Camera")
+      .checkContent("| Camera      | 0.00 | 80.00 |\n" +
+                    "| Camera Body | 0.00 | 80.00 |\n");
 
     timeline.selectMonth(201106);
-    budgetView.extras.checkSeriesList("Camera", "Other camera");
-    budgetView.extras.checkSeries("Other camera", 0.00, -280.00);
+    budgetView.extras
+      .checkSeriesList("Camera", "Camera Body", "Other camera")
+      .expandGroup("Other camera");
+    budgetView.extras.checkContent("| Other camera | 0.00 | 280.00 |\n" +
+                                   "| Lens         | 0.00 | 200.00 |\n" +
+                                   "| Camera Body  | 0.00 | 80.00  |\n" +
+                                   "| Camera       | 0.00 | 80.00  |\n" +
+                                   "| Camera Body  | 0.00 | 80.00  |\n");
     timeline.selectMonth(201107);
-    budgetView.extras.checkSeries("Other camera", 0.00, -180.00);
+    budgetView.extras.checkContent("| Other camera | 0.00 | 180.00 |\n" +
+                                   "| Bag          | 0.00 | 100.00 |\n" +
+                                   "| Camera Body  | 0.00 | 80.00  |\n" +
+                                   "| Camera       | 0.00 | 80.00  |\n" +
+                                   "| Camera Body  | 0.00 | 80.00  |\n");
     timeline.selectMonth(201108);
-    budgetView.extras.checkSeries("Camera", 0.00, -80.00);
+    budgetView.extras.checkContent("| Camera       | 0.00 | 80.00 |\n" +
+                                   "| Camera Body  | 0.00 | 80.00 |\n" +
+                                   "| Other camera | 0.00 | 80.00 |\n" +
+                                   "| Camera Body  | 0.00 | 80.00 |\n");
     timeline.selectMonth(201109);
-    budgetView.extras.checkSeries("Camera", 0.00, -80.00);
+    budgetView.extras.checkContent("| Camera       | 0.00 | 80.00 |\n" +
+                                   "| Camera Body  | 0.00 | 80.00 |\n" +
+                                   "| Other camera | 0.00 | 80.00 |\n" +
+                                   "| Camera Body  | 0.00 | 80.00 |\n");
   }
 
   public void testDuplicationErrorsAndCancel() throws Exception {

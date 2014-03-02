@@ -69,8 +69,6 @@
                 title="Comment traiter les cartes à débit différé ?"/>
           <page file="support/faq/comptes/multi_devises.html"
                 title="Est-il possible de gérer des comptes qui utilisent différentes devises ?"/>
-          <page file="support/faq/comptes/supprimer_operation.html"
-                title="Comment supprime-t-on une opération ?"/>
         </page>
 
         <page file="support/faq/import.html" title="Import des relevés bancaires">
@@ -96,6 +94,14 @@
           <page file="support/faq/categorisation/ventiler_operation.html"
                 title="Comment ventiler une opération parmi plusieurs enveloppes ?"/>
         </page>
+
+        <page file="support/faq/operations.html" title="Gestion des opérations">
+          <page file="support/faq/operations/operations_recurrentes.html"
+                title="Comment gère-t-on les opérations récurrentes ?"/>
+          <page file="support/faq/operations/supprimer_operation.html"
+                title="Comment supprime-t-on une opération ?"/>
+        </page>
+
 
         <page file="support/faq/mobile.html" title="Utilisation sur smartphone et tablette">
           <page file="support/faq/mobile/utilisation_android.html"

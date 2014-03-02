@@ -166,7 +166,7 @@ public class ProjectItemTransferPanel extends ProjectItemEditionPanel {
 
     public void update() {
       Glob projectTransfer = localRepository.get(Key.create(ProjectTransfer.TYPE, itemKey.get(ProjectItem.ID)));
-      boolean isSavings = ProjectTransfer.isSavings(projectTransfer, ProjectItemTransferPanel.this.localRepository);
+      boolean isSavings = ProjectTransfer.usesSavingsAccounts(projectTransfer, ProjectItemTransferPanel.this.localRepository);
       savingsMessage.setVisible(isSavings);
     }
 

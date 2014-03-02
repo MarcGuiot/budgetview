@@ -14,10 +14,7 @@ import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.util.Collections;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
 
@@ -41,13 +38,12 @@ public class DeleteProjectAction extends MultiSelectionAction {
 
   protected void processClick(GlobList selection, GlobRepository repository, Directory directory) {
     final Key currentProjectKey = selection.getFirst().getKey();
-    Key seriesKey = repository.get(currentProjectKey).getTargetKey(Project.SERIES);
+    Set<Integer> seriesIds = Project.getSeriesIds(selection.getAll(Project.TYPE), repository);
     final List<Key> transactionKeys =
       repository.getAll(Transaction.TYPE,
-                        and(linkedTo(seriesKey, Transaction.SERIES),
+                        and(fieldIn(Transaction.SERIES, seriesIds),
                             isFalse(Transaction.PLANNED)))
         .getKeyList();
-
     if (!transactionKeys.isEmpty()) {
       ConfirmationDialog confirm = new ConfirmationDialog("projectEdition.deleteConfirmation.title",
                                                           Lang.get("projectEdition.deleteConfirmation.message"),

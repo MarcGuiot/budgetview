@@ -4,10 +4,7 @@ import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Project;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.*;
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -86,7 +83,7 @@ public class CarryOverAction
     }
 
     Glob series = repository.find(seriesKey);
-    if ((series == null) || Project.findProject(series, repository) != null) {
+    if ((series == null) || ProjectItem.findProjectItem(series, repository) != null) {
       setDisabled();
       return;
     }

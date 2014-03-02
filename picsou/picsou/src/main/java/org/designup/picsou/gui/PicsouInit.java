@@ -112,16 +112,15 @@ public class PicsouInit {
     repository.addTrigger(new DeleteInitialSeriesTrigger());
     repository.addTrigger(new DeleteUnusedSeriesGroupTrigger());
     repository.addTrigger(new ProjectTransferAccountChangeTrigger());
-    repository.addTrigger(new ProjectToSeriesTrigger());
     repository.addTrigger(new ProjectToItemTrigger());
     repository.addTrigger(new ProjectItemToAmountGlobalTrigger());
     repository.addTrigger(new ProjectItemToSeriesTrigger());
     repository.addTrigger(new ProjectTransferToSeriesTrigger());
     repository.addTrigger(new ProjectTransferDeletionTrigger());
+    repository.addTrigger(new ProjectToSeriesGroupTrigger());
     repository.addTrigger(new ProjectToStatTrigger());
     repository.addTrigger(new ProjectItemToStatTrigger());
     repository.addTrigger(new ProjectItemToSeriesBudgetTrigger());
-    repository.addTrigger(new ProjectItemToSubSeriesTrigger());
     repository.addTrigger(new ProjectItemToProjectStatTrigger());
     repository.addTrigger(new HideProjectDetailsTrigger());
     repository.addTrigger(new SavingsAccountUpdateSeriesTrigger());
@@ -157,7 +156,6 @@ public class PicsouInit {
     repository.addTrigger(new SubSeriesStatTrigger());
     repository.addTrigger(new SeriesStatToProjectStatTrigger());
     repository.addTrigger(new SeriesStatToProjectItemStatTrigger());
-    repository.addTrigger(new SubSeriesStatToProjectItemStatTrigger());
     repository.addTrigger(new ProjectCategorizationWarningTrigger());
     repository.addTrigger(new SeriesStatForGroupsTrigger());
     repository.addTrigger(new DateFormatTrigger(directory));
@@ -170,8 +168,7 @@ public class PicsouInit {
 
   public void partialReset() {
     GlobList additionalGlobToInsert = additionalGlobToAdd(PicsouInit.this.repository);
-    Collection<GlobType> globTypeCollection = PicsouGuiModel.getUserSpecificType();
-    repository.reset(GlobList.EMPTY, globTypeCollection.toArray(new GlobType[globTypeCollection.size()]));
+    repository.reset(GlobList.EMPTY, PicsouGuiModel.getUserSpecificTypes());
     Set<GlobType> types = additionalGlobToInsert.getTypes();
     repository.reset(additionalGlobToInsert, types.toArray(new GlobType[types.size()]));
   }
@@ -189,9 +186,8 @@ public class PicsouInit {
       this.useDemoAccount = useDemoAccount;
       this.autoLogin = autoLogin;
       changeSet = new DefaultChangeSet();
-      Collection<GlobType> globTypeCollection = PicsouGuiModel.getUserSpecificType();
-      typesToReplace = globTypeCollection.toArray(new GlobType[globTypeCollection.size()]);
-      idGenerator.reset(globTypeCollection);
+      typesToReplace = PicsouGuiModel.getUserSpecificTypes();
+      idGenerator.reset(Arrays.asList(typesToReplace));
 
       userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {
         public void update(IntegerField field, Integer lastAllocatedId) {

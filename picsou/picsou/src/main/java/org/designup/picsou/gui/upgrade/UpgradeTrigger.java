@@ -3,12 +3,12 @@ package org.designup.picsou.gui.upgrade;
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.projects.utils.ProjectUpgrade;
 import org.designup.picsou.gui.utils.FrameSize;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AccountInitialPositionTrigger;
 import org.designup.picsou.triggers.PositionTrigger;
-import org.designup.picsou.triggers.projects.ProjectItemToSubSeriesTrigger;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.Field;
@@ -34,6 +34,7 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 public class UpgradeTrigger implements ChangeSetListener {
   private Directory directory;
   private HashMap<Integer, Key[]> savingsSeriesToOp = new HashMap<Integer, Key[]>();
+  private ProjectUpgrade projectUpgrade = new ProjectUpgrade();
 
   public UpgradeTrigger(Directory directory) {
     this.directory = directory;
@@ -126,18 +127,12 @@ public class UpgradeTrigger implements ChangeSetListener {
       updateOpenCloseAccount(repository);
       deleteDuplicateSynchro(repository);
     }
-    if (currentJarVersion < 125) {
-      updateProjetItemSeries(repository);
-    }
-    if (currentJarVersion < 126) {
-      updateProjetItemSequence(repository);
-    }
-    if (currentJarVersion < 127) {
-      createMissingSubSeriesForProjectItems(repository);
-    }
     if (currentJarVersion < 131) {
       FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
       LayoutConfig.init(frameSize.screenSize, frameSize.targetFrameSize, repository);
+    }
+    if (currentJarVersion < 132) {
+      projectUpgrade.updateProjectSeriesAndGroups(repository);
     }
 
     if (currentJarVersion < 132) {
@@ -320,12 +315,6 @@ public class UpgradeTrigger implements ChangeSetListener {
                         FieldValue.value(Account.DEFERRED_DAY, day),
                         FieldValue.value(Account.DEFERRED_DEBIT_DAY, day),
                         FieldValue.value(Account.DEFERRED_MONTH_SHIFT, 0));
-    }
-  }
-
-  private void createMissingSubSeriesForProjectItems(GlobRepository repository) {
-    for (Glob projectItem : repository.getAll(ProjectItem.TYPE, isNull(ProjectItem.SUB_SERIES))) {
-      ProjectItemToSubSeriesTrigger.createSubSeries(projectItem.getKey(), projectItem, repository);
     }
   }
 
@@ -673,6 +662,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       }
     }
     savingsSeriesToOp.clear();
+    projectUpgrade.postProcessing(repository);
   }
 
   private boolean isSame(Glob targetAccount, Glob transaction, GlobRepository repository) {
@@ -691,7 +681,10 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   private void fixHiddenProjectSeriesBudget(GlobRepository repository) {
-    Set<Integer> seriesIds = repository.getAll(Project.TYPE).getValueSet(Project.SERIES);
+    Set<Integer> seriesIds = new HashSet<Integer>();
+    for (Glob project : repository.getAll(Project.TYPE)) {
+      seriesIds.addAll(repository.findLinkedTo(project, ProjectItem.PROJECT).getValueSet(ProjectItem.SERIES));
+    }
     for (Glob seriesBudget : repository.getAll(SeriesBudget.TYPE, GlobMatchers.fieldIn(SeriesBudget.SERIES, seriesIds))) {
       if (!seriesBudget.isTrue(SeriesBudget.ACTIVE) &&
           Amounts.isNotZero(seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT))) {
@@ -700,20 +693,4 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
   }
 
-  private void updateProjetItemSeries(GlobRepository repository) {
-    for (Glob projectItem : repository.getAll(ProjectItem.TYPE)) {
-      if (projectItem.get(ProjectItem.SERIES) == null) {
-        Glob project = repository.findLinkTarget(projectItem, ProjectItem.PROJECT);
-        if (project != null) {
-          repository.update(projectItem.getKey(), ProjectItem.SERIES, project.get(Project.SERIES));
-        }
-      }
-    }
-  }
-
-  private void updateProjetItemSequence(GlobRepository repository) {
-    for (Glob project : repository.getAll(Project.TYPE)) {
-      Project.sortItems(project, repository);
-    }
-  }
 }

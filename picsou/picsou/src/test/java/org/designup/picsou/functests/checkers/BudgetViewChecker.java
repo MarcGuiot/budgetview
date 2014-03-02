@@ -17,6 +17,7 @@ import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 
 import javax.swing.*;
@@ -256,23 +257,31 @@ public class BudgetViewChecker extends ViewChecker {
       return actualNames;
     }
 
-    public BudgetAreaChecker checkSeriesPresent(String... expectedNames) {
-      List<String> actualNames = getActualNamesList();
-      for (String expectedName : expectedNames) {
-        if (!actualNames.contains(expectedName)) {
-          Assert.fail("Series '" + expectedName + "' not found. Actual series: " + actualNames);
+    public BudgetAreaChecker checkSeriesPresent(final String... expectedNames) {
+      UISpecAssert.assertThat(new Assertion() {
+        public void check() {
+          List<String> actualNames = getActualNamesList();
+          for (String expectedName : expectedNames) {
+            if (!actualNames.contains(expectedName)) {
+              Assert.fail("Series '" + expectedName + "' not found. Actual series: " + actualNames);
+            }
+          }
         }
-      }
+      });
       return this;
     }
 
-    public BudgetAreaChecker checkSeriesNotPresent(String... seriesNames) {
-      List<String> actualNames = getActualNamesList();
-      for (String expectedName : seriesNames) {
-        if (actualNames.contains(expectedName)) {
-          Assert.fail("Series '" + expectedName + "' unexpectedly found. Actual series: " + actualNames);
+    public BudgetAreaChecker checkSeriesNotPresent(final String... seriesNames) {
+      UISpecAssert.assertThat(new Assertion() {
+        public void check() {
+          List<String> actualNames = getActualNamesList();
+          for (String expectedName : seriesNames) {
+            if (actualNames.contains(expectedName)) {
+              Assert.fail("Series '" + expectedName + "' unexpectedly found. Actual series: " + actualNames);
+            }
+          }
         }
-      }
+      });
       return this;
     }
 
@@ -294,8 +303,12 @@ public class BudgetViewChecker extends ViewChecker {
         getSeriesPanel(seriesName).getSeriesButton().triggerClick(Lang.get("series.edit")));
     }
 
-    public void editProjectSeries(String seriesName) {
+    public void editProjectForSeries(String seriesName) {
       getSeriesPanel(seriesName).getSeriesButton().click(Lang.get("series.edit"));
+    }
+
+    public void editProjectForGroup(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton().click(Lang.get("seriesGroup.goto.project"));
     }
 
     public SeriesAmountEditionDialogChecker editPlannedAmount(String seriesName) {
@@ -481,7 +494,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public void checkCarryOverDisabled(String seriesName) {
-      getSeriesPanel(seriesName).getSeriesButton().checkItemDisabled("Carry over next month");
+      getSeriesPanel(seriesName).getSeriesButton().checkItemNotPresent("Carry over next month");
     }
 
     public BudgetAreaChecker checkGroups(String series, String... labels) {
@@ -510,15 +523,16 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
-    public void expandGroup(String groupName) {
+    public BudgetAreaChecker expandGroup(String groupName) {
       getSeriesPanel(groupName).getSeriesButton()
         .click(Lang.get("seriesGroup.menu.expand"));
-
+      return this;
     }
 
-    public void collapseGroup(String groupName) {
+    public BudgetAreaChecker collapseGroup(String groupName) {
       getSeriesPanel(groupName).getSeriesButton()
         .click(Lang.get("seriesGroup.menu.collapse"));
+      return this;
     }
 
     public BudgetAreaChecker clickPlanned(String groupName) {

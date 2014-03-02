@@ -79,6 +79,10 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     );
     budgetView.extras.checkSeries("My project", 0, -200.00);
     budgetView.getSummary().checkEndPosition(1700.00);
+    budgetView.extras.checkContent("| My project | 0.00 | 200.00 |\n");
+    budgetView.extras.expandGroup("My project");
+    budgetView.extras.checkContent("| My project  | 0.00 | 200.00 |\n" +
+                                   "| Reservation | 0.00 | 200.00 |\n");
 
     timeline.selectMonth("2011/02");
     budgetView.extras.checkSeries("My project", 0, -600.00);
@@ -86,8 +90,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTransaction("Resa Travel Plus");
-    categorization.selectExtras().checkSeriesContainsSubSeries("My project",
-                                                               "Reservation", "Travel", "Hotel");
+    categorization.selectExtras().checkContainsSeries("Reservation", "Travel", "Hotel");
 
     views.selectHome();
     projectChart.select("My project");
@@ -99,10 +102,10 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkProjectGauge(0.00, -700.00);
 
     categorization.selectTransaction("Resa Travel Plus");
-    categorization.selectExtras().checkSeriesContainsSubSeries("My project", "Reservation", "Hotel");
-    categorization.selectExtras().checkSeriesDoesNotContainSubSeries("My project", "Travel");
+    categorization.selectExtras().checkGroupContainsSeries("My project", "Reservation", "Hotel");
+    categorization.selectExtras().checkGroupDoesNotContainSeries("My project", "Travel");
 
-    categorization.setExtra("Resa Travel Plus", "My project", "Reservation");
+    categorization.setExtra("Resa Travel Plus", "Reservation");
 
     timeline.selectMonth("2011/02");
     projectChart.checkProject("My project", 201101, 201102, 700.00);
@@ -135,7 +138,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     budgetView.getSummary().checkEndPosition(1800.00);
 
     transactions.initAmountContent()
-      .add("01/01/2011", "RESA TRAVEL PLUS", -100.00, "My project / Reservation", 1900.00, 1900.00, "Account n. 001111")
+      .add("01/01/2011", "RESA TRAVEL PLUS", -100.00, "Reservation", 1900.00, 1900.00, "Account n. 001111")
       .add("01/01/2011", "INCOME", 1000.00, "To categorize", 2000.00, 2000.00, "Account n. 001111")
       .check();
   }
@@ -193,20 +196,20 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addBankAccount("001111", 800.00, "2011/01/10")
       .addTransaction("2011/01/01", -200.00, "Resa")
-      .addTransaction("2011/01/01", -500.00, "Hotel")
+      .addTransaction("2011/01/01", -500.00, "MegaHotel")
       .addTransaction("2011/01/01", -10.00, "Something else")
       .load();
 
-    categorization.setExtra("Resa", "My project");
-    categorization.setExtra("Hotel", "My project");
+    categorization.setExtra("Resa", "Reservation");
+    categorization.setExtra("MegaHotel", "Hotel");
 
     views.selectHome();
     projectChart.select("My project");
     currentProject.openDeleteAndNavigate();
     views.checkCategorizationSelected();
     categorization.checkTable(new Object[][]{
-      {"01/01/2011", "My project", "HOTEL", -500.0},
-      {"01/01/2011", "My project", "RESA", -200.0},
+      {"01/01/2011", "Hotel", "MEGAHOTEL", -500.0},
+      {"01/01/2011", "Reservation", "RESA", -200.0},
     });
     categorization.checkSelectedTableRows(0, 1);
     categorization.unselectAllTransactions();
@@ -219,9 +222,9 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
                               "Some operations have been assigned to this project");
 
     views.checkCategorizationSelected();
-    categorization.checkSelectedTableRows("RESA", "HOTEL");
+    categorization.checkSelectedTableRows("RESA", "MEGAHOTEL");
     categorization.checkTable(new Object[][]{
-      {"01/01/2011", "", "HOTEL", -500.0},
+      {"01/01/2011", "", "MEGAHOTEL", -500.0},
       {"01/01/2011", "", "RESA", -200.0},
     });
     categorization.checkSelectedTableRows(0, 1);
@@ -331,7 +334,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     currentProject.checkItemCount(0);
   }
 
-  public void testRenamingAnItemRenamesTheCorrespondingSubSeries() throws Exception {
+  public void testRenamingAnItemRenamesTheCorrespondingSeries() throws Exception {
     operations.hideSignposts();
 
     OfxBuilder.init(this)
@@ -346,15 +349,15 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addExpenseItem(1, "Item 2", 201101, 100.00);
 
     categorization.selectTransaction("Income");
-    categorization.selectExtras().checkSeriesContainsSubSeries("My project", "Item 1", "Item 2");
+    categorization.selectExtras().checkGroupContainsSeries("My project", "Item 1", "Item 2");
 
     projectChart.select("My project");
     currentProject.toggleAndEditExpense(0)
       .setLabel("NewItem1")
       .validate();
 
-    categorization.selectExtras().checkSeriesContainsSubSeries("My project", "NewItem1", "Item 2");
-    categorization.selectExtras().checkSeriesDoesNotContainSubSeries("My project", "Item 1");
+    categorization.selectExtras().checkGroupContainsSeries("My project", "NewItem1", "Item 2");
+    categorization.selectExtras().checkGroupDoesNotContainSeries("My project", "Item 1");
   }
 
   public void testGaugesShownForProjectItems() throws Exception {
@@ -380,10 +383,10 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTransaction("SNCF");
     categorization.selectExtras()
-      .checkSeriesContainsSubSeries("My project", "Travel", "Accomodation");
-    categorization.setExtra("SNCF", "My project", "Travel");
-    categorization.setExtra("EUROPCAR", "My project", "Travel");
-    categorization.setExtra("SHERATON", "My project", "Accomodation");
+      .checkGroupContainsSeries("My project", "Travel", "Accomodation");
+    categorization.setExtra("SNCF", "Travel");
+    categorization.setExtra("EUROPCAR", "Travel");
+    categorization.setExtra("SHERATON", "Accomodation");
 
     views.selectHome();
     projectChart.select("My project");
@@ -400,7 +403,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkProjectGauge(-800.00, -900.00);
   }
 
-  public void testTransactionsAreAssignedToTheProjectWhenItemsAreDeleted() throws Exception {
+  public void testTransactionsAreUnassignedWhenItemsAreDeleted() throws Exception {
     operations.hideSignposts();
 
     OfxBuilder.init(this)
@@ -417,10 +420,10 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addExpenseItem(1, "Accomodation", 201212, -500.00);
 
     categorization.selectTransaction("SNCF");
-    categorization.selectExtras().checkSeriesContainsSubSeries("My project", "Travel", "Accomodation");
-    categorization.setExtra("SNCF", "My project", "Travel");
-    categorization.setExtra("EUROPCAR", "My project", "Travel");
-    categorization.setExtra("SHERATON", "My project", "Accomodation");
+    categorization.selectExtras().checkGroupContainsSeries("My project", "Travel", "Accomodation");
+    categorization.setExtra("SNCF", "Travel");
+    categorization.setExtra("EUROPCAR", "Travel");
+    categorization.setExtra("SHERATON", "Accomodation");
 
     views.selectHome();
     projectChart.select("My project");
@@ -429,44 +432,56 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
                   "| Accomodation | Dec | 550.00 | 500.00 |")
       .deleteItem(0);
 
-    categorization.selectTransaction("EUROPCAR").getExtras().checkSeriesIsSelected("My project");
-    categorization.selectTransaction("SNCF").getExtras().checkSeriesIsSelected("My project");
+    categorization.selectTransaction("EUROPCAR").getExtras().checkNoSeriesSelected();
+    categorization.selectTransaction("SHERATON").getExtras().checkSeriesIsSelected("Accomodation");
+    categorization.selectTransaction("SNCF").getExtras().checkNoSeriesSelected();
+
+    transactions.initContent()
+      .add("15/12/2012", TransactionType.PRELEVEMENT, "SHERATON", "", -550.00, "Accomodation")
+      .add("10/12/2012", TransactionType.PRELEVEMENT, "EUROPCAR", "", -150.00)
+      .add("01/12/2012", TransactionType.PRELEVEMENT, "SNCF", "", -100.00)
+      .check();
   }
 
-  public void testProjectViewIsAlwaysShownWhenEditingAssociatedSeries() throws Exception {
+  public void testProjectViewIsAlwaysShownWhenEditingAssociatedSeriesOrGroup() throws Exception {
 
     operations.hideSignposts();
 
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2010/01/10")
       .addTransaction("2010/12/01", 1000.00, "Income")
-      .addTransaction("2011/01/05", 100.00, "Resa")
+      .addTransaction("2011/01/05", -100.00, "Resa")
       .load();
 
     budgetView.extras.createProject();
     views.checkHomeSelected();
     currentProject
-      .setName("Past Project")
+      .setName("My Project")
       .addExpenseItem(0, "Reservation", 201101, -100.00)
       .addExpenseItem(1, "Hotel", 201102, -500.00)
       .backToList();
 
     views.selectBudget();
-    budgetView.extras.editProjectSeries("Past Project");
+    budgetView.extras.editProjectForGroup("My Project");
     views.checkHomeSelected();
     projects.checkEditionShown();
     currentProject
-      .checkName("Past Project")
+      .checkName("My Project")
       .checkItems("| Reservation | Jan | 0.00 | 100.00 |\n" +
                   "| Hotel       | Feb | 0.00 | 500.00 |")
       .backToList();
 
     views.selectBudget();
-    budgetView.extras.editPlannedAmountForProject("Past Project");
+    budgetView.extras
+      .expandGroup("My project")
+      .editPlannedAmountForProject("Reservation");
     views.checkHomeSelected();
     projects.checkEditionShown();
     currentProject
-      .checkName("Past Project")
+      .checkName("My Project")
+      .editExpense(0)
+      .cancel();
+    currentProject
       .checkItems("| Reservation | Jan | 0.00 | 100.00 |\n" +
                   "| Hotel       | Feb | 0.00 | 500.00 |")
       .backToList();
@@ -475,14 +490,15 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     categorization.showAllTransactions();
     categorization.selectTransaction("Resa");
 
-    categorization.selectExtras().selectSeries("Past Project");
-    categorization.selectExtras().editProjectSeries("Past Project");
+    categorization.selectExtras().selectSeries("Reservation");
+    categorization.selectExtras().editProjectSeries("Reservation");
     views.checkHomeSelected();
     projects.checkEditionShown();
     currentProject
-      .checkName("Past Project")
-      .checkItems("| Reservation | Jan | 0.00 | 100.00 |\n" +
-                  "| Hotel       | Feb | 0.00 | 500.00 |");
+      .checkName("My Project")
+      .cancelExpenseEdition(0)
+      .checkItems("| Reservation | Jan | 100.00 | 100.00 |\n" +
+                  "| Hotel       | Feb | 0.00   | 500.00 |");
   }
 
   public void testCanCreateProjectsFromTheCategorizationView() throws Exception {
@@ -571,11 +587,11 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addExpenseItem(0, "Another item", 201011, -200.00);
 
     timeline.selectMonth("2010/11");
-    categorization.setExtra("RESA", "Trip");
+    categorization.setExtra("RESA", "Booking");
 
     views.selectData();
     transactions.initContent()
-      .add("15/11/2010", TransactionType.PRELEVEMENT, "RESA", "", -100.00, "Trip")
+      .add("15/11/2010", TransactionType.PRELEVEMENT, "RESA", "", -100.00, "Booking")
       .add("01/11/2010", TransactionType.VIREMENT, "INCOME", "", 1000.00)
       .check();
     transactions.editProject(0);
@@ -604,9 +620,9 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addExpenseItem(0, "Booking", 201011, -250.00)
       .addExpenseItem(1, "Hotel", 201012, -200.00);
 
-    categorization.setExtra("RESA 1", "Trip", "Booking");
-    categorization.setExtra("RESA 2", "Trip", "Booking");
-    categorization.setExtra("Sheraton", "Trip", "Hotel");
+    categorization.setExtra("RESA 1", "Booking");
+    categorization.setExtra("RESA 2", "Booking");
+    categorization.setExtra("Sheraton", "Hotel");
 
     views.selectHome();
     currentProject
@@ -619,15 +635,15 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     views.checkDataSelected();
     timeline.checkSelection("2010/11", "2010/12");
     transactions.initContent()
-      .add("10/12/2010", TransactionType.PRELEVEMENT, "RESA 2", "", -100.00, "Trip / Booking")
-      .add("15/11/2010", TransactionType.PRELEVEMENT, "RESA 1", "", -100.00, "Trip / Booking")
+      .add("10/12/2010", TransactionType.PRELEVEMENT, "RESA 2", "", -100.00, "Booking")
+      .add("15/11/2010", TransactionType.PRELEVEMENT, "RESA 1", "", -100.00, "Booking")
       .check();
 
     views.selectHome();
     currentProject.view(1).showTransactionsThroughActual();
     views.checkDataSelected();
     transactions.initContent()
-      .add("15/12/2010", TransactionType.PRELEVEMENT, "SHERATON", "", -250.00, "Trip / Hotel")
+      .add("15/12/2010", TransactionType.PRELEVEMENT, "SHERATON", "", -250.00, "Hotel")
       .check();
 
     timeline.selectMonth("2010/12");
@@ -636,8 +652,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     views.checkDataSelected();
     timeline.checkSelection("2010/11", "2010/12");
     transactions.initContent()
-      .add("10/12/2010", TransactionType.PRELEVEMENT, "RESA 2", "", -100.00, "Trip / Booking")
-      .add("15/11/2010", TransactionType.PRELEVEMENT, "RESA 1", "", -100.00, "Trip / Booking")
+      .add("10/12/2010", TransactionType.PRELEVEMENT, "RESA 2", "", -100.00, "Booking")
+      .add("15/11/2010", TransactionType.PRELEVEMENT, "RESA 1", "", -100.00, "Booking")
       .check();
   }
 
